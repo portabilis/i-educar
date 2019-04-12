@@ -107,10 +107,7 @@ class indice extends clsCadastro
     public $situacao_funcionamento;
     public $dependencia_administrativa;
     public $orgao_vinculado_escola;
-    public $latitude;
-    public $longitude;
     public $regulamentacao;
-    public $acesso;
     public $gestor_id;
     public $cargo_gestor;
     public $email_gestor;
@@ -123,14 +120,6 @@ class indice extends clsCadastro
     public $codigo_inep_escola_compartilhada4;
     public $codigo_inep_escola_compartilhada5;
     public $codigo_inep_escola_compartilhada6;
-    public $decreto_criacao;
-    public $area_terreno_total;
-    public $area_construida;
-    public $area_disponivel;
-    public $num_pavimentos;
-    public $tipo_piso;
-    public $medidor_energia;
-    public $agua_consumida;
     public $agua_potavel_consumo;
     public $abastecimento_agua;
     public $abastecimento_energia;
@@ -155,7 +144,6 @@ class indice extends clsCadastro
     public $numero_salas_acessibilidade;
     public $total_funcionario;
     public $atendimento_aee;
-    public $atividade_complementar;
     public $fundamental_ciclo;
     public $organizacao_ensino;
     public $instrumentos_pedagogicos;
@@ -164,11 +152,8 @@ class indice extends clsCadastro
     public $reserva_vagas_cotas;
     public $projeto_politico_pedagogico;
     public $localizacao_diferenciada;
-    public $materiais_didaticos_especificos;
     public $educacao_indigena;
     public $lingua_ministrada;
-    public $espaco_brasil_aprendizado;
-    public $abre_final_semana;
     public $codigo_lingua_indigena;
     public $equipamentos;
     public $uso_internet;
@@ -179,20 +164,9 @@ class indice extends clsCadastro
     public $quantidade_computadores_alunos_tablets;
     public $lousas_digitais;
     public $televisoes;
-    public $videocassetes;
     public $dvds;
-    public $antenas_parabolicas;
-    public $copiadoras;
-    public $retroprojetores;
-    public $impressoras;
     public $aparelhos_de_som;
     public $projetores_digitais;
-    public $faxs;
-    public $maquinas_fotograficas;
-    public $computadores;
-    public $computadores_administrativo;
-    public $computadores_alunos;
-    public $impressoras_multifuncionais;
     public $acesso_internet;
     public $ato_criacao;
     public $ato_autorizativo;
@@ -774,6 +748,10 @@ class indice extends clsCadastro
 
                 $this->inputsHelper()->select('zona_localizacao', $options);
 
+                $resources = SelectOptions::localizacoesDiferenciadasEscola();
+                $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70);
+                $this->inputsHelper()->select('localizacao_diferenciada', $options);
+
                 // Detalhes do Endereco
                 $objUf = new clsUf();
                 $listauf = $objUf->lista();
@@ -869,17 +847,16 @@ class indice extends clsCadastro
                     $this->campoNumero("andar", "Andar", $this->andar, "2", "2", false);
                 }
 
-                $this->campoTexto("p_http", "Site", $this->p_http, "50", "255", false);
-                $this->campoTexto("p_email", "E-mail", $this->p_email, "50", "255", false);
                 $this->inputTelefone('1', 'Telefone 1');
                 $this->inputTelefone('2', 'Telefone 2');
                 $this->inputTelefone('mov', 'Celular');
                 $this->inputTelefone('fax', 'Fax');
+                $this->campoTexto("p_email", "E-mail", $this->p_email, "50", "255", false);
+                $this->campoTexto("p_http", "Site/Blog/Rede social", $this->p_http, "50", "255", false);
                 $this->passou = true;
                 $this->campoOculto("passou", $this->passou);
             }
-            $this->inputsHelper()->numeric('latitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
-            $this->inputsHelper()->numeric('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
+
             $this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
             $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra diferenciada", dbBool($this->utiliza_regra_diferenciada), '', false, false, false, 'Se marcado, utilizará regra de avaliação diferenciada informada na Série');
 
@@ -919,11 +896,58 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->select('regulamentacao', $options);
 
+            $resources = SelectOptions::esferasAdministrativasEscola();
+            $options = [
+                'label' => 'Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização',
+                'resources' => $resources,
+                'value' => $this->esfera_administrativa,
+                'required' => false,
+            ];
+            $this->inputsHelper()->select('esfera_administrativa', $options);
+
             $options = array('label' => 'Ato de criação', 'value' => $this->ato_criacao, 'size' => 70, 'required' => false);
             $this->inputsHelper()->text('ato_criacao', $options);
 
             $options = array('label' => 'Ato autorizativo', 'value' => $this->ato_autorizativo, 'size' => 70, 'required' => false);
             $this->inputsHelper()->text('ato_autorizativo', $options);
+
+            $mantenedoras = MantenedoraDaEscolaPrivada::getDescriptiveValues();
+            $helperOptions = ['objectName' => 'mantenedora_escola_privada'];
+            $options = [
+                'label' => 'Mantenedora da escola privada',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->mantenedora_escola_privada,
+                    'all_values' => $mantenedoras
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+            $resources = array('' => 'Selecione',
+                1 => 'Particular',
+                2 => 'Comunitária',
+                3 => 'Confessional',
+                4 => 'Filantrópica');
+            $options = array('label' => 'Categoria da escola privada',
+                'resources' => $resources,
+                'value' => $this->categoria_escola_privada,
+                'required' => false,
+                'size' => 70);
+            $this->inputsHelper()->select('categoria_escola_privada', $options);
+
+            $resources = array('' => 'Selecione',
+                1 => 'Estadual',
+                2 => 'Municipal',
+                3 => 'Estadual e Municipal');
+            $options = array('label' => 'Conveniada com poder público',
+                'resources' => $resources,
+                'value' => $this->conveniada_com_poder_publico,
+                'required' => false,
+                'size' => 70);
+            $this->inputsHelper()->select('conveniada_com_poder_publico', $options);
+
+            $this->campoCnpj("cnpj_mantenedora_principal", "CNPJ da mantenedora principal da escola privada", $this->cnpj_mantenedora_principal);
 
             $hiddenInputOptions = array('options' => array('value' => $this->gestor_id));
             $helperOptions = array('objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions);
@@ -947,15 +971,6 @@ class indice extends clsCadastro
             $options = array('label' => 'E-mail do gestor escolar', 'value' => $this->email_gestor, 'required' => $obrigarCamposCenso, 'size' => 50);
 
             $this->inputsHelper()->text('email_gestor', $options);
-
-            $resources = SelectOptions::esferasAdministrativasEscola();
-            $options = [
-                'label' => 'Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização',
-                'resources' => $resources,
-                'value' => $this->esfera_administrativa,
-                'required' => false,
-            ];
-            $this->inputsHelper()->select('esfera_administrativa', $options);
 
             if ($_POST["escola_curso"]) {
                 $this->escola_curso = unserialize(urldecode($_POST["escola_curso"]));
@@ -1113,50 +1128,6 @@ class indice extends clsCadastro
             $this->inputsHelper()->select('predio_compartilhado_outra_escola', $options);
 
             $this->geraCamposCodigoInepEscolaCompartilhada();
-
-            $resources = array(null => 'Selecione',
-                1 => 'Difícil',
-                2 => 'Dificílimo');
-            $options = array('label' => 'Acesso à escola', 'resources' => $resources, 'value' => $this->acesso, 'required' => false, 'size' => 50);
-            $this->inputsHelper()->select('acesso', $options);
-
-            $options = array('label' => 'Decreto de criação de unidade', 'resources' => $resources, 'value' => $this->decreto_criacao, 'required' => false, 'size' => 50);
-            $this->inputsHelper()->text('decreto_criacao', $options);
-
-            $options = array('label' => 'Área do terreno total', 'resources' => $resources, 'value' => $this->area_terreno_total, 'required' => false, 'size' => 10, 'placeholder' => '');
-            $this->inputsHelper()->text('area_terreno_total', $options);
-
-            $options = array('label' => 'Área construída', 'resources' => $resources, 'value' => $this->area_construida, 'required' => false, 'size' => 10, 'placeholder' => '');
-            $this->inputsHelper()->text('area_construida', $options);
-
-            $options = array('label' => 'Área disponível', 'resources' => $resources, 'value' => $this->area_disponivel, 'required' => false, 'size' => 10, 'placeholder' => '');
-            $this->inputsHelper()->text('area_disponivel', $options);
-
-            $options = array('label' => 'Número de pavimentos', 'resources' => $resources, 'value' => $this->num_pavimentos, 'required' => false, 'size' => 5, 'placeholder' => '');
-            $this->inputsHelper()->integer('num_pavimentos', $options);
-
-            $resources = array(null => 'Selecione',
-                1 => 'Cerâmica',
-                2 => 'Acimentado',
-                3 => 'Madeira',
-                4 => 'Outros');
-            $options = array('label' => 'Tipo de piso', 'resources' => $resources, 'value' => $this->tipo_piso, 'required' => false, 'size' => 70);
-            $this->inputsHelper()->select('tipo_piso', $options);
-
-            $resources = array(null => 'Selecione',
-                1 => 'Monofásico',
-                2 => 'Bifásico',
-                3 => 'Trifásico',
-                4 => 'Não');
-
-            $options = array('label' => 'Medidor de energia', 'resources' => $resources, 'value' => $this->medidor_energia, 'required' => false, 'size' => 70);
-            $this->inputsHelper()->select('medidor_energia', $options);
-
-            $resources = array(null => 'Selecione',
-                1 => 'Não filtrada',
-                2 => 'Filtrada');
-            $options = array('label' => 'Água consumida pelos alunos', 'resources' => $resources, 'value' => $this->agua_consumida, 'required' => $obrigarCamposCenso, 'size' => 70);
-            $this->inputsHelper()->select('agua_consumida', $options);
 
             $resources = [
                 null => 'Selecione',
@@ -1399,39 +1370,6 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Quantidade de videocassetes', 'resources' => $resources, 'value' => $this->videocassetes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('videocassetes', $options);
-
-            $options = array('label' => 'Quantidade de antenas parabólicas', 'resources' => $resources, 'value' => $this->antenas_parabolicas, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('antenas_parabolicas', $options);
-
-            $options = array('label' => 'Quantidade de copiadoras', 'resources' => $resources, 'value' => $this->copiadoras, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('copiadoras', $options);
-
-            $options = array('label' => 'Quantidade de retroprojetores', 'resources' => $resources, 'value' => $this->retroprojetores, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('retroprojetores', $options);
-
-            $options = array('label' => 'Quantidade de impressoras', 'resources' => $resources, 'value' => $this->impressoras, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('impressoras', $options);
-
-            $options = array('label' => 'Quantidade de FAXs', 'resources' => $resources, 'value' => $this->faxs, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('faxs', $options);
-
-            $options = array('label' => 'Quantidade de máquinas fotográficas ou filmadoras', 'resources' => $resources, 'value' => $this->maquinas_fotograficas, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('maquinas_fotograficas', $options);
-
-            $options = array('label' => 'Quantidade de impressoras multifuncionais', 'resources' => $resources, 'value' => $this->impressoras_multifuncionais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('impressoras_multifuncionais', $options);
-
-            $options = array('label' => 'Quantidade de computadores de uso administrativo', 'resources' => $resources, 'value' => $this->computadores_administrativo, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('computadores_administrativo', $options);
-
-            $options = array('label' => 'Quantidade de computadores de uso dos alunos', 'resources' => $resources, 'value' => $this->computadores_alunos, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('computadores_alunos', $options);
-
-            $options = array('label' => 'Quantidade total de computadores', 'resources' => $resources, 'value' => $this->computadores, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('computadores', $options);
-
             $options = array(
                 'label' => 'Possui internet banda larga',
                 'value' => $this->acesso_internet,
@@ -1512,15 +1450,8 @@ class indice extends clsCadastro
                 0 => 'Não oferece',
                 1 => 'Não exclusivamente',
                 2 => 'Exclusivamente');
-            $options = array('label' => 'Atendimento educacional especializado - AEE', 'resources' => $resources, 'value' => $this->atendimento_aee, 'required' => $obrigarCamposCenso, 'size' => 70);
+            $options = array('label' => 'Atendimento educacional especializado - AEE', 'resources' => $resources, 'value' => $this->atendimento_aee, 'required' => false, 'size' => 70);
             $this->inputsHelper()->select('atendimento_aee', $options);
-
-            $resources = array(NULL => 'Selecione',
-                0 => 'Não oferece',
-                1 => 'Não exclusivamente',
-                2 => 'Exclusivamente');
-            $options = array('label' => 'Atividade complementar', 'resources' => $resources, 'value' => $this->atividade_complementar, 'required' => $obrigarCamposCenso, 'size' => 70);
-            $this->inputsHelper()->select('atividade_complementar', $options);
 
             $habilitaFundamentalCiclo = false;
             if ($this->cod_escola) {
@@ -1533,7 +1464,7 @@ class indice extends clsCadastro
                 'placeholder' => 'Selecione',
                 'prompt' => 'Selecione',
                 'value' => $this->fundamental_ciclo,
-                'required' => $habilitaFundamentalCiclo,
+                'required' => false,
                 'disabled' => !$habilitaFundamentalCiclo
             );
             $this->inputsHelper()->booleanSelect('fundamental_ciclo', $options);
@@ -1576,6 +1507,7 @@ class indice extends clsCadastro
 
             $options = array(
                 'label' => 'Escola faz exame de seleção para ingresso de seus aluno(a)s',
+                'label_hint' => 'Avaliação por prova e /ou analise curricular',
                 'placeholder' => 'Selecione',
                 'prompt' => 'Selecione',
                 'value' => $this->exame_selecao_ingresso,
@@ -1620,12 +1552,6 @@ class indice extends clsCadastro
                 1 => 'Não utiliza',
                 2 => 'Quilombola',
                 3 => 'Indígena');
-            $options = array('label' => 'Materiais didáticos específicos para atendimento à diversidade sócio-cultural',
-                'resources' => $resources,
-                'value' => $this->materiais_didaticos_especificos,
-                'required' => $obrigarCamposCenso,
-                'size' => 70);
-            $this->inputsHelper()->select('materiais_didaticos_especificos', $options);
 
             $options = [
                 'label' => 'Educação escolar indígena',
@@ -1635,13 +1561,16 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->booleanSelect('educacao_indigena', $options);
 
-            $resources = array(1 => 'Língua Portuguesa',
-                2 => 'Língua Indígena');
+            $resources = [
+                null => 'Selecione',
+                1 => 'Língua Portuguesa',
+                2 => 'Língua Indígena'
+            ];
             $habilitaLiguaMinistrada = $this->educacao_indigena == 1;
             $options = array('label' => 'Língua em que o ensino é ministrado',
                 'resources' => $resources,
                 'value' => $this->lingua_ministrada,
-                'required' => $habilitaLiguaMinistrada,
+                'required' => false,
                 'disabled' => !$habilitaLiguaMinistrada,
                 'size' => 70);
             $this->inputsHelper()->select('lingua_ministrada', $options);
@@ -1663,24 +1592,6 @@ class indice extends clsCadastro
                 ]
             ];
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-
-            $options = array('label' => 'Escola cede espaço para turmas do Brasil Alfabetizado',
-                'prompt' => 'Selecione',
-                'value' => $this->espaco_brasil_aprendizado,
-                'required' => $obrigarCamposCenso);
-            $this->inputsHelper()->booleanSelect('espaco_brasil_aprendizado', $options);
-
-            $options = array('label' => 'Escola abre aos finais de semana para a comunidade',
-                'prompt' => 'Selecione',
-                'value' => $this->abre_final_semana,
-                'required' => $obrigarCamposCenso);
-            $this->inputsHelper()->booleanSelect('abre_final_semana', $options);
-
-            $options = array('label' => 'Escola com proposta pedagógica de formação por alternância',
-                'prompt' => 'Selecione',
-                'value' => $this->proposta_pedagogica,
-                'required' => $obrigarCamposCenso);
-            $this->inputsHelper()->booleanSelect('proposta_pedagogica', $options);
 
             $resources = SelectOptions::unidadesVinculadasEscola();
             $options = [
@@ -1705,44 +1616,6 @@ class indice extends clsCadastro
                 ]
             ];
             $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
-
-            $mantenedoras = MantenedoraDaEscolaPrivada::getDescriptiveValues();
-            $helperOptions = ['objectName' => 'mantenedora_escola_privada'];
-            $options = [
-                'label' => 'Mantenedora da escola privada',
-                'size' => 50,
-                'required' => false,
-                'options' => [
-                    'values' => $this->mantenedora_escola_privada,
-                    'all_values' => $mantenedoras
-                ]
-            ];
-            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-
-            $resources = array('' => 'Selecione',
-                1 => 'Particular',
-                2 => 'Comunitária',
-                3 => 'Confessional',
-                4 => 'Filantrópica');
-            $options = array('label' => 'Categoria da escola privada',
-                'resources' => $resources,
-                'value' => $this->categoria_escola_privada,
-                'required' => false,
-                'size' => 70);
-            $this->inputsHelper()->select('categoria_escola_privada', $options);
-
-            $resources = array('' => 'Selecione',
-                1 => 'Estadual',
-                2 => 'Municipal',
-                3 => 'Estadual e Municipal');
-            $options = array('label' => 'Conveniada com poder público',
-                'resources' => $resources,
-                'value' => $this->conveniada_com_poder_publico,
-                'required' => false,
-                'size' => 70);
-            $this->inputsHelper()->select('conveniada_com_poder_publico', $options);
-
-            $this->campoCnpj("cnpj_mantenedora_principal", "CNPJ da mantenedora principal da escola privada", $this->cnpj_mantenedora_principal);
         }
     }
 
@@ -1777,10 +1650,6 @@ class indice extends clsCadastro
         $codigo_lingua_indigena = implode(',', $this->codigo_lingua_indigena);
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
-            return false;
-        }
-
-        if (!$this->validaLatitudeLongitude()) {
             return false;
         }
 
@@ -1825,10 +1694,7 @@ class indice extends clsCadastro
                     $obj->situacao_funcionamento = $this->situacao_funcionamento;
                     $obj->dependencia_administrativa = $this->dependencia_administrativa;
                     $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
-                    $obj->latitude = $this->latitude;
-                    $obj->longitude = $this->longitude;
                     $obj->regulamentacao = $this->regulamentacao;
-                    $obj->acesso = $this->acesso;
                     $obj->ref_idpes_gestor = $this->gestor_id;
                     $obj->cargo_gestor = $this->cargo_gestor;
                     $obj->email_gestor = $this->email_gestor;
@@ -1841,14 +1707,6 @@ class indice extends clsCadastro
                     $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
                     $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
                     $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
-                    $obj->decreto_criacao = $this->decreto_criacao;
-                    $obj->area_terreno_total = $this->area_terreno_total;
-                    $obj->area_construida = $this->area_construida;
-                    $obj->area_disponivel = $this->area_disponivel;
-                    $obj->num_pavimentos = $this->num_pavimentos;
-                    $obj->tipo_piso = $this->tipo_piso;
-                    $obj->medidor_energia = $this->medidor_energia;
-                    $obj->agua_consumida = $this->agua_consumida;
                     $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
                     $obj->abastecimento_agua = $abastecimento_agua;
                     $obj->abastecimento_energia = $abastecimento_energia;
@@ -1873,7 +1731,6 @@ class indice extends clsCadastro
                     $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
                     $obj->total_funcionario = $this->total_funcionario;
                     $obj->atendimento_aee = $this->atendimento_aee;
-                    $obj->atividade_complementar = $this->atividade_complementar;
                     $obj->fundamental_ciclo = $this->fundamental_ciclo;
                     $obj->organizacao_ensino = $organizacao_ensino;
                     $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
@@ -1882,9 +1739,9 @@ class indice extends clsCadastro
                     $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
                     $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
                     $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-                    $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
                     $obj->educacao_indigena = $this->educacao_indigena;
                     $obj->lingua_ministrada = $this->lingua_ministrada;
+                    $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
                     $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
                     $obj->abre_final_semana = $this->abre_final_semana;
                     $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
@@ -1898,20 +1755,9 @@ class indice extends clsCadastro
                     $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
                     $obj->lousas_digitais = $this->lousas_digitais;
                     $obj->televisoes = $this->televisoes;
-                    $obj->videocassetes = $this->videocassetes;
                     $obj->dvds = $this->dvds;
-                    $obj->antenas_parabolicas = $this->antenas_parabolicas;
-                    $obj->copiadoras = $this->copiadoras;
-                    $obj->retroprojetores = $this->retroprojetores;
-                    $obj->impressoras = $this->impressoras;
                     $obj->aparelhos_de_som = $this->aparelhos_de_som;
                     $obj->projetores_digitais = $this->projetores_digitais;
-                    $obj->faxs = $this->faxs;
-                    $obj->maquinas_fotograficas = $this->maquinas_fotograficas;
-                    $obj->computadores = $this->computadores;
-                    $obj->computadores_administrativo = $this->computadores_administrativo;
-                    $obj->computadores_alunos = $this->computadores_alunos;
-                    $obj->impressoras_multifuncionais = $this->impressoras_multifuncionais;
                     $obj->acesso_internet = $this->acesso_internet;
                     $obj->ato_criacao = $this->ato_criacao;
                     $obj->ato_autorizativo = $this->ato_autorizativo;
@@ -1995,6 +1841,8 @@ class indice extends clsCadastro
                     return false;
                 }
 
+                $this->saveInep($escola['cod_escola']);
+
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 
                 throw new HttpResponseException(
@@ -2008,11 +1856,8 @@ class indice extends clsCadastro
             $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, null, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
             $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
-            $obj->latitude = $this->latitude;
-            $obj->longitude = $this->longitude;
             $obj->regulamentacao = $this->regulamentacao;
             $obj->situacao_funcionamento = $this->situacao_funcionamento;
-            $obj->acesso = $this->acesso;
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
             $obj->email_gestor = $this->email_gestor;
@@ -2025,14 +1870,6 @@ class indice extends clsCadastro
             $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
             $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
             $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
-            $obj->decreto_criacao = $this->decreto_criacao;
-            $obj->area_terreno_total = $this->area_terreno_total;
-            $obj->area_construida = $this->area_construida;
-            $obj->area_disponivel = $this->area_disponivel;
-            $obj->num_pavimentos = $this->num_pavimentos;
-            $obj->tipo_piso = $this->tipo_piso;
-            $obj->medidor_energia = $this->medidor_energia;
-            $obj->agua_consumida = $this->agua_consumida;
             $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
             $obj->abastecimento_agua = $abastecimento_agua;
             $obj->abastecimento_energia = $abastecimento_energia;
@@ -2057,7 +1894,6 @@ class indice extends clsCadastro
             $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
-            $obj->atividade_complementar = $this->atividade_complementar;
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
             $obj->organizacao_ensino = $this->organizacao_ensino;
             $obj->instrumentos_pedagogicos = $this->instrumentos_pedagogicos;
@@ -2066,9 +1902,9 @@ class indice extends clsCadastro
             $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
             $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-            $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
+            $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
             $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
             $obj->abre_final_semana = $this->abre_final_semana;
             $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
@@ -2082,20 +1918,9 @@ class indice extends clsCadastro
             $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
             $obj->lousas_digitais = $this->lousas_digitais;
             $obj->televisoes = $this->televisoes;
-            $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
-            $obj->antenas_parabolicas = $this->antenas_parabolicas;
-            $obj->copiadoras = $this->copiadoras;
-            $obj->retroprojetores = $this->retroprojetores;
-            $obj->impressoras = $this->impressoras;
             $obj->aparelhos_de_som = $this->aparelhos_de_som;
             $obj->projetores_digitais = $this->projetores_digitais;
-            $obj->faxs = $this->faxs;
-            $obj->maquinas_fotograficas = $this->maquinas_fotograficas;
-            $obj->computadores = $this->computadores;
-            $obj->computadores_administrativo = $this->computadores_administrativo;
-            $obj->computadores_alunos = $this->computadores_alunos;
-            $obj->impressoras_multifuncionais = $this->impressoras_multifuncionais;
             $obj->acesso_internet = $this->acesso_internet;
             $obj->ato_criacao = $this->ato_criacao;
             $obj->ato_autorizativo = $this->ato_autorizativo;
@@ -2140,6 +1965,7 @@ class indice extends clsCadastro
                             }
                         }
                     }
+                    $this->saveInep($escola['cod_escola']);
                     //-----------------------FIM CADASTRA CURSO------------------------//
                     $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 
@@ -2168,10 +1994,6 @@ class indice extends clsCadastro
         }
 
         if (!$this->validaDadosTelefones()) {
-            return false;
-        }
-
-        if (!$this->validaLatitudeLongitude()) {
             return false;
         }
 
@@ -2231,11 +2053,8 @@ class indice extends clsCadastro
             $obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
             $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
-            $obj->latitude = $this->latitude;
-            $obj->longitude = $this->longitude;
             $obj->regulamentacao = $this->regulamentacao;
             $obj->situacao_funcionamento = $this->situacao_funcionamento;
-            $obj->acesso = $this->acesso;
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
             $obj->email_gestor = $this->email_gestor;
@@ -2248,14 +2067,6 @@ class indice extends clsCadastro
             $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
             $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
             $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
-            $obj->decreto_criacao = $this->decreto_criacao;
-            $obj->area_terreno_total = $this->area_terreno_total;
-            $obj->area_construida = $this->area_construida;
-            $obj->area_disponivel = $this->area_disponivel;
-            $obj->num_pavimentos = $this->num_pavimentos;
-            $obj->tipo_piso = $this->tipo_piso;
-            $obj->medidor_energia = $this->medidor_energia;
-            $obj->agua_consumida = $this->agua_consumida;
             $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
             $obj->abastecimento_agua = $abastecimento_agua;
             $obj->abastecimento_energia = $abastecimento_energia;
@@ -2280,7 +2091,6 @@ class indice extends clsCadastro
             $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
-            $obj->atividade_complementar = $this->atividade_complementar;
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
             $obj->organizacao_ensino = $organizacao_ensino;
             $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
@@ -2289,9 +2099,9 @@ class indice extends clsCadastro
             $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
             $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-            $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
+            $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
             $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
             $obj->abre_final_semana = $this->abre_final_semana;
             $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
@@ -2305,20 +2115,9 @@ class indice extends clsCadastro
             $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
             $obj->lousas_digitais = $this->lousas_digitais;
             $obj->televisoes = $this->televisoes;
-            $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
-            $obj->antenas_parabolicas = $this->antenas_parabolicas;
-            $obj->copiadoras = $this->copiadoras;
-            $obj->retroprojetores = $this->retroprojetores;
-            $obj->impressoras = $this->impressoras;
             $obj->aparelhos_de_som = $this->aparelhos_de_som;
             $obj->projetores_digitais = $this->projetores_digitais;
-            $obj->faxs = $this->faxs;
-            $obj->maquinas_fotograficas = $this->maquinas_fotograficas;
-            $obj->computadores = $this->computadores;
-            $obj->computadores_administrativo = $this->computadores_administrativo;
-            $obj->computadores_alunos = $this->computadores_alunos;
-            $obj->impressoras_multifuncionais = $this->impressoras_multifuncionais;
             $obj->acesso_internet = $this->acesso_internet;
             $obj->ato_criacao = $this->ato_criacao;
             $obj->ato_autorizativo = $this->ato_autorizativo;
@@ -2347,10 +2146,7 @@ class indice extends clsCadastro
             $obj->situacao_funcionamento = $this->situacao_funcionamento;
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
             $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
-            $obj->latitude = $this->latitude;
-            $obj->longitude = $this->longitude;
             $obj->regulamentacao = $this->regulamentacao;
-            $obj->acesso = $this->acesso;
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
             $obj->email_gestor = $this->email_gestor;
@@ -2363,14 +2159,6 @@ class indice extends clsCadastro
             $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
             $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
             $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
-            $obj->decreto_criacao = $this->decreto_criacao;
-            $obj->area_terreno_total = $this->area_terreno_total;
-            $obj->area_construida = $this->area_construida;
-            $obj->area_disponivel = $this->area_disponivel;
-            $obj->num_pavimentos = $this->num_pavimentos;
-            $obj->tipo_piso = $this->tipo_piso;
-            $obj->medidor_energia = $this->medidor_energia;
-            $obj->agua_consumida = $this->agua_consumida;
             $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
             $obj->abastecimento_agua = $abastecimento_agua;
             $obj->abastecimento_energia = $abastecimento_energia;
@@ -2395,7 +2183,6 @@ class indice extends clsCadastro
             $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
-            $obj->atividade_complementar = $this->atividade_complementar;
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
             $obj->organizacao_ensino = $organizacao_ensino;
             $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
@@ -2404,9 +2191,9 @@ class indice extends clsCadastro
             $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
             $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-            $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
+            $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
             $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
             $obj->abre_final_semana = $this->abre_final_semana;
             $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
@@ -2420,20 +2207,9 @@ class indice extends clsCadastro
             $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
             $obj->lousas_digitais = $this->lousas_digitais;
             $obj->televisoes = $this->televisoes;
-            $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
-            $obj->antenas_parabolicas = $this->antenas_parabolicas;
-            $obj->copiadoras = $this->copiadoras;
-            $obj->retroprojetores = $this->retroprojetores;
-            $obj->impressoras = $this->impressoras;
             $obj->aparelhos_de_som = $this->aparelhos_de_som;
             $obj->projetores_digitais = $this->projetores_digitais;
-            $obj->faxs = $this->faxs;
-            $obj->maquinas_fotograficas = $this->maquinas_fotograficas;
-            $obj->computadores = $this->computadores;
-            $obj->computadores_administrativo = $this->computadores_administrativo;
-            $obj->computadores_alunos = $this->computadores_alunos;
-            $obj->impressoras_multifuncionais = $this->impressoras_multifuncionais;
             $obj->acesso_internet = $this->acesso_internet;
             $obj->ato_criacao = $this->ato_criacao;
             $obj->ato_autorizativo = $this->ato_autorizativo;
@@ -2529,6 +2305,7 @@ class indice extends clsCadastro
                                 }
                             }
                         }
+                        $this->saveInep($this->cod_escola);
                         //-----------------------FIM EDITA CURSO------------------------//
                         $this->mensagem .= "Edição efetuada com sucesso.<br>";
 
@@ -2562,6 +2339,7 @@ class indice extends clsCadastro
                             }
                         }
                     }
+                    $this->saveInep($this->cod_escola);
                     //-----------------------FIM EDITA CURSO------------------------//
                     $this->mensagem .= "Edição efetuada com sucesso.<br>";
 
@@ -2649,7 +2427,8 @@ class indice extends clsCadastro
                 $this->validaSalasAcessibilidade() &&
                 $this->validaRecursos() &&
                 $this->validaQuantidadeComputadoresAlunos() &&
-                $this->validaQuantidadeEquipamentosEnsino();
+                $this->validaQuantidadeEquipamentosEnsino() &&
+                $this->validaLinguasIndigenas();
     }
 
     protected function validaOcupacaoPredio()
@@ -2749,39 +2528,6 @@ class indice extends clsCadastro
             return FALSE;
         }
         return TRUE;
-    }
-
-    protected function validaLatitudeLongitude()
-    {
-        $caracteres = array(" ", ".", "-", null, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
-        $mensagemErro = "O campo: Latitude e/ou Longitude foi preenchido com valor inválido.";
-
-        for ($i = 0; $i <= strlen($this->latitude); $i++) {
-            $char = substr($this->latitude, $i, 1);
-
-            if (!in_array($char, $caracteres)) {
-                $this->mensagem = $mensagemErro;
-                return false;
-            }
-        }
-
-        for ($i = 0; $i <= strlen($this->longitude); $i++) {
-            $char = substr($this->longitude, $i, 1);
-            if (!in_array($char, $caracteres)) {
-                $this->mensagem = $mensagemErro;
-                return false;
-            }
-        }
-
-        if (empty($this->latitude) && !empty($this->longitude)) {
-            $this->mensagem = "O campo Latitude deve ser preenchido quando o Longitude estiver preenchido.";
-            return false;
-        } elseif (!empty($this->latitude) && empty($this->longitude)) {
-            $this->mensagem = "O campo Longitude deve ser preenchido quando o Latitude estiver preenchido.";
-            return false;
-        }
-
-        return true;
     }
 
     protected function validaDadosTelefones()
@@ -3050,7 +2796,7 @@ class indice extends clsCadastro
         }
 
         if (in_array(ReservaVagasCotas::NAO_POSSUI, $this->reserva_vagas_cotas) && count($this->reserva_vagas_cotas) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Órgãos colegiados em funcionamento na escola</b>, quando a opção: <b>Não há órgãos colegiados em funcionamento</b> estiver selecionada.';
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Reserva de vagas por sistema de cotas para grupos específicos de alunos(as)</b>, quando a opção: <b>Sem reservas de vagas para sistema de cotas (ampla concorrência)</b> estiver selecionada.';
             return false;
         }
 
@@ -3122,6 +2868,33 @@ class indice extends clsCadastro
 
         if ($this->lousas_digitais == '0') {
             $this->mensagem = 'O campo: <b>Lousa digital</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        return true;
+    }
+
+    private function saveInep($schoolId)
+    {
+        DB::table('modules.educacenso_cod_escola')->where('cod_escola', $schoolId)
+            ->delete();
+        if (!empty($this->escola_inep_id)) {
+            $data = [
+                'cod_escola' => $schoolId,
+                'cod_escola_inep' => $this->escola_inep_id,
+                'fonte' => 'fonte',
+                'nome_inep' => '-',
+                'created_at' => 'NOW()',
+            ];
+
+            DB::table('modules.educacenso_cod_escola')->insert($data);
+        }
+    }
+  
+    protected function validaLinguasIndigenas()
+    {
+        if (count($this->codigo_lingua_indigena) > 3) {
+            $this->mensagem = 'O campo: <b>Línguas indígenas</b>, não pode ter mais que 3 opções';
             return false;
         }
 

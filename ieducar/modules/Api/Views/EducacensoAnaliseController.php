@@ -8,6 +8,7 @@ use App\Repositories\EducacensoRepository;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\Data\Registro10 as Registro10Data;
 use iEducar\Modules\Educacenso\Data\Registro20 as Registro20Data;
+use iEducar\Modules\Educacenso\Model\LinguaMinistrada;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
@@ -177,7 +178,7 @@ class EducacensoAnaliseController extends ApiCoreController
         if (!$cnpjMantenedoraPrivada->isValid()) {
             $mensagem[] = [
                 'text' => $cnpjMantenedoraPrivada->getMessage(),
-                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: CNPJ da mantenedora principal da escola privada)',
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: CNPJ da mantenedora principal da escola privada)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                 'fail' => true
             ];
@@ -250,7 +251,7 @@ class EducacensoAnaliseController extends ApiCoreController
             if (!$escola->categoriaEscolaPrivada) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar qual a categoria desta unidade escolar.",
-                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Categoria da escola privada)',
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do gerais > Campo: Categoria da escola privada)',
                     'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true
                 ];
@@ -259,7 +260,7 @@ class EducacensoAnaliseController extends ApiCoreController
             if (!$escola->conveniadaPoderPublico) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar qual o tipo de convênio desta unidade escolar.",
-                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Conveniada com poder público)',
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Conveniada com poder público)',
                     'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true
                 ];
@@ -268,7 +269,7 @@ class EducacensoAnaliseController extends ApiCoreController
             if (!$escola->mantenedoraEscolaPrivada) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que a dependência administrativa da escola é privada, portanto é necessário informar qual o tipo de mantenedora desta unidade escolar.",
-                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Mantenedora da escola privada)',
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Campo: Mantenedora da escola privada)',
                     'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true
                 ];
@@ -439,7 +440,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
         if (!$escola->existeRecursosAcessibilidade()) {
             $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que o recurso de acessibilidade foi preenchido incorretamente.",
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se alguma opção dos recursos de acessibilidade que a escola possui foi informada.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dependências > Campo: Recursos de acessibilidade)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true
@@ -455,7 +456,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ((!$numeroSalasUtilizadasForaPredio || $escola->predioEscolar()) && !$escola->numeroSalasUtilizadasDentroPredio) {
+        if ((!$escola->numeroSalasUtilizadasForaPredio || $escola->predioEscolar()) && !$escola->numeroSalasUtilizadasDentroPredio) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o número de salas de aula utilizadas na escola dentro do prédio escolar da escola foi informado.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dependências > Campo: Número de salas de aula utilizadas na escola dentro do prédio escolar)',
@@ -464,7 +465,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if (!$escola->numeroSalasUtilizadasDentroPredio && !$numeroSalasUtilizadasForaPredio) {
+        if (!$escola->numeroSalasUtilizadasDentroPredio && !$escola->numeroSalasUtilizadasForaPredio) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se o número de salas de aula utilizadas na escola fora do prédio escolar da escola foi informado.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dependências > Campo: Número de salas de aula utilizadas na escola fora do prédio escolar)',
@@ -500,7 +501,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->usaInternet() && empty($escola->acessoInternet)) {
+        if ($escola->usaInternet() && !is_null($escola->acessoInternet)) {
             $mensagem[] = [
                 'text' => " Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se a internet banda larga foi informada.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Campo: Possui internet banda larga)',
@@ -527,7 +528,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->quantidadeProfissionaisPreenchida()) {
+        if (!$escola->quantidadeProfissionaisPreenchida()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a escola não preencheu nenhuma informação referente à quantidade de profissionais, portanto é necessário informar pelo menos um profissional.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Recursos > Seção: Quantidade de profissionais)',
@@ -536,7 +537,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if (empty($escola->alimentacaoEscolarAlunos)) {
+        if (is_null($escola->alimentacaoEscolarAlunos)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a alimentação escolar para os alunos(as) não foi informada.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Infraestrutura > Campo: Alimentação escolar para os alunos(as))',
@@ -545,7 +546,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if (empty($escola->educacaoIndigena)) {
+        if (is_null($escola->educacaoIndigena)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a educação escolar indígena não foi informada.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Educação escolar indígena)',
@@ -563,7 +564,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->linguaMinistrada == 2 && empty($escola->codigoLinguaIndigena)) {
+        if ($escola->linguaMinistrada == LinguaMinistrada::INDIGENA && empty($escola->codigoLinguaIndigena)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a(s) língua(s) indígena(s) não foi(ram) informada(s).",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Línguas indígenas)',
