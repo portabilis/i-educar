@@ -55,11 +55,6 @@ class Registro20 implements RegistroEducacenso
     /**
       * @var string
       */
-    public $atividadesAee;
-
-    /**
-      * @var string
-      */
     public $etapaEducacenso;
 
     /**

@@ -281,7 +281,6 @@ SQL;
                    turma.dias_semana[1] AS "diasSemana",
                    turma.tipo_atendimento AS "tipoAtendimento",
                    turma.atividades_complementares[1] AS "atividadesComplementares",
-                   turma.atividades_aee[1] AS "atividadesAee",
                    turma.etapa_educacenso AS "etapaEducacenso",
                    juridica.fantasia AS "nomeEscola",
                    turma.tipo_mediacao_didatico_pedagogico AS "tipoMediacaoDidaticoPedagogico",
