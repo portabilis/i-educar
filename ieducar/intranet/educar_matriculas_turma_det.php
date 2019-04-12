@@ -70,6 +70,9 @@ class indice extends clsDetalhe
             }
         }
 
+        $qtd_alunos = 0;
+        $nm_alunos = [];
+
         if ($ano_letivo || !$ref_ref_cod_serie) {
             $obj_matriculas_turma = new clsPmieducarMatriculaTurma();
             $lst_matriculas_turma = $obj_matriculas_turma->lista(null, $this->ref_cod_turma, null, null, null, null, null, null, 1, null, null, null, null, null, false, null, [1, 2, 3], null, null, $ano_letivo, null, false, null, 1, true);
@@ -110,8 +113,7 @@ class indice extends clsDetalhe
         }
 
         if (empty($registro)) {
-            header('location: educar_matriculas_turma_lst.php');
-            die();
+            $this->simpleRedirect('educar_matricula_lst.php');
         }
 
         $obj_ref_cod_serie = new clsPmieducarSerie($registro['ref_ref_cod_serie']);

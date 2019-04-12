@@ -319,8 +319,7 @@ class indice extends clsCadastro
     }
 
     $this->mensagem .= "Edição efetuada com sucesso.<br>";
-    header( "Location: index.php" );
-    die();
+    $this->simpleRedirect('index.php');
   }
 
   // Retorna true caso a foto seja válida

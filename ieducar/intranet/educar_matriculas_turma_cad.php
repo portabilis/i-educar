@@ -1,5 +1,12 @@
 <?php
 
+// TODO
+// Esta classe será removida nas próximas atualizações do i-Educar. Deve ser
+// utilizado o serviço `EnrollmentService` para fazer a enturmação e/ou
+// desenturmação de alunos.
+
+use App\Services\EnrollmentService;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -55,7 +62,7 @@ class indice extends clsCadastro
     public function Inicializar()
     {
         $this->ref_cod_turma = $_GET['ref_cod_turma'];
-        $this->ano = $_GET['ano'];
+        $this->ano = $_GET['ano'] ?? null;
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
@@ -92,7 +99,7 @@ class indice extends clsCadastro
             $existe_entrumacao = $db->CampoUnico("select * from matricula_turma where ref_cod_turma = $this->ref_cod_turma");
 
             if ($retorno == 'Editar' and $existe_entrumacao) {
-                $this->url_copiar_enturmacoes = sprintf('educar_matricula_cad.php?ref_cod_turma_copiar_enturmacoes=%d', $this->ref_cod_turma);
+                $this->url_copiar_enturmacoes = sprintf('%d', $this->ref_cod_turma);
                 $this->nome_url_copiar_enturmacoes = 'Copiar enturmações';
             }
 
@@ -105,8 +112,7 @@ class indice extends clsCadastro
             return $retorno;
         }
 
-        header('Location: educar_matriculas_turma_lst.php');
-        die;
+        $this->simpleRedirect('educar_matricula_lst.php');
     }
 
     public function Gerar()
@@ -194,7 +200,7 @@ class indice extends clsCadastro
         // Inlui o aluno
         $this->campoQuebra();
 
-        if ($_POST['matriculas_turma']) {
+        if (!empty($_POST['matriculas_turma'])) {
             $this->matriculas_turma = unserialize(urldecode($_POST['matriculas_turma']));
         }
 
@@ -238,7 +244,7 @@ class indice extends clsCadastro
             }
         }
 
-        if ($_POST['ref_cod_matricula']) {
+        if (!empty($_POST['ref_cod_matricula'])) {
             $obj_matriculas_turma = new clsPmieducarMatriculaTurma(
                 $_POST['ref_cod_matricula'],
                 $this->ref_cod_turma
@@ -334,10 +340,22 @@ class indice extends clsCadastro
 
     public function Editar()
     {
+        /** @var EnrollmentService $enrollments */
+        $enrollments = app(EnrollmentService::class);
+
         $this->data_enturmacao = Portabilis_Date_Utils::brToPgSQL($this->data_enturmacao);
 
         foreach ($this->check_desenturma as $matricula) {
-            $this->removerEnturmacao($matricula, $this->ref_cod_turma);
+            try {
+                $enrollments->cancelEnrollment($matricula, $this->ref_cod_turma, new DateTime($this->data_enturmacao));
+            } catch (Throwable $exception) {
+                $this->mensagem = $exception->getMessage();
+
+                // FIXME resolver problema de XSS (Chrome bloqueia página)
+                header('X-XSS-Protection: 0');
+
+                return false;
+            }
         }
 
         if (empty($this->matriculas_turma)) {
@@ -350,7 +368,7 @@ class indice extends clsCadastro
         $objEnturmacoes = new clsPmieducarMatriculaTurma();
         $objEscolaSerie = new clsPmieducarEscolaSerie();
 
-        $totalAlunosParaEnturmar = count($this->ref_cod_matricula);
+        $totalAlunosParaEnturmar = is_array($this->ref_cod_matricula) ? count($this->ref_cod_matricula) : 0;
         $dadosTurma = $objTurma->lista($this->ref_cod_turma);
         $maxAlunos = $dadosTurma[0]['max_aluno'];
         $alunosEnturmados = $objEnturmacoes->enturmacoesSemDependencia($this->ref_cod_turma);
@@ -366,6 +384,10 @@ class indice extends clsCadastro
             }
 
             return false;
+        }
+
+        if (!is_array($this->ref_cod_matricula)) {
+            $this->simpleRedirect('educar_matriculas_turma_lst.php');
         }
 
         foreach ($this->ref_cod_matricula as $matricula => $campo) {
@@ -414,48 +436,6 @@ class indice extends clsCadastro
         }
 
         $this->simpleRedirect('educar_matriculas_turma_lst.php');
-    }
-
-    public function Excluir()
-    {
-    }
-
-    public function removerEnturmacao($matriculaId, $turmaId)
-    {
-        $sequencialEnturmacao = $this->getSequencialEnturmacaoByTurmaId($matriculaId, $turmaId);
-        $enturmacao = new clsPmieducarMatriculaTurma(
-            $matriculaId,
-            $turmaId,
-            $this->pessoa_logada,
-            null,
-            null,
-            date('Y-m-d'),
-            0,
-            null,
-            $sequencialEnturmacao
-        );
-        if ($enturmacao->edita()) {
-            $enturmacao->marcaAlunoRemanejado($this->data_enturmacao);
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function getSequencialEnturmacaoByTurmaId($matriculaId, $turmaId)
-    {
-        $db = new clsBanco();
-        $sql = 'select coalesce(max(sequencial), 1) from pmieducar.matricula_turma where ativo = 1 and ref_cod_matricula = $1 and ref_cod_turma = $2';
-
-        if ($db->execPreparedQuery($sql, [$matriculaId, $turmaId]) != false) {
-            $db->ProximoRegistro();
-            $sequencial = $db->Tupla();
-
-            return $sequencial[0];
-        }
-
-        return 1;
     }
 }
 

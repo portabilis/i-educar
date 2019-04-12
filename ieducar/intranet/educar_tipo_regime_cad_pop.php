@@ -135,10 +135,6 @@ class indice extends clsCadastro
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
             die();
-//          $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-//          header( "Location: educar_tipo_regime_lst.php" );
-            die();
-            return true;
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";

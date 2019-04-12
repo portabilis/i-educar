@@ -69,8 +69,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_reservas_lst.php" );
-            die();
+            $this->simpleRedirect('educar_reservas_lst.php');
         }
 
         if( class_exists( "clsPmieducarExemplar" ) )

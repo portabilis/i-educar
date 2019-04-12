@@ -76,8 +76,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_situacao_lst.php" );
-            die();
+            $this->simpleRedirect('educar_situacao_lst.php');
         }
 
         if( class_exists( "clsPmieducarBiblioteca" ) )

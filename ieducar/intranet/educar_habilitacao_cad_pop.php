@@ -129,8 +129,6 @@ class indice extends clsCadastro
                         parent.document.getElementById('habilitacao').disabled = false;
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
-//          $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-//          header( "Location: educar_habilitacao_lst.php" );
             die();
             return true;
         }

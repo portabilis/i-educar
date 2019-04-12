@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'App/Model/NivelTipoUsuario.php';
 
@@ -2438,8 +2440,6 @@ class clsPmieducarEscola
                 return true;
             }
         }
-
-        return false;
     }
 
     /**

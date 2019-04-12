@@ -104,8 +104,7 @@ class indice extends clsCadastro
 
       // Nenhum servidor com o código de servidor e instituição
       if (!$det_servidor) {
-        header('Location: educar_servidor_lst.php');
-        die;
+          $this->simpleRedirect('educar_servidor_lst.php');
       }
 
       $this->professor = $obj_servidor->isProfessor() == TRUE ? 'true' : 'false';
@@ -132,8 +131,7 @@ class indice extends clsCadastro
       $this->carga_horaria = $det_servidor['carga_horaria'];
     }
     else {
-      header('Location: educar_servidor_lst.php');
-      die;
+        $this->simpleRedirect('educar_servidor_lst.php');
     }
 
     $this->url_cancelar = sprintf(
@@ -249,9 +247,7 @@ class indice extends clsCadastro
     $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
     $destination = 'educar_servidor_det.php?cod_servidor=%s&ref_cod_instituicao=%s';
     $destination = sprintf($destination, $this->ref_cod_servidor, $this->ref_ref_cod_instituicao);
-
-    header('Location: ' . $destination);
-    die();
+    $this->simpleRedirect($destination);
   }
 
   function Editar()
