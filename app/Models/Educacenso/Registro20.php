@@ -155,8 +155,6 @@ class Registro20 implements RegistroEducacenso
             case 16:
             case 17:
             case 18:
-                return [1,2,4,17,25,29];
-                break;
             case 69:
                 return [1,2,4,17,25,29];
                 break;
@@ -164,16 +162,12 @@ class Registro20 implements RegistroEducacenso
             case 20:
             case 21:
             case 41:
+            case 70:
                 return [17,25,28];
                 break;
             case 23:
             case 22:
             case 56:
-                return [17,25];
-                break;
-            case 70:
-                return [17,25,28];
-                break;
             case 72:
                 return [17,25];
                 break;
@@ -185,8 +179,6 @@ class Registro20 implements RegistroEducacenso
             case 27:
             case 28:
             case 29:
-                return [5,17,25,28];
-                break;
             case 71:
                 return [5,17,25,28];
                 break;
@@ -195,8 +187,6 @@ class Registro20 implements RegistroEducacenso
             case 32:
             case 33:
             case 34:
-                return [5,25,28];
-                break;
             case 74:
             case 67:
                 return [5,25,28];
