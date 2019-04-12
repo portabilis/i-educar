@@ -146,7 +146,7 @@ class indice extends clsCadastro
         $this->inputsHelper()->select('funcao_exercida', $options);
 
         $resources = TipoVinculo::getDescriptiveValues();
-        $resources = array_replace([null => 'Nenhum'], $resources);
+        $resources = array_replace([null => 'Selecione'], $resources);
 
         $options = [
             'label' => 'Tipo do vínculo',
