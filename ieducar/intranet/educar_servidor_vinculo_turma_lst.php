@@ -28,6 +28,8 @@
  * @version   $Id$
  */
 
+use iEducar\Support\View\SelectOptions;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -113,14 +115,7 @@ class indice extends clsListagem
 
     $this->inputsHelper()->dynamic(array('ano', 'instituicao','escola','curso','serie', 'turma'), array('required' => false));
 
-    $resources_funcao = array(  null => 'Selecione',
-                                1    => 'Docente',
-                                2    => 'Auxiliar/Assistente educacional',
-                                3    => 'Profissional/Monitor de atividade complementar',
-                                4    => 'Tradutor Intérprete de LIBRAS',
-                                5    => 'Docente titular - Coordenador de tutoria (de módulo ou disciplina) - EAD',
-                                6    => 'Docente tutor - Auxiliar (de módulo ou disciplina) - EAD');
-
+    $resources_funcao = SelectOptions::funcoesExercidaServidor();
     $options = array('label' => Portabilis_String_Utils::toLatin1('Função exercida'), 'resources' => $resources_funcao, 'value' => $this->funcao_exercida);
     $this->inputsHelper()->select('funcao_exercida', $options);   
 

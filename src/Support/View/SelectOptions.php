@@ -3,6 +3,7 @@
 namespace iEducar\Support\View;
 
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
+use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Modules\Transport\Period;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
@@ -82,8 +83,23 @@ class SelectOptions
         return self::getDefaultOption() + UnidadeVinculadaComOutraInstituicao::getDescriptiveValues();
     }
 
+    /**
+     * Retorna as opções disponíveis referentes aos locais de funcionamento da escola
+     *
+     * @return array
+     */
     public static function locaisFuncionamentoEscola()
     {
         return self::getDefaultOption() + LocalFuncionamento::getDescriptiveValues();
+    }
+
+    /**
+     * Retorna as opções disponíveis referentes aos locais de funcionamento da escola
+     *
+     * @return array
+     */
+    public static function funcoesExercidaServidor()
+    {
+        return self::getDefaultOption() + FuncaoExercida::getDescriptiveValues();
     }
 }
