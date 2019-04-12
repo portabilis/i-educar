@@ -51,6 +51,9 @@
             "ieducar/intranet/include",
             "ieducar/lib"
         ],
+        "files": [
+            "ieducar/intranet/include/funcoes.inc.php"
+        ],
         "psr-4": {
             "App\\": "app/",
             "iEducar\\": "src"

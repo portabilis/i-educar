@@ -85,8 +85,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
-            die();
+            $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
         if( class_exists( "clsPmieducarAluno" ) )

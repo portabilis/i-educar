@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyLevel extends Model
 {
@@ -29,6 +30,19 @@ class LegacyLevel extends Model
     public $timestamps = false;
 
     /**
+     * @return string
+     */
+    public function getNameAttribute()
+    {
+        return $this->nm_serie;
+    }
+
+    public function getCourseIdAttribute()
+    {
+        return $this->ref_cod_curso;
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function evaluationRules()
@@ -39,5 +53,15 @@ class LegacyLevel extends Model
             'serie_id',
             'regra_avaliacao_id'
         )->withPivot('ano_letivo', 'regra_avaliacao_diferenciada_id');
+    }
+
+    /**
+     * Relacionamento com o curso.
+     *
+     * @return BelongsTo
+     */
+    public function course()
+    {
+        return $this->belongsTo(LegacyCourse::class, 'ref_cod_curso');
     }
 }

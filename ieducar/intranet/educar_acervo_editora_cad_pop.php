@@ -161,7 +161,6 @@ class indice extends clsCadastro
         if( $cadastrou )
         {
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            //header( "Location: educar_acervo_editora_lst.php" );
             echo "<script>
                     parent.document.getElementById('editora').value = '$cadastrou';
                     parent.document.getElementById('tipoacao').value = '';

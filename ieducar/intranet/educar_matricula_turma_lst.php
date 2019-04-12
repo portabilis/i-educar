@@ -94,8 +94,7 @@ class indice extends clsListagem
     $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
 
     if (!$this->ref_cod_matricula) {
-      header('Location: educar_matricula_lst.php');
-      die;
+        $this->simpleRedirect('educar_matricula_lst.php');
     }
 
     $obj_matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
