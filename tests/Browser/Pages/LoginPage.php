@@ -13,7 +13,7 @@ class LoginPage extends Page
      */
     public function url()
     {
-        return '/';
+        return '/login';
     }
 
     /**

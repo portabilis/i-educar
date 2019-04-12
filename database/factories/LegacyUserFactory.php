@@ -1,24 +1,38 @@
 <?php
 
+use App\Models\LegacyEmployee;
+use App\Models\LegacyUser;
+use App\Models\LegacyUserType;
 use Faker\Generator as Faker;
 
-/*
-|--------------------------------------------------------------------------
-| Model Factories
-|--------------------------------------------------------------------------
-|
-| This directory should contain each of the model factory definitions for
-| your application. Factories provide a convenient way to generate new
-| model instances for testing / seeding your application's database.
-|
-*/
-
-$factory->define(App\LegacyUser::class, function (Faker $faker) {
+$factory->define(LegacyUser::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'email_verified_at' => now(),
-        'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
-        'remember_token' => str_random(10),
+        'cod_usuario' => function () {
+            return factory(LegacyEmployee::class)->create()->ref_cod_pessoa_fj;
+        },
+        'ref_cod_instituicao' => 1,
+        'ref_funcionario_cad' => function () {
+            return factory(LegacyEmployee::class)->create()->ref_cod_pessoa_fj;
+        },
+        'ref_cod_tipo_usuario' => function () {
+            return factory(LegacyUserType::class)->create()->cod_tipo_usuario;
+        },
+        'data_cadastro' => $faker->dateTime,
+        'ativo' => 1,
+    ];
+});
+
+$factory->state(LegacyUser::class, 'unique', function () {
+
+    $user = LegacyUser::query()->first();
+
+    if (empty($user)) {
+        $user = factory(LegacyUser::class)->create();
+    }
+
+    return [
+        'cod_usuario' => $user->getKey(),
+        'ref_funcionario_cad' => $user->ref_funcionario_cad,
+        'ref_cod_tipo_usuario' => $user->cod_tipo_usuario,
     ];
 });

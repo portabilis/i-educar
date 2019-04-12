@@ -64,8 +64,7 @@ class indice extends clsDetalhe
         
         if( ! $registro )
         {
-            header( "location: public_pais_lst.php" );
-            die();
+            $this->simpleRedirect('public_pais_lst.php');
         }
         
         if( $registro["nome"] )

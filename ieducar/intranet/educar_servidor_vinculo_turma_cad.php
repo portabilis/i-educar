@@ -219,8 +219,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-        header('Location: ' . $backUrl);
-        die();
+        $this->simpleRedirect($backUrl);
     }
 
     public function Editar()
@@ -257,8 +256,7 @@ class indice extends clsCadastro
         if ($editou) {
             $professorTurma->gravaComponentes($this->id, $this->componentecurricular);
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-            header('Location: ' . $backUrl);
-            die();
+            $this->simpleRedirect($backUrl);
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
@@ -282,8 +280,7 @@ class indice extends clsCadastro
         $professorTurma->excluir();
 
         $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-        header('Location:' . $backUrl);
-        die();
+        $this->simpleRedirect($backUrl);
     }
 }
 

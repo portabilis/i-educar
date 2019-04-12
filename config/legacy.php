@@ -38,9 +38,6 @@ return [
 
     'path' => env('LEGACY_PATH', 'ieducar'),
 
-
-    'env' => env('LEGACY_ENV', 'development'),
-
     /*
     |--------------------------------------------------------------------------
     | Migrations
@@ -56,4 +53,6 @@ return [
     ],
 
     'env' => env('LEGACY_ENV', 'local'),
+
+    'gtm' => env('GOOGLE_TAG_MANAGER'),
 ];

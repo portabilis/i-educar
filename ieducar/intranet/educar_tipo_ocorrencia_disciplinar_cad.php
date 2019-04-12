@@ -130,9 +130,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($tipoOcorrenciaDisciplinar);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_tipo_ocorrencia_disciplinar_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_tipo_ocorrencia_disciplinar_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -156,9 +154,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($tipoOcorrenciaDisciplinarDetalheAntes, $tipoOcorrenciaDisciplinarDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_tipo_ocorrencia_disciplinar_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_tipo_ocorrencia_disciplinar_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -179,9 +175,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($tipoOcorrenciaDisciplinar);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_tipo_ocorrencia_disciplinar_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_tipo_ocorrencia_disciplinar_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

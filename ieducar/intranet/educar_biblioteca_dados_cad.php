@@ -24,6 +24,7 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -105,7 +106,7 @@ class indice extends clsCadastro
         }
 
         if( !$permitido)
-            header( "Location: educar_biblioteca_dados_lst.php" );
+            $this->simpleRedirect('educar_biblioteca_dados_lst.php');
         if( is_numeric( $this->cod_biblioteca ) )
         {
 
@@ -327,8 +328,7 @@ class indice extends clsCadastro
                 }
 
                 $this->mensagem .= 'Edição efetuada com sucesso.<br />';
-                header('Location: educar_biblioteca_dados_det.php');
-                die();
+                $this->simpleRedirect('educar_biblioteca_dados_det.php');
               }
             }
         //-----------------------FIM DIA DA SEMANA------------------------//
@@ -357,9 +357,7 @@ class indice extends clsCadastro
             }
         //-----------------------FIM EDITA FERIADO------------------------//
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_biblioteca_dados_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_biblioteca_dados_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -388,9 +386,7 @@ class indice extends clsCadastro
                 if ( $excluiu2 )
                 {
                     $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-                    header( "Location: educar_biblioteca_dados_lst.php" );
-                    die();
-                    return true;
+                    $this->simpleRedirect('educar_biblioteca_dados_lst.php');
                 }
             }
         }

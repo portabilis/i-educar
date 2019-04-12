@@ -329,7 +329,7 @@ class clsPmieducarMatriculaTurma
         $gruda = ", ";
       }
 
-      $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao, $this->sequencial);
+      $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao);
       $this->sequencial_fechamento = $sequencialEnturmacao->ordenaSequencialNovaMatricula();
 
       if(is_numeric($this->sequencial_fechamento)){
@@ -366,6 +366,8 @@ class clsPmieducarMatriculaTurma
       is_numeric($this->ref_usuario_exc) && is_numeric($this->sequencial)) {
       $db = new clsBanco();
       $set = "";
+
+      $gruda = '';
 
       if (is_numeric($this->ref_usuario_exc)) {
         $set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
@@ -435,9 +437,13 @@ class clsPmieducarMatriculaTurma
       }
 
       if ($this->removerSequencial){
-        $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao, $this->sequencial);
+        $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao);
         $this->sequencial_fechamento = $sequencialEnturmacao->ordenaSequencialExcluiMatricula();
       }
+
+      // FIXME
+      // Este trecho de código não é utilizado na atualização do registro, ou
+      // seja, não serve para nada. Verificar o impacto ao corrigi-lo.
 
       if(is_numeric($this->sequencial_fechamento)){
         $campos .= "{$gruda}sequencial_fechamento";
@@ -487,6 +493,10 @@ class clsPmieducarMatriculaTurma
     $int_turma_turno_id = FALSE, $int_ano_turma = FALSE, $dependencia = NULL,
     $apenasTurmasMultiSeriadas = FALSE, $apenasTurmasUnificadas = FALSE)
   {
+    $nome = '';
+    $tab_aluno = '';
+    $where_nm_aluno = '';
+
     if ($bool_get_nome_aluno === true) {
       $nome = " ,(SELECT (nome)
                         FROM cadastro.pessoa
@@ -496,6 +506,9 @@ class clsPmieducarMatriculaTurma
 
       $where_nm_aluno = " AND a.cod_aluno = m.ref_cod_aluno";
     }
+
+    $from = '';
+    $where = '';
 
     if ( $bool_escola_andamento) {
       if ($pegar_ano_em_andamento) {
