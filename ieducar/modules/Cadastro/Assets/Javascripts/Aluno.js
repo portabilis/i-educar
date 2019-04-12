@@ -1076,12 +1076,6 @@ var handleGetPersonDetails = function (dataResponse) {
     $j('#data_emissao_certidao_civil').val(dataResponse.data_emissao_cert_civil);
     $j('#cartorio_emissao_certidao_civil').val(dataResponse.cartorio_cert_civil);
 
-    $inepCartorio = $j('#cartorio_cert_civil_inep');
-    if (dataResponse.id_cartorio != null && dataResponse.nome_cartorio != null) {
-        $inepCartorio.val(dataResponse.id_cartorio + ' - ' + dataResponse.nome_cartorio);
-    }
-    $j('#cartorio_cert_civil_inep_id').val(dataResponse.cartorio_cert_civil_inep);
-
     // # TODO show aluno photo
     //$j('#aluno_foto').val(dataResponse.url_foto);
     canShowParentsFields();
@@ -1100,16 +1094,12 @@ var checkTipoCertidaoCivil = function () {
 
     $j('#uf_emissao_certidao_civil').makeUnrequired();
     $j('#data_emissao_certidao_civil').makeUnrequired();
-    $j('#cartorio_cert_civil_inep_id').makeUnrequired();
-    $j('#cartorio_cert_civil_inep').makeUnrequired();
 
     if ($j.inArray(tipoCertidaoCivil, ['91', '92']) > -1) {
         $certidaoCivilFields.show();
         if (obrigarCamposCenso) {
           $j('#uf_emissao_certidao_civil').makeRequired();
           $j('#data_emissao_certidao_civil').makeRequired();
-          $j('#cartorio_cert_civil_inep_id').makeRequired();
-          $j('#cartorio_cert_civil_inep').makeRequired();
           $certidaoCivilFields.makeRequired();
         }
         $j('#tr_tipo_certidao_civil td:first span').html('Tipo certidão civil');
