@@ -115,8 +115,7 @@ class indice extends clsDetalhe
         }
 
         if (!$registro) {
-            header('Location: educar_turma_lst.php');
-            die();
+            $this->simpleRedirect('educar_turma_lst.php');
         }
 
         if (class_exists('clsPmieducarTurmaTipo')) {

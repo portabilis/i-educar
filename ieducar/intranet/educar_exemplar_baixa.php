@@ -213,9 +213,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("exemplar", $this->pessoa_logada, $this->cod_exemplar);
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_exemplar_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_exemplar_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";

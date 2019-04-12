@@ -209,9 +209,7 @@ class indice extends clsCadastro
       }
 
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      header( "Location: educar_matricula_historico_lst.php?ref_cod_matricula=".$this->ref_cod_matricula);
-      die();
-      return true;
+      $this->simpleRedirect("educar_matricula_historico_lst.php?ref_cod_matricula=".$this->ref_cod_matricula);
     }
 
     $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -231,9 +229,7 @@ class indice extends clsCadastro
     if( $excluiu )
     {
       $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-      header( "Location: educar_matricula_historico_lst.php?ref_cod_matricula=".$this->ref_cod_matricula);
-      die();
-      return true;
+      $this->simpleRedirect("educar_matricula_historico_lst.php?ref_cod_matricula=".$this->ref_cod_matricula);
     }
 
     $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

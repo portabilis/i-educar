@@ -78,8 +78,7 @@ class indice extends clsDetalhe
     $registro = array_shift($lst_obj);
 
     if (! $registro) {
-      header('Location: educar_reserva_vaga_lst.php');
-      die();
+      $this->simpleRedirect('educar_reserva_vaga_lst.php');
     }
 
     // Instituição

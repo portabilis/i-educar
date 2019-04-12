@@ -110,8 +110,7 @@ class indice extends clsDetalhe
     }
 
     if (!$registro) {
-      header('Location: educar_reservada_vaga_lst.php');
-      die();
+        $this->simpleRedirect('educar_reservada_vaga_lst.php');
     }
 
     // Atribui códigos a variáveis de instância
@@ -217,9 +216,8 @@ class indice extends clsDetalhe
 
     if ($excluiu) {
       $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-      header('Location: educar_reservada_vaga_lst.php?ref_cod_escola=' .
-        $this->ref_cod_escola . '&ref_cod_serie=' . $this->ref_cod_serie);
-      die();
+      $this->simpleRedirect('educar_reservada_vaga_lst.php?ref_cod_escola=' .
+          $this->ref_cod_escola . '&ref_cod_serie=' . $this->ref_cod_serie);
     }
 
     $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';

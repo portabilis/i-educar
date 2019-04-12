@@ -70,8 +70,7 @@ class indice extends clsDetalhe
         $this->ref_cod_cliente_tipo = $_GET["cod_cliente_tipo"];
 
         if ( !( isset( $this->cod_cliente ) && isset( $this->ref_cod_cliente_tipo ) ) ) {
-            header( "location: educar_definir_cliente_tipo_lst.php" );
-            die();
+            $this->simpleRedirect("educar_definir_cliente_tipo_lst.php");
         }
 
         $tmp_obj = new clsPmieducarCliente();
@@ -92,8 +91,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_definir_cliente_tipo_lst.php" );
-            die();
+            $this->simpleRedirect("educar_definir_cliente_tipo_lst.php");
         }
         else {
             foreach ( $registro as $cliente )

@@ -98,8 +98,7 @@ class indice extends clsCadastro
 
 
         if ($volta){
-            header('Location: transporte_rota_lst.php');
-            die();
+            $this->simpleRedirect('transporte_rota_lst.php');
         }
         $this->url_cancelar = "transporte_rota_det.php?cod_rota={$this->cod_rota}";
         $this->nome_url_cancelar = "Cancelar";
@@ -232,10 +231,7 @@ class indice extends clsCadastro
                 }
             }
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: transporte_rota_det.php?cod_rota={$this->cod_rota}" );
-            die();
-            return true;
-
+            $this->simpleRedirect("transporte_rota_det.php?cod_rota={$this->cod_rota}");
         }
 
     }
