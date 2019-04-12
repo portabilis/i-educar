@@ -17,7 +17,7 @@ class InsertSchoolManagers extends Migration
                 (
                     SELECT ref_idpes_gestor,
                            cod_escola,
-                           cargo_gestor,
+                           CASE WHEN cargo_gestor NOT IN (1,2) THEN null ELSE cargo_gestor END,
                            true
                       FROM pmieducar.escola
                      WHERE escola.ref_idpes_gestor IS NOT NULL
