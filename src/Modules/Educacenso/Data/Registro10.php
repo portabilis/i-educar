@@ -39,6 +39,13 @@ class Registro10 extends AbstractRegistro
         $data->redeLocal = Portabilis_Utils_Database::pgArrayToArray($data->redeLocal);
         $data->orgaosColegiados = Portabilis_Utils_Database::pgArrayToArray($data->orgaosColegiados);
         $data->reservaVagasCotas = Portabilis_Utils_Database::pgArrayToArray($data->reservaVagasCotas);
+        $data->salasGerais = Portabilis_Utils_Database::pgArrayToArray($data->salasGerais);
+        $data->salasFuncionais = Portabilis_Utils_Database::pgArrayToArray($data->salasFuncionais);
+        $data->banheiros = Portabilis_Utils_Database::pgArrayToArray($data->banheiros);
+        $data->laboratorios = Portabilis_Utils_Database::pgArrayToArray($data->laboratorios);
+        $data->salasAtividades = Portabilis_Utils_Database::pgArrayToArray($data->salasAtividades);
+        $data->dormitorios = Portabilis_Utils_Database::pgArrayToArray($data->dormitorios);
+        $data->areasExternas = Portabilis_Utils_Database::pgArrayToArray($data->areasExternas);
         $data->nomeEscola = strtoupper($data->nomeEscola);
 
         return $data;

@@ -419,37 +419,37 @@ class Registro10 implements RegistroEducacenso
     public $possuiDependencias;
 
     /**
-     * @var string
+     * @var array
      */
     public $salasGerais;
 
     /**
-     * @var string
+     * @var array
      */
     public $salasFuncionais;
 
     /**
-     * @var string
+     * @var array
      */
     public $banheiros;
 
     /**
-     * @var string
+     * @var array
      */
     public $laboratorios;
 
     /**
-     * @var string
+     * @var array
      */
     public $salasAtividades;
 
     /**
-     * @var string
+     * @var array
      */
     public $dormitorios;
 
     /**
-     * @var string
+     * @var array
      */
     public $areasExternas;
 
@@ -712,6 +712,14 @@ class Registro10 implements RegistroEducacenso
     public function usoInternetInexistenteEOutrosCamposPreenchidos()
     {
         return in_array(UsoInternet::NAO_POSSUI, $this->usoInternet) && count($this->usoInternet) > 1;
+    }
+
+    /**
+     * @return bool
+     */
+    public function alunosUsamInternet()
+    {
+        return in_array(UsoInternet::ALUNOS, $this->usoInternet);
     }
 
     /**

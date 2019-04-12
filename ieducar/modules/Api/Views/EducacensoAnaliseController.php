@@ -485,7 +485,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->usaInternet() && empty($escola->equipamentosAcessoInternet)) {
+        if ($escola->alunosUsamInternet() && empty($escola->equipamentosAcessoInternet)) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se alguma opção de equipamentos que os aluno(a)s usam para acessar a internet da escola foi informada.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Campo: Equipamentos que os aluno(a)s usam para acessar a internet da escola)',
@@ -548,7 +548,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if (!is_null($escola->educacaoIndigena) && !$escola->linguaMinistrada) {
+        if ($escola->educacaoIndigena == 1 && !$escola->linguaMinistrada) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a língua em que o ensino é ministrado não foi informada.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Língua em que o ensino é ministrado)',
