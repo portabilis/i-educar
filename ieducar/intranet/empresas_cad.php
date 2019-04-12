@@ -89,7 +89,7 @@ class indice extends clsCadastro
     {
         $this->busca_empresa = $_POST['busca_empresa'];
         $this->cod_pessoa_fj = $_GET['idpes'];
-        $this->idpes_cad = $_SESSION['id_pessoa'];
+        $this->idpes_cad = $this->pessoa_logada;
 
         if ($this->busca_empresa) {
             $this->cnpj = $this->busca_empresa;
@@ -276,7 +276,7 @@ class indice extends clsCadastro
 
             $this->insc_est = idFederal2int($this->insc_est);
 
-            $this->idpes_cad = $_SESSION["id_pessoa"];
+            $this->idpes_cad = $this->pessoa_logada;
 
             $objPessoa = new clsPessoa_(false, $this->razao_social, $this->idpes_cad, $this->url, "J", false, false,
                 $this->email);
@@ -336,8 +336,7 @@ class indice extends clsCadastro
                     $this->cidade, $this->sigla_uf, false);
                 $objEnderecoExterno->cadastra();
             }
-            header("Location: empresas_lst.php");
-            return true;
+            $this->simpleRedirect('empresas_lst.php');
         }
 
         $this->mensagem = "Ja existe uma empresa cadastrada com este CNPJ. ";
@@ -439,14 +438,12 @@ class indice extends clsCadastro
                 $objEnderecoExterno2->cadastra();
             }
         }
-        header("Location: empresas_lst.php");
-        return true;
+        $this->simpleRedirect('empresas_lst.php');
     }
 
     function Excluir()
     {
-        header("LOCATION: empresas_lst.php");
-        return true;
+        $this->simpleRedirect('empresas_lst.php');
     }
 
     protected function inputTelefone($type, $typeLabel = '')

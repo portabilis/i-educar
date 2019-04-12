@@ -28,6 +28,8 @@
  * @version   $Id$
  */
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -89,9 +91,7 @@ class indice extends clsConfig
 
   function renderHTML()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    $this->pessoa_logada = Session::get('id_pessoa');
 
     $obj_permissoes = new clsPermissoes();
 

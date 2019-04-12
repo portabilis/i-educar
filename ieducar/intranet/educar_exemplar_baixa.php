@@ -74,9 +74,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         //$retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->cod_exemplar=$_GET["cod_exemplar"];
 
@@ -172,9 +170,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-/*      @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+/*
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 606, $this->pessoa_logada, 11,  "educar_exemplar_lst.php" );
@@ -199,9 +195,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
 
         $obj_permissoes = new clsPermissoes();
@@ -219,9 +213,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("exemplar", $this->pessoa_logada, $this->cod_exemplar);
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_exemplar_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_exemplar_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -231,9 +223,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-    /*  @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+    /*
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 606, $this->pessoa_logada, 11,  "educar_exemplar_lst.php" );

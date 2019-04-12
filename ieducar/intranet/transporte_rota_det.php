@@ -78,10 +78,6 @@ class indice extends clsDetalhe
 
   function Gerar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     // Verificação de permissão para cadastro.
     $this->obj_permissao = new clsPermissoes();
 
@@ -96,8 +92,7 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->detalhe();
 
     if (! $registro) {
-      header('Location: transporte_rota_lst.php');
-      die();
+        $this->simpleRedirect('transporte_rota_lst.php');
     }
 
     $this->addDetalhe( array("Ano", $registro['ano']) );
@@ -111,7 +106,7 @@ class indice extends clsDetalhe
     if (trim($registro['km_npav'])!='')
       $this->addDetalhe( array("Percurso não pavimentado", $registro['km_npav'].' km'));
 
-    $this->addDetalhe( array("Terceirizado", ($registro['tipo_rota'] == 'S' ? 'Sim' : 'Não' )));
+    $this->addDetalhe( array("Terceirizado", ($registro['tercerizado'] == 'S' ? 'Sim' : 'Não' )));
 
     // Itinerário
 

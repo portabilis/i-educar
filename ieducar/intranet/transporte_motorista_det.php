@@ -74,10 +74,6 @@ class indice extends clsDetalhe
 
   function Gerar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     // Verificação de permissão para cadastro.
     $this->obj_permissao = new clsPermissoes();
 
@@ -92,8 +88,7 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->detalhe();
 
     if (! $registro) {
-      header('Location: transporte_motorista_lst.php');
-      die();
+        $this->simpleRedirect('transporte_motorista_lst.php');
     }
 
     $this->addDetalhe( array("Código do motorista", $cod_motorista));

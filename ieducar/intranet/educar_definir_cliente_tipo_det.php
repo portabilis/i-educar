@@ -63,10 +63,6 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = "Cliente - Detalhe";
         
 
@@ -74,8 +70,7 @@ class indice extends clsDetalhe
         $this->ref_cod_cliente_tipo = $_GET["cod_cliente_tipo"];
 
         if ( !( isset( $this->cod_cliente ) && isset( $this->ref_cod_cliente_tipo ) ) ) {
-            header( "location: educar_definir_cliente_tipo_lst.php" );
-            die();
+            $this->simpleRedirect("educar_definir_cliente_tipo_lst.php");
         }
 
         $tmp_obj = new clsPmieducarCliente();
@@ -96,8 +91,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_definir_cliente_tipo_lst.php" );
-            die();
+            $this->simpleRedirect("educar_definir_cliente_tipo_lst.php");
         }
         else {
             foreach ( $registro as $cliente )

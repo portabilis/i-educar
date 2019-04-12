@@ -60,10 +60,6 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = "Tipo Ensino - Detalhe";
         
 
@@ -71,10 +67,10 @@ class indice extends clsDetalhe
 
         $tmp_obj = new clsPmieducarTipoEnsino( $this->cod_tipo_ensino,null,null,null,null,null,1);
         if( !$registro = $tmp_obj->detalhe())
-            header("Location: educar_tipo_ensino_lst.php");
+            $this->simpleRedirect('educar_tipo_ensino_lst.php');
 
         if(!$registro["ativo"] )
-            header("Location: educar_tipo_ensino_lst.php");
+            $this->simpleRedirect('educar_tipo_ensino_lst.php');
 
         if( $registro["cod_tipo_ensino"] )
         {

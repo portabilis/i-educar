@@ -66,10 +66,6 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = "Categoria Nivel - Detalhe";
         $this->addBanner("imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet");
 
@@ -80,8 +76,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_categoria_nivel_lst.php" );
-            die();
+            $this->simpleRedirect('educar_categoria_nivel_lst.php');
         }
 
 

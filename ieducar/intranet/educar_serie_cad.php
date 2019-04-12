@@ -58,9 +58,7 @@ class indice extends clsCadastro
     public function Inicializar()
     {
         $retorno = 'Novo';
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->cod_serie=$_GET['cod_serie'];
 
@@ -263,9 +261,7 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
         $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
@@ -305,8 +301,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($serie);
 
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            header('Location: educar_serie_lst.php');
-            die();
+            $this->simpleRedirect('educar_serie_lst.php');
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
@@ -317,9 +312,7 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
         $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
@@ -358,8 +351,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($detalheAntigo, $detalheAtual);
 
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-            header('Location: educar_serie_lst.php');
-            die();
+            $this->simpleRedirect('educar_serie_lst.php');
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
@@ -370,9 +362,7 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj = new clsPmieducarSerie(
             $this->cod_serie,
@@ -402,8 +392,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($serie);
 
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-            header('Location: educar_serie_lst.php');
-            die();
+            $this->simpleRedirect('educar_serie_lst.php');
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';

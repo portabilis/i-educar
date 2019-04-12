@@ -19,6 +19,9 @@ class SituacaoFuncionamento implements EducacensoExportRule
             $registro00->inicioAnoLetivo = null;
             $registro00->fimAnoLetivo = null;
             $registro00->regulamentacao = null;
+            $registro00->esferaFederal = null;
+            $registro00->esferaEstadual = null;
+            $registro00->esferaMunicipal = null;
             $registro00->unidadeVinculada = null;
             $registro00->mantenedoraEscolaPrivada = null;
             $registro00->mantenedoraEmpresa = null;

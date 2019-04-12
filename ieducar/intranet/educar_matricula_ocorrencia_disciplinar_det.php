@@ -62,10 +62,6 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = "Matricula Ocorrencia Disciplinar - Detalhe";
         
 
@@ -77,8 +73,7 @@ class indice extends clsDetalhe
         $registro = $tmp_obj->detalhe();
         if( ! $registro )
         {
-            header( "location: educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}" );
-            die();
+            $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
         }
 
 

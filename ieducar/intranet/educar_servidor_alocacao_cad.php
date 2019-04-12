@@ -49,9 +49,7 @@ class indice extends clsCadastro
     public function Inicializar()
     {
         $retorno = 'Novo';
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $ref_cod_servidor        = $_GET['ref_cod_servidor'];
         $ref_ref_cod_instituicao = $_GET['ref_cod_instituicao'];
@@ -82,8 +80,7 @@ class indice extends clsCadastro
             $this->ref_cod_servidor        = $ref_cod_servidor;
             $this->ref_cod_instituicao = $ref_ref_cod_instituicao;
         } else {
-            header('Location: educar_servidor_lst.php');
-            die();
+            $this->simpleRedirect('educar_servidor_lst.php');
         }
 
         $obj_permissoes = new clsPermissoes();
@@ -209,9 +206,7 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
@@ -298,8 +293,8 @@ class indice extends clsCadastro
         }
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-        header('Location: ' . sprintf('educar_servidor_alocacao_det.php?cod_servidor_alocacao=%d', $this->cod_servidor_alocacao));
-        die();
+        $this->simpleRedirect(sprintf('educar_servidor_alocacao_det.php?cod_servidor_alocacao=%d', $this->cod_servidor_alocacao));
+
     }
 
     public function Editar()
@@ -309,9 +304,7 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         if ($this->cod_servidor_alocacao) {
             $obj_tmp = new clsPmieducarServidorAlocacao($this->cod_servidor_alocacao, null, $this->pessoa_logada);
@@ -319,8 +312,7 @@ class indice extends clsCadastro
 
             if ($excluiu) {
                 $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
-                header('Location: '. sprintf('educar_servidor_alocacao_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d', $this->ref_cod_servidor, $this->ref_ref_cod_instituicao));
-                die();
+                $this->simpleRedirect(sprintf('educar_servidor_alocacao_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d', $this->ref_cod_servidor, $this->ref_ref_cod_instituicao));
             }
         }
 

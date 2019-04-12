@@ -57,9 +57,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->cod_deficiencia=$_GET["cod_deficiencia"];
 
@@ -105,9 +103,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
 
 
@@ -120,10 +116,7 @@ class indice extends clsCadastro
                         parent.document.getElementById('ref_cod_deficiencia').value = '$cadastrou';
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
-//          $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-//          header( "Location: educar_deficiencia_lst.php" );
             die();
-            return true;
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -133,9 +126,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        /*@session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        /*
 
 
 
@@ -156,9 +147,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        /*@session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        /*
 
 
 

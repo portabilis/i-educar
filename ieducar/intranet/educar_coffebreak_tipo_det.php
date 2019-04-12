@@ -59,10 +59,6 @@ class indice extends clsDetalhe
     
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-        
         $this->titulo = "Coffebreak Tipo - Detalhe";
         
 
@@ -73,8 +69,7 @@ class indice extends clsDetalhe
         
         if( ! $registro || !$registro["ativo"] )
         {
-            header( "location: educar_coffebreak_tipo_lst.php" );
-            die();
+            $this->simpleRedirect('educar_coffebreak_tipo_lst.php');
         }
 
 

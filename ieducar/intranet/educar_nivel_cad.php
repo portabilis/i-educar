@@ -71,9 +71,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->ref_cod_categoria_nivel = $_GET["cod_categoria"];
 
@@ -118,8 +116,7 @@ class indice extends clsCadastro
         }
         else
         {
-            header("location:educar_categoria_nivel_lst.php");
-            die();
+            $this->simpleRedirect('educar_categoria_nivel_lst.php');
         }
 
         $this->url_cancelar = "educar_categoria_nivel_det.php?cod_categoria_nivel={$this->cod_nivel}";
@@ -159,9 +156,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 829, $this->pessoa_logada, 3,  "educar_categoria_nivel_det.php?cod_categoria_nivel={$this->cod_nivel}",true );
@@ -202,10 +197,7 @@ class indice extends clsCadastro
                 $obj->desativaTodos($niveis);
             }
 
-            header("location:educar_categoria_nivel_det.php?cod_categoria_nivel={$this->ref_cod_categoria_nivel}");
-            die();
-
-            return true;
+            $this->simpleRedirect("educar_categoria_nivel_det.php?cod_categoria_nivel={$this->ref_cod_categoria_nivel}");
         }
 
 
@@ -223,9 +215,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 829, $this->pessoa_logada, 3,  "educar_nivel_lst.php", true );
@@ -236,9 +226,7 @@ class indice extends clsCadastro
         if( $excluiu )
         {
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header("location:educar_categoria_nivel_det.php?cod_categoria_nivel={$this->ref_cod_categoria_nivel}");
-            die();
-            return true;
+            $this->simpleRedirect("educar_categoria_nivel_det.php?cod_categoria_nivel={$this->ref_cod_categoria_nivel}");
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

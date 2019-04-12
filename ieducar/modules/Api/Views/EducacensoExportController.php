@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Educacenso\Registro00;
-use App\Services\EducacensoRepository;
+use App\Repositories\EducacensoRepository;
 use iEducar\Modules\Educacenso\ArrayToCenso;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaAluno;
@@ -9,9 +9,11 @@ use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaProfessor;
 use iEducar\Modules\Educacenso\Deficiencia\MapeamentoDeficienciasAluno;
 use iEducar\Modules\Educacenso\Deficiencia\ValueDeficienciaMultipla;
 use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
+use iEducar\Modules\Educacenso\ExportRule\Regulamentacao;
 use iEducar\Modules\Educacenso\ExportRule\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Formatters;
 use iEducar\Modules\Educacenso\ValueTurmaMaisEducacao;
+use Illuminate\Support\Facades\Session;
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'include/clsBanco.inc.php';
@@ -110,10 +112,7 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosCensoPorEscola($escolaId, $ano, $data_ini, $data_fim)
     {
-
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        $this->pessoa_logada = Session::get('id_pessoa');
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
@@ -150,9 +149,7 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosCensoPorEscolaFase2($escolaId, $ano, $data_ini, $data_fim)
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        $this->pessoa_logada = Session::get('id_pessoa');
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
@@ -295,6 +292,7 @@ class EducacensoExportController extends ApiCoreController
 
         $escola = SituacaoFuncionamento::handle($escola);
         $escola = DependenciaAdministrativa::handle($escola);
+        $escola = Regulamentacao::handle($escola);
 
         $data = [
             $escola->registro,
@@ -341,7 +339,7 @@ class EducacensoExportController extends ApiCoreController
             $escola->codigoIes,
         ];
 
-        return ArrayToCenso::format($data);
+        return ArrayToCenso::format($data) . PHP_EOL;
     }
 
     protected function exportaDadosRegistro10($escolaId, $ano)

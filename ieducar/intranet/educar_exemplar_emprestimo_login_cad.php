@@ -24,6 +24,12 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -55,11 +61,13 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
-            unset($_SESSION['emprestimo']['cod_cliente']);
-            unset($_SESSION['emprestimo']['ref_cod_biblioteca']);
-        @session_write_close();
+
+        Session::forget([
+            'emprestimo.cod_cliente',
+            'emprestimo.ref_cod_biblioteca',
+        ]);
+        Session::save();
+        Session::start();
 
 //      $this->url_cancelar = "educar_exemplar_emprestimo_lst.php";
 //      $this->nome_url_cancelar = "Cancelar";
@@ -116,22 +124,23 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 610, $this->pessoa_logada, 11,  "educar_exemplar_emprestimo_lst.php" );
 
         if ($this->ref_cod_cliente)
         {
-            @session_start();
-                $_SESSION['emprestimo']['cod_cliente'] = $this->ref_cod_cliente;
-                $_SESSION['emprestimo']['ref_cod_biblioteca'] = $this->ref_cod_biblioteca;
-            @session_write_close();
-            header( "Location: educar_exemplar_emprestimo_cad.php" );
-            die();
-            return true;
+            Session::put([
+                'emprestimo.cod_cliente' => $this->ref_cod_cliente,
+                'emprestimo.ref_cod_biblioteca' => $this->ref_cod_biblioteca,
+            ]);
+
+            throw new HttpResponseException(
+                new RedirectResponse(
+                    URL::to('intranet/educar_exemplar_emprestimo_cad.php')
+                )
+            );
         }
         else if($this->login_ && $this->senha_)
         {
@@ -161,14 +170,16 @@ class indice extends clsCadastro
 
                         if ($this->ref_cod_biblioteca == $biblioteca_cliente)
                         {
-                            @session_start();
-                                $_SESSION['emprestimo']['cod_cliente'] = $cod_cliente;
-                                $_SESSION['emprestimo']['ref_cod_biblioteca'] = $this->ref_cod_biblioteca;
-                            @session_write_close();
-                            $this->mensagem .= "Login efetuado com sucesso.<br>";
-                            header( "Location: educar_exemplar_emprestimo_cad.php" );
-                            die();
-                            return true;
+                            Session::put([
+                                'emprestimo.cod_cliente' => $cod_cliente,
+                                'emprestimo.ref_cod_biblioteca' => $this->ref_cod_biblioteca,
+                            ]);
+
+                            throw new HttpResponseException(
+                                new RedirectResponse(
+                                    URL::to('intranet/educar_exemplar_emprestimo_cad.php')
+                                )
+                            );
                         }
                     }
                     echo "<script> alert('Cliente não pertence a biblioteca escolhida!'); </script>";

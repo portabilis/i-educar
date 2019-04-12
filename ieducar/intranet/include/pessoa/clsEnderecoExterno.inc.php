@@ -28,6 +28,8 @@
  * @version   $Id$
  */
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/clsBanco.inc.php';
 require_once 'include/Geral.inc.php';
 
@@ -101,8 +103,8 @@ class clsEnderecoExterno
       $this->sigla_uf = $sigla_uf;
     }
 
-    $this->idpes_cad        = $idpes_cad ? $idpes_cad : $_SESSION['id_pessoa'];
-    $this->idpes_rev        = $idpes_rev ? $idpes_rev : $_SESSION['id_pessoa'];
+    $this->idpes_cad        = $idpes_cad ? $idpes_cad : Session::get('id_pessoa');
+    $this->idpes_rev        = $idpes_rev ? $idpes_rev : Session::get('id_pessoa');
     $this->reside_desde     = $reside_desde;
     $this->bloco            = $bloco;
     $this->apartamento      = $apartamento;
