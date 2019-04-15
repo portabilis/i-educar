@@ -486,15 +486,6 @@ mailling_grafico_enviados_semana.php
 mailling_grupos_cad.php
 mailling_grupos_det.php
 mailling_grupos_lst.php
-menu_cad.php
-menu_det.php
-menu_lst.php
-menu_menu_cad.php
-menu_menu_det.php
-menu_menu_lst.php
-menu_suspenso_cad.php
-menu_suspenso_det.php
-menu_suspenso_lst.php
 meusdados.php
 not_tipos_cad.php
 not_tipos_det.php
@@ -503,9 +494,6 @@ noticias_cad.php
 noticias_det.php
 noticias_grafico_tipo.php
 noticias_lst.php
-opcao_menu_cad.php
-opcao_menu_det.php
-opcao_menu_lst.php
 oprot_setor_cad.php
 oprot_setor_det.php
 oprot_setor_lst.php
@@ -576,8 +564,6 @@ transporte_rota_lst.php
 transporte_veiculo_det.php
 transporte_veiculo_lst.php
 troca_senha_pop.php
-tutormenu_det.php
-tutormenu_lst.php
 urbano_cep_logradouro_cad.php
 urbano_cep_logradouro_det.php
 urbano_cep_logradouro_lst.php
