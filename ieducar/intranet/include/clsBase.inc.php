@@ -58,30 +58,6 @@ class clsBase extends clsConfig
     var $script_footer;
     var $prog_alert;
 
-    public $configuracoes;
-
-    protected function setupConfigs()
-    {
-        $configuracoes = new clsPmieducarConfiguracoesGerais();
-        $this->configuracoes = $configuracoes->detalhe();
-    }
-
-    protected function mostraSupenso()
-    {
-        if (empty($this->configuracoes)) {
-            $this->setupConfigs();
-        }
-
-        $nivel = Session::get('nivel');
-
-        if (!$this->configuracoes['active_on_ieducar'] && $nivel !== 1) {
-            header('HTTP/1.1 503 Service Temporarily Unavailable');
-            header("Location: suspenso.php");
-
-            die();
-        }
-    }
-
     function OpenTpl($template)
     {
 
@@ -371,7 +347,6 @@ class clsBase extends clsConfig
         $cronometro = new clsCronometro();
         $cronometro->marca('inicio');
 
-        $this->mostraSupenso();
         $this->Formular();
         $this->VerificaPermicao();
         $this->CadastraAcesso();
