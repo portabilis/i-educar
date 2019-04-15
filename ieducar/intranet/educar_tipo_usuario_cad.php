@@ -82,7 +82,7 @@ class indice extends clsCadastro
             $obj = new clsPmieducarTipoUsuario($this->cod_tipo_usuario);
 
             if (!$registro = $obj->detalhe()) {
-                header('Location: educar_tipo_usuario_lst.php');
+                $this->simpleRedirect('educar_tipo_usuario_lst.php');
             }
 
             if ($registro) {
@@ -332,8 +332,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem .= 'Altera&ccedil;&atilde;o efetuada com sucesso.<br>';
-        header('Location: educar_tipo_usuario_lst.php');
-        die();
+        $this->simpleRedirect('educar_tipo_usuario_lst.php');
     }
 
     function Excluir()
@@ -354,8 +353,7 @@ class indice extends clsCadastro
             $menuTipoUsuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario);
             $menuTipoUsuario->excluirTudo();
 
-            header('Location: educar_tipo_usuario_lst.php');
-            die();
+            $this->simpleRedirect('educar_tipo_usuario_lst.php');
         }
 
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';

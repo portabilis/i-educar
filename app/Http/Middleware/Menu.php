@@ -26,7 +26,7 @@ class Menu
 
     private function getCachedMenu()
     {
-        $cache = Cache::tags(['menu', config('app.name')]);
+        $cache = Cache::tags(['menu', config('app.nickname')]);
 
         $cacheKey =  'menu_' . md5(session('id_pessoa'));
 

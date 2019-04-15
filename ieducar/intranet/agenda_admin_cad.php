@@ -24,6 +24,7 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 $desvio_diretorio = "";
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
@@ -215,9 +216,8 @@ class indice extends clsCadastro
             $id_agenda = $db->insertId( "portal.agenda_cod_agenda_seq" );
 
             $db->Consulta( "INSERT INTO portal.agenda_responsavel( ref_ref_cod_pessoa_fj, ref_cod_agenda ) VALUES( '{$this->pessoa_logada}', '{$id_agenda}' )" );
-            header( "location: agenda_admin_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('agenda_admin_lst.php');
         }
         else
         {
@@ -248,9 +248,7 @@ class indice extends clsCadastro
             }
 
             $db->Consulta( "UPDATE portal.agenda SET ref_ref_cod_pessoa_exc = '{$this->pessoa_logada}', data_edicao = NOW() $set WHERE cod_agenda = '{$this->cod_agenda}'" );
-            header( "location: agenda_admin_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('agenda_admin_lst.php');
         }
         else
         {
@@ -271,9 +269,7 @@ class indice extends clsCadastro
             $db->Consulta( "DELETE FROM portal.agenda_responsavel WHERE ref_cod_agenda={$this->cod_agenda}" );
 
             $db->Consulta( "DELETE FROM portal.agenda WHERE cod_agenda={$this->cod_agenda}" );
-            header( "location: agenda_admin_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('agenda_admin_lst.php');
         }
         $this->mensagem = "Codigo da Agenda inválido!";
         return false;

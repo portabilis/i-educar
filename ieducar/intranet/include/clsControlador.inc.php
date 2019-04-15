@@ -5,13 +5,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\View;
 
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
-require_once 'Portabilis/Messenger.php';
-require_once 'Portabilis/Mailer.php';
-require_once 'Portabilis/Utils/User.php';
-require_once 'Portabilis/Utils/ReCaptcha.php';
 
 class clsControlador
 {
@@ -145,58 +142,17 @@ class clsControlador
   // renderiza o template de login, com as mensagens adicionadas durante validações
   protected function renderLoginPage() {
     $this->destroyLoginSession();
-    require_once __DIR__.'/../../includes/bootstrap.php';
-    $parceiro = $GLOBALS['coreExt']['Config']->app->template->layout;
-    $templateName   = (trim($parceiro)=='' ? 'templates/nvp_htmlloginintranet.tpl' : 'templates/'.trim($parceiro));
-    $templateFile   = fopen($templateName, "r");
-    $templateText   = fread($templateFile, filesize($templateName));
-    $templateText   = str_replace( "<!-- #&ERROLOGIN&# -->", $this->messenger->toHtml('p'), $templateText);
 
     $configuracoes = new clsPmieducarConfiguracoesGerais();
-    $configuracoes = $configuracoes->detalhe();
+    $config = (object) $configuracoes->detalhe();
 
-    $msgCriarConta = '';
-    if (!empty($configuracoes["url_cadastro_usuario"])) {
-        $msgCriarConta  = 'Não possui uma conta? <a target="_BLANK" href="'. $configuracoes["url_cadastro_usuario"] .'">Crie sua conta agora</a>.';
-    }
-
-    $requiresHumanAccessValidation = Session::get('tentativas_login_falhas')
-      && is_numeric(Session::get('tentativas_login_falhas'))
-      && Session::get('tentativas_login_falhas') >= $this->_maximoTentativasFalhas;
-
-    if ($requiresHumanAccessValidation) {
-        $templateText = str_replace( "<!-- #&RECAPTCHA&# -->", Portabilis_Utils_ReCaptcha::getWidget(), $templateText);
-    }
-
-    $templateText = str_replace("<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", CORE_EXT_CONFIGURATION_ENV, $templateText);
-    $templateText = str_replace("<!-- #&BRASAO&# -->", $this->getLoginLogo($configuracoes), $templateText);
-    $templateText = str_replace("<!-- #&NOME_ENTIDADE&# -->", $configuracoes["ieducar_entity_name"], $templateText);
-    $templateText = str_replace("<!-- #&RODAPE_LOGIN&# -->", $configuracoes["ieducar_login_footer"], $templateText);
-    $templateText = str_replace("<!-- #&RODAPE_EXTERNO&# -->", $configuracoes["ieducar_external_footer"], $templateText);
-    $templateText = str_replace("<!-- #&LINKS_SOCIAL&# -->", $this->getSocialMediaLinks($configuracoes), $templateText);
-    $templateText = str_replace("<!-- #&CRIARCONTA&# -->", $msgCriarConta, $templateText);
-    $templateText = str_replace("<!-- #&GOOGLE_TAG_MANAGER_ID&# -->", $GLOBALS['coreExt']['Config']->app->gtm->id, $templateText);
-    $templateText = str_replace("<!-- #&SLUG&# -->", $GLOBALS['coreExt']['Config']->app->database->dbname, $templateText);
-
-    if (!$configuracoes['active_on_ieducar']) {
-        $msgSuspensao = '' .
-            '<div class="box" id="mensagens">' .
-                '<div class="message message-danger">' .
-                    '<div class="icone">' .
-                        '<img src="imagens/login/icon-danger.png">' .
-                    '</div>' .
-                    '<div class="titulo">Acesso suspenso</div>' .
-                    '<div class="mensagem"><p>O sistema está temporariamente indisponível. Contate o responsável pelo sistema em seu município. Obrigado pela compreensão.</p></div>' .
-                '</div>' .
-            '</div><br><br>';
-
-        $templateText = str_replace("<!-- #&SUSPENSO&# -->", $msgSuspensao, $templateText);
-    }
-
-    fclose($templateFile);
+    $view = View::make('login', [
+      'error' => $this->messenger->toHtml('p'),
+      'config' => $config,
+    ]);
 
     throw new HttpResponseException(
-      new Response($templateText)
+      new Response($view->render())
     );
   }
 
@@ -324,35 +280,4 @@ class clsControlador
                               "error", false, "error");
     }
   }
-
-    public function getSocialMediaLinks($configuracoes){
-        $socialMedia = "";
-
-        if($configuracoes['facebook_url'] || $configuracoes['linkedin_url'] || $configuracoes['twitter_url']){
-            $socialMedia .= "<p> Siga-nos nas redes sociais&nbsp;&nbsp;</p>";
-        }
-
-        if($configuracoes['facebook_url']){
-            $socialMedia .= '<a target="_blank" href="'.$configuracoes['facebook_url'].'"><img src="/intranet/imagens/icon-social-facebook.png"></a> ';
-        }
-        if($configuracoes['linkedin_url']){
-            $socialMedia .= '<a target="_blank" href="'.$configuracoes['linkedin_url'].'"><img src="/intranet/imagens/icon-social-linkedin.png"></a> ';
-        }
-        if($configuracoes['twitter_url']){
-            $socialMedia .= '<a target="_blank" href="'.$configuracoes['twitter_url'].'"><img src="/intranet/imagens/icon-social-twitter.png"></a> ';
-        }
-
-        return $socialMedia;
-    }
-
-    public function getLoginLogo($configuracoes){
-        $logoUrl = "/intranet/imagens/brasao-republica.png";
-
-        if(!empty($configuracoes['ieducar_image'])){
-            $logoUrl = $configuracoes['ieducar_image'];
-        }
-
-        return '<img width="150px" height="150px" src="'.$logoUrl.'"/>';
-    }
-
 }

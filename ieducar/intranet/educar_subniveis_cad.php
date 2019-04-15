@@ -32,6 +32,9 @@
  * @version     $Id$
  */
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -229,9 +232,10 @@ class indice extends clsCadastro
         if( $excluiu )
         {
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header("location:educar_categoria_nivel_det.php?cod_categoria_nivel={$this->ref_cod_categoria_nivel}");
-            die();
-            return true;
+
+            throw new HttpResponseException(
+                new RedirectResponse("educar_categoria_nivel_det.php?cod_categoria_nivel={$this->ref_cod_categoria_nivel}")
+            );
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

@@ -1224,13 +1224,6 @@ class clsPmieducarEscola
         $gruda = ", ";
       }
 
-      // if (is_null($this->ref_idpes_gestor)){
-      //   echo "oi '" . $this->ref_idpes_gestor . "'"; die;
-      // }else{
-      //   echo "tchau '" . $this->ref_idpes_gestor . "'"; die;
-      // }
-
-
       if (is_numeric($this->ref_idpes_gestor)) {
         $set .= "{$gruda}ref_idpes_gestor = '{$this->ref_idpes_gestor}'";
         $gruda = ", ";

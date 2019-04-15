@@ -69,8 +69,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_motivo_suspensao_lst.php" );
-            die();
+            $this->simpleRedirect('educar_motivo_suspensao_lst.php');
         }
 
         if( $registro["nm_motivo"] )

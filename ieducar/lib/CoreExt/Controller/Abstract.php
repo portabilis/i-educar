@@ -193,7 +193,7 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
             $url = $this->getRequest()->getBaseurl() . '/' . $url;
         }
 
-        header(sprintf('Location: %s', $url));
+        $this->simpleRedirect($url);
     }
 
     /**
