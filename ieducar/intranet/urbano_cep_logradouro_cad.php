@@ -435,51 +435,6 @@ function getBairroUnico(xml_bairro) {
     campoBairro.options[0].text = 'O munic\u00edpio n\u00e3o possui nenhum bairro';
   }
 }
-// Quando seleciona um logradouro, busca por registros de CEP e bairro jÃ¡
-// existentes no banco de dados
-/*document.getElementById('idlog').onchange = function() {
-  var campoLogradouro = document.getElementById('idlog').value;
-  var xml_cep = new ajax(getCepBairro);
-  xml_cep.envia('urbano_cep_logradouro_bairro_xml.php?log=' + campoLogradouro);
-}
-function getCepBairro(xml_cep) {
-  var campoLogradouro = document.getElementById('idlog');
-  var DOM_array = xml_cep.getElementsByTagName('cep_bairro');
-  if (DOM_array.length) {
-    for (var i = 0; i < DOM_array.length; i++) {
-      if (i != 0) {
-        tab_add_1.addRow();
-      }
-      var campoCep = document.getElementById('cep['+i+']');
-      var cep = DOM_array[i].getAttribute('cep');
-      campoCep.value = cep.substring(0,5) + '-' + cep.substring(5);
-    }
-    var campoMunicipio = document.getElementById('idmun').value;
-    var xml_bairro = new ajax(getBairro_, DOM_array);
-    xml_bairro.envia('public_bairro_xml.php?mun=' + campoMunicipio);
-  }
-}
-function getBairro_(xml_bairro, DOM_array) {
-  var DOM_array_ = xml_bairro.getElementsByTagName('bairro');
-  DOM_array = DOM_array[0];
-  for (var i = 0; i < tab_add_1.id; i++) {
-    var campoBairro = document.getElementById('idbai['+i+']');
-    if (DOM_array_.length) {
-      campoBairro.length = 1;
-      campoBairro.options[0].text = 'Selecione um bairro';
-      campoBairro.disabled = false;
-      for (var j = 0; j < DOM_array_.length; j++) {
-        campoBairro.options[campoBairro.options.length] = new Option(DOM_array_[j].firstChild.data,
-          DOM_array_[j].getAttribute('idbai'), false, false);
-      }
-      campoBairro.value = DOM_array[i].firstChild.data;
-    }
-    else {
-      campoBairro.options[0].text = 'O municÃ­pio nÃ£o possui nenhum bairro';
-    }
-  }
-}*/
-
 
 $j(document).ready(function(){
 

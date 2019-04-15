@@ -2,7 +2,6 @@
 
 use iEducar\Modules\ErrorTracking\TrackerFactory;
 
-require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'lib/Portabilis/View/Helper/Inputs.php';
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';

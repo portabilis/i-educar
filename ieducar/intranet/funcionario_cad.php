@@ -147,19 +147,6 @@ class indice extends clsCadastro
             $this->ref_cod_setor_new = $detFunc["ref_cod_setor_new"];
         }
 
-        if( $this->ref_cod_setor_new )
-        {
-            $objSetor = new clsSetor();
-            $parentes = $objSetor->getNiveis( $this->ref_cod_setor_new );
-            for( $i = 0; $i < 5; $i++ )
-            {
-                if( isset( $parentes[$i] ) && $parentes[$i] )
-                {
-                    $nmvar = "setor_{$i}";
-                    $this->$nmvar = $parentes[$i];
-                }
-            }
-        }
          //--------------------------------------------------------------------
         if( $_GET["ref_pessoa"] )
         {
@@ -192,87 +179,6 @@ class indice extends clsCadastro
         $this->campoEmail("email", "E-mail usuário", $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
 
         $this->campoTexto('matricula_interna', 'Matr&iacute;cula interna', $this->matricula_interna, 30, 30, false, false, false , 'Utilizado somente para registro, caso a institui&ccedil;&atilde;o deseje que a matr&iacute;cula interna deste funcion&aacute;rio seja registrada no sistema.');
-
-        $obj_setor = new clsSetor();
-        $lst_setor = $obj_setor->lista(null, null, null, null, null, null, null, null, null, 1, 0);
-
-        $opcoes = array("" => "Selecione");
-
-        if( is_array($lst_setor) && count($lst_setor) )
-        {
-            foreach ($lst_setor as $setor) {
-                $opcoes[$setor["cod_setor"]] = $setor["sgl_setor"];
-            }
-        }
-        $this->campoLista("setor_0", "Setor", $opcoes, $this->setor_0, "oproDocumentoNextLvl( this.value, '1' )", NULL, NULL, NULL, NULL, FALSE);
-
-        $lst_setor = $obj_setor->lista($this->setor_0);
-
-        $opcoes = array("" => "Selecione");
-
-        if( is_array($lst_setor) && count($lst_setor) )
-        {
-            foreach($lst_setor as $setor)
-            {
-                $opcoes[$setor["cod_setor"]] = $setor["sgl_setor"];
-            }
-        }
-        else
-        {
-            $opcoes[""] = "---------";
-        }
-        $this->campoLista("setor_1", "Subsetor 1", $opcoes, $this->setor_1, "oproDocumentoNextLvl(this.value, '2')", false, "", "", $this->setor_0 == "" ? true : false, false);
-
-        $opcoes = array("" => "Selecione");
-
-        $lst_setor = $obj_setor->lista($this->setor_1);
-
-        if( is_array($lst_setor) && count($lst_setor) )
-        {
-            foreach ($lst_setor as $setor)
-            {
-                $opcoes[$setor["cod_setor"]] = $setor["sgl_setor"];
-            }
-        }
-        else
-        {
-            $opcoes[""] = "---------";
-        }
-        $this->campoLista("setor_2", "Subsetor 2", $opcoes, $this->setor_2, "oproDocumentoNextLvl(this.value, '3')", false, "", "", $this->setor_1 == "" ? true : false, false);
-
-        $opcoes = array("" => "Selecione");
-
-        $lst_setor = $obj_setor->lista($this->setor_2);
-
-        if( is_array($lst_setor) && count($lst_setor) )
-        {
-            foreach ($lst_setor as $setor)
-            {
-                $opcoes[$setor["cod_setor"]] = $setor["sgl_setor"];
-            }
-        }
-        else
-        {
-            $opcoes[""] = "---------";
-        }
-        $this->campoLista("setor_3", "Subsetor 3", $opcoes, $this->setor_3, "oproDocumentoNextLvl(this.value, '4')", false, "", "", $this->setor_2 == "" ? true : false, false);
-
-        $opcoes = array("" => "Selecione");
-
-        $lst_setor = $obj_setor->lista($this->setor_3);
-
-        if( is_array($lst_setor) && count($lst_setor) )
-        {
-            foreach ($lst_setor as $setor)
-            {
-                $opcoes[$setor["cod_setor"]] = $setor["sgl_setor"];
-            }
-        }
-        else
-        {
-            $opcoes[""] = "---------";
-        }
-        $this->campoLista("setor_4", "Subsetor 4", $opcoes, $this->setor_4, "oproDocumentoNextLvl(this.value, '5')", false, "", "", $this->setor_3 == "" ? true : false, false);
 
         $opcoes = array(0 => "Inativo", 1 => "Ativo");
         $this->campoLista("ativo", "Status", $opcoes, $this->ativo);

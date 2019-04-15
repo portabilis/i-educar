@@ -235,35 +235,6 @@ function centralizaExpansivel(expansivel)
 	}
 }
 
-/*
-expansivel = document.getElementById( "DOM_expansivel" );
-
-	expansivel.style.width = largura + 'px';
-	expansivel.style.height = altura + 'px';
-
-	centralizaExpansivel();
-
-	// fffee0
-	//expansivel.innerHTML = '<table border="1" cellpadding="2" cellspacing="0" width="' + largura + '" height="' + altura + '" style="border-style: solid; border-color: #000000;border-width: 2px;background-color: #' + bgColor + ';"><tr><td align="center" style="background-color: #' + bgColor + ';">' + conteudo + '</td></tr></table>';
-	//expansivel.innerHTML = conteudo;
-	if( typeof arguments[3] == "string" )
-	{
-		titulo = arguments[3];
-	}
-	else
-	{
-		titulo = ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ';
-	}
-	conteudoMoldurado = '<table border="0" cellpadding="0" cellspacing="0" width="' + largura + '" height="' + altura + '"><tr><td width="9" height="44" valign="top"><img src="imagens/moldura/top_01.gif" border="0" width="9" height="44"></td><td background="imagens/moldura/top_04.gif" height="44" valign="top"><table border="0" cellpadding="0" cellspacing="0" height="44"><tr><td background="imagens/moldura/top_02.gif" height="44">' + titulo + '</td><td width="44" height="44" valign="top"><img src="imagens/moldura/top_03.gif" border="0" width="44" height="44"></td></tr></table></td><td background="imagens/moldura/top_04.gif" height="44" align="right"><a href="javascript: fechaExpansivel();"><img src="imagens/moldura/close.png" border="0" width="17" height="17"></a></td><td width="9" height="44" valign="top"><img src="imagens/moldura/top_05.gif" border="0" width="9" height="44"></td></tr><tr><td background="imagens/moldura/meio_esq.jpg" width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2">';
-	conteudoMoldurado += conteudo;
-	conteudoMoldurado += '</td><td background="imagens/moldura/meio_dir.jpg" width="9">&nbsp;</td></tr><tr><td width="9" height="20" valign="top"><img src="imagens/moldura/bottom_01.jpg" width="9" height="20"></td><td colspan="2" background="imagens/moldura/bottom_02.jpg" height="20">&nbsp;</td><td width="9" height="20" valign="top"><img src="imagens/moldura/bottom_03.jpg" width="9" height="20"></td></tr></table>';
-	expansivel.innerHTML = conteudoMoldurado;
-
-	expansivel.style.display = 'block';
-	expansivel.style.width = largura + 'px';
-	expansivel.style.height = altura + 'px';
-	*/
-
  function insertAfter( node, referenceNode)
  {
  	referenceNode.parentNode.insertBefore(node, referenceNode.nextSibling);
@@ -309,7 +280,7 @@ function showExpansivel( largura, altura, conteudo )
 	{
 		cliqueFecha = '';
 	}
-//	conteudoMoldurado = '<table border="0" id="tabela_conteudo" cellpadding="0" cellspacing="0" width="100%"><tr><td width="9" height="44" valign="top"><img src="imagens/moldura/top_01.gif" border="0" width="9" height="44"></td><td background="imagens/moldura/top_04.gif" height="44" valign="top"><table border="0" cellpadding="0" cellspacing="0" height="44"><tr><td background="imagens/moldura/top_02.gif" height="44">' + titulo + '</td><td width="44" height="44" valign="top"><img src="imagens/moldura/top_03.gif" border="0" width="44" height="44"></td></tr></table></td><td background="imagens/moldura/top_04.gif" height="44" align="right"><a href="javascript:void(0);" id="linkFechar" onclick="fechaExpansivel( \'div_dinamico_'+exp_id+'\');" ><img src="imagens/moldura/close.png" border="0" width="17" height="17"></a></td><td width="9" height="44" valign="top"><img src="imagens/moldura/top_05.gif" border="0" width="9" height="44"></td></tr><tr><td background="imagens/moldura/meio_esq.jpg" width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2"><div id="expansivel_conteudo" style="overflow:auto;">';
+
 	conteudoMoldurado = '<table border="0" id="tabela_conteudo" cellpadding="0" cellspacing="0" width="100%"><tr><td width="9" height="44" valign="top"></td><td id="modal-title" height="44" valign="top">'+ titulo + '</td><td id="modal-close" '+cliqueFecha+'</td><td width="9" height="44" valign="top"></td></tr><tr><td  width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2"><div id="expansivel_conteudo" class="modal-domjs-conteudo" style="overflow:hidden;">';
 	conteudoMoldurado += conteudo;
 	conteudoMoldurado += '</div></td><td width="9">&nbsp;</td></tr><tr><td width="9" height="20" valign="top"></td><td colspan="2"  height="20">&nbsp;</td><td width="9" height="20" valign="top"></td></tr></table>';
@@ -762,112 +733,6 @@ function preencheLink( itensArray )
 	(personalizado para cada pagina)
 */
 
-function diaria_carrega_valores()
-{
-	dataPartida = document.getElementById( "data_partida" ).value;
-	horaPartida = document.getElementById( "hora_partida" ).value;
-	dataChegada = document.getElementById( "data_chegada" ).value;
-	horaChegada = document.getElementById( "hora_chegada" ).value;
-
-	tipo_estadual = document.getElementById( "estadual" ).value;
-	tipo_grupo = document.getElementById( "ref_cod_diaria_grupo" ).value;
-
-	// verifica se todos eles estao preenchidos
-	if( dataPartida != "" && horaPartida != "" && dataChegada != "" && horaChegada != "" && tipo_estadual != "" && tipo_grupo != "" )
-	{
-		// define qual a funcao que devera ser executada quando o xml for carregado
-		DOM_execute_when_xmlhttpChange = function() { diaria_trata_valores(); };
-
-		dataPartida = dataPartida.split( "/" ).join( "_" );
-		horaPartida = horaPartida.split( ":" ).join( "_" );
-		dataChegada = dataChegada.split( "/" ).join( "_" );
-		horaChegada = horaChegada.split( ":" ).join( "_" );
-		
-		chegadaDataArr = dataChegada.split( "_" );
-		chegadaCompara = chegadaDataArr[2] + '_' + chegadaDataArr[1] + '_' + chegadaDataArr[0] + '_' + horaChegada;
-		
-		partidaDataArr = dataPartida.split( "_" );
-		partidaCompara = partidaDataArr[2] + '_' + partidaDataArr[1] + '_' + partidaDataArr[0] + '_' + horaPartida;
-
-		if( chegadaCompara > partidaCompara )
-		{
-			if( dataPartida.length == 10 && dataChegada.length == 10 && horaPartida.length == 5 && horaChegada.length == 5 )
-			{
-				document.getElementById( "sug100" ).value = "Carregando...";
-				document.getElementById( "sug75" ).value = "Carregando...";
-				document.getElementById( "sug50" ).value = "Carregando...";
-				document.getElementById( "sug25" ).value = "Carregando...";
-
-				strURL = "xml_diaria_sugestao.php?dp=" + dataPartida + "&hp=" + horaPartida + "&dc=" + dataChegada + "&hc=" + horaChegada + "&grupo=" + tipo_grupo + "&est=" + tipo_estadual;
-				//alert( strURL );
-				DOM_loadXMLDoc( strURL )
-			}
-		}
-		else
-		{
-			alert( 'A data (e hora) de chegada devem ser maiores do que a data (e hora) de saida.' );
-		}
-	}
-}
-
-// Funcao para diaria_cad.php recebe dados do XML e preenche as sugestoes
-function diaria_trata_valores()
-{
-	var valores = [];
-	for( i = 0; i < DOM_itensArray.length; i++ )
-	{
-		objXML = DOM_itensArray[i].firstChild;
-		valores[i] = objXML.data;
-	}
-
-	// preenche os campos de sugestao com os valores do XML
-	document.getElementById( "sug100" ).value = valores[0];
-	document.getElementById( "sug75" ).value = valores[1];
-	document.getElementById( "sug50" ).value = valores[2];
-	document.getElementById( "sug25" ).value = valores[3];
-}
-
-// Funcao para diaria_cad.php recebe dados do XML e preenche as sugestoes
-function diaria_copia_valores()
-{
-	document.getElementById( "vl100" ).value = document.getElementById( "sug100" ).value;
-	document.getElementById( "vl75" ).value = document.getElementById( "sug75" ).value;
-	document.getElementById( "vl50" ).value = document.getElementById( "sug50" ).value;
-	document.getElementById( "vl25" ).value = document.getElementById( "sug25" ).value;
-}
-
-function otopic_qtd_topicos( cod_grupo, cod_reuniao )
-{
-	// define qual a funcao que devera ser executada quando o xml for carregado
-	DOM_execute_when_xmlhttpChange = function() { otopic_recarrega_pagina(); };
-
-	strURL = "xml_otopic_qtdtopicos.php?&cr=" + cod_reuniao;
-	DOM_loadXMLDoc( strURL );
-}
-
-function otopic_recarrega_pagina()
-{
-	var valores = [];
-	for( i = 0; i < DOM_itensArray.length; i++ )
-	{
-		objXML = DOM_itensArray[i].firstChild;
-		valores[i] = objXML.data;
-	}
-
-	// verifica se o numero de topicos eh diferente
-	if( document.getElementById( "qtd_topicos" ).value != valores[0] )
-	{
-		if( confirm( 'Um novo tópico foi inserido para essa reunião. Você gostaia de atualizar a pagina ?' ) )
-		{
-			document.location.href = document.location.href;
-		}
-	}
-	else
-	{
-		//alert( 'mesma qtd ' + valores[0] );
-	}
-}
-
 function odes_renda( )
 {
 	// define qual a funcao que devera ser executada quando o xml for carregado
@@ -1056,109 +921,6 @@ function ce_atualiza_disponivel( objXML )
 		{
 			document.getElementById(campo_modificar.replace('[','_[')).value = parseInt(valores[i]) + parseInt(valor_soma);
 		}
-	}
-}
-
-function oproDocumentoNextLvl( setorPai, proxNivel)
-{
-	if( typeof arguments[2] == 'string' )
-	{
-		nome = arguments[2];
-	}
-	else
-	{
-		nome = 'setor_';
-	}
-	nivel = proxNivel * 1;
-	for( ; nivel < 5; nivel++ )
-	{
-		// desabilita todos os objetos de nivel maior
-		obj = document.getElementById( nome + nivel );
-		obj.disabled = true;
-		obj.length=0;
-		obj.options[0] = new Option( '-----------', '0', false, false );
-	}
-
-	if( setorPai )
-	{
-		obj = document.getElementById( nome + proxNivel );
-		if( typeof obj == 'object' )
-		{
-			DOM_execute_when_xmlhttpChange = function() { oproDocumentoNextLvlDone( proxNivel, nome ); };
-			strURL = "xml_oprot_setor.php?setor_pai=" + setorPai;
-			if( typeof arguments[3] == 'string' )
-			{
-				strURL = "xml_oprot_setor_not_in.php?setor_pai=" + setorPai;
-			}
-			DOM_loadXMLDoc( strURL );
-		}
-	}
-}
-
-function oproDocumentoNextLvlNomeComleto( setorPai, proxNivel)
-{
-	if( typeof arguments[2] == 'string' )
-	{
-		nome = arguments[2];
-	}
-	else
-	{
-		nome = 'setor_';
-	}
-	nivel = proxNivel * 1;
-	for( ; nivel < 5; nivel++ )
-	{
-		// desabilita todos os objetos de nivel maior
-		obj = document.getElementById( nome + nivel );
-		obj.disabled = true;
-		obj.length=0;
-		obj.options[0] = new Option( '-----------', '0', false, false );
-	}
-
-	if( setorPai )
-	{
-		obj = document.getElementById( nome + proxNivel );
-		if( typeof obj == 'object' )
-		{
-			DOM_execute_when_xmlhttpChange = function() { oproDocumentoNextLvlDone( proxNivel, nome ); };
-			strURL = "xml_oprot_setor.php?nm_completo=1&setor_pai=" + setorPai;
-			if( typeof arguments[3] == 'string' )
-			{
-				strURL = "xml_oprot_setor_not_in.php?setor_pai=" + setorPai;
-			}
-			DOM_loadXMLDoc( strURL );
-		}
-	}
-}
-
-function oproDocumentoNextLvlDone( proxNivel, nome )
-{
-	// habilita o proximo nivel
-	obj = document.getElementById( nome + proxNivel );
-	obj.disabled = false;
-	valores = new Array();
-	for( i = 0; i < DOM_itensArray.length; i++ )
-	{
-		objXML = DOM_itensArray[i].firstChild;
-		valores[i] = objXML.data;
-	}
-
-	if( valores.length )
-	{
-		obj.length=0;
-		obj.options[0] = new Option( 'Selecione', '0', false, false );
-
-		var length = 1;
-		for(i = 0; i< valores.length; i+=2)
-		{
-			obj.options[length] = new Option( valores[i], valores[i+1], false, false );
-			length++;
-		}
-	}
-	else
-	{
-		obj.length=0;
-		obj.options[0] = new Option( '-----------', '0', false, false );
 	}
 }
 
@@ -1450,17 +1212,6 @@ function trocaCampo(campo){
 	}
 }
 
-function BuscaEscola(campo){
-	/// define qual a funcao que devera ser executada quando o xml for carregado
-	DOM_execute_when_xmlhttpChange = function() { atualizaEscola(campo); };
-
-	var campo_ = document.getElementById('ref_cod_instituicao');
-	var valor = campo_.options[campo_.selectedIndex].value;
-
-	strURL = "xml_escola.php?cod_instituicao="+valor;
-	DOM_loadXMLDoc( strURL );
-}
-
 function atualizaEscola(campo){
 	document.getElementById(campo).options.length=1;
 	var length = 1;
@@ -1719,18 +1470,4 @@ function getPDFouvidoriaOrdemDone()
 	Obj.onclick = function() { document.location.href = link;};
 	//alert('Arquivo Conclu?o');
 	document.location.href = link;
-}
-
-function fecha_notificacao( id_notificacao )
-{
-	DOM_execute_when_xmlhttpChange = function()
-	{
-		if( DOM_itensArray[0].firstChild.data == 0 )
-		{
-			alert( 'Erro de permiss?. A notifica?o n? foi deletada.' );
-			document.getElementById('notificacao_' + id_notificacao).style.display='block';
-		}
-	}
-	DOM_loadXMLDoc('deleta_notificacao.php?cod_not=' + id_notificacao);
-	document.getElementById('notificacao_' + id_notificacao).style.display='none';
 }

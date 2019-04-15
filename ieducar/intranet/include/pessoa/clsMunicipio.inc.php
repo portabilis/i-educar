@@ -258,13 +258,10 @@ class clsMunicipio
             $objBairro = new clsBairro();
             $listaBairro = $objBairro->lista($this->idmun);
 
-            $objVila = new clsVila();
-            $listaVila = $objVila->lista($this->idmun);
-
             $objLog = new clsLogradouro();
             $listaLog = $objLog->lista(false, false, $this->idmun);
 
-            if(!count($listaBairro) && !count($listaVila) && !count($listaLog))
+            if(!count($listaBairro) && !count($listaLog))
             {
                 $db = new clsBanco();
                 //$db->Consulta("DELETE FROM {$this->schema}.{$this->tabela} WHERE idmun={$this->idmun}");

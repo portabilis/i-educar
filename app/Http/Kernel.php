@@ -38,7 +38,6 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\ChangeAppName::class,
             \App\Http\Middleware\ConnectTenantDatabase::class,
-            \App\Http\Middleware\LoadLegacyConfig::class,
             \App\Http\Middleware\SetLayoutVariables::class,
         ],
 

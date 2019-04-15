@@ -39,16 +39,6 @@ class LegacyController extends Controller
     }
 
     /**
-     * Return i-Educar original bootstrap file.
-     *
-     * @return string
-     */
-    private function getLegacyBootstrapFile()
-    {
-        return $this->getLegacyPath() . '/includes/bootstrap.php';
-    }
-
-    /**
      * Define which errors and exceptions are shown.
      *
      * @return void
@@ -66,26 +56,6 @@ class LegacyController extends Controller
         restore_error_handler();
 
         restore_exception_handler();
-    }
-
-    /**
-     * Load bootstrap file, if not found, throw a HttpException with HTTP error
-     * code 500 Server Internal Error.
-     *
-     * @return void
-     *
-     * @throws HttpException
-     * @throws Exception
-     */
-    private function loadLegacyBootstrapFile()
-    {
-        $filename = $this->getLegacyBootstrapFile();
-
-        if (false === file_exists($filename)) {
-            throw new HttpException(500, 'Legacy bootstrap file not found.');
-        }
-
-        $this->loadFileOrAbort($filename);
     }
 
     /**
@@ -194,6 +164,16 @@ class LegacyController extends Controller
     }
 
     /**
+     * Change directory.
+     *
+     * @return void
+     */
+    private function changeDirectory()
+    {
+        chdir(base_path('ieducar/intranet'));
+    }
+
+    /**
      * Start session, configure errors and exceptions and load necessary files
      * to run legacy code.
      *
@@ -210,7 +190,7 @@ class LegacyController extends Controller
 
         $this->overrideGlobals();
         $this->configureErrorsAndExceptions();
-        $this->loadLegacyBootstrapFile();
+        $this->changeDirectory();
         $this->loadLegacyFile($filename);
 
         $content = ob_get_contents();
