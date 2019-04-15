@@ -83,7 +83,6 @@ class Kernel extends HttpKernel
     protected $middlewarePriority = [
         \App\Http\Middleware\ConnectTenantDatabase::class,
         \App\Http\Middleware\LoadLegacyConfig::class,
-        \App\Http\Middleware\Suspended::class,
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
         \App\Http\Middleware\Authenticate::class,
@@ -91,5 +90,6 @@ class Kernel extends HttpKernel
         \Illuminate\Routing\Middleware\SubstituteBindings::class,
         \Illuminate\Auth\Middleware\Authorize::class,
         \App\Http\Middleware\ChangeAppName::class,
+        \App\Http\Middleware\Suspended::class,
     ];
 }
