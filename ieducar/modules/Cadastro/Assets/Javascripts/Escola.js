@@ -207,11 +207,11 @@ if (!$j('#cnpj').is(':visible')){
   $j('#atendimento_aee').closest('tr').attr('id','tatendimento_aee');
 
   // Pega o número dessa linha
-  linha_inicial_infra = $j('#tlocal_funcionamento').index()-1;
-  linha_inicial_dependencia = $j('#tr_possui_dependencias').index()-1;
-  linha_inicial_equipamento = $j('#tr_equipamentos').index()-1;
-  linha_inicial_recursos = $j('#tr_quantidade_profissionais').index()-1;
-  linha_inicial_dados = $j('#tatendimento_aee').index()-1;
+  linha_inicial_infra = $j('#tlocal_funcionamento').index()-2;
+  linha_inicial_dependencia = $j('#tr_possui_dependencias').index()-2;
+  linha_inicial_equipamento = $j('#tr_equipamentos').index()-2;
+  linha_inicial_recursos = $j('#tr_quantidade_profissionais').index()-2;
+  linha_inicial_dados = $j('#tatendimento_aee').index()-2;
 
   // Adiciona um ID à linha que termina o formulário para parar de esconder os campos
   $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
