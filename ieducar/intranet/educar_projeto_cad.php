@@ -126,9 +126,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($projeto);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_projeto_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_projeto_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -152,9 +150,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($projetoDetalheAntes, $projetoDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_projeto_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_projeto_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -175,9 +171,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($projeto);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_projeto_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_projeto_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

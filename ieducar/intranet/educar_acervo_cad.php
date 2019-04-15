@@ -322,9 +322,8 @@ class indice extends clsCadastro
             $this->gravaCategorias($cadastrou);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_acervo_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('educar_acervo_lst.php');
         }
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
         echo "<!--\nErro ao cadastrar clsPmieducarAcervo\nvalores obrigatorios\nis_numeric( $this->ref_cod_exemplar_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_acervo_colecao ) && is_numeric( $this->ref_cod_acervo_idioma ) && is_numeric( $this->ref_cod_acervo_editora ) && is_string( $this->titulo ) && is_string( $this->isbn )\n-->";
@@ -355,9 +354,8 @@ class indice extends clsCadastro
             $this->gravaCategorias($this->cod_acervo);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_acervo_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('educar_acervo_lst.php');
         }
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
         echo "<!--\nErro ao editar clsPmieducarAcervo\nvalores obrigatorios\nif( is_numeric( $this->cod_acervo ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
@@ -384,9 +382,8 @@ class indice extends clsCadastro
             $objCategoria = new clsPmieducarCategoriaAcervo();
             $objCategoria->deletaCategoriaDaObra($this->cod_acervo);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_acervo_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('educar_acervo_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

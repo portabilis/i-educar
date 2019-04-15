@@ -125,10 +125,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($deficiencia);
 
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            header('Location: educar_deficiencia_lst.php');
-            die();
-
-            return true;
+            $this->simpleRedirect('educar_deficiencia_lst.php');
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
@@ -157,10 +154,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($deficienciaDetalheAntes, $deficienciaDetalheDepois);
 
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-            header('Location: educar_deficiencia_lst.php');
-            die();
-
-            return true;
+            $this->simpleRedirect('educar_deficiencia_lst.php');
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
@@ -181,10 +175,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($detalhe);
 
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-            header('Location: educar_deficiencia_lst.php');
-            die();
-
-            return true;
+            $this->simpleRedirect('educar_deficiencia_lst.php');
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';

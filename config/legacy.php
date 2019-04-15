@@ -55,6 +55,8 @@ return [
 
     'env' => env('LEGACY_ENV', 'local'),
 
+    'gtm' => env('GOOGLE_TAG_MANAGER'),
+
     'apis' => [
         'access_key' => env('API_ACCESS_KEY'),
         'secret_key' => env('API_SECRET_KEY'),

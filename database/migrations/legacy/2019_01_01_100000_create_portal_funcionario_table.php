@@ -20,7 +20,7 @@ class CreatePortalFuncionarioTable extends Migration
                 CREATE TABLE portal.funcionario (
                     ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
                     matricula character varying(12),
-                    senha character varying(32),
+                    senha varchar(191) NULL,
                     ativo smallint,
                     ref_sec integer,
                     ramal character varying(10),
@@ -41,7 +41,7 @@ class CreatePortalFuncionarioTable extends Migration
                     ip_logado character varying(50),
                     data_login timestamp without time zone,
                     email character varying(50),
-                    status_token character varying(50),
+                    status_token character varying(191) NULL,
                     matricula_interna character varying(30),
                     receber_novidades smallint,
                     atualizou_cadastro smallint

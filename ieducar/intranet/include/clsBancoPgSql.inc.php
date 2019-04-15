@@ -3,8 +3,6 @@
 use iEducar\Modules\ErrorTracking\TrackerFactory;
 use Illuminate\Database\Connection;
 
-require_once 'Portabilis/Mailer.php';
-
 abstract class clsBancoSQL_
 {
   /**

@@ -107,8 +107,8 @@ INSERT INTO portal.menu_submenu VALUES (566, 55, 2, 'Cursos', 'educar_curso_lst.
 INSERT INTO portal.menu_submenu VALUES (578, 55, 2, 'Alunos', 'educar_aluno_lst.php', '', 3);
 INSERT INTO portal.menu_submenu VALUES (647, 55, 2, 'Tipos de rede de ensino da escola', 'educar_escola_rede_ensino_lst.php', '', 3);
 INSERT INTO portal.menu_submenu VALUES (999867, 57, 2, 'Categorias de obras', 'educar_categoria_lst.php', NULL, 3);
-INSERT INTO portal.menu_submenu VALUES (846, 70, 2, 'Exportação do educacenso - 1ª fase', 'educar_exportacao_educacenso.php', NULL, 2);
-INSERT INTO portal.menu_submenu VALUES (9998845, 70, 2, 'Exportação do educacenso - 2ª fase', 'educar_exportacao_educacenso.php?fase2=1', NULL, 2);
+INSERT INTO portal.menu_submenu VALUES (846, 70, 2, 'Exportação do educacenso - 1ª fase', 'educar_exportacao_educacenso.php', NULL, 3);
+INSERT INTO portal.menu_submenu VALUES (9998845, 70, 2, 'Exportação do educacenso - 2ª fase', 'educar_exportacao_educacenso.php?fase2=1', NULL, 3);
 INSERT INTO portal.menu_submenu VALUES (999861, 55, 2, 'Documentação padrão', 'DocumentacaoPadrao.php', NULL, 3);
 INSERT INTO portal.menu_submenu VALUES (583, 55, 2, 'Séries', 'educar_serie_lst.php', '', 3);
 INSERT INTO portal.menu_submenu VALUES (586, 55, 2, 'Turmas', 'educar_turma_lst.php', '', 3);

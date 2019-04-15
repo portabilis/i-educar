@@ -145,9 +145,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($motivoAfastamento);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_motivo_afastamento_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_motivo_afastamento_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -177,8 +175,7 @@ class indice extends clsCadastro
         $auditoria->alteracao($motivoAfastamentoAntes, $motivoAfastamentoDepois);
 
         $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
-        header('Location: educar_motivo_afastamento_lst.php');
-        die();
+        $this->simpleRedirect('educar_motivo_afastamento_lst.php');
     }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
@@ -208,9 +205,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($motivoAfastamento);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_motivo_afastamento_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_motivo_afastamento_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

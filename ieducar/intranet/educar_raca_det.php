@@ -69,8 +69,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_raca_lst.php" );
-            die();
+            $this->simpleRedirect('educar_raca_lst.php');
         }
 
         /*if( class_exists( "clsCadastroFisica" ) )

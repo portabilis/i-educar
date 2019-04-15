@@ -258,12 +258,10 @@ class indice extends clsCadastro
         }
       }
       $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
-      header('Location: urbano_cep_logradouro_lst.php');
-      die();
+      $this->simpleRedirect('urbano_cep_logradouro_lst.php');
     }
     else {
-      header('Location: urbano_cep_logradouro_lst.php');
-      die();
+      $this->simpleRedirect('urbano_cep_logradouro_lst.php');
     }
   }
   function Excluir()
@@ -274,8 +272,7 @@ class indice extends clsCadastro
     $excluiu = $obj->excluir();
     if ($excluiu) {
       $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-      header('Location: urbano_cep_logradouro_lst.php');
-      die();
+      $this->simpleRedirect('urbano_cep_logradouro_lst.php');
     }
     $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
     echo "<!--\nErro ao excluir clsUrbanoCepLogradouro\nvalores obrigatorios\nif( is_numeric( $this->cep ) && is_numeric( $this->idlog ) )\n-->";

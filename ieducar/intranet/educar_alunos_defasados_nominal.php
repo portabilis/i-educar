@@ -98,8 +98,9 @@ class indice extends clsCadastro
 
 
         $obj_permissoes = new clsPermissoes();
-        if($obj_permissoes->nivel_acesso($this->pessoa_logada) > 7)
-            header("location: index.php");
+        if($obj_permissoes->nivel_acesso($this->pessoa_logada) > 7){
+            $this->simpleRedirect('index.php');
+        }
 
         return $retorno;
     }

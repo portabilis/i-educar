@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 require_once 'include/clsBanco.inc.php';
-require_once 'include/clsControlador.inc.php';
 require_once 'include/clsLogAcesso.inc.php';
 require_once 'include/Geral.inc.php';
 require_once 'include/pmicontrolesis/geral.inc.php';
@@ -184,13 +183,15 @@ class clsBase
             }
 
             if (!$permite) {
-                header('location: index.php?negado=1&err=1');
-                die('Acesso negado para este usu&acute;rio');
+                throw new HttpResponseException(
+                    new RedirectResponse(' index.php?negado=1&err=1')
+                );
             }
         } else {
             if (!$this->VerificaPermicaoNumerico($this->processoAp)) {
-                header('location: index.php?negado=1&err=2');
-                die('Acesso negado para este usu&acute;rio');
+                throw new HttpResponseException(
+                    new RedirectResponse(' index.php?negado=1&err=1')
+                );
             }
         }
 
@@ -326,60 +327,38 @@ class clsBase
     public function CadastraAcesso()
     {
         if (Session::get('marcado') != "private") {
-            if (!$this->convidado) {
-                $ip = empty($_SERVER['REMOTE_ADDR']) ? "NULL" : $_SERVER['REMOTE_ADDR'];
-                $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? "NULL" : $_SERVER['HTTP_X_FORWARDED_FOR'];
-                $id_pessoa = $this->pessoa_logada;
+            $ip = empty($_SERVER['REMOTE_ADDR']) ? "NULL" : $_SERVER['REMOTE_ADDR'];
+            $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? "NULL" : $_SERVER['HTTP_X_FORWARDED_FOR'];
+            $id_pessoa = $this->pessoa_logada;
 
-                $logAcesso = new clsLogAcesso(FALSE, $ip, $ip_de_rede, $id_pessoa);
-                $logAcesso->cadastra();
+            $logAcesso = new clsLogAcesso(FALSE, $ip, $ip_de_rede, $id_pessoa);
+            $logAcesso->cadastra();
 
-                Session::put('marcado', 'private');
-                Session::save();
-                Session::start();
-            }
+            Session::put('marcado', 'private');
+            Session::save();
+            Session::start();
         }
     }
 
     public function MakeAll()
     {
+        $this->mostraSupenso();
+        $this->Formular();
+        $this->verificaPermissao();
+        $this->CadastraAcesso();
+
         $saida_geral = '';
 
-        $controlador = new clsControlador();
+        app(TopMenu::class)->current($this->processoAp, request()->getRequestUri());
 
-        if ($controlador->Logado()) {
-            $this->mostraSupenso();
-            $this->Formular();
-            $this->verificaPermissao();
-            $this->CadastraAcesso();
+        View::share('title', $this->titulo);
 
-            app(TopMenu::class)->current($this->processoAp, request()->getRequestUri());
-
-            View::share('title', $this->titulo);
-
-            if ($this->renderMenu) {
-                $saida_geral .= $this->MakeBody();
-            } else {
-                foreach ($this->clsForm as $form) {
-                    $saida_geral .= $form->RenderHTML();
-                }
-            }
-        } elseif (empty($_POST['login']) || empty($_POST['senha'])) {
-            $force = !empty($_GET['force']) ? true : false;
-
-            if (!$force) {
-                $this->mostraSupenso();
-            }
-
-            $saida_geral .= $this->MakeHeadHtml();
-            $controlador->Logar(false);
-            $saida_geral .= $this->MakeFootHtml();
+        if ($this->renderMenu) {
+            $saida_geral .= $this->MakeBody();
         } else {
-            $controlador->Logar(true);
-
-            throw new HttpResponseException(
-                new RedirectResponse($_SERVER['HTTP_REFERER'])
-            );
+            foreach ($this->clsForm as $form) {
+                $saida_geral .= $form->RenderHTML();
+            }
         }
 
         $view = 'legacy.body';

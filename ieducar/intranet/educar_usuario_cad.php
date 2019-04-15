@@ -369,9 +369,7 @@ class indice extends clsCadastro
             if( $cadastrou )
             {
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header( "Location: educar_usuario_lst.php" );
-                die();
-                return true;
+                $this->simpleRedirect('educar_usuario_lst.php');
             }
         }
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -482,9 +480,7 @@ class indice extends clsCadastro
             {
 
                 $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-                header( "Location: educar_usuario_lst.php" );
-                die();
-                return true;
+                $this->simpleRedirect('educar_usuario_lst.php');
             }
         }
 
@@ -504,8 +500,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("funcionario", $this->pessoa_logada, $this->ref_pessoa);
       $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_usuario_lst.php" );
-            return true;
+            $this->simpleRedirect('educar_usuario_lst.php');
         }
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
         echo "<!--\nErro ao excluir clsPortalFuncionario\n-->";

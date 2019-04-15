@@ -5,6 +5,9 @@ require_once 'include/clsMenuFuncionario.inc.php';
 require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 class clsPermissoes
 {
     /**
@@ -70,16 +73,17 @@ class clsPermissoes
             $ok = $this->getBiblioteca($int_idpes_usuario) == 0 ? false : true;
 
             if (!$ok && $nivel == 8) {
-                header('Location: index.php?negado=1');
-                echo('Usuário não adicionado (ao cadastro da) biblioteca. <a href=\'/intranet\'>Inicio</a>');
-                die();
+                throw new HttpResponseException(
+                    new RedirectResponse('index.php?negado=1')
+                );
             }
         }
 
         if (!$ok) {
             if ($str_pagina_redirecionar) {
-                header("Location: $str_pagina_redirecionar");
-                die();
+                throw new HttpResponseException(
+                    new RedirectResponse( $str_pagina_redirecionar)
+                );
             } else {
                 return false;
             }
@@ -148,15 +152,17 @@ class clsPermissoes
             $ok = $this->getBiblioteca($int_idpes_usuario) == 0 ? false : true;
 
             if (!$ok && $nivel == 8) {
-                header('Location: index.php?negado=1');
-                die();
+                throw new HttpResponseException(
+                    new RedirectResponse( 'index.php?negado=1')
+                );
             }
         }
 
         if (!$ok) {
             if ($str_pagina_redirecionar) {
-                header("Location: $str_pagina_redirecionar");
-                die();
+                throw new HttpResponseException(
+                    new RedirectResponse( $str_pagina_redirecionar)
+                );
             } else {
                 return false;
             }
