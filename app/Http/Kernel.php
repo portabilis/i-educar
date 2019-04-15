@@ -69,6 +69,7 @@ class Kernel extends HttpKernel
         'ieducar.menu' => \App\Http\Middleware\Menu::class,
         'ieducar.footer' => \App\Http\Middleware\Footer::class,
         'ieducar.xssbypass' => \App\Http\Middleware\XssByPass::class,
+        'ieducar.suspended' => \App\Http\Middleware\Suspended::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
 
@@ -82,6 +83,7 @@ class Kernel extends HttpKernel
     protected $middlewarePriority = [
         \App\Http\Middleware\ConnectTenantDatabase::class,
         \App\Http\Middleware\LoadLegacyConfig::class,
+        \App\Http\Middleware\Suspended::class,
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
         \App\Http\Middleware\Authenticate::class,
