@@ -1507,7 +1507,6 @@ class EducacensoAnaliseController extends ApiCoreController
                    documento.tipo_cert_civil AS tipo_cert_civil,
                    documento.num_termo AS num_termo,
                    documento.sigla_uf_cert_civil AS uf_cartorio,
-                   codigo_cartorio_inep.id_cartorio AS cod_cartorio,
                    uf.cod_ibge AS uf_inep,
                    uf.sigla_uf AS sigla_uf,
                    municipio.cod_ibge AS municipio_inep,
@@ -1523,7 +1522,6 @@ class EducacensoAnaliseController extends ApiCoreController
              INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
              INNER JOIN cadastro.fisica ON (fisica.idpes = pessoa.idpes)
               LEFT JOIN cadastro.documento ON (documento.idpes = pessoa.idpes)
-              LEFT JOIN cadastro.codigo_cartorio_inep ON (codigo_cartorio_inep.id = documento.cartorio_cert_civil_inep)
               LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = pessoa.idpes)
               LEFT JOIN public.logradouro ON (logradouro.idlog = endereco_pessoa.idlog)
               LEFT JOIN public.municipio ON (municipio.idmun = logradouro.idmun)
@@ -1630,15 +1628,6 @@ class EducacensoAnaliseController extends ApiCoreController
                     $mensagem[] = [
                         'text' => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o estado do cartório do(a) aluno(a) {$nomeAluno} foi informado, portanto é necessário preencher o código deste estado conforme a 'Tabela de UF'.",
                         'path' => '(Endereçamento > Cadastros > Estados > Editar > Campo: Código INEP)',
-                        'fail' => true
-                    ];
-                }
-
-                if (!$aluno['cod_cartorio']) {
-                    $mensagem[] = [
-                        'text' => "Dados para formular o registro 70 da escola {$nomeEscola} não encontrados. Verificamos que o número da certidão civil do(a) aluno(a) {$nomeAluno} foi informada, portanto é necessário informar também o código do cartório conforme a 'Tabela de Cartórios'.",
-                        'path' => '(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: Estado emissão / Data emissão)',
-                        'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesAluno}",
                         'fail' => true
                     ];
                 }
