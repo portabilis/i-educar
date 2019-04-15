@@ -71,8 +71,7 @@ class indice extends clsDetalhe
         
         if( ! $lst_cep_logradouro )
         {
-            header( "location: urbano_cep_logradouro_lst.php" );
-            die();
+            $this->simpleRedirect('urbano_cep_logradouro_lst.php');
         }
         else 
         {

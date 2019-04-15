@@ -533,7 +533,7 @@ class indice extends clsCadastro
         }
       }
 
-      header("Location: menu_suspenso_det.php?cod_menu={$_GET['cod_menu']}");
+      $this->simpleRedirect("menu_suspenso_det.php?cod_menu={$_GET['cod_menu']}");
     }
 
     return FALSE;

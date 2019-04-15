@@ -146,23 +146,25 @@ class indice extends clsListagem
                 $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
                 $registro['nm_escola'] = $det_ref_cod_escola['nome'];
 
+                $link = route('enrollments.batch.enroll.index', ['schoolClass' => $registro['cod_turma']]);
+
                 $lista_busca = [
-                    "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro['cod_turma']}\">{$registro['ano']}</a>",
-                    "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro['cod_turma']}\">{$registro['nm_turma']}</a>"
+                    "<a href=\"{$link}\">{$registro['ano']}</a>",
+                    "<a href=\"{$link}\">{$registro['nm_turma']}</a>"
                 ];
 
                 if ($registro['ref_ref_cod_serie']) {
-                    $lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro['cod_turma']}\">{$registro['nm_serie']}</a>";
+                    $lista_busca[] = "<a href=\"{$link}\">{$registro['nm_serie']}</a>";
                 } else {
-                    $lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro['cod_turma']}\">-</a>";
+                    $lista_busca[] = "<a href=\"{$link}\">-</a>";
                 }
 
-                $lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro['cod_turma']}\">{$registro['nm_curso']}</a>";
+                $lista_busca[] = "<a href=\"{$link}\">{$registro['nm_curso']}</a>";
 
                 if ($registro['ref_ref_cod_escola']) {
-                    $lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro['cod_turma']}\">{$registro['nm_escola']}</a>";
+                    $lista_busca[] = "<a href=\"{$link}\">{$registro['nm_escola']}</a>";
                 } else {
-                    $lista_busca[] = "<a href=\"educar_matriculas_turma_cad.php?ref_cod_turma={$registro['cod_turma']}\">-</a>";
+                    $lista_busca[] = "<a href=\"{$link}\">-</a>";
                 }
 
                 $this->addLinhas($lista_busca);
@@ -188,14 +190,14 @@ $pagina->MakeAll();
 
     document.getElementById('ref_cod_escola').onchange = function () {
         getEscolaCurso();
-    }
+    };
 
     document.getElementById('ref_cod_curso').onchange = function () {
         getEscolaCursoSerie();
-    }
+    };
 
     document.getElementById('ref_ref_cod_serie').onchange = function () {
         getTurma();
-    }
+    };
 
 </script>

@@ -77,8 +77,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_cliente_lst.php" );
-            die();
+            $this->simpleRedirect('educar_cliente_lst.php');
         }
         else {
             foreach ( $registro as $cliente )

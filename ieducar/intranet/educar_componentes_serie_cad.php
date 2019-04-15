@@ -167,28 +167,21 @@ class indice extends clsCadastro
 
   function Novo()
   {
-
     // Todas as ações estão sendo realizadas em ComponentesSerieAcao.js
-    header("Location: educar_componentes_serie_lst.php");
-    die();
-
+    $this->simpleRedirect('educar_componentes_serie_lst.php');
   }
 
   function Editar()
   {
-
     // Todas as ações estão sendo realizadas em ComponentesSerieAcao.js
-    header("Location: educar_componentes_serie_lst.php");
-    die();
+    $this->simpleRedirect('educar_componentes_serie_lst.php');
   }
 
   function Excluir()
   {
-
     // Todas as ações estão sendo realizadas em ComponentesSerieAcao.js
     $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
-    header( "Location: educar_componentes_serie_lst.php" );
-    die();
+    $this->simpleRedirect('educar_componentes_serie_lst.php');
   }
 }
 

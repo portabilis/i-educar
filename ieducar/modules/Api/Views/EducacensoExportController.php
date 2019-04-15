@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Educacenso\Registro00;
-use App\Services\EducacensoRepository;
+use App\Repositories\EducacensoRepository;
 use iEducar\Modules\Educacenso\ArrayToCenso;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaAluno;

@@ -42,8 +42,7 @@ class indice extends clsCadastro
     
 
     if (! $_POST) {
-      header('Location: educar_matricula_lst.php');
-      die;
+        $this->simpleRedirect('educar_matricula_lst.php');
     }
 
     foreach ($_POST as $key =>$value) {
@@ -85,13 +84,11 @@ class indice extends clsCadastro
                 </script>', $this->mensagem, $this->ref_cod_matricula);
           echo $alert;
       } else {
-        header('Location: educar_matricula_det.php?cod_matricula=' . $this->ref_cod_matricula);
-        die();
+          $this->simpleRedirect('educar_matricula_det.php?cod_matricula=' . $this->ref_cod_matricula);
       }
     }
     else {
-      header('Location: /intranet/educar_aluno_lst.php');
-      die();
+        $this->simpleRedirect('/intranet/educar_aluno_lst.php');
     }
   }
 

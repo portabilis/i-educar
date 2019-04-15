@@ -171,8 +171,7 @@ class indice extends clsCadastro
     $cadastrou = $obj->cadastra();
     if ($cadastrou) {
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-      header('Location: educar_serie_vaga_lst.php');
-      die();
+      $this->simpleRedirect('educar_serie_vaga_lst.php');
     }
 
     $this->mensagem = 'Cadastro n&atilde;o realizado. Verifique se j&aacute; n&atilde;o existe cadastro para est&aacute; s&eacute;rie/ano!<br />';
@@ -192,8 +191,7 @@ class indice extends clsCadastro
     $editou = $obj->edita();
     if ($editou) {
       $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br />';
-      header('Location: educar_serie_vaga_lst.php');
-      die();
+      $this->simpleRedirect('educar_serie_vaga_lst.php');
     }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o nÃ£o realizada.<br />';
@@ -213,8 +211,7 @@ class indice extends clsCadastro
 
     if ($excluiu) {
       $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br />';
-      header('Location: educar_serie_vaga_lst.php');
-      die();
+      $this->simpleRedirect('educar_serie_vaga_lst.php');
     }
 
     $this->mensagem = 'Exclus&atilde;o nÃ£o realizada.<br />';

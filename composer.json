@@ -3,7 +3,7 @@
     "description": "Software livre de gestão escolar",
     "type": "project",
     "license": "GPL-2.0-or-later",
-    "version": "2.1.7",
+    "version": "2.1.8",
     "keywords": [
         "Portabilis",
         "i-Educar"
@@ -50,6 +50,9 @@
             "database/factories",
             "ieducar/intranet/include",
             "ieducar/lib"
+        ],
+        "files": [
+            "ieducar/intranet/include/funcoes.inc.php"
         ],
         "psr-4": {
             "App\\": "app/",
