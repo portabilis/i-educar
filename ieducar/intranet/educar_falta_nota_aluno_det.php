@@ -82,8 +82,7 @@ class indice extends clsDetalhe
         }
         if( ! $registro )
         {
-            header( "location: educar_falta_nota_aluno_lst.php" );
-            die();
+            $this->simpleRedirect('educar_falta_nota_aluno_lst.php');
         }
 
         if( class_exists( "clsPmieducarTurma" ) )

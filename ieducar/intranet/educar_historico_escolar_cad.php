@@ -116,8 +116,7 @@ class indice extends clsCadastro
                 }
 
                 if (!$this->origem) {
-                    header("Location: educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
-                    die();
+                    $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
                 }
 
                 if ($obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7)) {
@@ -401,10 +400,7 @@ class indice extends clsCadastro
                 }
 
                 $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-                header("Location: educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
-                die();
-
-                return true;
+                $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
             }
             //--------------FIM CADASTRA DISCIPLINAS--------------//
         }
@@ -457,10 +453,7 @@ class indice extends clsCadastro
                     }
                 }
                 $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-                header("Location: educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
-                die();
-
-                return true;
+                $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
             }
             //--------------FIM EDITA DISCIPLINAS--------------//
         }
@@ -482,10 +475,7 @@ class indice extends clsCadastro
             $excluiu = $obj->excluirTodos($this->ref_cod_aluno, $this->sequencial);
             if ($excluiu) {
                 $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-                header("Location: educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
-                die();
-
-                return true;
+                $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
             }
         }
 

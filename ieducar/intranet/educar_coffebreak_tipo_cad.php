@@ -86,7 +86,7 @@ class indice extends clsCadastro
                 $retorno = "Editar";
             }
             else{
-                header("location: educar_coffebreak_tipo_lst.php");
+                $this->simpleRedirect('educar_coffebreak_tipo_lst.php');
             }
         }
         $this->url_cancelar = ($retorno == "Editar") ? "educar_coffebreak_tipo_det.php?cod_coffebreak_tipo={$registro["cod_coffebreak_tipo"]}" : "educar_coffebreak_tipo_lst.php";
@@ -122,9 +122,7 @@ class indice extends clsCadastro
         if( $cadastrou )
         {
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_coffebreak_tipo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_coffebreak_tipo_lst.php');
         }
         
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -144,9 +142,7 @@ class indice extends clsCadastro
         if( $editou )
         {
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_coffebreak_tipo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_coffebreak_tipo_lst.php');
         }
         
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -163,9 +159,7 @@ class indice extends clsCadastro
         if( $excluiu )
         {
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_coffebreak_tipo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_coffebreak_tipo_lst.php');
         }
         
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

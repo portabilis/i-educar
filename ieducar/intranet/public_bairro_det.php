@@ -95,8 +95,7 @@ class indice extends clsDetalhe
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->idbai);
 
     if (! $lst_bairro) {
-      header('Location: public_bairro_lst.php');
-      die();
+        $this->simpleRedirect('public_bairro_lst.php');
     }
     else {
       $registro = $lst_bairro[0];

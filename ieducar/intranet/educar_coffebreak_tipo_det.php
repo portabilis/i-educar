@@ -69,8 +69,7 @@ class indice extends clsDetalhe
         
         if( ! $registro || !$registro["ativo"] )
         {
-            header( "location: educar_coffebreak_tipo_lst.php" );
-            die();
+            $this->simpleRedirect('educar_coffebreak_tipo_lst.php');
         }
 
 
