@@ -24,6 +24,7 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -167,9 +168,8 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("acervo_colecao", $this->pessoa_logada, $this->cod_acervo_colecao);
       $auditoria->inclusao($acervo_colecao);
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_acervo_colecao_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('educar_acervo_colecao_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -194,9 +194,8 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("acervo_colecao", $this->pessoa_logada, $this->cod_acervo_colecao);
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_acervo_colecao_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('educar_acervo_colecao_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -221,9 +220,8 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("acervo_colecao", $this->pessoa_logada, $this->cod_acervo_colecao);
       $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_acervo_colecao_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('educar_acervo_colecao_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

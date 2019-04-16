@@ -172,6 +172,7 @@ class indice extends clsCadastro
         
         $script = "javascript:showExpansivelIframe(520, 400, 'educar_pre_requisito_cad_pop.php');";
         $script = "<img id='img_colecao' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
+        $this->simpleRedirect('educar_serie_lst.php');
         $this->campoLista( "ref_cod_pre_requisito", "Pre Requisito", $opcoes, $this->ref_cod_pre_requisito, "", "","", $script );
 
 
@@ -195,9 +196,7 @@ class indice extends clsCadastro
         if( $cadastrou )
         {
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_serie_pre_requisito_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_serie_pre_requisito_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -218,9 +217,7 @@ class indice extends clsCadastro
         if( $editou )
         {
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_serie_pre_requisito_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_serie_pre_requisito_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -241,9 +238,7 @@ class indice extends clsCadastro
         if( $excluiu )
         {
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_serie_pre_requisito_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_serie_pre_requisito_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

@@ -30,7 +30,6 @@ pmidrh_holerite_habilita.php
 pmidrh_holerite_lst.php
 suspenso.php
 transporte_itinerario_del.php
-tutormenu_cad.php
 educar_matricula_historico_lst.php
 educar_servidor_nivel_cad.php
 educar_servidor_vinculo_turma_det.php

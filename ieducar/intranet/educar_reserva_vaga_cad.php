@@ -150,8 +150,7 @@ class indice extends clsCadastro
 
     if ($cadastrou) {
       $this->mensagem .= 'Reserva de Vaga efetuada com sucesso.<br>';
-      header('Location: educar_reservada_vaga_det.php?cod_reserva_vaga=' . $cadastrou);
-      die();
+      $this->simpleRedirect('educar_reservada_vaga_det.php?cod_reserva_vaga=' . $cadastrou);
     }
 
     $this->mensagem = 'Reserva de Vaga n&atilde;o realizada.<br>';

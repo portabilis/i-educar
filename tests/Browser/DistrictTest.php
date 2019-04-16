@@ -3,6 +3,7 @@
 namespace Tests\Browser;
 
 use Illuminate\Foundation\Testing\WithFaker;
+use Tests\Browser\Login\LoginAsAdmin;
 use Tests\Browser\Pages\District\CreatePage;
 use Tests\Browser\Pages\District\DetailPage;
 use Tests\Browser\Pages\District\ListingPage;
@@ -12,7 +13,7 @@ use Laravel\Dusk\Browser;
 
 class DistrictTest extends DuskTestCase
 {
-    use WithFaker;
+    use LoginAsAdmin, WithFaker;
 
     /**
      * Test district flow.
@@ -30,7 +31,7 @@ class DistrictTest extends DuskTestCase
             $districtName = $this->faker->name;
             $districtNameAfterUpdate = $this->faker->name;
 
-            $browser->loginLegacy();
+            $browser->login();
 
             $browser->visit(new ListingPage())
                 ->press(' Novo ');
@@ -84,7 +85,7 @@ class DistrictTest extends DuskTestCase
     public function testDistrictListing()
     {
         $this->browse(function (Browser $browser) {
-            $browser->loginLegacy();
+            $browser->login();
             $browser->visit(new ListingPage());
         });
     }

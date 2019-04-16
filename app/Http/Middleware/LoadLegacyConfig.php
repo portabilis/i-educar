@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use iEducar\Support\Config\LegacyConfig;
+use Illuminate\Support\Facades\DB;
 
 class LoadLegacyConfig
 {
@@ -22,8 +23,28 @@ class LoadLegacyConfig
 
         $laravelLegacyConfig = config()->get('legacy');
 
-        config()->set(['legacy' => array_merge($laravelLegacyConfig, $configObject->getArrayConfig())]);
+        $data = array_merge(
+            $laravelLegacyConfig, $configObject->getArrayConfig(), $this->getConfig()
+        );
+
+        config()->set(['legacy' => $data]);
 
         return $next($request);
+    }
+
+    /**
+     * Return configurations for institution.
+     *
+     * @return array
+     */
+    private function getConfig()
+    {
+        $config = (array) DB::table('pmieducar.configuracoes_gerais as cg')
+            ->select('cg.*')
+            ->join('pmieducar.instituicao as i', 'cod_instituicao', '=', 'ref_cod_instituicao')
+            ->where('i.ativo', 1)
+            ->first();
+
+        return ['config' => $config];
     }
 }

@@ -25,6 +25,8 @@
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 
 require_once ("include/clsBase.inc.php");
@@ -46,7 +48,7 @@ class clsIndex extends clsBase
     }
 }
 
-class indice
+class indice extends clsCadastro
 {
     var $agenda;
     var $editor;
@@ -69,6 +71,9 @@ class indice
         // inicializacao de variaveis
         $this->editor = Session::get('id_pessoa');
 
+        Portabilis_View_Helper_Application::loadJavascript($this, "/intranet/scripts/agenda.js");
+        Portabilis_View_Helper_Application::loadStylesheet($this, "/intranet/styles/agenda.css");
+
         if( $_REQUEST["cod_agenda"] )
         {
             $this->agenda = $_REQUEST["cod_agenda"];
@@ -83,8 +88,9 @@ class indice
         // Checa se a pessoa possui permissao (daqui por diante comeca a visualizar, editar, excluir, etc.)
         if( ! $objAgenda->permissao_agenda() )
         {
-            header( "location: " . $this->scriptNome );
-            die();
+            throw new HttpResponseException(
+                new RedirectResponse( $this->scriptNome)
+            );
         }
 
         if( isset( $_REQUEST["time"] ) )
@@ -397,7 +403,7 @@ class indice
                                     <div>
                                         <i class=\"fa fa-pencil\" aria-hidden=\"true\"></i> Editar
                                     </div></a>
-                                <a class=\"small\" href=\"javascript: excluir( {$cod_agenda_compromisso} );\">
+                                <a class=\"small\" href=\"javascript: excluir_compromisso( {$cod_agenda_compromisso} );\">
                                 <div>
                                         <i class=\"fa fa-close\" aria-hidden=\"true\"></i> Excluir
                                 </div></a>";
