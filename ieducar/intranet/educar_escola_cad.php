@@ -2649,12 +2649,12 @@ class indice extends clsCadastro
             $rows[] = $this->makeRowManagerTable($key, $manager);
         }
 
-        $countOld = count(old('managers_inep_id'));
+        $countOld = count(old('managers_individual_id'));
         $countRegistered = count($managers);
 
         if ($countOld > $countRegistered) {
             for ($count = $countRegistered; $count < $countOld; $count++) {
-                $rows[] = $this->makeRowManagerTable($count, $manager);
+                $rows[] = $this->makeRowManagerTable($count, new SchoolManager());
             }
         }
 
@@ -2725,6 +2725,10 @@ class indice extends clsCadastro
         $schoolService = app(SchoolManagerService::class);
         $schoolService->deleteAllManagers($schoolId);
         foreach($this->managers_individual_id as $key => $individualId) {
+            if (empty($individualId) || empty($this->managers_role_id[$key])) {
+                continue;
+            }
+
             $valueObject = new SchoolManagerValueObject();
             $valueObject->individualId = $individualId;
             $valueObject->schoolId = $schoolId;
