@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Menu extends Model
@@ -30,11 +31,17 @@ class Menu extends Model
         return $this->hasMany(Menu::class, 'parent_id');
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function parent()
     {
         return $this->belongsTo(Menu::class, 'parent_id');
     }
 
+    /**
+     * @return Menu
+     */
     public function root()
     {
         $root = $this;
