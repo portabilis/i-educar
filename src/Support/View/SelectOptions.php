@@ -85,21 +85,33 @@ class SelectOptions
         return self::getDefaultOption() + UnidadeVinculadaComOutraInstituicao::getDescriptiveValues();
     }
 
+    /**
+     * @return array
+     */
     public static function locaisFuncionamentoEscola()
     {
         return self::getDefaultOption() + LocalFuncionamento::getDescriptiveValues();
     }
 
+    /**
+     * @return array
+     */
     public static function schoolManagerRoles()
     {
         return self::getDefaultOption() + ManagerRole::all()->getKeyValueArray('name');
     }
 
+    /**
+     * @return array
+     */
     public static function schoolManagerAccessCriterias()
     {
         return self::getDefaultOption() + ManagerAccessCriteria::all()->getKeyValueArray('name');
     }
 
+    /**
+     * @return array
+     */
     public static function schoolManagerLinkTypes()
     {
         return self::getDefaultOption() + ManagerLinkType::all()->getKeyValueArray('name');

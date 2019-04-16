@@ -58,8 +58,7 @@ class indice extends clsDetalhe{
         $tmp_obj = new clsPmieducarCategoriaObra($this->id);
         $registro = $tmp_obj->detalhe();
         if(!$registro){
-            header( "location: educar_categoria_lst.php" );
-            die();
+            $this->simpleRedirect('educar_categoria_nivel_lst.php');
         }
         if($registro["id"]){
             $this->addDetalhe(array("C&oacute;digo", "{$registro["id"]}"));

@@ -124,8 +124,6 @@ class indice extends clsCadastro
         $cadastrou = $obj->cadastra();
         if( $cadastrou )
         {
-//          $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-//          header( "Location: educar_turma_tipo_lst.php" );
             echo "<script>
                         if (parent.document.getElementById('ref_cod_turma_tipo').disabled)
                             parent.document.getElementById('ref_cod_turma_tipo').options[0] = new Option('Selectione um tipo de turma', '', false, false);

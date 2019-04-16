@@ -401,7 +401,7 @@ class indice extends clsCadastro
         $camposEscola['abastecimento_agua'][] = $i;
       }
     }
-    $camposEscola['abastecimento_agua'] = '{'.implode(',', $camposEscola['abastecimento_agua']).'}';
+    $camposEscola['abastecimento_agua'] = implode(',', $camposEscola['abastecimento_agua']);
 
     $camposEscola['abastecimento_energia'] = array();
     for ($i=1; $i <= 4; $i++) {
@@ -409,7 +409,7 @@ class indice extends clsCadastro
         $camposEscola['abastecimento_energia'][] = $i;
       }
     }
-    $camposEscola['abastecimento_energia'] = '{'.implode(',', $camposEscola['abastecimento_energia']).'}';
+    $camposEscola['abastecimento_energia'] = implode(',', $camposEscola['abastecimento_energia']);
 
     $camposEscola['esgoto_sanitario'] = array();
     for ($i=1; $i <= 3; $i++) {
@@ -417,7 +417,7 @@ class indice extends clsCadastro
         $camposEscola['esgoto_sanitario'][] = $i;
       }
     }
-    $camposEscola['esgoto_sanitario'] = '{'.implode(',', $camposEscola['esgoto_sanitario']).'}';
+    $camposEscola['esgoto_sanitario'] = implode(',', $camposEscola['esgoto_sanitario']);
 
     $camposEscola['destinacao_lixo'] = array();
     for ($i=1; $i <= 6; $i++) {
@@ -425,7 +425,7 @@ class indice extends clsCadastro
         $camposEscola['destinacao_lixo'][] = $i;
       }
     }
-    $camposEscola['destinacao_lixo'] = '{'.implode(',', $camposEscola['destinacao_lixo']).'}';
+    $camposEscola['destinacao_lixo'] = implode(',', $camposEscola['destinacao_lixo']);
 
     $codEscola = $this->existeEscola($inep);
     if($codEscola){
@@ -501,7 +501,7 @@ class indice extends clsCadastro
     );
 
     $camposTurma['dias_semana'] = array();
-    for ($i=1; $i <= 7; $i++) { 
+    for ($i=1; $i <= 7; $i++) {
       if($dadosRegistro[10+$i-1]){
         $camposTurma['dias_semana'][] = $i;
       }
@@ -509,7 +509,7 @@ class indice extends clsCadastro
     $camposTurma['dias_semana'] = '{'.implode(',', $camposTurma['dias_semana']).'}';
 
     $camposTurma['atividades_complementares'] = array();
-    for ($i=1; $i <= 6; $i++) { 
+    for ($i=1; $i <= 6; $i++) {
       if($dadosRegistro[19+$i-1]){
         $camposTurma['atividades_complementares'][] = $dadosRegistro[19+$i-1];
       }
@@ -517,7 +517,7 @@ class indice extends clsCadastro
     $camposTurma['atividades_complementares'] = '{'.implode(',', $camposTurma['atividades_complementares']).'}';
 
     $camposTurma['atividades_aee'] = array();
-    for ($i=1; $i <= 11; $i++) { 
+    for ($i=1; $i <= 11; $i++) {
       if($dadosRegistro[25+$i-1]){
         $camposTurma['atividades_aee'][] = $i;
       }
@@ -768,7 +768,7 @@ class indice extends clsCadastro
     if ($this->isAtendimentoEspecializado($tipoAtendimento)) {
       $dadosCurso = $this->etapasCenso['atendimento_educacional_especializado'];
     }
-    
+
     $codCurso = $this->getCurso($dadosCurso['curso']);
 
     if (!$codCurso) {
@@ -803,7 +803,7 @@ class indice extends clsCadastro
         $vinculo->cadastra();
       }
     }
- 
+
     return $codCurso;
   }
 
@@ -983,7 +983,7 @@ class indice extends clsCadastro
     );
 
     $cursosServidor['pos_graduacao'] = array();
-    for ($i=1; $i <= 4; $i++) { 
+    for ($i=1; $i <= 4; $i++) {
       if($dadosRegistro[23+$i-1]){
         $cursosServidor['pos_graduacao'][] = $i;
       }
@@ -991,7 +991,7 @@ class indice extends clsCadastro
     $cursosServidor['pos_graduacao'] = '{'.implode(',', $cursosServidor['pos_graduacao']).'}';
 
     $cursosServidor['curso_formacao_continuada'] = array();
-    for ($i=1; $i <= 16; $i++) { 
+    for ($i=1; $i <= 16; $i++) {
       if($dadosRegistro[27+$i-1]){
         $cursosServidor['curso_formacao_continuada'][] = $i;
       }
@@ -1140,7 +1140,7 @@ class indice extends clsCadastro
     }
 
     $recursosProva = array();
-    for ($i=1; $i <= 9; $i++) { 
+    for ($i=1; $i <= 9; $i++) {
       if($dadosRegistro[29+$i-1]){
         $recursosProva[] = $i;
       }

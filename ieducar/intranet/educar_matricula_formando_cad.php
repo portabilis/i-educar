@@ -95,9 +95,7 @@ class indice extends clsCadastro
 
         }
 
-        header("location: educar_matricula_lst.php");;
-        die;
-
+        $this->simpleRedirect('educar_matricula_lst.php');
     }
 
     function Gerar()

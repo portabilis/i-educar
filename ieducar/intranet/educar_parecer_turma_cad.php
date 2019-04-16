@@ -160,8 +160,7 @@ class indice extends clsCadastro
     $obj->ano = $this->ano;
 
     if ($obj->edita()){
-      header( "Location: educar_turma_det.php?cod_turma={$this->cod_turma}" );
-      return true;
+        $this->simpleRedirect("educar_turma_det.php?cod_turma={$this->cod_turma}");
     }
     $this->mensagem = "Erro ao salvar lançamentos.<br>";
     return false;

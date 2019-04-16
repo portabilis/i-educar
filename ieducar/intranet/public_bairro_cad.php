@@ -265,8 +265,7 @@ class indice extends clsCadastro
       $auditoria->inclusao($enderecamento);
 
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-      header('Location: public_bairro_lst.php');
-      die();
+      $this->simpleRedirect('public_bairro_lst.php');
     }
 
     $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
@@ -294,8 +293,7 @@ class indice extends clsCadastro
       $auditoria->alteracao($enderecamentoDetalheAntes, $enderecamentoDetalheDepois);
 
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      header('Location: public_bairro_lst.php');
-      die();
+      $this->simpleRedirect('public_bairro_lst.php');
     }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
@@ -311,8 +309,7 @@ class indice extends clsCadastro
 
     if ($excluiu) {
       $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-      header('Location: public_bairro_lst.php');
-      die();
+      $this->simpleRedirect('public_bairro_lst.php');
     }
 
     $this->mensagem = 'Exclusão não realizada.<br>';

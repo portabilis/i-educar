@@ -13,24 +13,23 @@ class InsertManagerLinkTypes extends Migration
     public function up()
     {
         DB::table('manager_link_types')->updateOrInsert(
-            [
-                [
-                    'id' => 1,
-                    'name' => 'Concursado/efetivo/estável'
-                ],
-                [
-                    'id' => 2,
-                    'name' => 'Contrato temporário'
-                ],
-                [
-                    'id' => 3,
-                    'name' => 'Contrato terceirizado'
-                ],
-                [
-                    'id' => 4,
-                    'name' => 'Contrato CLT'
-                ],
-            ]
+            ['id' => 1],
+            ['name' => 'Concursado/efetivo/estável']
+        );
+
+        DB::table('manager_link_types')->updateOrInsert(
+            ['id' => 2],
+            ['name' => 'Contrato temporário']
+        );
+
+        DB::table('manager_link_types')->updateOrInsert(
+            ['id' => 3],
+            ['name' => 'Contrato terceirizado']
+        );
+
+        DB::table('manager_link_types')->updateOrInsert(
+            ['id' => 4],
+            ['name' => 'Contrato CLT']
         );
     }
 

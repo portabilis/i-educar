@@ -101,8 +101,7 @@ class indice extends clsListagem
     }
 
     if (!$_GET['ref_cod_matricula']) {
-      header('Location: educar_matricula_lst.php');
-      die();
+        $this->simpleRedirect('educar_matricula_lst.php');
     }
 
     $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
