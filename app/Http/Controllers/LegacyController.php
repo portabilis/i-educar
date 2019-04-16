@@ -163,8 +163,6 @@ class LegacyController extends Controller
             );
         }
 
-        app(ExceptionHandler::class)->report($exception);
-
         if (config('app.debug')) {
             throw $exception;
         }

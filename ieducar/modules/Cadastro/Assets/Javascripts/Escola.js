@@ -740,7 +740,6 @@ function habilitaCampoEducacaoIndigena() {
     }else{
         makeUnrequired('lingua_ministrada');
         makeUnrequired('codigo_lingua_indigena');
-        $j('#lingua_ministrada').val(1)
     }
 
     $j('#lingua_ministrada').prop('disabled', !escolaIndigena);

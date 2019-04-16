@@ -3058,7 +3058,7 @@ class indice extends clsCadastro
             DB::table('modules.educacenso_cod_escola')->insert($data);
         }
     }
-  
+
     protected function validaLinguasIndigenas()
     {
         if (count($this->codigo_lingua_indigena) > 3) {
