@@ -2645,8 +2645,17 @@ class indice extends clsCadastro
         $managers = $schoolService->getSchoolManagers($this->cod_escola);
 
         $rows = [];
-        foreach ($managers as $manager) {
-            $rows[] = $this->makeRowManagerTable($manager);
+        foreach ($managers as $key => $manager) {
+            $rows[] = $this->makeRowManagerTable($key, $manager);
+        }
+
+        $countOld = count(old('managers_inep_id'));
+        $countRegistered = count($managers);
+
+        if ($countOld > $countRegistered) {
+            for ($count = $countRegistered; $count < $countOld; $count++) {
+                $rows[] = $this->makeRowManagerTable($count, $manager);
+            }
         }
 
         $this->campoTabelaInicio('gestores', 'Gestores escolares',
@@ -2691,18 +2700,18 @@ class indice extends clsCadastro
      * @param SchoolManager $schoolManager
      * @return array
      */
-    protected function makeRowManagerTable($schoolManager)
+    protected function makeRowManagerTable($key, $schoolManager)
     {
         return [
-            $schoolManager->inep_id,
-            $schoolManager->individual_id . ' - ' . $schoolManager->individual->real_name,
-            $schoolManager->role_id,
+            old("managers_inep_id")[$key] ?? $schoolManager->inep_id,
+            old("managers_individual_nome")[$key] ?? $schoolManager->individual_id . ' - ' . $schoolManager->individual->real_name,
+            old("managers_role_id")[$key] ?? $schoolManager->role_id,
             null,
-            (int)$schoolManager->chief,
-            $schoolManager->individual_id,
-            $schoolManager->access_criteria_id,
-            $schoolManager->access_criteria_description,
-            $schoolManager->link_type_id,
+            old("managers_chief")[$key] ?? (int)$schoolManager->chief,
+            old("managers_individual_id")[$key] ?? $schoolManager->individual_id,
+            old("managers_access_criteria_id")[$key] ?? $schoolManager->access_criteria_id,
+            old("managers_access_criteria_description")[$key] ?? $schoolManager->access_criteria_description,
+            old("managers_link_type_id")[$key] ?? $schoolManager->link_type_id,
         ];
     }
 
