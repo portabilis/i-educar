@@ -179,9 +179,8 @@
                     <td valign=top>
                         <table summary="" class='tabelanum2' border='0' cellspacing='0' cellpadding='0'>
                             <tr>
-                                <td height="0" id="menu_suspenso">
-                                    <input type="hidden" value="" id="posx">
-                                    <input type="hidden" value="" id="posy">
+                                <td>
+                                    @include('layout.topmenu')
                                 </td>
                             </tr>
                             <tr>
@@ -311,9 +310,5 @@
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/select2.full.min.js") }}"></script>
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/pt-BR.js") }}"></script>
 <link type="text/css" rel="stylesheet" href="{{ Asset::get("/intranet/scripts/select2/select2.min.css") }}"/>
-@include('layout.topmenu')
-<script type="text/javascript">
-
-</script>
 </body>
 </html>

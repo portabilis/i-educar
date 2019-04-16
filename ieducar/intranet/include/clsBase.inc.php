@@ -1,6 +1,6 @@
 <?php
 
-use iEducar\Support\Navigation\TopMenu;
+use App\Menu;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
@@ -354,8 +354,19 @@ class clsBase extends clsConfig
 
         $saida_geral = '';
 
-        app(TopMenu::class)->current($this->processoAp,  request()->getRequestUri());
+        $topmenu = Menu::query()
+            ->where('process', $this->processoAp)
+            ->first();
 
+        $menu = Menu::query()
+            ->whereNull('parent_id')
+            ->get();
+
+        if ($topmenu) {
+            View::share('topmenu', $topmenu->root()->load('children.children.children.children'));
+        }
+
+        View::share('menu', $menu);
         View::share('title', $this->titulo);
 
         if ($this->renderMenu) {

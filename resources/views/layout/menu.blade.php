@@ -33,29 +33,44 @@
                                                autocomplete=off></li>
                 </ul>
 
-                @foreach($menu as $itemMenu)
-                    <a href="{{$itemMenu->caminho}}"
-                       style="outline:none; text-decoration: none;">
-                        <div>
-                            <table width="168" class="title active-section-title"
-                                   style="-moz-user-select: none;">
-                                <tbody style="-moz-user-select: none;">
-                                <tr style="-moz-user-select: none;">
-                                    <td style="-moz-user-select: none;"><a
-                                            href="{{$itemMenu->caminho}}"
-                                            id='link1_68' style="outline:none">
-                                            <div id="fa-icons"><i class="fa {{$itemMenu->icon_class}}"
-                                                                  aria-hidden="true"></i></div>
-                                            {{$itemMenu->nm_menu}}</a></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <div id='div_{{$itemMenu->ref_cod_menu_pai}}' style="display:none;">
-                                <ul class="menu"></ul>
-                            </div>
-                        </div>
-                    </a>
+                <ul class="ieducar-sidebar-menu">
+                @foreach($menu as $item)
+                    <li>
+                        <a href="{{ $item->link }}"><i class="fa {{$item->icon}}"></i> <span>{{$item->title}}</span></a>
+                    </li>
                 @endforeach
+                </ul>
+                <style>
+                    .ieducar-sidebar-menu {
+                        padding: 0;
+                        margin: 0;
+                    }
+                    .ieducar-sidebar-menu li {
+                        padding: 0;
+                        margin: 0;
+                        list-style: none;
+                    }
+                    .ieducar-sidebar-menu li a {
+                        display: block;
+                        color: #47728f;
+                        font-family: "Open Sans", sans-serif;
+                        font-size: 16px;
+                        padding: 17px 15px;
+                        margin: 0 10px;
+                        -webkit-border-radius: 3px;
+                        -moz-border-radius: 3px;
+                        border-radius: 3px;
+                    }
+                    .ieducar-sidebar-menu li a:hover {
+                        background: #cddce6;
+                        text-decoration: none;
+                    }
+                    .ieducar-sidebar-menu li a i {
+                        color: #98b0c3;
+                        font-size: 20px;
+                        padding-right: 10px;
+                    }
+                </style>
             </td>
         </tr>
     </table>
