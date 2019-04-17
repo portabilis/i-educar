@@ -14,9 +14,7 @@ class AlteraColunaCodigoLinguaIndigenaEscola extends Migration
      */
     public function up()
     {
-        Schema::table('pmieducar.escola', function (Blueprint $table) {
-            $table->dropForeign('escola_codigo_indigena_fk');
-        });
+        DB::statement('ALTER TABLE pmieducar.escola DROP CONSTRAINT IF EXISTS escola_codigo_indigena_fk;');
 
         DB::statement('alter table pmieducar.escola alter column codigo_lingua_indigena type integer[] USING array[codigo_lingua_indigena]::integer[]');
     }

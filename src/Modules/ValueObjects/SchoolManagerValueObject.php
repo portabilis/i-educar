@@ -38,4 +38,9 @@ class SchoolManagerValueObject
      * @var boolean
      */
     public $isChief;
+
+    /**
+     * @var integer
+     */
+    public $inepId;
 }

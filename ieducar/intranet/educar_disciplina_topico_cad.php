@@ -108,9 +108,7 @@ class indice extends clsCadastro
         if( $cadastrou )
         {
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_disciplina_topico_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_disciplina_topico_lst.php');
         }
         
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -127,9 +125,7 @@ class indice extends clsCadastro
         if( $editou )
         {
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_disciplina_topico_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_disciplina_topico_lst.php');
         }
         
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -146,9 +142,7 @@ class indice extends clsCadastro
         if( $excluiu )
         {
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_disciplina_topico_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_disciplina_topico_lst.php');
         }
         
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

@@ -210,9 +210,8 @@ class indice extends clsCadastro
 
     if ($cadastrou) {
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-      header('Location: ' . sprintf('educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
-        $this->ref_cod_servidor, $this->ref_cod_instituicao));
-      die();
+      $this->simpleRedirect(sprintf('educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
+            $this->ref_cod_servidor, $this->ref_cod_instituicao));
     }
 
     $this->mensagem = 'Cadastro não realizado.<br />';
@@ -250,9 +249,8 @@ class indice extends clsCadastro
     $editou = $obj->edita();
     if ($editou) {
       $this->mensagem .= 'Edição efetuada com sucesso.<br />';
-      header('Location: ' . sprintf('educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
-        $this->ref_cod_servidor, $this->ref_cod_instituicao));
-      die();
+      $this->simpleRedirect(sprintf('educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
+            $this->ref_cod_servidor, $this->ref_cod_instituicao));
     }
 
     $this->mensagem = 'Edição não realizada.<br />';
@@ -276,9 +274,8 @@ class indice extends clsCadastro
     $excluiu = $obj->excluir();
     if ($excluiu) {
       $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
-      header('Location: ' . sprintf('educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
-        $this->ref_cod_servidor, $this->ref_cod_instituicao));
-      die();
+      $this->simpleRedirect(sprintf('educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
+            $this->ref_cod_servidor, $this->ref_cod_instituicao));
     }
     $this->mensagem = "Exclusão não realizada.<br>";
     echo "<!--\nErro ao excluir clsPmieducarFaltaAtraso\nvalores obrigatórios\nif( is_numeric( $this->cod_falta_atraso ) && is_numeric( $this->ref_usuario_exc ) )\n-->";

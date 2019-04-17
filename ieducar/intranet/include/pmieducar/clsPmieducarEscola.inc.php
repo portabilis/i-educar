@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'App/Model/NivelTipoUsuario.php';
 
@@ -1567,19 +1569,25 @@ class clsPmieducarEscola
 
             if (is_string($this->local_funcionamento)) {
                 $set .= "{$gruda}local_funcionamento = '{{$this->local_funcionamento}}'";
-                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}local_funcionamento = '{}'";
             }
 
+            $gruda = ', ';
             if (is_numeric($this->condicao)) {
                 $set .= "{$gruda}condicao = '{$this->condicao}'";
-                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}condicao = NULL ";
             }
 
+            $gruda = ', ';
             if (is_numeric($this->predio_compartilhado_outra_escola)) {
                 $set .= "{$gruda}predio_compartilhado_outra_escola = '{$this->predio_compartilhado_outra_escola}'";
-                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}predio_compartilhado_outra_escola = NULL ";
             }
 
+            $gruda = ', ';
             if (is_numeric($this->codigo_inep_escola_compartilhada)) {
                 $set .= "{$gruda}codigo_inep_escola_compartilhada = '{$this->codigo_inep_escola_compartilhada}'";
                 $gruda = ', ';
@@ -2016,9 +2024,11 @@ class clsPmieducarEscola
 
             if (is_numeric($this->atendimento_aee)) {
                 $set .= "{$gruda}atendimento_aee = '{$this->atendimento_aee}'";
-                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}atendimento_aee = NULL ";
             }
 
+            $gruda = ', ';
             if (is_numeric($this->atividade_complementar)) {
                 $set .= "{$gruda}atividade_complementar = '{$this->atividade_complementar}'";
                 $gruda = ', ';
@@ -2026,9 +2036,11 @@ class clsPmieducarEscola
 
             if (is_numeric($this->fundamental_ciclo)) {
                 $set .= "{$gruda}fundamental_ciclo = '{$this->fundamental_ciclo}'";
-                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}fundamental_ciclo = NULL ";
             }
 
+            $gruda = ', ';
             if (is_string($this->organizacao_ensino)) {
                 $set .= "{$gruda}organizacao_ensino = '{{$this->organizacao_ensino}}'";
                 $gruda = ', ';
@@ -2092,9 +2104,11 @@ class clsPmieducarEscola
 
             if (is_numeric($this->educacao_indigena)) {
                 $set .= "{$gruda}educacao_indigena = '{$this->educacao_indigena}'";
-                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}educacao_indigena = NULL ";
             }
 
+            $gruda = ', ';
             if (is_numeric($this->lingua_ministrada)) {
                 $set .= "{$gruda}lingua_ministrada = '{$this->lingua_ministrada}'";
                 $gruda = ', ';
@@ -2267,9 +2281,11 @@ class clsPmieducarEscola
 
             if (is_numeric($this->acesso_internet)) {
                 $set .= "{$gruda}acesso_internet = '{$this->acesso_internet}'";
-                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}acesso_internet = NULL ";
             }
 
+            $gruda = ', ';
             if (is_string($this->ato_criacao)) {
                 $set .= "{$gruda}ato_criacao = '{$this->ato_criacao}'";
                 $gruda = ', ';

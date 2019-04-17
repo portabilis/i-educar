@@ -18,6 +18,8 @@ class Registro40 implements RegistroEducacenso
 
     public $codigoPessoa;
 
+    public $inepGestor;
+
     public $cargo;
 
     public $criterioAcesso;

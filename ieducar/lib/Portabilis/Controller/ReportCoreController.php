@@ -214,8 +214,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
     protected function validatesIfUserIsLoggedIn()
     {
         if (!$this->getSession()->id_pessoa) {
-            header('Location: logof.php');
-            die();
+            $this->simpleRedirect('logof.php');
         }
     }
 

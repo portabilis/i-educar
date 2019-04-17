@@ -82,8 +82,7 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->detalhe();
 
     if (!$registro) {
-      header('Location: educar_bloqueio_lancamento_faltas_notas_lst.php');
-      die();
+        $this->simpleRedirect('educar_bloqueio_lancamento_faltas_notas_lst.php');
     }
 
     //Nome da etapa

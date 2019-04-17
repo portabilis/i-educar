@@ -752,10 +752,7 @@ JS;
         include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-        header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-
-
-        die();
+        $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
       }
     } else {
       $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao;
@@ -783,9 +780,7 @@ JS;
         include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-        header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-
-        die();
+        $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
       }
     }
     $this->mensagem = 'Cadastro não realizado.<br>';
@@ -835,9 +830,7 @@ JS;
         include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
         $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-        header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-
-        die();
+        $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
       }
     } else {
       $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
@@ -889,9 +882,7 @@ JS;
               include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
               $this->mensagem .= "Edição efetuada com sucesso.<br>";
-              header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-
-              die();
+              $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
             }
           }
         }
@@ -939,8 +930,7 @@ JS;
 
           $this->excluiFuncoes();
           $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
-          header("Location: educar_servidor_lst.php");
-          die();
+          $this->simpleRedirect('educar_servidor_lst.php');
         }
       }
     }

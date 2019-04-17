@@ -35,13 +35,13 @@ class SchoolManagers implements EducacensoValidator
     {
         $individualArray = $this->getIndividualArray();
         if ($this->containsEmptyOrIsNull($individualArray)) {
-            $this->message[] = 'Você precisa cadastrar pelo menos um gestor';
+            $this->message[] = 'Informe pelo menos um(a) gestor(a) como gestor(a) principal';
             $this->valid = false;
         }
 
         $roleArray = $this->getRoleArray();
         if ($this->containsEmptyOrIsNull($roleArray)) {
-            $this->message[] = 'Você precisa informar o cargo dos gestores';
+            $this->message[] = 'O campo: <b>Cargo do gestor</b> deve ser preenchido';
             $this->valid = false;
         }
 
@@ -76,13 +76,37 @@ class SchoolManagers implements EducacensoValidator
      */
     private function validateAccessCriteria($valueObject)
     {
-        if (!isset($valueObject->roleId)) {
+        if (empty($valueObject->roleId)) {
             return;
         }
 
         if ($valueObject->roleId == SchoolManagerRole::DIRETOR && empty($valueObject->accessCriteriaId)) {
             $this->valid = false;
-            $this->message[] = 'Se o cargo do gestor for <b>Diretor</b>, você precisa informar o critério de acesso ao cargo';
+            $this->message[] = 'O campo: <b>Critério de acesso ao cargo</b> deve ser preenchido quando o campo: <b>Cargo</b> for: <b>Diretor</b>';
+        }
+
+        $publicDependency = [
+            DependenciaAdministrativaEscola::FEDERAL,
+            DependenciaAdministrativaEscola::ESTADUAL,
+            DependenciaAdministrativaEscola::MUNICIPAL,
+        ];
+
+        if ($valueObject->accessCriteriaId == SchoolManagerAccessCriteria::PROPRIETARIO && in_array($this->administrativeDependency, $publicDependency)) {
+            $this->valid = false;
+            $this->message[] = 'Não é possível selecionar a opção: <b>Ser proprietário(a) ou sócio(a)-proprietário(a) da escola</b> quando a dependência administrativa for: <b>Federal, Estadual ou Municipal</b>.';
+        }
+
+        $publicAccesCriteria = [
+            SchoolManagerAccessCriteria::CONCURSO,
+            SchoolManagerAccessCriteria::PROCESSO_ELEITORAL_COMUNIDADE,
+            SchoolManagerAccessCriteria::PROCESSO_SELETIVO_COMUNIDADE,
+        ];
+
+        $accessCriteriaSelected = SchoolManagerAccessCriteria::getDescriptiveValues()[$valueObject->accessCriteriaId];
+
+        if (in_array($valueObject->accessCriteriaId, $publicAccesCriteria) && $this->administrativeDependency == DependenciaAdministrativaEscola::PRIVADA) {
+            $this->valid = false;
+            $this->message[] = "Não é possível selecionar a opção: <b>{$accessCriteriaSelected}</b> quando a dependência administrativa da escola for: <b>Privada</b>";
         }
     }
 
@@ -91,13 +115,13 @@ class SchoolManagers implements EducacensoValidator
      */
     private function validateAccessCriteriaDescription($valueObject)
     {
-        if (!isset($valueObject->accessCriteriaId)) {
+        if (empty($valueObject->accessCriteriaId)) {
             return;
         }
 
         if ($valueObject->accessCriteriaId == SchoolManagerAccessCriteria::OUTRO && empty($valueObject->accessCriteriaDescription)) {
             $this->valid = false;
-            $this->message[] = 'Se o citério de acesso ao cargo do gestor for <b>Outros</b>, você precisa informar uma especificação';
+            $this->message[] = 'O campo: <b>Especificação do critério de acesso</b> deve ser preenchido quando o campo: <b>Critério de acesso ao cargo</b> for: <b>Outros</b>';
         }
     }
 
@@ -106,7 +130,7 @@ class SchoolManagers implements EducacensoValidator
      */
     private function validateAccessLinkType($valueObject)
     {
-        if (!isset($valueObject->roleId)) {
+        if (empty($valueObject->roleId)) {
             return;
         }
 
@@ -116,7 +140,7 @@ class SchoolManagers implements EducacensoValidator
 
         if ($valueObject->roleId == SchoolManagerRole::DIRETOR && empty($valueObject->linkTypeId)) {
             $this->valid = false;
-            $this->message[] = 'O campo <b>Tipo de vínculo</b> do gestor precisa ser preenchido';
+            $this->message[] = 'O campo: <b>Tipo de vínculo</b> deve ser preenchido quando o campo: <b>Cargo</b> for: <b>Diretor</b> e o campo: <b>Dependência administrativa</b> não for: <b>Privada</b>';
         }
     }
 

@@ -85,8 +85,7 @@ class indice extends clsCadastro
 
         if (!isset($this->ref_cod_cliente))
         {
-            header( "Location: educar_reservas_lst.php" );
-            die();
+            $this->simpleRedirect('educar_reserva_vaga_lst.php');
         }
 
         if( is_numeric( $this->cod_reserva ) )
@@ -434,9 +433,7 @@ class indice extends clsCadastro
         if( $cadastrou )
         {
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_reservas_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_reservas_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";

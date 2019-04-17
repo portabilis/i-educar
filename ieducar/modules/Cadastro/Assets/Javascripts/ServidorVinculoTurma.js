@@ -17,17 +17,19 @@ $j(document).ready(function() {
 
   var handleGetComponenteCurricular = function(dataResponse) {
 
-    $j.each(dataResponse['componentecurricular'], function(id, value) {
+    setTimeout(function () {
+      $j.each(dataResponse['componentecurricular'], function(id, value) {
 
-      // Insere o componente no multipleSearch caso não exista
-      if (0 == $componentecurricular.children("[value=" + value + "]").length) {
-        addComponenteCurricular(value);
-      } else {
-        $componentecurricular.children("[value=" + value + "]").attr('selected', '');
-      }
-    });
+        // Insere o componente no multipleSearch caso não exista
+        if (0 == $componentecurricular.children("[value=" + value + "]").length) {
+          addComponenteCurricular(value);
+        } else {
+          $componentecurricular.children("[value=" + value + "]").attr('selected', '');
+        }
+      });
 
-    $componentecurricular.trigger('chosen:updated');
+      $componentecurricular.trigger('chosen:updated');
+    }, 1000);
   }
 
   var handleAddComponenteCurricular = function(dataResponse, id) {

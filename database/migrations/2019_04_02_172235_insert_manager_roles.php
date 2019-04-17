@@ -13,16 +13,13 @@ class InsertManagerRoles extends Migration
     public function up()
     {
         DB::table('manager_roles')->updateOrInsert(
-            [
-                [
-                    'id' => 1,
-                    'name' => 'Diretor(a)'
-                ],
-                [
-                    'id' => 2,
-                    'name' => 'Outro cargo'
-                ],
-            ]
+            ['id' => 1],
+            ['name' => 'Diretor(a)']
+        );
+
+        DB::table('manager_roles')->updateOrInsert(
+            ['id' => 2],
+            ['name' => 'Outro cargo']
         );
     }
 

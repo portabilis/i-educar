@@ -3,6 +3,8 @@
 use App\Services\SchoolClassService;
 use App\Models\School;
 use App\Models\LegacyCourse;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -880,11 +882,15 @@ class indice extends clsCadastro
         $this->atualizaModulos();
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.';
-        header('Location: educar_turma_lst.php');
+        $this->simpleRedirect('educar_turma_lst.php');
     }
 
     public function Editar()
     {
+        $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
+        $turmaDetalhe = $turmaDetalhe->detalhe();
+        $this->ref_ref_cod_escola = $turmaDetalhe['ref_ref_cod_escola'];
+
         if (!$this->verificaModulos()) {
             return false;
         }
@@ -897,8 +903,6 @@ class indice extends clsCadastro
             return false;
         }
 
-        $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
-        $turmaDetalhe = $turmaDetalhe->detalhe();
 
         if (is_null($this->ref_cod_instituicao)) {
             $this->ref_cod_instituicao = $turmaDetalhe['ref_cod_instituicao'];
@@ -937,9 +941,11 @@ class indice extends clsCadastro
 
         $this->atualizaModulos();
 
-        $this->mensagem .= 'Edição efetuada com sucesso.';
-        header('Location: educar_turma_lst.php');
-        die();
+        $this->message = 'Edição efetuada com sucesso.';
+
+        throw new HttpResponseException(
+            new RedirectResponse('educar_turma_lst.php')
+        );
     }
 
     protected function validaCamposHorario()
@@ -1085,7 +1091,7 @@ class indice extends clsCadastro
         }
 
         if (in_array($this->local_funcionamento_diferenciado, [App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO, App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL]) &&
-            !in_array($this->etapa_educacenso, [1, 2, 3, 56])
+            in_array($this->etapa_educacenso, [1, 2, 3, 56])
         ) {
             $nomeOpcao = (App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums())[$this->local_funcionamento_diferenciado];
             $this->mensagem = "Quando o campo: Local de funcionamento diferenciado é: {$nomeOpcao}, o campo: Etapa de ensino não pode ser nenhuma das seguintes opções: 1, 2, 3 ou 56";
@@ -1323,9 +1329,11 @@ class indice extends clsCadastro
                 $auditoria = new clsModulesAuditoriaGeral('turma', $this->pessoa_logada, $this->cod_turma);
                 $auditoria->exclusao($turma);
 
-                $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.';
-                header('Location: educar_turma_lst.php');
-                die();
+                $this->mensagem .= 'Exclusão efetuada com sucesso.';
+
+                throw new HttpResponseException(
+                    new RedirectResponse('educar_turma_lst.php')
+                );
             } else {
                 $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.';
                 echo "<!--\nErro ao excluir clsPmieducarTurma\nvalores obrigatorios\nif( is_numeric( $this->cod_turma ) && is_numeric( $this->pessoa_logada ) )\n-->";
@@ -1749,7 +1757,7 @@ $pagina->MakeAll();
     }
 
     function valida() {
-        if (validaHorarioInicialFinal() && validaMinutos() && validaAtividadesComplementares()) {
+        if (validaHorarioInicialFinal() && validaHoras() && validaAtividadesComplementares()) {
             if (document.getElementById('padrao_ano_escolar').value == 1) {
                 var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
                 var campoEscola = document.getElementById('ref_cod_escola').value;
