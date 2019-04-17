@@ -276,6 +276,7 @@ SQL;
                40 AS registro,
                educacenso_cod_escola.cod_escola_inep AS "inepEscola",
                school_managers.individual_id AS "codigoPessoa",
+               school_managers.inep_id AS "inepGestor",
                school_managers.role_id AS cargo,
                school_managers.access_criteria_id AS "criterioAcesso",
                school_managers.access_criteria_description AS "especificacaoCriterioAcesso",
