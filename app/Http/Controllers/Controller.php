@@ -28,21 +28,6 @@ class Controller extends BaseController
     }
 
     /**
-     * Set the top menu of the action
-     *
-     * @param $currentSubmenuId
-     * @param null $currentUri
-     */
-    public function topMenu($currentSubmenuId, $currentUri = null)
-    {
-        if (empty($currentUri)) {
-            $currentUri = request()->getRequestUri();
-        }
-
-        app(TopMenu::class)->current($currentSubmenuId, $currentUri);
-    }
-
-    /**
      * Share with view, title, mainmenu and menu links.
      * 
      * @param int $process
