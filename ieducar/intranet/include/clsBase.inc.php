@@ -3,6 +3,7 @@
 use App\Menu;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Tooleks\LaravelAssetVersion\Facades\Asset;
@@ -354,16 +355,13 @@ class clsBase extends clsConfig
 
         $saida_geral = '';
 
+        $menu = Menu::user(Auth::user());
         $topmenu = Menu::query()
             ->where('process', $this->processoAp)
             ->first();
 
-        $menu = Menu::query()
-            ->whereNull('parent_id')
-            ->get();
-
         if ($topmenu) {
-            View::share('topmenu', $topmenu->root()->load('children.children.children.children'));
+            View::share('mainmenu', $topmenu->root()->getKey());
         }
 
         View::share('menu', $menu);

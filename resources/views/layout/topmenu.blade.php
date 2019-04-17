@@ -1,4 +1,7 @@
-@if(isset($topmenu))
+@if(isset($mainmenu))
+    @php
+    $topmenu = $menu->where('id', $mainmenu)->first();
+    @endphp
     <div class="ieducar-menu-container">
     @if($topmenu->children && $topmenu->children->count())
         <ul class="ieducar-menu clearfix">

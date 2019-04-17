@@ -5,6 +5,7 @@ namespace App;
 use App\Models\LegacyEmployee;
 use App\Models\LegacyUserType;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -119,5 +120,28 @@ class User extends Authenticatable
     public function employee()
     {
         return $this->belongsTo(LegacyEmployee::class, 'cod_usuario', 'ref_cod_pessoa_fj');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function menu()
+    {
+        return $this->belongsToMany(
+            Menu::class,
+            'pmieducar.menu_tipo_usuario',
+            'ref_cod_tipo_usuario',
+            'ref_cod_menu_submenu',
+            'ref_cod_tipo_usuario',
+            'process'
+        )->wherePivot('visualiza', 1);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function root()
+    {
+        return $this->menu()->select('process');
     }
 }
