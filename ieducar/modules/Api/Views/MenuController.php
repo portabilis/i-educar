@@ -1,5 +1,8 @@
 <?php
 
+use App\Menu;
+use App\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
@@ -19,19 +22,22 @@ class MenuController extends ApiCoreController
     protected function sqlsForNumericSearch()
     {
         $usuario = $this->getCurrentUser();
-        $sqls[] =
-              "select arquivo as id,
-                      nm_submenu as name
-                 from portal.menu_submenu as ms
-                left  join pmicontrolesis.menu as m on(m.ref_cod_menu_submenu = ms.cod_menu_submenu)
-                inner join pmieducar.menu_tipo_usuario as mtu on(ms.cod_menu_submenu = mtu.ref_cod_menu_submenu)
-                inner join pmieducar.usuario as u on (u.ref_cod_tipo_usuario = mtu.ref_cod_tipo_usuario)
-                where ms.cod_menu_submenu = $1 AND
-                      arquivo is not null AND
-                      trim(arquivo) <> '' AND
-                      mtu.visualiza = 1 AND
-                      u.cod_usuario = '{$usuario}'
-                      limit 15";
+        $sqls[] = "
+            select 
+                m.link as id, 
+                title as name
+            from public.menus m 
+            inner join pmieducar.menu_tipo_usuario mst
+            on mst.ref_cod_menu_submenu = m.process
+            inner join pmieducar.usuario u 
+            on u.ref_cod_tipo_usuario = mst.ref_cod_tipo_usuario
+            where true 
+            and u.cod_usuario = '{$usuario}'
+            and mst.visualiza = 1
+            and m.process = $1
+            order by m.title
+            limit 15;
+        ";
 
         return $sqls;
     }
@@ -39,19 +45,26 @@ class MenuController extends ApiCoreController
     protected function sqlsForStringSearch()
     {
         $usuario = $this->getCurrentUser();
-        $sqls[] =
-            "select arquivo as id,
-                    nm_submenu as name
-               from portal.menu_submenu as ms
-              left  join pmicontrolesis.menu as m on(m.ref_cod_menu_submenu = ms.cod_menu_submenu)
-              inner join pmieducar.menu_tipo_usuario as mtu on(ms.cod_menu_submenu = mtu.ref_cod_menu_submenu)
-              inner join pmieducar.usuario as u on (u.ref_cod_tipo_usuario = mtu.ref_cod_tipo_usuario)
-              where lower(nm_submenu) like '%'||lower($1)||'%' AND
-                    arquivo is not null AND
-                    trim(arquivo) <> '' AND
-                    mtu.visualiza = 1 AND
-                    u.cod_usuario = '{$usuario}'
-              limit 15";
+
+        $sqls[] = "
+            select 
+                m.link as id, 
+                m.title as name
+            from public.menus m 
+            inner join pmieducar.menu_tipo_usuario mst
+            on mst.ref_cod_menu_submenu = m.process
+            inner join pmieducar.usuario u 
+            on u.ref_cod_tipo_usuario = mst.ref_cod_tipo_usuario
+            where true 
+            and u.cod_usuario = '{$usuario}'
+            and mst.visualiza = 1
+            and (
+                m.title ilike '%'|| $1 ||'%'
+                or m.description ilike '%'|| $1 ||'%'
+            )
+            order by m.title
+            limit 15;
+        ";
 
         return $sqls;
     }
