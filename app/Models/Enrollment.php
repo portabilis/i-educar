@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Registration;
-use App\Models\SchoolClass;
+use App\Models\LegacySchoolClass;
 
 class Enrollment extends Model
 {
@@ -28,7 +28,7 @@ class Enrollment extends Model
      */
     public function schoolClass()
     {
-        return $this->belongsTo(SchoolClass::class, 'ref_cod_turma', 'cod_turma');
+        return $this->belongsTo(LegacySchoolClass::class, 'ref_cod_turma', 'cod_turma');
     }
 
     /**

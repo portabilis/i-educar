@@ -2,7 +2,7 @@
 
 namespace App\Services\SchoolClass;
 
-use App\Models\SchoolClass;
+use App\Models\LegacySchoolClass;
 
 class AvailableTimeService
 {
@@ -16,13 +16,13 @@ class AvailableTimeService
      */
     public function isAvailable(int $studentId, int $schoolClassId)
     {
-        $schoolClass = SchoolClass::findOrFail($schoolClassId);
+        $schoolClass = LegacySchoolClass::findOrFail($schoolClassId);
 
         if ($schoolClass->tipo_mediacao_didatico_pedagogico != 1) {
             return true;
         }
 
-        $otherSchoolClass = SchoolClass::where('cod_turma', '<>', $schoolClassId)
+        $otherSchoolClass = LegacySchoolClass::where('cod_turma', '<>', $schoolClassId)
             ->whereHas('enrollments', function($enrollmentsQuery) use ($studentId){
                 $enrollmentsQuery->whereHas('registration', function($registrationQuery) use ($studentId) {
                     $registrationQuery->where('ref_cod_aluno', $studentId);
@@ -38,7 +38,7 @@ class AvailableTimeService
         return true;
     }
 
-    private function schedulesMatch(SchoolClass $schoolClass, SchoolClass $otherSchoolClass)
+    private function schedulesMatch(LegacySchoolClass $schoolClass, LegacySchoolClass $otherSchoolClass)
     {
         if ($otherSchoolClass->tipo_mediacao_didatico_pedagogico != 1) {
             return false;
