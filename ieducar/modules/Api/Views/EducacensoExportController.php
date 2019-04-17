@@ -139,7 +139,7 @@ class EducacensoExportController extends ApiCoreController
         }
 
         $export .= $this->exportaDadosRegistro40($escolaId);
-return $export;
+
         foreach ($this->getAlunos($escolaId, $ano, $data_ini, $data_fim) as $alunoId) {
             $registro60 = $this->exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
             $registro70 = $this->exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
