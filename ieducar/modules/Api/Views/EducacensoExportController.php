@@ -133,8 +133,8 @@ class EducacensoExportController extends ApiCoreController
             $registro30 = $this->exportaDadosRegistro30($servidor['id'], $escolaId);
             $registro50 = $this->exportaDadosRegistro50($servidor['id'], $escolaId);
             $registro51 = $this->exportaDadosRegistro51($servidor['id'], $escolaId, $data_ini, $data_fim, $ano);
-            if (!empty($registro30) && !empty($registro40) && !empty($registro50)) {
-                $export .= $registro30 . $registro40 . $registro50 . $registro51;
+            if (!empty($registro30) && !empty($registro50)) {
+                $export .= $registro30 . $registro50 . $registro51;
             }
         }
 
@@ -956,12 +956,14 @@ return $export;
         $stringCenso = '';
         foreach ($gestores as $gestor) {
             $gestor = CargoGestor::handle($gestor);
+            /** @var Registro40 $gestor */
             $gestor = CriterioAcessoGestor::handle($gestor);
 
             $data = [
                 $gestor->registro,
                 $gestor->inepEscola,
                 $gestor->codigoPessoa,
+                $gestor->inepGestor,
                 $gestor->cargo,
                 $gestor->criterioAcesso,
                 $gestor->especificacaoCriterioAcesso,
