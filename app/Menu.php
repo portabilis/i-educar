@@ -26,6 +26,47 @@ class Menu extends Model
     ];
 
     /**
+     * Indica se o menu é um link ou tem ao menos um link em seus submenus.
+     *
+     * @return bool
+     */
+    public function hasLink()
+    {
+        return $this->isLink() || $this->hasLinkInSubmenu();
+    }
+
+    /**
+     * Indica se o menu é um link.
+     *
+     * @return bool
+     */
+    public function isLink()
+    {
+        return boolval($this->link);
+    }
+
+    /**
+     * Indica se o menu tem links em seus submenus.
+     *
+     * @return bool
+     */
+    public function hasLinkInSubmenu()
+    {
+        foreach ($this->children as $menu) {
+
+            if ($menu->isLink()) {
+                return true;
+            }
+
+            if ($menu->hasLinkInSubmenu()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @return HasMany
      */
     public function children()
@@ -42,6 +83,8 @@ class Menu extends Model
     }
 
     /**
+     * Retorna o menu raiz.
+     *
      * @return Menu
      */
     public function root()
@@ -56,6 +99,8 @@ class Menu extends Model
     }
 
     /**
+     * Retorna os menus disponíveis para um determinado usuário.
+     *
      * @param User $user
      *
      * @return Collection
