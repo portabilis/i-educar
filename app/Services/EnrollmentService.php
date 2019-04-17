@@ -7,12 +7,15 @@ use App\Exceptions\Enrollment\CancellationDateBeforeAcademicYearException;
 use App\Exceptions\Enrollment\EnrollDateAfterAcademicYearException;
 use App\Exceptions\Enrollment\EnrollDateBeforeAcademicYearException;
 use App\Exceptions\Enrollment\ExistsActiveEnrollmentException;
+use App\Exceptions\Enrollment\ExistsActiveEnrollmentSameTimeException;
 use App\Exceptions\Enrollment\NoVacancyException;
 use App\Exceptions\Enrollment\PreviousEnrollDateException;
 use App\Exceptions\Enrollment\PreviousCancellationDateException;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacyEnrollment;
+use App\Models\LegacyInstitution;
+use App\Services\SchoolClass\AvailableTimeService;
 use App\User;
 use Carbon\Carbon;
 use DateTime;
@@ -154,6 +157,13 @@ class EnrollmentService
 
         if ($registration->lastEnrollment && $registration->lastEnrollment->date_departed->format('Y-m-d') > $date->format('Y-m-d')) {
             throw new PreviousEnrollDateException($date, $registration->lastEnrollment);
+        }
+
+        $availableTimeService = new AvailableTimeService();
+        $validateCenso = LegacyInstitution::active()->first()->obrigar_campos_censo ?? false;
+
+        if ($validateCenso && !$availableTimeService->isAvailable($registration->id, $schoolClass->id)) {
+            throw new ExistsActiveEnrollmentSameTimeException($registration);
         }
 
         $sequenceInSchoolClass = $this->getSequenceSchoolClass($registration, $schoolClass, $date);

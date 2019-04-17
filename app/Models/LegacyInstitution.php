@@ -42,6 +42,11 @@ class LegacyInstitution extends Model
      */
     public $timestamps = false;
 
+    public function scopeActive($query)
+    {
+        return $query->where('ativo', 1);
+    }
+
     public function getNameAttribute()
     {
         return $this->nm_instituicao;
