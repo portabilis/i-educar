@@ -64,9 +64,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->cod_motivo_afastamento = $_GET["cod_motivo_afastamento"];
 
@@ -130,9 +128,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 633, $this->pessoa_logada, 7,  "educar_motivo_afastamento_lst.php" );
@@ -149,9 +145,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($motivoAfastamento);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_motivo_afastamento_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_motivo_afastamento_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -162,10 +156,6 @@ class indice extends clsCadastro
 
 
   public function Editar() {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(633, $this->pessoa_logada, 7,
       'educar_motivo_afastamento_lst.php');
@@ -185,8 +175,7 @@ class indice extends clsCadastro
         $auditoria->alteracao($motivoAfastamentoAntes, $motivoAfastamentoDepois);
 
         $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
-        header('Location: educar_motivo_afastamento_lst.php');
-        die();
+        $this->simpleRedirect('educar_motivo_afastamento_lst.php');
     }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
@@ -197,9 +186,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 633, $this->pessoa_logada, 7,  "educar_motivo_afastamento_lst.php" );
@@ -218,9 +205,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($motivoAfastamento);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_motivo_afastamento_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_motivo_afastamento_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

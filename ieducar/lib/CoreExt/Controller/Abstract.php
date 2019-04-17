@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once 'CoreExt/Controller/Interface.php';
 
 abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interface
@@ -190,7 +193,7 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
             $url = $this->getRequest()->getBaseurl() . '/' . $url;
         }
 
-        header(sprintf('Location: %s', $url));
+        $this->simpleRedirect($url);
     }
 
     /**
@@ -201,6 +204,8 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
      * @param int    $code
      *
      * @return void
+     *
+     * @throws HttpResponseException
      */
     public function simpleRedirect(string $url, int $code = 302)
     {
@@ -216,10 +221,9 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
             $code = 302;
         }
 
-        header($codes[$code]);
-        header('Location: ' . $url);
-
-        die();
+        throw new HttpResponseException(
+            new RedirectResponse($url, $code)
+        );
     }
 
     /**
@@ -229,12 +233,15 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
      * @param string $url
      *
      * @return void
+     *
+     * @throws HttpResponseException
      */
     public function redirectIf($condition, $url)
     {
         if ($condition) {
-            header('Location: ' . $url);
-            die();
+            throw new HttpResponseException(
+                new RedirectResponse($url)
+            );
         }
     }
 }

@@ -13,7 +13,7 @@ return [
     'version' => env('APP_VERSION'),
     'hostname' => gethostname(),
     'project_root' => base_path(),
-    'environment_name' => config('app.name'),
+    'environment_name' => config('app.nickname'),
     'handlers' => [
         'exception' => true,
         'error' => true,

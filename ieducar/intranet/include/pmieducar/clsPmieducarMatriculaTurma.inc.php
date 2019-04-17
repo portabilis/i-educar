@@ -28,6 +28,8 @@
  * @version   $Id$
  */
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
@@ -62,6 +64,7 @@ class clsPmieducarMatriculaTurma
   var $etapa_educacenso;
   var $turma_unificada;
   var $remanejado;
+  var $turno_id;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -126,11 +129,9 @@ class clsPmieducarMatriculaTurma
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}matricula_turma";
 
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
+    $this->pessoa_logada = Session::get('id_pessoa');
 
-    $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.abandono, mt.reclassificado, mt.remanejado, mt.transferido, mt.falecido, mt.ref_cod_turma, mt.etapa_educacenso, mt.turma_unificada, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT (pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
+    $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.abandono, mt.reclassificado, mt.remanejado, mt.transferido, mt.falecido, mt.ref_cod_turma, mt.etapa_educacenso, mt.turma_unificada, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, mt.turno_id, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT (pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists("clsPmieducarUsuario")) {
@@ -328,12 +329,18 @@ class clsPmieducarMatriculaTurma
         $gruda = ", ";
       }
 
-      $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao, $this->sequencial);
+      $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao);
       $this->sequencial_fechamento = $sequencialEnturmacao->ordenaSequencialNovaMatricula();
 
       if(is_numeric($this->sequencial_fechamento)){
         $campos .= "{$gruda}sequencial_fechamento";
         $valores .= "{$gruda}'{$this->sequencial_fechamento}'";
+        $gruda = ", ";
+      }
+
+      if(is_numeric($this->turno_id)){
+        $campos .= "{$gruda}turno_id";
+        $valores .= "{$gruda}'{$this->turno_id}'";
         $gruda = ", ";
       }
 
@@ -359,6 +366,8 @@ class clsPmieducarMatriculaTurma
       is_numeric($this->ref_usuario_exc) && is_numeric($this->sequencial)) {
       $db = new clsBanco();
       $set = "";
+
+      $gruda = '';
 
       if (is_numeric($this->ref_usuario_exc)) {
         $set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
@@ -428,13 +437,25 @@ class clsPmieducarMatriculaTurma
       }
 
       if ($this->removerSequencial){
-        $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao, $this->sequencial);
+        $sequencialEnturmacao = new SequencialEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma, $this->data_enturmacao);
         $this->sequencial_fechamento = $sequencialEnturmacao->ordenaSequencialExcluiMatricula();
       }
+
+      // FIXME
+      // Este trecho de código não é utilizado na atualização do registro, ou
+      // seja, não serve para nada. Verificar o impacto ao corrigi-lo.
 
       if(is_numeric($this->sequencial_fechamento)){
         $campos .= "{$gruda}sequencial_fechamento";
         $valores .= "{$gruda}'{$this->sequencial_fechamento}'";
+        $gruda = ", ";
+      }
+
+      if (is_string($this->turno_id) && $this->turno_id == 0) {
+        $set .= "{$gruda}turno_id = NULL";
+        $gruda = ", ";
+      } elseif (is_string($this->turno_id) && !empty($this->turno_id)) {
+        $set .= "{$gruda}turno_id = '{$this->turno_id}'";
         $gruda = ", ";
       }
 
@@ -472,6 +493,10 @@ class clsPmieducarMatriculaTurma
     $int_turma_turno_id = FALSE, $int_ano_turma = FALSE, $dependencia = NULL,
     $apenasTurmasMultiSeriadas = FALSE, $apenasTurmasUnificadas = FALSE)
   {
+    $nome = '';
+    $tab_aluno = '';
+    $where_nm_aluno = '';
+
     if ($bool_get_nome_aluno === true) {
       $nome = " ,(SELECT (nome)
                         FROM cadastro.pessoa
@@ -481,6 +506,9 @@ class clsPmieducarMatriculaTurma
 
       $where_nm_aluno = " AND a.cod_aluno = m.ref_cod_aluno";
     }
+
+    $from = '';
+    $where = '';
 
     if ( $bool_escola_andamento) {
       if ($pegar_ano_em_andamento) {

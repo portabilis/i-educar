@@ -78,9 +78,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->cod_cliente        = $_GET["cod_cliente"];
         $this->acao_status        = $_GET["status"];
@@ -191,10 +189,6 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
 
@@ -209,9 +203,7 @@ class indice extends clsCadastro
       $auditoria->inclusao($clienteSuspensao);
 
             $this->mensagem .= "Suspens&atilde;o efetuada com sucesso.<br>";
-            header("Location: educar_cliente_det.php?cod_cliente={$this->cod_cliente}&ref_cod_biblioteca={$this->ref_cod_biblioteca}");
-            die();
-            return true;
+            $this->simpleRedirect("educar_cliente_det.php?cod_cliente={$this->cod_cliente}&ref_cod_biblioteca={$this->ref_cod_biblioteca}");
         }
 
         $this->mensagem = "Suspens&atilde;o n&atilde;o realizada.<br>";
@@ -221,9 +213,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
 
@@ -234,9 +224,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("cliente_suspensao", $this->pessoa_logada);
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Libera&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_cliente_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect("educar_cliente_lst.php?cod_cliente={$this->cod_cliente}");
         }
         $obj = new clsPmieducarCliente( $this->cod_cliente, $this->pessoa_logada, $this->pessoa_logada, $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, $this->ativo );
         $editou = $obj->edita();
@@ -247,9 +235,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
@@ -263,9 +249,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("cliente", $this->pessoa_logada, $this->cod_cliente);
       $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_cliente_lst.php?cod_cliente={$this->cod_cliente}" );
-            die();
-            return true;
+            $this->simpleRedirect("educar_cliente_det.php?cod_cliente={$this->cod_cliente}");
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

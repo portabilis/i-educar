@@ -1,4 +1,7 @@
 <?php
+
+use Illuminate\Support\Facades\Session;
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
     *                                                                        *
     *   @author Prefeitura Municipal de Itajaí                               *
@@ -53,9 +56,7 @@ class indice extends clsListagem
         $limite = 20;
         $iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
                 
-        @session_start();
-        $id_pessoa = $_SESSION['id_pessoa'];
-        session_write_close();
+        $id_pessoa = Session::get('id_pessoa');
         
         $sql = "SELECT b.data_hora, b.ip_externo FROM acesso b WHERE cod_pessoa={$id_pessoa}";
         if (!empty($_GET['status']))

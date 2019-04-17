@@ -89,17 +89,12 @@ class indice extends clsListagem
 
   function Gerar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->titulo = 'Selecione uma turma para enturmar ou remover a enturmação';
 
     $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
 
     if (!$this->ref_cod_matricula) {
-      header('Location: educar_matricula_lst.php');
-      die;
+        $this->simpleRedirect('educar_matricula_lst.php');
     }
 
     $obj_matricula = new clsPmieducarMatricula($this->ref_cod_matricula);

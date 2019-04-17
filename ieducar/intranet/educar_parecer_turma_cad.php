@@ -60,9 +60,7 @@ class indice extends clsCadastro
 
     function Inicializar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->cod_turma=$_GET["cod_turma"];
 
@@ -148,9 +146,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 586, $this->pessoa_logada, 7,  "educar_turma_lst.php" );
@@ -164,8 +160,7 @@ class indice extends clsCadastro
     $obj->ano = $this->ano;
 
     if ($obj->edita()){
-      header( "Location: educar_turma_det.php?cod_turma={$this->cod_turma}" );
-      return true;
+        $this->simpleRedirect("educar_turma_det.php?cod_turma={$this->cod_turma}");
     }
     $this->mensagem = "Erro ao salvar lançamentos.<br>";
     return false;

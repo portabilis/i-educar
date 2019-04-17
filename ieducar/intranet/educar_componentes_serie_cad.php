@@ -79,9 +79,7 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+
 
     $this->serie_id=$_GET['serie_id'];
 
@@ -169,34 +167,21 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
     // Todas as ações estão sendo realizadas em ComponentesSerieAcao.js
-    header("Location: educar_componentes_serie_lst.php");
-    die();
-
+    $this->simpleRedirect('educar_componentes_serie_lst.php');
   }
 
   function Editar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
     // Todas as ações estão sendo realizadas em ComponentesSerieAcao.js
-    header("Location: educar_componentes_serie_lst.php");
-    die();
+    $this->simpleRedirect('educar_componentes_serie_lst.php');
   }
 
   function Excluir()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
     // Todas as ações estão sendo realizadas em ComponentesSerieAcao.js
     $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
-    header( "Location: educar_componentes_serie_lst.php" );
-    die();
+    $this->simpleRedirect('educar_componentes_serie_lst.php');
   }
 }
 

@@ -1,5 +1,9 @@
 <?php
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -23,37 +27,55 @@ class clsIndexBase extends clsBase
 class indice extends clsCadastro
 {
     public $pessoa_logada;
+
     public $cod_matricula;
+
     public $ref_cod_reserva_vaga;
+
     public $ref_ref_cod_escola;
+
     public $ref_ref_cod_serie;
+
     public $ref_usuario_exc;
+
     public $ref_usuario_cad;
+
     public $ref_cod_aluno;
+
     public $aprovado;
+
     public $data_cadastro;
+
     public $data_exclusao;
+
     public $ativo;
+
     public $ano;
+
     public $data_matricula;
+
     public $ref_cod_instituicao;
+
     public $ref_cod_curso;
+
     public $ref_cod_escola;
+
     public $ref_cod_turma;
+
     public $semestre;
+
     public $is_padrao;
+
     public $dependencia;
+
     public $ref_cod_candidato_reserva_vaga;
+
     public $ref_cod_candidato_fila_unica;
+
     public $ref_cod_turma_copiar_enturmacoes;
 
     public function Inicializar()
     {
-        //$retorno = 'Novo';
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $this->ref_cod_turma_copiar_enturmacoes = $this->getQueryString('ref_cod_turma_copiar_enturmacoes');
         $this->cod_matricula = $this->getQueryString('cod_matricula');
         $this->ref_cod_aluno = $this->getQueryString('ref_cod_aluno');
@@ -63,14 +85,15 @@ class indice extends clsCadastro
         $retorno = $this->ref_cod_turma_copiar_enturmacoes ? 'Enturmar' : 'Novo';
         $obj_aluno = new clsPmieducarAluno($this->ref_cod_aluno);
 
-        if (! $obj_aluno->existe() and !$this->ref_cod_turma_copiar_enturmacoes) {
-            header('Location: educar_aluno_lst.php');
-            die;
+        if (!$obj_aluno->existe() and !$this->ref_cod_turma_copiar_enturmacoes) {
+            throw new HttpResponseException(
+                new RedirectResponse('educar_aluno_lst.php')
+            );
         }
 
         if ($this->ref_cod_turma_copiar_enturmacoes) {
             $this->nome_url_sucesso = Portabilis_String_Utils::toLatin1('Gravar enturmações');
-            $url = 'educar_matriculas_turma_cad.php?ref_cod_turma=' . $this->ref_cod_turma_copiar_enturmacoes;
+            $url = route('enrollments.batch.enroll.index', ['schoolClass' => $this->ref_cod_turma_copiar_enturmacoes]);
         } else {
             $url = 'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno;
         }
@@ -84,19 +107,14 @@ class indice extends clsCadastro
             }
         }
 
-        $this->url_cancelar = $url;
-        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Nova';
-        $localizacao = new LocalizacaoSistema();
-
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php'                  => 'Escola',
-            ''        => "{$nomeMenu} matrícula"
-        ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
-
         $this->nome_url_cancelar = 'Cancelar';
+        $this->url_cancelar = $url;
+
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Nova';
+
+        $this->breadcrumb("{$nomeMenu} matrícula", [
+            'educar_index.php' => 'Escola',
+        ]);
 
         return $retorno;
     }
@@ -158,7 +176,7 @@ class indice extends clsCadastro
         $anoLetivoHelperOptions = ['situacoes' => ['em_andamento', 'nao_iniciado']];
 
         $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola', 'curso', 'serie', 'turma']);
-        $this->inputsHelper()->date('data_matricula', ['label' => Portabilis_String_Utils::toLatin1('Data da matrícula'), 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y') ]);
+        $this->inputsHelper()->date('data_matricula', ['label' => Portabilis_String_Utils::toLatin1('Data da matrícula'), 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
         $this->inputsHelper()->hidden('ano_em_andamento', ['value' => '1']);
 
         if ($GLOBALS['coreExt']['Config']->app->matricula->dependencia == 1) {
@@ -196,7 +214,7 @@ class indice extends clsCadastro
 
     private function getEnturmacoesNaTurma($turma)
     {
-        return (array) Portabilis_Utils_Database::fetchPreparedQuery("
+        return (array)Portabilis_Utils_Database::fetchPreparedQuery("
             select *
             from pmieducar.matricula_turma
             where ref_cod_turma = {$turma}
@@ -206,7 +224,7 @@ class indice extends clsCadastro
 
     private function getMaximoAlunosNaTurma($turma)
     {
-        return (int) (new clsBanco())->CampoUnico("
+        return (int)(new clsBanco())->CampoUnico("
             select max_aluno
             from pmieducar.turma
             where cod_turma = $turma
@@ -239,7 +257,7 @@ class indice extends clsCadastro
             $escola,
             $serie,
             null,
-            $_SESSION['id_pessoa'],
+            $this->pessoa_logada,
             $aluno,
             3,
             null,
@@ -264,7 +282,7 @@ class indice extends clsCadastro
     {
         $data = date('Y-m-d');
         $datahora = date('Y-m-d H:i:s');
-        $usuario = $_SESSION['id_pessoa'];
+        $usuario = $this->pessoa_logada;
 
         (new clsBanco)->CampoUnico("
             insert into pmieducar.matricula_turma (
@@ -313,8 +331,11 @@ class indice extends clsCadastro
             $this->addEnturmacao($matricula, $this->ref_cod_turma, $enturmar['sequencial'], $enturmar['ativo']);
         }
 
-        header("Location: educar_matriculas_turma_cad.php?ref_cod_turma= {$this->ref_cod_turma}");
-        die();
+        throw new HttpResponseException(
+            new RedirectResponse(
+                route('enrollments.batch.enroll.index', ['schoolClass' => $this->ref_cod_turma])
+            )
+        );
     }
 
     public function Novo()
@@ -354,10 +375,6 @@ class indice extends clsCadastro
 
         $this->url_cancelar = 'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno;
         $this->nome_url_cancelar = 'Cancelar';
-
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
 
@@ -442,7 +459,6 @@ class indice extends clsCadastro
                     $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
 
                     if (($mesmoCursoAno || $GLOBALS['coreExt']['Config']->app->matricula->multiplas_matriculas === 0) && !$cursoDeAtividadeComplementar) {
-
                         require_once 'include/pmieducar/clsPmieducarEscola.inc.php';
                         require_once 'include/pessoa/clsJuridica.inc.php';
 
@@ -494,9 +510,7 @@ class indice extends clsCadastro
 
             $verificarDataCorte = $alertaFaixaEtaria || $bloquearMatriculaFaixaEtaria;
 
-            @session_start();
-            $reload = $_SESSION['reload_faixa_etaria'];
-            @session_write_close();
+            $reload = Session::get('reload_faixa_etaria');
 
             if ($verificarDataCorte && !$reload) {
                 $instituicao = new clsPmiEducarInstituicao($this->ref_cod_instituicao);
@@ -520,9 +534,9 @@ class indice extends clsCadastro
                     return false;
                 } elseif ($alertaFaixaEtaria && !$dentroPeriodoCorte) {
                     echo '<script type="text/javascript">
-                        var msg = \''.Portabilis_String_Utils::toLatin1('A idade do aluno encontra-se fora da faixa etária pré-definida na série, deseja continuar com a matrícula?').'\';
+                        var msg = \'' . Portabilis_String_Utils::toLatin1('A idade do aluno encontra-se fora da faixa etária pré-definida na série, deseja continuar com a matrícula?') . '\';
                         if (!confirm(msg)) {
-                          window.location = \'educar_aluno_det.php?cod_aluno='.$this->ref_cod_aluno.'\';
+                          window.location = \'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno . '\';
                         } else {
                           parent.document.getElementById(\'formcadastro\').submit();
                         }
@@ -531,9 +545,9 @@ class indice extends clsCadastro
                     //Permite que o usuário possa salvar a matrícula na próxima tentativa
                     $reload = 1;
 
-                    @session_start();
-                    $_SESSION['reload_faixa_etaria'] = $reload;
-                    @session_write_close();
+                    Session::put('reload_faixa_etaria', $reload);
+                    Session::save();
+                    Session::start();
 
                     return true;
                 }
@@ -763,7 +777,7 @@ class indice extends clsCadastro
             );
 
             if ($this->is_padrao == 1) {
-                $this->semestre =  null;
+                $this->semestre = null;
             }
 
             if (!$this->removerFlagUltimaMatricula($this->ref_cod_aluno)) {
@@ -789,9 +803,7 @@ class indice extends clsCadastro
                 return false;
             }
 
-            @session_start();
-            $reloadReserva = $_SESSION['reload_reserva_vaga'];
-            @session_write_close();
+            $reloadReserva = Session::get('reload_reserva_vaga');
 
             $obj_CandidatoReservaVaga = new clsPmieducarCandidatoReservaVaga();
 
@@ -822,18 +834,19 @@ class indice extends clsCadastro
 
                 if (($countEscolasDiferentes > 0) && (!$reloadReserva)) {
                     echo '<script type="text/javascript">
-                      var msg = \''.Portabilis_String_Utils::toLatin1('O aluno possui uma reserva de vaga em outra escola, deseja matricula-lo assim mesmo?').'\';
+                      var msg = \'' . Portabilis_String_Utils::toLatin1('O aluno possui uma reserva de vaga em outra escola, deseja matricula-lo assim mesmo?') . '\';
                       if (!confirm(msg)) {
-                        window.location = \'educar_aluno_det.php?cod_aluno='.$this->ref_cod_aluno.'\';
+                        window.location = \'educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno . '\';
                       } else {
                         parent.document.getElementById(\'formcadastro\').submit();
                       }
                     </script>';
 
                     $reloadReserva = 1;
-                    @session_start();
-                    $_SESSION['reload_reserva_vaga'] = $reloadReserva;
-                    @session_write_close();
+
+                    Session::put('reload_reserva_vaga', $reloadReserva);
+                    Session::save();
+                    Session::start();
 
                     return true;
                 } elseif (($countEscolasDiferentes > 0) && ($reloadReserva == 1)) {
@@ -924,9 +937,8 @@ class indice extends clsCadastro
                 $this->enturmacaoMatricula($this->cod_matricula, $this->ref_cod_turma);
                 $this->verificaSolicitacaoTransferencia();
 
-                // TODO set in $_SESSION['flash'] 'Aluno matriculado com sucesso'
                 $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-                header('Location: educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
+                $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
             }
 
             $this->mensagem = 'Cadastro n&atilde;o realizado.<br />';
@@ -954,7 +966,7 @@ class indice extends clsCadastro
     public function verificaQtdeDependenciasPermitida()
     {
         $matriculasDependencia =
-      Portabilis_Utils_Database::fetchPreparedQuery("SELECT *
+            Portabilis_Utils_Database::fetchPreparedQuery("SELECT *
                                                        FROM pmieducar.matricula
                                                       WHERE matricula.ano = {$this->ano}
                                                         AND matricula.ref_cod_aluno = {$this->ref_cod_aluno}
@@ -965,7 +977,7 @@ class indice extends clsCadastro
         $matriculasDependencia = count($matriculasDependencia);
 
         $db = new clsBanco();
-        $matriculasDependenciaPermitida =  $db->CampoUnico("SELECT regra_avaliacao.qtd_matriculas_dependencia
+        $matriculasDependenciaPermitida = $db->CampoUnico("SELECT regra_avaliacao.qtd_matriculas_dependencia
                                                               FROM pmieducar.serie
                                                         INNER JOIN modules.regra_avaliacao ON (regra_avaliacao.id = serie.regra_avaliacao_id)
                                                              WHERE serie.cod_serie = {$this->ref_cod_serie}");
@@ -1093,7 +1105,6 @@ class indice extends clsCadastro
         $obj_transferencia->edita();
     }
 
-
     public function desativaEnturmacoesMatricula($matriculaId)
     {
         $result = true;
@@ -1130,10 +1141,9 @@ class indice extends clsCadastro
                 $detEnturmacao = $detEnturmacao['data_enturmacao'];
                 $enturmacao->data_enturmacao = $detEnturmacao;
 
-                if ($result && ! $enturmacao->edita()){
+                if ($result && !$enturmacao->edita()) {
                     $result = false;
                 }
-
             }
         }
 
@@ -1147,10 +1157,6 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_excluir(
@@ -1258,8 +1264,10 @@ class indice extends clsCadastro
 
         if ($excluiu) {
             $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br />';
-            header('Location: educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
-            die();
+
+            throw new HttpResponseException(
+                new RedirectResponse("educar_aluno_det.php?cod_aluno={$this->ref_cod_aluno}")
+            );
         }
 
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br />';
@@ -1292,7 +1300,7 @@ class indice extends clsCadastro
         );
 
         foreach ($matriculas as $matricula) {
-            if (!$matricula['aprovado']==3) {
+            if (!$matricula['aprovado'] == 3) {
                 $matricula = new clsPmieducarMatricula(
                     $matricula['cod_matricula'],
                     null,
@@ -1464,7 +1472,7 @@ class indice extends clsCadastro
                    AND turno_pre_matricula = $5
                    AND aprovado = 11 ';
 
-        return (int) Portabilis_Utils_Database::selectField($sql, [$this->ano, $this->ref_cod_escola, $this->ref_cod_curso, $this->ref_cod_serie, $det_t['turma_turno_id']]);
+        return (int)Portabilis_Utils_Database::selectField($sql, [$this->ano, $this->ref_cod_escola, $this->ref_cod_curso, $this->ref_cod_serie, $det_t['turma_turno_id']]);
     }
 
     public function _getQtdMatriculaTurno()
@@ -1504,7 +1512,7 @@ class indice extends clsCadastro
             $int_ref_cod_serie_mult = null,
             $int_semestre = null,
             $pegar_ano_em_andamento = false,
-            $parar=null,
+            $parar = null,
             $diario = false,
             $int_turma_turno_id = $det_t['turma_turno_id'],
             $int_ano_turma = $det_t['ano'],
@@ -1515,14 +1523,8 @@ class indice extends clsCadastro
     }
 }
 
-// Instancia objeto de página
 $pagina = new clsIndexBase();
-
-// Instancia objeto de conteúdo
 $miolo = new indice();
 
-// Atribui o conteúdo à página
 $pagina->addForm($miolo);
-
-// Gera o código HTML
 $pagina->MakeAll();

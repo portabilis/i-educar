@@ -2,8 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
-use App\Services\CacheManager;
+use App\Models\LegacyUser;
 use App\Services\MenuService;
 use Closure;
 use Illuminate\Support\Facades\Cache;
@@ -27,7 +26,7 @@ class Menu
 
     private function getCachedMenu()
     {
-        $cache = Cache::tags(['menu', config('app.name')]);
+        $cache = Cache::tags(['menu', config('app.nickname')]);
 
         $cacheKey =  'menu_' . md5(session('id_pessoa'));
 
@@ -35,13 +34,13 @@ class Menu
             return $cache->get($cacheKey);
         }
 
-        if (empty(User::find(session('id_pessoa')))) {
+        if (empty(LegacyUser::find(session('id_pessoa')))) {
             return [];
         }
 
         /** @var MenuService $menuService */
         $menuService = app(MenuService::class);
-        $menuArray = $menuService->getByUser(User::find(session('id_pessoa')));
+        $menuArray = $menuService->getByUser(LegacyUser::find(session('id_pessoa')));
 
         $cache->add($cacheKey, $menuArray, 60);
 

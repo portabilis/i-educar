@@ -24,6 +24,9 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -81,19 +84,16 @@ class indice extends clsListagem
         {
             $this->$campo = $valor;
         }
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        $_SESSION["campo1"] = $_GET["campo1"] ? $_GET["campo1"] : $_SESSION["campo1"];
-        $_SESSION["campo2"] = $_GET["campo2"] ? $_GET["campo2"] : $_SESSION["campo2"];
+        Session::put([
+            'campo1' => $_GET["campo1"] ?? Session::get('campo1'),
+            'campo2' => $_GET["campo2"] ?? Session::get('campo2'),
+        ]);
+        Session::save();
+        Session::start();
+
         $this->ref_cod_biblioteca = $this->ref_cod_biblioteca ? $this->ref_cod_biblioteca : $_GET['ref_cod_biblioteca'];
-        session_write_close();
 
         $this->titulo = "Cliente - Listagem";
-
-        /*foreach( $_SESSION AS $var => $val ) // passa todos os valores obtidos no SESSION para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;*/
 
         $this->addCabecalhos( array(
             "Código",
@@ -158,10 +158,12 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
-                if ( is_string( $_SESSION['campo1'] ) && is_string( $_SESSION['campo2'] ) )
-                    $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_cliente']}', '{$registro['nome']}'); addVal1('{$_SESSION['campo2']}','{$registro['nome']}', '{$registro['cod_cliente']}'); fecha();\"";
-                else if ( is_string( $_SESSION['campo1'] ) )
-                    $script = " onclick=\"addVal1('{$_SESSION['campo1']}','{$registro['cod_cliente']}', '{$registro['nome']}'); fecha();\"";
+                $campo1 = Session::get('campo1');
+                $campo2 = Session::get('campo2');
+                if ( is_string(  ) && is_string(  ) )
+                    $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_cliente']}', '{$registro['nome']}'); addVal1('{$campo2}','{$registro['nome']}', '{$registro['cod_cliente']}'); fecha();\"";
+                else if ( is_string( $campo1 ) )
+                    $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_cliente']}', '{$registro['nome']}'); fecha();\"";
                 $this->addLinhas( array(
                     "<a href=\"javascript:void(0);\" {$script}>{$registro["cod_cliente"]}</a>",
                     "<a href=\"javascript:void(0);\" {$script}>{$registro["nome"]}</a>"

@@ -300,7 +300,7 @@ class indice extends clsCadastro
 
         $this->campoCheck('bloqueia_matricula_serie_nao_seguinte', 'Não permitir matrículas que não respeitem a sequência de enturmação', $this->bloqueia_matricula_serie_nao_seguinte);
 
-        $this->campoCheck('obrigar_campos_censo', 'Obrigar o preenchimento dos campos exigidos pelo Censo escolar', $this->obrigar_campos_censo);
+        $this->campoCheck('obrigar_campos_censo', 'Obrigar e validar o preenchimento dos campos exigidos pelo Censo escolar', $this->obrigar_campos_censo);
 
         $this->campoCheck(
             'exigir_lancamentos_anteriores',
@@ -316,59 +316,7 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        header('Location: educar_instituicao_lst.php');
-
-        $obj = new clsPmieducarInstituicao(null, $this->ref_usuario_exc, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, str_replace('-', '', $this->cep), $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, 1, str_replace('\'', '\'\'', $this->nm_instituicao), null, null, $this->quantidade_alunos_metro_quadrado);
-        $obj->data_base_remanejamento = Portabilis_Date_Utils::brToPgSQL($this->data_base_remanejamento);
-        $obj->data_base_transferencia = Portabilis_Date_Utils::brToPgSQL($this->data_base_transferencia);
-        $obj->data_expiracao_reserva_vaga = Portabilis_Date_Utils::brToPgSQL($this->data_expiracao_reserva_vaga);
-        $obj->exigir_vinculo_turma_professor = is_null($this->exigir_vinculo_turma_professor) ? 0 : 1;
-        $obj->gerar_historico_transferencia = !is_null($this->gerar_historico_transferencia);
-        $obj->controlar_posicao_historicos = !is_null($this->controlar_posicao_historicos);
-        $obj->matricula_apenas_bairro_escola = !is_null($this->matricula_apenas_bairro_escola);
-        $obj->restringir_historico_escolar = !is_null($this->restringir_historico_escolar);
-        $obj->restringir_multiplas_enturmacoes = !is_null($this->restringir_multiplas_enturmacoes);
-        $obj->permissao_filtro_abandono_transferencia = !is_null($this->permissao_filtro_abandono_transferencia);
-        $obj->multiplas_reserva_vaga = !is_null($this->multiplas_reserva_vaga);
-        $obj->permitir_carga_horaria = !is_null($this->permitir_carga_horaria);
-        $obj->componente_curricular_turma = !is_null($this->componente_curricular_turma);
-        $obj->reprova_dependencia_ano_concluinte = !is_null($this->reprova_dependencia_ano_concluinte);
-        $obj->bloqueia_matricula_serie_nao_seguinte = !is_null($this->bloqueia_matricula_serie_nao_seguinte);
-        $obj->reserva_integral_somente_com_renda = !is_null($this->reserva_integral_somente_com_renda);
-        $obj->coordenador_transporte = $this->pessoa_coordenador_transporte;
-        $obj->controlar_espaco_utilizacao_aluno = is_null($this->controlar_espaco_utilizacao_aluno) ? 0 : 1;
-        $obj->altera_atestado_para_declaracao = is_null(dbBool($this->altera_atestado_para_declaracao)) ? 0 : 1;
-        $obj->percentagem_maxima_ocupacao_salas = Portabilis_Currency_Utils::moedaBrToUs($this->percentagem_maxima_ocupacao_salas);
-        $obj->data_base_matricula = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_base);
-        $obj->data_fechamento = Portabilis_Date_Utils::brToPgSQL_ddmm($this->data_fechamento);
-        $obj->auditar_notas = !is_null($this->auditar_notas);
-        $obj->data_educacenso = $this->data_educacenso;
-        $obj->exigir_dados_socioeconomicos = is_null($this->exigir_dados_socioeconomicos) ? false : true;
-        $obj->obrigar_campos_censo = !is_null($this->obrigar_campos_censo);
-        $obj->obrigar_documento_pessoa = !is_null($this->obrigar_documento_pessoa);
-        $obj->orgao_regional = $this->orgao_regional;
-        $obj->exigir_lancamentos_anteriores = !is_null($this->exigir_lancamentos_anteriores);
-        $obj->exibir_apenas_professores_alocados = !is_null($this->exibir_apenas_professores_alocados);
-        $cod_instituicao = $cadastrou = $obj->cadastra();
-
-        if ($cadastrou) {
-            $instituicao = new clsPmieducarInstituicao($cod_instituicao);
-            $instituicao = $instituicao->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral('instituicao', $this->pessoa_logada, $cod_instituicao);
-            $auditoria->inclusao($instituicao);
-            $obj_altera = new alteraAtestadoParaDeclaracao(is_null($this->altera_atestado_para_declaracao) ? false : true);
-            $obj_altera->editaMenus();
-            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            header('Location: educar_instituicao_lst.php');
-            die();
-
-            return true;
-        }
-
-        $this->mensagem = 'Cadastro não realizado.<br>';
-        echo "<!--\nErro ao cadastrar clsPmieducarInstituicao\nvalores obrigatorios\nis_numeric( $ref_usuario_cad ) && is_string( $ref_idtlog ) && is_string( $ref_sigla_uf ) && is_numeric( $cep ) && is_string( $cidade ) && is_string( $bairro ) && is_string( $logradouro ) && is_string( $nm_responsavel ) && is_string( $data_cadastro ) && is_numeric( $ativo )\n-->";
-
-        return false;
+        $this->simpleRedirect('educar_instituicao_lst.php');
     }
 
     public function Editar()
@@ -414,10 +362,7 @@ class indice extends clsCadastro
             $obj_altera = new alteraAtestadoParaDeclaracao(is_null($this->altera_atestado_para_declaracao) ? false : true);
             $obj_altera->editaMenus();
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-            header('Location: educar_instituicao_lst.php');
-            die();
-
-            return true;
+            $this->simpleRedirect('educar_instituicao_lst.php');
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
@@ -428,34 +373,7 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        header('Location: educar_instituicao_lst.php');
-
-        $verificaEscolasVinculadas = new clsPmieducarEscola();
-        $listaEscolasVinculadas = $verificaEscolasVinculadas->lista(null, null, null, $this->cod_instituicao);
-        if (is_array($listaEscolasVinculadas)) {
-            $this->mensagem = 'Exclusão não realizada. Esta instituicão possui escolas vinculadas.<br>';
-
-            return false;
-        } else {
-            $obj = new clsPmieducarInstituicao($this->cod_instituicao, $this->pessoa_logada, $this->ref_usuario_cad, $this->ref_idtlog, $this->ref_sigla_uf, $this->cep, $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->complemento, $this->nm_responsavel, $this->ddd_telefone, $this->telefone, $this->data_cadastro, $this->data_exclusao, $this->ativo);
-            $instituicao = $obj->detalhe();
-            $excluiu = $obj->excluir();
-            if ($excluiu) {
-                $auditoria = new clsModulesAuditoriaGeral('instituicao', $this->pessoa_logada, $this->cod_instituicao);
-                $auditoria->exclusao($instituicao);
-
-                $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-                header('Location: educar_instituicao_lst.php');
-                die();
-
-                return true;
-            }
-
-            $this->mensagem = 'Exclusão não realizada.<br>';
-            echo "<!--\nErro ao excluir clsPmieducarInstituicao\nvalores obrigatorios\nif( is_numeric( $this->cod_instituicao ) )\n-->";
-
-            return false;
-        }
+        $this->simpleRedirect('educar_instituicao_lst.php');
     }
 }
 

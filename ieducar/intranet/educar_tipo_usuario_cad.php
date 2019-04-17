@@ -71,10 +71,6 @@ class indice extends clsCadastro
     {
         $retorno = 'Novo';
 
-        session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         // Verifica se o usuário tem permissão para realizar o cadastro
         $obj_permissao = new clsPermissoes();
         $obj_permissao->permissao_cadastra(554, $this->pessoa_logada, 7,
@@ -86,7 +82,7 @@ class indice extends clsCadastro
             $obj = new clsPmieducarTipoUsuario($this->cod_tipo_usuario);
 
             if (!$registro = $obj->detalhe()) {
-                header('Location: educar_tipo_usuario_lst.php');
+                $this->simpleRedirect('educar_tipo_usuario_lst.php');
             }
 
             if ($registro) {
@@ -260,10 +256,6 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $tipoUsuario = new clsPmieducarTipoUsuario($this->cod_tipo_usuario, $this->pessoa_logada, null,
             $this->nm_tipo, $this->descricao, $this->nivel, null, null, 1);
         $this->cod_tipo_usuario = $tipoUsuario->cadastra();
@@ -286,10 +278,6 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $tipoUsuario = new clsPmieducarTipoUsuario($this->cod_tipo_usuario, null, $this->pessoa_logada,
             $this->nm_tipo, $this->descricao, $this->nivel, null, null, 1);
 
@@ -344,16 +332,11 @@ class indice extends clsCadastro
         }
 
         $this->mensagem .= 'Altera&ccedil;&atilde;o efetuada com sucesso.<br>';
-        header('Location: educar_tipo_usuario_lst.php');
-        die();
+        $this->simpleRedirect('educar_tipo_usuario_lst.php');
     }
 
     function Excluir()
     {
-        session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $tipoUsuario = new clsPmieducarTipoUsuario($this->cod_tipo_usuario, null, $this->pessoa_logada);
         $detalhe = $tipoUsuario->detalhe();
 
@@ -370,8 +353,7 @@ class indice extends clsCadastro
             $menuTipoUsuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario);
             $menuTipoUsuario->excluirTudo();
 
-            header('Location: educar_tipo_usuario_lst.php');
-            die();
+            $this->simpleRedirect('educar_tipo_usuario_lst.php');
         }
 
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';

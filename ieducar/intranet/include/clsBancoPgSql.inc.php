@@ -5,7 +5,6 @@ use Illuminate\Database\Connection;
 
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsCronometro.inc.php';
-require_once 'Portabilis/Mailer.php';
 
 abstract class clsBancoSQL_
 {
@@ -534,12 +533,6 @@ abstract class clsBancoSQL_
   function Interrompe($appErrorMsg, $getError = FALSE)
   {
     $lastError = error_get_last();
-
-    @session_start();
-    $_SESSION['last_php_error_message'] = $lastError['message'];
-    $_SESSION['last_php_error_line']    = $lastError['line'];
-    $_SESSION['last_php_error_file']    = $lastError['file'];
-    @session_write_close();
 
     if ($GLOBALS['coreExt']['Config']->modules->error->track) {
         $tracker = TrackerFactory::getTracker($GLOBALS['coreExt']['Config']->modules->error->tracker_name);

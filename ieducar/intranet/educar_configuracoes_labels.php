@@ -23,9 +23,7 @@ class indice extends clsCadastro
 
   function Inicializar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(9998869, $this->pessoa_logada, 7, 'educar_index.php');
@@ -45,9 +43,7 @@ class indice extends clsCadastro
 
   function Gerar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $obj_permissoes = new clsPermissoes();
     $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
@@ -57,7 +53,7 @@ class indice extends clsCadastro
 
     $this->custom_labels = $configuracoes['custom_labels'];
 
-    $customLabel = new CustomLabel(PROJECT_ROOT . DS . 'configuration' . DS . 'custom_labels.json');
+    $customLabel = new CustomLabel();
     $defaults = $customLabel->getDefaults();
 
     foreach($defaults as $k => $v) {
@@ -73,9 +69,7 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $obj_permissoes = new clsPermissoes();
     $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
@@ -92,8 +86,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("configuracoes_gerais", $this->pessoa_logada, $ref_cod_instituicao ? $ref_cod_instituicao : 'null');
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      header("Location: index.php");
-      die();
+      $this->simpleRedirect('index.php');
     }
 
     $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";

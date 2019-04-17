@@ -33,9 +33,7 @@ class indice extends clsCadastro
     public function Inicializar()
     {
         $retorno = 'Novo';
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->cod_deficiencia=$_GET['cod_deficiencia'];
 
@@ -111,9 +109,7 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj = new clsCadastroDeficiencia($this->cod_deficiencia);
         $obj->nm_deficiencia = $this->nm_deficiencia;
@@ -129,10 +125,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($deficiencia);
 
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            header('Location: educar_deficiencia_lst.php');
-            die();
-
-            return true;
+            $this->simpleRedirect('educar_deficiencia_lst.php');
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
@@ -143,9 +136,7 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $deficienciaDetalhe = new clsCadastroDeficiencia($this->cod_deficiencia);
         $deficienciaDetalheAntes = $deficienciaDetalhe->detalhe();
@@ -163,10 +154,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($deficienciaDetalheAntes, $deficienciaDetalheDepois);
 
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-            header('Location: educar_deficiencia_lst.php');
-            die();
-
-            return true;
+            $this->simpleRedirect('educar_deficiencia_lst.php');
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
@@ -177,9 +165,7 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj = new clsCadastroDeficiencia($this->cod_deficiencia, $this->nm_deficiencia);
         $detalhe = $obj->detalhe();
@@ -189,10 +175,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($detalhe);
 
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-            header('Location: educar_deficiencia_lst.php');
-            die();
-
-            return true;
+            $this->simpleRedirect('educar_deficiencia_lst.php');
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';

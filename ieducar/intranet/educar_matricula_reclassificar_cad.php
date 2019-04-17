@@ -79,9 +79,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->cod_matricula=$_GET["ref_cod_matricula"];
         $this->ref_cod_aluno=$_GET["ref_cod_aluno"];
@@ -92,8 +90,9 @@ class indice extends clsCadastro
         $obj_matricula = new clsPmieducarMatricula($this->cod_matricula);
         $det_matricula = $obj_matricula->detalhe();
 
-        if(!$det_matricula || $det_matricula['aprovado'] != 3)
-            header("location: educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+        if(!$det_matricula || $det_matricula['aprovado'] != 3){
+            $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+        }
 
         foreach ($det_matricula as $key => $value)
             $this->$key = $value;
@@ -166,16 +165,15 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
 
         $this->data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
 
-        if($this->ref_ref_cod_serie == $this->ref_ref_cod_serie_antiga)
-            header("location: educar_matricula_det.php?cod_matricula={$this->cod_matricula}");
+        if($this->ref_ref_cod_serie == $this->ref_ref_cod_serie_antiga) {
+            $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->cod_matricula}");
+        }
 
         $obj_matricula = new clsPmieducarMatricula($this->cod_matricula);
         $det_matricula = $obj_matricula->detalhe();
@@ -196,8 +194,9 @@ class indice extends clsCadastro
             }
         }
 
-        if(!$det_matricula || $det_matricula['aprovado'] != 3)
-            header("location: educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+        if(!$det_matricula || $det_matricula['aprovado'] != 3) {
+            $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+        }
 
         $obj_matricula = new clsPmieducarMatricula($this->cod_matricula,null,null,null,$this->pessoa_logada,null,null,5,null,null,1,null,0,null,null,$this->descricao_reclassificacao);
         $obj_matricula->data_cancel = $this->data_cancel;
@@ -226,11 +225,14 @@ class indice extends clsCadastro
                 echo "<script>alert('Erro ao desativar enturmações da matrícula: {$this->cod_matricula}\nContate o administrador do sistema informando a matrícula!');</script>";
             }
 
-            $notaAlunoId = (new Avaliacao_Model_NotaAlunoDataMapper())
-                ->findAll(['id'], ['matricula_id' => $this->cod_matricula])[0]->get('id');
+            $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper())
+                ->findAll(['id'], ['matricula_id' => $this->cod_matricula])[0];
 
-            (new Avaliacao_Model_NotaComponenteMediaDataMapper())
-                ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::RECLASSIFICADO);
+            if (!is_null($notaAluno)) {
+                $notaAlunoId = $notaAluno->get('id');
+                (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                    ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::RECLASSIFICADO);
+            }
 
             //window.location='educar_matricula_det.php?cod_matricula={$this->cod_matricula}&ref_cod_aluno={$this->ref_cod_aluno}';
             echo "<script>alert('Reclassificação realizada com sucesso!\\nO Código da nova matrícula é: $cadastrou.');

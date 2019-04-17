@@ -33,7 +33,6 @@ var multipleSearch = {
   setup : function(options) {
     options = defaultMultipleSearchOptions.mergeWith(options);
     options.chosenOptions.url = options.get('searchPath');
-console.log(options);
     var typeSearch = options.get('typeSearch');
     var attrName = options.get('attrName');
     if (attrName) { attrName = '_' + attrName; }

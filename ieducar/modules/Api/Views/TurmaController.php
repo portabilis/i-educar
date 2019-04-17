@@ -68,7 +68,7 @@ class TurmaController extends ApiCoreController
             ];
         }
 
-        sort($lstNomes); //echo "<pre>";print_r($lstNomes);die;
+        sort($lstNomes);
         array_unshift($lstNomes, 'indice zero');
         $quantidadeAlunos = count($lstNomes);
 

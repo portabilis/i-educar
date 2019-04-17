@@ -29,6 +29,8 @@
  * @version   $Id$
  */
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -102,6 +104,7 @@ class indice extends clsCadastro
   var $curso_formacao_continuada;
   var $multi_seriado;
   var $matricula = array();
+  var $cod_servidor_funcao = [];
 
   var $total_horas_alocadas;
 
@@ -113,9 +116,7 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+
 
     $this->cod_servidor                 = $_GET['cod_servidor'];
     $this->ref_cod_instituicao          = $_GET['ref_cod_instituicao'];
@@ -192,7 +193,7 @@ class indice extends clsCadastro
             $obj_funcao = new clsPmieducarFuncao($funcao['ref_cod_funcao']);
             $det_funcao = $obj_funcao->detalhe();
 
-            $this->ref_cod_funcao[] = array($funcao['ref_cod_funcao'] . '-' . $det_funcao['professor'], null, null, $funcao['matricula']);
+            $this->ref_cod_funcao[] = array($funcao['ref_cod_funcao'] . '-' . $det_funcao['professor'], null, null, $funcao['matricula'], $funcao['cod_servidor_funcao']);
 
             if (false == $this->docente && (bool) $det_funcao['professor']) {
               $this->docente = true;
@@ -220,15 +221,11 @@ class indice extends clsCadastro
           $this->curso_formacao_continuada = explode(',',str_replace(array('{', "}"), '', $this->curso_formacao_continuada));
         }
 
-        @session_start();
-
-        if ($_SESSION['cod_servidor'] == $this->cod_servidor) {
-          $_SESSION['cursos_disciplina'] = $this->cursos_disciplina;
+        if (Session::get('cod_servidor') == $this->cod_servidor) {
+            Session::put('cursos_disciplina', $this->cursos_disciplina);
         } else {
-          unset($_SESSION['cursos_disciplina']);
+            Session::forget('cursos_disciplina');
         }
-
-        @session_write_close();
 
         $retorno = 'Editar';
       }
@@ -381,6 +378,8 @@ class indice extends clsCadastro
       "<img src='imagens/lupa_antiga.png' border='0' style='cursor:pointer;' alt='Buscar Cursos' title='Buscar Cursos' onclick=\"$funcao\">");
 
     $this->campoTexto('matricula', 'Matricula', $this->matricula);
+
+    $this->campoOculto('cod_servidor_funcao', null);
 
     $this->campoTabelaFim();
 
@@ -690,6 +689,20 @@ class indice extends clsCadastro
 
     Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
 
+    $script = <<<'JS'
+(function () {
+    $j('.ref_cod_funcao select').each(function () {
+        const $this = $j(this);
+        const value = $this.val();
+
+        if (value != '') {
+            $this.data('valor-original', value);
+        }
+    });
+})();
+JS;
+
+    Portabilis_View_Helper_Application::embedJavascript($this, $script);
   }
 
   function Novo()
@@ -705,12 +718,10 @@ class indice extends clsCadastro
     $this->carga_horaria = $hour + $min;
 
     $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
-    
+
     $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
 
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
@@ -741,10 +752,7 @@ class indice extends clsCadastro
         include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-        header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-
-
-        die();
+        $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
       }
     } else {
       $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao;
@@ -772,9 +780,7 @@ class indice extends clsCadastro
         include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-        header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-
-        die();
+        $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
       }
     }
     $this->mensagem = 'Cadastro não realizado.<br>';
@@ -794,9 +800,7 @@ class indice extends clsCadastro
 
     $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
 
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+
 
     $servidor = new clsPmieducarServidor($this->cod_servidor, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
     $servidorAntes = $servidor->detalhe();
@@ -826,9 +830,7 @@ class indice extends clsCadastro
         include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
         $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-        header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-
-        die();
+        $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
       }
     } else {
       $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
@@ -880,9 +882,7 @@ class indice extends clsCadastro
               include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
               $this->mensagem .= "Edição efetuada com sucesso.<br>";
-              header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-
-              die();
+              $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
             }
           }
         }
@@ -895,9 +895,7 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
@@ -932,8 +930,7 @@ class indice extends clsCadastro
 
           $this->excluiFuncoes();
           $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
-          header("Location: educar_servidor_lst.php");
-          die();
+          $this->simpleRedirect('educar_servidor_lst.php');
         }
       }
     }
@@ -969,31 +966,23 @@ class indice extends clsCadastro
 
   function cadastraFuncoes()
   {
-    @session_start();
-    $cursos_disciplina = $_SESSION['cursos_disciplina'];
-    $cursos_servidor   = $_SESSION['cursos_servidor'];
-    @session_write_close();
+    $cursos_disciplina = Session::get('cursos_disciplina');
+    $cursos_servidor = Session::get('cursos_servidor');
 
-    $existe_funcao_professor = FALSE;
     $listFuncoesCadastradas = array();
+
     if ($this->ref_cod_funcao) {
-        $cont = -1;
+        foreach ($this->ref_cod_funcao as $k => $funcao) {
+            list($funcao, $professor) = explode('-', $funcao);
 
-        foreach ($this->ref_cod_funcao as $funcao) {
-            $cont++;
-            $funcao_professor = explode('-', $funcao);
-            $funcao = array_shift($funcao_professor);
-            $professor = array_shift($funcao_professor);
+            $existe_funcao_professor = (bool) $professor;
+            $cod_servidor_funcao = $this->cod_servidor_funcao[$k];
+            $obj_servidor_funcao = new clsPmieducarServidorFuncao(null, null, null, null, $cod_servidor_funcao);
 
-            if ($professor) {
-                $existe_funcao_professor = true;
-            }
-
-            $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao);
             if ($obj_servidor_funcao->existe()) {
-                $this->atualizaFuncao($funcao,$this->matricula[$cont]);
+                $this->atualizaFuncao($obj_servidor_funcao, $funcao, $this->matricula[$k]);
             } else {
-                $this->cadastraFuncao($funcao,$this->matricula[$cont]);
+                $this->cadastraFuncao($funcao, $this->matricula[$k]);
             }
             array_push($listFuncoesCadastradas,$funcao);
         }
@@ -1044,9 +1033,11 @@ class indice extends clsCadastro
     $obj_servidor_funcao->excluirFuncoesRemovidas($funcoes);
   }
 
-  function atualizaFuncao($funcao,$matricula)
+  function atualizaFuncao($obj_servidor_funcao, $funcao, $matricula)
   {
-      $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao, $matricula);
+      $obj_servidor_funcao->ref_cod_funcao = $funcao;
+      $obj_servidor_funcao->matricula = $matricula;
+
       $obj_servidor_funcao->edita();
   }
 

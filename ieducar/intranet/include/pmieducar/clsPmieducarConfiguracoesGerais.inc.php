@@ -134,11 +134,11 @@ class clsPmieducarConfiguracoesGerais
         ieducar_external_footer, ieducar_internal_footer, facebook_url, twitter_url, linkedin_url,
         ieducar_suspension_message, bloquear_cadastro_aluno';
 
-    if (!empty($campos['ref_cod_instituicao']) && is_numeric($campos['ref_cod_instituicao'])) {
+    if (is_numeric($campos['ref_cod_instituicao'] ?? null)) {
       $this->ref_cod_instituicao = $campos['ref_cod_instituicao'];
     }
 
-    if (!empty($campos['permite_relacionamento_posvendas']) && is_numeric($campos['permite_relacionamento_posvendas'])) {
+    if (is_numeric($campos['permite_relacionamento_posvendas'] ?? null)) {
       $this->permite_relacionamento_posvendas = $campos['permite_relacionamento_posvendas'];
     }
 
@@ -146,11 +146,11 @@ class clsPmieducarConfiguracoesGerais
       $this->url_novo_educacao = $campos['url_novo_educacao'];
     }
 
-    if (!empty($campos['mostrar_codigo_inep_aluno']) && is_numeric($campos['mostrar_codigo_inep_aluno'])) {
+    if (is_numeric($campos['mostrar_codigo_inep_aluno'] ?? null)) {
         $this->mostrar_codigo_inep_aluno = $campos['mostrar_codigo_inep_aluno'];
     }
 
-    if (!empty($campos['justificativa_falta_documentacao_obrigatorio']) && is_numeric($campos['justificativa_falta_documentacao_obrigatorio'])) {
+    if (is_numeric($campos['justificativa_falta_documentacao_obrigatorio'] ?? null)) {
        $this->justificativa_falta_documentacao_obrigatorio = $campos['justificativa_falta_documentacao_obrigatorio'];
     }
 
@@ -170,7 +170,7 @@ class clsPmieducarConfiguracoesGerais
         $this->url_cadastro_usuario = $campos['url_cadastro_usuario'];
     }
 
-    if (isset($campos['active_on_ieducar']) && is_numeric($campos['active_on_ieducar'])) {
+    if (is_numeric($campos['active_on_ieducar'] ?? null)) {
         $this->active_on_ieducar = $campos['active_on_ieducar'];
     }
 

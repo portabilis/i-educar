@@ -54,10 +54,6 @@ class indice extends clsDetalhe
     
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-        
         $this->titulo = "Pais - Detalhe";
         
 
@@ -68,8 +64,7 @@ class indice extends clsDetalhe
         
         if( ! $registro )
         {
-            header( "location: public_pais_lst.php" );
-            die();
+            $this->simpleRedirect('public_pais_lst.php');
         }
         
         if( $registro["nome"] )

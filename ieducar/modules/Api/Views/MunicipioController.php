@@ -31,4 +31,42 @@ class MunicipioController extends ApiCoreController
             $this->notImplementedOperationError();
         }
     }
+
+    protected function search()
+    {
+        if ($this->canSearch()) {
+            $sql = <<<SQL
+                SELECT
+                    DISTINCT sigla_uf,
+                    idmun AS id,
+                    nome AS name,
+                    LENGTH(nome) AS size
+                FROM
+                    public.municipio
+                WHERE TRUE
+                    AND LOWER(UNACCENT(nome)) LIKE '%' || LOWER(UNACCENT($1)) || '%'
+                ORDER BY
+                    size,
+                    nome
+                LIMIT 15
+SQL;
+
+            $tmpResults = $this->fetchPreparedQuery($sql, ['params' => trim($this->getRequest()->query)], false);
+            $results = [];
+
+            foreach ($tmpResults as $result) {
+                if (!isset($results[$result['id']])) {
+                    $results[$result['id']] = $this->formatResourceValue($result);
+                }
+            }
+
+            $resources = $results;
+        }
+
+        if (empty($resources)) {
+            $resources = ['' => 'Sem resultados.'];
+        }
+
+        return ['result' => $resources];
+    }
 }
