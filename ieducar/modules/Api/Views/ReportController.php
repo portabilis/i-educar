@@ -93,7 +93,7 @@ class ReportController extends ApiCoreController
             return [
                 'matricula_id' => $this->getRequest()->matricula_id,
                 'encoding' => $encoding,
-                'encoded' => $encoded
+                'encoded' => base64_encode($encoded)
             ];
         }
     }
@@ -135,7 +135,7 @@ class ReportController extends ApiCoreController
 
             return [
                 'encoding' => $encoding,
-                'encoded' => $encoded
+                'encoded' => base64_encode($encoded)
             ];
         }
     }
