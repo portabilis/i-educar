@@ -2644,17 +2644,24 @@ class indice extends clsCadastro
         $schoolService = app(SchoolManagerService::class);
         $managers = $schoolService->getSchoolManagers($this->cod_escola);
 
-        $rows = [];
-        foreach ($managers as $key => $manager) {
-            $rows[] = $this->makeRowManagerTable($key, $manager);
-        }
-
-        $countOld = count(old('managers_individual_id'));
-        $countRegistered = count($managers);
-
-        if ($countOld > $countRegistered) {
-            for ($count = $countRegistered; $count < $countOld; $count++) {
-                $rows[] = $this->makeRowManagerTable($count, new SchoolManager());
+        if (old('managers_individual_id')) {
+            foreach (old('managers_individual_id') as $key => $value) {
+                $rows[] = [
+                    old('managers_inep_id')[$key],
+                    old('managers_individual_nome')[$key],
+                    old('managers_role_id')[$key],
+                    null,
+                    old('managers_chief')[$key],
+                    old('managers_individual_id')[$key],
+                    old('managers_access_criteria_id')[$key],
+                    old('managers_access_criteria_description')[$key],
+                    old('managers_link_type_id')[$key],
+                ];
+            }
+        } else {
+            $rows = [];
+            foreach ($managers as $key => $manager) {
+                $rows[] = $this->makeRowManagerTable($key, $manager);
             }
         }
 
@@ -2703,15 +2710,15 @@ class indice extends clsCadastro
     protected function makeRowManagerTable($key, $schoolManager)
     {
         return [
-            old("managers_inep_id")[$key] ?? $schoolManager->inep_id,
-            old("managers_individual_nome")[$key] ?? $schoolManager->individual_id . ' - ' . $schoolManager->individual->real_name,
-            old("managers_role_id")[$key] ?? $schoolManager->role_id,
+            $this->managers_inep_id[$key] ?? $schoolManager->inep_id,
+            $this->managers_individual_nome[$key] ?? $schoolManager->individual_id . ' - ' . $schoolManager->individual->real_name,
+            $this->managers_role_id[$key] ?? $schoolManager->role_id,
             null,
-            old("managers_chief")[$key] ?? (int)$schoolManager->chief,
-            old("managers_individual_id")[$key] ?? $schoolManager->individual_id,
-            old("managers_access_criteria_id")[$key] ?? $schoolManager->access_criteria_id,
-            old("managers_access_criteria_description")[$key] ?? $schoolManager->access_criteria_description,
-            old("managers_link_type_id")[$key] ?? $schoolManager->link_type_id,
+            $this->managers_chief[$key] ?? (int)$schoolManager->chief,
+            $this->managers_individual_id[$key] ?? $schoolManager->individual_id,
+            $this->managers_access_criteria_id[$key] ?? $schoolManager->access_criteria_id,
+            $this->managers_access_criteria_description[$key] ?? $schoolManager->access_criteria_description,
+            $this->managers_link_type_id[$key] ?? $schoolManager->link_type_id,
         ];
     }
 
