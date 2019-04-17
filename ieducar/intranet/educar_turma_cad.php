@@ -205,6 +205,21 @@ class indice extends clsCadastro
             }
         }
 
+        if (is_numeric($this->cod_turma)) {
+            $obj_turma = new clsPmieducarTurma($this->cod_turma);
+            $registro = $obj_turma->detalhe();
+            $obj_esc = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
+            $det_esc = $obj_esc->detalhe();
+            $obj_ser = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
+            $det_ser = $obj_ser->detalhe();
+
+            $this->ref_cod_escola = $det_esc['cod_escola'];
+            $this->ref_cod_instituicao = $det_esc['ref_cod_instituicao'];
+            $this->ref_cod_curso = $det_ser['ref_cod_curso'];
+            $this->ref_cod_serie = $det_ser['cod_serie'];
+            $this->ano = $registro['ano'];
+        }
+
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
 
         if (is_numeric($this->ano_letivo)) {
