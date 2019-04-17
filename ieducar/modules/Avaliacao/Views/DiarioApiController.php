@@ -830,7 +830,7 @@ class DiarioApiController extends ApiCoreController
                 $objMatriculaTurma = new clsPmieducarMatriculaTurma();
                 $matriculaDependencia = $objMatriculaTurma->verficaEnturmacaoDeDependencia($matriculaId, $turmaId);
 
-                if (!empty($componenteCurricularId) && $isDependencia && !in_array($componenteCurricularId, $disciplinasDependenciaId)) {
+                if (!empty($componenteCurricularId) && $matriculaDependencia && !in_array($componenteCurricularId, $disciplinasDependenciaId)) {
                     continue;
                 }
 
