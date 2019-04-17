@@ -210,11 +210,6 @@ class Portabilis_View_Helper_Inputs
         $this->simpleSearchResourceInput('simpleSearchCursoSuperior', $attrName, $inputOptions, $helperOptions);
     }
 
-    public function simpleSearchCartorioInep($attrName, $inputOptions = [], $helperOptions = [])
-    {
-        $this->simpleSearchResourceInput('simpleSearchCartorioInep', $attrName, $inputOptions, $helperOptions);
-    }
-
     public function simpleSearchServidor($attrName, $inputOptions = [], $helperOptions = [])
     {
         $this->simpleSearchResourceInput('simpleSearchServidor', $attrName, $inputOptions, $helperOptions);

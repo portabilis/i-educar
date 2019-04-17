@@ -346,7 +346,9 @@ class indice extends clsCadastro
         }
 
         throw new HttpResponseException(
-            new RedirectResponse("educar_matriculas_turma_cad.php?ref_cod_turma={$this->ref_cod_turma}")
+            new RedirectResponse(
+                route('enrollments.batch.enroll.index', ['schoolClass' => $this->ref_cod_turma])
+            )
         );
     }
 

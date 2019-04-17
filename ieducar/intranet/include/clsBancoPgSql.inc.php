@@ -5,7 +5,6 @@ use Illuminate\Database\Connection;
 
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsCronometro.inc.php';
-require_once 'Portabilis/Mailer.php';
 
 abstract class clsBancoSQL_
 {
