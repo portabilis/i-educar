@@ -27,6 +27,6 @@ class Employee extends Model
      */
     public function inep()
     {
-        return $this->belongsTo(EmployeeInep::class, 'employee_id', 'cod_servidor');
+        return $this->belongsTo(EmployeeInep::class, 'cod_servidor', 'cod_servidor');
     }
 }

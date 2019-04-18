@@ -13,7 +13,7 @@ class SchoolManager extends Model
      */
     public function individual()
     {
-        return $this->belongsTo(Individual::class, 'individual_id', 'id');
+        return $this->belongsTo(Individual::class, 'employee_id', 'id');
     }
 
     /**

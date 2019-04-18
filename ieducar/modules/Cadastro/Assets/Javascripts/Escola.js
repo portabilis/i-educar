@@ -596,9 +596,10 @@ if ( document.getElementById('ref_cod_instituicao') )
 }
 
 var search = function (request, response) {
-    var searchPath = '/module/Api/Pessoa?oper=get&resource=pessoa-search',
+    var searchPath = '/module/Api/Servidor?oper=get&resource=servidor-search',
         params = {
-            query: request.term
+            query: request.term,
+            escola_id: $j('#cod_escola').val()
         };
 
     $j.get(searchPath, params, function (dataResponse) {
@@ -607,19 +608,31 @@ var search = function (request, response) {
 };
 
 var handleSelect = function (event, ui) {
-    var $target = $j(event.target),
-        id = $target.attr('id'),
+    var target = $j(event.target),
+        id = target.attr('id'),
         idNum = id.match(/\[(\d+)\]/),
-        $refEscola = $j('input[id="managers_individual_id[' + idNum[1] + ']"]');
+        refIdServidor = $j('input[id="servidor_id[' + idNum[1] + ']"]'),
+        refInepServidor = $j('input[id="managers_inep_id[' + idNum[1] + ']"]'),
+        refEmail = $j('input[id="managers_email[' + idNum[1] + ']"]');
 
-    $target.val(ui.item.label);
-    $refEscola.val(ui.item.value);
+    target.val(ui.item.label);
+    refIdServidor.val(ui.item.value);
+
+    var searchPath = '/module/Api/Servidor?oper=get&resource=dados-servidor',
+        params = {
+            servidor_id: ui.item.value
+        };
+
+    $j.get(searchPath, params, function (dataResponse) {
+        refInepServidor.val(dataResponse.result.inep);
+        refEmail.val(dataResponse.result.email);
+    });
 
     return false;
 };
 
 function setAutoComplete() {
-    $j.each($j('input[id^="managers_individual"]'), function (index, field) {
+    $j.each($j('input[id^="servidor"]'), function (index, field) {
         $j(field).autocomplete({
             source: search,
             select: handleSelect,
@@ -637,6 +650,10 @@ $j('#btn_add_tab_add_1').click(function () {
 });
 
 $j.each($j('input[id^="managers_access_criteria_description"]'), function (index, field) {
+    $j(field).val(decodeURIComponent($j(field).val().replace(/\+/g, ' ')));
+});
+
+$j.each($j('input[id^="managers_email"]'), function (index, field) {
     $j(field).val(decodeURIComponent($j(field).val().replace(/\+/g, ' ')));
 });
 

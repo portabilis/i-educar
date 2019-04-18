@@ -17,6 +17,8 @@ class EmployeeInep extends Model
      */
     protected $primaryKey = 'cod_servidor';
 
+    protected $fillable = ['cod_servidor', 'cod_docente_inep'];
+
     public function getNumberAttribute()
     {
         return $this->cod_docente_inep;
