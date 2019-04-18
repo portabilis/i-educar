@@ -27,6 +27,14 @@ class SchoolManager extends Model
     /**
      * @return BelongsTo
      */
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'employee_id', 'cod_servidor');
+    }
+
+    /**
+     * @return BelongsTo
+     */
     public function role()
     {
         return $this->belongsTo(ManagerRole::class, 'role_id', 'id');
