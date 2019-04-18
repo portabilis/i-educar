@@ -1,10 +1,10 @@
 <?php
 
 require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/clsMenuFuncionario.inc.php';
 require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 
+use App\User;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
@@ -31,14 +31,10 @@ class clsPermissoes
         $super_usuario = null,
         $int_verifica_usuario_biblioteca = false
     ) {
-        $obj_usuario = new clsFuncionario($int_idpes_usuario);
-        $detalhe_usuario = $obj_usuario->detalhe();
+        /** @var User $user */
+        $user = User::findOrFail($int_idpes_usuario);
 
-        // Verifica se é super usuário
-        if ($detalhe_usuario['ativo']) {
-            $obj_menu_funcionario = new clsMenuFuncionario($int_idpes_usuario, false, false, 0);
-            $detalhe_super_usuario = $obj_menu_funcionario->detalhe();
-        }
+        $detalhe_super_usuario = $user->isAdmin();
 
         if (!$detalhe_super_usuario) {
             $obj_menu_tipo_usuario = new clsPmieducarMenuTipoUsuario();
@@ -111,14 +107,10 @@ class clsPermissoes
         $super_usuario = null,
         $int_verifica_usuario_biblioteca = false
     ) {
-        $obj_usuario = new clsFuncionario($int_idpes_usuario);
-        $detalhe_usuario = $obj_usuario->detalhe();
+        /** @var User $user */
+        $user = User::findOrFail($int_idpes_usuario);
 
-        // Verifica se é super usuário
-        if ($super_usuario != null && $detalhe_usuario['ativo']) {
-            $obj_menu_funcionario = new clsMenuFuncionario($int_idpes_usuario, false, false, 0);
-            $detalhe_super_usuario = $obj_menu_funcionario->detalhe();
-        }
+        $detalhe_super_usuario = $user->isAdmin();
 
         if (!$detalhe_super_usuario) {
             $obj_menu_tipo_usuario = new clsPmieducarMenuTipoUsuario();
