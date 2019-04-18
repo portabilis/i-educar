@@ -627,15 +627,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'required' => false
           );
 
-          $helperOptions = array(
-            'objectName' => 'cartorio_cert_civil_inep',
-            'hiddenInputOptions' => array(
-              'options' => array('value' => $documentos['cartorio_cert_civil_inep'])
-            )
-          );
-
-          $this->inputsHelper()->simpleSearchCartorioInep(null, $options, $helperOptions);
-
         // cartório emissão certidão civil
         $labelCartorio = Portabilis_String_Utils::toLatin1('Cartório emissão');
         $options = array(
