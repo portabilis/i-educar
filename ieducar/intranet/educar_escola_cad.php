@@ -928,8 +928,6 @@ class indice extends clsCadastro
             $options = array('label' => 'Ato autorizativo', 'value' => $this->ato_autorizativo, 'size' => 70, 'required' => false);
             $this->inputsHelper()->text('ato_autorizativo', $options);
 
-            $this->addSchoolManagersTable();
-
             $mantenedoras = MantenedoraDaEscolaPrivada::getDescriptiveValues();
             $helperOptions = ['objectName' => 'mantenedora_escola_privada'];
             $options = [
@@ -983,6 +981,9 @@ class indice extends clsCadastro
                 'required' => false,
             ];
             $this->inputsHelper()->select('esfera_administrativa', $options);
+
+            $this->campoQuebra();
+            $this->addSchoolManagersTable();
 
             if ($_POST["escola_curso"]) {
                 $this->escola_curso = unserialize(urldecode($_POST["escola_curso"]));
