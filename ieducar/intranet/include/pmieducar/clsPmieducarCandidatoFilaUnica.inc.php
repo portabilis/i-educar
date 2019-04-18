@@ -89,7 +89,9 @@ class clsPmieducarCandidatoFilaUnica
                                                        cfu.horario_inicial,
                                                        cfu.horario_final,
                                                        cfu.situacao,
+                                                       cfu.historico,
                                                        cfu.motivo,
+                                                       cfu.data_situacao,
                                                        cfu.via_judicial,
                                                        cfu.via_judicial_doc,
                                                        cfu.ativo';
@@ -779,13 +781,47 @@ class clsPmieducarCandidatoFilaUnica
         return '';
     }
 
+    protected function montaHistorico()
+    {
+        $detalhes = $this->detalhe();
+        $historico = $detalhes['historico'];
+
+        if (is_null($historico)) {
+            $historico = [];
+        } else {
+            $historico = json_decode($historico, true);
+        }
+
+        $mapaSituacao = [
+            null => 'Em espera',
+            'I' => 'Indeferida',
+            'A' => 'Atendida',
+        ];
+
+        $data = $detalhes['data_situacao'] ?? $detalhes['data_solicitacao'];
+        $data = date('d/m/Y', strtotime($data));
+
+        $historico[] = [
+            'situacao' => $mapaSituacao[$detalhes['situacao']] ?? 'Desconhecida',
+            'motivo' => trim($detalhes['motivo']),
+            'data' => $data,
+        ];
+
+        return json_encode($historico);
+    }
+
     public function indefereCandidatura($motivo = null)
     {
         $motivo = $motivo == null ? 'null' : '\''. $motivo .'\'';
 
         if (is_numeric($this->cod_candidato_fila_unica)) {
+            $historico = $this->montaHistorico();
             $db = new clsBanco();
-            $db->Consulta("UPDATE pmieducar.candidato_fila_unica SET situacao = 'I', motivo = $motivo, data_situacao = NOW()
+            $db->Consulta("UPDATE pmieducar.candidato_fila_unica
+                              SET situacao = 'I',
+                                  motivo = $motivo,
+                                  historico = '$historico',
+                                  data_situacao = NOW()
                             WHERE cod_candidato_fila_unica = '{$this->cod_candidato_fila_unica}'");
             $db->ProximoRegistro();
 
@@ -798,9 +834,15 @@ class clsPmieducarCandidatoFilaUnica
     public function vinculaMatricula($ref_cod_matricula)
     {
         if (is_numeric($ref_cod_matricula)) {
+            $historico = $this->montaHistorico();
+
             $db = new clsBanco();
-            $db->Consulta("UPDATE pmieducar.candidato_fila_unica SET ref_cod_matricula = '{$ref_cod_matricula}', situacao = 'A', data_situacao = NOW()
-                      WHERE cod_candidato_fila_unica = '{$this->cod_candidato_fila_unica}'");
+            $db->Consulta("UPDATE pmieducar.candidato_fila_unica
+                              SET ref_cod_matricula = '{$ref_cod_matricula}',
+                                  situacao = 'A',
+                                  data_situacao = NOW(),
+                                  historico = '{$historico}'
+                            WHERE cod_candidato_fila_unica = '{$this->cod_candidato_fila_unica}'");
             $db->ProximoRegistro();
 
             return $db->Tupla();
@@ -817,13 +859,15 @@ class clsPmieducarCandidatoFilaUnica
 
         $situacao = $situacao ?: 'NULL';
         $motivo = $motivo ?: 'NULL';
+        $historico = $this->montaHistorico();
 
         $db = new clsBanco();
         $db->Consulta("UPDATE pmieducar.candidato_fila_unica
-                                   SET situacao = {$situacao},
-                                       motivo = {$motivo},
-                                       data_situacao = NOW()
-                                 WHERE cod_candidato_fila_unica = '{$this->cod_candidato_fila_unica}'");
+                          SET situacao = {$situacao},
+                              motivo = {$motivo},
+                              data_situacao = NOW(),
+                              historico = '{$historico}'
+                        WHERE cod_candidato_fila_unica = '{$this->cod_candidato_fila_unica}'");
 
         return true;
     }
