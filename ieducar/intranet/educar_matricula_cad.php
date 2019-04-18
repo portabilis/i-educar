@@ -444,7 +444,7 @@ class indice extends clsCadastro
                 $curso = $this->getCurso($this->ref_cod_curso);
 
                 if ($m['ref_ref_cod_serie'] == $this->ref_cod_serie) {
-                    $this->mensagem .= 'Este aluno j&aacute; est&aacute; matriculado nesta s&eacute;rie e curso, n&atilde;o &eacute; possivel matricular um aluno mais de uma vez na mesma s&eacute;rie.<br />';
+                    $this->mensagem = 'Este aluno j&aacute; est&aacute; matriculado nesta s&eacute;rie e curso, n&atilde;o &eacute; possivel matricular um aluno mais de uma vez na mesma s&eacute;rie.<br />';
 
                     return false;
                 } elseif ($curso['multi_seriado'] != 1) {
@@ -457,7 +457,7 @@ class indice extends clsCadastro
                         $nomeSerie = '';
                     }
 
-                    $this->mensagem .= "Este aluno j&aacute; est&aacute; matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso n&atilde;o &eacute; multisseriado, n&atilde;o &eacute; possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
+                    $this->mensagem = "Este aluno j&aacute; est&aacute; matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso n&atilde;o &eacute; multisseriado, n&atilde;o &eacute; possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
 
                     return false;
                 }
@@ -509,7 +509,7 @@ class indice extends clsCadastro
                             $curso = '';
                         }
 
-                        $this->mensagem .= "Este aluno j&aacute; est&aacute; matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transfer&ecirc;ncia ao secret&aacute;rio(a) da escola citada.<br />";
+                        $this->mensagem = "Este aluno j&aacute; est&aacute; matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transfer&ecirc;ncia ao secret&aacute;rio(a) da escola citada.<br />";
 
                         return false;
                     }
@@ -812,7 +812,7 @@ class indice extends clsCadastro
             $m = $db->Tupla();
 
             if (is_array($m) && count($m) && $dependencia) {
-                $this->mensagem .= 'Esse aluno j&aacute; tem uma matr&iacute;cula de depend&ecirc;ncia nesta escola e s&eacute;rie.';
+                $this->mensagem = 'Esse aluno j&aacute; tem uma matr&iacute;cula de depend&ecirc;ncia nesta escola e s&eacute;rie.';
 
                 return false;
             }
@@ -911,14 +911,14 @@ class indice extends clsCadastro
             }
 
             if ($dataTransferencia && $dataMatriculaObj <= $dataTransferencia) {
-                $this->mensagem .= sprintf(
+                $this->mensagem = sprintf(
                     'Não é possível matricular o aluno. O mesmo possui enturmação com data de saída anterior à data informada. Favor alterar a data de matrícula para ser superior a %s.',
                     $dataTransferencia->format('d/m/Y')
                 );
 
                 return false;
             } elseif ($dataMatriculaObj < $dataAnoLetivoInicio) {
-                $this->mensagem .= sprintf(
+                $this->mensagem = sprintf(
                     'A data de matrícula precisa ser igual ou maior que a data de início do ano letivo da escola ou turma (%s).',
                     $dataAnoLetivoInicio->format('d/m/Y')
                 );
@@ -927,7 +927,7 @@ class indice extends clsCadastro
             }
 
             if ($dataMatriculaObj > $dataAnoLetivoTermino) {
-                $this->mensagem .= sprintf(
+                $this->mensagem = sprintf(
                     'A data de matrícula precisa ser igual ou menor que a data fim do ano letivo da escola ou turma (%s).',
                     $dataAnoLetivoTermino->format('d/m/Y')
                 );
@@ -960,7 +960,7 @@ class indice extends clsCadastro
                 $this->enturmacaoMatricula($this->cod_matricula, $this->ref_cod_turma);
                 $this->verificaSolicitacaoTransferencia();
 
-                $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
+                $this->mensagem = 'Cadastro efetuado com sucesso.<br />';
 
                 DB::commit();
                 $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
@@ -1288,7 +1288,7 @@ class indice extends clsCadastro
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br />';
+            $this->mensagem = 'Exclus&atilde;o efetuada com sucesso.<br />';
 
             throw new HttpResponseException(
                 new RedirectResponse("educar_aluno_det.php?cod_aluno={$this->ref_cod_aluno}")
@@ -1396,14 +1396,14 @@ class indice extends clsCadastro
         if (!$dependencia) {
             // Caso quantidade de matrículas naquela turma seja maior ou igual que a capacidade da turma deve bloquear
             if ($this->_getQtdMatriculaTurma() >= $this->_getMaxAlunoTurma()) {
-                $this->mensagem .= Portabilis_String_Utils::toLatin1('Não existem vagas disponíveis para essa turma!') . '<br/>';
+                $this->mensagem = Portabilis_String_Utils::toLatin1('Não existem vagas disponíveis para essa turma!') . '<br/>';
 
                 return false;
             }
 
             // Caso a capacidade de alunos naquele turno seja menor ou igual ao ao número de alunos matrículados + alunos na reserva de vaga externa deve bloquear
             if ($this->_getMaxAlunoTurno() <= ($this->_getQtdAlunosFila() + $this->_getQtdMatriculaTurno())) {
-                $this->mensagem .= Portabilis_String_Utils::toLatin1('Não existem vagas disponíveis para essa série/turno!') . '<br/>';
+                $this->mensagem = Portabilis_String_Utils::toLatin1('Não existem vagas disponíveis para essa série/turno!') . '<br/>';
 
                 return false;
             }
