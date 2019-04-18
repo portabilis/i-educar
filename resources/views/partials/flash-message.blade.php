@@ -19,6 +19,20 @@
         @if ($message = Session::get('legacy'))
             <div class="flashMessages__message -legacy"><a href="#" class="close-msg">×</a><time>{{ date('H:i:s', time()) }}</time>{!! $message !!}</div>
         @endif
+
+        @if (Session::has('errors'))
+            @php
+                $msgs = [];
+
+                foreach (Session::get('errors')->all() as $error) {
+                    $msgs[] = $error;
+                }
+
+                $message = join('<br>', $msgs);
+            @endphp
+
+            <div class="flashMessages__message -error"><a href="#" class="close-msg">×</a><time>{{ date('H:i:s', time()) }}</time>{!! $message !!}</div>
+        @endif
     </div>
     <ul class="flashMessages__controls">
         <li><a href="#" data-action="showAll">mostrar todos (+<span>0</span>)</a></li><li><a href="#" data-action="closeAll">fechar todos</a></li>
