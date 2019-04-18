@@ -167,6 +167,11 @@ class indice extends clsCadastro
             'required' => false,
             'label_hint' => 'Preencha apenas se o servidor atuar em algum turno específico'
         ];
+
+        if ($this->tipoacao === 'Editar') {
+            $options['disabled'] = true;
+        }
+
         $this->inputsHelper()->select('turma_turno_id', $options);
 
         $options = [
