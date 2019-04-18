@@ -1,23 +1,25 @@
 .flashMessages {
   font-size: 14px;
   left: 0;
+  margin: 0 auto;
+  max-height: 100vh;
+  max-width: 860px;
+  overflow-y: auto;
   position: fixed;
   right: 0;
   top: 0;
   z-index: 9999;
-  max-height: 100vh;
-  overflow-y: auto;
 }
 
 .flashMessages__controls {
   margin: 0;
-  padding: 0 24px 0 0;
+  padding: 0 12px 0 0;
   text-align: right;
 }
 
 .flashMessages__controls li {
   display: inline-block;
-  margin: 12px 24px 12px 0;
+  margin: 12px 12px 12px 0;
 }
 
 .flashMessages__controls li a {
@@ -37,7 +39,7 @@
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, .5);
   color: rgba(0, 0, 0, .75);
-  margin: 24px 48px;
+  margin: 24px 24px;
   padding: 15px;
   position: relative;
 }
