@@ -115,6 +115,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->type->level === LegacyUserType::LEVEL_ADMIN;
+    }
+
+    /**
      * @return BelongsTo
      */
     public function employee()
@@ -135,13 +143,5 @@ class User extends Authenticatable
             'ref_cod_tipo_usuario',
             'process'
         )->wherePivot('visualiza', 1);
-    }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function root()
-    {
-        return $this->menu()->select('process');
     }
 }

@@ -107,6 +107,14 @@ class Menu extends Model
      */
     public static function user(User $user)
     {
+        if ($user->isAdmin()) {
+            return static::query()
+                ->with('children.children.children.children.children')
+                ->whereNull('parent_id')
+                ->orderBy('order')
+                ->get();
+        }
+
         $ids = $user->menu()->pluck('process')->sortBy('process')->toArray();
 
         return static::query()
