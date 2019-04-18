@@ -4,7 +4,7 @@ namespace iEducar\Modules\Educacenso\ExportRule;
 
 use App\Models\Educacenso\Registro00;
 use App\Models\Educacenso\RegistroEducacenso;
-use iEducar\Modules\Educacenso\SituacaoFuncionamento as SituacaoFuncionamentoModel;
+use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento as SituacaoFuncionamentoModel;
 
 
 class SituacaoFuncionamento implements EducacensoExportRule

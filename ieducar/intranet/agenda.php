@@ -48,7 +48,7 @@ class clsIndex extends clsBase
     }
 }
 
-class indice
+class indice extends clsCadastro
 {
     var $agenda;
     var $editor;
@@ -70,6 +70,9 @@ class indice
         $db2 = new clsBanco();
         // inicializacao de variaveis
         $this->editor = Session::get('id_pessoa');
+
+        Portabilis_View_Helper_Application::loadJavascript($this, "/intranet/scripts/agenda.js");
+        Portabilis_View_Helper_Application::loadStylesheet($this, "/intranet/styles/agenda.css");
 
         if( $_REQUEST["cod_agenda"] )
         {
@@ -400,7 +403,7 @@ class indice
                                     <div>
                                         <i class=\"fa fa-pencil\" aria-hidden=\"true\"></i> Editar
                                     </div></a>
-                                <a class=\"small\" href=\"javascript: excluir( {$cod_agenda_compromisso} );\">
+                                <a class=\"small\" href=\"javascript: excluir_compromisso( {$cod_agenda_compromisso} );\">
                                 <div>
                                         <i class=\"fa fa-close\" aria-hidden=\"true\"></i> Excluir
                                 </div></a>";
