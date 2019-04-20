@@ -167,11 +167,6 @@ class clsBase extends clsConfig
 
     function verificaPermissao()
     {
-        return $this->VerificaPermicao();
-    }
-
-    function VerificaPermicao()
-    {
         if (Gate::denies('view', $this->processoAp)) {
             throw new HttpResponseException(
                 new RedirectResponse('index.php?negado=1&err=1')
@@ -256,7 +251,7 @@ class clsBase extends clsConfig
         $cronometro->marca('inicio');
 
         $this->Formular();
-        $this->VerificaPermicao();
+        $this->verificaPermissao();
         $this->CadastraAcesso();
 
         $saida_geral = '';
@@ -264,7 +259,7 @@ class clsBase extends clsConfig
         /** @var User $user */
         $user = Auth::user();
         $menu = Menu::user($user);
-        
+
         $topmenu = Menu::query()
             ->where('process', $this->processoAp)
             ->first();
