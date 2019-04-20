@@ -1,6 +1,7 @@
 <?php
 
 use App\Menu;
+use App\User;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -260,7 +261,10 @@ class clsBase extends clsConfig
 
         $saida_geral = '';
 
-        $menu = Menu::user(Auth::user());
+        /** @var User $user */
+        $user = Auth::user();
+        $menu = Menu::user($user);
+        
         $topmenu = Menu::query()
             ->where('process', $this->processoAp)
             ->first();
