@@ -4,15 +4,17 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 
-use App\User;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 
 class clsPermissoes
 {
     /**
      * Verifica se um usuário tem permissão para cadastrar baseado em um
      * identificador de processo.
+     *
+     * @deprecated
      *
      * @param int $int_processo_ap Identificador de processo
      * @param int $int_idpes_usuario Identificador do usuário
@@ -31,64 +33,26 @@ class clsPermissoes
         $super_usuario = null,
         $int_verifica_usuario_biblioteca = false
     ) {
-        /** @var User $user */
-        $user = User::findOrFail($int_idpes_usuario);
+        $allow = Gate::allows('modify', $int_processo_ap);
 
-        $detalhe_super_usuario = $user->isAdmin();
-
-        if (!$detalhe_super_usuario) {
-            $obj_menu_tipo_usuario = new clsPmieducarMenuTipoUsuario();
-            $detalhe = $obj_menu_tipo_usuario->detalhePorUsuario($int_idpes_usuario, $int_processo_ap);
+        if ($allow) {
+            return true;
         }
 
-        $nivel = $this->nivel_acesso($int_idpes_usuario);
-        $ok = false;
-
-        // Alterado, pois super_usuário sempre deve ter acesso a tudo
-        if (($detalhe_super_usuario) || $nivel && $int_soma_nivel_acesso) {
-            $ok = true;
+        if (empty($str_pagina_redirecionar)) {
+            return false;
         }
 
-        if (!$detalhe_super_usuario && !$detalhe['cadastra']) {
-            $ok = false;
-        }
-
-        // Se for usuario tipo biblioteca ou escola
-        // ($int_verifica_usuario_biblioteca = true), verifica se possui
-        // cadastro na tabela usuario biblioteca
-        if (
-            (
-                $nivel == 8
-                || ($nivel == 4 && $int_verifica_usuario_biblioteca == true)
-            )
-            && $int_soma_nivel_acesso > 3
-            && !$detalhe_super_usuario
-        ) {
-            $ok = $this->getBiblioteca($int_idpes_usuario) == 0 ? false : true;
-
-            if (!$ok && $nivel == 8) {
-                throw new HttpResponseException(
-                    new RedirectResponse('index.php?negado=1')
-                );
-            }
-        }
-
-        if (!$ok) {
-            if ($str_pagina_redirecionar) {
-                throw new HttpResponseException(
-                    new RedirectResponse($str_pagina_redirecionar)
-                );
-            } else {
-                return false;
-            }
-        }
-
-        return true;
+        throw new HttpResponseException(
+            new RedirectResponse($str_pagina_redirecionar)
+        );
     }
 
     /**
      * Verifica se um usuário tem permissão para cadastrar baseado em um
      * identificador de processo.
+     *
+     * @deprecated
      *
      * @param int $int_processo_ap Identificador de processo
      * @param int $int_idpes_usuario Identificador do usuário
@@ -107,59 +71,19 @@ class clsPermissoes
         $super_usuario = null,
         $int_verifica_usuario_biblioteca = false
     ) {
-        /** @var User $user */
-        $user = User::findOrFail($int_idpes_usuario);
+        $allow = Gate::allows('remove', $int_processo_ap);
 
-        $detalhe_super_usuario = $user->isAdmin();
-
-        if (!$detalhe_super_usuario) {
-            $obj_menu_tipo_usuario = new clsPmieducarMenuTipoUsuario();
-            $detalhe = $obj_menu_tipo_usuario->detalhePorUsuario($int_idpes_usuario, $int_processo_ap);
+        if ($allow) {
+            return true;
         }
 
-        $nivel = $this->nivel_acesso($int_idpes_usuario);
-        $ok = false;
-
-        if (($super_usuario && $detalhe_super_usuario) || $nivel & $int_soma_nivel_acesso) {
-            $ok = true;
+        if (empty($str_pagina_redirecionar)) {
+            return false;
         }
 
-        if ((!$detalhe['exclui'] && !$detalhe_super_usuario)) {
-            $ok = false;
-        }
-
-        /*
-         * Se for usuario tipo biblioteca ou escola
-         * ($int_verifica_usuario_biblioteca = true), verifica se possui cadastro na
-         * tabela usuario biblioteca
-         */
-        if (
-            (
-                $nivel == 8
-                || ($nivel == 4 && $int_verifica_usuario_biblioteca == true)
-            ) && $int_soma_nivel_acesso > 3
-            && !$detalhe_super_usuario
-        ) {
-            $ok = $this->getBiblioteca($int_idpes_usuario) == 0 ? false : true;
-
-            if (!$ok && $nivel == 8) {
-                throw new HttpResponseException(
-                    new RedirectResponse('index.php?negado=1')
-                );
-            }
-        }
-
-        if (!$ok) {
-            if ($str_pagina_redirecionar) {
-                throw new HttpResponseException(
-                    new RedirectResponse($str_pagina_redirecionar)
-                );
-            } else {
-                return false;
-            }
-        }
-
-        return true;
+        throw new HttpResponseException(
+            new RedirectResponse($str_pagina_redirecionar)
+        );
     }
 
     /**
