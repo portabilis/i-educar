@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -13,9 +14,7 @@ class AdicionaColunaTipoAtendimentoMatriculaTurma extends Migration
      */
     public function up()
     {
-        Schema::table('pmieducar.matricula_turma', function (Blueprint $table) {
-            $table->integer('tipo_atendimento')->nullable();
-        });
+        DB::statement('ALTER TABLE pmieducar.matricula_turma ADD COLUMN tipo_atendimento integer[]');
     }
 
     /**
