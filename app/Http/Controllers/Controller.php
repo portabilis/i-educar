@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Menu;
 use iEducar\Support\Navigation\Breadcrumb;
-use iEducar\Support\Navigation\TopMenu;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
