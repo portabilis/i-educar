@@ -149,8 +149,8 @@ class ServidorController extends ApiCoreController
                        pessoa.email,
                        educacenso_cod_docente.cod_docente_inep AS inep
                 FROM pmieducar.servidor
-                LEFT JOIN cadastro.pessoa ON pessoa.idpes = servidor.cod_servidor
-                LEFT JOIN modules.educacenso_cod_docente ON educacenso_cod_docente.cod_servidor = servidor.cod_servidor
+                JOIN cadastro.pessoa ON pessoa.idpes = servidor.cod_servidor
+                JOIN modules.educacenso_cod_docente ON educacenso_cod_docente.cod_servidor = servidor.cod_servidor
                 WHERE servidor.cod_servidor = $1';
 
         $result = $this->fetchPreparedQuery($sql, [$servidor]);
