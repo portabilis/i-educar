@@ -242,10 +242,10 @@ class ApiCoreController extends Core_Controller_Page_EditController
             error_log("Erro inesperado no metodo prepareResponse da classe ApiCoreController: {$e->getMessage()}");
 
             $response = [
-                'msgs' => [
+                'msgs' => [[
                     'msg' => 'Erro inesperado no servidor. Por favor, tente novamente.',
                     'type' => 'error'
-                ]
+                ]]
             ];
 
             $response = SafeJson::encode($response);
