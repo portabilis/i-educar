@@ -275,7 +275,7 @@ SQL;
             SELECT
                40 AS registro,
                educacenso_cod_escola.cod_escola_inep AS "inepEscola",
-               school_managers.individual_id AS "codigoPessoa",
+               school_managers.employee_id AS "codigoPessoa",
                educacenso_cod_docente.cod_docente_inep AS "inepGestor",
                school_managers.role_id AS cargo,
                school_managers.access_criteria_id AS "criterioAcesso",
