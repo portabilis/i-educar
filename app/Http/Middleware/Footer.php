@@ -29,7 +29,7 @@ class Footer
 
         $cacheKey = 'configurations_' . md5(session('id_pessoa'));
         if ($cache->has($cacheKey)) {
-            // return $cache->get($cacheKey)->ieducar_internal_footer;
+            return $cache->get($cacheKey)->ieducar_internal_footer;
         }
 
         $configurationRepository = app(ConfigurationRepository::class);
