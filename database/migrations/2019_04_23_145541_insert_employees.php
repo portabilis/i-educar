@@ -14,7 +14,7 @@ class InsertEmployees extends Migration
     {
         $sql = <<<'SQL'
                 INSERT INTO pmieducar.servidor (cod_servidor, ref_cod_instituicao, carga_horaria, data_cadastro, ativo)
-                    SELECT employee_id,
+                    SELECT DISTINCT employee_id,
                            (SELECT instituicao.cod_instituicao
                             FROM pmieducar.instituicao
                             WHERE ativo = 1
