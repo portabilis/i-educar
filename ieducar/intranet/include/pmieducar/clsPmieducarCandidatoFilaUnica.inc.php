@@ -821,7 +821,9 @@ class clsPmieducarCandidatoFilaUnica
                               SET situacao = 'I',
                                   motivo = $motivo,
                                   historico = '$historico',
-                                  data_situacao = NOW()
+                                  data_situacao = NOW(),
+                                  data_solicitacao = NOW(),
+                                  hora_solicitacao = NOW()
                             WHERE cod_candidato_fila_unica = '{$this->cod_candidato_fila_unica}'");
             $db->ProximoRegistro();
 
