@@ -54,21 +54,25 @@ function modalOpen(thisElement) {
 function fillHiddenInputs() {
     let accessCriteriaId = $j("#managers_access_criteria_id").val(),
         accessCriteriaIdDescription = $j("#managers_access_criteria_description").val(),
-        linkTypeId = $j("#managers_link_type_id").val();
+        linkTypeId = $j("#managers_link_type_id").val(),
+        email = $j("#managers_email").val();
 
     $j('input[id^="managers_access_criteria_id[' + idLastLineUsed + ']').val(accessCriteriaId);
     $j('input[id^="managers_access_criteria_description[' + idLastLineUsed + ']').val(accessCriteriaIdDescription);
     $j('input[id^="managers_link_type_id[' + idLastLineUsed + ']').val(linkTypeId);
+    $j('input[id^="managers_email[' + idLastLineUsed + ']').val(email);
 }
 
 function fillInputs() {
     let accessCriteriaId = $j('input[id^="managers_access_criteria_id[' + idLastLineUsed + ']').val(),
         accessCriteriaIdDescription = $j('input[id^="managers_access_criteria_description[' + idLastLineUsed + ']').val(),
-        linkTypeId = $j('input[id^="managers_link_type_id[' + idLastLineUsed + ']').val();
+        linkTypeId = $j('input[id^="managers_link_type_id[' + idLastLineUsed + ']').val(),
+        email = $j('input[id^="managers_email[' + idLastLineUsed + ']').val();
 
     $j("#managers_access_criteria_id").val(accessCriteriaId);
     $j("#managers_access_criteria_description").val(accessCriteriaIdDescription);
     $j("#managers_link_type_id").val(linkTypeId);
+    $j("#managers_email").val(email);
 }
 
 function htmlFormModal() {
@@ -86,7 +90,7 @@ function htmlFormModal() {
                         <option value="7">Outros</option>
                     </select>
                     <label for="managers_access_criteria_description">Especificação do critério de acesso</label>
-                    <input type="text" name="managers_access_criteria_description" id="managers_access_criteria_description" size="50" maxlength="255" class="text">
+                    <input type="text" name="managers_access_criteria_description" id="managers_access_criteria_description" size="62" maxlength="255" class="text">
                     <label for="managers_link_type_id">Tipo de vínculo</label>
                     <select class="select ui-widget-content ui-corner-all" name="managers_link_type_id" id="managers_link_type_id">
                         <option value="">Selecione</option>
@@ -95,6 +99,8 @@ function htmlFormModal() {
                         <option value="3">Contrato terceirizado</option>
                         <option value="4">Contrato CLT</option>
                     </select>
+                    <label for="managers_email">Email</label>
+                    <input type="text" name="managers_email" id="managers_email" size="62" maxlength="50" class="text">
                 </form>
             </div>`;
 }
