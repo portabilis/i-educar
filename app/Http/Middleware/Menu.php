@@ -31,7 +31,7 @@ class Menu
         $cacheKey =  'menu_' . md5(session('id_pessoa'));
 
         if ($cache->has($cacheKey)) {
-            // return $cache->get($cacheKey);
+            return $cache->get($cacheKey);
         }
 
         if (empty(LegacyUser::find(session('id_pessoa')))) {
