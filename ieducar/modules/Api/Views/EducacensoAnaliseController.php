@@ -2,11 +2,14 @@
 
 use App\Models\Educacenso\Registro00;
 use App\Models\Educacenso\Registro10;
+use App\Models\Educacenso\Registro40;
+use App\Models\Individual;
 use App\Models\Educacenso\Registro20;
 use App\Models\School;
 use App\Repositories\EducacensoRepository;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\Data\Registro10 as Registro10Data;
+use iEducar\Modules\Educacenso\Data\Registro40 as Registro40Data;
 use iEducar\Modules\Educacenso\Data\Registro20 as Registro20Data;
 use iEducar\Modules\Educacenso\Model\LinguaMinistrada;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
@@ -14,7 +17,10 @@ use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
+use iEducar\Modules\Educacenso\Validator\SchoolManagers;
 use iEducar\Modules\Educacenso\Validator\Telefone;
+use iEducar\Modules\ValueObjects\SchoolManagerValueObject;
+use Illuminate\Support\Facades\DB;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 
@@ -1058,99 +1064,73 @@ class EducacensoAnaliseController extends ApiCoreController
 
     protected function analisaEducacensoRegistro40()
     {
-        $escola = $this->getRequest()->escola;
-        $ano = $this->getRequest()->ano;
-        $data_fim = $this->getRequest()->data_fim;
+        $escolaId = $this->getRequest()->escola;
 
-        $sql = 'SELECT pessoa.idpes AS idpes,
-                   juridica.fantasia AS nome_escola,
-                   fisica.nacionalidade AS nacionalidade,
-                   uf.cod_ibge AS uf_inep,
-                   uf.sigla_uf AS sigla_uf,
-                   municipio.cod_ibge AS municipio_inep,
-                   municipio.idmun AS idmun,
-                   pessoa.nome AS nome_servidor,
-                   fisica.cpf AS cpf,
-                   endereco_pessoa.cep AS cep
-             FROM modules.professor_turma
-            INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
-            INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
-            INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
-            INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
-            INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
-            INNER JOIN cadastro.fisica ON (fisica.idpes = professor_turma.servidor_id)
-             LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = professor_turma.servidor_id)
-             LEFT JOIN public.logradouro ON (logradouro.idlog = endereco_pessoa.idlog)
-             LEFT JOIN public.municipio ON (municipio.idmun = logradouro.idmun)
-             LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
-            WHERE professor_turma.ano = $1
-            AND NOT EXISTS (SELECT 1 FROM
-                pmieducar.servidor_alocacao
-                WHERE servidor.cod_servidor = servidor_alocacao.ref_cod_servidor
-                AND escola.cod_escola = servidor_alocacao.ref_cod_escola
-                AND turma.ano = servidor_alocacao.ano
-                AND servidor_alocacao.data_admissao > DATE($3)
-                )
-              AND turma.ativo = 1
-              AND turma.visivel = TRUE
-              AND COALESCE(turma.nao_informar_educacenso, 0) = 0
-              AND turma.ano = professor_turma.ano
-              AND escola.cod_escola = $2
-              AND servidor.ativo = 1
-            GROUP BY pessoa.idpes,
-                     professor_turma.servidor_id,
-                     juridica.fantasia,
-                     fisica.nacionalidade,
-                     uf.cod_ibge,
-                     uf.sigla_uf,
-                     municipio.cod_ibge,
-                     municipio.idmun,
-                     pessoa.nome,
-                     fisica.cpf,
-                     endereco_pessoa.cep
-            ORDER BY pessoa.nome';
+        $educacensoRepository = new EducacensoRepository();
+        $registro40Model = new Registro40();
+        $registro40 = new Registro40Data($educacensoRepository, $registro40Model);
+        $gestores = $registro40->getData($escolaId);
 
-        $servidores = $this->fetchPreparedQuery($sql, [$ano, $escola, Portabilis_Date_Utils::brToPgSQL($data_fim)]);
-
-        if (empty($servidores)) {
-            $this->messenger->append('Nenhum servidor encontrado.');
-
-            return ['title' => 'Análise exportação - Registro 40'];
-        }
+        /** @var todo Refatorar para usar o model School */
+        $escola = DB::select(DB::raw('SELECT relatorio.get_nome_escola(:escolaId) as nome'), [$escolaId])[0];
+        $nomeEscola = $escola->nome;
+        $codEscola = $escolaId;
 
         $mensagem = [];
-
-        foreach ($servidores as $servidor) {
-            $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($servidor['nome_escola']));
-            $nomeServidor = Portabilis_String_Utils::toUtf8(strtoupper($servidor['nome_servidor']));
-            $siglaUF = $servidor['sigla_uf'];
-            $idpesServidor = $servidor['idpes'];
-            $codMunicipio = $servidor['idmun'];
-            $naturalidadeBrasileiro = ($servidor['nacionalidade'] == 1 || $servidor['nacionalidade'] == 2);
-
-            if ($naturalidadeBrasileiro && !$servidor['cpf']) {
+        if (count($gestores) > 3) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) servidor(a) {$nomeServidor} é brasileiro(a)/naturalizado brasileiro(a), portanto é necessário informar seu CPF.",
-                    'path' => '(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: CPF)',
-                    'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesServidor}",
+                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} possui valor inválido. A escola não pode ter mais de 3 gestores escolares.",
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: dados gerais > Tabela Gestores escolares)',
+                    'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                    'fail' => true
+                ];
+        }
+
+        if (empty($gestores)) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verifique se algum(a) gestor(a) escolar foi informado(a)",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: dados gerais > Tabela Gestores escolares)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                'fail' => true
+            ];
+
+            return [
+                'mensagens' => $mensagem,
+                'title' => 'Análise exportação - Registro 40'
+            ];
+        }
+
+        $valueObjectArray = [];
+
+        foreach ($gestores as $gestor) {
+            $nomeGestor = Individual::find($gestor->codigoPessoa)->realName;
+
+            if (empty($gestor->cargo)) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verifique se o cargo do gestor(a) {$nomeGestor} foi informado",
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: dados gerais > Tabela Gestores escolares)',
+                    'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true
                 ];
             }
 
-            if ($servidor['cep'] && !$servidor['uf_inep']) {
-                $mensagem[] = [
-                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que no cadastro do(a) servidor(a) {$nomeServidor} o endereçamento foi informado, portanto é necessário cadastrar código da UF informada conforme a 'Tabela de UF'.",
-                    'path' => '(Endereçamento > Cadastros > Estados > Editar > Campo: Código INEP)',
-                    'linkPath' => "/intranet/public_uf_cad.php?sigla_uf={$siglaUF}",
-                    'fail' => true
-                ];
-            }
+            $valueObject = new SchoolManagerValueObject();
+            $valueObject->individualId = $gestor->codigoPessoa;
+            $valueObject->roleId = $gestor->cargo;
+            $valueObject->accessCriteriaId = $gestor->criterioAcesso;
+            $valueObject->accessCriteriaDescription = $gestor->especificacaoCriterioAcesso;
+            $valueObject->linkTypeId = $gestor->tipoVinculo;
+            $valueObjectArray[] = $valueObject;
+        }
 
-            if ($servidor['cep'] && !$servidor['municipio_inep']) {
+        $managersValidator = new SchoolManagers($valueObjectArray, $gestores[0]->dependencia_administrativa);
+
+        if (!$managersValidator->isValid()) {
+            foreach ($managersValidator->getMessage() as $message) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que no cadastro do(a) servidor(a) {$nomeServidor} o endereçamento foi informado, portanto é necessário cadastrar código do município informado conforme a 'Tabela de Municípios'.",
-                    'path' => '(Endereçamento > Cadastros > Municípios > Editar > Campo: Código INEP)',
-                    'linkPath' => "/intranet/public_municipio_cad.php?idmun={$codMunicipio}",
+                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. " . $message,
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: dados gerais > Tabela Gestores escolares)',
+                    'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true
                 ];
             }
