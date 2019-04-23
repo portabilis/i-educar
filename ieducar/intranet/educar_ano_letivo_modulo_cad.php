@@ -340,8 +340,6 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
             561,
@@ -351,14 +349,14 @@ class indice extends clsCadastro
         );
 
         if ($this->ref_cod_modulo && $this->data_inicio && $this->data_fim) {
-            $valida = $this->validaModulos();
-
-            if ($valida === false) {
+            try {
+                $this->validaModulos();
+            } catch (Exception $e) {
                 $_POST = [];
 
                 $this->Inicializar();
 
-                $this->mensagem = 'Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.';
+                $this->mensagem = $e->getMessage();
 
                 return false;
             }
@@ -699,7 +697,7 @@ class indice extends clsCadastro
         $sum = array_sum($counts);
 
         if ($sum > 0) {
-            return false;
+            throw new Exception('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.');
         }
 
         try {
@@ -707,7 +705,7 @@ class indice extends clsCadastro
 
             foreach ($etapas as $etapa) {
                 if ($iDiarioService->getStepActivityByUnit($escolaId, $etapa)) {
-                    return false;
+                    throw new Exception('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas no diário online.');
                 }
             }
         } catch (\Exception $e) {

@@ -1176,7 +1176,7 @@ class indice extends clsCadastro
         $sum = array_sum($counts);
 
         if ($sum > 0) {
-            return false;
+            throw new Exception('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.');
         }
 
         try {
@@ -1184,7 +1184,7 @@ class indice extends clsCadastro
 
             foreach ($etapas as $etapa) {
                 if ($iDiarioService->getStepActivityByClassroom($turmaId, $etapa)) {
-                    return false;
+                    throw new Exception('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas no diário online.');
                 }
             }
         } catch (\Exception $e) {
@@ -1196,11 +1196,12 @@ class indice extends clsCadastro
 
     public function atualizaModulos()
     {
-        $valido = $this->validaModulos();
-
-        if ($valido === false) {
+        try {
+            $this->validaModulos();
+        } catch (Exception $e) {
             $this->Inicializar();
-            $this->mensagem = 'Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.';
+
+            $this->mensagem = $e->getMessage();
 
             return false;
         }
