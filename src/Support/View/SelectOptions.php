@@ -6,6 +6,7 @@ use App\Models\ManagerAccessCriteria;
 use App\Models\ManagerLinkType;
 use App\Models\ManagerRole;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
+use iEducar\Modules\Educacenso\Model\TipoAtendimentoAluno;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Modules\Servidores\Model\TipoVinculo;
 use iEducar\Modules\Transport\Period;
@@ -136,5 +137,15 @@ class SelectOptions
     public static function tiposVinculoServidor()
     {
         return self::getDefaultOption() + TipoVinculo::getDescriptiveValues();
+    }
+
+    /**
+     * Retorna as opções disponíveis referentes aos tipo de atendimento educacional especializado
+     *
+     * @return array
+     */
+    public static function tiposAtendimentoAluno()
+    {
+        return TipoAtendimentoAluno::getDescriptiveValues();
     }
 }
