@@ -1,13 +1,17 @@
 <?php
 
 use App\Models\Educacenso\Registro00;
+use App\Models\Educacenso\Registro40;
 use App\Repositories\EducacensoRepository;
 use iEducar\Modules\Educacenso\ArrayToCenso;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
+use iEducar\Modules\Educacenso\Data\Registro40 as Registro40Data;
 use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaAluno;
 use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaProfessor;
 use iEducar\Modules\Educacenso\Deficiencia\MapeamentoDeficienciasAluno;
 use iEducar\Modules\Educacenso\Deficiencia\ValueDeficienciaMultipla;
+use iEducar\Modules\Educacenso\ExportRule\CargoGestor;
+use iEducar\Modules\Educacenso\ExportRule\CriterioAcessoGestor;
 use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
 use iEducar\Modules\Educacenso\ExportRule\Regulamentacao;
 use iEducar\Modules\Educacenso\ExportRule\SituacaoFuncionamento;
@@ -127,13 +131,14 @@ class EducacensoExportController extends ApiCoreController
         foreach ($this->getServidores($escolaId, $ano, $data_ini, $data_fim) as $servidor) {
 
             $registro30 = $this->exportaDadosRegistro30($servidor['id'], $escolaId);
-            $registro40 = $this->exportaDadosRegistro40($servidor['id'], $escolaId);
             $registro50 = $this->exportaDadosRegistro50($servidor['id'], $escolaId);
             $registro51 = $this->exportaDadosRegistro51($servidor['id'], $escolaId, $data_ini, $data_fim, $ano);
-            if (!empty($registro30) && !empty($registro40) && !empty($registro50)) {
-                $export .= $registro30 . $registro40 . $registro50 . $registro51;
+            if (!empty($registro30) && !empty($registro50)) {
+                $export .= $registro30 . $registro50 . $registro51;
             }
         }
+
+        $export .= $this->exportaDadosRegistro40($escolaId);
 
         foreach ($this->getAlunos($escolaId, $ano, $data_ini, $data_fim) as $alunoId) {
             $registro60 = $this->exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
@@ -939,73 +944,36 @@ class EducacensoExportController extends ApiCoreController
         }
     }
 
-    protected function exportaDadosRegistro40($servidorId, $escolaId)
+    protected function exportaDadosRegistro40($escolaId)
     {
-        $sql =
-            'SELECT
+        $educacensoRepository = new EducacensoRepository();
+        $registro40Model = new Registro40();
+        $registro40 = new Registro40Data($educacensoRepository, $registro40Model);
 
-        \'40\' AS r40s1,
-        ece.cod_escola_inep AS r40s2,
-    ecd.cod_docente_inep AS r40s3,
-        s.cod_servidor AS r40s4,
-        fis.cpf AS r40s5,
-        b.zona_localizacao AS r40s6,
-        ep.cep AS r40s7,
-        l.idtlog || l.nome AS r40s8,
-    ep.numero AS r40s9,
-        ep.complemento AS r40s10,
-        b.nome AS r40s11,
-        uf.cod_ibge AS r40s12,
-        m.cod_ibge AS r40s13
+        /** @var Registro40[] $gestores */
+        $gestores = $registro40->getExportFormatData($escolaId);
 
-        FROM    pmieducar.servidor s
-        INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
-        INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
-    INNER JOIN modules.professor_turma pt ON (pt.servidor_id = s.cod_servidor)
-    INNER JOIN pmieducar.turma t ON (t.cod_turma = pt.turma_id)
-    INNER JOIN pmieducar.escola e ON (e.cod_escola = t.ref_ref_cod_escola)
-        INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
-         LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
-         LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
-         LEFT JOIN public.bairro b ON (clb.idbai = b.idbai)
-         LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
-         LEFT JOIN public.distrito d ON (d.iddis = b.iddis)
-         LEFT JOIN public.municipio m ON (d.idmun = m.idmun)
-         LEFT JOIN public.uf ON (uf.sigla_uf = m.sigla_uf)
-         LEFT JOIN public.pais ON (pais.idpais = uf.idpais)
-         LEFT JOIN public.logradouro l ON (l.idlog = cl.idlog)
-     LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
-        WHERE s.cod_servidor = $1
-      AND COALESCE(t.nao_informar_educacenso, 0) = 0
-      AND e.cod_escola = $2
-      AND t.ativo = 1
-      AND t.visivel = TRUE
-        LIMIT 1
-    ';
+        $stringCenso = '';
+        foreach ($gestores as $gestor) {
+            $gestor = CargoGestor::handle($gestor);
+            /** @var Registro40 $gestor */
+            $gestor = CriterioAcessoGestor::handle($gestor);
 
-        // Transforma todos resultados em variáveis
-        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql,
-            array('return_only' => 'first-row', 'params' => array($servidorId, $escolaId))));
-        if ($r40s1) {
-            $r40s5 = $this->cpfToCenso($r40s5);
+            $data = [
+                $gestor->registro,
+                $gestor->inepEscola,
+                $gestor->codigoPessoa,
+                $gestor->inepGestor,
+                $gestor->cargo,
+                $gestor->criterioAcesso,
+                $gestor->especificacaoCriterioAcesso,
+                $gestor->tipoVinculo
+            ];
 
-            $r40s8 = $this->convertStringToCenso($r40s8);
-            $r40s9 = $this->convertStringToCenso($r40s9);
-            $r40s10 = $this->convertStringToCenso($r40s10);
-            $r40s11 = $this->convertStringToCenso($r40s11);
-
-            $d = '|';
-            $return = '';
-            $numeroRegistros = 13;
-
-            for ($i = 1; $i <= $numeroRegistros; $i++) {
-                $return .= ${'r40s' . $i} . $d;
-            }
-
-            $return = substr_replace($return, "", -1);
-
-            return $return . "\n";
+            $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;
         }
+
+        return $stringCenso;
     }
 
     protected function exportaDadosRegistro50($servidorId, $escolaId)

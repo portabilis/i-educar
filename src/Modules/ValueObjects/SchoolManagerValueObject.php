@@ -7,7 +7,7 @@ class SchoolManagerValueObject
     /**
      * @var integer
      */
-    public $individualId;
+    public $employeeId;
 
     /**
      * @var integer

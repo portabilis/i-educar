@@ -2,10 +2,10 @@
 
 namespace iEducar\Support\View;
 
+use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use App\Models\ManagerAccessCriteria;
 use App\Models\ManagerLinkType;
 use App\Models\ManagerRole;
-use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Modules\Servidores\Model\TipoVinculo;
 use iEducar\Modules\Transport\Period;
@@ -92,6 +92,14 @@ class SelectOptions
      *
      * @return array
      */
+    public static function locaisFuncionamentoEscola()
+    {
+        return self::getDefaultOption() + LocalFuncionamento::getDescriptiveValues();
+    }
+
+    /**
+     * @return array
+     */
     public static function schoolManagerRoles()
     {
         return self::getDefaultOption() + ManagerRole::all()->getKeyValueArray('name');
@@ -111,11 +119,6 @@ class SelectOptions
     public static function schoolManagerLinkTypes()
     {
         return self::getDefaultOption() + ManagerLinkType::all()->getKeyValueArray('name');
-    }
-
-    public static function locaisFuncionamentoEscola()
-    {
-        return self::getDefaultOption() + LocalFuncionamento::getDescriptiveValues();
     }
 
     /**

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\EmployeeInep;
+use App\Models\LegacyPerson;
 use App\Models\SchoolManager;
 use App\Rules\SchoolManagerAtLeastOneChief;
 use App\Rules\SchoolManagerUniqueIndividuals;
@@ -190,11 +192,12 @@ class indice extends clsCadastro
     public $esfera_administrativa;
     public $managers_inep_id;
     public $managers_role_id;
-    public $managers_individual_id;
+    public $servidor_id;
     public $managers_access_criteria_id;
     public $managers_access_criteria_description;
     public $managers_link_type_id;
     public $managers_chief;
+    public $managers_email;
     public $qtd_secretario_escolar;
     public $qtd_auxiliar_administrativo;
     public $qtd_apoio_pedagogico;
@@ -925,8 +928,6 @@ class indice extends clsCadastro
             $options = array('label' => 'Ato autorizativo', 'value' => $this->ato_autorizativo, 'size' => 70, 'required' => false);
             $this->inputsHelper()->text('ato_autorizativo', $options);
 
-            $this->addSchoolManagersTable();
-
             $mantenedoras = MantenedoraDaEscolaPrivada::getDescriptiveValues();
             $helperOptions = ['objectName' => 'mantenedora_escola_privada'];
             $options = [
@@ -980,6 +981,9 @@ class indice extends clsCadastro
                 'required' => false,
             ];
             $this->inputsHelper()->select('esfera_administrativa', $options);
+
+            $this->campoQuebra();
+            $this->addSchoolManagersTable();
 
             if ($_POST["escola_curso"]) {
                 $this->escola_curso = unserialize(urldecode($_POST["escola_curso"]));
@@ -2644,18 +2648,19 @@ class indice extends clsCadastro
         $schoolService = app(SchoolManagerService::class);
         $managers = $schoolService->getSchoolManagers($this->cod_escola);
 
-        if (old('managers_individual_id')) {
-            foreach (old('managers_individual_id') as $key => $value) {
+        if (old('servidor_id')) {
+            foreach (old('servidor_id') as $key => $value) {
                 $rows[] = [
                     old('managers_inep_id')[$key],
                     old('managers_individual_nome')[$key],
                     old('managers_role_id')[$key],
                     null,
                     old('managers_chief')[$key],
-                    old('managers_individual_id')[$key],
+                    old('servidor_id')[$key],
                     old('managers_access_criteria_id')[$key],
                     old('managers_access_criteria_description')[$key],
                     old('managers_link_type_id')[$key],
+                    old('managers_email')[$key],
                 ];
             }
         } else {
@@ -2677,17 +2682,18 @@ class indice extends clsCadastro
         );
 
         $this->campoTexto('managers_inep_id', null, null, null, 12);
-        $helperOptions = ['objectName' => 'managers_individual'];
-        $this->inputsHelper()->simpleSearchPessoa('nome', ['required' => false], $helperOptions);
+
+        $this->inputsHelper()->simpleSearchServidor(null, ['required' => false]);
         $options = [
             'resources' => SelectOptions::schoolManagerRoles(),
             'required' => false
         ];
         $this->inputsHelper()->select('managers_role_id', $options);
-        $this->campoRotulo('detalhes', 'Detalhes', '<a class="btn-detalhes" onclick="modalOpen(this)">Dados adicionais do diretor(a)</a>');
+        $this->campoRotulo('detalhes', 'Detalhes', '<a class="btn-detalhes" onclick="modalOpen(this)">Dados adicionais do gestor(a)</a>');
         $this->campoOculto('managers_access_criteria_id', null);
         $this->campoOculto('managers_access_criteria_description', null);
         $this->campoOculto('managers_link_type_id', null);
+        $this->campoOculto('managers_email', null);
 
         $resources = [
                 0 => 'Não',
@@ -2710,15 +2716,16 @@ class indice extends clsCadastro
     protected function makeRowManagerTable($key, $schoolManager)
     {
         return [
-            $this->managers_inep_id[$key] ?? $schoolManager->inep_id,
-            $this->managers_individual_nome[$key] ?? $schoolManager->individual_id . ' - ' . $schoolManager->individual->real_name,
+            $this->managers_inep_id[$key] ?? $schoolManager->employee->inep->number,
+            $this->managers_individual_nome[$key] ?? $schoolManager->individual->real_name,
             $this->managers_role_id[$key] ?? $schoolManager->role_id,
             null,
             $this->managers_chief[$key] ?? (int)$schoolManager->chief,
-            $this->managers_individual_id[$key] ?? $schoolManager->individual_id,
+            $this->servidor_id[$key] ?? $schoolManager->employee_id,
             $this->managers_access_criteria_id[$key] ?? $schoolManager->access_criteria_id,
             $this->managers_access_criteria_description[$key] ?? $schoolManager->access_criteria_description,
             $this->managers_link_type_id[$key] ?? $schoolManager->link_type_id,
+            $this->managers_email[$key] ?? $schoolManager->individual->person->email,
         ];
     }
 
@@ -2728,25 +2735,49 @@ class indice extends clsCadastro
      */
     protected function storeManagers($schoolId)
     {
+//        dd($this);
         /** @var SchoolManagerService $schoolService */
         $schoolService = app(SchoolManagerService::class);
         $schoolService->deleteAllManagers($schoolId);
-        foreach($this->managers_individual_id as $key => $individualId) {
-            if (empty($individualId) || empty($this->managers_role_id[$key])) {
+        foreach($this->servidor_id as $key => $employeeId) {
+            if (empty($employeeId) || empty($this->managers_role_id[$key])) {
                 continue;
             }
 
             $valueObject = new SchoolManagerValueObject();
-            $valueObject->individualId = $individualId;
+            $valueObject->employeeId = $employeeId;
             $valueObject->schoolId = $schoolId;
-            $valueObject->inepId = $this->managers_inep_id[$key];
             $valueObject->roleId = $this->managers_role_id[$key];
             $valueObject->accessCriteriaId = $this->managers_access_criteria_id[$key] ?: null;
             $valueObject->accessCriteriaDescription = $this->managers_access_criteria_description[$key];
             $valueObject->linkTypeId = $this->managers_link_type_id[$key] ?: null;
             $valueObject->isChief = $this->managers_chief[$key];
             $schoolService->storeManager($valueObject);
+
+            if ($this->managers_email[$key]){
+                $this->storeManagerEmail($employeeId, $this->managers_email[$key]);
+            }
+
+            if ($this->managers_inep_id[$key]) {
+                $this->storeInepCode($employeeId, $this->managers_inep_id[$key]);
+            }
         }
+    }
+
+    protected function storeManagerEmail($employeeId, $email)
+    {
+        $person = LegacyPerson::find($employeeId);
+        $person->email = $email;
+        $person->save();
+    }
+
+    protected function storeInepCode($employeeId, $inepCode)
+    {
+        $employeeInep = EmployeeInep::firstOrNew(
+            ['cod_servidor' => $employeeId]
+        );
+        $employeeInep->cod_docente_inep = $inepCode;
+        $employeeInep->save();
     }
 
     /**
@@ -2756,12 +2787,12 @@ class indice extends clsCadastro
     {
         request()->validate(
             [
-                'managers_individual_id' => ['max:3', new SchoolManagerUniqueIndividuals()],
+                'servidor_id' => ['max:3', new SchoolManagerUniqueIndividuals()],
                 'managers_chief' => new SchoolManagerAtLeastOneChief(),
                 'managers_inep_id.*' => 'nullable|size:12',
             ],
             [
-                'managers_individual_id.max' => 'Informe no máximo 3 Gestores escolares',
+                'servidor_id.max' => 'Informe no máximo 3 Gestores escolares',
                 'managers_inep_id.*.size' => 'O campo: Código INEP do gestor(a) deve conter 12 dígitos'
             ]);
     }
@@ -2773,9 +2804,9 @@ class indice extends clsCadastro
     protected function validateCensusManagerRules()
     {
         $managers = [];
-        foreach ($this->managers_individual_id as $key => $value) {
+        foreach ($this->servidor_id as $key => $value) {
             $valueObject = new SchoolManagerValueObject();
-            $valueObject->individualId = $this->managers_individual_id[$key];
+            $valueObject->employeeId = $this->servidor_id[$key];
             $valueObject->inepId = $this->managers_inep_id[$key];
             $valueObject->roleId = $this->managers_role_id[$key];
             $valueObject->accessCriteriaId = $this->managers_access_criteria_id[$key];
