@@ -41,7 +41,7 @@ class clsPmieducarTurma
     public $visivel;
     public $data_fechamento;
 
-    public $tipo_atendimento;
+    public $tipo_atendimento = false;
     public $turma_mais_educacao;
     public $atividade_complementar_1;
     public $atividade_complementar_2;
@@ -68,7 +68,7 @@ class clsPmieducarTurma
     public $parecer_3_etapa;
     public $parecer_4_etapa;
     public $nao_informar_educacenso;
-    public $tipo_mediacao_didatico_pedagogico;
+    public $tipo_mediacao_didatico_pedagogico = false;
     public $dias_semana;
     public $atividades_complementares;
     public $atividades_aee;
@@ -863,6 +863,9 @@ class clsPmieducarTurma
             if (is_numeric($this->tipo_atendimento)) {
                 $set .= "{$gruda}tipo_atendimento = '{$this->tipo_atendimento}'";
                 $gruda = ', ';
+            } elseif ($this->tipo_atendimento !== false) {
+                $set .= "{$gruda}tipo_atendimento = NULL";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->turma_mais_educacao)) {
@@ -1027,6 +1030,9 @@ class clsPmieducarTurma
 
             if (is_numeric($this->tipo_mediacao_didatico_pedagogico)) {
                 $set .= "{$gruda}tipo_mediacao_didatico_pedagogico = '{$this->tipo_mediacao_didatico_pedagogico}'";
+                $gruda = ', ';
+            } elseif ($this->tipo_mediacao_didatico_pedagogico !== false) {
+                $set .= "{$gruda}tipo_mediacao_didatico_pedagogico = NULL";
                 $gruda = ', ';
             }
 
