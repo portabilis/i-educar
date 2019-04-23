@@ -85,7 +85,7 @@ class indice extends clsCadastro
         $this->validaParametros();
 
         $enturmacoes = $this->getEnturmacoesAee();
-        // A helper do i-educar não permite criar campo simple search como array
+
         $arrayTipoAtendimento = [];
         foreach ($enturmacoes as $enturmacao) {
             $arrayTipoAtendimento[] = [
@@ -103,7 +103,7 @@ class indice extends clsCadastro
             $obj->edita();
         }
 
-        $this->mensagem .= "Tipo do AEE do aluno atualizado com sucesso.<br>";
+        $this->mensagem = "Tipo do AEE do aluno atualizado com sucesso.<br>";
         return true;
     }
 
