@@ -2683,10 +2683,10 @@ class indice extends clsCadastro
 
         $this->campoTexto('managers_inep_id', null, null, null, 12);
 
-        $this->inputsHelper()->simpleSearchServidor(null, ['required' => false]);
+        $this->inputsHelper()->simpleSearchServidor(null, ['required' => false, 'placeholder' => 'asdasd']);
         $options = [
             'resources' => SelectOptions::schoolManagerRoles(),
-            'required' => false
+            'required' => false,
         ];
         $this->inputsHelper()->select('managers_role_id', $options);
         $this->campoRotulo('detalhes', 'Detalhes', '<a class="btn-detalhes" onclick="modalOpen(this)">Dados adicionais do gestor(a)</a>');

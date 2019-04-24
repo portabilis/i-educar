@@ -598,8 +598,7 @@ if ( document.getElementById('ref_cod_instituicao') )
 var search = function (request, response) {
     var searchPath = '/module/Api/Servidor?oper=get&resource=servidor-search',
         params = {
-            query: request.term,
-            escola_id: $j('#cod_escola').val()
+            query: request.term
         };
 
     $j.get(searchPath, params, function (dataResponse) {
@@ -637,12 +636,33 @@ function setAutoComplete() {
             source: search,
             select: handleSelect,
             minLength: 1,
-            autoFocus: false
+            autoFocus: true,
+            autoSelect: true,
         });
+
+        $j(field).attr('placeholder', 'Digite um nome para buscar');
+    });
+
+    $j('input[id^="servidor"]').blur(function() {
+        validateServidor(this)
     });
 };
 
 setAutoComplete();
+
+function validateServidor(field){
+    var id = $j(field).attr('id'),
+        idNum = id.match(/\[(\d+)\]/),
+        refIdServidor = $j('input[id="servidor_id[' + idNum[1] + ']"]');
+
+    if ($j(field).val() === '') {
+        refIdServidor.val('')
+    } else {
+        if (refIdServidor.val() === '') {
+            messageUtils.error('O campo: <b>Nome do(a) gestor(a)</b> deve ser preenchido com o cadastro de um servidor pré-cadastrado', field);
+        }
+    }
+}
 
 $j('#btn_add_tab_add_1').click(function () {
     setAutoComplete();

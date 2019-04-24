@@ -99,7 +99,7 @@ function htmlFormModal() {
                         <option value="3">Contrato terceirizado</option>
                         <option value="4">Contrato CLT</option>
                     </select>
-                    <label for="managers_email">Email</label>
+                    <label for="managers_email">E-mail</label>
                     <input type="text" name="managers_email" id="managers_email" size="62" maxlength="50" class="text">
                 </form>
             </div>`;
