@@ -387,4 +387,80 @@ SQL;
             'classroomId' => $classroomId,
         ]);
     }
+
+    public function getDataForRecord50($year, $school)
+    {
+        $sql = <<<'SQL'
+            SELECT    DISTINCT
+                       '50' AS registro,
+                       educacenso_cod_escola.cod_escola_inep AS "inepEscola",
+                       servidor.cod_servidor AS "codigoPessoa",
+                       educacenso_cod_docente.cod_docente_inep AS "inepDocente",
+                       turma.cod_turma AS "codigoTurma",
+                       educacenso_cod_turma.cod_turma_inep AS "inepTurma",
+                       professor_turma.funcao_exercida AS "funcaoDocente",
+                       professor_turma.tipo_vinculo AS "tipoVinculo",
+                       tbl_componentes.componentes[1] AS componente1,
+                       tbl_componentes.componentes[2] AS componente2,
+                       tbl_componentes.componentes[3] AS componente4,
+                       tbl_componentes.componentes[4] AS componente5,
+                       tbl_componentes.componentes[5] AS componente6,
+                       tbl_componentes.componentes[6] AS componente6,
+                       tbl_componentes.componentes[7] AS componente7,
+                       tbl_componentes.componentes[8] AS componente8,
+                       tbl_componentes.componentes[9] AS componente9,
+                       tbl_componentes.componentes[10] AS componente10,
+                       tbl_componentes.componentes[11] AS componente11,
+                       tbl_componentes.componentes[12] AS componente12,
+                       tbl_componentes.componentes[13] AS componente13,
+                       tbl_componentes.componentes[14] AS componente14,
+                       tbl_componentes.componentes[15] AS componente15,
+                       relatorio.get_nome_escola(escola.cod_escola) AS "nomeEscola",
+                       pessoa.nome AS "nomeDocente",
+                       servidor.cod_servidor AS "idServidor",
+                       instituicao.cod_instituicao AS "idInstituicao",
+                       professor_turma.id AS "idAlocacao",
+                       turma.tipo_mediacao_didatico_pedagogico AS "tipoMediacaoTurma",
+                       turma.tipo_atendimento AS "tipoAtendimentoTurma",
+                       turma.nm_turma AS "nomeTurma"
+                 FROM pmieducar.servidor
+                 JOIN modules.professor_turma     ON professor_turma.servidor_id = servidor.cod_servidor
+                 JOIN pmieducar.turma             ON turma.cod_turma = professor_turma.turma_id
+                                                 AND turma.ano = professor_turma.ano
+                 JOIN pmieducar.escola            ON escola.cod_escola = turma.ref_ref_cod_escola
+                 JOIN pmieducar.instituicao       ON escola.ref_cod_instituicao = instituicao.cod_instituicao
+                 JOIN cadastro.pessoa             ON pessoa.idpes = servidor.cod_servidor
+            LEFT JOIN pmieducar.servidor_alocacao ON servidor_alocacao.ref_cod_escola = escola.cod_escola
+                                                 AND servidor_alocacao.ano = turma.ano
+            LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
+            LEFT JOIN modules.educacenso_cod_docente ON educacenso_cod_docente.cod_servidor = servidor.cod_servidor
+            LEFT JOIN modules.educacenso_cod_turma ON educacenso_cod_turma.cod_turma = turma.cod_turma
+            LEFT JOIN modules.professor_turma_disciplina ON professor_turma_disciplina.professor_turma_id = professor_turma.id,
+              LATERAL (
+                         SELECT array_agg(cc.codigo_educacenso) AS componentes
+                         FROM modules.componente_curricular cc
+                                  INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
+                         WHERE   ptd.professor_turma_id = professor_turma.id
+                      ) AS tbl_componentes
+                WHERE turma.ano = :year
+                  AND turma.ativo = 1
+                  AND turma.visivel = true
+                  AND escola.ativo = 1
+                  AND escola.cod_escola = :school
+                  AND servidor.ativo = 1
+                  AND coalesce(servidor_alocacao.data_admissao, '2999-01-01'::date) > instituicao.data_educacenso
+                  AND coalesce(servidor_alocacao.data_saida, '1900-01-01'::date) < instituicao.data_educacenso
+                  AND exists (
+                        SELECT 1
+                        FROM pmieducar.matricula_turma
+                        WHERE matricula_turma.ref_cod_turma = turma.cod_turma
+                          AND matricula_turma.data_enturmacao <= instituicao.data_educacenso
+                          AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) > instituicao.data_educacenso)
+SQL;
+
+        return $this->fetchPreparedQuery($sql, [
+            'year' => (int)$year,
+            'school' => (int)$school,
+        ]);
+    }
 }
