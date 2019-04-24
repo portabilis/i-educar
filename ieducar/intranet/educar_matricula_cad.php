@@ -323,7 +323,7 @@ class indice extends clsCadastro
         $validarCamposEducacenso = $this->validarCamposObrigatoriosCenso();
 
         foreach ($enturmacoesParaCopiar as $enturmar) {
-            if ($validarCamposEducacenso && !$this->availableTimeService()->isAvailable($enturmar['ref_cod_matricula'], $this->ref_cod_turma)) {
+            if ($validarCamposEducacenso && !$this->availableTimeService()->isAvailable($dadosDaMatricula['ref_cod_aluno'], $this->ref_cod_turma)) {
                 $mensagemErro = 'O aluno já está matriculado em uma turma com esse horário.';
             }
 
@@ -935,18 +935,16 @@ class indice extends clsCadastro
                 return false;
             }
 
-            DB::beginTransaction();
+            $validarCamposEducacenso = $this->validarCamposObrigatoriosCenso();
+
+            if (!empty($this->ref_cod_turma) && $validarCamposEducacenso && !$this->availableTimeService()->isAvailable($this->ref_cod_aluno, $this->ref_cod_turma)) {
+                $this->mensagem = 'O aluno já está matriculado em uma turma com esse horário.';
+                return false;
+            }
+
             $obj->dependencia = $dependencia;
             $cadastrou = $obj->cadastra();
             $this->cod_matricula = $cadastrou;
-
-            $validarCamposEducacenso = $this->validarCamposObrigatoriosCenso();
-
-            if (!empty($this->ref_cod_turma) && $validarCamposEducacenso && !$this->availableTimeService()->isAvailable($this->cod_matricula, $this->ref_cod_turma)) {
-                $this->mensagem = 'O aluno já está matriculado em uma turma com esse horário.';
-                DB::rollback();
-                return false;
-            }
 
             if ($cadastrou) {
                 if ($countEscolasIguais > 0) {

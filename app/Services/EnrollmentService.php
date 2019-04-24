@@ -162,7 +162,7 @@ class EnrollmentService
         $availableTimeService = new AvailableTimeService();
         $validateCenso = LegacyInstitution::active()->first()->obrigar_campos_censo ?? false;
 
-        if ($validateCenso && !$availableTimeService->isAvailable($registration->id, $schoolClass->id)) {
+        if ($validateCenso && !$availableTimeService->isAvailable($registration->ref_cod_aluno, $schoolClass->id)) {
             throw new ExistsActiveEnrollmentSameTimeException($registration);
         }
 

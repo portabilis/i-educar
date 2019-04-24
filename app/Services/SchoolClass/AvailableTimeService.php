@@ -23,6 +23,7 @@ class AvailableTimeService
         }
 
         $otherSchoolClass = LegacySchoolClass::where('cod_turma', '<>', $schoolClassId)
+            ->where('ano', $schoolClass->ano)
             ->whereHas('enrollments', function($enrollmentsQuery) use ($studentId){
                 $enrollmentsQuery->whereHas('registration', function($registrationQuery) use ($studentId) {
                     $registrationQuery->where('ref_cod_aluno', $studentId);
