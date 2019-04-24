@@ -1201,6 +1201,15 @@ class EducacensoAnaliseController extends ApiCoreController
                     'fail' => true
                 ];
             }
+
+            if (!$docente->tipoVinculo) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 50 da escola {$docente->nomeEscola} não encontrados. Verifique se o tipo de vínculo do(a) docente {$docente->nomeDocente} foi informada.",
+                    'path' => '(Servidores > Cadastros > Servidores > Vincular professor a turmas > Editar > Campo: Tipo do vínculo)',
+                    'linkPath' => "/intranet/educar_servidor_vinculo_turma_cad.php?id={$docente->idAlocacao}&ref_cod_instituicao={$docente->idInstituicao}&ref_cod_servidor={$docente->idServidor}",
+                    'fail' => true
+                ];
+            }
         }
 
         return [
