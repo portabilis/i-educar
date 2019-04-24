@@ -2740,14 +2740,14 @@ class indice extends clsCadastro
         $schoolService = app(SchoolManagerService::class);
         $schoolService->deleteAllManagers($schoolId);
         foreach($this->servidor_id as $key => $employeeId) {
-            if (empty($employeeId) || empty($this->managers_role_id[$key])) {
+            if (empty($employeeId)) {
                 continue;
             }
 
             $valueObject = new SchoolManagerValueObject();
             $valueObject->employeeId = $employeeId;
             $valueObject->schoolId = $schoolId;
-            $valueObject->roleId = $this->managers_role_id[$key];
+            $valueObject->roleId = $this->managers_role_id[$key] ?: null;
             $valueObject->accessCriteriaId = $this->managers_access_criteria_id[$key] ?: null;
             $valueObject->accessCriteriaDescription = $this->managers_access_criteria_description[$key];
             $valueObject->linkTypeId = $this->managers_link_type_id[$key] ?: null;
