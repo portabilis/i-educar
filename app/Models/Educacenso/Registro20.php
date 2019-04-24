@@ -4,6 +4,8 @@ namespace App\Models\Educacenso;
 
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
+use App_Model_TipoMediacaoDidaticoPedagogico;
+use App_Model_LocalFuncionamentoDiferenciado;
 
 class Registro20 implements RegistroEducacenso
 {
