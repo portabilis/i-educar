@@ -2,6 +2,7 @@
 
 namespace App\Models\Educacenso;
 
+use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\TratamentoLixo;
 use iEducar\Modules\Educacenso\Model\RecursosAcessibilidade;
 use iEducar\Modules\Educacenso\Model\UsoInternet;
@@ -29,4 +30,11 @@ class Registro40 implements RegistroEducacenso
     public $tipoVinculo;
 
     public $dependenciaAdministrativa;
+
+    public function isDependenciaAdministrativaPublica()
+    {
+        return $this->dependenciaAdministrativa == DependenciaAdministrativaEscola::MUNICIPAL ||
+            $this->dependenciaAdministrativa == DependenciaAdministrativaEscola::ESTADUAL ||
+            $this->dependenciaAdministrativa == DependenciaAdministrativaEscola::FEDERAL;
+    }
 }
