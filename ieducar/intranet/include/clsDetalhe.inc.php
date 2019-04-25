@@ -96,29 +96,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
 
     $retorno = '';
 
-    $script = explode('/', $_SERVER['PHP_SELF']);
-    $script = $script[count($script)-1];
-
     $width = empty($this->largura) ? '' : 'width=' . $this->largura;
-
-    /*
-     * adiciona os botoes de help para a pagina atual
-     */
-    $url = parse_url($_SERVER['REQUEST_URI']);
-    $url = preg_replace('/^\//', "", $url["path"] );
-
-    if (strpos($url, '_det.php') !== FALSE) {
-      $tipo = "det";
-    }
-    elseif (strpos($url, '_lst.php') !== FALSE) {
-      $tipo = 'lst';
-    }
-    elseif (strpos($url, '_pdf.php') !== FALSE) {
-      $tipo = 'pdf';
-    }
-    else {
-      $tipo = 'cad';
-    }
 
     $barra = '<b>' . $this->titulo . '</b>';
 
