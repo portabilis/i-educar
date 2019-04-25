@@ -126,7 +126,6 @@ class EducacensoExportController extends ApiCoreController
         $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
             'educar_index.php');
         $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
-
         $export = $this->exportaDadosRegistro00($escolaId, $ano);
         $export .= $this->exportaDadosRegistro10($escolaId, $ano);
         foreach ($this->getTurmas($escolaId, $ano) as $turmaId => $turmaNome) {
@@ -986,12 +985,15 @@ class EducacensoExportController extends ApiCoreController
         $registro50Model = new Registro50();
         $registro50 = new Registro50Data($educacensoRepository, $registro50Model);
 
+        $quantidadeComponentes = 15;
+
         /** @var Registro50[] $docentes */
         $docentes = $registro50->getExportFormatData($escolaId, $ano);
 
         $stringCenso = '';
         foreach ($docentes as $docente) {
             $docente = TipoVinculoServidor::handle($docente);
+            /** @var Registro50 $docente */
             $docente = ComponentesCurriculares::handle($docente);
 
             $data = [
@@ -1003,22 +1005,11 @@ class EducacensoExportController extends ApiCoreController
                 $docente->inepTurma,
                 $docente->funcaoDocente,
                 $docente->tipoVinculo,
-                $docente->componente1,
-                $docente->componente2,
-                $docente->componente3,
-                $docente->componente4,
-                $docente->componente5,
-                $docente->componente6,
-                $docente->componente7,
-                $docente->componente8,
-                $docente->componente9,
-                $docente->componente10,
-                $docente->componente11,
-                $docente->componente12,
-                $docente->componente13,
-                $docente->componente14,
-                $docente->componente15,
             ];
+
+            for ($count = 0; $count <= $quantidadeComponentes - 1; $count++) {
+                $data[] = $docente->componentes[$count];
+            }
 
             $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;
         }
