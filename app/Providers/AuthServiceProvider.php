@@ -22,18 +22,24 @@ class AuthServiceProvider extends ServiceProvider
     ];
 
     /**
-     * Register any authentication / authorization services.
+     * Register custom user providers.
      *
      * @return void
      */
-    public function boot()
+    private function registerUserProviders()
     {
-        $this->registerPolicies();
-
         Auth::provider('legacy', function ($app) {
             return new LegacyUserProvider($app->make(Hasher::class));
         });
+    }
 
+    /**
+     * Register Gates for application.
+     *
+     * @return void
+     */
+    private function registerGates()
+    {
         Gate::before(function (User $user) {
             if ($user->isAdmin()) {
                 return true;
@@ -43,6 +49,18 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('view', ProcessPolicy::class . '@view');
         Gate::define('modify', ProcessPolicy::class . '@modify');
         Gate::define('remove', ProcessPolicy::class . '@remove');
+    }
+
+    /**
+     * Register any authentication / authorization services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->registerPolicies();
+        $this->registerGates();
+        $this->registerUserProviders();
     }
 
     /**
