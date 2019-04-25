@@ -22,6 +22,11 @@ class Registro20 implements RegistroEducacenso
     /**
       * @var string
       */
+    public $codCurso;
+
+    /**
+      * @var string
+      */
     public $codSerie;
 
     /**

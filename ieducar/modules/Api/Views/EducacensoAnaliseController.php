@@ -638,7 +638,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 $mensagem = [[
                     'text' => "Dados para formular o registro 20 da escola {$nomeEscola} possui valor inválido. Verificamos que existem turmas duplicadas com o nome {$nomeTurma}.",
                     'path' => '(Escola > Cadastros > Turmas)',
-                    'linkPath' => "/intranet/educar_turma_lst.php",
+                    'linkPath' => "/intranet/educar_turma_lst.php?busca=S&ano={$ano}&ref_cod_escola={$escola}&ref_cod_curso={$turma->codCurso}&ref_cod_serie={$turma->codSerie}&nm_turma={$turma->nomeTurma}",
                     'fail' => true
                 ]];
                 break;
