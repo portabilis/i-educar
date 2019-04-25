@@ -1,33 +1,5 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Include
- * @since     Arquivo disponível desde a versão 1.0.0
- * @version   $Id$
- */
-
 use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\View;
 
@@ -39,34 +11,18 @@ require_once 'include/localizacaoSistema.php';
 define('alTopLeft', 'valign=top align=left');
 define('alTopCenter', 'valign=top align=center');
 define('alTopRight', 'valign=top align=right');
-
 define('alMiddleLeft', 'valign=middle align=left');
 define('alMiddleCenter', 'valign=middle align=center');
 define('alMiddleRight', 'valign=middle align=right');
-
 define('alBottomLeft', 'valign=bottom align=left');
 define('alBottomCenter', 'valign=bottom align=center');
 define('alBottomRight', 'valign=bottom align=right');
 
-/**
- * clsListagem class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Include
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
 class clsListagem extends clsCampos
 {
   var $nome = 'formulario';
   var $__titulo;
   var $titulo;
-  var $banner = FALSE;
-  var $bannerLateral = FALSE;
-  var $titulo_barra;
-  var $bannerClose = FALSE;
   var $largura;
   var $linhas;
   var $colunas;
@@ -106,20 +62,16 @@ class clsListagem extends clsCampos
     return FALSE;
   }
 
-  function addBanner($strBannerUrl = '', $strBannerLateralUrl = '',
-    $strBannerTitulo = '', $boolFechaBanner = TRUE)
-  {
-    if ($strBannerUrl != '') {
-      $this->banner = $strBannerUrl;
-    }
-    if ($strBannerLateralUrl != '') {
-      $this->bannerLateral = $strBannerLateralUrl;
-    }
-    if ($strBannerTitulo != '') {
-      $this->titulo_barra = $strBannerTitulo;
-    }
-
-    $this->bannerClose = $boolFechaBanner;
+  /**
+   * @deprecated
+   */
+  function addBanner(
+      $strBannerUrl = '',
+      $strBannerLateralUrl = '',
+      $strBannerTitulo = '',
+      $boolFechaBanner = TRUE
+  ) {
+      // Apenas para fins de compatibilidade
   }
   function enviaLocalizacao($localizao, $appendInTop = FALSE){
     if($localizao)
@@ -266,11 +218,6 @@ class clsListagem extends clsCampos
     View::share('title', $this->titulo);
 
     $retorno = '';
-
-    if ($this->banner) {
-      $retorno .= "<table width='100%' style=\"height:100%\" border='0' cellpadding='0' cellspacing='0'><tr>";
-      $retorno .= "<td valign='top'>";
-    }
 
     $retorno .= "
     <script type=\"text/javascript\">function go(url) { document.location = url; }
@@ -666,15 +613,6 @@ class clsListagem extends clsCampos
         </table>
       </form>
       <!-- listagem end -->";
-
-    if ($this->bannerClose) {
-      $retorno .= "
-              <!-- Fechando o Banner (clsListagem) -->
-            </td>
-          </tr>
-        </table>
-      ";
-    }
 
     Portabilis_View_Helper_Application::embedJavascriptToFixupFieldsWidth($this);
 
