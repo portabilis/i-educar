@@ -50,10 +50,6 @@ require_once 'include/localizacaoSistema.php';
 class clsDetalhe extends Core_Controller_Page_Abstract
 {
   var $titulo;
-  var $banner = FALSE;
-  var $bannerLateral = FALSE;
-  var $titulo_barra;
-  var $bannerClose = FALSE;
   var $largura;
   var $detalhe = array();
 
@@ -67,22 +63,16 @@ class clsDetalhe extends Core_Controller_Page_Abstract
   var $array_botao_url;
   var $array_botao_url_script;
 
-  function addBanner($strBannerUrl = '', $strBannerLateralUrl = '',
-    $strBannerTitulo = '', $boolFechaBanner = FALSE)
-  {
-    if ($strBannerUrl != '') {
-      $this->banner = $strBannerUrl;
-    }
-
-    if ($strBannerLateralUrl != '') {
-      $this->bannerLateral = $strBannerLateralUrl;
-    }
-
-    if ($strBannerTitulo != '') {
-      $this->titulo_barra = $strBannerTitulo;
-    }
-
-    $this->bannerClose = $boolFechaBanner;
+    /**
+     * @deprecated
+     */
+  function addBanner(
+      $strBannerUrl = '',
+      $strBannerLateralUrl = '',
+      $strBannerTitulo = '',
+      $boolFechaBanner = FALSE
+  ) {
+      // Método permanece somente para fins de compatibilidade e evitar erros.
   }
 
 
@@ -102,15 +92,9 @@ class clsDetalhe extends Core_Controller_Page_Abstract
   function RenderHTML()
   {
     $this->_preRender();
-
-    $this->titulo_barra= 'Intranet';
     $this->Gerar();
 
     $retorno = '';
-    if ($this->banner) {
-      $retorno .= "<table width='100%' style=\"height:100%\" border='0' cellpadding='0' cellspacing='0'><tr>";
-      $retorno .= "<td valign='top'>";
-    }
 
     $script = explode('/', $_SERVER['PHP_SELF']);
     $script = $script[count($script)-1];
@@ -255,14 +239,6 @@ class clsDetalhe extends Core_Controller_Page_Abstract
     $retorno .= "
       </table><br><br>
       <!-- detalhe end -->";
-
-    if ($this->bannerClose) {
-      $retorno .= "
-        <!-- Fechando o Banner (clsDetalhe) -->
-          </td>
-        </tr>
-        </table>";
-    }
 
     return $retorno;
   }
