@@ -7,10 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
-use Tooleks\LaravelAssetVersion\Facades\Asset;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/../../includes/bootstrap.php';
 require_once 'include/clsCronometro.inc.php';
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -29,19 +26,6 @@ if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente) {
     );
 }
 
-
-/**
- * clsBase class.
- *
- * Provê uma API para criação de páginas HTML programaticamente.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Include
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
 class clsBase extends clsConfig
 {
     var $titulo = 'Prefeitura Cobra Tecnologia';
