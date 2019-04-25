@@ -1,9 +1,11 @@
 <?php
 
 use App\Menu;
+use App\User;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Tooleks\LaravelAssetVersion\Facades\Asset;
@@ -165,111 +167,10 @@ class clsBase extends clsConfig
 
     function verificaPermissao()
     {
-        return $this->VerificaPermicao();
-    }
-
-    function VerificaPermicao()
-    {
-        if ($this->processoAp) {
-            $permite = true;
-
-            if (!is_array($this->processoAp)) {
-                return true;
-            }
-
-            foreach ($this->processoAp as $processo) {
-                if (!$this->VerificaPermicaoNumerico($processo)) {
-                    $permite = false;
-                } else {
-                    $this->processoAp = $processo;
-                    $permite = true;
-                    break;
-                }
-            }
-
-            if (!$permite) {
-                throw new HttpResponseException(
-                    new RedirectResponse(' index.php?negado=1&err=1')
-                );
-            }
-        } else {
-            if (!$this->VerificaPermicaoNumerico($this->processoAp)) {
-                throw new HttpResponseException(
-                    new RedirectResponse(' index.php?negado=1&err=1')
-                );
-            }
-        }
-
-        return TRUE;
-    }
-
-    function VerificaPermicaoNumerico($processo_ap)
-    {
-        if (is_numeric($processo_ap)) {
-            $sempermissao = TRUE;
-
-            if ($processo_ap == 0) {
-                $this->prog_alert .= "Processo AP == 0!";
-            }
-
-            if ($processo_ap != 0) {
-                $this->db()->Consulta("SELECT 1 FROM pmieducar.menu_tipo_usuario mtu
-                                INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
-                                INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
-                                WHERE mtu.ref_cod_menu_submenu = 0 AND u.cod_usuario = {$this->currentUserId()}");
-                if ($this->db()->ProximoRegistro()) {
-                    list($aui) = $this->db()->Tupla();
-                    $sempermissao = FALSE;
-                }
-
-                // @todo A primeira consulta OK, verifica de forma simples de tem
-                //       permissão de acesso ao processo. Já a segunda, não existe
-                //       sentido para nivel = 2 já que processoAp pode ser de níveis
-                //       maiores que 2.
-                $this->db()->Consulta("SELECT 1 FROM pmieducar.menu_tipo_usuario mtu
-                                INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
-                                INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
-                                WHERE (mtu.ref_cod_menu_submenu = {$processo_ap} AND u.cod_usuario = {$this->currentUserId()})
-                                OR (SELECT true FROM menu_submenu WHERE cod_menu_submenu = {$processo_ap} AND nivel = 2)
-                                LIMIT 1");
-                if ($this->db()->ProximoRegistro()) {
-                    list($aui) = $this->db()->Tupla();
-                    $sempermissao = FALSE;
-                }
-
-                if ($sempermissao) {
-                    $ip = empty($_SERVER['REMOTE_ADDR']) ? "NULL" : $_SERVER['REMOTE_ADDR'];
-                    $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? "NULL" : $_SERVER['HTTP_X_FORWARDED_FOR'];
-                    $pagina = $_SERVER["PHP_SELF"];
-                    $posts = "";
-                    $gets = "";
-                    $sessions = "";
-
-                    foreach ($_POST as $key => $val) {
-                        $posts .= " - $key: $val\n";
-                    }
-
-                    foreach ($_GET as $key => $val) {
-                        $gets .= " - $key: $val\n";
-                    }
-
-                    foreach (Session::all() as $key => $val) {
-                        $sessions .= " - $key: $val\n";
-                    }
-
-                    $variaveis = "POST\n{$posts}GET\n{$gets}SESSION\n{$sessions}";
-                    $variaveis = Portabilis_String_Utils::toLatin1($variaveis, array('escape' => true));
-
-                    if ($this->currentUserId()) {
-                        $this->db()->Consulta("INSERT INTO intranet_segur_permissao_negada (ref_ref_cod_pessoa_fj, ip_externo, ip_interno, data_hora, pagina, variaveis) VALUES('{$this->currentUserId()}', '$ip', '$ip_de_rede', NOW(), '$pagina', '$variaveis')");
-                    } else {
-                        $this->db()->Consulta("INSERT INTO intranet_segur_permissao_negada (ref_ref_cod_pessoa_fj, ip_externo, ip_interno, data_hora, pagina, variaveis) VALUES(NULL, '$ip', '$ip_de_rede', NOW(), '$pagina', '$variaveis')");
-                    }
-
-                    return FALSE;
-                }
-            }
-            return TRUE;
+        if (Gate::denies('view', $this->processoAp)) {
+            throw new HttpResponseException(
+                new RedirectResponse('index.php?negado=1&err=1')
+            );
         }
     }
 
@@ -350,12 +251,15 @@ class clsBase extends clsConfig
         $cronometro->marca('inicio');
 
         $this->Formular();
-        $this->VerificaPermicao();
+        $this->verificaPermissao();
         $this->CadastraAcesso();
 
         $saida_geral = '';
 
-        $menu = Menu::user(Auth::user());
+        /** @var User $user */
+        $user = Auth::user();
+        $menu = Menu::user($user);
+
         $topmenu = Menu::query()
             ->where('process', $this->processoAp)
             ->first();

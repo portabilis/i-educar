@@ -133,7 +133,7 @@ class User extends Authenticatable
     /**
      * @return BelongsToMany
      */
-    public function menu()
+    public function processes()
     {
         return $this->belongsToMany(
             Menu::class,
@@ -142,6 +142,14 @@ class User extends Authenticatable
             'ref_cod_menu_submenu',
             'ref_cod_tipo_usuario',
             'process'
-        )->wherePivot('visualiza', 1);
+        );
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function menu()
+    {
+        return $this->processes()->wherePivot('visualiza', 1);
     }
 }
