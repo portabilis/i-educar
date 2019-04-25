@@ -207,9 +207,6 @@ class clsCadastro extends clsCampos
 
         $this->Gerar();
 
-        $script = explode('/', $_SERVER['PHP_SELF']);
-        $script = $script[count($script) - 1];
-
         $this->nome_excluirImg = empty($this->nome_excluirImg) ? 'Excluir Imagem' : $this->nome_excluirImg;
         $this->nome_url_cancelar = empty($this->nome_url_cancelar) ? 'Cancelar' : $this->nome_url_cancelar;
         $this->nome_url_sucesso = empty($this->nome_url_sucesso) ? 'Salvar' : $this->nome_url_sucesso;
@@ -240,20 +237,7 @@ class clsCadastro extends clsCampos
         $titulo = isset($this->titulo) ? $this->titulo : "<b>{$this->tipoacao} {$applicationTitle}</b>";
 
         View::share('title', $this->getPageTitle());
-        /**
-         * Adiciona os botoes de help para a pagina atual
-         */
-        $url = parse_url($_SERVER['REQUEST_URI']);
-        $url = preg_replace('/^\//', '', $url['path']);
-        if (strpos($url, '_det.php') !== false) {
-            $tipo = 'det';
-        } elseif (strpos($url, '_lst.php') !== false) {
-            $tipo = 'lst';
-        } elseif (strpos($url, '_pdf.php') !== false) {
-            $tipo = 'pdf';
-        } else {
-            $tipo = 'cad';
-        }
+
         $barra = $titulo;
 
         $retorno .= "<tr><td class='formdktd' colspan='2' height='24'>{$barra}</td></tr>";
