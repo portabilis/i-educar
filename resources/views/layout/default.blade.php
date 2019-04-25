@@ -131,6 +131,8 @@
     </script>
 
     <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/custom.css') }}'/>
+    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
+    <link rel=stylesheet type='text/css' href='{{ Asset::get('css/base.css') }}'/>
 
     @stack('styles')
 
@@ -149,24 +151,29 @@
 <div id="DOM_expansivel" class="DOM_expansivel"></div>
 <table summary="" class='tabelanum1' id="tablenum1" border='0' cellspacing='0' cellpadding='0'>
     <tr id="topo" class="topo">
-        <td class="logo" align="left"><a style="color:#FFF; text-decoration: none;" href="/">i-Educar</a></td>
-        <td id="perfil-user-id" class="perfil-user" align="right">
-            <a class="icons-top" href="#">
-                <img id="notificacao" src="/intranet/imagens/icon-nav-notifications.png">
-            </a>
-            <a href="/intranet/meusdados.php" title="Meus dados">
-                <div id="foto-user" class="foto-user"
-                     style="background: url('/intranet/imagens/user-perfil.png')"></div>
-            </a>
-            <div class="dropdown">
-                <div class="dropbtn">{{$loggedUser->name}}</div>
-                <div class="dropdown-content">
-                    <a href="/intranet/agenda.php">Agenda</a>
-                    <a href="/intranet/index.php">Calendário</a>
-                    <a href="/intranet/meusdados.php">Meus dados</a>
-                    <a href="/intranet/logof.php">Sair</a>
+        <td colspan="2">
+            <header class="ieducar-header">
+                <div class="ieducar-header-logo">
+                    <h1><a href="{{ url('/') }}">i-Educar</a></h1>
                 </div>
-            </div>
+                <div class="ieducar-header-links">
+                    <div class="dropdown">
+                        <div class="dropbtn">{{ $loggedUser->name }}</div>
+                        <div class="dropdown-content">
+                            <a href="{{ url('intranet/agenda.php') }}">Agenda</a>
+                            <a href="{{ url('intranet/index.php') }}">Calendário</a>
+                            <a href="{{ url('intranet/meusdados.php') }}">Meus dados</a>
+                            <a href="{{ url('intranet/logof.php') }}">Sair</a>
+                        </div>
+                    </div>
+                    <a href="{{ url('intranet/meusdados.php') }}" class="avatar" title="Meus dados">
+                        <img height="35" src="{{ url('intranet/imagens/user-perfil.png') }}" alt="Perfil">
+                    </a>
+                    <a href="#" class="notifications">
+                        <img alt="Notificação" id="notificacao" src="{{ url('intranet/imagens/icon-nav-notifications.png') }}">
+                    </a>
+                </div>
+            </header>
         </td>
     </tr>
     <tr>
@@ -310,5 +317,6 @@
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/select2.full.min.js") }}"></script>
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/pt-BR.js") }}"></script>
 <link type="text/css" rel="stylesheet" href="{{ Asset::get("/intranet/scripts/select2/select2.min.css") }}"/>
+@include('layout.vue')
 </body>
 </html>
