@@ -316,19 +316,47 @@ SQL;
                AND turma.ativo = 1
                AND turma.visivel = TRUE
                AND escola.ativo = 1
-               AND exists (
-                    SELECT 1
-                    FROM pmieducar.matricula_turma
-                    WHERE matricula_turma.ref_cod_turma = turma.cod_turma
-                    AND matricula_turma.data_enturmacao <= instituicao.data_educacenso
-                    AND coalesce(matricula_turma.data_exclusao, \'2999-01-01\'::date) > instituicao.data_educacenso
-               )
-        ';
+               AND
+        ' . $this->enrollmentConditionSubquery();
 
         return $this->fetchPreparedQuery($sql, [
             'school' => $school,
             'year' => $year,
         ]);
+    }
+
+    private function enrollmentConditionSubquery()
+    {
+        return " (
+                exists (
+                  SELECT 1
+                  FROM pmieducar.matricula_turma
+                  WHERE matricula_turma.ref_cod_turma = turma.cod_turma
+                  AND matricula_turma.data_enturmacao < instituicao.data_educacenso
+                  AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
+                )
+                OR
+                exists (
+                  SELECT 1
+                  FROM pmieducar.matricula_turma
+                  JOIN pmieducar.matricula
+                      ON matricula.cod_matricula = matricula_turma.ref_cod_matricula
+                  WHERE matricula_turma.ref_cod_turma = turma.cod_turma
+                  AND matricula_turma.data_enturmacao = instituicao.data_educacenso
+                  AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
+                  AND NOT EXISTS (
+                    SELECT 1
+                    FROM pmieducar.matricula_turma smt
+                    JOIN pmieducar.matricula sm
+                      ON sm.cod_matricula = smt.ref_cod_matricula
+                    WHERE sm.ref_cod_aluno = matricula.ref_cod_aluno
+                    AND sm.ativo = 1
+                    AND smt.data_enturmacao < matricula_turma.data_enturmacao
+                    AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
+                  )
+                )
+              )
+        ";
     }
 
     /**
