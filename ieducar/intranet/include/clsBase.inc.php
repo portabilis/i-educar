@@ -6,7 +6,6 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Tooleks\LaravelAssetVersion\Facades\Asset;
 
@@ -86,22 +85,17 @@ class clsBase extends clsConfig
         }
     }
 
-    /**
-     * @see Core_Page_Controller_Abstract#getAppendedOutput()
-     * @see Core_Page_Controller_Abstract#getPrependedOutput()
-     */
     function MakeBody()
     {
         $corpo = '';
+
         foreach ($this->clsForm as $form) {
             $corpo .= $form->RenderHTML();
 
-            // Prepend output.
             if (method_exists($form, 'getPrependedOutput')) {
                 $corpo = $form->getPrependedOutput() . $corpo;
             }
 
-            // Append output.
             if (method_exists($form, 'getAppendedOutput')) {
                 $corpo = $corpo . $form->getAppendedOutput();
             }
@@ -115,22 +109,7 @@ class clsBase extends clsConfig
             }
         }
 
-        $saida = $corpo;
-
-        // Pega o endereço IP do host, primeiro com HTTP_X_FORWARDED_FOR (para pegar o IP real
-        // caso o host esteja atrás de um proxy)
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
-            // No caso de múltiplos IPs, pega o último da lista
-            $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-            $ip_maquina = trim(array_pop($ip));
-        } else {
-            $ip_maquina = $_SERVER['REMOTE_ADDR'];
-        }
-
-        $sql = "UPDATE funcionario SET ip_logado = '$ip_maquina' , data_login = NOW() WHERE ref_cod_pessoa_fj = {$this->currentUserId()}";
-        $this->db()->Consulta($sql);
-
-        return $saida;
+        return $corpo;
     }
 
     function Formular()
@@ -178,15 +157,5 @@ class clsBase extends clsConfig
         }
 
         echo view($view, ['body' => $saida_geral])->render();
-    }
-
-    protected function db()
-    {
-        return Portabilis_Utils_Database::db();
-    }
-
-    protected function currentUserId()
-    {
-        return Portabilis_Utils_User::currentUserId();
     }
 }
