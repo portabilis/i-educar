@@ -103,9 +103,6 @@ class clsBase extends clsConfig
 
     function MakeAll()
     {
-        $cronometro = new clsCronometro();
-        $cronometro->marca('inicio');
-
         $this->Formular();
         $this->verificaPermissao();
 
