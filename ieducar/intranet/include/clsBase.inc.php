@@ -50,30 +50,12 @@ class clsBase extends clsConfig
     var $bodyscript = NULL;
     var $processoAp;
     var $refresh = FALSE;
-
     var $renderMenu = TRUE;
     var $renderMenuSuspenso = TRUE;
     var $renderBanner = TRUE;
     var $estilos;
     var $scripts;
-
-    var $script_header;
-    var $script_footer;
     var $prog_alert;
-
-    function OpenTpl($template)
-    {
-
-        $prefix = 'nvp_';
-        $file = $this->arrayConfig['strDirTemplates'] . $prefix . $template . '.tpl';
-
-        ob_start();
-        include $file;
-        $contents = ob_get_contents();
-        ob_end_clean();
-
-        return $contents;
-    }
 
     function SetTitulo($titulo)
     {
@@ -85,63 +67,6 @@ class clsBase extends clsConfig
         $this->clsForm[] = $form;
     }
 
-    function MakeHeadHtml()
-    {
-
-        $saida = $this->OpenTpl('htmlhead');
-        $saida = str_replace("<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", CORE_EXT_CONFIGURATION_ENV, $saida);
-        $saida = str_replace("<!-- #&USER_ID&# -->", Session::get('id_pessoa'), $saida);
-        $saida = str_replace("<!-- #&TITULO&# -->", $this->titulo, $saida);
-
-        if ($this->refresh) {
-            $saida = str_replace("<!-- #&REFRESH&# -->", "<meta http-equiv='refresh' content='60'>", $saida);
-        }
-
-        if (is_array($this->estilos) && count($this->estilos)) {
-            $estilos = '';
-            foreach ($this->estilos as $estilo) {
-                $estilos .= "<link rel=stylesheet type='text/css' href='" . Asset::get('/intranet/scripts/' . $estilo . '.js') . ".css' />";
-            }
-            $saida = str_replace("<!-- #&ESTILO&# -->", $estilos, $saida);
-        }
-
-
-        if (is_array($this->scripts) && count($this->scripts)) {
-            $scripts = '';
-            foreach ($this->scripts as $script) {
-                $scripts .= "<script type='text/javascript' src='" . Asset::get('/intranet/scripts/' . $script . '.js') . "'></script>";
-            }
-            $saida = str_replace("<!-- #&SCRIPT&# -->", $scripts, $saida);
-        }
-
-        if ($this->bodyscript) {
-            $saida = str_replace("<!-- #&BODYSCRIPTS&# -->", $this->bodyscript, $saida);
-        } else {
-            $saida = str_replace("<!-- #&BODYSCRIPTS&# -->", "", $saida);
-        }
-
-        if ($this->script_header) {
-            $saida = str_replace("<!-- #&SCRIPT_HEADER&# -->", $this->script_header, $saida);
-        } else {
-            $saida = str_replace("<!-- #&SCRIPT_HEADER&# -->", "", $saida);
-        }
-
-        $saida = str_replace("<!-- #&GOOGLE_TAG_MANAGER_ID&# -->", $GLOBALS['coreExt']['Config']->app->gtm->id, $saida);
-
-        // nome completo usuario
-        // @TODO: jeito mais eficiente de usar estes dados, já que eles são
-        //         usados em mais um método aqui...
-        $nomePessoa = new clsPessoaFisica();
-        list($nomePessoa, $email) = $nomePessoa->queryRapida($this->currentUserId(), "nome", "email");
-        $nomePessoa = ($nomePessoa) ? $nomePessoa : 'Visitante';
-
-        $saida = str_replace("<!-- #&SLUG&# -->", $GLOBALS['coreExt']['Config']->app->database->dbname, $saida);
-        $saida = str_replace("<!-- #&USERLOGADO&# -->", trim($nomePessoa), $saida);
-        $saida = str_replace("<!-- #&USEREMAIL&# -->", trim($email), $saida);
-
-        return $saida;
-    }
-
     function addEstilo($estilo_nome)
     {
         $this->estilos[$estilo_nome] = $estilo_nome;
@@ -150,19 +75,6 @@ class clsBase extends clsConfig
     function addScript($script_nome)
     {
         $this->scripts[$script_nome] = $script_nome;
-    }
-
-    function MakeFootHtml()
-    {
-        $saida = $this->OpenTpl('htmlfoot');
-
-        if ($this->script_footer) {
-            $saida = str_replace("<!-- #&SCRIPT_FOOTER&# -->", $this->script_footer, $saida);
-        } else {
-            $saida = str_replace("<!-- #&SCRIPT_FOOTER&# -->", "", $saida);
-        }
-
-        return $saida;
     }
 
     function verificaPermissao()
