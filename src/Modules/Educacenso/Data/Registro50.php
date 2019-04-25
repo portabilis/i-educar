@@ -37,14 +37,10 @@ class Registro50 extends AbstractRegistro
         return $this->modelArray;
     }
 
-    public function getExportFormatData($escola, $ano)
+    public function getExportFormatData($ano, $escola)
     {
-        $modelArray = $this->getData($escola, $ano);
+        $modelArray = $this->getData($ano, $escola);
 
-        foreach ($modelArray as $registro50) {
-
-        }
-        
         return $modelArray;
     }
 }

@@ -2,19 +2,23 @@
 
 use App\Models\Educacenso\Registro00;
 use App\Models\Educacenso\Registro40;
+use App\Models\Educacenso\Registro50;
 use App\Repositories\EducacensoRepository;
 use iEducar\Modules\Educacenso\ArrayToCenso;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\Data\Registro40 as Registro40Data;
+use iEducar\Modules\Educacenso\Data\Registro50 as Registro50Data;
 use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaAluno;
 use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaProfessor;
 use iEducar\Modules\Educacenso\Deficiencia\MapeamentoDeficienciasAluno;
 use iEducar\Modules\Educacenso\Deficiencia\ValueDeficienciaMultipla;
 use iEducar\Modules\Educacenso\ExportRule\CargoGestor;
+use iEducar\Modules\Educacenso\ExportRule\ComponentesCurriculares;
 use iEducar\Modules\Educacenso\ExportRule\CriterioAcessoGestor;
 use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
 use iEducar\Modules\Educacenso\ExportRule\Regulamentacao;
 use iEducar\Modules\Educacenso\ExportRule\SituacaoFuncionamento;
+use iEducar\Modules\Educacenso\ExportRule\TipoVinculoServidor;
 use iEducar\Modules\Educacenso\Formatters;
 use iEducar\Modules\Educacenso\ValueTurmaMaisEducacao;
 use Illuminate\Support\Facades\Session;
@@ -131,14 +135,14 @@ class EducacensoExportController extends ApiCoreController
         foreach ($this->getServidores($escolaId, $ano, $data_ini, $data_fim) as $servidor) {
 
             $registro30 = $this->exportaDadosRegistro30($servidor['id'], $escolaId);
-            $registro50 = $this->exportaDadosRegistro50($servidor['id'], $escolaId);
             $registro51 = $this->exportaDadosRegistro51($servidor['id'], $escolaId, $data_ini, $data_fim, $ano);
-            if (!empty($registro30) && !empty($registro50)) {
-                $export .= $registro30 . $registro50 . $registro51;
+            if (!empty($registro30)) {
+                $export .= $registro30 . $registro51;
             }
         }
 
         $export .= $this->exportaDadosRegistro40($escolaId);
+        $export .= $this->exportaDadosRegistro50($escolaId, $ano);
 
         foreach ($this->getAlunos($escolaId, $ano, $data_ini, $data_fim) as $alunoId) {
             $registro60 = $this->exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
@@ -976,178 +980,50 @@ class EducacensoExportController extends ApiCoreController
         return $stringCenso;
     }
 
-    protected function exportaDadosRegistro50($servidorId, $escolaId)
+    protected function exportaDadosRegistro50($escolaId, $ano)
     {
-        $sql = <<<'SQL'
-            SELECT
-        '50' AS r50s1,
-        ece.cod_escola_inep AS r50s2,
-    ecd.cod_docente_inep AS r50s3,
-        s.cod_servidor AS r50s4,
-        esc.escolaridade AS r50s5,
-        situacao_curso_superior_1 AS r50s6,
-        formacao_complementacao_pedagogica_1 AS r50s7,
-    (SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_1) AS r50s8,
-        (SELECT grau_academico FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_1) AS grau_academico_curso_superior_1,
-        ano_inicio_curso_superior_1 AS r50s9,
-        ano_conclusao_curso_superior_1 AS r50s10,
-        (SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_1) AS r50s11,
-        situacao_curso_superior_2 AS r50s12,
-        formacao_complementacao_pedagogica_2 AS r50s13,
-    (SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_2) AS r50s14,
-    (SELECT grau_academico FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_2) AS grau_academico_curso_superior_2,
-        ano_inicio_curso_superior_2 AS r50s15,
-        ano_conclusao_curso_superior_2 AS r50s16,
-        (SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_2) AS r50s17,
-        situacao_curso_superior_3 AS r50s18,
-        formacao_complementacao_pedagogica_3 AS r50s19,
-        (SELECT curso_id FROM modules.educacenso_curso_superior ecs WHERE ecs.id = codigo_curso_superior_3) AS r50s20,
-    (SELECT grau_academico FROM modules.educacenso_curso_superior ecs
-    WHERE ecs.id = codigo_curso_superior_3) AS grau_academico_curso_superior_3,
-        ano_inicio_curso_superior_3 AS r50s21,
-        ano_conclusao_curso_superior_3 AS r50s22,
-        (SELECT ies_id FROM modules.educacenso_ies ei WHERE ei.id = instituicao_curso_superior_3) AS r50s23,
-        (ARRAY[1] <@ pos_graduacao)::INT AS r50s24,
-        (ARRAY[2] <@ pos_graduacao)::INT AS r50s25,
-        (ARRAY[3] <@ pos_graduacao)::INT AS r50s26,
-        (ARRAY[4] <@ pos_graduacao)::INT AS r50s27,
-        (ARRAY[1] <@ curso_formacao_continuada)::INT AS r50s28,
-        (ARRAY[2] <@ curso_formacao_continuada)::INT AS r50s29,
-        (ARRAY[3] <@ curso_formacao_continuada)::INT AS r50s30,
-        (ARRAY[4] <@ curso_formacao_continuada)::INT AS r50s31,
-        (ARRAY[5] <@ curso_formacao_continuada)::INT AS r50s32,
-        (ARRAY[6] <@ curso_formacao_continuada)::INT AS r50s33,
-        (ARRAY[7] <@ curso_formacao_continuada)::INT AS r50s34,
-        (ARRAY[8] <@ curso_formacao_continuada)::INT AS r50s35,
-        (ARRAY[9] <@ curso_formacao_continuada)::INT AS r50s36,
-        (ARRAY[10] <@ curso_formacao_continuada)::INT AS r50s37,
-        (ARRAY[11] <@ curso_formacao_continuada)::INT AS r50s38,
-        (ARRAY[12] <@ curso_formacao_continuada)::INT AS r50s39,
-        (ARRAY[13] <@ curso_formacao_continuada)::INT AS r50s40,
-        (ARRAY[14] <@ curso_formacao_continuada)::INT AS r50s41,
-        (ARRAY[15] <@ curso_formacao_continuada)::INT AS r50s42,
-        (ARRAY[16] <@ curso_formacao_continuada)::INT AS r50s43,
-        s.situacao_curso_superior_1,
-        s.situacao_curso_superior_2,
-        s.situacao_curso_superior_3 
-        FROM    pmieducar.servidor s
-        INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
-        INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
-    INNER JOIN modules.professor_turma pt ON (pt.servidor_id = s.cod_servidor)
-    INNER JOIN pmieducar.turma t ON (t.cod_turma = pt.turma_id)
-    INNER JOIN pmieducar.escola e ON (e.cod_escola = t.ref_ref_cod_escola)
-        INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
-        LEFT JOIN cadastro.escolaridade esc ON (esc.idesco = s.ref_idesco)
-    LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
-        WHERE s.cod_servidor = $1
-      AND COALESCE(t.nao_informar_educacenso, 0) = 0
-      AND e.cod_escola = $2
-      AND t.ativo = 1
-      AND t.visivel = TRUE
-        LIMIT 1
-SQL;
+        $educacensoRepository = new EducacensoRepository();
+        $registro50Model = new Registro50();
+        $registro50 = new Registro50Data($educacensoRepository, $registro50Model);
 
-        // Transforma todos resultados em variáveis
-        extract(Portabilis_Utils_Database::fetchPreparedQuery(
-            $sql,
-            [
-                'return_only' => 'first-row',
-                'params' => [
-                    $servidorId,
-                    $escolaId
-                ]
-            ]
-        ));
+        /** @var Registro50[] $docentes */
+        $docentes = $registro50->getExportFormatData($escolaId, $ano);
 
-        if ($r50s1) {
-            $d = '|';
-            $return = '';
-            $numeroRegistros = 43;
+        $stringCenso = '';
+        foreach ($docentes as $docente) {
+            $docente = TipoVinculoServidor::handle($docente);
+            $docente = ComponentesCurriculares::handle($docente);
 
-            if ($this->isCursoSuperiorBachareladoOuTecnologoCompleto($grau_academico_curso_superior_1,
-                $situacao_curso_superior_1)) {
-                if (is_null($r50s7)) {
-                    $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 7 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
-                    $this->error = true;
-                }
-            } elseif ($grau_academico_curso_superior_1 == self::LICENCIATURA) {
-                $r50s7 = null;
-            }
+            $data = [
+                $docente->registro,
+                $docente->inepEscola,
+                $docente->codigoPessoa,
+                $docente->inepDocente,
+                $docente->codigoTurma,
+                $docente->inepTurma,
+                $docente->funcaoDocente,
+                $docente->tipoVinculo,
+                $docente->componente1,
+                $docente->componente2,
+                $docente->componente3,
+                $docente->componente4,
+                $docente->componente5,
+                $docente->componente6,
+                $docente->componente7,
+                $docente->componente8,
+                $docente->componente9,
+                $docente->componente10,
+                $docente->componente11,
+                $docente->componente12,
+                $docente->componente13,
+                $docente->componente14,
+                $docente->componente15,
+            ];
 
-            if ($this->isCursoSuperiorBachareladoOuTecnologoCompleto($grau_academico_curso_superior_2,
-                $situacao_curso_superior_2)) {
-                if (is_null($r50s13)) {
-                    $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 14 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
-                    $this->error = true;
-                }
-            } elseif ($grau_academico_curso_superior_2 == self::LICENCIATURA) {
-                $r50s13 = null;
-            }
-
-            if ($this->isCursoSuperiorBachareladoOuTecnologoCompleto($grau_academico_curso_superior_3,
-                $situacao_curso_superior_3)) {
-                if (is_null($r50s19)) {
-                    $this->msg .= "Dados para formular o registro 50 do servidor {$servidorId} com problemas. O registro 21 é obrigatório para cursos do tipo BACHARELADO ou TECNOLOGO.<br/>";
-                    $this->error = true;
-                }
-            } elseif ($grau_academico_curso_superior_3 == self::LICENCIATURA) {
-                $r50s19 = null;
-            }
-
-            if ($r50s6 != 2) {
-                $r50s9 = null;
-            }
-            if ($r50s6 != 1) {
-                $r50s10 = null;
-            }
-
-            if ($r50s12 != 2) {
-                $r50s15 = null;
-            }
-            if ($r50s12 != 1) {
-                $r50s16 = null;
-            }
-
-            if ($r50s18 != 2) {
-                $r50s21 = null;
-            }
-            if ($r50s18 != 1) {
-                $r50s22 = null;
-            }
-
-            if ($r50s6 != 1) {
-                $r50s7 = null;
-            }
-            if ($r50s12 != 1) {
-                $r50s13 = null;
-            }
-            if ($r50s18 != 1) {
-                $r50s19 = null;
-            }
-
-            $situacaoConcluido = ($r50s6 == 1 || $r50s12 == 1 || $r50s18 == 1);
-
-            if (!$situacaoConcluido) {
-                $r50s24 = $r50s25 = $r50s26 = $r50s27 = null;
-            }
-
-            if ($r50s43 == 1) {
-                $r50s28 = $r50s29 = $r50s30 = $r50s31 = $r50s32 = $r50s33 = $r50s34 = $r50s35 = $r50s36 = $r50s37 = $r50s38 = $r50s39 = $r50s40 = $r50s41 = $r50s42 = 0;
-            }
-
-            $cont = 0;
-            for ($i = 1; $i <= $numeroRegistros; $i++) {
-                if ($i >= 31) {
-                    $return .= (${'r50s' . $i} == 1 ? 1 : 0) . $d;
-                } else {
-                    $return .= ${'r50s' . $i} . $d;
-                }
-            }
-
-            $return = substr_replace($return, "", -1);
-
-            return $return . "\n";
+            $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;
         }
+
+        return $stringCenso;
     }
 
     protected function exportaDadosRegistro51($servidorId, $escolaId, $data_ini, $data_fim, $ano)

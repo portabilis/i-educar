@@ -193,6 +193,18 @@ class Registro50 implements RegistroEducacenso
     public $nomeTurma;
 
     /**
+     * @var string
+     * Campo usado somente na análise
+     */
+    public $dependenciaAdministrativaEscola;
+
+    /**
+     * @var string
+     * Campo usado somente na análise
+     */
+    public $etapaEducacensoTurma;
+
+    /**
      * @return bool
      */
     public function isTitularOrTutor()

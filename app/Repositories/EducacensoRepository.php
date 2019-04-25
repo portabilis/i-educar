@@ -397,7 +397,7 @@ SQL;
                        servidor.cod_servidor AS "codigoPessoa",
                        educacenso_cod_docente.cod_docente_inep AS "inepDocente",
                        turma.cod_turma AS "codigoTurma",
-                       educacenso_cod_turma.cod_turma_inep AS "inepTurma",
+                       null AS "inepTurma",
                        professor_turma.funcao_exercida AS "funcaoDocente",
                        professor_turma.tipo_vinculo AS "tipoVinculo",
                        tbl_componentes.componentes[1] AS componente1,
@@ -422,7 +422,9 @@ SQL;
                        professor_turma.id AS "idAlocacao",
                        turma.tipo_mediacao_didatico_pedagogico AS "tipoMediacaoTurma",
                        turma.tipo_atendimento AS "tipoAtendimentoTurma",
-                       turma.nm_turma AS "nomeTurma"
+                       turma.nm_turma AS "nomeTurma",
+                       escola.dependencia_administrativa AS "dependenciaAdministrativaEscola",
+                       turma.etapa_educacenso AS "etapaEducacensoTurma"
                  FROM pmieducar.servidor
                  JOIN modules.professor_turma     ON professor_turma.servidor_id = servidor.cod_servidor
                  JOIN pmieducar.turma             ON turma.cod_turma = professor_turma.turma_id
@@ -437,7 +439,7 @@ SQL;
             LEFT JOIN modules.educacenso_cod_turma ON educacenso_cod_turma.cod_turma = turma.cod_turma
             LEFT JOIN modules.professor_turma_disciplina ON professor_turma_disciplina.professor_turma_id = professor_turma.id,
               LATERAL (
-                         SELECT array_agg(cc.codigo_educacenso) AS componentes
+                         SELECT DISTINCT array_agg(cc.codigo_educacenso) AS componentes
                          FROM modules.componente_curricular cc
                                   INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
                          WHERE   ptd.professor_turma_id = professor_turma.id
