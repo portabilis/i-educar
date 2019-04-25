@@ -15,9 +15,9 @@
         </vue-multiselect>
     </div>
 </div>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
-<script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
+<script src="{{ Asset::get('js/axios.min.js') }}"></script>
+<script src="{{ Asset::get('js/vue.min.js') }}"></script>
+<script src="{{ Asset::get('js/vue-multiselect.min.js') }}"></script>
 <script>
     Vue.component('vue-multiselect', window.VueMultiselect.default);
     Vue.component('quick-search', {
