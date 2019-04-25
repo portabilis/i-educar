@@ -24,23 +24,17 @@ class ProcessPolicy
 
         $root = Menu::query()
             ->whereNull('parent_id')
-            ->pluck('process')
-            ->toArray();
+            ->where('process', $process)
+            ->exists();
 
-        if (in_array($process, $root)) {
+        if ($root) {
             return true;
         }
 
-        $allow = $user->processes()
+        return $user->processes()
             ->wherePivot('visualiza', 1)
             ->where('process', $process)
-            ->first();
-
-        if ($allow) {
-            return true;
-        }
-
-        return false;
+            ->exists();
     }
 
     /**
@@ -55,16 +49,10 @@ class ProcessPolicy
             return true;
         }
 
-        $allow = $user->processes()
+        return $user->processes()
             ->wherePivot('cadastra', 1)
             ->where('process', $process)
-            ->first();
-
-        if ($allow) {
-            return true;
-        }
-
-        return false;
+            ->exists();
     }
 
     /**
@@ -79,15 +67,9 @@ class ProcessPolicy
             return true;
         }
 
-        $allow = $user->processes()
+        return $user->processes()
             ->wherePivot('exclui', 1)
             ->where('process', $process)
-            ->first();
-
-        if ($allow) {
-            return true;
-        }
-
-        return false;
+            ->exists();
     }
 }
