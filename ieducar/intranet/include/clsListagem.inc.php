@@ -23,10 +23,6 @@ class clsListagem extends clsCampos
   var $nome = 'formulario';
   var $__titulo;
   var $titulo;
-  var $banner = FALSE;
-  var $bannerLateral = FALSE;
-  var $titulo_barra;
-  var $bannerClose = FALSE;
   var $largura;
   var $linhas;
   var $colunas;
@@ -66,20 +62,16 @@ class clsListagem extends clsCampos
     return FALSE;
   }
 
-  function addBanner($strBannerUrl = '', $strBannerLateralUrl = '',
-    $strBannerTitulo = '', $boolFechaBanner = TRUE)
-  {
-    if ($strBannerUrl != '') {
-      $this->banner = $strBannerUrl;
-    }
-    if ($strBannerLateralUrl != '') {
-      $this->bannerLateral = $strBannerLateralUrl;
-    }
-    if ($strBannerTitulo != '') {
-      $this->titulo_barra = $strBannerTitulo;
-    }
-
-    $this->bannerClose = $boolFechaBanner;
+  /**
+   * @deprecated
+   */
+  function addBanner(
+      $strBannerUrl = '',
+      $strBannerLateralUrl = '',
+      $strBannerTitulo = '',
+      $boolFechaBanner = TRUE
+  ) {
+      // Apenas para fins de compatibilidade
   }
   function enviaLocalizacao($localizao, $appendInTop = FALSE){
     if($localizao)
@@ -226,11 +218,6 @@ class clsListagem extends clsCampos
     View::share('title', $this->titulo);
 
     $retorno = '';
-
-    if ($this->banner) {
-      $retorno .= "<table width='100%' style=\"height:100%\" border='0' cellpadding='0' cellspacing='0'><tr>";
-      $retorno .= "<td valign='top'>";
-    }
 
     $retorno .= "
     <script type=\"text/javascript\">function go(url) { document.location = url; }
@@ -626,15 +613,6 @@ class clsListagem extends clsCampos
         </table>
       </form>
       <!-- listagem end -->";
-
-    if ($this->bannerClose) {
-      $retorno .= "
-              <!-- Fechando o Banner (clsListagem) -->
-            </td>
-          </tr>
-        </table>
-      ";
-    }
 
     Portabilis_View_Helper_Application::embedJavascriptToFixupFieldsWidth($this);
 
