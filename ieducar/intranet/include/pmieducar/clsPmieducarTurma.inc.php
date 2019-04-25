@@ -24,10 +24,10 @@ class clsPmieducarTurma
     public $data_exclusao;
     public $ativo;
     public $ref_cod_turma_tipo;
-    public $hora_inicial;
-    public $hora_final;
-    public $hora_inicio_intervalo;
-    public $hora_fim_intervalo;
+    public $hora_inicial = false;
+    public $hora_final = false;
+    public $hora_inicio_intervalo = false;
+    public $hora_fim_intervalo = false;
     public $ano;
 
     public $ref_cod_regente;
@@ -41,7 +41,7 @@ class clsPmieducarTurma
     public $visivel;
     public $data_fechamento;
 
-    public $tipo_atendimento;
+    public $tipo_atendimento = false;
     public $turma_mais_educacao;
     public $atividade_complementar_1;
     public $atividade_complementar_2;
@@ -68,7 +68,7 @@ class clsPmieducarTurma
     public $parecer_3_etapa;
     public $parecer_4_etapa;
     public $nao_informar_educacenso;
-    public $tipo_mediacao_didatico_pedagogico;
+    public $tipo_mediacao_didatico_pedagogico = false;
     public $dias_semana;
     public $atividades_complementares;
     public $atividades_aee;
@@ -788,19 +788,35 @@ class clsPmieducarTurma
             if (($this->hora_inicial)) {
                 $set .= "{$gruda}hora_inicial = '{$this->hora_inicial}'";
                 $gruda = ', ';
+            } elseif ($this->hora_inicial !== false) {
+                $set .= "{$gruda}hora_inicial = NULL";
+                $gruda = ', ';
             }
+
             if (($this->hora_final)) {
                 $set .= "{$gruda}hora_final = '{$this->hora_final}'";
                 $gruda = ', ';
+            } elseif ($this->hora_final !== false) {
+                $set .= "{$gruda}hora_final = NULL";
+                $gruda = ', ';
             }
+
             if (($this->hora_inicio_intervalo)) {
                 $set .= "{$gruda}hora_inicio_intervalo = '{$this->hora_inicio_intervalo}'";
                 $gruda = ', ';
+            } elseif ($this->hora_inicio_intervalo !== false) {
+                $set .= "{$gruda}hora_inicio_intervalo = NULL";
+                $gruda = ', ';
             }
+
             if (($this->hora_fim_intervalo)) {
                 $set .= "{$gruda}hora_fim_intervalo = '{$this->hora_fim_intervalo}'";
                 $gruda = ', ';
+            } elseif ($this->hora_fim_intervalo !== false) {
+                $set .= "{$gruda}hora_fim_intervalo = NULL";
+                $gruda = ', ';
             }
+
             if (is_numeric($this->ref_cod_instituicao)) {
                 $set .= "{$gruda}ref_cod_instituicao = '{$this->ref_cod_instituicao}'";
                 $gruda = ', ';
@@ -862,6 +878,9 @@ class clsPmieducarTurma
 
             if (is_numeric($this->tipo_atendimento)) {
                 $set .= "{$gruda}tipo_atendimento = '{$this->tipo_atendimento}'";
+                $gruda = ', ';
+            } elseif ($this->tipo_atendimento !== false) {
+                $set .= "{$gruda}tipo_atendimento = NULL";
                 $gruda = ', ';
             }
 
@@ -1027,6 +1046,9 @@ class clsPmieducarTurma
 
             if (is_numeric($this->tipo_mediacao_didatico_pedagogico)) {
                 $set .= "{$gruda}tipo_mediacao_didatico_pedagogico = '{$this->tipo_mediacao_didatico_pedagogico}'";
+                $gruda = ', ';
+            } elseif ($this->tipo_mediacao_didatico_pedagogico !== false) {
+                $set .= "{$gruda}tipo_mediacao_didatico_pedagogico = NULL";
                 $gruda = ', ';
             }
 
