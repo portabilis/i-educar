@@ -274,6 +274,7 @@ SQL;
     {
         $sql = ' SELECT turma.cod_turma AS "codTurma",
                    turma.ref_ref_cod_escola AS "codEscola",
+                   turma.ref_cod_curso AS "codCurso",
                    turma.ref_ref_cod_serie AS "codSerie",
                    turma.nm_turma AS "nomeTurma",
                    turma.hora_inicial AS "horaInicial",
