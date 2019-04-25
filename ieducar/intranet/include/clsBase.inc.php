@@ -138,25 +138,6 @@ class clsBase extends clsConfig
         return FALSE;
     }
 
-    /**
-     * @todo Verificar se funciona.
-     */
-    function CadastraAcesso()
-    {
-        if (Session::get('marcado') != "private") {
-            $ip = empty($_SERVER['REMOTE_ADDR']) ? "NULL" : $_SERVER['REMOTE_ADDR'];
-            $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? "NULL" : $_SERVER['HTTP_X_FORWARDED_FOR'];
-            $id_pessoa = $this->pessoa_logada;
-
-            $logAcesso = new clsLogAcesso(FALSE, $ip, $ip_de_rede, $id_pessoa);
-            $logAcesso->cadastra();
-
-            Session::put('marcado', 'private');
-            Session::save();
-            Session::start();
-        }
-    }
-
     function MakeAll()
     {
         $cronometro = new clsCronometro();
@@ -164,7 +145,6 @@ class clsBase extends clsConfig
 
         $this->Formular();
         $this->verificaPermissao();
-        $this->CadastraAcesso();
 
         $saida_geral = '';
 
