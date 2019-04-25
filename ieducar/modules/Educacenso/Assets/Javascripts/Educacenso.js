@@ -236,6 +236,17 @@ $j(document).ready(function(){
 
       //Realiza alterações na modal para mostrar resultado de sucesso
       $j("#modal_gif_load").css("display", "none");
+
+      if($j('#enable_export').val() == '1') {
+        $j("#modal_mensagem_exportacao").css("display", "block");
+        $j("#modal_mensagem_sucesso").css("display", "block");
+        $j("#modal_mensagem_desabilitado").css("display", "none");
+      } else {
+        $j("#modal_mensagem_exportacao").css("display", "none");
+        $j("#modal_mensagem_sucesso").css("display", "none");
+        $j("#modal_mensagem_desabilitado").css("display", "block");
+      }
+
       $j("#modal_mensagem_exportacao").css("display", "none");
       $j("#modal_mensagem_sucesso").css("display", "none");
       $j("#modal_mensagem_desabilitado").css("display", "block");

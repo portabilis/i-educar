@@ -148,6 +148,8 @@ modules.error.tracker_name = EMAIL
 modules.error.honeybadger_key =
 modules.error.email_recipient =
 
+educacenso.enable_export = true
+
 [testing : production]
 
 [development : testing]
