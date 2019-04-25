@@ -1,5 +1,6 @@
 <?php
 
+use iEducar\Modules\Educacenso\Model\TipoAtendimentoAluno;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Str;
@@ -40,8 +41,8 @@ class indice extends clsCadastro
 
     public function Inicializar()
     {
-        $this->cod_matricula = $_GET["ref_cod_matricula"];
-        $this->ref_cod_aluno = $_GET["ref_cod_aluno"];
+        $this->cod_matricula = $this->getQueryString('ref_cod_matricula');
+        $this->ref_cod_aluno = $this->getQueryString('ref_cod_aluno');
 
         $this->validaPermissao();
         $this->validaParametros();
@@ -71,7 +72,7 @@ class indice extends clsCadastro
                 'label' => "Tipo de atendimento educacional especializado do aluno na turma: {$enturmacao['nm_turma']}",
                 'options' => [
                     'values' => $tipoAtendimento,
-                    'all_values' => SelectOptions::tiposAtendimentoAluno(),
+                    'all_values' => TipoAtendimentoAluno::getDescriptiveValues(),
                 ],
                 'required' => false,
             ];

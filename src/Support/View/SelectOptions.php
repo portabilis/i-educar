@@ -138,14 +138,4 @@ class SelectOptions
     {
         return self::getDefaultOption() + TipoVinculo::getDescriptiveValues();
     }
-
-    /**
-     * Retorna as opções disponíveis referentes aos tipo de atendimento educacional especializado
-     *
-     * @return array
-     */
-    public static function tiposAtendimentoAluno()
-    {
-        return TipoAtendimentoAluno::getDescriptiveValues();
-    }
 }
