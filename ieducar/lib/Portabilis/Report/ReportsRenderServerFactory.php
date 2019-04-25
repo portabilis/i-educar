@@ -98,6 +98,7 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
 
         $url = $this->sourcePath;
         $data = $report->getJsonData();
+        $data = $report->modify($data);
 
         $response = $client->request('POST', $this->url, [
             'json' => [

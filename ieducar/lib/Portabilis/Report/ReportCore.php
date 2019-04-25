@@ -1,6 +1,7 @@
 <?php
 
 require_once 'lib/Portabilis/Array/Utils.php';
+require_once 'Reports/Modifiers/BaseModifier.php';
 
 abstract class Portabilis_Report_ReportCore
 {
@@ -13,6 +14,11 @@ abstract class Portabilis_Report_ReportCore
      * @var array
      */
     public $args;
+
+    /**
+     * @var array
+     */
+    public $modifiers = [];
 
     /**
      * Portabilis_Report_ReportCore constructor.
@@ -181,5 +187,29 @@ abstract class Portabilis_Report_ReportCore
     public function getJsonData()
     {
         return [];
+    }
+
+    /**
+     * Realiza modificações nos dados que serão utilizados para a geração de um
+     * relatório. Útil quando é necessário manipular os dados de uma query base
+     * para gerar novos campos, formatações, etc.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    public function modify($data)
+    {
+        foreach ($this->modifiers as $modifier) {
+            $modifier = new $modifier($this->templateName(), $this->args);
+
+            if (!is_subclass_of($modifier, BaseModifier::class)) {
+                continue;
+            }
+
+            $data = $modifier->modify($data);
+        }
+
+        return $data;
     }
 }
