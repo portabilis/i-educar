@@ -18,9 +18,6 @@ class clsCadastro extends clsCampos
      */
     public $pessoa_logada;
     public $__nome = 'formcadastro';
-    public $banner;
-    public $bannerLateral;
-    public $titulo_barra;
     public $target = '_self';
     public $largura;
     public $tipoacao;
@@ -60,23 +57,16 @@ class clsCadastro extends clsCampos
     public $onSubmit = 'acao()';
     public $form_enctype;
 
+    /**
+     * @deprecated
+     */
     public function addBanner(
         $strBannerUrl = '',
         $strBannerLateralUrl = '',
         $strBannerTitulo = '',
         $boolFechaBanner = true
-    )
-    {
-        if ($strBannerUrl != '') {
-            $this->banner = $strBannerUrl;
-        }
-        if ($strBannerLateralUrl != '') {
-            $this->bannerLateral = $strBannerLateralUrl;
-        }
-        if ($strBannerTitulo != '') {
-            $this->titulo_barra = $strBannerTitulo;
-        }
-        $this->bannerClose = $boolFechaBanner;
+    ) {
+        // Método deixado para compatibilidade
     }
 
     public function __construct()
@@ -211,17 +201,9 @@ class clsCadastro extends clsCampos
     public function RenderHTML()
     {
         $this->_preRender();
-
-        $this->bannerLateral = 'imagens/nvp_vert_intranet.jpg';
-        $this->titulo_barra = 'Intranet';
         $this->Processar();
 
         $retorno = '';
-
-        if ($this->banner) {
-            $retorno .= '<table width=\'100%\' style="height:100%" border=\'0\' cellpadding=\'0\' cellspacing=\'0\'><tr>';
-            $retorno .= '<td valign=\'top\'>';
-        }
 
         $this->Gerar();
 
@@ -624,10 +606,6 @@ class clsCadastro extends clsCampos
         $retorno .= "</td>\n</tr>\n";
         $retorno .= "</table>\n</center>\n<!-- cadastro end -->\n";
         $retorno .= "</form>\n";
-
-        if (!empty($this->bannerClose)) {
-            $retorno .= '</td></tr></table>';
-        }
 
         if (!empty($this->executa_script)) {
             $retorno .= "<script type=\"text/javascript\">{$this->executa_script}</script>";
