@@ -1,7 +1,7 @@
 @if ($breadcrumb->pages())
     <div class="breadcrumb">
         <a href="{{ route('home') }}" title="Ir para o Início">
-            <i class="fa fa-home" aria-hidden="true"></i><span>Início</span>
+            <i class="fa fa-home" aria-hidden="true"></i> <span>Início</span>
         </a>
 
         @if($breadcrumb->hasPages())
