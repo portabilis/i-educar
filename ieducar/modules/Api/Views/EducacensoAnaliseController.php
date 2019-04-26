@@ -1108,7 +1108,7 @@ class EducacensoAnaliseController extends ApiCoreController
             if (empty($gestor->cargo)) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verifique se o cargo do gestor(a) {$nomeGestor} foi informado.",
-                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: dados gerais > Tabela Gestores escolares)',
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Tabela Gestores escolares > Campo: Cargo do(a) gestor(a))',
                     'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true
                 ];
@@ -1117,7 +1117,7 @@ class EducacensoAnaliseController extends ApiCoreController
             if (!$gestor->criterioAcesso && $gestor->cargo == SchoolManagerRole::DIRETOR) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que o gestor escolar {$nomeGestor}  é diretor(a), portanto é necessário informar o critério de acesso ao cargo.",
-                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Seção: Gestores escolares > Link: Dados adicionais do(a) Diretor(a) > Campo: Critério de acesso ao cargo)',
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Tabela Gestores escolares > Link: Dados adicionais do(a) gestor(a) > Campo: Critério de acesso ao cargo)',
                     'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true
                 ];
@@ -1128,7 +1128,7 @@ class EducacensoAnaliseController extends ApiCoreController
             if ($gestor->criterioAcesso == SchoolManagerAccessCriteria::PROPRIETARIO && $gestor->isDependenciaAdministrativaPublica()) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 40 da escola {$nomeEscola} possui valor inválido. Verificamos que a escola é {$dependenciaAdministraticaDesc}, portanto o critério de acesso ao cargo do(a) gestor(a) {$nomeGestor} não pode ser proprietário(a) ou sócio(a)-proprietário(a) da escola.",
-                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Seção: Gestores escolares > Link: Dados adicionais do(a) Diretor(a) > Campo: Critério de acesso ao cargo)',
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Tabela Gestores escolares > Link: Dados adicionais do(a) gestor(a) > Campo: Critério de acesso ao cargo)',
                     'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true
                 ];
@@ -1145,7 +1145,7 @@ class EducacensoAnaliseController extends ApiCoreController
             if (!$gestor->isDependenciaAdministrativaPublica() && in_array($gestor->criterioAcesso, $rolesInvalid)) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 40 da escola {$nomeEscola} possui valor inválido. Verificamos que a escola é privada, portanto o critério de acesso ao cargo do(a) gestor(a) {$nomeGestor} não pode ser {$criterioAcessoDesc}.",
-                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Seção: Gestores escolares > Link: Dados adicionais do(a) Diretor(a) > Campo: Critério de acesso ao cargo)',
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Tabela Gestores escolares > Link: Dados adicionais do(a) gestor(a) > Campo: Critério de acesso ao cargo)',
                     'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true
                 ];
@@ -1153,8 +1153,8 @@ class EducacensoAnaliseController extends ApiCoreController
 
             if (!$gestor->especificacaoCriterioAcesso && $gestor->criterioAcesso == SchoolManagerAccessCriteria::OUTRO) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que o gestor escolar {$nomeGestor} possui o critério de acesso ao cargo definido como \"outros\", portanto é necessário informar a escificação do critério.",
-                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Seção: Gestores escolares > Link: Dados adicionais do(a) Diretor(a) > Campo: Especificação do critério de acesso)',
+                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que o gestor escolar {$nomeGestor} possui o critério de acesso ao cargo definido como \"outros\", portanto é necessário informar a especificação do critério.",
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Tabela Gestores escolares > Link: Dados adicionais do(a) gestor(a) > Campo: Especificação do critério de acesso)',
                     'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true
                 ];
@@ -1163,7 +1163,7 @@ class EducacensoAnaliseController extends ApiCoreController
             if (!$gestor->tipoVinculo && $gestor->cargo == SchoolManagerRole::DIRETOR && $gestor->isDependenciaAdministrativaPublica()) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que o gestor escolar {$nomeGestor} é diretor(a) e a dependência administrativa da escola é {$dependenciaAdministraticaDesc}, portanto é necessário informar o tipo de vínculo.",
-                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Seção: Gestores escolares > Link: Dados adicionais do(a) Diretor(a) > Campo: Tipo de vínculo)',
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Tabela Gestores escolares > Link: Dados adicionais do(a) gestor(a) > Campo: Tipo de vínculo)',
                     'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true
                 ];
