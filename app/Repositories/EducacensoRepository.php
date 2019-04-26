@@ -385,4 +385,9 @@ SQL;
             'classroomId' => $classroomId,
         ]);
     }
+
+    public function getDataForRecord60($school, $year)
+    {
+
+    }
 }
