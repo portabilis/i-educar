@@ -137,12 +137,12 @@ class Registro20 implements RegistroEducacenso
         if ($this->horaInicial >= $this->horaFinal) {
             return false;
         }
-        $horasInicial = explode(':', $this->horaInicial)[0];
-        $horasFinal = explode(':', $this->horaFinal)[0];
-        $minutosInicial = explode(':', $this->horaInicial)[1];
-        $minutosFinal = explode(':', $this->horaFinal)[1];
+        $horaInicial = explode(':', $this->horaInicial)[0];
+        $horaFinal = explode(':', $this->horaFinal)[0];
+        $minutoInicial = explode(':', $this->horaInicial)[1];
+        $minutoFinal = explode(':', $this->horaFinal)[1];
 
-        return $this->validaHoras($horasInicial) && $this->validaHoras($horasFinal) && $this->validaMinutos($minutosInicial) && $this->validaMinutos($minutosFinal);
+        return $this->validaHoras($horaInicial) && $this->validaHoras($horaFinal) && $this->validaMinutos($minutoInicial) && $this->validaMinutos($minutoFinal);
     }
 
     /**
