@@ -1335,6 +1335,12 @@ class AlunoController extends ApiCoreController
     {
         $maeId = $this->getRequest()->mae_id;
         $paiId = $this->getRequest()->pai_id;
+
+        if (!empty($maeId) && !empty($paiId) && $maeId == $paiId) {
+            $this->messenger->append('Não é possível informar a mesma pessoa para Pai e Mãe.');
+            return false;
+        }
+
         $pessoaId = $this->getRequest()->pessoa_id;
 
         $sql = 'UPDATE cadastro.fisica set ';
@@ -1359,6 +1365,8 @@ class AlunoController extends ApiCoreController
 
         $sql .= " WHERE idpes = {$pessoaId}";
         Portabilis_Utils_Database::fetchPreparedQuery($sql);
+
+        return true;
     }
 
     protected function getOcorrenciasDisciplinares()
@@ -1441,7 +1449,9 @@ class AlunoController extends ApiCoreController
             $id = $this->createOrUpdateAluno();
             $pessoaId = $this->getRequest()->pessoa_id;
 
-            $this->saveParents();
+            if (!$this->saveParents()) {
+                return [];
+            }
 
             if (is_numeric($id)) {
                 $this->updateBeneficios($id);
@@ -1472,7 +1482,9 @@ class AlunoController extends ApiCoreController
         $id = $this->getRequest()->id;
         $pessoaId = $this->getRequest()->pessoa_id;
 
-        $this->saveParents();
+        if (!$this->saveParents()) {
+            return [];
+        }
 
         if ($this->canPut() && $this->createOrUpdateAluno($id)) {
             $this->updateBeneficios($id);

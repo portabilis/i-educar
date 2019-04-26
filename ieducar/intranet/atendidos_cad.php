@@ -1230,6 +1230,12 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!empty($this->pai_id) && !empty($this->mae_id) && $this->pai_id == $this->mae_id) {
+            $this->mensagem = 'Não é possível informar a mesma pessoa para Pai e Mãe';
+
+            return false;
+        }
+
         if (! $this->validatesCpf($this->id_federal)) {
             return false;
         }
