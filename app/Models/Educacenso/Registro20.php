@@ -4,8 +4,10 @@ namespace App\Models\Educacenso;
 
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
+use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use App_Model_TipoMediacaoDidaticoPedagogico;
 use App_Model_LocalFuncionamentoDiferenciado;
+use App_Model_IedFinder;
 
 class Registro20 implements RegistroEducacenso
 {
@@ -13,6 +15,11 @@ class Registro20 implements RegistroEducacenso
       * @var string
       */
     public $codTurma;
+
+    /**
+      * @var string
+      */
+    public $codigoEscolaInep;
 
     /**
       * @var string
@@ -98,6 +105,11 @@ class Registro20 implements RegistroEducacenso
       * @var string
       */
     public $modalidadeCurso;
+
+    /**
+      * @var array
+      */
+    public $componentes;
 
     /**
       * @var string
@@ -209,5 +221,81 @@ class Registro20 implements RegistroEducacenso
                 return [];
                 break;
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function escolarizacao()
+    {
+        return $this->tipoAtendimento == TipoAtendimentoTurma::ESCOLARIZACAO;
+    }
+
+    /**
+     * @return bool
+     */
+    public function atividadeComplementar()
+    {
+        return $this->tipoAtendimento == TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR;
+    }
+
+    /**
+     * @return bool
+     */
+    public function atendimentoEducacionalEspecializado()
+    {
+        return $this->tipoAtendimento == TipoAtendimentoTurma::AEE;
+    }
+
+    /**
+     * @return array
+     */
+    public function componentesCodigosEducacenso()
+    {
+        $componentes = $this->componentes();
+
+        return array_map(function($componente) {
+            return $componente->get('codigo_educacenso');
+        }, $componentes);
+    }
+
+    /**
+     * @return array
+     */
+    public function componentesIds()
+    {
+        $componentes = $this->componentes();
+
+        return array_map(function($componente) {
+            return $componente->get('id');
+        }, $componentes);
+    }
+
+    /**
+     * @return array
+     */
+    public function componentes()
+    {
+        if (!isset($this->componentes)) {
+            $this->componentes = App_Model_IedFinder::getComponentesTurma($this->codSerie, $this->codEscola, $this->codTurma);
+        }
+
+        return $this->componentes;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function presencial()
+    {
+        return $this->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function educacaoDistancia()
+    {
+        return $this->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA;
     }
 }
