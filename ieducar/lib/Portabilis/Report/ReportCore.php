@@ -202,12 +202,11 @@ abstract class Portabilis_Report_ReportCore
     public function modify($data)
     {
         foreach ($this->modifiers as $modifier) {
-            $modifier = new $modifier($this->templateName(), $this->args);
-
             if (!is_subclass_of($modifier, BaseModifier::class)) {
                 continue;
             }
 
+            $modifier = new $modifier($this->templateName(), $this->args);
             $data = $modifier->modify($data);
         }
 
