@@ -129,6 +129,38 @@ class Registro20 implements RegistroEducacenso
       */
     public $codCursoProfissional;
 
+    /**
+      * @return bool
+      */
+    public function horarioFuncionamentoValido()
+    {
+        if ($this->horaInicial >= $this->horaFinal) {
+            return false;
+        }
+        $horasInicial = explode(':', $this->horaInicial)[0];
+        $horasFinal = explode(':', $this->horaFinal)[0];
+        $minutosInicial = explode(':', $this->horaInicial)[1];
+        $minutosFinal = explode(':', $this->horaFinal)[1];
+
+        return $this->validaHoras($horasInicial) && $this->validaHoras($horasFinal) && $this->validaMinutos($minutosInicial) && $this->validaMinutos($minutosFinal);
+    }
+
+    /**
+      * @return bool
+      */
+    private function validaHoras($horas)
+    {
+        return strlen($horas) == 2 && $horas >= '00' && $horas <= '23';
+    }
+
+    /**
+      * @return bool
+      */
+    private function validaMinutos($minutos)
+    {
+        return strlen($minutos) == 2 && $minutos <= '55' && ((int) $minutos % 5) == 0;
+    }
+
     public function getLocalFuncionamentoDescriptiveValue()
     {
         $descriptiveValues = LocalFuncionamento::getDescriptiveValues();
