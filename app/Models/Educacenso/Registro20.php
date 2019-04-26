@@ -87,6 +87,31 @@ class Registro20 implements RegistroEducacenso
     /**
       * @var string
       */
+    public $possuiServidorLibras;
+
+    /**
+      * @var string
+      */
+    public $possuiServidorLibrasOuAuxiliarEad;
+
+    /**
+      * @var string
+      */
+    public $possuiServidorDiferenteLibrasOuAuxiliarEad;
+
+    /**
+      * @var string
+      */
+    public $possuiAlunoNecessitandoTradutor;
+
+    /**
+      * @var string
+      */
+    public $possuiServidorNecessitandoTradutor;
+
+    /**
+      * @var string
+      */
     public $localFuncionamentoDiferenciado;
 
     /**
