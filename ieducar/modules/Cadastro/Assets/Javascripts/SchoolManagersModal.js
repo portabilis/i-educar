@@ -90,7 +90,7 @@ function htmlFormModal() {
                         <option value="7">Outros</option>
                     </select>
                     <label for="managers_access_criteria_description">Especificação do critério de acesso</label>
-                    <input type="text" name="managers_access_criteria_description" id="managers_access_criteria_description" size="62" maxlength="255" class="text">
+                    <input type="text" name="managers_access_criteria_description" id="managers_access_criteria_description" size="62" maxlength="100" class="text">
                     <label for="managers_link_type_id">Tipo de vínculo</label>
                     <select class="select ui-widget-content ui-corner-all" name="managers_link_type_id" id="managers_link_type_id">
                         <option value="">Selecione</option>
