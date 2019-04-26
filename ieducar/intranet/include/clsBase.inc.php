@@ -6,12 +6,8 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
-use Tooleks\LaravelAssetVersion\Facades\Asset;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/../../includes/bootstrap.php';
 require_once 'include/clsCronometro.inc.php';
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -30,19 +26,6 @@ if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente) {
     );
 }
 
-
-/**
- * clsBase class.
- *
- * Provê uma API para criação de páginas HTML programaticamente.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Include
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
 class clsBase extends clsConfig
 {
     var $titulo = 'Prefeitura Cobra Tecnologia';
@@ -50,30 +33,12 @@ class clsBase extends clsConfig
     var $bodyscript = NULL;
     var $processoAp;
     var $refresh = FALSE;
-
     var $renderMenu = TRUE;
     var $renderMenuSuspenso = TRUE;
     var $renderBanner = TRUE;
     var $estilos;
     var $scripts;
-
-    var $script_header;
-    var $script_footer;
     var $prog_alert;
-
-    function OpenTpl($template)
-    {
-
-        $prefix = 'nvp_';
-        $file = $this->arrayConfig['strDirTemplates'] . $prefix . $template . '.tpl';
-
-        ob_start();
-        include $file;
-        $contents = ob_get_contents();
-        ob_end_clean();
-
-        return $contents;
-    }
 
     function SetTitulo($titulo)
     {
@@ -83,63 +48,6 @@ class clsBase extends clsConfig
     function AddForm($form)
     {
         $this->clsForm[] = $form;
-    }
-
-    function MakeHeadHtml()
-    {
-
-        $saida = $this->OpenTpl('htmlhead');
-        $saida = str_replace("<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", CORE_EXT_CONFIGURATION_ENV, $saida);
-        $saida = str_replace("<!-- #&USER_ID&# -->", Session::get('id_pessoa'), $saida);
-        $saida = str_replace("<!-- #&TITULO&# -->", $this->titulo, $saida);
-
-        if ($this->refresh) {
-            $saida = str_replace("<!-- #&REFRESH&# -->", "<meta http-equiv='refresh' content='60'>", $saida);
-        }
-
-        if (is_array($this->estilos) && count($this->estilos)) {
-            $estilos = '';
-            foreach ($this->estilos as $estilo) {
-                $estilos .= "<link rel=stylesheet type='text/css' href='" . Asset::get('/intranet/scripts/' . $estilo . '.js') . ".css' />";
-            }
-            $saida = str_replace("<!-- #&ESTILO&# -->", $estilos, $saida);
-        }
-
-
-        if (is_array($this->scripts) && count($this->scripts)) {
-            $scripts = '';
-            foreach ($this->scripts as $script) {
-                $scripts .= "<script type='text/javascript' src='" . Asset::get('/intranet/scripts/' . $script . '.js') . "'></script>";
-            }
-            $saida = str_replace("<!-- #&SCRIPT&# -->", $scripts, $saida);
-        }
-
-        if ($this->bodyscript) {
-            $saida = str_replace("<!-- #&BODYSCRIPTS&# -->", $this->bodyscript, $saida);
-        } else {
-            $saida = str_replace("<!-- #&BODYSCRIPTS&# -->", "", $saida);
-        }
-
-        if ($this->script_header) {
-            $saida = str_replace("<!-- #&SCRIPT_HEADER&# -->", $this->script_header, $saida);
-        } else {
-            $saida = str_replace("<!-- #&SCRIPT_HEADER&# -->", "", $saida);
-        }
-
-        $saida = str_replace("<!-- #&GOOGLE_TAG_MANAGER_ID&# -->", $GLOBALS['coreExt']['Config']->app->gtm->id, $saida);
-
-        // nome completo usuario
-        // @TODO: jeito mais eficiente de usar estes dados, já que eles são
-        //         usados em mais um método aqui...
-        $nomePessoa = new clsPessoaFisica();
-        list($nomePessoa, $email) = $nomePessoa->queryRapida($this->currentUserId(), "nome", "email");
-        $nomePessoa = ($nomePessoa) ? $nomePessoa : 'Visitante';
-
-        $saida = str_replace("<!-- #&SLUG&# -->", $GLOBALS['coreExt']['Config']->app->database->dbname, $saida);
-        $saida = str_replace("<!-- #&USERLOGADO&# -->", trim($nomePessoa), $saida);
-        $saida = str_replace("<!-- #&USEREMAIL&# -->", trim($email), $saida);
-
-        return $saida;
     }
 
     function addEstilo($estilo_nome)
@@ -152,19 +60,6 @@ class clsBase extends clsConfig
         $this->scripts[$script_nome] = $script_nome;
     }
 
-    function MakeFootHtml()
-    {
-        $saida = $this->OpenTpl('htmlfoot');
-
-        if ($this->script_footer) {
-            $saida = str_replace("<!-- #&SCRIPT_FOOTER&# -->", $this->script_footer, $saida);
-        } else {
-            $saida = str_replace("<!-- #&SCRIPT_FOOTER&# -->", "", $saida);
-        }
-
-        return $saida;
-    }
-
     function verificaPermissao()
     {
         if (Gate::denies('view', $this->processoAp)) {
@@ -174,22 +69,17 @@ class clsBase extends clsConfig
         }
     }
 
-    /**
-     * @see Core_Page_Controller_Abstract#getAppendedOutput()
-     * @see Core_Page_Controller_Abstract#getPrependedOutput()
-     */
     function MakeBody()
     {
         $corpo = '';
+
         foreach ($this->clsForm as $form) {
             $corpo .= $form->RenderHTML();
 
-            // Prepend output.
             if (method_exists($form, 'getPrependedOutput')) {
                 $corpo = $form->getPrependedOutput() . $corpo;
             }
 
-            // Append output.
             if (method_exists($form, 'getAppendedOutput')) {
                 $corpo = $corpo . $form->getAppendedOutput();
             }
@@ -203,22 +93,7 @@ class clsBase extends clsConfig
             }
         }
 
-        $saida = $corpo;
-
-        // Pega o endereço IP do host, primeiro com HTTP_X_FORWARDED_FOR (para pegar o IP real
-        // caso o host esteja atrás de um proxy)
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
-            // No caso de múltiplos IPs, pega o último da lista
-            $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-            $ip_maquina = trim(array_pop($ip));
-        } else {
-            $ip_maquina = $_SERVER['REMOTE_ADDR'];
-        }
-
-        $sql = "UPDATE funcionario SET ip_logado = '$ip_maquina' , data_login = NOW() WHERE ref_cod_pessoa_fj = {$this->currentUserId()}";
-        $this->db()->Consulta($sql);
-
-        return $saida;
+        return $corpo;
     }
 
     function Formular()
@@ -226,33 +101,10 @@ class clsBase extends clsConfig
         return FALSE;
     }
 
-    /**
-     * @todo Verificar se funciona.
-     */
-    function CadastraAcesso()
-    {
-        if (Session::get('marcado') != "private") {
-            $ip = empty($_SERVER['REMOTE_ADDR']) ? "NULL" : $_SERVER['REMOTE_ADDR'];
-            $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? "NULL" : $_SERVER['HTTP_X_FORWARDED_FOR'];
-            $id_pessoa = $this->pessoa_logada;
-
-            $logAcesso = new clsLogAcesso(FALSE, $ip, $ip_de_rede, $id_pessoa);
-            $logAcesso->cadastra();
-
-            Session::put('marcado', 'private');
-            Session::save();
-            Session::start();
-        }
-    }
-
     function MakeAll()
     {
-        $cronometro = new clsCronometro();
-        $cronometro->marca('inicio');
-
         $this->Formular();
         $this->verificaPermissao();
-        $this->CadastraAcesso();
 
         $saida_geral = '';
 
@@ -286,15 +138,5 @@ class clsBase extends clsConfig
         }
 
         echo view($view, ['body' => $saida_geral])->render();
-    }
-
-    protected function db()
-    {
-        return Portabilis_Utils_Database::db();
-    }
-
-    protected function currentUserId()
-    {
-        return Portabilis_Utils_User::currentUserId();
     }
 }
