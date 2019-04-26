@@ -5,6 +5,7 @@ namespace iEducar\Support\View;
 use App\Models\ManagerAccessCriteria;
 use App\Models\ManagerLinkType;
 use App\Models\ManagerRole;
+use App_Model_TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Modules\Servidores\Model\TipoVinculo;
@@ -136,5 +137,10 @@ class SelectOptions
     public static function tiposVinculoServidor()
     {
         return self::getDefaultOption() + TipoVinculo::getDescriptiveValues();
+    }
+
+    public static function tiposMediacaoDidaticoPedagogico()
+    {
+        return self::getDefaultOption() + App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums();
     }
 }
