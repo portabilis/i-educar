@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyRegistration;
+use App\Services\SchoolClass\AvailableTimeService;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -39,7 +42,7 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = "Novo";
-    
+
 
     if (! $_POST) {
         $this->simpleRedirect('educar_matricula_lst.php');
@@ -94,6 +97,15 @@ class indice extends clsCadastro
 
   function novaEnturmacao($matriculaId, $turmaDestinoId, $turnoId = null) {
     if (!$this->validaDataEnturmacao($matriculaId, $turmaDestinoId)) {
+        return false;
+    }
+
+    $availableTimeService = new AvailableTimeService();
+
+    $registration = LegacyRegistration::find($matriculaId);
+
+    if ($this->validarCamposObrigatoriosCenso() && !$availableTimeService->isAvailable($registration->ref_cod_aluno, $turmaDestinoId)) {
+        $this->mensagem = 'O aluno já está matriculado em uma turma com esse horário.';
         return false;
     }
 
