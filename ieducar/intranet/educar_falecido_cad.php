@@ -150,11 +150,13 @@ class indice extends clsCadastro
 
                 }
 
-                $notaAlunoId = (new Avaliacao_Model_NotaAlunoDataMapper())
-                    ->findAll(['id'], ['matricula_id' => $obj_matricula->cod_matricula])[0]->get('id');
+                $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper())
+                                    ->findAll(['id'], ['matricula_id' => $obj_matricula->cod_matricula])[0] ?? null;
 
-                (new Avaliacao_Model_NotaComponenteMediaDataMapper())
-                    ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::FALECIDO);
+                if (!empty($notaAluno)) {
+                    (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                        ->updateSituation($notaAluno->get('id'), App_Model_MatriculaSituacao::FALECIDO);
+                }
 
                 $this->mensagem .= "Alteração realizado com sucesso.<br>";
                 $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
