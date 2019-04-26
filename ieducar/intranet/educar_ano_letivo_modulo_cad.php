@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\iDiarioService;
+use RuntimeException;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -697,19 +698,15 @@ class indice extends clsCadastro
         $sum = array_sum($counts);
 
         if ($sum > 0) {
-            throw new Exception('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.');
+            throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.');
         }
 
-        try {
-            $iDiarioService = app(iDiarioService::class);
+        $iDiarioService = app(iDiarioService::class);
 
-            foreach ($etapas as $etapa) {
-                if ($iDiarioService->getStepActivityByUnit($escolaId, $etapa)) {
-                    throw new Exception('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas no diário online.');
-                }
+        foreach ($etapas as $etapa) {
+            if ($iDiarioService->getStepActivityByUnit($escolaId, $etapa)) {
+                throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas no diário online.');
             }
-        } catch (\Exception $e) {
-            return true;
         }
 
         return true;
