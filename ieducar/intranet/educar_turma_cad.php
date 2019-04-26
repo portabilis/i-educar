@@ -457,7 +457,7 @@ class indice extends clsCadastro
         $this->campoQuebra2();
 
         // hora
-        if (!$this->obrigaCamposHorario()) {
+        if ($obrigarCamposCenso && !$this->obrigaCamposHorario()) {
             $this->hora_inicial = '';
             $this->hora_final = '';
             $this->hora_inicio_intervalo = '';
@@ -491,7 +491,7 @@ class indice extends clsCadastro
         $options = ['label' => 'Dias da semana',
             'size' => 50,
             'required' => false,
-            'disabled' => !$this->obrigaCamposHorario(),
+            'disabled' => $obrigarCamposCenso && !$this->obrigaCamposHorario(),
             'options' => ['values' => $this->dias_semana,
                 'all_values' => [1 => 'Domingo',
                     2 => 'Segunda',
