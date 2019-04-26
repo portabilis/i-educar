@@ -264,6 +264,7 @@ SQL;
     public function getDataForRecord20($school, $year)
     {
         $sql = ' SELECT turma.cod_turma AS "codTurma",
+                   educacenso_cod_escola.cod_escola_inep AS "codigoEscolaInep",
                    turma.ref_ref_cod_escola AS "codEscola",
                    turma.ref_cod_curso AS "codCurso",
                    turma.ref_ref_cod_serie AS "codSerie",
@@ -298,6 +299,7 @@ SQL;
                 turma.cod_curso_profissional as "codCursoProfissional"
 
               FROM pmieducar.escola
+              LEFT JOIN modules.educacenso_cod_escola ON (escola.cod_escola = educacenso_cod_escola.cod_escola)
              JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
              JOIN pmieducar.turma ON (turma.ref_ref_cod_escola = escola.cod_escola)
              JOIN pmieducar.curso ON (turma.ref_cod_curso = curso.cod_curso)

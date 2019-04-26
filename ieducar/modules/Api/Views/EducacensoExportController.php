@@ -2,10 +2,12 @@
 
 use App\Models\Educacenso\Registro00;
 use App\Models\Educacenso\Registro10;
+use App\Models\Educacenso\Registro20;
 use App\Repositories\EducacensoRepository;
 use iEducar\Modules\Educacenso\ArrayToCenso;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\Data\Registro10 as Registro10Data;
+use iEducar\Modules\Educacenso\Data\Registro20 as Registro20Data;
 use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaAluno;
 use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaProfessor;
 use iEducar\Modules\Educacenso\Deficiencia\MapeamentoDeficienciasAluno;
@@ -123,9 +125,8 @@ class EducacensoExportController extends ApiCoreController
 
         $export = $this->exportaDadosRegistro00($escolaId, $ano);
         $export .= $this->exportaDadosRegistro10($escolaId, $ano);
-        foreach ($this->getTurmas($escolaId, $ano) as $turmaId => $turmaNome) {
-            $export .= $this->exportaDadosRegistro20($escolaId, $turmaId, $data_ini, $data_fim);
-        }
+        $export .= $this->exportaDadosRegistro20($escolaId, $ano);
+
         foreach ($this->getServidores($escolaId, $ano, $data_ini, $data_fim) as $servidor) {
 
             $registro30 = $this->exportaDadosRegistro30($servidor['id'], $escolaId);
@@ -350,227 +351,18 @@ class EducacensoExportController extends ApiCoreController
         $data = $registro10->getExportFormatData($escolaId, $ano);
 
         return ArrayToCenso::format($data) . PHP_EOL;
-
     }
 
-    protected function exportaDadosRegistro20($escolaId, $turmaId, $data_ini, $data_fim)
+    protected function exportaDadosRegistro20($escolaId, $ano)
     {
-        $sql =
-            ' SELECT
-        \'20\' AS r20s1,
-        ece.cod_escola_inep AS r20s2,
-        t.cod_turma AS r20s4,
-        t.nm_turma AS r20s5,
-        1 AS r20s6,
-        substring(t.hora_inicial::VARCHAR,1,2) AS r20s7,
-        substring(t.hora_inicial::VARCHAR,4,2) AS r20s8,
-        substring(t.hora_final::VARCHAR,1,2) AS r20s9,
-        substring(t.hora_final::VARCHAR,4,2) AS r20s10,
-        (ARRAY[1] <@ t.dias_semana)::INT AS r20s11,
-        (ARRAY[2] <@ t.dias_semana)::INT AS r20s12,
-        (ARRAY[3] <@ t.dias_semana)::INT AS r20s13,
-        (ARRAY[4] <@ t.dias_semana)::INT AS r20s14,
-        (ARRAY[5] <@ t.dias_semana)::INT AS r20s15,
-        (ARRAY[6] <@ t.dias_semana)::INT AS r20s16,
-        (ARRAY[7] <@ t.dias_semana)::INT AS r20s17,
-        t.tipo_atendimento AS r20s18,
-        t.turma_mais_educacao AS r20s19,
-        t.atividades_complementares[1] AS r20s20,
-        t.atividades_complementares[2] AS r20s21,
-        t.atividades_complementares[3] AS r20s22,
-        t.atividades_complementares[4] AS r20s23,
-        t.atividades_complementares[5] AS r20s24,
-        t.atividades_complementares[6] AS r20s25,
-        (ARRAY[1] <@ t.atividades_aee)::INT AS r20s26,
-        (ARRAY[2] <@ t.atividades_aee)::INT AS r20s27,
-        (ARRAY[3] <@ t.atividades_aee)::INT AS r20s28,
-        (ARRAY[4] <@ t.atividades_aee)::INT AS r20s29,
-        (ARRAY[5] <@ t.atividades_aee)::INT AS r20s30,
-        (ARRAY[6] <@ t.atividades_aee)::INT AS r20s31,
-        (ARRAY[7] <@ t.atividades_aee)::INT AS r20s32,
-        (ARRAY[8] <@ t.atividades_aee)::INT AS r20s33,
-        (ARRAY[9] <@ t.atividades_aee)::INT AS r20s34,
-        (ARRAY[10] <@ t.atividades_aee)::INT AS r20s35,
-        (ARRAY[11] <@ t.atividades_aee)::INT AS r20s36,
-        c.modalidade_curso AS r20s37,
-        t.etapa_educacenso AS r20s38,
-        t.cod_curso_profissional AS r20s39,
-        s.cod_serie AS serieId,
-        e.dependencia_administrativa
+        $educacensoRepository = new EducacensoRepository();
+        $registro20Model = new Registro20();
+        $registro20 = new Registro20Data($educacensoRepository, $registro20Model);
+        $data = $registro20->getExportFormatData($escolaId, $ano);
 
-        FROM pmieducar.turma t
-        INNER JOIN pmieducar.serie s ON (t.ref_ref_cod_serie = s.cod_serie)
-        INNER JOIN pmieducar.curso c ON (s.ref_cod_curso = c.cod_curso)
-        INNER JOIN pmieducar.escola e ON (t.ref_ref_cod_escola = e.cod_escola)
-        INNER JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
-        WHERE t.cod_turma = $1
-        AND COALESCE(t.nao_informar_educacenso, 0) = 0
-        AND t.ativo = 1
-        AND t.visivel = TRUE
-        AND (SELECT 1
-              FROM pmieducar.matricula_turma mt
-             INNER JOIN pmieducar.matricula m ON(mt.ref_cod_matricula = m.cod_matricula)
-              WHERE mt.ref_cod_turma = t.cod_turma
-              AND (mt.ativo = 1 OR mt.data_exclusao > DATE($3))
-              AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($2) AND DATE($3)
-              LIMIT 1) IS NOT NULL';
-
-        // Transforma todos resultados em variáveis
-        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql,
-            array('return_only' => 'first-row', 'params' => array($turmaId, $data_ini, $data_fim))));
-        if ($r20s1) {
-
-            $r20s5 = $this->convertStringToCenso($r20s5);
-
-            //Dias da semana não podem ser nullos, 1 ou 0
-            for ($i = 11; $i < 18; $i++) {
-                ${'r20s' . $i} = (${'r20s' . $i} ? '1' : '0');
-            }
-
-            // Atribui 0 (Não lecionado) para todas as disciplinas por padrão.
-            $r20s40 = $r20s41 = $r20s42 = $r20s43 = $r20s44 = $r20s45 = $r20s46 = $r20s47 = $r20s48 = $r20s49 =
-            $r20s50 = $r20s51 = $r20s52 = $r20s53 = $r20s54 = $r20s55 = $r20s56 = $r20s57 = $r20s58 = $r20s59 = $r20s60 =
-            $r20s61 = $r20s62 = $r20s63 = $r20s64 = $r20s65 = 0;
-
-            // Se a turma não presta atendimento educacional especializado AEE esses campos precisam ser nulos
-            if ($r20s18 != 5) {
-                $r20s26 = $r20s27 = $r20s28 = $r20s29 = $r20s30 = $r20s31 = $r20s32 = $r20s33 = $r20s34 = $r20s35 = $r20s36 = null;
-            }
-
-            /**
-             * @var integer $dependencia_administrativa
-             * @var integer $r20s18 Tipo de atendimento
-             * @var integer $r20s37 Modalidade
-             * @var integer $r20s38 Etapa de ensino
-             * @var integer $r20s19 Turma mais educacao
-             * @var integer $r20s6 Tipo mediação
-             */
-            $turmaMaisEducacao = new ValueTurmaMaisEducacao();
-            $turmaMaisEducacao->setDependenciaAdministrativa($dependencia_administrativa);
-            $turmaMaisEducacao->setTipoAtendimento($r20s18);
-            $turmaMaisEducacao->setModalidade($r20s37);
-            $turmaMaisEducacao->setEtapaEnsino($r20s38);
-            $turmaMaisEducacao->setTurmaMaisEducacao($r20s19);
-            $turmaMaisEducacao->setTipoMediacao($r20s6);
-
-            $r20s19 = $turmaMaisEducacao->getValue();
-
-            $coddigoEducacensoToSeq =
-                array(
-                    1 => '40',
-                    2 => '41',
-                    3 => '42',
-                    4 => '43',
-                    5 => '44',
-                    6 => '45',
-                    7 => '46',
-                    8 => '47',
-                    30 => '48',
-                    9 => '49',
-                    10 => '50',
-                    11 => '51',
-                    12 => '52',
-                    13 => '53',
-                    14 => '54',
-                    28 => '55',
-                    29 => '56',
-                    16 => '57',
-                    17 => '58',
-                    20 => '59',
-                    21 => '60',
-                    23 => '61',
-                    25 => '62',
-                    26 => '63',
-                    27 => '64',
-                    99 => '65'
-                );
-            try {
-                $componentesTurma = App_Model_IedFinder::getComponentesTurma($serieid, $escolaId, $turmaId);
-            } catch (Exception $e) {
-                $componentesTurma = array();
-            }
-
-            foreach ($componentesTurma as $componente) {
-                // Só serão consideradas disciplinas tipificadas com o código do Educacenso
-                if ($componente->codigo_educacenso) {
-                    // Pega o código educacenso
-                    $codigoEducacenso = ComponenteCurricular_Model_CodigoEducacenso::getInstance();
-                    $codigoEducacenso = $codigoEducacenso->getKey($componente->codigo_educacenso);
-
-                    // Código da disciplina no i-Educar
-                    $codigoSistema = $componente->id;
-
-                    // Verifica se é disciplina padrão ano letivo. Se for, será considerado que existe professor
-                    // vinculado a disciplina na sala de aula
-
-                    $professorVinculado = (bool)Portabilis_Utils_Database::selectField
-                    ('SELECT 1
-              FROM modules.professor_turma
-            INNER JOIN modules.professor_turma_disciplina ON(professor_turma_disciplina.professor_turma_id = professor_turma.id)
-             WHERE professor_turma.turma_id = $1
-               AND professor_turma_disciplina.componente_curricular_id = $2
-               AND (SELECT 1
-                      FROM pmieducar.matricula_turma mt
-                     INNER JOIN pmieducar.matricula m ON(mt.ref_cod_matricula = m.cod_matricula)
-                     WHERE mt.ref_cod_turma = professor_turma.turma_id
-                       AND (mt.ativo = 1  OR mt.data_exclusao > DATE($4))
-                       AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
-                     LIMIT 1) IS NOT NULL
-               ',
-                        array('params' => array($turmaId, $codigoSistema, $data_ini, $data_fim)));
-
-                    if (array_key_exists($codigoEducacenso, $coddigoEducacensoToSeq)) {
-                        if (${'r20s' . $coddigoEducacensoToSeq[$codigoEducacenso]} == 1) {
-                            continue;
-                        } elseif (${'r20s' . $coddigoEducacensoToSeq[$codigoEducacenso]} == 2) {
-                            if (!$professorVinculado) {
-                                continue;
-                            }
-                        }
-                        ${'r20s' . $coddigoEducacensoToSeq[$codigoEducacenso]} = ($professorVinculado ? 1 : 2);
-                    }
-                }
-
-            }
-
-            $atividadeComplementar = 4;
-            $atendimentoEducEspecializado = 5;
-
-            $educInfantilCreche = 1;
-            $educInfantilPreEscola = 2;
-            $educInfantilUnificada = 3;
-            $ejaEnsinoFundamental = 65;
-
-            //Percorre todos os campos de disciplinas
-            for ($i = 40; $i < 66; $i++) {
-                if ($r20s18 == $atividadeComplementar || $r20s18 == $atendimentoEducEspecializado) {
-                    ${'r20s' . $i} = '';
-                } else {
-                    if ($r20s38 == $educInfantilCreche ||
-                        $r20s38 == $educInfantilPreEscola ||
-                        $r20s38 == $educInfantilUnificada ||
-                        $r20s38 == $ejaEnsinoFundamental) {
-                        ${'r20s' . $i} = '';
-                    }
-                }
-            }
-
-            if ($r20s18 == $atividadeComplementar || $r20s18 == $atendimentoEducEspecializado) {
-                $r20s37 = $r20s38 = '';
-            }
-
-            $this->turma_presencial_ou_semi = $r20s6;
-            $d = '|';
-            $return = '';
-
-            for ($i = 1; $i <= 65; $i++) {
-                $return .= ${'r20s' . $i} . $d;
-            }
-
-            $return = substr_replace($return, "", -1);
-
-            return $return . "\n";
-        }
+        return implode(PHP_EOL, array_map(function($record) {
+            return ArrayToCenso::format($record);
+        }, $data)) . PHP_EOL;
     }
 
     protected function exportaDadosRegistro30($servidorId, $escolaId)
