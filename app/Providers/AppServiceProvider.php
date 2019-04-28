@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use Exception;
-use CoreExt_Config_Ini;
 use App\Services\CacheManager;
 use Barryvdh\Debugbar\ServiceProvider as DebugbarServiceProvider;
 use iEducar\Support\Navigation\Breadcrumb;
@@ -11,7 +10,6 @@ use iEducar\Support\Navigation\TopMenu;
 use iEducar\Modules\ErrorTracking\HoneyBadgerTracker;
 use iEducar\Modules\ErrorTracking\Tracker;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -87,11 +85,6 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $this->loadLegacyBootstrap();
-
-        Request::macro('getSubdomain', function () {
-            $host = str_replace('-', '', $this->getHost());
-            return Str::replaceFirst('.' . config('app.default_host'), '', $host);
-        });
 
         // https://laravel.com/docs/5.5/migrations#indexes
         Schema::defaultStringLength(191);

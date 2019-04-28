@@ -4,15 +4,9 @@ use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\View;
 
 require_once 'include/clsCampos.inc.php';
-
-if (class_exists('clsPmiajudaPagina')) {
-    require_once 'include/pmiajuda/clsPmiajudaPagina.inc.php';
-}
-
 require_once 'Portabilis/View/Helper/Application.php';
 require_once 'Portabilis/View/Helper/Inputs.php';
 require_once 'Portabilis/Utils/User.php';
-
 require_once 'include/localizacaoSistema.php';
 
 class clsCadastro extends clsCampos
@@ -279,23 +273,6 @@ class clsCadastro extends clsCampos
             $tipo = 'cad';
         }
         $barra = $titulo;
-
-        // @todo Remover cï¿½digo, funcionalidade nï¿½o existente.
-        if (class_exists('clsPmiajudaPagina')) {
-            $ajudaPagina = new clsPmiajudaPagina();
-            $lista = $ajudaPagina->lista(null, null, $url);
-            if ($lista) {
-                $barra = "
-        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
-          <tr>
-          <script type=\"text/javascript\">document.help_page_index = 0;</script>
-          <td width=\"20\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]['ref_cod_topico']}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Botï¿½o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta pï¿½gina\"></a></td>
-          <td>{$titulo}</td>
-          <td align=\"right\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]['ref_cod_topico']}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Botï¿½o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta pï¿½gina\"></a></td>
-          </tr>
-        </table>";
-            }
-        }
 
         $retorno .= "<tr><td class='formdktd' colspan='2' height='24'>{$barra}</td></tr>";
 

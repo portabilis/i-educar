@@ -3,7 +3,7 @@
 namespace iEducar\Modules\Educacenso\Validator;
 
 use App\Models\Educacenso\Registro00;
-use iEducar\Modules\Educacenso\MantenedoraDaEscolaPrivada;
+use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 
 class CnpjMantenedoraPrivada implements EducacensoValidator
