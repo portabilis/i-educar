@@ -32,7 +32,6 @@ class clsBase
     public $script_header;
     public $script_footer;
     public $prog_alert;
-    public $configuracoes;
     public $_instituicao;
 
     public function __construct()
@@ -40,29 +39,7 @@ class clsBase
         $this->_instituicao = config('legacy.app.template.vars.instituicao');
     }
 
-    protected function setupConfigs()
-    {
-        $configuracoes = new clsPmieducarConfiguracoesGerais();
-        $this->configuracoes = $configuracoes->detalhe();
-    }
-
-    protected function mostraSupenso()
-    {
-        if (empty($this->configuracoes)) {
-            $this->setupConfigs();
-        }
-
-        $nivel = Session::get('nivel');
-
-        if (!$this->configuracoes['active_on_ieducar'] && $nivel !== 1) {
-            header('HTTP/1.1 503 Service Temporarily Unavailable');
-            header('Location: suspenso.php');
-
-            die();
-        }
-    }
-
-    function OpenTpl($template)
+    public function OpenTpl($template)
     {
         $prefix = 'nvp_';
         $file = 'templates/' . $prefix . $template . '.tpl';
@@ -342,7 +319,6 @@ class clsBase
 
     public function MakeAll()
     {
-        $this->mostraSupenso();
         $this->Formular();
         $this->verificaPermissao();
         $this->CadastraAcesso();
