@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -86,6 +87,8 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
 
         $templateName = $report->templateName();
         $params = $report->args;
+
+        $params['timezone'] = Carbon::now()->getTimezone()->getName();
 
         if ($report->useJson()) {
             $params['datasource'] = 'json';
