@@ -47,11 +47,8 @@ class clsPermissoes
 
         $nivel = $this->nivel_acesso($int_idpes_usuario);
         $ok = false;
-        /*
-          Alterado, pois super_usuário sempre deve ter acesso a tudo
-          Antes era: if (($super_usuario && $detalhe_super_usuario) || $nivel & $int_soma_nivel_acesso) {
-        */
 
+        // Alterado, pois super_usuário sempre deve ter acesso a tudo
         if (($detalhe_super_usuario) || $nivel && $int_soma_nivel_acesso) {
             $ok = true;
         }
@@ -60,15 +57,16 @@ class clsPermissoes
             $ok = false;
         }
 
-        /*
-         * Se for usuario tipo biblioteca ou escola
-         * ($int_verifica_usuario_biblioteca = true), verifica se possui cadastro na
-         * tabela usuario biblioteca
-         */
-        if ((
-                $nivel == 8 ||
-                ($nivel == 4 && $int_verifica_usuario_biblioteca == true)
-            ) && $int_soma_nivel_acesso > 3 && !$detalhe_super_usuario
+        // Se for usuario tipo biblioteca ou escola
+        // ($int_verifica_usuario_biblioteca = true), verifica se possui
+        // cadastro na tabela usuario biblioteca
+        if (
+            (
+                $nivel == 8
+                || ($nivel == 4 && $int_verifica_usuario_biblioteca == true)
+            )
+            && $int_soma_nivel_acesso > 3
+            && !$detalhe_super_usuario
         ) {
             $ok = $this->getBiblioteca($int_idpes_usuario) == 0 ? false : true;
 
@@ -82,7 +80,7 @@ class clsPermissoes
         if (!$ok) {
             if ($str_pagina_redirecionar) {
                 throw new HttpResponseException(
-                    new RedirectResponse( $str_pagina_redirecionar)
+                    new RedirectResponse($str_pagina_redirecionar)
                 );
             } else {
                 return false;
@@ -112,8 +110,7 @@ class clsPermissoes
         $str_pagina_redirecionar = null,
         $super_usuario = null,
         $int_verifica_usuario_biblioteca = false
-    )
-    {
+    ) {
         $obj_usuario = new clsFuncionario($int_idpes_usuario);
         $detalhe_usuario = $obj_usuario->detalhe();
 
@@ -144,16 +141,18 @@ class clsPermissoes
          * ($int_verifica_usuario_biblioteca = true), verifica se possui cadastro na
          * tabela usuario biblioteca
          */
-        if ((
-                $nivel == 8 ||
-                ($nivel == 4 && $int_verifica_usuario_biblioteca == true)
-            ) && $int_soma_nivel_acesso > 3 && !$detalhe_super_usuario
+        if (
+            (
+                $nivel == 8
+                || ($nivel == 4 && $int_verifica_usuario_biblioteca == true)
+            ) && $int_soma_nivel_acesso > 3
+            && !$detalhe_super_usuario
         ) {
             $ok = $this->getBiblioteca($int_idpes_usuario) == 0 ? false : true;
 
             if (!$ok && $nivel == 8) {
                 throw new HttpResponseException(
-                    new RedirectResponse( 'index.php?negado=1')
+                    new RedirectResponse('index.php?negado=1')
                 );
             }
         }
@@ -161,7 +160,7 @@ class clsPermissoes
         if (!$ok) {
             if ($str_pagina_redirecionar) {
                 throw new HttpResponseException(
-                    new RedirectResponse( $str_pagina_redirecionar)
+                    new RedirectResponse($str_pagina_redirecionar)
                 );
             } else {
                 return false;

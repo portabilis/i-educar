@@ -1,13 +1,31 @@
 <?php
 
+use iEducar\Modules\Educacenso\Model\AreasExternas;
+use iEducar\Modules\Educacenso\Model\Banheiros;
+use iEducar\Modules\Educacenso\Model\Dormitorios;
+use iEducar\Modules\Educacenso\Model\Equipamentos;
+use iEducar\Modules\Educacenso\Model\EquipamentosAcessoInternet;
+use iEducar\Modules\Educacenso\Model\InstrumentosPedagogicos;
+use iEducar\Modules\Educacenso\Model\Laboratorios;
+use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
+use iEducar\Modules\Educacenso\Model\OrganizacaoEnsino;
+use iEducar\Modules\Educacenso\Model\OrgaosColegiados;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
-use iEducar\Modules\Educacenso\LocalizacaoDiferenciadaEscola;
+use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
+use iEducar\Modules\Educacenso\Model\RecursosAcessibilidade;
+use iEducar\Modules\Educacenso\Model\RedeLocal;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
-use iEducar\Modules\Educacenso\MantenedoraDaEscolaPrivada;
+use iEducar\Modules\Educacenso\Model\ReservaVagasCotas;
+use iEducar\Modules\Educacenso\Model\SalasAtividades;
+use iEducar\Modules\Educacenso\Model\SalasFuncionais;
+use iEducar\Modules\Educacenso\Model\SalasGerais;
+use iEducar\Modules\Educacenso\Model\TratamentoLixo;
+use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
+use iEducar\Modules\Educacenso\Model\UsoInternet;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use iEducar\Support\View\SelectOptions;
 
@@ -89,91 +107,66 @@ class indice extends clsCadastro
     public $situacao_funcionamento;
     public $dependencia_administrativa;
     public $orgao_vinculado_escola;
-    public $latitude;
-    public $longitude;
     public $regulamentacao;
-    public $acesso;
     public $gestor_id;
     public $cargo_gestor;
     public $email_gestor;
     public $local_funcionamento;
     public $condicao;
+    public $predio_compartilhado_outra_escola;
     public $codigo_inep_escola_compartilhada;
     public $codigo_inep_escola_compartilhada2;
     public $codigo_inep_escola_compartilhada3;
     public $codigo_inep_escola_compartilhada4;
     public $codigo_inep_escola_compartilhada5;
     public $codigo_inep_escola_compartilhada6;
-    public $decreto_criacao;
-    public $area_terreno_total;
-    public $area_construida;
-    public $area_disponivel;
-    public $num_pavimentos;
-    public $tipo_piso;
-    public $medidor_energia;
-    public $agua_consumida;
+    public $agua_potavel_consumo;
     public $abastecimento_agua;
     public $abastecimento_energia;
     public $esgoto_sanitario;
     public $destinacao_lixo;
-    public $dependencia_sala_diretoria;
-    public $dependencia_sala_professores;
-    public $dependencia_sala_secretaria;
-    public $dependencia_laboratorio_informatica;
-    public $dependencia_laboratorio_ciencias;
-    public $dependencia_sala_aee;
-    public $dependencia_quadra_coberta;
-    public $dependencia_quadra_descoberta;
-    public $dependencia_cozinha;
-    public $dependencia_biblioteca;
-    public $dependencia_sala_leitura;
-    public $dependencia_parque_infantil;
-    public $dependencia_bercario;
-    public $dependencia_banheiro_fora;
-    public $dependencia_banheiro_dentro;
-    public $dependencia_banheiro_infantil;
-    public $dependencia_banheiro_deficiente;
-    public $dependencia_banheiro_chuveiro;
-    public $dependencia_vias_deficiente;
-    public $dependencia_refeitorio;
-    public $dependencia_dispensa;
-    public $dependencia_aumoxarifado;
-    public $dependencia_auditorio;
-    public $dependencia_patio_coberto;
-    public $dependencia_patio_descoberto;
-    public $dependencia_alojamento_aluno;
-    public $dependencia_alojamento_professor;
-    public $dependencia_area_verde;
-    public $dependencia_lavanderia;
-    public $dependencia_nenhuma_relacionada;
-    public $dependencia_numero_salas_existente;
-    public $dependencia_numero_salas_utilizadas;
+    public $tratamento_lixo;
+    public $alimentacao_escolar_alunos;
+    public $compartilha_espacos_atividades_integracao;
+    public $usa_espacos_equipamentos_atividades_regulares;
+    public $salas_funcionais;
+    public $salas_gerais;
+    public $banheiros;
+    public $laboratorios;
+    public $salas_atividades;
+    public $dormitorios;
+    public $areas_externas;
+    public $recursos_acessibilidade;
+    public $possui_dependencias;
+    public $numero_salas_utilizadas_dentro_predio;
+    public $numero_salas_utilizadas_fora_predio;
+    public $numero_salas_climatizadas;
+    public $numero_salas_acessibilidade;
     public $total_funcionario;
     public $atendimento_aee;
-    public $atividade_complementar;
     public $fundamental_ciclo;
+    public $organizacao_ensino;
+    public $instrumentos_pedagogicos;
+    public $orgaos_colegiados;
+    public $exame_selecao_ingresso;
+    public $reserva_vagas_cotas;
+    public $projeto_politico_pedagogico;
     public $localizacao_diferenciada;
-    public $materiais_didaticos_especificos;
     public $educacao_indigena;
     public $lingua_ministrada;
-    public $espaco_brasil_aprendizado;
-    public $abre_final_semana;
     public $codigo_lingua_indigena;
+    public $equipamentos;
+    public $uso_internet;
+    public $rede_local;
+    public $equipamentos_acesso_internet;
+    public $quantidade_computadores_alunos_mesa;
+    public $quantidade_computadores_alunos_portateis;
+    public $quantidade_computadores_alunos_tablets;
+    public $lousas_digitais;
     public $televisoes;
-    public $videocassetes;
     public $dvds;
-    public $antenas_parabolicas;
-    public $copiadoras;
-    public $retroprojetores;
-    public $impressoras;
     public $aparelhos_de_som;
     public $projetores_digitais;
-    public $faxs;
-    public $maquinas_fotograficas;
-    public $computadores;
-    public $computadores_administrativo;
-    public $computadores_alunos;
-    public $impressoras_multifuncionais;
     public $acesso_internet;
     public $ato_criacao;
     public $ato_autorizativo;
@@ -189,6 +182,35 @@ class indice extends clsCadastro
     public $com_cnpj;
     public $isEnderecoExterno = 0;
     public $esfera_administrativa;
+    public $qtd_secretario_escolar;
+    public $qtd_auxiliar_administrativo;
+    public $qtd_apoio_pedagogico;
+    public $qtd_coordenador_turno;
+    public $qtd_tecnicos;
+    public $qtd_bibliotecarios;
+    public $qtd_segurancas;
+    public $qtd_auxiliar_servicos_gerais;
+    public $qtd_nutricionistas;
+    public $qtd_profissionais_preparacao;
+    public $qtd_bombeiro;
+    public $qtd_psicologo;
+    public $qtd_fonoaudiologo;
+
+    private $inputsRecursos = [
+        'qtd_secretario_escolar' => 'Secretário(a) escolar',
+        'qtd_auxiliar_administrativo' => 'Auxiliares de secretaria ou auxiliares administrativos, atendentes',
+        'qtd_apoio_pedagogico' => 'Profissionais de apoio e supervisão pedagógica: pedagogo(a), coordenador(a) pedagógico(a), orientador(a) educacional, supervisor(a) escolar e coordenador(a) de área de ensino',
+        'qtd_coordenador_turno' => 'Coordenador(a) de turno/disciplina',
+        'qtd_tecnicos' => 'Técnicos(as), monitores(as) ou auxiliares de laboratório(s)',
+        'qtd_bibliotecarios' => 'Bibliotecário(a), auxiliar de biblioteca ou monitor(a) da sala de leitura',
+        'qtd_segurancas' => 'Seguranças, guarda ou segurança patrimonial',
+        'qtd_auxiliar_servicos_gerais' => 'Auxiliar de serviços gerais, porteiro(a), zelador(a), faxineiro(a), horticultor(a), jardineiro(a)',
+        'qtd_nutricionistas' => 'Nutricionista',
+        'qtd_profissionais_preparacao' => 'Profissionais de preparação e segurança alimentar, cozinheiro(a), merendeira e auxiliar de cozinha',
+        'qtd_bombeiro' => 'Bombeiro(a) brigadista, profissionais de assistência a saúde (urgência e emergência), Enfermeiro(a), Técnico(a) de enfermagem e socorrista',
+        'qtd_psicologo' => 'Psicólogo(a) Escolar',
+        'qtd_fonoaudiologo' => 'Fonoaudiólogo(a)',
+    ];
 
     public function Inicializar()
     {
@@ -389,6 +411,10 @@ class indice extends clsCadastro
             $this->cnpj_mantenedora_principal = int2CNPJ($this->cnpj_mantenedora_principal);
         }
 
+        if (is_string($this->local_funcionamento)) {
+            $this->local_funcionamento = explode(',', str_replace(array('{', "}"), '', $this->local_funcionamento));
+        }
+
         if (is_string($this->abastecimento_agua)) {
             $this->abastecimento_agua = explode(',', str_replace(array('{', "}"), '', $this->abastecimento_agua));
         }
@@ -405,12 +431,84 @@ class indice extends clsCadastro
             $this->destinacao_lixo = explode(',', str_replace(array('{', "}"), '', $this->destinacao_lixo));
         }
 
+        if (is_string($this->tratamento_lixo)) {
+            $this->tratamento_lixo = explode(',', str_replace(array('{', "}"), '', $this->tratamento_lixo));
+        }
+
+        if (is_string($this->salas_funcionais)) {
+            $this->salas_funcionais = explode(',', str_replace(array('{', "}"), '', $this->salas_funcionais));
+        }
+
+        if (is_string($this->salas_gerais)) {
+            $this->salas_gerais = explode(',', str_replace(array('{', "}"), '', $this->salas_gerais));
+        }
+
+        if (is_string($this->banheiros)) {
+            $this->banheiros = explode(',', str_replace(array('{', "}"), '', $this->banheiros));
+        }
+
+        if (is_string($this->laboratorios)) {
+            $this->laboratorios = explode(',', str_replace(array('{', "}"), '', $this->laboratorios));
+        }
+
+        if (is_string($this->salas_atividades)) {
+            $this->salas_atividades = explode(',', str_replace(array('{', "}"), '', $this->salas_atividades));
+        }
+
+        if (is_string($this->dormitorios)) {
+            $this->dormitorios = explode(',', str_replace(array('{', "}"), '', $this->dormitorios));
+        }
+
+        if (is_string($this->areas_externas)) {
+            $this->areas_externas = explode(',', str_replace(array('{', "}"), '', $this->areas_externas));
+        }
+
+        if (is_string($this->recursos_acessibilidade)) {
+            $this->recursos_acessibilidade = explode(',', str_replace(array('{', "}"), '', $this->recursos_acessibilidade));
+        }
+
         if (is_string($this->mantenedora_escola_privada)) {
             $this->mantenedora_escola_privada = explode(',', str_replace(array('{', "}"), '', $this->mantenedora_escola_privada));
         }
 
         if (is_string($this->orgao_vinculado_escola)) {
             $this->orgao_vinculado_escola = explode(',', str_replace(array('{', "}"), '', $this->orgao_vinculado_escola));
+        }
+
+        if (is_string($this->equipamentos)) {
+            $this->equipamentos = explode(',', str_replace(array('{', "}"), '', $this->equipamentos));
+        }
+
+        if (is_string($this->uso_internet)) {
+            $this->uso_internet = explode(',', str_replace(array('{', "}"), '', $this->uso_internet));
+        }
+
+        if (is_string($this->rede_local)) {
+            $this->rede_local = explode(',', str_replace(array('{', "}"), '', $this->rede_local));
+        }
+
+        if (is_string($this->equipamentos_acesso_internet)) {
+            $this->equipamentos_acesso_internet = explode(',', str_replace(array('{', "}"), '', $this->equipamentos_acesso_internet));
+        }
+
+        if (is_string($this->organizacao_ensino)) {
+            $this->organizacao_ensino = explode(',', str_replace(array('{', "}"), '', $this->organizacao_ensino));
+        }
+
+        if (is_string($this->instrumentos_pedagogicos)) {
+            $this->instrumentos_pedagogicos = explode(',', str_replace(array('{', "}"), '', $this->instrumentos_pedagogicos));
+        }
+
+        if (is_string($this->orgaos_colegiados)) {
+            $this->orgaos_colegiados = explode(',', str_replace(array('{', "}"), '', $this->orgaos_colegiados));
+        }
+
+        if (is_string($this->reserva_vagas_cotas)) {
+            $this->reserva_vagas_cotas = explode(',', str_replace(array('{', "}"), '', $this->reserva_vagas_cotas));
+        }
+
+        if (is_string($this->codigo_lingua_indigena)) {
+            $this->codigo_lingua_indigena = explode(',', str_replace(array('{', "}"), '', $this->codigo_lingua_indigena));
         }
 
         $this->url_cancelar = ($retorno == "Editar") ? "educar_escola_det.php?cod_escola={$registro["cod_escola"]}" : "educar_escola_lst.php";
@@ -650,6 +748,10 @@ class indice extends clsCadastro
 
                 $this->inputsHelper()->select('zona_localizacao', $options);
 
+                $resources = SelectOptions::localizacoesDiferenciadasEscola();
+                $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70);
+                $this->inputsHelper()->select('localizacao_diferenciada', $options);
+
                 // Detalhes do Endereco
                 $objUf = new clsUf();
                 $listauf = $objUf->lista();
@@ -745,17 +847,16 @@ class indice extends clsCadastro
                     $this->campoNumero("andar", "Andar", $this->andar, "2", "2", false);
                 }
 
-                $this->campoTexto("p_http", "Site", $this->p_http, "50", "255", false);
-                $this->campoTexto("p_email", "E-mail", $this->p_email, "50", "255", false);
                 $this->inputTelefone('1', 'Telefone 1');
                 $this->inputTelefone('2', 'Telefone 2');
                 $this->inputTelefone('mov', 'Celular');
                 $this->inputTelefone('fax', 'Fax');
+                $this->campoTexto("p_email", "E-mail", $this->p_email, "50", "255", false);
+                $this->campoTexto("p_http", "Site/Blog/Rede social", $this->p_http, "50", "255", false);
                 $this->passou = true;
                 $this->campoOculto("passou", $this->passou);
             }
-            $this->inputsHelper()->numeric('latitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
-            $this->inputsHelper()->numeric('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'São aceito somente os seguintes caracteres: 0123456789 .-'));
+
             $this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
             $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra diferenciada", dbBool($this->utiliza_regra_diferenciada), '', false, false, false, 'Se marcado, utilizará regra de avaliação diferenciada informada na Série');
 
@@ -795,11 +896,58 @@ class indice extends clsCadastro
             ];
             $this->inputsHelper()->select('regulamentacao', $options);
 
+            $resources = SelectOptions::esferasAdministrativasEscola();
+            $options = [
+                'label' => 'Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização',
+                'resources' => $resources,
+                'value' => $this->esfera_administrativa,
+                'required' => false,
+            ];
+            $this->inputsHelper()->select('esfera_administrativa', $options);
+
             $options = array('label' => 'Ato de criação', 'value' => $this->ato_criacao, 'size' => 70, 'required' => false);
             $this->inputsHelper()->text('ato_criacao', $options);
 
             $options = array('label' => 'Ato autorizativo', 'value' => $this->ato_autorizativo, 'size' => 70, 'required' => false);
             $this->inputsHelper()->text('ato_autorizativo', $options);
+
+            $mantenedoras = MantenedoraDaEscolaPrivada::getDescriptiveValues();
+            $helperOptions = ['objectName' => 'mantenedora_escola_privada'];
+            $options = [
+                'label' => 'Mantenedora da escola privada',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->mantenedora_escola_privada,
+                    'all_values' => $mantenedoras
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+            $resources = array('' => 'Selecione',
+                1 => 'Particular',
+                2 => 'Comunitária',
+                3 => 'Confessional',
+                4 => 'Filantrópica');
+            $options = array('label' => 'Categoria da escola privada',
+                'resources' => $resources,
+                'value' => $this->categoria_escola_privada,
+                'required' => false,
+                'size' => 70);
+            $this->inputsHelper()->select('categoria_escola_privada', $options);
+
+            $resources = array('' => 'Selecione',
+                1 => 'Estadual',
+                2 => 'Municipal',
+                3 => 'Estadual e Municipal');
+            $options = array('label' => 'Conveniada com poder público',
+                'resources' => $resources,
+                'value' => $this->conveniada_com_poder_publico,
+                'required' => false,
+                'size' => 70);
+            $this->inputsHelper()->select('conveniada_com_poder_publico', $options);
+
+            $this->campoCnpj("cnpj_mantenedora_principal", "CNPJ da mantenedora principal da escola privada", $this->cnpj_mantenedora_principal);
 
             $hiddenInputOptions = array('options' => array('value' => $this->gestor_id));
             $helperOptions = array('objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions);
@@ -823,15 +971,6 @@ class indice extends clsCadastro
             $options = array('label' => 'E-mail do gestor escolar', 'value' => $this->email_gestor, 'required' => $obrigarCamposCenso, 'size' => 50);
 
             $this->inputsHelper()->text('email_gestor', $options);
-
-            $resources = SelectOptions::esferasAdministrativasEscola();
-            $options = [
-                'label' => 'Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização',
-                'resources' => $resources,
-                'value' => $this->esfera_administrativa,
-                'required' => false,
-            ];
-            $this->inputsHelper()->select('esfera_administrativa', $options);
 
             if ($_POST["escola_curso"]) {
                 $this->escola_curso = unserialize(urldecode($_POST["escola_curso"]));
@@ -951,23 +1090,21 @@ class indice extends clsCadastro
             $this->campoOculto("incluir_curso", "");
             $this->campoQuebra();
 
-            $resources = array(NULL => 'Selecione',
-                3 => 'Prédio escolar',
-                4 => 'Templo/Igreja',
-                5 => 'Sala de empresa',
-                6 => 'Casa do professor',
-                7 => 'Salas em outra escola',
-                8 => 'Galpão/rancho/paiol/barracão',
-                9 => 'Unidade de atendimento socioeducativa',
-                10 => 'Unidade prisional',
-                11 => 'Outros');
+            $helperOptions = array('objectName' => 'local_funcionamento');
+            $options = [
+                'label' => 'Local de funcionamento',
+                'options' => [
+                    'values' => $this->local_funcionamento,
+                    'all_values' => SelectOptions::locaisFuncionamentoEscola(),
+                ],
+                'size' => 70,
+                'required' => $obrigarCamposCenso
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             // Os campos: Forma de ocupação do prédio e Código da escola que compartilha o prédio
             // serão desabilitados quando local de funcionamento for diferente de 3 (Prédio escolar)
-            $disabled = $this->local_funcionamento != 3;
-            $options = array('label' => 'Local de funcionamento', 'resources' => $resources, 'value' => $this->local_funcionamento, 'size' => 70, 'required' => $obrigarCamposCenso);
-            $this->inputsHelper()->select('local_funcionamento', $options);
-
+            $disabled = !in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento);
             $resources = array(NULL => 'Selecione',
                 1 => 'Próprio',
                 2 => 'Alugado',
@@ -975,51 +1112,36 @@ class indice extends clsCadastro
             $options = array('disabled' => $disabled, 'label' => 'Forma de ocupação do prédio', 'resources' => $resources, 'value' => $this->condicao, 'size' => 70, 'required' => false);
             $this->inputsHelper()->select('condicao', $options);
 
+            $resources = [
+                null => 'Selecione',
+                0 => 'Não',
+                1 => 'Sim',
+            ];
+            $options = [
+                'disabled' => $disabled,
+                'label' => 'Prédio compartilhado com outra escola',
+                'resources' => $resources,
+                'value' => $this->predio_compartilhado_outra_escola,
+                'size' => 70,
+                'required' => false
+            ];
+            $this->inputsHelper()->select('predio_compartilhado_outra_escola', $options);
+
             $this->geraCamposCodigoInepEscolaCompartilhada();
 
-            $resources = array(null => 'Selecione',
-                1 => 'Difícil',
-                2 => 'Dificílimo');
-            $options = array('label' => 'Acesso à escola', 'resources' => $resources, 'value' => $this->acesso, 'required' => false, 'size' => 50);
-            $this->inputsHelper()->select('acesso', $options);
-
-            $options = array('label' => 'Decreto de criação de unidade', 'resources' => $resources, 'value' => $this->decreto_criacao, 'required' => false, 'size' => 50);
-            $this->inputsHelper()->text('decreto_criacao', $options);
-
-            $options = array('label' => 'Área do terreno total', 'resources' => $resources, 'value' => $this->area_terreno_total, 'required' => false, 'size' => 10, 'placeholder' => '');
-            $this->inputsHelper()->text('area_terreno_total', $options);
-
-            $options = array('label' => 'Área construída', 'resources' => $resources, 'value' => $this->area_construida, 'required' => false, 'size' => 10, 'placeholder' => '');
-            $this->inputsHelper()->text('area_construida', $options);
-
-            $options = array('label' => 'Área disponível', 'resources' => $resources, 'value' => $this->area_disponivel, 'required' => false, 'size' => 10, 'placeholder' => '');
-            $this->inputsHelper()->text('area_disponivel', $options);
-
-            $options = array('label' => 'Número de pavimentos', 'resources' => $resources, 'value' => $this->num_pavimentos, 'required' => false, 'size' => 5, 'placeholder' => '');
-            $this->inputsHelper()->integer('num_pavimentos', $options);
-
-            $resources = array(null => 'Selecione',
-                1 => 'Cerâmica',
-                2 => 'Acimentado',
-                3 => 'Madeira',
-                4 => 'Outros');
-            $options = array('label' => 'Tipo de piso', 'resources' => $resources, 'value' => $this->tipo_piso, 'required' => false, 'size' => 70);
-            $this->inputsHelper()->select('tipo_piso', $options);
-
-            $resources = array(null => 'Selecione',
-                1 => 'Monofásico',
-                2 => 'Bifásico',
-                3 => 'Trifásico',
-                4 => 'Não');
-
-            $options = array('label' => 'Medidor de energia', 'resources' => $resources, 'value' => $this->medidor_energia, 'required' => false, 'size' => 70);
-            $this->inputsHelper()->select('medidor_energia', $options);
-
-            $resources = array(null => 'Selecione',
-                1 => 'Não filtrada',
-                2 => 'Filtrada');
-            $options = array('label' => 'Água consumida pelos alunos', 'resources' => $resources, 'value' => $this->agua_consumida, 'required' => $obrigarCamposCenso, 'size' => 70);
-            $this->inputsHelper()->select('agua_consumida', $options);
+            $resources = [
+                null => 'Selecione',
+                0 => 'Não',
+                1 => 'Sim'
+            ];
+            $options = [
+                'label' => 'Fornecimento de água potável para consumo',
+                'resources' => $resources,
+                'value' => $this->agua_potavel_consumo,
+                'required' => $obrigarCamposCenso,
+                'size' => 70
+            ];
+            $this->inputsHelper()->select('agua_potavel_consumo', $options);
 
             $helperOptions = array('objectName' => 'abastecimento_agua');
             $options = array('label' => 'Abastecimento de água',
@@ -1030,28 +1152,29 @@ class indice extends clsCadastro
                         2 => 'Poço artesiano',
                         3 => 'Cacimba/cisterna/poço',
                         4 => 'Fonte/rio/igarapé/riacho/córrego',
-                        5 => 'Inexistente')));
+                        5 => 'Não há abastecimento de água')));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $helperOptions = array('objectName' => 'abastecimento_energia');
-            $options = array('label' => 'Abastecimento de energia elétrica',
+            $options = array('label' => 'Fonte de energia elétrica',
                 'size' => 50,
                 'required' => $obrigarCamposCenso,
                 'options' => array('values' => $this->abastecimento_energia,
                     'all_values' => array(1 => 'Rede pública',
-                        2 => 'Gerador',
-                        3 => 'Outros (Ex.: Energia eólica, solar, etc.)',
-                        4 => 'Inexistente')));
+                        2 => 'Gerador movido a combustível fóssil',
+                        3 => 'Fontes de energia renováveis ou alternativas (gerador a biocombustível e/ou biodigestores, eólica, solar, outras)',
+                        4 => 'Não há energia elétrica')));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $helperOptions = array('objectName' => 'esgoto_sanitario');
-            $options = array('label' => 'Esgoto sanitário',
+            $options = array('label' => 'Esgotamento sanitário',
                 'size' => 50,
                 'required' => $obrigarCamposCenso,
                 'options' => array('values' => $this->esgoto_sanitario,
                     'all_values' => array(1 => 'Rede pública',
-                        2 => 'Fossa',
-                        3 => 'Inexistente')));
+                        2 => 'Fossa séptica',
+                        4 => 'Fossa rudimentar/comum',
+                        3 => 'Não há esgotamento sanitário')));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $helperOptions = array('objectName' => 'destinacao_lixo');
@@ -1059,193 +1182,276 @@ class indice extends clsCadastro
                 'size' => 50,
                 'required' => $obrigarCamposCenso,
                 'options' => array('values' => $this->destinacao_lixo,
-                    'all_values' => array(1 => 'Coleta periódica',
+                    'all_values' => array(1 => 'Serviço de coleta',
                         2 => 'Queima',
-                        3 => 'Joga em outra área',
-                        4 => 'Recicla',
-                        5 => 'Enterra',
-                        6 => 'Outros')));
+                        7 => 'Enterra',
+                        5 => 'Leva a uma destinação final licenciada pelo poder público',
+                        3 => 'Descarta em outra área',)));
             $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $dicaCamposCheckbox = "Os campos abaixo que não forem marcados, serão informados no Educacenso como Não";
-            $options = array('label' => 'Marcar todos', 'hint' => $dicaCamposCheckbox);
-            $this->inputsHelper()->checkbox('marcar_todas_dependencias', $options);
+            $helperOptions = ['objectName' => 'tratamento_lixo'];
+            $options = [
+                'label' => 'Tratamento do lixo/resíduos que a escola realiza',
+                'size' => 50,
+                'required' => $obrigarCamposCenso,
+                'options' => [
+                    'values' => $this->tratamento_lixo,
+                    'all_values' => TratamentoLixo::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Sala de diretoria', 'value' => $this->dependencia_sala_diretoria);
-            $this->inputsHelper()->checkbox('dependencia_sala_diretoria', $options);
+            $options = [
+                'label' => 'Alimentação escolar para os alunos(as)',
+                'value' => $this->alimentacao_escolar_alunos,
+                'required' => $obrigarCamposCenso,
+                'prompt' => 'Selecione',
+                'size' => 70
+            ];
+            $this->inputsHelper()->booleanSelect('alimentacao_escolar_alunos', $options);
 
-            $options = array('label' => 'Sala de professores', 'value' => $this->dependencia_sala_professores);
-            $this->inputsHelper()->checkbox('dependencia_sala_professores', $options);
+            $options = [
+                'label' => 'Escola compartilha espaços para atividades de integração escola-comunidade',
+                'value' => $this->compartilha_espacos_atividades_integracao,
+                'required' => false,
+                'prompt' => 'Selecione',
+                'size' => 70
+            ];
+            $this->inputsHelper()->booleanSelect('compartilha_espacos_atividades_integracao', $options);
 
-            $options = array('label' => 'Sala de secretaria', 'value' => $this->dependencia_sala_secretaria);
-            $this->inputsHelper()->checkbox('dependencia_sala_secretaria', $options);
+            $options = [
+                'label' => 'Escola usa espaços e equipamentos do entorno escolar para atividades regulares com os alunos(as)',
+                'value' => $this->usa_espacos_equipamentos_atividades_regulares,
+                'required' => false,
+                'prompt' => 'Selecione',
+                'size' => 70
+            ];
+            $this->inputsHelper()->booleanSelect('usa_espacos_equipamentos_atividades_regulares', $options);
 
-            $options = array('label' => 'Laboratório de informática', 'value' => $this->dependencia_laboratorio_informatica);
-            $this->inputsHelper()->checkbox('dependencia_laboratorio_informatica', $options);
+            $options = [
+                'label' => 'Possui dependências',
+                'label_hint' => 'Preencha com: Sim, para exportar os campos de dependências no arquivo do Censo escolar',
+                'value' => $this->possui_dependencias,
+                'required' => $obrigarCamposCenso,
+                'prompt' => 'Selecione',
+                'size' => 40
+            ];
+            $this->inputsHelper()->booleanSelect('possui_dependencias', $options);
 
-            $options = array('label' => 'Laboratório de ciências', 'value' => $this->dependencia_laboratorio_ciencias);
-            $this->inputsHelper()->checkbox('dependencia_laboratorio_ciencias', $options);
+            $helperOptions = ['objectName' => 'salas_gerais'];
+            $options = [
+                'label' => 'Salas gerais',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->salas_gerais,
+                    'all_values' => SalasGerais::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Sala de recursos multifuncionais para atendimento educacional especializado - AEE', 'value' => $this->dependencia_sala_aee);
-            $this->inputsHelper()->checkbox('dependencia_sala_aee', $options);
+            $helperOptions = ['objectName' => 'salas_funcionais'];
+            $options = [
+                'label' => 'Salas funcionais',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->salas_funcionais,
+                    'all_values' => SalasFuncionais::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Quadra de esportes coberta', 'value' => $this->dependencia_quadra_coberta);
-            $this->inputsHelper()->checkbox('dependencia_quadra_coberta', $options);
+            $helperOptions = ['objectName' => 'banheiros'];
+            $options = [
+                'label' => 'Banheiros',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->banheiros,
+                    'all_values' => Banheiros::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Quadra de esportes descoberta', 'value' => $this->dependencia_quadra_descoberta);
-            $this->inputsHelper()->checkbox('dependencia_quadra_descoberta', $options);
+            $helperOptions = ['objectName' => 'laboratorios'];
+            $options = [
+                'label' => 'Laboratórios',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->laboratorios,
+                    'all_values' => Laboratorios::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Cozinha', 'value' => $this->dependencia_cozinha);
-            $this->inputsHelper()->checkbox('dependencia_cozinha', $options);
+            $helperOptions = ['objectName' => 'salas_atividades'];
+            $options = [
+                'label' => 'Salas de atividades',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->salas_atividades,
+                    'all_values' => SalasAtividades::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Biblioteca', 'value' => $this->dependencia_biblioteca);
-            $this->inputsHelper()->checkbox('dependencia_biblioteca', $options);
+            $helperOptions = ['objectName' => 'dormitorios'];
+            $options = [
+                'label' => 'Dormitórios',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->dormitorios,
+                    'all_values' => Dormitorios::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Sala de leitura', 'value' => $this->dependencia_sala_leitura);
-            $this->inputsHelper()->checkbox('dependencia_sala_leitura', $options);
+            $helperOptions = ['objectName' => 'areas_externas'];
+            $options = [
+                'label' => 'Áreas externas',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->areas_externas,
+                    'all_values' => AreasExternas::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Parque infantil', 'value' => $this->dependencia_parque_infantil);
-            $this->inputsHelper()->checkbox('dependencia_parque_infantil', $options);
+            $helperOptions = ['objectName' => 'recursos_acessibilidade'];
+            $options = [
+                'label' => 'Recursos de acessibilidade',
+                'size' => 50,
+                'required' => $obrigarCamposCenso,
+                'options' => [
+                    'values' => $this->recursos_acessibilidade,
+                    'all_values' => RecursosAcessibilidade::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Berçário', 'value' => $this->dependencia_bercario);
-            $this->inputsHelper()->checkbox('dependencia_bercario', $options);
+            $options = array('label' => 'Número de salas de aula utilizadas na escola dentro do prédio escolar', 'resources' => $resources, 'value' => $this->numero_salas_utilizadas_dentro_predio, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4);
+            $this->inputsHelper()->integer('numero_salas_utilizadas_dentro_predio', $options);
 
-            $options = array('label' => 'Banheiro fora do prédio', 'value' => $this->dependencia_banheiro_fora);
-            $this->inputsHelper()->checkbox('dependencia_banheiro_fora', $options);
+            $options = array('label' => 'Número de salas de aula utilizadas na escola fora do prédio escolar', 'resources' => $resources, 'value' => $this->numero_salas_utilizadas_fora_predio, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4);
+            $this->inputsHelper()->integer('numero_salas_utilizadas_fora_predio', $options);
 
-            $options = array('label' => 'Banheiro dentro do prédio', 'value' => $this->dependencia_banheiro_dentro);
-            $this->inputsHelper()->checkbox('dependencia_banheiro_dentro', $options);
+            $options = array('label' => 'Número de salas de aula climatizadas', 'resources' => $resources, 'value' => $this->numero_salas_climatizadas, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4);
+            $this->inputsHelper()->integer('numero_salas_climatizadas', $options);
 
-            $options = array('label' => 'Banheiro adequado à Educação infantil', 'value' => $this->dependencia_banheiro_infantil);
-            $this->inputsHelper()->checkbox('dependencia_banheiro_infantil', $options);
+            $options = array('label' => 'Número de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida', 'resources' => $resources, 'value' => $this->numero_salas_acessibilidade, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4);
+            $this->inputsHelper()->integer('numero_salas_acessibilidade', $options);
 
-            $options = array('label' => 'Banheiro adequado a alunos com deficiência ou mobilidade reduzida', 'value' => $this->dependencia_banheiro_deficiente);
-            $this->inputsHelper()->checkbox('dependencia_banheiro_deficiente', $options);
+            $helperOptions = ['objectName' => 'equipamentos'];
+            $options = [
+                'label' => 'Equipamentos da escola',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->equipamentos,
+                    'all_values' => Equipamentos::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Dependências e vias adequadas a alunos com deficiência ou mobilidade reduzida', 'value' => $this->dependencia_vias_deficiente);
-            $this->inputsHelper()->checkbox('dependencia_vias_deficiente', $options);
+            $helperOptions = ['objectName' => 'uso_internet'];
+            $options = [
+                'label' => 'Acesso à internet',
+                'size' => 50,
+                'required' => $obrigarCamposCenso,
+                'options' => [
+                    'values' => $this->uso_internet,
+                    'all_values' => UsoInternet::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-            $options = array('label' => 'Banheiro com chuveiro', 'value' => $this->dependencia_banheiro_chuveiro);
-            $this->inputsHelper()->checkbox('dependencia_banheiro_chuveiro', $options);
-
-            $options = array('label' => 'Refeitório', 'value' => $this->dependencia_refeitorio);
-            $this->inputsHelper()->checkbox('dependencia_refeitorio', $options);
-
-            $options = array('label' => 'Despensa', 'value' => $this->dependencia_dispensa);
-            $this->inputsHelper()->checkbox('dependencia_dispensa', $options);
-
-            $options = array('label' => 'Almoxarifado', 'value' => $this->dependencia_aumoxarifado);
-            $this->inputsHelper()->checkbox('dependencia_aumoxarifado', $options);
-
-            $options = array('label' => 'Auditório', 'value' => $this->dependencia_auditorio);
-            $this->inputsHelper()->checkbox('dependencia_auditorio', $options);
-
-            $options = array('label' => 'Pátio coberto', 'value' => $this->dependencia_patio_coberto);
-            $this->inputsHelper()->checkbox('dependencia_patio_coberto', $options);
-
-            $options = array('label' => 'Pátio descoberto', 'value' => $this->dependencia_patio_descoberto);
-            $this->inputsHelper()->checkbox('dependencia_patio_descoberto', $options);
-
-            $resources = array(null => 'Selecione',
-                1 => 'Lage',
-                2 => 'Telhado',
-                3 => 'Outras');
-            $options = array('label' => 'Alojamento de aluno', 'value' => $this->dependencia_alojamento_aluno);
-            $this->inputsHelper()->checkbox('dependencia_alojamento_aluno', $options);
-
-            $options = array('label' => 'Alojamento de professor', 'value' => $this->dependencia_alojamento_professor);
-            $this->inputsHelper()->checkbox('dependencia_alojamento_professor', $options);
-
-            $options = array('label' => 'Área verde', 'value' => $this->dependencia_area_verde);
-            $this->inputsHelper()->checkbox('dependencia_area_verde', $options);
-
-            $options = array('label' => 'Lavanderia', 'value' => $this->dependencia_lavanderia);
-            $this->inputsHelper()->checkbox('dependencia_lavanderia', $options);
-
-            $resources = array(null => 'Selecione',
-                1 => 'Sim',
-                2 => 'Não',
-                3 => 'Parcial');
-            $options = array('label' => 'Nenhuma das relacionadas', 'value' => $this->dependencia_nenhuma_relacionada);
-            $this->inputsHelper()->checkbox('dependencia_nenhuma_relacionada', $options);
-
-            $options = array('label' => 'Número de salas de aula existentes na escola', 'resources' => $resources, 'value' => $this->dependencia_numero_salas_existente, 'required' => false, 'size' => 5, 'placeholder' => '', 'max_length' => 4);
-            $this->inputsHelper()->integer('dependencia_numero_salas_existente', $options);
-
-            $options = array('label' => 'Número de salas utilizadas como sala de aula - Dentro e fora do prédio', 'resources' => $resources, 'value' => $this->dependencia_numero_salas_utilizadas, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => '');
-            $this->inputsHelper()->integer('dependencia_numero_salas_utilizadas', $options);
-
-            $options = array('label' => 'Quantidade de televisores', 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('televisoes', $options);
-
-            $options = array('label' => 'Quantidade de videocassetes', 'resources' => $resources, 'value' => $this->videocassetes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('videocassetes', $options);
-
-            $options = array('label' => 'Quantidade de DVDs', 'resources' => $resources, 'value' => $this->dvds, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('dvds', $options);
-
-            $options = array('label' => 'Quantidade de antenas parabólicas', 'resources' => $resources, 'value' => $this->antenas_parabolicas, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('antenas_parabolicas', $options);
-
-            $options = array('label' => 'Quantidade de copiadoras', 'resources' => $resources, 'value' => $this->copiadoras, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('copiadoras', $options);
-
-            $options = array('label' => 'Quantidade de retroprojetores', 'resources' => $resources, 'value' => $this->retroprojetores, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('retroprojetores', $options);
-
-            $options = array('label' => 'Quantidade de impressoras', 'resources' => $resources, 'value' => $this->impressoras, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('impressoras', $options);
-
-            $options = array('label' => 'Quantidade de aparelhos de som', 'resources' => $resources, 'value' => $this->aparelhos_de_som, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('aparelhos_de_som', $options);
-
-            $options = array('label' => 'Quantidade de data show', 'resources' => $resources, 'value' => $this->projetores_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('projetores_digitais', $options);
-
-            $options = array('label' => 'Quantidade de FAXs', 'resources' => $resources, 'value' => $this->faxs, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('faxs', $options);
-
-            $options = array('label' => 'Quantidade de máquinas fotográficas ou filmadoras', 'resources' => $resources, 'value' => $this->maquinas_fotograficas, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('maquinas_fotograficas', $options);
-
-            $options = array('label' => 'Quantidade de impressoras multifuncionais', 'resources' => $resources, 'value' => $this->impressoras_multifuncionais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('impressoras_multifuncionais', $options);
-
-            $options = array('label' => 'Quantidade de computadores de uso administrativo', 'resources' => $resources, 'value' => $this->computadores_administrativo, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('computadores_administrativo', $options);
-
-            $options = array('label' => 'Quantidade de computadores de uso dos alunos', 'resources' => $resources, 'value' => $this->computadores_alunos, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('computadores_alunos', $options);
-
-            $options = array('label' => 'Quantidade total de computadores', 'resources' => $resources, 'value' => $this->computadores, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
-            $this->inputsHelper()->integer('computadores', $options);
-
-            $disabled = $this->computadores > 0;
             $options = array(
                 'label' => 'Possui internet banda larga',
                 'value' => $this->acesso_internet,
                 'required' => false,
                 'prompt' => 'Selecione',
-                'disabled' => !$disabled
             );
             $this->inputsHelper()->booleanSelect('acesso_internet', $options);
 
-            $options = array('label' => 'Total de funcionários da escola (inclusive profissionais escolares em sala de aula)', 'resources' => $resources, 'value' => $this->total_funcionario, 'required' => $obrigarCamposCenso, 'size' => 5, 'placeholder' => '');
-            $this->inputsHelper()->integer('total_funcionario', $options);
+            $helperOptions = ['objectName' => 'rede_local'];
+            $options = [
+                'label' => 'Rede local de interligação de computadores',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->rede_local,
+                    'all_values' => RedeLocal::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+            $helperOptions = ['objectName' => 'equipamentos_acesso_internet'];
+            $options = [
+                'label' => 'Equipamentos que os aluno(a)s usam para acessar a internet da escola',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->equipamentos_acesso_internet,
+                    'all_values' => EquipamentosAcessoInternet::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+            $this->campoRotulo(
+                'quantidade_computadores_alunos',
+                '<b>Quantidade de computadores de uso dos aluno</b>'
+            );
+
+            $options = array('label' => 'Computadores de mesa (desktop)', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_mesa, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('quantidade_computadores_alunos_mesa', $options);
+
+            $options = array('label' => 'Computadores portáteis', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_portateis, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('quantidade_computadores_alunos_portateis', $options);
+
+            $options = array('label' => 'Tablets', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_tablets, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('quantidade_computadores_alunos_tablets', $options);
+
+            $this->campoRotulo(
+                'equipamentos_aprendizagem',
+                '<b>Quantidade de equipamentos para ensino/aprendizagem</b>'
+            );
+
+            $options = array('label' => 'Aparelho de Televisão', 'resources' => $resources, 'value' => $this->televisoes, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('televisoes', $options);
+
+            $options = array('label' => 'Projetor Multimídia (Data show)', 'resources' => $resources, 'value' => $this->projetores_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('projetores_digitais', $options);
+
+            $options = array('label' => 'Aparelho de som', 'resources' => $resources, 'value' => $this->aparelhos_de_som, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('aparelhos_de_som', $options);
+
+            $options = array('label' => 'Aparelho de DVD/Blu-ray', 'resources' => $resources, 'value' => $this->dvds, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('dvds', $options);
+
+            $options = array('label' => 'Lousa digital', 'resources' => $resources, 'value' => $this->lousas_digitais, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+            $this->inputsHelper()->integer('lousas_digitais', $options);
+
+            $this->campoRotulo(
+                'quantidade_profissionais',
+                '<b>Quantidade de profissionais</b>'
+            );
+
+            foreach ($this->inputsRecursos as $key => $label) {
+                $options = array('label' => $label, 'value' => $this->{$key}, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
+                $this->inputsHelper()->integer($key, $options);
+            }
 
             $resources = array(NULL => 'Selecione',
                 0 => 'Não oferece',
                 1 => 'Não exclusivamente',
                 2 => 'Exclusivamente');
-            $options = array('label' => 'Atendimento educacional especializado - AEE', 'resources' => $resources, 'value' => $this->atendimento_aee, 'required' => $obrigarCamposCenso, 'size' => 70);
+            $options = array('label' => 'Atendimento educacional especializado - AEE', 'resources' => $resources, 'value' => $this->atendimento_aee, 'required' => false, 'size' => 70);
             $this->inputsHelper()->select('atendimento_aee', $options);
-
-            $resources = array(NULL => 'Selecione',
-                0 => 'Não oferece',
-                1 => 'Não exclusivamente',
-                2 => 'Exclusivamente');
-            $options = array('label' => 'Atividade complementar', 'resources' => $resources, 'value' => $this->atividade_complementar, 'required' => $obrigarCamposCenso, 'size' => 70);
-            $this->inputsHelper()->select('atividade_complementar', $options);
 
             $habilitaFundamentalCiclo = false;
             if ($this->cod_escola) {
@@ -1258,10 +1464,85 @@ class indice extends clsCadastro
                 'placeholder' => 'Selecione',
                 'prompt' => 'Selecione',
                 'value' => $this->fundamental_ciclo,
-                'required' => $habilitaFundamentalCiclo,
+                'required' => false,
                 'disabled' => !$habilitaFundamentalCiclo
             );
             $this->inputsHelper()->booleanSelect('fundamental_ciclo', $options);
+
+            $helperOptions = ['objectName' => 'organizacao_ensino'];
+            $options = [
+                'label' => 'Forma(s) de organização do ensino',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->organizacao_ensino,
+                    'all_values' => OrganizacaoEnsino::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+            $helperOptions = ['objectName' => 'instrumentos_pedagogicos'];
+            $options = [
+                'label' => 'Instrumentos, materiais socioculturais e/ou pedagógicos em uso na escola para o desenvolvimento de atividades de ensino aprendizagem',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->instrumentos_pedagogicos,
+                    'all_values' => InstrumentosPedagogicos::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+            $helperOptions = ['objectName' => 'orgaos_colegiados'];
+            $options = [
+                'label' => 'Órgãos colegiados em funcionamento na escola',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->orgaos_colegiados,
+                    'all_values' => OrgaosColegiados::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+            $options = array(
+                'label' => 'Escola faz exame de seleção para ingresso de seus aluno(a)s',
+                'label_hint' => 'Avaliação por prova e /ou analise curricular',
+                'placeholder' => 'Selecione',
+                'prompt' => 'Selecione',
+                'value' => $this->exame_selecao_ingresso,
+                'required' => false,
+            );
+            $this->inputsHelper()->booleanSelect('exame_selecao_ingresso', $options);
+
+            $helperOptions = ['objectName' => 'reserva_vagas_cotas'];
+            $options = [
+                'label' => 'Reserva de vagas por sistema de cotas para grupos específicos de alunos(as)',
+                'size' => 50,
+                'required' => false,
+                'options' => [
+                    'values' => $this->reserva_vagas_cotas,
+                    'all_values' => ReservaVagasCotas::getDescriptiveValues()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+            $resources = [
+                null => 'Selecione',
+                0 => 'Não sei',
+                1 => 'Sim',
+                2 => 'A escola não possui projeto político pedagógico/proposta pedagógica'
+            ];
+            $options = array(
+                'resources' => $resources,
+                'label' => 'Projeto político pedagógico ou a proposta pedagógica da escola atualizado nos últimos 12 meses até a data de referência',
+                'label_hint' => '(conforme art. 12 da LDB)',
+                'placeholder' => 'Selecione',
+                'prompt' => 'Selecione',
+                'value' => $this->projeto_politico_pedagogico,
+                'required' => false,
+            );
+            $this->inputsHelper()->select('projeto_politico_pedagogico', $options);
 
             $resources = SelectOptions::localizacoesDiferenciadasEscola();
             $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70);
@@ -1271,61 +1552,46 @@ class indice extends clsCadastro
                 1 => 'Não utiliza',
                 2 => 'Quilombola',
                 3 => 'Indígena');
-            $options = array('label' => 'Materiais didáticos específicos para atendimento à diversidade sócio-cultural',
-                'resources' => $resources,
-                'value' => $this->materiais_didaticos_especificos,
-                'required' => $obrigarCamposCenso,
-                'size' => 70);
-            $this->inputsHelper()->select('materiais_didaticos_especificos', $options);
 
-            $options = array('label' => 'Escola indígena',
+            $options = [
+                'label' => 'Educação escolar indígena',
                 'value' => $this->educacao_indigena,
-                'required' => false);
+                'required' => false,
+                'prompt' => 'Selecione',
+            ];
             $this->inputsHelper()->booleanSelect('educacao_indigena', $options);
 
-            $resources = array(1 => 'Língua Portuguesa',
-                2 => 'Língua Indígena');
+            $resources = [
+                null => 'Selecione',
+                1 => 'Língua Portuguesa',
+                2 => 'Língua Indígena'
+            ];
             $habilitaLiguaMinistrada = $this->educacao_indigena == 1;
             $options = array('label' => 'Língua em que o ensino é ministrado',
                 'resources' => $resources,
                 'value' => $this->lingua_ministrada,
-                'required' => $habilitaLiguaMinistrada,
+                'required' => false,
                 'disabled' => !$habilitaLiguaMinistrada,
                 'size' => 70);
             $this->inputsHelper()->select('lingua_ministrada', $options);
 
-            $habilitaLiguasIndigenas = $this->lingua_ministrada == 2;
             $resources_ = Portabilis_Utils_Database::fetchPreparedQuery('SELECT * FROM modules.lingua_indigena_educacenso');
 
             foreach ($resources_ as $reg) {
                 $resources[$reg['id']] = $reg['lingua'];
             }
 
-            $options = array('label' => Portabilis_String_Utils::toLatin1('Línguas indígenas'),
-                'resources' => $resources,
-                'value' => $this->codigo_lingua_indigena,
-                'required' => $habilitaLiguasIndigenas && $habilitaLiguaMinistrada,
-                'disabled' => !$habilitaLiguasIndigenas || !$habilitaLiguaMinistrada,
-                'size' => 70);
-            $this->inputsHelper()->select('codigo_lingua_indigena', $options);
-
-            $options = array('label' => 'Escola cede espaço para turmas do Brasil Alfabetizado',
-                'prompt' => 'Selecione',
-                'value' => $this->espaco_brasil_aprendizado,
-                'required' => $obrigarCamposCenso);
-            $this->inputsHelper()->booleanSelect('espaco_brasil_aprendizado', $options);
-
-            $options = array('label' => 'Escola abre aos finais de semana para a comunidade',
-                'prompt' => 'Selecione',
-                'value' => $this->abre_final_semana,
-                'required' => $obrigarCamposCenso);
-            $this->inputsHelper()->booleanSelect('abre_final_semana', $options);
-
-            $options = array('label' => 'Escola com proposta pedagógica de formação por alternância',
-                'prompt' => 'Selecione',
-                'value' => $this->proposta_pedagogica,
-                'required' => $obrigarCamposCenso);
-            $this->inputsHelper()->booleanSelect('proposta_pedagogica', $options);
+            $helperOptions = ['objectName' => 'codigo_lingua_indigena'];
+            $options = [
+                'label' => 'Línguas indígenas',
+                'size' => 70,
+                'required' => false,
+                'options' => [
+                    'values' => $this->codigo_lingua_indigena,
+                    'all_values' => $resources
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $resources = SelectOptions::unidadesVinculadasEscola();
             $options = [
@@ -1350,44 +1616,6 @@ class indice extends clsCadastro
                 ]
             ];
             $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
-
-            $mantenedoras = MantenedoraDaEscolaPrivada::getDescriptiveValues();
-            $helperOptions = ['objectName' => 'mantenedora_escola_privada'];
-            $options = [
-                'label' => 'Mantenedora da escola privada',
-                'size' => 50,
-                'required' => false,
-                'options' => [
-                    'values' => $this->mantenedora_escola_privada,
-                    'all_values' => $mantenedoras
-                ]
-            ];
-            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-
-            $resources = array('' => 'Selecione',
-                1 => 'Particular',
-                2 => 'Comunitária',
-                3 => 'Confessional',
-                4 => 'Filantrópica');
-            $options = array('label' => 'Categoria da escola privada',
-                'resources' => $resources,
-                'value' => $this->categoria_escola_privada,
-                'required' => false,
-                'size' => 70);
-            $this->inputsHelper()->select('categoria_escola_privada', $options);
-
-            $resources = array('' => 'Selecione',
-                1 => 'Estadual',
-                2 => 'Municipal',
-                3 => 'Estadual e Municipal');
-            $options = array('label' => 'Conveniada com poder público',
-                'resources' => $resources,
-                'value' => $this->conveniada_com_poder_publico,
-                'required' => false,
-                'size' => 70);
-            $this->inputsHelper()->select('conveniada_com_poder_publico', $options);
-
-            $this->campoCnpj("cnpj_mantenedora_principal", "CNPJ da mantenedora principal da escola privada", $this->cnpj_mantenedora_principal);
         }
     }
 
@@ -1397,20 +1625,39 @@ class indice extends clsCadastro
         $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 3, "educar_escola_lst.php");
         $orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
+        $local_funcionamento = implode(',', $this->local_funcionamento);
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
         $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
         $destinacao_lixo = implode(',', $this->destinacao_lixo);
+        $tratamento_lixo = implode(',', $this->tratamento_lixo);
+        $salas_funcionais = implode(',', $this->salas_funcionais);
+        $salas_gerais = implode(',', $this->salas_gerais);
+        $banheiros = implode(',', $this->banheiros);
+        $laboratorios = implode(',', $this->laboratorios);
+        $salas_atividades = implode(',', $this->salas_atividades);
+        $dormitorios = implode(',', $this->dormitorios);
+        $areas_externas = implode(',', $this->areas_externas);
+        $recursos_acessibilidade = implode(',', $this->recursos_acessibilidade);
+        $equipamentos = implode(',', $this->equipamentos);
+        $uso_internet = implode(',', $this->uso_internet);
+        $rede_local = implode(',', $this->rede_local);
+        $equipamentos_acesso_internet = implode(',', $this->equipamentos_acesso_internet);
+        $organizacao_ensino = implode(',', $this->organizacao_ensino);
+        $instrumentos_pedagogicos = implode(',', $this->instrumentos_pedagogicos);
+        $orgaos_colegiados = implode(',', $this->orgaos_colegiados);
+        $reserva_vagas_cotas = implode(',', $this->reserva_vagas_cotas);
+        $codigo_lingua_indigena = implode(',', $this->codigo_lingua_indigena);
 
         if (!$this->validaDigitosInepEscola($this->escola_inep_id, 'Código INEP')) {
             return false;
         }
 
-        if (!$this->validaLatitudeLongitude()) {
+        if (!$this->validaDadosTelefones()) {
             return false;
         }
 
-        if (!$this->validaDadosTelefones()) {
+        if (!$this->validaCampoPossuiDependencias()) {
             return false;
         }
 
@@ -1427,18 +1674,7 @@ class indice extends clsCadastro
             }
         }
 
-        if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
-            return false;
-        }
-
-        if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de energia elétrica</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
-            return false;
-        }
-
-        if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+        if (!$this->validaOpcoesUnicasMultipleSearch()) {
             return false;
         }
 
@@ -1458,92 +1694,70 @@ class indice extends clsCadastro
                     $obj->situacao_funcionamento = $this->situacao_funcionamento;
                     $obj->dependencia_administrativa = $this->dependencia_administrativa;
                     $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
-                    $obj->latitude = $this->latitude;
-                    $obj->longitude = $this->longitude;
                     $obj->regulamentacao = $this->regulamentacao;
-                    $obj->acesso = $this->acesso;
                     $obj->ref_idpes_gestor = $this->gestor_id;
                     $obj->cargo_gestor = $this->cargo_gestor;
                     $obj->email_gestor = $this->email_gestor;
-                    $obj->local_funcionamento = $this->local_funcionamento;
+                    $obj->local_funcionamento = $local_funcionamento;
                     $obj->condicao = $this->condicao;
+                    $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
                     $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
                     $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
                     $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
                     $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
                     $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
                     $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
-                    $obj->decreto_criacao = $this->decreto_criacao;
-                    $obj->area_terreno_total = $this->area_terreno_total;
-                    $obj->area_construida = $this->area_construida;
-                    $obj->area_disponivel = $this->area_disponivel;
-                    $obj->num_pavimentos = $this->num_pavimentos;
-                    $obj->tipo_piso = $this->tipo_piso;
-                    $obj->medidor_energia = $this->medidor_energia;
-                    $obj->agua_consumida = $this->agua_consumida;
+                    $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
                     $obj->abastecimento_agua = $abastecimento_agua;
                     $obj->abastecimento_energia = $abastecimento_energia;
                     $obj->esgoto_sanitario = $esgoto_sanitario;
                     $obj->destinacao_lixo = $destinacao_lixo;
-                    $obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
-                    $obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
-                    $obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
-                    $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
-                    $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
-                    $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
-                    $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
-                    $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
-                    $obj->dependencia_cozinha = $this->dependencia_cozinha == 'on' ? 1 : 0;
-                    $obj->dependencia_biblioteca = $this->dependencia_biblioteca == 'on' ? 1 : 0;
-                    $obj->dependencia_sala_leitura = $this->dependencia_sala_leitura == 'on' ? 1 : 0;
-                    $obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
-                    $obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
-                    $obj->dependencia_banheiro_fora = $this->dependencia_banheiro_fora == 'on' ? 1 : 0;
-                    $obj->dependencia_banheiro_dentro = $this->dependencia_banheiro_dentro == 'on' ? 1 : 0;
-                    $obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
-                    $obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
-                    $obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
-                    $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
-                    $obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
-                    $obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
-                    $obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
-                    $obj->dependencia_auditorio = $this->dependencia_auditorio == 'on' ? 1 : 0;
-                    $obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
-                    $obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
-                    $obj->dependencia_alojamento_aluno = $this->dependencia_alojamento_aluno == 'on' ? 1 : 0;
-                    $obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;
-                    $obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
-                    $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
-                    $obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
-                    $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
-                    $obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
+                    $obj->tratamento_lixo = $tratamento_lixo;
+                    $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
+                    $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
+                    $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
+                    $obj->salas_funcionais = $salas_funcionais;
+                    $obj->salas_gerais = $salas_gerais;
+                    $obj->banheiros = $banheiros;
+                    $obj->laboratorios = $laboratorios;
+                    $obj->salas_atividades = $salas_atividades;
+                    $obj->dormitorios = $dormitorios;
+                    $obj->areas_externas = $areas_externas;
+                    $obj->recursos_acessibilidade = $recursos_acessibilidade;
+                    $obj->possui_dependencias = $this->possui_dependencias;
+                    $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
+                    $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
+                    $obj->numero_salas_climatizadas = $this->numero_salas_climatizadas;
+                    $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
                     $obj->total_funcionario = $this->total_funcionario;
                     $obj->atendimento_aee = $this->atendimento_aee;
-                    $obj->atividade_complementar = $this->atividade_complementar;
                     $obj->fundamental_ciclo = $this->fundamental_ciclo;
+                    $obj->organizacao_ensino = $organizacao_ensino;
+                    $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
+                    $obj->orgaos_colegiados = $orgaos_colegiados;
+                    $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
+                    $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
+                    $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
                     $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-                    $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
                     $obj->educacao_indigena = $this->educacao_indigena;
                     $obj->lingua_ministrada = $this->lingua_ministrada;
+                    $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
                     $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
                     $obj->abre_final_semana = $this->abre_final_semana;
-                    $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
+                    $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
                     $obj->proposta_pedagogica = $this->proposta_pedagogica;
+                    $obj->equipamentos = $equipamentos;
+                    $obj->uso_internet = $uso_internet;
+                    $obj->rede_local = $rede_local;
+                    $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
+                    $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
+                    $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
+                    $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
+                    $obj->lousas_digitais = $this->lousas_digitais;
                     $obj->televisoes = $this->televisoes;
-                    $obj->videocassetes = $this->videocassetes;
                     $obj->dvds = $this->dvds;
-                    $obj->antenas_parabolicas = $this->antenas_parabolicas;
-                    $obj->copiadoras = $this->copiadoras;
-                    $obj->retroprojetores = $this->retroprojetores;
-                    $obj->impressoras = $this->impressoras;
                     $obj->aparelhos_de_som = $this->aparelhos_de_som;
                     $obj->projetores_digitais = $this->projetores_digitais;
-                    $obj->faxs = $this->faxs;
-                    $obj->maquinas_fotograficas = $this->maquinas_fotograficas;
-                    $obj->computadores = $this->computadores;
-                    $obj->computadores_administrativo = $this->computadores_administrativo;
-                    $obj->computadores_alunos = $this->computadores_alunos;
-                    $obj->impressoras_multifuncionais = $this->impressoras_multifuncionais;
                     $obj->acesso_internet = $this->acesso_internet;
                     $obj->ato_criacao = $this->ato_criacao;
                     $obj->ato_autorizativo = $this->ato_autorizativo;
@@ -1556,6 +1770,9 @@ class indice extends clsCadastro
                     $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
                     $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
                     $obj->esfera_administrativa = $this->esfera_administrativa;
+                    foreach ($this->inputsRecursos as $key => $value) {
+                        $obj->{$key} = $this->{$key};
+                    }
 
                     $cod_escola = $cadastrou1 = $obj->cadastra();
 
@@ -1624,6 +1841,8 @@ class indice extends clsCadastro
                     return false;
                 }
 
+                $this->saveInep($escola['cod_escola']);
+
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 
                 throw new HttpResponseException(
@@ -1637,93 +1856,71 @@ class indice extends clsCadastro
             $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, null, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
             $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
-            $obj->latitude = $this->latitude;
-            $obj->longitude = $this->longitude;
             $obj->regulamentacao = $this->regulamentacao;
             $obj->situacao_funcionamento = $this->situacao_funcionamento;
-            $obj->acesso = $this->acesso;
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
             $obj->email_gestor = $this->email_gestor;
-            $obj->local_funcionamento = $this->local_funcionamento;
+            $obj->local_funcionamento = $local_funcionamento;
             $obj->condicao = $this->condicao;
+            $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
             $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
             $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
             $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
             $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
             $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
-            $obj->decreto_criacao = $this->decreto_criacao;
-            $obj->area_terreno_total = $this->area_terreno_total;
-            $obj->area_construida = $this->area_construida;
-            $obj->area_disponivel = $this->area_disponivel;
-            $obj->num_pavimentos = $this->num_pavimentos;
-            $obj->tipo_piso = $this->tipo_piso;
-            $obj->medidor_energia = $this->medidor_energia;
-            $obj->agua_consumida = $this->agua_consumida;
+            $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
             $obj->abastecimento_agua = $abastecimento_agua;
             $obj->abastecimento_energia = $abastecimento_energia;
             $obj->esgoto_sanitario = $esgoto_sanitario;
             $obj->destinacao_lixo = $destinacao_lixo;
-            $obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
-            $obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
-            $obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
-            $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
-            $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
-            $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
-            $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
-            $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
-            $obj->dependencia_cozinha = $this->dependencia_cozinha == 'on' ? 1 : 0;
-            $obj->dependencia_biblioteca = $this->dependencia_biblioteca == 'on' ? 1 : 0;
-            $obj->dependencia_sala_leitura = $this->dependencia_sala_leitura == 'on' ? 1 : 0;
-            $obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
-            $obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_fora = $this->dependencia_banheiro_fora == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_dentro = $this->dependencia_banheiro_dentro == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
-            $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
-            $obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
-            $obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
-            $obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
-            $obj->dependencia_auditorio = $this->dependencia_auditorio == 'on' ? 1 : 0;
-            $obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
-            $obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
-            $obj->dependencia_alojamento_aluno = $this->dependencia_alojamento_aluno == 'on' ? 1 : 0;
-            $obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;
-            $obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
-            $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
-            $obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
-            $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
-            $obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
+            $obj->tratamento_lixo = $tratamento_lixo;
+            $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
+            $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
+            $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
+            $obj->salas_funcionais = $salas_funcionais;
+            $obj->salas_gerais = $salas_gerais;
+            $obj->banheiros = $banheiros;
+            $obj->laboratorios = $laboratorios;
+            $obj->salas_atividades = $salas_atividades;
+            $obj->dormitorios = $dormitorios;
+            $obj->areas_externas = $areas_externas;
+            $obj->recursos_acessibilidade = $recursos_acessibilidade;
+            $obj->possui_dependencias = $this->possui_dependencias;
+            $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
+            $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
+            $obj->numero_salas_climatizadas = $this->numero_salas_climatizadas;
+            $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
-            $obj->atividade_complementar = $this->atividade_complementar;
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
+            $obj->organizacao_ensino = $this->organizacao_ensino;
+            $obj->instrumentos_pedagogicos = $this->instrumentos_pedagogicos;
+            $obj->orgaos_colegiados = $orgaos_colegiados;
+            $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
+            $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
+            $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-            $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
+            $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
             $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
             $obj->abre_final_semana = $this->abre_final_semana;
-            $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
+            $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
             $obj->proposta_pedagogica = $this->proposta_pedagogica;
+            $obj->equipamentos = $equipamentos;
+            $obj->uso_internet = $uso_internet;
+            $obj->rede_local = $rede_local;
+            $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
+            $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
+            $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
+            $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
+            $obj->lousas_digitais = $this->lousas_digitais;
             $obj->televisoes = $this->televisoes;
-            $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
-            $obj->antenas_parabolicas = $this->antenas_parabolicas;
-            $obj->copiadoras = $this->copiadoras;
-            $obj->retroprojetores = $this->retroprojetores;
-            $obj->impressoras = $this->impressoras;
             $obj->aparelhos_de_som = $this->aparelhos_de_som;
             $obj->projetores_digitais = $this->projetores_digitais;
-            $obj->faxs = $this->faxs;
-            $obj->maquinas_fotograficas = $this->maquinas_fotograficas;
-            $obj->computadores = $this->computadores;
-            $obj->computadores_administrativo = $this->computadores_administrativo;
-            $obj->computadores_alunos = $this->computadores_alunos;
-            $obj->impressoras_multifuncionais = $this->impressoras_multifuncionais;
             $obj->acesso_internet = $this->acesso_internet;
             $obj->ato_criacao = $this->ato_criacao;
             $obj->ato_autorizativo = $this->ato_autorizativo;
@@ -1736,6 +1933,9 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
+            foreach ($this->inputsRecursos as $key => $value) {
+                $obj->{$key} = $this->{$key};
+            }
 
             $cod_escola = $cadastrou = $obj->cadastra();
 
@@ -1765,6 +1965,7 @@ class indice extends clsCadastro
                             }
                         }
                     }
+                    $this->saveInep($escola['cod_escola']);
                     //-----------------------FIM CADASTRA CURSO------------------------//
                     $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 
@@ -1796,7 +1997,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->validaLatitudeLongitude()) {
+        if (!$this->validaCampoPossuiDependencias()) {
             return false;
         }
 
@@ -1815,23 +2016,31 @@ class indice extends clsCadastro
 
         $orgao_vinculado_escola = implode(',', $this->orgao_vinculado_escola);
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
+        $local_funcionamento = implode(',', $this->local_funcionamento);
         $abastecimento_agua = implode(',', $this->abastecimento_agua);
         $abastecimento_energia = implode(',', $this->abastecimento_energia);
         $esgoto_sanitario = implode(',', $this->esgoto_sanitario);
         $destinacao_lixo = implode(',', $this->destinacao_lixo);
+        $tratamento_lixo = implode(',', $this->tratamento_lixo);
+        $salas_funcionais = implode(',', $this->salas_funcionais);
+        $salas_gerais = implode(',', $this->salas_gerais);
+        $banheiros = implode(',', $this->banheiros);
+        $laboratorios = implode(',', $this->laboratorios);
+        $salas_atividades = implode(',', $this->salas_atividades);
+        $dormitorios = implode(',', $this->dormitorios);
+        $areas_externas = implode(',', $this->areas_externas);
+        $recursos_acessibilidade = implode(',', $this->recursos_acessibilidade);
+        $equipamentos = implode(',', $this->equipamentos);
+        $uso_internet = implode(',', $this->uso_internet);
+        $rede_local = implode(',', $this->rede_local);
+        $equipamentos_acesso_internet = implode(',', $this->equipamentos_acesso_internet);
+        $organizacao_ensino = implode(',', $this->organizacao_ensino);
+        $instrumentos_pedagogicos = implode(',', $this->instrumentos_pedagogicos);
+        $orgaos_colegiados = implode(',', $this->orgaos_colegiados);
+        $reserva_vagas_cotas = implode(',', $this->reserva_vagas_cotas);
+        $codigo_lingua_indigena = implode(',', $this->codigo_lingua_indigena);
 
-        if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
-            return false;
-        }
-
-        if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de energia elétrica</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
-            return false;
-        }
-
-        if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
-            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgoto sanitário</b>, quando a opção: <b>Inexistente</b> estiver selecionada.';
+        if (!$this->validaOpcoesUnicasMultipleSearch()){
             return false;
         }
 
@@ -1844,95 +2053,71 @@ class indice extends clsCadastro
             $obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
             $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
-            $obj->latitude = $this->latitude;
-            $obj->longitude = $this->longitude;
             $obj->regulamentacao = $this->regulamentacao;
             $obj->situacao_funcionamento = $this->situacao_funcionamento;
-            $obj->acesso = $this->acesso;
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
             $obj->email_gestor = $this->email_gestor;
-            $obj->local_funcionamento = $this->local_funcionamento;
-            $obj->local_funcionamento = $this->local_funcionamento;
-            $obj->local_funcionamento = $this->local_funcionamento;
+            $obj->local_funcionamento = $local_funcionamento;
             $obj->condicao = $this->condicao;
+            $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
             $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
             $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
             $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
             $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
             $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
-            $obj->decreto_criacao = $this->decreto_criacao;
-            $obj->area_terreno_total = $this->area_terreno_total;
-            $obj->area_construida = $this->area_construida;
-            $obj->area_disponivel = $this->area_disponivel;
-            $obj->num_pavimentos = $this->num_pavimentos;
-            $obj->tipo_piso = $this->tipo_piso;
-            $obj->medidor_energia = $this->medidor_energia;
-            $obj->agua_consumida = $this->agua_consumida;
+            $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
             $obj->abastecimento_agua = $abastecimento_agua;
             $obj->abastecimento_energia = $abastecimento_energia;
             $obj->esgoto_sanitario = $esgoto_sanitario;
             $obj->destinacao_lixo = $destinacao_lixo;
-            $obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
-            $obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
-            $obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
-            $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
-            $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
-            $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
-            $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
-            $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
-            $obj->dependencia_cozinha = $this->dependencia_cozinha == 'on' ? 1 : 0;
-            $obj->dependencia_biblioteca = $this->dependencia_biblioteca == 'on' ? 1 : 0;
-            $obj->dependencia_sala_leitura = $this->dependencia_sala_leitura == 'on' ? 1 : 0;
-            $obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
-            $obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_fora = $this->dependencia_banheiro_fora == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_dentro = $this->dependencia_banheiro_dentro == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
-            $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
-            $obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
-            $obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
-            $obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
-            $obj->dependencia_auditorio = $this->dependencia_auditorio == 'on' ? 1 : 0;
-            $obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
-            $obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
-            $obj->dependencia_alojamento_aluno = $this->dependencia_alojamento_aluno == 'on' ? 1 : 0;
-            $obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;
-            $obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
-            $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
-            $obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
-            $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
-            $obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
+            $obj->tratamento_lixo = $tratamento_lixo;
+            $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
+            $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
+            $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
+            $obj->salas_funcionais = $salas_funcionais;
+            $obj->salas_gerais = $salas_gerais;
+            $obj->banheiros = $banheiros;
+            $obj->laboratorios = $laboratorios;
+            $obj->salas_atividades = $salas_atividades;
+            $obj->dormitorios = $dormitorios;
+            $obj->areas_externas = $areas_externas;
+            $obj->recursos_acessibilidade = $recursos_acessibilidade;
+            $obj->possui_dependencias = $this->possui_dependencias;
+            $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
+            $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
+            $obj->numero_salas_climatizadas = $this->numero_salas_climatizadas;
+            $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
-            $obj->atividade_complementar = $this->atividade_complementar;
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
+            $obj->organizacao_ensino = $organizacao_ensino;
+            $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
+            $obj->orgaos_colegiados = $orgaos_colegiados;
+            $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
+            $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
+            $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-            $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
+            $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
             $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
             $obj->abre_final_semana = $this->abre_final_semana;
-            $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
+            $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
             $obj->proposta_pedagogica = $this->proposta_pedagogica;
+            $obj->equipamentos = $equipamentos;
+            $obj->uso_internet = $uso_internet;
+            $obj->rede_local = $rede_local;
+            $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
+            $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
+            $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
+            $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
+            $obj->lousas_digitais = $this->lousas_digitais;
             $obj->televisoes = $this->televisoes;
-            $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
-            $obj->antenas_parabolicas = $this->antenas_parabolicas;
-            $obj->copiadoras = $this->copiadoras;
-            $obj->retroprojetores = $this->retroprojetores;
-            $obj->impressoras = $this->impressoras;
             $obj->aparelhos_de_som = $this->aparelhos_de_som;
             $obj->projetores_digitais = $this->projetores_digitais;
-            $obj->faxs = $this->faxs;
-            $obj->maquinas_fotograficas = $this->maquinas_fotograficas;
-            $obj->computadores = $this->computadores;
-            $obj->computadores_administrativo = $this->computadores_administrativo;
-            $obj->computadores_alunos = $this->computadores_alunos;
-            $obj->impressoras_multifuncionais = $this->impressoras_multifuncionais;
             $obj->acesso_internet = $this->acesso_internet;
             $obj->ato_criacao = $this->ato_criacao;
             $obj->ato_autorizativo = $this->ato_autorizativo;
@@ -1945,6 +2130,9 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
+            foreach ($this->inputsRecursos as $key => $value) {
+                $obj->{$key} = $this->{$key};
+            }
 
             $editou = $obj->edita();
 
@@ -1958,94 +2146,70 @@ class indice extends clsCadastro
             $obj->situacao_funcionamento = $this->situacao_funcionamento;
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
             $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
-            $obj->latitude = $this->latitude;
-            $obj->longitude = $this->longitude;
             $obj->regulamentacao = $this->regulamentacao;
-            $obj->acesso = $this->acesso;
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
             $obj->email_gestor = $this->email_gestor;
-            $obj->local_funcionamento = $this->local_funcionamento;
+            $obj->local_funcionamento = $local_funcionamento;
             $obj->condicao = $this->condicao;
+            $obj->predio_compartilhado_outra_escola = $this->predio_compartilhado_outra_escola;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
             $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
             $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
             $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
             $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
             $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
-            $obj->decreto_criacao = $this->decreto_criacao;
-            $obj->area_terreno_total = $this->area_terreno_total;
-            $obj->area_construida = $this->area_construida;
-            $obj->area_disponivel = $this->area_disponivel;
-            $obj->num_pavimentos = $this->num_pavimentos;
-            $obj->tipo_piso = $this->tipo_piso;
-            $obj->medidor_energia = $this->medidor_energia;
-            $obj->agua_consumida = $this->agua_consumida;
+            $obj->agua_potavel_consumo = $this->agua_potavel_consumo;
             $obj->abastecimento_agua = $abastecimento_agua;
             $obj->abastecimento_energia = $abastecimento_energia;
             $obj->esgoto_sanitario = $esgoto_sanitario;
             $obj->destinacao_lixo = $destinacao_lixo;
-            $obj->dependencia_sala_diretoria = $this->dependencia_sala_diretoria == 'on' ? 1 : 0;
-            $obj->dependencia_sala_professores = $this->dependencia_sala_professores == 'on' ? 1 : 0;
-            $obj->dependencia_sala_secretaria = $this->dependencia_sala_secretaria == 'on' ? 1 : 0;
-            $obj->dependencia_laboratorio_informatica = $this->dependencia_laboratorio_informatica == 'on' ? 1 : 0;
-            $obj->dependencia_laboratorio_ciencias = $this->dependencia_laboratorio_ciencias == 'on' ? 1 : 0;
-            $obj->dependencia_sala_aee = $this->dependencia_sala_aee == 'on' ? 1 : 0;
-            $obj->dependencia_quadra_coberta = $this->dependencia_quadra_coberta == 'on' ? 1 : 0;
-            $obj->dependencia_quadra_descoberta = $this->dependencia_quadra_descoberta == 'on' ? 1 : 0;
-            $obj->dependencia_cozinha = $this->dependencia_cozinha == 'on' ? 1 : 0;
-            $obj->dependencia_biblioteca = $this->dependencia_biblioteca == 'on' ? 1 : 0;
-            $obj->dependencia_sala_leitura = $this->dependencia_sala_leitura == 'on' ? 1 : 0;
-            $obj->dependencia_parque_infantil = $this->dependencia_parque_infantil == 'on' ? 1 : 0;
-            $obj->dependencia_bercario = $this->dependencia_bercario == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_fora = $this->dependencia_banheiro_fora == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_dentro = $this->dependencia_banheiro_dentro == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_infantil = $this->dependencia_banheiro_infantil == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_deficiente = $this->dependencia_banheiro_deficiente == 'on' ? 1 : 0;
-            $obj->dependencia_banheiro_chuveiro = $this->dependencia_banheiro_chuveiro == 'on' ? 1 : 0;
-            $obj->dependencia_vias_deficiente = $this->dependencia_vias_deficiente == 'on' ? 1 : 0;
-            $obj->dependencia_refeitorio = $this->dependencia_refeitorio == 'on' ? 1 : 0;
-            $obj->dependencia_dispensa = $this->dependencia_dispensa == 'on' ? 1 : 0;
-            $obj->dependencia_aumoxarifado = $this->dependencia_aumoxarifado == 'on' ? 1 : 0;
-            $obj->dependencia_auditorio = $this->dependencia_auditorio == 'on' ? 1 : 0;
-            $obj->dependencia_patio_coberto = $this->dependencia_patio_coberto == 'on' ? 1 : 0;
-            $obj->dependencia_patio_descoberto = $this->dependencia_patio_descoberto == 'on' ? 1 : 0;
-            $obj->dependencia_alojamento_aluno = $this->dependencia_alojamento_aluno == 'on' ? 1 : 0;
-            $obj->dependencia_alojamento_professor = $this->dependencia_alojamento_professor == 'on' ? 1 : 0;
-            $obj->dependencia_area_verde = $this->dependencia_area_verde == 'on' ? 1 : 0;
-            $obj->dependencia_lavanderia = $this->dependencia_lavanderia == 'on' ? 1 : 0;
-            $obj->dependencia_unidade_climatizada = $this->dependencia_unidade_climatizada;
-            $obj->dependencia_quantidade_ambiente_climatizado = $this->dependencia_quantidade_ambiente_climatizado;
-            $obj->dependencia_nenhuma_relacionada = $this->dependencia_nenhuma_relacionada == 'on' ? 1 : 0;
-            $obj->dependencia_numero_salas_utilizadas = $this->dependencia_numero_salas_utilizadas;
-            $obj->dependencia_numero_salas_existente = $this->dependencia_numero_salas_existente;
+            $obj->tratamento_lixo = $tratamento_lixo;
+            $obj->alimentacao_escolar_alunos = $this->alimentacao_escolar_alunos;
+            $obj->compartilha_espacos_atividades_integracao = $this->compartilha_espacos_atividades_integracao;
+            $obj->usa_espacos_equipamentos_atividades_regulares = $this->usa_espacos_equipamentos_atividades_regulares;
+            $obj->salas_funcionais = $salas_funcionais;
+            $obj->salas_gerais = $salas_gerais;
+            $obj->banheiros = $banheiros;
+            $obj->laboratorios = $laboratorios;
+            $obj->salas_atividades = $salas_atividades;
+            $obj->dormitorios = $dormitorios;
+            $obj->areas_externas = $areas_externas;
+            $obj->recursos_acessibilidade = $recursos_acessibilidade;
+            $obj->possui_dependencias = $this->possui_dependencias;
+            $obj->numero_salas_utilizadas_dentro_predio = $this->numero_salas_utilizadas_dentro_predio;
+            $obj->numero_salas_utilizadas_fora_predio = $this->numero_salas_utilizadas_fora_predio;
+            $obj->numero_salas_climatizadas = $this->numero_salas_climatizadas;
+            $obj->numero_salas_acessibilidade = $this->numero_salas_acessibilidade;
             $obj->total_funcionario = $this->total_funcionario;
             $obj->atendimento_aee = $this->atendimento_aee;
-            $obj->atividade_complementar = $this->atividade_complementar;
             $obj->fundamental_ciclo = $this->fundamental_ciclo;
+            $obj->organizacao_ensino = $organizacao_ensino;
+            $obj->instrumentos_pedagogicos = $instrumentos_pedagogicos;
+            $obj->orgaos_colegiados = $orgaos_colegiados;
+            $obj->exame_selecao_ingresso = $this->exame_selecao_ingresso;
+            $obj->reserva_vagas_cotas = $reserva_vagas_cotas;
+            $obj->projeto_politico_pedagogico = $this->projeto_politico_pedagogico;
             $obj->localizacao_diferenciada = $this->localizacao_diferenciada;
-            $obj->materiais_didaticos_especificos = $this->materiais_didaticos_especificos;
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
+            $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
             $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
             $obj->abre_final_semana = $this->abre_final_semana;
-            $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
+            $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
             $obj->proposta_pedagogica = $this->proposta_pedagogica;
+            $obj->equipamentos = $equipamentos;
+            $obj->uso_internet = $uso_internet;
+            $obj->rede_local = $rede_local;
+            $obj->equipamentos_acesso_internet = $equipamentos_acesso_internet;
+            $obj->quantidade_computadores_alunos_mesa = $this->quantidade_computadores_alunos_mesa;
+            $obj->quantidade_computadores_alunos_portateis = $this->quantidade_computadores_alunos_portateis;
+            $obj->quantidade_computadores_alunos_tablets = $this->quantidade_computadores_alunos_tablets;
+            $obj->lousas_digitais = $this->lousas_digitais;
             $obj->televisoes = $this->televisoes;
-            $obj->videocassetes = $this->videocassetes;
             $obj->dvds = $this->dvds;
-            $obj->antenas_parabolicas = $this->antenas_parabolicas;
-            $obj->copiadoras = $this->copiadoras;
-            $obj->retroprojetores = $this->retroprojetores;
-            $obj->impressoras = $this->impressoras;
             $obj->aparelhos_de_som = $this->aparelhos_de_som;
             $obj->projetores_digitais = $this->projetores_digitais;
-            $obj->faxs = $this->faxs;
-            $obj->maquinas_fotograficas = $this->maquinas_fotograficas;
-            $obj->computadores = $this->computadores;
-            $obj->computadores_administrativo = $this->computadores_administrativo;
-            $obj->computadores_alunos = $this->computadores_alunos;
-            $obj->impressoras_multifuncionais = $this->impressoras_multifuncionais;
             $obj->acesso_internet = $this->acesso_internet;
             $obj->ato_criacao = $this->ato_criacao;
             $obj->ato_autorizativo = $this->ato_autorizativo;
@@ -2058,6 +2222,9 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
+            foreach ($this->inputsRecursos as $key => $value) {
+                $obj->{$key} = $this->{$key};
+            }
 
             $this->cod_escola = $editou = $obj->cadastra();
 
@@ -2138,6 +2305,7 @@ class indice extends clsCadastro
                                 }
                             }
                         }
+                        $this->saveInep($this->cod_escola);
                         //-----------------------FIM EDITA CURSO------------------------//
                         $this->mensagem .= "Edição efetuada com sucesso.<br>";
 
@@ -2171,6 +2339,7 @@ class indice extends clsCadastro
                             }
                         }
                     }
+                    $this->saveInep($this->cod_escola);
                     //-----------------------FIM EDITA CURSO------------------------//
                     $this->mensagem .= "Edição efetuada com sucesso.<br>";
 
@@ -2243,31 +2412,29 @@ class indice extends clsCadastro
     protected function validaCamposCenso()
     {
         if (!$this->validarCamposObrigatoriosCenso()) {
-            return TRUE;
+            return true;
         }
         return $this->validaEscolaPrivada() &&
                 $this->validaOcupacaoPredio() &&
-                $this->validaSalasExistentes() &&
-                $this->validaPossuiBandaLarga() &&
                 $this->validaLocalizacaoDiferenciada() &&
                 $this->validaEsferaAdministrativa() &&
                 $this->validaDigitosInepEscola($this->inep_escola_sede, 'Código escola sede') &&
-                $this->inepEscolaSedeDiferenteDaEscolaPrincipal();
+                $this->inepEscolaSedeDiferenteDaEscolaPrincipal() &&
+                $this->validaEscolaCompartilhaPredio() &&
+                $this->validaSalasUtilizadasDentroEscola() &&
+                $this->validaSalasUtilizadasForaEscola() &&
+                $this->validaSalasClimatizadas() &&
+                $this->validaSalasAcessibilidade() &&
+                $this->validaRecursos() &&
+                $this->validaQuantidadeComputadoresAlunos() &&
+                $this->validaQuantidadeEquipamentosEnsino() &&
+                $this->validaLinguasIndigenas();
     }
 
     protected function validaOcupacaoPredio()
     {
-        if ($this->local_funcionamento == 3 && empty($this->condicao)) {
+        if (in_array(LocalFuncionamento::PREDIO_ESCOLAR, $this->local_funcionamento) && empty($this->condicao)) {
             $this->mensagem = 'O campo: Forma de ocupação do prédio, deve ser informado quando o Local de funcionamento for prédio escolar.';
-            return FALSE;
-        }
-        return TRUE;
-    }
-
-    protected function validaSalasExistentes()
-    {
-        if ($this->local_funcionamento == 3 && ((int) $this->dependencia_numero_salas_existente) <= 0) {
-            $this->mensagem = 'O campo: Número de salas de aula existentes na escola, deve ser informado quando o Local de funcionamento for prédio escolar.';
             return FALSE;
         }
         return TRUE;
@@ -2282,15 +2449,6 @@ class indice extends clsCadastro
         }
 
         return true;
-    }
-
-    protected function validaPossuiBandaLarga()
-    {
-        if (((int)$this->computadores) > 0 && !in_array($this->acesso_internet, array('0', '1'))) {
-            $this->mensagem = 'O campo: Possui internet banda larga, deve ser informado quando existir computadores na escola.';
-            return FALSE;
-        }
-        return TRUE;
     }
 
     protected function validaEsferaAdministrativa()
@@ -2372,39 +2530,6 @@ class indice extends clsCadastro
         return TRUE;
     }
 
-    protected function validaLatitudeLongitude()
-    {
-        $caracteres = array(" ", ".", "-", null, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
-        $mensagemErro = "O campo: Latitude e/ou Longitude foi preenchido com valor inválido.";
-
-        for ($i = 0; $i <= strlen($this->latitude); $i++) {
-            $char = substr($this->latitude, $i, 1);
-
-            if (!in_array($char, $caracteres)) {
-                $this->mensagem = $mensagemErro;
-                return false;
-            }
-        }
-
-        for ($i = 0; $i <= strlen($this->longitude); $i++) {
-            $char = substr($this->longitude, $i, 1);
-            if (!in_array($char, $caracteres)) {
-                $this->mensagem = $mensagemErro;
-                return false;
-            }
-        }
-
-        if (empty($this->latitude) && !empty($this->longitude)) {
-            $this->mensagem = "O campo Latitude deve ser preenchido quando o Longitude estiver preenchido.";
-            return false;
-        } elseif (!empty($this->latitude) && empty($this->longitude)) {
-            $this->mensagem = "O campo Longitude deve ser preenchido quando o Latitude estiver preenchido.";
-            return false;
-        }
-
-        return true;
-    }
-
     protected function validaDadosTelefones()
     {
         return $this->validaDDDTelefone($this->p_ddd_telefone_1, $this->p_telefone_1, 'Telefone 1') &&
@@ -2480,6 +2605,300 @@ class indice extends clsCadastro
             $this->inputsHelper()->integer('codigo_inep_escola_compartilhada'.$seq, $options);
         }
 
+    }
+
+    protected function validaEscolaCompartilhaPredio()
+    {
+        $arrayCampos = [
+            $this->codigo_inep_escola_compartilhada,
+            $this->codigo_inep_escola_compartilhada2,
+            $this->codigo_inep_escola_compartilhada3,
+            $this->codigo_inep_escola_compartilhada4,
+            $this->codigo_inep_escola_compartilhada5,
+            $this->codigo_inep_escola_compartilhada6,
+        ];
+
+        if (in_array($this->escola_inep_id, $arrayCampos)) {
+            $this->mensagem = "O campo: Código da escola que compartilha o prédio 1, 2, 3, 4, 5 ou 6, deve ser diferente do Código INEP da escola atual.";
+            return false;
+        }
+
+        $arrayCamposSemNulos = array_filter($arrayCampos);
+        if (count(array_unique($arrayCamposSemNulos)) < count($arrayCamposSemNulos)) {
+            $this->mensagem = "Os códigos Inep's das escolas compartilhadas devem ser diferentes entre si.";
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaCampoPossuiDependencias()
+    {
+        if ($this->possui_dependencias != 1) {
+            return true;
+        }
+
+        $arrayCampos = array_filter(
+            [
+                $this->salas_gerais,
+                $this->salas_funcionais,
+                $this->banheiros,
+                $this->laboratorios,
+                $this->salas_atividades,
+                $this->dormitorios,
+                $this->areas_externas,
+            ]
+        );
+
+        if (count($arrayCampos) == 0) {
+            $this->mensagem = 'Preencha pelo menos um dos campos de Salas gerais à Áreas externas';
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaSalasUtilizadasDentroEscola()
+    {
+        if ($this->numero_salas_utilizadas_dentro_predio == '0') {
+            $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->local_funcionamento != LocalFuncionamento::PREDIO_ESCOLAR) {
+            return true;
+        }
+
+        if ((int)$this->numero_salas_utilizadas_fora_predio <= 0 && (int)$this->numero_salas_utilizadas_dentro_predio <= 0) {
+            $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> deve ser preenchido quando o campo: <b>Local de funcionamento</b> for: <b>Prédio escolar</b> e o campo: <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b> não for preenchido';
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaSalasUtilizadasForaEscola()
+    {
+        if ($this->numero_salas_utilizadas_fora_predio == '0') {
+            $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ((int)$this->numero_salas_utilizadas_fora_predio <= 0 && (int)$this->numero_salas_utilizadas_dentro_predio <= 0) {
+            $this->mensagem = 'O campo: <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b> deve ser preenchido quando o campo: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> não for preenchido';
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaSalasClimatizadas()
+    {
+        if ($this->numero_salas_climatizadas == '0') {
+            $this->mensagem = 'O campo: <b>Número de salas de aula climatizadas</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        $totalSalas = (int)$this->numero_salas_utilizadas_dentro_predio + (int)$this->numero_salas_utilizadas_fora_predio;
+        if ((int)$this->numero_salas_climatizadas > $totalSalas) {
+            $this->mensagem = 'O campo: <b>Número de salas de aula climatizadas</b> não pode ser maior que a soma dos campos: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> e <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b>';
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaSalasAcessibilidade()
+    {
+        if ($this->numero_salas_acessibilidade == '0') {
+            $this->mensagem = 'O campo: <b>Número de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        $totalSalas = (int)$this->numero_salas_utilizadas_dentro_predio + (int)$this->numero_salas_utilizadas_fora_predio;
+        if ((int)$this->numero_salas_acessibilidade > $totalSalas) {
+            $this->mensagem = 'O campo: <b>Número de salas de aula com acessibilidade para pessoas com deficiência ou mobilidade reduzida</b> não pode ser maior que a soma dos campos: <b>Número de salas de aula utilizadas na escola dentro do prédio escolar</b> e <b>Número de salas de aula utilizadas na escola fora do prédio escolar</b>';
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaOpcoesUnicasMultipleSearch()
+    {
+        if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgotamento sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento</b> estiver selecionada';
+            return false;
+        }
+
+        if (in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Recursos de acessibilidade</b>, quando a opção: <b>Nenhum dos recursos de acessibilidade</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(UsoInternet::NAO_POSSUI, $this->uso_internet) && count($this->uso_internet) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Acesso à internet</b>, quando a opção: <b>Não possui acesso à internet</b> estiver selecionada.';
+            return false;
+        }
+        if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Abastecimento de água</b>, quando a opção: <b>Não há abastecimento de água</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(4, $this->abastecimento_energia) && count($this->abastecimento_energia) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Fonte de energia elétrica</b>, quando a opção: <b>Não há energia elétrica</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(3, $this->esgoto_sanitario) && count($this->esgoto_sanitario) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Esgotamento sanitário</b>, quando a opção: <b>Não há esgotamento sanitário</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(TratamentoLixo::NAO_FAZ, $this->tratamento_lixo) && count($this->tratamento_lixo) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Tratamento do lixo/resíduos que a escola realiza</b>, quando a opção: <b>Não faz tratamento</b> estiver selecionada';
+            return false;
+        }
+
+        if (in_array(RecursosAcessibilidade::NENHUM, $this->recursos_acessibilidade) && count($this->recursos_acessibilidade) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Recursos de acessibilidade</b>, quando a opção: <b>Nenhum dos recursos de acessibilidade</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(UsoInternet::NAO_POSSUI, $this->uso_internet) && count($this->uso_internet) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Acesso à internet</b>, quando a opção: <b>Não possui acesso à internet</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(RedeLocal::NENHUMA, $this->rede_local) && count($this->rede_local) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Rede local de interligação de computadores</b>, quando a opção: <b>Não há rede local interligando computadores</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(OrgaosColegiados::NENHUM, $this->orgaos_colegiados) && count($this->orgaos_colegiados) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Órgãos colegiados em funcionamento na escola</b>, quando a opção: <b>Não há órgãos colegiados em funcionamento</b> estiver selecionada.';
+            return false;
+        }
+
+        if (in_array(ReservaVagasCotas::NAO_POSSUI, $this->reserva_vagas_cotas) && count($this->reserva_vagas_cotas) > 1) {
+            $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Reserva de vagas por sistema de cotas para grupos específicos de alunos(as)</b>, quando a opção: <b>Sem reservas de vagas para sistema de cotas (ampla concorrência)</b> estiver selecionada.';
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaRecursos()
+    {
+        $algumCampoPreenchido = false;
+        foreach ($this->inputsRecursos as $key => $label) {
+            if ($this->{$key} == '0') {
+                $this->mensagem = "O campo: <b>{$label}</b> não pode ser preenchido com 0";
+                return false;
+            } elseif ((int) $this->{$key} > 0) {
+                $algumCampoPreenchido = true;
+            }
+        }
+
+        if ($algumCampoPreenchido) {
+            return true;
+        }
+
+        $this->mensagem = 'Preencha pelo menos um dos campos <b>da seção</b> Quantidade de profissionais da aba Recursos.';
+        return false;
+    }
+
+    protected function validaQuantidadeComputadoresAlunos()
+    {
+        if ($this->quantidade_computadores_alunos_mesa == '0') {
+            $this->mensagem = 'O campo: <b>Computadores de mesa</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->quantidade_computadores_alunos_portateis == '0') {
+            $this->mensagem = 'O campo: <b>Computadores portáteis</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->quantidade_computadores_alunos_tablets == '0') {
+            $this->mensagem = 'O campo: <b>Tablets</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        return true;
+    }
+
+
+    protected function validaQuantidadeEquipamentosEnsino()
+    {
+        if ($this->televisoes == '0') {
+            $this->mensagem = 'O campo: <b>Aparelho de Televisão</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->dvds == '0') {
+            $this->mensagem = 'O campo: <b>Aparelho de DVD/Blu-ray</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->aparelhos_de_som == '0') {
+            $this->mensagem = 'O campo: <b>Aparelho de som</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->projetores_digitais == '0') {
+            $this->mensagem = 'O campo: <b>Projetor Multimídia (Data show)</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if ($this->lousas_digitais == '0') {
+            $this->mensagem = 'O campo: <b>Lousa digital</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        return true;
+    }
+
+    private function saveInep($schoolId)
+    {
+        DB::table('modules.educacenso_cod_escola')->where('cod_escola', $schoolId)
+            ->delete();
+        if (!empty($this->escola_inep_id)) {
+            $data = [
+                'cod_escola' => $schoolId,
+                'cod_escola_inep' => $this->escola_inep_id,
+                'fonte' => 'fonte',
+                'nome_inep' => '-',
+                'created_at' => 'NOW()',
+            ];
+
+            DB::table('modules.educacenso_cod_escola')->insert($data);
+        }
+    }
+
+    protected function validaLinguasIndigenas()
+    {
+        if (count($this->codigo_lingua_indigena) > 3) {
+            $this->mensagem = 'O campo: <b>Línguas indígenas</b>, não pode ter mais que 3 opções';
+            return false;
+        }
+
+        return true;
     }
 }
 

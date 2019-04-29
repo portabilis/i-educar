@@ -1,7 +1,8 @@
 <?php
 
+use Tooleks\LaravelAssetVersion\Facades\Asset;
+
 require_once 'CoreExt/View/Helper/Abstract.php';
-require_once 'Portabilis/Assets/Version.php';
 
 class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
 {
@@ -48,10 +49,10 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
                 self::$javascriptsLoaded[] = $file;
 
                 if ($appendAssetsVersionParam) {
-                    $file .= '?assets_version=' . Portabilis_Assets_Version::VERSION;
+                    $viewInstance->appendOutput("<script type='text/javascript' src='" . Asset::get($file) . "'></script>");
+                } else {
+                    $viewInstance->appendOutput("<script type='text/javascript' src='$file'></script>");
                 }
-
-                $viewInstance->appendOutput("<script type='text/javascript' src='$file'></script>");
             }
         }
     }
@@ -80,10 +81,10 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
                 self::$stylesheetsLoaded[] = $file;
 
                 if ($appendAssetsVersionParam) {
-                    $file .= '?assets_version=' . Portabilis_Assets_Version::VERSION;
+                    $viewInstance->appendOutput("<link type='text/css' rel='stylesheet' href='" . Asset::get($file) . "'></script>");
+                } else {
+                    $viewInstance->appendOutput("<link type='text/css' rel='stylesheet' href='$file'></script>");
                 }
-
-                $viewInstance->appendOutput("<link type='text/css' rel='stylesheet' href='$file'></script>");
             }
         }
     }

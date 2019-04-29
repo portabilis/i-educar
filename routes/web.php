@@ -20,7 +20,13 @@ Route::redirect('/', 'intranet/index.php');
 
 Route::any('module/Api/{uri}', 'LegacyController@api')->where('uri', '.*');
 
-Route::group(['middleware' => ['ieducar.navigation', 'ieducar.menu', 'ieducar.footer', 'ieducar.xssbypass', 'auth']], function () {
+Route::any('intranet/filaunica/educar_consulta.php', 'LegacyController@intranet')
+    ->defaults('uri', 'filaunica/educar_consulta.php');
+
+Route::any('intranet/suspenso.php', 'LegacyController@intranet')
+    ->defaults('uri', 'suspenso.php');
+
+Route::group(['middleware' => ['ieducar.navigation', 'ieducar.menu', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth']], function () {
 
     Route::get('/enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@indexEnroll')
         ->name('enrollments.batch.enroll.index');
