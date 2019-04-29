@@ -87,8 +87,7 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->detalhe();
 
     if (! $registro) {
-      header('Location: transporte_empresa_lst.php');
-      die();
+        $this->simpleRedirect('transporte_empresa_lst.php');
     }
 
     $objPessoaJuridica = new clsPessoaJuridica();

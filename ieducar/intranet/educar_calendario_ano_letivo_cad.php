@@ -24,6 +24,10 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -215,9 +219,9 @@ class indice extends clsCadastro
                 if( $obj_calend_ano_letivo->edita() )
                 {
                     $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-                    header( "Location: educar_calendario_ano_letivo_lst.php" );
-                    die();
-                    return true;
+                    throw new HttpResponseException(
+                        new RedirectResponse('educar_calendario_ano_letivo_lst.php')
+                    );
                 }
 
                 $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -236,9 +240,9 @@ class indice extends clsCadastro
           $auditoria->inclusao($calendario_ano_letivo);
 
                     $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                    header( "Location: educar_calendario_ano_letivo_lst.php?ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}" );
-                    die();
-                    return true;
+                    throw new HttpResponseException(
+                        new RedirectResponse("educar_calendario_ano_letivo_lst.php?ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}")
+                    );
                 }
 
                 $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -304,9 +308,9 @@ class indice extends clsCadastro
             if( $obj_calend_ano_letivo->edita() )
             {
                 $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-                header( "Location: educar_calendario_ano_letivo_lst.php" );
-                die();
-                return true;
+                throw new HttpResponseException(
+                    new RedirectResponse('educar_calendario_ano_letivo_lst.php')
+                );
             }
 
             $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -347,9 +351,9 @@ class indice extends clsCadastro
         if( $excluiu )
         {
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_calendario_ano_letivo_lst.php" );
-            die();
-            return true;
+            throw new HttpResponseException(
+                new RedirectResponse('educar_calendario_ano_letivo_lst.php')
+            );
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

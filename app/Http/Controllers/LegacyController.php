@@ -117,8 +117,6 @@ class LegacyController extends Controller
      *
      * @return void
      *
-     * @throws HttpResponseException
-     * @throws HttpException
      * @throws Exception
      */
     private function loadFileOrAbort($filename)
@@ -126,14 +124,6 @@ class LegacyController extends Controller
         try {
             require_once $filename;
             return;
-        } catch (HttpResponseException $exception) {
-
-            // Para evitar encerrar a aplicação com `die` ou `exit`, é lançada
-            // uma exceção do tipo `HttpResponseException` com uma `Response`
-            // interna que será a resposta devolvida pela aplicação.
-
-            throw $exception;
-
         } catch (Exception $exception) {
 
             // A maioria das vezes será pega a Exception neste catch, apenas
@@ -154,13 +144,7 @@ class LegacyController extends Controller
             );
         }
 
-        app(ExceptionHandler::class)->report($exception);
-
-        if (config('app.debug')) {
-            throw $exception;
-        }
-
-        throw new HttpException(500, 'Error in legacy code.', $exception);
+        throw $exception;
     }
 
     /**
@@ -280,5 +264,18 @@ class LegacyController extends Controller
     public function modules($uri)
     {
         return $this->requireFileFromLegacy('modules/' . $uri);
+    }
+
+    /**
+     * Load module route file and generate a response for API.
+     *
+     * @return Response
+     *
+     * @throws HttpResponseException
+     * @throws Exception
+     */
+    public function api()
+    {
+        return $this->requireFileFromLegacy('module/index.php');
     }
 }

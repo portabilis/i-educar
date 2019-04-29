@@ -54,6 +54,26 @@ class TurmaController extends ApiCoreController
     }
 
     // api
+    protected function get()
+    {
+        if (!$this->canGet()) {
+            return void;
+        }
+
+        $id = $this->getRequest()->id;
+        $turma = new clsPmieducarTurma();
+        $turma->cod_turma = $id;
+        $turma = $turma->detalhe();
+
+        foreach ($turma as $k => $v) {
+            if (is_numeric($k)) {
+                unset($turma[$k]);
+            }
+        }
+
+        return $turma;
+    }
+
     protected function ordenaAlunosDaTurmaAlfabetica()
     {
         $codTurma = $this->getRequest()->id;
@@ -68,7 +88,7 @@ class TurmaController extends ApiCoreController
             ];
         }
 
-        sort($lstNomes); //echo "<pre>";print_r($lstNomes);die;
+        sort($lstNomes);
         array_unshift($lstNomes, 'indice zero');
         $quantidadeAlunos = count($lstNomes);
 
@@ -277,7 +297,9 @@ class TurmaController extends ApiCoreController
 
     public function Gerar()
     {
-        if ($this->isRequestFor('get', 'tipo-boletim')) {
+        if ($this->isRequestFor('get', 'turma')) {
+            $this->appendResponse($this->get());
+        } elseif ($this->isRequestFor('get', 'tipo-boletim')) {
             $this->appendResponse($this->getTipoBoletim());
         } elseif ($this->isRequestFor('get', 'ordena-turma-alfabetica')) {
             $this->appendResponse($this->ordenaSequencialAlunosTurma());

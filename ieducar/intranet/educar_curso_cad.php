@@ -520,8 +520,7 @@ class indice extends clsCadastro
                 }
 
                 $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-                header('Location: educar_curso_lst.php');
-                die();
+                $this->simpleRedirect('educar_curso_lst.php');
             }
 
             $this->mensagem = 'Cadastro não realizado.<br>';
@@ -614,8 +613,7 @@ class indice extends clsCadastro
                 
 
                 $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-                header('Location: educar_curso_lst.php');
-                die();
+                $this->simpleRedirect('educar_curso_lst.php');
             }
 
             $this->mensagem = 'Edição não realizada.<br>';
@@ -660,8 +658,7 @@ class indice extends clsCadastro
             $auditoria = new clsModulesAuditoriaGeral('curso', $this->pessoa_logada, $this->cod_curso);
             $auditoria->exclusao($curso);
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-            header('Location: educar_curso_lst.php');
-            die();
+            $this->simpleRedirect('educar_curso_lst.php');
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';

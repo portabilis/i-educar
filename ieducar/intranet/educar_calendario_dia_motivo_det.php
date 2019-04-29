@@ -72,8 +72,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_calendario_dia_motivo_lst.php" );
-            die();
+            $this->simpleRedirect('educar_calendario_dia_motivo_lst.php');
         }
 
         if( class_exists( "clsPmieducarEscola" ) )

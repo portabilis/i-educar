@@ -94,8 +94,7 @@ class indice extends clsDetalhe
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->iddis);
 
     if (! $lst_distrito) {
-      header('Location: public_distrito_lst.php');
-      die();
+        $this->simpleRedirect('public_distrito_lst.php');
     }
     else {
       $registro = $lst_distrito[0];

@@ -70,8 +70,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_pre_requisito_lst.php" );
-            die();
+            $this->simpleRedirect('educar_pre_requisito_lst.php');
         }
 
         if( class_exists( "clsPmieducarUsuario" ) )

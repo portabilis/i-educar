@@ -34,7 +34,10 @@
         autoFocus : false,
 
         messages : {
-          noResults: ''
+          noResults: '',
+          results : function(resultsCount) {
+            return resultsCount;
+          }
         },
 
         focus: function(event, ui) {

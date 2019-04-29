@@ -68,8 +68,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_deficiencia_lst.php" );
-            die();
+            $this->simpleRedirect('educar_deficiencia_lst.php');
         }
 
         if( $registro["nm_deficiencia"] )

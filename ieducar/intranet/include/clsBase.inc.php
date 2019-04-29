@@ -5,13 +5,13 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
+use Tooleks\LaravelAssetVersion\Facades\Asset;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../../includes/bootstrap.php';
 require_once 'include/clsCronometro.inc.php';
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsBanco.inc.php';
-require_once 'include/clsControlador.inc.php';
 require_once 'include/clsLogAcesso.inc.php';
 require_once 'include/Geral.inc.php';
 require_once 'include/pmicontrolesis/geral.inc.php';
@@ -19,11 +19,12 @@ require_once 'include/funcoes.inc.php';
 require_once 'Portabilis/Utils/Database.php';
 require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Assets/Version.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
 if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente) {
-    header("Location: /404.html");
+    throw new HttpResponseException(
+        new RedirectResponse('404.html')
+    );
 }
 
 
@@ -47,7 +48,6 @@ class clsBase extends clsConfig
     var $processoAp;
     var $refresh = FALSE;
 
-    var $convidado = FALSE;
     var $renderMenu = TRUE;
     var $renderMenuSuspenso = TRUE;
     var $renderBanner = TRUE;
@@ -57,30 +57,6 @@ class clsBase extends clsConfig
     var $script_header;
     var $script_footer;
     var $prog_alert;
-
-    public $configuracoes;
-
-    protected function setupConfigs()
-    {
-        $configuracoes = new clsPmieducarConfiguracoesGerais();
-        $this->configuracoes = $configuracoes->detalhe();
-    }
-
-    protected function mostraSupenso()
-    {
-        if (empty($this->configuracoes)) {
-            $this->setupConfigs();
-        }
-
-        $nivel = Session::get('nivel');
-
-        if (!$this->configuracoes['active_on_ieducar'] && $nivel !== 1) {
-            header('HTTP/1.1 503 Service Temporarily Unavailable');
-            header("Location: suspenso.php");
-
-            die();
-        }
-    }
 
     function OpenTpl($template)
     {
@@ -121,15 +97,16 @@ class clsBase extends clsConfig
         if (is_array($this->estilos) && count($this->estilos)) {
             $estilos = '';
             foreach ($this->estilos as $estilo) {
-                $estilos .= "<link rel=stylesheet type='text/css' href='/intranet/styles/{$estilo}.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
+                $estilos .= "<link rel=stylesheet type='text/css' href='" . Asset::get('/intranet/scripts/' . $estilo . '.js') . ".css' />";
             }
             $saida = str_replace("<!-- #&ESTILO&# -->", $estilos, $saida);
         }
 
+
         if (is_array($this->scripts) && count($this->scripts)) {
-            $estilos = '';
+            $scripts = '';
             foreach ($this->scripts as $script) {
-                $scripts .= "<script type='text/javascript' src='/intranet/scripts/{$script}.js?assets_version=" . Portabilis_Assets_Version::VERSION . "' ></script>";
+                $scripts .= "<script type='text/javascript' src='" . Asset::get('/intranet/scripts/' . $script . '.js') . "'></script>";
             }
             $saida = str_replace("<!-- #&SCRIPT&# -->", $scripts, $saida);
         }
@@ -210,13 +187,15 @@ class clsBase extends clsConfig
             }
 
             if (!$permite) {
-                header("location: index.php?negado=1&err=1");
-                die("Acesso negado para este usu&acute;rio");
+                throw new HttpResponseException(
+                    new RedirectResponse(' index.php?negado=1&err=1')
+                );
             }
         } else {
             if (!$this->VerificaPermicaoNumerico($this->processoAp)) {
-                header("location: index.php?negado=1&err=2");
-                die("Acesso negado para este usu&acute;rio");
+                throw new HttpResponseException(
+                    new RedirectResponse(' index.php?negado=1&err=1')
+                );
             }
         }
 
@@ -351,18 +330,16 @@ class clsBase extends clsConfig
     function CadastraAcesso()
     {
         if (Session::get('marcado') != "private") {
-            if (!$this->convidado) {
-                $ip = empty($_SERVER['REMOTE_ADDR']) ? "NULL" : $_SERVER['REMOTE_ADDR'];
-                $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? "NULL" : $_SERVER['HTTP_X_FORWARDED_FOR'];
-                $id_pessoa = $this->pessoa_logada;
+            $ip = empty($_SERVER['REMOTE_ADDR']) ? "NULL" : $_SERVER['REMOTE_ADDR'];
+            $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? "NULL" : $_SERVER['HTTP_X_FORWARDED_FOR'];
+            $id_pessoa = $this->pessoa_logada;
 
-                $logAcesso = new clsLogAcesso(FALSE, $ip, $ip_de_rede, $id_pessoa);
-                $logAcesso->cadastra();
+            $logAcesso = new clsLogAcesso(FALSE, $ip, $ip_de_rede, $id_pessoa);
+            $logAcesso->cadastra();
 
-                Session::put('marcado', 'private');
-                Session::save();
-                Session::start();
-            }
+            Session::put('marcado', 'private');
+            Session::save();
+            Session::start();
         }
     }
 
@@ -370,54 +347,23 @@ class clsBase extends clsConfig
     {
         $cronometro = new clsCronometro();
         $cronometro->marca('inicio');
-        $liberado = TRUE;
+
+        $this->Formular();
+        $this->VerificaPermicao();
+        $this->CadastraAcesso();
 
         $saida_geral = '';
 
-        if ($this->convidado) {
-            Session::put([
-                'convidado' => TRUE,
-                'id_pessoa' => '0',
-            ]);
-        }
+        app(TopMenu::class)->current($this->processoAp,  request()->getRequestUri());
 
-        $controlador = new clsControlador();
+        View::share('title', $this->titulo);
 
-        if ($controlador->Logado() && $liberado || $this->convidado) {
-            $this->mostraSupenso();
-
-            $this->Formular();
-            $this->VerificaPermicao();
-            $this->CadastraAcesso();
-            $saida_geral = '';
-
-            app(TopMenu::class)->current($this->processoAp,  request()->getRequestUri());
-            View::share('title', $this->titulo);
-
-            if ($this->renderMenu) {
-                $saida_geral .= $this->MakeBody();
-            } else {
-                foreach ($this->clsForm as $form) {
-                    $saida_geral .= $form->RenderHTML();
-                }
-            }
-
-        } elseif ((empty($_POST['login'])) || (empty($_POST['senha'])) && $liberado) {
-            $force = !empty($_GET['force']) ? true : false;
-
-            if (!$force) {
-                $this->mostraSupenso();
-            }
-
-            $saida_geral .= $this->MakeHeadHtml();
-            $controlador->Logar(false);
-            $saida_geral .= $this->MakeFootHtml();
+        if ($this->renderMenu) {
+            $saida_geral .= $this->MakeBody();
         } else {
-            $controlador->Logar(true);
-
-            throw new HttpResponseException(
-                new RedirectResponse($_SERVER['HTTP_REFERER'])
-            );
+            foreach ($this->clsForm as $form) {
+                $saida_geral .= $form->RenderHTML();
+            }
         }
 
         $view = 'legacy.body';

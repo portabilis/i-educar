@@ -503,8 +503,7 @@ class indice extends clsCadastro
             }
 
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            header('Location: educar_escola_serie_lst.php');
-            die();
+            $this->simpleRedirect('educar_escola_serie_lst.php');
         }
 
         $this->mensagem = 'Cadastro n&atilde;o rrealizado.<br>';
@@ -619,8 +618,7 @@ class indice extends clsCadastro
             }
 
             $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
-            header('Location: educar_escola_serie_lst.php');
-            die();
+            $this->simpleRedirect('educar_escola_serie_lst.php');
         }
 
         $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
@@ -654,8 +652,7 @@ class indice extends clsCadastro
 
             if ($excluiu1) {
                 $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-                header("Location: educar_escola_serie_lst.php");
-                die();
+                $this->simpleRedirect('educar_escola_serie_lst.php');
             }
         }
 

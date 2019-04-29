@@ -31,6 +31,9 @@
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsAgenda.inc.php';
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 /**
  * clsIndex class.
  *
@@ -421,8 +424,9 @@ class indice
       return $temp;
     }
     else {
-      header('Location: logof.php?login=1');
-      die();
+        throw new HttpResponseException(
+            new RedirectResponse('logof.php?login=1')
+        );
     }
   }
   function mostraModalPesquisa($municipio, $linkPesquisa){

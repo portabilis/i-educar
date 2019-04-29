@@ -1,6 +1,8 @@
 <?php
 
 use App\Services\SchoolClassService;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -899,7 +901,7 @@ class indice extends clsCadastro
         $this->atualizaModulos();
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.';
-        header('Location: educar_turma_lst.php');
+        $this->simpleRedirect('educar_turma_lst.php');
     }
 
     public function Editar()
@@ -913,6 +915,10 @@ class indice extends clsCadastro
         }
 
         if (!$this->nomeEstaDisponivel($this->ano_letivo, $this->ref_cod_curso, $this->ref_cod_serie, $this->ref_cod_escola, $this->nm_turma, $this->cod_turma)) {
+            return false;
+        }
+
+        if (!$this->verificaTurno()) {
             return false;
         }
 
@@ -956,9 +962,11 @@ class indice extends clsCadastro
 
         $this->atualizaModulos();
 
-        $this->mensagem .= 'Edição efetuada com sucesso.';
-        header('Location: educar_turma_lst.php');
-        die();
+        $this->message = 'Edição efetuada com sucesso.';
+
+        throw new HttpResponseException(
+            new RedirectResponse('educar_turma_lst.php')
+        );
     }
 
     protected function validaCamposHorario()
@@ -1046,6 +1054,47 @@ class indice extends clsCadastro
             return false;
         }
         if (!$this->validaCampoEtapaEnsino()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function verificaTurno()
+    {
+        $turmaId = (int) $this->cod_turma;
+        $turnoId = (int) $this->turma_turno_id;
+        $count = 0;
+
+        if ($turnoId === clsPmieducarTurma::TURNO_INTEGRAL) { // Se integral não pode ter vínculos noturnos
+            $count += DB::table('pmieducar.matricula_turma as mt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'mt.ref_cod_turma')
+                ->where('mt.turno_id', clsPmieducarTurma::TURNO_NOTURNO)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+
+            $count += DB::table('modules.professor_turma as pt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'pt.turma_id')
+                ->where('pt.turno_id', clsPmieducarTurma::TURNO_NOTURNO)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+        } else { // Se ñ é integral não pode ter vínculos diferentes do novo turno
+            $count += DB::table('pmieducar.matricula_turma as mt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'mt.ref_cod_turma')
+                ->where('mt.turno_id', '<>', $turnoId)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+
+            $count += DB::table('modules.professor_turma as pt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'pt.turma_id')
+                ->where('pt.turno_id', '<>', $turnoId)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+        }
+
+        if ($count > 0) {
+            $this->mensagem = 'Existem enturmações ou professores atrelados a esta turma em turnos diferentes do especificado.';
+
             return false;
         }
 
@@ -1260,9 +1309,11 @@ class indice extends clsCadastro
                 $auditoria = new clsModulesAuditoriaGeral('turma', $this->pessoa_logada, $this->cod_turma);
                 $auditoria->exclusao($turma);
 
-                $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.';
-                header('Location: educar_turma_lst.php');
-                die();
+                $this->mensagem .= 'Exclusão efetuada com sucesso.';
+
+                throw new HttpResponseException(
+                    new RedirectResponse('educar_turma_lst.php')
+                );
             } else {
                 $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.';
                 echo "<!--\nErro ao excluir clsPmieducarTurma\nvalores obrigatorios\nif( is_numeric( $this->cod_turma ) && is_numeric( $this->pessoa_logada ) )\n-->";
