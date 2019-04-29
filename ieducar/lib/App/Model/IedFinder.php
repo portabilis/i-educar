@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
+use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
 
 require_once 'CoreExt/Entity.php';
@@ -586,11 +587,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $disciplinas = $escolaSerieDisciplina->lista($serieId, $escolaId, $disciplinaId, 1, false, $etapa, $ano);
 
         if (false === $disciplinas) {
-            throw new App_Model_Exception(sprintf(
-                'Nenhuma disciplina para a série (%d) e a escola (%d) informados',
-                $serieId,
-                $escolaId
-            ));
+            throw new DisciplineNotLinkedToRegistrationException($escolaId, $disciplinaId, $ano, $serieId);
         }
 
         $componentes = [];
