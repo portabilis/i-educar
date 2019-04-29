@@ -388,6 +388,36 @@ SQL;
 
     public function getDataForRecord60($school, $year)
     {
+        $sql = <<<'SQL'
+       SELECT matricula.cod_matricula, matricula_turma.ref_cod_turma
+         FROM pmieducar.aluno
+         JOIN pmieducar.matricula ON matricula.ref_cod_aluno = aluno.cod_aluno
+         JOIN pmieducar.escola ON escola.cod_escola = matricula.ref_ref_cod_escola
+         JOIN pmieducar.matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
+         JOIN pmieducar.instituicao ON instituicao.cod_instituicao = escola.ref_cod_instituicao
+         JOIN pmieducar.turma ON turma.cod_turma = matricula_turma.ref_cod_turma
+        WHERE matricula.ano = :year
+          AND matricula.ativo = 1
+          AND escola.cod_escola = :school
+          AND (
+              (
+                matricula_turma.data_enturmacao < instituicao.data_educacenso
+                AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
+              )
+           OR (
+               matricula_turma.data_enturmacao = instituicao.data_educacenso AND
+               (
+                 NOT EXISTS(
+                     SELECT 1
+                       FROM pmieducar.matricula_turma enturmacao_anterior
+                      WHERE enturmacao_anterior.ref_cod_matricula = matricula.cod_matricula
+                        AND enturmacao_anterior.sequencial <> matricula_turma.sequencial
+                        AND enturmacao_anterior.data_exclusao = instituicao.data_educacenso
+                     )
+               )
+              )
+            );
+SQL;
 
     }
 }
