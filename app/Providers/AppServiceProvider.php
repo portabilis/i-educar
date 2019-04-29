@@ -64,11 +64,6 @@ class AppServiceProvider extends ServiceProvider
             $this->loadLegacyMigrations();
         }
 
-        Request::macro('getSubdomain', function () {
-            $host = str_replace('-', '', $this->getHost());
-            return Str::replaceFirst('.' . config('app.default_host'), '', $host);
-        });
-
         // https://laravel.com/docs/5.5/migrations#indexes
         Schema::defaultStringLength(191);
     }

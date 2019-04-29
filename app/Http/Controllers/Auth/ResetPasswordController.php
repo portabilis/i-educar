@@ -56,7 +56,7 @@ class ResetPasswordController extends Controller
     protected function validationErrorMessages()
     {
         return [
-            'password.required' => 'O campo senha é obritório.',
+            'password.required' => 'O campo senha é obrigatório.',
             'password.confirmed' => 'As senhas não são iguais.',
             'password.min' => 'A senha deve conter ao menos 8 caracteres.',
         ];

@@ -3,7 +3,7 @@
 namespace Tests\Unit\Educacenso\Validator;
 
 use App\Models\Educacenso\Registro00;
-use iEducar\Modules\Educacenso\MantenedoraDaEscolaPrivada;
+use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
 use Tests\TestCase;
