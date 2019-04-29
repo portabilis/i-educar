@@ -517,7 +517,7 @@ class AlunoController extends ApiCoreController
         $aluno->recursos_prova_inep = $recursosProvaInep;
         $aluno->recebe_escolarizacao_em_outro_espaco = $this->getRequest()->recebe_escolarizacao_em_outro_espaco;
         $aluno->justificativa_falta_documentacao = $this->getRequest()->justificativa_falta_documentacao;
-        $aluno->veiculo_transporte_escolar = implode(',', $this->getRequest()->veiculo_transporte_escolar);
+        $aluno->veiculo_transporte_escolar = implode(',', array_filter($this->getRequest()->veiculo_transporte_escolar));
 
         $this->file_foto = $_FILES['file'];
         $this->del_foto = $_POST['file_delete'];
