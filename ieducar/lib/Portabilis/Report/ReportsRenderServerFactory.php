@@ -40,6 +40,11 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
     private $connection;
 
     /**
+     * @var string
+     */
+    private $timezone;
+
+    /**
      * @inheritdoc
      */
     public function setSettings($config)
@@ -48,6 +53,7 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
         $this->sourcePath = $config->report->source_path;
         $this->token = $config->report->remote_factory->token;
         $this->logo = $config->report->logo_file_name;
+        $this->timezone = $config->app->locale->timezone;
         $this->connection = [
             'host' => $config->app->database->hostname,
             'port' => $config->app->database->port,
@@ -88,7 +94,7 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
         $templateName = $report->templateName();
         $params = $report->args;
 
-        $params['timezone'] = Carbon::now()->getTimezone()->getName();
+        $params['timezone'] = $this->timezone;
 
         if ($report->useJson()) {
             $params['datasource'] = 'json';
