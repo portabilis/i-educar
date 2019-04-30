@@ -18,8 +18,6 @@ class clsIndexBase extends clsBase
 
 class indice extends clsListagem
 {
-    public $pessoa_logada;
-    public $titulo;
     public $limite;
     public $offset;
     public $cod_servidor;
@@ -34,12 +32,12 @@ class indice extends clsListagem
     public $ref_cod_escola;
     public $ref_cod_instituicao;
     public $servidor_sem_alocacao;
+    public $ano_letivo;
 
     public function Gerar()
     {
         $this->titulo = 'Servidor - Listagem';
 
-        // passa todos os valores obtidos no GET para atributos do objeto
         foreach ($_GET as $var => $val) {
             $this->$var = ($val === '') ? null : $val;
         }
@@ -56,7 +54,6 @@ class indice extends clsListagem
         if ($this->cod_servidor) {
             $objTemp = new clsFuncionario($this->cod_servidor);
             $detalhe = $objTemp->detalhe();
-            // $detalhe = $detalhe['idpes']->detalhe();
 
             $opcoes[$detalhe['idpes']] = $detalhe['nome'];
             $opcoes[$detalhe['ref_cod_pessoa_fj']] = $detalhe['matricula_servidor'];
@@ -70,8 +67,9 @@ class indice extends clsListagem
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ($_GET['pagina_' . $this->nome]) ?
-            $_GET['pagina_' . $this->nome] * $this->limite - $this->limite : 0;
+        $this->offset = ($_GET['pagina_' . $this->nome])
+            ? $_GET['pagina_' . $this->nome] * $this->limite - $this->limite
+            : 0;
 
         $obj_servidor = new clsPmieducarServidor();
         $obj_servidor->setOrderby('carga_horaria ASC');
@@ -119,30 +117,16 @@ class indice extends clsListagem
         $url = CoreExt_View_Helper_UrlHelper::getInstance();
 
         // Monta a lista
-        // echo "<pre>";var_dump($lista);die;
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
-                // Pega detalhes de foreign_keys
-                if (class_exists('clsPmieducarInstituicao')) {
-                    $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
-                    $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
+                $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
+                $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
 
-                    $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
-                } else {
-                    $registro['ref_cod_instituicao'] = 'Erro na geração';
-                }
+                $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
-                if (class_exists('clsFuncionario')) {
-                    $obj_cod_servidor = new clsFuncionario($registro['cod_servidor']);
-                    $det_cod_servidor = $obj_cod_servidor->detalhe();
-                    // $det_cod_servidor      = $det_cod_servidor['idpes']->detalhe();
-                    $det_cod_servidor = $det_cod_servidor;
-                    // $registro['nome']      = $det_cod_servidor['nome'];
-                    $registro['cpf'] = $det_cod_servidor['cpf'];
-                } else {
-                    $registro['cod_servidor'] = 'Erro na geracao';
-                }
-
+                $obj_cod_servidor = new clsFuncionario($registro['cod_servidor']);
+                $det_cod_servidor = $obj_cod_servidor->detalhe();
+                $registro['cpf'] = $det_cod_servidor['cpf'];
                 $path = 'educar_servidor_det.php';
                 $options = [
                     'query' => [
@@ -150,6 +134,7 @@ class indice extends clsListagem
                         'ref_cod_instituicao' => $det_ref_cod_instituicao['cod_instituicao'],
                     ]
                 ];
+
                 $this->addLinhas([
                     $url->l($registro['nome'], $path, $options),
                     $url->l($registro['matricula_servidor'], $path, $options),
@@ -179,14 +164,7 @@ class indice extends clsListagem
     }
 }
 
-// Instancia objeto de página
 $pagina = new clsIndexBase();
-
-// Instancia objeto de conteúdo
 $miolo = new indice();
-
-// Atribui o conteúdo à  página
 $pagina->addForm($miolo);
-
-// Gera o código HTML
 $pagina->MakeAll();
