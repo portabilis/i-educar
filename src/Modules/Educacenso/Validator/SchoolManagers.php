@@ -148,7 +148,7 @@ class SchoolManagers implements EducacensoValidator
     {
         $individualArray = [];
         foreach ($this->valueObject as $manager) {
-            $individualArray[] = $manager->individualId;
+            $individualArray[] = $manager->employeeId;
         }
         return $individualArray;
     }
