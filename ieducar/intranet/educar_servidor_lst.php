@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyIndividual;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -118,15 +120,19 @@ class indice extends clsListagem
 
         // Monta a lista
         if (is_array($lista) && count($lista)) {
+            $obj_ref_cod_instituicao = new clsPmieducarInstituicao($lista[0]['ref_cod_instituicao']);
+            $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
+
+            $ids = array_map(function ($individual) {
+                return $individual['cod_servidor'];
+            }, $lista);
+
+            $cpfs = LegacyIndividual::query()->whereKey($ids)->pluck('cpf', 'idpes')->toArray();
+
             foreach ($lista as $registro) {
-                $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
-                $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-
                 $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
-
-                $obj_cod_servidor = new clsFuncionario($registro['cod_servidor']);
-                $det_cod_servidor = $obj_cod_servidor->detalhe();
-                $registro['cpf'] = $det_cod_servidor['cpf'];
+                $registro['cpf'] = int2CPF($cpfs[$registro['cod_servidor']]);
+                
                 $path = 'educar_servidor_det.php';
                 $options = [
                     'query' => [
@@ -154,13 +160,9 @@ class indice extends clsListagem
 
         $this->largura = '100%';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'Início',
-            'educar_servidores_index.php' => 'Servidores',
-            '' => 'Servidores'
+        $this->breadcrumb('Servidores', [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
-        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 
