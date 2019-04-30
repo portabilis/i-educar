@@ -64,12 +64,12 @@ class DiarioController extends ApiCoreController
         $componentesTurma = $this->getComponentesPorTurma($turmaId);
 
         if (!($componentesTurma instanceof CoreExt_Entity)) {
-                foreach ($componentesTurma as $componente) {
-                    $arr = $componente->id;
-                    $key = key($arr);
-                    $componentesTurma[$key] = $arr[$key];
-
-                }
+            foreach ($componentesTurma as $componente) {
+                $arr[] = $componente->id;
+                $key = key($arr);
+                $componentes[$key] = $arr;
+            }
+            $componentesTurma = $componentes[0];
         } else {
             $componentesTurma = CoreExt_Entity::entityFilterAttr($componentesTurma, 'id', 'id');
         }
