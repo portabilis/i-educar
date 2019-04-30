@@ -1,8 +1,11 @@
 <?php
 
+use App\Services\iDiarioService;
 use App\Services\SchoolClassService;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
+use RuntimeException;
+use Throwable;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -898,7 +901,9 @@ class indice extends clsCadastro
 
         $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
-        $this->atualizaModulos();
+        if (!$this->atualizaModulos()) {
+            return false;
+        }
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.';
         $this->simpleRedirect('educar_turma_lst.php');
@@ -960,7 +965,9 @@ class indice extends clsCadastro
 
         $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
-        $this->atualizaModulos();
+        if (!$this->atualizaModulos()) {
+            return false;
+        }
 
         $this->message = 'Edição efetuada com sucesso.';
 
@@ -1163,8 +1170,85 @@ class indice extends clsCadastro
         return $objTurma;
     }
 
+    protected function validaModulos()
+    {
+        $turmaId = $this->cod_turma;
+        $etapasCount = count($this->data_inicio);
+        $etapasCountAntigo = (int) Portabilis_Utils_Database::selectField(
+            'SELECT COUNT(*) AS count FROM pmieducar.turma_modulo WHERE ref_cod_turma = $1',
+            [$turmaId]
+        );
+
+        if ($etapasCount >= $etapasCountAntigo) {
+            return true;
+        }
+
+        $etapasTmp = $etapasCount;
+        $etapas = [];
+
+        while ($etapasTmp < $etapasCountAntigo) {
+            $etapasTmp += 1;
+            $etapas[] = $etapasTmp;
+        }
+
+        $counts = [];
+
+        $counts[] = DB::table('modules.falta_componente_curricular as fcc')
+            ->join('modules.falta_aluno as fa', 'fa.id',  '=', 'fcc.falta_aluno_id')
+            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'fa.matricula_id')
+            ->join('pmieducar.matricula_turma as mt', 'mt.ref_cod_matricula', '=', 'm.cod_matricula')
+            ->whereIn('fcc.etapa', $etapas)
+            ->where('mt.ref_cod_turma', $turmaId)
+            ->where('m.ativo', 1)
+            ->count();
+
+        $counts[] = DB::table('modules.falta_geral as fg')
+            ->join('modules.falta_aluno as fa', 'fa.id',  '=', 'fg.falta_aluno_id')
+            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'fa.matricula_id')
+            ->join('pmieducar.matricula_turma as mt', 'mt.ref_cod_matricula', '=', 'm.cod_matricula')
+            ->whereIn('fg.etapa', $etapas)
+            ->where('mt.ref_cod_turma', $turmaId)
+            ->where('m.ativo', 1)
+            ->count();
+
+        $counts[] = DB::table('modules.nota_componente_curricular as ncc')
+            ->join('modules.nota_aluno as na', 'na.id',  '=', 'ncc.nota_aluno_id')
+            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'na.matricula_id')
+            ->join('pmieducar.matricula_turma as mt', 'mt.ref_cod_matricula', '=', 'm.cod_matricula')
+            ->whereIn('ncc.etapa', $etapas)
+            ->where('mt.ref_cod_turma', $turmaId)
+            ->where('m.ativo', 1)
+            ->count();
+
+        $sum = array_sum($counts);
+
+        if ($sum > 0) {
+            throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.');
+        }
+
+        $iDiarioService = app(iDiarioService::class);
+
+        foreach ($etapas as $etapa) {
+            if ($iDiarioService->getStepActivityByClassroom($turmaId, $etapa)) {
+                throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas no diário online.');
+            }
+        }
+
+        return true;
+    }
+
     public function atualizaModulos()
     {
+        try {
+            $this->validaModulos();
+        } catch (Exception $e) {
+            $this->Inicializar();
+
+            $this->mensagem = $e->getMessage();
+
+            return false;
+        }
+
         $objModulo = new clsPmieducarTurmaModulo();
         $excluiu = $objModulo->excluirTodos($this->cod_turma);
         $modulos = $this->montaModulos();
