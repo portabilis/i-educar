@@ -1232,9 +1232,9 @@ class DiarioApiController extends ApiCoreController
 
         $media = urldecode($this->serviceBoletim()->getMediaComponente($componenteCurricularId)->media);
 
-        // $media = round($media,1);
+        $scale = pow(10, 3);
 
-        return str_replace(',', '.', $media);
+        return floor(floatval($media) * $scale) / $scale;
     }
 
     protected function getMediaArredondadaAtual($componenteCurricularId = null)
