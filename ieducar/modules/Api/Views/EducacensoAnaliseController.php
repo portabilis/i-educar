@@ -630,7 +630,7 @@ class EducacensoAnaliseController extends ApiCoreController
             $nomeEscola = strtoupper($turma->nomeEscola);
             $nomeTurma = strtoupper($turma->nomeTurma);
             $atividadeComplementar = ($turma->tipoAtendimento == 4); //Código 4 fixo no cadastro de turma
-            $existeAtividadeComplementar = !empty($turma->atividadesComplementares);
+            $existeAtividadeComplementar = !empty(array_filter($turma->atividadesComplementares));
 
             $chaveTurma = "{$nomeTurma}|{$turma->tipoMediacaoDidaticoPedagogico}|{$turma->horaInicial}|{$turma->horaFinal}|{$turma->tipoAtendimento}|{$turma->localFuncionamentoDiferenciado}|{$turma->modalidadeCurso}|{$turma->etapaEducacenso}";
 
@@ -638,7 +638,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 $mensagem = [[
                     'text' => "Dados para formular o registro 20 da escola {$nomeEscola} possui valor inválido. Verificamos que existem turmas duplicadas com o nome {$nomeTurma}.",
                     'path' => '(Escola > Cadastros > Turmas)',
-                    'linkPath' => "/intranet/educar_turma_lst.php",
+                    'linkPath' => "/intranet/educar_turma_lst.php?busca=S&ano={$ano}&ref_cod_escola={$escola}&ref_cod_curso={$turma->codCurso}&ref_cod_serie={$turma->codSerie}&nm_turma={$turma->nomeTurma}",
                     'fail' => true
                 ]];
                 break;
@@ -679,6 +679,24 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
+            if ($turma->possuiServidorLibrasOuAuxiliarEad && !$turma->possuiServidorDiferenteLibrasOuAuxiliarEad) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que a turma {$nomeTurma} possui vínculo apenas com docente(s): Tradutor(es)-Intérprete(s) de Libras ou Docente(s) tutor(es) - Auxiliar(es) (de módulo ou disciplina) - EAD.",
+                    'path' => '(Servidores > Cadastros > Servidores)',
+                    'linkPath' => "/intranet/educar_servidor_lst.php",
+                    'fail' => true
+                ];
+            }
+
+            if ($turma->possuiServidorLibras && !$turma->possuiAlunoNecessitandoTradutor && !$turma->possuiServidorNecessitandoTradutor) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que a turma {$nomeTurma} possui vínculo com docente(s): Tradutor(es)-Intérprete(s) de Libras, porém não possui nenhum aluno(a) ou outro profissional escolar em sala de aula com surdez, deficiência auditiva ou surdocegueira.",
+                    'path' => '(Servidores > Cadastros > Servidores)',
+                    'linkPath' => "/intranet/educar_servidor_lst.php",
+                    'fail' => true
+                ];
+            }
+
             if (strlen($nomeTurma) > 80) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. possui valor inválido. Insira no máximo 80 letras no nome da turma {$nomeTurma}.",
@@ -704,9 +722,17 @@ class EducacensoAnaliseController extends ApiCoreController
                     'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
                     'fail' => true
                 ];
+            } else if (!empty($turma->horaInicial) && !empty($turma->horaFinal) && !$turma->horarioFuncionamentoValido()) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verifique se o horário da turma {$nomeTurma} foi preenchido com um valor válido.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados gerais > Seção: Horário de funcionamento da turma)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+
             }
 
-            if (empty($turma->diasSemana) && $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL) {
+            if (empty(array_filter($turma->diasSemana)) && $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é presencial, portanto é necessário informar os dias da semana em que ela funciona.",
                     'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados gerais > Campo: Dias da semana)',
@@ -744,7 +770,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if (empty($turma->localFuncionamentoDiferenciado) && in_array($turma->tipoMediacaoDidaticoPedagogico, [App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL, App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL])) {
+            if (is_null($turma->localFuncionamentoDiferenciado) && in_array($turma->tipoMediacaoDidaticoPedagogico, [App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL, App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL])) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é presencial ou semipresencial, portanto é necessário informar se ela possui local de funcionamento diferenciado.",
                     'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Local de funcionamento diferenciado)',
@@ -776,16 +802,14 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if ($turma->tipoAtendimento != 0 && empty($this->etapaEducacenso)) {
-                $descricaoTipoMediacao = (App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums())[$turma->tipoMediacaoDidaticoPedagogico];
-
+            if ($turma->tipoAtendimento == 0 && is_null($turma->etapaEducacenso)) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que o tipo de mediação da turma {$nomeTurma} é {$descricaoTipoMediacao}, portanto o tipo de atendimento deve ser obrigatoriamente escolarização.",
-                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Tipo de atendimento)',
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se alguma opção de etapa de ensino da turma {$nomeTurma} foi informada.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Etapa de ensino)',
                     'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
                     'fail' => true
                 ];
-            } elseif ($turma->tipoAtendimento != 0) {
+            } elseif ($turma->tipoAtendimento == 0) {
                 $valid = true;
                 $opcoesEtapaEducacenso = '';
 
@@ -855,7 +879,7 @@ class EducacensoAnaliseController extends ApiCoreController
                     ];
                 }
 
-                if (in_array($this->localFuncionamentoDiferenciado, [App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO, App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL]) && in_array($turma->etapaEducacenso, [1, 2, 3, 56]) ) {
+                if (in_array($turma->localFuncionamentoDiferenciado, [App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO, App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL]) && in_array($turma->etapaEducacenso, [1, 2, 3, 56]) ) {
                     $descricaoLocalDiferenciado = $turma->getLocalFuncionamentoDiferenciadoDescription();
                     $mensagem[] = [
                         'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola}  possui valor inválido. Verificamos que o local de funcionamento diferenciado da turma {$nomeTurma} é {$descricaoLocalDiferenciado}, portanto a etapa de ensino não pode ser nenhuma das seguintes opções: 1, 2, 3 ou 56.",
@@ -864,15 +888,15 @@ class EducacensoAnaliseController extends ApiCoreController
                         'fail' => true
                     ];
                 }
+            }
 
-                if (empty($turma->codCursoProfissional) && in_array($turma->etapaEducacenso, [30, 31, 32, 33, 34, 39, 40, 64, 74])) {
-                    $mensagem[] = [
-                        'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se o código dos cursos de educação profissional da turma {$nomeTurma} foi informado",
-                        'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Curso de educação profissional)',
-                        'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
-                        'fail' => true
-                    ];
-                }
+            if (empty($turma->codCursoProfissional) && in_array($turma->etapaEducacenso, [30, 31, 32, 33, 34, 39, 40, 64, 74])) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se o código dos cursos de educação profissional da turma {$nomeTurma} foi informado",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Curso de educação profissional)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
             }
 
             $componentes = App_Model_IedFinder::getComponentesTurma($turma->codSerie, $turma->codEscola, $turma->codTurma);
@@ -931,6 +955,8 @@ class EducacensoAnaliseController extends ApiCoreController
                         'linkPath' => "/module/ComponenteCurricular/edit?id={$componenteNulo->get('id')}",
                         'fail' => true
                     ]];
+
+                    break;
                 }
             }
         }

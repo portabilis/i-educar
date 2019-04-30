@@ -118,8 +118,6 @@ class LegacyController extends Controller
      *
      * @return void
      *
-     * @throws HttpResponseException
-     * @throws HttpException
      * @throws Exception
      */
     private function loadFileOrAbort($filename)
@@ -142,7 +140,6 @@ class LegacyController extends Controller
             // e tratamento das mensagens de erro
 
             throw $exception;
-
         } catch (Exception $exception) {
 
             // A maioria das vezes será pega a Exception neste catch, apenas
@@ -163,11 +160,7 @@ class LegacyController extends Controller
             );
         }
 
-        if (config('app.debug')) {
-            throw $exception;
-        }
-
-        throw new HttpException(500, 'Error in legacy code.', $exception);
+        throw $exception;
     }
 
     /**

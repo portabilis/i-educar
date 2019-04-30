@@ -3,6 +3,8 @@
 use App\Services\SchoolClassService;
 use App\Models\School;
 use App\Models\LegacyCourse;
+use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+use iEducar\Support\View\SelectOptions;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
@@ -201,6 +203,21 @@ class indice extends clsCadastro
             foreach ($_POST as $campo => $val) {
                 $this->$campo = $this->$campo ? $this->$campo : $val;
             }
+        }
+
+        if (is_numeric($this->cod_turma)) {
+            $obj_turma = new clsPmieducarTurma($this->cod_turma);
+            $registro = $obj_turma->detalhe();
+            $obj_esc = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
+            $det_esc = $obj_esc->detalhe();
+            $obj_ser = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
+            $det_ser = $obj_ser->detalhe();
+
+            $this->ref_cod_escola = $det_esc['cod_escola'];
+            $this->ref_cod_instituicao = $det_esc['ref_cod_instituicao'];
+            $this->ref_cod_curso = $det_ser['ref_cod_curso'];
+            $this->ref_cod_serie = $det_ser['cod_serie'];
+            $this->ano = $registro['ano'];
         }
 
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
@@ -433,10 +450,14 @@ class indice extends clsCadastro
 
         $this->campoOculto('ref_cod_serie_mult_', $this->ref_ref_cod_serie_mult);
 
+        $resources = SelectOptions::tiposMediacaoDidaticoPedagogico();
+        $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => $obrigarCamposCenso, 'size' => 70,];
+        $this->inputsHelper()->select('tipo_mediacao_didatico_pedagogico', $options);
+
         $this->campoQuebra2();
 
         // hora
-        if (!$this->obrigaCamposHorario()) {
+        if ($obrigarCamposCenso && !$this->obrigaCamposHorario()) {
             $this->hora_inicial = '';
             $this->hora_final = '';
             $this->hora_inicio_intervalo = '';
@@ -470,7 +491,7 @@ class indice extends clsCadastro
         $options = ['label' => 'Dias da semana',
             'size' => 50,
             'required' => false,
-            'disabled' => !$this->obrigaCamposHorario(),
+            'disabled' => $obrigarCamposCenso && !$this->obrigaCamposHorario(),
             'options' => ['values' => $this->dias_semana,
                 'all_values' => [1 => 'Domingo',
                     2 => 'Segunda',
@@ -631,12 +652,6 @@ class indice extends clsCadastro
             'options' => ['values' => $this->cod_curso_profissional,
                 'all_values' => $cursos]];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-
-        $resources = App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums();
-        $resources = array_replace([null => 'Selecione'], $resources);
-
-        $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => $obrigarCamposCenso, 'size' => 70,];
-        $this->inputsHelper()->select('tipo_mediacao_didatico_pedagogico', $options);
 
         $resources = App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums();
         $resources = array_replace([null => 'Selecione'], $resources);
@@ -1060,6 +1075,10 @@ class indice extends clsCadastro
     {
         $course = LegacyCourse::find($this->ref_cod_curso);
 
+        if ($this->tipo_atendimento != TipoAtendimentoTurma::ESCOLARIZACAO) {
+            return true;
+        }
+
         if ($course->modalidade_curso == 1 && !in_array($this->etapa_educacenso, [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 41, 56])) {
             $this->mensagem = 'Quando a modalidade do curso é: Ensino regular, o campo: Etapa de ensino deve ser uma das seguintes opções: 1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 41 ou 56.';
             return false;
@@ -1179,6 +1198,7 @@ class indice extends clsCadastro
         $objTurma->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
         $objTurma->dias_semana = $this->dias_semana;
         $objTurma->atividades_complementares = $this->atividades_complementares;
+        $objTurma->local_funcionamento_diferenciado = $this->local_funcionamento_diferenciado;
 
         return $objTurma;
     }
@@ -1749,10 +1769,14 @@ $pagina->MakeAll();
         var DOM_escola_serie_hora = xml.getElementsByTagName('item');
 
         if (DOM_escola_serie_hora.length) {
-            campoHoraInicial.value = (DOM_escola_serie_hora[0].firstChild || {}).data;
-            campoHoraFinal.value = (DOM_escola_serie_hora[1].firstChild || {}).data;
-            campoHoraInicioIntervalo.value = (DOM_escola_serie_hora[2].firstChild || {}).data;
-            campoHoraFimIntervalo.value = (DOM_escola_serie_hora[3].firstChild || {}).data;
+            horaInicial = (DOM_escola_serie_hora[0].firstChild || {}).data;
+            horaFinal = (DOM_escola_serie_hora[1].firstChild || {}).data;
+            horaInicioIntervalo = (DOM_escola_serie_hora[2].firstChild || {}).data;
+            horaFimIntervalo = (DOM_escola_serie_hora[3].firstChild || {}).data;
+            campoHoraInicial.value = typeof(horaInicial) != 'undefined' ? horaInicial : null;
+            campoHoraFinal.value = typeof(horaFinal) != 'undefined' ? horaFinal : null;
+            campoHoraInicioIntervalo.value = typeof(horaInicioIntervalo) != 'undefined' ? horaInicioIntervalo : null;
+            campoHoraFimIntervalo.value = typeof(horaFimIntervalo) != 'undefined' ? horaFimIntervalo : null;
         }
     }
 
