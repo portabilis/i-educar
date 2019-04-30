@@ -2,10 +2,8 @@
 
 namespace iEducar\Modules\Educacenso\Data;
 
-use App\Models\Educacenso\Registro10 as Registro10Model;
+use App\Models\Educacenso\Registro60 as Registro60Model;
 use iEducar\Modules\Educacenso\Formatters;
-use Portabilis_Date_Utils;
-use Portabilis_Utils_Database;
 
 class Registro60 extends AbstractRegistro
 {
@@ -52,7 +50,6 @@ class Registro60 extends AbstractRegistro
 
     private function processData($data)
     {
-
         return $data;
     }
 }

@@ -420,13 +420,18 @@ SQL;
                     (ARRAY[7] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteAquaviarioCapacidade5",
                     (ARRAY[8] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteAquaviarioCapacidade5a15",
                     (ARRAY[9] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteAquaviarioCapacidade15a35",
-                    (ARRAY[10] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteAquaviarioCapacidadeAcima35"
+                    (ARRAY[10] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteAquaviarioCapacidadeAcima35",
+                    relatorio.get_nome_escola(escola.cod_escola) "nomeEscola",
+                    cadastro.pessoa.nome "nomeAluno",
+                    aluno.cod_aluno "codigoAluno",
+                    turma.tipo_atendimento "tipoAtendimentoTurma"
                      FROM pmieducar.aluno
                      JOIN pmieducar.matricula ON matricula.ref_cod_aluno = aluno.cod_aluno
                      JOIN pmieducar.escola ON escola.cod_escola = matricula.ref_ref_cod_escola
                      JOIN pmieducar.matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
                      JOIN pmieducar.instituicao ON instituicao.cod_instituicao = escola.ref_cod_instituicao
                      JOIN pmieducar.turma ON turma.cod_turma = matricula_turma.ref_cod_turma
+                     JOIN cadastro.pessoa ON pessoa.idpes = aluno.ref_idpes
                 LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
                 LEFT JOIN modules.educacenso_cod_turma ON educacenso_cod_turma.cod_turma = turma.cod_turma
                 LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = aluno.cod_aluno
