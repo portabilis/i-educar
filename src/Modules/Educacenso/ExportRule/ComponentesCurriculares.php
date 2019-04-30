@@ -49,7 +49,7 @@ class ComponentesCurriculares implements EducacensoExportRule
 
 
         return in_array($registro50->funcaoDocente, $funcoes)
-            && !in_array($registro50->etapaEducacensoTurma, $etapas)
-            && $registro50->tipoAtendimentoTurma == TipoAtendimentoTurma::ESCOLARIZACAO;
+            || !in_array($registro50->etapaEducacensoTurma, $etapas)
+            || $registro50->tipoAtendimentoTurma == TipoAtendimentoTurma::ESCOLARIZACAO;
     }
 }

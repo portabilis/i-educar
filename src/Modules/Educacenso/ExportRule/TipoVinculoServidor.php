@@ -20,7 +20,7 @@ class TipoVinculoServidor implements EducacensoExportRule
             FuncaoExercida::DOCENTE_TITULAR_EAD,
             FuncaoExercida::DOCENTE_TUTOR_EAD
         ];
-        if ($registro50->dependenciaAdministrativaEscola == DependenciaAdministrativaEscola::PRIVADA && !in_array($registro50->funcaoDocente, $funcoes)) {
+        if ($registro50->dependenciaAdministrativaEscola == DependenciaAdministrativaEscola::PRIVADA || !in_array($registro50->funcaoDocente, $funcoes)) {
             $registro50->tipoVinculo = null;
         }
 
