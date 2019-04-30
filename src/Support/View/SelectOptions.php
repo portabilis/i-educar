@@ -6,6 +6,7 @@ use App\Models\ManagerAccessCriteria;
 use App\Models\ManagerLinkType;
 use App\Models\ManagerRole;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
+use iEducar\Modules\Educacenso\Model\TipoAtendimentoAluno;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Modules\Servidores\Model\TipoVinculo;
 use iEducar\Modules\Transport\Period;
