@@ -55,94 +55,10 @@ class Registro50 implements RegistroEducacenso
     public $tipoVinculo;
 
     /**
-     * @var string
-     * Campo 9
+     * @var array
+     * Campos 9 a 23
      */
-    public $componente1;
-
-    /**
-     * @var string
-     * Campo 10
-     */
-    public $componente2;
-
-    /**
-     * @var string
-     * Campo 11
-     */
-    public $componente3;
-
-    /**
-     * @var string
-     * Campo 12
-     */
-    public $componente4;
-
-    /**
-     * @var string
-     * Campo 13
-     */
-    public $componente5;
-
-    /**
-     * @var string
-     * Campo 14
-     */
-    public $componente6;
-
-    /**
-     * @var string
-     * Campo 15
-     */
-    public $componente7;
-
-    /**
-     * @var string
-     * Campo 16
-     */
-    public $componente8;
-
-    /**
-     * @var string
-     * Campo 17
-     */
-    public $componente9;
-
-    /**
-     * @var string
-     * Campo 18
-     */
-    public $componente10;
-
-    /**
-     * @var string
-     * Campo 19
-     */
-    public $componente11;
-
-    /**
-     * @var string
-     * Campo 20
-     */
-    public $componente12;
-
-    /**
-     * @var string
-     * Campo 21
-     */
-    public $componente13;
-
-    /**
-     * @var string
-     * Campo 22
-     */
-    public $componente14;
-
-    /**
-     * @var string
-     * Campo 23
-     */
-    public $componente15;
+    public $componentes;
 
     /**
      * @var string
@@ -191,6 +107,18 @@ class Registro50 implements RegistroEducacenso
      * Campo usado somente na análise
      */
     public $nomeTurma;
+
+    /**
+     * @var string
+     * Campo usado somente na análise
+     */
+    public $dependenciaAdministrativaEscola;
+
+    /**
+     * @var string
+     * Campo usado somente na análise
+     */
+    public $etapaEducacensoTurma;
 
     /**
      * @return bool

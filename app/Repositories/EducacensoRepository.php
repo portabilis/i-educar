@@ -346,19 +346,47 @@ SQL;
                AND turma.ativo = 1
                AND turma.visivel = TRUE
                AND escola.ativo = 1
-               AND exists (
-                    SELECT 1
-                    FROM pmieducar.matricula_turma
-                    WHERE matricula_turma.ref_cod_turma = turma.cod_turma
-                    AND matricula_turma.data_enturmacao <= instituicao.data_educacenso
-                    AND coalesce(matricula_turma.data_exclusao, \'2999-01-01\'::date) > instituicao.data_educacenso
-               )
-        ';
+               AND
+        ' . $this->enrollmentConditionSubquery();
 
         return $this->fetchPreparedQuery($sql, [
             'school' => $school,
             'year' => $year,
         ]);
+    }
+
+    private function enrollmentConditionSubquery()
+    {
+        return " (
+                exists (
+                  SELECT 1
+                  FROM pmieducar.matricula_turma
+                  WHERE matricula_turma.ref_cod_turma = turma.cod_turma
+                  AND matricula_turma.data_enturmacao < instituicao.data_educacenso
+                  AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
+                )
+                OR
+                exists (
+                  SELECT 1
+                  FROM pmieducar.matricula_turma
+                  JOIN pmieducar.matricula
+                      ON matricula.cod_matricula = matricula_turma.ref_cod_matricula
+                  WHERE matricula_turma.ref_cod_turma = turma.cod_turma
+                  AND matricula_turma.data_enturmacao = instituicao.data_educacenso
+                  AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
+                  AND NOT EXISTS (
+                    SELECT 1
+                    FROM pmieducar.matricula_turma smt
+                    JOIN pmieducar.matricula sm
+                      ON sm.cod_matricula = smt.ref_cod_matricula
+                    WHERE sm.ref_cod_aluno = matricula.ref_cod_aluno
+                    AND sm.ativo = 1
+                    AND smt.data_enturmacao < matricula_turma.data_enturmacao
+                    AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
+                  )
+                )
+              )
+        ";
     }
 
     /**
@@ -397,24 +425,10 @@ SQL;
                        servidor.cod_servidor AS "codigoPessoa",
                        educacenso_cod_docente.cod_docente_inep AS "inepDocente",
                        turma.cod_turma AS "codigoTurma",
-                       educacenso_cod_turma.cod_turma_inep AS "inepTurma",
+                       null AS "inepTurma",
                        professor_turma.funcao_exercida AS "funcaoDocente",
                        professor_turma.tipo_vinculo AS "tipoVinculo",
-                       tbl_componentes.componentes[1] AS componente1,
-                       tbl_componentes.componentes[2] AS componente2,
-                       tbl_componentes.componentes[3] AS componente4,
-                       tbl_componentes.componentes[4] AS componente5,
-                       tbl_componentes.componentes[5] AS componente6,
-                       tbl_componentes.componentes[6] AS componente6,
-                       tbl_componentes.componentes[7] AS componente7,
-                       tbl_componentes.componentes[8] AS componente8,
-                       tbl_componentes.componentes[9] AS componente9,
-                       tbl_componentes.componentes[10] AS componente10,
-                       tbl_componentes.componentes[11] AS componente11,
-                       tbl_componentes.componentes[12] AS componente12,
-                       tbl_componentes.componentes[13] AS componente13,
-                       tbl_componentes.componentes[14] AS componente14,
-                       tbl_componentes.componentes[15] AS componente15,
+                       tbl_componentes.componentes AS componentes,
                        relatorio.get_nome_escola(escola.cod_escola) AS "nomeEscola",
                        pessoa.nome AS "nomeDocente",
                        servidor.cod_servidor AS "idServidor",
@@ -422,7 +436,9 @@ SQL;
                        professor_turma.id AS "idAlocacao",
                        turma.tipo_mediacao_didatico_pedagogico AS "tipoMediacaoTurma",
                        turma.tipo_atendimento AS "tipoAtendimentoTurma",
-                       turma.nm_turma AS "nomeTurma"
+                       turma.nm_turma AS "nomeTurma",
+                       escola.dependencia_administrativa AS "dependenciaAdministrativaEscola",
+                       turma.etapa_educacenso AS "etapaEducacensoTurma"
                  FROM pmieducar.servidor
                  JOIN modules.professor_turma     ON professor_turma.servidor_id = servidor.cod_servidor
                  JOIN pmieducar.turma             ON turma.cod_turma = professor_turma.turma_id
@@ -437,7 +453,7 @@ SQL;
             LEFT JOIN modules.educacenso_cod_turma ON educacenso_cod_turma.cod_turma = turma.cod_turma
             LEFT JOIN modules.professor_turma_disciplina ON professor_turma_disciplina.professor_turma_id = professor_turma.id,
               LATERAL (
-                         SELECT array_agg(cc.codigo_educacenso) AS componentes
+                         SELECT DISTINCT array_agg(cc.codigo_educacenso) AS componentes
                          FROM modules.componente_curricular cc
                                   INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
                          WHERE   ptd.professor_turma_id = professor_turma.id
@@ -450,13 +466,9 @@ SQL;
                   AND servidor.ativo = 1
                   AND coalesce(servidor_alocacao.data_admissao, '2999-01-01'::date) >= instituicao.data_educacenso
                   AND coalesce(servidor_alocacao.data_saida, '1900-01-01'::date) <= instituicao.data_educacenso
-                  AND exists (
-                        SELECT 1
-                        FROM pmieducar.matricula_turma
-                        WHERE matricula_turma.ref_cod_turma = turma.cod_turma
-                          AND matricula_turma.data_enturmacao <= instituicao.data_educacenso
-                          AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) > instituicao.data_educacenso)
+                  AND
 SQL;
+        $sql .= $this->enrollmentConditionSubquery();
 
         return $this->fetchPreparedQuery($sql, [
             'year' => (int)$year,
