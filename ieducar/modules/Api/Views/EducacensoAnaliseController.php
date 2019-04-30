@@ -6,6 +6,7 @@ use App\Models\Educacenso\Registro20;
 use App\Models\Educacenso\Registro60;
 use App\Models\School;
 use App\Repositories\EducacensoRepository;
+use App\Services\SchoolClass\AvailableTimeService;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\Data\Registro10 as Registro10Data;
 use iEducar\Modules\Educacenso\Data\Registro20 as Registro20Data;
@@ -15,6 +16,7 @@ use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
+use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
@@ -1615,22 +1617,81 @@ class EducacensoAnaliseController extends ApiCoreController
         }
 
         $mensagem = [];
+        $countAtividadesComplementar = [];
 
         foreach ($alunos as $aluno) {
             $nomeEscola = strtoupper($aluno->nomeEscola);
             $nomeAluno = strtoupper($aluno->nomeAluno);
+            $nomeTurma = strtoupper($aluno->nomeTurma);
             $codigoAluno = $aluno->codigoAluno;
+            $codigoTurma = $aluno->codigoTurma;
+            $codigoMatricula = $aluno->codigoMatricula;
 
-            $avaliableTimeService = new AvaliableTimeService;
-            if (is_null($aluno['cor_raca'])) {
+            $avaliableTimeService = new AvailableTimeService();
+
+            if (!$avaliableTimeService->isAvailable($codigoAluno, $codigoTurma)) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 60 da escola (Nome da escola) possui valor inválido. Verificamos que o(a) aluno(a) (Nome do aluno) possui mais de um vínculo em diferentes turmas presenciais com horário e dias coincidentes.",
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verificamos que o(a) aluno(a) {$nomeAluno} possui mais de um vínculo em diferentes turmas presenciais com horário e dias coincidentes.",
                     'path' => '(Escola > Cadastros > Alunos > Seção: Matrículas)',
                     'linkPath' => "/intranet/educar_aluno_det.php?cod_aluno={$codigoAluno}",
                     'fail' => true
                 ];
             }
 
+            if ($aluno->tipoAtendimentoTurma == TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR) {
+                $countAtividadesComplementar[$codigoAluno][] = [
+                    'codigoAluno' => $codigoAluno,
+                    'nomeAluno' => $nomeAluno,
+                    'nomeEscola' => $nomeEscola
+                ];
+            }
+
+            if (!$aluno->etapaAluno && in_array($aluno->etapaTurma, App_Model_Educacenso::etapas_multisseriadas())) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verificamos que a turma {$nomeTurma} é multisseriada, portanto é necessário informar qual a etapa do(a) aluno(a) {$nomeAluno}.",
+                    'path' => '(Escola > Cadastros > Alunos > Visualizar > Etapa do aluno > Campo: Etapa do aluno na turma)',
+                    'linkPath' => "/intranet/educar_matricula_det.php?cod_matricula={$codigoMatricula}",
+                    'fail' => true
+                ];
+            }
+
+            if (!$aluno->tipoAtendimentoMatricula && $aluno->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verificamos que a turma {$nomeTurma} é de atendimento educacional especializado, portanto é necessário informar qual a tipo de atendimento do(a) aluno(a) {$nomeAluno}.",
+                    'path' => '(Escola > Cadastros > Alunos > Visualizar > Tipo do AEE do aluno > Campo: Tipo de Atendimento Educacional Especializado do aluno na turma)',
+                    'linkPath' => "/intranet/educar_matricula_det.php?cod_matricula={$codigoMatricula}",
+                    'fail' => true
+                ];
+            }
+
+            if (!$aluno->transportePublico && $aluno->transportePublicoRequired()) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido.  Verifique se o transporte escolar público do(a) aluno(a) {$nomeAluno} foi informado.",
+                    'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados Pessoais > Campo: Transporte escolar público)',
+                    'linkPath' => "/module/Cadastro/aluno?id={$codigoAluno}",
+                    'fail' => true
+                ];
+            }
+
+            if (!$aluno->veiculoTransporteEscolar && $aluno->veiculoTransporteEscolarRequired()) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verifique se o tipo de veículo do transporte escolar público utilizado pelo(a) aluno(a) {$nomeAluno} foi informado.",
+                    'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados Pessoais > Campo: Veículo utilizado)',
+                    'linkPath' => "/module/Cadastro/aluno?id={$codigoAluno}",
+                    'fail' => true
+                ];
+            }
+        }
+
+        foreach ($countAtividadesComplementar as $atividadesAluno) {
+            if (count($atividadesAluno) > 4) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 60 da escola {$atividadesAluno['nomeEscola']} possui valor inválido. Verificamos que o(a) aluno(a) {$atividadesAluno['nomeAluno']} possui mais de quatro vínculos com turmas de AEE ou Atividade Complementar.",
+                    'path' => '(Escola > Cadastros > Alunos > Seção: Matrículas)',
+                    'linkPath' => "/intranet/educar_aluno_det.php?cod_aluno={$atividadesAluno['codigoAluno']}",
+                    'fail' => true
+                ];
+            }
         }
 
         return [

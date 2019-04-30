@@ -453,7 +453,7 @@ SQL;
                     turma.cod_turma "codigoTUrma",
                     educacenso_cod_turma.cod_turma_inep "inepTurma",
                     null "matriculaAluno",
-                    matricula_turma.etapa_educacenso "etapaEducacenso",
+                    matricula_turma.etapa_educacenso "etapaAluno",
                     COALESCE((ARRAY[1] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoDesenvolvimentoFuncoesGognitivas",
                     COALESCE((ARRAY[2] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoDesenvolvimentoVidaAutonoma",
                     COALESCE((ARRAY[3] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnriquecimentoCurricular",
@@ -481,7 +481,14 @@ SQL;
                     relatorio.get_nome_escola(escola.cod_escola) "nomeEscola",
                     cadastro.pessoa.nome "nomeAluno",
                     aluno.cod_aluno "codigoAluno",
-                    turma.tipo_atendimento "tipoAtendimentoTurma"
+                    turma.tipo_atendimento "tipoAtendimentoTurma",
+                    turma.cod_turma "codigoTurma",
+                    turma.etapa_educacenso "etapaTurma",
+                    matricula.cod_matricula "codigoMatricula",
+                    turma.nm_turma "nomeTurma",
+                    matricula_turma "tipoAtendimentoMatricula",
+                    turma.tipo_mediacao_didatico_pedagogico "tipoMediacaoTurma",
+                    aluno.veiculo_transporte_escolar "veiculoTransporteEscolar"
                      FROM pmieducar.aluno
                      JOIN pmieducar.matricula ON matricula.ref_cod_aluno = aluno.cod_aluno
                      JOIN pmieducar.escola ON escola.cod_escola = matricula.ref_ref_cod_escola

@@ -4,6 +4,9 @@ namespace App\Models\Educacenso;
 
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
+use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
+use Transporte_Model_Responsavel;
 
 class Registro60 implements RegistroEducacenso
 {
@@ -14,7 +17,7 @@ class Registro60 implements RegistroEducacenso
     public $codigoTUrma;
     public $inepTurma;
     public $matriculaAluno;
-    public $etapaEducacenso;
+    public $etapaAluno;
     public $tipoAtendimentoDesenvolvimentoFuncoesGognitivas;
     public $tipoAtendimentoDesenvolvimentoVidaAutonoma;
     public $tipoAtendimentoEnriquecimentoCurricular;
@@ -59,4 +62,65 @@ class Registro60 implements RegistroEducacenso
      * @var string Campo usado somente na análise
      */
     public $tipoAtendimentoTurma;
+
+    /**
+     * @var string Campo usado somente na análise
+     */
+    public $codigoTurma;
+
+    /**
+     * @var string Campo usado somente na análise
+     */
+    public $etapaTurma;
+
+    /**
+     * @var string Campo usado somente na análise
+     */
+    public $codigoMatricula;
+
+    /**
+     * @var string Campo usado somente na análise
+     */
+    public $nomeTurma;
+
+    /**
+     * @var string Campo usado somente na análise
+     */
+    public $tipoAtendimentoMatricula;
+
+    /**
+     * @var string Campo usado somente na análise
+     */
+    public $tipoMediacaoTurma;
+
+    /**
+     * @var string Campo usado somente na análise
+     */
+    public $veiculoTransporteEscolar;
+
+    /**
+     * @return bool
+     */
+    public function transportePublicoRequired()
+    {
+        $tiposMediacaoPresencialSemiPresencial = [
+            TipoMediacaoDidaticoPedagogico::PRESENCIAL,
+            TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL,
+        ];
+
+        return $this->tipoAtendimentoTurma == TipoAtendimentoTurma::ESCOLARIZACAO && in_array($this->tipoMediacaoTurma, $tiposMediacaoPresencialSemiPresencial);
+    }
+
+    /**
+     * @return bool
+     */
+    public function veiculoTransporteEscolarRequired()
+    {
+        $transportePublico = [
+            Transporte_Model_Responsavel::MUNICIPAL,
+            Transporte_Model_Responsavel::ESTADUAL,
+        ];
+
+        return in_array($this->transportePublico, $transportePublico);
+    }
 }
