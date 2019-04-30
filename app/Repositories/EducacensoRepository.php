@@ -464,8 +464,8 @@ SQL;
                   AND escola.ativo = 1
                   AND escola.cod_escola = :school
                   AND servidor.ativo = 1
-                  AND coalesce(servidor_alocacao.data_admissao, '2999-01-01'::date) > instituicao.data_educacenso
-                  AND coalesce(servidor_alocacao.data_saida, '1900-01-01'::date) < instituicao.data_educacenso
+                  AND coalesce(servidor_alocacao.data_admissao, '2999-01-01'::date) >= instituicao.data_educacenso
+                  AND coalesce(servidor_alocacao.data_saida, '1900-01-01'::date) <= instituicao.data_educacenso
                   AND
 SQL;
         $sql .= $this->enrollmentConditionSubquery();
