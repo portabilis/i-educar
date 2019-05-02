@@ -1581,7 +1581,7 @@ function changeMediaValue(elementId, nota, notaArredondada, regra){
           valorMinimo = parseFloat(opcoesNotas[i].valor_minimo);
           valorMaximo = parseFloat(opcoesNotas[i].valor_maximo);
 
-          if ((valorMaximo == nota) || (nota >= valorMinimo && nota <= valorMaximo)){
+          if (nota >= valorMinimo && nota <= valorMaximo) {
             valorSelecionado = valorMaximo;
           }
         };
