@@ -1664,7 +1664,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if (!$aluno->transportePublico && $aluno->transportePublicoRequired()) {
+            if (is_null($aluno->transportePublico) && $aluno->transportePublicoRequired()) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido.  Verifique se o transporte escolar público do(a) aluno(a) {$nomeAluno} foi informado.",
                     'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados Pessoais > Campo: Transporte escolar público)',
