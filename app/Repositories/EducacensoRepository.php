@@ -447,6 +447,7 @@ SQL;
                  JOIN pmieducar.instituicao       ON escola.ref_cod_instituicao = instituicao.cod_instituicao
                  JOIN cadastro.pessoa             ON pessoa.idpes = servidor.cod_servidor
             LEFT JOIN pmieducar.servidor_alocacao ON servidor_alocacao.ref_cod_escola = escola.cod_escola
+                                                 AND servidor_alocacao.ref_cod_servidor = servidor.cod_servidor
                                                  AND servidor_alocacao.ano = turma.ano
             LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
             LEFT JOIN modules.educacenso_cod_docente ON educacenso_cod_docente.cod_servidor = servidor.cod_servidor
