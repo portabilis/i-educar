@@ -2,6 +2,7 @@
 
 namespace iEducar\Support\View;
 
+
 use App\Models\ManagerAccessCriteria;
 use App\Models\ManagerLinkType;
 use App\Models\ManagerRole;
