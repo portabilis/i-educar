@@ -661,6 +661,11 @@ class Registro10 implements RegistroEducacenso
     /**
      * @var int
      */
+    public $projetoPoliticoPedagogico;
+
+    /**
+     * @var int
+     */
     public $url;
 
     /**

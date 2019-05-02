@@ -141,7 +141,7 @@ class Registro10 extends AbstractRegistro
             $data->usoInternetNaoPossui() ?: 0, // 106
             $data->equipamentosAcessoInternetComputadorMesa() ?: 0 , // 107
             $data->equipamentosAcessoInternetDispositivosPessoais() ?: 0 , // 108
-            $data->usoInternetNaoPossui() ? ($data->acessoInternet ?: 0) : null, // 109
+            $data->usoInternetNaoPossui() ? null : ($data->acessoInternet ?: 0), // 109
             $data->possuiComputadores() ? ($data->redeLocalACabo() ?: 0) : null, // 110
             $data->possuiComputadores() ? ($data->redeLocalWireless() ?: 0) : null, // 111
             $data->possuiComputadores() ? ($data->redeLocalNenhuma() ?: 0) : null, // 112
@@ -177,27 +177,27 @@ class Registro10 extends AbstractRegistro
             $data->instrumentosPedagogicosMateriaisRelacoesEtnicosRaciais() ?: 0, // 142
             $data->instrumentosPedagogicosMateriaisEducacaoCampo() ?: 0, // 143
             $data->educacaoIndigena, // 144
-            $data->educacaoIndigena ? ($data->linguaMinistradaIndigena ?: 0) : null, // 145
-            $data->educacaoIndigena ? ($data->linguaMinistradaPortugues ?: 0) : null, // 146
-            $data->educacaoIndigena && $data->linguaMinistradaIndigena ? ($data->codigoLinguaIndigena[0] ?? null) : null, // 147
-            $data->educacaoIndigena && $data->linguaMinistradaIndigena ? ($data->codigoLinguaIndigena[1] ?? null) : null, // 148
-            $data->educacaoIndigena && $data->linguaMinistradaIndigena ? ($data->codigoLinguaIndigena[2] ?? null) : null, // 149
+            $data->educacaoIndigena ? ($data->linguaMinistradaIndigena() ?: 0) : null, // 145
+            $data->educacaoIndigena ? ($data->linguaMinistradaPortugues() ?: 0) : null, // 146
+            $data->educacaoIndigena && $data->linguaMinistradaIndigena() ? ($data->codigoLinguaIndigena[0] ?? null) : null, // 147
+            $data->educacaoIndigena && $data->linguaMinistradaIndigena() ? ($data->codigoLinguaIndigena[1] ?? null) : null, // 148
+            $data->educacaoIndigena && $data->linguaMinistradaIndigena() ? ($data->codigoLinguaIndigena[2] ?? null) : null, // 149
             $data->exameSelecaoIngresso ?: 0, // 150
-            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasAutodeclaracaoPpi ?: 0) : null, // 151
-            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasCondicaoRenda ?: 0) : null, // 152
-            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasEscolaPublica ?: 0) : null, // 153
-            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasPcd ?: 0) : null, // 154
-            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasOutros ?: 0) : null, // 155
-            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasNaoPossui ?: 0) : null, // 156
+            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasAutodeclaracaoPpi() ?: 0) : null, // 151
+            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasCondicaoRenda() ?: 0) : null, // 152
+            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasEscolaPublica() ?: 0) : null, // 153
+            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasPcd() ?: 0) : null, // 154
+            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasOutros() ?: 0) : null, // 155
+            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasNaoPossui() ?: 0) : null, // 156
             empty($data->url) ? 0 : 1, // 157
             $data->compartilhaEspacosAtividadesIntegracao ?: 0, // 158
             $data->usaEspacosEquipamentosAtividadesRegulares ?: 0, // 159
-            $data->orgaosColegiadosAssociacaoPais ?: null, // 160
-            $data->orgaosColegiadosAssociacaoPaisEMestres ?: null, // 161
-            $data->orgaosColegiadosConselhoEscolar ?: null, // 162
-            $data->orgaosColegiadosGremioEstudantil ?: null, // 163
-            $data->orgaosColegiadosOutros ?: null, // 164
-            $data->orgaosColegiadosNenhum ?: null, // 165
+            $data->orgaosColegiadosAssociacaoPais() ?: null, // 160
+            $data->orgaosColegiadosAssociacaoPaisEMestres() ?: null, // 161
+            $data->orgaosColegiadosConselhoEscolar() ?: null, // 162
+            $data->orgaosColegiadosGremioEstudantil() ?: null, // 163
+            $data->orgaosColegiadosOutros() ?: null, // 164
+            $data->orgaosColegiadosNenhum() ?: null, // 165
             $data->projetoPoliticoPedagogico ?: 0, // 166
         ];
 

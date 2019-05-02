@@ -126,7 +126,6 @@ class EducacensoExportController extends ApiCoreController
         $export = $this->exportaDadosRegistro00($escolaId, $ano);
         $export .= $this->exportaDadosRegistro10($escolaId, $ano);
         $export .= $this->exportaDadosRegistro20($escolaId, $ano);
-
         foreach ($this->getServidores($escolaId, $ano, $data_ini, $data_fim) as $servidor) {
 
             $registro30 = $this->exportaDadosRegistro30($servidor['id'], $escolaId);
