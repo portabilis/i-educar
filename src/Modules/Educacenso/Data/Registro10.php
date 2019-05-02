@@ -118,8 +118,8 @@ class Registro10 extends AbstractRegistro
             $data->recursosAcessibilidadeNenhum() ?: 0, // 83
             $data->numeroSalasUtilizadasDentroPredio, // 84
             $data->numeroSalasUtilizadasForaPredio, // 85
-            !$data->numeroSalasUtilizadasDentroPredio && !$data->numeroSalasUtilizadasForaPredio ? $data->numeroSalasClimatizadas : null, // 86
-            !$data->numeroSalasUtilizadasDentroPredio && !$data->numeroSalasUtilizadasForaPredio ? $data->numeroSalasAcessibilidade : null, // 87
+            !$data->numeroSalasUtilizadasDentroPredio || !$data->numeroSalasUtilizadasForaPredio ? $data->numeroSalasClimatizadas : null, // 86
+            !$data->numeroSalasUtilizadasDentroPredio || !$data->numeroSalasUtilizadasForaPredio ? $data->numeroSalasAcessibilidade : null, // 87
             $data->possuiAntenaParabolica() ?: 0, // 88
             $data->possuiComputadores() ?: 0, // 89
             $data->possuiCopiadora() ?: 0, // 90
