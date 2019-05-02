@@ -58,9 +58,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->idpais=$_GET["idpais"];
 
@@ -118,9 +116,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj = new clsPublicPais( null, $this->nome, $this->geom, $this->cod_ibge );
         $cadastrou = $obj->cadastra();
@@ -133,9 +129,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($enderecamento);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: public_pais_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('public_pais_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -145,9 +139,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $enderecamentoDetalhe = new clsPublicPais($this->idpais);
         $enderecamentoDetalhe->cadastrou = $this->idpais;
@@ -162,9 +154,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($enderecamentoDetalheAntes, $enderecamentoDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: public_pais_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('public_pais_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -174,9 +164,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj = new clsPublicPais( $this->idpais );
 
@@ -190,9 +178,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($enderecamento);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: public_pais_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('public_pais_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

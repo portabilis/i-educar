@@ -96,10 +96,6 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->iddis = $_GET['iddis'];
 
     if (is_numeric($this->iddis)) {
@@ -210,10 +206,6 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
         $this->mensagem = 'Não é permitido cadastro de distritos brasileiros, pois já estão previamente cadastrados.<br>';
         return FALSE;
@@ -233,8 +225,7 @@ class indice extends clsCadastro
       $auditoria->inclusao($enderecamento);
 
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-      header('Location: public_distrito_lst.php');
-      die();
+      $this->simpleRedirect('public_distrito_lst.php');
     }
 
     $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
@@ -245,10 +236,6 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
         $this->mensagem = 'Não é permitido edição de distritos brasileiros, pois já estão previamente cadastrados.<br>';
         return FALSE;
@@ -270,8 +257,7 @@ class indice extends clsCadastro
       $auditoria->alteracao($enderecamentoDetalheAntes, $enderecamentoDetalheDepois);
 
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      header('Location: public_distrito_lst.php');
-      die();
+      $this->simpleRedirect('public_distrito_lst.php');
     }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
@@ -282,10 +268,6 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     if ($this->idpais == App_Model_Pais::BRASIL && $this->nivelAcessoPessoaLogada() != App_Model_NivelAcesso::POLI_INSTITUCIONAL) {
         $this->mensagem = 'Não é permitido exclusão de distritos brasileiros, pois já estão previamente cadastrados.<br>';
         return FALSE;
@@ -296,8 +278,7 @@ class indice extends clsCadastro
 
     if ($excluiu) {
       $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-      header('Location: public_distrito_lst.php');
-      die();
+      $this->simpleRedirect('public_distrito_lst.php');
     }
 
     $this->mensagem = 'Exclusão não realizada.<br>';

@@ -88,10 +88,6 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->ref_cod_servidor        = $_GET['ref_cod_servidor'];
     $this->ref_ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
@@ -108,8 +104,7 @@ class indice extends clsCadastro
 
       // Nenhum servidor com o código de servidor e instituição
       if (!$det_servidor) {
-        header('Location: educar_servidor_lst.php');
-        die;
+          $this->simpleRedirect('educar_servidor_lst.php');
       }
 
       $this->professor = $obj_servidor->isProfessor() == TRUE ? 'true' : 'false';
@@ -136,8 +131,7 @@ class indice extends clsCadastro
       $this->carga_horaria = $det_servidor['carga_horaria'];
     }
     else {
-      header('Location: educar_servidor_lst.php');
-      die;
+        $this->simpleRedirect('educar_servidor_lst.php');
     }
 
     $this->url_cancelar = sprintf(
@@ -207,10 +201,6 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $professor  = isset($_POST['professor']) ? strtolower($_POST['professor']) : 'FALSE';
     $substituto = isset($_POST['ref_cod_servidor_todos']) ? $_POST['ref_cod_servidor_todos'] : NULL;
 
@@ -257,9 +247,7 @@ class indice extends clsCadastro
     $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
     $destination = 'educar_servidor_det.php?cod_servidor=%s&ref_cod_instituicao=%s';
     $destination = sprintf($destination, $this->ref_cod_servidor, $this->ref_ref_cod_instituicao);
-
-    header('Location: ' . $destination);
-    die();
+    $this->simpleRedirect($destination);
   }
 
   function Editar()

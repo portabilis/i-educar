@@ -1119,8 +1119,8 @@ class indice extends clsCadastro
         $pessoaFisica->excluir();
 
         $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.';
-        header('Location: atendidos_lst.php');
-        die();
+
+        $this->simpleRedirect('atendidos_lst.php');
     }
 
     public function afterChangePessoa($id)

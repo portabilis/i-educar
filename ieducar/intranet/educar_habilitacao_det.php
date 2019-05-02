@@ -61,10 +61,6 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = "Habilitacao - Detalhe";
         
 
@@ -75,8 +71,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_habilitacao_lst.php" );
-            die();
+            $this->simpleRedirect('educar_habilitacao_lst.php');
         }
         if( $registro["ref_cod_instituicao"] )
         {

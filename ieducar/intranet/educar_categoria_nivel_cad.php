@@ -67,9 +67,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->cod_categoria_nivel=$_GET["cod_categoria_nivel"];
 
@@ -126,9 +124,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 829, $this->pessoa_logada, 3,  "educar_categoria_nivel_lst.php", true );
@@ -146,9 +142,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($categoriaNivel);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_categoria_nivel_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_categoria_nivel_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -158,9 +152,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 829, $this->pessoa_logada, 3,  "educar_categoria_nivel_lst.php", true );
@@ -178,9 +170,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($categoriaNivelAntes, $categoriaNivelDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_categoria_nivel_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_categoria_nivel_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -190,9 +180,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 829, $this->pessoa_logada, 3,  "educar_categoria_nivel_lst.php", true );
@@ -209,9 +197,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($categoriaNivel);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_categoria_nivel_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_categoria_nivel_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

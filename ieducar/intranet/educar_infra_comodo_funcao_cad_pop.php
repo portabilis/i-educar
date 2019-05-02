@@ -64,9 +64,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
 
         $this->cod_infra_comodo_funcao=$_GET["cod_infra_comodo_funcao"];
@@ -129,9 +127,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmieducarInfraComodoFuncao( null, null, $this->pessoa_logada, $this->nm_funcao, $this->desc_funcao, null, null, 1, $this->ref_cod_escola );
         $cadastrou = $obj->cadastra();
@@ -145,10 +141,7 @@ class indice extends clsCadastro
                         parent.document.getElementById('ref_cod_infra_comodo_funcao').disabled = false;
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
-//          $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-//          header( "Location: educar_infra_comodo_funcao_lst.php" );
             die();
-            return true;
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -158,9 +151,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        /*@session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        /*
 
         $obj = new clsPmieducarInfraComodoFuncao($this->cod_infra_comodo_funcao, $this->pessoa_logada, null, $this->nm_funcao, $this->desc_funcao, null, null, 1, $this->ref_cod_escola );
         $editou = $obj->edita();
@@ -179,9 +170,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        /*@session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        /*
 
         $obj = new clsPmieducarInfraComodoFuncao($this->cod_infra_comodo_funcao, $this->pessoa_logada, null,null,null,null,null, 0);
         $excluiu = $obj->excluir();

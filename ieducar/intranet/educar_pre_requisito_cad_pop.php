@@ -64,9 +64,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->cod_pre_requisito=$_GET["cod_pre_requisito"];
 
@@ -120,21 +118,13 @@ class indice extends clsCadastro
         $opcoes = array( "Selecione a Tabela" );
         $this->campoLista( "tabela", "Tabela", $opcoes, $this->tabela, "", false, "", "", true );
 
-        // text
-//      $this->campoTexto( "schema_", "Schema ", $this->schema_, 30, 255, true );
-//      $this->campoTexto( "tabela", "Tabela", $this->tabela, 30, 255, true );
         $this->campoTexto( "nome", "Nome", $this->nome, 30, 255, true );
         $this->campoMemo( "sql", "Sql", $this->sql, 60, 10, false );
-
-        // data
-
     }
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 601, $this->pessoa_logada, 3,  "educar_pre_requisito_lst.php", true );
@@ -160,52 +150,12 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        /*@session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
-        $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 601, $this->pessoa_logada, 3,  "educar_pre_requisito_lst.php", true );
-
-
-        $obj = new clsPmieducarPreRequisito($this->cod_pre_requisito, $this->pessoa_logada, $this->pessoa_logada, $this->schema_, $this->tabela, $this->nome, $this->sql, $this->data_cadastro, $this->data_exclusao, $this->ativo);
-        $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_pre_requisito_lst.php" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarPreRequisito\nvalores obrigatorios\nif( is_numeric( $this->cod_pre_requisito ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-        return false;*/
     }
 
     function Excluir()
     {
-        /*@session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
-        $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir( 601, $this->pessoa_logada, 3,  "educar_pre_requisito_lst.php", true );
-
-
-        $obj = new clsPmieducarPreRequisito($this->cod_pre_requisito, $this->pessoa_logada, $this->pessoa_logada, $this->schema_, $this->tabela, $this->nome, $this->sql, $this->data_cadastro, $this->data_exclusao, 0);
-        $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_pre_requisito_lst.php" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarPreRequisito\nvalores obrigatorios\nif( is_numeric( $this->cod_pre_requisito ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-        return false;*/
     }
 }
 

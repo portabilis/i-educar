@@ -55,9 +55,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->ref_cod_matricula=$_GET["ref_cod_matricula"];
         $this->ref_cod_aluno=$_GET["ref_cod_aluno"];
@@ -106,9 +104,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
@@ -154,15 +150,16 @@ class indice extends clsCadastro
 
                 }
 
-                $notaAlunoId = (new Avaliacao_Model_NotaAlunoDataMapper())
-                    ->findAll(['id'], ['matricula_id' => $obj_matricula->cod_matricula])[0]->get('id');
+                $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper())
+                                    ->findAll(['id'], ['matricula_id' => $obj_matricula->cod_matricula])[0] ?? null;
 
-                (new Avaliacao_Model_NotaComponenteMediaDataMapper())
-                    ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::FALECIDO);
+                if (!empty($notaAluno)) {
+                    (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                        ->updateSituation($notaAluno->get('id'), App_Model_MatriculaSituacao::FALECIDO);
+                }
 
                 $this->mensagem .= "Alteração realizado com sucesso.<br>";
-                header( "Location: educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
-                return true;
+                $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
             }
 
             $this->mensagem = "A alteração não pode ser salva.<br>";

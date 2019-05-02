@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Services;
 
-use App\Models\EvaluationRule;
-use App\Models\Level;
+use App\Models\LegacyEvaluationRule;
+use App\Models\LegacyLevel;
 use App\Services\SchoolLevelsService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -22,8 +22,8 @@ class SchoolLevelsServiceTest extends TestCase
         parent::setUp();
         $this->service = app(SchoolLevelsService::class);
         $this->disableForeignKeys();
-        Level::query()->truncate();
-        EvaluationRule::query()->truncate();
+        LegacyLevel::query()->truncate();
+        LegacyEvaluationRule::query()->truncate();
     }
 
     public function tearDown()
@@ -34,9 +34,9 @@ class SchoolLevelsServiceTest extends TestCase
 
     public function testRetornaRegrasAvaliacao()
     {
-        $regraAvaliacaoFake = factory(EvaluationRule::class)->create();
-        /** @var Level $level */
-        $level = factory(Level::class)->create();
+        $regraAvaliacaoFake = factory(LegacyEvaluationRule::class)->create();
+        /** @var LegacyLevel $level */
+        $level = factory(LegacyLevel::class)->create();
 
         $level->evaluationRules()->attach($regraAvaliacaoFake->id, ['ano_letivo' => 2019]);
 
@@ -48,7 +48,7 @@ class SchoolLevelsServiceTest extends TestCase
 
     public function testSemRegrasDeveRetornarVazio()
     {
-        $level = factory(Level::class)->create();
+        $level = factory(LegacyLevel::class)->create();
         $evaluationRules = $this->service->getEvaluationRules($level->cod_serie);
         $this->assertEmpty($evaluationRules);
     }
@@ -58,12 +58,12 @@ class SchoolLevelsServiceTest extends TestCase
         $result = $this->service->levelAllowDefineDisciplinePerStage(null, 2019);
         $this->assertFalse($result);
 
-        $level = factory(Level::class)->create();
+        $level = factory(LegacyLevel::class)->create();
         $result = $this->service->levelAllowDefineDisciplinePerStage($level->cod_serie, 2019);
         $this->assertFalse($result);
 
-        $level = factory(Level::class)->create();
-        $regraAvaliacaoFake = factory(EvaluationRule::class)->create([
+        $level = factory(LegacyLevel::class)->create();
+        $regraAvaliacaoFake = factory(LegacyEvaluationRule::class)->create([
             'definir_componente_etapa' => true,
         ]);
         $level->evaluationRules()->attach($regraAvaliacaoFake->id, ['ano_letivo' => 2019]);
@@ -73,8 +73,8 @@ class SchoolLevelsServiceTest extends TestCase
 
     public function testRegraAvaliacaoPermiteDefinirComponentesEtapa()
     {
-        $level = factory(Level::class)->create();
-        $regraAvaliacaoFake = factory(EvaluationRule::class)->create([
+        $level = factory(LegacyLevel::class)->create();
+        $regraAvaliacaoFake = factory(LegacyEvaluationRule::class)->create([
             'definir_componente_etapa' => true,
         ]);
 
@@ -83,8 +83,8 @@ class SchoolLevelsServiceTest extends TestCase
 
         $this->assertTrue($result);
 
-        $level = factory(Level::class)->create();
-        $regraAvaliacaoFake = factory(EvaluationRule::class)->create([
+        $level = factory(LegacyLevel::class)->create();
+        $regraAvaliacaoFake = factory(LegacyEvaluationRule::class)->create([
             'definir_componente_etapa' => false,
         ]);
 

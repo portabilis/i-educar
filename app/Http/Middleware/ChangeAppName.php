@@ -15,8 +15,12 @@ class ChangeAppName
      */
     public function handle($request, Closure $next)
     {
-        config(['app.name' => request()->getHost()]);
-        config(['honeybadger.environment_name' => request()->getHost()]);
+        config([
+            'app.name' => config('legacy.config.ieducar_entity_name'),
+            'app.nickname' => url('/'),
+            'app.url' => $request->getBasePath(),
+            'honeybadger.environment_name' => $request->getHost(),
+        ]);
 
         return $next($request);
     }

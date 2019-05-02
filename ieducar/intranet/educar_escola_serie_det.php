@@ -83,10 +83,6 @@ class indice extends clsDetalhe
 
   function Gerar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->titulo = 'Escola S&eacute;rie - Detalhe';
     $this->addBanner('imagens/nvp_top_intranet.jpg',
       'imagens/nvp_vert_intranet.jpg', 'Intranet');
@@ -99,8 +95,7 @@ class indice extends clsDetalhe
     $registro = array_shift($lst_obj);
 
     if (! $registro) {
-      header('Location: educar_escola_serie_lst.php');
-      die();
+        $this->simpleRedirect('educar_escola_serie_lst.php');
     }
 
     $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);

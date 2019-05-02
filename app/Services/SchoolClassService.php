@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\SchoolClass;
+use App\Models\LegacySchoolClass;
 
 class SchoolClassService
 {
@@ -21,7 +21,7 @@ class SchoolClassService
      */
     public function isAvailableName($name, $course, $level, $school, $academicYear, $idToIgnore = null)
     {
-        $query = SchoolClass::query()
+        $query = LegacySchoolClass::query()
             ->where('nm_turma', (string) $name)
             ->where('ref_ref_cod_serie', $level)
             ->where('ref_cod_curso', $course)

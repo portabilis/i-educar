@@ -74,10 +74,6 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = "Hist&oacute;rico Escolar - Detalhe";
 
 
@@ -89,8 +85,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
-            die();
+            $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
         if( class_exists( "clsPmieducarAluno" ) )

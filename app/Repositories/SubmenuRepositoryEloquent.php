@@ -2,9 +2,9 @@
 
 namespace App\Repositories;
 
-use App\Models\Submenu;
 use iEducar\Support\Repositories\SubmenuRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
+use App\Models\LegacySubmenu;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class SubmenuRepositoryEloquent extends BaseRepository implements SubmenuRepository
@@ -16,7 +16,7 @@ class SubmenuRepositoryEloquent extends BaseRepository implements SubmenuReposit
      */
     public function model()
     {
-        return Submenu::class;
+        return LegacySubmenu::class;
     }
 
     /**

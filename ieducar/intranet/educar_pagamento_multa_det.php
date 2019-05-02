@@ -60,10 +60,6 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = "Pagamento Multa - Detalhe";
         
 
@@ -72,7 +68,7 @@ class indice extends clsDetalhe
         $this->ref_cod_cliente_tipo = $_GET["cod_cliente_tipo"];
 
         if(!$this->ref_cod_cliente || !$this->ref_cod_cliente_tipo)
-            header("Location: educar_pagamento_multa_lst.php");
+            $this->simpleRedirect('educar_pagamento_multa_lst.php');
 
         if( class_exists( "clsPmieducarCliente" ) )
         {
