@@ -3,31 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Registration extends Model
 {
-    /**
-     * @var string
-     */
-    protected $table = 'pmieducar.matricula';
+    public function student()
+    {
+        return $this->belogsTo(Student::class);
+    }
 
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'cod_matricula';
-
-    /**
-     * @var array
-     */
-    protected $fillable = [
-        'ref_cod_aluno', 'data_cadastro', 'ano', 'ref_usuario_cad',
-    ];
-
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
+    public function getStatusDescriptionAttribute()
+    {
+        return (new RegistrationStatus)->getDescriptiveValues()[(int) $this->status];
+    }
 }

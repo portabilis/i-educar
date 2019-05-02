@@ -65,9 +65,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->cod_tipo_ocorrencia_disciplinar=$_GET["cod_tipo_ocorrencia_disciplinar"];
 
@@ -119,9 +117,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj = new clsPmieducarTipoOcorrenciaDisciplinar( null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, $this->max_ocorrencias, null, null, 1, $this->ref_cod_instituicao );
         $cadastrou = $obj->cadastra();
@@ -134,9 +130,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($tipoOcorrenciaDisciplinar);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_tipo_ocorrencia_disciplinar_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_tipo_ocorrencia_disciplinar_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -146,9 +140,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $tipoOcorrenciaDisciplinarDetalhe = new clsPmieducarTipoOcorrenciaDisciplinar($this->cod_tipo_ocorrencia_disciplinar);
         $tipoOcorrenciaDisciplinarDetalheAntes = $tipoOcorrenciaDisciplinarDetalhe->detalhe();
@@ -162,9 +154,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($tipoOcorrenciaDisciplinarDetalheAntes, $tipoOcorrenciaDisciplinarDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_tipo_ocorrencia_disciplinar_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_tipo_ocorrencia_disciplinar_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -174,9 +164,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj = new clsPmieducarTipoOcorrenciaDisciplinar($this->cod_tipo_ocorrencia_disciplinar, $this->pessoa_logada, null, null, null, null, null, null, 0);
         $tipoOcorrenciaDisciplinar = $obj->detalhe();
@@ -187,9 +175,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($tipoOcorrenciaDisciplinar);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_tipo_ocorrencia_disciplinar_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_tipo_ocorrencia_disciplinar_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

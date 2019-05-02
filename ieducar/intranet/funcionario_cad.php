@@ -73,9 +73,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->ref_pessoa = $_POST["ref_pessoa"];
         if( $_GET["ref_pessoa"] )
@@ -450,9 +448,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         //setor recebe o id do ultimo subsetor selecionado
         $this->ref_cod_setor_new = 0;
@@ -477,8 +473,7 @@ class indice extends clsCadastro
             if($this->cadastrarTabelas())
             {
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header( "Location: funcionario_lst.php" );
-                return true;
+                $this->simpleRedirect('funcionario_lst.php');
             }
             $this->mensagem = "Cadastro de menus n&atilde;o realizado.<br>";
             echo "<!--\nErro ao cadastrar clsPortalMenuFuncionario-->";
@@ -492,9 +487,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->ref_cod_setor_new = 0;
         for( $i = 0; $i < 5; $i++ )
@@ -526,7 +519,7 @@ class indice extends clsCadastro
             if( $this->cadastrarTabelas() )
             {
                 $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-                header( "Location: funcionario_lst.php" );
+                $this->simpleRedirect('funcionario_lst.php');
             }
         }
 
@@ -537,16 +530,13 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa);
         if($obj_funcionario->excluir())
         {
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: funcionario_lst.php" );
-            return true;
+            $this->simpleRedirect('funcionario_lst.php');
         }
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
         echo "<!--\nErro ao excluir clsPortalFuncionario\n-->";

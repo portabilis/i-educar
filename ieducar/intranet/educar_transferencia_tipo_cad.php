@@ -62,9 +62,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->cod_transferencia_tipo=$_GET["cod_transferencia_tipo"];
 
@@ -115,9 +113,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmieducarTransferenciaTipo( null,null,$this->pessoa_logada,$this->nm_tipo,$this->desc_tipo,null,null,1,$this->ref_cod_instituicao );
         $cadastrou = $obj->cadastra();
@@ -130,9 +126,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($transferenciaTipo);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_transferencia_tipo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_transferencia_tipo_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -142,9 +136,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $transferenciaTipoDetalhe = new clsPmieducarTransferenciaTipo($this->cod_transferencia_tipo);
         $transferenciaTipoDetalheAntes = $transferenciaTipoDetalhe->detalhe();
@@ -158,9 +150,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($transferenciaTipoDetalheAntes, $transferenciaTipoDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_transferencia_tipo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_transferencia_tipo_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -170,9 +160,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmieducarTransferenciaTipo( $this->cod_transferencia_tipo, $this->pessoa_logada, null, null, null, null, null, 0);
         $transferenciaTipo = $obj->detalhe();
@@ -183,9 +171,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($transferenciaTipo);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_transferencia_tipo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_transferencia_tipo_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

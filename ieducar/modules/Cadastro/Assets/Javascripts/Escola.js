@@ -34,7 +34,14 @@ const LOCAL_FUNCIONAMENTO = {
     PREDIO_ESCOLAR: 3
 }
 
-$escolaInepIdField.closest('tr').hide();
+const USO_INTERNET = {
+    NAO_POSSUI: 1,
+    ALUNOS: 4
+};
+
+const EQUIPAMENTOS = {
+    COMPUTADORES: 1
+};
 
 var submitForm = function(){
   var canSubmit = validationUtils.validatesFields(true);
@@ -45,23 +52,15 @@ var submitForm = function(){
   // #TODO refatorar cadastro de escola para que todos campos sejam enviados via ajax,
   // podendo então definir o código escolaInepId ao cadastrar a escola.
 
-  if (canSubmit && $escolaIdField.val())
-    putEscola();
-  else if (canSubmit)
+  if (canSubmit) {
     acao();
+  }
 }
 
 var handleGetEscola = function(dataResponse) {
   handleMessages(dataResponse.msgs);
 
   $escolaInepIdField.val(dataResponse.escola_inep_id);
-}
-
-var handlePutEscola = function(dataResponse) {
-  handleMessages(dataResponse.msgs);
-
-  // submete formulário somente após put (para não interromper requisição ajax)
-  acao();
 }
 
 var getEscola = function(escolaId) {
@@ -79,26 +78,8 @@ var getEscola = function(escolaId) {
   getResource(options);
 }
 
-var putEscola = function() {
-  var inep = $escolaInepIdField.val().length == 8 ? $escolaInepIdField.val() : '';
-  var data = {
-    id             : $escolaIdField.val(),
-    escola_inep_id : inep
-  };
-
-  var options = {
-    url      : putResourceUrlBuilder.buildUrl('/module/Api/escola', 'escola'),
-    dataType : 'json',
-    data     : data,
-    success  : handlePutEscola
-  };
-
-  putResource(options);
-}
-
 if ($escolaIdField.val()) {
   getEscola($escolaIdField.val());
-  $escolaInepIdField.closest('tr').show();
 }
 
 // unbind events
@@ -117,45 +98,6 @@ $j('#local_funcionamento').on('change', function () {
 $j('#predio_compartilhado_outra_escola').on('change', function () {
     changePredioCompartilhadoEscola()
 });
-
-$j('#educacao_indigena').change(
-  function(){
-      var escolaIndigena = this.value == 1;
-      if(escolaIndigena){
-        makeRequired('lingua_ministrada');
-        $j('#lingua_ministrada').prop('disabled', false);
-      }else{
-        makeUnrequired('lingua_ministrada');
-        makeUnrequired('codigo_lingua_indigena');
-        $j('#lingua_ministrada').prop('disabled', true);
-        $j('#codigo_lingua_indigena').prop('disabled', true);
-        $j('#lingua_ministrada').val(1)
-      }
-  }
-);
-$j('#lingua_ministrada').change(
-  function(){
-      var linguaIndigena = this.value == 2;
-      if(linguaIndigena){
-        makeRequired('codigo_lingua_indigena');
-        $j('#codigo_lingua_indigena').prop('disabled', false);
-      }else{
-        makeUnrequired('codigo_lingua_indigena');
-        $j('#codigo_lingua_indigena').prop('disabled', true);
-      }
-  }
-);
-
-$j('#computadores').change(
-  function(){
-      var possuiComputadores = this.value > 0;
-      $j('#acesso_internet').prop('disabled', !possuiComputadores);
-      $j('#acesso_internet').makeUnrequired();
-      if (possuiComputadores && obrigarCamposCenso) {
-        $j('#acesso_internet').makeRequired();
-      }
-  }
-).trigger('change');
 
 function obrigaCampoRegulamentacao() {
   escolaEmAtividade = $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE;
@@ -246,19 +188,19 @@ function changePossuiDependencias() {
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
 if (!$j('#cnpj').is(':visible')){
 
-  $j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="escolaTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="escolaTab"> <span class="tabText">Infraestrutura</span></div></li><li><div id="tab3" class="escolaTab"> <span class="tabText">Depend\u00eancias</span></div></li><li><div id="tab4" class="escolaTab"> <span class="tabText">Equipamentos</span></div></li><li><div id="tab5" class="escolaTab"> <span class="tabText">Dados do ensino</span></div></li></ul></div>');
+  $j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="escolaTab"> <span class="tabText">Dados gerais</span></div></li><li><div id="tab2" class="escolaTab"> <span class="tabText">Infraestrutura</span></div></li><li><div id="tab3" class="escolaTab"> <span class="tabText">Depend\u00eancias</span></div></li><li><div id="tab4" class="escolaTab"> <span class="tabText">Equipamentos</span></div></li><li><div id="tab5" class="escolaTab"> <span class="tabText">Recursos</span></div></li><li><div id="tab6" class="escolaTab"> <span class="tabText">Dados do ensino</span></div></li></ul></div>');
   $j('td .formdktd b').remove();
   $j('#tab1').addClass('escolaTab-active').removeClass('escolaTab');
 
   // Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
   $j('#local_funcionamento').closest('tr').attr('id','tlocal_funcionamento');
-  $j('#televisoes').closest('tr').attr('id','ttelevisoes');
   $j('#atendimento_aee').closest('tr').attr('id','tatendimento_aee');
 
   // Pega o número dessa linha
   linha_inicial_infra = $j('#tlocal_funcionamento').index()-1;
   linha_inicial_dependencia = $j('#tr_possui_dependencias').index()-1;
-  linha_inicial_equipamento = $j('#ttelevisoes').index()-1;
+  linha_inicial_equipamento = $j('#tr_equipamentos').index()-1;
+  linha_inicial_recursos = $j('#tr_quantidade_profissionais').index()-1;
   linha_inicial_dados = $j('#tatendimento_aee').index()-1;
 
   // Adiciona um ID à linha que termina o formulário para parar de esconder os campos
@@ -341,7 +283,7 @@ $j(document).ready(function() {
       $j('#tab4').toggleClass('escolaTab escolaTab-active')
       $j('.tablecadastro >tbody  > tr').each(function(index, row) {
         if (row.id!='stop'){
-          if (index>=linha_inicial_equipamento && index < linha_inicial_dados){
+          if (index>=linha_inicial_equipamento && index < linha_inicial_recursos){
             row.show();
           }else if (index>0){
             row.hide();
@@ -349,7 +291,10 @@ $j(document).ready(function() {
         }else
           return false;
       });
-
+      habilitaCampoAcessoInternet();
+      habilitaCampoEquipamentosAcessoInternet();
+      habilitaCampoRedeLocal();
+      habilitaCamposQuantidadeComputadoresAlunos();
     });
 
   // Dados educacionais
@@ -357,6 +302,23 @@ $j(document).ready(function() {
     function(){
       $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
       $j('#tab5').toggleClass('escolaTab escolaTab-active')
+      $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+        if (row.id!='stop'){
+          if (index>=linha_inicial_recursos && index < linha_inicial_dados){
+            row.show();
+          }else if (index>0){
+            row.hide();
+          }
+        }else
+          return false;
+      });
+   });
+
+  // Dados educacionais
+  $j('#tab6').click(
+    function(){
+      $j('.escolaTab-active').toggleClass('escolaTab-active escolaTab');
+      $j('#tab6').toggleClass('escolaTab escolaTab-active')
       $j('.tablecadastro >tbody  > tr').each(function(index, row) {
         if (row.id!='stop'){
           if (index>=linha_inicial_dados){
@@ -386,6 +348,9 @@ $j(document).ready(function() {
         mostrarCamposDaUnidadeVinculada();
         obrigarCamposDaUnidadeVinculada();
         obrigarCnpjMantenedora();
+        habilitaCampoEducacaoIndigena();
+        habilitaCampoLinguaMinistrada();
+        habilitaReservaVagasCotas();
       });
 
   // fix checkboxs
@@ -449,13 +414,14 @@ $j(document).ready(function() {
 
   function habilitarCampoUnidadeVinculada() {
     escolaEmAtividade = $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE;
-    
+
     if (escolaEmAtividade) {
       $j("#unidade_vinculada_outra_instituicao").prop('disabled', false);
       if (obrigarCamposCenso) {
         $j("#unidade_vinculada_outra_instituicao").makeRequired();
       }
     } else {
+      $j("#unidade_vinculada_outra_instituicao").val('');
       $j("#unidade_vinculada_outra_instituicao").prop('disabled', true);
       $j("#unidade_vinculada_outra_instituicao").makeUnrequired();
     }
@@ -629,4 +595,107 @@ function habilitaCamposNumeroSalas() {
 
 $j('#numero_salas_utilizadas_dentro_predio,#numero_salas_utilizadas_fora_predio').blur(function () {
     habilitaCamposNumeroSalas();
+});
+
+function habilitaCampoAcessoInternet() {
+    let disabled = $j.inArray(USO_INTERNET.NAO_POSSUI.toString(), $j('#uso_internet').val()) != -1;
+    $j('#acesso_internet').prop('disabled', disabled);
+
+    if (!disabled && obrigarCamposCenso) {
+        $j('#acesso_internet').makeRequired();
+    } else {
+        $j('#acesso_internet').makeUnrequired();
+    }
+}
+
+function habilitaCampoEquipamentosAcessoInternet() {
+    let disabled = $j.inArray(USO_INTERNET.ALUNOS.toString(), $j('#uso_internet').val()) == -1;
+
+    $j('#equipamentos_acesso_internet').prop('disabled', disabled);
+    $j("#equipamentos_acesso_internet").trigger("chosen:updated");
+
+    if (disabled) {
+        $j('#equipamentos_acesso_internet').makeUnrequired();
+    } else if(obrigarCamposCenso) {
+        $j('#equipamentos_acesso_internet').makeRequired();
+    }
+}
+
+$j('#uso_internet').on('change', function () {
+    habilitaCampoAcessoInternet();
+    habilitaCampoEquipamentosAcessoInternet();
+});
+
+function habilitaCampoRedeLocal() {
+    let disabled = $j.inArray(EQUIPAMENTOS.COMPUTADORES.toString(), $j('#equipamentos').val()) == -1;
+
+    if (disabled) {
+        makeUnrequired('rede_local');
+    } else if(obrigarCamposCenso){
+        makeRequired('rede_local');
+    }
+
+    $j('#rede_local').prop('disabled', disabled);
+
+    $j("#rede_local").trigger("chosen:updated");
+}
+function habilitaCamposQuantidadeComputadoresAlunos() {
+    let disabled = $j.inArray(EQUIPAMENTOS.COMPUTADORES.toString(), $j('#equipamentos').val()) == -1;
+
+    $j('#quantidade_computadores_alunos_mesa, #quantidade_computadores_alunos_portateis, #quantidade_computadores_alunos_tablets').prop('disabled', disabled);
+    $j("#quantidade_computadores_alunos_mesa, #quantidade_computadores_alunos_portateis, #quantidade_computadores_alunos_tablets").trigger("chosen:updated");
+}
+
+$j('#equipamentos').on('change', function () {
+    habilitaCampoRedeLocal();
+    habilitaCamposQuantidadeComputadoresAlunos();
+});
+
+function habilitaCampoEducacaoIndigena() {
+    var escolaIndigena = $j('#educacao_indigena').val() == 1;
+    if(escolaIndigena && obrigarCamposCenso){
+        makeRequired('lingua_ministrada');
+    }else{
+        makeUnrequired('lingua_ministrada');
+        makeUnrequired('codigo_lingua_indigena');
+    }
+
+    $j('#lingua_ministrada').prop('disabled', !escolaIndigena);
+    habilitaCampoLinguaMinistrada();
+}
+
+function habilitaCampoLinguaMinistrada() {
+    var linguaIndigena = $j('#lingua_ministrada').val() == 2;
+    if(linguaIndigena && obrigarCamposCenso){
+        makeRequired('codigo_lingua_indigena');
+    }else{
+        makeUnrequired('codigo_lingua_indigena');
+    }
+
+    $j('#codigo_lingua_indigena').prop('disabled', !linguaIndigena);
+    $j("#codigo_lingua_indigena").trigger("chosen:updated");
+}
+
+$j('#educacao_indigena').on('change', function() {
+    habilitaCampoEducacaoIndigena()
+});
+
+$j('#lingua_ministrada').on('change', function() {
+    habilitaCampoLinguaMinistrada()
+});
+
+function habilitaReservaVagasCotas() {
+    var fazExameSelecao = $j('#exame_selecao_ingresso').val() == 1;
+    if(fazExameSelecao && obrigarCamposCenso){
+        makeRequired('reserva_vagas_cotas');
+    }else{
+        makeUnrequired('reserva_vagas_cotas');
+    }
+
+    $j('#reserva_vagas_cotas').prop('disabled', !fazExameSelecao);
+    $j("#reserva_vagas_cotas").trigger("chosen:updated");
+}
+
+$j('#exame_selecao_ingresso').on('change', function() {
+    habilitaReservaVagasCotas()
 });

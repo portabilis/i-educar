@@ -601,7 +601,6 @@ class clsPmieducarServidor
      */
     public function lista_professor($cod_instituicao, $cod_escola, $str_nome_servidor)
     {
-        session_start();
         $this->_campos_lista = 's.cod_servidor, p.nome, func.matricula, s.ref_cod_instituicao';
 
         $this->_schema = 'pmieducar.';

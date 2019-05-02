@@ -80,10 +80,6 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->idsetorbai = $_GET['idsetorbai'];
 
     if (is_numeric($this->idsetorbai)) {
@@ -132,10 +128,6 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $obj = new clsPublicSetorBai(NULL, $this->nome);
 
     $cadastrou = $obj->cadastra();
@@ -147,8 +139,7 @@ class indice extends clsCadastro
       $auditoria->inclusao($enderecamento);
 
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-      header('Location: public_setor_lst.php');
-      die();
+      $this->simpleRedirect('public_setor_lst.php');
     }
 
     $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
@@ -158,10 +149,6 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $enderecamentoDetalhe = new clsPublicSetorBai($this->idsetorbai);
     $enderecamentoDetalhe->cadastrou = $this->idsetorbai;
     $enderecamentoDetalheAntes = $enderecamentoDetalhe->detalhe();
@@ -176,8 +163,7 @@ class indice extends clsCadastro
       $auditoria->alteracao($enderecamentoDetalheAntes, $enderecamentoDetalheDepois);
 
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      header('Location: public_setor_lst.php');
-      die();
+      $this->simpleRedirect('public_setor_lst.php');
     }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
@@ -187,17 +173,12 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $obj = new clsPublicSetorBai($this->idsetorbai);
     $excluiu = $obj->excluir();
 
     if ($excluiu) {
       $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-      header('Location: public_setor_lst.php');
-      die();
+      $this->simpleRedirect('public_setor_lst.php');
     }
 
     $this->mensagem = 'Exclusão não realizada.<br>';

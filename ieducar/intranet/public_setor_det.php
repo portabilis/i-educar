@@ -73,10 +73,6 @@ class indice extends clsDetalhe
 
   function Gerar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->titulo = 'Setor - Detalhe';
 
     $this->idsetorbai = $_GET['idsetorbai'];
@@ -85,8 +81,7 @@ class indice extends clsDetalhe
     $det_setor_bai = $tmp_obj->detalhe();
 
     if (! $det_setor_bai) {
-      header('Location: public_setor_lst.php');
-      die();
+        $this->simpleRedirect('public_setor_lst.php');
     }
     else {
       $registro = $det_setor_bai;

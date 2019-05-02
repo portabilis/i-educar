@@ -80,10 +80,6 @@ class indice extends clsListagem
     
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-        
         $this->titulo = "Disciplina T&oacute;pico - Listagem";
         
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto

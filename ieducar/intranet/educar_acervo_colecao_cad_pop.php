@@ -63,9 +63,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 593, $this->pessoa_logada, 11,  "educar_acervo_colecao_lst.php" );
@@ -87,9 +85,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 593, $this->pessoa_logada, 11,  "educar_acervo_colecao_lst.php" );
@@ -105,7 +101,6 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("acervo_colecao", $this->pessoa_logada, $this->cod_acervo_colecao);
       $auditoria->inclusao($acervo_colecao);
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            //header( "Location: educar_acervo_colecao_lst.php" );
             echo "<script>
                     parent.document.getElementById('colecao').value = '$cadastrou';
                     parent.document.getElementById('ref_cod_acervo_colecao').disabled = false;

@@ -26,7 +26,8 @@ class RegraController extends ApiCoreController
 
     protected function canGetRegraSerie()
     {
-        return $this->validatesPresenceOf('serie_id');
+        return $this->validatesPresenceOf('serie_id') &&
+        $this->validatesPresenceOf('ano_letivo');
     }
 
     protected function getTabelasDeArredondamento()
@@ -108,7 +109,7 @@ class RegraController extends ApiCoreController
             $ano = $this->getRequest()->ano;
 
             $sql = '
-              SELECT 
+              SELECT
                   DISTINCT ra.id,
                   ra.tabela_arredondamento_id,
                   ra.tabela_arredondamento_id_conceitual,
@@ -116,14 +117,14 @@ class RegraController extends ApiCoreController
                   ra.tipo_presenca,
                   ra.parecer_descritivo,
                   (
-                      SELECT 
+                      SELECT
                           jsonb_agg(json_build_object(\'turma_id\', t.cod_turma) ORDER BY t.cod_turma)
-                      FROM 
-                          pmieducar.turma t 
-                      INNER JOIN pmieducar.serie s ON true 
+                      FROM
+                          pmieducar.turma t
+                      INNER JOIN pmieducar.serie s ON true
                           AND s.cod_serie = t.ref_ref_cod_serie
-                      INNER JOIN modules.regra_avaliacao_serie_ano rasa ON true 
-                          AND rasa.serie_id = s.cod_serie 
+                      INNER JOIN modules.regra_avaliacao_serie_ano rasa ON true
+                          AND rasa.serie_id = s.cod_serie
                           AND rasa.ano_letivo = $2
                       WHERE true
                           AND rasa.regra_avaliacao_id = ra.id
@@ -139,7 +140,7 @@ class RegraController extends ApiCoreController
               FROM modules.regra_avaliacao ra
               WHERE true
                   AND ra.instituicao_id = $1
-              ORDER BY 
+              ORDER BY
                 COALESCE(ra.regra_diferenciada_id,0),
                 ra.id';
 
@@ -177,15 +178,17 @@ class RegraController extends ApiCoreController
     public function getRegraSerie()
     {
         $serieId = $this->getRequest()->serie_id;
+        $anoLetivo = $this->getRequest()->ano_letivo;
 
         if ($this->canGetRegraSerie()) {
-            $sql = 'SELECT *
-                FROM modules.regra_avaliacao
-               WHERE regra_avaliacao.id = (SELECT regra_avaliacao_id
-                                             FROM pmieducar.serie
-                                            WHERE serie.cod_serie = $1) LIMIT 1';
+            $sql = 'SELECT ra.*
+                      FROM modules.regra_avaliacao AS ra
+                INNER JOIN modules.regra_avaliacao_serie_ano AS rasa ON rasa.regra_avaliacao_id = ra.id
+                     WHERE rasa.serie_id = $1
+                       AND rasa.ano_letivo = $2
+                     LIMIT 1';
 
-            $regra = $this->fetchPreparedQuery($sql, ['params' => $serieId]);
+            $regra = $this->fetchPreparedQuery($sql, [$serieId, $anoLetivo]);
 
             $atributos = [
                 'id',

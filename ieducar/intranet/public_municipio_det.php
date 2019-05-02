@@ -69,10 +69,6 @@ class indice extends clsDetalhe
     
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-        
         $this->titulo = "Munic&iacute;pio - Detalhe";
         
 
@@ -83,8 +79,7 @@ class indice extends clsDetalhe
         
         if( ! $registro )
         {
-            header( "location: public_municipio_lst.php" );
-            die();
+            $this->simpleRedirect('public_municipio_lst.php');
         }
         
         if( class_exists( "clsPais" ) )

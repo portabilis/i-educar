@@ -156,9 +156,23 @@ class indice extends clsCadastro
         ];
         $this->inputsHelper()->select('tipo_vinculo', $options);
 
-        $this->inputsHelper()->turmaTurno([
-            'required' => false
-        ]);
+        $options = [
+            'label' => 'Turno',
+            'resources' => [
+                null => 'Selecione',
+                clsPmieducarTurma::TURNO_MATUTINO => 'Matutino',
+                clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
+            ],
+            'value' => $this->turma_turno_id,
+            'required' => false,
+            'label_hint' => 'Preencha apenas se o servidor atuar em algum turno específico'
+        ];
+
+        if ($this->tipoacao === 'Editar') {
+            $options['disabled'] = true;
+        }
+
+        $this->inputsHelper()->select('turma_turno_id', $options);
 
         $options = [
             'label' => 'Professor de área específica?',
@@ -210,8 +224,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-        header('Location: ' . $backUrl);
-        die();
+        $this->simpleRedirect($backUrl);
     }
 
     public function Editar()
@@ -248,8 +261,7 @@ class indice extends clsCadastro
         if ($editou) {
             $professorTurma->gravaComponentes($this->id, $this->componentecurricular);
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-            header('Location: ' . $backUrl);
-            die();
+            $this->simpleRedirect($backUrl);
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
@@ -273,8 +285,7 @@ class indice extends clsCadastro
         $professorTurma->excluir();
 
         $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-        header('Location:' . $backUrl);
-        die();
+        $this->simpleRedirect($backUrl);
     }
 }
 

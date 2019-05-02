@@ -24,6 +24,7 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -65,10 +66,6 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = "Dados Biblioteca - Detalhe";
         
 
@@ -98,8 +95,7 @@ class indice extends clsDetalhe
 
         if( ! $registro || !$permitido)
         {
-            header( "location: educar_biblioteca_dados_lst.php" );
-            die();
+            $this->simpleRedirect('educar_biblioteca_dados_lst.php');
         }
 
         if( $registro["nm_biblioteca"] )
