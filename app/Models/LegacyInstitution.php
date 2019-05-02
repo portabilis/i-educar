@@ -4,6 +4,7 @@ namespace App\Models;
 
 use DateTime;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * LegacyInstitution
@@ -45,6 +46,14 @@ class LegacyInstitution extends Model
     public function scopeActive($query)
     {
         return $query->where('ativo', 1);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function generalConfiguration(): HasOne
+    {
+        return $this->hasOne(LegacyGeneralConfiguration::class, 'ref_cod_instituicao', 'cod_instituicao');
     }
 
     public function getNameAttribute()

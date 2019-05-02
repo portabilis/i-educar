@@ -154,9 +154,23 @@ class indice extends clsCadastro
         ];
         $this->inputsHelper()->select('tipo_vinculo', $options);
 
-        $this->inputsHelper()->turmaTurno([
-            'required' => false
-        ]);
+        $options = [
+            'label' => 'Turno',
+            'resources' => [
+                null => 'Selecione',
+                clsPmieducarTurma::TURNO_MATUTINO => 'Matutino',
+                clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
+            ],
+            'value' => $this->turma_turno_id,
+            'required' => false,
+            'label_hint' => 'Preencha apenas se o servidor atuar em algum turno específico'
+        ];
+
+        if ($this->tipoacao === 'Editar') {
+            $options['disabled'] = true;
+        }
+
+        $this->inputsHelper()->select('turma_turno_id', $options);
 
         $options = [
             'label' => 'Professor de área específica?',
