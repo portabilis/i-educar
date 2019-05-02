@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Http\Exceptions\HttpResponseException;

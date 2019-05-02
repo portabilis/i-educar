@@ -2,12 +2,15 @@
 
 namespace App\Providers;
 
+use App\Models\SchoolManager;
+use App\Observers\SchoolManagerObserver;
 use App\Services\CacheManager;
 use Barryvdh\Debugbar\ServiceProvider as DebugbarServiceProvider;
 use iEducar\Support\Navigation\Breadcrumb;
 use iEducar\Support\Navigation\TopMenu;
 use iEducar\Modules\ErrorTracking\HoneyBadgerTracker;
 use iEducar\Modules\ErrorTracking\Tracker;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
@@ -63,6 +66,20 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->loadLegacyMigrations();
         }
+
+        Request::macro('getSubdomain', function () {
+            $host = str_replace('-', '', $this->getHost());
+            return Str::replaceFirst('.' . config('app.default_host'), '', $host);
+        });
+
+        Collection::macro('getKeyValueArray', function ($valueField) {
+            $keyValueArray = [];
+            foreach ($this->items as $item) {
+                $keyValueArray[$item->getKey()] = $item->getAttribute($valueField);
+            }
+
+            return $keyValueArray;
+        });
 
         // https://laravel.com/docs/5.5/migrations#indexes
         Schema::defaultStringLength(191);

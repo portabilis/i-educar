@@ -61,7 +61,7 @@ class clsPmieducarAluno
   var $url_laudo_medico;
   var $url_documento;
   var $codigo_sistema;
-  var $veiculo_transporte_escolar;
+  var $veiculo_transporte_escolar = false;
   var $autorizado_um;
   var $parentesco_um;
   var $autorizado_dois;
@@ -410,9 +410,9 @@ class clsPmieducarAluno
         $gruda = ', ';
       }
 
-      if (is_numeric($this->veiculo_transporte_escolar)) {
-        $campos  .= "{$gruda}veiculo_transporte_escolar";
-        $valores .= "{$gruda}'{$this->veiculo_transporte_escolar}'";
+      if (is_string($this->veiculo_transporte_escolar)) {
+        $campos .= "{$gruda}veiculo_transporte_escolar";
+        $valores .= "{$gruda}'{{$this->veiculo_transporte_escolar}}'";
         $gruda = ', ';
       }
 
@@ -607,11 +607,11 @@ class clsPmieducarAluno
         $gruda = ', ';
       }
 
-      if (is_numeric($this->veiculo_transporte_escolar)) {
-        $set .= "{$gruda}veiculo_transporte_escolar = '{$this->veiculo_transporte_escolar}'";
+      if (is_string($this->veiculo_transporte_escolar)) {
+        $set .= "{$gruda}veiculo_transporte_escolar = '{{$this->veiculo_transporte_escolar}}'";
         $gruda = ', ';
-      }else{
-        $set .= "{$gruda}veiculo_transporte_escolar = NULL ";
+      } elseif ($this->veiculo_transporte_escolar !== false) {
+        $set .= "{$gruda}veiculo_transporte_escolar = NULL";
         $gruda = ', ';
       }
 
