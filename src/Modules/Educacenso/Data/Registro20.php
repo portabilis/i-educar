@@ -64,31 +64,31 @@ class Registro20 extends AbstractRegistro
         return [
             '20', //  1
             $record->codigoEscolaInep, //  2 Código de escola - Inep
-            $record->codigoTurma, //  3 Código da Turma na Entidade/Escola
+            $record->codTurma, //  3 Código da Turma na Entidade/Escola
             '' , //  4 Código da Turma - Inep
             $this->convertStringToCenso($record->nomeTurma), //  5 Nome da Turma
             $record->tipoMediacaoDidaticoPedagogico, //  6 Tipo de mediação didático-pedagógica
-            $record->presencial() ? ($record->horaInicial ? substr($record->horaInicial, 1, 2) : '') : '', //  7 Hora Inicial - Hora
+            $record->presencial() ? ($record->horaInicial ? substr($record->horaInicial, 0, 2) : '') : '', //  7 Hora Inicial - Hora
             $record->presencial() ? ($record->horaInicial ? substr($record->horaInicial, 3, 2) : '') : '', //  8 Hora Inicial - Minuto
-            $record->presencial() ? ($record->horaFinal ? substr($record->horaFinal, 1, 2) : '') : '', //  9 Hora Final - Hora
+            $record->presencial() ? ($record->horaFinal ? substr($record->horaFinal, 0, 2) : '') : '', //  9 Hora Final - Hora
             $record->presencial() ? ($record->horaFinal ? substr($record->horaFinal, 3, 2) : '') : '', //  10 Hora Final - Minuto
-            (int) in_array(1, $record->diasSemana), //  11 Domingo
-            (int) in_array(2, $record->diasSemana), //  12 Segunda-feira
-            (int) in_array(3, $record->diasSemana), //  13 Terça-feira
-            (int) in_array(4, $record->diasSemana), //  14 Quarta-feira
-            (int) in_array(5, $record->diasSemana), //  15 Quinta-feira
-            (int) in_array(6, $record->diasSemana), //  16 Sexta-feira
-            (int) in_array(7, $record->diasSemana), //  17 Sábado
-            $record->escolarizacao(), //  18 Escolarização
-            $record->atividadeComplementar(), //  19 Atividade complementar
-            $record->atendimentoEducacionalEspecializado(), //  20 Atendimento educacional especializado - AEE]
+            $record->presencial() ? (int) in_array(1, $record->diasSemana) : '', //  11 Domingo
+            $record->presencial() ? (int) in_array(2, $record->diasSemana) : '', //  12 Segunda-feira
+            $record->presencial() ? (int) in_array(3, $record->diasSemana) : '', //  13 Terça-feira
+            $record->presencial() ? (int) in_array(4, $record->diasSemana) : '', //  14 Quarta-feira
+            $record->presencial() ? (int) in_array(5, $record->diasSemana) : '', //  15 Quinta-feira
+            $record->presencial() ? (int) in_array(6, $record->diasSemana) : '', //  16 Sexta-feira
+            $record->presencial() ? (int) in_array(7, $record->diasSemana) : '', //  17 Sábado
+            $record->escolarizacao() ?: 0, //  18 Escolarização
+            $record->atividadeComplementar() ?: 0, //  19 Atividade complementar
+            $record->atendimentoEducacionalEspecializado() ?: 0, //  20 Atendimento educacional especializado - AEE]
             $record->atividadeComplementar() ? ($record->atividadesComplementares[0] ?? '') : '', //  21 Código 1 - Tipos de atividades complementares
             $record->atividadeComplementar() ? ($record->atividadesComplementares[1] ?? '') : '', //  22 Código 2 - Tipos de atividades complementares
             $record->atividadeComplementar() ? ($record->atividadesComplementares[2] ?? '') : '', //  23 Código 3 - Tipos de atividades complementares
             $record->atividadeComplementar() ? ($record->atividadesComplementares[3] ?? '') : '', //  24 Código 4 - Tipos de atividades complementares
             $record->atividadeComplementar() ? ($record->atividadesComplementares[4] ?? '') : '', //  25 Código 5 - Tipos de atividades complementares
             $record->atividadeComplementar() ? ($record->atividadesComplementares[5] ?? '') : '', //  26 Código 6 - Tipos de atividades complementares
-            $record->educacaoDistancia() ? $record->localFuncionamentoDiferenciado : '', //  27 Local de funcionamento diferenciado
+            $record->educacaoDistancia() ? '' : $record->localFuncionamentoDiferenciado, //  27 Local de funcionamento diferenciado
             $record->escolarizacao() ? $record->modalidadeCurso : '', //  28 Modalidade
             $record->escolarizacao() ? $record->etapaEducacenso : '', //  29 Etapa
             in_array($record->etapaEducacenso, [30, 31, 32, 33, 34, 39, 40, 64, 74]) ? $record->codCursoProfissional : '', //  30 Código Curso
