@@ -4,6 +4,7 @@ namespace App\Models;
 
 use DateTime;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * LegacyInstitution
@@ -41,6 +42,14 @@ class LegacyInstitution extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @return HasOne
+     */
+    public function generalConfiguration(): HasOne
+    {
+        return $this->hasOne(LegacyGeneralConfiguration::class, 'ref_cod_instituicao', 'cod_instituicao');
+    }
 
     public function getNameAttribute()
     {

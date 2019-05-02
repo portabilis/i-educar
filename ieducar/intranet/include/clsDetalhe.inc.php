@@ -137,22 +137,6 @@ class clsDetalhe extends Core_Controller_Page_Abstract
     }
 
     $barra = '<b>' . $this->titulo . '</b>';
-    if (class_exists('clsPmiajudaPagina')) {
-      $ajudaPagina = new clsPmiajudaPagina();
-      $lista = $ajudaPagina->lista(null,null,$url);
-
-      if ($lista) {
-        $barra = "
-          <table border=\"0\" cellpading=\"0\" cellspacing=\"0\" width=\"100%\">
-            <tr>
-              <script type=\"text/javascript\">document.help_page_index = 0;</script>
-              <td width=\"20\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Botï¿½o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta pï¿½gina\"></a></td>
-              <td><b>{$this->titulo}</b></td>
-              <td align=\"right\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Botï¿½o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta pï¿½gina\"></a></td>
-            </tr>
-          </table>";
-      }
-    }
 
     if ($this->locale){
         app(Breadcrumb::class)->setLegacy($this->locale);

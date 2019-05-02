@@ -102,8 +102,7 @@ $j(function () {
             $j('input.error').removeClass('error');
         },
         validateDates: function () {
-            var that = this,
-                fields = $j('[id^=data_inicio], [id^=data_fim]'),
+            var fields = $j('[id^=data_inicio], [id^=data_fim]'),
                 valid = true;
 
             fields.each(function (i, elm) {
@@ -234,15 +233,38 @@ $j(function () {
             sendBtn.unbind('click');
             this.submit();
         },
+        makeDialog: function (params) {
+            var container = $j('#dialog-container');
+
+            if (container.length < 1) {
+                $j('body').append('<div id="dialog-container" style="width: 500px;"></div>');
+                container = $j('#dialog-container');
+            }
+
+            if (container.hasClass('ui-dialog-content')) {
+                container.dialog('destroy');
+            }
+
+            container.empty();
+            container.html(params.content);
+
+            delete params['content'];
+
+            container.dialog(params);
+        },
         setupModule: function () {
             var $select = $j('#ref_cod_modulo'),
                 val = $select.val(),
                 availableModules = window.modulosDisponiveis || [],
+                oldModuleInfo = availableModules[this.module] || {},
                 moduleInfo = availableModules[val] || {},
                 etapas = moduleInfo.etapas || undefined,
-                rows = this.countRows();
+                rows = this.countRows(),
+                that = this,
+                content = '';
 
             val = (val === '') ? 0 : parseInt(val, 10);
+            oldModuleInfo.module = this.module;
 
             if (val && Boolean(etapas) === false) {
                 alert("Este módulo não possui o número de etapas definido.\nRealize esta alteração no seguinte caminho:\nCadastros > Tipos > Escolas > Tipos de etapas");
@@ -257,13 +279,73 @@ $j(function () {
             if (etapas > rows) {
                 var diff = etapas - rows;
 
-                this.addRows(diff);
+                content += (diff == 1)
+                  ? '<strong>Você está adicionando uma etapa!</strong> '
+                  : `<strong>Você está adicionando ${diff} etapas!</strong> `;
+
+                content += '<br><br>Esta mudança irá afetar o tipo de etapa onde as notas e faltas são emitidas. Exemplo: ';
+                content += `Notas lançadas no primeiro <strong>${oldModuleInfo.label}</strong> vão aparecer no primeiro <strong>${moduleInfo.label}</strong>. `;
+                content += '<br><br>Tem certeza de que deseja prosseguir?';
+
+                this.makeDialog({
+                    content: content,
+                    title: 'Atenção!',
+                    maxWidth: 860,
+                    width: 860,
+                    close: function () {
+                        $select.val(oldModuleInfo.module);
+                        $j(this).dialog('destroy');
+                    },
+                    buttons: [{
+                        text: 'Sim',
+                        click: function () {
+                            that.addRows(diff);
+                            $j(this).dialog('destroy');
+                        }
+                    }, {
+                        text: 'Não',
+                        click: function () {
+                            $select.val(oldModuleInfo.module);
+                            $j(this).dialog('destroy');
+                        }
+                    }]
+                });
             }
 
             if (etapas < rows) {
                 var diff = rows - etapas;
 
-                this.removeRows(diff);
+                content += (diff == 1)
+                  ? '<strong>Você está removendo uma etapa!</strong> '
+                  : `<strong>Você está removendo ${diff} etapas!</strong> `;
+
+                content += '<br><br>Esta mudança irá afetar o tipo de etapa onde as notas e faltas são emitidas. Exemplo: ';
+                content += `Notas lançadas no primeiro <strong>${oldModuleInfo.label}</strong> vão aparecer no primeiro <strong>${moduleInfo.label}</strong>. `;
+                content += 'Se houver notas/faltas enviadas na etapa sendo removida esta alteração será bloqueada.<br><br>Tem certeza de que deseja prosseguir?';
+
+                this.makeDialog({
+                    content: content,
+                    title: 'Atenção!',
+                    maxWidth: 860,
+                    width: 860,
+                    close: function () {
+                        $select.val(oldModuleInfo.module);
+                        $j(this).dialog('destroy');
+                    },
+                    buttons: [{
+                        text: 'Sim',
+                        click: function () {
+                            that.removeRows(diff);
+                            $j(this).dialog('destroy');
+                        }
+                    }, {
+                        text: 'Não',
+                        click: function () {
+                            $select.val(oldModuleInfo.module);
+                            $j(this).dialog('destroy');
+                        }
+                    }]
+                });
             }
         },
         addRows: function (qtt) {

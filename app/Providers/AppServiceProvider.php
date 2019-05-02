@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\SchoolManager;
 use App\Observers\SchoolManagerObserver;
 use App\Services\CacheManager;
+use App\Models\LegacyInstitution;
 use Barryvdh\Debugbar\ServiceProvider as DebugbarServiceProvider;
 use iEducar\Support\Navigation\Breadcrumb;
 use iEducar\Support\Navigation\TopMenu;
@@ -67,6 +68,7 @@ class AppServiceProvider extends ServiceProvider
             $this->loadLegacyMigrations();
         }
 
+<<<<<<< HEAD
         Request::macro('getSubdomain', function () {
             $host = str_replace('-', '', $this->getHost());
             return Str::replaceFirst('.' . config('app.default_host'), '', $host);
@@ -81,6 +83,8 @@ class AppServiceProvider extends ServiceProvider
             return $keyValueArray;
         });
 
+=======
+>>>>>>> master
         // https://laravel.com/docs/5.5/migrations#indexes
         Schema::defaultStringLength(191);
     }
@@ -103,6 +107,10 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $this->app->bind(Tracker::class, HoneyBadgerTracker::class);
+
+        $this->app->bind(LegacyInstitution::class, function () {
+            return LegacyInstitution::query()->where('ativo', 1)->firstOrFail();
+        });
 
         Cache::swap(new CacheManager(app()));
     }
