@@ -827,9 +827,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $helperOptions = ['objectName' => 'veiculo_transporte_escolar'];
         $options = [
             'label' => 'Veículo utilizado',
-            'required' => false,
+            'required' => true,
             'options' => [
-                'values' => null,
                 'all_values' => $veiculos
             ]
         ];

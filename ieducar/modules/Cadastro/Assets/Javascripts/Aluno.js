@@ -217,6 +217,16 @@ var newSubmitForm = function (event) {
         return false;
     }
 
+    $tipoTransporte = $j('#tipo_transporte');
+
+    if ($tipoTransporte.val() == 'municipal' || $tipoTransporte.val() == 'estadual') {
+        veiculoTransporte = $j('#veiculo_transporte_escolar').val();
+        if (obrigarCamposCenso && (veiculoTransporte == '' || veiculoTransporte == null)) {
+            messageUtils.error('O campo Veículo utilizado deve ser preenchido');
+            return false;
+        }
+    }
+
     submitFormExterno();
 };
 
