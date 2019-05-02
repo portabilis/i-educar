@@ -5,6 +5,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
+use Tooleks\LaravelAssetVersion\Facades\Asset;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../../includes/bootstrap.php';
@@ -18,7 +19,6 @@ require_once 'include/funcoes.inc.php';
 require_once 'Portabilis/Utils/Database.php';
 require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Assets/Version.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
 if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente) {
@@ -57,30 +57,6 @@ class clsBase extends clsConfig
     var $script_header;
     var $script_footer;
     var $prog_alert;
-
-    public $configuracoes;
-
-    protected function setupConfigs()
-    {
-        $configuracoes = new clsPmieducarConfiguracoesGerais();
-        $this->configuracoes = $configuracoes->detalhe();
-    }
-
-    protected function mostraSupenso()
-    {
-        if (empty($this->configuracoes)) {
-            $this->setupConfigs();
-        }
-
-        $nivel = Session::get('nivel');
-
-        if (!$this->configuracoes['active_on_ieducar'] && $nivel !== 1) {
-            header('HTTP/1.1 503 Service Temporarily Unavailable');
-            header("Location: suspenso.php");
-
-            die();
-        }
-    }
 
     function OpenTpl($template)
     {
@@ -121,15 +97,16 @@ class clsBase extends clsConfig
         if (is_array($this->estilos) && count($this->estilos)) {
             $estilos = '';
             foreach ($this->estilos as $estilo) {
-                $estilos .= "<link rel=stylesheet type='text/css' href='/intranet/styles/{$estilo}.css?assets_version=" . Portabilis_Assets_Version::VERSION . "' />";
+                $estilos .= "<link rel=stylesheet type='text/css' href='" . Asset::get('/intranet/scripts/' . $estilo . '.js') . ".css' />";
             }
             $saida = str_replace("<!-- #&ESTILO&# -->", $estilos, $saida);
         }
 
+
         if (is_array($this->scripts) && count($this->scripts)) {
-            $estilos = '';
+            $scripts = '';
             foreach ($this->scripts as $script) {
-                $scripts .= "<script type='text/javascript' src='/intranet/scripts/{$script}.js?assets_version=" . Portabilis_Assets_Version::VERSION . "' ></script>";
+                $scripts .= "<script type='text/javascript' src='" . Asset::get('/intranet/scripts/' . $script . '.js') . "'></script>";
             }
             $saida = str_replace("<!-- #&SCRIPT&# -->", $scripts, $saida);
         }
@@ -371,7 +348,6 @@ class clsBase extends clsConfig
         $cronometro = new clsCronometro();
         $cronometro->marca('inicio');
 
-        $this->mostraSupenso();
         $this->Formular();
         $this->VerificaPermicao();
         $this->CadastraAcesso();

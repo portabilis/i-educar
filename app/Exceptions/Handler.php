@@ -5,6 +5,8 @@ namespace App\Exceptions;
 use Exception;
 use iEducar\Modules\ErrorTracking\Tracker;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class Handler extends ExceptionHandler
 {
@@ -30,12 +32,15 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param  \Exception  $exception
+     * @param Exception $exception
+     *
      * @return void
+     *
+     * @throws Exception
      */
     public function report(Exception $exception)
     {
-        if (config('app.trackerror')) {
+        if (config('app.trackerror') && $this->shouldReport($exception)) {
             app(Tracker::class)->notify($exception, $this->getContext());
         }
 
@@ -45,19 +50,25 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
+     * @param Request   $request
+     * @param Exception $exception
+     *
+     * @return Response
      */
     public function render($request, Exception $exception)
     {
         return parent::render($request, $exception);
     }
 
+    /**
+     * Return context data for the error.
+     *
+     * @return array
+     */
     private function getContext()
     {
         if (app()->runningInConsole()) {
-            return null;
+            return [];
         }
 
         return app('request')->all();
