@@ -69,7 +69,7 @@ class indice extends clsCadastro
 
             $helperOptions = array('objectName' => "{$enturmacao['ref_cod_turma']}_{$enturmacao['sequencial']}_tipoatendimento");
             $options = [
-                'label' => "Tipo de atendimento educacional especializado do aluno na turma: {$enturmacao['nm_turma']}",
+                'label' => "Tipo de atendimento educacional especializado do aluno na turma {$enturmacao['nm_turma']}: ",
                 'options' => [
                     'values' => $tipoAtendimento,
                     'all_values' => TipoAtendimentoAluno::getDescriptiveValues(),
@@ -105,7 +105,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Tipo do AEE do aluno atualizado com sucesso.<br>";
-        return true;
+        $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->cod_matricula}");
     }
 
     private function validaPermissao()
