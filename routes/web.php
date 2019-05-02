@@ -55,6 +55,10 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.menu', 'ieducar.fo
     Route::any('modules/{uri}', 'LegacyController@modules')->where('uri', '.*');
     Route::any('intranet/{uri}', 'LegacyController@intranet')->where('uri', '.*');
 
+    Route::group(['namespace' => 'Educacenso', 'prefix' => 'educacenso'], function() {
+        Route::get('validar/{validator}', 'ValidatorController@validation');
+    });
+
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
