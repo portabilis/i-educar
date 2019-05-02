@@ -332,7 +332,10 @@ SQL;
                 exists (
                   SELECT 1
                   FROM pmieducar.matricula_turma
+                  JOIN pmieducar.matricula
+                      ON matricula.cod_matricula = matricula_turma.ref_cod_matricula
                   WHERE matricula_turma.ref_cod_turma = turma.cod_turma
+                  AND matricula.ativo = 1
                   AND matricula_turma.data_enturmacao < instituicao.data_educacenso
                   AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
                 )
@@ -343,6 +346,7 @@ SQL;
                   JOIN pmieducar.matricula
                       ON matricula.cod_matricula = matricula_turma.ref_cod_matricula
                   WHERE matricula_turma.ref_cod_turma = turma.cod_turma
+                  AND matricula.ativo = 1
                   AND matricula_turma.data_enturmacao = instituicao.data_educacenso
                   AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
                   AND NOT EXISTS (
@@ -352,8 +356,9 @@ SQL;
                       ON sm.cod_matricula = smt.ref_cod_matricula
                     WHERE sm.ref_cod_aluno = matricula.ref_cod_aluno
                     AND sm.ativo = 1
+                    AND sm.ano = matricula.ano
                     AND smt.data_enturmacao < matricula_turma.data_enturmacao
-                    AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
+                    AND coalesce(smt.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
                   )
                 )
               )
