@@ -264,4 +264,187 @@ SQL;
             'school' => $school
         ]);
     }
+
+    /**
+     * @param $school
+     * @param $year
+     * @return array
+     */
+    public function getDataForRecord20($school, $year)
+    {
+        $sql = ' SELECT turma.cod_turma AS "codTurma",
+                   turma.ref_ref_cod_escola AS "codEscola",
+                   turma.ref_cod_curso AS "codCurso",
+                   turma.ref_ref_cod_serie AS "codSerie",
+                   turma.nm_turma AS "nomeTurma",
+                   turma.hora_inicial AS "horaInicial",
+                   turma.hora_final AS "horaFinal",
+                   turma.dias_semana AS "diasSemana",
+                   turma.tipo_atendimento AS "tipoAtendimento",
+                   turma.atividades_complementares AS "atividadesComplementares",
+                   turma.etapa_educacenso AS "etapaEducacenso",
+                   juridica.fantasia AS "nomeEscola",
+                   turma.tipo_mediacao_didatico_pedagogico AS "tipoMediacaoDidaticoPedagogico",
+
+                   COALESCE((
+                        SELECT 1
+                        FROM modules.professor_turma
+                        INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
+                        WHERE professor_turma.turma_id = turma.cod_turma
+                        LIMIT 1),0)as "possuiServidor",
+
+                   COALESCE((
+                        SELECT 1
+                        FROM modules.professor_turma
+                        INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
+                        WHERE professor_turma.turma_id = turma.cod_turma
+                        AND professor_turma.funcao_exercida IN (1, 5)
+                        LIMIT 1),0)as "possuiServidorDocente",
+
+                   COALESCE((
+                        SELECT 1
+                        FROM modules.professor_turma
+                        INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
+                        WHERE professor_turma.turma_id = turma.cod_turma
+                        AND professor_turma.funcao_exercida = 4
+                        LIMIT 1),0)as "possuiServidorLibras",
+
+                   COALESCE((
+                        SELECT 1
+                        FROM modules.professor_turma
+                        INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
+                        WHERE professor_turma.turma_id = turma.cod_turma
+                        AND professor_turma.funcao_exercida IN (4, 6)
+                        LIMIT 1),0)as "possuiServidorLibrasOuAuxiliarEad",
+
+                   COALESCE((
+                        SELECT 1
+                        FROM modules.professor_turma
+                        INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
+                        WHERE professor_turma.turma_id = turma.cod_turma
+                        AND professor_turma.funcao_exercida NOT IN (4, 6)
+                        LIMIT 1),0)as "possuiServidorDiferenteLibrasOuAuxiliarEad",
+
+                   COALESCE((
+                        SELECT 1
+                        FROM pmieducar.matricula_turma
+                        JOIN pmieducar.matricula
+                        ON matricula.cod_matricula = matricula_turma.ref_cod_matricula
+                        JOIN pmieducar.aluno
+                        ON aluno.cod_aluno = matricula.ref_cod_aluno
+                        JOIN cadastro.fisica_deficiencia
+                        ON fisica_deficiencia.ref_idpes = aluno.ref_idpes
+                        JOIN cadastro.deficiencia
+                        ON fisica_deficiencia.ref_cod_deficiencia = deficiencia.cod_deficiencia
+                        AND deficiencia.deficiencia_educacenso IN (3,4,5)
+                        WHERE matricula_turma.ref_cod_turma = turma.cod_turma
+                        AND matricula_turma.data_enturmacao <= instituicao.data_educacenso
+                        AND coalesce(matricula_turma.data_exclusao, \'2999-01-01\'::date) > instituicao.data_educacenso
+
+                        LIMIT 1),0)as "possuiAlunoNecessitandoTradutor",
+
+                   COALESCE((
+                        SELECT 1
+                        FROM modules.professor_turma
+                        INNER JOIN pmieducar.servidor
+                        ON servidor.cod_servidor = professor_turma.servidor_id
+                        JOIN cadastro.fisica_deficiencia
+                        ON fisica_deficiencia.ref_idpes = servidor.cod_servidor
+                        JOIN cadastro.deficiencia
+                        ON fisica_deficiencia.ref_cod_deficiencia = deficiencia.cod_deficiencia
+                        AND deficiencia.deficiencia_educacenso IN (3,4,5)
+                        WHERE professor_turma.turma_id = turma.cod_turma
+                        LIMIT 1),0)as "possuiServidorNecessitandoTradutor",
+
+
+                turma.local_funcionamento_diferenciado as "localFuncionamentoDiferenciado",
+                escola.local_funcionamento as "localFuncionamento",
+                curso.modalidade_curso as "modalidadeCurso",
+                turma.cod_curso_profissional as "codCursoProfissional"
+
+              FROM pmieducar.escola
+             JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
+             JOIN pmieducar.turma ON (turma.ref_ref_cod_escola = escola.cod_escola)
+             JOIN pmieducar.curso ON (turma.ref_cod_curso = curso.cod_curso)
+             JOIN pmieducar.instituicao ON (escola.ref_cod_instituicao = instituicao.cod_instituicao)
+             WHERE escola.cod_escola = :school
+               AND COALESCE(turma.nao_informar_educacenso, 0) = 0
+               AND turma.ano = :year
+               AND turma.ativo = 1
+               AND turma.visivel = TRUE
+               AND escola.ativo = 1
+               AND
+        ' . $this->enrollmentConditionSubquery();
+
+        return $this->fetchPreparedQuery($sql, [
+            'school' => $school,
+            'year' => $year,
+        ]);
+    }
+
+    private function enrollmentConditionSubquery()
+    {
+        return " (
+                exists (
+                  SELECT 1
+                  FROM pmieducar.matricula_turma
+                  JOIN pmieducar.matricula
+                      ON matricula.cod_matricula = matricula_turma.ref_cod_matricula
+                  WHERE matricula_turma.ref_cod_turma = turma.cod_turma
+                  AND matricula.ativo = 1
+                  AND matricula_turma.data_enturmacao < instituicao.data_educacenso
+                  AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
+                )
+                OR
+                exists (
+                  SELECT 1
+                  FROM pmieducar.matricula_turma
+                  JOIN pmieducar.matricula
+                      ON matricula.cod_matricula = matricula_turma.ref_cod_matricula
+                  WHERE matricula_turma.ref_cod_turma = turma.cod_turma
+                  AND matricula.ativo = 1
+                  AND matricula_turma.data_enturmacao = instituicao.data_educacenso
+                  AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
+                  AND NOT EXISTS (
+                    SELECT 1
+                    FROM pmieducar.matricula_turma smt
+                    JOIN pmieducar.matricula sm
+                      ON sm.cod_matricula = smt.ref_cod_matricula
+                    WHERE sm.ref_cod_aluno = matricula.ref_cod_aluno
+                    AND sm.ativo = 1
+                    AND sm.ano = matricula.ano
+                    AND smt.data_enturmacao < matricula_turma.data_enturmacao
+                    AND coalesce(smt.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
+                  )
+                )
+              )
+        ";
+    }
+
+    /**
+     * @param $classroomId
+     * @param $disciplineIds
+     * @return array
+     */
+    public function getDisciplinesWithoutTeacher($classroomId, $disciplineIds)
+    {
+        $disciplineIds = implode(', ', $disciplineIds);
+        $sql = "
+            SELECT componente_curricular.nome
+            from modules.componente_curricular
+            WHERE componente_curricular.id IN ({$disciplineIds})
+            AND not exists (
+                SELECT 1
+                FROM modules.professor_turma_disciplina
+                JOIN modules.professor_turma
+                ON professor_turma.id = professor_turma_disciplina.professor_turma_id
+                WHERE professor_turma.turma_id = :classroomId
+                AND professor_turma_disciplina.componente_curricular_id = componente_curricular.id
+            )
+        ";
+
+        return $this->fetchPreparedQuery($sql, [
+            'classroomId' => $classroomId,
+        ]);
+    }
 }

@@ -2,10 +2,12 @@
 
 use App\Models\Educacenso\Registro00;
 use App\Models\Educacenso\Registro10;
+use App\Models\Educacenso\Registro20;
 use App\Models\School;
 use App\Repositories\EducacensoRepository;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\Data\Registro10 as Registro10Data;
+use iEducar\Modules\Educacenso\Data\Registro20 as Registro20Data;
 use iEducar\Modules\Educacenso\Model\LinguaMinistrada;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
@@ -13,11 +15,16 @@ use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
 use iEducar\Modules\Educacenso\Validator\Telefone;
+use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
+use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'intranet/include/clsBanco.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
+require_once 'lib/App/Model/IedFinder.php';
 require_once 'lib/App/Model/Educacenso.php';
+require_once 'lib/App/Model/Educacenso/TipoMediacaoDidaticoPedagogico.php';
+require_once 'lib/App/Model/Educacenso/LocalFuncionamentoDiferenciado.php';
 
 /**
  * @deprecated Essa versão da API pública será descontinuada
@@ -602,46 +609,44 @@ class EducacensoAnaliseController extends ApiCoreController
         $escola = $this->getRequest()->escola;
         $ano = $this->getRequest()->ano;
 
-        $sql = 'SELECT turma.cod_turma AS cod_turma,
-                   turma.nm_turma AS nome_turma,
-                   turma.hora_inicial AS hora_inicial,
-                   turma.hora_final AS hora_final,
-                   turma.dias_semana[1] AS dias_semana,
-                   turma.tipo_atendimento AS tipo_atendimento,
-                   turma.atividades_complementares[1] AS atividades_complementares,
-                   turma.atividades_aee[1] AS atividades_aee,
-                   turma.etapa_educacenso AS etapa_educacenso,
-                   juridica.fantasia AS nome_escola
-              FROM pmieducar.escola
-             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
-             INNER JOIN pmieducar.turma ON (turma.ref_ref_cod_escola = escola.cod_escola)
-             WHERE escola.cod_escola = $1
-               AND COALESCE(turma.nao_informar_educacenso, 0) = 0
-               AND turma.ano = $2
-               AND turma.ativo = 1
-               AND turma.visivel = TRUE
-               AND escola.ativo = 1';
+        $educacensoRepository = new EducacensoRepository();
+        $registro20Model = new Registro20();
+        $registro20 = new Registro20Data($educacensoRepository, $registro20Model);
 
-        $turmas = $this->fetchPreparedQuery($sql, [$escola, $ano]);
+        $turmas = $registro20->getData($escola, $ano);
 
         if (empty($turmas)) {
             $this->messenger->append('Ocorreu algum problema ao decorrer da análise.');
 
-            return ['title' => 'Análise exportação - Registro 20'];
+            return [
+                'title' => 'Análise exportação - Registro 20'
+            ];
         }
 
         $mensagem = [];
+        $chavesTurmas = [];
 
         foreach ($turmas as $turma) {
-            $nomeEscola = strtoupper($turma['nome_escola']);
-            $nomeTurma = strtoupper($turma['nome_turma']);
-            $codTurma = $turma['cod_turma'];
-            $atividadeComplementar = ($turma['tipo_atendimento'] == 4); //Código 4 fixo no cadastro de turma
-            $existeAtividadeComplementar = ($turma['atividades_complementares']);
-            $atendimentoAee = ($turma['tipo_atendimento'] == 5); //Código 5 fixo no cadastro de turma
-            $existeAee = ($turma['atividades_aee']);
+            $nomeEscola = strtoupper($turma->nomeEscola);
+            $nomeTurma = strtoupper($turma->nomeTurma);
+            $atividadeComplementar = ($turma->tipoAtendimento == 4); //Código 4 fixo no cadastro de turma
+            $existeAtividadeComplementar = !empty(array_filter($turma->atividadesComplementares));
 
-            switch ($turma['tipo_atendimento']) {
+            $chaveTurma = "{$nomeTurma}|{$turma->tipoMediacaoDidaticoPedagogico}|{$turma->horaInicial}|{$turma->horaFinal}|{$turma->tipoAtendimento}|{$turma->localFuncionamentoDiferenciado}|{$turma->modalidadeCurso}|{$turma->etapaEducacenso}";
+
+            if (isset($chavesTurmas[$chaveTurma])) {
+                $mensagem = [[
+                    'text' => "Dados para formular o registro 20 da escola {$nomeEscola} possui valor inválido. Verificamos que existem turmas duplicadas com o nome {$nomeTurma}.",
+                    'path' => '(Escola > Cadastros > Turmas)',
+                    'linkPath' => "/intranet/educar_turma_lst.php?busca=S&ano={$ano}&ref_cod_escola={$escola}&ref_cod_curso={$turma->codCurso}&ref_cod_serie={$turma->codSerie}&nm_turma={$turma->nomeTurma}",
+                    'fail' => true
+                ]];
+                break;
+            } else {
+                $chavesTurmas[$chaveTurma] = true;
+            }
+
+            switch ($turma->tipoAtendimento) {
                 case 0:
                     $nomeAtendimento = 'Não se aplica';
                     break;
@@ -656,67 +661,303 @@ class EducacensoAnaliseController extends ApiCoreController
                     break;
             }
 
-            if (!$turma['hora_inicial']) {
+            if (!$turma->possuiServidor) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verifique se o horário inicial da turma {$nomeTurma} foi cadastrado.",
-                    'path' => '(Escola > Cadastros > Turmas > Cadastrar > Editar > Aba: Dados gerais > Campo: Hora inicial)',
-                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$codTurma}",
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} não possui nenhum docente vinculado.",
+                    'path' => '(Servidores > Cadastros > Servidores)',
+                    'linkPath' => "/intranet/educar_servidor_lst.php",
                     'fail' => true
                 ];
             }
 
-            if (!$turma['hora_final']) {
+            if (!empty($turma->etapaEducacenso) && $turma->etapaEducacenso != 1 && !$turma->possuiServidorDocente) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verifique se o horário final da turma {$nomeTurma} foi cadastrado.",
-                    'path' => '(Escola > Cadastros > Turmas > Cadastrar > Editar > Aba: Dados gerais > Campo: Hora final)',
-                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$codTurma}",
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} não possui nenhum Docente ou Docente titular - coordenador de tutoria (de módulo ou disciplina) - EAD vinculado.",
+                    'path' => '(Servidores > Cadastros > Servidores)',
+                    'linkPath' => "/intranet/educar_servidor_lst.php",
                     'fail' => true
                 ];
             }
 
-            if (!$turma['dias_semana']) {
+            if ($turma->possuiServidorLibrasOuAuxiliarEad && !$turma->possuiServidorDiferenteLibrasOuAuxiliarEad) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. É necessário informar ao menos um dia da semana para a turma presencial {$nomeTurma}.",
-                    'path' => '(Escola > Cadastros > Turmas > Cadastrar > Editar > Aba: Dados gerais > Campo: Dias da semana)',
-                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$codTurma}",
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que a turma {$nomeTurma} possui vínculo apenas com docente(s): Tradutor(es)-Intérprete(s) de Libras ou Docente(s) tutor(es) - Auxiliar(es) (de módulo ou disciplina) - EAD.",
+                    'path' => '(Servidores > Cadastros > Servidores)',
+                    'linkPath' => "/intranet/educar_servidor_lst.php",
                     'fail' => true
                 ];
             }
 
-            if (is_null($turma['tipo_atendimento']) || $turma['tipo_atendimento'] < 0) {
+            if ($turma->possuiServidorLibras && !$turma->possuiAlunoNecessitandoTradutor && !$turma->possuiServidorNecessitandoTradutor) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verifique se o tipo de atendimento da turma {$nomeTurma} foi cadastrado.",
-                    'path' => '(Escola > Cadastros > Turmas > Cadastrar > Editar > Aba: Dados adicionais > Campo: Tipo de atendimento)',
-                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$codTurma}",
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que a turma {$nomeTurma} possui vínculo com docente(s): Tradutor(es)-Intérprete(s) de Libras, porém não possui nenhum aluno(a) ou outro profissional escolar em sala de aula com surdez, deficiência auditiva ou surdocegueira.",
+                    'path' => '(Servidores > Cadastros > Servidores)',
+                    'linkPath' => "/intranet/educar_servidor_lst.php",
                     'fail' => true
                 ];
             }
 
-            if (!$atendimentoAee && !$atividadeComplementar && !$turma['etapa_educacenso']) {
+            if (strlen($nomeTurma) > 80) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é '{$nomeAtendimento}', portanto é necessário informar qual a etapa de ensino.",
-                    'path' => '(Escola > Cadastros > Turmas > Aba: Dados adicionais > Campo: Etapa de ensino)',
-                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$codTurma}",
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. possui valor inválido. Insira no máximo 80 letras no nome da turma {$nomeTurma}.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados gerais > Campo: Nome da turma)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+            }
+
+            if (empty($turma->tipoMediacaoDidaticoPedagogico)) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se o tipo de mediação didático pedagógica da turma {$nomeTurma} foi informado.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Tipo de mediação didático pedagógico)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+            }
+
+            if ((empty($turma->horaInicial) || empty($turma->horaFinal)) && $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é presencial, portanto é necessário informar os horários de funcionamento.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados gerais > Seção: Horário de funcionamento da turma)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+            } else if (!empty($turma->horaInicial) && !empty($turma->horaFinal) && !$turma->horarioFuncionamentoValido()) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verifique se o horário da turma {$nomeTurma} foi preenchido com um valor válido.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados gerais > Seção: Horário de funcionamento da turma)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+
+            }
+
+            if (empty(array_filter($turma->diasSemana)) && $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é presencial, portanto é necessário informar os dias da semana em que ela funciona.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados gerais > Campo: Dias da semana)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+            }
+
+            if (is_null($turma->tipoAtendimento) || $turma->tipoAtendimento < 0) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se o tipo de atendimento da turma {$nomeTurma} foi informado.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Tipo de atendimento)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+            }
+
+            if ($turma->tipoAtendimento != 0 && in_array($turma->tipoMediacaoDidaticoPedagogico, [App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA, App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL])) {
+                $descricaoTipoMediacao = (App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums())[$turma->tipoMediacaoDidaticoPedagogico];
+
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que o tipo de mediação da turma {$nomeTurma} é {$descricaoTipoMediacao}, portanto o tipo de atendimento deve ser obrigatoriamente escolarização.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Tipo de atendimento)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
                     'fail' => true
                 ];
             }
 
             if ($atividadeComplementar && !$existeAtividadeComplementar) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é de atividade complementar, portanto obrigatoriamente é necessário informar o código de ao menos uma atividade.",
-                    'path' => '(Escola > Cadastros > Turmas > Cadastrar > Editar > Aba: Dados adicionais > Campo: Código do tipo de atividade complementar)',
-                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$codTurma}",
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é de atividades complementares, portanto é necessário informar quais atividades complementares são trabalhadas.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Tipos de atividades complementares)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
                     'fail' => true
                 ];
             }
 
-            if ($atendimentoAee && !$existeAee) {
+            if (is_null($turma->localFuncionamentoDiferenciado) && in_array($turma->tipoMediacaoDidaticoPedagogico, [App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL, App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL])) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 20 da escola {$nomeEscola} não encontrados. Verificamos que o tipo de atendimento da turma {$nomeTurma} é de educação especializada - AEE, portanto obrigatoriamente é necessário informar ao menos uma atividade realizada. ",
-                    'path' => '(Escola > Cadastros > Turmas > Cadastrar > Editar > Aba: Dados adicionais > Campo: Atividades do Atendimento Educacional Especializado - AEE)',
-                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$codTurma}",
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é presencial ou semipresencial, portanto é necessário informar se ela possui local de funcionamento diferenciado.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Local de funcionamento diferenciado)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
                     'fail' => true
                 ];
+            }
+
+            if ((!in_array(LocalFuncionamento::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVA, $turma->localFuncionamento) && $turma->localFuncionamentoDiferenciado == App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO) || (!in_array(LocalFuncionamento::UNIDADE_PRISIONAL, $turma->localFuncionamento) && $turma->localFuncionamentoDiferenciado == App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL)) {
+                $valuesDescription = $turma->getLocalFuncionamentoDescriptiveValue();
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que o local de funcionamento da escola é {$valuesDescription}. Portanto, o local de funcionamento diferenciado da turma {$nomeTurma}, deve estar de acordo com o local da escola.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Local de funcionamento diferenciado)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+            }
+
+            if (($turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL && !in_array($turma->modalidadeCurso, [ModalidadeCurso::EDUCACAO_ESPECIAL, ModalidadeCurso::EJA])) ||
+                ($turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA && !in_array($turma->modalidadeCurso, [ModalidadeCurso::ENSINO_REGULAR, ModalidadeCurso::EJA, ModalidadeCurso::EDUCACAO_PROFISSIONAL]))
+            ) {
+                $valuesDescription = $turma->getModalidadeCursoDescriptiveValue();
+                $opcoesPermitidas = $turma->getTipoMediacaoValidaParaModalidadeCurso();
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que a modalidade do curso da turma {$nomeTurma} é {$valuesDescription}, portanto a mediação da turma deve ser {$opcoesPermitidas}.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Tipo de mediação didático pedagógico)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+            }
+
+            if ($turma->tipoAtendimento == 0 && is_null($turma->etapaEducacenso)) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se alguma opção de etapa de ensino da turma {$nomeTurma} foi informada.",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Etapa de ensino)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+            } elseif ($turma->tipoAtendimento == 0) {
+                $valid = true;
+                $opcoesEtapaEducacenso = '';
+
+                switch ($turma->modalidadeCurso) {
+                    case ModalidadeCurso::ENSINO_REGULAR:
+                        if (!in_array($turma->etapaEducacenso, [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 41, 56])) {
+                            $opcoesEtapaEducacenso = '1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 41 ou 56';
+                            $valid = false;
+                        }
+                        break;
+                    case ModalidadeCurso::EDUCACAO_ESPECIAL:
+                        if (!in_array($turma->etapaEducacenso, [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 41, 56, 39, 40, 69, 70, 71, 72, 73, 74, 64, 67, 68])) {
+                            $opcoesEtapaEducacenso = '1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 41, 56, 39, 40, 69, 70, 71, 72, 73, 74, 64, 67 ou 68';
+                            $valid = false;
+                        }
+                        break;
+                    case ModalidadeCurso::EJA:
+                        if (!in_array($turma->etapaEducacenso, [69, 70, 71, 72])) {
+                            $opcoesEtapaEducacenso = '69, 70, 71 ou 72';
+                            $valid = false;
+                        }
+                        break;
+                    case ModalidadeCurso::EDUCACAO_PROFISSIONAL:
+                        if (!in_array($turma->etapaEducacenso, [30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67, 68])) {
+                            $opcoesEtapaEducacenso = '30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67 ou 68';
+                            $valid = false;
+                        }
+                        break;
+                }
+
+                if (!$valid) {
+                    $modalidadeCursoDescription = $turma->getModalidadeCursoDescriptiveValue();
+                    $mensagem[] = [
+                        'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que a modalidade do curso da turma {$nomeTurma} é {$modalidadeCursoDescription}, portanto a etapa de ensino deve ser uma das seguintes opções: {$opcoesEtapaEducacenso}.",
+                        'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Etapa de ensino)',
+                        'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                        'fail' => true
+                    ];
+                }
+
+                $valid = true;
+                $opcoesEtapaEducacenso = '';
+
+                switch ($turma->tipoMediacaoDidaticoPedagogico) {
+                    case App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL:
+                        if (!in_array($turma->etapaEducacenso, [69, 70, 71, 72])) {
+                            $opcoesEtapaEducacenso = '69, 70, 71 ou 72';
+                            $valid = false;
+                        }
+                        break;
+                    case App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA:
+                        if (!in_array($turma->etapaEducacenso, [30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67, 68])) {
+                            $opcoesEtapaEducacenso = '30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67 ou 68';
+                            $valid = false;
+                        }
+                        break;
+                }
+
+
+                if (!$valid) {
+                    $descricaoTipoMediacao = (App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums())[$turma->tipoMediacaoDidaticoPedagogico];
+                    $mensagem[] = [
+                        'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} possui valor inválido. Verificamos que o tipo de mediação didático-pedagógica da turma {$nomeTurma} é {$descricaoTipoMediacao}, portanto a etapa de ensino deve ser uma das seguintes opções: {$opcoesEtapaEducacenso}.",
+                        'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Etapa de ensino)',
+                        'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                        'fail' => true
+                    ];
+                }
+
+                if (in_array($turma->localFuncionamentoDiferenciado, [App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO, App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL]) && in_array($turma->etapaEducacenso, [1, 2, 3, 56]) ) {
+                    $descricaoLocalDiferenciado = $turma->getLocalFuncionamentoDiferenciadoDescription();
+                    $mensagem[] = [
+                        'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola}  possui valor inválido. Verificamos que o local de funcionamento diferenciado da turma {$nomeTurma} é {$descricaoLocalDiferenciado}, portanto a etapa de ensino não pode ser nenhuma das seguintes opções: 1, 2, 3 ou 56.",
+                        'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Etapa de ensino)',
+                        'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                        'fail' => true
+                    ];
+                }
+            }
+
+            if (empty($turma->codCursoProfissional) && in_array($turma->etapaEducacenso, [30, 31, 32, 33, 34, 39, 40, 64, 74])) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se o código dos cursos de educação profissional da turma {$nomeTurma} foi informado",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados adicionais > Campo: Curso de educação profissional)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+            }
+
+            $componentes = App_Model_IedFinder::getComponentesTurma($turma->codSerie, $turma->codEscola, $turma->codTurma);
+
+            if (empty($componentes)) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se alguma disciplina da turma {$nomeTurma} foi informada",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados gerais > Seção: Componentes curriculares definidos em séries da escola)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+            } else {
+                $componenteIds = array_map(function($componente) {
+                    return $componente->get('id');
+                }, $componentes);
+
+                $codigosEducacenso = array_map(function($componente) {
+                    return $componente->get('codigo_educacenso');
+                }, $componentes);
+
+                $disciplinesWithoutTeacher = $registro20->getDisciplinesWithoutTeacher($turma->codTurma, $componenteIds);
+
+                $educacaoDistancia = $turma->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA;
+
+                foreach ($disciplinesWithoutTeacher as $discipline) {
+                    $mensagem[] = [
+                        'text' => $educacaoDistancia ? "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que o tipo de mediação da turma {$nomeTurma} é educação a distância, portanto a disciplina {$discipline->nome} deve possuir um docente vinculado." : "Aviso: Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$discipline->nome} da turma {$nomeTurma} não possui docente vinculado, portanto será exportada como: 2 (Sim, oferece disciplina sem docente vinculado).",
+                        'path' => '(Servidores > Cadastros > Servidores)',
+                        'linkPath' => "/intranet/educar_servidor_lst.php",
+                        'fail' => $educacaoDistancia
+                    ];
+                }
+
+                $componenteNulo = null;
+
+                foreach ($componentes as $componente) {
+                    if (empty($componente->get('codigo_educacenso'))) {
+                        $componenteNulo = $componente;
+                        break;
+                    }
+
+                    if (in_array($componente->get('codigo_educacenso'), $turma->getForbiddenDisciplines())) {
+                        $mensagem[] = [
+                            'text' => "Aviso: Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$componente->get('nome')} da turma {$nomeTurma} não está de acordo com a Tabela de Regras de Disciplinas do Censo, portanto não será exportada.",
+                            'path' => '(Escola > Cadastros > Componentes curriculares > Editar > Disciplina Educacenso)',
+                            'linkPath' => "/module/ComponenteCurricular/edit?id={$componente->get('id')}",
+                            'fail' => false
+                        ];
+                    }
+                }
+
+                if ($componenteNulo) {
+                    $mensagem = [[
+                        'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se a disciplina do educacenso foi informada para a disciplina {$componente->get('nome')}.",
+                        'path' => '(Escola > Cadastros > Componentes curriculares > Editar > Disciplina Educacenso)',
+                        'linkPath' => "/module/ComponenteCurricular/edit?id={$componenteNulo->get('id')}",
+                        'fail' => true
+                    ]];
+
+                    break;
+                }
             }
         }
 
