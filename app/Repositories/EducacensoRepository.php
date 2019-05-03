@@ -486,7 +486,7 @@ SQL;
                     turma.etapa_educacenso "etapaTurma",
                     matricula.cod_matricula "codigoMatricula",
                     turma.nm_turma "nomeTurma",
-                    matricula_turma "tipoAtendimentoMatricula",
+                    matricula_turma.tipo_atendimento "tipoAtendimentoMatricula",
                     turma.tipo_mediacao_didatico_pedagogico "tipoMediacaoTurma",
                     aluno.veiculo_transporte_escolar "veiculoTransporteEscolar"
                      FROM pmieducar.aluno

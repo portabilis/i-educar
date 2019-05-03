@@ -1618,6 +1618,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
         $mensagem = [];
         $countAtividadesComplementar = [];
+        $notAvaliableTime = [];
 
         foreach ($alunos as $aluno) {
             $nomeEscola = strtoupper($aluno->nomeEscola);
@@ -1630,7 +1631,7 @@ class EducacensoAnaliseController extends ApiCoreController
             $avaliableTimeService = new AvailableTimeService();
 
             if (!$avaliableTimeService->isAvailable($codigoAluno, $codigoTurma)) {
-                $mensagem[] = [
+                $notAvaliableTime[$codigoAluno] = [
                     'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verificamos que o(a) aluno(a) {$nomeAluno} possui mais de um vínculo em diferentes turmas presenciais com horário e dias coincidentes.",
                     'path' => '(Escola > Cadastros > Alunos > Seção: Matrículas)',
                     'linkPath' => "/intranet/educar_aluno_det.php?cod_aluno={$codigoAluno}",
@@ -1638,7 +1639,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if ($aluno->tipoAtendimentoTurma == TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR) {
+            if ($aluno->tipoAtendimentoTurma ==  $aluno->isAtividadeComplementarOrAee()) {
                 $countAtividadesComplementar[$codigoAluno][] = [
                     'codigoAluno' => $codigoAluno,
                     'nomeAluno' => $nomeAluno,
@@ -1648,25 +1649,25 @@ class EducacensoAnaliseController extends ApiCoreController
 
             if (!$aluno->etapaAluno && in_array($aluno->etapaTurma, App_Model_Educacenso::etapas_multisseriadas())) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verificamos que a turma {$nomeTurma} é multisseriada, portanto é necessário informar qual a etapa do(a) aluno(a) {$nomeAluno}.",
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é multisseriada, portanto é necessário informar qual a etapa do(a) aluno(a) {$nomeAluno}.",
                     'path' => '(Escola > Cadastros > Alunos > Visualizar > Etapa do aluno > Campo: Etapa do aluno na turma)',
-                    'linkPath' => "/intranet/educar_matricula_det.php?cod_matricula={$codigoMatricula}",
+                    'linkPath' => "/intranet/educar_matricula_etapa_turma_cad.php?ref_cod_matricula={$codigoMatricula}&ref_cod_aluno={$codigoAluno}",
                     'fail' => true
                 ];
             }
 
             if (!$aluno->tipoAtendimentoMatricula && $aluno->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verificamos que a turma {$nomeTurma} é de atendimento educacional especializado, portanto é necessário informar qual a tipo de atendimento do(a) aluno(a) {$nomeAluno}.",
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é de atendimento educacional especializado, portanto é necessário informar qual a tipo de atendimento do(a) aluno(a) {$nomeAluno}.",
                     'path' => '(Escola > Cadastros > Alunos > Visualizar > Tipo do AEE do aluno > Campo: Tipo de Atendimento Educacional Especializado do aluno na turma)',
-                    'linkPath' => "/intranet/educar_matricula_det.php?cod_matricula={$codigoMatricula}",
+                    'linkPath' => "/intranet/educar_matricula_turma_tipo_aee_cad.php?ref_cod_matricula={$codigoMatricula}&ref_cod_aluno={$codigoAluno}",
                     'fail' => true
                 ];
             }
 
             if (is_null($aluno->transportePublico) && $aluno->transportePublicoRequired()) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido.  Verifique se o transporte escolar público do(a) aluno(a) {$nomeAluno} foi informado.",
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados.  Verifique se o transporte escolar público do(a) aluno(a) {$nomeAluno} foi informado.",
                     'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados Pessoais > Campo: Transporte escolar público)',
                     'linkPath' => "/module/Cadastro/aluno?id={$codigoAluno}",
                     'fail' => true
@@ -1675,12 +1676,16 @@ class EducacensoAnaliseController extends ApiCoreController
 
             if (!$aluno->veiculoTransporteEscolar && $aluno->veiculoTransporteEscolarRequired()) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verifique se o tipo de veículo do transporte escolar público utilizado pelo(a) aluno(a) {$nomeAluno} foi informado.",
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verifique se o tipo de veículo do transporte escolar público utilizado pelo(a) aluno(a) {$nomeAluno} foi informado.",
                     'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados Pessoais > Campo: Veículo utilizado)',
                     'linkPath' => "/module/Cadastro/aluno?id={$codigoAluno}",
                     'fail' => true
                 ];
             }
+        }
+
+        foreach ($notAvaliableTime as $notAvaliableTimeMessage) {
+            $mensagem[] = $notAvaliableTimeMessage;
         }
 
         foreach ($countAtividadesComplementar as $atividadesAluno) {
