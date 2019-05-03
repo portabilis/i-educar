@@ -239,6 +239,11 @@ function safeSort(values) {
   }
 }
 
+function dateBrToDb(value) {
+  let splittedValue = value.split('/');
+
+  return `${splittedValue[2]}-${splittedValue[1]}-${splittedValue[0]}`;
+}
 
 function safeUtf8Decode(s) {
   return stringUtils.toUtf8(s);

@@ -1,5 +1,8 @@
 <?php
 
+use iEducar\Modules\Educacenso\Validator\NameValidator;
+use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
+
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
@@ -505,13 +508,48 @@ class PessoaController extends ApiCoreController
         return $pessoa;
     }
 
+    private function validateName()
+    {
+        $validator = new NameValidator($this->getRequest()->nome);
+
+        if (!$validator->isValid()) {
+            $this->messenger->append($validator->getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validateBirthDate()
+    {
+        if (empty($this->getRequest()->datanasc)) {
+            return true;
+        }
+
+        $validator = new BirthDateValidator(Portabilis_Date_Utils::brToPgSQL($this->getRequest()->datanasc));
+
+        if (!$validator->isValid()) {
+            $this->messenger->append($validator->getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function canPost()
+    {
+        return $this->validateName() && $this->validateBirthDate();
+    }
+
     protected function post()
     {
-        $pessoaId = $this->getRequest()->pessoa_id;
-        $pessoaId = $this->createOrUpdatePessoa($pessoaId);
+        if ($this->canPost()) {
+            $pessoaId = $this->getRequest()->pessoa_id;
+            $pessoaId = $this->createOrUpdatePessoa($pessoaId);
 
-        $this->createOrUpdatePessoaFisica($pessoaId);
-        $this->appendResponse('pessoa_id', $pessoaId);
+            $this->createOrUpdatePessoaFisica($pessoaId);
+            $this->appendResponse('pessoa_id', $pessoaId);
+        }
     }
 
     protected function createOrUpdatePessoa($pessoaId = null)

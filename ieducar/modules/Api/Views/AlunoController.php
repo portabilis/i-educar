@@ -1,5 +1,6 @@
 <?php
 
+use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
@@ -223,8 +224,34 @@ class AlunoController extends ApiCoreController
     {
         return (
             parent::canPost() &&
-            $this->validatesUniquenessOfAlunoByPessoaId()
+            $this->validatesUniquenessOfAlunoByPessoaId() &&
+            $this->validateDeficiencies()
         );
+    }
+
+    protected function canPut()
+    {
+        return (
+            parent::canPut() &&
+            $this->validateDeficiencies()
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    private function validateDeficiencies()
+    {
+
+        $deficiencias = array_filter((array) $this->getRequest()->deficiencias);
+        $validator = new DeficiencyValidator($deficiencias);
+
+        if ($validator->isValid()) {
+            return true;
+        } else {
+            $this->messenger->append($validator->getMessage());
+            return false;
+        }
     }
 
     protected function canGetOcorrenciasDisciplinares()

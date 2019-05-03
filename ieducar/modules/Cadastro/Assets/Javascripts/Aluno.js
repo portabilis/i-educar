@@ -1888,8 +1888,7 @@ function canShowParentsFields() {
 
 
                     if (bValid) {
-                        postPessoa(nameParent, nameParent.val(), sexoParent.val(), estadocivilParent.val(), datanascParent.val(), null, (editar_pessoa ? $j('#' + pessoaPaiOuMae + '_id').val() : null), pessoaPaiOuMae, null, null, null, null, falecidoParent.is(':checked'));
-                        $j(this).dialog("close");
+                        postPessoa($(this), nameParent, nameParent.val(), sexoParent.val(), estadocivilParent.val(), datanascParent.val(), null, (editar_pessoa ? $j('#' + pessoaPaiOuMae + '_id').val() : null), pessoaPaiOuMae, null, null, null, null, falecidoParent.is(':checked'));
                     }
                 },
                 "Cancelar": function () {
@@ -2299,6 +2298,12 @@ function canShowParentsFields() {
             dataType: 'json',
             data: data,
             success: function (dataResponse) {
+              if (dataResponse['any_error_msg']) {
+                dataResponse['msgs'].forEach(msgObject => {
+                  messageUtils.error(msgObject['msg']);
+                });
+              } else {
+                $container.dialog('close');
                 if (parentType == 'mae')
                     afterChangePessoaParent(dataResponse.pessoa_id, 'mae');
                 else if (parentType == 'pai')
@@ -2307,6 +2312,7 @@ function canShowParentsFields() {
                     afterChangePessoaParent(dataResponse.pessoa_id, 'responsavel');
                 else
                     postEnderecoPessoa(dataResponse.pessoa_id);
+              }
             }
         };
 

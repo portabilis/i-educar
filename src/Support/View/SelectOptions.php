@@ -4,6 +4,7 @@ namespace iEducar\Support\View;
 
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Transport\Period;
+use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
@@ -80,6 +81,16 @@ class SelectOptions
     public static function unidadesVinculadasEscola()
     {
         return self::getDefaultOption() + UnidadeVinculadaComOutraInstituicao::getDescriptiveValues();
+    }
+
+    /**
+     * Retorna as opções disponíveis referentes às deficiências do Educacenso
+     *
+     * @return array
+     */
+    public static function educacensoDeficiencies()
+    {
+        return self::getDefaultOption() + Deficiencias::getDescriptiveValues();
     }
 
     public static function locaisFuncionamentoEscola()
