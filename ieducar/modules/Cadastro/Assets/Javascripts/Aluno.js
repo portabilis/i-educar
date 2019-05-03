@@ -885,6 +885,26 @@ $paiIdField.change(changeVisibilityOfLinksToPessoaPai);
 $maeIdField.change(changeVisibilityOfLinksToPessoaMae);
 $responsavelIdField.change(changeVisibilityOfLinksToPessoaResponsavel);
 
+var checkJustificativa = function () {
+    var certidaoNascimento = $j('#certidao_nascimento').val().trim();
+    var nisPisPasep = $j('#nis_pis_pasep').val().trim();
+    var cpf = $j('#id_federal').val().trim();
+
+    if (
+      certidaoNascimento ||
+      nisPisPasep ||
+      cpf
+    ) {
+        disableJustificativaFields();
+    } else {
+        enableJustificativaFields();
+    }
+};
+
+$j('#certidao_nascimento').on('change', checkJustificativa);
+$j('#nis_pis_pasep').on('change', checkJustificativa);
+$j('#id_federal').on('change', checkJustificativa);
+
 var handleGetPersonDetails = function (dataResponse) {
     handleMessages(dataResponse.msgs);
     $pessoaNotice.hide();
@@ -1028,25 +1048,6 @@ var handleGetPersonDetails = function (dataResponse) {
         enableJustificativaFields();
     }
 
-    var validaRg = function () {
-        var rg = $j('#rg').val().replace(" ", "");
-        var dataEmissao = $j('#data_emissao_rg').val().replace(" ", "");
-
-        if (rg != '' && dataEmissao != '') {
-            disableJustificativaFields();
-        } else {
-            enableJustificativaFields();
-        }
-    };
-
-    $j('#rg').change(function () {
-        validaRg();
-    });
-
-    $j('#data_emissao_rg').change(function () {
-        validaRg();
-    });
-
     $j('#certidao_nascimento').val(dataResponse.certidao_nascimento);
     $j('#certidao_casamento').val(dataResponse.certidao_casamento);
     $j('#termo_certidao_civil').val(dataResponse.num_termo);
@@ -1062,6 +1063,7 @@ var handleGetPersonDetails = function (dataResponse) {
     }
 
     var cpf = dataResponse.cpf;
+    $j('#nis_pis_pasep').val(dataResponse.nis_pis_pasep);
 
     var mascara = null;
 
@@ -1126,8 +1128,7 @@ var checkTipoCertidaoCivil = function () {
 
 function disableJustificativaFields() {
     $jField = $j('#justificativa_falta_documentacao');
-    $jField.removeClass('obrigatorio');
-    $jField.addClass('geral');
+    $jField.makeUnrequired();
     $jField.attr('disabled', 'disabled');
 }
 
@@ -1135,9 +1136,10 @@ function enableJustificativaFields() {
     $jField = $j('#justificativa_falta_documentacao');
     $jField.removeAttr('disabled');
 
-    if ($j('#justificativa_falta_documentacao_obrigatorio').length) {
-        $jField.removeClass('geral');
-        $jField.addClass('obrigatorio');
+    if ($j('#obrigar_campos_censo').val() == '1') {
+      $jField.makeRequired();
+    } else {
+      $jField.makeUnrequired();
     }
 }
 
@@ -1729,6 +1731,8 @@ function canShowParentsFields() {
         $j('#logradouro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
         $j('<label>').html('Bairro').attr('for', 'bairro_bairro').insertBefore($j('#bairro_bairro'));
         $j('#bairro_bairro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+        $j('<label>').html('País de residência').attr('for', 'pais_residencia').insertBefore($j('#pais_residencia'));
+        $j('#pais_residencia').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
         $j('<label>').html('Zona de localiza&ccedil;&atilde;o').attr('for', 'zona_localizacao').insertBefore($j('#zona_localizacao'));
         $j('#zona_localizacao').toggleClass('geral text');
         $j('<label>').html('Bairro').attr('for', 'bairro').insertBefore($j('#bairro'));
@@ -1821,8 +1825,9 @@ function canShowParentsFields() {
                     }
 
                     if (bValid) {
-                        postPessoa($(this), $j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val(), (editar_pessoa ? $j('#pessoa_id').val() : null), null, ddd_telefone_1.val(), telefone_1.val(), ddd_telefone_mov.val(), telefone_mov.val(), undefined,
-                          $j('#tipo_nacionalidade').val(), $j('#pais_origem_id').val(), $j('#cor_raca').val(), $j('#zona_localizacao_censo').val(), nome_social.val());
+                        postPessoa($j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val(), (editar_pessoa ? $j('#pessoa_id').val() : null), null, ddd_telefone_1.val(), telefone_1.val(), ddd_telefone_mov.val(), telefone_mov.val(), undefined,
+                          $j('#tipo_nacionalidade').val(), $j('#pais_origem_id').val(), $j('#cor_raca').val(), $j('#zona_localizacao_censo').val(), nome_social.val(), $j('#pais_residencia').val());
+                        $j(this).dialog("close");
                     }
                 },
                 "Cancelar": function () {
@@ -1969,6 +1974,7 @@ function canShowParentsFields() {
             $j('#ddd_telefone_cel').val(person_details.ddd_fone_mov);
             $j('#telefone_cel').val(person_details.fone_mov);
             $j('#distrito_id').val(person_details.iddis);
+            $j('#pais_residencia').val(person_details.pais_residencia);
 
             if ($j('#cep_').val()) {
                 $j('#municipio_municipio').removeAttr('disabled');
@@ -2265,8 +2271,8 @@ function canShowParentsFields() {
     }); // ready
 
 
-    function postPessoa($container, $pessoaField, nome, sexo, estadocivil, datanasc, naturalidade, pessoa_id, parentType, ddd_telefone_1, telefone_1, ddd_telefone_mov, telefone_mov, falecido,
-      tipo_nacionalidade, pais_origem_id, cor_raca, zona_localizacao_censo, nome_social) {
+    function postPessoa($pessoaField, nome, sexo, estadocivil, datanasc, naturalidade, pessoa_id, parentType, ddd_telefone_1, telefone_1, ddd_telefone_mov, telefone_mov, falecido,
+      tipo_nacionalidade, pais_origem_id, cor_raca, zona_localizacao_censo, nome_social, pais_residencia) {
         var data = {
             nome: nome,
             sexo: sexo,
@@ -2283,7 +2289,8 @@ function canShowParentsFields() {
             pais_origem_id: pais_origem_id,
             cor_raca: cor_raca,
             zona_localizacao_censo: zona_localizacao_censo,
-            nome_social: nome_social
+            nome_social: nome_social,
+            pais_residencia: pais_residencia
         };
 
         var options = {

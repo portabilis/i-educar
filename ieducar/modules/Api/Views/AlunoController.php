@@ -1727,6 +1727,7 @@ class AlunoController extends ApiCoreController
         $fisica = new clsFisica($idPessoa);
         $fisica->cpf = idFederal2int($this->getRequest()->id_federal);
         $fisica->ref_cod_religiao = $this->getRequest()->religiao_id;
+        $fisica->nis_pis_pasep = $this->getRequest()->nis_pis_pasep;
         $fisica = $fisica->edita();
     }
 

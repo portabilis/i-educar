@@ -23,6 +23,8 @@ require_once 'Portabilis/View/Helper/Application.php';
 require_once 'Portabilis/Utils/Validation.php';
 require_once 'Portabilis/Date/Utils.php';
 
+use iEducar\Modules\Educacenso\Model\PaisResidencia;
+
 class clsIndex extends clsBase
 {
     public function Formular()
@@ -109,7 +111,7 @@ class indice extends clsCadastro
                 $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade,
                 $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa,
                 $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido,
-                $this->religiao_id, $this->zona_localizacao_censo, $this->nome_social
+                $this->religiao_id, $this->zona_localizacao_censo, $this->nome_social, $this->pais_residencia
             ) =
             $objPessoa->queryRapida(
                 $this->cod_pessoa_fj,
@@ -160,7 +162,8 @@ class indice extends clsCadastro
                 'falecido',
                 'ref_cod_religiao',
                 'zona_localizacao_censo',
-                'nome_social'
+                'nome_social',
+                'pais_residencia'
             );
 
             // var_dump($objPessoa); die;
@@ -901,6 +904,15 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->text('logradouro', $options);
 
+        $options = [
+            'label' => 'País de residência',
+            'value' => $this->pais_residencia ?: PaisResidencia::BRASIL ,
+            'resources' => PaisResidencia::getDescriptiveValues(),
+            'required' => true,
+        ];
+
+        $this->inputsHelper()->select('pais_residencia', $options);
+
         // zona localização
 
         $zonas = [
@@ -1452,6 +1464,7 @@ class indice extends clsCadastro
         $fisica->ref_cod_religiao = $this->religiao_id;
         $fisica->zona_localizacao_censo = empty($this->zona_localizacao_censo) ? null : $this->zona_localizacao_censo;
         $fisica->nome_social = $this->nome_social;
+        $fisica->pais_residencia = $this->pais_residencia;
 
         $sql = 'select 1 from cadastro.fisica WHERE idpes = $1 limit 1';
 

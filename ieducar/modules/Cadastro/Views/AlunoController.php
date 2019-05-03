@@ -12,6 +12,8 @@ require_once 'Usuario/Model/FuncionarioDataMapper.php';
 require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
 require_once 'Portabilis/String/Utils.php';
 
+use iEducar\Modules\Educacenso\Model\PaisResidencia;
+
 class AlunoController extends Portabilis_Controller_Page_EditController
 {
     protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
@@ -481,25 +483,27 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->uf($options, $helperOptions);
 
+        $nisPisPasep = '';
         // cpf
         if (is_numeric($this->cod_pessoa_fj)) {
             $fisica = new clsFisica($this->cod_pessoa_fj);
             $fisica = $fisica->detalhe();
             $valorCpf = is_numeric($fisica['cpf']) ? int2CPF($fisica['cpf']) : '';
+            $nisPisPasep = $fisica['nis_pis_pasep'];
         }
+
         $this->campoCpf("id_federal", "CPF", $valorCpf);
 
-        // justificativa_falta_documentacao
-        $resources = array(null => 'Selecione',
-            1 => Portabilis_String_Utils::toLatin1('Aluno não possui documentação'),
-            2 => Portabilis_String_Utils::toLatin1('Escola não possui informação'));
-
-        $options = array('label' => $this->_getLabel('justificativa_falta_documentacao'),
-            'resources' => $resources,
+        $options = [
             'required' => false,
-            'disabled' => true);
+            'label' => 'NIS (PIS/PASEP)',
+            'placeholder' => '',
+            'value' => $nisPisPasep,
+            'max_length' => 11,
+            'size' => 20
+        ];
 
-        $this->inputsHelper()->select('justificativa_falta_documentacao', $options);
+        $this->inputsHelper()->integer('nis_pis_pasep', $options);
 
         // tipo de certidao civil
         $escolha_certidao = Portabilis_String_Utils::toLatin1('Tipo certidão civil');
@@ -638,6 +642,21 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         );
 
         $this->inputsHelper()->textArea('cartorio_emissao_certidao_civil', $options);
+
+        // justificativa_falta_documentacao
+        $resources = array(
+            null => 'Selecione',
+            1 => 'O(a) aluno(a) não possui os documentos pessoais solicitados',
+            2 => 'A escola não dispõe ou não recebeu os documentos pessoais do(a) aluno(a)'
+        );
+
+        $options = array('label' => $this->_getLabel('justificativa_falta_documentacao'),
+            'resources' => $resources,
+            'required' => false,
+            'label_hint' => 'Pelo menos um dos documentos: CPF, NIS, Certidão de Nascimento (novo formato) deve ser informado para não precisar justificar a ausência de documentação',
+            'disabled' => true);
+
+        $this->inputsHelper()->select('justificativa_falta_documentacao', $options);
 
         // Passaporte
         $labelPassaporte = Portabilis_String_Utils::toLatin1('Passaporte');
@@ -1356,6 +1375,15 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         );
 
         $this->inputsHelper()->select('zona_localizacao', $options);
+
+        $options = [
+            'label' => 'País de residência',
+            'value' => $this->pais_residencia ?: PaisResidencia::BRASIL ,
+            'resources' => PaisResidencia::getDescriptiveValues(),
+            'required' => true,
+        ];
+
+        $this->inputsHelper()->select('pais_residencia', $options);
 
         $helperOptions = array('hiddenInputOptions' => array('options' => array('value' => $this->logradouro_id)));
 
