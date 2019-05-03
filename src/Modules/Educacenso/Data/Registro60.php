@@ -4,6 +4,7 @@ namespace iEducar\Modules\Educacenso\Data;
 
 use App\Models\Educacenso\Registro60 as Registro60Model;
 use iEducar\Modules\Educacenso\Formatters;
+use Portabilis_Utils_Database;
 
 class Registro60 extends AbstractRegistro
 {
@@ -50,6 +51,8 @@ class Registro60 extends AbstractRegistro
 
     private function processData($data)
     {
+        $data->veiculoTransporteEscolar = Portabilis_Utils_Database::pgArrayToArray($data->veiculoTransporteEscolar);
+
         return $data;
     }
 }

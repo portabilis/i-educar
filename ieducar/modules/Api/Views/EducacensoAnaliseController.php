@@ -1674,7 +1674,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if (!$aluno->veiculoTransporteEscolar && $aluno->veiculoTransporteEscolarRequired()) {
+            if ((!$aluno->veiculoTransporteEscolar )&& $aluno->veiculoTransporteEscolarRequired()) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verifique se o tipo de veículo do transporte escolar público utilizado pelo(a) aluno(a) {$nomeAluno} foi informado.",
                     'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados Pessoais > Campo: Veículo utilizado)',
