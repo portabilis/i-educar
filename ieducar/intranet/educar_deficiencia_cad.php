@@ -8,6 +8,7 @@ require_once 'lib/Portabilis/String/Utils.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 use iEducar\Modules\Educacenso\Model\Deficiencias;
+use iEducar\Support\View\SelectOptions;
 
 class clsIndexBase extends clsBase
 {
@@ -83,12 +84,9 @@ class indice extends clsCadastro
         // text
         $this->campoTexto('nm_deficiencia', 'Deficiência', $this->nm_deficiencia, 30, 255, true);
 
-        $resources = [ null => 'Selecione'];
-        $resources += Deficiencias::getDescriptiveValues();
-
         $options = [
             'label' => 'Deficiência educacenso',
-            'resources' => $resources,
+            'resources' => SelectOptions::educacensoDeficiencies(),
             'value' => $this->deficiencia_educacenso
         ];
 
