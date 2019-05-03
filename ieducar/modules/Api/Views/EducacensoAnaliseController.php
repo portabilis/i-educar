@@ -6,13 +6,16 @@ use App\Models\Educacenso\Registro20;
 use App\Models\Educacenso\Registro40;
 use App\Models\Educacenso\Registro50;
 use App\Models\Individual;
+use App\Models\Educacenso\Registro60;
 use App\Models\School;
 use App\Repositories\EducacensoRepository;
+use App\Services\SchoolClass\AvailableTimeService;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\Data\Registro10 as Registro10Data;
 use iEducar\Modules\Educacenso\Data\Registro20 as Registro20Data;
 use iEducar\Modules\Educacenso\Data\Registro40 as Registro40Data;
 use iEducar\Modules\Educacenso\Data\Registro50 as Registro50Data;
+use iEducar\Modules\Educacenso\Data\Registro60 as Registro60Data;
 use iEducar\Modules\Educacenso\Model\LinguaMinistrada;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
@@ -1382,55 +1385,12 @@ class EducacensoAnaliseController extends ApiCoreController
     {
         $escola = $this->getRequest()->escola;
         $ano = $this->getRequest()->ano;
-        $data_ini = $this->getRequest()->data_ini;
-        $data_fim = $this->getRequest()->data_fim;
 
-        $sql = 'SELECT pessoa.idpes AS idpes,
-                   juridica.fantasia AS nome_escola,
-                   pessoa.nome AS nome_aluno,
-                   raca.raca_educacenso AS cor_raca,
-                   fisica.nacionalidade AS nacionalidade,
-                   uf.cod_ibge AS uf_inep,
-                   uf.sigla_uf AS sigla_uf,
-                   municipio.cod_ibge AS municipio_inep,
-                   municipio.idmun AS idmun,
-                   aluno.cod_aluno AS cod_aluno,
-                   aluno.recursos_prova_inep[1] AS recursos_prova_inep,
-                   EXISTS (SELECT 1
-                             FROM cadastro.fisica_deficiencia fd,
-                                  cadastro.deficiencia d
-                            WHERE d.cod_deficiencia = fd.ref_cod_deficiencia
-                              AND fd.ref_idpes = aluno.ref_idpes
-                              AND d.deficiencia_educacenso IS NOT NULL) AS possui_deficiencia
-              FROM pmieducar.aluno
-             INNER JOIN pmieducar.matricula ON (matricula.ref_cod_aluno = aluno.cod_aluno)
-             INNER JOIN pmieducar.matricula_turma ON (matricula_turma.ref_cod_matricula = matricula.cod_matricula)
-             INNER JOIN pmieducar.turma ON (turma.cod_turma = matricula_turma.ref_cod_turma)
-             INNER JOIN pmieducar.escola ON (escola.cod_escola = matricula.ref_ref_cod_escola)
-             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
-             INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
-             INNER JOIN cadastro.fisica ON (fisica.idpes = pessoa.idpes)
-              LEFT JOIN cadastro.fisica_raca ON (fisica_raca.ref_idpes = fisica.idpes)
-              LEFT JOIN cadastro.raca ON (raca.cod_raca = fisica_raca.ref_cod_raca)
-              LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = fisica.idpes)
-              LEFT JOIN public.municipio ON (municipio.idmun = fisica.idmun_nascimento)
-              LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
-             WHERE aluno.ativo = 1
-               AND turma.ativo = 1
-               AND turma.visivel = TRUE
-               AND COALESCE(turma.nao_informar_educacenso, 0) = 0
-               AND matricula.ativo = 1
-               AND matricula_turma.ativo = 1
-               AND matricula.ano = $1
-               AND escola.cod_escola = $2
-               AND COALESCE(matricula.data_matricula,matricula.data_cadastro) BETWEEN DATE($3) AND DATE($4)
-               AND (matricula.aprovado = 3 OR DATE(COALESCE(matricula.data_cancel,matricula.data_exclusao)) > DATE($4))
-             ORDER BY nome_aluno';
+        $educacensoRepository = new EducacensoRepository();
+        $registro60Model = new Registro60();
+        $registro60 = new Registro60Data($educacensoRepository, $registro60Model);
 
-        $alunos = $this->fetchPreparedQuery($sql, [$ano,
-            $escola,
-            Portabilis_Date_Utils::brToPgSQL($data_ini),
-            Portabilis_Date_Utils::brToPgSQL($data_fim)]);
+        $alunos = $registro60->getData($escola, $ano);
 
         if (empty($alunos)) {
             $this->messenger->append('Nenhum aluno encontrado.');
@@ -1439,59 +1399,85 @@ class EducacensoAnaliseController extends ApiCoreController
         }
 
         $mensagem = [];
-        $brasileiro = 1;
+        $countAtividadesComplementar = [];
+        $notAvaliableTime = [];
 
         foreach ($alunos as $aluno) {
-            $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($aluno['nome_escola']));
-            $nomeAluno = Portabilis_String_Utils::toUtf8(strtoupper($aluno['nome_aluno']));
-            $codPessoa = $aluno['idpes'];
-            $codAluno = $aluno['cod_aluno'];
-            $siglaUF = $aluno['sigla_uf'];
-            $codMunicipio = $aluno['idmun'];
+            $nomeEscola = strtoupper($aluno->nomeEscola);
+            $nomeAluno = strtoupper($aluno->nomeAluno);
+            $nomeTurma = strtoupper($aluno->nomeTurma);
+            $codigoAluno = $aluno->codigoAluno;
+            $codigoTurma = $aluno->codigoTurma;
+            $codigoMatricula = $aluno->codigoMatricula;
 
-            if (is_null($aluno['cor_raca'])) {
-                $mensagem[] = [
-                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verifique se a raça do(a) aluno(a) {$nomeAluno} foi informada.",
-                    'path' => '(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: Raça)',
-                    'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$codPessoa}",
+            $avaliableTimeService = new AvailableTimeService();
+
+            if (!$avaliableTimeService->isAvailable($codigoAluno, $codigoTurma)) {
+                $notAvaliableTime[$codigoAluno] = [
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verificamos que o(a) aluno(a) {$nomeAluno} possui mais de um vínculo em diferentes turmas presenciais com horário e dias coincidentes.",
+                    'path' => '(Escola > Cadastros > Alunos > Seção: Matrículas)',
+                    'linkPath' => "/intranet/educar_aluno_det.php?cod_aluno={$codigoAluno}",
                     'fail' => true
                 ];
             }
 
-            if (!$aluno['nacionalidade']) {
+            if ($aluno->tipoAtendimentoTurma ==  $aluno->isAtividadeComplementarOrAee()) {
+                $countAtividadesComplementar[$codigoAluno][] = [
+                    'codigoAluno' => $codigoAluno,
+                    'nomeAluno' => $nomeAluno,
+                    'nomeEscola' => $nomeEscola
+                ];
+            }
+
+            if (!$aluno->etapaAluno && in_array($aluno->etapaTurma, App_Model_Educacenso::etapas_multisseriadas())) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verifique se a nacionalidade do(a) aluno(a) {$nomeAluno} foi informada.",
-                    'path' => '(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: Nacionalidade)',
-                    'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$codPessoa}",
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é multisseriada, portanto é necessário informar qual a etapa do(a) aluno(a) {$nomeAluno}.",
+                    'path' => '(Escola > Cadastros > Alunos > Visualizar > Etapa do aluno > Campo: Etapa do aluno na turma)',
+                    'linkPath' => "/intranet/educar_matricula_etapa_turma_cad.php?ref_cod_matricula={$codigoMatricula}&ref_cod_aluno={$codigoAluno}",
                     'fail' => true
                 ];
-            } else {
-                if ($aluno['nacionalidade'] == $brasileiro && !$aluno['uf_inep']) {
-                    $mensagem[] = [
-                        'text' => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) aluno(a) {$nomeAluno} é brasileiro(a), portanto é necessário preencher o código da UF de nascimento conforme a 'Tabela de UF'.",
-                        'path' => '(Endereçamento > Cadastros > Estados > Editar > Campo: Código INEP)',
-                        'linkPath' => "/intranet/public_uf_cad.php?sigla_uf={$siglaUF}",
-                        'fail' => true
-                    ];
-                }
+            }
 
-                if ($aluno['nacionalidade'] == $brasileiro && !$aluno['municipio_inep']) {
-                    $mensagem[] = [
-                        'text' => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) aluno(a) {$nomeAluno} é brasileiro(a), portanto é necessário preencher o código do município de nascimento conforme a 'Tabela de Municípios'.",
-                        'path' => '(Endereçamento > Cadastros > Municípios > Editar > Campo: Código INEP)',
-                        'linkPath' => "/intranet/public_municipio_cad.php?idmun={$codMunicipio}",
-                        'fail' => true
-                    ];
-                }
+            if (!$aluno->tipoAtendimentoMatricula && $aluno->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verificamos que a turma {$nomeTurma} é de atendimento educacional especializado, portanto é necessário informar qual a tipo de atendimento do(a) aluno(a) {$nomeAluno}.",
+                    'path' => '(Escola > Cadastros > Alunos > Visualizar > Tipo do AEE do aluno > Campo: Tipo de Atendimento Educacional Especializado do aluno na turma)',
+                    'linkPath' => "/intranet/educar_matricula_turma_tipo_aee_cad.php?ref_cod_matricula={$codigoMatricula}&ref_cod_aluno={$codigoAluno}",
+                    'fail' => true
+                ];
+            }
 
-                if (dbBool($aluno['possui_deficiencia']) && empty($aluno['recursos_prova_inep'])) {
-                    $mensagem[] = [
-                        'text' => "<span class='avisos-educacenso'><b>Aviso!</b> Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verificamos que o(a) aluno(a) {$nomeAluno} possui uma(s) deficiência(s), porém nenhum recurso para a prova INEP foi selecionado.</span>",
-                        'path' => '(Escola > Cadastros > Alunos > Cadastrar > Editar > Aba: Dados educacenso > Campo: Recursos prova INEP)',
-                        'linkPath' => "/module/Cadastro/aluno?id={$codAluno}",
-                        'fail' => false
-                    ];
-                }
+            if (is_null($aluno->transportePublico) && $aluno->transportePublicoRequired()) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados.  Verifique se o transporte escolar público do(a) aluno(a) {$nomeAluno} foi informado.",
+                    'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados Pessoais > Campo: Transporte escolar público)',
+                    'linkPath' => "/module/Cadastro/aluno?id={$codigoAluno}",
+                    'fail' => true
+                ];
+            }
+
+            if ((!$aluno->veiculoTransporteEscolar )&& $aluno->veiculoTransporteEscolarRequired()) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verifique se o tipo de veículo do transporte escolar público utilizado pelo(a) aluno(a) {$nomeAluno} foi informado.",
+                    'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados Pessoais > Campo: Veículo utilizado)',
+                    'linkPath' => "/module/Cadastro/aluno?id={$codigoAluno}",
+                    'fail' => true
+                ];
+            }
+        }
+
+        foreach ($notAvaliableTime as $notAvaliableTimeMessage) {
+            $mensagem[] = $notAvaliableTimeMessage;
+        }
+
+        foreach ($countAtividadesComplementar as $atividadesAluno) {
+            if (count($atividadesAluno) > 4) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 60 da escola {$atividadesAluno[0]['nomeEscola']} possui valor inválido. Verificamos que o(a) aluno(a) {$atividadesAluno[0]['nomeAluno']} possui mais de quatro vínculos com turmas de AEE ou Atividade Complementar.",
+                    'path' => '(Escola > Cadastros > Alunos > Seção: Matrículas)',
+                    'linkPath' => "/intranet/educar_aluno_det.php?cod_aluno={$atividadesAluno[0]['codigoAluno']}",
+                    'fail' => true
+                ];
             }
         }
 
