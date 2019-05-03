@@ -1821,9 +1821,8 @@ function canShowParentsFields() {
                     }
 
                     if (bValid) {
-                        postPessoa($j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val(), (editar_pessoa ? $j('#pessoa_id').val() : null), null, ddd_telefone_1.val(), telefone_1.val(), ddd_telefone_mov.val(), telefone_mov.val(), undefined,
+                        postPessoa($(this), $j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val(), (editar_pessoa ? $j('#pessoa_id').val() : null), null, ddd_telefone_1.val(), telefone_1.val(), ddd_telefone_mov.val(), telefone_mov.val(), undefined,
                           $j('#tipo_nacionalidade').val(), $j('#pais_origem_id').val(), $j('#cor_raca').val(), $j('#zona_localizacao_censo').val(), nome_social.val());
-                        $j(this).dialog("close");
                     }
                 },
                 "Cancelar": function () {
@@ -1884,8 +1883,7 @@ function canShowParentsFields() {
 
 
                     if (bValid) {
-                        postPessoa(nameParent, nameParent.val(), sexoParent.val(), estadocivilParent.val(), datanascParent.val(), null, (editar_pessoa ? $j('#' + pessoaPaiOuMae + '_id').val() : null), pessoaPaiOuMae, null, null, null, null, falecidoParent.is(':checked'));
-                        $j(this).dialog("close");
+                        postPessoa($(this), nameParent, nameParent.val(), sexoParent.val(), estadocivilParent.val(), datanascParent.val(), null, (editar_pessoa ? $j('#' + pessoaPaiOuMae + '_id').val() : null), pessoaPaiOuMae, null, null, null, null, falecidoParent.is(':checked'));
                     }
                 },
                 "Cancelar": function () {
@@ -2267,7 +2265,7 @@ function canShowParentsFields() {
     }); // ready
 
 
-    function postPessoa($pessoaField, nome, sexo, estadocivil, datanasc, naturalidade, pessoa_id, parentType, ddd_telefone_1, telefone_1, ddd_telefone_mov, telefone_mov, falecido,
+    function postPessoa($container, $pessoaField, nome, sexo, estadocivil, datanasc, naturalidade, pessoa_id, parentType, ddd_telefone_1, telefone_1, ddd_telefone_mov, telefone_mov, falecido,
       tipo_nacionalidade, pais_origem_id, cor_raca, zona_localizacao_censo, nome_social) {
         var data = {
             nome: nome,
@@ -2293,6 +2291,12 @@ function canShowParentsFields() {
             dataType: 'json',
             data: data,
             success: function (dataResponse) {
+              if (dataResponse['any_error_msg']) {
+                dataResponse['msgs'].forEach(msgObject => {
+                  messageUtils.error(msgObject['msg']);
+                });
+              } else {
+                $container.dialog('close');
                 if (parentType == 'mae')
                     afterChangePessoaParent(dataResponse.pessoa_id, 'mae');
                 else if (parentType == 'pai')
@@ -2301,6 +2305,7 @@ function canShowParentsFields() {
                     afterChangePessoaParent(dataResponse.pessoa_id, 'responsavel');
                 else
                     postEnderecoPessoa(dataResponse.pessoa_id);
+              }
             }
         };
 

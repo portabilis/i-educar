@@ -1,5 +1,8 @@
 <?php
 
+use iEducar\Modules\Educacenso\Validator\NameValidator;
+use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -1252,6 +1255,14 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!empty($this->nm_pessoa) && !$this->validaNome()) {
+            return false;
+        }
+
+        if (!empty($this->data_nasc) && !$this->validaDataNascimento()) {
+            return false;
+        }
+
         $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
         $this->savePhoto($pessoaId);
         $this->createOrUpdatePessoaFisica($pessoaId);
@@ -1259,6 +1270,28 @@ class indice extends clsCadastro
         $this->createOrUpdateTelefones($pessoaId);
         $this->createOrUpdateEndereco($pessoaId);
         $this->afterChangePessoa($pessoaId);
+
+        return true;
+    }
+
+    private function validaNome()
+    {
+        $validator = new NameValidator($this->nm_pessoa);
+        if (!$validator->isValid()) {
+            $this->mensagem = $validator->getMessage();
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validaDataNascimento()
+    {
+        $validator = new BirthDateValidator(Portabilis_Date_Utils::brToPgSQL($this->data_nasc));
+        if (!$validator->isValid()) {
+            $this->mensagem = $validator->getMessage();
+            return false;
+        }
 
         return true;
     }
