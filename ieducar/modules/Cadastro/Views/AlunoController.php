@@ -12,6 +12,8 @@ require_once 'Usuario/Model/FuncionarioDataMapper.php';
 require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
 require_once 'Portabilis/String/Utils.php';
 
+use iEducar\Modules\Educacenso\Model\PaisResidencia;
+
 class AlunoController extends Portabilis_Controller_Page_EditController
 {
     protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
@@ -1356,6 +1358,15 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         );
 
         $this->inputsHelper()->select('zona_localizacao', $options);
+
+        $options = [
+            'label' => 'País de residência',
+            'value' => $this->pais_residencia ?: PaisResidencia::BRASIL ,
+            'resources' => PaisResidencia::getDescriptiveValues(),
+            'required' => true,
+        ];
+
+        $this->inputsHelper()->select('pais_residencia', $options);
 
         $helperOptions = array('hiddenInputOptions' => array('options' => array('value' => $this->logradouro_id)));
 

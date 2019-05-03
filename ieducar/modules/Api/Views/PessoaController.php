@@ -185,7 +185,8 @@ class PessoaController extends ApiCoreController
               (SELECT fone_pessoa.ddd FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 1) as ddd_fone_fixo,
               (SELECT fone_pessoa.ddd FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 2) as ddd_fone_mov,
 
-             (SELECT idlog FROM cadastro.endereco_pessoa WHERE idpes = $2) as idlog
+             (SELECT idlog FROM cadastro.endereco_pessoa WHERE idpes = $2) as idlog,
+             fisica.pais_residencia
             from cadastro.fisica
             where idpes = $2';
 
@@ -256,6 +257,7 @@ class PessoaController extends ApiCoreController
             'id_cartorio',
             'nome_cartorio',
             'nome_social',
+            'pais_residencia',
         ];
 
         $details = Portabilis_Array_Utils::filter($details, $attrs);
@@ -554,6 +556,7 @@ class PessoaController extends ApiCoreController
         $fisica->nacionalidade = $this->getRequest()->tipo_nacionalidade;
         $fisica->zona_localizacao_censo = $this->getRequest()->zona_localizacao_censo;
         $fisica->nome_social = $this->getRequest()->nome_social;
+        $fisica->pais_residencia = $this->getRequest()->pais_residencia;
 
         $sql = 'select 1 from cadastro.fisica WHERE idpes = $1 limit 1';
 

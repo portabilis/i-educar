@@ -37,6 +37,7 @@ class clsPessoaFisica extends clsPessoaFj
     public $data_exclusao;
     public $zona_localizacao_censo;
     public $nome_social;
+    public $pais_residencia;
 
     public $banco           = 'pmi';
     public $schema_cadastro = 'cadastro';
@@ -300,6 +301,7 @@ class clsPessoaFisica extends clsPessoaFj
                 $this->data_exclusao            = $detalhe_fisica['data_exclusao'];
                 $this->zona_localizacao_censo   = $detalhe_fisica['zona_localizacao_censo'];
                 $this->nome_social              = $detalhe_fisica['nome_social'];
+                $this->pais_residencia          = $detalhe_fisica['pais_residencia'];
 
                 $tupla['idpes'] = $this->idpes;
                 $tupla[]        = & $tupla['idpes'];
@@ -388,6 +390,9 @@ class clsPessoaFisica extends clsPessoaFj
                 $tupla['nome_social'] = $this->nome_social;
                 $tupla[] = & $tupla['nome_social'];
 
+                $tupla['pais_residencia'] = $this->pais_residencia;
+                $tupla[] = & $tupla['pais_residencia'];
+
                 return $tupla;
             }
         } elseif ($this->cpf) {
@@ -468,6 +473,7 @@ class clsPessoaFisica extends clsPessoaFj
                     $this->data_exclusao            = $detalhe_fisica['data_exclusao'];
                     $this->zona_localizacao_censo   = $detalhe_fisica['zona_localizacao_censo'];
                     $this->nome_social              = $detalhe_fisica['nome_social'];
+                    $this->pais_residencia          = $detalhe_fisica['pais_residencia'];
 
                     $tupla['idpes'] = $this->idpes;
                     $tupla[]        = & $tupla['idpes'];
@@ -549,6 +555,9 @@ class clsPessoaFisica extends clsPessoaFj
 
                     $tupla['nome_social'] = $this->nome_social;
                     $tupla[] = & $tupla['nome_social'];
+
+                    $tupla['pais_residencia'] = $this->pais_residencia;
+                    $tupla[] = & $tupla['pais_residencia'];
 
                     return $tupla;
                 }
