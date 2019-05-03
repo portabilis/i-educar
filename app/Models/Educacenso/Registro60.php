@@ -123,4 +123,10 @@ class Registro60 implements RegistroEducacenso
 
         return in_array($this->transportePublico, $transportePublico);
     }
+
+    public function isAtividadeComplementarOrAee()
+    {
+        return $this->tipoAtendimentoTurma == TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR ||
+            $this->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE;
+    }
 }

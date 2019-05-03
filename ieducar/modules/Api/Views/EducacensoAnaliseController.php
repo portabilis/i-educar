@@ -1638,7 +1638,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if ($aluno->tipoAtendimentoTurma == TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR) {
+            if ($aluno->tipoAtendimentoTurma ==  $aluno->isAtividadeComplementarOrAee()) {
                 $countAtividadesComplementar[$codigoAluno][] = [
                     'codigoAluno' => $codigoAluno,
                     'nomeAluno' => $nomeAluno,
@@ -1694,6 +1694,8 @@ class EducacensoAnaliseController extends ApiCoreController
             }
         }
 
+        print_r($countAtividadesComplementar);
+        die;
         return [
             'mensagens' => $mensagem,
             'title' => 'Análise exportação - Registro 60'
