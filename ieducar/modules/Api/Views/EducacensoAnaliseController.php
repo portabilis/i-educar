@@ -1691,9 +1691,9 @@ class EducacensoAnaliseController extends ApiCoreController
         foreach ($countAtividadesComplementar as $atividadesAluno) {
             if (count($atividadesAluno) > 4) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 60 da escola {$atividadesAluno['nomeEscola']} possui valor inválido. Verificamos que o(a) aluno(a) {$atividadesAluno['nomeAluno']} possui mais de quatro vínculos com turmas de AEE ou Atividade Complementar.",
+                    'text' => "Dados para formular o registro 60 da escola {$atividadesAluno[0]['nomeEscola']} possui valor inválido. Verificamos que o(a) aluno(a) {$atividadesAluno[0]['nomeAluno']} possui mais de quatro vínculos com turmas de AEE ou Atividade Complementar.",
                     'path' => '(Escola > Cadastros > Alunos > Seção: Matrículas)',
-                    'linkPath' => "/intranet/educar_aluno_det.php?cod_aluno={$atividadesAluno['codigoAluno']}",
+                    'linkPath' => "/intranet/educar_aluno_det.php?cod_aluno={$atividadesAluno[0]['codigoAluno']}",
                     'fail' => true
                 ];
             }
