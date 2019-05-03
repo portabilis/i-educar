@@ -2272,8 +2272,6 @@ function canShowParentsFields() {
 
     function postPessoa($pessoaField, nome, sexo, estadocivil, datanasc, naturalidade, pessoa_id, parentType, ddd_telefone_1, telefone_1, ddd_telefone_mov, telefone_mov, falecido,
       tipo_nacionalidade, pais_origem_id, cor_raca, zona_localizacao_censo, nome_social, pais_residencia) {
-      console.log('pais_residencia');
-      console.log(pais_residencia);
         var data = {
             nome: nome,
             sexo: sexo,
