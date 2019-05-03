@@ -885,6 +885,26 @@ $paiIdField.change(changeVisibilityOfLinksToPessoaPai);
 $maeIdField.change(changeVisibilityOfLinksToPessoaMae);
 $responsavelIdField.change(changeVisibilityOfLinksToPessoaResponsavel);
 
+var checkJustificativa = function () {
+    var certidaoNascimento = $j('#certidao_nascimento').val().trim();
+    var nisPisPasep = $j('#nis_pis_pasep').val().trim();
+    var cpf = $j('#id_federal').val().trim();
+
+    if (
+      certidaoNascimento ||
+      nisPisPasep ||
+      cpf
+    ) {
+        disableJustificativaFields();
+    } else {
+        enableJustificativaFields();
+    }
+};
+
+$j('#certidao_nascimento').on('change', checkJustificativa);
+$j('#nis_pis_pasep').on('change', checkJustificativa);
+$j('#id_federal').on('change', checkJustificativa);
+
 var handleGetPersonDetails = function (dataResponse) {
     handleMessages(dataResponse.msgs);
     $pessoaNotice.hide();
@@ -1028,25 +1048,6 @@ var handleGetPersonDetails = function (dataResponse) {
         enableJustificativaFields();
     }
 
-    var validaRg = function () {
-        var rg = $j('#rg').val().replace(" ", "");
-        var dataEmissao = $j('#data_emissao_rg').val().replace(" ", "");
-
-        if (rg != '' && dataEmissao != '') {
-            disableJustificativaFields();
-        } else {
-            enableJustificativaFields();
-        }
-    };
-
-    $j('#rg').change(function () {
-        validaRg();
-    });
-
-    $j('#data_emissao_rg').change(function () {
-        validaRg();
-    });
-
     $j('#certidao_nascimento').val(dataResponse.certidao_nascimento);
     $j('#certidao_casamento').val(dataResponse.certidao_casamento);
     $j('#termo_certidao_civil').val(dataResponse.num_termo);
@@ -1062,6 +1063,7 @@ var handleGetPersonDetails = function (dataResponse) {
     }
 
     var cpf = dataResponse.cpf;
+    $j('#nis_pis_pasep').val(dataResponse.nis_pis_pasep);
 
     var mascara = null;
 
@@ -1126,8 +1128,7 @@ var checkTipoCertidaoCivil = function () {
 
 function disableJustificativaFields() {
     $jField = $j('#justificativa_falta_documentacao');
-    $jField.removeClass('obrigatorio');
-    $jField.addClass('geral');
+    $jField.makeUnrequired();
     $jField.attr('disabled', 'disabled');
 }
 
@@ -1135,9 +1136,10 @@ function enableJustificativaFields() {
     $jField = $j('#justificativa_falta_documentacao');
     $jField.removeAttr('disabled');
 
-    if ($j('#justificativa_falta_documentacao_obrigatorio').length) {
-        $jField.removeClass('geral');
-        $jField.addClass('obrigatorio');
+    if ($j('#obrigar_campos_censo').val() == '1') {
+      $jField.makeRequired();
+    } else {
+      $jField.makeUnrequired();
     }
 }
 
