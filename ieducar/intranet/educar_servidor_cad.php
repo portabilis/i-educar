@@ -29,6 +29,7 @@
  * @version   $Id$
  */
 
+use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/clsBase.inc.php';
@@ -472,9 +473,10 @@ class indice extends clsCadastro
     $helperOptions = array(
       'objectName' => 'codigo_curso_superior_1',
       'hiddenInputOptions' => array(
-        'options' => array('value' => $this->codigo_curso_superior_1)
+        'options' => array('value' => $this->codigo_curso_superior_1_id ?? $this->codigo_curso_superior_1)
       )
     );
+
     $this->inputsHelper()->simpleSearchCursoSuperior(null, $options, $helperOptions);
 
     $options = array(
@@ -504,7 +506,7 @@ class indice extends clsCadastro
     $helperOptions = array(
       'objectName' => 'instituicao_curso_superior_1',
       'hiddenInputOptions' => array(
-        'options' => array('value' => $this->instituicao_curso_superior_1)
+        'options' => array('value' => $this->instituicao_curso_superior_1_id ?? $this->instituicao_curso_superior_1)
       )
     );
     $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
@@ -537,7 +539,7 @@ class indice extends clsCadastro
     $helperOptions = array(
       'objectName' => 'codigo_curso_superior_2',
       'hiddenInputOptions' => array(
-        'options' => array('value' => $this->codigo_curso_superior_2)
+        'options' => array('value' => $this->codigo_curso_superior_2_id ?? $this->codigo_curso_superior_2)
       )
     );
     $this->inputsHelper()->simpleSearchCursoSuperior(null, $options, $helperOptions);
@@ -569,7 +571,7 @@ class indice extends clsCadastro
     $helperOptions = array(
       'objectName' => 'instituicao_curso_superior_2',
       'hiddenInputOptions' => array(
-        'options' => array('value' => $this->instituicao_curso_superior_2)
+        'options' => array('value' => $this->instituicao_curso_superior_2_id ?? $this->instituicao_curso_superior_2)
       )
     );
     $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
@@ -602,7 +604,7 @@ class indice extends clsCadastro
     $helperOptions = array(
       'objectName' => 'codigo_curso_superior_3',
       'hiddenInputOptions' => array(
-        'options' => array('value' => $this->codigo_curso_superior_3)
+        'options' => array('value' => $this->codigo_curso_superior_3_id ?? $this->codigo_curso_superior_3)
       )
     );
     $this->inputsHelper()->simpleSearchCursoSuperior(null, $options, $helperOptions);
@@ -634,7 +636,7 @@ class indice extends clsCadastro
     $helperOptions = array(
       'objectName' => 'instituicao_curso_superior_3',
       'hiddenInputOptions' => array(
-        'options' => array('value' => $this->instituicao_curso_superior_3)
+        'options' => array('value' => $this->instituicao_curso_superior_3_id ?? $this->instituicao_curso_superior_3)
       )
     );
     $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
@@ -707,6 +709,10 @@ JS;
 
   function Novo()
   {
+    if (!$this->validaDeficiencias()) {
+        return false;
+    }
+
     $this->cod_servidor = (int) $this->cod_servidor;
     $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao;
 
@@ -790,6 +796,10 @@ JS;
 
   function Editar()
   {
+    if (!$this->validaDeficiencias()) {
+        return false;
+    }
+
     $timesep = explode(':', $this->carga_horaria);
     $hour    = $timesep[0] + ((int) ($timesep[1] / 60));
     $min     = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
@@ -937,6 +947,19 @@ JS;
     $this->mensagem = 'Exclusão não realizada.<br>';
 
     return false;
+  }
+
+  private function validaDeficiencias()
+  {
+    $deficiencias = array_filter((array) $this->deficiencias);
+    $validator = new DeficiencyValidator($deficiencias);
+
+    if ($validator->isValid()) {
+        return true;
+    } else {
+        $this->mensagem = $validator->getMessage();
+        return false;
+    }
   }
 
   function addCamposCenso($obj){
