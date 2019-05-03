@@ -195,14 +195,13 @@ class PessoaController extends ApiCoreController
             is_null($details['rg']) &&
             is_null($details['cpf']) &&
             is_null($details['nis_pis_pasep']) &&
-            is_null($details['num_termo']) &&
-            is_null($details['certidao_nascimento']) &&
-            is_null($details['certidao_casamento'])
+            is_null($details['certidao_nascimento'])
         );
 
         $attrs = [
             'cpf',
             'rg',
+            'nis_pis_pasep',
             'data_nascimento',
             'religiao_id',
             'pai_id',
