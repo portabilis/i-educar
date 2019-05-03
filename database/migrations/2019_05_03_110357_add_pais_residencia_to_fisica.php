@@ -14,7 +14,7 @@ class AddPaisResidenciaToFisica extends Migration
     public function up()
     {
         Schema::table('cadastro.fisica', function (Blueprint $table) {
-            $table->integer('pais_residencia')->default(76);
+            $table->integer('pais_residencia')->default(76); // default: Brasil
         });
     }
 
