@@ -4,6 +4,9 @@ namespace iEducar\Support\View;
 
 use App_Model_TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
+use App\Models\ManagerAccessCriteria;
+use App\Models\ManagerLinkType;
+use App\Models\ManagerRole;
 use iEducar\Modules\Transport\Period;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
@@ -83,6 +86,9 @@ class SelectOptions
         return self::getDefaultOption() + UnidadeVinculadaComOutraInstituicao::getDescriptiveValues();
     }
 
+    /**
+     * @return array
+     */
     public static function locaisFuncionamentoEscola()
     {
         return self::getDefaultOption() + LocalFuncionamento::getDescriptiveValues();
@@ -91,5 +97,29 @@ class SelectOptions
     public static function tiposMediacaoDidaticoPedagogico()
     {
         return self::getDefaultOption() + App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums();
+    }
+
+    /**
+     * @return array
+     */
+    public static function schoolManagerRoles()
+    {
+        return self::getDefaultOption() + ManagerRole::all()->getKeyValueArray('name');
+    }
+
+    /**
+     * @return array
+     */
+    public static function schoolManagerAccessCriterias()
+    {
+        return self::getDefaultOption() + ManagerAccessCriteria::all()->getKeyValueArray('name');
+    }
+
+    /**
+     * @return array
+     */
+    public static function schoolManagerLinkTypes()
+    {
+        return self::getDefaultOption() + ManagerLinkType::all()->getKeyValueArray('name');
     }
 }

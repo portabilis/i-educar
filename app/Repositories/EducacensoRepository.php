@@ -267,6 +267,36 @@ SQL;
 
     /**
      * @param $school
+     * @return array
+     */
+    public function getDataForRecord40($school)
+    {
+        $sql = <<<'SQL'
+            SELECT
+               40 AS registro,
+               educacenso_cod_escola.cod_escola_inep AS "inepEscola",
+               school_managers.employee_id AS "codigoPessoa",
+               educacenso_cod_docente.cod_docente_inep AS "inepGestor",
+               school_managers.role_id AS cargo,
+               school_managers.access_criteria_id AS "criterioAcesso",
+               school_managers.access_criteria_description AS "especificacaoCriterioAcesso",
+               school_managers.link_type_id AS "tipoVinculo",
+               escola.dependencia_administrativa AS "dependenciaAdministrativa"
+          FROM school_managers
+          JOIN pmieducar.escola ON escola.cod_escola = school_managers.school_id
+     LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
+     LEFT JOIN pmieducar.servidor ON servidor.cod_servidor = school_managers.employee_id
+     LEFT JOIN modules.educacenso_cod_docente ON educacenso_cod_docente.cod_servidor = servidor.cod_servidor
+        WHERE school_managers.school_id = :school
+SQL;
+
+        return $this->fetchPreparedQuery($sql, [
+            'school' => $school,
+        ]);
+    }
+
+    /**
+     * @param $school
      * @param $year
      * @return array
      */
