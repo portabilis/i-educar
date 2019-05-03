@@ -1618,6 +1618,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
         $mensagem = [];
         $countAtividadesComplementar = [];
+        $notAvaliableTime = [];
 
         foreach ($alunos as $aluno) {
             $nomeEscola = strtoupper($aluno->nomeEscola);
@@ -1630,7 +1631,7 @@ class EducacensoAnaliseController extends ApiCoreController
             $avaliableTimeService = new AvailableTimeService();
 
             if (!$avaliableTimeService->isAvailable($codigoAluno, $codigoTurma)) {
-                $mensagem['avaliable'-$codigoAluno] = [
+                $notAvaliableTime[$codigoAluno] = [
                     'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verificamos que o(a) aluno(a) {$nomeAluno} possui mais de um vínculo em diferentes turmas presenciais com horário e dias coincidentes.",
                     'path' => '(Escola > Cadastros > Alunos > Seção: Matrículas)',
                     'linkPath' => "/intranet/educar_aluno_det.php?cod_aluno={$codigoAluno}",
@@ -1650,7 +1651,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verificamos que a turma {$nomeTurma} é multisseriada, portanto é necessário informar qual a etapa do(a) aluno(a) {$nomeAluno}.",
                     'path' => '(Escola > Cadastros > Alunos > Visualizar > Etapa do aluno > Campo: Etapa do aluno na turma)',
-                    'linkPath' => "/intranet/educar_matricula_det.php?cod_matricula={$codigoMatricula}",
+                    'linkPath' => "/intranet/educar_matricula_etapa_turma_cad.php?ref_cod_matricula={$codigoMatricula}&ref_cod_aluno={$codigoAluno}",
                     'fail' => true
                 ];
             }
@@ -1659,7 +1660,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verificamos que a turma {$nomeTurma} é de atendimento educacional especializado, portanto é necessário informar qual a tipo de atendimento do(a) aluno(a) {$nomeAluno}.",
                     'path' => '(Escola > Cadastros > Alunos > Visualizar > Tipo do AEE do aluno > Campo: Tipo de Atendimento Educacional Especializado do aluno na turma)',
-                    'linkPath' => "/intranet/educar_matricula_det.php?cod_matricula={$codigoMatricula}",
+                    'linkPath' => "/intranet/educar_matricula_turma_tipo_aee_cad.php?ref_cod_matricula={$codigoMatricula}&ref_cod_aluno={$codigoAluno}",
                     'fail' => true
                 ];
             }
@@ -1683,6 +1684,10 @@ class EducacensoAnaliseController extends ApiCoreController
             }
         }
 
+        foreach ($notAvaliableTime as $notAvaliableTimeMessage) {
+            $mensagem[] = $notAvaliableTimeMessage;
+        }
+
         foreach ($countAtividadesComplementar as $atividadesAluno) {
             if (count($atividadesAluno) > 4) {
                 $mensagem[] = [
@@ -1694,8 +1699,6 @@ class EducacensoAnaliseController extends ApiCoreController
             }
         }
 
-        print_r($countAtividadesComplementar);
-        die;
         return [
             'mensagens' => $mensagem,
             'title' => 'Análise exportação - Registro 60'
