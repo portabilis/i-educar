@@ -10,6 +10,7 @@ $j(document).ready(function() {
   $componentecurricular = $j('#componentecurricular');
   $selecionarTodosElement = $j('#selecionar_todos');
   $componentecurricular.trigger('chosen:updated');
+  $anoLetivoField = $j('#ano');
   $serieField = $j('#ref_cod_serie');
   $turmaField = $j('#ref_cod_turma');
   $turnoField = $j('#turma_turno_id');
@@ -163,8 +164,12 @@ $j(document).ready(function() {
 
   function getRegraAvaliacao(){
     $serieId = $serieField.val();
+    $anoLetivo = $anoLetivoField.val();
 
-    var params = { serie_id: $serieId };
+    var params = {
+      serie_id   : $serieId,
+      ano_letivo : $anoLetivo
+    };
 
     var options = {
       url      : getResourceUrlBuilder.buildUrl('/module/Api/Regra', 'regra-serie', params),

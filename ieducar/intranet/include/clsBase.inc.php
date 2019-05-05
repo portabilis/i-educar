@@ -6,9 +6,9 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
-require_once 'include/clsCronometro.inc.php';
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/clsLogAcesso.inc.php';
@@ -28,39 +28,39 @@ if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente) {
 
 class clsBase extends clsConfig
 {
-    var $titulo = 'Prefeitura Cobra Tecnologia';
-    var $clsForm = array();
-    var $bodyscript = NULL;
-    var $processoAp;
-    var $refresh = FALSE;
-    var $renderMenu = TRUE;
-    var $renderMenuSuspenso = TRUE;
-    var $renderBanner = TRUE;
-    var $estilos;
-    var $scripts;
-    var $prog_alert;
+    public $titulo = 'Prefeitura Municipal';
+    public $clsForm = [];
+    public $bodyscript = null;
+    public $processoAp;
+    public $refresh = false;
+    public $renderMenu = true;
+    public $renderMenuSuspenso = true;
+    public $renderBanner = true;
+    public $estilos;
+    public $scripts;
+    public $prog_alert;
 
-    function SetTitulo($titulo)
+    public function SetTitulo($titulo)
     {
         $this->titulo = $titulo;
     }
 
-    function AddForm($form)
+    public function AddForm($form)
     {
         $this->clsForm[] = $form;
     }
 
-    function addEstilo($estilo_nome)
+    public function addEstilo($estilo_nome)
     {
         $this->estilos[$estilo_nome] = $estilo_nome;
     }
 
-    function addScript($script_nome)
+    public function addScript($script_nome)
     {
         $this->scripts[$script_nome] = $script_nome;
     }
 
-    function verificaPermissao()
+    public function verificaPermissao()
     {
         if (Gate::denies('view', $this->processoAp)) {
             throw new HttpResponseException(
@@ -69,7 +69,7 @@ class clsBase extends clsConfig
         }
     }
 
-    function MakeBody()
+    public function MakeBody()
     {
         $corpo = '';
 
@@ -96,15 +96,32 @@ class clsBase extends clsConfig
         return $corpo;
     }
 
-    function Formular()
+    public function Formular()
     {
-        return FALSE;
+        return false;
     }
 
-    function MakeAll()
+    public function CadastraAcesso()
+    {
+        if (Session::get('marcado') != "private") {
+            $ip = empty($_SERVER['REMOTE_ADDR']) ? "NULL" : $_SERVER['REMOTE_ADDR'];
+            $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? "NULL" : $_SERVER['HTTP_X_FORWARDED_FOR'];
+            $id_pessoa = Session::get('id_pessoa');
+
+            $logAcesso = new clsLogAcesso(FALSE, $ip, $ip_de_rede, $id_pessoa);
+            $logAcesso->cadastra();
+
+            Session::put('marcado', 'private');
+            Session::save();
+            Session::start();
+        }
+    }
+
+    public function MakeAll()
     {
         $this->Formular();
         $this->verificaPermissao();
+        $this->CadastraAcesso();
 
         $saida_geral = '';
 
