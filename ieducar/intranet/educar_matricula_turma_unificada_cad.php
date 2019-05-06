@@ -78,8 +78,6 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-
-
         $this->validaPermissao();
         $this->validaParametros();
 
@@ -95,7 +93,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem .= "Etapas atualizadas com sucesso.<br>";
-        return true;
+        $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->cod_matricula}");
     }
 
     private function montaLocalizacao()

@@ -152,41 +152,50 @@ class clsCadastro extends clsCampos
         }
     }
 
-    public function Inicializar()
-    {
-    }
 
-    public function Formular()
-    {
-    }
+  function Inicializar()
+  {
+  }
 
-    public function Novo()
-    {
-        return false;
-    }
+  function Formular()
+  {
+  }
 
-    public function Editar()
-    {
-        return false;
-    }
+  function Novo()
+  {
+    return FALSE;
+  }
 
-    public function Excluir()
-    {
-        return false;
-    }
+  function Editar()
+  {
+    return FALSE;
+  }
 
-    public function ExcluirImg()
-    {
-        return false;
-    }
+  function Excluir()
+  {
+    return FALSE;
+  }
 
-    public function Gerar()
-    {
-        return false;
-    }
+  function ExcluirImg()
+  {
+    return FALSE;
+  }
+
+  function Gerar()
+  {
+    return FALSE;
+  }
 
     protected function flashMessage()
     {
+        if (Session::has('errors')) {
+            $messages = [];
+            foreach (Session::get('errors')->all() as $message) {
+                $messages[] = $message;
+            }
+            $this->mensagem = implode('<br>', $messages);
+        }
+
         if (empty($this->mensagem) && isset($_GET['mensagem']) && $_GET['mensagem'] == 'sucesso') {
             $this->mensagem = 'Registro incluido com sucesso!';
         }
@@ -195,7 +204,7 @@ class clsCadastro extends clsCampos
             return "<p class='success'>$this->mensagem</p>";
         }
 
-        return empty($this->mensagem) ? '' : "<p class='form_erro error'>$this->mensagem</p>";
+        return empty($this->mensagem) ? "" : "<p class='form_erro error'>$this->mensagem</p>";
     }
 
     public function RenderHTML()
