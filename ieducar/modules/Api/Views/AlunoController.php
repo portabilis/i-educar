@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\Individual;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
+use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
@@ -227,6 +229,7 @@ class AlunoController extends ApiCoreController
             parent::canPost() &&
             $this->validatesUniquenessOfAlunoByPessoaId() &&
             $this->validateDeficiencies() &&
+            $this->validateBirthCertificate() &&
             $this->validateInepExam()
         );
     }
@@ -236,6 +239,7 @@ class AlunoController extends ApiCoreController
         return (
             parent::canPut() &&
             $this->validateDeficiencies()&&
+            $this->validateBirthCertificate()&&
             $this->validateInepExam()
         );
     }
@@ -255,6 +259,27 @@ class AlunoController extends ApiCoreController
             $this->messenger->append($validator->getMessage());
             return false;
         }
+    }
+
+    /**
+     * @return bool
+     */
+    private function validateBirthCertificate()
+    {
+        $usesBirthCertificate = $this->getRequest()->tipo_certidao_civil == 'certidao_nascimento_novo_formato';
+        $individual = Individual::find($this->getRequest()->pessoa_id);
+        if (!$usesBirthCertificate || empty($this->getRequest()->certidao_nascimento) || !$individual || empty($individual->birthdate)) {
+            return true;
+        }
+
+        $validator = new BirthCertificateValidator($this->getRequest()->certidao_nascimento, $individual->birthdate);
+
+        if ($validator->isValid()) {
+            return true;
+        }
+
+        $this->messenger->append($validator->getMessage());
+        return false;
     }
 
     /**
