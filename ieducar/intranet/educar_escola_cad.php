@@ -1,5 +1,11 @@
 <?php
 
+use App\Models\EmployeeInep;
+use App\Models\LegacyPerson;
+use App\Models\SchoolManager;
+use App\Rules\SchoolManagerAtLeastOneChief;
+use App\Rules\SchoolManagerUniqueIndividuals;
+use App\Services\SchoolManagerService;
 use iEducar\Modules\Educacenso\Model\AreasExternas;
 use iEducar\Modules\Educacenso\Model\Banheiros;
 use iEducar\Modules\Educacenso\Model\Dormitorios;
@@ -19,6 +25,7 @@ use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\Model\RecursosAcessibilidade;
 use iEducar\Modules\Educacenso\Model\RedeLocal;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
+use iEducar\Modules\Educacenso\Validator\SchoolManagers;
 use iEducar\Modules\Educacenso\Model\ReservaVagasCotas;
 use iEducar\Modules\Educacenso\Model\SalasAtividades;
 use iEducar\Modules\Educacenso\Model\SalasFuncionais;
@@ -27,6 +34,7 @@ use iEducar\Modules\Educacenso\Model\TratamentoLixo;
 use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Model\UsoInternet;
 use iEducar\Modules\Educacenso\Validator\Telefone;
+use iEducar\Modules\ValueObjects\SchoolManagerValueObject;
 use iEducar\Support\View\SelectOptions;
 
 require_once 'include/clsBase.inc.php';
@@ -182,6 +190,14 @@ class indice extends clsCadastro
     public $com_cnpj;
     public $isEnderecoExterno = 0;
     public $esfera_administrativa;
+    public $managers_inep_id;
+    public $managers_role_id;
+    public $servidor_id;
+    public $managers_access_criteria_id;
+    public $managers_access_criteria_description;
+    public $managers_link_type_id;
+    public $managers_chief;
+    public $managers_email;
     public $qtd_secretario_escolar;
     public $qtd_auxiliar_administrativo;
     public $qtd_apoio_pedagogico;
@@ -525,6 +541,7 @@ class indice extends clsCadastro
             '/modules/Portabilis/Assets/Javascripts/Utils.js',
             '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
             '/modules/Cadastro/Assets/Javascripts/Escola.js',
+            '/modules/Cadastro/Assets/Javascripts/SchoolManagersModal.js',
         );
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
         $styles = array('/modules/Cadastro/Assets/Stylesheets/Escola.css');
@@ -949,13 +966,6 @@ class indice extends clsCadastro
 
             $this->campoCnpj("cnpj_mantenedora_principal", "CNPJ da mantenedora principal da escola privada", $this->cnpj_mantenedora_principal);
 
-            $hiddenInputOptions = array('options' => array('value' => $this->gestor_id));
-            $helperOptions = array('objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions);
-            $options = array('label' => 'Gestor escolar',
-                'required' => $obrigarCamposCenso,
-                'size' => 50);
-            $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
-
             $hiddenInputOptions = array('options' => array('value' => $this->secretario_id));
             $helperOptions = array('objectName' => 'secretario', 'hiddenInputOptions' => $hiddenInputOptions);
             $options = array('label' => 'Secretário escolar',
@@ -963,14 +973,17 @@ class indice extends clsCadastro
                 'required' => false);
             $this->inputsHelper()->simpleSearchPessoa('nome', $options, $helperOptions);
 
-            $resources = array(1 => 'Diretor',
-                2 => 'Outro cargo');
-            $options = array('label' => 'Cargo do gestor escolar', 'resources' => $resources, 'value' => $this->cargo_gestor, 'required' => $obrigarCamposCenso, 'size' => 50);
-            $this->inputsHelper()->select('cargo_gestor', $options);
+            $resources = SelectOptions::esferasAdministrativasEscola();
+            $options = [
+                'label' => 'Esfera administrativa do conselho ou órgão responsável pela Regulamentação/Autorização',
+                'resources' => $resources,
+                'value' => $this->esfera_administrativa,
+                'required' => false,
+            ];
+            $this->inputsHelper()->select('esfera_administrativa', $options);
 
-            $options = array('label' => 'E-mail do gestor escolar', 'value' => $this->email_gestor, 'required' => $obrigarCamposCenso, 'size' => 50);
-
-            $this->inputsHelper()->text('email_gestor', $options);
+            $this->campoQuebra();
+            $this->addSchoolManagersTable();
 
             if ($_POST["escola_curso"]) {
                 $this->escola_curso = unserialize(urldecode($_POST["escola_curso"]));
@@ -1665,6 +1678,8 @@ class indice extends clsCadastro
             return false;
         }
 
+        $this->validateManagersRules();
+
         for ( $i = 1; $i <= 6; $i++) {
             $seq = $i == 1 ? '' : $i;
             $campo = 'codigo_inep_escola_compartilhada'.$seq;
@@ -1830,6 +1845,8 @@ class indice extends clsCadastro
                                     return false;
                                 }
                             }
+
+                            $this->storeManagers($cod_escola);
                         }
                         //-----------------------FIM CADASTRA CURSO------------------------//
                     } else {
@@ -1964,9 +1981,14 @@ class indice extends clsCadastro
                                 return false;
                             }
                         }
+
+                        $this->storeManagers($cod_escola);
                     }
                     $this->saveInep($escola['cod_escola']);
                     //-----------------------FIM CADASTRA CURSO------------------------//
+
+
+
                     $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 
                     throw new HttpResponseException(
@@ -2004,6 +2026,8 @@ class indice extends clsCadastro
         if (!$this->validaCamposCenso()) {
             return false;
         }
+
+        $this->validateManagersRules();
 
         for ( $i = 1; $i <= 6; $i++) {
             $seq = $i == 1 ? '' : $i;
@@ -2305,6 +2329,9 @@ class indice extends clsCadastro
                                 }
                             }
                         }
+
+                        $this->storeManagers($this->cod_escola);
+
                         $this->saveInep($this->cod_escola);
                         //-----------------------FIM EDITA CURSO------------------------//
                         $this->mensagem .= "Edição efetuada com sucesso.<br>";
@@ -2339,6 +2366,9 @@ class indice extends clsCadastro
                             }
                         }
                     }
+
+                    $this->storeManagers($this->cod_escola);
+
                     $this->saveInep($this->cod_escola);
                     //-----------------------FIM EDITA CURSO------------------------//
                     $this->mensagem .= "Edição efetuada com sucesso.<br>";
@@ -2420,6 +2450,7 @@ class indice extends clsCadastro
                 $this->validaEsferaAdministrativa() &&
                 $this->validaDigitosInepEscola($this->inep_escola_sede, 'Código escola sede') &&
                 $this->inepEscolaSedeDiferenteDaEscolaPrincipal() &&
+                $this->validateCensusManagerRules() &&
                 $this->validaEscolaCompartilhaPredio() &&
                 $this->validaSalasUtilizadasDentroEscola() &&
                 $this->validaSalasUtilizadasForaEscola() &&
@@ -2605,6 +2636,194 @@ class indice extends clsCadastro
             $this->inputsHelper()->integer('codigo_inep_escola_compartilhada'.$seq, $options);
         }
 
+    }
+
+
+    /**
+     * Cria tabela dinâmica com gestores da escola
+     */
+    protected function addSchoolManagersTable()
+    {
+        /** @var SchoolManagerService $schoolService */
+        $schoolService = app(SchoolManagerService::class);
+        $managers = $schoolService->getSchoolManagers($this->cod_escola);
+
+        if (old('servidor_id')) {
+            foreach (old('servidor_id') as $key => $value) {
+                $rows[] = [
+                    old('managers_inep_id')[$key],
+                    old('managers_individual_nome')[$key],
+                    old('managers_role_id')[$key],
+                    null,
+                    old('managers_chief')[$key],
+                    old('servidor_id')[$key],
+                    old('managers_access_criteria_id')[$key],
+                    old('managers_access_criteria_description')[$key],
+                    old('managers_link_type_id')[$key],
+                    old('managers_email')[$key],
+                ];
+            }
+        } else {
+            $rows = [];
+            foreach ($managers as $key => $manager) {
+                $rows[] = $this->makeRowManagerTable($key, $manager);
+            }
+        }
+
+        $this->campoTabelaInicio('gestores', 'Gestores escolares',
+            [
+                'INEP',
+                'Nome do(a) gestor(a)',
+                'Cargo do(a) gestor(a)',
+                'Detalhes',
+                'Principal',
+            ],
+            $rows
+        );
+
+        $this->campoTexto('managers_inep_id', null, null, null, 12);
+
+        $this->inputsHelper()->simpleSearchServidor(null, ['required' => false, 'placeholder' => 'asdasd']);
+        $options = [
+            'resources' => SelectOptions::schoolManagerRoles(),
+            'required' => false,
+        ];
+        $this->inputsHelper()->select('managers_role_id', $options);
+        $this->campoRotulo('detalhes', 'Detalhes', '<a class="btn-detalhes" onclick="modalOpen(this)">Dados adicionais do gestor(a)</a>');
+        $this->campoOculto('managers_access_criteria_id', null);
+        $this->campoOculto('managers_access_criteria_description', null);
+        $this->campoOculto('managers_link_type_id', null);
+        $this->campoOculto('managers_email', null);
+
+        $resources = [
+                0 => 'Não',
+                1 => 'Sim',
+            ];
+        $options =
+            [
+                'resources' => $resources,
+                'required' => false
+            ];
+        $this->inputsHelper()->select('managers_chief', $options);
+
+        $this->campoTabelaFim();
+    }
+
+    /**
+     * @param SchoolManager $schoolManager
+     * @return array
+     */
+    protected function makeRowManagerTable($key, $schoolManager)
+    {
+        return [
+            $this->managers_inep_id[$key] ?? $schoolManager->employee->inep->number,
+            $this->managers_individual_nome[$key] ?? $schoolManager->individual->real_name,
+            $this->managers_role_id[$key] ?? $schoolManager->role_id,
+            null,
+            $this->managers_chief[$key] ?? (int)$schoolManager->chief,
+            $this->servidor_id[$key] ?? $schoolManager->employee_id,
+            $this->managers_access_criteria_id[$key] ?? $schoolManager->access_criteria_id,
+            $this->managers_access_criteria_description[$key] ?? $schoolManager->access_criteria_description,
+            $this->managers_link_type_id[$key] ?? $schoolManager->link_type_id,
+            $this->managers_email[$key] ?? $schoolManager->individual->person->email,
+        ];
+    }
+
+    /**
+     * Salva os gestores da escola
+     * @param $schoolId
+     */
+    protected function storeManagers($schoolId)
+    {
+//        dd($this);
+        /** @var SchoolManagerService $schoolService */
+        $schoolService = app(SchoolManagerService::class);
+        $schoolService->deleteAllManagers($schoolId);
+        foreach($this->servidor_id as $key => $employeeId) {
+            if (empty($employeeId)) {
+                continue;
+            }
+
+            $valueObject = new SchoolManagerValueObject();
+            $valueObject->employeeId = $employeeId;
+            $valueObject->schoolId = $schoolId;
+            $valueObject->roleId = $this->managers_role_id[$key] ?: null;
+            $valueObject->accessCriteriaId = $this->managers_access_criteria_id[$key] ?: null;
+            $valueObject->accessCriteriaDescription = $this->managers_access_criteria_description[$key];
+            $valueObject->linkTypeId = $this->managers_link_type_id[$key] ?: null;
+            $valueObject->isChief = $this->managers_chief[$key];
+            $schoolService->storeManager($valueObject);
+
+            if ($this->managers_email[$key]){
+                $this->storeManagerEmail($employeeId, $this->managers_email[$key]);
+            }
+
+            if ($this->managers_inep_id[$key]) {
+                $this->storeInepCode($employeeId, $this->managers_inep_id[$key]);
+            }
+        }
+    }
+
+    protected function storeManagerEmail($employeeId, $email)
+    {
+        $person = LegacyPerson::find($employeeId);
+        $person->email = $email;
+        $person->save();
+    }
+
+    protected function storeInepCode($employeeId, $inepCode)
+    {
+        $employeeInep = EmployeeInep::firstOrNew(
+            ['cod_servidor' => $employeeId]
+        );
+        $employeeInep->cod_docente_inep = $inepCode;
+        $employeeInep->save();
+    }
+
+    /**
+     * Valida as regras gerais dos gestores da escola
+     */
+    protected function validateManagersRules()
+    {
+        request()->validate(
+            [
+                'servidor_id' => ['max:3', new SchoolManagerUniqueIndividuals()],
+                'managers_chief' => new SchoolManagerAtLeastOneChief(),
+                'managers_inep_id.*' => 'nullable|size:12',
+            ],
+            [
+                'servidor_id.max' => 'Informe no máximo 3 Gestores escolares',
+                'managers_inep_id.*.size' => 'O campo: Código INEP do gestor(a) deve conter 12 dígitos'
+            ]);
+    }
+
+    /**
+     * Valida as regras do censo referentes aos gestores da escola
+     * @return bool
+     */
+    protected function validateCensusManagerRules()
+    {
+        $managers = [];
+        foreach ($this->servidor_id as $key => $value) {
+            $valueObject = new SchoolManagerValueObject();
+            $valueObject->employeeId = $this->servidor_id[$key];
+            $valueObject->inepId = $this->managers_inep_id[$key];
+            $valueObject->roleId = $this->managers_role_id[$key];
+            $valueObject->accessCriteriaId = $this->managers_access_criteria_id[$key];
+            $valueObject->accessCriteriaDescription = $this->managers_access_criteria_description[$key];
+            $valueObject->linkTypeId = $this->managers_link_type_id[$key];
+            $valueObject->isChief = $this->managers_chief[$key];
+            $managers[] = $valueObject;
+        }
+
+        $managersValidator = new SchoolManagers($managers, $this->dependencia_administrativa);
+
+        if (!$managersValidator->isValid()) {
+            $this->mensagem = implode('<br>', $managersValidator->getMessage());
+            return false;
+        }
+
+        return true;
     }
 
     protected function validaEscolaCompartilhaPredio()
