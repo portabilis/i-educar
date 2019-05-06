@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
+use iEducar\Modules\Educacenso\Validator\InepExamValidator;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
@@ -225,7 +226,8 @@ class AlunoController extends ApiCoreController
         return (
             parent::canPost() &&
             $this->validatesUniquenessOfAlunoByPessoaId() &&
-            $this->validateDeficiencies()
+            $this->validateDeficiencies() &&
+            $this->validateInepExam()
         );
     }
 
@@ -233,7 +235,8 @@ class AlunoController extends ApiCoreController
     {
         return (
             parent::canPut() &&
-            $this->validateDeficiencies()
+            $this->validateDeficiencies()&&
+            $this->validateInepExam()
         );
     }
 
@@ -245,6 +248,24 @@ class AlunoController extends ApiCoreController
 
         $deficiencias = array_filter((array) $this->getRequest()->deficiencias);
         $validator = new DeficiencyValidator($deficiencias);
+
+        if ($validator->isValid()) {
+            return true;
+        } else {
+            $this->messenger->append($validator->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    private function validateInepExam()
+    {
+
+        $resources = array_filter((array) $this->getRequest()->recursos_prova_inep__);
+        $deficiencies = array_filter((array) $this->getRequest()->deficiencias);
+        $validator = new InepExamValidator($resources, $deficiencies);
 
         if ($validator->isValid()) {
             return true;
