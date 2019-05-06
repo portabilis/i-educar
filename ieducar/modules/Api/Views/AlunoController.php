@@ -1745,9 +1745,9 @@ class AlunoController extends ApiCoreController
     protected function createOrUpdatePessoa($idPessoa)
     {
         $fisica = new clsFisica($idPessoa);
-        $fisica->cpf = idFederal2int($this->getRequest()->id_federal);
+        $fisica->cpf = $this->getRequest()->id_federal ? idFederal2int($this->getRequest()->id_federal) : 'NULL';
         $fisica->ref_cod_religiao = $this->getRequest()->religiao_id;
-        $fisica->nis_pis_pasep = $this->getRequest()->nis_pis_pasep;
+        $fisica->nis_pis_pasep = $this->getRequest()->nis_pis_pasep ?: 'NULL';
         $fisica = $fisica->edita();
     }
 
