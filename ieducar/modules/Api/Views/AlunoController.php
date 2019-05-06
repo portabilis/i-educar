@@ -262,7 +262,6 @@ class AlunoController extends ApiCoreController
      */
     private function validateInepExam()
     {
-
         $resources = array_filter((array) $this->getRequest()->recursos_prova_inep__);
         $deficiencies = array_filter((array) $this->getRequest()->deficiencias);
         $validator = new InepExamValidator($resources, $deficiencies);
