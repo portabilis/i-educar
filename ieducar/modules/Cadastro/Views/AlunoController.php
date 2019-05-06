@@ -1256,9 +1256,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->multipleSearchCustom('_', $options, $helperOptions);
 
         $selectOptions = array(
-            3 => 'Não recebe',
-            1 => 'Em hospital',
-            2 => 'Em domicílio'
+            1 => 'Não recebe escolarização fora da escola',
+            2 => 'Em domicílio',
+            3 => 'Em hospital',
         );
 
         $options = array(
