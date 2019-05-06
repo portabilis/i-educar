@@ -1077,7 +1077,7 @@ var handleGetPersonDetails = function (dataResponse) {
     $j('#uf_emissao_certidao_civil').val(dataResponse.sigla_uf_cert_civil);
     $j('#data_emissao_certidao_civil').val(dataResponse.data_emissao_cert_civil);
     $j('#cartorio_emissao_certidao_civil').val(dataResponse.cartorio_cert_civil);
-
+    checkJustificativa();
     // # TODO show aluno photo
     //$j('#aluno_foto').val(dataResponse.url_foto);
     canShowParentsFields();

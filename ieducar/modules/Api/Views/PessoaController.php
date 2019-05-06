@@ -196,10 +196,9 @@ class PessoaController extends ApiCoreController
         $details = $this->fetchPreparedQuery($sql, [$alunoId, $pessoaId], false, 'first-row');
 
         $details['possui_documento'] = !(
-            is_null($details['rg']) &&
-            is_null($details['cpf']) &&
-            is_null($details['nis_pis_pasep']) &&
-            is_null($details['certidao_nascimento'])
+            empty($details['cpf']) &&
+            empty($details['nis_pis_pasep']) &&
+            empty($details['certidao_nascimento'])
         );
 
         $attrs = [
