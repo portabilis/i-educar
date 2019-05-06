@@ -283,7 +283,6 @@ function showExpansivel( largura, altura, conteudo )
 
 
 	centralizaExpansivel(expansivel);
-	// document.onscroll = function() { centralizaExpansivel(); };
 }
 
 function showExpansivelIframe( largura, altura, URL, fecha )
