@@ -268,10 +268,10 @@ class AlunoController extends ApiCoreController
 
         if ($validator->isValid()) {
             return true;
-        } else {
-            $this->messenger->append($validator->getMessage());
-            return false;
         }
+
+        $this->messenger->append($validator->getMessage());
+        return false;
     }
 
     protected function canGetOcorrenciasDisciplinares()
