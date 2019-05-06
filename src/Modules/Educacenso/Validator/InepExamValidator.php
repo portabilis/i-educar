@@ -60,10 +60,10 @@ class InepExamValidator implements EducacensoValidator
             ]
         )) {
             return true;
-        } else {
-            $this->setDefaultErrorMessage();
-            return false;
         }
+
+        $this->setDefaultErrorMessage();
+        return false;
     }
 
     /**
@@ -104,10 +104,10 @@ class InepExamValidator implements EducacensoValidator
             ]
         )) {
             return true;
-        } else {
-            $this->setDefaultErrorMessage();
-            return false;
         }
+
+        $this->setDefaultErrorMessage();
+        return false;
     }
 
     /**
@@ -135,10 +135,10 @@ class InepExamValidator implements EducacensoValidator
 
         if ($valid) {
             return true;
-        } else {
-            $this->setDefaultErrorMessage();
-            return false;
         }
+
+        $this->setDefaultErrorMessage();
+        return false;
     }
 
     /**
@@ -153,10 +153,10 @@ class InepExamValidator implements EducacensoValidator
             ]
         )) {
             return true;
-        } else {
-            $this->setDefaultErrorMessage();
-            return false;
         }
+
+        $this->setDefaultErrorMessage();
+        return false;
     }
 
     /**
@@ -175,10 +175,10 @@ class InepExamValidator implements EducacensoValidator
             ]
         )) {
             return true;
-        } else {
-            $this->setDefaultErrorMessage();
-            return false;
         }
+
+        $this->setDefaultErrorMessage();
+        return false;
     }
 
     /**
@@ -197,10 +197,10 @@ class InepExamValidator implements EducacensoValidator
             ]
         )) {
             return true;
-        } else {
-            $this->setDefaultErrorMessage();
-            return false;
         }
+
+        $this->setDefaultErrorMessage();
+        return false;
     }
 
     /**
@@ -218,10 +218,10 @@ class InepExamValidator implements EducacensoValidator
             ]
         )) {
             return true;
-        } else {
-            $this->setDefaultErrorMessage();
-            return false;
         }
+
+        $this->setDefaultErrorMessage();
+        return false;
     }
 
     /**
@@ -239,10 +239,10 @@ class InepExamValidator implements EducacensoValidator
             ]
         )) {
             return true;
-        } else {
-            $this->setDefaultErrorMessage();
-            return false;
         }
+
+        $this->setDefaultErrorMessage();
+        return false;
     }
 
     /**
@@ -264,10 +264,10 @@ class InepExamValidator implements EducacensoValidator
             ]
         )) {
             return true;
-        } else {
-            $this->setDefaultErrorMessage();
-            return false;
         }
+
+        $this->setDefaultErrorMessage();
+        return false;
     }
 
     /**
@@ -286,10 +286,10 @@ class InepExamValidator implements EducacensoValidator
             ]
         )) {
             return true;
-        } else {
-            $this->setDefaultErrorMessage();
-            return false;
         }
+
+        $this->setDefaultErrorMessage();
+        return false;
     }
 
     /**
@@ -308,10 +308,10 @@ class InepExamValidator implements EducacensoValidator
             ]
         )) {
             return true;
-        } else {
-            $this->setDefaultErrorMessage();
-            return false;
         }
+
+        $this->setDefaultErrorMessage();
+        return false;
     }
     /**
      * @return bool
@@ -327,10 +327,10 @@ class InepExamValidator implements EducacensoValidator
             []
         )) {
             return true;
-        } else {
-            $this->setDefaultErrorMessage();
-            return false;
         }
+
+        $this->setDefaultErrorMessage();
+        return false;
     }
 
     /**
