@@ -290,13 +290,13 @@ class SequencialEnturmacao
             '
                 SELECT sequencial_fechamento
                 FROM pmieducar.matricula_turma
-                INNER JOIN pmieducar.matricula 
+                INNER JOIN pmieducar.matricula
                 ON matricula.cod_matricula = matricula_turma.ref_cod_matricula
                 WHERE matricula.ativo = 1
                 AND ref_cod_matricula = ?
                 AND ref_cod_turma = ?
                 AND (
-                    CASE 
+                    CASE
                         WHEN matricula_turma.ativo = 1 THEN TRUE
                         WHEN matricula_turma.transferido THEN TRUE
                         WHEN matricula_turma.remanejado THEN TRUE
