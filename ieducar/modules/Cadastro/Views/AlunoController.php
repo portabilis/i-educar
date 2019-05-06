@@ -13,6 +13,7 @@ require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
 require_once 'Portabilis/String/Utils.php';
 
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
+use iEducar\Modules\Educacenso\Model\RecursosRealizacaoProvas;
 
 class AlunoController extends Portabilis_Controller_Page_EditController
 {
@@ -280,7 +281,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         /************
          * PROVA INEP
          ************/
-        'recursos_prova_inep' => array('label' => 'Recursos prova INEP'),
+        'recursos_prova_inep' => array('label' => 'Recursos necessários para realização de provas'),
 
         'recebe_escolarizacao_em_outro_espaco' => array('label' => 'Recebe escolarização em outro espaço (diferente da escola)'),
 
@@ -1259,20 +1260,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('lixo')), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('lixo', $options);
 
-        $recursosProvaInep = array(
-            1 => 'Auxílio ledor',
-            2 => 'Auxílio transcrição',
-            3 => 'Guia-intérprete',
-            4 => 'Intérprete de LIBRAS',
-            5 => 'Leitura labial',
-            6 => 'Prova ampliada (Fonte 16)',
-            7 => 'Prova ampliada (Fonte 20)',
-            8 => 'Prova ampliada (Fonte 24)',
-            9 => 'Prova em Braille'
-        );
+        $recursosProvaInep = RecursosRealizacaoProvas::getDescriptiveValues();
         $helperOptions = array('objectName'  => 'recursos_prova_inep');
         $options = array(
-            'label' => 'Recursos prova INEP',
+            'label' => $this->_getLabel('recursos_prova_inep'),
+            'label_hint' => '<a href="#" class="open-dialog-recursos-prova-inep">Regras do preenchimento dos recursos necessários para realização de provas</a>',
             'size' => 50,
             'required' => false,
             'options' => array(

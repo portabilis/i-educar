@@ -1696,6 +1696,55 @@ function canShowParentsFields() {
 
         `);
 
+        $j('body').append(`
+          <div id="dialog-recursos-prova-inep" style="font-size: 85%;">
+          <ul style="padding-right: 30px;">
+            <li>Dentre as opções: Prova Ampliada (Fonte 18), Prova superampliada (Fonte 24) ou Material didático e Prova em Braille, apenas uma deve ser informada;</li>
+            <li><b>Auxílio ledor</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira, Baixa visão, Surdocegueira, Deficiência física, Deficiência intelectual e Transtorno do espectro autista. <b>Exceto</b> se possuir também Surdez;</li>
+            <li><b>Auxílio transcrição</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira, Baixa visão, Surdocegueira, Deficiência física, Deficiência intelectual e Transtorno do espectro autista. Obs.: Quando a deficiência for Cegueira ou Surdocegueira, obrigatoriamente este auxílio deve ser informado junto com um outro auxílio;</li>
+            <li><b>Guia-Intérprete</b>: pode ser informado quando o(a) aluno(a) possuir qualquer deficiência. <b>Exceto</b> se possuir Surdocegueira</li>
+            <li><b>Tradutor-Intérprete de Libras</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
+            <li><b>Leitura Labia</b>l: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
+            <li><b>Prova Ampliada (Fonte 18)</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Baixa visão e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
+            <li><b>Prova superampliada (Fonte 24)</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Baixa visão e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
+            <li><b>CD com áudio para deficiente visual</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira, Baixa visão, Surdocegueira, Deficiência física, Deficiência intelectual e Transtorno do espectro autista. <b>Exceto</b> se possuir também Surdez;</li>
+            <li><b>Prova de Língua Portuguesa como segunda língua para surdos e deficientes auditivos</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
+            <li><b>Prova em Vídeo em Libras</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
+            <li><b>Material didático e Prova em Braille</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira e Surdocegueira;</li>
+            <li><b>Nenhum</b>: não pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira e Surdocegueira;</li>
+           </ul>
+          </div>
+
+        `);
+
+        $j("#dialog-recursos-prova-inep").dialog({
+          autoOpen: false,
+          title: 'Regras para o preenchimento do campo: Recursos necessários para realização de provas:',
+          height: 'auto',
+          width: '80%',
+          modal: true,
+          resizable: false,
+          draggable: false,
+          hide: {
+            effect: "clip",
+            duration: 500
+          },
+          show: {
+            effect: "clip",
+            duration: 500
+          },
+          buttons: {
+            "Fechar": function () {
+              $j(this).dialog("close");
+            }
+          }
+        });
+        $j('body').on('click', '.open-dialog-recursos-prova-inep', () => {
+          $j("#dialog-recursos-prova-inep").dialog('open');
+        });
+
+        $j('.ui-dialog:has(#dialog-recursos-prova-inep) .ui-dialog-titlebar').show();
+
         var name = $j("#nome-pessoa-aluno"),
             nome_social = $j("#nome-social-pessoa-aluno"),
             sexo = $j("#sexo-pessoa-aluno"),
@@ -1872,7 +1921,6 @@ function canShowParentsFields() {
             modal: true,
             resizable: false,
             draggable: false,
-            title: "teste",
             buttons: {
                 "Gravar": function () {
                     var bValid = true;
