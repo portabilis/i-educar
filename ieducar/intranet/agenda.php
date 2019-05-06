@@ -24,6 +24,11 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/clsAgenda.inc.php");
@@ -43,7 +48,7 @@ class clsIndex extends clsBase
     }
 }
 
-class indice
+class indice extends clsCadastro
 {
     var $agenda;
     var $editor;
@@ -64,9 +69,10 @@ class indice
         $db = new clsBanco();
         $db2 = new clsBanco();
         // inicializacao de variaveis
-        @session_start();
-        $this->editor = $_SESSION['id_pessoa'];
-        session_write_close();
+        $this->editor = Session::get('id_pessoa');
+
+        Portabilis_View_Helper_Application::loadJavascript($this, "/intranet/scripts/agenda.js");
+        Portabilis_View_Helper_Application::loadStylesheet($this, "/intranet/styles/agenda.css");
 
         if( $_REQUEST["cod_agenda"] )
         {
@@ -82,8 +88,9 @@ class indice
         // Checa se a pessoa possui permissao (daqui por diante comeca a visualizar, editar, excluir, etc.)
         if( ! $objAgenda->permissao_agenda() )
         {
-            header( "location: " . $this->scriptNome );
-            die();
+            throw new HttpResponseException(
+                new RedirectResponse( $this->scriptNome)
+            );
         }
 
         if( isset( $_REQUEST["time"] ) )
@@ -396,7 +403,7 @@ class indice
                                     <div>
                                         <i class=\"fa fa-pencil\" aria-hidden=\"true\"></i> Editar
                                     </div></a>
-                                <a class=\"small\" href=\"javascript: excluir( {$cod_agenda_compromisso} );\">
+                                <a class=\"small\" href=\"javascript: excluir_compromisso( {$cod_agenda_compromisso} );\">
                                 <div>
                                         <i class=\"fa fa-close\" aria-hidden=\"true\"></i> Excluir
                                 </div></a>";

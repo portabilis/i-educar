@@ -32,9 +32,7 @@ class indice extends clsCadastro
 
     public function Inicializar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->cod_matricula = $_GET["ref_cod_matricula"];
         $this->ref_cod_aluno = $_GET["ref_cod_aluno"];
@@ -80,10 +78,6 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $this->validaPermissao();
         $this->validaParametros();
 
@@ -99,7 +93,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem .= "Etapas atualizadas com sucesso.<br>";
-        return true;
+        $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->cod_matricula}");
     }
 
     private function montaLocalizacao()
@@ -125,7 +119,7 @@ class indice extends clsCadastro
         $det_matricula = $obj_matricula->detalhe();
 
         if (!$det_matricula) {
-            header("location: educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
     }

@@ -76,10 +76,6 @@ class indice extends clsListagem
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = "Hist&oacute;rico Escolar - Listagem";
 
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
@@ -89,8 +85,7 @@ class indice extends clsListagem
 
         if ( !$this->ref_cod_aluno )
         {
-            header( "location: educar_aluno_lst.php" );
-            die();
+            $this->simpleRedirect('educar_aluno_lst.php');
         }
 
 

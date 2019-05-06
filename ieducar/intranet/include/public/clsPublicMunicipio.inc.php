@@ -554,6 +554,9 @@ class clsPublicMunicipio
             {
                 $set .= "{$gruda}cod_ibge = '{$this->cod_ibge}'";
                 $gruda = ", ";
+            } elseif (is_null($this->cod_ibge)) {
+                $set .= "{$gruda}cod_ibge = NULL";
+                $gruda = ", ";
             }
             if( is_string( $this->geom ) )
             {

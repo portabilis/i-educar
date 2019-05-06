@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 require_once 'image_check.php';
 require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
@@ -515,7 +517,7 @@ class AlunoController extends ApiCoreController
         $aluno->recursos_prova_inep = $recursosProvaInep;
         $aluno->recebe_escolarizacao_em_outro_espaco = $this->getRequest()->recebe_escolarizacao_em_outro_espaco;
         $aluno->justificativa_falta_documentacao = $this->getRequest()->justificativa_falta_documentacao;
-        $aluno->veiculo_transporte_escolar = $this->getRequest()->veiculo_transporte_escolar;
+        $aluno->veiculo_transporte_escolar = implode(',', array_filter($this->getRequest()->veiculo_transporte_escolar));
 
         $this->file_foto = $_FILES['file'];
         $this->del_foto = $_POST['file_delete'];
@@ -831,7 +833,6 @@ class AlunoController extends ApiCoreController
                             end
                     )
                     and (matricula.ref_cod_aluno::varchar(255) like $1||\'%\')
-                    and matricula.aprovado in (1, 2, 3, 4, 7, 8, 9)
                 limit 15
             ) as alunos
             order by
@@ -1071,7 +1072,7 @@ class AlunoController extends ApiCoreController
             $aluno['parentesco_quatro'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_quatro']);
             $aluno['autorizado_cinco'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_cinco']);
             $aluno['parentesco_cinco'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_cinco']);
-
+            $aluno['veiculo_transporte_escolar'] = Portabilis_Utils_Database::pgArrayToArray($aluno['veiculo_transporte_escolar']);
             $aluno['alfabetizado'] = $aluno['analfabeto'] == 0;
             unset($aluno['analfabeto']);
 
@@ -1667,7 +1668,6 @@ class AlunoController extends ApiCoreController
         $documentos->sigla_uf_cert_civil = $this->getRequest()->uf_emissao_certidao_civil;
         $documentos->cartorio_cert_civil = addslashes($this->getRequest()->cartorio_emissao_certidao_civil);
         $documentos->passaporte = addslashes($this->getRequest()->passaporte);
-        $documentos->cartorio_cert_civil_inep = $this->getRequest()->cartorio_cert_civil_inep_id;
 
         // Alteração de documentos compativel com a versão anterior do cadastro,
         // onde era possivel criar uma pessoa, não informando os documentos,
@@ -1693,20 +1693,18 @@ class AlunoController extends ApiCoreController
 
     protected function loadAcessoDataEntradaSaida()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        $this->pessoa_logada = Session::get('id_pessoa');
+
         $acesso = new clsPermissoes();
-        session_write_close();
 
         return $acesso->permissao_cadastra(626, $this->pessoa_logada, 7, null, true);
     }
 
     protected function isUsuarioAdmin()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        $isAdmin = ($this->pessoa_logada == 1);
-        session_write_close();
+        $this->pessoa_logada = Session::get('id_pessoa');
+
+        $isAdmin = $this->pessoa_logada == 1;
 
         return $isAdmin;
     }

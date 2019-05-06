@@ -70,9 +70,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $this->ref_cod_matricula = $_GET["ref_cod_matricula"];
 
@@ -237,9 +235,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_ocorrencia_disciplinar_lst.php" );
@@ -277,12 +273,13 @@ class indice extends clsCadastro
 
             }
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            if ($voltaListagem)
-                header( "Location: educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}" );
-            else
+            if ($voltaListagem) {
+                $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
+            } else {
                 echo "<script language='javascript' type='text/javascript'>alert('Cadastro efetuado com sucesso.');</script>";
                 echo "<script language='javascript' type='text/javascript'>window.location.href='educar_matricula_ocorrencia_disciplinar_cad.php'</script>";
-                //header( "Location: educar_matricula_ocorrencia_disciplinar_cad.php");
+            }
+
             return true;
         }
 
@@ -293,9 +290,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_ocorrencia_disciplinar_lst.php" );
@@ -320,12 +315,11 @@ class indice extends clsCadastro
             $auditoria->alteracao($ocorrenciaDisciplinarDetalheAntes, $ocorrenciaDisciplinarDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            if ($voltaListagem)
-                header( "Location: educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}" );
-            else
-                header( "Location: educar_matricula_ocorrencia_disciplinar_cad.php");
-            die();
-            return true;
+            if ($voltaListagem) {
+                $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
+            } else {
+                $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_cad.php");
+            }
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -335,9 +329,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 578, $this->pessoa_logada, 7,  "educar_matricula_ocorrencia_disciplinar_lst.php" );
@@ -355,9 +347,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($ocorrenciaDisciplinar);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}" );
-            die();
-            return true;
+            $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

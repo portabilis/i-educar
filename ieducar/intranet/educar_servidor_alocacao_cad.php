@@ -40,6 +40,7 @@ class indice extends clsCadastro
     public $ref_cod_funcionario_vinculo;
     public $ano;
     public $data_admissao;
+    public $data_saida;
     public $alocacao_array          = [];
     public $alocacao_excluida_array = [];
 
@@ -49,9 +50,7 @@ class indice extends clsCadastro
     public function Inicializar()
     {
         $retorno = 'Novo';
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         $ref_cod_servidor        = $_GET['ref_cod_servidor'];
         $ref_ref_cod_instituicao = $_GET['ref_cod_instituicao'];
@@ -73,6 +72,7 @@ class indice extends clsCadastro
             $this->ativo                       = $servidorAlocacao['ativo'];
             $this->ano                         = $servidorAlocacao['ano'];
             $this->data_admissao               = $servidorAlocacao['data_admissao'];
+            $this->data_saida                  = $servidorAlocacao['data_saida'];
             $this->hora_inicial                = $servidorAlocacao['hora_inicial'];
             $this->hora_final                  = $servidorAlocacao['hora_final'];
             $this->hora_atividade              = $servidorAlocacao['hora_atividade'];
@@ -82,8 +82,7 @@ class indice extends clsCadastro
             $this->ref_cod_servidor        = $ref_cod_servidor;
             $this->ref_cod_instituicao = $ref_ref_cod_instituicao;
         } else {
-            header('Location: educar_servidor_lst.php');
-            die();
+            $this->simpleRedirect('educar_servidor_lst.php');
         }
 
         $obj_permissoes = new clsPermissoes();
@@ -178,6 +177,16 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->date('data_admissao', $options);
 
+        $options = [
+            'label' => 'Data de saída',
+            'placeholder' => 'dd/mm/yyyy',
+            'hint' => 'A data deve estar em branco ou fora do período de datas da exportação para o Educacenso, para o servidor ser exportado.',
+            'value' => $this->data_saida,
+            'required' => false,
+        ];
+
+        $this->inputsHelper()->date('data_saida', $options);
+
         // Funções
         $obj_funcoes = new clsPmieducarServidorFuncao();
 
@@ -209,9 +218,6 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
@@ -222,6 +228,7 @@ class indice extends clsCadastro
         );
 
         $dataAdmissao = $this->data_admissao ? Portabilis_Date_Utils::brToPgSql($this->data_admissao) : null;
+        $dataSaida = $this->data_saida ? Portabilis_Date_Utils::brToPgSql($this->data_saida) : null;
 
         $servidorAlocacao = new clsPmieducarServidorAlocacao(
             $this->cod_servidor_alocacao,
@@ -265,7 +272,8 @@ class indice extends clsCadastro
                 $this->hora_inicial,
                 $this->hora_final,
                 $this->hora_atividade,
-                $this->horas_excedentes
+                $this->horas_excedentes,
+                $dataSaida
             );
 
             if ($obj_novo->periodoAlocado()) {
@@ -298,8 +306,8 @@ class indice extends clsCadastro
         }
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-        header('Location: ' . sprintf('educar_servidor_alocacao_det.php?cod_servidor_alocacao=%d', $this->cod_servidor_alocacao));
-        die();
+        $this->simpleRedirect(sprintf('educar_servidor_alocacao_det.php?cod_servidor_alocacao=%d', $this->cod_servidor_alocacao));
+
     }
 
     public function Editar()
@@ -309,9 +317,7 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+
 
         if ($this->cod_servidor_alocacao) {
             $obj_tmp = new clsPmieducarServidorAlocacao($this->cod_servidor_alocacao, null, $this->pessoa_logada);
@@ -319,8 +325,7 @@ class indice extends clsCadastro
 
             if ($excluiu) {
                 $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
-                header('Location: '. sprintf('educar_servidor_alocacao_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d', $this->ref_cod_servidor, $this->ref_ref_cod_instituicao));
-                die();
+                $this->simpleRedirect(sprintf('educar_servidor_alocacao_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d', $this->ref_cod_servidor, $this->ref_ref_cod_instituicao));
             }
         }
 

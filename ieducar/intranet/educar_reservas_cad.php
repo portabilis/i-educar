@@ -24,6 +24,9 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -72,11 +75,8 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
-            $this->ref_cod_cliente = $_SESSION['reservas']['cod_cliente'];
-            $this->ref_cod_biblioteca = $_SESSION['reservas']['ref_cod_biblioteca'];
-        @session_write_close();
+        $this->ref_cod_cliente = Session::get('reservas.cod_cliente');
+        $this->ref_cod_biblioteca = Session::get('reservas.ref_cod_biblioteca');
 
         $this->cod_reserva=$_GET["cod_reserva"];
 
@@ -85,8 +85,7 @@ class indice extends clsCadastro
 
         if (!isset($this->ref_cod_cliente))
         {
-            header( "Location: educar_reservas_lst.php" );
-            die();
+            $this->simpleRedirect('educar_reserva_vaga_lst.php');
         }
 
         if( is_numeric( $this->cod_reserva ) )
@@ -298,10 +297,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-         $this->ref_cod_cliente = $_SESSION['reservas']['cod_cliente'];
-        @session_write_close();
+        $this->ref_cod_cliente = Session::get('reservas.cod_cliente');
 
         if ($this->passo == 2)
             return true;
@@ -437,9 +433,7 @@ class indice extends clsCadastro
         if( $cadastrou )
         {
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_reservas_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_reservas_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";

@@ -54,10 +54,6 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = "Serie Pre Requisito - Detalhe";
         
 
@@ -70,8 +66,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_serie_pre_requisito_lst.php" );
-            die();
+            $this->simpleRedirect('educar_serie_pre_requisito_lst.php');
         }
 
         if( class_exists( "clsPmieducarSerie" ) )

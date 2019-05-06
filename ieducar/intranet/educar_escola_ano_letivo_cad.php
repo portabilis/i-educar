@@ -80,9 +80,7 @@ class indice extends clsCadastro
   {
     $retorno = 'Novo';
 
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $this->ano            = $_GET['ano'];
     $this->ref_cod_escola = $_GET['cod_escola'];
@@ -126,11 +124,11 @@ class indice extends clsCadastro
       }
     }
 
-    $ano_atual = date('Y');
+    $ano_atual = date('Y') - 5;
 
     // Foreign keys
     $opcoes = array('' => 'Selecione');
-    $lim = 5;
+    $lim = 10;
 
     for ($i = 0; $i < $lim; $i++) {
       $ano = $ano_atual + $i;
@@ -148,9 +146,7 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7,
@@ -161,8 +157,7 @@ class indice extends clsCadastro
       $this->ref_cod_escola, $this->ano
     );
 
-    header('Location: ' . $url);
-    die();
+      $this->simpleRedirect($url);
   }
 }
 

@@ -24,6 +24,9 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -64,9 +67,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->cod_emprestimo = $_GET["cod_emprestimo"];
 
@@ -213,9 +214,7 @@ class indice extends clsCadastro
         $this->campoOculto( "ref_cod_exemplar", $this->ref_cod_exemplar );
         $this->campoTextoInv("titulo_obra", "Obra", $titulo_obra, 30, 255);
 
-        @session_start(); 
-            $reload = $_SESSION['reload'];
-        @session_write_close();
+        $reload = Session::get('reload');
 
         if ($valor_divida && !$reload )
         {
@@ -224,9 +223,9 @@ class indice extends clsCadastro
             $this->campoOculto( "valor_multa", $this->valor_multa );
 
             $reload = 1;
-            @session_start();
-                $_SESSION['reload'] = $reload;
-            @session_write_close();
+            Session::put('reload', $reload);
+            Session::save();
+            Session::start();
 
             echo "<script>
                 if(!confirm('Atraso na devolução do exemplar ($dias_atraso dias)! \\n Data prevista para a entrega: $data_entrega \\n Valor total da multa: R$$valor_divida \\n Deseja adicionar a multa?'))
@@ -244,9 +243,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 628, $this->pessoa_logada, 11,  "educar_exemplar_devolucao_lst.php" );
@@ -285,9 +282,7 @@ class indice extends clsCadastro
             }
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_exemplar_devolucao_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_exemplar_devolucao_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";

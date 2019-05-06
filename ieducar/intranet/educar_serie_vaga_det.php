@@ -28,6 +28,9 @@
  * @version   $Id$
  */
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once "include/clsBase.inc.php";
 require_once "include/clsDetalhe.inc.php";
 require_once "include/clsBanco.inc.php";
@@ -71,10 +74,6 @@ class indice extends clsDetalhe
 
   function Gerar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->titulo = 'Vagas por série - Detalhe';
     $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg',
       'Intranet');
@@ -86,8 +85,9 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->detalhe();
 
     if (!$registro) {
-      header('Location: educar_serie_vaga_lst.php');
-      die();
+        throw new HttpResponseException(
+            new RedirectResponse('educar_serie_vaga_lst.php')
+        );
     }
 
     if (class_exists('clsPmieducarSerie')) {

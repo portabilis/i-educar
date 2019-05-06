@@ -24,6 +24,10 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -66,9 +70,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $this->cod_calendario_dia_motivo=$_GET["cod_calendario_dia_motivo"];
 
@@ -138,9 +140,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmieducarCalendarioDiaMotivo( null, $this->ref_cod_escola, null, $this->pessoa_logada, $this->sigla, $this->descricao, $this->tipo, null, null, 1, $this->nm_motivo );
         $cadastrou = $obj->cadastra();
@@ -153,9 +153,9 @@ class indice extends clsCadastro
             $auditoria->inclusao($calendarioDiaMotivo);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_calendario_dia_motivo_lst.php" );
-            die();
-            return true;
+            throw new HttpResponseException(
+                new RedirectResponse('educar_calendario_dia_motivo_lst')
+            );
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -165,9 +165,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $calendarioDiaMotivoDetalhe = new clsPmieducarCalendarioDiaMotivo($this->cod_calendario_dia_motivo);
         $calendarioDiaMotivoDetalheAntes = $calendarioDiaMotivoDetalhe->detalhe();
@@ -181,9 +179,9 @@ class indice extends clsCadastro
             $auditoria->alteracao($calendarioDiaMotivoDetalheAntes, $calendarioDiaMotivoDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_calendario_dia_motivo_lst.php" );
-            die();
-            return true;
+            throw new HttpResponseException(
+                new RedirectResponse('educar_calendario_dia_motivo_lst')
+            );
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -193,9 +191,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmieducarCalendarioDiaMotivo($this->cod_calendario_dia_motivo, null, $this->pessoa_logada, null, null, null, null, null, null, 0);
         $calendarioDiaMotivo = $obj->detalhe();
@@ -206,9 +202,9 @@ class indice extends clsCadastro
             $auditoria->exclusao($calendarioDiaMotivo);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_calendario_dia_motivo_lst.php" );
-            die();
-            return true;
+            throw new HttpResponseException(
+                new RedirectResponse('educar_calendario_dia_motivo_lst')
+            );
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

@@ -24,6 +24,10 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -62,10 +66,6 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = "Material Did&aacute;tico - Detalhe";
         
 
@@ -76,8 +76,9 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_material_didatico_lst.php" );
-            die();
+            throw new HttpResponseException(
+                new RedirectResponse('educar_material_didatico_lst.php')
+            );
         }
 
         if( class_exists( "clsPmieducarMaterialTipo" ) )

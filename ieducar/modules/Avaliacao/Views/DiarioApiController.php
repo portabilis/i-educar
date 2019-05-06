@@ -2,6 +2,7 @@
 
 use Cocur\Slugify\Slugify;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
+use Illuminate\Support\Facades\Session;
 
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'Avaliacao/Model/NotaGeralDataMapper.php';
@@ -824,6 +825,14 @@ class DiarioApiController extends ApiCoreController
                 $matriculaId = $aluno['ref_cod_matricula'];
                 $turmaId = $aluno['ref_cod_turma'];
                 $serieId = $aluno['ref_ref_cod_serie'];
+                $componenteCurricularId = $this->getRequest()->componente_curricular_id;
+                $disciplinasDependenciaId = App_Model_IedFinder::getDisciplinasDependenciaPorMatricula($matriculaId, $serieId, $this->getRequest()->escola_id);
+                $objMatriculaTurma = new clsPmieducarMatriculaTurma();
+                $matriculaDependencia = $objMatriculaTurma->verficaEnturmacaoDeDependencia($matriculaId, $turmaId);
+
+                if (!empty($componenteCurricularId) && $matriculaDependencia && !in_array($componenteCurricularId, $disciplinasDependenciaId)) {
+                    continue;
+                }
 
                 // seta id da matricula a ser usado pelo metodo serviceBoletim
                 $this->setCurrentMatriculaId($matriculaId);
@@ -1716,13 +1725,11 @@ class DiarioApiController extends ApiCoreController
 
     public function canPostSituacaoAndNota()
     {
+        $this->pessoa_logada = Session::get('id_pessoa');
 
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
         $acesso = new clsPermissoes();
-        session_write_close();
-        return $acesso->permissao_cadastra(630, $this->pessoa_logada, 7, null, true);
 
+        return $acesso->permissao_cadastra(630, $this->pessoa_logada, 7, null, true);
     }
 
     public function Gerar()

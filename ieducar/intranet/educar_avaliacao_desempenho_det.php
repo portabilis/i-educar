@@ -24,6 +24,7 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -61,10 +62,6 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $this->titulo = "Avalia&ccedil;&atilde;o Desempenho - Detalhe";
         
 
@@ -77,8 +74,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_avaliacao_desempenho_lst.php" );
-            die();
+            $this->simpleRedirect('educar_avaliacao_desempenho_lst.php');
         }
 
         if( class_exists( "clsPmieducarInstituicao" ) )

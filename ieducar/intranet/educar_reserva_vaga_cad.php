@@ -68,10 +68,6 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->ref_cod_serie  = $_GET['ref_cod_serie'];
     $this->ref_cod_escola = $_GET['ref_cod_escola'];
 
@@ -142,10 +138,6 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     if ($this->passo == 2) {
       return true;
     }
@@ -158,8 +150,7 @@ class indice extends clsCadastro
 
     if ($cadastrou) {
       $this->mensagem .= 'Reserva de Vaga efetuada com sucesso.<br>';
-      header('Location: educar_reservada_vaga_det.php?cod_reserva_vaga=' . $cadastrou);
-      die();
+      $this->simpleRedirect('educar_reservada_vaga_det.php?cod_reserva_vaga=' . $cadastrou);
     }
 
     $this->mensagem = 'Reserva de Vaga n&atilde;o realizada.<br>';

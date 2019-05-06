@@ -186,7 +186,7 @@ class clsPmieducarCandidatoReservaVaga
     if (is_numeric($membros_trabalham)) {
       $this->membros_trabalham = $membros_trabalham;
     }
-    
+
     if (is_bool($mae_fez_pre_natal)) {
       $this->mae_fez_pre_natal = $mae_fez_pre_natal;
     }
@@ -468,7 +468,7 @@ class clsPmieducarCandidatoReservaVaga
               INNER JOIN pmieducar.aluno a ON a.cod_aluno = crv.ref_cod_aluno
               INNER JOIN cadastro.pessoa pes ON pes.idpes = a.ref_idpes
               INNER JOIN cadastro.fisica fis ON fis.idpes = pes.idpes
-              INNER JOIN cadastro.pessoa resp_pes ON fis.idpes_responsavel = resp_pes.idpes
+              LEFT JOIN cadastro.pessoa resp_pes ON fis.idpes_responsavel = resp_pes.idpes
               INNER JOIN pmieducar.serie AS ser ON ser.cod_serie = crv.ref_cod_serie {$filtros}");
 
     $db->Consulta($sql);
@@ -705,10 +705,10 @@ class clsPmieducarCandidatoReservaVaga
         $motivo = $motivo ?: 'NULL';
 
         $db = new clsBanco();
-        $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga 
-                                   SET situacao = {$situacao}, 
+        $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga
+                                   SET situacao = {$situacao},
                                        motivo = {$motivo},
-                                       data_situacao = NOW() 
+                                       data_situacao = NOW()
                                  WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
 
         return true;

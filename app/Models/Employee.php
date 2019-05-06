@@ -2,27 +2,20 @@
 
 namespace App\Models;
 
-use Prettus\Repository\Contracts\Transformable;
-use Prettus\Repository\Traits\TransformableTrait;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * Class Funcionario.
- *
- * @package namespace App\Entities;
- */
-class Employee extends EloquentBaseModel implements Transformable
+class Employee extends Model
 {
-    use TransformableTrait;
+    /**
+     * @var string
+     */
+    protected $table = 'pmieducar.servidor';
 
     /**
      * @var string
      */
-    protected $table = 'portal.funcionario';
-
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'ref_cod_pessoa_fj';
+    protected $primaryKey = 'cod_servidor';
 
     /**
      * @var bool
@@ -30,10 +23,10 @@ class Employee extends EloquentBaseModel implements Transformable
     public $timestamps = false;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
+     * @return BelongsTo
      */
-    protected $fillable = [];
-
+    public function inep()
+    {
+        return $this->belongsTo(EmployeeInep::class, 'cod_servidor', 'cod_servidor');
+    }
 }

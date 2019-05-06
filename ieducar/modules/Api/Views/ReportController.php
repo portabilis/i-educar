@@ -93,7 +93,7 @@ class ReportController extends ApiCoreController
             return [
                 'matricula_id' => $this->getRequest()->matricula_id,
                 'encoding' => $encoding,
-                'encoded' => $encoded
+                'encoded' => base64_encode($encoded)
             ];
         }
     }
@@ -112,7 +112,7 @@ class ReportController extends ApiCoreController
             $boletimProfessorReport->addArg('professor', Portabilis_String_Utils::toLatin1($this->getRequest()->professor));
             $boletimProfessorReport->addArg('disciplina', (int)$this->getRequest()->componente_curricular_id);
             $boletimProfessorReport->addArg('orientacao', 2);
-            $boletimProfessorReport->addArg('situacao', 0);
+            $boletimProfessorReport->addArg('situacao', (int) $this->getRequest()->situacao ?? 0);
 
             $configuracoes = new clsPmieducarConfiguracoesGerais();
             $configuracoes = $configuracoes->detalhe();
@@ -135,7 +135,7 @@ class ReportController extends ApiCoreController
 
             return [
                 'encoding' => $encoding,
-                'encoded' => $encoded
+                'encoded' => base64_encode($encoded)
             ];
         }
     }

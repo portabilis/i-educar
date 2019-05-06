@@ -63,9 +63,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
 
 
@@ -122,9 +120,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        
 
         $obj = new clsPmieducarTipoRegime( $this->cod_tipo_regime, $this->pessoa_logada, $this->pessoa_logada, $this->nm_tipo, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->ref_cod_instituicao );
         $cadastrou = $obj->cadastra();
@@ -139,10 +135,6 @@ class indice extends clsCadastro
                         window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length-1));
                     </script>";
             die();
-//          $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-//          header( "Location: educar_tipo_regime_lst.php" );
-            die();
-            return true;
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -152,9 +144,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        /*@session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        /*
 
         $obj = new clsPmieducarTipoRegime($this->cod_tipo_regime, $this->pessoa_logada, $this->pessoa_logada, $this->nm_tipo, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->ref_cod_instituicao);
         $editou = $obj->edita();
@@ -173,9 +163,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        /*@session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+        /*
 
         $obj = new clsPmieducarTipoRegime($this->cod_tipo_regime, $this->pessoa_logada, $this->pessoa_logada, $this->nm_tipo, $this->data_cadastro, $this->data_exclusao, 0, $this->ref_cod_instituicao);
         $excluiu = $obj->excluir();

@@ -5,7 +5,6 @@ use Illuminate\Database\Connection;
 
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsCronometro.inc.php';
-require_once 'Portabilis/Mailer.php';
 
 abstract class clsBancoSQL_
 {
@@ -284,6 +283,8 @@ abstract class clsBancoSQL_
    *
    * Verifica se o link está inativo e conecta. Se a conexão não obtiver
    * sucesso, interrompe o script
+   *
+   * @throws Exception
    */
   public function Conecta() {
     // Verifica se o link de conexão está inativo e conecta
@@ -291,8 +292,9 @@ abstract class clsBancoSQL_
       $this->FraseConexao();
       $this->bLink_ID = pg_connect($this->strFraseConexao);
 
-      if (! $this->bLink_ID)
-        $this->Interrompe("N&atilde;o foi possivel conectar ao banco de dados");
+      if (! $this->bLink_ID) {
+        throw new Exception('Não foi possível conectar ao banco de dados');
+      }
     }
   }
 
@@ -304,6 +306,8 @@ abstract class clsBancoSQL_
    *   sintaxe MySQL em PostgreSQL.
    * @return bool|resource FALSE em caso de erro ou o identificador da consulta
    *   em caso de sucesso.
+   *
+   * @throws Exception
    */
   public function Consulta($consulta, $reescrever = true)
   {
@@ -338,9 +342,7 @@ abstract class clsBancoSQL_
       if (! ($i % 2)) {
         // Fora das aspas, verifica se há algo errado no SQL
         if (preg_match("/(--|#|\/\*)/", $temp[$i])) {
-          $erroMsg = 'Proteção contra injection: ' . date( "Y-m-d H:i:s" );
-          echo "<!-- {$this->strStringSQL} -->";
-          $this->Interrompe($erroMsg);
+          throw new Exception('Erro na query executada no banco de dados');
         }
       }
     }
@@ -525,40 +527,6 @@ abstract class clsBancoSQL_
   {
     return $this->UnicoCampo($consulta);
   }
-
-  /**
-   * Mostra a mensagem de erro e interrompe a execução do script.
-   * @param  string $msg
-   * @param  bool   $getError
-   */
-  function Interrompe($appErrorMsg, $getError = FALSE)
-  {
-    $lastError = error_get_last();
-
-    @session_start();
-    $_SESSION['last_php_error_message'] = $lastError['message'];
-    $_SESSION['last_php_error_line']    = $lastError['line'];
-    $_SESSION['last_php_error_file']    = $lastError['file'];
-    @session_write_close();
-
-    if ($GLOBALS['coreExt']['Config']->modules->error->track) {
-        $tracker = TrackerFactory::getTracker($GLOBALS['coreExt']['Config']->modules->error->tracker_name);
-
-        $pgErrorMsg = $getError ? pg_result_error($this->bConsulta_ID) : '';
-
-        $data = [
-            'databaseError' => $pgErrorMsg,
-            'appError' => $appErrorMsg,
-            'sql' => $this->strStringSQL,
-            'request' => $_REQUEST,
-        ];
-
-        $tracker->notify(new Exception($lastError['message']), $data);
-    }
-
-    die("<script>document.location.href = '/module/Error/unexpected';</script>");
-  }
-
 
   /**
    * Executa uma consulta SQL preparada ver: http://php.net/manual/en/function.pg-prepare.php

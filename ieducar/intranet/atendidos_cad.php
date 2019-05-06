@@ -547,17 +547,7 @@ class indice extends clsCadastro
             'required' => false
         ];
 
-        $helperOptions = [
-            'objectName' => 'cartorio_cert_civil_inep',
-            'hiddenInputOptions' => [
-                'options' => ['value' => $documentos['cartorio_cert_civil_inep']]
-            ]
-        ];
-
-        $this->inputsHelper()->simpleSearchCartorioInep(null, $options, $helperOptions);
-
         // cartório emissão certidão civil
-
         $options = [
             'required' => false,
             'label' => 'Cartório emissão',
@@ -1129,8 +1119,8 @@ class indice extends clsCadastro
         $pessoaFisica->excluir();
 
         $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.';
-        header('Location: atendidos_lst.php');
-        die();
+
+        $this->simpleRedirect('atendidos_lst.php');
     }
 
     public function afterChangePessoa($id)
@@ -1502,7 +1492,6 @@ class indice extends clsCadastro
         $documentos->sigla_uf_cert_civil = $_REQUEST['uf_emissao_certidao_civil'];
         $documentos->cartorio_cert_civil = addslashes($_REQUEST['cartorio_emissao_certidao_civil']);
         $documentos->passaporte = addslashes($_REQUEST['passaporte']);
-        $documentos->cartorio_cert_civil_inep = $_REQUEST['cartorio_cert_civil_inep_id'];
 
         // carteira de trabalho
 

@@ -24,6 +24,9 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Support\Facades\Session;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -91,11 +94,10 @@ class indice extends clsListagem
 
     function Gerar()
     {
-        @session_start();
-            $this->pessoa_logada = $_SESSION['id_pessoa'];
-            unset($_SESSION['reservas']['cod_cliente']);
-            unset($_SESSION['reservas']['ref_cod_biblioteca']);
-        session_write_close();
+        Session::forget([
+            'reservas.cod_cliente',
+            'reservas.ref_cod_biblioteca',
+        ]);
 
         $this->titulo = "Reservas - Listagem";
 

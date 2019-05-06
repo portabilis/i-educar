@@ -90,9 +90,7 @@ class indice extends clsCadastro
   {
     $retorno = '';
 
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $this->cod_formacao        = $_GET['cod_formacao'];
     $this->ref_cod_servidor    = $_GET['ref_cod_servidor'];
@@ -308,9 +306,7 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $backUrl = sprintf(
       'educar_servidor_formacao_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
@@ -333,8 +329,7 @@ class indice extends clsCadastro
 
         if ($obj->cadastra()) {
           $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-          header('Location: ' . $backUrl);
-          die();
+          $this->simpleRedirect($backUrl);
         }
       }
       elseif ( $this->tipo == 'T' || $this->tipo == 'O' ) {
@@ -343,8 +338,7 @@ class indice extends clsCadastro
 
         if ($obj->cadastra()) {
           $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-          header('Location: ' . $backUrl);
-          die();
+          $this->simpleRedirect($backUrl);
         }
       }
     }
@@ -355,9 +349,7 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $backUrl = sprintf(
       'educar_servidor_formacao_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
@@ -384,8 +376,7 @@ class indice extends clsCadastro
 
         if ($editou_cur) {
           $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-          header('Location: ' . $backUrl);
-          die();
+          $this->simpleRedirect($backUrl);
         }
       }
       else {
@@ -397,8 +388,7 @@ class indice extends clsCadastro
 
         if ($editou_tit) {
           $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-          header('Location: ' . $backUrl);
-          die();
+          $this->simpleRedirect($backUrl);
         }
       }
     }
@@ -409,9 +399,7 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    @session_write_close();
+    
 
     $backUrl = sprintf(
       'educar_servidor_formacao_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
@@ -429,8 +417,7 @@ class indice extends clsCadastro
 
     if ($excluiu) {
       $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-      header('Location:' . $backUrl);
-      die();
+      $this->simpleRedirect($backUrl);
     }
 
     $this->mensagem = 'Exclusão não realizada.<br>';
