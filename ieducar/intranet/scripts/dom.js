@@ -189,12 +189,12 @@ function deleteCookie( name, path, domain )
 /*
 	CONTROLE DE JANELAS
 */
-function centralizaExpansivel(expansivel) {
+function centralizaExpansivel() {
   screenWidth = 0;
   screenHeight = 0;
 
   for (let i = 0; i < DOM_divs.length; i++) {
-    expansivel = DOM_divs[i];
+    let expansivel = DOM_divs[i];
     let largura = expansivel.offsetWidth;
     let altura = expansivel.offsetHeight;
 
@@ -280,9 +280,8 @@ function showExpansivel( largura, altura, conteudo )
 	{
 		expansivel.style.width = expansivel.offsetWidth;
 	}
-
-
-	centralizaExpansivel(expansivel);
+	
+	centralizaExpansivel();
 }
 
 function showExpansivelIframe( largura, altura, URL, fecha )
