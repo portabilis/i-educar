@@ -124,11 +124,11 @@ class indice extends clsCadastro
       }
     }
 
-    $ano_atual = date('Y');
+    $ano_atual = date('Y') - 5;
 
     // Foreign keys
     $opcoes = array('' => 'Selecione');
-    $lim = 5;
+    $lim = 10;
 
     for ($i = 0; $i < $lim; $i++) {
       $ano = $ano_atual + $i;
@@ -157,8 +157,7 @@ class indice extends clsCadastro
       $this->ref_cod_escola, $this->ano
     );
 
-    header('Location: ' . $url);
-    die();
+      $this->simpleRedirect($url);
   }
 }
 

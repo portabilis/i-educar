@@ -473,8 +473,7 @@ class indice extends clsCadastro
             if($this->cadastrarTabelas())
             {
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header( "Location: funcionario_lst.php" );
-                return true;
+                $this->simpleRedirect('funcionario_lst.php');
             }
             $this->mensagem = "Cadastro de menus n&atilde;o realizado.<br>";
             echo "<!--\nErro ao cadastrar clsPortalMenuFuncionario-->";
@@ -520,7 +519,7 @@ class indice extends clsCadastro
             if( $this->cadastrarTabelas() )
             {
                 $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-                header( "Location: funcionario_lst.php" );
+                $this->simpleRedirect('funcionario_lst.php');
             }
         }
 
@@ -537,8 +536,7 @@ class indice extends clsCadastro
         if($obj_funcionario->excluir())
         {
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: funcionario_lst.php" );
-            return true;
+            $this->simpleRedirect('funcionario_lst.php');
         }
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
         echo "<!--\nErro ao excluir clsPortalFuncionario\n-->";

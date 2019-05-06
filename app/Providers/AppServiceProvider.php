@@ -2,59 +2,27 @@
 
 namespace App\Providers;
 
+use App\Models\SchoolManager;
+use App\Observers\SchoolManagerObserver;
 use App\Services\CacheManager;
+use App\Models\LegacyInstitution;
 use Barryvdh\Debugbar\ServiceProvider as DebugbarServiceProvider;
 use iEducar\Support\Navigation\Breadcrumb;
 use iEducar\Support\Navigation\TopMenu;
 use iEducar\Modules\ErrorTracking\HoneyBadgerTracker;
 use iEducar\Modules\ErrorTracking\Tracker;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Laravel\Dusk\Browser;
 use Laravel\Dusk\DuskServiceProvider;
 use Laravel\Dusk\ElementResolver;
 use Laravel\Telescope\TelescopeServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register routes for fake auth using Laravel Dusk.
-     *
-     * @return void
-     */
-    private function registerRoutesForFakeAuth()
-    {
-        Route::get('/_dusk/legacy/login', [
-            'middleware' => 'web',
-            'uses' => 'App\Http\Controllers\LegacyFakeAuthController@doFakeLogin',
-        ]);
-
-        Route::get('/_dusk/legacy/logout', [
-            'middleware' => 'web',
-            'uses' => 'App\Http\Controllers\LegacyFakeAuthController@doFakeLogout',
-        ]);
-    }
-
-    /**
-     * Add custom methods in Browser class used by Laravel Dusk.
-     *
-     * @return void
-     */
-    private function customBrowserForFakeAuth()
-    {
-        Browser::macro('loginLegacy', function () {
-            return $this->visit('/_dusk/legacy/login');
-        });
-
-        Browser::macro('logoutLegacy', function () {
-            return $this->visit('/_dusk/legacy/logout');
-        });
-    }
-
     /**
      * Add custom methods in ElementResolver class used by Laravel Dusk.
      *
@@ -93,8 +61,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         if ($this->app->environment('development', 'dusk', 'local', 'testing')) {
-            $this->registerRoutesForFakeAuth();
-            $this->customBrowserForFakeAuth();
             $this->customElementResolver();
         }
 
@@ -105,6 +71,15 @@ class AppServiceProvider extends ServiceProvider
         Request::macro('getSubdomain', function () {
             $host = str_replace('-', '', $this->getHost());
             return Str::replaceFirst('.' . config('app.default_host'), '', $host);
+        });
+
+        Collection::macro('getKeyValueArray', function ($valueField) {
+            $keyValueArray = [];
+            foreach ($this->items as $item) {
+                $keyValueArray[$item->getKey()] = $item->getAttribute($valueField);
+            }
+
+            return $keyValueArray;
         });
 
         // https://laravel.com/docs/5.5/migrations#indexes
@@ -118,7 +93,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
         $this->app->register(RepositoryServiceProvider::class);
         $this->app->singleton(Breadcrumb::class);
         $this->app->singleton(TopMenu::class);
@@ -130,6 +104,10 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $this->app->bind(Tracker::class, HoneyBadgerTracker::class);
+
+        $this->app->bind(LegacyInstitution::class, function () {
+            return LegacyInstitution::query()->where('ativo', 1)->firstOrFail();
+        });
 
         Cache::swap(new CacheManager(app()));
     }

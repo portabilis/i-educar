@@ -73,8 +73,7 @@ class indice extends clsDetalhe
         $registro = $tmp_obj->detalhe();
         if( ! $registro )
         {
-            header( "location: educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}" );
-            die();
+            $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
         }
 
 

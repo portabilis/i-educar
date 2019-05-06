@@ -74,7 +74,7 @@ class indice extends clsCadastro
             );
             $etapasEducacenso = array(0 => 'Nenhuma') + $etapasEducacenso;
 
-            $this->campoLista("etapas_educacenso[{$enturmacao['ref_cod_turma']}-{$enturmacao['sequencial']}]", "Etapa do aluno na turma: {$enturmacao['nm_turma']}", $etapasEducacenso, $enturmacao['etapa_educacenso'], '', false, '', '', false, false);
+            $this->campoLista("etapas_educacenso[{$enturmacao['ref_cod_turma']}-{$enturmacao['sequencial']}]", "Etapa do aluno na turma {$enturmacao['nm_turma']}:", $etapasEducacenso, $enturmacao['etapa_educacenso'], '', false, '', '', false, false);
         }
     }
 
@@ -97,7 +97,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem .= "Etapas atualizadas com sucesso.<br>";
-        return true;
+        $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->cod_matricula}");
     }
 
     private function montaLocalizacao()
@@ -123,7 +123,7 @@ class indice extends clsCadastro
         $det_matricula = $obj_matricula->detalhe();
 
         if (!$det_matricula) {
-            header("location: educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->simpleRedirect('educar_matricula_lst.php?ref_cod_aluno=' . $this->ref_cod_aluno);
         }
 
     }

@@ -81,6 +81,7 @@ class indice extends clsDetalhe
   var $ref_cod_funcionario_vinculo = null;
   var $ano = null;
   var $data_admissao = null;
+  var $data_saida = null;
   /**
    * Implementação do método Gerar()
    */
@@ -96,14 +97,14 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->detalhe();
 
     if (!$registro) {
-      header('Location: educar_servidor_lst.php');
-      die();
+        $this->simpleRedirect('educar_servidor_lst.php');
     }
 
     $this->ref_cod_servidor            = $registro['ref_cod_servidor'];
     $this->ref_cod_instituicao         = $registro['ref_ref_cod_instituicao'];
     $this->ref_cod_servidor_funcao     = $registro['ref_cod_servidor_funcao'];
-    $this->data_admissao = $registro['data_admissao'];
+    $this->data_admissao               = $registro['data_admissao'];
+    $this->data_saida                  = $registro['data_saida'];
     $this->ref_cod_funcionario_vinculo = $registro['ref_cod_funcionario_vinculo'];
     $this->ano                         = $registro['ano'];
 
@@ -155,6 +156,10 @@ class indice extends clsDetalhe
 
     if (!empty($this->data_admissao)) {
       $this->addDetalhe(array("Data de admissão", Portabilis_Date_Utils::pgSQLToBr($this->data_admissao)));
+    }
+
+    if (!empty($this->data_saida)) {
+      $this->addDetalhe(array("Data de saída", Portabilis_Date_Utils::pgSQLToBr($this->data_saida)));
     }
 
     $obj_permissoes = new clsPermissoes();

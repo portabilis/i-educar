@@ -95,7 +95,7 @@ class indice extends clsListagem
         
 
         if(!$this->ref_cod_matricula)
-            header("Location: educar_matricula_lst.php");
+            $this->simpleRedirect('educar_matricula_lst.php');
 
         $this->campoOculto("ref_cod_matricula",$this->ref_cod_matricula);
 

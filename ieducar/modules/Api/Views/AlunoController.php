@@ -517,7 +517,7 @@ class AlunoController extends ApiCoreController
         $aluno->recursos_prova_inep = $recursosProvaInep;
         $aluno->recebe_escolarizacao_em_outro_espaco = $this->getRequest()->recebe_escolarizacao_em_outro_espaco;
         $aluno->justificativa_falta_documentacao = $this->getRequest()->justificativa_falta_documentacao;
-        $aluno->veiculo_transporte_escolar = $this->getRequest()->veiculo_transporte_escolar;
+        $aluno->veiculo_transporte_escolar = implode(',', array_filter($this->getRequest()->veiculo_transporte_escolar));
 
         $this->file_foto = $_FILES['file'];
         $this->del_foto = $_POST['file_delete'];
@@ -833,7 +833,6 @@ class AlunoController extends ApiCoreController
                             end
                     )
                     and (matricula.ref_cod_aluno::varchar(255) like $1||\'%\')
-                    and matricula.aprovado in (1, 2, 3, 4, 7, 8, 9)
                 limit 15
             ) as alunos
             order by
@@ -1073,7 +1072,7 @@ class AlunoController extends ApiCoreController
             $aluno['parentesco_quatro'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_quatro']);
             $aluno['autorizado_cinco'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_cinco']);
             $aluno['parentesco_cinco'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_cinco']);
-
+            $aluno['veiculo_transporte_escolar'] = Portabilis_Utils_Database::pgArrayToArray($aluno['veiculo_transporte_escolar']);
             $aluno['alfabetizado'] = $aluno['analfabeto'] == 0;
             unset($aluno['analfabeto']);
 
@@ -1669,7 +1668,6 @@ class AlunoController extends ApiCoreController
         $documentos->sigla_uf_cert_civil = $this->getRequest()->uf_emissao_certidao_civil;
         $documentos->cartorio_cert_civil = addslashes($this->getRequest()->cartorio_emissao_certidao_civil);
         $documentos->passaporte = addslashes($this->getRequest()->passaporte);
-        $documentos->cartorio_cert_civil_inep = $this->getRequest()->cartorio_cert_civil_inep_id;
 
         // Alteração de documentos compativel com a versão anterior do cadastro,
         // onde era possivel criar uma pessoa, não informando os documentos,

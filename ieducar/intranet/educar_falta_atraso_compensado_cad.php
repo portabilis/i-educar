@@ -161,9 +161,8 @@ class indice extends clsCadastro
 
     if ($cadastrou) {
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-      header('Location: ' . sprintf('educar_falta_atraso_det.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
-        $this->ref_cod_servidor, $this->ref_cod_escola, $this->ref_cod_instituicao));
-      die();
+      $this->simpleRedirect(sprintf('educar_falta_atraso_det.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
+            $this->ref_cod_servidor, $this->ref_cod_escola, $this->ref_cod_instituicao));
     }
 
     $this->mensagem = 'Cadastro não realizado.<br />';
@@ -192,9 +191,8 @@ class indice extends clsCadastro
 
     if ($editou) {
       $this->mensagem .= 'Edição efetuada com sucesso.<br />';
-      header('Location: ' . sprintf('educar_falta_atraso_det.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
-        $this->ref_cod_servidor, $this->ref_cod_escola, $this->ref_cod_instituicao));
-      die();
+      $this->simpleRedirect(sprintf('educar_falta_atraso_det.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
+            $this->ref_cod_servidor, $this->ref_cod_escola, $this->ref_cod_instituicao));
     }
 
     $this->mensagem = 'Edição não realizada.<br />';
@@ -223,8 +221,7 @@ class indice extends clsCadastro
 
     if ($excluiu) {
       $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
-      header("Location: educar_falta_atraso_det.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-      die();
+      $this->simpleRedirect("educar_falta_atraso_det.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}");
     }
 
     $this->mensagem = 'Exclusão não realizada.<br />';

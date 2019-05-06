@@ -67,8 +67,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: portal_acesso_lst.php" );
-            die();
+            $this->simpleRedirect('portal_acesso_lst.php');
         }
 
 

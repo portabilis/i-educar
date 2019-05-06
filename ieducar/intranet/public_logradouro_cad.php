@@ -216,8 +216,7 @@ class indice extends clsCadastro
       $auditoria->inclusao($enderecamento);
 
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-      header('Location: public_logradouro_lst.php');
-      die();
+      $this->simpleRedirect('public_logradouro_lst.php');
     }
 
     $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
@@ -238,8 +237,7 @@ class indice extends clsCadastro
     $editou = $obj->edita();
     if ($editou) {
       $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
-      header('Location: public_logradouro_lst.php');
-      die();
+      $this->simpleRedirect('public_logradouro_lst.php');
     }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
@@ -256,8 +254,7 @@ class indice extends clsCadastro
     $excluiu = $obj->excluir();
     if ($excluiu) {
       $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-      header('Location: public_logradouro_lst.php');
-      die();
+      $this->simpleRedirect('public_logradouro_lst.php');
     }
 
     $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';

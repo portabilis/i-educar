@@ -68,8 +68,7 @@ class indice extends clsDetalhe
         
         if( ! $registro )
         {
-            header( "location: educar_disciplina_topico_lst.php" );
-            die();
+            $this->simpleRedirect('educar_disciplina_topico_lst.php');
         }
         
         if( $registro["nm_topico"] )

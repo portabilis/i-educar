@@ -94,8 +94,7 @@ class indice extends clsDetalhe
     }
 
     if (! $this->ref_cod_matricula) {
-      header('Location: educar_matricula_lst.php');
-      die();
+        $this->simpleRedirect('educar_matricula_lst.php');
     }
 
     $obj_mat_turma = new clsPmieducarMatriculaTurma();
@@ -136,8 +135,7 @@ class indice extends clsDetalhe
     $this->ref_cod_curso = $registro['ref_cod_curso'];
 
     if (!$registro || !$_POST) {
-      header('Location: educar_matricula_lst.php');
-      die();
+        $this->simpleRedirect('educar_matricula_lst.php');
     }
 
 

@@ -1,8 +1,15 @@
 <?php
 
+use App\Services\iDiarioService;
 use App\Services\SchoolClassService;
 use App\Models\School;
 use App\Models\LegacyCourse;
+use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+use iEducar\Support\View\SelectOptions;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+use RuntimeException;
+use Throwable;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -199,6 +206,21 @@ class indice extends clsCadastro
             foreach ($_POST as $campo => $val) {
                 $this->$campo = $this->$campo ? $this->$campo : $val;
             }
+        }
+
+        if (is_numeric($this->cod_turma)) {
+            $obj_turma = new clsPmieducarTurma($this->cod_turma);
+            $registro = $obj_turma->detalhe();
+            $obj_esc = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
+            $det_esc = $obj_esc->detalhe();
+            $obj_ser = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
+            $det_ser = $obj_ser->detalhe();
+
+            $this->ref_cod_escola = $det_esc['cod_escola'];
+            $this->ref_cod_instituicao = $det_esc['ref_cod_instituicao'];
+            $this->ref_cod_curso = $det_ser['ref_cod_curso'];
+            $this->ref_cod_serie = $det_ser['cod_serie'];
+            $this->ano = $registro['ano'];
         }
 
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
@@ -431,10 +453,14 @@ class indice extends clsCadastro
 
         $this->campoOculto('ref_cod_serie_mult_', $this->ref_ref_cod_serie_mult);
 
+        $resources = SelectOptions::tiposMediacaoDidaticoPedagogico();
+        $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => $obrigarCamposCenso, 'size' => 70,];
+        $this->inputsHelper()->select('tipo_mediacao_didatico_pedagogico', $options);
+
         $this->campoQuebra2();
 
         // hora
-        if (!$this->obrigaCamposHorario()) {
+        if ($obrigarCamposCenso && !$this->obrigaCamposHorario()) {
             $this->hora_inicial = '';
             $this->hora_final = '';
             $this->hora_inicio_intervalo = '';
@@ -468,7 +494,7 @@ class indice extends clsCadastro
         $options = ['label' => 'Dias da semana',
             'size' => 50,
             'required' => false,
-            'disabled' => !$this->obrigaCamposHorario(),
+            'disabled' => $obrigarCamposCenso && !$this->obrigaCamposHorario(),
             'options' => ['values' => $this->dias_semana,
                 'all_values' => [1 => 'Domingo',
                     2 => 'Segunda',
@@ -629,12 +655,6 @@ class indice extends clsCadastro
             'options' => ['values' => $this->cod_curso_profissional,
                 'all_values' => $cursos]];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-
-        $resources = App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums();
-        $resources = array_replace([null => 'Selecione'], $resources);
-
-        $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => $obrigarCamposCenso, 'size' => 70,];
-        $this->inputsHelper()->select('tipo_mediacao_didatico_pedagogico', $options);
 
         $resources = App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums();
         $resources = array_replace([null => 'Selecione'], $resources);
@@ -877,10 +897,12 @@ class indice extends clsCadastro
 
         $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
-        $this->atualizaModulos();
+        if (!$this->atualizaModulos()) {
+            return false;
+        }
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.';
-        header('Location: educar_turma_lst.php');
+        $this->simpleRedirect('educar_turma_lst.php');
     }
 
     public function Editar()
@@ -888,6 +910,7 @@ class indice extends clsCadastro
         $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
         $turmaDetalhe = $turmaDetalhe->detalhe();
         $this->ref_cod_curso = $turmaDetalhe['ref_cod_curso'];
+        $this->ref_ref_cod_escola = $turmaDetalhe['ref_ref_cod_escola'];
 
         if (!$this->verificaModulos()) {
             return false;
@@ -898,6 +921,10 @@ class indice extends clsCadastro
         }
 
         if (!$this->nomeEstaDisponivel($this->ano_letivo, $this->ref_cod_curso, $this->ref_cod_serie, $this->ref_cod_escola, $this->nm_turma, $this->cod_turma)) {
+            return false;
+        }
+
+        if (!$this->verificaTurno()) {
             return false;
         }
 
@@ -936,11 +963,15 @@ class indice extends clsCadastro
 
         $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
-        $this->atualizaModulos();
+        if (!$this->atualizaModulos()) {
+            return false;
+        }
 
-        $this->mensagem .= 'Edição efetuada com sucesso.';
-        header('Location: educar_turma_lst.php');
-        die();
+        $this->message = 'Edição efetuada com sucesso.';
+
+        throw new HttpResponseException(
+            new RedirectResponse('educar_turma_lst.php')
+        );
     }
 
     protected function validaCamposHorario()
@@ -1055,6 +1086,10 @@ class indice extends clsCadastro
     {
         $course = LegacyCourse::find($this->ref_cod_curso);
 
+        if ($this->tipo_atendimento != TipoAtendimentoTurma::ESCOLARIZACAO) {
+            return true;
+        }
+
         if ($course->modalidade_curso == 1 && !in_array($this->etapa_educacenso, [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 41, 56])) {
             $this->mensagem = 'Quando a modalidade do curso é: Ensino regular, o campo: Etapa de ensino deve ser uma das seguintes opções: 1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 41 ou 56.';
             return false;
@@ -1086,7 +1121,7 @@ class indice extends clsCadastro
         }
 
         if (in_array($this->local_funcionamento_diferenciado, [App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO, App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL]) &&
-            !in_array($this->etapa_educacenso, [1, 2, 3, 56])
+            in_array($this->etapa_educacenso, [1, 2, 3, 56])
         ) {
             $nomeOpcao = (App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums())[$this->local_funcionamento_diferenciado];
             $this->mensagem = "Quando o campo: Local de funcionamento diferenciado é: {$nomeOpcao}, o campo: Etapa de ensino não pode ser nenhuma das seguintes opções: 1, 2, 3 ou 56";
@@ -1117,6 +1152,47 @@ class indice extends clsCadastro
             return false;
         }
         if (!$this->validaCampoLocalFuncionamentoDiferenciado()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function verificaTurno()
+    {
+        $turmaId = (int) $this->cod_turma;
+        $turnoId = (int) $this->turma_turno_id;
+        $count = 0;
+
+        if ($turnoId === clsPmieducarTurma::TURNO_INTEGRAL) { // Se integral não pode ter vínculos noturnos
+            $count += DB::table('pmieducar.matricula_turma as mt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'mt.ref_cod_turma')
+                ->where('mt.turno_id', clsPmieducarTurma::TURNO_NOTURNO)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+
+            $count += DB::table('modules.professor_turma as pt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'pt.turma_id')
+                ->where('pt.turno_id', clsPmieducarTurma::TURNO_NOTURNO)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+        } else { // Se ñ é integral não pode ter vínculos diferentes do novo turno
+            $count += DB::table('pmieducar.matricula_turma as mt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'mt.ref_cod_turma')
+                ->where('mt.turno_id', '<>', $turnoId)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+
+            $count += DB::table('modules.professor_turma as pt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'pt.turma_id')
+                ->where('pt.turno_id', '<>', $turnoId)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+        }
+
+        if ($count > 0) {
+            $this->mensagem = 'Existem enturmações ou professores atrelados a esta turma em turnos diferentes do especificado.';
+
             return false;
         }
 
@@ -1174,12 +1250,90 @@ class indice extends clsCadastro
         $objTurma->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
         $objTurma->dias_semana = $this->dias_semana;
         $objTurma->atividades_complementares = $this->atividades_complementares;
+        $objTurma->local_funcionamento_diferenciado = $this->local_funcionamento_diferenciado;
 
         return $objTurma;
     }
 
+    protected function validaModulos()
+    {
+        $turmaId = $this->cod_turma;
+        $etapasCount = count($this->data_inicio);
+        $etapasCountAntigo = (int) Portabilis_Utils_Database::selectField(
+            'SELECT COUNT(*) AS count FROM pmieducar.turma_modulo WHERE ref_cod_turma = $1',
+            [$turmaId]
+        );
+
+        if ($etapasCount >= $etapasCountAntigo) {
+            return true;
+        }
+
+        $etapasTmp = $etapasCount;
+        $etapas = [];
+
+        while ($etapasTmp < $etapasCountAntigo) {
+            $etapasTmp += 1;
+            $etapas[] = $etapasTmp;
+        }
+
+        $counts = [];
+
+        $counts[] = DB::table('modules.falta_componente_curricular as fcc')
+            ->join('modules.falta_aluno as fa', 'fa.id',  '=', 'fcc.falta_aluno_id')
+            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'fa.matricula_id')
+            ->join('pmieducar.matricula_turma as mt', 'mt.ref_cod_matricula', '=', 'm.cod_matricula')
+            ->whereIn('fcc.etapa', $etapas)
+            ->where('mt.ref_cod_turma', $turmaId)
+            ->where('m.ativo', 1)
+            ->count();
+
+        $counts[] = DB::table('modules.falta_geral as fg')
+            ->join('modules.falta_aluno as fa', 'fa.id',  '=', 'fg.falta_aluno_id')
+            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'fa.matricula_id')
+            ->join('pmieducar.matricula_turma as mt', 'mt.ref_cod_matricula', '=', 'm.cod_matricula')
+            ->whereIn('fg.etapa', $etapas)
+            ->where('mt.ref_cod_turma', $turmaId)
+            ->where('m.ativo', 1)
+            ->count();
+
+        $counts[] = DB::table('modules.nota_componente_curricular as ncc')
+            ->join('modules.nota_aluno as na', 'na.id',  '=', 'ncc.nota_aluno_id')
+            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'na.matricula_id')
+            ->join('pmieducar.matricula_turma as mt', 'mt.ref_cod_matricula', '=', 'm.cod_matricula')
+            ->whereIn('ncc.etapa', $etapas)
+            ->where('mt.ref_cod_turma', $turmaId)
+            ->where('m.ativo', 1)
+            ->count();
+
+        $sum = array_sum($counts);
+
+        if ($sum > 0) {
+            throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.');
+        }
+
+        $iDiarioService = app(iDiarioService::class);
+
+        foreach ($etapas as $etapa) {
+            if ($iDiarioService->getStepActivityByClassroom($turmaId, $etapa)) {
+                throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas no diário online.');
+            }
+        }
+
+        return true;
+    }
+
     public function atualizaModulos()
     {
+        try {
+            $this->validaModulos();
+        } catch (Exception $e) {
+            $this->Inicializar();
+
+            $this->mensagem = $e->getMessage();
+
+            return false;
+        }
+
         $objModulo = new clsPmieducarTurmaModulo();
         $excluiu = $objModulo->excluirTodos($this->cod_turma);
         $modulos = $this->montaModulos();
@@ -1324,9 +1478,11 @@ class indice extends clsCadastro
                 $auditoria = new clsModulesAuditoriaGeral('turma', $this->pessoa_logada, $this->cod_turma);
                 $auditoria->exclusao($turma);
 
-                $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.';
-                header('Location: educar_turma_lst.php');
-                die();
+                $this->mensagem .= 'Exclusão efetuada com sucesso.';
+
+                throw new HttpResponseException(
+                    new RedirectResponse('educar_turma_lst.php')
+                );
             } else {
                 $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.';
                 echo "<!--\nErro ao excluir clsPmieducarTurma\nvalores obrigatorios\nif( is_numeric( $this->cod_turma ) && is_numeric( $this->pessoa_logada ) )\n-->";
@@ -1742,15 +1898,19 @@ $pagina->MakeAll();
         var DOM_escola_serie_hora = xml.getElementsByTagName('item');
 
         if (DOM_escola_serie_hora.length) {
-            campoHoraInicial.value = (DOM_escola_serie_hora[0].firstChild || {}).data;
-            campoHoraFinal.value = (DOM_escola_serie_hora[1].firstChild || {}).data;
-            campoHoraInicioIntervalo.value = (DOM_escola_serie_hora[2].firstChild || {}).data;
-            campoHoraFimIntervalo.value = (DOM_escola_serie_hora[3].firstChild || {}).data;
+            horaInicial = (DOM_escola_serie_hora[0].firstChild || {}).data;
+            horaFinal = (DOM_escola_serie_hora[1].firstChild || {}).data;
+            horaInicioIntervalo = (DOM_escola_serie_hora[2].firstChild || {}).data;
+            horaFimIntervalo = (DOM_escola_serie_hora[3].firstChild || {}).data;
+            campoHoraInicial.value = typeof(horaInicial) != 'undefined' ? horaInicial : null;
+            campoHoraFinal.value = typeof(horaFinal) != 'undefined' ? horaFinal : null;
+            campoHoraInicioIntervalo.value = typeof(horaInicioIntervalo) != 'undefined' ? horaInicioIntervalo : null;
+            campoHoraFimIntervalo.value = typeof(horaFimIntervalo) != 'undefined' ? horaFimIntervalo : null;
         }
     }
 
     function valida() {
-        if (validaHorarioInicialFinal() && validaMinutos() && validaAtividadesComplementares()) {
+        if (validaHorarioInicialFinal() && validaHoras() && validaAtividadesComplementares()) {
             if (document.getElementById('padrao_ano_escolar').value == 1) {
                 var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
                 var campoEscola = document.getElementById('ref_cod_escola').value;

@@ -2,59 +2,37 @@
 
 namespace iEducar\Modules\ErrorTracking;
 
-use Exception;
+use App\Mail\ErrorTrackerMail;
+use Illuminate\Support\Facades\Mail;
+use Symfony\Component\Debug\Exception\FlattenException;
+use Symfony\Component\Debug\ExceptionHandler;
 use Throwable;
 
 class EmailTracker implements Tracker
 {
     public function notify(Throwable $exception, $data = [])
     {
-        $message = $this->getStringMessage($exception, $data);
-        $subject = '[Erro inesperado] i-Educar - ' . $this->getHost();
+        $subject = '[Erro inesperado] i-Educar - ' . config('app.name');
+
         $to = $this->getRecipient();
 
-        (new \Portabilis_Mailer())->sendMail($to, $subject, $message);
-    }
+        try {
+            $e = FlattenException::create($exception);
 
-    private function getStringMessage(Throwable $exception, array $data)
-    {
-        $data = $this->getStringData($data);
-        $trace = $this->getStringTrace();
+            $handler = new ExceptionHandler();
 
-        return "Olá!\n\n" .
-            "Ocorreu um erro inesperado no banco de dados, detalhes abaixo:\n\n" .
-            "  ERRO: ' {$exception->getMessage()}\n" .
-            "  LINHA {$exception->getLine()} em {$exception->getFile()}\n" .
-            "  DADOS: {$data}\n" .
-            "  TRACE: \n{$trace}\n" .
-            "\n\n-\n\n" .
-            'Você recebeu este email pois seu email foi configurado para receber ' .
-            'notificações de erros.';
-    }
+            $html = $handler->getHtml($e);
 
-    private function getStringTrace()
-    {
-        return json_encode(debug_backtrace());
-    }
+            $mail = new ErrorTrackerMail($to, $subject, $html);
 
-    private function getStringData($data)
-    {
-        return json_encode($data);
-    }
-
-    protected function getHost()
-    {
-        return $_SERVER['HTTP_HOST'] ?? null;
+            Mail::send($mail);
+        } catch (Throwable $throwable) {
+            //
+        }
     }
 
     private function getRecipient()
     {
-        $recipient = $GLOBALS['coreExt']['Config']->modules->error->email_recipient;
-
-        if (empty($recipient)) {
-            throw new Exception('Parâmetro modules.error.email_recipient não encontrado');
-        }
-
-        return $recipient;
+        return $GLOBALS['coreExt']['Config']->modules->error->email_recipient;
     }
 }

@@ -81,8 +81,7 @@ class indice extends clsDetalhe
         
         if( ! $registro )
         {
-            header( "location: educar_infra_predio_lst.php" );
-            die();
+            $this->simpleRedirect('educar_infra_predio_lst.php');
         }
         
         if( class_exists( "clsPmieducarEscola" ) )

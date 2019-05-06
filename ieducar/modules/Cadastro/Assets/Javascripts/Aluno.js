@@ -217,6 +217,16 @@ var newSubmitForm = function (event) {
         return false;
     }
 
+    $tipoTransporte = $j('#tipo_transporte');
+
+    if ($tipoTransporte.val() == 'municipal' || $tipoTransporte.val() == 'estadual') {
+        veiculoTransporte = $j('#veiculo_transporte_escolar').val();
+        if (obrigarCamposCenso && (veiculoTransporte == '' || veiculoTransporte == null)) {
+            messageUtils.error('O campo Veículo utilizado deve ser preenchido');
+            return false;
+        }
+    }
+
     submitFormExterno();
 };
 
@@ -485,7 +495,6 @@ resourceOptions.handleGet = function (dataResponse) {
     tipo_resp = dataResponse.tipo_responsavel;
     $j('#religiao_id').val(dataResponse.religiao_id);
     $j('#tipo_transporte').val(dataResponse.tipo_transporte);
-    $j('#veiculo_transporte_escolar').val(dataResponse.veiculo_transporte_escolar).trigger('change');
     $j('#alfabetizado').attr('checked', dataResponse.alfabetizado);
     $j('#autorizado_um').val(dataResponse.autorizado_um);
     $j('#parentesco_um').val(dataResponse.parentesco_um);
@@ -497,7 +506,6 @@ resourceOptions.handleGet = function (dataResponse) {
     $j('#parentesco_quatro').val(dataResponse.parentesco_quatro);
     $j('#autorizado_cinco').val(dataResponse.autorizado_cinco);
     $j('#parentesco_cinco').val(dataResponse.parentesco_cinco);
-
 
     if ($j('#autorizado_um').val() == '') {
         $j('#autorizado_dois').closest('tr').hide();
@@ -836,7 +844,15 @@ resourceOptions.handleGet = function (dataResponse) {
             $j('#pessoaj_id').val(dataResponse.ref_idpes_destino);
         }
     }
+
     camposTransporte();
+
+    setTimeout(function() {
+        $veiculo_transporte_escolar = $j('#veiculo_transporte_escolar');
+        $veiculo_transporte_escolar.val(dataResponse.veiculo_transporte_escolar);
+        $veiculo_transporte_escolar.trigger('chosen:updated');
+    }, 550);
+
     verificaObrigatoriedadeRg();
 };
 
@@ -1076,12 +1092,6 @@ var handleGetPersonDetails = function (dataResponse) {
     $j('#data_emissao_certidao_civil').val(dataResponse.data_emissao_cert_civil);
     $j('#cartorio_emissao_certidao_civil').val(dataResponse.cartorio_cert_civil);
 
-    $inepCartorio = $j('#cartorio_cert_civil_inep');
-    if (dataResponse.id_cartorio != null && dataResponse.nome_cartorio != null) {
-        $inepCartorio.val(dataResponse.id_cartorio + ' - ' + dataResponse.nome_cartorio);
-    }
-    $j('#cartorio_cert_civil_inep_id').val(dataResponse.cartorio_cert_civil_inep);
-
     // # TODO show aluno photo
     //$j('#aluno_foto').val(dataResponse.url_foto);
     canShowParentsFields();
@@ -1100,16 +1110,12 @@ var checkTipoCertidaoCivil = function () {
 
     $j('#uf_emissao_certidao_civil').makeUnrequired();
     $j('#data_emissao_certidao_civil').makeUnrequired();
-    $j('#cartorio_cert_civil_inep_id').makeUnrequired();
-    $j('#cartorio_cert_civil_inep').makeUnrequired();
 
     if ($j.inArray(tipoCertidaoCivil, ['91', '92']) > -1) {
         $certidaoCivilFields.show();
         if (obrigarCamposCenso) {
           $j('#uf_emissao_certidao_civil').makeRequired();
           $j('#data_emissao_certidao_civil').makeRequired();
-          $j('#cartorio_cert_civil_inep_id').makeRequired();
-          $j('#cartorio_cert_civil_inep').makeRequired();
           $certidaoCivilFields.makeRequired();
         }
         $j('#tr_tipo_certidao_civil td:first span').html('Tipo certidão civil');
@@ -2466,6 +2472,8 @@ if ($j('#transporte_rota').length > 0) {
             $j('#pessoaj_transporte_destino').closest('tr').hide();
             $j('#transporte_observacao').closest('tr').hide();
         }
+
+        $j('#veiculo_transporte_escolar').trigger('chosen:updated');
     }
 
     $j('#tipo_transporte').on('change', function () {
