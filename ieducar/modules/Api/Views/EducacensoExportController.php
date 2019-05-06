@@ -126,7 +126,12 @@ class EducacensoExportController extends ApiCoreController
         $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
             'educar_index.php');
         $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
-        $export = $this->exportaDadosRegistro00($escolaId, $ano);
+        $continuaExportacao = true;
+        $export = $this->exportaDadosRegistro00($escolaId, $ano, $continuaExportacao);
+        if (!$continuaExportacao) {
+            return $export;
+        }
+
         $export .= $this->exportaDadosRegistro10($escolaId, $ano);
         foreach ($this->getTurmas($escolaId, $ano) as $turmaId => $turmaNome) {
             $export .= $this->exportaDadosRegistro20($escolaId, $turmaId, $data_ini, $data_fim);
@@ -284,7 +289,7 @@ class EducacensoExportController extends ApiCoreController
         return Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($escolaId, $ano, $turmaId)));
     }
 
-    protected function exportaDadosRegistro00($escolaId, $ano)
+    protected function exportaDadosRegistro00($escolaId, $ano, &$continuaExportacao)
     {
         $educacensoRepository = new EducacensoRepository();
         $registro00Model = new Registro00();
@@ -301,6 +306,8 @@ class EducacensoExportController extends ApiCoreController
         $escola = SituacaoFuncionamento::handle($escola);
         $escola = DependenciaAdministrativa::handle($escola);
         $escola = Regulamentacao::handle($escola);
+
+        $continuaExportacao = !in_array($escola->situacaoFuncionamento, [2, 3]);
 
         $data = [
             $escola->registro,
