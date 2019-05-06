@@ -13,7 +13,7 @@ class DefaultPmieducarTipoAutorTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/pmieducar.tipo_autor.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/pmieducar.tipo_autor.sql')
         );
     }
 }

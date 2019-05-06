@@ -13,7 +13,7 @@ class DefaultCadastroCodigoCartorioInepTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/cadastro.codigo_cartorio_inep.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/cadastro.codigo_cartorio_inep.sql')
         );
     }
 }

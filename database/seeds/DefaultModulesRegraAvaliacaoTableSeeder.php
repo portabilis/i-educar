@@ -13,7 +13,7 @@ class DefaultModulesRegraAvaliacaoTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/modules.regra_avaliacao.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/modules.regra_avaliacao.sql')
         );
     }
 }

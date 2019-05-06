@@ -13,7 +13,7 @@ class DefaultModulesEducacensoCursoSuperiorTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/modules.educacenso_curso_superior.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/modules.educacenso_curso_superior.sql')
         );
     }
 }

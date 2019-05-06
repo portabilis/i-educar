@@ -13,7 +13,7 @@ class DefaultPmieducarInstituicaoTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/pmieducar.instituicao.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/pmieducar.instituicao.sql')
         );
     }
 }

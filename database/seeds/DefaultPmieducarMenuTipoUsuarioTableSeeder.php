@@ -13,7 +13,7 @@ class DefaultPmieducarMenuTipoUsuarioTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/pmieducar.menu_tipo_usuario.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/pmieducar.menu_tipo_usuario.sql')
         );
     }
 }

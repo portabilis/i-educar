@@ -13,7 +13,7 @@ class DefaultCadastroEstadoCivilTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/cadastro.estado_civil.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/cadastro.estado_civil.sql')
         );
     }
 }

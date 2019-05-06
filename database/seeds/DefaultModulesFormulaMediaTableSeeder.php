@@ -13,7 +13,7 @@ class DefaultModulesFormulaMediaTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/modules.formula_media.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/modules.formula_media.sql')
         );
     }
 }

@@ -13,7 +13,7 @@ class DefaultModulesTabelaArredondamentoTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/modules.tabela_arredondamento.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/modules.tabela_arredondamento.sql')
         );
     }
 }

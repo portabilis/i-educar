@@ -13,7 +13,7 @@ class DefaultModulesEtapasEducacensoTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/modules.etapas_educacenso.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/modules.etapas_educacenso.sql')
         );
     }
 }

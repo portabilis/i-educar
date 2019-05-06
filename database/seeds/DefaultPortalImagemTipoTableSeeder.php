@@ -13,7 +13,7 @@ class DefaultPortalImagemTipoTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/portal.imagem_tipo.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/portal.imagem_tipo.sql')
         );
     }
 }

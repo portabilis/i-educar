@@ -13,7 +13,7 @@ class DefaultUrbanoTipoLogradouroTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/urbano.tipo_logradouro.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/urbano.tipo_logradouro.sql')
         );
     }
 }

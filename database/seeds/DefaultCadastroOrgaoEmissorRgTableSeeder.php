@@ -13,7 +13,7 @@ class DefaultCadastroOrgaoEmissorRgTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/cadastro.orgao_emissor_rg.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/cadastro.orgao_emissor_rg.sql')
         );
     }
 }
