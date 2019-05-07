@@ -30,6 +30,7 @@
  */
 
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
+use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/clsBase.inc.php';
@@ -104,6 +105,7 @@ class indice extends clsCadastro
   var $instituicao_curso_superior_3;
   var $curso_formacao_continuada;
   var $multi_seriado;
+  var $tipo_ensino_medio_cursado;
   var $matricula = array();
   var $cod_servidor_funcao = [];
 
@@ -453,6 +455,15 @@ class indice extends clsCadastro
     }
 
     $this->campoLista('ref_idesco', 'Escolaridade', $opcoes, $this->ref_idesco, '', FALSE, '', $script, FALSE, $obrigarCamposCenso);
+
+    $options = array(
+      'label' => 'Tipo de ensino médio cursado',
+      'resources' => SelectOptions::tiposEnsinoMedioCursados(),
+      'value' => $this->tipo_ensino_medio_cursado,
+      'required' => false
+    );
+
+    $this->inputsHelper()->select('tipo_ensino_medio_cursado', $options);
 
     $resources = array(
       null => 'Selecione',
@@ -964,6 +975,7 @@ JS;
 
   function addCamposCenso($obj){
 
+    $obj->tipo_ensino_medio_cursado = $this->tipo_ensino_medio_cursado;
     $obj->situacao_curso_superior_1 = $this->situacao_curso_superior_1;
     $obj->formacao_complementacao_pedagogica_1 = $this->formacao_complementacao_pedagogica_1;
     $obj->codigo_curso_superior_1 = $this->codigo_curso_superior_1_id;

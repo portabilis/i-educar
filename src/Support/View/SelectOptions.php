@@ -7,9 +7,11 @@ use iEducar\Modules\Transport\Period;
 use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
+use iEducar\Modules\Educacenso\Model\Escolaridade;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaPessoa;
+use iEducar\Modules\Educacenso\Model\TipoEnsinoMedioCursado;
 use iEducar\Modules\Educacenso\Model\UnidadeVinculadaComOutraInstituicao;
 
 class SelectOptions
@@ -55,6 +57,16 @@ class SelectOptions
     }
 
     /**
+     * Retorna as opções disponíveis referentes às escolaridades
+     *
+     * @return array
+     */
+    public static function escolaridades()
+    {
+        return self::getDefaultOption() + Escolaridade::getDescriptiveValues();
+    }
+
+    /**
      * Retorna as opções disponíveis referentes às esferas administrativas da escola
      *
      * @return array
@@ -82,6 +94,16 @@ class SelectOptions
     public static function localizacoesDiferenciadasPessoa()
     {
         return self::getDefaultOption() + LocalizacaoDiferenciadaPessoa::getDescriptiveValues();
+    }
+
+    /**
+     * Retorna as opções disponíveis referentes aos tipos de ensino médio cursados
+     *
+     * @return array
+     */
+    public static function tiposEnsinoMedioCursados()
+    {
+        return self::getDefaultOption() + TipoEnsinoMedioCursado::getDescriptiveValues();
     }
 
     /**

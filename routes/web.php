@@ -38,6 +38,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.menu', 'ieducar.fo
     Route::post('/cancelar-enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@cancelEnrollments')
         ->name('enrollments.batch.cancel');
 
+    Route::get('/escolaridade/{schoolingDegree}', 'SchoolingDegreeController@show')
+        ->name('schooling_degrees.show');
+
     Route::get('intranet/index.php', 'LegacyController@intranet')
         ->defaults('uri', 'index.php')
         ->name('home');
