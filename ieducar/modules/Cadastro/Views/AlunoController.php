@@ -14,6 +14,7 @@ require_once 'Portabilis/String/Utils.php';
 
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
 use iEducar\Modules\Educacenso\Model\RecursosRealizacaoProvas;
+use iEducar\Support\View\SelectOptions;
 
 class AlunoController extends Portabilis_Controller_Page_EditController
 {
@@ -1524,6 +1525,14 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         );
 
         $this->inputsHelper()->select('zona_localizacao_censo', $options);
+
+        $options = [
+            'label' => 'Localização diferenciada',
+            'resources' => SelectOptions::localizacoesDiferenciadasPessoa(),
+            'required' => false,
+        ];
+
+        $this->inputsHelper()->select('localizacao_diferenciada', $options);
 
         $tiposNacionalidade = array(
             '1'  => 'Brasileiro',

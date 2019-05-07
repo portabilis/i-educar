@@ -2,6 +2,7 @@
 
 use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
+use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
@@ -168,6 +169,7 @@ class PessoaController extends ApiCoreController
              fisica.idpais_estrangeiro as pais_origem_id,
            fisica.nacionalidade as tipo_nacionalidade,
            fisica.zona_localizacao_censo,
+           fisica.localizacao_diferenciada,
            fisica.nome_social,
            (SELECT pais.nome
                    FROM public.pais
@@ -246,6 +248,7 @@ class PessoaController extends ApiCoreController
             'pais_origem_id',
             'tipo_nacionalidade',
             'zona_localizacao_censo',
+            'localizacao_diferenciada',
             'pais_origem_nome',
             'cor_raca',
             'uf_emissao_rg',
@@ -535,9 +538,21 @@ class PessoaController extends ApiCoreController
         return true;
     }
 
+    private function validateDifferentiatedLocation()
+    {
+        $validator = new DifferentiatedLocationValidator($this->getRequest()->localizacao_diferenciada, $this->getRequest()->zona_localizacao_censo);
+
+        if (!$validator->isValid()) {
+            $this->messenger->append($validator->getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
     protected function canPost()
     {
-        return $this->validateName() && $this->validateBirthDate();
+        return $this->validateName() && $this->validateBirthDate() && $this->validateDifferentiatedLocation();
     }
 
     protected function post()
@@ -591,6 +606,7 @@ class PessoaController extends ApiCoreController
         $fisica->idpais_estrangeiro = $this->getRequest()->pais_origem_id;
         $fisica->nacionalidade = $this->getRequest()->tipo_nacionalidade;
         $fisica->zona_localizacao_censo = $this->getRequest()->zona_localizacao_censo;
+        $fisica->localizacao_diferenciada = $this->getRequest()->localizacao_diferenciada;
         $fisica->nome_social = $this->getRequest()->nome_social;
         $fisica->pais_residencia = $this->getRequest()->pais_residencia;
 

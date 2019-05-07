@@ -1812,6 +1812,9 @@ function canShowParentsFields() {
         }
         $j('#zona_localizacao_censo').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
 
+        $j('<label>').html('Localização diferenciada').attr('for', 'localizacao_diferenciada').insertBefore($j('#localizacao_diferenciada'));
+        $j('#localizacao_diferenciada').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+
         $label = $j('<label>').html('Raça').attr('for', 'cor_raca').attr('style', 'display:block;').insertBefore($j('#cor_raca'));
         if ($j('#cor_raca').hasClass('obrigatorio')) {
           $label.append($j('<span/>').addClass('campo_obrigatorio').text('*'));
@@ -1903,7 +1906,7 @@ function canShowParentsFields() {
 
                     if (bValid) {
                         postPessoa($j(this), $j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val() || 'NULL', (editar_pessoa ? $j('#pessoa_id').val() : null), null, ddd_telefone_1.val(), telefone_1.val(), ddd_telefone_mov.val(), telefone_mov.val(), undefined,
-                          $j('#tipo_nacionalidade').val(), $j('#pais_origem_id').val(), $j('#cor_raca').val(), $j('#zona_localizacao_censo').val(), nome_social.val(), $j('#pais_residencia').val());
+                          $j('#tipo_nacionalidade').val(), $j('#pais_origem_id').val(), $j('#cor_raca').val(), $j('#zona_localizacao_censo').val(), $j('#localizacao_diferenciada').val(), nome_social.val(), $j('#pais_residencia').val());
                     }
                 },
                 "Cancelar": function () {
@@ -2033,6 +2036,7 @@ function canShowParentsFields() {
             }
 
             $j('#zona_localizacao_censo').val(person_details.zona_localizacao_censo);
+            $j('#localizacao_diferenciada').val(person_details.localizacao_diferenciada);
             $j('#cor_raca').val(person_details.cor_raca);
             $j('#tipo_nacionalidade').val(person_details.tipo_nacionalidade);
             if (person_details.pais_origem_id) {
@@ -2347,7 +2351,7 @@ function canShowParentsFields() {
 
 
     function postPessoa($container, $pessoaField, nome, sexo, estadocivil, datanasc, naturalidade, pessoa_id, parentType, ddd_telefone_1, telefone_1, ddd_telefone_mov, telefone_mov, falecido,
-      tipo_nacionalidade, pais_origem_id, cor_raca, zona_localizacao_censo, nome_social, pais_residencia) {
+      tipo_nacionalidade, pais_origem_id, cor_raca, zona_localizacao_censo, localizacao_diferenciada, nome_social, pais_residencia) {
         var data = {
             nome: nome,
             sexo: sexo,
@@ -2364,6 +2368,7 @@ function canShowParentsFields() {
             pais_origem_id: pais_origem_id,
             cor_raca: cor_raca,
             zona_localizacao_censo: zona_localizacao_censo,
+            localizacao_diferenciada: localizacao_diferenciada,
             nome_social: nome_social,
             pais_residencia: pais_residencia
         };
