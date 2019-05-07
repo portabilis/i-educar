@@ -908,7 +908,6 @@ $j('#id_federal').on('change', checkJustificativa);
 let verificaCampoZonaResidencia = () => {
   let $field = $j('#zona_localizacao_censo');
   let isBrasil = $j('#pais_residencia').val() == '76';
-  console.log()
   if (isBrasil) {
     $field.removeAttr('disabled');
 
@@ -918,8 +917,6 @@ let verificaCampoZonaResidencia = () => {
   } else {
     $field.val('');
     $field.makeUnrequired();
-    console.log('disabled?');
-    console.log('disabled?');
     $field.attr('disabled', 'disabled');
   }
 };
