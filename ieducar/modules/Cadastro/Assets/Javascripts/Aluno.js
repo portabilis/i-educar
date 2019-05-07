@@ -1702,9 +1702,9 @@ function canShowParentsFields() {
             <li>Dentre as opções: Prova Ampliada (Fonte 18), Prova superampliada (Fonte 24) ou Material didático e Prova em Braille, apenas uma deve ser informada;</li>
             <li><b>Auxílio ledor</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira, Baixa visão, Surdocegueira, Deficiência física, Deficiência intelectual e Transtorno do espectro autista. <b>Exceto</b> se possuir também Surdez;</li>
             <li><b>Auxílio transcrição</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira, Baixa visão, Surdocegueira, Deficiência física, Deficiência intelectual e Transtorno do espectro autista. Obs.: Quando a deficiência for Cegueira ou Surdocegueira, obrigatoriamente este auxílio deve ser informado junto com um outro auxílio;</li>
-            <li><b>Guia-Intérprete</b>: pode ser informado quando o(a) aluno(a) possuir qualquer deficiência. <b>Exceto</b> se possuir Surdocegueira</li>
+            <li><b>Guia-Intérprete</b>: pode ser informado quando o(a) aluno(a) possuir qualquer deficiência. <b>Exceto</b> se possuir Surdocegueira;</li>
             <li><b>Tradutor-Intérprete de Libras</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
-            <li><b>Leitura Labia</b>l: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
+            <li><b>Leitura Labial</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
             <li><b>Prova Ampliada (Fonte 18)</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Baixa visão e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
             <li><b>Prova superampliada (Fonte 24)</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Baixa visão e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
             <li><b>CD com áudio para deficiente visual</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira, Baixa visão, Surdocegueira, Deficiência física, Deficiência intelectual e Transtorno do espectro autista. <b>Exceto</b> se possuir também Surdez;</li>
@@ -1719,7 +1719,7 @@ function canShowParentsFields() {
 
         $j("#dialog-recursos-prova-inep").dialog({
           autoOpen: false,
-          title: 'Regras para o preenchimento do campo: Recursos necessários para realização de provas:',
+          title: 'Regras para o preenchimento do campo:',
           height: 'auto',
           width: '80%',
           modal: true,

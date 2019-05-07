@@ -25,7 +25,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('Não é possível informar mais de uma opção no campo: Recursos necessários para realização de provas, quando a opção: Nenhum estiver selecionada', $validator->getMessage());
+        $this->assertContains('Não é possível informar mais de uma opção no campo: Recursos necessários para realização de provas, quando a opção: <b>Nenhum</b> estiver selecionada', $validator->getMessage());
     }
 
     public function testProvaAmpliadaAndAnotherPermitedOptionChoosed()
