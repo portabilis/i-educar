@@ -1719,7 +1719,7 @@ function canShowParentsFields() {
 
         $j("#dialog-recursos-prova-inep").dialog({
           autoOpen: false,
-          title: 'Regras para o preenchimento do campo: Recursos necessários para realização de provas:',
+          title: 'Regras para o preenchimento do campo:',
           height: 'auto',
           width: '80%',
           modal: true,
