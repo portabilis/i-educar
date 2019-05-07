@@ -33,9 +33,7 @@ class CreateAggregates extends Migration
     {
         DB::unprepared(
             '
-                DROP TYPE public.typ_idlog;
-                
-                DROP TYPE public.typ_idpes;
+                DROP AGGREGATE public.textcat_all(text);
             '
         );
     }
