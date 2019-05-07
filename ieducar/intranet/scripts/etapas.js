@@ -44,7 +44,14 @@ $j(function () {
             $j('#btn_enviar').click(function (e) {
                 if (validationUtils.validatesFields(true)) {
                     if (parseInt($j('#padrao_ano_escolar').val(), 10) === 1) {
-                        window.acao();
+                        if (typeof window.valida !== "undefined") {
+                            // reproduzindo função encontrada em modules/Cadastro/Assets/Javascripts/Turma.js:332
+                            if (validationUtils.validatesFields(true)) {
+                                window.valida();
+                            }
+                        } else {
+                            window.acao();
+                        }
 
                         return;
                     }
