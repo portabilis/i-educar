@@ -9,6 +9,7 @@ use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
+use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaPessoa;
 use iEducar\Modules\Educacenso\Model\UnidadeVinculadaComOutraInstituicao;
 
 class SelectOptions
@@ -71,6 +72,16 @@ class SelectOptions
     public static function localizacoesDiferenciadasEscola()
     {
         return self::getDefaultOption() + LocalizacaoDiferenciadaEscola::getDescriptiveValues();
+    }
+
+    /**
+     * Retorna as opções disponíveis referentes à localização diferenciada das pessoas
+     *
+     * @return array
+     */
+    public static function localizacoesDiferenciadasPessoa()
+    {
+        return self::getDefaultOption() + LocalizacaoDiferenciadaPessoa::getDescriptiveValues();
     }
 
     /**

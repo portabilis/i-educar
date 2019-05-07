@@ -4,6 +4,9 @@ use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use iEducar\Modules\Educacenso\Validator\NisValidator;
+use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
+use iEducar\Modules\Educacenso\Model\PaisResidencia;
+use iEducar\Support\View\SelectOptions;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -24,8 +27,6 @@ require_once 'Portabilis/Utils/Database.php';
 require_once 'Portabilis/View/Helper/Application.php';
 require_once 'Portabilis/Utils/Validation.php';
 require_once 'Portabilis/Date/Utils.php';
-
-use iEducar\Modules\Educacenso\Model\PaisResidencia;
 
 class clsIndex extends clsBase
 {
@@ -81,6 +82,7 @@ class indice extends clsCadastro
     public $renda_mensal;
     public $data_admissao;
     public $zona_localizacao_censo;
+    public $localizacao_diferenciada;
 
     // Variáveis para controle da foto
     public $objPhoto;
@@ -113,7 +115,7 @@ class indice extends clsCadastro
                 $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade,
                 $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa,
                 $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido,
-                $this->religiao_id, $this->zona_localizacao_censo, $this->nome_social, $this->pais_residencia
+                $this->religiao_id, $this->zona_localizacao_censo, $this->localizacao_diferenciada, $this->nome_social, $this->pais_residencia
             ) =
             $objPessoa->queryRapida(
                 $this->cod_pessoa_fj,
@@ -164,6 +166,7 @@ class indice extends clsCadastro
                 'falecido',
                 'ref_cod_religiao',
                 'zona_localizacao_censo',
+                'localizacao_diferenciada',
                 'nome_social',
                 'pais_residencia'
             );
@@ -932,6 +935,15 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->select('zona_localizacao_censo', $options);
 
+        $options = [
+            'label' => 'Localização diferenciada',
+            'value' => $this->localizacao_diferenciada,
+            'resources' => SelectOptions::localizacoesDiferenciadasPessoa(),
+            'required' => false,
+        ];
+
+        $this->inputsHelper()->select('localizacao_diferenciada', $options);
+
         // complemento
 
         $options = [
@@ -1277,6 +1289,10 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!$this->validaLocalizacaoDiferenciada()) {
+            return false;
+        }
+
         $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
         $this->savePhoto($pessoaId);
         $this->createOrUpdatePessoaFisica($pessoaId);
@@ -1291,6 +1307,17 @@ class indice extends clsCadastro
     private function validaNome()
     {
         $validator = new NameValidator($this->nm_pessoa);
+        if (!$validator->isValid()) {
+            $this->mensagem = $validator->getMessage();
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validaLocalizacaoDiferenciada()
+    {
+        $validator = new DifferentiatedLocationValidator($this->localizacao_diferenciada, $this->zona_localizacao_censo);
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
             return false;
@@ -1479,6 +1506,7 @@ class indice extends clsCadastro
         $fisica->falecido = $this->falecido;
         $fisica->ref_cod_religiao = $this->religiao_id;
         $fisica->zona_localizacao_censo = empty($this->zona_localizacao_censo) ? null : $this->zona_localizacao_censo;
+        $fisica->localizacao_diferenciada = $this->localizacao_diferenciada ?: 'null';
         $fisica->nome_social = $this->nome_social;
         $fisica->pais_residencia = $this->pais_residencia;
 
