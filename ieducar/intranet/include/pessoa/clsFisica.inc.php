@@ -58,6 +58,7 @@ class clsFisica
     public $horario_inicial_trabalho;
     public $horario_final_trabalho;
     public $pais_residencia;
+    public $localizacao_diferenciada;
 
     public $tabela;
     public $schema;
@@ -383,6 +384,11 @@ class clsFisica
                 $valores .= ", '$this->pais_residencia'";
             }
 
+            if (is_numeric($this->localizacao_diferenciada)) {
+                $campos .=  ', localizacao_diferenciada';
+                $valores .= ", '$this->localizacao_diferenciada'";
+            }
+
             if ($this->falecido) {
                 $campos .=  ', falecido';
                 $valores .= ', \'t\'';
@@ -631,6 +637,11 @@ class clsFisica
 
             if ($this->pais_residencia) {
                 $set  .= "$gruda pais_residencia = '{$this->pais_residencia}'";
+                $gruda = ', ';
+            }
+
+            if ($this->localizacao_diferenciada) {
+                $set  .= "$gruda localizacao_diferenciada = {$this->localizacao_diferenciada} ";
                 $gruda = ', ';
             }
 
@@ -955,7 +966,7 @@ class clsFisica
     {
         if ($this->idpes) {
             $db = new clsBanco();
-            $db->Consulta("SELECT fisica.idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido, ativo, data_exclusao, zona_localizacao_censo, nome, nome_social, pais_residencia FROM {$this->schema}.{$this->tabela}
+            $db->Consulta("SELECT fisica.idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido, ativo, data_exclusao, zona_localizacao_censo, nome, nome_social, pais_residencia, localizacao_diferenciada FROM {$this->schema}.{$this->tabela}
             INNER JOIN cadastro.pessoa ON (pessoa.idpes = fisica.idpes) WHERE fisica.idpes = {$this->idpes}");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
