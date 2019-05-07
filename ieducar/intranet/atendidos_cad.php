@@ -718,7 +718,7 @@ class indice extends clsCadastro
             'hiddenInputOptions' => $hiddenInputOptions
         ];
 
-        $this->inputsHelper()->simpleSearchPais('nome', $options, $helperOptions);
+        $this->inputsHelper()->simpleSearchPaisSemBrasil('nome', $options, $helperOptions);
 
         //Falecido
         $options = ['label' => 'Falecido?', 'required' => false, 'value' => dbBool($this->falecido)];
