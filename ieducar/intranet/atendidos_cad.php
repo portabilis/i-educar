@@ -2,6 +2,7 @@
 
 use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
+use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -1259,10 +1260,6 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->validaCertidao()) {
-            return false;
-        }
-
         if (!$this->validaNisPisPasep()) {
             return false;
         }
@@ -1272,6 +1269,10 @@ class indice extends clsCadastro
         }
 
         if (!empty($this->data_nasc) && !$this->validaDataNascimento()) {
+            return false;
+        }
+
+        if (!$this->validaCertidao()) {
             return false;
         }
 
@@ -1397,6 +1398,14 @@ class indice extends clsCadastro
             $this->mensagem = 'O campo referente a certidão de casamento deve conter exatos 32 dígitos.';
 
             return false;
+        }
+
+        if (!empty($this->data_nasc) && $certidaoNascimento) {
+            $validator = new BirthCertificateValidator($this->certidao_nascimento, Portabilis_Date_Utils::brToPgSQL($this->data_nasc));
+            if (!$validator->isValid()) {
+                $this->mensagem = $validator->getMessage();
+                return false;
+            }
         }
 
         return true;

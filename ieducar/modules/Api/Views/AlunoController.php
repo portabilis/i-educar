@@ -1,7 +1,10 @@
 <?php
 
+use App\Models\Individual;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
+use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
+use iEducar\Modules\People\CertificateType;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
@@ -227,6 +230,7 @@ class AlunoController extends ApiCoreController
             parent::canPost() &&
             $this->validatesUniquenessOfAlunoByPessoaId() &&
             $this->validateDeficiencies() &&
+            $this->validateBirthCertificate() &&
             $this->validateInepExam()
         );
     }
@@ -236,6 +240,7 @@ class AlunoController extends ApiCoreController
         return (
             parent::canPut() &&
             $this->validateDeficiencies()&&
+            $this->validateBirthCertificate()&&
             $this->validateInepExam()
         );
     }
@@ -255,6 +260,27 @@ class AlunoController extends ApiCoreController
             $this->messenger->append($validator->getMessage());
             return false;
         }
+    }
+
+    /**
+     * @return bool
+     */
+    private function validateBirthCertificate()
+    {
+        $usesBirthCertificate = $this->getRequest()->tipo_certidao_civil == CertificateType::BIRTH_NEW_FORMAT;
+        $individual = Individual::find($this->getRequest()->pessoa_id);
+        if (!$usesBirthCertificate || empty($this->getRequest()->certidao_nascimento) || !$individual || empty($individual->birthdate)) {
+            return true;
+        }
+
+        $validator = new BirthCertificateValidator($this->getRequest()->certidao_nascimento, $individual->birthdate);
+
+        if ($validator->isValid()) {
+            return true;
+        }
+
+        $this->messenger->append($validator->getMessage());
+        return false;
     }
 
     /**
@@ -1695,11 +1721,11 @@ class AlunoController extends ApiCoreController
         //
         // quando selecionado um tipo diferente do novo formato,
         // é removido o valor de certidao_nascimento.
-        if ($this->getRequest()->tipo_certidao_civil == 'certidao_nascimento_novo_formato') {
+        if ($this->getRequest()->tipo_certidao_civil == CertificateType::BIRTH_NEW_FORMAT) {
             $documentos->tipo_cert_civil = null;
             $documentos->certidao_casamento = '';
             $documentos->certidao_nascimento = $this->getRequest()->certidao_nascimento;
-        } elseif ($this->getRequest()->tipo_certidao_civil == 'certidao_casamento_novo_formato') {
+        } elseif ($this->getRequest()->tipo_certidao_civil == CertificateType::MARRIAGE_NEW_FORMAT) {
             $documentos->tipo_cert_civil = null;
             $documentos->certidao_nascimento = '';
             $documentos->certidao_casamento = $this->getRequest()->certidao_casamento;

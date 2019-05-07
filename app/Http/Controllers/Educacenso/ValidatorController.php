@@ -10,6 +10,7 @@ class ValidatorController extends Controller
     const VALIDATORS = [
         'nome' => 'iEducar\Modules\Educacenso\Validator\NameValidator',
         'data-nascimento' => 'iEducar\Modules\Educacenso\Validator\BirthDateValidator',
+        'certidao-nascimento' => 'iEducar\Modules\Educacenso\Validator\BirthCertificateValidator',
     ];
 
     public function validation($validator, Request $request)
@@ -18,8 +19,8 @@ class ValidatorController extends Controller
         if (is_null($validatorClass)) {
             return response()->json(['error' => 'Wrong validator', 'success' => false], 422);
         }
-
-        $validator = new $validatorClass($request->value ?: '');
+        $values = is_array($request->values) ? $request->values : [($request->value ?: '')];
+        $validator = new $validatorClass(...$values);
         if ($validator->isValid()) {
             return response()->json(['success' => true]);
         } else {
