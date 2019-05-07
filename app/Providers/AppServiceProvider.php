@@ -5,14 +5,15 @@ namespace App\Providers;
 use App\Models\SchoolManager;
 use App\Observers\SchoolManagerObserver;
 use App\Services\CacheManager;
+use App\Models\LegacyInstitution;
 use Barryvdh\Debugbar\ServiceProvider as DebugbarServiceProvider;
 use iEducar\Support\Navigation\Breadcrumb;
 use iEducar\Support\Navigation\TopMenu;
 use iEducar\Modules\ErrorTracking\HoneyBadgerTracker;
 use iEducar\Modules\ErrorTracking\Tracker;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -103,6 +104,10 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $this->app->bind(Tracker::class, HoneyBadgerTracker::class);
+
+        $this->app->bind(LegacyInstitution::class, function () {
+            return LegacyInstitution::query()->where('ativo', 1)->firstOrFail();
+        });
 
         Cache::swap(new CacheManager(app()));
     }

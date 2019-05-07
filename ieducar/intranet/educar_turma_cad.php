@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\iDiarioService;
 use App\Services\SchoolClassService;
 use App\Models\School;
 use App\Models\LegacyCourse;
@@ -7,6 +8,8 @@ use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
+use RuntimeException;
+use Throwable;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -457,7 +460,7 @@ class indice extends clsCadastro
         $this->campoQuebra2();
 
         // hora
-        if (!$this->obrigaCamposHorario()) {
+        if ($obrigarCamposCenso && !$this->obrigaCamposHorario()) {
             $this->hora_inicial = '';
             $this->hora_final = '';
             $this->hora_inicio_intervalo = '';
@@ -491,7 +494,7 @@ class indice extends clsCadastro
         $options = ['label' => 'Dias da semana',
             'size' => 50,
             'required' => false,
-            'disabled' => !$this->obrigaCamposHorario(),
+            'disabled' => $obrigarCamposCenso && !$this->obrigaCamposHorario(),
             'options' => ['values' => $this->dias_semana,
                 'all_values' => [1 => 'Domingo',
                     2 => 'Segunda',
@@ -894,7 +897,9 @@ class indice extends clsCadastro
 
         $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
-        $this->atualizaModulos();
+        if (!$this->atualizaModulos()) {
+            return false;
+        }
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.';
         $this->simpleRedirect('educar_turma_lst.php');
@@ -904,6 +909,7 @@ class indice extends clsCadastro
     {
         $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
         $turmaDetalhe = $turmaDetalhe->detalhe();
+        $this->ref_cod_curso = $turmaDetalhe['ref_cod_curso'];
         $this->ref_ref_cod_escola = $turmaDetalhe['ref_ref_cod_escola'];
 
         if (!$this->verificaModulos()) {
@@ -918,6 +924,9 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!$this->verificaTurno()) {
+            return false;
+        }
 
         if (is_null($this->ref_cod_instituicao)) {
             $this->ref_cod_instituicao = $turmaDetalhe['ref_cod_instituicao'];
@@ -954,7 +963,9 @@ class indice extends clsCadastro
 
         $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
-        $this->atualizaModulos();
+        if (!$this->atualizaModulos()) {
+            return false;
+        }
 
         $this->message = 'Edição efetuada com sucesso.';
 
@@ -1022,7 +1033,7 @@ class indice extends clsCadastro
         return true;
     }
 
-    protected function validaCampoLocalFuncionamentoDiferenciad()
+    protected function validaCampoLocalFuncionamentoDiferenciado()
     {
         $school = School::find($this->ref_ref_cod_escola);
         $localFuncionamentoEscola = $school->local_funcionamento;
@@ -1095,7 +1106,7 @@ class indice extends clsCadastro
         }
 
         if ($course->modalidade_curso == 4 && !in_array($this->etapa_educacenso, [30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67, 68])) {
-            $this->mensagem = 'Quando a modalidade do curso é: Educação Profissional, o campo: Etapa de ensino deve ser uma das seguintes opções:30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67 ou 68.';
+            $this->mensagem = 'Quando a modalidade do curso é: Educação Profissional, o campo: Etapa de ensino deve ser uma das seguintes opções: 30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67 ou 68.';
             return false;
         }
 
@@ -1140,7 +1151,48 @@ class indice extends clsCadastro
         if (!$this->validaCampoTipoAtendimento()) {
             return false;
         }
-        if (!$this->validaCampoLocalFuncionamentoDiferenciad()) {
+        if (!$this->validaCampoLocalFuncionamentoDiferenciado()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function verificaTurno()
+    {
+        $turmaId = (int) $this->cod_turma;
+        $turnoId = (int) $this->turma_turno_id;
+        $count = 0;
+
+        if ($turnoId === clsPmieducarTurma::TURNO_INTEGRAL) { // Se integral não pode ter vínculos noturnos
+            $count += DB::table('pmieducar.matricula_turma as mt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'mt.ref_cod_turma')
+                ->where('mt.turno_id', clsPmieducarTurma::TURNO_NOTURNO)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+
+            $count += DB::table('modules.professor_turma as pt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'pt.turma_id')
+                ->where('pt.turno_id', clsPmieducarTurma::TURNO_NOTURNO)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+        } else { // Se ñ é integral não pode ter vínculos diferentes do novo turno
+            $count += DB::table('pmieducar.matricula_turma as mt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'mt.ref_cod_turma')
+                ->where('mt.turno_id', '<>', $turnoId)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+
+            $count += DB::table('modules.professor_turma as pt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'pt.turma_id')
+                ->where('pt.turno_id', '<>', $turnoId)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+        }
+
+        if ($count > 0) {
+            $this->mensagem = 'Existem enturmações ou professores atrelados a esta turma em turnos diferentes do especificado.';
+
             return false;
         }
 
@@ -1203,8 +1255,85 @@ class indice extends clsCadastro
         return $objTurma;
     }
 
+    protected function validaModulos()
+    {
+        $turmaId = $this->cod_turma;
+        $etapasCount = count($this->data_inicio);
+        $etapasCountAntigo = (int) Portabilis_Utils_Database::selectField(
+            'SELECT COUNT(*) AS count FROM pmieducar.turma_modulo WHERE ref_cod_turma = $1',
+            [$turmaId]
+        );
+
+        if ($etapasCount >= $etapasCountAntigo) {
+            return true;
+        }
+
+        $etapasTmp = $etapasCount;
+        $etapas = [];
+
+        while ($etapasTmp < $etapasCountAntigo) {
+            $etapasTmp += 1;
+            $etapas[] = $etapasTmp;
+        }
+
+        $counts = [];
+
+        $counts[] = DB::table('modules.falta_componente_curricular as fcc')
+            ->join('modules.falta_aluno as fa', 'fa.id',  '=', 'fcc.falta_aluno_id')
+            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'fa.matricula_id')
+            ->join('pmieducar.matricula_turma as mt', 'mt.ref_cod_matricula', '=', 'm.cod_matricula')
+            ->whereIn('fcc.etapa', $etapas)
+            ->where('mt.ref_cod_turma', $turmaId)
+            ->where('m.ativo', 1)
+            ->count();
+
+        $counts[] = DB::table('modules.falta_geral as fg')
+            ->join('modules.falta_aluno as fa', 'fa.id',  '=', 'fg.falta_aluno_id')
+            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'fa.matricula_id')
+            ->join('pmieducar.matricula_turma as mt', 'mt.ref_cod_matricula', '=', 'm.cod_matricula')
+            ->whereIn('fg.etapa', $etapas)
+            ->where('mt.ref_cod_turma', $turmaId)
+            ->where('m.ativo', 1)
+            ->count();
+
+        $counts[] = DB::table('modules.nota_componente_curricular as ncc')
+            ->join('modules.nota_aluno as na', 'na.id',  '=', 'ncc.nota_aluno_id')
+            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'na.matricula_id')
+            ->join('pmieducar.matricula_turma as mt', 'mt.ref_cod_matricula', '=', 'm.cod_matricula')
+            ->whereIn('ncc.etapa', $etapas)
+            ->where('mt.ref_cod_turma', $turmaId)
+            ->where('m.ativo', 1)
+            ->count();
+
+        $sum = array_sum($counts);
+
+        if ($sum > 0) {
+            throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.');
+        }
+
+        $iDiarioService = app(iDiarioService::class);
+
+        foreach ($etapas as $etapa) {
+            if ($iDiarioService->getStepActivityByClassroom($turmaId, $etapa)) {
+                throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas no diário online.');
+            }
+        }
+
+        return true;
+    }
+
     public function atualizaModulos()
     {
+        try {
+            $this->validaModulos();
+        } catch (Exception $e) {
+            $this->Inicializar();
+
+            $this->mensagem = $e->getMessage();
+
+            return false;
+        }
+
         $objModulo = new clsPmieducarTurmaModulo();
         $excluiu = $objModulo->excluirTodos($this->cod_turma);
         $modulos = $this->montaModulos();

@@ -596,7 +596,7 @@ if ( document.getElementById('ref_cod_instituicao') )
 }
 
 var search = function (request, response) {
-    var searchPath = '/module/Api/Pessoa?oper=get&resource=pessoa-search',
+    var searchPath = '/module/Api/Servidor?oper=get&resource=servidor-search',
         params = {
             query: request.term
         };
@@ -607,29 +607,62 @@ var search = function (request, response) {
 };
 
 var handleSelect = function (event, ui) {
-    var $target = $j(event.target),
-        id = $target.attr('id'),
+    var target = $j(event.target),
+        id = target.attr('id'),
         idNum = id.match(/\[(\d+)\]/),
-        $refEscola = $j('input[id="managers_individual_id[' + idNum[1] + ']"]');
+        refIdServidor = $j('input[id="servidor_id[' + idNum[1] + ']"]'),
+        refInepServidor = $j('input[id="managers_inep_id[' + idNum[1] + ']"]'),
+        refEmail = $j('input[id="managers_email[' + idNum[1] + ']"]');
 
-    $target.val(ui.item.label);
-    $refEscola.val(ui.item.value);
+    target.val(ui.item.label);
+    refIdServidor.val(ui.item.value);
+
+    var searchPath = '/module/Api/Servidor?oper=get&resource=dados-servidor',
+        params = {
+            servidor_id: ui.item.value
+        };
+
+    $j.get(searchPath, params, function (dataResponse) {
+        refInepServidor.val(dataResponse.result.inep);
+        refEmail.val(dataResponse.result.email);
+    });
 
     return false;
 };
 
 function setAutoComplete() {
-    $j.each($j('input[id^="managers_individual"]'), function (index, field) {
+    $j.each($j('input[id^="servidor"]'), function (index, field) {
         $j(field).autocomplete({
             source: search,
             select: handleSelect,
             minLength: 1,
-            autoFocus: false
+            autoFocus: true,
+            autoSelect: true,
         });
+
+        $j(field).attr('placeholder', 'Digite um nome para buscar');
+    });
+
+    $j('input[id^="servidor"]').blur(function() {
+        validateServidor(this)
     });
 };
 
 setAutoComplete();
+
+function validateServidor(field){
+    var id = $j(field).attr('id'),
+        idNum = id.match(/\[(\d+)\]/),
+        refIdServidor = $j('input[id="servidor_id[' + idNum[1] + ']"]');
+
+    if ($j(field).val() === '') {
+        refIdServidor.val('')
+    } else {
+        if (refIdServidor.val() === '') {
+            messageUtils.error('O campo: <b>Nome do(a) gestor(a)</b> deve ser preenchido com o cadastro de um servidor pré-cadastrado', field);
+        }
+    }
+}
 
 $j('#btn_add_tab_add_1').click(function () {
     setAutoComplete();
@@ -637,6 +670,10 @@ $j('#btn_add_tab_add_1').click(function () {
 });
 
 $j.each($j('input[id^="managers_access_criteria_description"]'), function (index, field) {
+    $j(field).val(decodeURIComponent($j(field).val().replace(/\+/g, ' ')));
+});
+
+$j.each($j('input[id^="managers_email"]'), function (index, field) {
     $j(field).val(decodeURIComponent($j(field).val().replace(/\+/g, ' ')));
 });
 

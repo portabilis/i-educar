@@ -94,6 +94,31 @@ class Registro20 implements RegistroEducacenso
     /**
       * @var string
       */
+    public $possuiServidorLibras;
+
+    /**
+      * @var string
+      */
+    public $possuiServidorLibrasOuAuxiliarEad;
+
+    /**
+      * @var string
+      */
+    public $possuiServidorDiferenteLibrasOuAuxiliarEad;
+
+    /**
+      * @var string
+      */
+    public $possuiAlunoNecessitandoTradutor;
+
+    /**
+      * @var string
+      */
+    public $possuiServidorNecessitandoTradutor;
+
+    /**
+      * @var string
+      */
     public $localFuncionamentoDiferenciado;
 
     /**
@@ -115,6 +140,38 @@ class Registro20 implements RegistroEducacenso
       * @var string
       */
     public $codCursoProfissional;
+
+    /**
+      * @return bool
+      */
+    public function horarioFuncionamentoValido()
+    {
+        if ($this->horaInicial >= $this->horaFinal) {
+            return false;
+        }
+        $horaInicial = explode(':', $this->horaInicial)[0];
+        $horaFinal = explode(':', $this->horaFinal)[0];
+        $minutoInicial = explode(':', $this->horaInicial)[1];
+        $minutoFinal = explode(':', $this->horaFinal)[1];
+
+        return $this->validaHoras($horaInicial) && $this->validaHoras($horaFinal) && $this->validaMinutos($minutoInicial) && $this->validaMinutos($minutoFinal);
+    }
+
+    /**
+      * @return bool
+      */
+    private function validaHoras($horas)
+    {
+        return strlen($horas) == 2 && $horas >= '00' && $horas <= '23';
+    }
+
+    /**
+      * @return bool
+      */
+    private function validaMinutos($minutos)
+    {
+        return strlen($minutos) == 2 && $minutos <= '55' && ((int) $minutos % 5) == 0;
+    }
 
     public function getLocalFuncionamentoDescriptiveValue()
     {

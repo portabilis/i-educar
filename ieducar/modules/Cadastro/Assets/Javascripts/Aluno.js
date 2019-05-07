@@ -217,6 +217,16 @@ var newSubmitForm = function (event) {
         return false;
     }
 
+    $tipoTransporte = $j('#tipo_transporte');
+
+    if ($tipoTransporte.val() == 'municipal' || $tipoTransporte.val() == 'estadual') {
+        veiculoTransporte = $j('#veiculo_transporte_escolar').val();
+        if (obrigarCamposCenso && (veiculoTransporte == '' || veiculoTransporte == null)) {
+            messageUtils.error('O campo Veículo utilizado deve ser preenchido');
+            return false;
+        }
+    }
+
     submitFormExterno();
 };
 
@@ -496,10 +506,6 @@ resourceOptions.handleGet = function (dataResponse) {
     $j('#parentesco_quatro').val(dataResponse.parentesco_quatro);
     $j('#autorizado_cinco').val(dataResponse.autorizado_cinco);
     $j('#parentesco_cinco').val(dataResponse.parentesco_cinco);
-
-    $veiculo_transporte_escolar = $j('#veiculo_transporte_escolar');
-    $veiculo_transporte_escolar.val(dataResponse.veiculo_transporte_escolar);
-    $veiculo_transporte_escolar.trigger('chosen:updated');
 
     if ($j('#autorizado_um').val() == '') {
         $j('#autorizado_dois').closest('tr').hide();
@@ -838,7 +844,15 @@ resourceOptions.handleGet = function (dataResponse) {
             $j('#pessoaj_id').val(dataResponse.ref_idpes_destino);
         }
     }
+
     camposTransporte();
+
+    setTimeout(function() {
+        $veiculo_transporte_escolar = $j('#veiculo_transporte_escolar');
+        $veiculo_transporte_escolar.val(dataResponse.veiculo_transporte_escolar);
+        $veiculo_transporte_escolar.trigger('chosen:updated');
+    }, 550);
+
     verificaObrigatoriedadeRg();
 };
 
@@ -2458,6 +2472,8 @@ if ($j('#transporte_rota').length > 0) {
             $j('#pessoaj_transporte_destino').closest('tr').hide();
             $j('#transporte_observacao').closest('tr').hide();
         }
+
+        $j('#veiculo_transporte_escolar').trigger('chosen:updated');
     }
 
     $j('#tipo_transporte').on('change', function () {
