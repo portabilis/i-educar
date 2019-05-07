@@ -737,7 +737,7 @@ class indice extends clsCadastro
         $this->inputsHelper()->simpleSearchMunicipio('nome', $options, $helperOptions);
 
         // Religião
-        $this->inputsHelper()->religiao(['required' => false]);
+        $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
 
         // Detalhes do Endereço
         if ($this->idlog && $this->idbai) {
