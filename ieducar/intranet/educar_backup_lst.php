@@ -81,7 +81,7 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $this->addCabecalhos( array(
             "Download",
@@ -123,17 +123,13 @@ class indice extends clsListagem
         }
         $this->addPaginador2( "educar_backup_lst.php", $total, $_GET, $this->data_backup, $this->__limite );
 
-        $obj_permissao = new clsPermissoes();   
+        $obj_permissao = new clsPermissoes();
 
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_configuracoes_index.php"    => "Configurações",
-         ""                                  => "Backups"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Backups', [
+            url('intranet/educar_configuracoes_index.php') => 'Configurações',
+        ]);
     }
 }
 // cria uma extensao da classe base
