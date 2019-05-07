@@ -112,7 +112,7 @@ class indice extends clsCadastro
     // Outros campos
     $this->campoTexto('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 30, 255, TRUE);
 
-    $options = array('label' => Escolaridade educacenso, 'resources' => SelectOptions::escolaridades(), 'value' => $this->escolaridade);
+    $options = array('label' => 'Escolaridade educacenso', 'resources' => SelectOptions::escolaridades(), 'value' => $this->escolaridade);
     $this->inputsHelper()->select('escolaridade', $options);
   }
 
