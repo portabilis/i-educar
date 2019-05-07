@@ -106,11 +106,13 @@ var getPersonByCpf = function(cpf) {
 // hide or show #pais_origem_nome by #tipo_nacionalidade
 var checkTipoNacionalidade = function() {
   if ($j.inArray($j('#tipo_nacionalidade').val(), ['2', '3']) > -1) {
+    $j('#naturalidade_nome').makeUnrequired();
     if (obrigarCamposCenso) {
       $j('#pais_origem_nome').makeRequired();
     }
     $j('#pais_origem_nome').show();
   } else {
+    $j('#naturalidade_nome').makeRequired();
     $j('#pais_origem_nome').hide();
   }
 }
