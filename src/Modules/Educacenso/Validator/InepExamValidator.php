@@ -47,7 +47,7 @@ class InepExamValidator implements EducacensoValidator
         }
 
         if (count($this->resources) > 1) {
-            $this->message = 'Não é possível informar mais de uma opção no campo: Recursos necessários para realização de provas, quando a opção: Nenhum estiver selecionada.';
+            $this->message = 'Não é possível informar mais de uma opção no campo: Recursos necessários para realização de provas, quando a opção: <b>Nenhum</b> estiver selecionada.';
             return false;
         }
 
