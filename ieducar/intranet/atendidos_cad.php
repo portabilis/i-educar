@@ -924,7 +924,7 @@ class indice extends clsCadastro
         ];
 
         $options = [
-            'label' => 'Zona localização',
+            'label' => 'Zona de residência',
             'value' => $this->zona_localizacao_censo,
             'resources' => $zonas,
             'required' => $obrigarCamposCenso,
