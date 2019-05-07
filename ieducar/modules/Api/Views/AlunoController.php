@@ -4,6 +4,7 @@ use App\Models\Individual;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
+use iEducar\Modules\Educacenso\Validator\NisValidator;
 use iEducar\Modules\People\CertificateType;
 use Illuminate\Support\Facades\Session;
 
@@ -231,6 +232,7 @@ class AlunoController extends ApiCoreController
             $this->validatesUniquenessOfAlunoByPessoaId() &&
             $this->validateDeficiencies() &&
             $this->validateBirthCertificate() &&
+            $this->validateNis() &&
             $this->validateInepExam()
         );
     }
@@ -241,6 +243,7 @@ class AlunoController extends ApiCoreController
             parent::canPut() &&
             $this->validateDeficiencies()&&
             $this->validateBirthCertificate()&&
+            $this->validateNis()&&
             $this->validateInepExam()
         );
     }
@@ -274,6 +277,21 @@ class AlunoController extends ApiCoreController
         }
 
         $validator = new BirthCertificateValidator($this->getRequest()->certidao_nascimento, $individual->birthdate);
+
+        if ($validator->isValid()) {
+            return true;
+        }
+
+        $this->messenger->append($validator->getMessage());
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    private function validateNis()
+    {
+        $validator = new NisValidator($this->getRequest()->nis_pis_pasep ?? '');
 
         if ($validator->isValid()) {
             return true;
