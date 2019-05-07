@@ -905,6 +905,26 @@ $j('#certidao_nascimento').on('change', checkJustificativa);
 $j('#nis_pis_pasep').on('change', checkJustificativa);
 $j('#id_federal').on('change', checkJustificativa);
 
+let verificaCampoZonaResidencia = () => {
+  let $field = $j('#zona_localizacao_censo');
+  let isBrasil = $j('#pais_residencia').val() == '76';
+  console.log()
+  if (isBrasil) {
+    $field.removeAttr('disabled');
+
+    if (obrigarCamposCenso) {
+      $field.makeRequired();
+    }
+  } else {
+    $field.val('');
+    $field.makeUnrequired();
+    console.log('disabled?');
+    console.log('disabled?');
+    $field.attr('disabled', 'disabled');
+  }
+};
+$j('#pais_residencia').change(verificaCampoZonaResidencia);
+
 var handleGetPersonDetails = function (dataResponse) {
     handleMessages(dataResponse.msgs);
     $pessoaNotice.hide();
@@ -1039,6 +1059,8 @@ var handleGetPersonDetails = function (dataResponse) {
         $j('#tipo_responsavel').append('<option value="pai_mae" >Pai e M&atilde;e</option>');
         $j('#tipo_responsavel').append('<option value="outra_pessoa" >Outra pessoa</option>');
     }
+
+    verificaCampoZonaResidencia();
 
     $j('#tipo_responsavel').val(tipo_resp).change();
 
