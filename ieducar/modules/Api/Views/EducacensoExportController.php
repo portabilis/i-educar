@@ -22,9 +22,14 @@ use iEducar\Modules\Educacenso\ExportRule\CargoGestor;
 use iEducar\Modules\Educacenso\ExportRule\ComponentesCurriculares;
 use iEducar\Modules\Educacenso\ExportRule\CriterioAcessoGestor;
 use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
+use iEducar\Modules\Educacenso\ExportRule\PoderPublicoResponsavelTransporte;
+use iEducar\Modules\Educacenso\ExportRule\RecebeEscolarizacaoOutroEspaco;
 use iEducar\Modules\Educacenso\ExportRule\Regulamentacao;
 use iEducar\Modules\Educacenso\ExportRule\SituacaoFuncionamento;
+use iEducar\Modules\Educacenso\ExportRule\TiposAee;
 use iEducar\Modules\Educacenso\ExportRule\TipoVinculoServidor;
+use iEducar\Modules\Educacenso\ExportRule\TransporteEscolarPublico;
+use iEducar\Modules\Educacenso\ExportRule\TurmaMulti;
 use iEducar\Modules\Educacenso\Formatters;
 use iEducar\Modules\Educacenso\ValueTurmaMaisEducacao;
 use Illuminate\Support\Facades\Session;
@@ -846,14 +851,52 @@ class EducacensoExportController extends ApiCoreController
         $educacensoRepository = new EducacensoRepository();
         $registro60Model = new Registro60();
         $registro60 = new Registro60Data($educacensoRepository, $registro60Model);
-        
+
         /** @var Registro60[] $alunos */
         $alunos = $registro60->getExportFormatData($escolaId, $ano);
 
         $stringCenso = '';
         foreach ($alunos as $aluno) {
-            $data = [
+            $aluno = TurmaMulti::handle($aluno);
+            $aluno = TiposAee::handle($aluno);
+            $aluno = RecebeEscolarizacaoOutroEspaco::handle($aluno);
+            $aluno = TransporteEscolarPublico::handle($aluno);
+            /** @var Registro60 $aluno */
+            $aluno = PoderPublicoResponsavelTransporte::handle($aluno);
 
+            $data = [
+                $aluno->registro,
+                $aluno->inepEscola,
+                $aluno->codigoPessoa,
+                $aluno->inepAluno,
+                $aluno->codigoTurma,
+                $aluno->inepTurma,
+                $aluno->matriculaAluno,
+                $aluno->etapaAluno,
+                $aluno->tipoAtendimentoDesenvolvimentoFuncoesGognitivas,
+                $aluno->tipoAtendimentoDesenvolvimentoVidaAutonoma,
+                $aluno->tipoAtendimentoEnriquecimentoCurricular,
+                $aluno->tipoAtendimentoEnsinoInformaticaAcessivel,
+                $aluno->tipoAtendimentoEnsinoLibras,
+                $aluno->tipoAtendimentoEnsinoLinguaPortuguesa,
+                $aluno->tipoAtendimentoEnsinoSoroban,
+                $aluno->tipoAtendimentoEnsinoBraile,
+                $aluno->tipoAtendimentoEnsinoOrientacaoMobilidade,
+                $aluno->tipoAtendimentoEnsinoCaa,
+                $aluno->tipoAtendimentoEnsinoRecursosOpticosNaoOpticos,
+                $aluno->recebeEscolarizacaoOutroEspacao,
+                $aluno->transportePublico,
+                $aluno->poderPublicoResponsavelTransporte,
+                $aluno->veiculoTransporteBicicleta,
+                $aluno->veiculoTransporteMicroonibus,
+                $aluno->veiculoTransporteOnibus,
+                $aluno->veiculoTransporteTracaoAnimal,
+                $aluno->veiculoTransporteVanKonbi,
+                $aluno->veiculoTransporteOutro,
+                $aluno->veiculoTransporteAquaviarioCapacidade5,
+                $aluno->veiculoTransporteAquaviarioCapacidade5a15,
+                $aluno->veiculoTransporteAquaviarioCapacidade15a35,
+                $aluno->veiculoTransporteAquaviarioCapacidadeAcima35
             ];
 
             $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;
