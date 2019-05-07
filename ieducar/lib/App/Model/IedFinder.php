@@ -783,7 +783,7 @@ class App_Model_IedFinder extends CoreExt_Entity
                 m.turno_pre_matricula,
                 m.dependencia,
                 data_saida_escola,
-                turno_id,
+                mt.turno_id,
                 p.nome,
                 (p.nome) AS nome_upper,
                 e.ref_cod_instituicao,
