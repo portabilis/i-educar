@@ -3,6 +3,7 @@
 use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
+use iEducar\Modules\Educacenso\Validator\NisValidator;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -1416,6 +1417,12 @@ class indice extends clsCadastro
         if ($this->nis_pis_pasep && strlen($this->nis_pis_pasep) != 11) {
             $this->mensagem = 'O NIS (PIS/PASEP) da pessoa deve conter 11 dígitos.';
 
+            return false;
+        }
+
+        $validator = new NisValidator($this->nis_pis_pasep ?? '');
+        if (!$validator->isValid()) {
+            $this->mensagem = $validator->getMessage();
             return false;
         }
 
