@@ -1810,8 +1810,14 @@ function canShowParentsFields() {
         let checkTipoNacionalidade = () => {
           if ($j.inArray($j('#tipo_nacionalidade').val(), ['2', '3']) > -1) {
             $j('#pais_origem_nome').show();
+            $j("#naturalidade_aluno_pessoa-aluno").makeUnrequired();
+            $j('label[for="naturalidade_pessoa-aluno"] .campo_obrigatorio').remove();
           } else {
             $j('#pais_origem_nome').hide();
+            $j("#naturalidade_aluno_pessoa-aluno").makeRequired();
+            if (!$j('label[for="naturalidade_pessoa-aluno"] .campo_obrigatorio').length) {
+              $j('label[for="naturalidade_pessoa-aluno"]').append($j('<span class="campo_obrigatorio">*</span>'));
+            }
           }
         }
         $j('#tipo_nacionalidade').change(checkTipoNacionalidade);
@@ -1857,7 +1863,10 @@ function canShowParentsFields() {
                     bValid = bValid && checkSelect(sexo, "sexo");
                     bValid = bValid && checkSelect(estadocivil, "estado civil");
                     bValid = bValid && checkRegexp(datanasc, /(^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$)/i, "O campo data de nascimento deve ser preenchido no formato dd/mm/yyyy.");
-                    bValid = bValid && checkSimpleSearch(municipio, municipio_id, "munic\u00edpio");
+                    if (municipio.hasClass('obrigatorio')) {
+                      bValid = bValid && checkSimpleSearch(municipio, municipio_id, "munic\u00edpio");
+                    }
+
                     bValid = bValid && ($j('#cep_').val() == '' ? true : validateEndereco());
 
                     if ($j('#zona_localizacao_censo').hasClass('obrigatorio')) {
@@ -1874,7 +1883,7 @@ function canShowParentsFields() {
                     }
 
                     if (bValid) {
-                        postPessoa($j(this), $j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val(), (editar_pessoa ? $j('#pessoa_id').val() : null), null, ddd_telefone_1.val(), telefone_1.val(), ddd_telefone_mov.val(), telefone_mov.val(), undefined,
+                        postPessoa($j(this), $j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val() || 'NULL', (editar_pessoa ? $j('#pessoa_id').val() : null), null, ddd_telefone_1.val(), telefone_1.val(), ddd_telefone_mov.val(), telefone_mov.val(), undefined,
                           $j('#tipo_nacionalidade').val(), $j('#pais_origem_id').val(), $j('#cor_raca').val(), $j('#zona_localizacao_censo').val(), nome_social.val(), $j('#pais_residencia').val());
                     }
                 },
