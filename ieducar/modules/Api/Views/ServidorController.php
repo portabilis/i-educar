@@ -141,6 +141,23 @@ class ServidorController extends ApiCoreController
         return ['escolaridade' => $escolaridade];
     }
 
+    protected function getDadosServidor()
+    {
+        $servidor = $this->getRequest()->servidor_id;
+
+        $sql = 'SELECT pessoa.nome,
+                       pessoa.email,
+                       educacenso_cod_docente.cod_docente_inep AS inep
+                FROM pmieducar.servidor
+                JOIN cadastro.pessoa ON pessoa.idpes = servidor.cod_servidor
+                JOIN modules.educacenso_cod_docente ON educacenso_cod_docente.cod_servidor = servidor.cod_servidor
+                WHERE servidor.cod_servidor = $1';
+
+        $result = $this->fetchPreparedQuery($sql, [$servidor]);
+
+        return ['result' => $result[0]];
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'servidor-search')) {
@@ -149,6 +166,8 @@ class ServidorController extends ApiCoreController
             $this->appendResponse($this->getEscolaridade());
         } elseif ($this->isRequestFor('get', 'servidores-disciplinas-turmas')) {
             $this->appendResponse($this->getServidoresDisciplinasTurmas());
+        } elseif ($this->isRequestFor('get', 'dados-servidor')) {
+            $this->appendResponse($this->getDadosServidor());
         } else {
             $this->notImplementedOperationError();
         }
