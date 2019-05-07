@@ -30,7 +30,6 @@ class AddForeignKeysOnPmieducarMatriculaExcessaoTable extends Migration
     public function down()
     {
         Schema::table('pmieducar.matricula_excessao', function (Blueprint $table) {
-            $table->dropForeign(['ref_cod_matricula', 'ref_cod_turma', 'ref_sequencial']);
             $table->dropForeign(['ref_cod_serie', 'ref_cod_escola', 'ref_cod_disciplina']);
         });
     }
