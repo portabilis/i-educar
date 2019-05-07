@@ -3,6 +3,7 @@
 use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
+use iEducar\Modules\Educacenso\Validator\NisValidator;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -717,7 +718,7 @@ class indice extends clsCadastro
             'hiddenInputOptions' => $hiddenInputOptions
         ];
 
-        $this->inputsHelper()->simpleSearchPais('nome', $options, $helperOptions);
+        $this->inputsHelper()->simpleSearchPaisSemBrasil('nome', $options, $helperOptions);
 
         //Falecido
         $options = ['label' => 'Falecido?', 'required' => false, 'value' => dbBool($this->falecido)];
@@ -736,7 +737,7 @@ class indice extends clsCadastro
         $this->inputsHelper()->simpleSearchMunicipio('nome', $options, $helperOptions);
 
         // Religião
-        $this->inputsHelper()->religiao(['required' => false]);
+        $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
 
         // Detalhes do Endereço
         if ($this->idlog && $this->idbai) {
@@ -923,7 +924,7 @@ class indice extends clsCadastro
         ];
 
         $options = [
-            'label' => 'Zona localização',
+            'label' => 'Zona de residência',
             'value' => $this->zona_localizacao_censo,
             'resources' => $zonas,
             'required' => $obrigarCamposCenso,
@@ -1419,6 +1420,12 @@ class indice extends clsCadastro
             return false;
         }
 
+        $validator = new NisValidator($this->nis_pis_pasep ?? '');
+        if (!$validator->isValid()) {
+            $this->mensagem = $validator->getMessage();
+            return false;
+        }
+
         return true;
     }
 
@@ -1457,7 +1464,7 @@ class indice extends clsCadastro
         $fisica->idpes_mae = $this->mae_id ? $this->mae_id : 'NULL';
         $fisica->nacionalidade = $_REQUEST['tipo_nacionalidade'];
         $fisica->idpais_estrangeiro = $_REQUEST['pais_origem_id'];
-        $fisica->idmun_nascimento = $_REQUEST['naturalidade_id'];
+        $fisica->idmun_nascimento = $_REQUEST['naturalidade_id'] ?: 'NULL';
         $fisica->sus = $this->sus;
         $fisica->nis_pis_pasep = $this->nis_pis_pasep ? $this->nis_pis_pasep : 'NULL';
         $fisica->ocupacao = $this->ocupacao;

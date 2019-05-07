@@ -1559,7 +1559,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
           'objectName'         => 'pais_origem',
           'hiddenInputOptions' => $hiddenInputOptions
         );
-        $this->inputsHelper()->simpleSearchPais('nome', $options, $helperOptions);
+        $this->inputsHelper()->simpleSearchPaisSemBrasil('nome', $options, $helperOptions);
     }
 
 
