@@ -967,20 +967,21 @@ class indice extends clsCadastro
     {
         $matriculasDependencia =
             Portabilis_Utils_Database::fetchPreparedQuery("SELECT *
-                                                       FROM pmieducar.matricula
-                                                      WHERE matricula.ano = {$this->ano}
-                                                        AND matricula.ref_cod_aluno = {$this->ref_cod_aluno}
-                                                        AND matricula.dependencia = TRUE
-                                                        AND matricula.aprovado = 3
-                                                        AND matricula.ativo = 1");
+                                                             FROM pmieducar.matricula
+                                                            WHERE matricula.ano = {$this->ano}
+                                                              AND matricula.ref_cod_aluno = {$this->ref_cod_aluno}
+                                                              AND matricula.dependencia = TRUE
+                                                              AND matricula.aprovado = 3
+                                                              AND matricula.ativo = 1");
 
         $matriculasDependencia = count($matriculasDependencia);
 
         $db = new clsBanco();
         $matriculasDependenciaPermitida = $db->CampoUnico("SELECT regra_avaliacao.qtd_matriculas_dependencia
-                                                              FROM pmieducar.serie
-                                                        INNER JOIN modules.regra_avaliacao ON (regra_avaliacao.id = serie.regra_avaliacao_id)
-                                                             WHERE serie.cod_serie = {$this->ref_cod_serie}");
+                                                             FROM pmieducar.serie
+                                                       INNER JOIN modules.regra_avaliacao_serie_ano AS rasa ON (rasa.serie_id = serie.cod_serie AND rasa.ano_letivo = {$this->ano})
+                                                       INNER JOIN modules.regra_avaliacao ON (regra_avaliacao.id = rasa.regra_avaliacao_id)
+                                                            WHERE serie.cod_serie = {$this->ref_cod_serie}");
 
         if ($matriculasDependencia >= $matriculasDependenciaPermitida) {
             $this->mensagem = Portabilis_String_Utils::toLatin1("A regra desta série limita a quantidade de matrículas de dependência para {$matriculasDependenciaPermitida}.");
