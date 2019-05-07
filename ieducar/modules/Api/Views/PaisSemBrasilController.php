@@ -6,13 +6,10 @@ require_once 'lib/Portabilis/String/Utils.php';
 
 class PaisSemBrasilController extends ApiCoreController
 {
-
-    // search options
     protected function searchOptions()
     {
         return ['namespace' => 'public', 'idAttr' => 'idpais', 'table' => 'pais'];
     }
-
 
     protected function sqlsForNumericSearch()
     {
