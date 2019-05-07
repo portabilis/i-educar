@@ -1787,7 +1787,7 @@ function canShowParentsFields() {
         $j('<label>').html('Bairro').attr('for', 'bairro').insertBefore($j('#bairro'));
         $j('#bairro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
 
-        let $label = $j('<label>').html('Zona localização').attr('for', 'zona_localizacao_censo').insertBefore($j('#zona_localizacao_censo'));
+        let $label = $j('<label>').html('Zona de residência').attr('for', 'zona_localizacao_censo').insertBefore($j('#zona_localizacao_censo'));
         if ($j('#zona_localizacao_censo').hasClass('obrigatorio')) {
           $label.append($j('<span/>').addClass('campo_obrigatorio').text('*'));
         }
