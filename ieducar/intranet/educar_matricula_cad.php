@@ -179,7 +179,7 @@ class indice extends clsCadastro
         $this->inputsHelper()->date('data_matricula', ['label' => Portabilis_String_Utils::toLatin1('Data da matrícula'), 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
         $this->inputsHelper()->hidden('ano_em_andamento', ['value' => '1']);
 
-        if ($GLOBALS['coreExt']['Config']->app->matricula->dependencia == 1) {
+        if (config('legacy.app.matricula.dependencia') == 1) {
             $this->inputsHelper()->checkbox(
                 'dependencia',
                 [
@@ -458,7 +458,7 @@ class indice extends clsCadastro
                     $cursoADeferir = new clsPmieducarCurso($this->ref_cod_curso);
                     $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
 
-                    if (($mesmoCursoAno || $GLOBALS['coreExt']['Config']->app->matricula->multiplas_matriculas === 0) && !$cursoDeAtividadeComplementar) {
+                    if (($mesmoCursoAno || config('legacy.app.matricula.multiplas_matriculas') === 0) && !$cursoDeAtividadeComplementar) {
                         require_once 'include/pmieducar/clsPmieducarEscola.inc.php';
                         require_once 'include/pessoa/clsJuridica.inc.php';
 

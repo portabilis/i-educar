@@ -235,7 +235,7 @@ class indice extends clsCadastro
 
         $this->campoLista("tempo_expira_conta", "Dias p/ expirar a conta", $opcoes, $this->tempo_expira_conta);
 
-        $tempoExpiraSenha = $GLOBALS['coreExt']['Config']->app->user_accounts->default_password_expiration_period;
+        $tempoExpiraSenha = config('legacy.app.user_accounts.default_password_expiration_period');
 
         if (is_numeric($tempoExpiraSenha))
             $this->campoOculto("tempo_expira_senha", $tempoExpiraSenha);

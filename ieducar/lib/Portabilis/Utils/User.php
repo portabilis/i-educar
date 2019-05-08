@@ -68,7 +68,7 @@ class Portabilis_Utils_User
 
         $options = ['params' => [$id], 'show_errors' => false, 'return_only' => 'first-line'];
         $user = self::fetchPreparedQuery($sql, $options);
-        $user['super'] = $GLOBALS['coreExt']['Config']->app->superuser == $user['matricula'];
+        $user['super'] = config('legacy.app.superuser') == $user['matricula'];
 
         // considera como expirado caso usuario não admin e data_reativa_conta + tempo_expira_conta <= now
         // obs: ao salvar drh > cadastro funcionario, seta data_reativa_conta = now
@@ -80,7 +80,7 @@ class Portabilis_Utils_User
 
         // considera o periodo para expiração de senha definido nas configs, caso o tenha sido feito.
 
-        $tempoExpiraSenha = $GLOBALS['coreExt']['Config']->app->user_accounts->default_password_expiration_period;
+        $tempoExpiraSenha = config('legacy.app.user_accounts.default_password_expiration_period');
 
         if (!is_numeric($tempoExpiraSenha)) {
             $tempoExpiraSenha = $user['tempo_expira_senha'];

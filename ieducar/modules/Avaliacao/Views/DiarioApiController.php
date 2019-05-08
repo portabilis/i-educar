@@ -1647,7 +1647,7 @@ class DiarioApiController extends ApiCoreController
             $itensRegra['quantidade_etapas'] = $this->serviceBoletim()->getOption('etapas');
         }
 
-        $itensRegra['nomenclatura_exame'] = ($GLOBALS['coreExt']['Config']->app->diario->nomenclatura_exame == 0 ? 'exame' : 'conselho');
+        $itensRegra['nomenclatura_exame'] = (config('legacy.app.diario.nomenclatura_exame') == 0 ? 'exame' : 'conselho');
 
         //tipo de recuperação paralela
         $tipoRecuperacaoParalela = $regra->get('tipoRecuperacaoParalela');
@@ -1693,7 +1693,7 @@ class DiarioApiController extends ApiCoreController
 
     protected function usaAuditoriaNotas()
     {
-        return ($GLOBALS['coreExt']['Config']->app->auditoria->notas == "1");
+        return (config('legacy.app.auditoria.notas') == "1");
     }
 
     public function canChange()
