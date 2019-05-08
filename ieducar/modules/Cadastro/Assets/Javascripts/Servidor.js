@@ -76,7 +76,7 @@ function validaPosGraduacao() {
   possuiMaisDeUmaOpcao = posGraduacao.length > 1;
 
   if (possuiOpcaoNenhuma && possuiMaisDeUmaOpcao) {
-    messageUtils.error('Não é possível informar mais de uma opção no campo: <b>Possui pós-graduação</b>, quando a opção: <b>Nenhuma</b> estiver selecionada.');
+    messageUtils.error('Não é possível informar mais de uma opção no campo: <b>Pós-Graduações concluídas</b>, quando a opção: <b>Não tem pós-graduação concluída</b> estiver selecionada.');
     return false;
   }
 

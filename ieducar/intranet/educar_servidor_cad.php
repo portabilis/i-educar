@@ -465,6 +465,40 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->select('tipo_ensino_medio_cursado', $options);
 
+      $helperOptions = array('objectName'  => 'pos_graduacao');
+      $options       = array('label' => 'Pós-Graduações concluídas',
+          'required' => false,
+          'options' => array('values' => $this->pos_graduacao,
+              'all_values' => array(
+                  1 => 'Especialização',
+                  2 => 'Mestrado',
+                  3 => 'Doutorado',
+                  4 => 'Não tem pós-graduação concluída')));
+      $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
+      $helperOptions = array('objectName'  => 'curso_formacao_continuada');
+      $options       = array('label' => 'Possui cursos de formação continuada',
+          'required' => $obrigarCamposCenso,
+          'options' => array('values' => $this->curso_formacao_continuada,
+              'all_values' => array(
+                  1 => 'Específico para Creche (0 a 3 anos)',
+                  2 => 'Específico para Pré-escola (4 e 5 anos)',
+                  3 => 'Específico para anos iniciais do ensino fundamental',
+                  4 => 'Específico para anos finais do ensino fundamental',
+                  5 => 'Específico para ensino médio',
+                  6 => 'Específico para educação de jovens e adultos',
+                  7 => 'Específico para educação especial',
+                  8 => 'Específico para educação indígena',
+                  9 => 'Específico para educação do campo',
+                  10 => 'Específico para educação ambiental',
+                  11 => 'Específico para educação em direitos humanos',
+                  12 => 'Gênero e diversidade sexual',
+                  13 => 'Direito das crianças e adolescentes',
+                  14 => 'Educação para as relações etnicorraciais e História e cultura Afro-Brasileira e Africana',
+                  15 => 'Outros',
+                  16 => 'Nenhum')));
+      $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+
     $resources = array(
       null => 'Selecione',
       1 => Portabilis_String_Utils::toLatin1('Concluído'),
@@ -658,40 +692,6 @@ class indice extends clsCadastro
     $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_3', $options);
 
     $this->campoQuebra();
-
-    $helperOptions = array('objectName'  => 'pos_graduacao');
-    $options       = array('label' => 'Possui pós-graduação',
-                            'required' => false,
-                            'options' => array('values' => $this->pos_graduacao,
-                                               'all_values' => array(
-                                                  1 => 'Especialização',
-                                                  2 => 'Mestrado',
-                                                  3 => 'Doutorado',
-                                                  4 => 'Nenhuma')));
-    $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-
-    $helperOptions = array('objectName'  => 'curso_formacao_continuada');
-    $options       = array('label' => 'Possui cursos de formação continuada',
-                            'required' => $obrigarCamposCenso,
-                            'options' => array('values' => $this->curso_formacao_continuada,
-                                               'all_values' => array(
-                                                 1 => 'Específico para Creche (0 a 3 anos)',
-                                                 2 => 'Específico para Pré-escola (4 e 5 anos)',
-                                                 3 => 'Específico para anos iniciais do ensino fundamental',
-                                                 4 => 'Específico para anos finais do ensino fundamental',
-                                                 5 => 'Específico para ensino médio',
-                                                 6 => 'Específico para educação de jovens e adultos',
-                                                 7 => 'Específico para educação especial',
-                                                 8 => 'Específico para educação indígena',
-                                                 9 => 'Específico para educação do campo',
-                                                10 => 'Específico para educação ambiental',
-                                                11 => 'Específico para educação em direitos humanos',
-                                                12 => 'Gênero e diversidade sexual',
-                                                13 => 'Direito das crianças e adolescentes',
-                                                14 => 'Educação para as relações etnicorraciais e História e cultura Afro-Brasileira e Africana',
-                                                15 => 'Outros',
-                                                16 => 'Nenhum')));
-    $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
     $scripts = array('/modules/Cadastro/Assets/Javascripts/Servidor.js');
 
