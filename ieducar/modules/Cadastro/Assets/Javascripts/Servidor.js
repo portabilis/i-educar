@@ -96,9 +96,6 @@ function validaCursoFormacaoContinuada() {
   return true;
 }
 
-habilitaComplementacaoPedagogica(1);
-habilitaComplementacaoPedagogica(2);
-habilitaComplementacaoPedagogica(3);
 verificaCamposObrigatorio(1);
 verificaCamposObrigatorio(2);
 verificaCamposObrigatorio(3);
@@ -108,35 +105,6 @@ habilitaCampoPosGraduacao();
 $j('#ref_idesco').on('change', ()=> {
   verificaCamposObrigatorio(1);
 });
-
-$j('#situacao_curso_superior_1').on('change', () => {
-  habilitaComplementacaoPedagogica(1);
-  habilitaCampoPosGraduacao();
-});
-$j('#codigo_curso_superior_1').on('change', () => habilitaComplementacaoPedagogica(1));
-
-$j('#situacao_curso_superior_2').on('change', () => {
-  habilitaComplementacaoPedagogica(2);
-  verificaCamposObrigatorio(2);
-  habilitaCampoPosGraduacao();
-});
-$j('#codigo_curso_superior_2').on('change', () => habilitaComplementacaoPedagogica(2));
-
-$j('#situacao_curso_superior_3').on('change', () => {
-  habilitaComplementacaoPedagogica(3);
-  verificaCamposObrigatorio(3);
-  habilitaCampoPosGraduacao();
-});
-$j('#codigo_curso_superior_3').on('change', () => habilitaComplementacaoPedagogica(3));
-
-function habilitaComplementacaoPedagogica(seq) {
-  var cursoSuperiorConcluido = $j('#situacao_curso_superior_'+seq).val() == 1;
-  var tecnologo = $j('#codigo_curso_superior_'+seq).val().search('Tecnológico') != -1;
-  var bacharelado  = $j('#codigo_curso_superior_'+seq).val().search('Bacharelado') != -1;
-  var habilitaCampo = cursoSuperiorConcluido && (tecnologo || bacharelado);
-
-  $j('#formacao_complementacao_pedagogica_'+seq).attr('disabled', !habilitaCampo);
-}
 
 function verificaCamposObrigatorio(seq) {
   $j(`#situacao_curso_superior_${seq}`).makeUnrequired();
@@ -174,9 +142,7 @@ function verificaCamposObrigatorio(seq) {
 }
 
 function habilitaCampoPosGraduacao() {
-  var possuiSuperiorConcuido = $j('#situacao_curso_superior_1').val() == 1 ||
-                               $j('#situacao_curso_superior_2').val() == 1 ||
-                               $j('#situacao_curso_superior_3').val() == 1;
+  var possuiSuperiorConcuido = true;
 
   $j('#tr_pos_graduacao').hide();
   $j('#pos_graduacao').makeUnrequired();
