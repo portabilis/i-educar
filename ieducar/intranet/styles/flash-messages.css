@@ -5,15 +5,21 @@
   max-height: 100vh;
   max-width: 860px;
   overflow-y: auto;
+  pointer-events: none;
   position: fixed;
   right: 0;
   top: 0;
   z-index: 9999;
 }
 
+.flashMessages * {
+  pointer-events: auto;
+}
+
 .flashMessages__controls {
   margin: 0;
   padding: 0 12px 0 0;
+  pointer-events: none;
   text-align: right;
 }
 
