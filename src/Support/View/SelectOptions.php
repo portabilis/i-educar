@@ -2,6 +2,7 @@
 
 namespace iEducar\Support\View;
 
+use App\Models\EmployeeGraduationDiscipline;
 use App_Model_TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use App\Models\ManagerAccessCriteria;
@@ -189,5 +190,13 @@ class SelectOptions
     public static function tiposVinculoServidor()
     {
         return self::getDefaultOption() + TipoVinculo::getDescriptiveValues();
+    }
+
+    /**
+     * @return array
+     */
+    public static function employeeGraduationDisciplines()
+    {
+        return self::getDefaultOption() + EmployeeGraduationDiscipline::all()->getKeyValueArray('name');
     }
 }
