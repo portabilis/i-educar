@@ -72,13 +72,9 @@ class indice extends clsCadastro
       'educar_index.php');
     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_educacenso_index.php" => "Educacenso",
-         "" => "Importação educacenso"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Importação educacenso', [
+        url('intranet/educar_educacenso_index.php') => 'Educacenso',
+    ]);
 
     $this->titulo = "Nova importação";
 
