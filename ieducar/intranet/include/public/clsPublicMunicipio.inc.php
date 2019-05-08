@@ -663,7 +663,7 @@ class clsPublicMunicipio
         }
         if( is_string( $str_nome ) )
         {
-            $filtros .= "{$whereAnd} nome LIKE E'%" . addslashes($str_nome) . "%'";
+            $filtros .= "{$whereAnd} UNACCENT(nome) ILIKE UNACCENT('%" . addslashes($str_nome) . "%')";
             $whereAnd = " AND ";
         }
         if( is_string( $str_sigla_uf ) )
