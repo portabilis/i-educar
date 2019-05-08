@@ -101,9 +101,44 @@ verificaCamposObrigatorio(2);
 verificaCamposObrigatorio(3);
 habilitaCampoPosGraduacao();
 
+let habilitaTipoEnsinoMedio = () => {
+  if (obrigarCamposCenso) {
+    $j('#tipo_ensino_medio_cursado').makeRequired();
+  } else {
+    $j('#tipo_ensino_medio_cursado').makeUnrequired();
+  }
+
+  $j('#tipo_ensino_medio_cursado').removeAttr('disabled');
+};
+
+let bloqueiaTipoEnsinoMedio = () => {
+  $j('#tipo_ensino_medio_cursado').attr('disabled', 'disabled').makeUnrequired().val('');
+};
+
+let verificaEscolaridade = () => {
+  let escolaridade = $j('#ref_idesco').val();
+  if (!escolaridade) {
+    bloqueiaTipoEnsinoMedio();
+    return;
+  }
+
+  $j.getJSON(`/escolaridade/${escolaridade}`)
+  .done((escolaridade) => {
+    if (escolaridade['escolaridade'] == 7) {
+      habilitaTipoEnsinoMedio();
+    } else {
+      bloqueiaTipoEnsinoMedio();
+    }
+  }).fail(() => {
+    bloqueiaTipoEnsinoMedio();
+  });
+}
+
+verificaEscolaridade();
 
 $j('#ref_idesco').on('change', ()=> {
   verificaCamposObrigatorio(1);
+  verificaEscolaridade();
 });
 
 function verificaCamposObrigatorio(seq) {

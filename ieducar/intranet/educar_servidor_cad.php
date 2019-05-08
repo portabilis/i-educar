@@ -91,6 +91,7 @@ class indice extends clsCadastro
   var $ref_cod_instituicao_original;
   var $curso_formacao_continuada;
   var $multi_seriado;
+  var $tipo_ensino_medio_cursado;
   var $matricula = array();
   var $cod_servidor_funcao = [];
 
@@ -446,6 +447,15 @@ class indice extends clsCadastro
 
     $this->campoLista('ref_idesco', 'Escolaridade', $opcoes, $this->ref_idesco, '', FALSE, '', $script, FALSE, $obrigarCamposCenso);
 
+    $options = array(
+      'label' => 'Tipo de ensino médio cursado',
+      'resources' => SelectOptions::tiposEnsinoMedioCursados(),
+      'value' => $this->tipo_ensino_medio_cursado,
+      'required' => false
+    );
+
+    $this->inputsHelper()->select('tipo_ensino_medio_cursado', $options);
+
     $resources = array(
       null => 'Selecione',
       1 => Portabilis_String_Utils::toLatin1('Concluído'),
@@ -779,6 +789,7 @@ JS;
   }
 
   function addCamposCenso($obj){
+    $obj->tipo_ensino_medio_cursado = $this->tipo_ensino_medio_cursado;
     $obj->pos_graduacao = $this->pos_graduacao;
     $obj->curso_formacao_continuada = $this->curso_formacao_continuada;
     return $obj;
