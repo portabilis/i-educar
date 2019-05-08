@@ -77,7 +77,7 @@ function validaPosGraduacao() {
   possuiMaisDeUmaOpcao = posGraduacao.length > 1;
 
   if (possuiOpcaoNenhuma && possuiMaisDeUmaOpcao) {
-    messageUtils.error('Não é possível informar mais de uma opção no campo: <b>Possui pós-graduação</b>, quando a opção: <b>Nenhuma</b> estiver selecionada.');
+    messageUtils.error('Não é possível informar mais de uma opção no campo: <b>Pós-Graduações concluídas</b>, quando a opção: <b>Não tem pós-graduação concluída</b> estiver selecionada.');
     return false;
   }
 
@@ -98,7 +98,6 @@ function validaCursoFormacaoContinuada() {
 }
 
 verificaCamposObrigatorio();
-habilitaCampoPosGraduacao();
 
 let habilitaTipoEnsinoMedio = () => {
   if (obrigarCamposCenso) {
@@ -151,6 +150,7 @@ function verificaCamposObrigatorio() {
       ),
       success : function(dataResponse) {
         escolaridadeSuperior = dataResponse.escolaridade.escolaridade == '6'
+        habilitaCampoPosGraduacao();
       }
     }
     getResource(options);
@@ -159,16 +159,11 @@ function verificaCamposObrigatorio() {
 
 
 function habilitaCampoPosGraduacao() {
-  var possuiSuperiorConcuido = true;
-
-  $j('#tr_pos_graduacao').hide();
-  $j('#pos_graduacao').makeUnrequired();
-  if (possuiSuperiorConcuido) {
-    $j('#tr_pos_graduacao').show();
-    if (obrigarCamposCenso) {
-      $j('#pos_graduacao').makeRequired();
-    }
+  $j('#pos_graduacao').removeAttr('disabled');
+  if (!escolaridadeSuperior) {
+    $j('#pos_graduacao').attr('disabled', 'disabled').makeUnrequired().val('');
   }
+  $j("#pos_graduacao").trigger("chosen:updated");
 }
 
 //abas
