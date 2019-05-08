@@ -50,7 +50,12 @@
         },
         data: function () {
             return {
-                options: [],
+                options: [
+                    {
+                        link: '',
+                        label: 'Sem resultados.'
+                    }
+                ],
                 value: null
             }
         },

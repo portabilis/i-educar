@@ -212,12 +212,16 @@ class clsListagem extends clsCampos
 
   function RenderHTML()
   {
+    View::share('title', $this->titulo);
+
+    ob_start();
+
     $this->_preRender();
     $this->Gerar();
 
-    View::share('title', $this->titulo);
+    $retorno = ob_get_contents();
 
-    $retorno = '';
+    ob_end_clean();
 
     $retorno .= "
     <script type=\"text/javascript\">function go(url) { document.location = url; }
@@ -310,28 +314,17 @@ class clsListagem extends clsCampos
 
     }
 
-    $retorno .=  "<br>";
-
     $ncols = count( $this->cabecalho );
     $width = empty($this->largura) ? '' : "width='$this->largura'";
 
-    if (! $this->__titulo) {
-      // Recebe a variavel titulo por motivos de compatibilidade com scripts antigos
-      $this->__titulo = $this->titulo;
+    if (empty($this->__titulo)) {
+      $this->__titulo = $this->titulo ?? $this->_titulo;
     }
 
     $this->method = 'POST';
 
     if ($this->locale && !$this->campos && !$this->appendInTop){
-
-      $retorno .=  "
-        <table class='tablelistagem' $width border='0'  cellpadding='0' cellspacing='0'>";
-
-      $retorno .=  "<tr height='10px'>
-                      <td class='fundoLocalizacao linkpreto' style='background-color: white;' colspan='2'>{$this->locale}</td>
-                    </tr>";
-
-      $retorno .= "</table>";
+        app(Breadcrumb::class)->setLegacy($this->locale);
     }
 
     $retorno .=  "

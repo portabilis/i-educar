@@ -209,12 +209,15 @@ class clsCadastro extends clsCampos
 
     public function RenderHTML()
     {
+        ob_start();
+
         $this->_preRender();
         $this->Processar();
-
-        $retorno = '';
-
         $this->Gerar();
+
+        $retorno = ob_get_contents();
+
+        ob_end_clean();
 
         $this->nome_excluirImg = empty($this->nome_excluirImg) ? 'Excluir Imagem' : $this->nome_excluirImg;
         $this->nome_url_cancelar = empty($this->nome_url_cancelar) ? 'Cancelar' : $this->nome_url_cancelar;
