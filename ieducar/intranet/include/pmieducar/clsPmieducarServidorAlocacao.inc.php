@@ -20,6 +20,7 @@ class clsPmieducarServidorAlocacao
     public $ano;
     public $codUsuario;
     public $dataAdmissao;
+    public $dataSaida;
     public $hora_inicial;
     public $hora_final;
     public $hora_atividade;
@@ -119,6 +120,7 @@ class clsPmieducarServidorAlocacao
      * @param null $hora_final
      * @param null $hora_atividade
      * @param null $horas_excedentes
+     * @param null $dataSaida
      */
     public function __construct(
         $cod_servidor_alocacao = null,
@@ -139,12 +141,13 @@ class clsPmieducarServidorAlocacao
         $hora_inicial = null,
         $hora_final = null,
         $hora_atividade = null,
-        $horas_excedentes = null
+        $horas_excedentes = null,
+        $dataSaida = null
     ) {
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'servidor_alocacao';
 
-        $this->_campos_lista = $this->_todos_campos = 'cod_servidor_alocacao, ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_cod_escola, ref_cod_servidor, data_cadastro, data_exclusao, ativo, carga_horaria, periodo, ref_cod_servidor_funcao, ref_cod_funcionario_vinculo, ano, data_admissao, hora_inicial, hora_final, hora_atividade, horas_excedentes ';
+        $this->_campos_lista = $this->_todos_campos = 'cod_servidor_alocacao, ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_cod_escola, ref_cod_servidor, data_cadastro, data_exclusao, ativo, carga_horaria, periodo, ref_cod_servidor_funcao, ref_cod_funcionario_vinculo, ano, data_admissao, hora_inicial, hora_final, hora_atividade, horas_excedentes, data_saida ';
 
         if (is_numeric($ref_usuario_cad)) {
             $usuario = new clsPmieducarUsuario($ref_usuario_cad);
@@ -245,6 +248,10 @@ class clsPmieducarServidorAlocacao
 
         if (is_string($dataAdmissao)) {
             $this->dataAdmissao = $dataAdmissao;
+        }
+
+        if (is_string($dataSaida)) {
+            $this->dataSaida = $dataSaida;
         }
     }
 
@@ -351,6 +358,12 @@ class clsPmieducarServidorAlocacao
             if (is_string($this->dataAdmissao) && !empty($this->dataAdmissao)) {
                 $campos  .= "{$gruda}data_admissao";
                 $valores .= "{$gruda}'{$this->dataAdmissao}'";
+                $gruda    = ', ';
+            }
+
+            if (is_string($this->dataSaida) && !empty($this->dataSaida)) {
+                $campos  .= "{$gruda}data_saida";
+                $valores .= "{$gruda}'{$this->dataSaida}'";
                 $gruda    = ', ';
             }
 
@@ -468,6 +481,12 @@ class clsPmieducarServidorAlocacao
             $set .= "{$gruda}data_admissao = '{$this->dataAdmissao}'";
         } else {
             $set .= "{$gruda}data_admissao = NULL ";
+        }
+
+        if (is_string($this->dataSaida) && !empty($this->dataSaida)) {
+            $set .= "{$gruda}data_saida = '{$this->dataSaida}'";
+        } else {
+            $set .= "{$gruda}data_saida = NULL ";
         }
 
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_servidor_alocacao = '{$this->cod_servidor_alocacao}'");

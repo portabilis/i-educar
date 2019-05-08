@@ -43,6 +43,11 @@ class LegacyInstitution extends Model
      */
     public $timestamps = false;
 
+    public function scopeActive($query)
+    {
+        return $query->where('ativo', 1);
+    }
+
     /**
      * @return HasOne
      */

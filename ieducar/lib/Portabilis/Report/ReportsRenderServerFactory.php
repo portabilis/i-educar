@@ -98,6 +98,8 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
 
         if ($report->useJson()) {
             $params['datasource'] = 'json';
+            $this->url = str_replace('/deprecated', '', $this->url);
+            $this->sourcePath = str_replace('/deprecated', '', $this->sourcePath);
         } else {
             $params['datasource'] = 'database';
             $params['connection'] = 'postgresql';
@@ -107,6 +109,7 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
 
         $url = $this->sourcePath;
         $data = $report->getJsonData();
+        $data = $report->modify($data);
 
         $response = $client->request('POST', $this->url, [
             'json' => [
