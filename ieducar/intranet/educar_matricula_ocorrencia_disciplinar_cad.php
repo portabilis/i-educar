@@ -129,15 +129,12 @@ class indice extends clsCadastro
         if (is_numeric($this->ref_cod_matricula))
             $this->url_cancelar = ($retorno == "Editar") ? "educar_matricula_ocorrencia_disciplinar_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_tipo_ocorrencia_disciplinar={$registro["ref_cod_tipo_ocorrencia_disciplinar"]}&sequencial={$registro["sequencial"]}" : "educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Ocorrências disciplinares da matrícula"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Ocorrências disciplinares da matrícula', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
+
         return $retorno;
     }
 
