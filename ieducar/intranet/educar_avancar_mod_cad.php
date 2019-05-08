@@ -144,13 +144,13 @@ class indice extends clsCadastro
             if ($count > 0) {
                 $mensagem = '';
                 if ($count > 0) {
-                    $mensagem .= "<span class='success'>Rematriculado os seguinte(s) $count aluno(s) com sucesso em $this->ano_letivo: </br></br>";
+                    $mensagem .= "Rematriculado os seguinte(s) $count aluno(s) com sucesso em $this->ano_letivo: </br></br>";
                     foreach ($nomesAlunos as $nome) {
                         $mensagem .= "{$nome} </br>";
                     }
-                    $mensagem .= '</br> As enturmações podem ser realizadas em: Movimentação > Enturmação.</span>';
+                    $mensagem .= '</br> As enturmações podem ser realizadas em: Movimentação > Enturmação.';
                     if (count($alunosComSaidaDaEscola) > 0) {
-                        $mensagem .= '</br></br><span>O(s) seguinte(s) aluno(s) não foram rematriculados, pois possuem saída na escola: </br></br>';
+                        $mensagem .= '</br></br>O(s) seguinte(s) aluno(s) não foram rematriculados, pois possuem saída na escola: </br></br>';
                         foreach ($alunosComSaidaDaEscola as $nome) {
                             $mensagem .= "{$nome} </br>";
                         }
@@ -158,15 +158,15 @@ class indice extends clsCadastro
                 }
                 $this->mensagem = $mensagem;
             } elseif (count($alunosSemInep) > 0) {
-                $this->mensagem .= '<span>Não foi possível realizar a rematrícula, pois o(s) seguinte(s) aluno(s) não possuem o INEP cadastrado: </br></br>';
+                $this->mensagem .= 'Não foi possível realizar a rematrícula, pois o(s) seguinte(s) aluno(s) não possuem o INEP cadastrado: </br></br>';
                 foreach ($alunosSemInep as $nome) {
                     $this->mensagem .= "{$nome} </br>";
                 }
                 $this->mensagem .= '</br>Por favor, cadastre o INEP do(s) aluno(s) em: Cadastros > Aluno > Alunos > Campo: Código INEP.';
             } elseif ($this->existeMatriculasAprovadasReprovadas($escolaId, $cursoId, $serieId, $turmaId, $this->ano_letivo)) {
-                $this->mensagem = '<span class=\'notice\'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados em ' . ($this->ano_letivo - 1) . '.</span>';
+                $this->mensagem = 'Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados em ' . ($this->ano_letivo - 1) . '.';
             } else {
-                $this->mensagem = Portabilis_String_Utils::toLatin1('<span class=\'notice\'>Os alunos desta série já encontram-se rematriculados, sendo assim, favor verificar se as enturmações já foram efetuadas em Movimentação > Enturmação.</span>');
+                $this->mensagem = Portabilis_String_Utils::toLatin1('Os alunos desta série já encontram-se rematriculados, sendo assim, favor verificar se as enturmações já foram efetuadas em Movimentação > Enturmação.');
             }
         } elseif (empty($this->mensagem)) {
             $this->mensagem = 'Ocorreu algum erro inesperado durante as rematrículas, por favor, tente novamente.';
@@ -220,7 +220,7 @@ class indice extends clsCadastro
         $anoAnterior = $this->ano_letivo - 1;
 
         $sql = "
-            SELECT 
+            SELECT
                 cod_matricula,
                 ref_cod_aluno,
                 aprovado,
@@ -334,7 +334,7 @@ class indice extends clsCadastro
     protected function matricularAluno($escolaId, $cursoId, $serieId, $ano, $alunoId)
     {
         $sql = "
-            INSERT INTO pmieducar.matricula (ref_ref_cod_escola, ref_ref_cod_serie, ref_usuario_cad, ref_cod_aluno, aprovado, data_cadastro, ano, ref_cod_curso, ultima_matricula, data_matricula) 
+            INSERT INTO pmieducar.matricula (ref_ref_cod_escola, ref_ref_cod_serie, ref_usuario_cad, ref_cod_aluno, aprovado, data_cadastro, ano, ref_cod_curso, ultima_matricula, data_matricula)
             VALUES ('%d', '%d', '%d', '%d', '3', 'NOW()', '%d', '%d', '1','{$this->data_matricula}')
         ";
 
