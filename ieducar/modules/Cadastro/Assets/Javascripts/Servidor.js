@@ -142,12 +142,6 @@ $j('#ref_idesco').on('change', ()=> {
 });
 
 function verificaCamposObrigatorio(seq) {
-  $j(`#situacao_curso_superior_${seq}`).makeUnrequired();
-  $j(`#codigo_curso_superior_${seq}`).makeUnrequired();
-  $j(`#ano_inicio_curso_superior_${seq}`).makeUnrequired();
-  $j(`#ano_conclusao_curso_superior_${seq}`).makeUnrequired();
-  $j(`#instituicao_curso_superior_${seq}`).makeUnrequired();
-
   if($j('#ref_idesco').val() && seq == 1) {
     var options = {
       dataType : 'json',
@@ -158,21 +152,13 @@ function verificaCamposObrigatorio(seq) {
       ),
       success : function(dataResponse) {
         if(obrigarCamposCenso && dataResponse.escolaridade.escolaridade == '6'){
-          $j(`#situacao_curso_superior_${seq}`).makeRequired();
-          $j(`#codigo_curso_superior_${seq}`).makeRequired();
-          $j(`#ano_inicio_curso_superior_${seq}`).makeRequired();
-          $j(`#ano_conclusao_curso_superior_${seq}`).makeRequired();
-          $j(`#instituicao_curso_superior_${seq}`).makeRequired();
+
         }
       }
     }
     getResource(options);
-  } else if(seq >=2 && obrigarCamposCenso && $j(`#situacao_curso_superior_${seq}`).val()) {
-    $j(`#situacao_curso_superior_${seq}`).makeRequired();
-    $j(`#codigo_curso_superior_${seq}`).makeRequired();
-    $j(`#ano_inicio_curso_superior_${seq}`).makeRequired();
-    $j(`#ano_conclusao_curso_superior_${seq}`).makeRequired();
-    $j(`#instituicao_curso_superior_${seq}`).makeRequired();
+  } else if(seq >=2 && obrigarCamposCenso) {
+
   }
 }
 

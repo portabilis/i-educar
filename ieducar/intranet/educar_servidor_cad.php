@@ -485,7 +485,7 @@ class indice extends clsCadastro
                   11 => 'Educação em direitos humanos',
                   12 => 'Gênero e diversidade sexual',
                   13 => 'Direitos de criança e adolescente',
-                  14 => 'Educação para as relações etnicorraciais e História e cultura Afro-Brasileira e Africana',
+                  14 => 'Educação para as relações étnico-raciais e História e cultura Afro-Brasileira e Africana',
                   17 => 'Gestão Escolar',
                   15 => 'Outros',
                   16 => 'Nenhum')));
