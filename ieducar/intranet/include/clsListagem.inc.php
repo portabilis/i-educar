@@ -320,6 +320,10 @@ class clsListagem extends clsCampos
       $this->__titulo = $this->titulo;
     }
 
+    if (empty($this->__titulo)) {
+      $this->__titulo = $this->_titulo;
+    }
+
     $this->method = 'POST';
 
     if ($this->locale && !$this->campos && !$this->appendInTop){
