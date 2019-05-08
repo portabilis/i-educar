@@ -72,8 +72,6 @@ class EditController extends Core_Controller_Page_EditController
      */
     public function Gerar()
     {
-        global $coreExt;
-
         $this->campoOculto('id', $this->getEntity()->id);
         $this->campoOculto('servidor', $this->getRequest()->servidor);
 
@@ -135,7 +133,7 @@ class EditController extends Core_Controller_Page_EditController
         // Caso não seja uma instância persistida, usa a UF do locale.
         $uf = $this->getEntity()->ies->uf
             ? $this->getEntity()->ies->uf
-            : $coreExt['Config']->app->locale->province;
+            : config('legacy.app.locale.province');
 
         $this->campoLista('uf', 'UF', $opcoes, $uf, 'getIes()');
 
