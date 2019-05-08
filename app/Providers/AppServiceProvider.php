@@ -59,13 +59,8 @@ class AppServiceProvider extends ServiceProvider
      */
     private function loadLegacyBootstrap()
     {
-        global $coreExt;
-
-        $coreExt = [];
-        $coreExt['Config'] = json_decode(json_encode(config('legacy')));
-
         setlocale(LC_ALL, 'en_US.UTF-8');
-        date_default_timezone_set($coreExt['Config']->app->locale->timezone);
+        date_default_timezone_set(config('legacy.app.locale.timezone'));
     }
 
     /**

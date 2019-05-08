@@ -337,7 +337,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $configuracoes = new clsPmieducarConfiguracoesGerais();
         $configuracoes = $configuracoes->detalhe();
 
-        $labels_botucatu = $GLOBALS['coreExt']['Config']->app->mostrar_aplicacao == 'botucatu';
+        $labels_botucatu = config('legacy.app.mostrar_aplicacao') == 'botucatu';
 
         if ($configuracoes["justificativa_falta_documentacao_obrigatorio"]) {
             $this->inputsHelper()->hidden('justificativa_falta_documentacao_obrigatorio');
@@ -402,9 +402,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         );
 
         // código aluno sistema
-        if ($GLOBALS['coreExt']['Config']->app->alunos->mostrar_codigo_sistema) {
+        if (config('legacy.app.alunos.mostrar_codigo_sistema')) {
             $options = array(
-                'label' => Portabilis_String_Utils::toLatin1($GLOBALS['coreExt']['Config']->app->alunos->codigo_sistema),
+                'label' => Portabilis_String_Utils::toLatin1(config('legacy.app.alunos.codigo_sistema')),
                 'required' => false,
                 'size' => 25,
                 'max_length' => 30
@@ -896,7 +896,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = array('label' => $this->_getLabel('alfabetizado'), 'value' => 'checked');
         $this->inputsHelper()->checkbox('alfabetizado', $options);
 
-        if ($GLOBALS['coreExt']['Config']->app->alunos->nao_apresentar_campo_alfabetizado) {
+        if (config('legacy.app.alunos.nao_apresentar_campo_alfabetizado')) {
             $this->inputsHelper()->hidden('alfabetizado');
         }
 
@@ -908,7 +908,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->hidden('url_laudo_medico');
 
-        if ($GLOBALS['coreExt']['Config']->app->alunos->laudo_medico_obrigatorio == 1) {
+        if (config('legacy.app.alunos.laudo_medico_obrigatorio') == 1) {
             $this->inputsHelper()->hidden('url_laudo_medico_obrigatorio');
         }
 

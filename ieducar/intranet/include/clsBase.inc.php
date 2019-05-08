@@ -101,7 +101,7 @@ class clsBase
             $saida = str_replace('<!-- #&SCRIPT_HEADER&# -->', '', $saida);
         }
 
-        $saida = str_replace('<!-- #&GOOGLE_TAG_MANAGER_ID&# -->', $GLOBALS['coreExt']['Config']->app->gtm->id, $saida);
+        $saida = str_replace('<!-- #&GOOGLE_TAG_MANAGER_ID&# -->', config('legacy.app.gtm.id'), $saida);
 
         // nome completo usuario
         // @TODO: jeito mais eficiente de usar estes dados, já que eles são
@@ -110,7 +110,7 @@ class clsBase
         list($nomePessoa, $email) = $nomePessoa->queryRapida($this->currentUserId(), 'nome', 'email');
         $nomePessoa = ($nomePessoa) ? $nomePessoa : 'Visitante';
 
-        $saida = str_replace('<!-- #&SLUG&# -->', $GLOBALS['coreExt']['Config']->app->database->dbname, $saida);
+        $saida = str_replace('<!-- #&SLUG&# -->', config('legacy.app.database.dbname'), $saida);
         $saida = str_replace('<!-- #&USERLOGADO&# -->', trim($nomePessoa), $saida);
         $saida = str_replace('<!-- #&USEREMAIL&# -->', trim($email), $saida);
 

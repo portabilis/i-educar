@@ -191,7 +191,7 @@ class indice extends clsCadastro
 
     public function Gerar()
     {
-        $camposObrigatorios = !$GLOBALS['coreExt']['Config']->app->remove_obrigatorios_cadastro_pessoa == 1;
+        $camposObrigatorios = !config('legacy.app.remove_obrigatorios_cadastro_pessoa') == 1;
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
         $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
         $this->url_cancelar = $this->retorno == 'Editar' ?
@@ -327,7 +327,7 @@ class indice extends clsCadastro
 
         $required = (! empty($parentType));
 
-        if ($required && $GLOBALS['coreExt']['Config']->app->rg_pessoa_fisica_pais_opcional) {
+        if ($required && config('legacy.app.rg_pessoa_fisica_pais_opcional')) {
             $required = false;
         }
 
