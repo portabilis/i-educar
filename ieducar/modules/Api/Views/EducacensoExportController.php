@@ -3,6 +3,9 @@
 use App\Models\Educacenso\Registro00;
 use App\Models\Educacenso\Registro10;
 use App\Models\Educacenso\Registro20;
+use App\Models\Educacenso\Registro40;
+use App\Models\Educacenso\Registro50;
+use App\Models\Educacenso\Registro60;
 use App\Repositories\EducacensoRepository;
 use iEducar\Modules\Educacenso\ArrayToCenso;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
@@ -10,8 +13,7 @@ use iEducar\Modules\Educacenso\Data\Registro10 as Registro10Data;
 use iEducar\Modules\Educacenso\Data\Registro20 as Registro20Data;
 use iEducar\Modules\Educacenso\Data\Registro40 as Registro40Data;
 use iEducar\Modules\Educacenso\Data\Registro50 as Registro50Data;
-use App\Models\Educacenso\Registro40;
-use App\Models\Educacenso\Registro50;
+use iEducar\Modules\Educacenso\Data\Registro60 as Registro60Data;
 use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaAluno;
 use iEducar\Modules\Educacenso\Deficiencia\DeficienciaMultiplaProfessor;
 use iEducar\Modules\Educacenso\Deficiencia\MapeamentoDeficienciasAluno;
@@ -20,9 +22,14 @@ use iEducar\Modules\Educacenso\ExportRule\CargoGestor;
 use iEducar\Modules\Educacenso\ExportRule\ComponentesCurriculares;
 use iEducar\Modules\Educacenso\ExportRule\CriterioAcessoGestor;
 use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
+use iEducar\Modules\Educacenso\ExportRule\PoderPublicoResponsavelTransporte;
+use iEducar\Modules\Educacenso\ExportRule\RecebeEscolarizacaoOutroEspaco;
 use iEducar\Modules\Educacenso\ExportRule\Regulamentacao;
 use iEducar\Modules\Educacenso\ExportRule\SituacaoFuncionamento;
+use iEducar\Modules\Educacenso\ExportRule\TiposAee;
 use iEducar\Modules\Educacenso\ExportRule\TipoVinculoServidor;
+use iEducar\Modules\Educacenso\ExportRule\TransporteEscolarPublico;
+use iEducar\Modules\Educacenso\ExportRule\TurmaMulti;
 use iEducar\Modules\Educacenso\Formatters;
 use iEducar\Modules\Educacenso\ValueTurmaMaisEducacao;
 use Illuminate\Support\Facades\Session;
@@ -149,13 +156,13 @@ class EducacensoExportController extends ApiCoreController
 
         $export .= $this->exportaDadosRegistro40($escolaId);
         $export .= $this->exportaDadosRegistro50($escolaId, $ano);
+        $export .= $this->exportaDadosRegistro60($escolaId, $ano);
 
         foreach ($this->getAlunos($escolaId, $ano, $data_ini, $data_fim) as $alunoId) {
-            $registro60 = $this->exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
             $registro70 = $this->exportaDadosRegistro70($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
             $registro80 = $this->exportaDadosRegistro80($escolaId, $ano, $data_ini, $data_fim, $alunoId['id']);
-            if (!empty($registro60) && !empty($registro70) && !empty($registro80)) {
-                $export .= $registro60 . $registro70 . $registro80;
+            if (!empty($registro70) && !empty($registro80)) {
+                $export .= $registro70 . $registro80;
             }
         }
         $export .= $this->exportaDadosRegistro99();
@@ -839,177 +846,63 @@ class EducacensoExportController extends ApiCoreController
         return $return;
     }
 
-    protected function exportaDadosRegistro60($escolaId, $ano, $data_ini, $data_fim, $alunoId)
+    protected function exportaDadosRegistro60($escolaId, $ano)
     {
+        $educacensoRepository = new EducacensoRepository();
+        $registro60Model = new Registro60();
+        $registro60 = new Registro60Data($educacensoRepository, $registro60Model);
 
-        $sql =
-            'SELECT
+        /** @var Registro60[] $alunos */
+        $alunos = $registro60->getExportFormatData($escolaId, $ano);
 
-      DISTINCT(a.cod_aluno) AS r60s4,
-      p.idpes,
-      \'60\' AS r60s1,
-      ece.cod_escola_inep AS r60s2,
-      eca.cod_aluno_inep AS r60s3,
-      p.nome AS r60s5,
-      fis.data_nasc AS r60s6, /*tratar formato*/
-      fis.sexo AS r60s7, /*tratar na aplicação formato*/
-      r.raca_educacenso AS r60s8,
-      /*se não tiver r60s10 e 11 é 0 se tiver um dos dois é 1*/
-      COALESCE((SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_mae), a.nm_mae) AS r60s10,
-      COALESCE((SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_pai), a.nm_pai) AS r60s11,
-      COALESCE(fis.nacionalidade,1) AS r60s12,
-      (SELECT cod_ibge FROM public.pais WHERE pais.idpais = fis.idpais_estrangeiro) AS r60s13,
-      uf.cod_ibge AS r60s14,
-      mun.cod_ibge AS r60s15,
-      (ARRAY[1] <@ recursos_prova_inep)::INT AS r60s30,
-      (ARRAY[2] <@ recursos_prova_inep)::INT AS r60s31,
-      (ARRAY[3] <@ recursos_prova_inep)::INT AS r60s32,
-      (ARRAY[4] <@ recursos_prova_inep)::INT AS r60s33,
-      (ARRAY[5] <@ recursos_prova_inep)::INT AS r60s34,
-      (ARRAY[6] <@ recursos_prova_inep)::INT AS r60s35,
-      (ARRAY[7] <@ recursos_prova_inep)::INT AS r60s36,
-      (ARRAY[8] <@ recursos_prova_inep)::INT AS r60s37,
-      (ARRAY[9] <@ recursos_prova_inep)::INT AS r60s38,
-      fis.nacionalidade AS nacionalidade
+        $stringCenso = '';
+        foreach ($alunos as $aluno) {
+            $aluno = TurmaMulti::handle($aluno);
+            $aluno = TiposAee::handle($aluno);
+            $aluno = RecebeEscolarizacaoOutroEspaco::handle($aluno);
+            $aluno = TransporteEscolarPublico::handle($aluno);
+            /** @var Registro60 $aluno */
+            $aluno = PoderPublicoResponsavelTransporte::handle($aluno);
 
-      FROM  pmieducar.aluno a
-      INNER JOIN cadastro.fisica fis ON (fis.idpes = a.ref_idpes)
-      INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
-      INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno)
-      INNER JOIN pmieducar.escola e ON (m.ref_ref_cod_escola = e.cod_escola)
-      INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
-      LEFT JOIN cadastro.fisica_raca rc ON (rc.ref_idpes = fis.idpes)
-      LEFT JOIN cadastro.raca r ON (r.cod_raca = rc.ref_cod_raca)
-      LEFT JOIN public.municipio mun ON (mun.idmun = fis.idmun_nascimento)
-      LEFT JOIN public.uf ON (uf.sigla_uf = mun.sigla_uf)
-      LEFT JOIN modules.educacenso_cod_aluno eca ON a.cod_aluno = eca.cod_aluno
+            $data = [
+                $aluno->registro,
+                $aluno->inepEscola,
+                $aluno->codigoPessoa,
+                $aluno->inepAluno,
+                $aluno->codigoTurma,
+                $aluno->inepTurma,
+                $aluno->matriculaAluno,
+                $aluno->etapaAluno,
+                $aluno->tipoAtendimentoDesenvolvimentoFuncoesGognitivas,
+                $aluno->tipoAtendimentoDesenvolvimentoVidaAutonoma,
+                $aluno->tipoAtendimentoEnriquecimentoCurricular,
+                $aluno->tipoAtendimentoEnsinoInformaticaAcessivel,
+                $aluno->tipoAtendimentoEnsinoLibras,
+                $aluno->tipoAtendimentoEnsinoLinguaPortuguesa,
+                $aluno->tipoAtendimentoEnsinoSoroban,
+                $aluno->tipoAtendimentoEnsinoBraile,
+                $aluno->tipoAtendimentoEnsinoOrientacaoMobilidade,
+                $aluno->tipoAtendimentoEnsinoCaa,
+                $aluno->tipoAtendimentoEnsinoRecursosOpticosNaoOpticos,
+                $aluno->recebeEscolarizacaoOutroEspacao,
+                $aluno->transportePublico,
+                $aluno->poderPublicoResponsavelTransporte,
+                $aluno->veiculoTransporteBicicleta,
+                $aluno->veiculoTransporteMicroonibus,
+                $aluno->veiculoTransporteOnibus,
+                $aluno->veiculoTransporteTracaoAnimal,
+                $aluno->veiculoTransporteVanKonbi,
+                $aluno->veiculoTransporteOutro,
+                $aluno->veiculoTransporteAquaviarioCapacidade5,
+                $aluno->veiculoTransporteAquaviarioCapacidade5a15,
+                $aluno->veiculoTransporteAquaviarioCapacidade15a35,
+                $aluno->veiculoTransporteAquaviarioCapacidadeAcima35
+            ];
 
-      WHERE e.cod_escola = $1
-      AND COALESCE(m.data_matricula,m.data_cadastro) BETWEEN DATE($3) AND DATE($4)
-      AND (m.aprovado = 3 OR DATE(COALESCE(m.data_cancel,m.data_exclusao)) > DATE($4))
-      AND m.ano = $2
-      AND a.cod_aluno = $5
-    ';
-
-        // Transforma todos resultados em variáveis
-        $d = '|';
-        $return = '';
-        $numeroRegistros = 39;
-        $estrangeiro = 3;
-        $naturalizadoBrasileiro = 2;
-
-        $sqlDeficiencias = 'SELECT DISTINCT(deficiencia_educacenso) AS id FROM cadastro.fisica_deficiencia,
-                        cadastro.deficiencia WHERE cod_deficiencia = ref_cod_deficiencia AND ref_idpes = $1
-                        AND deficiencia_educacenso IS NOT NULL';
-
-        foreach (Portabilis_Utils_Database::fetchPreparedQuery($sql,
-            array('params' => array($escolaId, $ano, $data_ini, $data_fim, $alunoId))) as $reg) {
-            extract($reg);
-
-            $r60s5 = $this->convertStringToCenso($r60s5);
-
-            $r60s6 = Portabilis_Date_Utils::pgSQLToBr($r60s6);
-            $r60s7 = $r60s7 == 'M' ? 1 : 2;
-            $r60s8 = is_numeric($r60s8) ? $r60s8 : 0;
-            $r60s9 = (int)!(is_null($r60s10) && is_null($r60s11));
-
-            $r60s10 = $this->convertStringToAlpha($r60s10);
-            $r60s11 = $this->convertStringToAlpha($r60s11);
-
-            if ($r60s12 == '1' || $r60s12 == '2') {
-                $r60s13 = 76;
-            }
-
-            if ($nacionalidade == $estrangeiro || $nacionalidade == $naturalizadoBrasileiro) {
-                $r60s14 = $r60s15 = null;
-            }
-
-            $deficiencias = Portabilis_Utils_Database::fetchPreparedQuery($sqlDeficiencias,
-                array('params' => array($idpes)));
-
-            // Reseta deficiências (DEFAULT NULL)
-            $r60s16 = 0;
-            $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
-            $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = null;
-
-            $r60s39 = null;
-
-            // Define 'tipodeficiencia' => 'seqleiaute'
-            $deficienciaToSeq = MapeamentoDeficienciasAluno::getArrayMapeamentoDeficiencias();
-
-            if (count($deficiencias) == 0) {
-                $r60s30 = $r60s31 = $r60s32 = $r60s33 = $r60s34 = $r60s35 = $r60s36 = $r60s37 = $r60s38 = null;
-            }
-
-            $arrayDeficienciasAluno = [];
-            // Se tiver alguma deficiência, a seq 16 deve ser 1
-            if (count($deficiencias) > 0) {
-                $r60s16 = 1;
-                $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 = $r60s24 =
-                $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = 0;
-
-                foreach ($deficiencias as $deficiencia_educacenso) {
-                    $deficiencia_educacenso = $deficiencia_educacenso['id'];
-                    if (array_key_exists($deficiencia_educacenso, $deficienciaToSeq)) {
-                        ${'r60s' . $deficienciaToSeq[$deficiencia_educacenso]} = 1;
-                    }
-
-                    $arrayDeficienciasAluno[] = $deficienciaToSeq[$deficiencia_educacenso];
-                }
-            }
-            // Se o aluno não tiver deficiências não pode ser informado recursos para provas
-            if ($r60s16) {
-                $r60s39 = null;
-            } else {
-                $r60s17 = $r60s18 = $r60s19 = $r60s20 = $r60s21 = $r60s22 = $r60s23 =
-                $r60s25 = $r60s26 = $r60s27 = $r60s28 = $r60s29 = null;
-            }
-
-            if (!$this->precisaDeAuxilioEmProvaPorDeficiencia($deficiencias)) {
-                $r60s30 = null;
-                $r60s31 = null;
-                $r60s32 = null;
-                $r60s33 = null;
-                $r60s34 = null;
-                $r60s35 = null;
-                $r60s36 = null;
-                $r60s37 = null;
-                $r60s38 = null;
-            } else {
-                $r60s39 = 1;
-            }
-
-            $validaDeficienciaMultipla = new ValueDeficienciaMultipla(new DeficienciaMultiplaAluno(), $arrayDeficienciasAluno);
-            $r60s24 = $validaDeficienciaMultipla->getValue();
-
-
-            //O campo 39 recebe 0 quando algum campo de 30 à 38 for igual a 1
-            for ($i = 30; $i <= 38; $i++) {
-                if (${'r60s' . $i} == 1) {
-                    $r60s39 = 0;
-                }
-            }
-
-            //O campo 39 deve ser diferente de com 1 quando o campo 17 ou 21 for igual a 1.
-            if ($r60s17 || $r60s21) {
-                $r60s39 = 0;
-            }
-
-            if ($r60s39) {
-                for ($i = 30; $i <= 38; $i++) {
-                    ${'r60s' . $i} = 0;
-                }
-            }
-
-            for ($i = 1; $i <= $numeroRegistros; $i++) {
-                $return .= ${'r60s' . $i} . $d;
-            }
-
-            $return = substr_replace($return, "", -1);
-            $return .= "\n";
+            $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;
         }
 
-        return $return;
+        return $stringCenso;
     }
 
     protected function precisaDeAuxilioEmProvaPorDeficiencia($deficiencias)
