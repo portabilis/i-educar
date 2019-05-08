@@ -72,7 +72,7 @@ class indice extends clsDetalhe
   var $servidor_id;
   var $funcao_exercida;
   var $tipo_vinculo;
-  
+
   var $ref_cod_instituicao;
   var $ref_cod_escola;
   var $ref_cod_curso;
@@ -82,7 +82,7 @@ class indice extends clsDetalhe
   function Gerar()
   {
     $this->titulo = 'Servidor Vínculo Turma - Detalhe';
-    
+
 
     $this->id = $_GET['id'];
 
@@ -91,7 +91,7 @@ class indice extends clsDetalhe
 
     if (! $registro) {
         $this->simpleRedirect('educar_servidor_professor_vinculo_lst.php');
-    }    
+    }
 
     $resources_funcao = array(  null => 'Selecione',
                                 1    => 'Docente',
@@ -105,7 +105,7 @@ class indice extends clsDetalhe
                               1    => 'Concursado/efetivo/estável',
                               2    => 'Contrato temporário',
                               3    => 'Contrato terceirizado',
-                              4    => 'Contrato CLT');    
+                              4    => 'Contrato CLT');
 
     if ($registro['nm_escola']) {
       $this->addDetalhe(array('Escola', $registro['nm_escola']));
@@ -131,24 +131,24 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Tipo de vínculo', $resources_tipo[$registro['tipo_vinculo']]));
     }
 
-    $sql = 'SELECT nome 
-            FROM modules.professor_turma_disciplina 
+    $sql = 'SELECT nome
+            FROM modules.professor_turma_disciplina
             INNER JOIN modules.componente_curricular cc ON (cc.id = componente_curricular_id)
             WHERE professor_turma_id = $1
             ORDER BY nome';
 
     $disciplinas = '';
-    
+
     $resources = Portabilis_Utils_Database::fetchPreparedQuery($sql, array( 'params' => array($this->id) ));
 
-    foreach ($resources as $reg) {      
+    foreach ($resources as $reg) {
         $disciplinas .= '<span style="background-color: #ccdce6; padding: 2px; border-radius: 3px;"><b>'.$reg['nome'].'</b></span> ';
     }
 
     if ($disciplinas != '') {
       $this->addDetalhe(array('Disciplinas', $disciplinas));
     }
-    
+
     $obj_permissoes = new clsPermissoes();
 
     if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
@@ -168,7 +168,7 @@ class indice extends clsDetalhe
         $registro['id'], $registro['instituicao_id'], $registro['servidor_id']
       );
 
-      "go(\"educar_servidor_vinculo_turma_copia_cad.php?{$get_padrao}\");"; 
+      "go(\"educar_servidor_vinculo_turma_copia_cad.php?{$get_padrao}\");";
     }
 
     $this->url_cancelar = sprintf(
@@ -178,13 +178,9 @@ class indice extends clsDetalhe
 
     $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Detalhe do vínculo"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());   
+    $this->breadcrumb('Detalhe do vínculo', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
   }
 }
 
