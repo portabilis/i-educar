@@ -69,13 +69,9 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(999847, $this->pessoa_logada, 7,
       'index.php');
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "Unifica&ccedil;&atilde;o de alunos"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Unificação de alunos', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
 
     return $retorno;
   }
