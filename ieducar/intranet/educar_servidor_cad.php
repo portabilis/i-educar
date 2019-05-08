@@ -32,7 +32,9 @@
 use App\Models\EmployeeGraduation;
 use App\Services\EmployeeGraduationService;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
+use iEducar\Modules\ValueObjects\EmployeeGraduationValueObject;
 use iEducar\Support\View\SelectOptions;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/clsBase.inc.php';
@@ -98,6 +100,11 @@ class indice extends clsCadastro
 
   // Determina se o servidor é um docente para buscar código Educacenso/Inep.
   var $docente = false;
+
+  var $employee_course_id;
+  var $employee_completion_year;
+  var $employee_college_id;
+  var $employee_discipline_id;
 
   function Inicializar()
   {
@@ -556,6 +563,8 @@ JS;
         $this->createOrUpdateInep();
         $this->createOrUpdateDeficiencias();
 
+        $this->storeGraduations($this->cod_servidor);
+
         include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
@@ -583,6 +592,8 @@ JS;
         $this->cadastraFuncoes();
         $this->createOrUpdateInep();
         $this->createOrUpdateDeficiencias();
+
+        $this->storeGraduations($this->cod_servidor);
 
         include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
@@ -638,6 +649,8 @@ JS;
         $this->createOrUpdateInep();
         $this->createOrUpdateDeficiencias();
 
+        $this->storeGraduations($this->cod_servidor);
+
         include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
         $this->mensagem .= 'Edição efetuada com sucesso.<br>';
@@ -689,6 +702,8 @@ JS;
               $this->cadastraFuncoes();
               $this->createOrUpdateInep();
               $this->createOrUpdateDeficiencias();
+
+              $this->storeGraduations($this->cod_servidor);
 
               include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
@@ -905,13 +920,13 @@ JS;
       );
 
       $this->inputsHelper()->simpleSearchCursoSuperior(null, ['required' => false], ['objectName' => 'employee_course']);
-      $this->campoTexto('completion_year', null, null, null, 4);
+      $this->campoTexto('employee_completion_year', null, null, null, 4);
       $this->inputsHelper()->simpleSearchIes(null, ['required' => false], ['objectName' => 'employee_college']);
       $options = array(
           'resources' => SelectOptions::employeeGraduationDisciplines(),
           'required' => false
       );
-      $this->inputsHelper()->select('employee_college_discipline_id', $options);
+      $this->inputsHelper()->select('employee_discipline_id', $options);
 
       $this->campoTabelaFim();
   }
@@ -926,10 +941,12 @@ JS;
         if (old('course_id')) {
             foreach (old('course_id') as $key => $value) {
                 $oldInputGraduation = new EmployeeGraduation();
-                $oldInputGraduation->course_id = old('course_id')[$key];
-                $oldInputGraduation->completion_year = old('completion_year')[$key];
-                $oldInputGraduation->college_id = old('college_id')[$key];
-                $oldInputGraduation->discipline_id = old('discipline_id')[$key];
+                $oldInputGraduation->course = old('employee_course')[$key];
+                $oldInputGraduation->course_id = old('employee_course_id')[$key];
+                $oldInputGraduation->completion_year = old('employee_completion_year')[$key];
+                $oldInputGraduation->college = old('employee_college')[$key];
+                $oldInputGraduation->college_id = old('employee_college_id')[$key];
+                $oldInputGraduation->discipline_id = old('employee_discipline_id')[$key];
                 $graduations[] = $oldInputGraduation;
           }
 
@@ -938,7 +955,14 @@ JS;
 
         /** @var EmployeeGraduationService $employeeGraduationService */
         $employeeGraduationService = app(EmployeeGraduationService::class);
-        return $employeeGraduationService->getEmployeeGraduations($employeeId);
+        $graduations = $employeeGraduationService->getEmployeeGraduations($employeeId);
+
+        foreach ($graduations as $graduation) {
+            $graduation->course = $this->getCourseName($graduation->course_id);
+            $graduation->college = $this->getCollegeName($graduation->college_id);
+        }
+
+        return $graduations;
     }
 
     protected function getGraduateTableRows($graduations)
@@ -947,14 +971,57 @@ JS;
 
         foreach ($graduations as $graduation) {
             $rows[] = [
-                $graduation->course_id,
+                $graduation->course,
                 $graduation->completion_year,
-                $graduation->college_id,
+                $graduation->college,
                 $graduation->discipline_id,
+                $graduation->course_id,
+                $graduation->college_id,
             ];
         }
 
         return $rows;
+    }
+
+    protected function storeGraduations($employeeId)
+    {
+        /** @var EmployeeGraduationService $employeeGraduationService */
+        $employeeGraduationService = app(EmployeeGraduationService::class);
+
+        $employeeGraduationService->deleteAll($employeeId);
+
+        foreach($this->employee_course_id as $key => $courseId) {
+            if (empty($courseId)) {
+                continue;
+            }
+
+            $valueObject = new EmployeeGraduationValueObject();
+            $valueObject->employeeId = $employeeId;
+            $valueObject->courseId = $this->employee_course_id[$key];
+            $valueObject->completionYear = $this->employee_completion_year[$key];
+            $valueObject->collegeId = $this->employee_college_id[$key];
+            $valueObject->disciplineId = $this->employee_discipline_id[$key] ?? null;
+            $employeeGraduationService->storeGraduation($valueObject);
+        }
+    }
+
+    protected function getCourseName($courseId)
+    {
+        $academicLevels = [
+            1 => 'Tecnológico',
+            2 => 'Licenciatura',
+            3 => 'Bacharelado',
+        ];
+
+        $course = DB::table('modules.educacenso_curso_superior')->where('id', $courseId)->get(['nome', 'curso_id', 'grau_academico'])->first();
+
+        return $course->curso_id . ' - ' . $course->nome . ' / ' . ($academicLevels[$course->grau_academico] ?? '');
+    }
+
+    protected function getCollegeName($collegeId)
+    {
+        $college = DB::table('modules.educacenso_ies')->where('id', $collegeId)->get(['nome', 'ies_id'])->first();
+        return $college->ies_id . ' - ' . $college->nome;
     }
 
 }
