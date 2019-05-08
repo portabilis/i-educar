@@ -55,4 +55,11 @@ class Registro60 extends AbstractRegistro
 
         return $data;
     }
+
+    public function getExportFormatData($ano, $escola)
+    {
+        $modelArray = $this->getData($ano, $escola);
+
+        return $modelArray;
+    }
 }

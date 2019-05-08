@@ -143,9 +143,10 @@ SQL;
         $sql = '
             SELECT
                 escola.cod_escola AS "codEscola",
+                educacenso_cod_escola.cod_escola_inep AS "codigoInep",
                 escola.local_funcionamento AS "localFuncionamento",
                 escola.condicao AS "condicao",
-                escola.agua_consumida AS "aguaConsumida",
+                escola.agua_potavel_consumo AS "aguaPotavelConsumo",
                 (ARRAY[1] <@ escola.abastecimento_agua)::int AS "aguaRedePublica",
                 (ARRAY[2] <@ escola.abastecimento_agua)::int AS "aguaPocoArtesiano",
                 (ARRAY[3] <@ escola.abastecimento_agua)::int AS "aguaCacimbaCisternaPoco",
@@ -156,50 +157,25 @@ SQL;
                 (ARRAY[3] <@ escola.abastecimento_energia)::int AS "energiaOutros",
                 (ARRAY[4] <@ escola.abastecimento_energia)::int AS "energiaInexistente",
                 (ARRAY[1] <@ escola.esgoto_sanitario)::int AS "esgotoRedePublica",
-                (ARRAY[2] <@ escola.esgoto_sanitario)::int AS "esgotoFossa",
+                (ARRAY[2] <@ escola.esgoto_sanitario)::int AS "esgotoFossaComum",
                 (ARRAY[3] <@ escola.esgoto_sanitario)::int AS "esgotoInexistente",
+                (ARRAY[4] <@ escola.esgoto_sanitario)::int AS "esgotoFossaRudimentar",
                 (ARRAY[1] <@ escola.destinacao_lixo)::int AS "lixoColetaPeriodica",
                 (ARRAY[2] <@ escola.destinacao_lixo)::int AS "lixoQueima",
                 (ARRAY[3] <@ escola.destinacao_lixo)::int AS "lixoJogaOutraArea",
-                (ARRAY[4] <@ escola.destinacao_lixo)::int AS "lixoRecicla",
-                (ARRAY[5] <@ escola.destinacao_lixo)::int AS "lixoEnterra",
-                (ARRAY[6] <@ escola.destinacao_lixo)::int AS "lixoOutros",
+                (ARRAY[5] <@ escola.destinacao_lixo)::int AS "lixoDestinacaoPoderPublico",
+                (ARRAY[7] <@ escola.destinacao_lixo)::int AS "lixoEnterra",
                 escola.tratamento_lixo AS "tratamentoLixo",
-                escola.dependencia_sala_diretoria AS "dependenciaSalaDiretoria",
-                escola.dependencia_sala_professores AS "dependenciaSalaProfessores",
-                escola.dependencia_sala_secretaria AS "dependnciaSalaSecretaria",
-                escola.dependencia_laboratorio_informatica AS "dependenciaLaboratorioInformatica",
-                escola.dependencia_laboratorio_ciencias AS "dependenciaLaboratorioCiencias",
-                escola.dependencia_sala_aee AS "dependenciaSalaAee",
-                escola.dependencia_quadra_coberta AS "dependenciaQuadraCoberta",
-                escola.dependencia_quadra_descoberta AS "dependenciaQuadraDescoberta",
-                escola.dependencia_cozinha AS "dependenciaCozinha",
-                escola.dependencia_biblioteca AS "dependenciaBiblioteca",
-                escola.dependencia_sala_leitura AS "dependenciaSalaLeitura",
-                escola.dependencia_parque_infantil AS "dependenciaParqueInfantil",
-                escola.dependencia_bercario AS "dependenciaBercario",
-                escola.dependencia_banheiro_fora AS "dependenciaBanheiroFora",
-                escola.dependencia_banheiro_dentro AS "dependenciaBanheiroDentro",
-                escola.dependencia_banheiro_infantil AS "dependenciaBanheiroInfantil",
-                escola.dependencia_banheiro_deficiente AS "dependenciaBanheiroDeficiente",
-                escola.dependencia_banheiro_chuveiro AS "dependenciaBanheiroChuveiro",
-                escola.dependencia_refeitorio AS "dependenciaRefeitorio",
-                escola.dependencia_dispensa AS "dependenciaDispensa",
-                escola.dependencia_aumoxarifado AS "dependenciaAumoxarifado",
-                escola.dependencia_auditorio AS "dependenciaAuditorio",
-                escola.dependencia_patio_coberto AS "dependenciaPatioCoberto",
-                escola.dependencia_patio_descoberto AS "dependenciaPatioDescoberto",
-                escola.dependencia_alojamento_aluno AS "dependenciaAlojamentoAluno",
-                escola.dependencia_alojamento_professor AS "dependenciaAlojamentoProfessor",
-                escola.dependencia_area_verde AS "dependenciaAreaVerde",
-                escola.dependencia_lavanderia AS "dependenciaLavanderia",
                 escola.dependencia_nenhuma_relacionada AS "dependenciaNenhumaRelacionada",
                 escola.numero_salas_utilizadas_dentro_predio AS "numeroSalasUtilizadasDentroPredio",
                 escola.numero_salas_utilizadas_fora_predio AS "numeroSalasUtilizadasForaPredio",
+                escola.numero_salas_climatizadas AS "numeroSalasClimatizadas",
+                escola.numero_salas_acessibilidade AS "numeroSalasAcessibilidade",
                 escola.televisoes AS "televisoes",
                 escola.videocassetes AS "videocassetes",
                 escola.dvds AS "dvds",
                 escola.antenas_parabolicas AS "antenasParabolicas",
+                escola.lousas_digitais AS "lousasDigitais",
                 escola.copiadoras AS "copiadoras",
                 escola.retroprojetores AS "retroprojetores",
                 escola.impressoras AS "impressoras",
@@ -207,6 +183,9 @@ SQL;
                 escola.projetores_digitais AS "projetoresDigitais",
                 escola.faxs AS "faxs",
                 escola.maquinas_fotograficas AS "maquinasFotograficas",
+                escola.quantidade_computadores_alunos_mesa AS "quantidadeComputadoresAlunosMesa",
+                escola.quantidade_computadores_alunos_portateis AS "quantidadeComputadoresAlunosPortateis",
+                escola.quantidade_computadores_alunos_tablets AS "quantidadeComputadoresAlunosTablets",
                 escola.computadores AS "computadores",
                 escola.computadores_administrativo AS "computadoresAdministrativo",
                 escola.computadores_alunos AS "computadoresAlunos",
@@ -222,6 +201,11 @@ SQL;
                 juridica.fantasia AS "nomeEscola",
                 escola.predio_compartilhado_outra_escola as "predioCompartilhadoOutraEscola",
                 escola.codigo_inep_escola_compartilhada as "codigoInepEscolaCompartilhada",
+                escola.codigo_inep_escola_compartilhada2 as "codigoInepEscolaCompartilhada2",
+                escola.codigo_inep_escola_compartilhada3 as "codigoInepEscolaCompartilhada3",
+                escola.codigo_inep_escola_compartilhada4 as "codigoInepEscolaCompartilhada4",
+                escola.codigo_inep_escola_compartilhada5 as "codigoInepEscolaCompartilhada5",
+                escola.codigo_inep_escola_compartilhada6 as "codigoInepEscolaCompartilhada6",
                 escola.possui_dependencias as "possuiDependencias",
                 escola.salas_gerais as "salasGerais",
                 escola.salas_funcionais as "salasFuncionais",
@@ -252,10 +236,17 @@ SQL;
                 escola.alimentacao_escolar_alunos as "alimentacaoEscolarAlunos",
                 escola.orgaos_colegiados as "orgaosColegiados",
                 escola.exame_selecao_ingresso as "exameSelecaoIngresso",
-                escola.reserva_vagas_cotas as "reservaVagasCotas"
+                escola.reserva_vagas_cotas as "reservaVagasCotas",
+                escola.organizacao_ensino as "organizacaoEnsino",
+                escola.instrumentos_pedagogicos as "instrumentosPedagogicos",
+                escola.compartilha_espacos_atividades_integracao AS "compartilhaEspacosAtividadesIntegracao",
+                escola.usa_espacos_equipamentos_atividades_regulares AS "usaEspacosEquipamentosAtividadesRegulares",
+                pessoa.url AS "url",
+                escola.projeto_politico_pedagogico AS "projetoPoliticoPedagogico"
             FROM pmieducar.escola
-            INNER JOIN cadastro.juridica ON TRUE
-                AND juridica.idpes = escola.ref_idpes
+            INNER JOIN cadastro.juridica ON juridica.idpes = escola.ref_idpes
+            INNER JOIN cadastro.pessoa ON pessoa.idpes = escola.ref_idpes
+            LEFT JOIN modules.educacenso_cod_escola ON (escola.cod_escola = educacenso_cod_escola.cod_escola)
             WHERE TRUE
                 AND escola.cod_escola = :school
         ';
@@ -303,6 +294,7 @@ SQL;
     public function getDataForRecord20($school, $year)
     {
         $sql = ' SELECT turma.cod_turma AS "codTurma",
+                   educacenso_cod_escola.cod_escola_inep AS "codigoEscolaInep",
                    turma.ref_ref_cod_escola AS "codEscola",
                    turma.ref_cod_curso AS "codCurso",
                    turma.ref_ref_cod_serie AS "codSerie",
@@ -393,6 +385,7 @@ SQL;
                 turma.cod_curso_profissional as "codCursoProfissional"
 
               FROM pmieducar.escola
+              LEFT JOIN modules.educacenso_cod_escola ON (escola.cod_escola = educacenso_cod_escola.cod_escola)
              JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
              JOIN pmieducar.turma ON (turma.ref_ref_cod_escola = escola.cod_escola)
              JOIN pmieducar.curso ON (turma.ref_cod_curso = curso.cod_curso)
@@ -546,8 +539,8 @@ SQL;
                     educacenso_cod_escola.cod_escola "inepEscola",
                     aluno.ref_idpes "codigoPessoa",
                     educacenso_cod_aluno.cod_aluno_inep "inepAluno",
-                    turma.cod_turma "codigoTUrma",
-                    educacenso_cod_turma.cod_turma_inep "inepTurma",
+                    turma.cod_turma "codigoTurma",
+                    null "inepTurma",
                     null "matriculaAluno",
                     matricula_turma.etapa_educacenso "etapaAluno",
                     COALESCE((ARRAY[1] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoDesenvolvimentoFuncoesGognitivas",
@@ -562,7 +555,8 @@ SQL;
                     COALESCE((ARRAY[10] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoCaa",
                     COALESCE((ARRAY[11] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoRecursosOpticosNaoOpticos",
                     aluno.recebe_escolarizacao_em_outro_espaco AS "recebeEscolarizacaoOutroEspacao",
-                    transporte_aluno.responsavel AS "transportePublico",
+                    (CASE WHEN transporte_aluno.responsavel = 0 OR transporte_aluno.responsavel IS NULL THEN 0
+                        ELSE 1 END) AS "transportePublico",
                     transporte_aluno.responsavel AS "poderPublicoResponsavelTransporte",
                     (ARRAY[4] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteBicicleta",
                     (ARRAY[2] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteMicroonibus",
