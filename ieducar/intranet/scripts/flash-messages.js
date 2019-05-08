@@ -17,10 +17,14 @@
       flashMessages.closeEvent()
       flashMessages.closeAllEvent()
       flashMessages.showAllEvent()
+      flashMessages.showCloseAll()
+      flashMessages.hideOverflow()
     },
 
     closeEvent: () => {
       flashMessages.containerElm.on('click', flashMessages.closeMessageElmSelector, e => {
+        e.preventDefault()
+
         const $elm = $j(e.currentTarget)
         const $msg = $elm.closest('.flashMessages__message')
 
@@ -30,6 +34,8 @@
           flashMessages.hideOverflow()
           flashMessages.showCloseAll()
         })
+
+        return false
       })
     },
 
