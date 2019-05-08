@@ -1,6 +1,6 @@
 $j('#btn_enviar').removeAttr('onclick');
 $j('#btn_enviar').on('click', () => {
-  if (!validaServidor() || !validaPosGraduacao() || !validaCursoFormacaoContinuada() || !validationUtils.validatesFields(false)) {
+  if (!validaServidor() || !validaPosGraduacao() || !validaCursoFormacaoContinuada() || !validationUtils.validatesFields(false) || !validateGraduations()) {
     return false;
   }
 
@@ -292,6 +292,19 @@ function setAutoComplete() {
     });
 
     $j(field).attr('placeholder', 'Digite um nome para buscar');
+
+    $j('input[id^="employee_course"]').keydown(function(event) {
+      var keycode = (event.keyCode ? event.keyCode : event.which);
+      if(keycode == '13' || keycode == '9') {
+        return;
+      }
+
+      var id = $j(this).attr('id'),
+          idNum = id.match(/\[(\d+)\]/),
+          refIdCourse = $j('input[id="employee_course_id[' + idNum[1] + ']"]');
+
+      refIdCourse.val('')
+    });
   });
 
   $j.each($j('input[id^="employee_college"]'), function (index, field) {
@@ -304,6 +317,19 @@ function setAutoComplete() {
     });
 
     $j(field).attr('placeholder', 'Digite um nome para buscar');
+
+    $j('input[id^="employee_college"]').keydown(function(event) {
+      var keycode = (event.keyCode ? event.keyCode : event.which);
+      if(keycode == '13' || keycode == '9') {
+        return;
+      }
+
+      var id = $j(this).attr('id'),
+          idNum = id.match(/\[(\d+)\]/),
+          refIdCourse = $j('input[id="employee_college_id[' + idNum[1] + ']"]');
+
+      refIdCourse.val('')
+    });
   });
 };
 
@@ -326,3 +352,58 @@ $j('#btn_add_tab_add_2').click(function () {
 
 setAutoComplete();
 setupInputs();
+
+function validateGraduations() {
+  var result = true;
+
+  if ($j('input[id^="employee_course_id"]').length > 3) {
+    messageUtils.error('Informe no máximo 3 cursos superiores realizados');
+    return false;
+  }
+
+  if (!obrigarCamposCenso || $j('#ref_idesco').val() != 6) {
+    return result;
+  }
+
+  $j.each($j('input[id^="employee_course_id"]'), function (index, field) {
+    var id = $j(field).attr('id');
+    var idNum = id.match(/\[(\d+)\]/);
+    var courseId = $j(field),
+        courseName = $j('input[id="employee_course[' + idNum[1] + ']"]'),
+        completionYear = $j('input[id="employee_completion_year[' + idNum[1] + ']"]'),
+        collegeId = $j('input[id="employee_college_id[' + idNum[1] + ']"]'),
+        collegeName = $j('input[id="employee_college[' + idNum[1] + ']"]');
+
+    if (courseId.val() == '' || courseName.val() == '') {
+      messageUtils.error('O campo: curso é obrigatório', courseName);
+      result = false;
+    }
+
+    if (completionYear.val() == '') {
+      messageUtils.error('O campo: Ano de conclusão é obrigatório', completionYear);
+      result = false;
+    }
+
+    if (completionYear.val().length != 4) {
+      messageUtils.error('O campo: Ano de conclusão do curso superior deve conter 4 dígitos', completionYear);
+      result = false;
+    }
+
+    if (parseInt(completionYear.val()) < 1940) {
+      messageUtils.error('O campo: Ano de conclusão do curso superior deve ser maior que 1940', completionYear);
+      result = false;
+    }
+
+    if (parseInt(completionYear.val()) > (new Date().getFullYear())) {
+      messageUtils.error('O campo: Ano de conclusão do curso superior não deve ser maior que o ano atual', completionYear);
+      result = false;
+    }
+
+    if (collegeId.val() == '' || collegeName.val() == '') {
+      messageUtils.error('O campo: Instituição de Educação Superior é obrigatório', collegeName);
+      result = false;
+    }
+  });
+
+  return result;
+}
