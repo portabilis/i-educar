@@ -62,7 +62,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_motivo_suspensao=$_GET["cod_motivo_suspensao"];
 
@@ -89,14 +89,11 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_motivo_suspensao_det.php?cod_motivo_suspensao={$registro["cod_motivo_suspensao"]}" : "educar_motivo_suspensao_lst.php";
         $this->nome_url_cancelar = "Cancelar";
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "{$nomeMenu} motivo de suspens&atilde;o"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+
+        $this->breadcrumb($nomeMenu . ' motivo de suspensão', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
 
         return $retorno;
     }
@@ -116,7 +113,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 607, $this->pessoa_logada, 11,  "educar_motivo_suspensao_lst.php" );
@@ -141,7 +138,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 607, $this->pessoa_logada, 11,  "educar_motivo_suspensao_lst.php" );
@@ -166,7 +163,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 607, $this->pessoa_logada, 11,  "educar_motivo_suspensao_lst.php" );

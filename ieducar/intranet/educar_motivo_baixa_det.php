@@ -60,7 +60,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Motivo Baixa - Detalhe";
-        
+
 
         $this->cod_motivo_baixa=$_GET["cod_motivo_baixa"];
 
@@ -91,13 +91,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_motivo_baixa_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Detalhe do motivo de baixa"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhe do motivo de baixa', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 
