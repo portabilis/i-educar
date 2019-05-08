@@ -81,7 +81,7 @@ class indice extends clsListagem
       $this->$var = ($val === '') ? NULL : $val;
     }
 
-    
+
 
     $this->addCabecalhos(array(
       'Descri&ccedil;&atilde;o'
@@ -120,13 +120,9 @@ class indice extends clsListagem
       $this->nome_acao = 'Novo';
     }
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Escolaridade do servidor"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->breadcrumb('Escolaridade do servidor', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
 
     $this->largura = '100%';
   }
