@@ -555,7 +555,8 @@ SQL;
                     COALESCE((ARRAY[10] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoCaa",
                     COALESCE((ARRAY[11] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoRecursosOpticosNaoOpticos",
                     aluno.recebe_escolarizacao_em_outro_espaco AS "recebeEscolarizacaoOutroEspacao",
-                    (transporte_aluno.responsavel IS NOT NULL)::INTEGER AS "transportePublico",
+                    (CASE WHEN transporte_aluno.responsavel = 0 OR transporte_aluno.responsavel IS NULL THEN 0
+                        ELSE 1 END) AS "transportePublico",
                     transporte_aluno.responsavel AS "poderPublicoResponsavelTransporte",
                     (ARRAY[4] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteBicicleta",
                     (ARRAY[2] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteMicroonibus",
