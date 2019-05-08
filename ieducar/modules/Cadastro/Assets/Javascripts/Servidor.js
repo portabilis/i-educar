@@ -268,3 +268,95 @@ $j(document).ready(function() {
     }
   });
 });
+
+var searchCourse = function (request, response) {
+  var searchPath = '/module/Api/CursoSuperior?oper=get&resource=cursosuperior-search',
+      params = {
+        query: request.term
+      };
+
+  $j.get(searchPath, params, function (dataResponse) {
+    simpleSearch.handleSearch(dataResponse, response);
+  });
+};
+
+var handleSelectCourse = function (event, ui) {
+  var target = $j(event.target),
+      id = target.attr('id'),
+      idNum = id.match(/\[(\d+)\]/),
+      refIdCourse = $j('input[id="employee_course_id[' + idNum[1] + ']"]');
+
+  target.val(ui.item.label);
+  refIdCourse.val(ui.item.value);
+
+  return false;
+};
+
+var searchCollege = function (request, response) {
+  var searchPath = '/module/Api/Ies?oper=get&resource=ies-search',
+      params = {
+        query: request.term
+      };
+
+  $j.get(searchPath, params, function (dataResponse) {
+    simpleSearch.handleSearch(dataResponse, response);
+  });
+};
+
+var handleSelectCollege = function (event, ui) {
+  var target = $j(event.target),
+      id = target.attr('id'),
+      idNum = id.match(/\[(\d+)\]/),
+      refIdCourse = $j('input[id="employee_college_id[' + idNum[1] + ']"]');
+
+  target.val(ui.item.label);
+  refIdCourse.val(ui.item.value);
+
+  return false;
+};
+
+function setAutoComplete() {
+  $j.each($j('input[id^="employee_course"]'), function (index, field) {
+    $j(field).autocomplete({
+      source: searchCourse,
+      select: handleSelectCourse,
+      minLength: 1,
+      autoFocus: true,
+      autoSelect: true,
+    });
+
+    $j(field).attr('placeholder', 'Digite um nome para buscar');
+  });
+
+  $j.each($j('input[id^="employee_college"]'), function (index, field) {
+    $j(field).autocomplete({
+      source: searchCollege,
+      select: handleSelectCollege,
+      minLength: 1,
+      autoFocus: true,
+      autoSelect: true,
+    });
+
+    $j(field).attr('placeholder', 'Digite um nome para buscar');
+  });
+};
+
+function setupInputs() {
+  $j('input[id^="completion_year"]').keyup(function(){
+    var oldValue = this.value;
+
+    this.value = this.value.replace(/[^0-9\.]/g, '');
+    this.value = this.value.replace('.', '');
+
+    if (oldValue != this.value)
+      messageUtils.error('Informe apenas números.', this);
+  });
+}
+
+$j('#btn_add_tab_add_2').click(function () {
+  setAutoComplete();
+  setupInputs();
+});
+
+setAutoComplete();
+setupInputs();

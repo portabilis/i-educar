@@ -29,7 +29,10 @@
  * @version   $Id$
  */
 
+use App\Models\EmployeeGraduation;
+use App\Services\EmployeeGraduationService;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
+use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/clsBase.inc.php';
@@ -459,6 +462,10 @@ class indice extends clsCadastro
       1 => Portabilis_String_Utils::toLatin1('Concluído'),
       2 => 'Em andamento'
     );
+
+    $this->campoQuebra();
+    $this->addGraduationsTable();
+    $this->campoQuebra();
 
     $options = array(
       'label' => Portabilis_String_Utils::toLatin1('Situação do curso superior 1'),
@@ -1105,6 +1112,75 @@ JS;
       Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($this->cod_servidor, $this->cod_docente_inep)));
     }
   }
+
+  protected function addGraduationsTable()
+  {
+      $graduations = $this->fillEmployeeGraduations($this->cod_servidor);
+
+      $rows = $this->getGraduateTableRows($graduations);
+
+      $this->campoTabelaInicio('graduations', 'Curso(s) Superior(es) Concluído(s)',
+          [
+              'Curso',
+              'Ano de conclusão',
+              'Instituição de Educação Superior',
+              'Área de conhecimento/Disciplina de formação',
+          ],
+          $rows
+      );
+
+      $this->inputsHelper()->simpleSearchCursoSuperior(null, ['required' => false], ['objectName' => 'employee_course']);
+      $this->campoTexto('completion_year', null, null, null, 4);
+      $this->inputsHelper()->simpleSearchIes(null, ['required' => false], ['objectName' => 'employee_college']);
+      $options = array(
+          'resources' => SelectOptions::employeeGraduationDisciplines(),
+          'required' => false
+      );
+      $this->inputsHelper()->select('employee_college_discipline_id', $options);
+
+      $this->campoTabelaFim();
+  }
+
+    /**
+     * @param $employeeId
+     * @return array|mixed
+     */
+    protected function fillEmployeeGraduations($employeeId)
+    {
+        $graduations = [];
+        if (old('course_id')) {
+            foreach (old('course_id') as $key => $value) {
+                $oldInputGraduation = new EmployeeGraduation();
+                $oldInputGraduation->course_id = old('course_id')[$key];
+                $oldInputGraduation->completion_year = old('completion_year')[$key];
+                $oldInputGraduation->college_id = old('college_id')[$key];
+                $oldInputGraduation->discipline_id = old('discipline_id')[$key];
+                $graduations[] = $oldInputGraduation;
+          }
+
+            return $graduations;
+        }
+
+        /** @var EmployeeGraduationService $employeeGraduationService */
+        $employeeGraduationService = app(EmployeeGraduationService::class);
+        return $employeeGraduationService->getEmployeeGraduations($employeeId);
+    }
+
+    protected function getGraduateTableRows($graduations)
+    {
+        $rows = [];
+
+        foreach ($graduations as $graduation) {
+            $rows[] = [
+                $graduation->course_id,
+                $graduation->completion_year,
+                $graduation->college_id,
+                $graduation->discipline_id,
+            ];
+        }
+
+        return $rows;
+    }
 
 }
 
