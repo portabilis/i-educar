@@ -103,13 +103,15 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
 
             // Escala o valor para se tornar comparável
             $value = floatval($value) * $scale;
+            $value = floor($value);
 
             $return = 0;
 
             foreach ($this->_tabelaValores as $tabelaValor) {
-                if ($value >= ($tabelaValor->valorMinimo * $scale)
-                    && $value <= ($tabelaValor->valorMaximo * $scale)
-                ) {
+                $min = $tabelaValor->valorMinimo * $scale;
+                $max = $tabelaValor->valorMaximo * $scale;
+
+                if ($value >= $min && $value <= $max) {
                     $return = $tabelaValor->nome;
                     break;
                 }

@@ -95,6 +95,7 @@ class indice extends clsCadastro
     }
 
     $this->acao_enviar      = "acaoExportar();";
+    $this->nome_url_sucesso = 'Analisar';
 
     return 'Nova exportação';
   }
@@ -110,6 +111,7 @@ class indice extends clsCadastro
       $this->campoOculto("fase2", "true");
     }
 
+    $this->campoOculto("enable_export", (int)$GLOBALS['coreExt']['Config']->educacenso->enable_export);
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
     $this->inputsHelper()->hidden('escola_em_andamento', [ 'value' => $this->escola_em_andamento ]);
 
