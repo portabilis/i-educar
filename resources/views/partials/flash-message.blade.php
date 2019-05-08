@@ -1,37 +1,21 @@
 <div class="flashMessages">
     <div class="flashMessages__container">
-        @if ($message = Session::get('success'))
-            <div class="flashMessages__message -success"><a href="#" class="close-msg">×</a><time>{{ date('H:i:s', time()) }}</time>{!! $message !!}</div>
-        @endif
-
-        @if ($message = Session::get('error'))
-            <div class="flashMessages__message -error"><a href="#" class="close-msg">×</a><time>{{ date('H:i:s', time()) }}</time>{!! $message !!}</div>
-        @endif
-
-        @if ($message = Session::get('notice'))
-            <div class="flashMessages__message -notice"><a href="#" class="close-msg">×</a><time>{{ date('H:i:s', time()) }}</time>{!! $message !!}</div>
-        @endif
-
-        @if ($message = Session::get('info'))
-            <div class="flashMessages__message -info"><a href="#" class="close-msg">×</a><time>{{ date('H:i:s', time()) }}</time>{!! $message !!}</div>
-        @endif
-
-        @if ($message = Session::get('legacy'))
-            <div class="flashMessages__message -legacy"><a href="#" class="close-msg">×</a><time>{{ date('H:i:s', time()) }}</time>{!! $message !!}</div>
-        @endif
+        @foreach (['success', 'error', 'notice', 'info', 'legacy'] as $msgType)
+            @if (Session::get($msgType))
+                @if (is_array(Session::get($msgType)))
+                    @foreach (Session::get($msgType) as $message)
+                        <div class="flashMessages__message -{{ $msgType }}"><a href="#" class="close-msg">×</a><time>{{ date('H:i:s', time()) }}</time>{!! $message !!}</div>
+                    @endforeach
+                @else
+                    <div class="flashMessages__message -{{ $msgType }}"><a href="#" class="close-msg">×</a><time>{{ date('H:i:s', time()) }}</time>{!! Session::get($msgType) !!}</div>
+                @endif
+            @endif
+        @endforeach
 
         @if (Session::has('errors'))
-            @php
-                $msgs = [];
-
-                foreach (Session::get('errors')->all() as $error) {
-                    $msgs[] = $error;
-                }
-
-                $message = join('<br>', $msgs);
-            @endphp
-
-            <div class="flashMessages__message -error"><a href="#" class="close-msg">×</a><time>{{ date('H:i:s', time()) }}</time>{!! $message !!}</div>
+            @foreach (Session::get('errors')->all() as $message)
+                <div class="flashMessages__message -error"><a href="#" class="close-msg">×</a><time>{{ date('H:i:s', time()) }}</time>{!! $message !!}</div>
+            @endforeach
         @endif
     </div>
     <ul class="flashMessages__controls">
