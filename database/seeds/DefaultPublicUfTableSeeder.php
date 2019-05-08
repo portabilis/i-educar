@@ -13,7 +13,7 @@ class DefaultPublicUfTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/public.uf.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/public.uf.sql')
         );
     }
 }

@@ -13,7 +13,7 @@ class DefaultModulesEducacensoOrgaoRegionalTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/modules.educacenso_orgao_regional.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/modules.educacenso_orgao_regional.sql')
         );
     }
 }

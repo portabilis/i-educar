@@ -13,7 +13,7 @@ class DefaultModulesLinguaIndigenaEducacensoTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/modules.lingua_indigena_educacenso.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/modules.lingua_indigena_educacenso.sql')
         );
     }
 }

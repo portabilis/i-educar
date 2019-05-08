@@ -13,7 +13,7 @@ class DefaultPublicDistritoTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/public.distrito.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/public.distrito.sql')
         );
     }
 }

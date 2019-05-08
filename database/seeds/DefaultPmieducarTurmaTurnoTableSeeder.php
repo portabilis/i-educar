@@ -13,7 +13,7 @@ class DefaultPmieducarTurmaTurnoTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/pmieducar.turma_turno.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/pmieducar.turma_turno.sql')
         );
     }
 }

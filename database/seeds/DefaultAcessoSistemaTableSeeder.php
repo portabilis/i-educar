@@ -13,7 +13,7 @@ class DefaultAcessoSistemaTableSeeder extends Seeder
     public function run()
     {
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/inserts/acesso.sistema.sql')
+            file_get_contents(__DIR__ . '/../sqls/inserts/acesso.sistema.sql')
         );
     }
 }
