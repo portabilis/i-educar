@@ -58,6 +58,7 @@ function confirmaEnvio() {
 }
 
 let obrigarCamposCenso = $j('#obrigar_campos_censo').val() == '1';
+let escolaridadeSuperior = false;
 
 function validaServidor() {
   var inepServidor = $j('#cod_docente_inep').val();
@@ -96,9 +97,7 @@ function validaCursoFormacaoContinuada() {
   return true;
 }
 
-verificaCamposObrigatorio(1);
-verificaCamposObrigatorio(2);
-verificaCamposObrigatorio(3);
+verificaCamposObrigatorio();
 habilitaCampoPosGraduacao();
 
 let habilitaTipoEnsinoMedio = () => {
@@ -137,18 +136,12 @@ let verificaEscolaridade = () => {
 verificaEscolaridade();
 
 $j('#ref_idesco').on('change', ()=> {
-  verificaCamposObrigatorio(1);
+  verificaCamposObrigatorio();
   verificaEscolaridade();
 });
 
-function verificaCamposObrigatorio(seq) {
-  $j(`#situacao_curso_superior_${seq}`).makeUnrequired();
-  $j(`#codigo_curso_superior_${seq}`).makeUnrequired();
-  $j(`#ano_inicio_curso_superior_${seq}`).makeUnrequired();
-  $j(`#ano_conclusao_curso_superior_${seq}`).makeUnrequired();
-  $j(`#instituicao_curso_superior_${seq}`).makeUnrequired();
-
-  if($j('#ref_idesco').val() && seq == 1) {
+function verificaCamposObrigatorio() {
+  if($j('#ref_idesco').val()) {
     var options = {
       dataType : 'json',
       url : getResourceUrlBuilder.buildUrl(
@@ -157,24 +150,13 @@ function verificaCamposObrigatorio(seq) {
         {idesco : $j('#ref_idesco').val()}
       ),
       success : function(dataResponse) {
-        if(obrigarCamposCenso && dataResponse.escolaridade.escolaridade == '6'){
-          $j(`#situacao_curso_superior_${seq}`).makeRequired();
-          $j(`#codigo_curso_superior_${seq}`).makeRequired();
-          $j(`#ano_inicio_curso_superior_${seq}`).makeRequired();
-          $j(`#ano_conclusao_curso_superior_${seq}`).makeRequired();
-          $j(`#instituicao_curso_superior_${seq}`).makeRequired();
-        }
+        escolaridadeSuperior = dataResponse.escolaridade.escolaridade == '6'
       }
     }
     getResource(options);
-  } else if(seq >=2 && obrigarCamposCenso && $j(`#situacao_curso_superior_${seq}`).val()) {
-    $j(`#situacao_curso_superior_${seq}`).makeRequired();
-    $j(`#codigo_curso_superior_${seq}`).makeRequired();
-    $j(`#ano_inicio_curso_superior_${seq}`).makeRequired();
-    $j(`#ano_conclusao_curso_superior_${seq}`).makeRequired();
-    $j(`#instituicao_curso_superior_${seq}`).makeRequired();
   }
 }
+
 
 function habilitaCampoPosGraduacao() {
   var possuiSuperiorConcuido = true;
@@ -396,7 +378,7 @@ function validateGraduations() {
     return false;
   }
 
-  if (!obrigarCamposCenso || $j('#ref_idesco').val() != 6) {
+  if (!obrigarCamposCenso || !escolaridadeSuperior) {
     return result;
   }
 
