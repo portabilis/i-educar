@@ -47,10 +47,14 @@ class clsDetalhe extends Core_Controller_Page_Abstract
 
   function RenderHTML()
   {
+    ob_start();
+
     $this->_preRender();
     $this->Gerar();
 
-    $retorno = '';
+    $retorno = ob_get_contents();
+
+    ob_end_clean();
 
     $width = empty($this->largura) ? '' : 'width=' . $this->largura;
 

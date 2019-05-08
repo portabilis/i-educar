@@ -212,12 +212,16 @@ class clsListagem extends clsCampos
 
   function RenderHTML()
   {
+    View::share('title', $this->titulo);
+
+    ob_start();
+
     $this->_preRender();
     $this->Gerar();
 
-    View::share('title', $this->titulo);
+    $retorno = ob_get_contents();
 
-    $retorno = '';
+    ob_end_clean();
 
     $retorno .= "
     <script type=\"text/javascript\">function go(url) { document.location = url; }
