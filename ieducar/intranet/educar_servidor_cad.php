@@ -477,24 +477,25 @@ class indice extends clsCadastro
       $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
       $helperOptions = array('objectName'  => 'curso_formacao_continuada');
-      $options       = array('label' => 'Possui cursos de formação continuada',
+      $options       = array('label' => 'Outros cursos de formação continuada (Mínimo de 80 horas)',
           'required' => $obrigarCamposCenso,
           'options' => array('values' => $this->curso_formacao_continuada,
               'all_values' => array(
-                  1 => 'Específico para Creche (0 a 3 anos)',
-                  2 => 'Específico para Pré-escola (4 e 5 anos)',
-                  3 => 'Específico para anos iniciais do ensino fundamental',
-                  4 => 'Específico para anos finais do ensino fundamental',
-                  5 => 'Específico para ensino médio',
-                  6 => 'Específico para educação de jovens e adultos',
-                  7 => 'Específico para educação especial',
-                  8 => 'Específico para educação indígena',
-                  9 => 'Específico para educação do campo',
-                  10 => 'Específico para educação ambiental',
-                  11 => 'Específico para educação em direitos humanos',
+                  1 => 'Creche (0 a 3 anos)',
+                  2 => 'Pré-escola (4 e 5 anos)',
+                  3 => 'Anos iniciais do ensino fundamental',
+                  4 => 'Anos finais do ensino fundamental',
+                  5 => 'Ensino médio',
+                  6 => 'Educação de jovens e adultos',
+                  7 => 'Educação especial',
+                  8 => 'Educação indígena',
+                  9 => 'Educação do campo',
+                  10 => 'Educação ambiental',
+                  11 => 'Educação em direitos humanos',
                   12 => 'Gênero e diversidade sexual',
-                  13 => 'Direito das crianças e adolescentes',
+                  13 => 'Direitos de criança e adolescente',
                   14 => 'Educação para as relações etnicorraciais e História e cultura Afro-Brasileira e Africana',
+                  17 => 'Gestão Escolar',
                   15 => 'Outros',
                   16 => 'Nenhum')));
       $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
