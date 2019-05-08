@@ -138,13 +138,13 @@ class EducacensoExportController extends ApiCoreController
         }
         foreach ($this->getServidores($escolaId, $ano, $data_ini, $data_fim) as $servidor) {
 
-            $registro30 = $this->exportaDadosRegistro30($servidor['id'], $escolaId);
             $registro51 = $this->exportaDadosRegistro51($servidor['id'], $escolaId, $data_ini, $data_fim, $ano);
-            if (!empty($registro30)) {
-                $export .= $registro30 . $registro51;
+            if (!empty($registro51)) {
+                $export .= $registro51;
             }
         }
 
+        $export .= $this->exportaDadosRegistro30($escolaId, $ano);
         $export .= $this->exportaDadosRegistro40($escolaId);
         $export .= $this->exportaDadosRegistro50($escolaId, $ano);
 
@@ -828,130 +828,23 @@ class EducacensoExportController extends ApiCoreController
         }
     }
 
-    protected function exportaDadosRegistro30($servidorId, $escolaId)
+    protected function exportaDadosRegistro30($escolaId, $ano)
     {
-        $sql =
-            ' SELECT
-        \'30\' AS r30s1,
-        ece.cod_escola_inep AS r30s2,
-        ecd.cod_docente_inep AS r30s3,
-        s.cod_servidor AS r30s4,
-        p.nome AS r30s5,
-        p.email AS r30s6,
-        NULL AS r30s7,
-        fis.data_nasc AS r30s8,
-        fis.sexo AS r30s9,
-        r.raca_educacenso AS r30s10,
-        (SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_mae) AS r30s12,
-        (SELECT nome FROM cadastro.pessoa WHERE pessoa.idpes = fis.idpes_pai) AS r30s13,
-        coalesce(fis.nacionalidade,1) AS r30s14,
-        (SELECT cod_ibge FROM public.pais WHERE pais.idpais = fis.idpais_estrangeiro) AS r30s15,
-        uf.cod_ibge AS r30s16,
-        m.cod_ibge AS r30s17
+        $educacensoRepository = new EducacensoRepository();
 
+        $registro40Model = new Registro40();
+        $registro40 = new Registro40Data($educacensoRepository, $registro40Model);
 
-        FROM  pmieducar.servidor s
-        INNER JOIN cadastro.fisica fis ON (fis.idpes = s.cod_servidor)
-        INNER JOIN cadastro.pessoa p ON (fis.idpes = p.idpes)
-        INNER JOIN modules.professor_turma pt ON (pt.servidor_id = s.cod_servidor)
-        INNER JOIN pmieducar.turma t ON (t.cod_turma = pt.turma_id)
-        INNER JOIN pmieducar.escola e ON (e.cod_escola = t.ref_ref_cod_escola)
-        INNER JOIN modules.educacenso_cod_escola ece ON (ece.cod_escola = e.cod_escola)
-        LEFT JOIN cadastro.fisica_raca rc ON (rc.ref_idpes = fis.idpes)
-        LEFT JOIN cadastro.raca r ON (r.cod_raca = rc.ref_cod_raca)
-        LEFT JOIN public.municipio m ON (m.idmun = fis.idmun_nascimento)
-        LEFT JOIN public.uf ON (uf.sigla_uf = m.sigla_uf)
-        LEFT JOIN modules.educacenso_cod_docente ecd ON ecd.cod_servidor = s.cod_servidor
-        WHERE s.cod_servidor = $1
-          AND COALESCE(t.nao_informar_educacenso, 0) = 0
-          AND e.cod_escola = $2
-          AND t.ativo = 1
-          AND t.visivel = TRUE
-        LIMIT 1
-    ';
+        $registro50Model = new Registro50();
+        $registro50 = new Registro50Data($educacensoRepository, $registro50Model);
 
-        // Transforma todos resultados em variáveis
-        extract(Portabilis_Utils_Database::fetchPreparedQuery($sql,
-            array('return_only' => 'first-row', 'params' => array($servidorId, $escolaId))));
-        if ($r30s1) {
-            $r30s5 = $this->convertStringToCenso($r30s5);
-            $r30s6 = strtoupper($r30s6);
-            $r30s8 = Portabilis_Date_Utils::pgSQLToBr($r30s8);
-            $r30s9 = $r30s9 == 'M' ? 1 : 2;
-            $r30s10 = is_numeric($r30s10) ? $r30s10 : 0;
+        $registro60Model = new Registro60();
+        $registro60 = new Registro60Data($educacensoRepository, $registro60Model);
 
-            $r30s11 = ($r30s12 || $r30s13) ? 1 : 0;
-
-            $r30s12 = $this->convertStringToAlpha($r30s12);
-            $r30s13 = $this->convertStringToAlpha($r30s13);
-
-            if ($r30s14 != '1') {
-                $r30s16 = $r30s17 = null;
-            }
-
-            if ($r30s14 == '1' || $r30s14 == '2') {
-                $r30s15 = 76;
-            }
-
-            if ($r30s14 == "1") {
-                if (is_null($r30s16) || is_null($r30s17)) {
-                    $this->msg .= "Dados para formular o registro 30 da escola {$escolaId} não encontrados. Verifique se os municípios e UFs dos servidores brasileiros possuem código INEP cadastrados.<br/>";
-                    $this->error = true;
-                }
-            }
-
-            $sql = 'SELECT DISTINCT(deficiencia_educacenso) AS id FROM cadastro.fisica_deficiencia,
-              cadastro.deficiencia WHERE cod_deficiencia = ref_cod_deficiencia AND ref_idpes = $1
-              AND deficiencia_educacenso IS NOT NULL';
-
-            $deficiencias = Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($r30s4)));
-
-            $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = $r30s25 = 0;
-
-            $deficienciaToSeq = array(
-                1 => '19',
-                2 => '20',
-                3 => '21',
-                4 => '22',
-                5 => '23',
-                6 => '24',
-                7 => '25'
-            );
-            $r30s18 = 0;
-
-            $arrayDeficienciasProfessor = [];
-            foreach ($deficiencias as $deficiencia_educacenso) {
-                $deficiencia_educacenso = $deficiencia_educacenso['id'];
-                if (array_key_exists($deficiencia_educacenso, $deficienciaToSeq)) {
-                    ${'r30s' . $deficienciaToSeq[$deficiencia_educacenso]} = 1;
-                    $r30s18 = 1;
-                }
-
-                $arrayDeficienciasProfessor[] = $deficienciaToSeq[$deficiencia_educacenso];
-            }
-
-
-            $validaDeficienciaMultipla = new ValueDeficienciaMultipla(new DeficienciaMultiplaProfessor(), $arrayDeficienciasProfessor);
-            $r30s26 = $validaDeficienciaMultipla->getValue();
-
-            if ($r30s18 == 0) {
-                $r30s19 = $r30s20 = $r30s21 = $r30s22 = $r30s23 = $r30s24 = $r30s25 = $r30s26 = null;
-            }
-
-            $r30s7 = null;
-
-            $d = '|';
-            $return = '';
-            $numeroRegistros = 26;
-
-            for ($i = 1; $i <= $numeroRegistros; $i++) {
-                $return .= ${'r30s' . $i} . $d;
-            }
-
-            $return = substr_replace($return, "", -1);
-
-            return $return . "\n";
-        }
+        /** @var Registro40[] $gestores */
+        $gestores = $registro40->getExportFormatData($escolaId);
+        /** @var Registro50[] $docentes */
+        $docentes = $registro50->getExportFormatData($escolaId, $ano);
     }
 
     protected function exportaDadosRegistro40($escolaId)
