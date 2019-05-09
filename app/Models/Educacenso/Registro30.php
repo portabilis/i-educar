@@ -97,6 +97,65 @@ class Registro30 implements RegistroEducacenso
 
     public $justificativaFaltaDocumentacao;
 
+    public $inepServidor;
+
+    public $escolaridade;
+
+    public $tipoEnsinoMedioCursado;
+
+    public $formacaoCurso;
+
+    public $formacaoAnoConclusao;
+
+    public $formacaoInstituicao;
+
+    public $formacaoComponenteCurricular;
+
+    public $posGraduacaoEspecializacao;
+
+    public $posGraduacaoMestrado;
+
+    public $posGraduacaoDoutorado;
+
+    public $posGraduacaoNaoPossui;
+
+    public $formacaoContinuadaCreche;
+
+    public $formacaoContinuadaPreEscola;
+
+    public $formacaoContinuadaAnosIniciaisFundamental;
+
+    public $formacaoContinuadaAnosFinaisFundamental;
+
+    public $formacaoContinuadaEnsinoMedio;
+
+    public $formacaoContinuadaEducacaoJovensAdultos;
+
+    public $formacaoContinuadaEducacaoEspecial;
+
+    public $formacaoContinuadaEducacaoIndigena;
+
+    public $formacaoContinuadaEducacaoCampo;
+
+    public $formacaoContinuadaEducacaoAmbiental;
+
+    public $formacaoContinuadaEducacaoDireitosHumanos;
+
+    public $formacaoContinuadaGeneroDiversidadeSexual;
+
+    public $formacaoContinuadaDireitosCriancaAdolescente;
+
+    public $formacaoContinuadaEducacaoRelacoesEticoRaciais;
+
+    public $formacaoContinuadaEducacaoGestaoEscolar;
+
+    public $formacaoContinuadaEducacaoOutros;
+
+    public $formacaoContinuadaEducacaoNenhum;
+
+    public $email;
+
+
     /**
      * @return bool
      */

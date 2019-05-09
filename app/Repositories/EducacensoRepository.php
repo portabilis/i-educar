@@ -678,15 +678,56 @@ SQL;
         return $this->fetchPreparedQuery($sql, ['school' => $schoolId]);
     }
 
-    public function getEmployeeDataForRecord30($arrayEmployeeId, $schoolId)
+    public function getEmployeeDataForRecord30($arrayEmployeeId)
     {
         $stringPersonId = join(',', $arrayEmployeeId);
         $sql = <<<SQL
-            SELECT
-                fisica.idpes AS "codigoPessoa",
-                fisica.idpes AS "data_nasc"
-            FROM cadastro.fisica
-        WHERE fisica.idpes IN ({$stringPersonId})
+            SELECT DISTINCT
+                servidor.cod_servidor AS "codigoPessoa",
+                escolaridade.escolaridade AS "escolaridade",
+                servidor.tipo_ensino_medio_cursado AS "tipoEnsinoMedioCursado",
+                tbl_formacoes.course_id AS "formacaoCurso",
+                tbl_formacoes.completion_year AS "formacaoAnoConclusao",
+                tbl_formacoes.college_id AS "formacaoInstituicao",
+                tbl_formacoes.discipline_id AS "formacaoComponenteCurricular",
+                (ARRAY[1] <@ servidor.pos_graduacao)::INT "posGraduacaoEspecializacao",
+                (ARRAY[2] <@ servidor.pos_graduacao)::INT "posGraduacaoMestrado",
+                (ARRAY[3] <@ servidor.pos_graduacao)::INT "posGraduacaoDoutorado",
+                (ARRAY[4] <@ servidor.pos_graduacao)::INT "posGraduacaoNaoPossui",
+                (ARRAY[1] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaCreche",
+                (ARRAY[2] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaPreEscola",
+                (ARRAY[3] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaAnosIniciaisFundamental",
+                (ARRAY[4] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaAnosFinaisFundamental",
+                (ARRAY[5] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEnsinoMedio",
+                (ARRAY[6] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoJovensAdultos",
+                (ARRAY[7] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoEspecial",
+                (ARRAY[8] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoIndigena",
+                (ARRAY[9] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoCampo",
+                (ARRAY[10] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoAmbiental",
+                (ARRAY[11] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoDireitosHumanos",
+                (ARRAY[12] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaGeneroDiversidadeSexual",
+                (ARRAY[13] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaDireitosCriancaAdolescente",
+                (ARRAY[14] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoRelacoesEticoRaciais",
+                (ARRAY[17] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoGestaoEscolar",
+                (ARRAY[15] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoOutros",
+                (ARRAY[16] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoNenhum",
+                pessoa.email AS "email",
+                educacenso_cod_docente.cod_docente_inep AS "inepServidor"
+            
+            FROM pmieducar.servidor
+                 JOIN cadastro.pessoa ON pessoa.idpes = servidor.cod_servidor
+            LEFT JOIN cadastro.escolaridade ON escolaridade.idesco = servidor.ref_idesco
+            LEFT JOIN modules.educacenso_cod_docente ON educacenso_cod_docente.cod_servidor = servidor.cod_servidor,
+            LATERAL (
+                SELECT ARRAY_AGG(course_id) course_id,
+                       ARRAY_AGG(completion_year) completion_year,
+                       ARRAY_AGG(college_id) college_id,
+                       ARRAY_AGG(discipline_id) discipline_id
+                FROM employee_graduations WHERE employee_graduations.employee_id = servidor.cod_servidor
+            ) AS tbl_formacoes
+            WHERE servidor.cod_servidor IN ({$stringPersonId})
+
+
 SQL;
 
         return $this->fetchPreparedQuery($sql);
