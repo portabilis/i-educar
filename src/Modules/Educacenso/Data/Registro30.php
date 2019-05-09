@@ -7,7 +7,7 @@ use App\Models\Educacenso\Registro30 as Registro30Model;
 use App\Repositories\EducacensoRepository;
 use iEducar\Modules\Educacenso\Formatters;
 
-class Registro30
+class Registro30 extends AbstractRegistro
 {
     use Formatters;
 
@@ -26,11 +26,6 @@ class Registro30
      */
     protected $modelArray;
 
-    public function __construct(EducacensoRepository $repository)
-    {
-        $this->repository = $repository;
-    }
-
     /**
      * @param integer $escolaId
      * @return Registro30Model[]
@@ -42,11 +37,11 @@ class Registro30
         $return = $this->repository->getDataForRecord30($arrayPersonId);
 
         foreach ($return as $data) {
+            $this->model = $this->modelArray[$data->codigoPessoa];
             $this->hydrateModel($data);
             $this->modelArray[] = $this->model;
-            $this->model = new Registro30Model();
         }
-
+dd($this->modelArray);
         return $this->modelArray;
     }
 
@@ -62,9 +57,15 @@ class Registro30
             }
 
             $registro30Model = new Registro30Model();
+
+            if (isset($this->modelArray[$model->getCodigoPessoa()])) {
+                $registro30Model = $this->modelArray[$model->getCodigoPessoa()];
+            }
+
             $registro30Model->codigoPessoa = $model->getCodigoPessoa();
-            $registro30Model->tipo = $type;
-            $this->modelArray[] = $registro30Model;
+
+            $registro30Model->tipos[$type] = true;
+            $this->modelArray[$model->getCodigoPessoa()] = $registro30Model;
         }
     }
 

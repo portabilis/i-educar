@@ -3,6 +3,7 @@
 use App\Models\Educacenso\Registro00;
 use App\Models\Educacenso\Registro10;
 use App\Models\Educacenso\Registro20;
+use App\Models\Educacenso\Registro30;
 use App\Models\Educacenso\Registro40;
 use App\Models\Educacenso\Registro50;
 use App\Models\Individual;
@@ -13,7 +14,7 @@ use App\Services\SchoolClass\AvailableTimeService;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\Data\Registro10 as Registro10Data;
 use iEducar\Modules\Educacenso\Data\Registro20 as Registro20Data;
-use iEducar\Modules\Educacenso\Data\Registro30;
+use iEducar\Modules\Educacenso\Data\Registro30 as Registro30Data;
 use iEducar\Modules\Educacenso\Data\Registro40 as Registro40Data;
 use iEducar\Modules\Educacenso\Data\Registro50 as Registro50Data;
 use iEducar\Modules\Educacenso\Data\Registro60 as Registro60Data;
@@ -1005,10 +1006,10 @@ class EducacensoAnaliseController extends ApiCoreController
         /** @var Registro60[] $alunos */
         $alunos = $registro60->getData($escolaId, $ano);
 
-        $registro30Data = new Registro30($educacensoRepository);
-        $registro30Data->setArrayDataByType($gestores, \App\Models\Educacenso\Registro30::TIPO_GESTOR);
-        $registro30Data->setArrayDataByType($docentes, \App\Models\Educacenso\Registro30::TIPO_DOCENTE);
-        $registro30Data->setArrayDataByType($alunos, \App\Models\Educacenso\Registro30::TIPO_ALUNO);
+        $registro30Data = new Registro30Data($educacensoRepository, new Registro30());
+        $registro30Data->setArrayDataByType($gestores, Registro30::TIPO_GESTOR);
+        $registro30Data->setArrayDataByType($docentes, Registro30::TIPO_DOCENTE);
+        $registro30Data->setArrayDataByType($alunos, Registro30::TIPO_ALUNO);
 
         $registro30Data->getData();
 

@@ -9,16 +9,18 @@ class Registro30 implements RegistroEducacenso
     CONST TIPO_DOCENTE = 'docente';
     CONST TIPO_ALUNO = 'aluno';
 
-    public $tipo;
+    public $tipos = [];
 
     public $codigoPessoa;
+
+    public $data_nasc;
 
     /**
      * @return bool
      */
     public function isGestor()
     {
-        return $this->tipo == self::TIPO_GESTOR;
+        return isset($this->tipos[self::TIPO_GESTOR]);
     }
 
     /**
@@ -26,7 +28,7 @@ class Registro30 implements RegistroEducacenso
      */
     public function isDocente()
     {
-        return $this->tipo == self::TIPO_DOCENTE;
+        return isset($this->tipos[self::TIPO_DOCENTE]);
     }
 
     /**
@@ -34,7 +36,7 @@ class Registro30 implements RegistroEducacenso
      */
     public function isAluno()
     {
-        return $this->tipo == self::TIPO_ALUNO;
+        return isset($this->tipos[self::TIPO_ALUNO]);
     }
 
 }

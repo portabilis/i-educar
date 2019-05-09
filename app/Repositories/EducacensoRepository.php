@@ -624,7 +624,11 @@ SQL;
         $stringPersonId = join(',', $arrayPersonId);
         $sql = <<<SQL
 
-        SELECT * FROM cadastro.fisica WHERE idpes IN ({$stringPersonId})
+        SELECT 
+               idpes AS "codigoPessoa",
+               data_nasc
+        FROM cadastro.fisica 
+        WHERE idpes IN ({$stringPersonId})
 SQL;
 
         return $this->fetchPreparedQuery($sql);
