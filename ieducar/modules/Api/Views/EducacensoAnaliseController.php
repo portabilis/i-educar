@@ -1011,7 +1011,9 @@ class EducacensoAnaliseController extends ApiCoreController
         $registro30Data->setArrayDataByType($docentes, Registro30::TIPO_DOCENTE);
         $registro30Data->setArrayDataByType($alunos, Registro30::TIPO_ALUNO);
 
-        $registro30Data->getData();
+        $pessoas = $registro30Data->getData($escolaId);
+
+        dd($pessoas);
 
         $mensagem = [];
 

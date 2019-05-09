@@ -619,16 +619,74 @@ SQL;
         ]);
     }
 
-    public function getDataForRecord30($arrayPersonId)
+    public function getCommonDataForRecord30($arrayPersonId, $schoolId)
     {
         $stringPersonId = join(',', $arrayPersonId);
         $sql = <<<SQL
+            SELECT
+                '30' AS registro,
+                inepescola.cod_escola_inep AS "inepEscola",
+                fisica.idpes AS "codigoPessoa",
+                fisica_cpf.cpf AS cpf,
+                pessoa.nome AS "nomePessoa",
+                fisica.data_nasc AS "dataNascimento",
+                (fisica.nome_mae IS NOT NULL OR fisica.nome_pai IS NOT NULL)::INTEGER AS "filiacao",
+                fisica.nome_mae AS "filiacao1",
+                fisica.nome_pai AS "filiacao2",
+                CASE WHEN fisica.sexo = 'F' THEN 1 ELSE 2 END AS "sexo",
+                fisica_raca.ref_cod_raca AS "raca",
+                fisica.nacionalidade AS "nacionalidade",
+                CASE WHEN fisica.nacionalidade = 3 THEN fisica.idpais_estrangeiro ELSE 76 END AS "paisNacionalidade",
+                fisica.idmun_nascimento AS "municipioNascimento",
+                CASE WHEN
+                    true = (SELECT true FROM cadastro.fisica_deficiencia WHERE fisica_deficiencia.ref_idpes = fisica.idpes LIMIT 1) THEN 1
+                    ELSE 0 END
+                AS "deficiencia",
+                1 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaCegueira",
+                2 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaBaixaVisao",
+                3 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaSurdez",
+                4 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAuditiva",
+                5 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaSurdoCegueira",
+                6 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaFisica",
+                7 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaIntelectual",
+                CASE WHEN array_length(deficiencias.array_deficiencias, 1) > 1 THEN 1 ELSE 0 END "deficienciaMultipla",
+                11 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAltasHabilidades",
+                12 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAutismo"
+                 FROM cadastro.fisica
+                 JOIN cadastro.pessoa ON pessoa.idpes = fisica.idpes
+                 JOIN cadastro.fisica_raca ON fisica_raca.ref_idpes = fisica.idpes
+            
+            LEFT JOIN cadastro.fisica_cpf ON fisica_cpf.idpes = fisica.idpes
+            LEFT JOIN LATERAL (
+                 SELECT educacenso_cod_escola.cod_escola_inep
+                 FROM modules.educacenso_cod_escola
+                 WHERE educacenso_cod_escola.cod_escola = :school
+                 ) inepescola ON true
+            LEFT JOIN LATERAL (
+                 SELECT fisica_deficiencia.ref_idpes,
+                        ARRAY_AGG(fisica_deficiencia.ref_cod_deficiencia) as array_deficiencias
+                 FROM cadastro.fisica_deficiencia
+                 WHERE fisica_deficiencia.ref_idpes = fisica.idpes
+                   AND fisica_deficiencia.ref_cod_deficiencia IN (1,2,3,4,5,6,7,11,12)
+                 GROUP BY 1
+                 ) deficiencias ON true
+        
+            WHERE fisica.idpes IN ({$stringPersonId})
+      
+SQL;
 
-        SELECT 
-               idpes AS "codigoPessoa",
-               data_nasc
-        FROM cadastro.fisica 
-        WHERE idpes IN ({$stringPersonId})
+        return $this->fetchPreparedQuery($sql, ['school' => $schoolId]);
+    }
+
+    public function getEmployeeDataForRecord30($arrayPersonId, $schoolId)
+    {
+        $stringPersonId = join(',', $arrayPersonId);
+        $sql = <<<SQL
+            SELECT
+                fisica.idpes AS "codigoPessoa",
+                fisica.idpes AS "data_nasc"
+            FROM cadastro.fisica
+        WHERE fisica.idpes IN ({$stringPersonId})
 SQL;
 
         return $this->fetchPreparedQuery($sql);

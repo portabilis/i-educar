@@ -27,21 +27,34 @@ class Registro30 extends AbstractRegistro
     protected $modelArray;
 
     /**
-     * @param integer $escolaId
+     * @param $schoolId
      * @return Registro30Model[]
      */
-    public function getData()
+    public function getData($schoolId)
     {
         $arrayPersonId = $this->getArrayPersonId();
 
-        $return = $this->repository->getDataForRecord30($arrayPersonId);
-
-        foreach ($return as $data) {
+        $commonData = $this->repository->getCommonDataForRecord30($arrayPersonId, $schoolId);
+        foreach ($commonData as $data) {
             $this->model = $this->modelArray[$data->codigoPessoa];
             $this->hydrateModel($data);
-            $this->modelArray[] = $this->model;
+            $this->modelArray[$data->codigoPessoa] = $this->model;
         }
-dd($this->modelArray);
+
+        $employeeData = $this->repository->getEmployeeDataForRecord30($arrayPersonId, $schoolId);
+        foreach ($employeeData as $data) {
+            $this->model = $this->modelArray[$data->codigoPessoa];
+            $this->hydrateModel($data);
+            $this->modelArray[$data->codigoPessoa] = $this->model;
+        }
+
+        $employeeData = $this->repository->getEmployeeDataForRecord30($arrayPersonId, $schoolId);
+        foreach ($employeeData as $data) {
+            $this->model = $this->modelArray[$data->codigoPessoa];
+            $this->hydrateModel($data);
+            $this->modelArray[$data->codigoPessoa] = $this->model;
+        }
+
         return $this->modelArray;
     }
 

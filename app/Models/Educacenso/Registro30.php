@@ -11,9 +11,55 @@ class Registro30 implements RegistroEducacenso
 
     public $tipos = [];
 
+    public $registro;
+
+    public $inepEscola;
+
     public $codigoPessoa;
 
-    public $data_nasc;
+    public $cpf;
+
+    public $nomePessoa;
+
+    public $dataNascimento;
+
+    public $filiacao;
+
+    public $filiacao1;
+
+    public $filiacao2;
+
+    public $sexo;
+
+    public $raca;
+
+    public $nacionalidade;
+
+    public $paisNacionalidade;
+
+    public $municipioNascimento;
+
+    public $deficiencia;
+
+    public $deficienciaCegueira;
+
+    public $deficienciaBaixaVisao;
+
+    public $deficienciaSurdez;
+
+    public $deficienciaAuditiva;
+
+    public $deficienciaSurdoCegueira;
+
+    public $deficienciaFisica;
+
+    public $deficienciaIntelectual;
+
+    public $deficienciaMultipla;
+
+    public $deficienciaAltasHabilidades;
+
+    public $deficienciaAutismo;
 
     /**
      * @return bool
