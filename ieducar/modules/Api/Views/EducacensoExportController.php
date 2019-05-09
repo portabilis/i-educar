@@ -401,8 +401,12 @@ class EducacensoExportController extends ApiCoreController
 
         /** @var Registro40[] $gestores */
         $gestores = $registro40->getExportFormatData($escolaId);
+
         /** @var Registro50[] $docentes */
         $docentes = $registro50->getExportFormatData($escolaId, $ano);
+
+        /** @var Registro60[] $alunos */
+        $alunos = $registro60->getExportFormatData($escolaId, $ano);
     }
 
     protected function exportaDadosRegistro40($escolaId)

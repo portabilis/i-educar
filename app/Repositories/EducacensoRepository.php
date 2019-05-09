@@ -618,4 +618,15 @@ SQL;
             'year' => $year,
         ]);
     }
+
+    public function getDataForRecord30($arrayPersonId)
+    {
+        $stringPersonId = join(',', $arrayPersonId);
+        $sql = <<<SQL
+
+        SELECT * FROM cadastro.fisica WHERE idpes IN ({$stringPersonId})
+SQL;
+
+        return $this->fetchPreparedQuery($sql);
+    }
 }

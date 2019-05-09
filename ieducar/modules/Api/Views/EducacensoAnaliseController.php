@@ -13,6 +13,7 @@ use App\Services\SchoolClass\AvailableTimeService;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\Data\Registro10 as Registro10Data;
 use iEducar\Modules\Educacenso\Data\Registro20 as Registro20Data;
+use iEducar\Modules\Educacenso\Data\Registro30;
 use iEducar\Modules\Educacenso\Data\Registro40 as Registro40Data;
 use iEducar\Modules\Educacenso\Data\Registro50 as Registro50Data;
 use iEducar\Modules\Educacenso\Data\Registro60 as Registro60Data;
@@ -980,112 +981,38 @@ class EducacensoAnaliseController extends ApiCoreController
 
     protected function analisaEducacensoRegistro30()
     {
-        $escola = $this->getRequest()->escola;
+        header('Content-Type: text/html; charset=utf-8');
+        $escolaId = $this->getRequest()->escola;
         $ano = $this->getRequest()->ano;
-        $data_fim = $this->getRequest()->data_fim;
 
-        $sql = 'SELECT pessoa.idpes AS idpes,
-                   juridica.fantasia AS nome_escola,
-                   raca.raca_educacenso AS cor_raca,
-                   fisica.nacionalidade AS nacionalidade,
-                   uf.cod_ibge AS uf_inep,
-                   uf.sigla_uf AS sigla_uf,
-                   municipio.cod_ibge AS municipio_inep,
-                   municipio.idmun AS idmun,
-                   pessoa.nome AS nome_servidor
-              FROM modules.professor_turma
-             INNER JOIN pmieducar.turma ON (turma.cod_turma = professor_turma.turma_id)
-             INNER JOIN pmieducar.escola ON (escola.cod_escola = turma.ref_ref_cod_escola)
-             INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
-             INNER JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
-              LEFT JOIN cadastro.fisica_raca ON (fisica_raca.ref_idpes = professor_turma.servidor_id)
-              LEFT JOIN cadastro.raca ON (raca.cod_raca = fisica_raca.ref_cod_raca)
-             INNER JOIN cadastro.pessoa ON (pessoa.idpes = professor_turma.servidor_id)
-             INNER JOIN cadastro.fisica ON (fisica.idpes = professor_turma.servidor_id)
-              LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = professor_turma.servidor_id)
-              LEFT JOIN public.municipio ON (municipio.idmun = fisica.idmun_nascimento)
-              LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
-             WHERE professor_turma.ano = $1
-                AND NOT EXISTS (SELECT 1 FROM
-                pmieducar.servidor_alocacao
-                WHERE servidor.cod_servidor = servidor_alocacao.ref_cod_servidor
-                AND escola.cod_escola = servidor_alocacao.ref_cod_escola
-                AND turma.ano = servidor_alocacao.ano
-                AND servidor_alocacao.data_admissao > DATE($3)
-                )
-               AND turma.ativo = 1
-               AND turma.visivel = TRUE
-               AND COALESCE(turma.nao_informar_educacenso, 0) = 0
-               AND turma.ano = professor_turma.ano
-               AND escola.cod_escola = $2
-               AND servidor.ativo = 1
-             GROUP BY professor_turma.servidor_id,
-                      juridica.fantasia,
-                      raca.raca_educacenso,
-                      fisica.nacionalidade,
-                      uf.cod_ibge,
-                      uf.sigla_uf,
-                      municipio.cod_ibge,
-                      municipio.idmun,
-                      pessoa.nome,
-                      pessoa.idpes
-              ORDER BY nome_servidor';
+        $educacensoRepository = new EducacensoRepository();
 
-        $servidores = $this->fetchPreparedQuery($sql, [$ano, $escola, Portabilis_Date_Utils::brToPgSQL($data_fim)]);
+        $registro40Model = new Registro40();
+        $registro40 = new Registro40Data($educacensoRepository, $registro40Model);
 
-        if (empty($servidores)) {
-            $this->messenger->append('Nenhum servidor encontrado.');
+        $registro50Model = new Registro50();
+        $registro50 = new Registro50Data($educacensoRepository, $registro50Model);
 
-            return ['title' => 'Análise exportação - Registro 30'];
-        }
+        $registro60Model = new Registro60();
+        $registro60 = new Registro60Data($educacensoRepository, $registro60Model);
+
+        /** @var Registro40[] $gestores */
+        $gestores = $registro40->getData($escolaId);
+
+        /** @var Registro50[] $docentes */
+        $docentes = $registro50->getData($escolaId, $ano);
+
+        /** @var Registro60[] $alunos */
+        $alunos = $registro60->getData($escolaId, $ano);
+
+        $registro30Data = new Registro30($educacensoRepository);
+        $registro30Data->setArrayDataByType($gestores, \App\Models\Educacenso\Registro30::TIPO_GESTOR);
+        $registro30Data->setArrayDataByType($docentes, \App\Models\Educacenso\Registro30::TIPO_DOCENTE);
+        $registro30Data->setArrayDataByType($alunos, \App\Models\Educacenso\Registro30::TIPO_ALUNO);
+
+        $registro30Data->getData();
 
         $mensagem = [];
-        $brasileiro = 1;
-
-        foreach ($servidores as $servidor) {
-            $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($servidor['nome_escola']));
-            $nomeServidor = Portabilis_String_Utils::toUtf8(strtoupper($servidor['nome_servidor']));
-            $idpesServidor = $servidor['idpes'];
-            $siglaUF = $servidor['sigla_uf'];
-            $codMunicipio = $servidor['idmun'];
-
-            if (is_null($servidor['cor_raca'])) {
-                $mensagem[] = [
-                    'text' => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verifique se a raça do(a) servidor(a) {$nomeServidor} foi informada.",
-                    'path' => '(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: Raça)',
-                    'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesServidor}",
-                    'fail' => true
-                ];
-            }
-
-            if (!$servidor['nacionalidade']) {
-                $mensagem[] = [
-                    'text' => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verifique se a nacionalidade do(a) servidor(a) {$nomeServidor} foi informada.",
-                    'path' => '(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: Nacionalidade)',
-                    'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$idpesServidor}",
-                    'fail' => true
-                ];
-            } else {
-
-                if ($servidor['nacionalidade'] == $brasileiro && !$servidor['uf_inep']) {
-                    $mensagem[] = [
-                        'text' => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) servidor(a) {$nomeServidor} é brasileiro(a), portanto é necessário preencher o código da UF de nascimento conforme a 'Tabela de UF'.",
-                        'path' => '(Endereçamento > Cadastros > Estados > Editar > Campo: Código INEP)',
-                        'linkPath' => "/intranet/public_uf_cad.php?sigla_uf={$siglaUF}",
-                        'fail' => true
-                    ];
-                }
-
-                if ($servidor['nacionalidade'] == $brasileiro && !$servidor['municipio_inep']) {
-                    $mensagem[] = [
-                        'text' => "Dados para formular o registro 30 da escola {$nomeEscola} não encontrados. Verificamos que a nacionalidade do(a) servidor(a) {$nomeServidor} é brasileiro(a), portanto é necessário preencher o código do município de nascimento conforme a 'Tabela de Municípios'.",
-                        'path' => '(Endereçamento > Cadastros > Municípios > Editar > Campo: Código INEP)',
-                        'linkPath' => "/intranet/public_municipio_cad.php?idmun={$codMunicipio}",
-                        'fail' => true
-                    ];
-                }
-            }
-        }
 
         return [
             'mensagens' => $mensagem,
