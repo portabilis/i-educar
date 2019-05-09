@@ -134,4 +134,14 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
     {
         return $this->codigoPessoa;
     }
+
+    public function getCodigoAluno()
+    {
+        return $this->codigoAluno;
+    }
+
+    public function getCodigoServidor()
+    {
+        return null;
+    }
 }

@@ -17,6 +17,10 @@ class Registro30 implements RegistroEducacenso
 
     public $codigoPessoa;
 
+    public $codigoAluno;
+
+    public $codigoServidor;
+
     public $cpf;
 
     public $nomePessoa;
@@ -60,6 +64,38 @@ class Registro30 implements RegistroEducacenso
     public $deficienciaAltasHabilidades;
 
     public $deficienciaAutismo;
+
+    public $inepAluno;
+
+    public $recursoLedor;
+
+    public $recursoTranscricao;
+
+    public $recursoGuia;
+
+    public $recursoTradutor;
+
+    public $recursoLeituraLabial;
+
+    public $recursoProvaAmpliada;
+
+    public $recursoProvaSuperampliada;
+
+    public $recursoAudio;
+
+    public $recursoLinguaPortuguesaSegundaLingua;
+
+    public $recursoVideoLibras;
+
+    public $recursoBraile;
+
+    public $recursoNenhum;
+
+    public $nis;
+
+    public $certidaoNascimento;
+
+    public $justificativaFaltaDocumentacao;
 
     /**
      * @return bool

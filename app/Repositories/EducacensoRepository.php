@@ -678,15 +678,47 @@ SQL;
         return $this->fetchPreparedQuery($sql, ['school' => $schoolId]);
     }
 
-    public function getEmployeeDataForRecord30($arrayPersonId, $schoolId)
+    public function getEmployeeDataForRecord30($arrayEmployeeId, $schoolId)
     {
-        $stringPersonId = join(',', $arrayPersonId);
+        $stringPersonId = join(',', $arrayEmployeeId);
         $sql = <<<SQL
             SELECT
                 fisica.idpes AS "codigoPessoa",
                 fisica.idpes AS "data_nasc"
             FROM cadastro.fisica
         WHERE fisica.idpes IN ({$stringPersonId})
+SQL;
+
+        return $this->fetchPreparedQuery($sql);
+    }
+
+    public function getStudentDataForRecord30($arrayStudentId)
+    {
+        $stringStudentId = join(',', $arrayStudentId);
+        $sql = <<<SQL
+            SELECT DISTINCT
+                aluno.ref_idpes AS "codigoPessoa",
+                educacenso_cod_aluno.cod_aluno_inep AS "inepAluno",
+                (ARRAY[1] <@ aluno.recursos_prova_inep)::INT "recursoLedor",
+                (ARRAY[2] <@ aluno.recursos_prova_inep)::INT "recursoTranscricao",
+                (ARRAY[3] <@ aluno.recursos_prova_inep)::INT "recursoGuia",
+                (ARRAY[4] <@ aluno.recursos_prova_inep)::INT "recursoTradutor",
+                (ARRAY[5] <@ aluno.recursos_prova_inep)::INT "recursoLeituraLabial",
+                (ARRAY[10] <@ aluno.recursos_prova_inep)::INT "recursoProvaAmpliada",
+                (ARRAY[8] <@ aluno.recursos_prova_inep)::INT "recursoProvaSuperampliada",
+                (ARRAY[11] <@ aluno.recursos_prova_inep)::INT "recursoAudio",
+                (ARRAY[12] <@ aluno.recursos_prova_inep)::INT "recursoLinguaPortuguesaSegundaLingua",
+                (ARRAY[13] <@ aluno.recursos_prova_inep)::INT "recursoVideoLibras",
+                (ARRAY[9] <@ aluno.recursos_prova_inep)::INT "recursoBraile",
+                (aluno.recursos_prova_inep IS NOT NULL)::INT "recursoNenhum",
+                fisica.nis_pis_pasep AS "nis",
+                documento.certidao_casamento AS "certidaoNascimento",
+                aluno.justificativa_falta_documentacao AS "justificativaFaltaDocumentacao"
+            FROM pmieducar.aluno
+                 JOIN cadastro.fisica ON fisica.idpes = aluno.ref_idpes
+            LEFT JOIN cadastro.documento ON documento.idpes = fisica.idpes
+            LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = aluno.cod_aluno
+            WHERE aluno.cod_aluno IN ({$stringStudentId})
 SQL;
 
         return $this->fetchPreparedQuery($sql);

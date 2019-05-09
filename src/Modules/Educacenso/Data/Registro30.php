@@ -33,7 +33,6 @@ class Registro30 extends AbstractRegistro
     public function getData($schoolId)
     {
         $arrayPersonId = $this->getArrayPersonId();
-
         $commonData = $this->repository->getCommonDataForRecord30($arrayPersonId, $schoolId);
         foreach ($commonData as $data) {
             $this->model = $this->modelArray[$data->codigoPessoa];
@@ -41,15 +40,17 @@ class Registro30 extends AbstractRegistro
             $this->modelArray[$data->codigoPessoa] = $this->model;
         }
 
-        $employeeData = $this->repository->getEmployeeDataForRecord30($arrayPersonId, $schoolId);
+        $arrayEmployeeId = $this->getArrayEmployeeId();
+        $employeeData = $this->repository->getEmployeeDataForRecord30($arrayEmployeeId, $schoolId);
         foreach ($employeeData as $data) {
             $this->model = $this->modelArray[$data->codigoPessoa];
             $this->hydrateModel($data);
             $this->modelArray[$data->codigoPessoa] = $this->model;
         }
 
-        $employeeData = $this->repository->getEmployeeDataForRecord30($arrayPersonId, $schoolId);
-        foreach ($employeeData as $data) {
+        $arrayStudentId = $this->getArrayStudentId();
+        $studentData = $this->repository->getStudentDataForRecord30($arrayStudentId);
+        foreach ($studentData as $data) {
             $this->model = $this->modelArray[$data->codigoPessoa];
             $this->hydrateModel($data);
             $this->modelArray[$data->codigoPessoa] = $this->model;
@@ -76,6 +77,8 @@ class Registro30 extends AbstractRegistro
             }
 
             $registro30Model->codigoPessoa = $model->getCodigoPessoa();
+            $registro30Model->codigoAluno = $model->getCodigoAluno();
+            $registro30Model->codigoServidor = $model->getCodigoServidor();
 
             $registro30Model->tipos[$type] = true;
             $this->modelArray[$model->getCodigoPessoa()] = $registro30Model;
@@ -106,6 +109,42 @@ class Registro30 extends AbstractRegistro
         $arrayId = [];
         foreach ($this->modelArray as $model) {
             $arrayId[] = $model->codigoPessoa;
+        }
+
+        return $arrayId;
+    }
+
+    private function getArrayEmployeeId()
+    {
+        if (empty($this->modelArray)) {
+            return [];
+        }
+
+        $arrayId = [];
+        foreach ($this->modelArray as $model) {
+            if (empty($model->codigoServidor)) {
+                continue;
+            }
+
+            $arrayId[] = $model->codigoServidor;
+        }
+
+        return $arrayId;
+    }
+
+    private function getArrayStudentId()
+    {
+        if (empty($this->modelArray)) {
+            return [];
+        }
+
+        $arrayId = [];
+        foreach ($this->modelArray as $model) {
+            if (empty($model->codigoAluno)) {
+                continue;
+            }
+
+            $arrayId[] = $model->codigoAluno;
         }
 
         return $arrayId;

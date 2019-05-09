@@ -42,4 +42,14 @@ class Registro40 implements RegistroEducacenso, ItemOfRegistro30
     {
         return $this->codigoPessoa;
     }
+
+    public function getCodigoAluno()
+    {
+        return null;
+    }
+
+    public function getCodigoServidor()
+    {
+        return $this->codigoPessoa;
+    }
 }
