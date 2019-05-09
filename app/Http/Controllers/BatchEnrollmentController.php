@@ -36,7 +36,7 @@ class BatchEnrollmentController extends Controller
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
-        $this->topMenu(659); // Código: ieducar/intranet/educar_matriculas_turma_lst.php
+        $this->menu(659); // Código: ieducar/intranet/educar_matriculas_turma_lst.php
 
         return view('enrollments.batch.cancel', [
             'schoolClass' => $schoolClass,
@@ -66,7 +66,7 @@ class BatchEnrollmentController extends Controller
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
-        $this->topMenu(659); // Código: ieducar/intranet/educar_matriculas_turma_lst.php
+        $this->menu(659); // Código: ieducar/intranet/educar_matriculas_turma_lst.php
 
         return view('enrollments.batch.enroll', [
             'schoolClass' => $schoolClass,
