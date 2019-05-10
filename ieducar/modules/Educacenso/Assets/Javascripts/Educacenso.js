@@ -6,10 +6,7 @@ $j(document).ready(function(){
     '30',
     '40',
     '50',
-    '51',
-    '60',
-    '70',
-    '80'
+    '60'
   ];
 
   const recordsFirstStepNotActive = [
@@ -246,7 +243,7 @@ $j(document).ready(function(){
         $j("#modal_mensagem_sucesso").css("display", "none");
         $j("#modal_mensagem_desabilitado").css("display", "block");
       }
-      
+
       //Cria evento para download do arquivo de exportação
       var create = document.getElementById('download_file'), conteudo = response.conteudo;
       create.addEventListener('click', function () {
