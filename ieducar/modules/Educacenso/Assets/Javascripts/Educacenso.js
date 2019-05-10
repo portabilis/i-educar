@@ -199,7 +199,7 @@ $j(document).ready(function(){
     let makeInvalidInstitutionWarning = () => {
       const instituicaoId = $j('#ref_cod_instituicao').val();
       paginaResposta += `<div class="educacenso-institution-warning-container">
-                            <p> Para exportar todos os registros corretamente é necessário preencher o campo <b>Data de referência do Educacenso</b>, apresentado no cadastro de instituição na aba de Parâmetros. A data de referência normalmente é correspondente à última quarta feira do mês de maio do ano atual.</p>
+                            <p> Para exportar todos os registros corretamente é necessário preencher o campo <b>Data de referência do Educacenso</b>, apresentado no cadastro da Instituição na aba Parâmetros. A data de referência normalmente é correspondente à última quarta-feira do mês de maio do ano atual.</p>
                             <a class="educacenso-link-path"
                                href="/intranet/educar_instituicao_cad.php?cod_instituicao=${instituicaoId}"
                                target="_new">
