@@ -166,7 +166,7 @@ class indice extends clsCadastro
             } elseif ($this->existeMatriculasAprovadasReprovadas($escolaId, $cursoId, $serieId, $turmaId, $this->ano_letivo)) {
                 $this->mensagem = 'Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados em ' . ($this->ano_letivo - 1) . '.';
             } else {
-                $this->mensagem = Portabilis_String_Utils::toLatin1('Os alunos desta série já encontram-se rematriculados, sendo assim, favor verificar se as enturmações já foram efetuadas em Movimentação > Enturmação.');
+                $this->mensagem = 'Os alunos desta série já encontram-se rematriculados, sendo assim, favor verificar se as enturmações já foram efetuadas em Movimentação > Enturmação.';
             }
         } elseif (empty($this->mensagem)) {
             $this->mensagem = 'Ocorreu algum erro inesperado durante as rematrículas, por favor, tente novamente.';
