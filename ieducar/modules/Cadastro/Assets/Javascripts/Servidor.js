@@ -139,6 +139,14 @@ $j('#ref_idesco').on('change', ()=> {
   verificaEscolaridade();
 });
 
+function checkGraduationsTable() {
+  if (escolaridadeSuperior) {
+    $j('#tr_graduations').show();
+  } else {
+    $j('#tr_graduations').hide();
+  }
+}
+
 function verificaCamposObrigatorio() {
   if($j('#ref_idesco').val()) {
     var options = {
@@ -151,9 +159,13 @@ function verificaCamposObrigatorio() {
       success : function(dataResponse) {
         escolaridadeSuperior = dataResponse.escolaridade.escolaridade == '6'
         habilitaCampoPosGraduacao();
+        checkGraduationsTable();
       }
     }
     getResource(options);
+  } else {
+    escolaridadeSuperior = false;
+    checkGraduationsTable();
   }
 }
 
@@ -237,6 +249,7 @@ $j(document).ready(function() {
           return false;
       });
       habilitaCampoPosGraduacao();
+      checkGraduationsTable();
     });
 
   // fix checkboxs
