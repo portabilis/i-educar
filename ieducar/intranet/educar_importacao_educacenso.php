@@ -1287,13 +1287,13 @@ class indice extends clsCadastro
 
         switch ($recebeEscolarizacaoOutroEspaco) {
             case 1:
-                $obj->recebe_escolarizacao_em_outro_espaco = 3;
+                $obj->recebe_escolarizacao_em_outro_espaco = 2;
                 break;
             case 3:
                 $obj->recebe_escolarizacao_em_outro_espaco = 1;
                 break;
             default:
-                $obj->recebe_escolarizacao_em_outro_espaco = $recebeEscolarizacaoOutroEspaco;
+                $obj->recebe_escolarizacao_em_outro_espaco = 3;
                 break;
         }
 
