@@ -542,7 +542,7 @@ JS;
     $this->carga_horaria = $hour + $min;
     $this->carga_horaria = $hour + $min;
 
-    $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
+    $this->pos_graduacao = '{' . implode(',', array_filter($this->pos_graduacao)) . '}';
 
     $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
 
@@ -629,7 +629,7 @@ JS;
     $this->carga_horaria = $hour + $min;
     $this->carga_horaria = $hour + $min;
 
-    $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
+    $this->pos_graduacao = '{' . implode(',', array_filter($this->pos_graduacao)) . '}';
 
     $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
 
