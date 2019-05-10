@@ -11,6 +11,10 @@ use App\Models\Educacenso\Registro60;
 use App\Models\School;
 use App\Repositories\EducacensoRepository;
 use App\Services\SchoolClass\AvailableTimeService;
+use iEducar\Modules\Educacenso\Analysis\Register30CommonDataAnalysis;
+use iEducar\Modules\Educacenso\Analysis\Register30ManagerDataAnalysis;
+use iEducar\Modules\Educacenso\Analysis\Register30StudentDataAnalysis;
+use iEducar\Modules\Educacenso\Analysis\Register30TeacherDataAnalysis;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\Data\Registro10 as Registro10Data;
 use iEducar\Modules\Educacenso\Data\Registro20 as Registro20Data;
@@ -982,7 +986,6 @@ class EducacensoAnaliseController extends ApiCoreController
 
     protected function analisaEducacensoRegistro30()
     {
-        header('Content-Type: text/html; charset=utf-8');
         $escolaId = $this->getRequest()->escola;
         $ano = $this->getRequest()->ano;
 
@@ -1007,15 +1010,37 @@ class EducacensoAnaliseController extends ApiCoreController
         $alunos = $registro60->getData($escolaId, $ano);
 
         $registro30Data = new Registro30Data($educacensoRepository, new Registro30());
-        $registro30Data->setArrayDataByType($gestores, Registro30::TIPO_GESTOR);
-        $registro30Data->setArrayDataByType($docentes, Registro30::TIPO_DOCENTE);
-        $registro30Data->setArrayDataByType($alunos, Registro30::TIPO_ALUNO);
+        $registro30Data->setArrayDataByType($gestores, Registro30::TIPO_MANAGER);
+        $registro30Data->setArrayDataByType($docentes, Registro30::TIPO_TEACHER);
+        $registro30Data->setArrayDataByType($alunos, Registro30::TIPO_STUDENT);
 
         $pessoas = $registro30Data->getData($escolaId);
 
-        dd($pessoas);
-
         $mensagem = [];
+
+        foreach ($pessoas as $pessoa) {
+            $commonDataAnalysis = new Register30CommonDataAnalysis($pessoa);
+            $commonDataAnalysis->run();
+            $mensagem = array_merge($mensagem, $commonDataAnalysis->getMessages());
+
+            if ($pessoa->isStudent()) {
+                $studentDataAnalysis = new Register30StudentDataAnalysis($pessoa);
+                $studentDataAnalysis->run();
+                $mensagem = array_merge($mensagem, $studentDataAnalysis->getMessages());
+            }
+
+            if ($pessoa->isTeacher()) {
+                $teacherDataAnalysis = new Register30TeacherDataAnalysis($pessoa);
+                $teacherDataAnalysis->run();
+                $mensagem = array_merge($mensagem, $teacherDataAnalysis->getMessages());
+            }
+
+            if ($pessoa->isManager()) {
+                $managerDataAnalysis = new Register30ManagerDataAnalysis($pessoa);
+                $managerDataAnalysis->run();
+                $mensagem = array_merge($mensagem, $managerDataAnalysis->getMessages());
+            }
+        }
 
         return [
             'mensagens' => $mensagem,

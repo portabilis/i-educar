@@ -5,9 +5,9 @@ namespace App\Models\Educacenso;
 
 class Registro30 implements RegistroEducacenso
 {
-    CONST TIPO_GESTOR = 'gestor';
-    CONST TIPO_DOCENTE = 'docente';
-    CONST TIPO_ALUNO = 'aluno';
+    CONST TIPO_MANAGER = 'manager';
+    CONST TIPO_TEACHER = 'teacher';
+    CONST TIPO_STUDENT = 'student';
 
     public $tipos = [];
 
@@ -168,25 +168,25 @@ class Registro30 implements RegistroEducacenso
     /**
      * @return bool
      */
-    public function isGestor()
+    public function isManager()
     {
-        return isset($this->tipos[self::TIPO_GESTOR]);
+        return isset($this->tipos[self::TIPO_MANAGER]);
     }
 
     /**
      * @return bool
      */
-    public function isDocente()
+    public function isTeacher()
     {
-        return isset($this->tipos[self::TIPO_DOCENTE]);
+        return isset($this->tipos[self::TIPO_TEACHER]);
     }
 
     /**
      * @return bool
      */
-    public function isAluno()
+    public function isStudent()
     {
-        return isset($this->tipos[self::TIPO_ALUNO]);
+        return isset($this->tipos[self::TIPO_STUDENT]);
     }
 
 }
