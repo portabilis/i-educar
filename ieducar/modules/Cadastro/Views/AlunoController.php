@@ -1257,8 +1257,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $selectOptions = array(
             1 => 'Não recebe escolarização fora da escola',
-            2 => 'Em domicílio',
-            3 => 'Em hospital',
+            2 => 'Em hospital',
+            3 => 'Em domicílio',
         );
 
         $options = array(
