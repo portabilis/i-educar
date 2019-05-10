@@ -24,6 +24,7 @@ require_once 'Portabilis/Utils/CustomLabel.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
+require_once 'lib/App/Model/Educacenso/LocalFuncionamentoDiferenciado.php';
 require_once 'lib/App/Model/Educacenso/TipoMediacaoDidaticoPedagogico.php';
 
 class clsIndexBase extends clsBase
