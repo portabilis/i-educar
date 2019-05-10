@@ -2683,7 +2683,7 @@ class indice extends clsCadastro
 
         $this->campoTexto('managers_inep_id', null, null, null, 12);
 
-        $this->inputsHelper()->simpleSearchServidor(null, ['required' => false, 'placeholder' => 'asdasd']);
+        $this->inputsHelper()->simpleSearchServidor(null, ['required' => false]);
         $options = [
             'resources' => SelectOptions::schoolManagerRoles(),
             'required' => false,
@@ -2735,7 +2735,6 @@ class indice extends clsCadastro
      */
     protected function storeManagers($schoolId)
     {
-//        dd($this);
         /** @var SchoolManagerService $schoolService */
         $schoolService = app(SchoolManagerService::class);
         $schoolService->deleteAllManagers($schoolId);

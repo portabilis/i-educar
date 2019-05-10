@@ -24,6 +24,10 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use App\User;
+use Illuminate\Support\Facades\Auth;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -85,11 +89,10 @@ class indice extends clsListagem
         $obj_tipo_usuario = new clsPmieducarTipoUsuario($detalhe['ref_cod_tipo_usuario']);
         $tipo_usuario = $obj_tipo_usuario->detalhe();
 
-        $obj_super_usuario = new clsMenuFuncionario($this->pessoa_logada,false,false,0);
-        $super_usuario_det = $obj_super_usuario->detalhe();
+        /** @var User $user */
+        $user = Auth::user();
 
-
-        if( $super_usuario_det )
+        if( $user->isAdmin() )
         {
             $opcoes = array( "" => "Selecione", "1" => "Poli-Institucional", "2" => "Institucional", "4" => "Escolar", "8" => "Biblioteca");
         }
