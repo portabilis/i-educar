@@ -68,17 +68,12 @@ $j(document).ready(function(){
     var iniciaAnalise = function() {
 
     	var escola = $j("#ref_cod_escola").val();
-    	var dataIni = $j("#data_ini").val();
-    	var dataFim = $j("#data_fim").val();
       fase2 = ($j("#fase2").val() == "true");
 
-    	if (!escola || !dataIni || !dataFim){
+    	if (!escola){
     		alert("Preencha os dados obrigat\u00f3rios antes de continuar.");
     		return;
-    	} else if (!isValidDate(dataIni) || !isValidDate(dataFim)) {
-        alert("A data informada \u00e9 inv\u00e1lida.");
-        return;
-      }
+    	}
 
       resetParameters();
 
@@ -105,9 +100,7 @@ $j(document).ready(function(){
       $j("#registro_load").text(`Analisando registro ${record}`);
       let urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', `registro-${record}`, {
         escola: $j("#ref_cod_escola").val(),
-        ano: $j("#ano").val(),
-        data_ini: $j("#data_ini").val(),
-        data_fim: $j("#data_fim").val()
+        ano: $j("#ano").val()
       });
 
       let options = {
@@ -194,9 +187,7 @@ $j(document).ready(function(){
     var educacensoExport = function(){
         var urlForEducacensoExport = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoExport', 'educacenso-export', {
           escola   : $j("#ref_cod_escola").val(),
-          ano      : $j("#ano").val(),
-          data_ini : $j("#data_ini").val(),
-          data_fim : $j("#data_fim").val()
+          ano      : $j("#ano").val()
         });
 
         var options = {
@@ -210,9 +201,7 @@ $j(document).ready(function(){
     var educacensoExportFase2 = function(){
         var urlForEducacensoExport = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoExport', 'educacenso-export-fase2', {
           escola   : $j("#ref_cod_escola").val(),
-          ano      : $j("#ano").val(),
-          data_ini : $j("#data_ini").val(),
-          data_fim : $j("#data_fim").val()
+          ano      : $j("#ano").val()
         });
 
         var options = {
