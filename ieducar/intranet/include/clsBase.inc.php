@@ -1,11 +1,13 @@
 <?php
 
-use iEducar\Support\Navigation\TopMenu;
+use App\Menu;
+use App\User;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
-use Tooleks\LaravelAssetVersion\Facades\Asset;
 
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -36,23 +38,7 @@ class clsBase extends clsConfig
     public $renderBanner = true;
     public $estilos;
     public $scripts;
-    public $script_header;
-    public $script_footer;
     public $prog_alert;
-    public $_instituicao;
-
-    public function OpenTpl($template)
-    {
-        $prefix = 'nvp_';
-        $file = 'templates/' . $prefix . $template . '.tpl';
-
-        ob_start();
-        include $file;
-        $contents = ob_get_contents();
-        ob_end_clean();
-
-        return $contents;
-    }
 
     public function SetTitulo($titulo)
     {
@@ -62,61 +48,6 @@ class clsBase extends clsConfig
     public function AddForm($form)
     {
         $this->clsForm[] = $form;
-    }
-
-    public function MakeHeadHtml()
-    {
-        $saida = $this->OpenTpl('htmlhead');
-        $saida = str_replace('<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->', CORE_EXT_CONFIGURATION_ENV, $saida);
-        $saida = str_replace('<!-- #&USER_ID&# -->', Session::get('id_pessoa'), $saida);
-        $saida = str_replace('<!-- #&TITULO&# -->', $this->titulo, $saida);
-
-        if ($this->refresh) {
-            $saida = str_replace('<!-- #&REFRESH&# -->', '<meta http-equiv=\'refresh\' content=\'60\'>', $saida);
-        }
-
-        if (is_array($this->estilos) && count($this->estilos)) {
-            $estilos = '';
-            foreach ($this->estilos as $estilo) {
-                $estilos .= "<link rel=stylesheet type='text/css' href='" . Asset::get('/intranet/scripts/' . $estilo . '.js') . ".css' />";
-            }
-            $saida = str_replace('<!-- #&ESTILO&# -->', $estilos, $saida);
-        }
-
-        if (is_array($this->scripts) && count($this->scripts)) {
-            $scripts = '';
-            foreach ($this->scripts as $script) {
-                $scripts .= "<script type='text/javascript' src='" . Asset::get('/intranet/scripts/' . $script . '.js') . '\'></script>';
-            }
-            $saida = str_replace('<!-- #&SCRIPT&# -->', $scripts, $saida);
-        }
-
-        if ($this->bodyscript) {
-            $saida = str_replace('<!-- #&BODYSCRIPTS&# -->', $this->bodyscript, $saida);
-        } else {
-            $saida = str_replace('<!-- #&BODYSCRIPTS&# -->', '', $saida);
-        }
-
-        if ($this->script_header) {
-            $saida = str_replace('<!-- #&SCRIPT_HEADER&# -->', $this->script_header, $saida);
-        } else {
-            $saida = str_replace('<!-- #&SCRIPT_HEADER&# -->', '', $saida);
-        }
-
-        $saida = str_replace('<!-- #&GOOGLE_TAG_MANAGER_ID&# -->', $GLOBALS['coreExt']['Config']->app->gtm->id, $saida);
-
-        // nome completo usuario
-        // @TODO: jeito mais eficiente de usar estes dados, já que eles são
-        //         usados em mais um método aqui...
-        $nomePessoa = new clsPessoaFisica();
-        list($nomePessoa, $email) = $nomePessoa->queryRapida($this->currentUserId(), 'nome', 'email');
-        $nomePessoa = ($nomePessoa) ? $nomePessoa : 'Visitante';
-
-        $saida = str_replace('<!-- #&SLUG&# -->', $GLOBALS['coreExt']['Config']->app->database->dbname, $saida);
-        $saida = str_replace('<!-- #&USERLOGADO&# -->', trim($nomePessoa), $saida);
-        $saida = str_replace('<!-- #&USEREMAIL&# -->', trim($email), $saida);
-
-        return $saida;
     }
 
     public function addEstilo($estilo_nome)
@@ -129,141 +60,26 @@ class clsBase extends clsConfig
         $this->scripts[$script_nome] = $script_nome;
     }
 
-    public function MakeFootHtml()
-    {
-        $saida = $this->OpenTpl('htmlfoot');
-
-        if ($this->script_footer) {
-            $saida = str_replace('<!-- #&SCRIPT_FOOTER&# -->', $this->script_footer, $saida);
-        } else {
-            $saida = str_replace('<!-- #&SCRIPT_FOOTER&# -->', '', $saida);
-        }
-
-        return $saida;
-    }
-
     public function verificaPermissao()
     {
-        if ($this->processoAp) {
-            $permite = true;
-
-            if (!is_array($this->processoAp)) {
-                return true;
-            }
-
-            foreach ($this->processoAp as $processo) {
-                if (!$this->VerificaPermicaoNumerico($processo)) {
-                    $permite = false;
-                } else {
-                    $this->processoAp = $processo;
-                    $permite = true;
-                    break;
-                }
-            }
-
-            if (!$permite) {
-                throw new HttpResponseException(
-                    new RedirectResponse(' index.php?negado=1&err=1')
-                );
-            }
-        } else {
-            if (!$this->VerificaPermicaoNumerico($this->processoAp)) {
-                throw new HttpResponseException(
-                    new RedirectResponse(' index.php?negado=1&err=1')
-                );
-            }
-        }
-
-        return true;
-    }
-
-    public function VerificaPermicaoNumerico($processo_ap)
-    {
-        if (is_numeric($processo_ap)) {
-            $sempermissao = true;
-
-            if ($processo_ap == 0) {
-                $this->prog_alert .= 'Processo AP == 0!';
-            }
-
-            if ($processo_ap != 0) {
-                $this->db()->Consulta("SELECT 1 FROM pmieducar.menu_tipo_usuario mtu
-                                INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
-                                INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
-                                WHERE mtu.ref_cod_menu_submenu = 0 AND u.cod_usuario = {$this->currentUserId()}");
-                if ($this->db()->ProximoRegistro()) {
-                    list($aui) = $this->db()->Tupla();
-                    $sempermissao = false;
-                }
-
-                // @todo A primeira consulta OK, verifica de forma simples de tem
-                //       permissão de acesso ao processo. Já a segunda, não existe
-                //       sentido para nivel = 2 já que processoAp pode ser de níveis
-                //       maiores que 2.
-                $this->db()->Consulta("SELECT 1 FROM pmieducar.menu_tipo_usuario mtu
-                                INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
-                                INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
-                                WHERE (mtu.ref_cod_menu_submenu = {$processo_ap} AND u.cod_usuario = {$this->currentUserId()})
-                                OR (SELECT true FROM menu_submenu WHERE cod_menu_submenu = {$processo_ap} AND nivel = 2)
-                                LIMIT 1");
-                if ($this->db()->ProximoRegistro()) {
-                    list($aui) = $this->db()->Tupla();
-                    $sempermissao = false;
-                }
-
-                if ($sempermissao) {
-                    $ip = empty($_SERVER['REMOTE_ADDR']) ? 'NULL' : $_SERVER['REMOTE_ADDR'];
-                    $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? 'NULL' : $_SERVER['HTTP_X_FORWARDED_FOR'];
-                    $pagina = $_SERVER['PHP_SELF'];
-                    $posts = '';
-                    $gets = '';
-                    $sessions = '';
-
-                    foreach ($_POST as $key => $val) {
-                        $posts .= " - $key: $val\n";
-                    }
-
-                    foreach ($_GET as $key => $val) {
-                        $gets .= " - $key: $val\n";
-                    }
-
-                    foreach (Session::all() as $key => $val) {
-                        $sessions .= " - $key: $val\n";
-                    }
-
-                    $variaveis = "POST\n{$posts}GET\n{$gets}SESSION\n{$sessions}";
-                    $variaveis = Portabilis_String_Utils::toLatin1($variaveis, ['escape' => true]);
-
-                    if ($this->currentUserId()) {
-                        $this->db()->Consulta("INSERT INTO intranet_segur_permissao_negada (ref_ref_cod_pessoa_fj, ip_externo, ip_interno, data_hora, pagina, variaveis) VALUES('{$this->currentUserId()}', '$ip', '$ip_de_rede', NOW(), '$pagina', '$variaveis')");
-                    } else {
-                        $this->db()->Consulta("INSERT INTO intranet_segur_permissao_negada (ref_ref_cod_pessoa_fj, ip_externo, ip_interno, data_hora, pagina, variaveis) VALUES(NULL, '$ip', '$ip_de_rede', NOW(), '$pagina', '$variaveis')");
-                    }
-
-                    return false;
-                }
-            }
-
-            return true;
+        if (Gate::denies('view', $this->processoAp)) {
+            throw new HttpResponseException(
+                new RedirectResponse('index.php?negado=1&err=1')
+            );
         }
     }
 
-    /**
-     * @see Core_Page_Controller_Abstract#getAppendedOutput()
-     * @see Core_Page_Controller_Abstract#getPrependedOutput()
-     */
     public function MakeBody()
     {
         $corpo = '';
+
         foreach ($this->clsForm as $form) {
             $corpo .= $form->RenderHTML();
 
-            // Prepend output.
             if (method_exists($form, 'getPrependedOutput')) {
                 $corpo = $form->getPrependedOutput() . $corpo;
             }
 
-            // Append output.
             if (method_exists($form, 'getAppendedOutput')) {
                 $corpo = $corpo . $form->getAppendedOutput();
             }
@@ -277,22 +93,7 @@ class clsBase extends clsConfig
             }
         }
 
-        $saida = $corpo;
-
-        // Pega o endereço IP do host, primeiro com HTTP_X_FORWARDED_FOR (para pegar o IP real
-        // caso o host esteja atrás de um proxy)
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
-            // No caso de múltiplos IPs, pega o último da lista
-            $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-            $ip_maquina = trim(array_pop($ip));
-        } else {
-            $ip_maquina = $_SERVER['REMOTE_ADDR'];
-        }
-
-        $sql = "UPDATE funcionario SET ip_logado = '$ip_maquina' , data_login = NOW() WHERE ref_cod_pessoa_fj = {$this->currentUserId()}";
-        $this->db()->Consulta($sql);
-
-        return $saida;
+        return $corpo;
     }
 
     public function Formular()
@@ -300,9 +101,6 @@ class clsBase extends clsConfig
         return false;
     }
 
-    /**
-     * @todo Verificar se funciona.
-     */
     public function CadastraAcesso()
     {
         if (Session::get('marcado') != "private") {
@@ -327,8 +125,19 @@ class clsBase extends clsConfig
 
         $saida_geral = '';
 
-        app(TopMenu::class)->current($this->processoAp, request()->getRequestUri());
+        /** @var User $user */
+        $user = Auth::user();
+        $menu = Menu::user($user);
 
+        $topmenu = Menu::query()
+            ->where('process', $this->processoAp)
+            ->first();
+
+        if ($topmenu) {
+            View::share('mainmenu', $topmenu->root()->getKey());
+        }
+
+        View::share('menu', $menu);
         View::share('title', $this->titulo);
 
         if ($this->renderMenu) {
@@ -346,15 +155,5 @@ class clsBase extends clsConfig
         }
 
         echo view($view, ['body' => $saida_geral])->render();
-    }
-
-    protected function db()
-    {
-        return Portabilis_Utils_Database::db();
-    }
-
-    protected function currentUserId()
-    {
-        return Portabilis_Utils_User::currentUserId();
     }
 }

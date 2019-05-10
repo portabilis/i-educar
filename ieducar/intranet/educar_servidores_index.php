@@ -34,7 +34,7 @@ class clsIndex extends clsBase
     function Formular()
     {
         $this->SetTitulo( "{$this->_instituicao} i-Educar" );
-        $this->processoAp = "634";
+        $this->processoAp = 71;
     }
 }
 
