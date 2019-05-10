@@ -921,7 +921,7 @@ JS;
 
       $rows = $this->getGraduateTableRows($graduations);
 
-      $this->campoTabelaInicio('graduations', 'Curso(s) Superior(es) Concluído(s)',
+      $this->campoTabelaInicio('graduations', 'Curso(s) superior(es) concluído(s)',
           [
               'Curso',
               'Ano de conclusão',
