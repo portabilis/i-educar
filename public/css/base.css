@@ -291,6 +291,7 @@ a:hover {
 .ieducar-sub-menu {
   display: none;
   position: absolute;
+  z-index: 100;
   min-width: 220px;
 }
 
