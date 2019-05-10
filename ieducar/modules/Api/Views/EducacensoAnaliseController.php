@@ -986,6 +986,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
     protected function analisaEducacensoRegistro30()
     {
+        header('Content-Type: text/html; charset=utf-8');
         $escolaId = $this->getRequest()->escola;
         $ano = $this->getRequest()->ano;
 
@@ -1018,6 +1019,31 @@ class EducacensoAnaliseController extends ApiCoreController
 
         $mensagem = [];
 
+        $mensagem[] = [
+            'text' => "Aviso: Dados para formular o registro 30 da escola {$pessoas[0]->nomeEscola} sujeito à valor inválido. Certifique-se que os(as) alunos(as) ou docentes residentes de outro país, que não seja o Brasil, possuam o País de residência informado corretamente.",
+            'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: País de residência)',
+            'linkPath' => "/intranet/atendidos_lst.php",
+            'fail' => false
+        ];
+
+        if (DB::table('cadastro.raca')->whereNull('raca_educacenso')->exists()) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 30 da escola {$pessoas[0]->nomeEscola} não encontrados. Verifique se a(s) raça(s) do educacenso foi(ram) informada(s).",
+                'path' => '(Pessoas > Cadastros > Tipos > Tipos de cor ou raça)',
+                'linkPath' => "/intranet/educar_raca_lst.php",
+                'fail' => false
+            ];
+        }
+
+        if (DB::table('cadastro.deficiencia')->whereNull('deficiencia_educacenso')->exists()) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 30 da escola {$pessoas[0]->nomeEscola} não encontrados. Verifique se a(s) deficiência(s) do educacenso foi(ram) informada(s).",
+                'path' => '(Pessoas > Cadastros > Tipos > Tipos de deficiência)',
+                'linkPath' => "/intranet/educar_deficiencia_lst.php",
+                'fail' => false
+            ];
+        }
+
         foreach ($pessoas as $pessoa) {
             $commonDataAnalysis = new Register30CommonDataAnalysis($pessoa);
             $commonDataAnalysis->run();
@@ -1040,6 +1066,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 $managerDataAnalysis->run();
                 $mensagem = array_merge($mensagem, $managerDataAnalysis->getMessages());
             }
+            dd($mensagem, $pessoa);
         }
 
         return [

@@ -625,9 +625,9 @@ SQL;
         $sql = <<<SQL
             SELECT
                 '30' AS registro,
-                inepescola.cod_escola_inep AS "inepEscola",
+                dadosescola.cod_escola_inep AS "inepEscola",
                 fisica.idpes AS "codigoPessoa",
-                fisica_cpf.cpf AS cpf,
+                fisica.cpf AS cpf,
                 pessoa.nome AS "nomePessoa",
                 fisica.data_nasc AS "dataNascimento",
                 (fisica.nome_mae IS NOT NULL OR fisica.nome_pai IS NOT NULL)::INTEGER AS "filiacao",
@@ -635,7 +635,7 @@ SQL;
                 fisica.nome_pai AS "filiacao2",
                 CASE WHEN fisica.sexo = 'F' THEN 1 ELSE 2 END AS "sexo",
                 fisica_raca.ref_cod_raca AS "raca",
-                fisica.nacionalidade AS "nacionalidade",
+                pais.cod_ibge AS "nacionalidade",
                 CASE WHEN fisica.nacionalidade = 3 THEN fisica.idpais_estrangeiro ELSE 76 END AS "paisNacionalidade",
                 fisica.idmun_nascimento AS "municipioNascimento",
                 CASE WHEN
@@ -656,19 +656,24 @@ SQL;
                 endereco_pessoa.cep AS "cep",
                 municipio.cod_ibge AS "municipioResidencia",
                 fisica.zona_localizacao_censo AS "localizacaoResidencia",
-                fisica.localizacao_diferenciada AS "localizacaoDiferenciada"
+                fisica.localizacao_diferenciada AS "localizacaoDiferenciada",
+                dadosescola.nomeescola AS "nomeEscola",
+                   CASE WHEN fisica.nacionalidade = 1 THEN 'Brasileira' 
+                     WHEN fisica.nacionalidade = 3 THEN 'Naturalizado brasileiro'
+                     ELSE 'Estrangeira' END AS "nomeNacionalidade"
                  FROM cadastro.fisica
                  JOIN cadastro.pessoa ON pessoa.idpes = fisica.idpes
                  JOIN cadastro.fisica_raca ON fisica_raca.ref_idpes = fisica.idpes
-            LEFT JOIN cadastro.fisica_cpf ON fisica_cpf.idpes = fisica.idpes
             LEFT JOIN cadastro.endereco_pessoa ON endereco_pessoa.idpes = pessoa.idpes
             LEFT JOIN public.logradouro ON logradouro.idlog = endereco_pessoa.idlog
             LEFT JOIN public.municipio ON municipio.idmun = logradouro.idmun 
+            LEFT JOIN public.pais ON pais.idpais = CASE WHEN fisica.nacionalidade = 3 THEN fisica.idpais_estrangeiro ELSE 76 END
             LEFT JOIN LATERAL (
-                 SELECT educacenso_cod_escola.cod_escola_inep
+                 SELECT educacenso_cod_escola.cod_escola_inep,
+                        relatorio.get_nome_escola(educacenso_cod_escola.cod_escola) AS nomeescola
                  FROM modules.educacenso_cod_escola
                  WHERE educacenso_cod_escola.cod_escola = :school
-                 ) inepescola ON true
+                 ) dadosescola ON true
             LEFT JOIN LATERAL (
                  SELECT fisica_deficiencia.ref_idpes,
                         ARRAY_AGG(fisica_deficiencia.ref_cod_deficiencia) as array_deficiencias

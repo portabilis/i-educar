@@ -2,16 +2,20 @@
 
 namespace iEducar\Modules\Educacenso\Analysis;
 
+use App\Models\Educacenso\Registro30;
 use App\Models\Educacenso\RegistroEducacenso;
 
 class Register30ManagerDataAnalysis implements AnalysisInterface
 {
+    /**
+     * @var Registro30
+     */
     private $data;
 
     /**
      * @var array
      */
-    private $messages;
+    private $messages = [];
 
     public function __construct(RegistroEducacenso $data)
     {
@@ -20,17 +24,19 @@ class Register30ManagerDataAnalysis implements AnalysisInterface
 
     public function run()
     {
-        if (true) {
+        $data = $this->data;
+
+        if (!$data->cpf) {
             $this->messages[] = [
-                'text' => '',
-                'path' => '',
-                'linkPath' => '',
-                'fail' => true,
+                'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o(a) {$data->nomePessoa} se trata de um(a) gestor com nacionalidade {$data->nomeNacionalidade}, portanto é necessário informar o CPF.",
+                'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: CPF)',
+                'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
+                'fail' => false
             ];
         }
     }
 
-    public function getMessages()
+    public function getMessages(): array
     {
         return $this->messages;
     }

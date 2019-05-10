@@ -11,7 +11,7 @@ class Register30StudentDataAnalysis implements AnalysisInterface
     /**
      * @var array
      */
-    private $messages;
+    private $messages = [];
 
     public function __construct(RegistroEducacenso $data)
     {
@@ -20,17 +20,10 @@ class Register30StudentDataAnalysis implements AnalysisInterface
 
     public function run()
     {
-        if (true) {
-            $this->messages[] = [
-                'text' => '',
-                'path' => '',
-                'linkPath' => '',
-                'fail' => true,
-            ];
-        }
+
     }
 
-    public function getMessages()
+    public function getMessages(): array
     {
         return $this->messages;
     }

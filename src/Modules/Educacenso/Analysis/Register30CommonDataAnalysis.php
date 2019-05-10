@@ -1,18 +1,21 @@
 <?php
 
-
 namespace iEducar\Modules\Educacenso\Analysis;
 
+use App\Models\Educacenso\Registro30;
 use App\Models\Educacenso\RegistroEducacenso;
 
 class Register30CommonDataAnalysis implements AnalysisInterface
 {
+    /**
+     * @var Registro30
+     */
     private $data;
 
     /**
      * @var array
      */
-    private $messages;
+    private $messages = [];
 
     public function __construct(RegistroEducacenso $data)
     {
@@ -21,17 +24,12 @@ class Register30CommonDataAnalysis implements AnalysisInterface
 
     public function run()
     {
-        if (true) {
-            $this->messages[] = [
-                'text' => '',
-                'path' => '',
-                'linkPath' => '',
-                'fail' => true,
-            ];
-        }
+        $data = $this->data;
+
+
     }
 
-    public function getMessages()
+    public function getMessages(): array
     {
         return $this->messages;
     }

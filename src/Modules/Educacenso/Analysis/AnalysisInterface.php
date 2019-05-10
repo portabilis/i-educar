@@ -10,5 +10,5 @@ interface AnalysisInterface
 
     public function run();
 
-    public function getMessages();
+    public function getMessages(): array;
 }

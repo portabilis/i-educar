@@ -163,7 +163,11 @@ class Registro30 implements RegistroEducacenso
 
     public $localizacaoResidencia;
 
-    public $localizacaoDiferenciad;
+    public $localizacaoDiferenciada;
+
+    public $nomeEscola;
+
+    public $nomeNacionalidade;
 
     /**
      * @return bool
