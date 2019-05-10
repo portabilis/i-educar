@@ -256,7 +256,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
         if (!$escola->orgaoRegional) {
             $mensagem[] = [
-                'text' => "<span class='avisos-educacenso'><b>Aviso!</b> Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que o código do órgão regional de ensino não foi preenchido, caso seu estado possua uma subdivisão e a escola {$nomeEscola} não for federal vinculada a Setec, o código deve ser inserido conforme a 'Tabela de Órgãos Regionais'.</span>",
+                'text' => "<span class='avisos-educacenso'><b>Aviso:</b> Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que o código do órgão regional de ensino não foi preenchido, caso seu estado possua uma subdivisão e a escola {$nomeEscola} não for federal vinculada a Setec, o código deve ser inserido conforme a 'Tabela de Órgãos Regionais'.</span>",
                 'path' => '(Escola > Cadastros > Instituição > Editar > Aba: Dados gerais > Campo: Código do órgão regional de ensino)',
                 'linkPath' => "/intranet/educar_instituicao_cad.php?cod_instituicao={$codInstituicao}",
                 'fail' => false
@@ -934,7 +934,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
                 foreach ($disciplinesWithoutTeacher as $discipline) {
                     $mensagem[] = [
-                        'text' => $educacaoDistancia ? "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que o tipo de mediação da turma {$nomeTurma} é educação a distância, portanto a disciplina {$discipline->nome} deve possuir um docente vinculado." : "Aviso: Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$discipline->nome} da turma {$nomeTurma} não possui docente vinculado, portanto será exportada como: 2 (Sim, oferece disciplina sem docente vinculado).",
+                        'text' => $educacaoDistancia ? "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que o tipo de mediação da turma {$nomeTurma} é educação a distância, portanto a disciplina {$discipline->nome} deve possuir um docente vinculado." : "<span class='avisos-educacenso'><b>Aviso:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$discipline->nome} da turma {$nomeTurma} não possui docente vinculado, portanto será exportada como: 2 (Sim, oferece disciplina sem docente vinculado).</span>",
                         'path' => '(Servidores > Cadastros > Servidores)',
                         'linkPath' => "/intranet/educar_servidor_lst.php",
                         'fail' => $educacaoDistancia
@@ -951,7 +951,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
                     if (in_array($componente->get('codigo_educacenso'), $turma->getForbiddenDisciplines())) {
                         $mensagem[] = [
-                            'text' => "Aviso: Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$componente->get('nome')} da turma {$nomeTurma} não está de acordo com a Tabela de Regras de Disciplinas do Censo, portanto não será exportada.",
+                            'text' => "<span class='avisos-educacenso'><b>Aviso:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$componente->get('nome')} da turma {$nomeTurma} não está de acordo com a Tabela de Regras de Disciplinas do Censo, portanto não será exportada.</span>",
                             'path' => '(Escola > Cadastros > Componentes curriculares > Editar > Disciplina Educacenso)',
                             'linkPath' => "/module/ComponenteCurricular/edit?id={$componente->get('id')}",
                             'fail' => false
