@@ -54,17 +54,30 @@ class AvailableTimeServiceTest extends TestCase
         $this->assertTrue($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
     }
 
-    public function testWithEnrollmentsSameDaySameTimeReturnsFalse()
+    public function testWithEnrollmentsSameDaySameTimeSameYearReturnsFalse()
     {
         $schoolClass = factory(LegacySchoolClass::class, 'morning')->create([ 'tipo_mediacao_didatico_pedagogico' => 1 ]);
         $otherSchoolClass = factory(LegacySchoolClass::class, 'morning')->create([ 'tipo_mediacao_didatico_pedagogico' => 1 ]);
-        $registration = factory(LegacyRegistration::class)->create();
+        $registration = factory(LegacyRegistration::class)->create(['ano' => $schoolClass->ano]);
         factory(LegacyEnrollment::class)->create([
             'ref_cod_turma' => $otherSchoolClass->cod_turma,
             'ref_cod_matricula' => $registration->cod_matricula,
         ]);
 
         $this->assertFalse($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
+    }
+
+    public function testWithEnrollmentsSameDaySameTimeDifferentYearReturnsTrue()
+    {
+        $schoolClass = factory(LegacySchoolClass::class, 'morning')->create([ 'tipo_mediacao_didatico_pedagogico' => 1 ]);
+        $otherSchoolClass = factory(LegacySchoolClass::class, 'morning')->create([ 'tipo_mediacao_didatico_pedagogico' => 1 ]);
+        $registration = factory(LegacyRegistration::class)->create(['ano' => ($schoolClass->ano - 1)]);
+        factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $otherSchoolClass->cod_turma,
+            'ref_cod_matricula' => $registration->cod_matricula,
+        ]);
+
+        $this->assertTrue($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
     }
 
     public function testWithEnrollmentsDifferentDaySameTimeReturnsFalse()
