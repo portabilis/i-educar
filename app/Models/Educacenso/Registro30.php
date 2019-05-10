@@ -155,6 +155,15 @@ class Registro30 implements RegistroEducacenso
 
     public $email;
 
+    public $paisResidencia;
+
+    public $cep;
+
+    public $municipioResidencia;
+
+    public $localizacaoResidencia;
+
+    public $localizacaoDiferenciad;
 
     /**
      * @return bool

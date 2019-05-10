@@ -651,12 +651,19 @@ SQL;
                 7 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaIntelectual",
                 CASE WHEN array_length(deficiencias.array_deficiencias, 1) > 1 THEN 1 ELSE 0 END "deficienciaMultipla",
                 11 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAltasHabilidades",
-                12 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAutismo"
+                12 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAutismo",
+                fisica.pais_residencia AS "paisResidencia",
+                endereco_pessoa.cep AS "cep",
+                municipio.cod_ibge AS "municipioResidencia",
+                fisica.zona_localizacao_censo AS "localizacaoResidencia",
+                fisica.localizacao_diferenciada AS "localizacaoDiferenciada"
                  FROM cadastro.fisica
                  JOIN cadastro.pessoa ON pessoa.idpes = fisica.idpes
                  JOIN cadastro.fisica_raca ON fisica_raca.ref_idpes = fisica.idpes
-            
             LEFT JOIN cadastro.fisica_cpf ON fisica_cpf.idpes = fisica.idpes
+            LEFT JOIN cadastro.endereco_pessoa ON endereco_pessoa.idpes = pessoa.idpes
+            LEFT JOIN public.logradouro ON logradouro.idlog = endereco_pessoa.idlog
+            LEFT JOIN public.municipio ON municipio.idmun = logradouro.idmun 
             LEFT JOIN LATERAL (
                  SELECT educacenso_cod_escola.cod_escola_inep
                  FROM modules.educacenso_cod_escola
