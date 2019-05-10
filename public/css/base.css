@@ -292,6 +292,7 @@ a:hover {
   display: none;
   position: absolute;
   min-width: 220px;
+  z-index: 1100;
 }
 
 .ieducar-sub-menu li a {
