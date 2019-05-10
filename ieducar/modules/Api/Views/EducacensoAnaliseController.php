@@ -915,7 +915,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            $componentes = App_Model_IedFinder::getComponentesTurma($turma->codSerie, $turma->codEscola, $turma->codTurma);
+            $componentes = $turma->componentes();
 
             if (empty($componentes)) {
                 $mensagem[] = [
@@ -925,13 +925,8 @@ class EducacensoAnaliseController extends ApiCoreController
                     'fail' => true
                 ];
             } else {
-                $componenteIds = array_map(function($componente) {
-                    return $componente->get('id');
-                }, $componentes);
-
-                $codigosEducacenso = array_map(function($componente) {
-                    return $componente->get('codigo_educacenso');
-                }, $componentes);
+                $componenteIds = $turma->componentesIds();
+                $codigosEducacenso = $turma->componentesCodigosEducacenso();
 
                 $disciplinesWithoutTeacher = $registro20->getDisciplinesWithoutTeacher($turma->codTurma, $componenteIds);
 
