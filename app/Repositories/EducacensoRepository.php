@@ -635,7 +635,7 @@ SQL;
                 fisica.nome_pai AS "filiacao2",
                 CASE WHEN fisica.sexo = 'F' THEN 1 ELSE 2 END AS "sexo",
                 fisica_raca.ref_cod_raca AS "raca",
-                pais.cod_ibge AS "nacionalidade",
+                fisica.nacionalidade AS "nacionalidade",
                 CASE WHEN fisica.nacionalidade = 3 THEN fisica.idpais_estrangeiro ELSE 76 END AS "paisNacionalidade",
                 fisica.idmun_nascimento AS "municipioNascimento",
                 CASE WHEN
@@ -650,8 +650,8 @@ SQL;
                 6 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaFisica",
                 7 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaIntelectual",
                 CASE WHEN array_length(deficiencias.array_deficiencias, 1) > 1 THEN 1 ELSE 0 END "deficienciaMultipla",
-                11 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAltasHabilidades",
-                12 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAutismo",
+                13 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAltasHabilidades",
+                25 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAutismo",
                 fisica.pais_residencia AS "paisResidencia",
                 endereco_pessoa.cep AS "cep",
                 municipio.cod_ibge AS "municipioResidencia",
@@ -660,7 +660,8 @@ SQL;
                 dadosescola.nomeescola AS "nomeEscola",
                    CASE WHEN fisica.nacionalidade = 1 THEN 'Brasileira' 
                      WHEN fisica.nacionalidade = 3 THEN 'Naturalizado brasileiro'
-                     ELSE 'Estrangeira' END AS "nomeNacionalidade"
+                     ELSE 'Estrangeira' END AS "nomeNacionalidade",
+                deficiencias.array_deficiencias AS "arrayDeficiencias" 
                  FROM cadastro.fisica
                  JOIN cadastro.pessoa ON pessoa.idpes = fisica.idpes
                  JOIN cadastro.fisica_raca ON fisica_raca.ref_idpes = fisica.idpes
@@ -678,8 +679,9 @@ SQL;
                  SELECT fisica_deficiencia.ref_idpes,
                         ARRAY_AGG(fisica_deficiencia.ref_cod_deficiencia) as array_deficiencias
                  FROM cadastro.fisica_deficiencia
+                 JOIN cadastro.deficiencia ON deficiencia.cod_deficiencia = fisica_deficiencia.ref_cod_deficiencia
                  WHERE fisica_deficiencia.ref_idpes = fisica.idpes
-                   AND fisica_deficiencia.ref_cod_deficiencia IN (1,2,3,4,5,6,7,11,12)
+                   AND deficiencia.deficiencia_educacenso IN (1,2,3,4,5,6,7,25,13)
                  GROUP BY 1
                  ) deficiencias ON true
         

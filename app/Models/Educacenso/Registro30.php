@@ -169,6 +169,8 @@ class Registro30 implements RegistroEducacenso
 
     public $nomeNacionalidade;
 
+    public $arrayDeficiencias;
+
     /**
      * @return bool
      */

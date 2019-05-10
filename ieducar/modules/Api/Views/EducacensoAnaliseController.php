@@ -986,7 +986,6 @@ class EducacensoAnaliseController extends ApiCoreController
 
     protected function analisaEducacensoRegistro30()
     {
-        header('Content-Type: text/html; charset=utf-8');
         $escolaId = $this->getRequest()->escola;
         $ano = $this->getRequest()->ano;
 
@@ -1031,7 +1030,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'text' => "Dados para formular o registro 30 da escola {$pessoas[0]->nomeEscola} não encontrados. Verifique se a(s) raça(s) do educacenso foi(ram) informada(s).",
                 'path' => '(Pessoas > Cadastros > Tipos > Tipos de cor ou raça)',
                 'linkPath' => "/intranet/educar_raca_lst.php",
-                'fail' => false
+                'fail' => true
             ];
         }
 
@@ -1040,7 +1039,7 @@ class EducacensoAnaliseController extends ApiCoreController
                 'text' => "Dados para formular o registro 30 da escola {$pessoas[0]->nomeEscola} não encontrados. Verifique se a(s) deficiência(s) do educacenso foi(ram) informada(s).",
                 'path' => '(Pessoas > Cadastros > Tipos > Tipos de deficiência)',
                 'linkPath' => "/intranet/educar_deficiencia_lst.php",
-                'fail' => false
+                'fail' => true
             ];
         }
 
@@ -1066,7 +1065,6 @@ class EducacensoAnaliseController extends ApiCoreController
                 $managerDataAnalysis->run();
                 $mensagem = array_merge($mensagem, $managerDataAnalysis->getMessages());
             }
-            dd($mensagem, $pessoa);
         }
 
         return [
