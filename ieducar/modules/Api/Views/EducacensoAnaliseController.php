@@ -7,6 +7,7 @@ use App\Models\Educacenso\Registro40;
 use App\Models\Educacenso\Registro50;
 use App\Models\Individual;
 use App\Models\Educacenso\Registro60;
+use App\Models\LegacyInstitution;
 use App\Models\School;
 use App\Repositories\EducacensoRepository;
 use App\Services\SchoolClass\AvailableTimeService;
@@ -1560,9 +1561,18 @@ class EducacensoAnaliseController extends ApiCoreController
         ];
     }
 
+    private function validaInstituicao()
+    {
+        $institution = LegacyInstitution::find($this->getRequest()->instituicao);
+
+        return [ 'valid' => $institution && !empty($institution->data_educacenso)];
+    }
+
     public function Gerar()
     {
-        if ($this->isRequestFor('get', 'registro-00')) {
+        if ($this->isRequestFor('get', 'valida-instituicao')) {
+            $this->appendResponse($this->validaInstituicao());
+        } elseif ($this->isRequestFor('get', 'registro-00')) {
             $this->appendResponse($this->analisaEducacensoRegistro00());
         } elseif ($this->isRequestFor('get', 'registro-10')) {
             $this->appendResponse($this->analisaEducacensoRegistro10());
