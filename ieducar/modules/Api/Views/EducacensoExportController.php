@@ -30,6 +30,7 @@ use iEducar\Modules\Educacenso\ExportRule\TiposAee;
 use iEducar\Modules\Educacenso\ExportRule\TipoVinculoServidor;
 use iEducar\Modules\Educacenso\ExportRule\TransporteEscolarPublico;
 use iEducar\Modules\Educacenso\ExportRule\TurmaMulti;
+use iEducar\Modules\Educacenso\ExportRule\VeiculoTransporte;
 use iEducar\Modules\Educacenso\Formatters;
 use iEducar\Modules\Educacenso\ValueTurmaMaisEducacao;
 use Illuminate\Support\Facades\Session;
@@ -861,6 +862,7 @@ class EducacensoExportController extends ApiCoreController
             $aluno = TiposAee::handle($aluno);
             $aluno = RecebeEscolarizacaoOutroEspaco::handle($aluno);
             $aluno = TransporteEscolarPublico::handle($aluno);
+            $aluno = VeiculoTransporte::handle($aluno);
             /** @var Registro60 $aluno */
             $aluno = PoderPublicoResponsavelTransporte::handle($aluno);
 
