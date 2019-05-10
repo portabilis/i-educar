@@ -1019,7 +1019,7 @@ class EducacensoAnaliseController extends ApiCoreController
         $mensagem = [];
 
         $mensagem[] = [
-            'text' => "Aviso: Dados para formular o registro 30 da escola {$pessoas[0]->nomeEscola} sujeito à valor inválido. Certifique-se que os(as) alunos(as) ou docentes residentes de outro país, que não seja o Brasil, possuam o País de residência informado corretamente.",
+            'text' => "<span class='avisos-educacenso'><b>Aviso:</b> Dados para formular o registro 30 da escola {$pessoas[0]->nomeEscola} sujeito à valor inválido. Certifique-se que os(as) alunos(as) ou docentes residentes de outro país, que não seja o Brasil, possuam o País de residência informado corretamente.</span>",
             'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: País de residência)',
             'linkPath' => "/intranet/atendidos_lst.php",
             'fail' => false
@@ -1048,10 +1048,10 @@ class EducacensoAnaliseController extends ApiCoreController
             $commonDataAnalysis->run();
             $mensagem = array_merge($mensagem, $commonDataAnalysis->getMessages());
 
-            if ($pessoa->isStudent()) {
-                $studentDataAnalysis = new Register30StudentDataAnalysis($pessoa);
-                $studentDataAnalysis->run();
-                $mensagem = array_merge($mensagem, $studentDataAnalysis->getMessages());
+            if ($pessoa->isManager()) {
+                $managerDataAnalysis = new Register30ManagerDataAnalysis($pessoa);
+                $managerDataAnalysis->run();
+                $mensagem = array_merge($mensagem, $managerDataAnalysis->getMessages());
             }
 
             if ($pessoa->isTeacher()) {
@@ -1060,10 +1060,10 @@ class EducacensoAnaliseController extends ApiCoreController
                 $mensagem = array_merge($mensagem, $teacherDataAnalysis->getMessages());
             }
 
-            if ($pessoa->isManager()) {
-                $managerDataAnalysis = new Register30ManagerDataAnalysis($pessoa);
-                $managerDataAnalysis->run();
-                $mensagem = array_merge($mensagem, $managerDataAnalysis->getMessages());
+            if ($pessoa->isStudent()) {
+                $studentDataAnalysis = new Register30StudentDataAnalysis($pessoa);
+                $studentDataAnalysis->run();
+                $mensagem = array_merge($mensagem, $studentDataAnalysis->getMessages());
             }
         }
 
