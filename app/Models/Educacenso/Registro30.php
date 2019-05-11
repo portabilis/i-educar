@@ -171,6 +171,13 @@ class Registro30 implements RegistroEducacenso
 
     public $arrayDeficiencias;
 
+    public $recursosProvaInep;
+
+    /**
+     * @var Registro60
+     */
+    public $dadosAluno;
+
     /**
      * @return bool
      */
@@ -193,6 +200,11 @@ class Registro30 implements RegistroEducacenso
     public function isStudent()
     {
         return isset($this->tipos[self::TIPO_STUDENT]);
+    }
+
+    public function semDocumentacao()
+    {
+        return empty($this->cpf) && empty($this->nis) && empty($this->certidaoNascimento);
     }
 
 }

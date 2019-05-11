@@ -758,6 +758,7 @@ SQL;
             SELECT DISTINCT
                 aluno.ref_idpes AS "codigoPessoa",
                 educacenso_cod_aluno.cod_aluno_inep AS "inepAluno",
+                aluno.recursos_prova_inep AS "recursosProvaInep",
                 (ARRAY[1] <@ aluno.recursos_prova_inep)::INT "recursoLedor",
                 (ARRAY[2] <@ aluno.recursos_prova_inep)::INT "recursoTranscricao",
                 (ARRAY[3] <@ aluno.recursos_prova_inep)::INT "recursoGuia",
