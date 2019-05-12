@@ -15,6 +15,7 @@ use iEducar\Modules\Educacenso\Analysis\Register30CommonDataAnalysis;
 use iEducar\Modules\Educacenso\Analysis\Register30ManagerDataAnalysis;
 use iEducar\Modules\Educacenso\Analysis\Register30StudentDataAnalysis;
 use iEducar\Modules\Educacenso\Analysis\Register30TeacherDataAnalysis;
+use iEducar\Modules\Educacenso\Analysis\Register30TeacherAndStudentDataAnalysis;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\Data\Registro10 as Registro10Data;
 use iEducar\Modules\Educacenso\Data\Registro20 as Registro20Data;
@@ -1064,6 +1065,12 @@ class EducacensoAnaliseController extends ApiCoreController
                 $studentDataAnalysis = new Register30StudentDataAnalysis($pessoa);
                 $studentDataAnalysis->run();
                 $mensagem = array_merge($mensagem, $studentDataAnalysis->getMessages());
+            }
+
+            if ($pessoa->isTeacher() || $pessoa->isStudent()) {
+                $teacherAndstudentDataAnalysis = new Register30TeacherAndStudentDataAnalysis($pessoa);
+                $teacherAndstudentDataAnalysis->run();
+                $mensagem = array_merge($mensagem, $teacherAndstudentDataAnalysis->getMessages());
             }
         }
 
