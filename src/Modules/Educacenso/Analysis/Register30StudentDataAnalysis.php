@@ -4,6 +4,7 @@ namespace iEducar\Modules\Educacenso\Analysis;
 
 use App\Models\Educacenso\Registro30;
 use App\Models\Educacenso\RegistroEducacenso;
+use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
@@ -31,11 +32,11 @@ class Register30StudentDataAnalysis implements AnalysisInterface
     {
         $data = $this->data;
 
-        if ($data->deficiencia && $data->dadosAluno->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE) {
+        if (!$data->deficiencia && ($data->dadosAluno->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE || $data->dadosAluno->modalidadeCurso == ModalidadeCurso::EDUCACAO_ESPECIAL)) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o curso ou a turma do(a) aluno(a) {$data->nomePessoa} é de AEE, portanto é necessário informar qual a sua deficiência.",
-                'path' => null,
-                'linkPath' => null,
+                'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados pessoais > Campo: Deficiências / habilidades especiais)',
+                'linkPath' => "/module/Cadastro/aluno?id={$data->codigoAluno}",
                 'fail' => true
             ];
         }

@@ -578,13 +578,15 @@ SQL;
                     turma.nm_turma "nomeTurma",
                     matricula_turma.tipo_atendimento "tipoAtendimentoMatricula",
                     turma.tipo_mediacao_didatico_pedagogico "tipoMediacaoTurma",
-                    aluno.veiculo_transporte_escolar "veiculoTransporteEscolar"
+                    aluno.veiculo_transporte_escolar "veiculoTransporteEscolar",
+                    curso.modalidade_curso as "modalidadeCurso"
                      FROM pmieducar.aluno
                      JOIN pmieducar.matricula ON matricula.ref_cod_aluno = aluno.cod_aluno
                      JOIN pmieducar.escola ON escola.cod_escola = matricula.ref_ref_cod_escola
                      JOIN pmieducar.matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
                      JOIN pmieducar.instituicao ON instituicao.cod_instituicao = escola.ref_cod_instituicao
                      JOIN pmieducar.turma ON turma.cod_turma = matricula_turma.ref_cod_turma
+                     JOIN pmieducar.curso ON curso.cod_curso = turma.ref_cod_curso
                      JOIN cadastro.pessoa ON pessoa.idpes = aluno.ref_idpes
                 LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
                 LEFT JOIN modules.educacenso_cod_turma ON educacenso_cod_turma.cod_turma = turma.cod_turma
@@ -662,16 +664,16 @@ SQL;
                 fisica.zona_localizacao_censo AS "localizacaoResidencia",
                 fisica.localizacao_diferenciada AS "localizacaoDiferenciada",
                 dadosescola.nomeescola AS "nomeEscola",
-                   CASE WHEN fisica.nacionalidade = 1 THEN 'Brasileira' 
+                   CASE WHEN fisica.nacionalidade = 1 THEN 'Brasileira'
                      WHEN fisica.nacionalidade = 3 THEN 'Naturalizado brasileiro'
                      ELSE 'Estrangeira' END AS "nomeNacionalidade",
-                deficiencias.array_deficiencias AS "arrayDeficiencias" 
+                deficiencias.array_deficiencias AS "arrayDeficiencias"
                  FROM cadastro.fisica
                  JOIN cadastro.pessoa ON pessoa.idpes = fisica.idpes
                  JOIN cadastro.fisica_raca ON fisica_raca.ref_idpes = fisica.idpes
             LEFT JOIN cadastro.endereco_pessoa ON endereco_pessoa.idpes = pessoa.idpes
             LEFT JOIN public.logradouro ON logradouro.idlog = endereco_pessoa.idlog
-            LEFT JOIN public.municipio ON municipio.idmun = logradouro.idmun 
+            LEFT JOIN public.municipio ON municipio.idmun = logradouro.idmun
             LEFT JOIN public.pais ON pais.idpais = CASE WHEN fisica.nacionalidade = 3 THEN fisica.idpais_estrangeiro ELSE 76 END
             LEFT JOIN LATERAL (
                  SELECT educacenso_cod_escola.cod_escola_inep,
@@ -688,9 +690,9 @@ SQL;
                    AND deficiencia.deficiencia_educacenso IN (1,2,3,4,5,6,7,25,13)
                  GROUP BY 1
                  ) deficiencias ON true
-        
+
             WHERE fisica.idpes IN ({$stringPersonId})
-      
+
 SQL;
 
         return $this->fetchPreparedQuery($sql, ['school' => $schoolId]);
@@ -731,7 +733,7 @@ SQL;
                 (ARRAY[16] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoNenhum",
                 pessoa.email AS "email",
                 educacenso_cod_docente.cod_docente_inep AS "inepServidor"
-            
+
             FROM pmieducar.servidor
                  JOIN cadastro.pessoa ON pessoa.idpes = servidor.cod_servidor
             LEFT JOIN cadastro.escolaridade ON escolaridade.idesco = servidor.ref_idesco
