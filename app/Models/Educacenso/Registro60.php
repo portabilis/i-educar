@@ -42,6 +42,7 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
     public $veiculoTransporteAquaviarioCapacidade5a15;
     public $veiculoTransporteAquaviarioCapacidade15a35;
     public $veiculoTransporteAquaviarioCapacidadeAcima35;
+    public $modalidadeCurso;
 
     /**
      * @var string Campo usado somente na análise

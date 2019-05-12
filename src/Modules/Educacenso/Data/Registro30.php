@@ -80,6 +80,10 @@ class Registro30 extends AbstractRegistro
             $registro30Model->codigoAluno = $model->getCodigoAluno();
             $registro30Model->codigoServidor = $model->getCodigoServidor();
 
+            if ($type == Registro30Model::TIPO_STUDENT) {
+                $registro30Model->dadosAluno = $model;
+            }
+
             $registro30Model->tipos[$type] = true;
             $this->modelArray[$model->getCodigoPessoa()] = $registro30Model;
         }

@@ -578,13 +578,15 @@ SQL;
                     turma.nm_turma "nomeTurma",
                     matricula_turma.tipo_atendimento "tipoAtendimentoMatricula",
                     turma.tipo_mediacao_didatico_pedagogico "tipoMediacaoTurma",
-                    aluno.veiculo_transporte_escolar "veiculoTransporteEscolar"
+                    aluno.veiculo_transporte_escolar "veiculoTransporteEscolar",
+                    curso.modalidade_curso as "modalidadeCurso"
                      FROM pmieducar.aluno
                      JOIN pmieducar.matricula ON matricula.ref_cod_aluno = aluno.cod_aluno
                      JOIN pmieducar.escola ON escola.cod_escola = matricula.ref_ref_cod_escola
                      JOIN pmieducar.matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
                      JOIN pmieducar.instituicao ON instituicao.cod_instituicao = escola.ref_cod_instituicao
                      JOIN pmieducar.turma ON turma.cod_turma = matricula_turma.ref_cod_turma
+                     JOIN pmieducar.curso ON curso.cod_curso = turma.ref_cod_curso
                      JOIN cadastro.pessoa ON pessoa.idpes = aluno.ref_idpes
                 LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
                 LEFT JOIN modules.educacenso_cod_turma ON educacenso_cod_turma.cod_turma = turma.cod_turma
@@ -762,6 +764,7 @@ SQL;
             SELECT DISTINCT
                 aluno.ref_idpes AS "codigoPessoa",
                 educacenso_cod_aluno.cod_aluno_inep AS "inepAluno",
+                aluno.recursos_prova_inep AS "recursosProvaInep",
                 (ARRAY[1] <@ aluno.recursos_prova_inep)::INT "recursoLedor",
                 (ARRAY[2] <@ aluno.recursos_prova_inep)::INT "recursoTranscricao",
                 (ARRAY[3] <@ aluno.recursos_prova_inep)::INT "recursoGuia",
