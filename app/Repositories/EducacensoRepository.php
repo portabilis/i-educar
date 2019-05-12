@@ -636,9 +636,9 @@ SQL;
                 fisica.cpf AS cpf,
                 pessoa.nome AS "nomePessoa",
                 fisica.data_nasc AS "dataNascimento",
-                (fisica.nome_mae IS NOT NULL OR fisica.nome_pai IS NOT NULL)::INTEGER AS "filiacao",
-                fisica.nome_mae AS "filiacao1",
-                fisica.nome_pai AS "filiacao2",
+                (pessoa_mae.nome IS NOT NULL OR pessoa_pai.nome IS NOT NULL)::INTEGER AS "filiacao",
+                pessoa_mae.nome AS "filiacao1",
+                pessoa_pai.nome AS "filiacao2",
                 CASE WHEN fisica.sexo = 'F' THEN 1 ELSE 2 END AS "sexo",
                 fisica_raca.ref_cod_raca AS "raca",
                 fisica.nacionalidade AS "nacionalidade",
@@ -665,12 +665,16 @@ SQL;
                 fisica.localizacao_diferenciada AS "localizacaoDiferenciada",
                 dadosescola.nomeescola AS "nomeEscola",
                    CASE WHEN fisica.nacionalidade = 1 THEN 'Brasileira'
-                     WHEN fisica.nacionalidade = 3 THEN 'Naturalizado brasileiro'
+                     WHEN fisica.nacionalidade = 2 THEN 'Naturalizado brasileiro'
                      ELSE 'Estrangeira' END AS "nomeNacionalidade",
                 deficiencias.array_deficiencias AS "arrayDeficiencias"
                  FROM cadastro.fisica
                  JOIN cadastro.pessoa ON pessoa.idpes = fisica.idpes
                  JOIN cadastro.fisica_raca ON fisica_raca.ref_idpes = fisica.idpes
+            LEFT JOIN cadastro.pessoa as pessoa_mae
+            ON fisica.idpes_mae = pessoa_mae.idpes
+            LEFT JOIN cadastro.pessoa as pessoa_pai
+            ON fisica.idpes_pai = pessoa_pai.idpes
             LEFT JOIN cadastro.endereco_pessoa ON endereco_pessoa.idpes = pessoa.idpes
             LEFT JOIN public.logradouro ON logradouro.idlog = endereco_pessoa.idlog
             LEFT JOIN public.municipio ON municipio.idmun = logradouro.idmun
