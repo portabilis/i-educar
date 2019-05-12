@@ -203,7 +203,7 @@ $j(document).ready(function(){
                             <a class="educacenso-link-path"
                                href="/intranet/educar_instituicao_cad.php?cod_instituicao=${instituicaoId}"
                                target="_new">
-                               (Escola > Cadastros > Instituição > Editar > Aba: Parâmetros > Campo:Data de referência do Educacenso)
+                               (Escola > Cadastros > Instituição > Editar > Aba: Parâmetros > Campo: Data de referência do Educacenso)
                             </a>
                           </div>`;
     };
