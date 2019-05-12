@@ -6,6 +6,7 @@ use App\Models\Educacenso\ItemOfRegistro30;
 use App\Models\Educacenso\Registro30 as Registro30Model;
 use App\Repositories\EducacensoRepository;
 use iEducar\Modules\Educacenso\Formatters;
+use Portabilis_Utils_Database;
 
 class Registro30 extends AbstractRegistro
 {
@@ -54,6 +55,13 @@ class Registro30 extends AbstractRegistro
             $this->model = $this->modelArray[$data->codigoPessoa];
             $this->hydrateModel($data);
             $this->modelArray[$data->codigoPessoa] = $this->model;
+        }
+
+        foreach ($this->modelArray as &$record) {
+            $record->formacaoAnoConclusao = Portabilis_Utils_Database::pgArrayToArray($record->formacaoAnoConclusao);
+            $record->formacaoCurso = Portabilis_Utils_Database::pgArrayToArray($record->formacaoCurso);
+            $record->formacaoInstituicao = Portabilis_Utils_Database::pgArrayToArray($record->formacaoInstituicao);
+            $record->formacaoComponenteCurricular = Portabilis_Utils_Database::pgArrayToArray($record->formacaoComponenteCurricular);
         }
 
         return $this->modelArray;
