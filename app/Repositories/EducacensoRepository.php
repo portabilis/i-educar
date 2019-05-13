@@ -675,7 +675,7 @@ SQL;
                 deficiencias.array_deficiencias AS "arrayDeficiencias"
                  FROM cadastro.fisica
                  JOIN cadastro.pessoa ON pessoa.idpes = fisica.idpes
-                 JOIN cadastro.fisica_raca ON fisica_raca.ref_idpes = fisica.idpes
+            LEFT JOIN cadastro.fisica_raca ON fisica_raca.ref_idpes = fisica.idpes
             LEFT JOIN cadastro.pessoa as pessoa_mae
             ON fisica.idpes_mae = pessoa_mae.idpes
             LEFT JOIN cadastro.pessoa as pessoa_pai
