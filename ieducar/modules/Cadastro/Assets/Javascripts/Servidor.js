@@ -386,7 +386,7 @@ function validateGraduations() {
     return false;
   }
 
-  if (!obrigarCamposCenso || !escolaridadeSuperior) {
+  if (!escolaridadeSuperior) {
     return result;
   }
 
@@ -399,12 +399,12 @@ function validateGraduations() {
         collegeId = $j('input[id="employee_college_id[' + idNum[1] + ']"]'),
         collegeName = $j('input[id="employee_college[' + idNum[1] + ']"]');
 
-    if (courseId.val() == '' || courseName.val() == '') {
+    if (obrigarCamposCenso && courseId.val() == '' || courseName.val() == '') {
       messageUtils.error('O campo: curso é obrigatório.', courseName);
       result = false;
     }
 
-    if (completionYear.val() == '') {
+    if (obrigarCamposCenso && completionYear.val() == '') {
       messageUtils.error('O campo: Ano de conclusão é obrigatório.', completionYear);
       result = false;
     }
@@ -424,7 +424,7 @@ function validateGraduations() {
       result = false;
     }
 
-    if (collegeId.val() == '' || collegeName.val() == '') {
+    if (obrigarCamposCenso && collegeId.val() == '' || collegeName.val() == '') {
       messageUtils.error('O campo: Instituição de Educação Superior é obrigatório.', collegeName);
       result = false;
     }
