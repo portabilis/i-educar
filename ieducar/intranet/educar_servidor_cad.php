@@ -1020,7 +1020,7 @@ JS;
             $valueObject->courseId = $this->employee_course_id[$key];
             $valueObject->completionYear = $this->employee_completion_year[$key];
             $valueObject->collegeId = $this->employee_college_id[$key];
-            $valueObject->disciplineId = $this->employee_discipline_id[$key] ?? null;
+            $valueObject->disciplineId = $this->employee_discipline_id[$key] ?: null;
             $employeeGraduationService->storeGraduation($valueObject);
         }
     }
