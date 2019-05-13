@@ -185,13 +185,10 @@ class indice extends clsCadastro
             'educar_turma_det.php?cod_turma=' . $registro['cod_turma'] : 'educar_turma_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => "{$nomeMenu} turma"
+
+        $this->breadcrumb($nomeMenu . ' turma', [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
-        $this->enviaLocalizacao($localizacao->montar());
 
         $this->nome_url_cancelar = 'Cancelar';
 

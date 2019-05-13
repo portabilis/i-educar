@@ -27,13 +27,9 @@ class indice extends clsCadastro
 
   function Formular()
   {
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "Unificação de pessoas"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Unificação de pessoas', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
 
   function Inicializar()

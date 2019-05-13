@@ -58,13 +58,10 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == 'Editar') ? "educar_deficiencia_det.php?cod_deficiencia={$registro['cod_deficiencia']}" : 'educar_deficiencia_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-             $_SERVER['SERVER_NAME'].'/intranet' => 'Início',
-             'educar_pessoas_index.php'          => 'Pessoas',
-             ''        => "{$nomeMenu} deficiência"
+
+        $this->breadcrumb($nomeMenu . ' deficiência', [
+            url('intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
-        $this->enviaLocalizacao($localizacao->montar());
 
         $this->nome_url_cancelar = 'Cancelar';
 
@@ -102,7 +99,7 @@ class indice extends clsCadastro
             'resources' => $resources,
             'value' => $this->deficiencia_educacenso
         ];
-        
+
         $this->inputsHelper()->select('deficiencia_educacenso', $options);
         $this->campoCheck('desconsidera_regra_diferenciada', 'Desconsiderar deficiência na regra de avaliação diferenciada', dbBool($this->desconsidera_regra_diferenciada));
     }

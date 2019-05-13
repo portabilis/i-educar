@@ -62,7 +62,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Funcao - Detalhe";
-        
+
 
         $this->cod_funcao=$_GET["cod_funcao"];
         $this->ref_cod_instituicao=$_GET["ref_cod_instituicao"];
@@ -127,13 +127,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_funcao_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"                  => "Servidores",
-         ""                                  => "Detalhe da fun&ccedil;&atilde;o"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhe da função', [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
     }
 }
 

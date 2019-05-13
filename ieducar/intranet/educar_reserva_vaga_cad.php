@@ -76,13 +76,10 @@ class indice extends clsCadastro
       'educar_reserva_vaga_lst.php');
 
     $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "{$nomeMenu} reserva de vaga"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
+
+    $this->breadcrumb($nomeMenu . ' reserva de vaga', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
 
     return $retorno;
   }

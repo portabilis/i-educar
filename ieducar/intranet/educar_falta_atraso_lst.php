@@ -50,7 +50,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' Servidores - Falta Atraso');
     $this->processoAp = 635;
-    $this->addEstilo("localizacaoSistema");    
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -220,13 +220,9 @@ class indice extends clsListagem
 
     $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Listagem de faltas/atrasos do servidor"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->breadcrumb('Listagem de faltas/atrasos do servidor', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
   }
 
 }

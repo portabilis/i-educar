@@ -150,15 +150,9 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(
-            array(
-                $_SERVER['SERVER_NAME']."/intranet" => "Início", 
-                "educar_index.php"                  => "Escola", 
-                ""        => "Listagem de etapas"
-            )
-        );
-        $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Listagem de etapas', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

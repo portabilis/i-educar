@@ -91,13 +91,10 @@ class indice extends clsCadastro
     $this->nome_url_cancelar = 'Cancelar';
 
     $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""        => "{$nomeMenu} escolaridade"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
+
+    $this->breadcrumb($nomeMenu . ' escolaridade', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
 
     return $retorno;
   }
@@ -118,7 +115,7 @@ class indice extends clsCadastro
                      6 => 'Superior');
 
     $options = array('label' => Portabilis_String_Utils::toLatin1('Escolaridade educacenso'), 'resources' => $resources, 'value' => $this->escolaridade);
-    $this->inputsHelper()->select('escolaridade', $options);    
+    $this->inputsHelper()->select('escolaridade', $options);
   }
 
   function Novo()

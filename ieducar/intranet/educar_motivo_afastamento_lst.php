@@ -89,7 +89,7 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $lista_busca = array(
             "Motivo de Afastamento"
@@ -170,13 +170,9 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Motivos de afastamento do servidor"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Motivos de afastamento do servidor', [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
     }
 }
 // cria uma extensao da classe base

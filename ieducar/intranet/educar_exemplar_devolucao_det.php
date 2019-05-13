@@ -217,13 +217,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_exemplar_devolucao_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Detalhe do exemplar para devolu&ccedil;&atilde;o"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Detalhe do exemplar para devolução', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 

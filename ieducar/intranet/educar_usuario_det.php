@@ -61,7 +61,7 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        
+
 
         $this->titulo = "Usu&aacute;rio - Detalhe";
 
@@ -236,13 +236,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_usuario_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_configuracoes_index.php"  => "Configurações",
-         ""                                  => "Detalhe do usu&aacute;rio"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Detalhe do usuário', [
+            url('intranet/educar_configuracoes_index.php') => 'Configurações',
+        ]);
     }
 }
 
