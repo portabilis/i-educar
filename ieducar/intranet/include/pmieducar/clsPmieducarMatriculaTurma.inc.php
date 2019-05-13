@@ -65,6 +65,7 @@ class clsPmieducarMatriculaTurma
   var $turma_unificada;
   var $remanejado;
   var $turno_id;
+  var $tipo_atendimento = false;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -131,7 +132,7 @@ class clsPmieducarMatriculaTurma
 
     $this->pessoa_logada = Session::get('id_pessoa');
 
-    $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.abandono, mt.reclassificado, mt.remanejado, mt.transferido, mt.falecido, mt.ref_cod_turma, mt.etapa_educacenso, mt.turma_unificada, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, mt.turno_id, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT (pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
+    $this->_campos_lista = $this->_todos_campos = "mt.ref_cod_matricula, mt.abandono, mt.reclassificado, mt.remanejado, mt.transferido, mt.falecido, mt.ref_cod_turma, mt.etapa_educacenso, mt.turma_unificada, mt.ref_usuario_exc, mt.ref_usuario_cad, mt.data_cadastro, mt.data_exclusao, mt.ativo, mt.sequencial, mt.data_enturmacao, mt.turno_id, mt.tipo_atendimento, (SELECT pes.nome FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome, (SELECT (pes.nome) FROM cadastro.pessoa pes, pmieducar.aluno alu, pmieducar.matricula mat WHERE pes.idpes = alu.ref_idpes AND mat.ref_cod_aluno = alu.cod_aluno AND mat.cod_matricula = mt.ref_cod_matricula ) AS nome_ascii";
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists("clsPmieducarUsuario")) {
@@ -457,6 +458,14 @@ class clsPmieducarMatriculaTurma
       } elseif (is_string($this->turno_id) && !empty($this->turno_id)) {
         $set .= "{$gruda}turno_id = '{$this->turno_id}'";
         $gruda = ", ";
+      }
+
+      if (is_string($this->tipo_atendimento)) {
+          $set .= "{$gruda}tipo_atendimento = '{{$this->tipo_atendimento}}'";
+          $gruda = ', ';
+      } elseif ($this->tipo_atendimento !== false) {
+          $set .= "{$gruda}tipo_atendimento = NULL";
+          $gruda = ', ';
       }
 
       if ($set) {

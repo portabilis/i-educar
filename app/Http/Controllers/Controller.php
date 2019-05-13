@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Menu;
 use iEducar\Support\Navigation\Breadcrumb;
-use iEducar\Support\Navigation\TopMenu;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 
 class Controller extends BaseController
 {
@@ -25,17 +27,26 @@ class Controller extends BaseController
     }
 
     /**
-     * Set the top menu of the action
+     * Share with view, title, mainmenu and menu links.
+     * 
+     * @param int $process
      *
-     * @param $currentSubmenuId
-     * @param null $currentUri
+     * @return void
      */
-    public function topMenu($currentSubmenuId, $currentUri = null)
+    public function menu($process)
     {
-        if (empty($currentUri)) {
-            $currentUri = request()->getRequestUri();
+        $user = Auth::user();
+        $menu = Menu::user($user);
+
+        $topmenu = Menu::query()
+            ->where('process', $process)
+            ->first();
+
+        if ($topmenu) {
+            View::share('mainmenu', $topmenu->root()->getKey());
         }
 
-        app(TopMenu::class)->current($currentSubmenuId, $currentUri);
+        View::share('menu', $menu);
+        View::share('title', '');
     }
 }
