@@ -42,8 +42,8 @@ class Register30CommonDataAnalysis implements AnalysisInterface
             ];
         }
 
-        $nameValidator = new NameValidator($data->nomePessoa);
-        if (!$nameValidator->isValid()) {
+        $nameValidator = new NameValidator((string)$data->nomePessoa);
+        if ($data->nomePessoa && !$nameValidator->isValid()) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Não é permitido a repetição de 4 caracteres seguidos no nome da pessoa {$data->nomePessoa}.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Nome)',
