@@ -135,6 +135,7 @@ class MatriculaController extends ApiCoreController
             ->where('aprovado', 4)
             ->where('ano', $year)
             ->where('ref_ref_cod_escola', $school)
+            ->limit(15)
             ->get();
 
         $transfers = [];
