@@ -32,7 +32,7 @@ class RegrasEspecificasRegistro30 implements EducacensoExportRule
             $registro30->justificativaFaltaDocumentacao = null;
         }
 
-        if (!$registro30->isStudent() && !$registro30->isTeacher()) {
+        if ($registro30->isManager()) {
             $registro30->paisResidencia = null;
             $registro30->cep = null;
             $registro30->municipioResidencia = null;
@@ -40,7 +40,7 @@ class RegrasEspecificasRegistro30 implements EducacensoExportRule
             $registro30->localizacaoDiferenciada = null;
         }
 
-        if (!$registro30->isManager() && !$registro30->isTeacher()) {
+        if ($registro30->isStudent()) {
             $registro30->escolaridade = null;
             $registro30->tipoEnsinoMedioCursado = null;
             $registro30->formacaoCurso = null;

@@ -430,6 +430,7 @@ class EducacensoExportController extends ApiCoreController
                 $pessoa->registro,
                 $pessoa->inepEscola,
                 $pessoa->codigoPessoa,
+                $pessoa->cpf,
                 $pessoa->getInep(),
                 $pessoa->nomePessoa,
                 $pessoa->dataNascimento,

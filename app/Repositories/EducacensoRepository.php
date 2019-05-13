@@ -752,10 +752,10 @@ SQL;
             LEFT JOIN cadastro.escolaridade ON escolaridade.idesco = servidor.ref_idesco
             LEFT JOIN modules.educacenso_cod_docente ON educacenso_cod_docente.cod_servidor = servidor.cod_servidor,
             LATERAL (
-                SELECT ARRAY_AGG(course_id) course_id,
-                       ARRAY_AGG(completion_year) completion_year,
-                       ARRAY_AGG(college_id) college_id,
-                       ARRAY_AGG(discipline_id) discipline_id
+                SELECT ARRAY_REMOVE(ARRAY_AGG(course_id), NULL) course_id,
+                       ARRAY_REMOVE(ARRAY_AGG(completion_year), NULL) completion_year,
+                       ARRAY_REMOVE(ARRAY_AGG(college_id), NULL) college_id,
+                       ARRAY_REMOVE(ARRAY_AGG(discipline_id), NULL) discipline_id
                 FROM employee_graduations WHERE employee_graduations.employee_id = servidor.cod_servidor
             ) AS tbl_formacoes
             WHERE servidor.cod_servidor IN ({$stringPersonId})
