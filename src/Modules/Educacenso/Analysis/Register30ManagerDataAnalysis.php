@@ -35,6 +35,15 @@ class Register30ManagerDataAnalysis implements AnalysisInterface
                 'fail' => true
             ];
         }
+
+        if (empty($data->email)) {
+            $this->messages[] = [
+                'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verifique se e-mail do(a) gestor(a) escolar {$data->nomePessoa} foi informado.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Seção: Gestores escolares > Link: Dados adicionais do(a) Diretor(a) > Campo: E-mail do(a) gestor(a) escolar)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$data->codigoEscola}",
+                'fail' => true
+            ];
+        }
     }
 
     public function getMessages(): array

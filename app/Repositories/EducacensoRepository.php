@@ -632,6 +632,7 @@ SQL;
             SELECT
                 '30' AS registro,
                 dadosescola.cod_escola_inep AS "inepEscola",
+                dadosescola.cod_escola AS "codigoEscola",
                 fisica.idpes AS "codigoPessoa",
                 fisica.cpf AS cpf,
                 pessoa.nome AS "nomePessoa",
@@ -681,6 +682,7 @@ SQL;
             LEFT JOIN public.pais ON pais.idpais = CASE WHEN fisica.nacionalidade = 3 THEN fisica.idpais_estrangeiro ELSE 76 END
             LEFT JOIN LATERAL (
                  SELECT educacenso_cod_escola.cod_escola_inep,
+                        educacenso_cod_escola.cod_escola,
                         relatorio.get_nome_escola(educacenso_cod_escola.cod_escola) AS nomeescola
                  FROM modules.educacenso_cod_escola
                  WHERE educacenso_cod_escola.cod_escola = :school
@@ -707,6 +709,7 @@ SQL;
         $stringPersonId = join(',', $arrayEmployeeId);
         $sql = <<<SQL
             SELECT DISTINCT
+                servidor.ref_cod_instituicao AS "codigoInstituicao",
                 servidor.cod_servidor AS "codigoPessoa",
                 escolaridade.escolaridade AS "escolaridade",
                 servidor.tipo_ensino_medio_cursado AS "tipoEnsinoMedioCursado",
@@ -714,10 +717,12 @@ SQL;
                 tbl_formacoes.completion_year AS "formacaoAnoConclusao",
                 tbl_formacoes.college_id AS "formacaoInstituicao",
                 tbl_formacoes.discipline_id AS "formacaoComponenteCurricular",
+                coalesce(cardinality(servidor.pos_graduacao),0) as "countPosGraduacao",
                 (ARRAY[1] <@ servidor.pos_graduacao)::INT "posGraduacaoEspecializacao",
                 (ARRAY[2] <@ servidor.pos_graduacao)::INT "posGraduacaoMestrado",
                 (ARRAY[3] <@ servidor.pos_graduacao)::INT "posGraduacaoDoutorado",
                 (ARRAY[4] <@ servidor.pos_graduacao)::INT "posGraduacaoNaoPossui",
+                coalesce(cardinality(servidor.curso_formacao_continuada),0) as "countFormacaoContinuada",
                 (ARRAY[1] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaCreche",
                 (ARRAY[2] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaPreEscola",
                 (ARRAY[3] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaAnosIniciaisFundamental",

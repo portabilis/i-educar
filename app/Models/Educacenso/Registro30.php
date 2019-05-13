@@ -15,6 +15,8 @@ class Registro30 implements RegistroEducacenso
 
     public $inepEscola;
 
+    public $codigoEscola;
+
     public $codigoPessoa;
 
     public $codigoAluno;
@@ -99,6 +101,8 @@ class Registro30 implements RegistroEducacenso
 
     public $inepServidor;
 
+    public $codigoInstituicao;
+
     public $escolaridade;
 
     public $tipoEnsinoMedioCursado;
@@ -111,6 +115,8 @@ class Registro30 implements RegistroEducacenso
 
     public $formacaoComponenteCurricular;
 
+    public $countPosGraduacao;
+
     public $posGraduacaoEspecializacao;
 
     public $posGraduacaoMestrado;
@@ -118,6 +124,8 @@ class Registro30 implements RegistroEducacenso
     public $posGraduacaoDoutorado;
 
     public $posGraduacaoNaoPossui;
+
+    public $countFormacaoContinuada;
 
     public $formacaoContinuadaCreche;
 
