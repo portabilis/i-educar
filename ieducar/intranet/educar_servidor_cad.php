@@ -1002,6 +1002,10 @@ JS;
 
         $employeeGraduationService->deleteAll($employeeId);
 
+        if (empty($this->ref_idesco)) {
+            return true;
+        }
+
         if (LegacySchoolingDegree::find($this->ref_idesco)->escolaridade != Escolaridade::EDUCACAO_SUPERIOR) {
             return true;
         }

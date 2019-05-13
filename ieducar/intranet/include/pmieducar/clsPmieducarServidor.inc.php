@@ -5,7 +5,7 @@ require_once 'include/pmieducar/geral.inc.php';
 class clsPmieducarServidor
 {
     public $cod_servidor;
-    public $ref_idesco;
+    public $ref_idesco = false;
     public $carga_horaria;
     public $data_cadastro;
     public $data_exclusao;
@@ -127,22 +127,8 @@ class clsPmieducarServidor
           FROM pmieducar.servidor_funcao sf
          WHERE s.cod_servidor = sf.ref_cod_servidor) as matricula_servidor
     ';
-        if (is_numeric($ref_idesco)) {
-            if (class_exists('clsCadastroEscolaridade')) {
-                $tmp_obj = new clsCadastroEscolaridade($ref_idesco);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_idesco = $ref_idesco;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_idesco = $ref_idesco;
-                    }
-                }
-            } elseif ($db->CampoUnico("SELECT 1 FROM cadastro.escolaridade WHERE idesco = '{$ref_idesco}'")) {
-                $this->ref_idesco = $ref_idesco;
-            }
-        }
+        $this->ref_idesco = $ref_idesco;
+
         /**
          * Filtrar cod_servidor
          */
@@ -383,10 +369,15 @@ class clsPmieducarServidor
             $db = new clsBanco();
             $set = '';
             $gruda = '';
+
             if (is_numeric($this->ref_idesco)) {
                 $set .= "{$gruda}ref_idesco = '{$this->ref_idesco}'";
                 $gruda = ', ';
+            } elseif ($this->ref_idesco !== false) {
+                $set .= "{$gruda}ref_idesco = NULL";
+                $gruda = ', ';
             }
+
             if (is_numeric($this->carga_horaria)) {
                 $set .= "{$gruda}carga_horaria = '{$this->carga_horaria}'";
                 $gruda = ', ';
