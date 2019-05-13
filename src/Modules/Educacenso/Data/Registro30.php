@@ -100,13 +100,17 @@ class Registro30 extends AbstractRegistro
     /**
      * @param $escolaId
      * @return Registro30Model[]
+     * @throws \Exception
      */
     public function getExportFormatData($escolaId)
     {
         $modelArray = $this->getData($escolaId);
 
-        foreach ($modelArray as $registro30) {
-
+        foreach ($modelArray as &$registro30) {
+            $registro30->nomePessoa = $this->convertStringToCenso($registro30->nomePessoa);
+            $registro30->filiacao1 = $this->convertStringToCenso($registro30->filiacao1);
+            $registro30->filiacao2 = $this->convertStringToCenso($registro30->filiacao2);
+            $registro30->dataNascimento = (new \DateTime($registro30->dataNascimento))->format('d/m/Y');
         }
 
         return $modelArray;

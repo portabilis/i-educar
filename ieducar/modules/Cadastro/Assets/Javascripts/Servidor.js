@@ -140,7 +140,7 @@ $j('#ref_idesco').on('change', ()=> {
 });
 
 function checkGraduationsTable() {
-  if (escolaridadeSuperior) {
+  if (escolaridadeSuperior && $j('#tab2').hasClass('servidorTab-active')) {
     $j('#tr_graduations').show();
   } else {
     $j('#tr_graduations').hide();
