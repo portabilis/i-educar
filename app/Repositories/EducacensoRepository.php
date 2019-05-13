@@ -627,6 +627,10 @@ SQL;
 
     public function getCommonDataForRecord30($arrayPersonId, $schoolId)
     {
+        if (empty($arrayPersonId)) {
+            return [];
+        }
+
         $stringPersonId = join(',', $arrayPersonId);
         $sql = <<<SQL
             SELECT
