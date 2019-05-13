@@ -121,7 +121,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
 
         if (!$data->raca) {
             $this->messages[] = [
-                'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verifique se o raça da pessoa {$data->nomePessoa} foi informado.",
+                'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verifique se a raça da pessoa {$data->nomePessoa} foi informado.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Raça)',
                 'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
                 'fail' => true
@@ -174,7 +174,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
             }
 
             $this->messages[] = [
-                'text' => "Dados para formular o registro 30 da escola (Nome da escola) possui valor inválido. Verificamos que a pessoa (Nome da pessoa) possui o campo de deficiências preenchido incorretamente: " . $deficiencyValidator->getMessage(),
+                'text' => "Dados para formular o registro 30 da escola (Nome da escola) possui valor inválido. Verificamos que a pessoa {$data->nomePessoa} possui o campo de deficiências preenchido incorretamente: " . $deficiencyValidator->getMessage(),
                 'path' => $path,
                 'linkPath' => $linkPath,
                 'fail' => true
