@@ -480,6 +480,38 @@ class EducacensoExportController extends ApiCoreController
         return $stringCenso;
     }
 
+    protected function exportaDadosRegistro40($escolaId)
+    {
+        $educacensoRepository = new EducacensoRepository();
+        $registro40Model = new Registro40();
+        $registro40 = new Registro40Data($educacensoRepository, $registro40Model);
+
+        /** @var Registro40[] $gestores */
+        $gestores = $registro40->getExportFormatData($escolaId);
+
+        $stringCenso = '';
+        foreach ($gestores as $gestor) {
+            $gestor = CargoGestor::handle($gestor);
+            /** @var Registro40 $gestor */
+            $gestor = CriterioAcessoGestor::handle($gestor);
+
+            $data = [
+                $gestor->registro,
+                $gestor->inepEscola,
+                $gestor->codigoPessoa,
+                $gestor->inepGestor,
+                $gestor->cargo,
+                $gestor->criterioAcesso,
+                $gestor->especificacaoCriterioAcesso,
+                $gestor->tipoVinculo
+            ];
+
+            $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;
+        }
+
+        return $stringCenso;
+    }
+
     protected function exportaDadosRegistro50($escolaId, $ano)
     {
         $educacensoRepository = new EducacensoRepository();
