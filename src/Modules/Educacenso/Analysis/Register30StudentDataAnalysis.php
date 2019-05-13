@@ -32,7 +32,10 @@ class Register30StudentDataAnalysis implements AnalysisInterface
     {
         $data = $this->data;
 
-        if (!$data->deficiencia && ($data->dadosAluno->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE || $data->dadosAluno->modalidadeCurso == ModalidadeCurso::EDUCACAO_ESPECIAL)) {
+        $arrayDeficiencias = array_filter(Portabilis_Utils_Database::pgArrayToArray($data->arrayDeficiencias));
+        $arrayRecursos = array_filter(Portabilis_Utils_Database::pgArrayToArray($data->recursosProvaInep));
+
+        if (!$arrayDeficiencias && ($data->dadosAluno->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE || $data->dadosAluno->modalidadeCurso == ModalidadeCurso::EDUCACAO_ESPECIAL)) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o curso ou a turma do(a) aluno(a) {$data->nomePessoa} é de AEE, portanto é necessário informar qual a sua deficiência.",
                 'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados pessoais > Campo: Deficiências / habilidades especiais)',
@@ -41,7 +44,7 @@ class Register30StudentDataAnalysis implements AnalysisInterface
             ];
         }
 
-        if (!$data->recursosProvaInep && $data->deficiencia) {
+        if (empty($arrayRecursos) && $arrayDeficiencias) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o(a) aluno(a)  {$data->nomePessoa} possui deficiência, portanto é necessário informar qual o recurso para a realização de provas o(a) mesmo(a) necessita ou já recebe.",
                 'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados educacenso > Campo: Recursos necessários para realização de provas)',
@@ -50,8 +53,6 @@ class Register30StudentDataAnalysis implements AnalysisInterface
             ];
         }
 
-        $arrayDeficiencias = Portabilis_Utils_Database::pgArrayToArray($data->arrayDeficiencias);
-        $arrayRecursos = Portabilis_Utils_Database::pgArrayToArray($data->recursosProvaInep);
         $inepExamValidator = new InepExamValidator($arrayRecursos, $arrayDeficiencias);
         if (!$inepExamValidator->isValid()) {
             $this->messages[] = [
