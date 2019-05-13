@@ -1,6 +1,7 @@
 <?php
 
-use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
+use iEducar\Modules\Educacenso\Model\PaisResidencia;
+use iEducar\Modules\Educacenso\Model\RecursosRealizacaoProvas;
 use iEducar\Modules\Educacenso\Model\VeiculoTransporteEscolar;
 use iEducar\Support\View\SelectOptions;
 
@@ -15,10 +16,6 @@ require_once 'lib/Portabilis/Utils/CustomLabel.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
 require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
 require_once 'Portabilis/String/Utils.php';
-
-use iEducar\Modules\Educacenso\Model\PaisResidencia;
-use iEducar\Modules\Educacenso\Model\RecursosRealizacaoProvas;
-use iEducar\Support\View\SelectOptions;
 
 class AlunoController extends Portabilis_Controller_Page_EditController
 {
