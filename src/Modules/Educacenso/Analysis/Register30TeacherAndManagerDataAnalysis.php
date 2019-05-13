@@ -69,7 +69,7 @@ class Register30TeacherAndManagerDataAnalysis implements AnalysisInterface
         if (empty($data->countFormacaoContinuada)) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verifique se a formação continuada da pessoa {$data->nomePessoa} foi informada.",
-                'path' => '(Servidores > Cadastros > Servidores > Editar > Aba: Dados adicionais > Seção: Curso(s) Superior(es) Concluído(s) > Campo: Outros cursos de formação continuada (Mínimo de 80 horas))',
+                'path' => '(Servidores > Cadastros > Servidores > Editar > Aba: Dados adicionais > Campo: Outros cursos de formação continuada (Mínimo de 80 horas))',
                 'linkPath' => "educar_servidor_cad.php?cod_servidor={$data->codigoPessoa}&ref_cod_instituicao={$data->codigoInstituicao}",
                 'fail' => true
             ];
@@ -77,7 +77,7 @@ class Register30TeacherAndManagerDataAnalysis implements AnalysisInterface
             if ($data->formacaoContinuadaEducacaoNenhum && $data->countFormacaoContinuada > 1) {
                 $this->messages[] = [
                     'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Verificamos que a formação continuada da pessoa {$data->nomePessoa} foi preenchida incorretamente.",
-                    'path' => '(Servidores > Cadastros > Servidores > Editar > Aba: Dados adicionais > Seção: Curso(s) Superior(es) Concluído(s) > Campo: Outros cursos de formação continuada (Mínimo de 80 horas))',
+                    'path' => '(Servidores > Cadastros > Servidores > Editar > Aba: Dados adicionais > Campo: Outros cursos de formação continuada (Mínimo de 80 horas))',
                     'linkPath' => "educar_servidor_cad.php?cod_servidor={$data->codigoPessoa}&ref_cod_instituicao={$data->codigoInstituicao}",
                     'fail' => true
                 ];
