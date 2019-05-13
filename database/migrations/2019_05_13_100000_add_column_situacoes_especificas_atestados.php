@@ -26,7 +26,7 @@ class AddColumnSituacoesEspecificasAtestados extends Migration
     public function down()
     {
         Schema::table('pmieducar.configuracoes_gerais', function (Blueprint $table) {
-            $table->dropColumn('situacoes_especificas_atestados'):
+            $table->dropColumn('situacoes_especificas_atestados');
         });
     }
 }
