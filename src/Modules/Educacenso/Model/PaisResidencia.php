@@ -15,8 +15,6 @@ class PaisResidencia
     const SURINAME = 740;
     const URUGUAI = 858;
     const VENEZUELA = 862;
-    const OUTROS = 999;
-
 
     public static function getDescriptiveValues()
     {
@@ -32,7 +30,6 @@ class PaisResidencia
             self::SURINAME => 'Suriname',
             self::URUGUAI => 'Uruguai',
             self::VENEZUELA => 'Venezuela',
-            self::OUTROS => 'Outros',
         ];
     }
 }

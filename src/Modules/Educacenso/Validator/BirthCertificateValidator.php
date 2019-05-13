@@ -35,7 +35,7 @@ class BirthCertificateValidator implements EducacensoValidator
     /**
      * @return bool
      */
-    private function validateCertificateLength()
+    public function validateCertificateLength()
     {
         return strlen($this->birthCertificate) == 32;
     }
@@ -43,7 +43,7 @@ class BirthCertificateValidator implements EducacensoValidator
     /**
      * @return bool
      */
-    private function validateCertificateDigits()
+    public function validateCertificateDigits()
     {
         $shouldBeNumericDigits = substr($this->birthCertificate, 0, 30);
         $shouldBeNumericOrXDigits = substr($this->birthCertificate, 30, 30);
@@ -54,7 +54,7 @@ class BirthCertificateValidator implements EducacensoValidator
     /**
      * @return bool
      */
-    private function validateCertificateYear(): bool
+    public function validateCertificateYear(): bool
     {
         $certificateYear = $this->certificateYear();
 

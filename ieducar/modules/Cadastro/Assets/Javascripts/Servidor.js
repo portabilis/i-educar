@@ -64,7 +64,7 @@ function validaServidor() {
   var inepServidor = $j('#cod_docente_inep').val();
 
   if (inepServidor.length > 0 && inepServidor.length != 12) {
-    messageUtils.error('O código INEP deve conter 12 dígitos');
+    messageUtils.error('O código INEP deve conter 12 dígitos.');
     return false;
   }
 
@@ -139,6 +139,14 @@ $j('#ref_idesco').on('change', ()=> {
   verificaEscolaridade();
 });
 
+function checkGraduationsTable() {
+  if (escolaridadeSuperior) {
+    $j('#tr_graduations').show();
+  } else {
+    $j('#tr_graduations').hide();
+  }
+}
+
 function verificaCamposObrigatorio() {
   if($j('#ref_idesco').val()) {
     var options = {
@@ -151,9 +159,13 @@ function verificaCamposObrigatorio() {
       success : function(dataResponse) {
         escolaridadeSuperior = dataResponse.escolaridade.escolaridade == '6'
         habilitaCampoPosGraduacao();
+        checkGraduationsTable();
       }
     }
     getResource(options);
+  } else {
+    escolaridadeSuperior = false;
+    checkGraduationsTable();
   }
 }
 
@@ -190,7 +202,7 @@ $j('.tablecadastro >tbody  > tr').each(function(index, row) {
 });
 
 $j(document).ready(function() {
-
+  $j('#tr_graduations_tit td').addClass('formdktd');
   // on click das abas
 
   // DADOS GERAIS
@@ -237,6 +249,7 @@ $j(document).ready(function() {
           return false;
       });
       habilitaCampoPosGraduacao();
+      checkGraduationsTable();
     });
 
   // fix checkboxs
@@ -369,7 +382,7 @@ function validateGraduations() {
   var result = true;
 
   if ($j('input[id^="employee_course_id"]').length > 3) {
-    messageUtils.error('Informe no máximo 3 cursos superiores realizados');
+    messageUtils.error('Informe no máximo 3 cursos superiores realizados.');
     return false;
   }
 
@@ -387,32 +400,32 @@ function validateGraduations() {
         collegeName = $j('input[id="employee_college[' + idNum[1] + ']"]');
 
     if (courseId.val() == '' || courseName.val() == '') {
-      messageUtils.error('O campo: curso é obrigatório', courseName);
+      messageUtils.error('O campo: curso é obrigatório.', courseName);
       result = false;
     }
 
     if (completionYear.val() == '') {
-      messageUtils.error('O campo: Ano de conclusão é obrigatório', completionYear);
+      messageUtils.error('O campo: Ano de conclusão é obrigatório.', completionYear);
       result = false;
     }
 
     if (completionYear.val().length != 4) {
-      messageUtils.error('O campo: Ano de conclusão do curso superior deve conter 4 dígitos', completionYear);
+      messageUtils.error('O campo: Ano de conclusão do curso superior deve conter 4 dígitos.', completionYear);
       result = false;
     }
 
     if (parseInt(completionYear.val()) < 1940) {
-      messageUtils.error('O campo: Ano de conclusão do curso superior deve ser maior que 1940', completionYear);
+      messageUtils.error('O campo: Ano de conclusão do curso superior deve ser maior que 1940.', completionYear);
       result = false;
     }
 
     if (parseInt(completionYear.val()) > (new Date().getFullYear())) {
-      messageUtils.error('O campo: Ano de conclusão do curso superior não deve ser maior que o ano atual', completionYear);
+      messageUtils.error('O campo: Ano de conclusão do curso superior não deve ser maior que o ano atual.', completionYear);
       result = false;
     }
 
     if (collegeId.val() == '' || collegeName.val() == '') {
-      messageUtils.error('O campo: Instituição de Educação Superior é obrigatório', collegeName);
+      messageUtils.error('O campo: Instituição de Educação Superior é obrigatório.', collegeName);
       result = false;
     }
   });

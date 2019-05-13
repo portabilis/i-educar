@@ -8,7 +8,7 @@ use Transporte_Model_Responsavel;
 
 require_once __DIR__ . '/../../../ieducar/modules/Transporte/Model/Responsavel.php';
 
-class Registro60 implements RegistroEducacenso
+class Registro60 implements RegistroEducacenso, ItemOfRegistro30
 {
     public $registro;
     public $inepEscola;
@@ -42,6 +42,7 @@ class Registro60 implements RegistroEducacenso
     public $veiculoTransporteAquaviarioCapacidade5a15;
     public $veiculoTransporteAquaviarioCapacidade15a35;
     public $veiculoTransporteAquaviarioCapacidadeAcima35;
+    public $modalidadeCurso;
 
     /**
      * @var string Campo usado somente na análise
@@ -128,5 +129,20 @@ class Registro60 implements RegistroEducacenso
     {
         return $this->tipoAtendimentoTurma == TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR ||
             $this->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE;
+    }
+
+    public function getCodigoPessoa()
+    {
+        return $this->codigoPessoa;
+    }
+
+    public function getCodigoAluno()
+    {
+        return $this->codigoAluno;
+    }
+
+    public function getCodigoServidor()
+    {
+        return null;
     }
 }

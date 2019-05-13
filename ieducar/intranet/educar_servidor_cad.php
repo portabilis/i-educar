@@ -30,7 +30,9 @@
  */
 
 use App\Models\EmployeeGraduation;
+use App\Models\LegacySchoolingDegree;
 use App\Services\EmployeeGraduationService;
+use iEducar\Modules\Educacenso\Model\Escolaridade;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use iEducar\Modules\ValueObjects\EmployeeGraduationValueObject;
 use iEducar\Support\View\SelectOptions;
@@ -497,9 +499,7 @@ class indice extends clsCadastro
       2 => 'Em andamento'
     );
 
-    $this->campoQuebra();
     $this->addGraduationsTable();
-    $this->campoQuebra();
 
     $scripts = array('/modules/Cadastro/Assets/Javascripts/Servidor.js');
 
@@ -542,7 +542,7 @@ JS;
     $this->carga_horaria = $hour + $min;
     $this->carga_horaria = $hour + $min;
 
-    $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
+    $this->pos_graduacao = '{' . implode(',', array_filter($this->pos_graduacao)) . '}';
 
     $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
 
@@ -629,7 +629,7 @@ JS;
     $this->carga_horaria = $hour + $min;
     $this->carga_horaria = $hour + $min;
 
-    $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
+    $this->pos_graduacao = '{' . implode(',', array_filter($this->pos_graduacao)) . '}';
 
     $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
 
@@ -921,7 +921,7 @@ JS;
 
       $rows = $this->getGraduateTableRows($graduations);
 
-      $this->campoTabelaInicio('graduations', 'Curso(s) Superior(es) Concluído(s)',
+      $this->campoTabelaInicio('graduations', 'Curso(s) superior(es) concluído(s)',
           [
               'Curso',
               'Ano de conclusão',
@@ -1001,6 +1001,10 @@ JS;
         $employeeGraduationService = app(EmployeeGraduationService::class);
 
         $employeeGraduationService->deleteAll($employeeId);
+
+        if (LegacySchoolingDegree::find($this->ref_idesco)->escolaridade != Escolaridade::EDUCACAO_SUPERIOR) {
+            return true;
+        }
 
         foreach($this->employee_course_id as $key => $courseId) {
             if (empty($courseId)) {
