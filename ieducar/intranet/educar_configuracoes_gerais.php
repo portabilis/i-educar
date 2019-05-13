@@ -102,17 +102,17 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->checkbox('permite_relacionamento_posvendas', array(
         'label' => 'Permite relacionamento direto no pós-venda?',
-        'value' => $this->permite_relacionamento_posvendas
+        'value' => $this->permite_relacionamento_posvendas ? 'on' : ''
     ));
 
     $this->inputsHelper()->checkbox('bloquear_cadastro_aluno', array(
         'label' => 'Bloquear o cadastro de novos alunos',
-        'value' => $this->bloquear_cadastro_aluno
+        'value' => $this->bloquear_cadastro_aluno ? 'on' : ''
     ));
 
     $this->inputsHelper()->checkbox('situacoes_especificas_atestados', array(
         'label' => 'Exibir apenas matrículas em situações específicas para os atestados',
-        'value' => $this->bloquear_cadastro_aluno
+        'value' => $this->situacoes_especificas_atestados ? 'on' : ''
     ));
 
     $this->inputsHelper()->text('url_novo_educacao', array(
@@ -290,8 +290,8 @@ class indice extends clsCadastro
 
     $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao, array(
         'permite_relacionamento_posvendas' => $permiteRelacionamentoPosvendas,
-        'bloquear_cadastro_aluno' => $situacoesEspecificasAtestados,
-        'situacoes_especificas_atestados' => $bloquearCadastroAluno,
+        'bloquear_cadastro_aluno' => $bloquearCadastroAluno,
+        'situacoes_especificas_atestados' => $situacoesEspecificasAtestados,
         'url_novo_educacao' => $this->url_novo_educacao,
         'token_novo_educacao' => $this->token_novo_educacao,
         'mostrar_codigo_inep_aluno' => $this->mostrar_codigo_inep_aluno,

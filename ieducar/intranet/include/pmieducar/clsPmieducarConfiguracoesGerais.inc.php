@@ -63,6 +63,8 @@ class clsPmieducarConfiguracoesGerais
   var $twitter_url;
   var $linkedin_url;
   var $ieducar_suspension_message;
+  var $bloquear_cadastro_aluno;
+  var $situacoes_especificas_atestados;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
