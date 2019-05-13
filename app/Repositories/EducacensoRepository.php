@@ -706,6 +706,10 @@ SQL;
 
     public function getEmployeeDataForRecord30($arrayEmployeeId)
     {
+        if (empty($arrayEmployeeId)) {
+            return [];
+        }
+
         $stringPersonId = join(',', $arrayEmployeeId);
         $sql = <<<SQL
             SELECT DISTINCT
@@ -764,6 +768,10 @@ SQL;
 
     public function getStudentDataForRecord30($arrayStudentId)
     {
+        if (empty($arrayStudentId)) {
+            return [];
+        }
+
         $stringStudentId = join(',', $arrayStudentId);
         $sql = <<<SQL
             SELECT DISTINCT
