@@ -215,4 +215,13 @@ class Registro30 implements RegistroEducacenso
         return empty($this->cpf) && empty($this->nis) && empty($this->certidaoNascimento);
     }
 
+    public function getInep()
+    {
+        if ($this->isStudent()) {
+            return $this->inepAluno;
+        }
+
+        return $this->inepServidor;
+    }
+
 }

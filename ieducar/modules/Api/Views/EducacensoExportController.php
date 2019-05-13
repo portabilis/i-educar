@@ -3,6 +3,7 @@
 use App\Models\Educacenso\Registro00;
 use App\Models\Educacenso\Registro10;
 use App\Models\Educacenso\Registro20;
+use App\Models\Educacenso\Registro30;
 use App\Models\Educacenso\Registro40;
 use App\Models\Educacenso\Registro50;
 use App\Models\Educacenso\Registro60;
@@ -11,6 +12,7 @@ use iEducar\Modules\Educacenso\ArrayToCenso;
 use iEducar\Modules\Educacenso\Data\Registro00 as Registro00Data;
 use iEducar\Modules\Educacenso\Data\Registro10 as Registro10Data;
 use iEducar\Modules\Educacenso\Data\Registro20 as Registro20Data;
+use iEducar\Modules\Educacenso\Data\Registro30 as Registro30Data;
 use iEducar\Modules\Educacenso\Data\Registro40 as Registro40Data;
 use iEducar\Modules\Educacenso\Data\Registro50 as Registro50Data;
 use iEducar\Modules\Educacenso\Data\Registro60 as Registro60Data;
@@ -24,6 +26,8 @@ use iEducar\Modules\Educacenso\ExportRule\CriterioAcessoGestor;
 use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
 use iEducar\Modules\Educacenso\ExportRule\PoderPublicoResponsavelTransporte;
 use iEducar\Modules\Educacenso\ExportRule\RecebeEscolarizacaoOutroEspaco;
+use iEducar\Modules\Educacenso\ExportRule\RegrasEspecificasRegistro30;
+use iEducar\Modules\Educacenso\ExportRule\RegrasGeraisRegistro30;
 use iEducar\Modules\Educacenso\ExportRule\Regulamentacao;
 use iEducar\Modules\Educacenso\ExportRule\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\ExportRule\TiposAee;
@@ -371,32 +375,103 @@ class EducacensoExportController extends ApiCoreController
 
         /** @var Registro60[] $alunos */
         $alunos = $registro60->getExportFormatData($escolaId, $ano);
-    }
 
-    protected function exportaDadosRegistro40($escolaId)
-    {
-        $educacensoRepository = new EducacensoRepository();
-        $registro40Model = new Registro40();
-        $registro40 = new Registro40Data($educacensoRepository, $registro40Model);
+        $registro30Data = new Registro30Data($educacensoRepository, new Registro30());
+        $registro30Data->setArrayDataByType($gestores, Registro30::TIPO_MANAGER);
+        $registro30Data->setArrayDataByType($docentes, Registro30::TIPO_TEACHER);
+        $registro30Data->setArrayDataByType($alunos, Registro30::TIPO_STUDENT);
 
-        /** @var Registro40[] $gestores */
-        $gestores = $registro40->getExportFormatData($escolaId);
-
+        $pessoas = $registro30Data->getExportFormatData($escolaId);
         $stringCenso = '';
-        foreach ($gestores as $gestor) {
-            $gestor = CargoGestor::handle($gestor);
-            /** @var Registro40 $gestor */
-            $gestor = CriterioAcessoGestor::handle($gestor);
+
+        foreach ($pessoas as $pessoa) {
+            $pessoa = RegrasGeraisRegistro30::handle($pessoa);
+            /** @var Registro30 $pessoa */
+            $pessoa = RegrasEspecificasRegistro30::handle($pessoa);
 
             $data = [
-                $gestor->registro,
-                $gestor->inepEscola,
-                $gestor->codigoPessoa,
-                $gestor->inepGestor,
-                $gestor->cargo,
-                $gestor->criterioAcesso,
-                $gestor->especificacaoCriterioAcesso,
-                $gestor->tipoVinculo
+                $pessoa->registro,
+                $pessoa->inepEscola,
+                $pessoa->codigoPessoa,
+                $pessoa->cpf,
+                $pessoa->getInep(),
+                $pessoa->nomePessoa,
+                $pessoa->dataNascimento,
+                $pessoa->filiacao,
+                $pessoa->filiacao1,
+                $pessoa->filiacao2,
+                $pessoa->sexo,
+                $pessoa->raca,
+                $pessoa->nacionalidade,
+                $pessoa->paisNacionalidade,
+                $pessoa->municipioNascimento,
+                $pessoa->deficiencia,
+                $pessoa->deficienciaCegueira,
+                $pessoa->deficienciaBaixaVisao,
+                $pessoa->deficienciaSurdez,
+                $pessoa->deficienciaAuditiva,
+                $pessoa->deficienciaSurdoCegueira,
+                $pessoa->deficienciaFisica,
+                $pessoa->deficienciaIntelectual,
+                $pessoa->deficienciaMultipla,
+                $pessoa->deficienciaAutismo,
+                $pessoa->deficienciaAltasHabilidades,
+                $pessoa->recursoLedor,
+                $pessoa->recursoTranscricao,
+                $pessoa->recursoGuia,
+                $pessoa->recursoTradutor,
+                $pessoa->recursoLeituraLabial,
+                $pessoa->recursoProvaAmpliada,
+                $pessoa->recursoProvaSuperampliada,
+                $pessoa->recursoAudio,
+                $pessoa->recursoLinguaPortuguesaSegundaLingua,
+                $pessoa->recursoVideoLibras,
+                $pessoa->recursoBraile,
+                $pessoa->recursoNenhum,
+                $pessoa->nis,
+                $pessoa->certidaoNascimento,
+                $pessoa->justificativaFaltaDocumentacao,
+                $pessoa->paisResidencia,
+                $pessoa->cep,
+                $pessoa->municipioResidencia,
+                $pessoa->localizacaoResidencia,
+                $pessoa->localizacaoDiferenciada,
+                $pessoa->escolaridade,
+                $pessoa->tipoEnsinoMedioCursado,
+                $pessoa->formacaoCurso[0],
+                $pessoa->formacaoAnoConclusao[0],
+                $pessoa->formacaoInstituicao[0],
+                $pessoa->formacaoCurso[1],
+                $pessoa->formacaoAnoConclusao[1],
+                $pessoa->formacaoInstituicao[1],
+                $pessoa->formacaoCurso[2],
+                $pessoa->formacaoAnoConclusao[2],
+                $pessoa->formacaoInstituicao[2],
+                $pessoa->formacaoComponenteCurricular[0],
+                $pessoa->formacaoComponenteCurricular[1],
+                $pessoa->formacaoComponenteCurricular[2],
+                $pessoa->posGraduacaoEspecializacao,
+                $pessoa->posGraduacaoMestrado,
+                $pessoa->posGraduacaoDoutorado,
+                $pessoa->posGraduacaoNaoPossui,
+                $pessoa->formacaoContinuadaCreche,
+                $pessoa->formacaoContinuadaPreEscola,
+                $pessoa->formacaoContinuadaAnosIniciaisFundamental,
+                $pessoa->formacaoContinuadaAnosFinaisFundamental,
+                $pessoa->formacaoContinuadaEnsinoMedio,
+                $pessoa->formacaoContinuadaEducacaoJovensAdultos,
+                $pessoa->formacaoContinuadaEducacaoEspecial,
+                $pessoa->formacaoContinuadaEducacaoIndigena,
+                $pessoa->formacaoContinuadaEducacaoCampo,
+                $pessoa->formacaoContinuadaEducacaoAmbiental,
+                $pessoa->formacaoContinuadaEducacaoDireitosHumanos,
+                $pessoa->formacaoContinuadaGeneroDiversidadeSexual,
+                $pessoa->formacaoContinuadaDireitosCriancaAdolescente,
+                $pessoa->formacaoContinuadaEducacaoRelacoesEticoRaciais,
+                $pessoa->formacaoContinuadaEducacaoGestaoEscolar,
+                $pessoa->formacaoContinuadaEducacaoOutros,
+                $pessoa->formacaoContinuadaEducacaoNenhum,
+                $pessoa->email,
             ];
 
             $stringCenso .= ArrayToCenso::format($data) . PHP_EOL;
