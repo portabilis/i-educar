@@ -12,9 +12,9 @@ class DropTriggersToReleases extends Migration
      */
     public function up()
     {
-        DB::unprepared('DROP TRIGGER modules.impede_duplicacao_falta_aluno ON modules.falta_aluno;');
-        DB::unprepared('DROP TRIGGER modules.impede_duplicacao_nota_aluno ON modules.nota_aluno;');
-        DB::unprepared('DROP TRIGGER modules.impede_duplicacao_parecer_aluno ON modules.parecer_aluno;');
+        DB::unprepared('DROP TRIGGER IF EXISTS impede_duplicacao_falta_aluno ON modules.falta_aluno;');
+        DB::unprepared('DROP TRIGGER IF EXISTS impede_duplicacao_nota_aluno ON modules.nota_aluno;');
+        DB::unprepared('DROP TRIGGER IF EXISTS impede_duplicacao_parecer_aluno ON modules.parecer_aluno;');
     }
 
     /**
@@ -27,7 +27,7 @@ class DropTriggersToReleases extends Migration
         DB::unprepared(
             '
                 create
-                    trigger modules.impede_duplicacao_nota_aluno before insert
+                    trigger impede_duplicacao_nota_aluno before insert
                         or update
                             on
                             modules.nota_aluno for each row execute procedure modules.impede_duplicacao_nota_aluno();
@@ -36,7 +36,7 @@ class DropTriggersToReleases extends Migration
         DB::unprepared(
             '
                 create
-                    trigger modules.impede_duplicacao_falta_aluno before insert
+                    trigger impede_duplicacao_falta_aluno before insert
                         or update
                             on
                             modules.falta_aluno for each row execute procedure modules.impede_duplicacao_falta_aluno();
@@ -45,7 +45,7 @@ class DropTriggersToReleases extends Migration
         DB::unprepared(
             '
                 create
-                    trigger modules.impede_duplicacao_parecer_aluno before insert
+                    trigger impede_duplicacao_parecer_aluno before insert
                         or update
                             on
                             parecer_aluno for each row execute procedure modules.impede_duplicacao_parecer_aluno();
