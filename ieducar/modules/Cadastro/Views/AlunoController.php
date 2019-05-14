@@ -1,5 +1,9 @@
 <?php
 
+use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
+use iEducar\Modules\Educacenso\Model\VeiculoTransporteEscolar;
+use iEducar\Support\View\SelectOptions;
+
 require_once 'include/clsCadastro.inc.php';
 require_once "include/clsBanco.inc.php";
 require_once "include/pmieducar/clsPmieducarInstituicao.inc.php";
@@ -819,26 +823,16 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->select('tipo_transporte', $options);
 
-        $veiculos = array(null => 'Nenhum',
-            1 => Portabilis_String_Utils::toLatin1('Rodoviário - Vans/Kombis'),
-            2 => Portabilis_String_Utils::toLatin1('Rodoviário - Microônibus'),
-            3 => Portabilis_String_Utils::toLatin1('Rodoviário - Ônibus'),
-            4 => Portabilis_String_Utils::toLatin1('Rodoviário - Bicicleta'),
-            5 => Portabilis_String_Utils::toLatin1('Rodoviário - Tração animal'),
-            6 => Portabilis_String_Utils::toLatin1('Rodoviário - Outro'),
-            7 => Portabilis_String_Utils::toLatin1('Aquaviário/Embarcação - Capacidade de até 5 alunos'),
-            8 => Portabilis_String_Utils::toLatin1('Aquaviário/Embarcação - Capacidade entre 5 a 15 alunos'),
-            9 => Portabilis_String_Utils::toLatin1('Aquaviário/Embarcação - Capacidade entre 15 a 35 alunos'),
-            10 => Portabilis_String_Utils::toLatin1('Aquaviário/Embarcação - Capacidade acima de 35 alunos'),
-            11 => Portabilis_String_Utils::toLatin1('Ferroviário - Trem/Metrô'));
-
-        $options = array(
-            'label' => 'Ve&iacute;culo utilizado',
-            'resources' => $veiculos,
-            'required' => false
-        );
-
-        $this->inputsHelper()->select('veiculo_transporte_escolar', $options);
+        $veiculos = VeiculoTransporteEscolar::getDescriptiveValues();
+        $helperOptions = ['objectName' => 'veiculo_transporte_escolar'];
+        $options = [
+            'label' => 'Veículo utilizado',
+            'required' => true,
+            'options' => [
+                'all_values' => $veiculos
+            ]
+        ];
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
         if ($this->getClsPermissoes()->permissao_cadastra(21240, $this->getOption('id_usuario'), 7)) {
             // Cria lista de rotas
@@ -1262,9 +1256,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->multipleSearchCustom('_', $options, $helperOptions);
 
         $selectOptions = array(
-            3 => 'Não recebe',
-            1 => 'Em hospital',
-            2 => 'Em domicílio'
+            1 => 'Não recebe escolarização fora da escola',
+            2 => 'Em hospital',
+            3 => 'Em domicílio',
         );
 
         $options = array(

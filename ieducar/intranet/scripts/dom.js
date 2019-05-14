@@ -189,80 +189,20 @@ function deleteCookie( name, path, domain )
 /*
 	CONTROLE DE JANELAS
 */
-function centralizaExpansivel(expansivel)
-{
-	screenWidth = 0;
-	screenHeight = 0;
-	for( i = 0; i<DOM_divs.length;i++)
-	{
-		expansivel = DOM_divs[i];
-		largura = expansivel.offsetWidth;
-		altura = expansivel.offsetHeight;
-		if( typeof window.innerHeight == 'number' )
-		{
-			screenHeight = window.innerHeight;
-			screenWidth = window.innerWidth;
-		}
-		else if( typeof document.body.offsetHeight == 'number' )
-		{
-			screenHeight = document.body.offsetHeight;
-			screenWidth = document.body.offsetWidth;
-		}
-		else if( document.documentElement && typeof document.documentElement.clientWidth == 'number' )
-		{
-			screenHeight = document.documentElement.clientHeight;
-			screenWidth = document.documentElement.clientWidth;
-		}
-		else
-		{
-			alert( "Este navegador nao suporta os recursos desta pagina.\nPor favor contacte o CTIMA (9296) para que possamos adaptar o sistema para a sua configuracao." );
-		}
+function centralizaExpansivel() {
+  screenWidth = 0;
+  screenHeight = 0;
 
+  for (let i = 0; i < DOM_divs.length; i++) {
+    let expansivel = DOM_divs[i];
+    let largura = expansivel.offsetWidth;
+    let altura = expansivel.offsetHeight;
 
-		if( typeof window.pageXOffset == 'numeric' )
-		{
-			scrollY = window.pageYOffset;
-			scrollX = window.pageXOffset;
-		}
-		else
-		{
-			scrollY = document.body.scrollTop;
-			scrollX = document.body.scrollLeft;
-		}
-
-		expansivel.style.top = Math.round( ( screenHeight / 2 ) - ( altura / 2 ) ) + scrollY;
-		expansivel.style.left = Math.round( ( screenWidth / 2 ) - ( largura / 2 ) ) + scrollX;
-	}
+    expansivel.style.position = 'fixed';
+    expansivel.style.top = 'calc(50% - ' + (altura / 2) + 'px)';
+    expansivel.style.left = 'calc(50% - ' + (largura / 2) + 'px)';
+  }
 }
-
-/*
-expansivel = document.getElementById( "DOM_expansivel" );
-
-	expansivel.style.width = largura + 'px';
-	expansivel.style.height = altura + 'px';
-
-	centralizaExpansivel();
-
-	// fffee0
-	//expansivel.innerHTML = '<table border="1" cellpadding="2" cellspacing="0" width="' + largura + '" height="' + altura + '" style="border-style: solid; border-color: #000000;border-width: 2px;background-color: #' + bgColor + ';"><tr><td align="center" style="background-color: #' + bgColor + ';">' + conteudo + '</td></tr></table>';
-	//expansivel.innerHTML = conteudo;
-	if( typeof arguments[3] == "string" )
-	{
-		titulo = arguments[3];
-	}
-	else
-	{
-		titulo = ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ';
-	}
-	conteudoMoldurado = '<table border="0" cellpadding="0" cellspacing="0" width="' + largura + '" height="' + altura + '"><tr><td width="9" height="44" valign="top"><img src="imagens/moldura/top_01.gif" border="0" width="9" height="44"></td><td background="imagens/moldura/top_04.gif" height="44" valign="top"><table border="0" cellpadding="0" cellspacing="0" height="44"><tr><td background="imagens/moldura/top_02.gif" height="44">' + titulo + '</td><td width="44" height="44" valign="top"><img src="imagens/moldura/top_03.gif" border="0" width="44" height="44"></td></tr></table></td><td background="imagens/moldura/top_04.gif" height="44" align="right"><a href="javascript: fechaExpansivel();"><img src="imagens/moldura/close.png" border="0" width="17" height="17"></a></td><td width="9" height="44" valign="top"><img src="imagens/moldura/top_05.gif" border="0" width="9" height="44"></td></tr><tr><td background="imagens/moldura/meio_esq.jpg" width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2">';
-	conteudoMoldurado += conteudo;
-	conteudoMoldurado += '</td><td background="imagens/moldura/meio_dir.jpg" width="9">&nbsp;</td></tr><tr><td width="9" height="20" valign="top"><img src="imagens/moldura/bottom_01.jpg" width="9" height="20"></td><td colspan="2" background="imagens/moldura/bottom_02.jpg" height="20">&nbsp;</td><td width="9" height="20" valign="top"><img src="imagens/moldura/bottom_03.jpg" width="9" height="20"></td></tr></table>';
-	expansivel.innerHTML = conteudoMoldurado;
-
-	expansivel.style.display = 'block';
-	expansivel.style.width = largura + 'px';
-	expansivel.style.height = altura + 'px';
-	*/
 
  function insertAfter( node, referenceNode)
  {
@@ -304,12 +244,11 @@ function showExpansivel( largura, altura, conteudo )
 	{
 		titulo = ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ';
 	}
-	var cliqueFecha = '<a href="javascript:void(0);" id="linkFechar" onclick="fechaExpansivel( \'div_dinamico_'+exp_id+'\');" ><img src="imagens/moldura/close.png" border="0" width="17" height="17"></a>';
+	var cliqueFecha = '<a href="javascript:void(0);" id="linkFechar" onclick="fechaExpansivel( \'div_dinamico_'+exp_id+'\');" ><img src="/intranet/imagens/moldura/close.png" border="0" width="17" height="17"></a>';
 	if (typeof arguments[3] == "number")
 	{
 		cliqueFecha = '';
 	}
-//	conteudoMoldurado = '<table border="0" id="tabela_conteudo" cellpadding="0" cellspacing="0" width="100%"><tr><td width="9" height="44" valign="top"><img src="imagens/moldura/top_01.gif" border="0" width="9" height="44"></td><td background="imagens/moldura/top_04.gif" height="44" valign="top"><table border="0" cellpadding="0" cellspacing="0" height="44"><tr><td background="imagens/moldura/top_02.gif" height="44">' + titulo + '</td><td width="44" height="44" valign="top"><img src="imagens/moldura/top_03.gif" border="0" width="44" height="44"></td></tr></table></td><td background="imagens/moldura/top_04.gif" height="44" align="right"><a href="javascript:void(0);" id="linkFechar" onclick="fechaExpansivel( \'div_dinamico_'+exp_id+'\');" ><img src="imagens/moldura/close.png" border="0" width="17" height="17"></a></td><td width="9" height="44" valign="top"><img src="imagens/moldura/top_05.gif" border="0" width="9" height="44"></td></tr><tr><td background="imagens/moldura/meio_esq.jpg" width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2"><div id="expansivel_conteudo" style="overflow:auto;">';
 	conteudoMoldurado = '<table border="0" id="tabela_conteudo" cellpadding="0" cellspacing="0" width="100%"><tr><td width="9" height="44" valign="top"></td><td id="modal-title" height="44" valign="top">'+ titulo + '</td><td id="modal-close" '+cliqueFecha+'</td><td width="9" height="44" valign="top"></td></tr><tr><td  width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2"><div id="expansivel_conteudo" class="modal-domjs-conteudo" style="overflow:hidden;">';
 	conteudoMoldurado += conteudo;
 	conteudoMoldurado += '</div></td><td width="9">&nbsp;</td></tr><tr><td width="9" height="20" valign="top"></td><td colspan="2"  height="20">&nbsp;</td><td width="9" height="20" valign="top"></td></tr></table>';
@@ -328,8 +267,6 @@ function showExpansivel( largura, altura, conteudo )
 	{
 		document.getElementById("expansivel_conteudo").style.height = screenHeight - 100;
 		expansivel.style.height =  document.getElementById("tabela_conteudo").offsetHeight;
-		//alert(document.getElementById("tabela_conteudo").offsetHeight);
-
 	}
 
 	expansivel.style.display = 'block';
@@ -343,10 +280,8 @@ function showExpansivel( largura, altura, conteudo )
 	{
 		expansivel.style.width = expansivel.offsetWidth;
 	}
-
-
-	centralizaExpansivel(expansivel);
-	document.onscroll = function() { centralizaExpansivel(); };
+	
+	centralizaExpansivel();
 }
 
 function showExpansivelIframe( largura, altura, URL, fecha )
@@ -404,7 +339,7 @@ function showExpansivelImprimir( largura, altura, arquivo, array,  titulo )
 	}
 
 
-	conteudoMoldurado = '<table border="0" id="tabela_conteudo" cellpadding="0" cellspacing="0" ><tr><td width="9" height="44" valign="top"></td><td height="44" valign="top">' + titulo + '</td><td height="44" align="right"><a href="#" id="linkFechar" onclick="fechaExpansivel( \'div_dinamico_'+exp_id+'\');" ><img src="imagens/moldura/close.png" border="0" width="17" height="17"></a></td><td width="9" height="44" valign="top"></td></tr><tr><td width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2"><div id="expansivel_conteudo" class="modal-domjs-conteudo" style="overflow:auto;"><div id="LoadImprimir"><img style="margin-bottom: -8px;" src=\'imagens/carregando1.gif\'>Carregando...</div>';
+	conteudoMoldurado = '<table border="0" id="tabela_conteudo" cellpadding="0" cellspacing="0" ><tr><td width="9" height="44" valign="top"></td><td height="44" valign="top">' + titulo + '</td><td height="44" align="right"><a href="#" id="linkFechar" onclick="fechaExpansivel( \'div_dinamico_'+exp_id+'\');" ><img src="/intranet/imagens/moldura/close.png" border="0" width="17" height="17"></a></td><td width="9" height="44" valign="top"></td></tr><tr><td width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2"><div id="expansivel_conteudo" class="modal-domjs-conteudo" style="overflow:auto;"><div id="LoadImprimir"><img style="margin-bottom: -8px;" src=\'imagens/carregando1.gif\'>Carregando...</div>';
 	conteudoMoldurado += '<iframe name=\'miolo_' + exp_id + '\' id=\'miolo_' + exp_id + '\' frameborder=\'0\' height=\'100%\' width=\'100%\' marginheight=\'0\' marginwidth=\'0\' src=\''+arquivo+url+'\'></iframe>';
 	conteudoMoldurado += '</div></td><td width="9">&nbsp;</td></tr><tr><td width="9" height="20" valign="top"></td><td colspan="2" height="20">&nbsp;</td><td width="9" height="20" valign="top"></td></tr></table>';
 	expansivel.innerHTML = conteudoMoldurado;

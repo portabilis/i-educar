@@ -16,6 +16,8 @@ class LegacyUserType extends EloquentBaseModel implements Transformable
 {
     use TransformableTrait;
 
+    const LEVEL_ADMIN = 1;
+
     /**
      * @var string
      */

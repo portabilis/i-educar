@@ -67,8 +67,6 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
     /**
      * Título a ser utilizado na barra de título.
      *
-     * @see clsBase::MakeHeadHtml()
-     *
      * @var string
      */
     protected $_titulo = null;
