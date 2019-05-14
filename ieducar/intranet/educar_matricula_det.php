@@ -162,7 +162,6 @@ class indice extends clsDetalhe
 
         $existeTurma = false;
         $existeTurmaMulti = false;
-        $existeTurmaUnificada = false;
         $existeTurmaTurnoIntegral = false;
         $existeAtendimentoEspecializado = false;
         $nomesTurmas = [];
@@ -177,10 +176,6 @@ class indice extends clsDetalhe
 
             if (in_array($turma['etapa_educacenso'], App_Model_Educacenso::etapas_multisseriadas())) {
                 $existeTurmaMulti = true;
-            }
-
-            if (in_array($turma['etapa_educacenso'], App_Model_Educacenso::etapasEnsinoUnificadas())) {
-                $existeTurmaUnificada = true;
             }
 
             if ($turma['turma_turno_id'] == clsPmieducarTurma::TURNO_INTEGRAL) {
@@ -341,11 +336,6 @@ class indice extends clsDetalhe
             if ($existeTurmaTurnoIntegral) {
                 $this->array_botao[] = 'Turno';
                 $this->array_botao_url_script[] = "go(\"educar_matricula_turma_turno_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
-            }
-
-            if ($existeTurmaUnificada) {
-                $this->array_botao[] = 'Etapa da turma unificada';
-                $this->array_botao_url_script[] = "go(\"educar_matricula_turma_unificada_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
             }
 
             if ($registro['aprovado'] != 4 && $registro['aprovado'] != 6) {
