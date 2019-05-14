@@ -3,6 +3,9 @@
 use App\District;
 use App\Neighborhood;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
+
+/** @var Factory $factory */
 
 $factory->define(Neighborhood::class, function (Faker $faker) {
     return [

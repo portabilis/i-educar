@@ -4,6 +4,9 @@ use App\User;
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
+
+/** @var Factory $factory */
 
 /** @var Factory $factory */
 $factory->define(User::class, function (Faker $faker) {

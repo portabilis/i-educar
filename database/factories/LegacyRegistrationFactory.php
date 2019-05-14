@@ -3,6 +3,9 @@
 use App\Models\LegacyRegistration;
 use App\Models\LegacyStudent;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
+
+/** @var Factory $factory */
 
 $factory->define(LegacyRegistration::class, function (Faker $faker) {
     return [
