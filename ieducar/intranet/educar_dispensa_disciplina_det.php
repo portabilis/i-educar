@@ -179,13 +179,9 @@ class indice extends clsDetalhe
     $this->url_cancelar = 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
     $this->largura      = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Dispensa de componentes curriculares"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Dispensa de componentes curriculares', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
 }
 

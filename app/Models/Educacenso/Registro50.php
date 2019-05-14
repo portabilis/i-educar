@@ -4,7 +4,7 @@ namespace App\Models\Educacenso;
 
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 
-class Registro50 implements RegistroEducacenso
+class Registro50 implements RegistroEducacenso, ItemOfRegistro30
 {
     /**
      * @var string
@@ -127,5 +127,20 @@ class Registro50 implements RegistroEducacenso
     {
         return $this->funcaoDocente == FuncaoExercida::DOCENTE_TITULAR_EAD ||
             $this->funcaoDocente == FuncaoExercida::DOCENTE_TUTOR_EAD;
+    }
+
+    public function getCodigoPessoa()
+    {
+        return $this->codigoPessoa;
+    }
+
+    public function getCodigoAluno()
+    {
+        return null;
+    }
+
+    public function getCodigoServidor()
+    {
+        return $this->codigoPessoa;
     }
 }

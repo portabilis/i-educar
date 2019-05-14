@@ -84,7 +84,7 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $lista_busca = array(
             "Biblioteca",
@@ -188,7 +188,7 @@ class indice extends clsListagem
                 $this->addLinhas($lista_busca);
             }
         }
-        
+
         $this->addPaginador2( "educar_biblioteca_lst.php", $total, $_GET, $this->nome, $this->limite );
         $obj_permissoes = new clsPermissoes();
         if( $obj_permissoes->permissao_cadastra( 591, $this->pessoa_logada, 3 ) )
@@ -199,13 +199,9 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Listagem de bibliotecas"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Listagem de bibliotecas', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 // cria uma extensao da classe base

@@ -21,6 +21,7 @@ $factory->define(LegacySchoolClass::class, function (Faker $faker) {
         'ref_ref_cod_serie' => $schoolGrade->grade_id,
         'ref_cod_curso' => $schoolGrade->grade->course_id,
         'dias_semana' => [2, 3, 4, 5, 6],
+        'ano' => date('Y'),
     ];
 });
 

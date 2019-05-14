@@ -34,6 +34,7 @@ class MenuController extends ApiCoreController
             where true 
             and u.cod_usuario = '{$usuario}'
             and mst.visualiza = 1
+            and m.link is not null
             and m.process = $1
             order by m.title
             limit 15;
@@ -58,6 +59,7 @@ class MenuController extends ApiCoreController
             where true 
             and u.cod_usuario = '{$usuario}'
             and mst.visualiza = 1
+            and m.link is not null
             and (
                 m.title ilike '%'|| $1 ||'%'
                 or m.description ilike '%'|| $1 ||'%'
