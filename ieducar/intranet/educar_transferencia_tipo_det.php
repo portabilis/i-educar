@@ -65,7 +65,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Transferencia Tipo - Detalhe";
-        
+
 
         $this->cod_transferencia_tipo=$_GET["cod_transferencia_tipo"];
 
@@ -77,7 +77,7 @@ class indice extends clsDetalhe
             throw new HttpResponseException(
                 new RedirectResponse('educar_transferencia_tipo_lst.php')
             );
-        }           
+        }
         if (class_exists("clsPmieducarInstituicao"))
         {
             $obj_instituicao = new clsPmieducarInstituicao($registro["ref_cod_instituicao"]);
@@ -116,13 +116,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_transferencia_tipo_lst.php";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""                                  => "Detalhe do tipo de transfer&ecirc;ncia"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhe do tipo de transferência', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

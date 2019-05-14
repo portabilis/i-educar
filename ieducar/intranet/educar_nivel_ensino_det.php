@@ -61,7 +61,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "N&iacute;vel Ensino - Detalhe";
-        
+
 
         $this->cod_nivel_ensino=$_GET["cod_nivel_ensino"];
 
@@ -110,13 +110,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_nivel_ensino_lst.php";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "Detalhe do n&iacute;vel de ensino"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());                    
+        $this->breadcrumb('Detalhe do nível de ensino', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

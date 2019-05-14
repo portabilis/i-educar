@@ -74,13 +74,9 @@ class indice extends clsCadastro
 
     $nomeTela = $this->segunda_fase ? '2ª fase - Situação final' : '1ª fase - Matrícula inicial';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_educacenso_index.php"       => "Educacenso",
-         ""                                  => $nomeTela
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb($nomeTela, [
+        url('intranet/educar_educacenso_index.php') => 'Educacenso',
+    ]);
 
     $exportacao = $_POST["exportacao"];
 

@@ -98,13 +98,9 @@ class indice extends clsCadastro
 
     private function montaLocalizacao()
     {
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(array(
-            $_SERVER['SERVER_NAME'] . "/intranet" => "Início",
-            "educar_index.php" => "Escola",
-            "" => "Etapa da turma unificada",
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Etapa da turma unificada', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     private function validaPermissao()

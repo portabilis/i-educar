@@ -83,7 +83,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->ref_pessoa = $_POST["ref_pessoa"];
         if( $_GET["ref_pessoa"] )
@@ -131,13 +131,11 @@ class indice extends clsCadastro
         $this->nome_url_cancelar = "Cancelar";
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_configuracoes_index.php"    => "Configurações",
-             ""                                  => "{$nomeMenu} usu&aacute;rio"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' usuário', [
+            url('intranet/educar_configuracoes_index.php') => 'Configurações',
+        ]);
+
         return $retorno;
     }
 
@@ -409,7 +407,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         if ($this->email && !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
           $this->mensagem = "Formato do e-mail inválido.";
@@ -478,7 +476,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         if ($this->email && !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
           $this->mensagem = "Formato do e-mail inválido.";
@@ -589,7 +587,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
     $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa);
         $detalhe = $obj_funcionario->detalhe();

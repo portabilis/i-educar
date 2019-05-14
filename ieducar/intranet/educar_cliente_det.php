@@ -24,7 +24,7 @@
  *  02111-1307, USA.
  *
  */
- 
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -61,13 +61,13 @@ class indice extends clsDetalhe
     var $ativo;
     var $suspenso;
     var $pessoa_logada;
-    
+
     var $ref_cod_biblioteca;
 
     function Gerar()
     {
         $this->titulo = "Cliente - Detalhe";
-        
+
 
         $this->cod_cliente          = $_GET["cod_cliente"];
         $this->ref_cod_biblioteca   = $_GET["ref_cod_biblioteca"];
@@ -110,7 +110,7 @@ class indice extends clsDetalhe
                     }
                     else
                         $this->addDetalhe( array( "Status", "Regular" ) );
-                        
+
                     $tipo_cliente = $obj_banco->CampoUnico("SELECT nm_tipo FROM pmieducar.cliente_tipo WHERE ref_cod_biblioteca IN (SELECT ref_cod_biblioteca FROM pmieducar.biblioteca_usuario WHERE ref_cod_usuario = '$this->pessoa_logada') AND cod_cliente_tipo = (SELECT ref_cod_cliente_tipo FROM pmieducar.cliente_tipo_cliente WHERE ref_cod_cliente = '$this->cod_cliente'  AND ref_cod_biblioteca = '$this->ref_cod_biblioteca')");
                     if(is_string($tipo_cliente))
                     {
@@ -141,13 +141,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_cliente_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Detalhe do cliente"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhe do cliente', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 

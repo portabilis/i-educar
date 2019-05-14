@@ -61,7 +61,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Aluno Beneficio - Detalhe";
-        
+
 
         $this->cod_aluno_beneficio=$_GET["cod_aluno_beneficio"];
 
@@ -98,13 +98,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_aluno_beneficio_lst.php";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""                                  => "Detalhe do benef&iacute;cio de alunos"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());            
+        $this->breadcrumb('Detalhe do benefício de alunos', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

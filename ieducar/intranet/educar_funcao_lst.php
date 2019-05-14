@@ -89,7 +89,7 @@ class indice extends clsListagem
             $this->$var = ( $val === "" ) ? null: $val;
 
 
-        
+
 
         $lista_busca = array(
             "Nome Func&atilde;o",
@@ -193,13 +193,9 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Funções do servidor"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Funções do servidor', [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
     }
 }
 // cria uma extensao da classe base

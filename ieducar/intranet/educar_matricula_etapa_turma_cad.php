@@ -32,7 +32,7 @@ class indice extends clsCadastro
 
     public function Inicializar()
     {
-        
+
 
         $this->cod_matricula = $_GET["ref_cod_matricula"];
         $this->ref_cod_aluno = $_GET["ref_cod_aluno"];
@@ -80,7 +80,7 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        
+
 
         $this->validaPermissao();
         $this->validaParametros();
@@ -102,13 +102,9 @@ class indice extends clsCadastro
 
     private function montaLocalizacao()
     {
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(array(
-            $_SERVER['SERVER_NAME'] . "/intranet" => "Início",
-            "educar_index.php" => "Escola",
-            "" => "Etapa do aluno",
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Etapa do aluno', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     private function validaPermissao()

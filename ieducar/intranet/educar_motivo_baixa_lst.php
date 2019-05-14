@@ -86,19 +86,19 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $this->addCabecalhos( array(
             "Motivo Baixa",
             "Biblioteca"
         ) );
 
-        
+
         $get_escola = true;
         $get_biblioteca = true;
         $get_cabecalho = "lista_busca";
         include("include/pmieducar/educar_campo_lista.php");
-        
+
         // outros Filtros
         $this->campoTexto( "nm_motivo_baixa", "Motivo Baixa", $this->nm_motivo_baixa, 30, 255, false );
 
@@ -111,7 +111,7 @@ class indice extends clsListagem
             $obj_bib_user = new clsPmieducarBibliotecaUsuario();
             $this->ref_cod_biblioteca = $obj_bib_user->listaBibliotecas($this->pessoa_logada);
         }
-        
+
         $obj_motivo_baixa = new clsPmieducarMotivoBaixa();
         $obj_motivo_baixa->setOrderby( "nm_motivo_baixa ASC" );
         $obj_motivo_baixa->setLimite( $this->limite, $this->offset );
@@ -156,13 +156,9 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Listagem de motivos de baixa"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Listagem de motivos de baixa', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 // cria uma extensao da classe base
