@@ -18,9 +18,6 @@ class clsCadastro extends clsCampos
      */
     public $pessoa_logada;
     public $__nome = 'formcadastro';
-    public $banner;
-    public $bannerLateral;
-    public $titulo_barra;
     public $target = '_self';
     public $largura;
     public $tipoacao;
@@ -60,23 +57,16 @@ class clsCadastro extends clsCampos
     public $onSubmit = 'acao()';
     public $form_enctype;
 
+    /**
+     * @deprecated
+     */
     public function addBanner(
         $strBannerUrl = '',
         $strBannerLateralUrl = '',
         $strBannerTitulo = '',
         $boolFechaBanner = true
-    )
-    {
-        if ($strBannerUrl != '') {
-            $this->banner = $strBannerUrl;
-        }
-        if ($strBannerLateralUrl != '') {
-            $this->bannerLateral = $strBannerLateralUrl;
-        }
-        if ($strBannerTitulo != '') {
-            $this->titulo_barra = $strBannerTitulo;
-        }
-        $this->bannerClose = $boolFechaBanner;
+    ) {
+        // Método deixado para compatibilidade
     }
 
     public function __construct()
@@ -162,41 +152,50 @@ class clsCadastro extends clsCampos
         }
     }
 
-    public function Inicializar()
-    {
-    }
 
-    public function Formular()
-    {
-    }
+  function Inicializar()
+  {
+  }
 
-    public function Novo()
-    {
-        return false;
-    }
+  function Formular()
+  {
+  }
 
-    public function Editar()
-    {
-        return false;
-    }
+  function Novo()
+  {
+    return FALSE;
+  }
 
-    public function Excluir()
-    {
-        return false;
-    }
+  function Editar()
+  {
+    return FALSE;
+  }
 
-    public function ExcluirImg()
-    {
-        return false;
-    }
+  function Excluir()
+  {
+    return FALSE;
+  }
 
-    public function Gerar()
-    {
-        return false;
-    }
+  function ExcluirImg()
+  {
+    return FALSE;
+  }
+
+  function Gerar()
+  {
+    return FALSE;
+  }
 
     protected function flashMessage()
     {
+        if (Session::has('errors')) {
+            $messages = [];
+            foreach (Session::get('errors')->all() as $message) {
+                $messages[] = $message;
+            }
+            $this->mensagem = implode('<br>', $messages);
+        }
+
         if (empty($this->mensagem) && isset($_GET['mensagem']) && $_GET['mensagem'] == 'sucesso') {
             $this->mensagem = 'Registro incluido com sucesso!';
         }
@@ -205,28 +204,20 @@ class clsCadastro extends clsCampos
             return "<p class='success'>$this->mensagem</p>";
         }
 
-        return empty($this->mensagem) ? '' : "<p class='form_erro error'>$this->mensagem</p>";
+        return empty($this->mensagem) ? "" : "<p class='form_erro error'>$this->mensagem</p>";
     }
 
     public function RenderHTML()
     {
+        ob_start();
+
         $this->_preRender();
-
-        $this->bannerLateral = 'imagens/nvp_vert_intranet.jpg';
-        $this->titulo_barra = 'Intranet';
         $this->Processar();
-
-        $retorno = '';
-
-        if ($this->banner) {
-            $retorno .= '<table width=\'100%\' style="height:100%" border=\'0\' cellpadding=\'0\' cellspacing=\'0\'><tr>';
-            $retorno .= '<td valign=\'top\'>';
-        }
-
         $this->Gerar();
 
-        $script = explode('/', $_SERVER['PHP_SELF']);
-        $script = $script[count($script) - 1];
+        $retorno = ob_get_contents();
+
+        ob_end_clean();
 
         $this->nome_excluirImg = empty($this->nome_excluirImg) ? 'Excluir Imagem' : $this->nome_excluirImg;
         $this->nome_url_cancelar = empty($this->nome_url_cancelar) ? 'Cancelar' : $this->nome_url_cancelar;
@@ -258,20 +249,7 @@ class clsCadastro extends clsCampos
         $titulo = isset($this->titulo) ? $this->titulo : "<b>{$this->tipoacao} {$applicationTitle}</b>";
 
         View::share('title', $this->getPageTitle());
-        /**
-         * Adiciona os botoes de help para a pagina atual
-         */
-        $url = parse_url($_SERVER['REQUEST_URI']);
-        $url = preg_replace('/^\//', '', $url['path']);
-        if (strpos($url, '_det.php') !== false) {
-            $tipo = 'det';
-        } elseif (strpos($url, '_lst.php') !== false) {
-            $tipo = 'lst';
-        } elseif (strpos($url, '_pdf.php') !== false) {
-            $tipo = 'pdf';
-        } else {
-            $tipo = 'cad';
-        }
+
         $barra = $titulo;
 
         $retorno .= "<tr><td class='formdktd' colspan='2' height='24'>{$barra}</td></tr>";
@@ -624,10 +602,6 @@ class clsCadastro extends clsCampos
         $retorno .= "</td>\n</tr>\n";
         $retorno .= "</table>\n</center>\n<!-- cadastro end -->\n";
         $retorno .= "</form>\n";
-
-        if (!empty($this->bannerClose)) {
-            $retorno .= '</td></tr></table>';
-        }
 
         if (!empty($this->executa_script)) {
             $retorno .= "<script type=\"text/javascript\">{$this->executa_script}</script>";

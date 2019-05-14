@@ -1,4 +1,8 @@
 <?php
+
+use App\User;
+use Illuminate\Support\Facades\Auth;
+
 error_reporting(E_ERROR);
 ini_set("display_errors", 1);
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -261,11 +265,11 @@ class indice extends clsCadastro
             $objTemp = new clsPmieducarTipoUsuario();
             $objTemp->setOrderby('nm_tipo ASC');
 
-            $obj_libera_menu = new clsMenuFuncionario($this->pessoa_logada,false,false,0);
-            $obj_super_usuario = $obj_libera_menu->detalhe();
+            /** @var User $user */
+            $user = Auth::user();
 
             // verifica se pessoa logada é super-usuario
-            if ($obj_super_usuario) {
+            if ($user->isAdmin()) {
                 $lista = $objTemp->lista(null,null,null,null,null,null,null,null,1);
             }else{
                 $lista = $objTemp->lista(null,null,null,null,null,null,null,null,1,$obj_permissao->nivel_acesso($this->pessoa_logada));

@@ -26,7 +26,7 @@ Route::any('intranet/filaunica/educar_consulta.php', 'LegacyController@intranet'
 Route::any('intranet/suspenso.php', 'LegacyController@intranet')
     ->defaults('uri', 'suspenso.php');
 
-Route::group(['middleware' => ['ieducar.navigation', 'ieducar.menu', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth']], function () {
+Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth']], function () {
 
     Route::get('/enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@indexEnroll')
         ->name('enrollments.batch.enroll.index');
