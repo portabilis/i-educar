@@ -5,6 +5,7 @@ namespace Tests\Unit\Services\SchoolClass;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolClassStage;
 use App\Services\SchoolClass\AvailableTimeService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -65,6 +66,14 @@ class AvailableTimeServiceTest extends TestCase
             'ref_cod_matricula' => $registration->cod_matricula,
         ]);
 
+        factory(LegacySchoolClassStage::class)->create([
+            'ref_cod_turma' => $schoolClass,
+        ]);
+
+        factory(LegacySchoolClassStage::class)->create([
+            'ref_cod_turma' => $otherSchoolClass,
+        ]);
+
         $this->assertTrue($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
     }
 
@@ -76,6 +85,14 @@ class AvailableTimeServiceTest extends TestCase
         $schoolClass = factory(LegacySchoolClass::class, 'morning')->create(['tipo_mediacao_didatico_pedagogico' => 1]);
         $otherSchoolClass = factory(LegacySchoolClass::class, 'morning')->create(['tipo_mediacao_didatico_pedagogico' => 1]);
         $registration = factory(LegacyRegistration::class)->create(['ano' => $schoolClass->ano]);
+
+        factory(LegacySchoolClassStage::class)->create([
+            'ref_cod_turma' => $schoolClass,
+        ]);
+
+        factory(LegacySchoolClassStage::class)->create([
+            'ref_cod_turma' => $otherSchoolClass,
+        ]);
 
         factory(LegacyEnrollment::class)->create([
             'ref_cod_turma' => $otherSchoolClass->cod_turma,
