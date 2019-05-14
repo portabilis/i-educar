@@ -17,11 +17,11 @@ class RegrasGeraisRegistro30 implements EducacensoExportRule
      */
     public static function handle(RegistroEducacenso $registro30): RegistroEducacenso
     {
-        if ($registro30->paisNacionalidade == Nacionalidade::ESTRANGEIRA) {
+        if ($registro30->nacionalidade == Nacionalidade::ESTRANGEIRA) {
             $registro30->cpf = null;
         }
 
-        if ($registro30->paisNacionalidade == Nacionalidade::ESTRANGEIRA || $registro30->paisNacionalidade == Nacionalidade::NATURALIZADO_BRASILEIRO) {
+        if ($registro30->nacionalidade == Nacionalidade::ESTRANGEIRA || $registro30->nacionalidade == Nacionalidade::NATURALIZADO_BRASILEIRO) {
             $registro30->municipioNascimento = null;
         }
 
@@ -71,6 +71,10 @@ class RegrasGeraisRegistro30 implements EducacensoExportRule
             $registro30->formacaoAnoConclusao = null;
             $registro30->formacaoInstituicao = null;
             $registro30->formacaoComponenteCurricular = null;
+            $registro30->posGraduacaoEspecializacao = null;
+            $registro30->posGraduacaoDoutorado = null;
+            $registro30->posGraduacaoMestrado = null;
+            $registro30->posGraduacaoNaoPossui = null;
         }
 
         return $registro30;

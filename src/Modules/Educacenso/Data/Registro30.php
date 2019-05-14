@@ -111,6 +111,7 @@ class Registro30 extends AbstractRegistro
             $registro30->filiacao1 = $this->convertStringToCenso($registro30->filiacao1);
             $registro30->filiacao2 = $this->convertStringToCenso($registro30->filiacao2);
             $registro30->dataNascimento = (new \DateTime($registro30->dataNascimento))->format('d/m/Y');
+            $registro30->cpf = $this->cpfToCenso($registro30->cpf);
         }
 
         return $modelArray;

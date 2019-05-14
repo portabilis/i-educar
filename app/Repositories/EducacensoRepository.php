@@ -644,7 +644,7 @@ SQL;
                 (pessoa_mae.nome IS NOT NULL OR pessoa_pai.nome IS NOT NULL)::INTEGER AS "filiacao",
                 pessoa_mae.nome AS "filiacao1",
                 pessoa_pai.nome AS "filiacao2",
-                CASE WHEN fisica.sexo = 'F' THEN 1 ELSE 2 END AS "sexo",
+                CASE WHEN fisica.sexo = 'M' THEN 1 ELSE 2 END AS "sexo",
                 fisica_raca.ref_cod_raca AS "raca",
                 fisica.nacionalidade AS "nacionalidade",
                 CASE WHEN fisica.nacionalidade = 3 THEN fisica.idpais_estrangeiro ELSE 76 END AS "paisNacionalidade",

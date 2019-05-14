@@ -14,7 +14,7 @@ class RegrasEspecificasRegistro30 implements EducacensoExportRule
      */
     public static function handle(RegistroEducacenso $registro30): RegistroEducacenso
     {
-        if ($registro30->isStudent()) {
+        if (!$registro30->isStudent()) {
             $registro30->recursoLedor = null;
             $registro30->recursoTranscricao = null;
             $registro30->recursoGuia = null;
