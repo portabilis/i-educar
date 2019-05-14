@@ -61,7 +61,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Tipo Dispensa - Detalhe";
-        
+
 
         $this->cod_tipo_dispensa=$_GET["cod_tipo_dispensa"];
 
@@ -109,13 +109,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_tipo_dispensa_lst.php";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "Detalho do tipo de dispensa"             
-        ));
-
+        $this->breadcrumb('Detalhe do tipo de dispensa', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

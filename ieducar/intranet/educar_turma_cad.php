@@ -185,13 +185,10 @@ class indice extends clsCadastro
             'educar_turma_det.php?cod_turma=' . $registro['cod_turma'] : 'educar_turma_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => "{$nomeMenu} turma"
+
+        $this->breadcrumb($nomeMenu . ' turma', [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
-        $this->enviaLocalizacao($localizacao->montar());
 
         $this->nome_url_cancelar = 'Cancelar';
 
@@ -909,6 +906,7 @@ class indice extends clsCadastro
     {
         $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
         $turmaDetalhe = $turmaDetalhe->detalhe();
+        $this->ref_cod_curso = $turmaDetalhe['ref_cod_curso'];
         $this->ref_ref_cod_escola = $turmaDetalhe['ref_ref_cod_escola'];
 
         if (!$this->verificaModulos()) {
@@ -926,9 +924,6 @@ class indice extends clsCadastro
         if (!$this->verificaTurno()) {
             return false;
         }
-
-        $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
-        $turmaDetalhe = $turmaDetalhe->detalhe();
 
         if (is_null($this->ref_cod_instituicao)) {
             $this->ref_cod_instituicao = $turmaDetalhe['ref_cod_instituicao'];
@@ -1035,7 +1030,7 @@ class indice extends clsCadastro
         return true;
     }
 
-    protected function validaCampoLocalFuncionamentoDiferenciad()
+    protected function validaCampoLocalFuncionamentoDiferenciado()
     {
         $school = School::find($this->ref_ref_cod_escola);
         $localFuncionamentoEscola = $school->local_funcionamento;
@@ -1108,7 +1103,7 @@ class indice extends clsCadastro
         }
 
         if ($course->modalidade_curso == 4 && !in_array($this->etapa_educacenso, [30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67, 68])) {
-            $this->mensagem = 'Quando a modalidade do curso é: Educação Profissional, o campo: Etapa de ensino deve ser uma das seguintes opções:30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67 ou 68.';
+            $this->mensagem = 'Quando a modalidade do curso é: Educação Profissional, o campo: Etapa de ensino deve ser uma das seguintes opções: 30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67 ou 68.';
             return false;
         }
 
@@ -1153,7 +1148,7 @@ class indice extends clsCadastro
         if (!$this->validaCampoTipoAtendimento()) {
             return false;
         }
-        if (!$this->validaCampoLocalFuncionamentoDiferenciad()) {
+        if (!$this->validaCampoLocalFuncionamentoDiferenciado()) {
             return false;
         }
 

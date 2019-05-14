@@ -2,12 +2,11 @@
 
 namespace iEducar\Support\View;
 
-
+use App_Model_TipoMediacaoDidaticoPedagogico;
+use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use App\Models\ManagerAccessCriteria;
 use App\Models\ManagerLinkType;
 use App\Models\ManagerRole;
-use App_Model_TipoMediacaoDidaticoPedagogico;
-use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Modules\Servidores\Model\TipoVinculo;
 use iEducar\Modules\Transport\Period;
@@ -94,6 +93,19 @@ class SelectOptions
      *
      * @return array
      */
+    public static function locaisFuncionamentoEscola()
+    {
+        return self::getDefaultOption() + LocalFuncionamento::getDescriptiveValues();
+    }
+
+    public static function tiposMediacaoDidaticoPedagogico()
+    {
+        return self::getDefaultOption() + App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums();
+    }
+
+    /**
+     * @return array
+     */
     public static function schoolManagerRoles()
     {
         return self::getDefaultOption() + ManagerRole::all()->getKeyValueArray('name');
@@ -115,11 +127,6 @@ class SelectOptions
         return self::getDefaultOption() + ManagerLinkType::all()->getKeyValueArray('name');
     }
 
-    public static function locaisFuncionamentoEscola()
-    {
-        return self::getDefaultOption() + LocalFuncionamento::getDescriptiveValues();
-    }
-
     /**
      * Retorna as opções disponíveis referentes às funções exercidas do servidor
      *
@@ -138,10 +145,5 @@ class SelectOptions
     public static function tiposVinculoServidor()
     {
         return self::getDefaultOption() + TipoVinculo::getDescriptiveValues();
-    }
-
-    public static function tiposMediacaoDidaticoPedagogico()
-    {
-        return self::getDefaultOption() + App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums();
     }
 }

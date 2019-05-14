@@ -89,19 +89,19 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $lista_busca = array(
             "Biblioteca",
             "Escola"
         );
 
-        
+
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1)
             $lista_busca[] = "Institui&ccedil;&atilde;o";
-        
+
         /*if($nivel_usuario == 8){
             $this->ref_cod_biblioteca = $obj_permissoes->getBiblioteca($this->pessoa_logada);
             $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
@@ -115,13 +115,13 @@ class indice extends clsListagem
         $comma = "";
         if($lista_bib)
         {
-            foreach ($lista_bib as $biblioteca) 
+            foreach ($lista_bib as $biblioteca)
             {
                 $biblioteca_in .= "{$comma}{$biblioteca['ref_cod_biblioteca']}";
                 $comma =  ",";
             }
         }
-        
+
         // Filtros de Foreign Keys
         $get_escola = true;
         include("include/pmieducar/educar_campo_lista.php");
@@ -216,13 +216,9 @@ class indice extends clsListagem
         $this->addPaginador2( "educar_biblioteca_dados_lst.php", $total, $_GET, $this->nome, $this->limite );
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Listagem de dados das bibliotecas"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Listagem de dados das biblioteca', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 // cria uma extensao da classe base

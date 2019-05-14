@@ -89,14 +89,10 @@ class indice extends clsCadastro
             ? $_GET['referrer'] . '?cod_escola=' . $this->ref_ref_cod_escola
             : 'educar_escola_lst.php';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => 'Etapas do ano letivo'
+        $this->breadcrumb('Etapas do ano letivo', [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
 
-        $this->enviaLocalizacao($localizacao->montar());
         $this->nome_url_cancelar = 'Cancelar';
 
         return $retorno;

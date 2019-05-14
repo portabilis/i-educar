@@ -24,6 +24,10 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use App\User;
+use Illuminate\Support\Facades\Auth;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -49,7 +53,7 @@ class indice extends clsListagem
 
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
-        
+
         $this->addCabecalhos( array( "Nome","Matrícula", "Matrícula Interna" ,"Status", "Tipo usu&aacute;rio", "N&iacute;vel de Acesso") );
 
         // Filtros de Busca
@@ -85,11 +89,10 @@ class indice extends clsListagem
         $obj_tipo_usuario = new clsPmieducarTipoUsuario($detalhe['ref_cod_tipo_usuario']);
         $tipo_usuario = $obj_tipo_usuario->detalhe();
 
-        $obj_super_usuario = new clsMenuFuncionario($this->pessoa_logada,false,false,0);
-        $super_usuario_det = $obj_super_usuario->detalhe();
+        /** @var User $user */
+        $user = Auth::user();
 
-
-        if( $super_usuario_det )
+        if( $user->isAdmin() )
         {
             $opcoes = array( "" => "Selecione", "1" => "Poli-Institucional", "2" => "Institucional", "4" => "Escolar", "8" => "Biblioteca");
         }
@@ -141,12 +144,12 @@ class indice extends clsListagem
         $obj_func->setOrderby("(nome) ASC");
         $obj_func->setLimite($limite, $iniciolimit);
         $lst_func = $obj_func->listaFuncionarioUsuario(
-            $_GET["matricula"], 
+            $_GET["matricula"],
             $_GET['nm_pessoa'],
             $_GET['matricula_interna'],
-            $this->ref_cod_escola, 
-            $this->ref_cod_instituicao, 
-            $this->ref_cod_tipo_usuario, 
+            $this->ref_cod_escola,
+            $this->ref_cod_instituicao,
+            $this->ref_cod_tipo_usuario,
             $this->ref_cod_nivel_usuario,
             $this->int_ativo
             );
@@ -179,9 +182,9 @@ class indice extends clsListagem
                 $this->addLinhas( array(
                 "<a href='educar_usuario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'><img src='imagens/noticia.jpg' border=0>{$pessoa['nome']}</a>",
                 "<a href='educar_usuario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$pessoa['matricula']}</a>",
-                "<a href='educar_usuario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$pessoa['matricula_interna']}</a>", 
+                "<a href='educar_usuario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$pessoa['matricula_interna']}</a>",
                 "<a href='educar_usuario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$ativo}</a>",
-                "<a href='educar_usuario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$pessoa['nm_tipo']}</a>", 
+                "<a href='educar_usuario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$pessoa['nm_tipo']}</a>",
                 "<a href='educar_usuario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$nivel}</a>", ) );
             }
         }
@@ -196,13 +199,9 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_configuracoes_index.php"                  => "Configurações",
-         ""                                  => "Usuários"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Usuários', [
+            url('intranet/educar_configuracoes_index.php') => 'Configurações',
+        ]);
     }
 }
 

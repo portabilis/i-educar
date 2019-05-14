@@ -59,7 +59,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Religiao - Detalhe";
-        
+
 
         $this->cod_religiao=$_GET["cod_religiao"];
 
@@ -95,13 +95,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_religiao_lst.php";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_pessoas_index.php"          => "Pessoas",
-             ""                                  => "Detalhe da religi&atilde;o"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());                
+        $this->breadcrumb('Detalhe da religião', [
+            url('intranet/educar_pessoas_index.php') => 'Pessoas',
+        ]);
     }
 }
 

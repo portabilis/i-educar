@@ -87,7 +87,7 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $this->addCabecalhos( array(
             "C&oacute;digo Tipo Usu&aacute;rio",
@@ -162,13 +162,9 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_configuracoes_index.php"    => "Configurações",
-             ""                                  => "Listagem de tipo de usu&aacute;rio"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Listagem de tipo de usuário', [
+            url('intranet/educar_configuracoes_index.php') => 'Configurações',
+        ]);
     }
 }
 // cria uma extensao da classe base

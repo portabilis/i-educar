@@ -52,8 +52,6 @@
   -webkit-border-top-right-radius: 5px;
   -webkit-border-bottom-left-radius: 0px;
   -webkit-border-bottom-right-radius: 0px;
-  position:relative;
-  top: 2px;
   width: 100px;
   height: 25px;
   background-color: white;
@@ -76,8 +74,6 @@
   -webkit-border-top-right-radius: 5px;
   -webkit-border-bottom-left-radius: 0px;
   -webkit-border-bottom-right-radius: 0px;
-  position:relative;
-  top: 2px;
   width: 100px;
   height: 25px;
   background-color: #f5f9fd;
@@ -100,8 +96,6 @@
   -webkit-border-top-right-radius: 5px;
   -webkit-border-bottom-left-radius: 0px;
   -webkit-border-bottom-right-radius: 0px;
-  position:relative;
-  top: 3px;
   width: 100px;
   height: 25px;
   background-color: #f5f9fd;
@@ -124,8 +118,6 @@
   -webkit-border-top-right-radius: 5px;
   -webkit-border-bottom-left-radius: 0px;
   -webkit-border-bottom-right-radius: 0px;
-  position:relative;
-  top: 3px;
   width: 100px;
   height: 25px;
   background-color: white;
@@ -134,8 +126,8 @@
 }
 
 .tabText{
-  position: relative;
-  top: 6px;
+  display: inline-block;
+  padding-top: 6px;
 }
 
 #tr_tit_dados_hospital, #tr_tit_dados_responsavel,
