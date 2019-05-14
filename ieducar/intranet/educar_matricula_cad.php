@@ -323,11 +323,11 @@ class indice extends clsCadastro
         $validarCamposEducacenso = $this->validarCamposObrigatoriosCenso();
 
         foreach ($enturmacoesParaCopiar as $enturmar) {
+            $dadosDaMatricula = $this->getMatricula($enturmar['ref_cod_matricula']);
+
             if ($validarCamposEducacenso && !$this->availableTimeService()->isAvailable($dadosDaMatricula['ref_cod_aluno'], $this->ref_cod_turma)) {
                 $mensagemErro = 'O aluno já está matriculado em uma turma com esse horário.';
             }
-
-            $dadosDaMatricula = $this->getMatricula($enturmar['ref_cod_matricula']);
 
             $matricula = $this->addMatricula(
                 $this->ref_cod_escola,
