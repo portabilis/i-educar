@@ -60,10 +60,23 @@ class AvailableTimeService
         }
 
         $weekdaysMatches = array_intersect($schoolClass->dias_semana, $otherSchoolClass->dias_semana);
-        
+
         if (empty($weekdaysMatches)) {
             return false;
         }
+
+        // Valida se o início e fim do ano letivo da turma de destino não está
+        // entre o período de início e fim da turma da outra enturmação.
+
+        $doesNotStartBetween = false === $schoolClass->begin_academic_year->between($otherSchoolClass->begin_academic_year, $otherSchoolClass->end_academic_year);
+        $doesNotEndBetween = false === $schoolClass->end_academic_year->between($otherSchoolClass->begin_academic_year, $otherSchoolClass->end_academic_year);
+
+        if ($doesNotStartBetween && $doesNotEndBetween) {
+            return false;
+        }
+
+        // Caso os períodos do ano letivo sejam conflitantes, valida se os
+        // horários se sobrepoem.
 
         return $schoolClass->hora_inicial <= $otherSchoolClass->hora_final && $schoolClass->hora_final >= $otherSchoolClass->hora_inicial;
     }
