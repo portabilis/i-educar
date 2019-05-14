@@ -174,7 +174,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
             }
 
             $this->messages[] = [
-                'text' => "Dados para formular o registro 30 da escola (Nome da escola) possui valor inválido. Verificamos que a pessoa {$data->nomePessoa} possui o campo de deficiências preenchido incorretamente: " . $deficiencyValidator->getMessage(),
+                'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Verificamos que a pessoa {$data->nomePessoa} possui o campo de deficiências preenchido incorretamente: " . $deficiencyValidator->getMessage(),
                 'path' => $path,
                 'linkPath' => $linkPath,
                 'fail' => true
