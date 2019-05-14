@@ -38,6 +38,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::post('/cancelar-enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@cancelEnrollments')
         ->name('enrollments.batch.cancel');
 
+    Route::get('/escolaridade/{schoolingDegree}', 'SchoolingDegreeController@show')
+        ->name('schooling_degrees.show');
+
     Route::get('intranet/index.php', 'LegacyController@intranet')
         ->defaults('uri', 'index.php')
         ->name('home');
@@ -54,6 +57,10 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::any('module/{uri}', 'LegacyController@module')->where('uri', '.*');
     Route::any('modules/{uri}', 'LegacyController@modules')->where('uri', '.*');
     Route::any('intranet/{uri}', 'LegacyController@intranet')->where('uri', '.*');
+
+    Route::group(['namespace' => 'Educacenso', 'prefix' => 'educacenso'], function() {
+        Route::get('validar/{validator}', 'ValidatorController@validation');
+    });
 
 });
 

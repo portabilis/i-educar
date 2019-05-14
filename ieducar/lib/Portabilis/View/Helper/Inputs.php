@@ -135,6 +135,11 @@ class Portabilis_View_Helper_Inputs
         $this->simpleSearchResourceInput('simpleSearchPais', $attrName, $inputOptions, $helperOptions);
     }
 
+    public function simpleSearchPaisSemBrasil($attrName, $inputOptions = [], $helperOptions = [])
+    {
+        $this->simpleSearchResourceInput('simpleSearchPaisSemBrasil', $attrName, $inputOptions, $helperOptions);
+    }
+
     public function simpleSearchMunicipio($attrName, $inputOptions = [], $helperOptions = [])
     {
         $this->simpleSearchResourceInput('simpleSearchMunicipio', $attrName, $inputOptions, $helperOptions);

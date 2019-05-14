@@ -111,13 +111,7 @@ class indice extends clsCadastro
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
     $this->inputsHelper()->hidden('escola_em_andamento', [ 'value' => $this->escola_em_andamento ]);
 
-    $this->inputsHelper()->date('data_ini',array('label' => 'Data início',
-                                                 'value' => $this->data_ini,
-                                                 'dica' => $dicaCampoData));
-    $this->inputsHelper()->date('data_fim',array('label' => 'Data fim',
-                                                 'value' => $this->data_fim,
-                                                 'dica' => $dicaCampoData));
-    if (!empty($this->data_ini) && !empty($this->data_fim) && !empty($this->ref_cod_escola)) {
+    if (!empty($this->ref_cod_escola)) {
         Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Educacenso/Assets/Javascripts/Educacenso.js');
     }
 

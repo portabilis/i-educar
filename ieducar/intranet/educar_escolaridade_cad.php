@@ -35,6 +35,8 @@ require_once 'include/Geral.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/String/Utils.php';
 
+use iEducar\Support\View\SelectOptions;
+
 class clsIndexBase extends clsBase
 {
   function Formular()
@@ -107,14 +109,7 @@ class indice extends clsCadastro
     // Outros campos
     $this->campoTexto('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 30, 255, TRUE);
 
-    $resources = array(1 => 'Fundamental incompleto',
-                     2 => 'Fundamental completo',
-                     3 => 'Ensino médio - Normal/Magistério',
-                     4 => 'Ensino médio - Normal/Magistério Indígena',
-                     5 => 'Ensino médio',
-                     6 => 'Superior');
-
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Escolaridade educacenso'), 'resources' => $resources, 'value' => $this->escolaridade);
+    $options = array('label' => 'Escolaridade educacenso', 'resources' => SelectOptions::escolaridades(), 'value' => $this->escolaridade);
     $this->inputsHelper()->select('escolaridade', $options);
   }
 
