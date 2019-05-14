@@ -32,7 +32,7 @@ class RegrasEspecificasRegistro30 implements EducacensoExportRule
             $registro30->justificativaFaltaDocumentacao = null;
         }
 
-        if ($registro30->isManager()) {
+        if ($registro30->isManager() && !$registro30->isTeacher()) {
             $registro30->paisResidencia = null;
             $registro30->cep = null;
             $registro30->municipioResidencia = null;
