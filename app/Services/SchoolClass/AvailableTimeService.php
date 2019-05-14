@@ -7,10 +7,11 @@ use App\Models\LegacySchoolClass;
 class AvailableTimeService
 {
     /**
-     * Retorna se matrícula não possui enturmação em horário conflitante com a turma enviada por parâmetro
+     * Retorna se matrícula não possui enturmação em horário conflitante com a
+     * turma enviada por parâmetro.
      *
-     * @param int      $studentId     ID do aluno
-     * @param int      $schoolClassId ID da turma
+     * @param int $studentId     ID do aluno
+     * @param int $schoolClassId ID da turma
      *
      * @return bool
      */
@@ -24,8 +25,8 @@ class AvailableTimeService
 
         $otherSchoolClass = LegacySchoolClass::where('cod_turma', '<>', $schoolClassId)
             ->where('ano', $schoolClass->ano)
-            ->whereHas('enrollments', function($enrollmentsQuery) use ($studentId, $schoolClass) {
-                $enrollmentsQuery->whereHas('registration', function($registrationQuery) use ($studentId, $schoolClass) {
+            ->whereHas('enrollments', function ($enrollmentsQuery) use ($studentId, $schoolClass) {
+                $enrollmentsQuery->whereHas('registration', function ($registrationQuery) use ($studentId, $schoolClass) {
                     $registrationQuery->where('ref_cod_aluno', $studentId);
                     $registrationQuery->where('ano', $schoolClass->ano);
                 })->where('ativo', 1);
@@ -40,6 +41,14 @@ class AvailableTimeService
         return true;
     }
 
+    /**
+     * Retorna se os horários das turmas são conflitantes.
+     *
+     * @param LegacySchoolClass $schoolClass
+     * @param LegacySchoolClass $otherSchoolClass
+     *
+     * @return bool
+     */
     private function schedulesMatch(LegacySchoolClass $schoolClass, LegacySchoolClass $otherSchoolClass)
     {
         if ($otherSchoolClass->tipo_mediacao_didatico_pedagogico != 1) {
@@ -51,6 +60,7 @@ class AvailableTimeService
         }
 
         $weekdaysMatches = array_intersect($schoolClass->dias_semana, $otherSchoolClass->dias_semana);
+        
         if (empty($weekdaysMatches)) {
             return false;
         }
