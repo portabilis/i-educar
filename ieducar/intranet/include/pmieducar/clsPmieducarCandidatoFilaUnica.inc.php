@@ -517,7 +517,12 @@ class clsPmieducarCandidatoFilaUnica
         }
 
         if (is_string($this->situacao)) {
-            $filtros .= "{$whereAnd} situacao = '{$this->situacao}'";
+            if ($this->situacao === 'E') {
+                $filtros .= "{$whereAnd} cfu.situacao IS NULL";
+            } else {
+                $filtros .= "{$whereAnd} cfu.situacao = '{$this->situacao}'";
+            }
+
             $whereAnd = ' AND ';
         }
 
