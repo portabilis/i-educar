@@ -67,7 +67,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Situa&ccedil;&atilde;o - Detalhe";
-        
+
 
         $this->cod_situacao=$_GET["cod_situacao"];
 
@@ -163,13 +163,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_situacao_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Detalhe da situa&ccedil;&atilde;o"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());            
+        $this->breadcrumb('Detalhe da situação', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 

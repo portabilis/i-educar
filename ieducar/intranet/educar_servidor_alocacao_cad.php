@@ -99,14 +99,9 @@ class indice extends clsCadastro
         );
         $this->nome_url_cancelar = 'Cancelar';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_servidores_index.php' => 'Servidores',
-            '' => 'Alocar servidor'
+        $this->breadcrumb('Alocar servidor', [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
 
         return $retorno;
     }

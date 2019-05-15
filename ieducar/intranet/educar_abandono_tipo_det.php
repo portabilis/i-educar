@@ -61,7 +61,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Abandono Tipo - Detalhe";
-        
+
 
         $this->cod_abandono_tipo=$_GET["cod_abandono_tipo"];
 
@@ -71,7 +71,7 @@ class indice extends clsDetalhe
         if( ! $registro )
         {
             $this->simpleRedirect('educar_abandono_tipo_lst.php');
-        }           
+        }
         if (class_exists("clsPmieducarInstituicao"))
         {
             $obj_instituicao = new clsPmieducarInstituicao($registro["ref_cod_instituicao"]);
@@ -105,13 +105,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_abandono_tipo_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Detalhe do tipo de abandono"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());            
+        $this->breadcrumb('Detalhe do tipo de abandono', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

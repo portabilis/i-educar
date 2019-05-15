@@ -639,10 +639,10 @@ class clsPmieducarCandidatoFilaUnica
                        INNER JOIN pmieducar.aluno a ON (a.cod_aluno = cfu.ref_cod_aluno)
                        INNER JOIN cadastro.pessoa p ON (p.idpes = a.ref_idpes)
                        INNER JOIN cadastro.fisica f ON (f.idpes = a.ref_idpes)
-                       INNER JOIN pmieducar.responsaveis_aluno ra ON (ra.ref_cod_aluno= cfu.ref_cod_aluno)
-                       INNER JOIN cadastro.pessoa pessoa_responsavel ON (pessoa_responsavel.idpes = ra.ref_idpes)
-                       INNER JOIN cadastro.fisica fisica_responsavel ON (fisica_responsavel.idpes = pessoa_responsavel.idpes)
                        INNER JOIN pmieducar.serie s ON (s.cod_serie = cfu.ref_cod_serie)
+                        LEFT JOIN pmieducar.responsaveis_aluno ra ON (ra.ref_cod_aluno= cfu.ref_cod_aluno)
+                        LEFT JOIN cadastro.pessoa pessoa_responsavel ON (pessoa_responsavel.idpes = ra.ref_idpes)
+                        LEFT JOIN cadastro.fisica fisica_responsavel ON (fisica_responsavel.idpes = pessoa_responsavel.idpes)
                         LEFT JOIN cadastro.documento d ON (d.idpes = a.ref_idpes)
                             WHERE cod_candidato_fila_unica = {$this->cod_candidato_fila_unica}
                             GROUP BY cfu.cod_candidato_fila_unica,

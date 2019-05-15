@@ -106,7 +106,7 @@ class indice extends clsListagem
     $this->ref_cod_turma  = $_GET['ref_cod_turma'];
     $this->ano_letivo     = $_GET['ano_letivo'];
 
-    
+
 
     $this->addCabecalhos(array(
       'Turma',
@@ -227,7 +227,7 @@ WHERE
           $turmaHasEnturmacao = true;
       }
 
-      if($turmaHasEnturmacao) 
+      if($turmaHasEnturmacao)
         $enturmado = "Sim";
       else
         $enturmado = "Não";
@@ -249,13 +249,9 @@ WHERE
 
     $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Enturmações da matrícula"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Enturmações da matrícula', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
 }
 

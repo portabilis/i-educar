@@ -63,7 +63,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_infra_predio=$_GET["cod_infra_predio"];
 
@@ -94,22 +94,19 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}" : "educar_infra_predio_lst.php";
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} pr&eacute;dio"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
 
+        $this->breadcrumb($nomeMenu . ' prédio', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
+
         return $retorno;
     }
 
     function Gerar()
     {
-        
+
         // primary keys
         $this->campoOculto( "cod_infra_predio", $this->cod_infra_predio );
 
@@ -123,7 +120,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj = new clsPmieducarInfraPredio( $this->cod_infra_predio, $this->pessoa_logada, $this->pessoa_logada, $this->ref_cod_escola, $this->nm_predio, $this->desc_predio, $this->endereco, null, null, 1 );
         $cadastrou = $obj->cadastra();
@@ -146,7 +143,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $infraPredioDetalhe = new clsPmieducarInfraPredio($this->cod_infra_predio);
         $infraPredioDetalheAntes = $infraPredioDetalhe->detalhe();
@@ -170,7 +167,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj = new clsPmieducarInfraPredio($this->cod_infra_predio, $this->pessoa_logada, $this->pessoa_logada, $this->ref_cod_escola, $this->nm_predio, $this->desc_predio, $this->endereco, $this->data_cadastro, $this->data_exclusao, 0);
         $infraPredio = $obj->detalhe();

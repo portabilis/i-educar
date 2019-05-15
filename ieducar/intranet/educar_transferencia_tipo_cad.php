@@ -62,7 +62,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_transferencia_tipo=$_GET["cod_transferencia_tipo"];
 
@@ -84,15 +84,12 @@ class indice extends clsCadastro
             }
         }
         $this->url_cancelar = ($retorno == "Editar") ? "educar_transferencia_tipo_det.php?cod_transferencia_tipo={$registro["cod_transferencia_tipo"]}" : "educar_transferencia_tipo_lst.php";
-        
+
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} tipo de transfer&ecirc;ncia"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' tipo de transferência', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
         return $retorno;
@@ -113,7 +110,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj = new clsPmieducarTransferenciaTipo( null,null,$this->pessoa_logada,$this->nm_tipo,$this->desc_tipo,null,null,1,$this->ref_cod_instituicao );
         $cadastrou = $obj->cadastra();
@@ -136,7 +133,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $transferenciaTipoDetalhe = new clsPmieducarTransferenciaTipo($this->cod_transferencia_tipo);
         $transferenciaTipoDetalheAntes = $transferenciaTipoDetalhe->detalhe();
@@ -160,7 +157,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj = new clsPmieducarTransferenciaTipo( $this->cod_transferencia_tipo, $this->pessoa_logada, null, null, null, null, null, 0);
         $transferenciaTipo = $obj->detalhe();

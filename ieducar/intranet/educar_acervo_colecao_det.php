@@ -61,7 +61,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Cole&ccedil&atilde;o - Detalhe";
-        
+
 
         $this->cod_acervo_colecao=$_GET["cod_acervo_colecao"];
 
@@ -87,7 +87,7 @@ class indice extends clsDetalhe
         echo "<!--\nErro\nClasse nao existente: clsPmieducarInstituicao\n-->";
       }
                 }
-                
+
                if( class_exists( "clsPmieducarEscola" ) )
          {
         $registro["ref_cod_escola"] = $det_ref_cod_biblioteca["ref_cod_escola"];
@@ -107,15 +107,15 @@ class indice extends clsDetalhe
           $registro["ref_cod_escola"] = $obj_escola_det["nm_escola"];
       }
     }
-                        
+
     $obj_permissoes = new clsPermissoes();
     $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-     
+
     if( ! $registro )
     {
         $this->simpleRedirect('educar_acervo_colecao_lst.php');
     }
-               
+
     if ($nivel_usuario == 1)
     {
       if( $registro["ref_cod_instituicao"] )
@@ -123,7 +123,7 @@ class indice extends clsDetalhe
         $this->addDetalhe( array( "Institui&ccedil;&atilde;o", "{$registro["ref_cod_instituicao"]}") );
       }
     }
-                
+
     if ($nivel_usuario == 1 || $nivel_usuario == 2)
     {
         if( $registro["ref_cod_escola"] )
@@ -136,7 +136,7 @@ class indice extends clsDetalhe
     {
         $this->addDetalhe( array( "Biblioteca", "{$registro["ref_cod_biblioteca"]}") );
     }
-                        
+
 
     if( $registro["cod_acervo_colecao"] )
     {
@@ -160,14 +160,10 @@ class indice extends clsDetalhe
     $this->url_cancelar = "educar_acervo_colecao_lst.php";
     $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Detalhe da cole&ccedil;&atilde;o"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
-    
+    $this->breadcrumb('Detalhes da coleção', [
+        url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+    ]);
+
     }
 }
 

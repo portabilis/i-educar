@@ -26,7 +26,7 @@ Route::any('intranet/filaunica/educar_consulta.php', 'LegacyController@intranet'
 Route::any('intranet/suspenso.php', 'LegacyController@intranet')
     ->defaults('uri', 'suspenso.php');
 
-Route::group(['middleware' => ['ieducar.navigation', 'ieducar.menu', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth']], function () {
+Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth']], function () {
 
     Route::get('/enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@indexEnroll')
         ->name('enrollments.batch.enroll.index');
@@ -37,6 +37,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.menu', 'ieducar.fo
         ->name('enrollments.batch.cancel.index');
     Route::post('/cancelar-enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@cancelEnrollments')
         ->name('enrollments.batch.cancel');
+
+    Route::get('/escolaridade/{schoolingDegree}', 'SchoolingDegreeController@show')
+        ->name('schooling_degrees.show');
 
     Route::get('intranet/index.php', 'LegacyController@intranet')
         ->defaults('uri', 'index.php')
@@ -54,6 +57,10 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.menu', 'ieducar.fo
     Route::any('module/{uri}', 'LegacyController@module')->where('uri', '.*');
     Route::any('modules/{uri}', 'LegacyController@modules')->where('uri', '.*');
     Route::any('intranet/{uri}', 'LegacyController@intranet')->where('uri', '.*');
+
+    Route::group(['namespace' => 'Educacenso', 'prefix' => 'educacenso'], function() {
+        Route::get('validar/{validator}', 'ValidatorController@validation');
+    });
 
 });
 

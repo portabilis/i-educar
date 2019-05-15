@@ -195,13 +195,9 @@ class indice extends clsListagem
 
     $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Histórico de enturmações da matrí­cula"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Histórico de enturmações da matrí­cula', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
 }
 
