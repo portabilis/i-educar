@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Support\Navigation\Breadcrumb;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 require_once 'include/clsCampos.inc.php';
@@ -191,17 +192,17 @@ class clsCadastro extends clsCampos
 
     protected function setFlashMessage()
     {
-        session()->remove('legacy');
+        Session::remove('legacy');
 
         if (empty($this->_mensagem)) {
             if ($_GET['mensagem'] ?? '' === 'sucesso') {
-                session()->now('success', 'Registro incluido com sucesso!');
+                Session::now('success', 'Registro incluido com sucesso!');
             }
         } else {
             if ($this->sucesso) {
-                session()->now('success', $this->_mensagem);
+                Session::now('success', $this->_mensagem);
             } else {
-                session()->now('error', $this->_mensagem);
+                Session::now('error', $this->_mensagem);
             }
         }
     }
@@ -725,7 +726,7 @@ class clsCadastro extends clsCampos
         if ($name === 'mensagem') {
             $this->_mensagem = $value;
 
-            session()->flash('legacy', $value);
+            Session::flash('legacy', $value);
         } else {
             $this->{$name} = $value;
         }
