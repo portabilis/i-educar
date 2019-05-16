@@ -194,6 +194,20 @@ class clsCadastro extends clsCampos
     {
         Session::remove('legacy');
 
+        $hasMessage = false;
+        $flashKeys = ['success', 'error', 'notice', 'info', 'legacy'];
+
+        foreach ($flashKeys as $k) {
+            if (Session::has($k)) {
+                $hasMessage = true;
+                break;
+            }
+        }
+
+        if ($hasMessage) {
+            return;
+        }
+
         if (empty($this->_mensagem)) {
             if ($_GET['mensagem'] ?? '' === 'sucesso') {
                 Session::now('success', 'Registro incluido com sucesso!');
