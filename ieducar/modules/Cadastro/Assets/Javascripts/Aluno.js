@@ -1775,9 +1775,9 @@ function canShowParentsFields() {
           },
           open: function (event, ui) {
             $j('#dialog-recursos-prova-inep')
-              .parent('.ui-dialog').css('z-index', 9998);
+              .parent('.ui-dialog').css('z-index', 99998);
 
-            $j('.ui-widget-overlay').css('z-index', 9997);
+            $j('.ui-widget-overlay').css('z-index', 99997);
           }
         });
         $j('body').on('click', '.open-dialog-recursos-prova-inep', () => {
