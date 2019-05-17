@@ -44,7 +44,8 @@ class CreatePmieducarServidorAlocacaoTable extends Migration
                     ano integer,
                     data_admissao date,
                     hora_atividade time without time zone,
-                    horas_excedentes time without time zone
+                    horas_excedentes time without time zone,
+                    data_saida date NULL
                 );
                 
                 ALTER TABLE ONLY pmieducar.servidor_alocacao

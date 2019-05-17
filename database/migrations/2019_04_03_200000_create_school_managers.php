@@ -15,7 +15,7 @@ class CreateSchoolManagers extends Migration
     {
         Schema::create('school_managers', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('individual_id')->unsigned();
+            $table->integer('employee_id')->unsigned();
             $table->integer('school_id')->unsigned();
             $table->integer('role_id')->nullable()->unsigned();
             $table->integer('access_criteria_id')->nullable()->unsigned();
