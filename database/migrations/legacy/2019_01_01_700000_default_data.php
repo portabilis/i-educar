@@ -70,7 +70,7 @@ class DefaultData extends Migration
 
         Artisan::call('db:seed', ['--class' => DefaultRelatorioSituacaoMatriculaTableSeeder::class]);
 
-        Artisan::call('db:seed', ['--class' => DefaultPublicMenusTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultMenusTableSeeder::class]);
 
         Artisan::call('db:seed', ['--class' => DefaultManagerRolesTableSeeder::class]);
         Artisan::call('db:seed', ['--class' => DefaultManagerAccessCriteriasTableSeeder::class]);
@@ -87,7 +87,7 @@ class DefaultData extends Migration
         DB::raw('TRUNCATE manager_link_types CASCADE;');
         DB::raw('TRUNCATE manager_access_criterias CASCADE;');
         DB::raw('TRUNCATE manager_roles CASCADE;');
-        DB::raw('TRUNCATE public.menus CASCADE;');
+        DB::raw('TRUNCATE menus CASCADE;');
         DB::raw('TRUNCATE relatorio.situacao_matricula CASCADE;');
         DB::raw('TRUNCATE pmieducar.turma_turno CASCADE;');
         DB::raw('TRUNCATE pmieducar.tipo_autor CASCADE;');
