@@ -69,6 +69,8 @@ class DefaultData extends Migration
         Artisan::call('db:seed', ['--class' => DefaultPmieducarTurmaTurnoTableSeeder::class]);
 
         Artisan::call('db:seed', ['--class' => DefaultRelatorioSituacaoMatriculaTableSeeder::class]);
+
+        Artisan::call('db:seed', ['--class' => DefaultPublicMenusTableSeeder::class]);
     }
 
     /**
@@ -78,6 +80,7 @@ class DefaultData extends Migration
      */
     public function down()
     {
+        DB::raw('TRUNCATE public.menus CASCADE;');
         DB::raw('TRUNCATE relatorio.situacao_matricula CASCADE;');
         DB::raw('TRUNCATE pmieducar.turma_turno CASCADE;');
         DB::raw('TRUNCATE pmieducar.tipo_autor CASCADE;');
