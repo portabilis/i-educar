@@ -1,16 +1,16 @@
 <?php
 
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Migrations\Migration;
 
-class InsertManagerLinkTypes extends Migration
+class DefaultManagerLinkTypesTableSeeder extends Seeder
 {
     /**
-     * Run the migrations.
+     * Run the database seeds.
      *
      * @return void
      */
-    public function up()
+    public function run()
     {
         DB::table('manager_link_types')->updateOrInsert(
             ['id' => 1],
@@ -31,15 +31,5 @@ class InsertManagerLinkTypes extends Migration
             ['id' => 4],
             ['name' => 'Contrato CLT']
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        //
     }
 }

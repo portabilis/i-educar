@@ -1,16 +1,16 @@
 <?php
 
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Migrations\Migration;
 
-class InsertAccessCriterias extends Migration
+class DefaultManagerAccessCriteriasTableSeeder extends Seeder
 {
     /**
-     * Run the migrations.
+     * Run the database seeds.
      *
      * @return void
      */
-    public function up()
+    public function run()
     {
         DB::table('manager_access_criterias')->updateOrInsert(
             ['id' => 1],
@@ -51,15 +51,5 @@ class InsertAccessCriterias extends Migration
             ['id' => 7],
             ['name' => 'Outros']
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        //
     }
 }

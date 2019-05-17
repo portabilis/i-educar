@@ -1,16 +1,16 @@
 <?php
 
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Migrations\Migration;
 
-class InsertManagerRoles extends Migration
+class DefaultManagerRolesTableSeeder extends Seeder
 {
     /**
-     * Run the migrations.
+     * Run the database seeds.
      *
      * @return void
      */
-    public function up()
+    public function run()
     {
         DB::table('manager_roles')->updateOrInsert(
             ['id' => 1],
@@ -21,15 +21,5 @@ class InsertManagerRoles extends Migration
             ['id' => 2],
             ['name' => 'Outro cargo']
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        //
     }
 }
