@@ -7,22 +7,28 @@ class EtapasController extends ApiCoreController
 {
     protected function getEtapasEspecificas()
     {
-        if (empty($this->validatesPresenceOf('instituicao_id'))) {
+        if (empty($this->validatesPresenceOf(['instituicao_id', 'escola', 'ano']))) {
             return [];
         }
 
         $instituicaoId = $this->getRequest()->instituicao_id;
+        $ano = $this->getRequest()->ano;
+        $escola = $this->getRequest()->escola;
         $modified = $this->getRequest()->modified;
 
-        $params = [$instituicaoId];
+        $params = [$instituicaoId, $ano];
+
+        if (is_array($escola)) {
+            $escola = implode(',', $escola);
+        }
 
         $whereEscolaSerieDisciplina = '';
         $whereComponenteCurricularTurma = '';
 
         if ($modified) {
             $params[] = $modified;
-            $whereEscolaSerieDisciplina = ' AND esd.updated_at >= $2';
-            $whereComponenteCurricularTurma = ' AND cct.updated_at >= $2';
+            $whereEscolaSerieDisciplina = ' AND esd.updated_at >= $3';
+            $whereComponenteCurricularTurma = ' AND cct.updated_at >= $3';
         }
 
         $sql = "
@@ -43,6 +49,8 @@ class EtapasController extends ApiCoreController
                     AND t.ano = ANY(esd.anos_letivos)
                 WHERE TRUE 
                     {$whereEscolaSerieDisciplina}
+                    AND t.ano = $2
+                    AND t.ref_ref_cod_escola IN ({$escola})
                     AND esd.etapas_especificas = 1
                     AND NOT EXISTS(
                         SELECT 1
@@ -73,6 +81,8 @@ class EtapasController extends ApiCoreController
                     AND t.ano = ANY(esd.anos_letivos)
                 WHERE TRUE 
                     {$whereEscolaSerieDisciplina}
+                    AND t.ano = $2
+                    AND t.ref_ref_cod_escola IN ({$escola})
                     AND esd.etapas_especificas = 1
                     AND NOT EXISTS(
                         SELECT 1
@@ -95,8 +105,12 @@ class EtapasController extends ApiCoreController
                     cct.updated_at,
                     null as deleted_at
                 FROM modules.componente_curricular_turma AS cct
+                INNER JOIN pmieducar.turma t 
+                ON t.cod_turma = cct.turma_id
                 WHERE TRUE 
                     {$whereComponenteCurricularTurma}
+                    AND t.ano = $2
+                    AND t.ref_ref_cod_escola IN ({$escola})
                     AND cct.etapas_especificas = 1
                     AND EXISTS(
                         SELECT 1
@@ -115,8 +129,12 @@ class EtapasController extends ApiCoreController
                     cct.updated_at,
                     cct.deleted_at
                 FROM modules.componente_curricular_turma_excluidos AS cct
+                INNER JOIN pmieducar.turma t 
+                ON t.cod_turma = cct.turma_id
                 WHERE TRUE 
                     {$whereComponenteCurricularTurma}
+                    AND t.ano = $2
+                    AND t.ref_ref_cod_escola IN ({$escola})
                     AND cct.etapas_especificas = 1
                     AND EXISTS(
                         SELECT 1
