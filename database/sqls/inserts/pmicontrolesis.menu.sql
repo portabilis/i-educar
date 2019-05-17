@@ -180,7 +180,6 @@ INSERT INTO pmicontrolesis.menu VALUES (758, 758, 999930, 'CEP', 8, 'urbano_cep_
 INSERT INTO pmicontrolesis.menu VALUES (761, 761, 999931, 'Unificação de bairros', 1, 'educar_unifica_bairro.php', '_self', 1, 21, NULL, NULL);
 INSERT INTO pmicontrolesis.menu VALUES (762, 762, 999931, 'Unificação de logradouros', 2, 'educar_unifica_logradouro.php', '_self', 1, 21, NULL, NULL);
 INSERT INTO pmicontrolesis.menu VALUES (846, 846, 999932, '1ª fase - Matrícula inicial', 1, 'educar_exportacao_educacenso.php', '_self', 1, 22, NULL, NULL);
-INSERT INTO pmicontrolesis.menu VALUES (9998845, 9998845, 999932, '2ª fase - Situação final', 1, 'educar_exportacao_educacenso.php?fase2=1', '_self', 1, 22, NULL, NULL);
 INSERT INTO pmicontrolesis.menu VALUES (9998847, NULL, 20712, 'Cadastrais', 1, NULL, '_self', 1, 17, NULL, NULL);
 INSERT INTO pmicontrolesis.menu VALUES (9998867, 9998867, 999909, 'Configuração movimento geral', 3, 'module/Configuracao/ConfiguracaoMovimentoGeral', '_self', 1, 18, NULL, NULL);
 INSERT INTO pmicontrolesis.menu VALUES (9998869, 9998869, 999909, 'Customização de labels', 4, 'educar_configuracoes_labels.php', '_self', 1, 18, NULL, NULL);
