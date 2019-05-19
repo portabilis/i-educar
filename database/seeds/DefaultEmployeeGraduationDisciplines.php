@@ -1,16 +1,16 @@
 <?php
 
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Migrations\Migration;
 
-class InsertEmployeeGraduationDisciplines extends Migration
+class DefaultEmployeeGraduationDisciplines extends Seeder
 {
     /**
-     * Run the migrations.
+     * Run the database seeds.
      *
      * @return void
      */
-    public function up()
+    public function run()
     {
         $data = [
             6 => 'Língua /Literatura Portuguesa',
@@ -47,15 +47,5 @@ class InsertEmployeeGraduationDisciplines extends Migration
                 ['name' => $name]
             );
         }
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        //
     }
 }
