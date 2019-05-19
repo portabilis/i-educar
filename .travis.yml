@@ -19,11 +19,13 @@ cache:
 
 before_script:
   - composer new-install
+  - php artisan dusk:chrome-driver
   - vendor/laravel/dusk/bin/chromedriver-linux > /dev/null 2>&1 &
   - php artisan serve > /dev/null 2>&1 &
 
 script:
   - vendor/bin/phpunit
+  - php artisan dusk
 
 env:
   global:

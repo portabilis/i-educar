@@ -63,7 +63,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Avalia&ccedil;&atilde;o Desempenho - Detalhe";
-        
+
 
         $this->ref_cod_servidor=$_GET["ref_cod_servidor"];
         $this->ref_ref_cod_instituicao=$_GET["ref_ref_cod_instituicao"];
@@ -132,13 +132,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Detalhe da avalia&ccedil;&atilde;o de desempenho"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhe da avaliação de desempenho', [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
     }
 }
 

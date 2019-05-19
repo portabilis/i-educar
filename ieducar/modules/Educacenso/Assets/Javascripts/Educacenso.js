@@ -6,10 +6,7 @@ $j(document).ready(function(){
     '30',
     '40',
     '50',
-    '51',
-    '60',
-    '70',
-    '80'
+    '60'
   ];
 
   const recordsFirstStepNotActive = [
@@ -53,7 +50,7 @@ $j(document).ready(function(){
 
 
     var headerPaginaResposta = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+'Análise exportação'+'</title>'+
-            '<link rel="stylesheet" href="../modules/Educacenso/Assets/Stylesheets/educacensoPdf.css?v=2"></head><body>'+
+            '<link rel="stylesheet" href="../modules/Educacenso/Assets/Stylesheets/educacensoPdf.css?v=5"></head><body>'+
             '<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">'+
             `<p class="date-info">Data da geração: ${currentDateString()}</p>`+
 						'<div id="content">'+
@@ -71,17 +68,12 @@ $j(document).ready(function(){
     var iniciaAnalise = function() {
 
     	var escola = $j("#ref_cod_escola").val();
-    	var dataIni = $j("#data_ini").val();
-    	var dataFim = $j("#data_fim").val();
       fase2 = ($j("#fase2").val() == "true");
 
-    	if (!escola || !dataIni || !dataFim){
+    	if (!escola){
     		alert("Preencha os dados obrigat\u00f3rios antes de continuar.");
     		return;
-    	} else if (!isValidDate(dataIni) || !isValidDate(dataFim)) {
-        alert("A data informada \u00e9 inv\u00e1lida.");
-        return;
-      }
+    	}
 
       resetParameters();
 
@@ -99,7 +91,19 @@ $j(document).ready(function(){
           showClose: false
         });
 
-        analyseRecords($j('#escola_em_andamento').val() == '1' ? recordsFirstStep : recordsFirstStepNotActive);
+        $j.getJSON(
+          getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', `valida-instituicao`, {
+            instituicao: $j("#ref_cod_instituicao").val()
+          })
+        ).done((data) => {
+          if (data['valid']) {
+            analyseRecords($j('#escola_em_andamento').val() == '1' ? recordsFirstStep : recordsFirstStepNotActive);
+          } else {
+            makeInvalidInstitutionWarning();
+            falhaAnalise = true;
+            finishAnalysis();
+          }
+        });
       }
     }
 
@@ -108,9 +112,7 @@ $j(document).ready(function(){
       $j("#registro_load").text(`Analisando registro ${record}`);
       let urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', `registro-${record}`, {
         escola: $j("#ref_cod_escola").val(),
-        ano: $j("#ano").val(),
-        data_ini: $j("#data_ini").val(),
-        data_fim: $j("#data_fim").val()
+        ano: $j("#ano").val()
       });
 
       let options = {
@@ -194,12 +196,22 @@ $j(document).ready(function(){
       paginaResposta += htmlAnalise;
     };
 
+    let makeInvalidInstitutionWarning = () => {
+      const instituicaoId = $j('#ref_cod_instituicao').val();
+      paginaResposta += `<div class="educacenso-institution-warning-container">
+                            <p> Para exportar todos os registros corretamente é necessário preencher o campo <b>Data de referência do Educacenso</b>, apresentado no cadastro da Instituição na aba Parâmetros. A data de referência normalmente é correspondente à última quarta-feira do mês de maio do ano atual.</p>
+                            <a class="educacenso-link-path"
+                               href="/intranet/educar_instituicao_cad.php?cod_instituicao=${instituicaoId}"
+                               target="_new">
+                               (Escola > Cadastros > Instituição > Editar > Aba: Parâmetros > Campo: Data de referência do Educacenso)
+                            </a>
+                          </div>`;
+    };
+
     var educacensoExport = function(){
         var urlForEducacensoExport = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoExport', 'educacenso-export', {
           escola   : $j("#ref_cod_escola").val(),
-          ano      : $j("#ano").val(),
-          data_ini : $j("#data_ini").val(),
-          data_fim : $j("#data_fim").val()
+          ano      : $j("#ano").val()
         });
 
         var options = {
@@ -213,9 +225,7 @@ $j(document).ready(function(){
     var educacensoExportFase2 = function(){
         var urlForEducacensoExport = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoExport', 'educacenso-export-fase2', {
           escola   : $j("#ref_cod_escola").val(),
-          ano      : $j("#ano").val(),
-          data_ini : $j("#data_ini").val(),
-          data_fim : $j("#data_fim").val()
+          ano      : $j("#ano").val()
         });
 
         var options = {
@@ -246,7 +256,7 @@ $j(document).ready(function(){
         $j("#modal_mensagem_sucesso").css("display", "none");
         $j("#modal_mensagem_desabilitado").css("display", "block");
       }
-      
+
       //Cria evento para download do arquivo de exportação
       var create = document.getElementById('download_file'), conteudo = response.conteudo;
       create.addEventListener('click', function () {

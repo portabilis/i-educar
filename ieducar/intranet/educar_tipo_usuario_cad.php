@@ -103,13 +103,10 @@ class indice extends clsCadastro
         $this->nome_url_cancelar = 'Cancelar';
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(array(
-            $_SERVER['SERVER_NAME'] . "/intranet" => "In&iacute;cio",
-            "educar_configuracoes_index.php" => "Configurações",
-            "" => "{$nomeMenu} tipo de usu&aacute;rio"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' tipo de usuário', [
+            url('intranet/educar_configuracoes_index.php') => 'Configurações',
+        ]);
 
         return $retorno;
     }

@@ -143,9 +143,10 @@ SQL;
         $sql = '
             SELECT
                 escola.cod_escola AS "codEscola",
+                educacenso_cod_escola.cod_escola_inep AS "codigoInep",
                 escola.local_funcionamento AS "localFuncionamento",
                 escola.condicao AS "condicao",
-                escola.agua_consumida AS "aguaConsumida",
+                escola.agua_potavel_consumo AS "aguaPotavelConsumo",
                 (ARRAY[1] <@ escola.abastecimento_agua)::int AS "aguaRedePublica",
                 (ARRAY[2] <@ escola.abastecimento_agua)::int AS "aguaPocoArtesiano",
                 (ARRAY[3] <@ escola.abastecimento_agua)::int AS "aguaCacimbaCisternaPoco",
@@ -156,50 +157,25 @@ SQL;
                 (ARRAY[3] <@ escola.abastecimento_energia)::int AS "energiaOutros",
                 (ARRAY[4] <@ escola.abastecimento_energia)::int AS "energiaInexistente",
                 (ARRAY[1] <@ escola.esgoto_sanitario)::int AS "esgotoRedePublica",
-                (ARRAY[2] <@ escola.esgoto_sanitario)::int AS "esgotoFossa",
+                (ARRAY[2] <@ escola.esgoto_sanitario)::int AS "esgotoFossaComum",
                 (ARRAY[3] <@ escola.esgoto_sanitario)::int AS "esgotoInexistente",
+                (ARRAY[4] <@ escola.esgoto_sanitario)::int AS "esgotoFossaRudimentar",
                 (ARRAY[1] <@ escola.destinacao_lixo)::int AS "lixoColetaPeriodica",
                 (ARRAY[2] <@ escola.destinacao_lixo)::int AS "lixoQueima",
                 (ARRAY[3] <@ escola.destinacao_lixo)::int AS "lixoJogaOutraArea",
-                (ARRAY[4] <@ escola.destinacao_lixo)::int AS "lixoRecicla",
-                (ARRAY[5] <@ escola.destinacao_lixo)::int AS "lixoEnterra",
-                (ARRAY[6] <@ escola.destinacao_lixo)::int AS "lixoOutros",
+                (ARRAY[5] <@ escola.destinacao_lixo)::int AS "lixoDestinacaoPoderPublico",
+                (ARRAY[7] <@ escola.destinacao_lixo)::int AS "lixoEnterra",
                 escola.tratamento_lixo AS "tratamentoLixo",
-                escola.dependencia_sala_diretoria AS "dependenciaSalaDiretoria",
-                escola.dependencia_sala_professores AS "dependenciaSalaProfessores",
-                escola.dependencia_sala_secretaria AS "dependnciaSalaSecretaria",
-                escola.dependencia_laboratorio_informatica AS "dependenciaLaboratorioInformatica",
-                escola.dependencia_laboratorio_ciencias AS "dependenciaLaboratorioCiencias",
-                escola.dependencia_sala_aee AS "dependenciaSalaAee",
-                escola.dependencia_quadra_coberta AS "dependenciaQuadraCoberta",
-                escola.dependencia_quadra_descoberta AS "dependenciaQuadraDescoberta",
-                escola.dependencia_cozinha AS "dependenciaCozinha",
-                escola.dependencia_biblioteca AS "dependenciaBiblioteca",
-                escola.dependencia_sala_leitura AS "dependenciaSalaLeitura",
-                escola.dependencia_parque_infantil AS "dependenciaParqueInfantil",
-                escola.dependencia_bercario AS "dependenciaBercario",
-                escola.dependencia_banheiro_fora AS "dependenciaBanheiroFora",
-                escola.dependencia_banheiro_dentro AS "dependenciaBanheiroDentro",
-                escola.dependencia_banheiro_infantil AS "dependenciaBanheiroInfantil",
-                escola.dependencia_banheiro_deficiente AS "dependenciaBanheiroDeficiente",
-                escola.dependencia_banheiro_chuveiro AS "dependenciaBanheiroChuveiro",
-                escola.dependencia_refeitorio AS "dependenciaRefeitorio",
-                escola.dependencia_dispensa AS "dependenciaDispensa",
-                escola.dependencia_aumoxarifado AS "dependenciaAumoxarifado",
-                escola.dependencia_auditorio AS "dependenciaAuditorio",
-                escola.dependencia_patio_coberto AS "dependenciaPatioCoberto",
-                escola.dependencia_patio_descoberto AS "dependenciaPatioDescoberto",
-                escola.dependencia_alojamento_aluno AS "dependenciaAlojamentoAluno",
-                escola.dependencia_alojamento_professor AS "dependenciaAlojamentoProfessor",
-                escola.dependencia_area_verde AS "dependenciaAreaVerde",
-                escola.dependencia_lavanderia AS "dependenciaLavanderia",
                 escola.dependencia_nenhuma_relacionada AS "dependenciaNenhumaRelacionada",
                 escola.numero_salas_utilizadas_dentro_predio AS "numeroSalasUtilizadasDentroPredio",
                 escola.numero_salas_utilizadas_fora_predio AS "numeroSalasUtilizadasForaPredio",
+                escola.numero_salas_climatizadas AS "numeroSalasClimatizadas",
+                escola.numero_salas_acessibilidade AS "numeroSalasAcessibilidade",
                 escola.televisoes AS "televisoes",
                 escola.videocassetes AS "videocassetes",
                 escola.dvds AS "dvds",
                 escola.antenas_parabolicas AS "antenasParabolicas",
+                escola.lousas_digitais AS "lousasDigitais",
                 escola.copiadoras AS "copiadoras",
                 escola.retroprojetores AS "retroprojetores",
                 escola.impressoras AS "impressoras",
@@ -207,6 +183,9 @@ SQL;
                 escola.projetores_digitais AS "projetoresDigitais",
                 escola.faxs AS "faxs",
                 escola.maquinas_fotograficas AS "maquinasFotograficas",
+                escola.quantidade_computadores_alunos_mesa AS "quantidadeComputadoresAlunosMesa",
+                escola.quantidade_computadores_alunos_portateis AS "quantidadeComputadoresAlunosPortateis",
+                escola.quantidade_computadores_alunos_tablets AS "quantidadeComputadoresAlunosTablets",
                 escola.computadores AS "computadores",
                 escola.computadores_administrativo AS "computadoresAdministrativo",
                 escola.computadores_alunos AS "computadoresAlunos",
@@ -222,6 +201,11 @@ SQL;
                 juridica.fantasia AS "nomeEscola",
                 escola.predio_compartilhado_outra_escola as "predioCompartilhadoOutraEscola",
                 escola.codigo_inep_escola_compartilhada as "codigoInepEscolaCompartilhada",
+                escola.codigo_inep_escola_compartilhada2 as "codigoInepEscolaCompartilhada2",
+                escola.codigo_inep_escola_compartilhada3 as "codigoInepEscolaCompartilhada3",
+                escola.codigo_inep_escola_compartilhada4 as "codigoInepEscolaCompartilhada4",
+                escola.codigo_inep_escola_compartilhada5 as "codigoInepEscolaCompartilhada5",
+                escola.codigo_inep_escola_compartilhada6 as "codigoInepEscolaCompartilhada6",
                 escola.possui_dependencias as "possuiDependencias",
                 escola.salas_gerais as "salasGerais",
                 escola.salas_funcionais as "salasFuncionais",
@@ -252,10 +236,17 @@ SQL;
                 escola.alimentacao_escolar_alunos as "alimentacaoEscolarAlunos",
                 escola.orgaos_colegiados as "orgaosColegiados",
                 escola.exame_selecao_ingresso as "exameSelecaoIngresso",
-                escola.reserva_vagas_cotas as "reservaVagasCotas"
+                escola.reserva_vagas_cotas as "reservaVagasCotas",
+                escola.organizacao_ensino as "organizacaoEnsino",
+                escola.instrumentos_pedagogicos as "instrumentosPedagogicos",
+                escola.compartilha_espacos_atividades_integracao AS "compartilhaEspacosAtividadesIntegracao",
+                escola.usa_espacos_equipamentos_atividades_regulares AS "usaEspacosEquipamentosAtividadesRegulares",
+                pessoa.url AS "url",
+                escola.projeto_politico_pedagogico AS "projetoPoliticoPedagogico"
             FROM pmieducar.escola
-            INNER JOIN cadastro.juridica ON TRUE
-                AND juridica.idpes = escola.ref_idpes
+            INNER JOIN cadastro.juridica ON juridica.idpes = escola.ref_idpes
+            INNER JOIN cadastro.pessoa ON pessoa.idpes = escola.ref_idpes
+            LEFT JOIN modules.educacenso_cod_escola ON (escola.cod_escola = educacenso_cod_escola.cod_escola)
             WHERE TRUE
                 AND escola.cod_escola = :school
         ';
@@ -303,6 +294,7 @@ SQL;
     public function getDataForRecord20($school, $year)
     {
         $sql = ' SELECT turma.cod_turma AS "codTurma",
+                   educacenso_cod_escola.cod_escola_inep AS "codigoEscolaInep",
                    turma.ref_ref_cod_escola AS "codEscola",
                    turma.ref_cod_curso AS "codCurso",
                    turma.ref_ref_cod_serie AS "codSerie",
@@ -393,6 +385,7 @@ SQL;
                 turma.cod_curso_profissional as "codCursoProfissional"
 
               FROM pmieducar.escola
+              LEFT JOIN modules.educacenso_cod_escola ON (escola.cod_escola = educacenso_cod_escola.cod_escola)
              JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
              JOIN pmieducar.turma ON (turma.ref_ref_cod_escola = escola.cod_escola)
              JOIN pmieducar.curso ON (turma.ref_cod_curso = curso.cod_curso)
@@ -546,8 +539,8 @@ SQL;
                     educacenso_cod_escola.cod_escola "inepEscola",
                     aluno.ref_idpes "codigoPessoa",
                     educacenso_cod_aluno.cod_aluno_inep "inepAluno",
-                    turma.cod_turma "codigoTUrma",
-                    educacenso_cod_turma.cod_turma_inep "inepTurma",
+                    turma.cod_turma "codigoTurma",
+                    null "inepTurma",
                     null "matriculaAluno",
                     matricula_turma.etapa_educacenso "etapaAluno",
                     COALESCE((ARRAY[1] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoDesenvolvimentoFuncoesGognitivas",
@@ -562,7 +555,8 @@ SQL;
                     COALESCE((ARRAY[10] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoCaa",
                     COALESCE((ARRAY[11] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoRecursosOpticosNaoOpticos",
                     aluno.recebe_escolarizacao_em_outro_espaco AS "recebeEscolarizacaoOutroEspacao",
-                    transporte_aluno.responsavel AS "transportePublico",
+                    (CASE WHEN transporte_aluno.responsavel = 0 OR transporte_aluno.responsavel IS NULL THEN 0
+                        ELSE 1 END) AS "transportePublico",
                     transporte_aluno.responsavel AS "poderPublicoResponsavelTransporte",
                     (ARRAY[4] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteBicicleta",
                     (ARRAY[2] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteMicroonibus",
@@ -584,13 +578,15 @@ SQL;
                     turma.nm_turma "nomeTurma",
                     matricula_turma.tipo_atendimento "tipoAtendimentoMatricula",
                     turma.tipo_mediacao_didatico_pedagogico "tipoMediacaoTurma",
-                    aluno.veiculo_transporte_escolar "veiculoTransporteEscolar"
+                    aluno.veiculo_transporte_escolar "veiculoTransporteEscolar",
+                    curso.modalidade_curso as "modalidadeCurso"
                      FROM pmieducar.aluno
                      JOIN pmieducar.matricula ON matricula.ref_cod_aluno = aluno.cod_aluno
                      JOIN pmieducar.escola ON escola.cod_escola = matricula.ref_ref_cod_escola
                      JOIN pmieducar.matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
                      JOIN pmieducar.instituicao ON instituicao.cod_instituicao = escola.ref_cod_instituicao
                      JOIN pmieducar.turma ON turma.cod_turma = matricula_turma.ref_cod_turma
+                     JOIN pmieducar.curso ON curso.cod_curso = turma.ref_cod_curso
                      JOIN cadastro.pessoa ON pessoa.idpes = aluno.ref_idpes
                 LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
                 LEFT JOIN modules.educacenso_cod_turma ON educacenso_cod_turma.cod_turma = turma.cod_turma
@@ -608,11 +604,15 @@ SQL;
                            matricula_turma.data_enturmacao = instituicao.data_educacenso AND
                            (
                              NOT EXISTS(
-                                 SELECT 1
-                                   FROM pmieducar.matricula_turma enturmacao_anterior
-                                  WHERE enturmacao_anterior.ref_cod_matricula = matricula.cod_matricula
-                                    AND enturmacao_anterior.sequencial <> matricula_turma.sequencial
-                                    AND enturmacao_anterior.data_exclusao = instituicao.data_educacenso
+                                SELECT 1
+                                FROM pmieducar.matricula_turma smt
+                                JOIN pmieducar.matricula sm
+                                  ON sm.cod_matricula = smt.ref_cod_matricula
+                                WHERE sm.ref_cod_aluno = matricula.ref_cod_aluno
+                                AND sm.ativo = 1
+                                AND sm.ano = matricula.ano
+                                AND smt.data_enturmacao < matricula_turma.data_enturmacao
+                                AND coalesce(smt.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
                                  )
                            )
                           )
@@ -623,5 +623,190 @@ SQL;
             'school' => $school,
             'year' => $year,
         ]);
+    }
+
+    public function getCommonDataForRecord30($arrayPersonId, $schoolId)
+    {
+        if (empty($arrayPersonId)) {
+            return [];
+        }
+
+        $stringPersonId = join(',', $arrayPersonId);
+        $sql = <<<SQL
+            SELECT
+                '30' AS registro,
+                dadosescola.cod_escola_inep AS "inepEscola",
+                dadosescola.cod_escola AS "codigoEscola",
+                fisica.idpes AS "codigoPessoa",
+                fisica.cpf AS cpf,
+                pessoa.nome AS "nomePessoa",
+                fisica.data_nasc AS "dataNascimento",
+                (pessoa_mae.nome IS NOT NULL OR pessoa_pai.nome IS NOT NULL)::INTEGER AS "filiacao",
+                pessoa_mae.nome AS "filiacao1",
+                pessoa_pai.nome AS "filiacao2",
+                CASE WHEN fisica.sexo = 'M' THEN 1 ELSE 2 END AS "sexo",
+                fisica_raca.ref_cod_raca AS "raca",
+                fisica.nacionalidade AS "nacionalidade",
+                CASE WHEN fisica.nacionalidade = 3 THEN fisica.idpais_estrangeiro ELSE 76 END AS "paisNacionalidade",
+                fisica.idmun_nascimento AS "municipioNascimento",
+                CASE WHEN
+                    true = (SELECT true FROM cadastro.fisica_deficiencia WHERE fisica_deficiencia.ref_idpes = fisica.idpes LIMIT 1) THEN 1
+                    ELSE 0 END
+                AS "deficiencia",
+                1 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaCegueira",
+                2 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaBaixaVisao",
+                3 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaSurdez",
+                4 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAuditiva",
+                5 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaSurdoCegueira",
+                6 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaFisica",
+                7 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaIntelectual",
+                CASE WHEN array_length(deficiencias.array_deficiencias, 1) > 1 THEN 1 ELSE 0 END "deficienciaMultipla",
+                13 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAltasHabilidades",
+                25 = ANY (deficiencias.array_deficiencias)::INTEGER AS "deficienciaAutismo",
+                fisica.pais_residencia AS "paisResidencia",
+                endereco_pessoa.cep AS "cep",
+                municipio.cod_ibge AS "municipioResidencia",
+                fisica.zona_localizacao_censo AS "localizacaoResidencia",
+                fisica.localizacao_diferenciada AS "localizacaoDiferenciada",
+                dadosescola.nomeescola AS "nomeEscola",
+                   CASE WHEN fisica.nacionalidade = 1 THEN 'Brasileira'
+                     WHEN fisica.nacionalidade = 2 THEN 'Naturalizado brasileiro'
+                     ELSE 'Estrangeira' END AS "nomeNacionalidade",
+                deficiencias.array_deficiencias AS "arrayDeficiencias"
+                 FROM cadastro.fisica
+                 JOIN cadastro.pessoa ON pessoa.idpes = fisica.idpes
+            LEFT JOIN cadastro.fisica_raca ON fisica_raca.ref_idpes = fisica.idpes
+            LEFT JOIN cadastro.pessoa as pessoa_mae
+            ON fisica.idpes_mae = pessoa_mae.idpes
+            LEFT JOIN cadastro.pessoa as pessoa_pai
+            ON fisica.idpes_pai = pessoa_pai.idpes
+            LEFT JOIN cadastro.endereco_pessoa ON endereco_pessoa.idpes = pessoa.idpes
+            LEFT JOIN public.logradouro ON logradouro.idlog = endereco_pessoa.idlog
+            LEFT JOIN public.municipio ON municipio.idmun = logradouro.idmun
+            LEFT JOIN public.pais ON pais.idpais = CASE WHEN fisica.nacionalidade = 3 THEN fisica.idpais_estrangeiro ELSE 76 END
+            LEFT JOIN LATERAL (
+                 SELECT educacenso_cod_escola.cod_escola_inep,
+                        educacenso_cod_escola.cod_escola,
+                        relatorio.get_nome_escola(educacenso_cod_escola.cod_escola) AS nomeescola
+                 FROM modules.educacenso_cod_escola
+                 WHERE educacenso_cod_escola.cod_escola = :school
+                 ) dadosescola ON true
+            LEFT JOIN LATERAL (
+                 SELECT fisica_deficiencia.ref_idpes,
+                        ARRAY_AGG(fisica_deficiencia.ref_cod_deficiencia) as array_deficiencias
+                 FROM cadastro.fisica_deficiencia
+                 JOIN cadastro.deficiencia ON deficiencia.cod_deficiencia = fisica_deficiencia.ref_cod_deficiencia
+                 WHERE fisica_deficiencia.ref_idpes = fisica.idpes
+                   AND deficiencia.deficiencia_educacenso IN (1,2,3,4,5,6,7,25,13)
+                 GROUP BY 1
+                 ) deficiencias ON true
+
+            WHERE fisica.idpes IN ({$stringPersonId})
+
+SQL;
+
+        return $this->fetchPreparedQuery($sql, ['school' => $schoolId]);
+    }
+
+    public function getEmployeeDataForRecord30($arrayEmployeeId)
+    {
+        if (empty($arrayEmployeeId)) {
+            return [];
+        }
+
+        $stringPersonId = join(',', $arrayEmployeeId);
+        $sql = <<<SQL
+            SELECT DISTINCT
+                servidor.ref_cod_instituicao AS "codigoInstituicao",
+                servidor.cod_servidor AS "codigoPessoa",
+                escolaridade.escolaridade AS "escolaridade",
+                servidor.tipo_ensino_medio_cursado AS "tipoEnsinoMedioCursado",
+                tbl_formacoes.course_id AS "formacaoCurso",
+                tbl_formacoes.completion_year AS "formacaoAnoConclusao",
+                tbl_formacoes.college_id AS "formacaoInstituicao",
+                tbl_formacoes.discipline_id AS "formacaoComponenteCurricular",
+                coalesce(cardinality(servidor.pos_graduacao),0) as "countPosGraduacao",
+                (ARRAY[1] <@ servidor.pos_graduacao)::INT "posGraduacaoEspecializacao",
+                (ARRAY[2] <@ servidor.pos_graduacao)::INT "posGraduacaoMestrado",
+                (ARRAY[3] <@ servidor.pos_graduacao)::INT "posGraduacaoDoutorado",
+                (ARRAY[4] <@ servidor.pos_graduacao)::INT "posGraduacaoNaoPossui",
+                coalesce(cardinality(servidor.curso_formacao_continuada),0) as "countFormacaoContinuada",
+                (ARRAY[1] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaCreche",
+                (ARRAY[2] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaPreEscola",
+                (ARRAY[3] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaAnosIniciaisFundamental",
+                (ARRAY[4] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaAnosFinaisFundamental",
+                (ARRAY[5] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEnsinoMedio",
+                (ARRAY[6] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoJovensAdultos",
+                (ARRAY[7] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoEspecial",
+                (ARRAY[8] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoIndigena",
+                (ARRAY[9] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoCampo",
+                (ARRAY[10] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoAmbiental",
+                (ARRAY[11] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoDireitosHumanos",
+                (ARRAY[12] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaGeneroDiversidadeSexual",
+                (ARRAY[13] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaDireitosCriancaAdolescente",
+                (ARRAY[14] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoRelacoesEticoRaciais",
+                (ARRAY[17] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoGestaoEscolar",
+                (ARRAY[15] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoOutros",
+                (ARRAY[16] <@ servidor.curso_formacao_continuada)::INT "formacaoContinuadaEducacaoNenhum",
+                pessoa.email AS "email",
+                educacenso_cod_docente.cod_docente_inep AS "inepServidor"
+
+            FROM pmieducar.servidor
+                 JOIN cadastro.pessoa ON pessoa.idpes = servidor.cod_servidor
+            LEFT JOIN cadastro.escolaridade ON escolaridade.idesco = servidor.ref_idesco
+            LEFT JOIN modules.educacenso_cod_docente ON educacenso_cod_docente.cod_servidor = servidor.cod_servidor,
+            LATERAL (
+                SELECT ARRAY_REMOVE(ARRAY_AGG(educacenso_curso_superior.curso_id), NULL) course_id,
+                       ARRAY_REMOVE(ARRAY_AGG(completion_year), NULL) completion_year,
+                       ARRAY_REMOVE(ARRAY_AGG(educacenso_ies.ies_id), NULL) college_id,
+                       ARRAY_REMOVE(ARRAY_AGG(discipline_id), NULL) discipline_id
+                 FROM employee_graduations
+                 JOIN modules.educacenso_curso_superior ON educacenso_curso_superior.id = employee_graduations.course_id
+                 JOIN modules.educacenso_ies ON educacenso_ies.id = employee_graduations.college_id
+                WHERE employee_graduations.employee_id = servidor.cod_servidor
+            ) AS tbl_formacoes
+            WHERE servidor.cod_servidor IN ({$stringPersonId})
+
+
+SQL;
+
+        return $this->fetchPreparedQuery($sql);
+    }
+
+    public function getStudentDataForRecord30($arrayStudentId)
+    {
+        if (empty($arrayStudentId)) {
+            return [];
+        }
+
+        $stringStudentId = join(',', $arrayStudentId);
+        $sql = <<<SQL
+            SELECT DISTINCT
+                aluno.ref_idpes AS "codigoPessoa",
+                educacenso_cod_aluno.cod_aluno_inep AS "inepAluno",
+                aluno.recursos_prova_inep AS "recursosProvaInep",
+                (ARRAY[1] <@ aluno.recursos_prova_inep)::INT "recursoLedor",
+                (ARRAY[2] <@ aluno.recursos_prova_inep)::INT "recursoTranscricao",
+                (ARRAY[3] <@ aluno.recursos_prova_inep)::INT "recursoGuia",
+                (ARRAY[4] <@ aluno.recursos_prova_inep)::INT "recursoTradutor",
+                (ARRAY[5] <@ aluno.recursos_prova_inep)::INT "recursoLeituraLabial",
+                (ARRAY[10] <@ aluno.recursos_prova_inep)::INT "recursoProvaAmpliada",
+                (ARRAY[8] <@ aluno.recursos_prova_inep)::INT "recursoProvaSuperampliada",
+                (ARRAY[11] <@ aluno.recursos_prova_inep)::INT "recursoAudio",
+                (ARRAY[12] <@ aluno.recursos_prova_inep)::INT "recursoLinguaPortuguesaSegundaLingua",
+                (ARRAY[13] <@ aluno.recursos_prova_inep)::INT "recursoVideoLibras",
+                (ARRAY[9] <@ aluno.recursos_prova_inep)::INT "recursoBraile",
+                (aluno.recursos_prova_inep IS NOT NULL)::INT "recursoNenhum",
+                fisica.nis_pis_pasep AS "nis",
+                documento.certidao_nascimento AS "certidaoNascimento",
+                aluno.justificativa_falta_documentacao AS "justificativaFaltaDocumentacao"
+            FROM pmieducar.aluno
+                 JOIN cadastro.fisica ON fisica.idpes = aluno.ref_idpes
+            LEFT JOIN cadastro.documento ON documento.idpes = fisica.idpes
+            LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = aluno.cod_aluno
+            WHERE aluno.cod_aluno IN ({$stringStudentId})
+SQL;
+
+        return $this->fetchPreparedQuery($sql);
     }
 }

@@ -84,15 +84,13 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_projeto_det.php?cod_projeto={$registro["cod_projeto"]}" : "educar_projeto_lst.php";
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} projeto"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' projeto', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
+
         return $retorno;
     }
 

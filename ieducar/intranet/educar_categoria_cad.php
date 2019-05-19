@@ -84,11 +84,10 @@ class indice extends clsCadastro
         $this->nome_url_cancelar = "Cancelar";
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(array($_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-                                                  "educar_biblioteca_index.php" => "Biblioteca",
-                                                                             "" => "{$nomeMenu} categoria"));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' categoria', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
 
         return $retorno;
     }

@@ -120,13 +120,9 @@ class indice extends clsCadastro
         $this->acao_enviar       = "validaValor()";
         $this->valor_pendente    = $this->total_divida - $this->valor_pago_bib;
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "Pagamendo da d&iacute;vida"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Pagamento da dívida', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
 
         return $retorno;
     }

@@ -53,15 +53,10 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Documentação padrão";
-        
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""                                  => "Documentação padrão"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Documentação padrão', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->cod_instituicao=$_GET["cod_instituicao"];
 

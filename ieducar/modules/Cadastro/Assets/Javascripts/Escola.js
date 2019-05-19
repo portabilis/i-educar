@@ -51,8 +51,6 @@ const EQUIPAMENTOS = {
     COMPUTADORES: 1
 };
 
-$escolaInepIdField.closest('tr').hide();
-
 var submitForm = function(){
   var canSubmit = validationUtils.validatesFields(true);
 

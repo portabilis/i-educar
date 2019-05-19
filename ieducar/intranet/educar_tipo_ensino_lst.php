@@ -86,13 +86,13 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $get_escola = false;
         include("include/pmieducar/educar_campo_lista.php");
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-        
+
         switch ($nivel_usuario) {
             case 1:
                 $this->addCabecalhos( array(
@@ -100,11 +100,11 @@ class indice extends clsListagem
                     "Institui&ccedil;&atilde;o"
                 ) );
                 break;
-        
+
             default:
                 $this->addCabecalhos( array(
                     "Tipo Ensino"
-                ) );    
+                ) );
                 break;
         }
 
@@ -160,15 +160,15 @@ class indice extends clsListagem
                         $this->addLinhas( array(
                             "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro["cod_tipo_ensino"]}\">{$registro["nm_tipo"]}</a>",
                             "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro["cod_tipo_ensino"]}\">{$registro["ref_cod_instituicao"]}</a>"
-                        ) );    
+                        ) );
                         break;
-                
+
                     default:
                         $this->addLinhas( array(
                             "<a href=\"educar_tipo_ensino_det.php?cod_tipo_ensino={$registro["cod_tipo_ensino"]}\">{$registro["nm_tipo"]}</a>"
-                        ) );    
+                        ) );
                         break;
-                }       
+                }
 
             }
         }
@@ -185,13 +185,9 @@ class indice extends clsListagem
         $this->addPaginador2( "educar_tipo_ensino_lst.php", $total, $_GET, $this->nome, $this->limite );
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "Listagem de tipos de ensino"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());            
+        $this->breadcrumb('Listagem de tipos de ensino', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 // cria uma extensao da classe base

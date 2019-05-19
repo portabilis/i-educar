@@ -91,7 +91,7 @@ class indice extends clsListagem
         // Paginador
         $this->limite = 20;
         $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
-        
+
         $obj_categoria_obra = new clsPmieducarCategoriaObra();
         $obj_categoria_obra->setOrderby("descricao ASC");
         $obj_categoria_obra->setLimite($this->limite, $this->offset);
@@ -118,11 +118,9 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(array($_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-                                                  "educar_biblioteca_index.php" => "Biblioteca",
-                                                                             "" => "Listagem de categorias"));
-        $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Listagem de categorias', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 // cria uma extensao da classe base

@@ -38,8 +38,9 @@ class DiarioController extends ApiCoreController
         $detTurma = $objTurma->detalhe();
         $escolaId = $detTurma['ref_ref_cod_escola'];
         $serieId = $detTurma['ref_ref_cod_serie'];
+        $ano = $detTurma['ano'];
 
-        return App_Model_IedFinder::getComponentesTurma($serieId, $escolaId, $turmaId);
+        return App_Model_IedFinder::getComponentesTurma($serieId, $escolaId, $turmaId, null, null, null, null, null, $ano);
     }
 
     protected function validateComponenteCurricular($matriculaId, $componenteCurricularId)
@@ -58,11 +59,21 @@ class DiarioController extends ApiCoreController
     protected function validateComponenteTurma($turmaId, $componenteCurricularId)
     {
         $componentesTurma = $this->getComponentesPorTurma($turmaId);
-        $componentesTurma = CoreExt_Entity::entityFilterAttr($componentesTurma, 'id', 'id');
-        $valid = in_array($componenteCurricularId, $componentesTurma);
 
+        if ($componentesTurma instanceof CoreExt_Entity) {
+            $componentesTurma = CoreExt_Entity::entityFilterAttr($componentesTurma, 'id', 'id');
+        } else {
+            foreach ($componentesTurma as $componente) {
+                $arr[] = $componente->id;
+                $key = key($arr);
+                $componentes[$key] = $arr;
+            }
+            $componentesTurma = $componentes[0];
+        }
+
+        $valid = in_array($componenteCurricularId, $componentesTurma);
         if (!$valid) {
-            throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("Componente curricular de código $componenteCurricularId não existe para a turma $turmaId ."));
+            throw new CoreExt_Exception("Componente curricular de código $componenteCurricularId não existe para a turma $turmaId .");
         }
 
         return $valid;
@@ -129,12 +140,8 @@ class DiarioController extends ApiCoreController
 
             // set service
             if (!isset($this->_boletimServiceInstances[$matriculaId])) {
-                try {
                     $params = ['matricula' => $matriculaId];
                     $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
-                } catch (Exception $e) {
-                    $this->messenger->append(Portabilis_String_Utils::toLatin1("Erro ao instanciar serviço boletim para matricula {$matriculaId}: ") . $e->getMessage(), 'error', true);
-                }
             }
 
             // validates service

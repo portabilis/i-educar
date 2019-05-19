@@ -36,7 +36,9 @@ class clsPessoaFisica extends clsPessoaFj
     public $ativo;
     public $data_exclusao;
     public $zona_localizacao_censo;
+    public $localizacao_diferenciada;
     public $nome_social;
+    public $pais_residencia;
 
     public $banco           = 'pmi';
     public $schema_cadastro = 'cadastro';
@@ -299,7 +301,9 @@ class clsPessoaFisica extends clsPessoaFj
                 $this->ativo                    = $detalhe_fisica['ativo'];
                 $this->data_exclusao            = $detalhe_fisica['data_exclusao'];
                 $this->zona_localizacao_censo   = $detalhe_fisica['zona_localizacao_censo'];
+                $this->localizacao_diferenciada = $detalhe_fisica['localizacao_diferenciada'];
                 $this->nome_social              = $detalhe_fisica['nome_social'];
+                $this->pais_residencia          = $detalhe_fisica['pais_residencia'];
 
                 $tupla['idpes'] = $this->idpes;
                 $tupla[]        = & $tupla['idpes'];
@@ -385,8 +389,14 @@ class clsPessoaFisica extends clsPessoaFj
                 $tupla['zona_localizacao_censo'] = $this->zona_localizacao_censo;
                 $tupla[]                         = & $tupla['zona_localizacao_censo'];
 
+                $tupla['localizacao_diferenciada'] = $this->localizacao_diferenciada;
+                $tupla[]                           = & $tupla['localizacao_diferenciada'];
+
                 $tupla['nome_social'] = $this->nome_social;
                 $tupla[] = & $tupla['nome_social'];
+
+                $tupla['pais_residencia'] = $this->pais_residencia;
+                $tupla[] = & $tupla['pais_residencia'];
 
                 return $tupla;
             }
@@ -467,7 +477,9 @@ class clsPessoaFisica extends clsPessoaFj
                     $this->ativo                    = $detalhe_fisica['ativo'];
                     $this->data_exclusao            = $detalhe_fisica['data_exclusao'];
                     $this->zona_localizacao_censo   = $detalhe_fisica['zona_localizacao_censo'];
+                    $this->localizacao_diferenciada = $detalhe_fisica['localizacao_diferenciada'];
                     $this->nome_social              = $detalhe_fisica['nome_social'];
+                    $this->pais_residencia          = $detalhe_fisica['pais_residencia'];
 
                     $tupla['idpes'] = $this->idpes;
                     $tupla[]        = & $tupla['idpes'];
@@ -547,8 +559,14 @@ class clsPessoaFisica extends clsPessoaFj
                     $tupla['zona_localizacao_censo'] = $this->zona_localizacao_censo;
                     $tupla[] = & $tupla['zona_localizacao_censo'];
 
+                    $tupla['localizacao_diferenciada'] = $this->localizacao_diferenciada;
+                    $tupla[] = & $tupla['localizacao_diferenciada'];
+
                     $tupla['nome_social'] = $this->nome_social;
                     $tupla[] = & $tupla['nome_social'];
+
+                    $tupla['pais_residencia'] = $this->pais_residencia;
+                    $tupla[] = & $tupla['pais_residencia'];
 
                     return $tupla;
                 }
