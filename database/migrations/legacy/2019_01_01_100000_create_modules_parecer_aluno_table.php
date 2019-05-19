@@ -35,6 +35,9 @@ class CreateModulesParecerAlunoTable extends Migration
                 ALTER TABLE ONLY modules.parecer_aluno
                     ADD CONSTRAINT parecer_aluno_pkey PRIMARY KEY (id);
 
+                ALTER TABLE ONLY modules.parecer_aluno
+                    ADD CONSTRAINT modules_parecer_aluno_matricula_id_unique UNIQUE (matricula_id);
+
                 ALTER TABLE ONLY modules.parecer_aluno ALTER COLUMN id SET DEFAULT nextval(\'modules.parecer_aluno_id_seq\'::regclass);
                 
                 CREATE INDEX idx_parecer_aluno_matricula_id ON modules.parecer_aluno USING btree (matricula_id);

@@ -46,7 +46,8 @@ class CreatePmieducarServidorTable extends Migration
                     instituicao_curso_superior_3 smallint,
                     multi_seriado boolean,
                     pos_graduacao integer[],
-                    curso_formacao_continuada integer[]
+                    curso_formacao_continuada integer[],
+                    tipo_ensino_medio_cursado int4 NULL
                 );
                 
                 ALTER TABLE ONLY pmieducar.servidor

@@ -34,6 +34,9 @@ class CreateModulesNotaAlunoTable extends Migration
                 ALTER TABLE ONLY modules.nota_aluno
                     ADD CONSTRAINT nota_aluno_pkey PRIMARY KEY (id);
 
+                ALTER TABLE ONLY modules.nota_aluno
+                    ADD CONSTRAINT modules_nota_aluno_matricula_id_unique UNIQUE (matricula_id);
+
                 ALTER TABLE ONLY modules.nota_aluno ALTER COLUMN id SET DEFAULT nextval(\'modules.nota_aluno_id_seq\'::regclass);
                 
                 CREATE INDEX idx_nota_aluno_matricula ON modules.nota_aluno USING btree (matricula_id);

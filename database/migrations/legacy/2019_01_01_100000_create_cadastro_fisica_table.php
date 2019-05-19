@@ -70,6 +70,8 @@ class CreateCadastroFisicaTable extends Migration
                     horario_inicial_trabalho time without time zone,
                     horario_final_trabalho time without time zone,
                     nome_social varchar(150) NULL,
+                    pais_residencia int4 NOT NULL DEFAULT 76,
+                    localizacao_diferenciada int4 NULL,
                     CONSTRAINT ck_fisica_nacionalidade CHECK (((nacionalidade >= (1)::numeric) AND (nacionalidade <= (3)::numeric))),
                     CONSTRAINT ck_fisica_operacao CHECK (((operacao = \'I\'::bpchar) OR (operacao = \'A\'::bpchar) OR (operacao = \'E\'::bpchar))),
                     CONSTRAINT ck_fisica_origem_gravacao CHECK (((origem_gravacao = \'M\'::bpchar) OR (origem_gravacao = \'U\'::bpchar) OR (origem_gravacao = \'C\'::bpchar) OR (origem_gravacao = \'O\'::bpchar))),
