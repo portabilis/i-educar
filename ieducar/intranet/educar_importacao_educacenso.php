@@ -65,7 +65,7 @@ class indice extends clsCadastro
 
   function Inicializar()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(9998849, $this->pessoa_logada, 7,
@@ -100,7 +100,7 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(9998849, $this->pessoa_logada, 7,
@@ -1282,10 +1282,22 @@ class indice extends clsCadastro
       return false;
     }
 
-    if($recebeEscolarizacaoOutroEspaco){
-      $obj = new clsPmieducarAluno($codAluno);
-      $obj->recebe_escolarizacao_em_outro_espaco = $recebeEscolarizacaoOutroEspaco;
-      $obj->edita();
+    if ($recebeEscolarizacaoOutroEspaco) {
+        $obj = new clsPmieducarAluno($codAluno);
+
+        switch ($recebeEscolarizacaoOutroEspaco) {
+            case 1:
+                $obj->recebe_escolarizacao_em_outro_espaco = 2;
+                break;
+            case 3:
+                $obj->recebe_escolarizacao_em_outro_espaco = 1;
+                break;
+            default:
+                $obj->recebe_escolarizacao_em_outro_espaco = 3;
+                break;
+        }
+
+        $obj->edita();
     }
 
     $this->createOrUpdateAlunoTransporte($codAluno, $utilizaTransporte, $poderPublicoTransporte);

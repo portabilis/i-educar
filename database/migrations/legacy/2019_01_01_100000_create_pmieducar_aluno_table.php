@@ -42,7 +42,7 @@ class CreatePmieducarAlunoTable extends Migration
                     justificativa_falta_documentacao smallint,
                     url_laudo_medico json,
                     codigo_sistema character varying(30),
-                    veiculo_transporte_escolar smallint,
+                    veiculo_transporte_escolar int4[] NULL,
                     autorizado_um character varying(150),
                     parentesco_um character varying(150),
                     autorizado_dois character varying(150),
@@ -54,7 +54,7 @@ class CreatePmieducarAlunoTable extends Migration
                     autorizado_cinco character varying(150),
                     parentesco_cinco character varying(150),
                     url_documento json,
-                    recebe_escolarizacao_em_outro_espaco smallint DEFAULT 3 NOT NULL,
+	                recebe_escolarizacao_em_outro_espaco int2 NOT NULL DEFAULT 1,
                     recursos_prova_inep integer[]
                 );
                 

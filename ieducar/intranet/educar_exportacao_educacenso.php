@@ -95,6 +95,7 @@ class indice extends clsCadastro
     }
 
     $this->acao_enviar      = "acaoExportar();";
+    $this->nome_url_sucesso = 'Analisar';
 
     return 'Nova exportação';
   }

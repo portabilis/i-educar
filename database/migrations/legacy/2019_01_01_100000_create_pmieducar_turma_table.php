@@ -84,7 +84,8 @@ class CreatePmieducarTurmaTable extends Migration
                     dias_semana integer[],
                     atividades_complementares integer[],
                     atividades_aee integer[],
-                    tipo_boletim_diferenciado smallint
+                    tipo_boletim_diferenciado int2 NULL,
+                    local_funcionamento_diferenciado int2 NULL
                 );
                 
                 ALTER TABLE ONLY pmieducar.turma

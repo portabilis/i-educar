@@ -434,8 +434,8 @@ class indice extends clsCadastro
         $resources = [
 			null => 'Selecione',
 			1 => 'Ensino regular',
-			2 => 'Educação especial',
-			3 => 'Educação jovens e adultos',
+			2 => 'Educação Especial - Modalidade Substitutiva',
+			3 => 'Educação de Jovens e Adultos (EJA)',
 			4 => 'Educação profissional'
 		];
 
@@ -610,7 +610,7 @@ class indice extends clsCadastro
                 if ($alterouPadraoAnoEscolar) {
                     $this->updateClassStepsForCourse($this->cod_curso, $this->padrao_ano_escolar, date("Y"));
                 }
-                
+
 
                 $this->mensagem .= 'Edição efetuada com sucesso.<br>';
                 $this->simpleRedirect('educar_curso_lst.php');

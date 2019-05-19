@@ -94,9 +94,6 @@ class indice extends clsCadastro
       $objTemp = new clsPmieducarTipoUsuario();
       $objTemp->setOrderby('nm_tipo ASC');
 
-      $obj_libera_menu = new clsMenuFuncionario($this->pessoa_logada,false,false,0);
-      $obj_super_usuario = $obj_libera_menu->detalhe();
-
       $lista = $objTemp->lista(null,null,null,null,null,null,null,null,1);
 
       if ( is_array( $lista ) && count( $lista ) )

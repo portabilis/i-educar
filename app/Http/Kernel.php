@@ -66,7 +66,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'ieducar.navigation' => \App\Http\Middleware\Navigation::class,
         'ieducar.setlayoutvariables' => \App\Http\Middleware\SetLayoutVariables::class,
-        'ieducar.menu' => \App\Http\Middleware\Menu::class,
         'ieducar.footer' => \App\Http\Middleware\Footer::class,
         'ieducar.xssbypass' => \App\Http\Middleware\XssByPass::class,
         'ieducar.suspended' => \App\Http\Middleware\Suspended::class,

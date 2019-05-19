@@ -37,7 +37,8 @@ class CreatePmieducarMatriculaTurmaTable extends Migration
                     etapa_educacenso smallint,
                     turma_unificada smallint,
 	                turno_id int4 NULL,
-	                id serial NOT NULL
+	                id serial NOT NULL,
+	                tipo_atendimento int4[] NULL
                 );
                 
                 ALTER TABLE ONLY pmieducar.matricula_turma
