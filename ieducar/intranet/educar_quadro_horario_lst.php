@@ -90,6 +90,8 @@ class indice
 
   function renderHTML()
   {
+    $retorno = '';
+
     $this->pessoa_logada = Session::get('id_pessoa');
 
     $obj_permissoes = new clsPermissoes();
@@ -110,26 +112,9 @@ class indice
       return $retorno;
     }
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Quadros de horários"
-    ));
-    $this->locale = $localizacao->montar();
-
-
-    if ($this->locale){
-
-      $retorno .=  "
-        <table class='tablelistagem' width='100%' border='0'  cellpadding='0' cellspacing='0'>";
-
-      $retorno .=  "<tr height='10px'>
-                      <td class='fundoLocalizacao' colspan='5'>{$this->locale}</td>
-                    </tr>";
-
-      $retorno .= "</table>";
-    }    
+    $this->breadcrumb('Quadros de horários', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
 
     $retorno .= '
       <table width="100%" cellspacing="1" cellpadding="2" border="0" class="tablelistagem">
@@ -218,7 +203,7 @@ class indice
                 if($registro['ref_cod_disciplina'] == 0){
                   $componente->abreviatura = 'EDUCAÇÃO INFANTIL';
                 }else{
-                  $componente = $componenteMapper->find($registro['ref_cod_disciplina']); 
+                  $componente = $componenteMapper->find($registro['ref_cod_disciplina']);
                 }
 
                 // Servidor
@@ -289,9 +274,9 @@ class indice
     $x = 1;
     $quantidadeElementos = count($valores);
     while ($x < $quantidadeElementos) {
-        $mesmoHorario = (($valores[0]['hora_inicial'] == $valores[$x]['hora_inicial']) && 
+        $mesmoHorario = (($valores[0]['hora_inicial'] == $valores[$x]['hora_inicial']) &&
                          ($valores[0]['hora_final'] == $valores[$x]['hora_final']));
-        
+
         if($mesmoHorario){
           unset($valores[$x]);
           $valores[0]['ref_cod_disciplina'] = 0;

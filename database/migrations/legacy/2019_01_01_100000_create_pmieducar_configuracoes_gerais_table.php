@@ -38,7 +38,8 @@ class CreatePmieducarConfiguracoesGeraisTable extends Migration
                     linkedin_url character varying(255) DEFAULT \'https://www.linkedin.com/company/portabilis-tecnologia\'::character varying,
                     ieducar_suspension_message text,
 	                bloquear_cadastro_aluno bool NOT NULL DEFAULT false,
-	                token_novo_educacao varchar(191) NULL
+	                token_novo_educacao varchar(191) NULL,
+	                situacoes_especificas_atestados bool NOT NULL DEFAULT false
                 );
 
                 COMMENT ON COLUMN pmieducar.configuracoes_gerais.mostrar_codigo_inep_aluno IS \'Mostrar código INEP do aluno nas telas de cadastro\';

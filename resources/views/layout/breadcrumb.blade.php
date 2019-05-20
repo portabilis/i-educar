@@ -1,21 +1,18 @@
-@if ($breadcrumb->pages())
-    <div class="breadcrumb">
+@if ($breadcrumb->getLegacy())
+    {!! $breadcrumb->getLegacy() !!}
+@elseif ($breadcrumb->currentPage())
+    <div id="localizacao">
         <a href="{{ route('home') }}" title="Ir para o Início">
-            <i class="fa fa-home" aria-hidden="true"></i> <span>Início</span>
+            <i class="fa fa-home" aria-hidden="true"></i><span>Início</span>
         </a>
 
-        @if($breadcrumb->hasPages())
-            <a class="breadcrumb-separator"> / </a>
-        @endif
+        <a class="flechinha"> / </a>
 
         @foreach ($breadcrumb->pages() as $page)
             <a href="{{ $page->link }}" title="{{ $page->label }}">{{ $page->label }}</a>
-            <a class="breadcrumb-separator"> / </a>
+            <a class="flechinha"> / </a>
         @endforeach
 
-        <span class="breadcrumb-current">{{ $breadcrumb->currentPage() }}</span>
-
+        <span class="pagina_atual">{{ $breadcrumb->currentPage() }}</span>
     </div>
-@elseif ($breadcrumb->getLegacy())
-    {!! $breadcrumb->getLegacy() !!}
 @endif

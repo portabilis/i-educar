@@ -35,6 +35,9 @@ class CreateModulesFaltaAlunoTable extends Migration
                 ALTER TABLE ONLY modules.falta_aluno
                     ADD CONSTRAINT falta_aluno_pkey PRIMARY KEY (id);
 
+                ALTER TABLE ONLY modules.falta_aluno
+                    ADD CONSTRAINT modules_falta_aluno_matricula_id_unique UNIQUE (matricula_id);
+
                 ALTER TABLE ONLY modules.falta_aluno ALTER COLUMN id SET DEFAULT nextval(\'modules.falta_aluno_id_seq\'::regclass);
                 
                 CREATE INDEX idx_falta_aluno_matricula_id ON modules.falta_aluno USING btree (matricula_id);

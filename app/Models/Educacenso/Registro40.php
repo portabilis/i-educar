@@ -11,7 +11,7 @@ use iEducar\Modules\Educacenso\Model\ReservaVagasCotas;
 use iEducar\Modules\Educacenso\Model\RedeLocal;
 use iEducar\Modules\Educacenso\Model\OrgaosColegiados;
 
-class Registro40 implements RegistroEducacenso
+class Registro40 implements RegistroEducacenso, ItemOfRegistro30
 {
     public $registro;
 
@@ -36,5 +36,20 @@ class Registro40 implements RegistroEducacenso
         return $this->dependenciaAdministrativa == DependenciaAdministrativaEscola::MUNICIPAL ||
             $this->dependenciaAdministrativa == DependenciaAdministrativaEscola::ESTADUAL ||
             $this->dependenciaAdministrativa == DependenciaAdministrativaEscola::FEDERAL;
+    }
+
+    public function getCodigoPessoa()
+    {
+        return $this->codigoPessoa;
+    }
+
+    public function getCodigoAluno()
+    {
+        return null;
+    }
+
+    public function getCodigoServidor()
+    {
+        return $this->codigoPessoa;
     }
 }

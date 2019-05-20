@@ -120,13 +120,9 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_exemplar_det.php?cod_exemplar={$registro["cod_exemplar"]}" : "educar_exemplar_lst.php";
         $this->nome_url_cancelar = "Cancelar";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"       => "Biblioteca",
-         ""                                  => "Motivo de baixa do exemplar"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Motivo de baixa do exemplar', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
 
         return $retorno;
     }

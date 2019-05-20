@@ -75,6 +75,7 @@ class DefaultData extends Migration
         Artisan::call('db:seed', ['--class' => DefaultManagerRolesTableSeeder::class]);
         Artisan::call('db:seed', ['--class' => DefaultManagerAccessCriteriasTableSeeder::class]);
         Artisan::call('db:seed', ['--class' => DefaultManagerLinkTypesTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultEmployeeGraduationDisciplines::class]);
     }
 
     /**
@@ -84,6 +85,7 @@ class DefaultData extends Migration
      */
     public function down()
     {
+        DB::raw('TRUNCATE employee_graduation_disciplines CASCADE;');
         DB::raw('TRUNCATE manager_link_types CASCADE;');
         DB::raw('TRUNCATE manager_access_criterias CASCADE;');
         DB::raw('TRUNCATE manager_roles CASCADE;');

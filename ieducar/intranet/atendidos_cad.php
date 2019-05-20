@@ -1,5 +1,13 @@
 <?php
 
+use iEducar\Modules\Educacenso\Validator\NameValidator;
+use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
+use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
+use iEducar\Modules\Educacenso\Validator\NisValidator;
+use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
+use iEducar\Modules\Educacenso\Model\PaisResidencia;
+use iEducar\Support\View\SelectOptions;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -74,6 +82,7 @@ class indice extends clsCadastro
     public $renda_mensal;
     public $data_admissao;
     public $zona_localizacao_censo;
+    public $localizacao_diferenciada;
 
     // Variáveis para controle da foto
     public $objPhoto;
@@ -106,7 +115,7 @@ class indice extends clsCadastro
                 $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade,
                 $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa,
                 $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido,
-                $this->religiao_id, $this->zona_localizacao_censo, $this->nome_social
+                $this->religiao_id, $this->zona_localizacao_censo, $this->localizacao_diferenciada, $this->nome_social, $this->pais_residencia
             ) =
             $objPessoa->queryRapida(
                 $this->cod_pessoa_fj,
@@ -157,7 +166,9 @@ class indice extends clsCadastro
                 'falecido',
                 'ref_cod_religiao',
                 'zona_localizacao_censo',
-                'nome_social'
+                'localizacao_diferenciada',
+                'nome_social',
+                'pais_residencia'
             );
 
             // var_dump($objPessoa); die;
@@ -710,7 +721,7 @@ class indice extends clsCadastro
             'hiddenInputOptions' => $hiddenInputOptions
         ];
 
-        $this->inputsHelper()->simpleSearchPais('nome', $options, $helperOptions);
+        $this->inputsHelper()->simpleSearchPaisSemBrasil('nome', $options, $helperOptions);
 
         //Falecido
         $options = ['label' => 'Falecido?', 'required' => false, 'value' => dbBool($this->falecido)];
@@ -729,7 +740,7 @@ class indice extends clsCadastro
         $this->inputsHelper()->simpleSearchMunicipio('nome', $options, $helperOptions);
 
         // Religião
-        $this->inputsHelper()->religiao(['required' => false]);
+        $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
 
         // Detalhes do Endereço
         if ($this->idlog && $this->idbai) {
@@ -898,6 +909,15 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->text('logradouro', $options);
 
+        $options = [
+            'label' => 'País de residência',
+            'value' => $this->pais_residencia ?: PaisResidencia::BRASIL ,
+            'resources' => PaisResidencia::getDescriptiveValues(),
+            'required' => true,
+        ];
+
+        $this->inputsHelper()->select('pais_residencia', $options);
+
         // zona localização
 
         $zonas = [
@@ -907,13 +927,22 @@ class indice extends clsCadastro
         ];
 
         $options = [
-            'label' => 'Zona localização',
+            'label' => 'Zona de residência',
             'value' => $this->zona_localizacao_censo,
             'resources' => $zonas,
             'required' => $obrigarCamposCenso,
         ];
 
         $this->inputsHelper()->select('zona_localizacao_censo', $options);
+
+        $options = [
+            'label' => 'Localização diferenciada',
+            'value' => $this->localizacao_diferenciada,
+            'resources' => SelectOptions::localizacoesDiferenciadasPessoa(),
+            'required' => false,
+        ];
+
+        $this->inputsHelper()->select('localizacao_diferenciada', $options);
 
         // complemento
 
@@ -1230,6 +1259,12 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!empty($this->pai_id) && !empty($this->mae_id) && $this->pai_id == $this->mae_id) {
+            $this->mensagem = 'Não é possível informar a mesma pessoa para Pai e Mãe';
+
+            return false;
+        }
+
         if (! $this->validatesCpf($this->id_federal)) {
             return false;
         }
@@ -1238,11 +1273,23 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!$this->validaNisPisPasep()) {
+            return false;
+        }
+
+        if (!empty($this->nm_pessoa) && !$this->validaNome()) {
+            return false;
+        }
+
+        if (!empty($this->data_nasc) && !$this->validaDataNascimento()) {
+            return false;
+        }
+
         if (!$this->validaCertidao()) {
             return false;
         }
 
-        if (!$this->validaNisPisPasep()) {
+        if (!$this->validaLocalizacaoDiferenciada()) {
             return false;
         }
 
@@ -1253,6 +1300,39 @@ class indice extends clsCadastro
         $this->createOrUpdateTelefones($pessoaId);
         $this->createOrUpdateEndereco($pessoaId);
         $this->afterChangePessoa($pessoaId);
+
+        return true;
+    }
+
+    private function validaNome()
+    {
+        $validator = new NameValidator($this->nm_pessoa);
+        if (!$validator->isValid()) {
+            $this->mensagem = $validator->getMessage();
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validaLocalizacaoDiferenciada()
+    {
+        $validator = new DifferentiatedLocationValidator($this->localizacao_diferenciada, $this->zona_localizacao_censo);
+        if (!$validator->isValid()) {
+            $this->mensagem = $validator->getMessage();
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validaDataNascimento()
+    {
+        $validator = new BirthDateValidator(Portabilis_Date_Utils::brToPgSQL($this->data_nasc));
+        if (!$validator->isValid()) {
+            $this->mensagem = $validator->getMessage();
+            return false;
+        }
 
         return true;
     }
@@ -1348,6 +1428,14 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!empty($this->data_nasc) && $certidaoNascimento) {
+            $validator = new BirthCertificateValidator($this->certidao_nascimento, Portabilis_Date_Utils::brToPgSQL($this->data_nasc));
+            if (!$validator->isValid()) {
+                $this->mensagem = $validator->getMessage();
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -1356,6 +1444,12 @@ class indice extends clsCadastro
         if ($this->nis_pis_pasep && strlen($this->nis_pis_pasep) != 11) {
             $this->mensagem = 'O NIS (PIS/PASEP) da pessoa deve conter 11 dígitos.';
 
+            return false;
+        }
+
+        $validator = new NisValidator($this->nis_pis_pasep ?? '');
+        if (!$validator->isValid()) {
+            $this->mensagem = $validator->getMessage();
             return false;
         }
 
@@ -1397,7 +1491,7 @@ class indice extends clsCadastro
         $fisica->idpes_mae = $this->mae_id ? $this->mae_id : 'NULL';
         $fisica->nacionalidade = $_REQUEST['tipo_nacionalidade'];
         $fisica->idpais_estrangeiro = $_REQUEST['pais_origem_id'];
-        $fisica->idmun_nascimento = $_REQUEST['naturalidade_id'];
+        $fisica->idmun_nascimento = $_REQUEST['naturalidade_id'] ?: 'NULL';
         $fisica->sus = $this->sus;
         $fisica->nis_pis_pasep = $this->nis_pis_pasep ? $this->nis_pis_pasep : 'NULL';
         $fisica->ocupacao = $this->ocupacao;
@@ -1412,7 +1506,9 @@ class indice extends clsCadastro
         $fisica->falecido = $this->falecido;
         $fisica->ref_cod_religiao = $this->religiao_id;
         $fisica->zona_localizacao_censo = empty($this->zona_localizacao_censo) ? null : $this->zona_localizacao_censo;
+        $fisica->localizacao_diferenciada = $this->localizacao_diferenciada ?: 'null';
         $fisica->nome_social = $this->nome_social;
+        $fisica->pais_residencia = $this->pais_residencia;
 
         $sql = 'select 1 from cadastro.fisica WHERE idpes = $1 limit 1';
 

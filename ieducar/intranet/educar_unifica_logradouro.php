@@ -57,19 +57,15 @@ class indice extends clsCadastro
   {
     $retorno = 'Novo';
 
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(762, $this->pessoa_logada, 7,
        'index.php');
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_enderecamento_index.php"    => "Endereçamento",
-         ""        => "Unifica&ccedil;&atilde;o de logradouros"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Unificação de logradouros', [
+        url('intranet/educar_enderecamento_index.php') => 'Endereçamento',
+    ]);
 
     return $retorno;
   }
@@ -86,7 +82,7 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(762, $this->pessoa_logada, 7,
