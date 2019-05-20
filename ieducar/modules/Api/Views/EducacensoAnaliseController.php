@@ -9,6 +9,7 @@ use App\Models\Educacenso\Registro50;
 use App\Models\Individual;
 use App\Models\Educacenso\Registro60;
 use App\Models\LegacyInstitution;
+use App\Models\LegacySchool;
 use App\Models\School;
 use App\Repositories\EducacensoRepository;
 use App\Services\SchoolClass\AvailableTimeService;
@@ -1292,6 +1293,14 @@ class EducacensoAnaliseController extends ApiCoreController
         $countAtividadesComplementar = [];
         $notAvaliableTime = [];
 
+        /** @var LegacySchool $school */
+        $school = LegacySchool::query()->findOrFail($escola);
+        $educacensoDate = new DateTime($school->institution->data_educacenso);
+
+        $avaliableTimeService = new AvailableTimeService();
+
+        $avaliableTimeService->onlyUntilEnrollmentDate($educacensoDate);
+
         foreach ($alunos as $aluno) {
             $nomeEscola = strtoupper($aluno->nomeEscola);
             $nomeAluno = strtoupper($aluno->nomeAluno);
@@ -1299,8 +1308,6 @@ class EducacensoAnaliseController extends ApiCoreController
             $codigoAluno = $aluno->codigoAluno;
             $codigoTurma = $aluno->codigoTurma;
             $codigoMatricula = $aluno->codigoMatricula;
-
-            $avaliableTimeService = new AvailableTimeService();
 
             if (!$avaliableTimeService->isAvailable($codigoAluno, $codigoTurma)) {
                 $notAvaliableTime[$codigoAluno] = [
