@@ -3,9 +3,15 @@
 namespace App\Services\SchoolClass;
 
 use App\Models\LegacySchoolClass;
+use DateTime;
 
 class AvailableTimeService
 {
+    /**
+     * @var DateTime
+     */
+    private $enrollmentDate;
+
     /**
      * Retorna se matrícula não possui enturmação em horário conflitante com a
      * turma enviada por parâmetro.
@@ -30,6 +36,11 @@ class AvailableTimeService
                     $registrationQuery->where('ref_cod_aluno', $studentId);
                     $registrationQuery->where('ano', $schoolClass->ano);
                 })->where('ativo', 1);
+
+                if ($this->enrollmentDate) {
+                    $enrollmentsQuery->where('data_enturmacao', '<', $this->enrollmentDate->format('Y-m-d'));
+                }
+
             })->get();
 
         foreach ($otherSchoolClass as $otherSchoolClass) {
@@ -39,6 +50,21 @@ class AvailableTimeService
         }
 
         return true;
+    }
+
+    /**
+     * Define a data limite das enturmações que serão consideradas como
+     * conflitantes.
+     *
+     * @param DateTime $date
+     *
+     * @return $this
+     */
+    public function onlyUntilEnrollmentDate(DateTime $date)
+    {
+        $this->enrollmentDate = $date;
+
+        return $this;
     }
 
     /**
