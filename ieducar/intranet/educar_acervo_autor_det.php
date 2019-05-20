@@ -61,7 +61,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Autor - Detalhe";
-        
+
 
         $this->cod_acervo_autor=$_GET["cod_acervo_autor"];
 
@@ -131,13 +131,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_acervo_autor_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Detalhe do autor"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhe do autor', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 

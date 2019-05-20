@@ -86,7 +86,7 @@ class indice extends clsListagem
     foreach ($_GET as $var => $val) // passa todos os valores obtidos no GET para atributos do objeto
       $this->$var = ($val === '') ? NULL : $val;
 
-    
+
 
     $lista_busca = array(
       "S&eacute;rie",
@@ -204,13 +204,9 @@ class indice extends clsListagem
     $this->addPaginador2('educar_reserva_vaga_lst.php', $total, $_GET, $this->nome, $this->limite);
     $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Listagem de reservas de vaga"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->breadcrumb('Listagem de reservas de vaga', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
 }
 

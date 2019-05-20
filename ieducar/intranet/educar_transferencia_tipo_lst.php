@@ -86,7 +86,7 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $lista_busca = array(
             "Transfer&ecirc;ncia"
@@ -155,7 +155,7 @@ class indice extends clsListagem
                 if ($nivel_usuario == 1)
                 {
                     $lista_busca[] = "<a href=\"educar_transferencia_tipo_det.php?cod_transferencia_tipo={$registro["cod_transferencia_tipo"]}\">{$registro["ref_cod_instituicao"]}</a>";
-                }               
+                }
                 $this->addLinhas($lista_busca);
             }
         }
@@ -168,13 +168,9 @@ class indice extends clsListagem
         }
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""                                  => "Listagem de tipos de transfer&ecirc;ncias"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Listagem de tipos de transferência', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 // cria uma extensao da classe base

@@ -78,7 +78,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_cliente        = $_GET["cod_cliente"];
         $this->acao_status        = $_GET["status"];
@@ -103,13 +103,10 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_cliente_det.php?cod_cliente={$registro["cod_cliente"]}" : "educar_cliente_lst.php";
         $this->nome_url_cancelar = "Cancelar";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"       => "Biblioteca",
-         ""                                  => "Motivo de suspensão do cliente"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Motivo de suspensão do cliente', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
+
         return $retorno;
     }
 
@@ -213,7 +210,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
 
@@ -235,7 +232,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );

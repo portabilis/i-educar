@@ -80,7 +80,7 @@ class indice extends clsListagem
   var $servidor_id;
   var $funcao_exercida;
   var $tipo_vinculo;
-  
+
   var $ref_cod_instituicao;
   var $ref_cod_escola;
   var $ref_cod_curso;
@@ -99,7 +99,7 @@ class indice extends clsListagem
       $this->$var = ($val === '') ? NULL : $val;
     }
 
-    
+
 
     $this->addCabecalhos(array(
       'Ano',
@@ -117,7 +117,7 @@ class indice extends clsListagem
 
     $resources_funcao = SelectOptions::funcoesExercidaServidor();
     $options = array('label' => Portabilis_String_Utils::toLatin1('Função exercida'), 'resources' => $resources_funcao, 'value' => $this->funcao_exercida);
-    $this->inputsHelper()->select('funcao_exercida', $options);   
+    $this->inputsHelper()->select('funcao_exercida', $options);
 
     $resources_tipo = SelectOptions::tiposVinculoServidor();
     $options = array('label' => Portabilis_String_Utils::toLatin1('Tipo do vínculo'), 'resources' => $resources_tipo, 'value' => $this->tipo_vinculo);
@@ -199,13 +199,9 @@ class indice extends clsListagem
 
     $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Vincular servidor à turmas"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());   
+    $this->breadcrumb('Vincular servidor à turmas', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
   }
 }
 

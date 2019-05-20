@@ -111,13 +111,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_instituicao_lst.php";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "Detalhe da institui&ccedil;&atilde;o"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Detalhe da instituição', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->array_botao[] = 'Documentação padrão';
         $this->array_botao_url_script[] = "go(\"educar_documentacao_instituicao_cad.php?cod_instituicao={$registro["cod_instituicao"]}\")";

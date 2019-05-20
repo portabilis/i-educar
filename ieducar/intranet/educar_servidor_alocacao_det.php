@@ -172,14 +172,9 @@ class indice extends clsDetalhe
     $this->url_cancelar = "educar_servidor_alocacao_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}";
     $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos(array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         "" => "Detalhe da alocação"
-    ));
-
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Detalhe da alocação', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
   }
 }
 
