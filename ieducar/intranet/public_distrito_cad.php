@@ -87,9 +87,6 @@ class indice extends clsCadastro
   var $idpes_cad;
   var $data_cad;
   var $operacao;
-  var $idsis_rev;
-  var $idsis_cad;
-
   var $idpais;
   var $sigla_uf;
 
@@ -229,7 +226,6 @@ class indice extends clsCadastro
     }
 
     $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-    echo "<!--\nErro ao cadastrar clsPublicBairro\nvalores obrigatorios\nis_numeric( $this->idmun ) && is_string( $this->nome ) && is_string( $this->origem_gravacao ) && is_string( $this->operacao ) && is_numeric( $this->idsis_cad )\n-->";
 
     return FALSE;
   }

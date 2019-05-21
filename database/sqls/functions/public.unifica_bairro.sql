@@ -13,8 +13,8 @@ IF (SELECT 1 FROM urbano.cep_logradouro_bairro clb
       AND clb.idbai = p_idbai_principal
       LIMIT 1) IS NULL THEN
 
-  INSERT INTO urbano.cep_logradouro_bairro (idlog, cep, idbai, origem_gravacao, idpes_cad, data_cad, operacao, idsis_cad)
-                             VALUES (cur_cep_log_bai.idlog, cur_cep_log_bai.cep, p_idbai_principal, 'U', 1, NOW(), 'I', 9);
+  INSERT INTO urbano.cep_logradouro_bairro (idlog, cep, idbai, origem_gravacao, idpes_cad, data_cad, operacao)
+                             VALUES (cur_cep_log_bai.idlog, cur_cep_log_bai.cep, p_idbai_principal, 'U', 1, NOW(), 'I');
 
 
 END IF;

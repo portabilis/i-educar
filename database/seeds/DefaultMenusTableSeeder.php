@@ -15,5 +15,9 @@ class DefaultMenusTableSeeder extends Seeder
         DB::unprepared(
             file_get_contents(__DIR__ . '/../sqls/inserts/public.menus.sql')
         );
+
+        DB::unprepared(
+            'SELECT pg_catalog.setval(\'menus_id_seq\', 168, true);'
+        );
     }
 }

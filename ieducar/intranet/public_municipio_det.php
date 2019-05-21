@@ -64,8 +64,6 @@ class indice extends clsDetalhe
     var $data_cad;
     var $origem_gravacao;
     var $operacao;
-    var $idsis_rev;
-    var $idsis_cad;
     
     function Gerar()
     {
@@ -158,10 +156,6 @@ class indice extends clsDetalhe
         {
             $this->addDetalhe( array( "C&oacute;digo INEP", "{$registro["cod_ibge"]}") );
         }
-/*      if( $registro["idsis_cad"] )
-        {
-            $this->addDetalhe( array( "Idsis Cad", "{$registro["idsis_cad"]}") );
-        }*/
 
         $obj_permissao = new clsPermissoes();
 

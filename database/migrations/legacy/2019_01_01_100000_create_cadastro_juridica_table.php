@@ -27,8 +27,6 @@ class CreateCadastroJuridicaTable extends Migration
                     idpes_cad numeric,
                     data_cad timestamp without time zone NOT NULL,
                     operacao character(1) NOT NULL,
-                    idsis_rev integer,
-                    idsis_cad integer NOT NULL,
                     fantasia character varying(255),
                     capital_social character varying(255),
                     CONSTRAINT ck_juridica_operacao CHECK (((operacao = \'I\'::bpchar) OR (operacao = \'A\'::bpchar) OR (operacao = \'E\'::bpchar))),

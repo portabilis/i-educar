@@ -47,8 +47,6 @@ class clsUrbanoCepLogradouro
     var $idpes_cad;
     var $data_cad;
     var $operacao;
-    var $idsis_rev;
-    var $idsis_cad;
     var $pessoa_logada;
 
     // propriedades padrao
@@ -113,12 +111,10 @@ class clsUrbanoCepLogradouro
      * @param integer idpes_cad
      * @param string data_cad
      * @param string operacao
-     * @param integer idsis_rev
-     * @param integer idsis_cad
      *
      * @return object
      */
-    function __construct( $cep = null, $idlog = null, $nroini = null, $nrofin = null, $idpes_rev = null, $data_rev = null, $origem_gravacao = null, $idpes_cad = null, $data_cad = null, $operacao = null, $idsis_rev = null, $idsis_cad = null )
+    function __construct( $cep = null, $idlog = null, $nroini = null, $nrofin = null, $idpes_rev = null, $data_rev = null, $origem_gravacao = null, $idpes_cad = null, $data_cad = null, $operacao = null)
     {
         $db = new clsBanco();
         $this->_schema = "urbano.";
@@ -126,63 +122,7 @@ class clsUrbanoCepLogradouro
 
         $this->pessoa_logada = Session::get('id_pessoa');
 
-        $this->_campos_lista = $this->_todos_campos = "cl.cep, cl.idlog, cl.nroini, cl.nrofin, cl.idpes_rev, cl.data_rev, cl.origem_gravacao, cl.idpes_cad, cl.data_cad, cl.operacao, cl.idsis_rev, cl.idsis_cad";
-        if( is_numeric( $idsis_rev ) )
-        {
-            if( class_exists( "clsAcessoSistema" ) )
-            {
-                $tmp_obj = new clsAcessoSistema( $idsis_rev );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
-                        $this->idsis_rev = $idsis_rev;
-                    }
-                }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->idsis_rev = $idsis_rev;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM acesso.sistema WHERE idsis = '{$idsis_rev}'" ) )
-                {
-                    $this->idsis_rev = $idsis_rev;
-                }
-            }
-        }
-        if( is_numeric( $idsis_cad ) )
-        {
-            if( class_exists( "clsAcessoSistema" ) )
-            {
-                $tmp_obj = new clsAcessoSistema( $idsis_cad );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
-                        $this->idsis_cad = $idsis_cad;
-                    }
-                }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->idsis_cad = $idsis_cad;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM acesso.sistema WHERE idsis = '{$idsis_cad}'" ) )
-                {
-                    $this->idsis_cad = $idsis_cad;
-                }
-            }
-        }
+        $this->_campos_lista = $this->_todos_campos = "cl.cep, cl.idlog, cl.nroini, cl.nrofin, cl.idpes_rev, cl.data_rev, cl.origem_gravacao, cl.idpes_cad, cl.data_cad, cl.operacao";
         if( is_numeric( $idpes_rev ) )
         {
             if( class_exists( "clsCadastroPessoa" ) )
@@ -303,7 +243,7 @@ class clsUrbanoCepLogradouro
      */
     function cadastra()
     {
-        if( is_numeric( $this->cep ) && is_numeric( $this->idlog ) && is_string( $this->origem_gravacao ) && is_string( $this->operacao ) && is_numeric( $this->idsis_cad ) )
+        if( is_numeric( $this->cep ) && is_numeric( $this->idlog ) && is_string( $this->origem_gravacao ) && is_string( $this->operacao ))
         {
             $db = new clsBanco();
             $campos = "";
@@ -366,18 +306,6 @@ class clsUrbanoCepLogradouro
                 $valores .= "{$gruda}'{$this->operacao}'";
                 $gruda = ", ";
             }
-            if( is_numeric( $this->idsis_rev ) )
-            {
-                $campos .= "{$gruda}idsis_rev";
-                $valores .= "{$gruda}'{$this->idsis_rev}'";
-                $gruda = ", ";
-            }
-            if( is_numeric( $this->idsis_cad ) )
-            {
-                $campos .= "{$gruda}idsis_cad";
-                $valores .= "{$gruda}'{$this->idsis_cad}'";
-                $gruda = ", ";
-            }
             $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
 
          $detalhe = $this->detalhe();
@@ -438,16 +366,6 @@ class clsUrbanoCepLogradouro
                 $set .= "{$gruda}operacao = '{$this->operacao}'";
                 $gruda = ", ";
             }
-            if( is_numeric( $this->idsis_rev ) )
-            {
-                $set .= "{$gruda}idsis_rev = '{$this->idsis_rev}'";
-                $gruda = ", ";
-            }
-            if( is_numeric( $this->idsis_cad ) )
-            {
-                $set .= "{$gruda}idsis_cad = '{$this->idsis_cad}'";
-                $gruda = ", ";
-            }
             if( $set )
             {
                 $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cep = '{$this->cep}' AND idlog = '{$this->idlog}'" );
@@ -469,8 +387,6 @@ class clsUrbanoCepLogradouro
      * @param string date_data_cad_ini
      * @param string date_data_cad_fim
      * @param string str_operacao
-     * @param integer int_idsis_rev
-     * @param integer int_idsis_cad
      *
      * @return array
      */
@@ -542,16 +458,6 @@ class clsUrbanoCepLogradouro
             $filtros .= "{$whereAnd} cl.operacao LIKE '%{$str_operacao}%'";
             $whereAnd = " AND ";
         }
-        if( is_numeric( $int_idsis_rev ) )
-        {
-            $filtros .= "{$whereAnd} cl.idsis_rev = '{$int_idsis_rev}'";
-            $whereAnd = " AND ";
-        }
-        if( is_numeric( $int_idsis_cad ) )
-        {
-            $filtros .= "{$whereAnd} cl.idsis_cad = '{$int_idsis_cad}'";
-            $whereAnd = " AND ";
-        }
         if( is_numeric( $int_idpais ) )
         {
             $filtros .= "{$whereAnd} p.idpais = '{$int_idpais}'";
@@ -609,8 +515,6 @@ class clsUrbanoCepLogradouro
      * @param string date_data_cad_ini
      * @param string date_data_cad_fim
      * @param string str_operacao
-     * @param integer int_idsis_rev
-     * @param integer int_idsis_cad
      *
      * @return array
      */
@@ -680,16 +584,6 @@ class clsUrbanoCepLogradouro
         if( is_string( $str_operacao ) )
         {
             $filtros .= "{$whereAnd} cl.operacao LIKE '%{$str_operacao}%'";
-            $whereAnd = " AND ";
-        }
-        if( is_numeric( $int_idsis_rev ) )
-        {
-            $filtros .= "{$whereAnd} cl.idsis_rev = '{$int_idsis_rev}'";
-            $whereAnd = " AND ";
-        }
-        if( is_numeric( $int_idsis_cad ) )
-        {
-            $filtros .= "{$whereAnd} cl.idsis_cad = '{$int_idsis_cad}'";
             $whereAnd = " AND ";
         }
         if( is_numeric( $int_idpais ) )

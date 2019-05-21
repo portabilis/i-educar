@@ -13,8 +13,6 @@ class DefaultData extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultAcessoSistemaTableSeeder::class,]);
-
         Artisan::call('db:seed', ['--class' => DefaultCadastroDeficienciaTableSeeder::class]);
         Artisan::call('db:seed', ['--class' => DefaultCadastroEscolaridadeTableSeeder::class]);
         Artisan::call('db:seed', ['--class' => DefaultCadastroEstadoCivilTableSeeder::class]);
@@ -136,6 +134,5 @@ class DefaultData extends Migration
         DB::raw('TRUNCATE cadastro.estado_civil CASCADE;');
         DB::raw('TRUNCATE cadastro.escolaridade CASCADE;');
         DB::raw('TRUNCATE cadastro.deficiencia CASCADE;');
-        DB::raw('TRUNCATE acesso.sistema CASCADE;');
     }
 }

@@ -50,8 +50,6 @@ class clsPublicMunicipio
     var $data_cad;
     var $origem_gravacao;
     var $operacao;
-    var $idsis_rev;
-    var $idsis_cad;
 
     // propriedades padrao
 
@@ -131,18 +129,16 @@ class clsPublicMunicipio
      * @param string data_cad
      * @param string origem_gravacao
      * @param string operacao
-     * @param integer idsis_rev
-     * @param integer idsis_cad
      *
      * @return object
      */
-    function __construct( $idmun = null, $nome = null, $sigla_uf = null, $area_km2 = null, $idmreg = null, $idasmun = null, $cod_ibge = null, $geom = null, $tipo = null, $idmun_pai = null, $idpes_rev = null, $idpes_cad = null, $data_rev = null, $data_cad = null, $origem_gravacao = null, $operacao = null, $idsis_rev = null, $idsis_cad = null )
+    function __construct( $idmun = null, $nome = null, $sigla_uf = null, $area_km2 = null, $idmreg = null, $idasmun = null, $cod_ibge = null, $geom = null, $tipo = null, $idmun_pai = null, $idpes_rev = null, $idpes_cad = null, $data_rev = null, $data_cad = null, $origem_gravacao = null, $operacao = null)
     {
         $db = new clsBanco();
         $this->_schema = "public.";
         $this->_tabela = "{$this->_schema}municipio";
 
-        $this->_campos_lista = $this->_todos_campos = "idmun, nome, sigla_uf, area_km2, idmreg, idasmun, cod_ibge, geom, tipo, idmun_pai, idpes_rev, idpes_cad, data_rev, data_cad, origem_gravacao, operacao, idsis_rev, idsis_cad";
+        $this->_campos_lista = $this->_todos_campos = "idmun, nome, sigla_uf, area_km2, idmreg, idasmun, cod_ibge, geom, tipo, idmun_pai, idpes_rev, idpes_cad, data_rev, data_cad, origem_gravacao, operacao";
 
         if( is_string( $sigla_uf ) )
         {
@@ -169,62 +165,6 @@ class clsPublicMunicipio
                 if( $db->CampoUnico( "SELECT 1 FROM uf WHERE sigla_uf = '{$sigla_uf}'" ) )
                 {
                     $this->sigla_uf = $sigla_uf;
-                }
-            }
-        }
-        if( is_numeric( $idsis_rev ) )
-        {
-            if( class_exists( "clsAcessoSistema" ) )
-            {
-                $tmp_obj = new clsAcessoSistema( $idsis_rev );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
-                        $this->idsis_rev = $idsis_rev;
-                    }
-                }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->idsis_rev = $idsis_rev;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM acesso.sistema WHERE idsis = '{$idsis_rev}'" ) )
-                {
-                    $this->idsis_rev = $idsis_rev;
-                }
-            }
-        }
-        if( is_numeric( $idsis_cad ) )
-        {
-            if( class_exists( "clsAcessoSistema" ) )
-            {
-                $tmp_obj = new clsAcessoSistema( $idsis_cad );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
-                        $this->idsis_cad = $idsis_cad;
-                    }
-                }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->idsis_cad = $idsis_cad;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM acesso.sistema WHERE idsis = '{$idsis_cad}'" ) )
-                {
-                    $this->idsis_cad = $idsis_cad;
                 }
             }
         }
@@ -396,7 +336,7 @@ class clsPublicMunicipio
      */
     function cadastra()
     {
-        if( is_string( $this->nome ) && is_string( $this->sigla_uf ) && is_string( $this->tipo ) && is_string( $this->origem_gravacao ) && is_string( $this->operacao ) && is_numeric( $this->idsis_cad ) )
+        if( is_string( $this->nome ) && is_string( $this->sigla_uf ) && is_string( $this->tipo ) && is_string( $this->origem_gravacao ) && is_string( $this->operacao ) )
         {
             $db = new clsBanco();
 
@@ -491,19 +431,6 @@ class clsPublicMunicipio
                 $valores .= "{$gruda}'{$this->operacao}'";
                 $gruda = ", ";
             }
-            if( is_numeric( $this->idsis_rev ) )
-            {
-                $campos .= "{$gruda}idsis_rev";
-                $valores .= "{$gruda}'{$this->idsis_rev}'";
-                $gruda = ", ";
-            }
-            if( is_numeric( $this->idsis_cad ) )
-            {
-                $campos .= "{$gruda}idsis_cad";
-                $valores .= "{$gruda}'{$this->idsis_cad}'";
-                $gruda = ", ";
-            }
-
 
             $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
             return $db->InsertId( "seq_municipio" );
@@ -603,18 +530,6 @@ class clsPublicMunicipio
                 $set .= "{$gruda}operacao = '{$this->operacao}'";
                 $gruda = ", ";
             }
-            if( is_numeric( $this->idsis_rev ) )
-            {
-                $set .= "{$gruda}idsis_rev = '{$this->idsis_rev}'";
-                $gruda = ", ";
-            }
-            if( is_numeric( $this->idsis_cad ) )
-            {
-                $set .= "{$gruda}idsis_cad = '{$this->idsis_cad}'";
-                $gruda = ", ";
-            }
-
-
             if( $set )
             {
                 $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE idmun = '{$this->idmun}'" );
@@ -644,12 +559,10 @@ class clsPublicMunicipio
      * @param string date_data_cad_fim
      * @param string str_origem_gravacao
      * @param string str_operacao
-     * @param integer int_idsis_rev
-     * @param integer int_idsis_cad
      *
      * @return array
      */
-    function lista( $str_nome = null, $str_sigla_uf = null, $int_area_km2 = null, $int_idmreg = null, $int_idasmun = null, $int_cod_ibge = null, $str_geom = null, $str_tipo = null, $int_idmun_pai = null, $int_idpes_rev = null, $int_idpes_cad = null, $date_data_rev_ini = null, $date_data_rev_fim = null, $date_data_cad_ini = null, $date_data_cad_fim = null, $str_origem_gravacao = null, $str_operacao = null, $int_idsis_rev = null, $int_idsis_cad = null )
+    function lista( $str_nome = null, $str_sigla_uf = null, $int_area_km2 = null, $int_idmreg = null, $int_idasmun = null, $int_cod_ibge = null, $str_geom = null, $str_tipo = null, $int_idmun_pai = null, $int_idpes_rev = null, $int_idpes_cad = null, $date_data_rev_ini = null, $date_data_rev_fim = null, $date_data_cad_ini = null, $date_data_cad_fim = null, $str_origem_gravacao = null, $str_operacao = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = "";
@@ -746,17 +659,6 @@ class clsPublicMunicipio
             $filtros .= "{$whereAnd} operacao LIKE '%{$str_operacao}%'";
             $whereAnd = " AND ";
         }
-        if( is_numeric( $int_idsis_rev ) )
-        {
-            $filtros .= "{$whereAnd} idsis_rev = '{$int_idsis_rev}'";
-            $whereAnd = " AND ";
-        }
-        if( is_numeric( $int_idsis_cad ) )
-        {
-            $filtros .= "{$whereAnd} idsis_cad = '{$int_idsis_cad}'";
-            $whereAnd = " AND ";
-        }
-
 
         $db = new clsBanco();
         $countCampos = count( explode( ",", $this->_campos_lista ) );

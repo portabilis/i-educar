@@ -14,16 +14,6 @@ class AddForeignKeysOnPublicDistritoTable extends Migration
     public function up()
     {
         Schema::table('public.distrito', function (Blueprint $table) {
-            $table->foreign('idsis_rev')
-               ->references('idsis')
-               ->on('acesso.sistema')
-               ->onDelete('set null');
-
-            $table->foreign('idsis_cad')
-               ->references('idsis')
-               ->on('acesso.sistema')
-               ->onDelete('set null');
-
             $table->foreign('idpes_rev')
                ->references('idpes')
                ->on('cadastro.pessoa')
@@ -48,8 +38,6 @@ class AddForeignKeysOnPublicDistritoTable extends Migration
     public function down()
     {
         Schema::table('public.distrito', function (Blueprint $table) {
-            $table->dropForeign(['idsis_rev']);
-            $table->dropForeign(['idsis_cad']);
             $table->dropForeign(['idpes_rev']);
             $table->dropForeign(['idpes_cad']);
             $table->dropForeign(['idmun']);

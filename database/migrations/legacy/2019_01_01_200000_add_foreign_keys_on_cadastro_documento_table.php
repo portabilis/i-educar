@@ -26,16 +26,6 @@ class AddForeignKeysOnCadastroDocumentoTable extends Migration
                ->references('sigla_uf')
                ->on('uf');
 
-            $table->foreign('idsis_rev')
-               ->references('idsis')
-               ->on('acesso.sistema')
-               ->onDelete('set null');
-
-            $table->foreign('idsis_cad')
-               ->references('idsis')
-               ->on('acesso.sistema')
-               ->onDelete('set null');
-
             $table->foreign('idpes_rev')
                ->references('idpes')
                ->on('cadastro.pessoa')
@@ -74,8 +64,6 @@ class AddForeignKeysOnCadastroDocumentoTable extends Migration
             $table->dropForeign(['sigla_uf_exp_rg']);
             $table->dropForeign(['sigla_uf_cert_civil']);
             $table->dropForeign(['sigla_uf_cart_trabalho']);
-            $table->dropForeign(['idsis_rev']);
-            $table->dropForeign(['idsis_cad']);
             $table->dropForeign(['idpes_rev']);
             $table->dropForeign(['idpes_cad']);
             $table->dropForeign(['idorg_exp_rg']);

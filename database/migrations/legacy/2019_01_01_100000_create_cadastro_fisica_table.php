@@ -46,8 +46,6 @@ class CreateCadastroFisicaTable extends Migration
                     idpes_cad numeric,
                     data_cad timestamp without time zone NOT NULL,
                     operacao character(1) NOT NULL,
-                    idsis_rev integer,
-                    idsis_cad integer NOT NULL,
                     ref_cod_sistema integer,
                     cpf numeric(11,0),
                     ref_cod_religiao integer,

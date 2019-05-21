@@ -15,7 +15,6 @@ class CreateSchemas extends Migration
     {
         DB::unprepared(
             '
-                CREATE SCHEMA acesso;
                 CREATE SCHEMA cadastro;
                 CREATE SCHEMA modules;
                 CREATE SCHEMA pmicontrolesis;
@@ -36,7 +35,6 @@ class CreateSchemas extends Migration
     {
         DB::unprepared(
             '
-                DROP SCHEMA acesso;
                 DROP SCHEMA cadastro;
                 DROP SCHEMA modules;
                 DROP SCHEMA pmicontrolesis;
