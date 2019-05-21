@@ -121,8 +121,6 @@ class clsPublicLogradouro
      * @param integer idpes_cad
      * @param string data_cad
      * @param string operacao
-     * @param integer idsis_rev
-     * @param integer idsis_cad
      *
      * @return object
      */
@@ -137,9 +135,7 @@ class clsPublicLogradouro
                                   $origem_gravacao = null, 
                                   $idpes_cad       = null, 
                                   $data_cad        = null, 
-                                  $operacao        = null, 
-                                  $idsis_rev       = null, 
-                                  $idsis_cad       = null )
+                                  $operacao        = null )
     {
         $db = new clsBanco();
         $this->_schema = "public.";
@@ -451,8 +447,6 @@ class clsPublicLogradouro
      * @param string date_data_cad_ini
      * @param string date_data_cad_fim
      * @param string str_operacao
-     * @param integer int_idsis_rev
-     * @param integer int_idsis_cad
      *
      * @return array
      */

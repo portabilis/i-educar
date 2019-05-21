@@ -119,8 +119,6 @@ class clsPublicBairro
    * @param int     $idpes_cad
    * @param string  $data_cad
    * @param string  $operacao
-   * @param int     $idsis_rev
-   * @param int     $idsis_cad
    * @param int     $zona_localizacao
    */
   function __construct($idmun = NULL, $geom = NULL, $idbai = NULL,
@@ -441,8 +439,6 @@ class clsPublicBairro
    * @param string  $date_data_cad_ini
    * @param string  $date_data_cad_fim
    * @param string  $str_operacao
-   * @param int     $int_idsis_rev
-   * @param int     $int_idsis_cad
    * @param int     $zona_localizacao
    * @return array
    */

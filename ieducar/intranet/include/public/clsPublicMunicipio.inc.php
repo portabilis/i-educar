@@ -129,12 +129,10 @@ class clsPublicMunicipio
      * @param string data_cad
      * @param string origem_gravacao
      * @param string operacao
-     * @param integer idsis_rev
-     * @param integer idsis_cad
      *
      * @return object
      */
-    function __construct( $idmun = null, $nome = null, $sigla_uf = null, $area_km2 = null, $idmreg = null, $idasmun = null, $cod_ibge = null, $geom = null, $tipo = null, $idmun_pai = null, $idpes_rev = null, $idpes_cad = null, $data_rev = null, $data_cad = null, $origem_gravacao = null, $operacao = null, $idsis_rev = null, $idsis_cad = null )
+    function __construct( $idmun = null, $nome = null, $sigla_uf = null, $area_km2 = null, $idmreg = null, $idasmun = null, $cod_ibge = null, $geom = null, $tipo = null, $idmun_pai = null, $idpes_rev = null, $idpes_cad = null, $data_rev = null, $data_cad = null, $origem_gravacao = null, $operacao = null)
     {
         $db = new clsBanco();
         $this->_schema = "public.";
@@ -561,12 +559,10 @@ class clsPublicMunicipio
      * @param string date_data_cad_fim
      * @param string str_origem_gravacao
      * @param string str_operacao
-     * @param integer int_idsis_rev
-     * @param integer int_idsis_cad
      *
      * @return array
      */
-    function lista( $str_nome = null, $str_sigla_uf = null, $int_area_km2 = null, $int_idmreg = null, $int_idasmun = null, $int_cod_ibge = null, $str_geom = null, $str_tipo = null, $int_idmun_pai = null, $int_idpes_rev = null, $int_idpes_cad = null, $date_data_rev_ini = null, $date_data_rev_fim = null, $date_data_cad_ini = null, $date_data_cad_fim = null, $str_origem_gravacao = null, $str_operacao = null, $int_idsis_rev = null, $int_idsis_cad = null )
+    function lista( $str_nome = null, $str_sigla_uf = null, $int_area_km2 = null, $int_idmreg = null, $int_idasmun = null, $int_cod_ibge = null, $str_geom = null, $str_tipo = null, $int_idmun_pai = null, $int_idpes_rev = null, $int_idpes_cad = null, $date_data_rev_ini = null, $date_data_rev_fim = null, $date_data_cad_ini = null, $date_data_cad_fim = null, $str_origem_gravacao = null, $str_operacao = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = "";

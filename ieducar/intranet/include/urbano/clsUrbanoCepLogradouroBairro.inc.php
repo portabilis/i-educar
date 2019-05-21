@@ -103,12 +103,10 @@ class clsUrbanoCepLogradouroBairro
      * @param integer idpes_cad
      * @param string data_cad
      * @param string operacao
-     * @param integer idsis_rev
-     * @param integer idsis_cad
      *
      * @return object
      */
-    function __construct( $idlog = null, $cep = null, $idbai = null, $idpes_rev = null, $data_rev = null, $origem_gravacao = null, $idpes_cad = null, $data_cad = null, $operacao = null, $idsis_rev = null, $idsis_cad = null )
+    function __construct( $idlog = null, $cep = null, $idbai = null, $idpes_rev = null, $data_rev = null, $origem_gravacao = null, $idpes_cad = null, $data_cad = null, $operacao = null)
     {
         $db = new clsBanco();
         $this->_schema = "urbano.";
@@ -383,8 +381,6 @@ class clsUrbanoCepLogradouroBairro
      * @param string date_data_cad_ini
      * @param string date_data_cad_fim
      * @param string str_operacao
-     * @param integer int_idsis_rev
-     * @param integer int_idsis_cad
      *
      * @return array
      */
