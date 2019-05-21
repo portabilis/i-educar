@@ -77,26 +77,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
 
     protected $chavesManterTodosVinculos = [
         [
-            'tabela' => 'acesso.usuario',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'acesso.usuario',
-            'coluna' => 'idpes_sga'
-        ],
-        [
-            'tabela' => 'acesso.log_acesso',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'acesso.log_erro',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'acesso.pessoa_instituicao',
-            'coluna' => 'idpes'
-        ],
-        [
             'tabela' => 'cadastro.aviso_nome',
             'coluna' => 'idpes'
         ],
