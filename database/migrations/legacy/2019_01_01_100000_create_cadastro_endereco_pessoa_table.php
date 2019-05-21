@@ -36,8 +36,6 @@ class CreateCadastroEnderecoPessoaTable extends Migration
                     bloco character varying(20),
                     andar numeric(2,0),
                     apartamento numeric(6,0),
-                    idsis_rev integer,
-                    idsis_cad integer NOT NULL,
                     observacoes text,
                     CONSTRAINT ck_endereco_pessoa_operacao CHECK (((operacao = \'I\'::bpchar) OR (operacao = \'A\'::bpchar) OR (operacao = \'E\'::bpchar))),
                     CONSTRAINT ck_endereco_pessoa_origem_gravacao CHECK (((origem_gravacao = \'M\'::bpchar) OR (origem_gravacao = \'U\'::bpchar) OR (origem_gravacao = \'C\'::bpchar) OR (origem_gravacao = \'O\'::bpchar))),
