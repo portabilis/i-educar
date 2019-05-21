@@ -37,8 +37,6 @@ class CreateCadastroPessoaTable extends Migration
                     situacao character(1) NOT NULL,
                     origem_gravacao character(1) NOT NULL,
                     operacao character(1) NOT NULL,
-                    idsis_rev integer,
-                    idsis_cad integer NOT NULL,
                     CONSTRAINT ck_pessoa_operacao CHECK (((operacao = \'I\'::bpchar) OR (operacao = \'A\'::bpchar) OR (operacao = \'E\'::bpchar))),
                     CONSTRAINT ck_pessoa_origem_gravacao CHECK (((origem_gravacao = \'M\'::bpchar) OR (origem_gravacao = \'U\'::bpchar) OR (origem_gravacao = \'C\'::bpchar) OR (origem_gravacao = \'O\'::bpchar))),
                     CONSTRAINT ck_pessoa_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar) OR (situacao = \'P\'::bpchar))),
