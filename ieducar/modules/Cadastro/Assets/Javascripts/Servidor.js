@@ -13,7 +13,7 @@ function verificaDeficiencias() {
           {deficiencias : $j('#deficiencias').val()}
       ),
       success : function(dataResponse) {
-        if (dataResponse.msgs) {
+        if (dataResponse.msgs.length > 0) {
 
           dataResponse.msgs.each(function(m){
             messageUtils.error(m.msg);
