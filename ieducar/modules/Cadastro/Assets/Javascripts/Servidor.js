@@ -1,6 +1,6 @@
 $j('#btn_enviar').removeAttr('onclick');
 $j('#btn_enviar').on('click', () => {
-  if (!validaServidor() || !validaPosGraduacao() || !validaCursoFormacaoContinuada() || !validationUtils.validatesFields(false) || !validateGraduations()) {
+  if (!validaServidor() || !verificaDeficiencias() || !validaPosGraduacao() || !validaCursoFormacaoContinuada() || !validationUtils.validatesFields(false) || !validateGraduations()) {
     return false;
   }
 
@@ -176,6 +176,32 @@ function habilitaCampoPosGraduacao() {
     $j('#pos_graduacao').attr('disabled', 'disabled').makeUnrequired().val('');
   }
   $j("#pos_graduacao").trigger("chosen:updated");
+}
+
+function verificaDeficiencias() {
+  if($j('#deficiencias').val()) {
+    var options = {
+      dataType : 'json',
+      url : getResourceUrlBuilder.buildUrl(
+        '/module/Api/Servidor',
+        'verifica-deficiencias',
+        {deficiencias : $j('#deficiencias').val()}
+      ),
+      success : function(dataResponse) {
+        if (dataResponse.msgs) {
+
+          dataResponse.msgs.each(function(m){
+            messageUtils.error(m.msg);
+          });
+
+          return false
+        }
+
+        return true;
+      }
+    }
+    getResource(options);
+  }
 }
 
 //abas
