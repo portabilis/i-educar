@@ -15,7 +15,7 @@ class SearchPath extends Migration
         DB::unprepared(
             '
                 ALTER DATABASE ' . env('DB_DATABASE') . ' 
-                SET search_path = "$user", public, portal, cadastro, acesso, 
+                SET search_path = "$user", public, portal, cadastro, 
                 pmicontrolesis, pmieducar, urbano, modules;
             '
         );
