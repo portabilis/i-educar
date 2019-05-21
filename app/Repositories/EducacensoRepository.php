@@ -693,7 +693,7 @@ SQL;
                  ) dadosescola ON true
             LEFT JOIN LATERAL (
                  SELECT fisica_deficiencia.ref_idpes,
-                        ARRAY_AGG(fisica_deficiencia.ref_cod_deficiencia) as array_deficiencias
+                        ARRAY_AGG(deficiencia.deficiencia_educacenso) as array_deficiencias
                  FROM cadastro.fisica_deficiencia
                  JOIN cadastro.deficiencia ON deficiencia.cod_deficiencia = fisica_deficiencia.ref_cod_deficiencia
                  WHERE fisica_deficiencia.ref_idpes = fisica.idpes
