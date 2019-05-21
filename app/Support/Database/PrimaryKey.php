@@ -110,15 +110,4 @@ SQL;
             $table->unique($columnsForeignKey) ;
         });
     }
-
-    /**
-     * @param $tableName
-     * @param $columnsForeignKey
-     */
-    public function createForeignKey($tableName, $columnsForeignKey)
-    {
-        Schema::table($tableName, function (Blueprint $table) use ($columnsForeignKey) {
-            $table->foreign($columnsForeignKey)->references('idpes')->on('cadastro.fisica');
-        });
-    }
 }
