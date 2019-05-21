@@ -519,6 +519,7 @@ SQL;
                   AND turma.visivel = true
                   AND escola.ativo = 1
                   AND escola.cod_escola = :school
+                  AND COALESCE(turma.nao_informar_educacenso, 0) = 0
                   AND servidor.ativo = 1
                   AND coalesce(servidor_alocacao.data_admissao, '1900-01-01'::date) <= instituicao.data_educacenso
                   AND coalesce(servidor_alocacao.data_saida, '2999-01-01'::date) >= instituicao.data_educacenso
@@ -595,6 +596,7 @@ SQL;
                     WHERE matricula.ano = :year
                       AND matricula.ativo = 1
                       AND escola.cod_escola = :school
+                      AND COALESCE(turma.nao_informar_educacenso, 0) = 0
                       AND (
                           (
                             matricula_turma.data_enturmacao < instituicao.data_educacenso
