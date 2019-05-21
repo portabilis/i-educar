@@ -34,7 +34,7 @@ class CreateCadastroFuncionarioTable extends Migration
                 );
                 
                 ALTER TABLE ONLY cadastro.funcionario
-                    ADD CONSTRAINT pk_funcionario PRIMARY KEY (matricula, idins);
+                    ADD CONSTRAINT pk_funcionario PRIMARY KEY (matricula);
             '
         );
     }
