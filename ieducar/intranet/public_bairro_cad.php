@@ -87,8 +87,6 @@ class indice extends clsCadastro
   var $idpes_cad;
   var $data_cad;
   var $operacao;
-  var $idsis_rev;
-  var $idsis_cad;
   var $zona_localizacao;
   var $iddis;
 

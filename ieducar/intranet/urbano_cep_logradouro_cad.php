@@ -65,8 +65,6 @@ class indice extends clsCadastro
   var $idpes_cad;
   var $data_cad;
   var $operacao;
-  var $idsis_rev;
-  var $idsis_cad;
   var $idpais;
   var $sigla_uf;
   var $idmun;
@@ -268,7 +266,7 @@ class indice extends clsCadastro
   {
     $obj = new clsUrbanoCepLogradouro($this->cep, $this->idlog, $this->nroini,
       $this->nrofin, $this->idpes_rev, $this->data_rev, $this->origem_gravacao,
-      $this->idpes_cad, $this->data_cad, $this->operacao, $this->idsis_rev, $this->idsis_cad);
+      $this->idpes_cad, $this->data_cad, $this->operacao);
     $excluiu = $obj->excluir();
     if ($excluiu) {
       $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';

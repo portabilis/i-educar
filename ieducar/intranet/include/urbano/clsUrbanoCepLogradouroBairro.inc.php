@@ -41,8 +41,7 @@ class clsUrbanoCepLogradouroBairro
     var $idpes_cad;
     var $data_cad;
     var $operacao;
-    var $idsis_rev;
-    var $idsis_cad;
+
     // propriedades padrao
     /**
      * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
@@ -114,63 +113,8 @@ class clsUrbanoCepLogradouroBairro
         $db = new clsBanco();
         $this->_schema = "urbano.";
         $this->_tabela = "{$this->_schema}cep_logradouro_bairro";
-        $this->_campos_lista = $this->_todos_campos = "clb.idlog, clb.cep, clb.idbai, clb.idpes_rev, clb.data_rev, clb.origem_gravacao, clb.idpes_cad, clb.data_cad, clb.operacao, clb.idsis_rev, clb.idsis_cad";
-        if( is_numeric( $idsis_rev ) )
-        {
-            if( class_exists( "clsAcessoSistema" ) )
-            {
-                $tmp_obj = new clsAcessoSistema( $idsis_rev );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
-                        $this->idsis_rev = $idsis_rev;
-                    }
-                }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->idsis_rev = $idsis_rev;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM acesso.sistema WHERE idsis = '{$idsis_rev}'" ) )
-                {
-                    $this->idsis_rev = $idsis_rev;
-                }
-            }
-        }
-        if( is_numeric( $idsis_cad ) )
-        {
-            if( class_exists( "clsAcessoSistema" ) )
-            {
-                $tmp_obj = new clsAcessoSistema( $idsis_cad );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
-                        $this->idsis_cad = $idsis_cad;
-                    }
-                }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->idsis_cad = $idsis_cad;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM acesso.sistema WHERE idsis = '{$idsis_cad}'" ) )
-                {
-                    $this->idsis_cad = $idsis_cad;
-                }
-            }
-        }
+        $this->_campos_lista = $this->_todos_campos = "clb.idlog, clb.cep, clb.idbai, clb.idpes_rev, clb.data_rev, clb.origem_gravacao, clb.idpes_cad, clb.data_cad, clb.operacao";
+
         if( is_numeric( $idpes_rev ) )
         {
             if( class_exists( "clsCadastroPessoa" ) )
@@ -310,7 +254,7 @@ class clsUrbanoCepLogradouroBairro
      */
     function cadastra()
     {
-        if( is_numeric( $this->idlog ) && is_numeric( $this->cep ) && is_numeric( $this->idbai ) && is_string( $this->origem_gravacao ) && is_string( $this->operacao ) && is_numeric( $this->idsis_cad ) )
+        if( is_numeric( $this->idlog ) && is_numeric( $this->cep ) && is_numeric( $this->idbai ) && is_string( $this->origem_gravacao ) && is_string( $this->operacao ))
         {
             $db = new clsBanco();
             $campos = "";
@@ -367,18 +311,6 @@ class clsUrbanoCepLogradouroBairro
                 $valores .= "{$gruda}'{$this->operacao}'";
                 $gruda = ", ";
             }
-            if( is_numeric( $this->idsis_rev ) )
-            {
-                $campos .= "{$gruda}idsis_rev";
-                $valores .= "{$gruda}'{$this->idsis_rev}'";
-                $gruda = ", ";
-            }
-            if( is_numeric( $this->idsis_cad ) )
-            {
-                $campos .= "{$gruda}idsis_cad";
-                $valores .= "{$gruda}'{$this->idsis_cad}'";
-                $gruda = ", ";
-            }
             $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
             return true;
         }
@@ -424,16 +356,6 @@ class clsUrbanoCepLogradouroBairro
             if( is_string( $this->operacao ) )
             {
                 $set .= "{$gruda}operacao = '{$this->operacao}'";
-                $gruda = ", ";
-            }
-            if( is_numeric( $this->idsis_rev ) )
-            {
-                $set .= "{$gruda}idsis_rev = '{$this->idsis_rev}'";
-                $gruda = ", ";
-            }
-            if( is_numeric( $this->idsis_cad ) )
-            {
-                $set .= "{$gruda}idsis_cad = '{$this->idsis_cad}'";
                 $gruda = ", ";
             }
             if( $set )
@@ -527,16 +449,6 @@ class clsUrbanoCepLogradouroBairro
         if( is_string( $str_operacao ) )
         {
             $filtros .= "{$whereAnd} clb.operacao LIKE '%{$str_operacao}%'";
-            $whereAnd = " AND ";
-        }
-        if( is_numeric( $int_idsis_rev ) )
-        {
-            $filtros .= "{$whereAnd} clb.idsis_rev = '{$int_idsis_rev}'";
-            $whereAnd = " AND ";
-        }
-        if( is_numeric( $int_idsis_cad ) )
-        {
-            $filtros .= "{$whereAnd} clb.idsis_cad = '{$int_idsis_cad}'";
             $whereAnd = " AND ";
         }
         if( is_numeric( $int_idpais ) )
