@@ -199,7 +199,7 @@ class AlunoController extends ApiCoreController
 
     protected function canGetTodosAlunos()
     {
-        return $this->validatesPresenceOf('instituicao_id');
+        return $this->validatesPresenceOf('instituicao_id') && $this->validatesPresenceOf('escola');
     }
 
     protected function canGetAlunosByGuardianCpf()
@@ -1129,6 +1129,11 @@ class AlunoController extends ApiCoreController
         if ($this->canGetTodosAlunos()) {
 
             $modified = $this->getRequest()->modified;
+            $escola = $this->getRequest()->escola;
+
+            if (is_array($escola)) {
+                $escola = implode(', ', $escola);
+            }
 
             $params = [];
 
@@ -1165,6 +1170,9 @@ class AlunoController extends ApiCoreController
                 INNER JOIN cadastro.fisica f ON f.idpes = p.idpes
                 LEFT JOIN cadastro.fisica_foto ff ON p.idpes = ff.idpes
                 WHERE TRUE
+                and exists (
+                    select * from pmieducar.matricula where ref_ref_cod_escola in ({$escola}) and ref_cod_aluno = a.cod_aluno
+                )
                 {$where}
                 ORDER BY nome_aluno ASC
             ";
