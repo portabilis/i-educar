@@ -182,8 +182,8 @@ class clsEnderecoExterno
 
       $sql = sprintf(
         'INSERT INTO %s.%s (idpes, tipo, idtlog, logradouro, cidade, sigla_uf, ' .
-        'origem_gravacao, idsis_cad, data_cad, operacao, idpes_cad %s) ' .
-        'VALUES (\'%d\', 1, \'%s\', \'%s\', \'%s\', \'%s\', \'M\', 17, NOW(), \'I\', \'%d\' %s)',
+        'origem_gravacao, data_cad, operacao, idpes_cad %s) ' .
+        'VALUES (\'%d\', 1, \'%s\', \'%s\', \'%s\', \'%s\', \'M\', NOW(), \'I\', \'%d\' %s)',
         $this->schema, $this->tabela, $campos, $this->idpes, $this->idtlog,
         $this->logradouro, $this->cidade, $this->sigla_uf, $this->idpes_cad,
         $values

@@ -12,8 +12,8 @@ IF (SELECT 1 FROM urbano.cep_logradouro cl
       AND cl.cep = cur_cep_log.cep
       LIMIT 1) IS NULL THEN
 
-  INSERT INTO urbano.cep_logradouro (idlog, cep, origem_gravacao, idpes_cad, data_cad, operacao, idsis_cad)
-                             VALUES (p_idlog_principal, cur_cep_log.cep, 'U', 1, NOW(), 'I', 9);
+  INSERT INTO urbano.cep_logradouro (idlog, cep, origem_gravacao, idpes_cad, data_cad, operacao)
+                             VALUES (p_idlog_principal, cur_cep_log.cep, 'U', 1, NOW(), 'I');
 
 
 END IF;
@@ -24,8 +24,8 @@ IF (SELECT 1 FROM urbano.cep_logradouro_bairro clb
       AND clb.idbai = cur_cep_log.idbai
       LIMIT 1) IS NULL THEN
 
-  INSERT INTO urbano.cep_logradouro_bairro (idlog, cep, idbai, origem_gravacao, idpes_cad, data_cad, operacao, idsis_cad)
-                             VALUES (p_idlog_principal, cur_cep_log.cep, cur_cep_log.idbai, 'U', 1, NOW(), 'I', 9);
+  INSERT INTO urbano.cep_logradouro_bairro (idlog, cep, idbai, origem_gravacao, idpes_cad, data_cad, operacao)
+                             VALUES (p_idlog_principal, cur_cep_log.cep, cur_cep_log.idbai, 'U', 1, NOW(), 'I');
 
 
 END IF;

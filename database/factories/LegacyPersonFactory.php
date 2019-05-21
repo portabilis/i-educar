@@ -11,6 +11,5 @@ $factory->define(LegacyPerson::class, function (Faker $faker) {
         'situacao' => $faker->randomElement(['A', 'I', 'P']),
         'origem_gravacao' => $faker->randomElement(['M', 'U', 'C', 'O']),
         'operacao' => $faker->randomElement(['I', 'A', 'E']),
-        'idsis_cad' => 1,
     ];
 });
