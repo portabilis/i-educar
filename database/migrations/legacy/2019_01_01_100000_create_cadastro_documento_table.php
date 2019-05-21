@@ -43,8 +43,6 @@ class CreateCadastroDocumentoTable extends Migration
                     idpes_cad numeric,
                     data_cad timestamp without time zone NOT NULL,
                     operacao character(1) NOT NULL,
-                    idsis_rev integer,
-                    idsis_cad integer NOT NULL,
                     certidao_nascimento character varying(50),
                     cartorio_cert_civil_inep integer,
                     certidao_casamento character varying(50),
