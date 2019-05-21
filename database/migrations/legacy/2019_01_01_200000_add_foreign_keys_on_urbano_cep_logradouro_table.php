@@ -14,16 +14,6 @@ class AddForeignKeysOnUrbanoCepLogradouroTable extends Migration
     public function up()
     {
         Schema::table('urbano.cep_logradouro', function (Blueprint $table) {
-            $table->foreign('idsis_rev')
-               ->references('idsis')
-               ->on('acesso.sistema')
-               ->onDelete('set null');
-
-            $table->foreign('idsis_cad')
-               ->references('idsis')
-               ->on('acesso.sistema')
-               ->onDelete('set null');
-
             $table->foreign('idpes_rev')
                ->references('idpes')
                ->on('cadastro.pessoa')
@@ -49,8 +39,6 @@ class AddForeignKeysOnUrbanoCepLogradouroTable extends Migration
     public function down()
     {
         Schema::table('urbano.cep_logradouro', function (Blueprint $table) {
-            $table->dropForeign(['idsis_rev']);
-            $table->dropForeign(['idsis_cad']);
             $table->dropForeign(['idpes_rev']);
             $table->dropForeign(['idpes_cad']);
             $table->dropForeign(['idlog']);
