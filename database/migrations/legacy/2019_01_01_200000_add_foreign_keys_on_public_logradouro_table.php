@@ -18,16 +18,6 @@ class AddForeignKeysOnPublicLogradouroTable extends Migration
                ->references('idtlog')
                ->on('urbano.tipo_logradouro');
 
-            $table->foreign('idsis_rev')
-               ->references('idsis')
-               ->on('acesso.sistema')
-               ->onDelete('set null');
-
-            $table->foreign('idsis_cad')
-               ->references('idsis')
-               ->on('acesso.sistema')
-               ->onDelete('set null');
-
             $table->foreign('idpes_rev')
                ->references('idpes')
                ->on('cadastro.pessoa')
@@ -49,8 +39,6 @@ class AddForeignKeysOnPublicLogradouroTable extends Migration
     {
         Schema::table('public.logradouro', function (Blueprint $table) {
             $table->dropForeign(['idtlog']);
-            $table->dropForeign(['idsis_rev']);
-            $table->dropForeign(['idsis_cad']);
             $table->dropForeign(['idpes_rev']);
             $table->dropForeign(['idpes_cad']);
         });
