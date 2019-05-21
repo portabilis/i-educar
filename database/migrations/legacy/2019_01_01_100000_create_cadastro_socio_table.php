@@ -26,8 +26,6 @@ class CreateCadastroSocioTable extends Migration
                     idpes_cad numeric,
                     data_cad timestamp without time zone NOT NULL,
                     operacao character(1) NOT NULL,
-                    idsis_rev integer,
-                    idsis_cad integer NOT NULL,
                     CONSTRAINT ck_socio_operacao CHECK (((operacao = \'I\'::bpchar) OR (operacao = \'A\'::bpchar) OR (operacao = \'E\'::bpchar))),
                     CONSTRAINT ck_socio_origem_gravacao CHECK (((origem_gravacao = \'M\'::bpchar) OR (origem_gravacao = \'U\'::bpchar) OR (origem_gravacao = \'C\'::bpchar) OR (origem_gravacao = \'O\'::bpchar)))
                 );
