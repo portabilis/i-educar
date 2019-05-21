@@ -35,8 +35,6 @@ class CreatePublicBairroTable extends Migration
                     idpes_cad numeric,
                     data_cad timestamp without time zone NOT NULL,
                     operacao character(1) NOT NULL,
-                    idsis_rev integer,
-                    idsis_cad integer NOT NULL,
                     zona_localizacao integer DEFAULT 1,
                     iddis integer NOT NULL,
                     idsetorbai numeric(6,0),
