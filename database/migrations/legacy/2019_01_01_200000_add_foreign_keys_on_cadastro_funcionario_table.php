@@ -14,16 +14,6 @@ class AddForeignKeysOnCadastroFuncionarioTable extends Migration
     public function up()
     {
         Schema::table('cadastro.funcionario', function (Blueprint $table) {
-            $table->foreign('idsis_rev')
-               ->references('idsis')
-               ->on('acesso.sistema')
-               ->onDelete('set null');
-
-            $table->foreign('idsis_cad')
-               ->references('idsis')
-               ->on('acesso.sistema')
-               ->onDelete('set null');
-
             $table->foreign('idpes_rev')
                ->references('idpes')
                ->on('cadastro.pessoa')
@@ -33,10 +23,6 @@ class AddForeignKeysOnCadastroFuncionarioTable extends Migration
                ->references('idpes')
                ->on('cadastro.pessoa')
                ->onDelete('set null');
-
-            $table->foreign('idins')
-               ->references('idins')
-               ->on('acesso.instituicao');
 
             $table->foreign('idpes')
                ->references('idpes')
@@ -52,11 +38,8 @@ class AddForeignKeysOnCadastroFuncionarioTable extends Migration
     public function down()
     {
         Schema::table('cadastro.funcionario', function (Blueprint $table) {
-            $table->dropForeign(['idsis_rev']);
-            $table->dropForeign(['idsis_cad']);
             $table->dropForeign(['idpes_rev']);
             $table->dropForeign(['idpes_cad']);
-            $table->dropForeign(['idins']);
             $table->dropForeign(['idpes']);
         });
     }
