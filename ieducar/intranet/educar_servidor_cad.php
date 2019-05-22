@@ -525,10 +525,6 @@ JS;
 
   function Novo()
   {
-    if (!$this->validaDeficiencias()) {
-        return false;
-    }
-
     $this->cod_servidor = (int) $this->cod_servidor;
     $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao;
 
@@ -616,10 +612,6 @@ JS;
 
   function Editar()
   {
-    if (!$this->validaDeficiencias()) {
-        return false;
-    }
-
     $timesep = explode(':', $this->carga_horaria);
     $hour    = $timesep[0] + ((int) ($timesep[1] / 60));
     $min     = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
@@ -771,19 +763,6 @@ JS;
     $this->mensagem = 'Exclusão não realizada.<br>';
 
     return false;
-  }
-
-  private function validaDeficiencias()
-  {
-    $deficiencias = array_filter((array) $this->deficiencias);
-    $validator = new DeficiencyValidator($deficiencias);
-
-    if ($validator->isValid()) {
-        return true;
-    } else {
-        $this->mensagem = $validator->getMessage();
-        return false;
-    }
   }
 
   function addCamposCenso($obj){
