@@ -29,6 +29,8 @@
  */
 
 
+use App\Models\LogUnification;
+use iEducar\Modules\Unification\StudentLogUnification;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -119,10 +121,22 @@ class indice extends clsCadastro
         return false;
     }
 
-    App_Unificacao_Aluno::unifica($cod_aluno_principal, $cod_alunos, $this->pessoa_logada, new clsBanco());
+    $unificationId = $this->createLog($cod_aluno_principal, $cod_alunos, $this->pessoa_logada);
+    App_Unificacao_Aluno::unifica($cod_aluno_principal, $cod_alunos, $this->pessoa_logada, new clsBanco(), $unificationId);
 
     $this->mensagem = "<span>Alunos unificados com sucesso.</span>";
     return true;
+  }
+
+  private function createLog($mainId, $duplicatesId, $createdBy)
+  {
+    $log = new LogUnification();
+    $log->type_id = StudentLogUnification::ID;
+    $log->main_id = $mainId;
+    $log->duplicates_id = json_encode($duplicatesId);
+    $log->created_by = $createdBy;
+    $log->save();
+    return $log->id;
   }
 }
 
