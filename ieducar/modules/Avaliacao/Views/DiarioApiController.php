@@ -418,7 +418,7 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
         $this->appendResponse('situacao', $this->getSituacaoComponente());
         $this->appendResponse('nota_necessaria_exame', $notaNecessariaExame = $this->getNotaNecessariaExame($this->getRequest()->componente_curricular_id));
-        $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
+        $this->appendResponse('media', round($this->getMediaAtual($this->getRequest()->componente_curricular_id), 3));
         $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
         if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), array('Em exame', 'Aprovado após exame', 'Retido'))) {
@@ -825,6 +825,14 @@ class DiarioApiController extends ApiCoreController
                 $matriculaId = $aluno['ref_cod_matricula'];
                 $turmaId = $aluno['ref_cod_turma'];
                 $serieId = $aluno['ref_ref_cod_serie'];
+                $componenteCurricularId = $this->getRequest()->componente_curricular_id;
+                $disciplinasDependenciaId = App_Model_IedFinder::getDisciplinasDependenciaPorMatricula($matriculaId, $serieId, $this->getRequest()->escola_id);
+                $objMatriculaTurma = new clsPmieducarMatriculaTurma();
+                $matriculaDependencia = $objMatriculaTurma->verficaEnturmacaoDeDependencia($matriculaId, $turmaId);
+
+                if (!empty($componenteCurricularId) && $matriculaDependencia && !in_array($componenteCurricularId, $disciplinasDependenciaId)) {
+                    continue;
+                }
 
                 // seta id da matricula a ser usado pelo metodo serviceBoletim
                 $this->setCurrentMatriculaId($matriculaId);
@@ -1224,9 +1232,9 @@ class DiarioApiController extends ApiCoreController
 
         $media = urldecode($this->serviceBoletim()->getMediaComponente($componenteCurricularId)->media);
 
-        // $media = round($media,1);
+        $scale = pow(10, 3);
 
-        return str_replace(',', '.', $media);
+        return floor(floatval($media) * $scale) / $scale;
     }
 
     protected function getMediaArredondadaAtual($componenteCurricularId = null)

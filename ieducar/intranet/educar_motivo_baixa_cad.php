@@ -62,7 +62,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_motivo_baixa=$_GET["cod_motivo_baixa"];
 
@@ -90,14 +90,11 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_motivo_baixa_det.php?cod_motivo_baixa={$registro["cod_motivo_baixa"]}" : "educar_motivo_baixa_lst.php";
         $this->nome_url_cancelar = "Cancelar";
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "{$nomeMenu} motivo de baixa"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+
+        $this->breadcrumb($nomeMenu . ' motivo de baixa', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
 
         return $retorno;
     }
@@ -117,7 +114,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 600, $this->pessoa_logada, 11,  "educar_motivo_baixa_lst.php" );
@@ -132,9 +129,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("motivo_baixa", $this->pessoa_logada, $this->cod_motivo_baixa);
       $auditoria->inclusao($motivo_baixa);
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_motivo_baixa_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_motivo_baixa_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -144,7 +139,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 600, $this->pessoa_logada, 11,  "educar_motivo_baixa_lst.php" );
@@ -159,9 +154,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("motivo_baixa", $this->pessoa_logada, $this->cod_motivo_baixa);
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_motivo_baixa_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_motivo_baixa_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -171,7 +164,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 600, $this->pessoa_logada, 11,  "educar_motivo_baixa_lst.php" );
@@ -185,9 +178,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("motivo_baixa", $this->pessoa_logada, $this->cod_motivo_baixa);
       $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_motivo_baixa_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_motivo_baixa_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

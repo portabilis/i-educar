@@ -24,8 +24,6 @@
   -webkit-border-top-right-radius: 5px;
   -webkit-border-bottom-left-radius: 0px;
   -webkit-border-bottom-right-radius: 0px;
-  position:relative;
-  top: 2px;
   width: 150px;
   height: 25px;
   background-color: white;
@@ -50,8 +48,6 @@
   -webkit-border-top-right-radius: 5px;
   -webkit-border-bottom-left-radius: 0px;
   -webkit-border-bottom-right-radius: 0px;
-  position:relative;
-  top: 3px;
   width: 150px;
   height: 25px;
   background-color: #f5f9fd;
@@ -59,8 +55,8 @@
   font-weight: bold;  
 }
 .tabText{
-  position: relative;
-  top: 6px;  
+  display: inline-block;
+  padding-top: 6px;
 }
 
 

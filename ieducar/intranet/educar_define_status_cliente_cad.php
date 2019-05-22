@@ -78,7 +78,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_cliente        = $_GET["cod_cliente"];
         $this->acao_status        = $_GET["status"];
@@ -103,13 +103,10 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_cliente_det.php?cod_cliente={$registro["cod_cliente"]}" : "educar_cliente_lst.php";
         $this->nome_url_cancelar = "Cancelar";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"       => "Biblioteca",
-         ""                                  => "Motivo de suspensão do cliente"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Motivo de suspensão do cliente', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
+
         return $retorno;
     }
 
@@ -203,9 +200,7 @@ class indice extends clsCadastro
       $auditoria->inclusao($clienteSuspensao);
 
             $this->mensagem .= "Suspens&atilde;o efetuada com sucesso.<br>";
-            header("Location: educar_cliente_det.php?cod_cliente={$this->cod_cliente}&ref_cod_biblioteca={$this->ref_cod_biblioteca}");
-            die();
-            return true;
+            $this->simpleRedirect("educar_cliente_det.php?cod_cliente={$this->cod_cliente}&ref_cod_biblioteca={$this->ref_cod_biblioteca}");
         }
 
         $this->mensagem = "Suspens&atilde;o n&atilde;o realizada.<br>";
@@ -215,7 +210,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
 
@@ -226,9 +221,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("cliente_suspensao", $this->pessoa_logada);
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Libera&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_cliente_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect("educar_cliente_lst.php?cod_cliente={$this->cod_cliente}");
         }
         $obj = new clsPmieducarCliente( $this->cod_cliente, $this->pessoa_logada, $this->pessoa_logada, $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, $this->ativo );
         $editou = $obj->edita();
@@ -239,7 +232,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
@@ -253,9 +246,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("cliente", $this->pessoa_logada, $this->cod_cliente);
       $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_cliente_lst.php?cod_cliente={$this->cod_cliente}" );
-            die();
-            return true;
+            $this->simpleRedirect("educar_cliente_det.php?cod_cliente={$this->cod_cliente}");
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

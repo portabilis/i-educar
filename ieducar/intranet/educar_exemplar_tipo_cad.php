@@ -100,14 +100,12 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_exemplar_tipo_det.php?cod_exemplar_tipo={$registro["cod_exemplar_tipo"]}" : "educar_exemplar_tipo_lst.php";
         $this->nome_url_cancelar = "Cancelar";
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "{$nomeMenu} tipo de exemplar"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+
+        $this->breadcrumb($nomeMenu . ' tipo de exemplar', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
+
         return $retorno;
     }
 
@@ -238,9 +236,7 @@ class indice extends clsCadastro
         //-----------------------FIM CADASTRA CLIENTE TIPO------------------------//
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_exemplar_tipo_lst.php" );
-            die();
-            return true;
+             $this->simpleRedirect('educar_exemplar_tipo_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -291,9 +287,7 @@ class indice extends clsCadastro
         //-----------------------FIM EDITA CLIENTE TIPO------------------------//
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_exemplar_tipo_lst.php" );
-            die();
-            return true;
+             $this->simpleRedirect('educar_exemplar_tipo_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -317,9 +311,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("exemplar_tipo", $this->pessoa_logada, $this->cod_exemplar_tipo);
       $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_exemplar_tipo_lst.php" );
-            die();
-            return true;
+             $this->simpleRedirect('educar_exemplar_tipo_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

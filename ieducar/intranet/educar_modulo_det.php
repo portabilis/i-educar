@@ -40,7 +40,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Etapa - Detalhe";
-        
+
         $this->cod_modulo=$_GET["cod_modulo"];
 
         $tmp_obj = new clsPmieducarModulo($this->cod_modulo);
@@ -48,8 +48,7 @@ class indice extends clsDetalhe
 
         if (! $registro)
         {
-            header("location: educar_modulo_lst.php");
-            die();
+            $this->simpleRedirect('educar_modulo_lst.php');
         }
 
         if (class_exists("clsPmieducarInstituicao"))
@@ -126,13 +125,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_modulo_lst.php";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(array(
-             $_SERVER['SERVER_NAME']."/intranet" => "Início",
-             "educar_index.php"                  => "Escola",
-             ""        => "Detalhe da etapa"
-      ));
-        $this->enviaLocalizacao($localizacao->montar());                
+        $this->breadcrumb('Detalhe da etapa', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

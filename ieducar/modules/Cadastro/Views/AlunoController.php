@@ -1,5 +1,10 @@
 <?php
 
+use iEducar\Modules\Educacenso\Model\PaisResidencia;
+use iEducar\Modules\Educacenso\Model\RecursosRealizacaoProvas;
+use iEducar\Modules\Educacenso\Model\VeiculoTransporteEscolar;
+use iEducar\Support\View\SelectOptions;
+
 require_once 'include/clsCadastro.inc.php';
 require_once "include/clsBanco.inc.php";
 require_once "include/pmieducar/clsPmieducarInstituicao.inc.php";
@@ -278,7 +283,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         /************
          * PROVA INEP
          ************/
-        'recursos_prova_inep' => array('label' => 'Recursos prova INEP'),
+        'recursos_prova_inep' => array('label' => 'Recursos necessários para realização de provas'),
 
         'recebe_escolarizacao_em_outro_espaco' => array('label' => 'Recebe escolarização em outro espaço (diferente da escola)'),
 
@@ -481,25 +486,27 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->uf($options, $helperOptions);
 
+        $nisPisPasep = '';
         // cpf
         if (is_numeric($this->cod_pessoa_fj)) {
             $fisica = new clsFisica($this->cod_pessoa_fj);
             $fisica = $fisica->detalhe();
             $valorCpf = is_numeric($fisica['cpf']) ? int2CPF($fisica['cpf']) : '';
+            $nisPisPasep = $fisica['nis_pis_pasep'];
         }
+
         $this->campoCpf("id_federal", "CPF", $valorCpf);
 
-        // justificativa_falta_documentacao
-        $resources = array(null => 'Selecione',
-            1 => Portabilis_String_Utils::toLatin1('Aluno não possui documentação'),
-            2 => Portabilis_String_Utils::toLatin1('Escola não possui informação'));
-
-        $options = array('label' => $this->_getLabel('justificativa_falta_documentacao'),
-            'resources' => $resources,
+        $options = [
             'required' => false,
-            'disabled' => true);
+            'label' => 'NIS (PIS/PASEP)',
+            'placeholder' => '',
+            'value' => $nisPisPasep,
+            'max_length' => 11,
+            'size' => 20
+        ];
 
-        $this->inputsHelper()->select('justificativa_falta_documentacao', $options);
+        $this->inputsHelper()->integer('nis_pis_pasep', $options);
 
         // tipo de certidao civil
         $escolha_certidao = Portabilis_String_Utils::toLatin1('Tipo certidão civil');
@@ -627,15 +634,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'required' => false
           );
 
-          $helperOptions = array(
-            'objectName' => 'cartorio_cert_civil_inep',
-            'hiddenInputOptions' => array(
-              'options' => array('value' => $documentos['cartorio_cert_civil_inep'])
-            )
-          );
-
-          $this->inputsHelper()->simpleSearchCartorioInep(null, $options, $helperOptions);
-
         // cartório emissão certidão civil
         $labelCartorio = Portabilis_String_Utils::toLatin1('Cartório emissão');
         $options = array(
@@ -647,6 +645,21 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         );
 
         $this->inputsHelper()->textArea('cartorio_emissao_certidao_civil', $options);
+
+        // justificativa_falta_documentacao
+        $resources = array(
+            null => 'Selecione',
+            1 => 'O(a) aluno(a) não possui os documentos pessoais solicitados',
+            2 => 'A escola não dispõe ou não recebeu os documentos pessoais do(a) aluno(a)'
+        );
+
+        $options = array('label' => $this->_getLabel('justificativa_falta_documentacao'),
+            'resources' => $resources,
+            'required' => false,
+            'label_hint' => 'Pelo menos um dos documentos: CPF, NIS, Certidão de Nascimento (novo formato) deve ser informado para não precisar justificar a ausência de documentação',
+            'disabled' => true);
+
+        $this->inputsHelper()->select('justificativa_falta_documentacao', $options);
 
         // Passaporte
         $labelPassaporte = Portabilis_String_Utils::toLatin1('Passaporte');
@@ -828,26 +841,16 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->select('tipo_transporte', $options);
 
-        $veiculos = array(null => 'Nenhum',
-            1 => Portabilis_String_Utils::toLatin1('Rodoviário - Vans/Kombis'),
-            2 => Portabilis_String_Utils::toLatin1('Rodoviário - Microônibus'),
-            3 => Portabilis_String_Utils::toLatin1('Rodoviário - Ônibus'),
-            4 => Portabilis_String_Utils::toLatin1('Rodoviário - Bicicleta'),
-            5 => Portabilis_String_Utils::toLatin1('Rodoviário - Tração animal'),
-            6 => Portabilis_String_Utils::toLatin1('Rodoviário - Outro'),
-            7 => Portabilis_String_Utils::toLatin1('Aquaviário/Embarcação - Capacidade de até 5 alunos'),
-            8 => Portabilis_String_Utils::toLatin1('Aquaviário/Embarcação - Capacidade entre 5 a 15 alunos'),
-            9 => Portabilis_String_Utils::toLatin1('Aquaviário/Embarcação - Capacidade entre 15 a 35 alunos'),
-            10 => Portabilis_String_Utils::toLatin1('Aquaviário/Embarcação - Capacidade acima de 35 alunos'),
-            11 => Portabilis_String_Utils::toLatin1('Ferroviário - Trem/Metrô'));
-
-        $options = array(
-            'label' => 'Ve&iacute;culo utilizado',
-            'resources' => $veiculos,
-            'required' => false
-        );
-
-        $this->inputsHelper()->select('veiculo_transporte_escolar', $options);
+        $veiculos = VeiculoTransporteEscolar::getDescriptiveValues();
+        $helperOptions = ['objectName' => 'veiculo_transporte_escolar'];
+        $options = [
+            'label' => 'Veículo utilizado',
+            'required' => true,
+            'options' => [
+                'all_values' => $veiculos
+            ]
+        ];
+        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
         if ($this->getClsPermissoes()->permissao_cadastra(21240, $this->getOption('id_usuario'), 7)) {
             // Cria lista de rotas
@@ -1249,20 +1252,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('lixo')), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('lixo', $options);
 
-        $recursosProvaInep = array(
-            1 => 'Auxílio ledor',
-            2 => 'Auxílio transcrição',
-            3 => 'Guia-intérprete',
-            4 => 'Intérprete de LIBRAS',
-            5 => 'Leitura labial',
-            6 => 'Prova ampliada (Fonte 16)',
-            7 => 'Prova ampliada (Fonte 20)',
-            8 => 'Prova ampliada (Fonte 24)',
-            9 => 'Prova em Braille'
-        );
+        $recursosProvaInep = RecursosRealizacaoProvas::getDescriptiveValues();
         $helperOptions = array('objectName'  => 'recursos_prova_inep');
         $options = array(
-            'label' => 'Recursos prova INEP',
+            'label' => $this->_getLabel('recursos_prova_inep'),
+            'label_hint' => '<a href="#" class="open-dialog-recursos-prova-inep">Regras do preenchimento dos recursos necessários para realização de provas</a>',
             'size' => 50,
             'required' => false,
             'options' => array(
@@ -1271,9 +1265,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->multipleSearchCustom('_', $options, $helperOptions);
 
         $selectOptions = array(
-            3 => 'Não recebe',
-            1 => 'Em hospital',
-            2 => 'Em domicílio'
+            1 => 'Não recebe escolarização fora da escola',
+            2 => 'Em hospital',
+            3 => 'Em domicílio',
         );
 
         $options = array(
@@ -1365,6 +1359,15 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         );
 
         $this->inputsHelper()->select('zona_localizacao', $options);
+
+        $options = [
+            'label' => 'País de residência',
+            'value' => $this->pais_residencia ?: PaisResidencia::BRASIL ,
+            'resources' => PaisResidencia::getDescriptiveValues(),
+            'required' => true,
+        ];
+
+        $this->inputsHelper()->select('pais_residencia', $options);
 
         $helperOptions = array('hiddenInputOptions' => array('options' => array('value' => $this->logradouro_id)));
 
@@ -1514,6 +1517,14 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->select('zona_localizacao_censo', $options);
 
+        $options = [
+            'label' => 'Localização diferenciada',
+            'resources' => SelectOptions::localizacoesDiferenciadasPessoa(),
+            'required' => false,
+        ];
+
+        $this->inputsHelper()->select('localizacao_diferenciada', $options);
+
         $tiposNacionalidade = array(
             '1'  => 'Brasileiro',
             '2'  => 'Naturalizado brasileiro',
@@ -1548,7 +1559,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
           'objectName'         => 'pais_origem',
           'hiddenInputOptions' => $hiddenInputOptions
         );
-        $this->inputsHelper()->simpleSearchPais('nome', $options, $helperOptions);
+        $this->inputsHelper()->simpleSearchPaisSemBrasil('nome', $options, $helperOptions);
     }
 
 

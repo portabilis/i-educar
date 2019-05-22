@@ -24,6 +24,7 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -62,7 +63,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->ref_cod_servidor=$_GET["ref_cod_servidor"];
         $this->ref_ref_cod_instituicao=$_GET["ref_ref_cod_instituicao"];
@@ -92,15 +93,12 @@ class indice extends clsCadastro
         /*echo*/ $this->url_cancelar = ($retorno == "Editar") ? "educar_avaliacao_desempenho_det.php?sequencial={$this->sequencial}&ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}" : "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}";
         $this->nome_url_cancelar = "Cancelar";
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""        => "{$nomeMenu} avalia&ccedil;&atilde;o de desempenho"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
-        
+        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+
+        $this->breadcrumb($nomeMenu . ' avaliação de desempenho', [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
+
         return $retorno;
     }
 
@@ -110,7 +108,7 @@ class indice extends clsCadastro
         $this->campoOculto( "sequencial", $this->sequencial );
         $this->campoOculto( "ref_cod_servidor", $this->ref_cod_servidor );
         $this->campoOculto( "ref_ref_cod_instituicao", $this->ref_ref_cod_instituicao );
-        
+
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1)
@@ -142,7 +140,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 635, $this->pessoa_logada, 7,  "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}" );
@@ -152,9 +150,7 @@ class indice extends clsCadastro
         if( $cadastrou )
         {
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}" );
-            die();
-            return true;
+            $this->simpleRedirect("educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -164,7 +160,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 635, $this->pessoa_logada, 7,  "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}" );
@@ -175,9 +171,7 @@ class indice extends clsCadastro
         if( $editou )
         {
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}" );
-            die();
-            return true;
+            $this->simpleRedirect("educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -187,7 +181,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 635, $this->pessoa_logada, 7,  "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}" );
@@ -198,9 +192,7 @@ class indice extends clsCadastro
         if( $excluiu )
         {
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}" );
-            die();
-            return true;
+            $this->simpleRedirect("educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}");
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

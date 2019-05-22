@@ -106,11 +106,13 @@ var getPersonByCpf = function(cpf) {
 // hide or show #pais_origem_nome by #tipo_nacionalidade
 var checkTipoNacionalidade = function() {
   if ($j.inArray($j('#tipo_nacionalidade').val(), ['2', '3']) > -1) {
+    $j('#naturalidade_nome').makeUnrequired();
     if (obrigarCamposCenso) {
       $j('#pais_origem_nome').makeRequired();
     }
     $j('#pais_origem_nome').show();
   } else {
+    $j('#naturalidade_nome').makeRequired();
     $j('#pais_origem_nome').hide();
   }
 }
@@ -127,16 +129,12 @@ var checkTipoCertidaoCivil = function() {
   $certidaoCasamentoField.makeUnrequired();
   $j('#uf_emissao_certidao_civil').makeUnrequired();
   $j('#data_emissao_certidao_civil').makeUnrequired();
-  $j('#cartorio_cert_civil_inep_id').makeUnrequired();
-  $j('#cartorio_cert_civil_inep').makeUnrequired();
 
   if ($j.inArray(tipoCertidaoCivil, ['91', '92']) > -1) {
     $certidaoCivilFields.show();
     if (obrigarCamposCenso) {
       $j('#uf_emissao_certidao_civil').makeRequired();
       $j('#data_emissao_certidao_civil').makeRequired();
-      $j('#cartorio_cert_civil_inep_id').makeRequired();
-      $j('#cartorio_cert_civil_inep').makeRequired();
       $certidaoCivilFields.makeRequired();
     }
     $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil'));
@@ -224,6 +222,22 @@ var submitForm = function(event) {
     formUtils.submit();
 }
 
+let verificaCampoZonaResidencia = () => {
+  let $field = $j('#zona_localizacao_censo');
+  let isBrasil = $j('#pais_residencia').val() == '76';
+  if (isBrasil) {
+    $field.removeAttr('disabled');
+
+    if (obrigarCamposCenso) {
+      $field.makeRequired();
+    }
+  } else {
+    $field.val('');
+    $field.makeUnrequired();
+    $field.attr('disabled', 'disabled');
+  }
+};
+
 // when page is ready
 
 $j(document).ready(function() {
@@ -231,6 +245,8 @@ $j(document).ready(function() {
 
   changeVisibilityOfLinksToPessoaPai();
   changeVisibilityOfLinksToPessoaMae();
+  verificaCampoZonaResidencia();
+  $j('#pais_residencia').on('change', verificaCampoZonaResidencia);
 
   // style fixup
 

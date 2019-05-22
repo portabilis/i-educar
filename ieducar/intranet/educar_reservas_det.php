@@ -60,7 +60,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Reservas - Detalhe";
-        
+
 
         $this->cod_reserva=$_GET["cod_reserva"];
 
@@ -69,8 +69,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_reservas_lst.php" );
-            die();
+            $this->simpleRedirect('educar_reservas_lst.php');
         }
 
         if( class_exists( "clsPmieducarExemplar" ) )
@@ -137,13 +136,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_reservas_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Detalhe da reserva"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhe da reserva', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 

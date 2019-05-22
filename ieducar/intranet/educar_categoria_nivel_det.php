@@ -41,8 +41,8 @@ class clsIndexBase extends clsBase
 {
   public function Formular() {
     $this->SetTitulo($this->_instituicao . 'Servidores - Detalhe Categoria Nível');
-    $this->processoAp = "829"; 
-        $this->addEstilo('localizacaoSistema');    
+    $this->processoAp = "829";
+        $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -76,8 +76,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_categoria_nivel_lst.php" );
-            die();
+            $this->simpleRedirect('educar_categoria_nivel_lst.php');
         }
 
 
@@ -133,13 +132,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_categoria_nivel_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Detalhe da categoria/n&iacute;vel"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhes da categoria/nível', [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
     }
 }
 

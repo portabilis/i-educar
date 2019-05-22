@@ -86,8 +86,7 @@ class indice extends clsListagem
 
         if ( !$this->ref_cod_aluno )
         {
-            header( "location: educar_aluno_lst.php" );
-            die();
+            $this->simpleRedirect('educar_aluno_lst.php');
         }
 
         $this->addCabecalhos( array( "Ano", "Kit completo", 'Data da distribu&ccedil;&atilde;o') );
@@ -152,13 +151,9 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Distribuições de uniforme escolar"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Distribuições de uniforme escolar', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 // cria uma extensao da classe base

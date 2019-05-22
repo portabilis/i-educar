@@ -78,7 +78,7 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    
+
 
     $this->cod_serie_vaga = $_GET['cod_serie_vaga'];
 
@@ -113,13 +113,10 @@ class indice extends clsCadastro
     $this->nome_url_cancelar = 'Cancelar';
 
     $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} vagas por s&eacute;rie"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+    $this->breadcrumb($nomeMenu . ' vagas por série', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
 
     return $retorno;
   }
@@ -149,7 +146,7 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(21253, $this->pessoa_logada, 7, 'educar_serie_vaga_lst.php');
@@ -171,8 +168,7 @@ class indice extends clsCadastro
     $cadastrou = $obj->cadastra();
     if ($cadastrou) {
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
-      header('Location: educar_serie_vaga_lst.php');
-      die();
+      $this->simpleRedirect('educar_serie_vaga_lst.php');
     }
 
     $this->mensagem = 'Cadastro n&atilde;o realizado. Verifique se j&aacute; n&atilde;o existe cadastro para est&aacute; s&eacute;rie/ano!<br />';
@@ -181,7 +177,7 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(21253, $this->pessoa_logada, 7, 'educar_serie_vaga_lst.php');
@@ -192,8 +188,7 @@ class indice extends clsCadastro
     $editou = $obj->edita();
     if ($editou) {
       $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br />';
-      header('Location: educar_serie_vaga_lst.php');
-      die();
+      $this->simpleRedirect('educar_serie_vaga_lst.php');
     }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o nÃ£o realizada.<br />';
@@ -202,7 +197,7 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_excluir(21253, $this->pessoa_logada, 7, 'educar_serie_vaga_lst.php');
@@ -213,8 +208,7 @@ class indice extends clsCadastro
 
     if ($excluiu) {
       $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br />';
-      header('Location: educar_serie_vaga_lst.php');
-      die();
+      $this->simpleRedirect('educar_serie_vaga_lst.php');
     }
 
     $this->mensagem = 'Exclus&atilde;o nÃ£o realizada.<br />';

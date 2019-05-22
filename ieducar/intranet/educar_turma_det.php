@@ -115,8 +115,7 @@ class indice extends clsDetalhe
         }
 
         if (!$registro) {
-            header('Location: educar_turma_lst.php');
-            die();
+            $this->simpleRedirect('educar_turma_lst.php');
         }
 
         if (class_exists('clsPmieducarTurmaTipo')) {
@@ -445,15 +444,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = 'educar_turma_lst.php';
         $this->largura = '100%';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(
-            [
-                $_SERVER['SERVER_NAME'] . "/intranet" => "Início",
-                "educar_index.php" => "Escola",
-                "" => "Detalhe da turma"
-            ]
-        );
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Detalhe da turma', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $scripts = [
             '/modules/Portabilis/Assets/Javascripts/Utils.js',

@@ -84,15 +84,13 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_projeto_det.php?cod_projeto={$registro["cod_projeto"]}" : "educar_projeto_lst.php";
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} projeto"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' projeto', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
+
         return $retorno;
     }
 
@@ -126,9 +124,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($projeto);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_projeto_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_projeto_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -152,9 +148,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($projetoDetalheAntes, $projetoDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_projeto_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_projeto_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -175,9 +169,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($projeto);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_projeto_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_projeto_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

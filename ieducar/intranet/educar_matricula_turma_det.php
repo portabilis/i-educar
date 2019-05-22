@@ -94,8 +94,7 @@ class indice extends clsDetalhe
     }
 
     if (! $this->ref_cod_matricula) {
-      header('Location: educar_matricula_lst.php');
-      die();
+        $this->simpleRedirect('educar_matricula_lst.php');
     }
 
     $obj_mat_turma = new clsPmieducarMatriculaTurma();
@@ -136,8 +135,7 @@ class indice extends clsDetalhe
     $this->ref_cod_curso = $registro['ref_cod_curso'];
 
     if (!$registro || !$_POST) {
-      header('Location: educar_matricula_lst.php');
-      die();
+        $this->simpleRedirect('educar_matricula_lst.php');
     }
 
 
@@ -326,7 +324,7 @@ class indice extends clsDetalhe
           }
 
           %s
-          
+
           document.formcadastro.ref_cod_matricula.value = ref_cod_matricula;
           document.formcadastro.ref_cod_turma_destino.value = ref_cod_turma_destino;
           document.formcadastro.data_enturmacao.value = document.getElementById("data_enturmacao").value;
@@ -394,13 +392,9 @@ class indice extends clsDetalhe
 
     $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Enturmações da matrícula"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Enturmações da matrícula', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
 
   protected function getEscolaSerie($escolaId, $serieId) {

@@ -98,7 +98,7 @@ class indice extends clsDetalhe
   function Gerar()
   {
     $this->titulo = 'Vagas Reservadas - Detalhe';
-    
+
 
     $this->cod_reserva_vaga = $_GET['cod_reserva_vaga'];
 
@@ -110,8 +110,7 @@ class indice extends clsDetalhe
     }
 
     if (!$registro) {
-      header('Location: educar_reservada_vaga_lst.php');
-      die();
+        $this->simpleRedirect('educar_reservada_vaga_lst.php');
     }
 
     // Atribui códigos a variáveis de instância
@@ -196,13 +195,9 @@ class indice extends clsDetalhe
       $this->ref_cod_escola . '&ref_cod_serie=' . $this->ref_cod_serie;
     $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Detalhe da vaga reservada"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->breadcrumb('Detalhe da vaga reservada', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
 
   /**
@@ -217,9 +212,8 @@ class indice extends clsDetalhe
 
     if ($excluiu) {
       $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-      header('Location: educar_reservada_vaga_lst.php?ref_cod_escola=' .
-        $this->ref_cod_escola . '&ref_cod_serie=' . $this->ref_cod_serie);
-      die();
+      $this->simpleRedirect('educar_reservada_vaga_lst.php?ref_cod_escola=' .
+          $this->ref_cod_escola . '&ref_cod_serie=' . $this->ref_cod_serie);
     }
 
     $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';

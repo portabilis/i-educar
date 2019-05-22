@@ -24,6 +24,7 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -66,8 +67,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_bloqueio_ano_letivo_lst.php" );
-            die();
+            $this->simpleRedirect('educar_bloqueio_ano_letivo_lst.php');
         }
 
         if( $registro["instituicao"] )
@@ -99,13 +99,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_bloqueio_ano_letivo_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Detalhe do bloqueio do ano letivo"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Detalhe do bloqueio do ano letivo', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

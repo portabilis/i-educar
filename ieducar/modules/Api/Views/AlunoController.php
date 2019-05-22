@@ -1,5 +1,12 @@
 <?php
 
+use App\Models\Deficiency;
+use App\Models\Individual;
+use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
+use iEducar\Modules\Educacenso\Validator\InepExamValidator;
+use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
+use iEducar\Modules\Educacenso\Validator\NisValidator;
+use iEducar\Modules\People\CertificateType;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
@@ -223,8 +230,98 @@ class AlunoController extends ApiCoreController
     {
         return (
             parent::canPost() &&
-            $this->validatesUniquenessOfAlunoByPessoaId()
+            $this->validatesUniquenessOfAlunoByPessoaId() &&
+            $this->validateDeficiencies() &&
+            $this->validateBirthCertificate() &&
+            $this->validateNis() &&
+            $this->validateInepExam()
         );
+    }
+
+    protected function canPut()
+    {
+        return (
+            parent::canPut() &&
+            $this->validateDeficiencies()&&
+            $this->validateBirthCertificate()&&
+            $this->validateNis()&&
+            $this->validateInepExam()
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    private function validateDeficiencies()
+    {
+        $deficiencias = array_filter((array) $this->getRequest()->deficiencias);
+
+        $deficiencias = $this->replaceByEducacensoDeficiencies($deficiencias);
+
+        $validator = new DeficiencyValidator($deficiencias);
+
+        if ($validator->isValid()) {
+            return true;
+        } else {
+            $this->messenger->append($validator->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    private function validateBirthCertificate()
+    {
+        $usesBirthCertificate = $this->getRequest()->tipo_certidao_civil == CertificateType::BIRTH_NEW_FORMAT;
+        $individual = Individual::find($this->getRequest()->pessoa_id);
+        if (!$usesBirthCertificate || empty($this->getRequest()->certidao_nascimento) || !$individual || empty($individual->birthdate)) {
+            return true;
+        }
+
+        $validator = new BirthCertificateValidator($this->getRequest()->certidao_nascimento, $individual->birthdate);
+
+        if ($validator->isValid()) {
+            return true;
+        }
+
+        $this->messenger->append($validator->getMessage());
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    private function validateNis()
+    {
+        $validator = new NisValidator($this->getRequest()->nis_pis_pasep ?? '');
+
+        if ($validator->isValid()) {
+            return true;
+        }
+
+        $this->messenger->append($validator->getMessage());
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    private function validateInepExam()
+    {
+        $resources = array_filter((array) $this->getRequest()->recursos_prova_inep__);
+        $deficiencies = array_filter((array) $this->getRequest()->deficiencias);
+
+        $deficiencies = $this->replaceByEducacensoDeficiencies($deficiencies);
+
+        $validator = new InepExamValidator($resources, $deficiencies);
+
+        if ($validator->isValid()) {
+            return true;
+        }
+
+        $this->messenger->append($validator->getMessage());
+        return false;
     }
 
     protected function canGetOcorrenciasDisciplinares()
@@ -517,7 +614,7 @@ class AlunoController extends ApiCoreController
         $aluno->recursos_prova_inep = $recursosProvaInep;
         $aluno->recebe_escolarizacao_em_outro_espaco = $this->getRequest()->recebe_escolarizacao_em_outro_espaco;
         $aluno->justificativa_falta_documentacao = $this->getRequest()->justificativa_falta_documentacao;
-        $aluno->veiculo_transporte_escolar = $this->getRequest()->veiculo_transporte_escolar;
+        $aluno->veiculo_transporte_escolar = implode(',', array_filter($this->getRequest()->veiculo_transporte_escolar));
 
         $this->file_foto = $_FILES['file'];
         $this->del_foto = $_POST['file_delete'];
@@ -833,7 +930,6 @@ class AlunoController extends ApiCoreController
                             end
                     )
                     and (matricula.ref_cod_aluno::varchar(255) like $1||\'%\')
-                    and matricula.aprovado in (1, 2, 3, 4, 7, 8, 9)
                 limit 15
             ) as alunos
             order by
@@ -1073,7 +1169,7 @@ class AlunoController extends ApiCoreController
             $aluno['parentesco_quatro'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_quatro']);
             $aluno['autorizado_cinco'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_cinco']);
             $aluno['parentesco_cinco'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_cinco']);
-
+            $aluno['veiculo_transporte_escolar'] = Portabilis_Utils_Database::pgArrayToArray($aluno['veiculo_transporte_escolar']);
             $aluno['alfabetizado'] = $aluno['analfabeto'] == 0;
             unset($aluno['analfabeto']);
 
@@ -1337,6 +1433,12 @@ class AlunoController extends ApiCoreController
     {
         $maeId = $this->getRequest()->mae_id;
         $paiId = $this->getRequest()->pai_id;
+
+        if (!empty($maeId) && !empty($paiId) && $maeId == $paiId) {
+            $this->messenger->append('Não é possível informar a mesma pessoa para Pai e Mãe.');
+            return false;
+        }
+
         $pessoaId = $this->getRequest()->pessoa_id;
 
         $sql = 'UPDATE cadastro.fisica set ';
@@ -1361,6 +1463,8 @@ class AlunoController extends ApiCoreController
 
         $sql .= " WHERE idpes = {$pessoaId}";
         Portabilis_Utils_Database::fetchPreparedQuery($sql);
+
+        return true;
     }
 
     protected function getOcorrenciasDisciplinares()
@@ -1443,7 +1547,9 @@ class AlunoController extends ApiCoreController
             $id = $this->createOrUpdateAluno();
             $pessoaId = $this->getRequest()->pessoa_id;
 
-            $this->saveParents();
+            if (!$this->saveParents()) {
+                return [];
+            }
 
             if (is_numeric($id)) {
                 $this->updateBeneficios($id);
@@ -1474,7 +1580,9 @@ class AlunoController extends ApiCoreController
         $id = $this->getRequest()->id;
         $pessoaId = $this->getRequest()->pessoa_id;
 
-        $this->saveParents();
+        if (!$this->saveParents()) {
+            return [];
+        }
 
         if ($this->canPut() && $this->createOrUpdateAluno($id)) {
             $this->updateBeneficios($id);
@@ -1637,11 +1745,11 @@ class AlunoController extends ApiCoreController
         //
         // quando selecionado um tipo diferente do novo formato,
         // é removido o valor de certidao_nascimento.
-        if ($this->getRequest()->tipo_certidao_civil == 'certidao_nascimento_novo_formato') {
+        if ($this->getRequest()->tipo_certidao_civil == CertificateType::BIRTH_NEW_FORMAT) {
             $documentos->tipo_cert_civil = null;
             $documentos->certidao_casamento = '';
             $documentos->certidao_nascimento = $this->getRequest()->certidao_nascimento;
-        } elseif ($this->getRequest()->tipo_certidao_civil == 'certidao_casamento_novo_formato') {
+        } elseif ($this->getRequest()->tipo_certidao_civil == CertificateType::MARRIAGE_NEW_FORMAT) {
             $documentos->tipo_cert_civil = null;
             $documentos->certidao_nascimento = '';
             $documentos->certidao_casamento = $this->getRequest()->certidao_casamento;
@@ -1669,7 +1777,6 @@ class AlunoController extends ApiCoreController
         $documentos->sigla_uf_cert_civil = $this->getRequest()->uf_emissao_certidao_civil;
         $documentos->cartorio_cert_civil = addslashes($this->getRequest()->cartorio_emissao_certidao_civil);
         $documentos->passaporte = addslashes($this->getRequest()->passaporte);
-        $documentos->cartorio_cert_civil_inep = $this->getRequest()->cartorio_cert_civil_inep_id;
 
         // Alteração de documentos compativel com a versão anterior do cadastro,
         // onde era possivel criar uma pessoa, não informando os documentos,
@@ -1688,8 +1795,9 @@ class AlunoController extends ApiCoreController
     protected function createOrUpdatePessoa($idPessoa)
     {
         $fisica = new clsFisica($idPessoa);
-        $fisica->cpf = idFederal2int($this->getRequest()->id_federal);
+        $fisica->cpf = $this->getRequest()->id_federal ? idFederal2int($this->getRequest()->id_federal) : 'NULL';
         $fisica->ref_cod_religiao = $this->getRequest()->religiao_id;
+        $fisica->nis_pis_pasep = $this->getRequest()->nis_pis_pasep ?: 'NULL';
         $fisica = $fisica->edita();
     }
 
@@ -1850,5 +1958,17 @@ class AlunoController extends ApiCoreController
         } else {
             $this->notImplementedOperationError();
         }
+    }
+
+    private function replaceByEducacensoDeficiencies($deficiencies)
+    {
+        $databaseDeficiencies = Deficiency::all()->getKeyValueArray('deficiencia_educacenso');
+
+        $arrayEducacensoDeficiencies = [];
+        foreach ($deficiencies as $deficiency) {
+            $arrayEducacensoDeficiencies[] = $databaseDeficiencies[$deficiency];
+        }
+
+        return $arrayEducacensoDeficiencies;
     }
 }

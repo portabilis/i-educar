@@ -187,21 +187,17 @@ class indice extends clsCadastro
       }
     }
     else {
-      header('Location: educar_quadro_horario_lst.php');
-      die;
+        $this->simpleRedirect('educar_quadro_horario_lst.php');
     }
 
     $this->url_cancelar = "educar_quadro_horario_lst.php?ref_cod_instituicao={$this->ref_cod_instituicao}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_turma={$this->ref_cod_turma}&ano={$this->ano_alocacao}&busca=S";
     $this->nome_url_cancelar = 'Cancelar';
 
     $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""        => "{$nomeMenu} hor&aacute;rio"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+
+    $this->breadcrumb($nomeMenu . ' horário', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
 
     return $retorno;
   }
@@ -586,8 +582,8 @@ class indice extends clsCadastro
       $obj_quadro_horarios_aux->excluirTodos($this->identificador);
 
       $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-      header("Location: educar_quadro_horario_lst.php{$parametros}");
-      die();
+      $this->simpleRedirect("educar_quadro_horario_lst.php{$parametros}");
+
     }
 
     $this->mensagem = "Cadastro não realizado. 1<br>";
@@ -714,8 +710,7 @@ class indice extends clsCadastro
       $obj_quadro_horarios_aux->excluirTodos($this->identificador);
 
       $this->mensagem .= 'Cadastro editado com sucesso.<br>';
-      header("Location: educar_quadro_horario_lst.php{$parametros}");
-      die();
+      $this->simpleRedirect("educar_quadro_horario_lst.php{$parametros}");
     }
 
     $this->mensagem = 'Cadastro não editado.<br>';
@@ -741,8 +736,7 @@ class indice extends clsCadastro
       $obj_quadro_horarios_aux->excluirTodos($this->identificador);
 
       $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
-      header("Location: educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}");
-      die();
+      $this->simpleRedirect("educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}");
     }
 
     $this->mensagem = "Exclusão não realizada.<br>";

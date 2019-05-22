@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyRegistration;
+use Illuminate\Support\Str;
+
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
@@ -106,6 +109,48 @@ class MatriculaController extends ApiCoreController
         and lower((pessoa.nome)) like \'%\'||lower(($1))||\'%\'
         and (select case when $2 != 0 then matricula.ref_ref_cod_escola = $2 else true end)
         and (select case when $3 != 0 then matricula.ano = $3 else true end) limit 15';
+    }
+
+    /**
+     * Método para possibilitar a busca apenas de alunos transferidos, será
+     * substituído em futuras versões.
+     * 
+     * @deprecated
+     *
+     * @return array
+     */
+    public function getTransferredRegistrations()
+    {
+        $year = $this->getRequest()->ano;
+        $school = $this->getRequest()->escola_id;
+        $query = $this->getRequest()->query;
+
+        $query = str_replace('-', ' ', Str::slug($query));
+
+        $registrations = LegacyRegistration::query()
+            ->with('student.person')
+            ->whereHas('student.person', function ($builder) use ($query) {
+                $builder->where('nome', 'ilike', '%' . $query . '%');
+            })
+            ->where('aprovado', 4)
+            ->where('ano', $year)
+            ->where('ref_ref_cod_escola', $school)
+            ->limit(15)
+            ->get();
+
+        $transfers = [];
+
+        foreach ($registrations as $registration) {
+            $codAluno = $registration->student->cod_aluno;
+            $nome = $registration->student->person->nome;
+            $transfers[$registration->cod_matricula] = "({$codAluno}) {$nome}";
+        }
+
+        if (empty($transfers)) {
+            return ['result' => ['' => 'Sem resultados.']];
+        }
+
+        return ['result' => $transfers];
     }
 
     protected function formatResourceValue($resource)
@@ -745,6 +790,8 @@ class MatriculaController extends ApiCoreController
             $this->appendResponse($this->getFrequencia());
         } elseif ($this->isRequestFor('get', 'matricula-search')) {
             $this->appendResponse($this->search());
+        } elseif ($this->isRequestFor('get', 'matricula-transferida')) {
+            $this->appendResponse($this->getTransferredRegistrations());
         } elseif ($this->isRequestFor('get', 'movimentacao-enturmacao')) {
             $this->appendResponse($this->getMovimentacaoEnturmacao());
         } elseif ($this->isRequestFor('delete', 'abandono')) {

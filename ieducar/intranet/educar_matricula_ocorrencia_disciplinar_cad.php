@@ -129,15 +129,12 @@ class indice extends clsCadastro
         if (is_numeric($this->ref_cod_matricula))
             $this->url_cancelar = ($retorno == "Editar") ? "educar_matricula_ocorrencia_disciplinar_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_tipo_ocorrencia_disciplinar={$registro["ref_cod_tipo_ocorrencia_disciplinar"]}&sequencial={$registro["sequencial"]}" : "educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Ocorrências disciplinares da matrícula"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Ocorrências disciplinares da matrícula', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
+
         return $retorno;
     }
 
@@ -273,12 +270,13 @@ class indice extends clsCadastro
 
             }
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            if ($voltaListagem)
-                header( "Location: educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}" );
-            else
+            if ($voltaListagem) {
+                $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
+            } else {
                 echo "<script language='javascript' type='text/javascript'>alert('Cadastro efetuado com sucesso.');</script>";
                 echo "<script language='javascript' type='text/javascript'>window.location.href='educar_matricula_ocorrencia_disciplinar_cad.php'</script>";
-                //header( "Location: educar_matricula_ocorrencia_disciplinar_cad.php");
+            }
+
             return true;
         }
 
@@ -314,12 +312,11 @@ class indice extends clsCadastro
             $auditoria->alteracao($ocorrenciaDisciplinarDetalheAntes, $ocorrenciaDisciplinarDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            if ($voltaListagem)
-                header( "Location: educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}" );
-            else
-                header( "Location: educar_matricula_ocorrencia_disciplinar_cad.php");
-            die();
-            return true;
+            if ($voltaListagem) {
+                $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
+            } else {
+                $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_cad.php");
+            }
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -347,9 +344,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($ocorrenciaDisciplinar);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}" );
-            die();
-            return true;
+            $this->simpleRedirect("educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}");
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

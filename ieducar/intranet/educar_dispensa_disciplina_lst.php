@@ -101,8 +101,7 @@ class indice extends clsListagem
     }
 
     if (!$_GET['ref_cod_matricula']) {
-      header('Location: educar_matricula_lst.php');
-      die();
+        $this->simpleRedirect('educar_matricula_lst.php');
     }
 
     $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
@@ -253,13 +252,9 @@ class indice extends clsListagem
 
     $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Dispensa de componentes curriculares"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->breadcrumb('Dispensa de componentes curriculares', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
 }
 

@@ -61,14 +61,14 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Pagamento Multa - Detalhe";
-        
+
 
 
         $this->ref_cod_cliente      = $_GET["cod_cliente"];
         $this->ref_cod_cliente_tipo = $_GET["cod_cliente_tipo"];
 
         if(!$this->ref_cod_cliente || !$this->ref_cod_cliente_tipo)
-            header("Location: educar_pagamento_multa_lst.php");
+            $this->simpleRedirect('educar_pagamento_multa_lst.php');
 
         if( class_exists( "clsPmieducarCliente" ) )
         {
@@ -177,13 +177,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_pagamento_multa_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Detalhe da d&iacute;vida"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhe da dívida', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 

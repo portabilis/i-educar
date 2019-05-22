@@ -138,13 +138,9 @@ class indice extends clsCadastro {
 
     $this->nome_url_cancelar = "Cancelar";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""        => "Afastar servidor"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->breadcrumb('Afastar servidor', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
 
     return $retorno;
   }
@@ -387,8 +383,7 @@ class indice extends clsCadastro {
         }
 
         $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-        header("Location: educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-        die();
+          $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
       }
     }
     else {
@@ -397,8 +392,7 @@ class indice extends clsCadastro {
     }
 
     $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-    header("Location: educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-    die();
+    $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
   }
 
 
@@ -471,8 +465,7 @@ class indice extends clsCadastro {
       }
 
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      header("Location: educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-      die();
+      $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
     }
 
     $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -503,9 +496,7 @@ class indice extends clsCadastro {
 
     if ($excluiu) {
       $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-      header("Location: educar_servidor_afastamento_lst.php");
-
-      die();
+      $this->simpleRedirect('educar_servidor_afastamento_lst.php');
     }
 
     $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

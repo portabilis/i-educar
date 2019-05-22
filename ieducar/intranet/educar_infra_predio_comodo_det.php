@@ -77,8 +77,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_infra_predio_comodo_lst.php" );
-            die();
+            $this->simpleRedirect('educar_infra_predio_comodo_lst.php');
         }
 
         if( class_exists( "clsPmieducarInfraComodoFuncao" ) )
@@ -164,17 +163,13 @@ class indice extends clsDetalhe
             $this->url_novo = "educar_infra_predio_comodo_cad.php";
             $this->url_editar = "educar_infra_predio_comodo_cad.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}";
         }
-                
+
         $this->url_cancelar = "educar_infra_predio_comodo_lst.php";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "Detalhe do ambiente"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Detalhe do ambiente', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

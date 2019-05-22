@@ -94,4 +94,9 @@ class Portabilis_Utils_Database
     {
         return '\'{' . implode(',', $value) . '}\'';
     }
+
+    public static function pgArrayToArray($value): array
+    {
+        return !empty($value) ? explode(',', str_replace(array('{', "}"), '', $value)) : [];
+    }
 }

@@ -64,8 +64,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_projeto_lst.php" );
-            die();
+            $this->simpleRedirect('educar_projeto_lst.php');
         }
 
         if( $registro["cod_projeto"] )
@@ -93,13 +92,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_projeto_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Detalhe do projeto"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Detalhe do projeto', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

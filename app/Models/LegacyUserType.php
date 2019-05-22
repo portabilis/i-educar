@@ -2,17 +2,21 @@
 
 namespace App\Models;
 
+use App\User;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class UserType.
- *
- * @package namespace App\Entities;
+ * @property int    $id
+ * @property int    $level
+ * @property User[] $users
  */
 class LegacyUserType extends EloquentBaseModel implements Transformable
 {
     use TransformableTrait;
+
+    const LEVEL_ADMIN = 1;
 
     /**
      * @var string
@@ -37,11 +41,18 @@ class LegacyUserType extends EloquentBaseModel implements Transformable
     protected $fillable = [];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return int
+     */
+    public function getLevelAttribute()
+    {
+        return $this->nivel;
+    }
+
+    /**
+     * @return HasMany
      */
     public function users()
     {
         return $this->hasMany(User::class, 'ref_cod_tipo_usuario', 'cod_tipo_usuario');
     }
-
 }

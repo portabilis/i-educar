@@ -42,8 +42,7 @@
     require_once( "include/otopic/clsSituacao.inc.php" );
     
     // includes de fora do otopic
-    require_once( "include/clsEmail.inc.php" ); 
-    require_once( "include/clsMenuFuncionario.inc.php" );   
+    require_once( "include/clsEmail.inc.php" );
     require_once( "include/clsLogAcesso.inc.php" ); 
     require_once( "include/Geral.inc.php" );
 ?>

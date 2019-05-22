@@ -24,6 +24,7 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -62,7 +63,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_acervo_colecao=$_GET["cod_acervo_colecao"];
 
@@ -101,21 +102,18 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_acervo_colecao_det.php?cod_acervo_colecao={$registro["cod_acervo_colecao"]}" : "educar_acervo_colecao_lst.php";
         $this->nome_url_cancelar = "Cancelar";
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "{$nomeMenu} cole&ccedil;&atilde;o"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+
+        $this->breadcrumb($nomeMenu . ' coleção', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
 
         return $retorno;
     }
 
     function Gerar()
     {
-        
+
         // primary keys
         $this->campoOculto( "cod_acervo_colecao", $this->cod_acervo_colecao );
 
@@ -152,7 +150,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 593, $this->pessoa_logada, 11,  "educar_acervo_colecao_lst.php" );
@@ -167,9 +165,8 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("acervo_colecao", $this->pessoa_logada, $this->cod_acervo_colecao);
       $auditoria->inclusao($acervo_colecao);
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_acervo_colecao_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('educar_acervo_colecao_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -179,7 +176,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 593, $this->pessoa_logada, 11,  "educar_acervo_colecao_lst.php" );
@@ -194,9 +191,8 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("acervo_colecao", $this->pessoa_logada, $this->cod_acervo_colecao);
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_acervo_colecao_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('educar_acervo_colecao_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -206,7 +202,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 593, $this->pessoa_logada, 11,  "educar_acervo_colecao_lst.php" );
@@ -221,9 +217,8 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("acervo_colecao", $this->pessoa_logada, $this->cod_acervo_colecao);
       $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_acervo_colecao_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('educar_acervo_colecao_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

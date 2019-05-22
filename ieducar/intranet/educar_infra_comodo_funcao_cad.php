@@ -90,23 +90,20 @@ class indice extends clsCadastro
 
                     $retorno = "Editar";
                 }else{
-                    header( "Location: educar_infra_comodo_funcao_lst.php" );
-                    die();
+                    $this->simpleRedirect('educar_infra_comodo_funcao_lst.php');
                 }
             }
         }
         $this->url_cancelar = ($retorno == "Editar") ? "educar_infra_comodo_funcao_det.php?cod_infra_comodo_funcao={$registro["cod_infra_comodo_funcao"]}" : "educar_infra_comodo_funcao_lst.php";
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} tipo de ambiente"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' tipo de ambiente', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
+
         return $retorno;
     }
 
@@ -140,9 +137,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($infraComodoFuncao);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_infra_comodo_funcao_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_infra_comodo_funcao_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -166,9 +161,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($infraComodoFuncaoDetalheAntes, $infraComodoFuncaoDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_infra_comodo_funcao_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_infra_comodo_funcao_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -189,9 +182,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($infraComodoFuncao);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_infra_comodo_funcao_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_infra_comodo_funcao_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

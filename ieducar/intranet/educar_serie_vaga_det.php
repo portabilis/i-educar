@@ -28,6 +28,9 @@
  * @version   $Id$
  */
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once "include/clsBase.inc.php";
 require_once "include/clsDetalhe.inc.php";
 require_once "include/clsBanco.inc.php";
@@ -82,8 +85,9 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->detalhe();
 
     if (!$registro) {
-      header('Location: educar_serie_vaga_lst.php');
-      die();
+        throw new HttpResponseException(
+            new RedirectResponse('educar_serie_vaga_lst.php')
+        );
     }
 
     if (class_exists('clsPmieducarSerie')) {
@@ -148,13 +152,9 @@ class indice extends clsDetalhe
     $this->url_cancelar = 'educar_serie_vaga_lst.php';
     $this->largura      = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Detalhe de vagas da série"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Detalhe de vagas da série', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
 }
 

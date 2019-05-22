@@ -24,6 +24,10 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -63,7 +67,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Material Did&aacute;tico - Detalhe";
-        
+
 
         $this->cod_material_didatico=$_GET["cod_material_didatico"];
 
@@ -72,8 +76,9 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_material_didatico_lst.php" );
-            die();
+            throw new HttpResponseException(
+                new RedirectResponse('educar_material_didatico_lst.php')
+            );
         }
 
         if( class_exists( "clsPmieducarMaterialTipo" ) )
@@ -133,13 +138,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_material_didatico_lst.php";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""                                  => "Detalhe do material did&aacute;tico"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());            
+        $this->breadcrumb('Detalhe do material didático', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

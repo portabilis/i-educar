@@ -61,16 +61,16 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Tipo Ensino - Detalhe";
-        
+
 
         $this->cod_tipo_ensino=$_GET["cod_tipo_ensino"];
 
         $tmp_obj = new clsPmieducarTipoEnsino( $this->cod_tipo_ensino,null,null,null,null,null,1);
         if( !$registro = $tmp_obj->detalhe())
-            header("Location: educar_tipo_ensino_lst.php");
+            $this->simpleRedirect('educar_tipo_ensino_lst.php');
 
         if(!$registro["ativo"] )
-            header("Location: educar_tipo_ensino_lst.php");
+            $this->simpleRedirect('educar_tipo_ensino_lst.php');
 
         if( $registro["cod_tipo_ensino"] )
         {
@@ -111,14 +111,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_tipo_ensino_lst.php";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "Detalhe do tipo de ensino"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());    
-
+        $this->breadcrumb('Detalhe do tipo de ensino', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

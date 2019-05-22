@@ -24,6 +24,7 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -85,14 +86,11 @@ class indice extends clsCadastro
         $this->nome_url_cancelar = "Cancelar";
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                                          => "{$nomeMenu} tipo de abandono"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-            
+
+        $this->breadcrumb($nomeMenu . ' tipo de abandono', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
+
         return $retorno;
     }
 
@@ -105,7 +103,7 @@ class indice extends clsCadastro
         include("include/pmieducar/educar_campo_lista.php");
 
         // text
-        $this->campoTexto( "nome", "Motivo Abandono", $this->nome, 30, 255, true ); 
+        $this->campoTexto( "nome", "Motivo Abandono", $this->nome, 30, 255, true );
     }
 
     function Novo()
@@ -129,9 +127,8 @@ class indice extends clsCadastro
             $auditoria->inclusao($abandonoTipo);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_abandono_tipo_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('educar_abandono_tipo_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -155,9 +152,8 @@ class indice extends clsCadastro
             $auditoria->alteracao($abandonoTipoDetalheAntes, $abandonoTipoDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_abandono_tipo_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('educar_abandono_tipo_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -178,9 +174,8 @@ class indice extends clsCadastro
             $auditoria->exclusao($abandonoTipo);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_abandono_tipo_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('educar_abandono_tipo_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

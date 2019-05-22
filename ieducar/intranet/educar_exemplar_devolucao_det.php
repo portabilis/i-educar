@@ -71,8 +71,9 @@ class indice extends clsDetalhe
 
         $this->cod_emprestimo=$_GET["cod_emprestimo"];
 
-        if(!$this->cod_emprestimo)
-            header("Location: educar_exemplar_devolucao_lst.php");
+        if(!$this->cod_emprestimo){
+            $this->simpleRedirect('educar_exemplar_devolucao_lst.php');
+        }
 
         $obj_exemplar_emprestimo = new clsPmieducarExemplarEmprestimo();
         $lista = $obj_exemplar_emprestimo->lista($this->cod_emprestimo);
@@ -82,8 +83,7 @@ class indice extends clsDetalhe
 
             if( ! $registro )
             {
-                header( "location: educar_exemplar_devolucao_lst.php" );
-                die();
+                $this->simpleRedirect('educar_exemplar_devolucao_lst.php');
             }
 
             if( class_exists( "clsPmieducarBiblioteca" ) )
@@ -217,13 +217,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_exemplar_devolucao_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Detalhe do exemplar para devolu&ccedil;&atilde;o"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Detalhe do exemplar para devolução', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 

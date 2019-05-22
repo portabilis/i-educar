@@ -95,8 +95,7 @@ class indice extends clsDetalhe
     $registro = array_shift($lst_obj);
 
     if (! $registro) {
-      header('Location: educar_escola_serie_lst.php');
-      die();
+        $this->simpleRedirect('educar_escola_serie_lst.php');
     }
 
     $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
@@ -206,14 +205,9 @@ class indice extends clsDetalhe
     $this->url_cancelar = "educar_escola_serie_lst.php";
     $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "Detalhe do v&iacute;nculos entre escola e s&eacute;rie"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-
+    $this->breadcrumb('Detalhe dos vínculos entre escola e série', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
 }
 

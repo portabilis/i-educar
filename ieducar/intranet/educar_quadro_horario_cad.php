@@ -124,13 +124,10 @@ class indice extends clsCadastro
     $this->nome_url_cancelar = 'Cancelar';
 
     $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""        => "{$nomeMenu} quadro de hor&aacute;rios"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+
+    $this->breadcrumb($nomeMenu . ' quadro de horários', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
 
     return $retorno;
   }
@@ -176,8 +173,7 @@ class indice extends clsCadastro
       $auditoria->inclusao($quadroHorario);
 
       $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-      header("Location: educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}&busca=S");
-      die();
+      $this->simpleRedirect("educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}&busca=S");
     }
 
     $this->mensagem = 'Cadastro não realizado.<br>';
@@ -206,14 +202,13 @@ class indice extends clsCadastro
           $this->pessoa_logada);
 
         $quadroHorario = $obj_quadro->detalhe();
-        
+
         if ($obj_quadro->excluir()) {
           $auditoria = new clsModulesAuditoriaGeral("quadro_horario", $this->pessoa_logada, $this->cod_quadro_horario);
           $auditoria->exclusao($quadroHorario);
 
           $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-          header("Location: educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}");
-          die();
+          $this->simpleRedirect("educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}");
         }
       }
     }

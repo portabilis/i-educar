@@ -78,7 +78,7 @@ class indice extends clsCadastro
                 continue;
             }
             
-            $this->campoLista("turno[{$enturmacao['ref_cod_turma']}-{$enturmacao['sequencial']}]", "Turno do aluno na turma: {$enturmacao['nm_turma']}", $turnos, $enturmacao['turno_id'], '', false, '', '', false, false);
+            $this->campoLista("turno[{$enturmacao['ref_cod_turma']}-{$enturmacao['sequencial']}]", "Turno do aluno na turma: {$enturmacao['nm_turma']}", $turnos, $enturmacao['turno_id'], '', false, 'Não é necessário preencher o campo quando o aluno cursar o turno INTEGRAL', '', false, false);
         }
     }
 
@@ -114,7 +114,7 @@ class indice extends clsCadastro
         $det_matricula = $obj_matricula->detalhe();
 
         if (!$det_matricula) {
-            header("location: educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+            $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
     }

@@ -144,18 +144,12 @@ class indice extends clsCadastro
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(
-            array(
-                $_SERVER['SERVER_NAME'] . "/intranet" => "In&iacute;cio",
-                "educar_index.php" => "Escola",
-                "" => "{$nomeMenu} v&iacute;nculo entre escola e s&eacute;rie"
-            )
-        );
-
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb($nomeMenu . ' vínculo entre escola e série', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
@@ -505,8 +499,7 @@ class indice extends clsCadastro
             }
 
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            header('Location: educar_escola_serie_lst.php');
-            die();
+            $this->simpleRedirect('educar_escola_serie_lst.php');
         }
 
         $this->mensagem = 'Cadastro n&atilde;o rrealizado.<br>';
@@ -621,8 +614,7 @@ class indice extends clsCadastro
             }
 
             $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
-            header('Location: educar_escola_serie_lst.php');
-            die();
+            $this->simpleRedirect('educar_escola_serie_lst.php');
         }
 
         $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
@@ -656,8 +648,7 @@ class indice extends clsCadastro
 
             if ($excluiu1) {
                 $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-                header("Location: educar_escola_serie_lst.php");
-                die();
+                $this->simpleRedirect('educar_escola_serie_lst.php');
             }
         }
 

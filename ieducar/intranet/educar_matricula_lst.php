@@ -78,8 +78,7 @@ class indice extends clsListagem
         }
 
         if (!$this->ref_cod_aluno) {
-            header('location: educar_aluno_lst.php');
-            die();
+            $this->simpleRedirect('educar_aluno_lst.php');
         }
 
         $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);

@@ -90,7 +90,7 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $lista_busca = array(
             "Motivo",
@@ -198,13 +198,9 @@ class indice extends clsListagem
         }
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "Início",
-             "educar_index.php"                  => "Escola",
-             ""                                  => "Tipos de evento do calendário"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Tipos de evento do calendário', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 // cria uma extensao da classe base

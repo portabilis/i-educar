@@ -120,13 +120,9 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_exemplar_det.php?cod_exemplar={$registro["cod_exemplar"]}" : "educar_exemplar_lst.php";
         $this->nome_url_cancelar = "Cancelar";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"       => "Biblioteca",
-         ""                                  => "Motivo de baixa do exemplar"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Motivo de baixa do exemplar', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
 
         return $retorno;
     }
@@ -213,9 +209,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("exemplar", $this->pessoa_logada, $this->cod_exemplar);
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_exemplar_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_exemplar_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";

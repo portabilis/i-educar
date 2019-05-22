@@ -34,7 +34,7 @@ class clsIndex extends clsBase
     function Formular()
     {
         $this->SetTitulo("{$this->_instituicao} Empresas!");
-        $this->processoAp = array("41", "649");
+        $this->processoAp = 41;
         $this->addEstilo('localizacaoSistema');
     }
 }
@@ -336,8 +336,7 @@ class indice extends clsCadastro
                     $this->cidade, $this->sigla_uf, false);
                 $objEnderecoExterno->cadastra();
             }
-            header("Location: empresas_lst.php");
-            return true;
+            $this->simpleRedirect('empresas_lst.php');
         }
 
         $this->mensagem = "Ja existe uma empresa cadastrada com este CNPJ. ";
@@ -439,14 +438,12 @@ class indice extends clsCadastro
                 $objEnderecoExterno2->cadastra();
             }
         }
-        header("Location: empresas_lst.php");
-        return true;
+        $this->simpleRedirect('empresas_lst.php');
     }
 
     function Excluir()
     {
-        header("LOCATION: empresas_lst.php");
-        return true;
+        $this->simpleRedirect('empresas_lst.php');
     }
 
     protected function inputTelefone($type, $typeLabel = '')

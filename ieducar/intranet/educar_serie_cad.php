@@ -129,15 +129,10 @@ class indice extends clsCadastro
             : 'educar_serie_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
-        $localizacao = new LocalizacaoSistema();
 
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'Início',
-            'educar_index.php' => 'Escola',
-            '' => "{$nomeMenu} série"
+        $this->breadcrumb($nomeMenu . ' série', [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
 
         $this->nome_url_cancelar = 'Cancelar';
 
@@ -301,8 +296,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($serie);
 
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            header('Location: educar_serie_lst.php');
-            die();
+            $this->simpleRedirect('educar_serie_lst.php');
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
@@ -352,8 +346,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($detalheAntigo, $detalheAtual);
 
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-            header('Location: educar_serie_lst.php');
-            die();
+            $this->simpleRedirect('educar_serie_lst.php');
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
@@ -394,8 +387,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($serie);
 
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-            header('Location: educar_serie_lst.php');
-            die();
+            $this->simpleRedirect('educar_serie_lst.php');
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';

@@ -58,8 +58,7 @@ class indice extends clsDetalhe{
         $tmp_obj = new clsPmieducarCategoriaObra($this->id);
         $registro = $tmp_obj->detalhe();
         if(!$registro){
-            header( "location: educar_categoria_lst.php" );
-            die();
+            $this->simpleRedirect('educar_categoria_nivel_lst.php');
         }
         if($registro["id"]){
             $this->addDetalhe(array("C&oacute;digo", "{$registro["id"]}"));
@@ -80,12 +79,9 @@ class indice extends clsDetalhe{
         $this->url_cancelar = "educar_categoria_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos(array($_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-                                              "educar_biblioteca_index.php" => "Biblioteca",
-                                                                         "" => "Listagem de categorias"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Listagem de categorias', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 

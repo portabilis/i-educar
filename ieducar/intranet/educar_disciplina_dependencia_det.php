@@ -93,8 +93,7 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->detalhe();
 
     if (!$registro) {
-      header('Location: educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
-      die();
+        $this->simpleRedirect('educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
     }
 
     if (class_exists('clsPmieducarSerie')) {
@@ -165,13 +164,9 @@ class indice extends clsDetalhe
     $this->url_cancelar = 'educar_disciplina_dependencia_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
     $this->largura      = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Disciplinas de dependência"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Disciplinas de dependência', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
 }
 

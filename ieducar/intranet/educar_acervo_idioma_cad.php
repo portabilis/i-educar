@@ -24,6 +24,7 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -92,14 +93,11 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_acervo_idioma_det.php?cod_acervo_idioma={$registro["cod_acervo_idioma"]}" : "educar_acervo_idioma_lst.php";
         $this->nome_url_cancelar = "Cancelar";
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "{$nomeMenu} idioma"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+
+        $this->breadcrumb($nomeMenu . ' idioma', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
 
         return $retorno;
     }
@@ -133,9 +131,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("acervo_idioma", $this->pessoa_logada, $this->cod_acervo_idioma);
       $auditoria->inclusao($acervo_idioma);
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_acervo_idioma_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_acervo_idioma_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -160,9 +156,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("acervo_idioma", $this->pessoa_logada, $this->cod_acervo_idioma);
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_acervo_idioma_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_acervo_idioma_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -186,9 +180,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("acervo_idioma", $this->pessoa_logada, $this->cod_acervo_idioma);
       $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_acervo_idioma_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_acervo_idioma_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

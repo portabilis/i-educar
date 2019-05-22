@@ -4,6 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * LegacyCourse
+ *
+ * @property string $name Nome do curso
+ */
 class LegacyCourse extends Model
 {
     /**
@@ -25,7 +30,38 @@ class LegacyCourse extends Model
     ];
 
     /**
+     * @var array
+     */
+    protected $casts = [
+        'padrao_ano_escolar' => 'boolean',
+    ];
+
+    /**
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @return int
+     */
+    public function getIdAttribute()
+    {
+        return $this->cod_curso;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameAttribute()
+    {
+        return $this->nm_curso;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsStandardCalendarAttribute()
+    {
+        return $this->padrao_ano_escolar;
+    }
 }

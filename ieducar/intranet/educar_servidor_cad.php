@@ -29,6 +29,14 @@
  * @version   $Id$
  */
 
+use App\Models\EmployeeGraduation;
+use App\Models\LegacySchoolingDegree;
+use App\Services\EmployeeGraduationService;
+use iEducar\Modules\Educacenso\Model\Escolaridade;
+use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
+use iEducar\Modules\ValueObjects\EmployeeGraduationValueObject;
+use iEducar\Support\View\SelectOptions;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/clsBase.inc.php';
@@ -83,26 +91,9 @@ class indice extends clsCadastro
   var $data_exclusao;
   var $ativo;
   var $ref_cod_instituicao_original;
-  var $situacao_curso_superior_1;
-  var $formacao_complementacao_pedagogica_1;
-  var $codigo_curso_superior_1;
-  var $ano_inicio_curso_superior_1;
-  var $ano_conclusao_curso_superior_1;
-  var $instituicao_curso_superior_1;
-  var $situacao_curso_superior_2;
-  var $formacao_complementacao_pedagogica_2;
-  var $codigo_curso_superior_2;
-  var $ano_inicio_curso_superior_2;
-  var $ano_conclusao_curso_superior_2;
-  var $instituicao_curso_superior_2;
-  var $situacao_curso_superior_3;
-  var $formacao_complementacao_pedagogica_3;
-  var $codigo_curso_superior_3;
-  var $ano_inicio_curso_superior_3;
-  var $ano_conclusao_curso_superior_3;
-  var $instituicao_curso_superior_3;
   var $curso_formacao_continuada;
   var $multi_seriado;
+  var $tipo_ensino_medio_cursado;
   var $matricula = array();
   var $cod_servidor_funcao = [];
 
@@ -112,6 +103,11 @@ class indice extends clsCadastro
 
   // Determina se o servidor é um docente para buscar código Educacenso/Inep.
   var $docente = false;
+
+  var $employee_course_id;
+  var $employee_completion_year;
+  var $employee_college_id;
+  var $employee_discipline_id;
 
   function Inicializar()
   {
@@ -238,13 +234,10 @@ class indice extends clsCadastro
     $this->nome_url_cancelar = 'Cancelar';
 
     $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos(array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         "" => "{$nomeMenu} servidor"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+
+    $this->breadcrumb($nomeMenu . ' servidor', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
 
     return $retorno;
   }
@@ -453,68 +446,49 @@ class indice extends clsCadastro
 
     $this->campoLista('ref_idesco', 'Escolaridade', $opcoes, $this->ref_idesco, '', FALSE, '', $script, FALSE, $obrigarCamposCenso);
 
-    $resources = array(
-      null => 'Selecione',
-      1 => Portabilis_String_Utils::toLatin1('Concluído'),
-      2 => 'Em andamento'
-    );
-
     $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Situação do curso superior 1'),
-      'resources' => $resources,
-      'value' => $this->situacao_curso_superior_1,
+      'label' => 'Tipo de ensino médio cursado',
+      'resources' => SelectOptions::tiposEnsinoMedioCursados(),
+      'value' => $this->tipo_ensino_medio_cursado,
       'required' => false
     );
 
-    $this->inputsHelper()->select('situacao_curso_superior_1', $options);
+    $this->inputsHelper()->select('tipo_ensino_medio_cursado', $options);
 
-    $options = array('label' => Portabilis_String_Utils::toLatin1('Curso superior 1'), 'required'   => false);
-    $helperOptions = array(
-      'objectName' => 'codigo_curso_superior_1',
-      'hiddenInputOptions' => array(
-        'options' => array('value' => $this->codigo_curso_superior_1)
-      )
-    );
-    $this->inputsHelper()->simpleSearchCursoSuperior(null, $options, $helperOptions);
+      $helperOptions = array('objectName'  => 'pos_graduacao');
+      $options       = array('label' => 'Pós-Graduações concluídas',
+          'required' => false,
+          'options' => array('values' => $this->pos_graduacao,
+              'all_values' => array(
+                  1 => 'Especialização',
+                  2 => 'Mestrado',
+                  3 => 'Doutorado',
+                  4 => 'Não tem pós-graduação concluída')));
+      $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Ano de início do curso superior 1'),
-      'placeholder' => '',
-      'value' => $this->ano_inicio_curso_superior_1,
-      'max_length' => 4,
-      'size' => 5,
-      'required' => false
-    );
-    $this->inputsHelper()->integer('ano_inicio_curso_superior_1', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Ano de conclusão do curso superior 1'),
-      'placeholder' => '',
-      'value' => $this->ano_conclusao_curso_superior_1,
-      'max_length' => 4,
-      'size' => 5,
-      'required' => false
-    );
-    $this->inputsHelper()->integer('ano_conclusao_curso_superior_1', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Instituição do curso superior 1'),
-      'required'   => false
-    );
-    $helperOptions = array(
-      'objectName' => 'instituicao_curso_superior_1',
-      'hiddenInputOptions' => array(
-        'options' => array('value' => $this->instituicao_curso_superior_1)
-      )
-    );
-    $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
-
-    $options = array('label' => 'Possui formação/complementação pedagógica 1',
-                     'value' => $this->formacao_complementacao_pedagogica_1,
-                     'required' => false);
-    $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_1', $options);
-
-    $this->campoQuebra();
+      $helperOptions = array('objectName'  => 'curso_formacao_continuada');
+      $options       = array('label' => 'Outros cursos de formação continuada (Mínimo de 80 horas)',
+          'required' => $obrigarCamposCenso,
+          'options' => array('values' => $this->curso_formacao_continuada,
+              'all_values' => array(
+                  1 => 'Creche (0 a 3 anos)',
+                  2 => 'Pré-escola (4 e 5 anos)',
+                  3 => 'Anos iniciais do ensino fundamental',
+                  4 => 'Anos finais do ensino fundamental',
+                  5 => 'Ensino médio',
+                  6 => 'Educação de jovens e adultos',
+                  7 => 'Educação especial',
+                  8 => 'Educação indígena',
+                  9 => 'Educação do campo',
+                  10 => 'Educação ambiental',
+                  11 => 'Educação em direitos humanos',
+                  12 => 'Gênero e diversidade sexual',
+                  13 => 'Direitos de criança e adolescente',
+                  14 => 'Educação para as relações étnico-raciais e História e cultura Afro-Brasileira e Africana',
+                  17 => 'Gestão Escolar',
+                  15 => 'Outros',
+                  16 => 'Nenhum')));
+      $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
     $resources = array(
       null => 'Selecione',
@@ -522,163 +496,7 @@ class indice extends clsCadastro
       2 => 'Em andamento'
     );
 
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Situação do curso superior 2'),
-      'resources' => $resources,
-      'value' => $this->situacao_curso_superior_2,
-      'required' => false
-    );
-    $this->inputsHelper()->select('situacao_curso_superior_2', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso superior 2'),
-      'required' => false
-    );
-    $helperOptions = array(
-      'objectName' => 'codigo_curso_superior_2',
-      'hiddenInputOptions' => array(
-        'options' => array('value' => $this->codigo_curso_superior_2)
-      )
-    );
-    $this->inputsHelper()->simpleSearchCursoSuperior(null, $options, $helperOptions);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Ano de início do curso superior 2'),
-      'placeholder' => '',
-      'value' => $this->ano_inicio_curso_superior_2,
-      'max_length' => 4,
-      'size' => 5,
-      'required' => false
-    );
-    $this->inputsHelper()->integer('ano_inicio_curso_superior_2', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Ano de conclusão do curso superior 2'),
-      'placeholder' => '',
-      'value' => $this->ano_conclusao_curso_superior_2,
-      'max_length' => 4,
-      'size' => 5,
-      'required' => false
-    );
-    $this->inputsHelper()->integer('ano_conclusao_curso_superior_2', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Instituição do curso superior 2'),
-      'required' => false
-    );
-    $helperOptions = array(
-      'objectName' => 'instituicao_curso_superior_2',
-      'hiddenInputOptions' => array(
-        'options' => array('value' => $this->instituicao_curso_superior_2)
-      )
-    );
-    $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
-
-    $options = array('label' => 'Possui formação/complementação pedagógica 2',
-                     'value' => $this->formacao_complementacao_pedagogica_2,
-                     'required' => false);
-    $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_2', $options);
-
-    $this->campoQuebra();
-
-    $resources = array(
-      null => 'Selecione',
-      1 => Portabilis_String_Utils::toLatin1('Concluído'),
-      2 => 'Em andamento'
-    );
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Situação do curso superior 3'),
-      'resources' => $resources,
-      'value' => $this->situacao_curso_superior_3,
-      'required' => false
-    );
-    $this->inputsHelper()->select('situacao_curso_superior_3', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Curso superior 3'),
-      'required' => false
-    );
-    $helperOptions = array(
-      'objectName' => 'codigo_curso_superior_3',
-      'hiddenInputOptions' => array(
-        'options' => array('value' => $this->codigo_curso_superior_3)
-      )
-    );
-    $this->inputsHelper()->simpleSearchCursoSuperior(null, $options, $helperOptions);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Ano de início do curso superior 3'),
-      'placeholder' => '',
-      'value' => $this->ano_inicio_curso_superior_3,
-      'max_length' => 4,
-      'size' => 5,
-      'required' => false
-    );
-    $this->inputsHelper()->integer('ano_inicio_curso_superior_3', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Ano de conclusão do curso superior 3'),
-      'placeholder' => '',
-      'value' => $this->ano_conclusao_curso_superior_3,
-      'max_length' => 4,
-      'size' => 5,
-      'required' => false
-    );
-    $this->inputsHelper()->integer('ano_conclusao_curso_superior_3', $options);
-
-    $options = array(
-      'label' => Portabilis_String_Utils::toLatin1('Instituição do curso superior 3'),
-      'required' => false
-    );
-    $helperOptions = array(
-      'objectName' => 'instituicao_curso_superior_3',
-      'hiddenInputOptions' => array(
-        'options' => array('value' => $this->instituicao_curso_superior_3)
-      )
-    );
-    $this->inputsHelper()->simpleSearchIes(null, $options, $helperOptions);
-
-    $options = array('label' => 'Possui formação/complementação pedagógica 3',
-                     'value' => $this->formacao_complementacao_pedagogica_3,
-                     'required' => false);
-    $this->inputsHelper()->booleanSelect('formacao_complementacao_pedagogica_3', $options);
-
-    $this->campoQuebra();
-
-    $helperOptions = array('objectName'  => 'pos_graduacao');
-    $options       = array('label' => 'Possui pós-graduação',
-                            'required' => false,
-                            'options' => array('values' => $this->pos_graduacao,
-                                               'all_values' => array(
-                                                  1 => 'Especialização',
-                                                  2 => 'Mestrado',
-                                                  3 => 'Doutorado',
-                                                  4 => 'Nenhuma')));
-    $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-
-    $helperOptions = array('objectName'  => 'curso_formacao_continuada');
-    $options       = array('label' => 'Possui cursos de formação continuada',
-                            'required' => $obrigarCamposCenso,
-                            'options' => array('values' => $this->curso_formacao_continuada,
-                                               'all_values' => array(
-                                                 1 => 'Específico para Creche (0 a 3 anos)',
-                                                 2 => 'Específico para Pré-escola (4 e 5 anos)',
-                                                 3 => 'Específico para anos iniciais do ensino fundamental',
-                                                 4 => 'Específico para anos finais do ensino fundamental',
-                                                 5 => 'Específico para ensino médio',
-                                                 6 => 'Específico para educação de jovens e adultos',
-                                                 7 => 'Específico para educação especial',
-                                                 8 => 'Específico para educação indígena',
-                                                 9 => 'Específico para educação do campo',
-                                                10 => 'Específico para educação ambiental',
-                                                11 => 'Específico para educação em direitos humanos',
-                                                12 => 'Gênero e diversidade sexual',
-                                                13 => 'Direito das crianças e adolescentes',
-                                                14 => 'Educação para as relações etnicorraciais e História e cultura Afro-Brasileira e Africana',
-                                                15 => 'Outros',
-                                                16 => 'Nenhum')));
-    $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
+    $this->addGraduationsTable();
 
     $scripts = array('/modules/Cadastro/Assets/Javascripts/Servidor.js');
 
@@ -717,7 +535,7 @@ JS;
     $this->carga_horaria = $hour + $min;
     $this->carga_horaria = $hour + $min;
 
-    $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
+    $this->pos_graduacao = '{' . implode(',', array_filter($this->pos_graduacao)) . '}';
 
     $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
 
@@ -749,13 +567,12 @@ JS;
         $this->createOrUpdateInep();
         $this->createOrUpdateDeficiencias();
 
+        $this->storeGraduations($this->cod_servidor);
+
         include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-        header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-
-
-        die();
+        $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
       }
     } else {
       $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao;
@@ -780,12 +597,12 @@ JS;
         $this->createOrUpdateInep();
         $this->createOrUpdateDeficiencias();
 
+        $this->storeGraduations($this->cod_servidor);
+
         include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-        header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-
-        die();
+        $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
       }
     }
     $this->mensagem = 'Cadastro não realizado.<br>';
@@ -801,7 +618,7 @@ JS;
     $this->carga_horaria = $hour + $min;
     $this->carga_horaria = $hour + $min;
 
-    $this->pos_graduacao = '{' . implode(',', $this->pos_graduacao) . '}';
+    $this->pos_graduacao = '{' . implode(',', array_filter($this->pos_graduacao)) . '}';
 
     $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
 
@@ -832,12 +649,12 @@ JS;
         $this->createOrUpdateInep();
         $this->createOrUpdateDeficiencias();
 
+        $this->storeGraduations($this->cod_servidor);
+
         include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
         $this->mensagem .= 'Edição efetuada com sucesso.<br>';
-        header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-
-        die();
+        $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
       }
     } else {
       $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
@@ -886,12 +703,12 @@ JS;
               $this->createOrUpdateInep();
               $this->createOrUpdateDeficiencias();
 
+              $this->storeGraduations($this->cod_servidor);
+
               include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
               $this->mensagem .= "Edição efetuada com sucesso.<br>";
-              header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
-
-              die();
+              $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
             }
           }
         }
@@ -939,8 +756,7 @@ JS;
 
           $this->excluiFuncoes();
           $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
-          header("Location: educar_servidor_lst.php");
-          die();
+          $this->simpleRedirect('educar_servidor_lst.php');
         }
       }
     }
@@ -950,25 +766,7 @@ JS;
   }
 
   function addCamposCenso($obj){
-
-    $obj->situacao_curso_superior_1 = $this->situacao_curso_superior_1;
-    $obj->formacao_complementacao_pedagogica_1 = $this->formacao_complementacao_pedagogica_1;
-    $obj->codigo_curso_superior_1 = $this->codigo_curso_superior_1_id;
-    $obj->ano_inicio_curso_superior_1 = $this->ano_inicio_curso_superior_1;
-    $obj->ano_conclusao_curso_superior_1 = $this->ano_conclusao_curso_superior_1;
-    $obj->instituicao_curso_superior_1 = $this->instituicao_curso_superior_1_id;
-    $obj->situacao_curso_superior_2 = $this->situacao_curso_superior_2;
-    $obj->formacao_complementacao_pedagogica_2 = $this->formacao_complementacao_pedagogica_2;
-    $obj->codigo_curso_superior_2 = $this->codigo_curso_superior_2_id;
-    $obj->ano_inicio_curso_superior_2 = $this->ano_inicio_curso_superior_2;
-    $obj->ano_conclusao_curso_superior_2 = $this->ano_conclusao_curso_superior_2;
-    $obj->instituicao_curso_superior_2 = $this->instituicao_curso_superior_2_id;
-    $obj->situacao_curso_superior_3 = $this->situacao_curso_superior_3;
-    $obj->formacao_complementacao_pedagogica_3 = $this->formacao_complementacao_pedagogica_3;
-    $obj->codigo_curso_superior_3 = $this->codigo_curso_superior_3_id;
-    $obj->ano_inicio_curso_superior_3 = $this->ano_inicio_curso_superior_3;
-    $obj->ano_conclusao_curso_superior_3 = $this->ano_conclusao_curso_superior_3;
-    $obj->instituicao_curso_superior_3 = $this->instituicao_curso_superior_3_id;
+    $obj->tipo_ensino_medio_cursado = $this->tipo_ensino_medio_cursado;
     $obj->pos_graduacao = $this->pos_graduacao;
     $obj->curso_formacao_continuada = $this->curso_formacao_continuada;
     return $obj;
@@ -1092,6 +890,135 @@ JS;
       Portabilis_Utils_Database::fetchPreparedQuery($sql, array('params' => array($this->cod_servidor, $this->cod_docente_inep)));
     }
   }
+
+  protected function addGraduationsTable()
+  {
+      $graduations = $this->fillEmployeeGraduations($this->cod_servidor);
+
+      $rows = $this->getGraduateTableRows($graduations);
+
+      $this->campoTabelaInicio('graduations', 'Curso(s) superior(es) concluído(s)',
+          [
+              'Curso',
+              'Ano de conclusão',
+              'Instituição de Educação Superior',
+              'Área de conhecimento/Disciplina de formação',
+          ],
+          $rows
+      );
+
+      $this->inputsHelper()->simpleSearchCursoSuperior(null, ['required' => false], ['objectName' => 'employee_course']);
+      $this->campoTexto('employee_completion_year', null, null, null, 4);
+      $this->inputsHelper()->simpleSearchIes(null, ['required' => false], ['objectName' => 'employee_college']);
+      $options = array(
+          'resources' => SelectOptions::employeeGraduationDisciplines(),
+          'required' => false
+      );
+      $this->inputsHelper()->select('employee_discipline_id', $options);
+
+      $this->campoTabelaFim();
+  }
+
+    /**
+     * @param $employeeId
+     * @return array|mixed
+     */
+    protected function fillEmployeeGraduations($employeeId)
+    {
+        $graduations = [];
+        if (old('course_id')) {
+            foreach (old('course_id') as $key => $value) {
+                $oldInputGraduation = new EmployeeGraduation();
+                $oldInputGraduation->course = old('employee_course')[$key];
+                $oldInputGraduation->course_id = old('employee_course_id')[$key];
+                $oldInputGraduation->completion_year = old('employee_completion_year')[$key];
+                $oldInputGraduation->college = old('employee_college')[$key];
+                $oldInputGraduation->college_id = old('employee_college_id')[$key];
+                $oldInputGraduation->discipline_id = old('employee_discipline_id')[$key];
+                $graduations[] = $oldInputGraduation;
+          }
+
+            return $graduations;
+        }
+
+        /** @var EmployeeGraduationService $employeeGraduationService */
+        $employeeGraduationService = app(EmployeeGraduationService::class);
+        $graduations = $employeeGraduationService->getEmployeeGraduations($employeeId);
+
+        foreach ($graduations as $graduation) {
+            $graduation->course = $this->getCourseName($graduation->course_id);
+            $graduation->college = $this->getCollegeName($graduation->college_id);
+        }
+
+        return $graduations;
+    }
+
+    protected function getGraduateTableRows($graduations)
+    {
+        $rows = [];
+
+        foreach ($graduations as $graduation) {
+            $rows[] = [
+                $graduation->course,
+                $graduation->completion_year,
+                $graduation->college,
+                $graduation->discipline_id,
+                $graduation->course_id,
+                $graduation->college_id,
+            ];
+        }
+
+        return $rows;
+    }
+
+    protected function storeGraduations($employeeId)
+    {
+        /** @var EmployeeGraduationService $employeeGraduationService */
+        $employeeGraduationService = app(EmployeeGraduationService::class);
+
+        $employeeGraduationService->deleteAll($employeeId);
+
+        if (empty($this->ref_idesco)) {
+            return true;
+        }
+
+        if (LegacySchoolingDegree::find($this->ref_idesco)->escolaridade != Escolaridade::EDUCACAO_SUPERIOR) {
+            return true;
+        }
+
+        foreach($this->employee_course_id as $key => $courseId) {
+            if (empty($courseId)) {
+                continue;
+            }
+
+            $valueObject = new EmployeeGraduationValueObject();
+            $valueObject->employeeId = $employeeId;
+            $valueObject->courseId = $this->employee_course_id[$key];
+            $valueObject->completionYear = $this->employee_completion_year[$key];
+            $valueObject->collegeId = $this->employee_college_id[$key];
+            $valueObject->disciplineId = $this->employee_discipline_id[$key] ?: null;
+            $employeeGraduationService->storeGraduation($valueObject);
+        }
+    }
+
+    protected function getCourseName($courseId)
+    {
+        $academicLevels = [
+            1 => 'Tecnológico',
+            2 => 'Licenciatura',
+            3 => 'Bacharelado',
+        ];
+
+        $course = DB::table('modules.educacenso_curso_superior')->where('id', $courseId)->get(['nome', 'curso_id', 'grau_academico'])->first();
+
+        return $course->curso_id . ' - ' . $course->nome . ' / ' . ($academicLevels[$course->grau_academico] ?? '');
+    }
+
+    protected function getCollegeName($collegeId)
+    {
+        $college = DB::table('modules.educacenso_ies')->where('id', $collegeId)->get(['nome', 'ies_id'])->first();
+        return $college->ies_id . ' - ' . $college->nome;
+    }
 
 }
 

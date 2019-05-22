@@ -24,6 +24,7 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -66,7 +67,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Dados Biblioteca - Detalhe";
-        
+
 
         $this->cod_biblioteca=$_GET["cod_biblioteca"];
 
@@ -94,8 +95,7 @@ class indice extends clsDetalhe
 
         if( ! $registro || !$permitido)
         {
-            header( "location: educar_biblioteca_dados_lst.php" );
-            die();
+            $this->simpleRedirect('educar_biblioteca_dados_lst.php');
         }
 
         if( $registro["nm_biblioteca"] )
@@ -212,13 +212,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_biblioteca_dados_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Detalhe dos dados da biblioteca"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhe dos dados da biblioteca', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 

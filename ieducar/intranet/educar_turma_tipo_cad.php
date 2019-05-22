@@ -63,7 +63,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_turma_tipo=$_GET["cod_turma_tipo"];
 
@@ -89,17 +89,15 @@ class indice extends clsCadastro
             }
         }
         $this->url_cancelar = ($retorno == "Editar") ? "educar_turma_tipo_det.php?cod_turma_tipo={$registro["cod_turma_tipo"]}" : "educar_turma_tipo_lst.php";
-        
+
         $nomeMenu = $retorno == "Editar" ? $retorno : "Novo";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "Início",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} tipo de turma"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' tipo de turma', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
+
         return $retorno;
     }
 
@@ -120,7 +118,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj = new clsPmieducarTurmaTipo( null, null, $this->pessoa_logada, $this->nm_tipo, $this->sgl_tipo, null, null, 1, $this->ref_cod_instituicao );
         $cadastrou = $obj->cadastra();
@@ -133,9 +131,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($turmaTipo);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_turma_tipo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_turma_tipo_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -145,7 +141,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $turmaTipoDetalhe = new clsPmieducarTurmaTipo($this->cod_turma_tipo);
         $turmaTipoDetalheAntes = $turmaTipoDetalhe->detalhe();
@@ -159,9 +155,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($turmaTipoDetalheAntes, $turmaTipoDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_turma_tipo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_turma_tipo_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -171,7 +165,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj = new clsPmieducarTurmaTipo($this->cod_turma_tipo, $this->pessoa_logada, null, null, null, null, null, 0);
         $turmaTipo = $obj->detalhe();
@@ -182,9 +176,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($turmaTipo);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_turma_tipo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_turma_tipo_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

@@ -67,7 +67,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_cliente_tipo=$_GET["cod_cliente_tipo"];
 
@@ -99,14 +99,11 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_cliente_tipo_det.php?cod_cliente_tipo={$registro["cod_cliente_tipo"]}" : "educar_cliente_tipo_lst.php";
         $this->nome_url_cancelar = "Cancelar";
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "{$nomeMenu} tipo de cliente"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+
+        $this->breadcrumb($nomeMenu . ' tipo de cliente', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
 
         return $retorno;
     }
@@ -199,7 +196,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 596, $this->pessoa_logada, 11,  "educar_cliente_tipo_lst.php" );
@@ -240,9 +237,7 @@ class indice extends clsCadastro
         //-----------------------FIM CADASTRA EXEMPLAR TIPO------------------------//
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_cliente_tipo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_cliente_tipo_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -252,7 +247,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 596, $this->pessoa_logada, 11,  "educar_cliente_tipo_lst.php" );
@@ -298,9 +293,7 @@ class indice extends clsCadastro
         //-----------------------FIM EDITA EXEMPLAR TIPO------------------------//
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_cliente_tipo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_cliente_tipo_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -310,7 +303,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 596, $this->pessoa_logada, 11,  "educar_cliente_tipo_lst.php" );
@@ -325,9 +318,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("cliente_tipo", $this->pessoa_logada, $this->cod_cliente_tipo);
       $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_cliente_tipo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_cliente_tipo_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

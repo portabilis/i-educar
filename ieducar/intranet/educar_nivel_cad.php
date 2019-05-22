@@ -116,20 +116,15 @@ class indice extends clsCadastro
         }
         else
         {
-            header("location:educar_categoria_nivel_lst.php");
-            die();
+            $this->simpleRedirect('educar_categoria_nivel_lst.php');
         }
 
         $this->url_cancelar = "educar_categoria_nivel_det.php?cod_categoria_nivel={$this->cod_nivel}";
         $this->nome_url_cancelar = "Cancelar";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""        => "Adicionar n&iacute;veis &agrave; categoria"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Adicionar níveis à categoria', [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
 
         return $retorno;
     }
@@ -198,10 +193,7 @@ class indice extends clsCadastro
                 $obj->desativaTodos($niveis);
             }
 
-            header("location:educar_categoria_nivel_det.php?cod_categoria_nivel={$this->ref_cod_categoria_nivel}");
-            die();
-
-            return true;
+            $this->simpleRedirect("educar_categoria_nivel_det.php?cod_categoria_nivel={$this->ref_cod_categoria_nivel}");
         }
 
 
@@ -230,9 +222,7 @@ class indice extends clsCadastro
         if( $excluiu )
         {
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header("location:educar_categoria_nivel_det.php?cod_categoria_nivel={$this->ref_cod_categoria_nivel}");
-            die();
-            return true;
+            $this->simpleRedirect("educar_categoria_nivel_det.php?cod_categoria_nivel={$this->ref_cod_categoria_nivel}");
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

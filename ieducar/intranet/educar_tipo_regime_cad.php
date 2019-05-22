@@ -91,15 +91,13 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_tipo_regime_det.php?cod_tipo_regime={$registro["cod_tipo_regime"]}" : "educar_tipo_regime_lst.php";
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} tipo de regime"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' tipo de regime', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
+
         return $retorno;
     }
 
@@ -135,9 +133,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($tipoRegime);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_tipo_regime_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_tipo_regime_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -161,9 +157,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($tipoRegimeDetalheAntes, $tipoRegimeDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_tipo_regime_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_tipo_regime_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -184,9 +178,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($tipoRegime);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_tipo_regime_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_tipo_regime_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

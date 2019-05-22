@@ -25,7 +25,7 @@ class Footer
 
     private function getCachedFooter()
     {
-        $cache = Cache::tags(['configurations', config('app.name')]);
+        $cache = Cache::tags(['configurations', config('app.nickname')]);
 
         $cacheKey = 'configurations_' . md5(session('id_pessoa'));
         if ($cache->has($cacheKey)) {

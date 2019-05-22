@@ -66,7 +66,7 @@ class indice extends clsDetalhe
   function Gerar()
   {
     $this->titulo = 'Tipo Usuário - Detalhe';
-    
+
 
     $this->cod_tipo_usuario = $_GET['cod_tipo_usuario'];
 
@@ -74,7 +74,7 @@ class indice extends clsDetalhe
       NULL, NULL, NULL, NULL, NULL, 1);
 
     if (! $registro = $tmp_obj->detalhe()){
-      header('Location: educar_tipo_usuario_lst.php');
+        $this->simpleRedirect('educar_tipo_usuario_lst.php');
     }
 
     if ($registro['cod_tipo_usuario']) {
@@ -155,13 +155,9 @@ class indice extends clsDetalhe
     $this->url_cancelar = 'educar_tipo_usuario_lst.php';
     $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Configurações",
-         ""                                  => "Detalhe do tipo de usu&aacute;rio"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->breadcrumb('Detalhe do tipo de usuário', [
+        url('intranet/educar_configuracoes_index.php') => 'Configurações',
+    ]);
   }
 
   function lista_menus($opcoes)

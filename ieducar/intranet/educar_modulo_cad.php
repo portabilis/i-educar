@@ -75,17 +75,13 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_modulo_det.php?cod_modulo={$registro["cod_modulo"]}" : "educar_modulo_lst.php";
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(
-            array(
-                $_SERVER['SERVER_NAME']."/intranet" => "Início",
-                "educar_index.php"                  => "Escola",
-                ""        => "{$nomeMenu} etapa"
-            )
-        );
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' etapa', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
+
         return $retorno;
     }
 
@@ -132,9 +128,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($modulo);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_modulo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_modulo_lst.php');
         }
 
         $this->mensagem = "Cadastro não realizado.<br>";
@@ -161,9 +155,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($moduloDetalheAntes, $moduloDetalheDepois);
 
             $this->mensagem .= "Edição efetuada com sucesso.<br>";
-            header( "Location: educar_modulo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_modulo_lst.php');
         }
 
         $this->mensagem = "Edição não realizada.<br>";
@@ -195,9 +187,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($modulo);
 
             $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
-            header( "Location: educar_modulo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_modulo_lst.php');
         }
 
         $this->mensagem = "Exclusão não realizada.<br>";

@@ -99,15 +99,13 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_infra_predio_comodo_det.php?cod_infra_predio_comodo={$registro["cod_infra_predio_comodo"]}" : "educar_infra_predio_comodo_lst.php";
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} ambiente"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' ambiente', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
+
         return $retorno;
     }
 
@@ -211,9 +209,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("infra_predio_comodo", $this->pessoa_logada, $cod_infra_predio_comodo);
       $auditoria->inclusao($infra_predio_comodo);
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_infra_predio_comodo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_infra_predio_comodo_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -237,9 +233,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("infra_predio_comodo", $this->pessoa_logada, $this->cod_infra_predio_comodo);
       $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_infra_predio_comodo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_infra_predio_comodo_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -259,9 +253,7 @@ class indice extends clsCadastro
       $auditoria = new clsModulesAuditoriaGeral("infra_predio_comodo", $this->pessoa_logada, $this->cod_infra_predio_comodo);
       $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_infra_predio_comodo_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_infra_predio_comodo_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

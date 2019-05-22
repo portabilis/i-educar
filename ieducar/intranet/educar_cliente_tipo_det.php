@@ -61,7 +61,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Tipo Cliente - Detalhe";
-        
+
 
         $this->cod_cliente_tipo=$_GET["cod_cliente_tipo"];
 
@@ -70,8 +70,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_cliente_tipo_lst.php" );
-            die();
+            $this->simpleRedirect('educar_cliente_tipo_lst.php');
         }
 
         if( class_exists( "clsPmieducarBiblioteca" ) )
@@ -171,13 +170,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_cliente_tipo_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Detalhe do tipo de clientes"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhe do tipo de clientes', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 

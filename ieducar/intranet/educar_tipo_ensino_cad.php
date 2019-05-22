@@ -63,7 +63,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         //** Verificacao de permissao para exclusao
         $obj_permissao = new clsPermissoes();
@@ -75,14 +75,14 @@ class indice extends clsCadastro
 
         if( is_numeric( $this->cod_tipo_ensino ) )
         {
-            
+
             $obj = new clsPmieducarTipoEnsino($this->cod_tipo_ensino,null,null,null,null,null,1);
             if(!$registro = $obj->detalhe()){
-                header("Location: educar_tipo_ensino_lst.php");
+                $this->simpleRedirect('educar_tipo_ensino_lst.php');
             }
 
             if(!$registro["ativo"] )
-                header("Location: educar_tipo_ensino_lst.php");
+                $this->simpleRedirect('educar_tipo_ensino_lst.php');
 
             if( $registro )
             {
@@ -100,15 +100,13 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_tipo_ensino_det.php?cod_tipo_ensino={$registro["cod_tipo_ensino"]}" : "educar_tipo_ensino_lst.php";
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} tipo de ensino"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' tipo de ensino', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
+
         return $retorno;
     }
 
@@ -132,7 +130,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $this->atividade_complementar = is_null($this->atividade_complementar) ? FALSE : TRUE;
 
@@ -152,9 +150,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($tipoEnsino);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_tipo_ensino_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -164,7 +160,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $this->atividade_complementar = is_null($this->atividade_complementar) ? FALSE : TRUE;
 
@@ -187,9 +183,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($tipoEnsinoDetalheAntes, $tipoEnsinoDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_tipo_ensino_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -199,7 +193,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj = new clsPmieducarTipoEnsino($this->cod_tipo_ensino, $this->pessoa_logada, null, $this->nm_tipo, null, null, 0);
         $tipoEnsino = $obj->detalhe();
@@ -210,9 +204,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($tipoEnsino);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_tipo_ensino_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

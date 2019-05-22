@@ -24,6 +24,10 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -84,15 +88,12 @@ class indice extends clsCadastro
             }
         }
         $this->url_cancelar = ($retorno == "Editar") ? "educar_nivel_ensino_det.php?cod_nivel_ensino={$registro["cod_nivel_ensino"]}" : "educar_nivel_ensino_lst.php";
-        
+
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} n&iacute;vel de ensino"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' nível de ensino', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
         return $retorno;
@@ -127,9 +128,10 @@ class indice extends clsCadastro
             $auditoria->inclusao($nivelEnsino);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_nivel_ensino_lst.php" );
-            die();
-            return true;
+
+            throw new HttpResponseException(
+                new RedirectResponse('educar_nivel_ensino_lst.php')
+            );
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -153,9 +155,10 @@ class indice extends clsCadastro
             $auditoria->alteracao($nivelEnsinoDetalheAntes, $nivelEnsinoDetalheDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_nivel_ensino_lst.php" );
-            die();
-            return true;
+
+            throw new HttpResponseException(
+                new RedirectResponse('educar_nivel_ensino_lst.php')
+            );
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -176,9 +179,10 @@ class indice extends clsCadastro
             $auditoria->exclusao($nivelEnsino);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_nivel_ensino_lst.php" );
-            die();
-            return true;
+
+            throw new HttpResponseException(
+                new RedirectResponse('educar_nivel_ensino_lst.php')
+            );
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

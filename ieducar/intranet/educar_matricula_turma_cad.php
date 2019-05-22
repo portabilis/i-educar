@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyRegistration;
+use App\Services\SchoolClass\AvailableTimeService;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -39,11 +42,10 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = "Novo";
-    
+
 
     if (! $_POST) {
-      header('Location: educar_matricula_lst.php');
-      die;
+        $this->simpleRedirect('educar_matricula_lst.php');
     }
 
     foreach ($_POST as $key =>$value) {
@@ -55,13 +57,9 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, 'educar_matricula_lst.php');
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php" => "Escola",
-         "" => "Enturma&ccedil;&atilde;o da matr&iacute;cula"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Enturmação da matrícula', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
 
     //nova lógica
     $retorno = false;
@@ -85,18 +83,25 @@ class indice extends clsCadastro
                 </script>', $this->mensagem, $this->ref_cod_matricula);
           echo $alert;
       } else {
-        header('Location: educar_matricula_det.php?cod_matricula=' . $this->ref_cod_matricula);
-        die();
+          $this->simpleRedirect('educar_matricula_det.php?cod_matricula=' . $this->ref_cod_matricula);
       }
     }
     else {
-      header('Location: /intranet/educar_aluno_lst.php');
-      die();
+        $this->simpleRedirect('/intranet/educar_aluno_lst.php');
     }
   }
 
   function novaEnturmacao($matriculaId, $turmaDestinoId, $turnoId = null) {
     if (!$this->validaDataEnturmacao($matriculaId, $turmaDestinoId)) {
+        return false;
+    }
+
+    $availableTimeService = new AvailableTimeService();
+
+    $registration = LegacyRegistration::find($matriculaId);
+
+    if ($this->validarCamposObrigatoriosCenso() && !$availableTimeService->isAvailable($registration->ref_cod_aluno, $turmaDestinoId)) {
+        $this->mensagem = 'O aluno já está matriculado em uma turma com esse horário.';
         return false;
     }
 

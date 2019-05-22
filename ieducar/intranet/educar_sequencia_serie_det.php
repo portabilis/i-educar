@@ -59,7 +59,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Sequ&ecirc;ncia Enturma&ccedil;&atilde;o - Detalhe";
-        
+
 
         $this->ref_serie_origem = $_GET["ref_serie_origem"];
         $this->ref_serie_destino = $_GET["ref_serie_destino"];
@@ -69,8 +69,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_sequencia_serie_lst.php" );
-            die();
+            $this->simpleRedirect('educar_sequencia_serie_lst.php');
         }
 
         if( class_exists( "clsPmieducarSerie" ) )
@@ -168,13 +167,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_sequencia_serie_lst.php";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "Detalhe da sequ&ecirc;ncia de enturma&ccedil;&atilde;o"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhe da sequência de enturmação', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

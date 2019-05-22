@@ -24,6 +24,7 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -105,7 +106,7 @@ class indice extends clsCadastro
         }
 
         if( !$permitido)
-            header( "Location: educar_biblioteca_dados_lst.php" );
+            $this->simpleRedirect('educar_biblioteca_dados_lst.php');
         if( is_numeric( $this->cod_biblioteca ) )
         {
 
@@ -126,14 +127,11 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_biblioteca_dados_det.php?cod_biblioteca={$registro["cod_biblioteca"]}" : "educar_biblioteca_dados_lst.php";
         $this->nome_url_cancelar = "Cancelar";
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "{$nomeMenu} dados da biblioteaca"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+
+        $this->breadcrumb($nomeMenu . ' dados da biblioteca', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
 
         return $retorno;
     }
@@ -327,8 +325,7 @@ class indice extends clsCadastro
                 }
 
                 $this->mensagem .= 'Edição efetuada com sucesso.<br />';
-                header('Location: educar_biblioteca_dados_det.php');
-                die();
+                $this->simpleRedirect('educar_biblioteca_dados_det.php');
               }
             }
         //-----------------------FIM DIA DA SEMANA------------------------//
@@ -357,9 +354,7 @@ class indice extends clsCadastro
             }
         //-----------------------FIM EDITA FERIADO------------------------//
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_biblioteca_dados_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_biblioteca_dados_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -388,9 +383,7 @@ class indice extends clsCadastro
                 if ( $excluiu2 )
                 {
                     $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-                    header( "Location: educar_biblioteca_dados_lst.php" );
-                    die();
-                    return true;
+                    $this->simpleRedirect('educar_biblioteca_dados_lst.php');
                 }
             }
         }

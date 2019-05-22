@@ -73,7 +73,7 @@ class indice extends clsCadastro
         $this->ref_cod_biblioteca = $_GET["cod_biblioteca"];
 
         if(!$this->ref_cod_cliente || !$this->ref_cod_biblioteca)
-            header("Location: educar_pagamento_multa_lst.php");
+            $this->simpleRedirect('educar_pagamento_multa_lst.php');
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 622, $this->pessoa_logada, 11,  "educar_pagamento_multa_lst.php" );
@@ -120,13 +120,9 @@ class indice extends clsCadastro
         $this->acao_enviar       = "validaValor()";
         $this->valor_pendente    = $this->total_divida - $this->valor_pago_bib;
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "Pagamendo da d&iacute;vida"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Pagamento da dívida', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
 
         return $retorno;
     }
@@ -161,9 +157,7 @@ class indice extends clsCadastro
         if( $cadastrou )
         {
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_pagamento_multa_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_pagamento_multa_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -184,9 +178,7 @@ class indice extends clsCadastro
         if( $editou )
         {
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_pagamento_multa_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_pagamento_multa_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -207,9 +199,7 @@ class indice extends clsCadastro
         if( $excluiu )
         {
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_pagamento_multa_lst.php" );
-            die();
-            return true;
+            $this->simpleRedirect('educar_pagamento_multa_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

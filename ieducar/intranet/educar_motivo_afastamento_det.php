@@ -27,6 +27,10 @@
 /**
  * @author Adriano Erik Weiguert Nagasava
  */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -65,7 +69,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Motivo Afastamento - Detalhe";
-        
+
 
         $this->cod_motivo_afastamento=$_GET["cod_motivo_afastamento"];
 
@@ -74,8 +78,9 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_motivo_afastamento_lst.php" );
-            die();
+            throw new HttpResponseException(
+                new RedirectResponse('educar_motivo_afastamento_lst.php')
+            );
         }
     /*  if( class_exists( "clsPmieducarEscola" ) )
         {
@@ -135,13 +140,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_motivo_afastamento_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Detalhe do motivo de afastamento"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhe do motivo de afastamento', [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
     }
 }
 

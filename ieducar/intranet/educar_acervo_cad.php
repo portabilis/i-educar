@@ -139,14 +139,11 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_acervo_det.php?cod_acervo={$registro["cod_acervo"]}" : "educar_acervo_lst.php";
         $this->nome_url_cancelar = "Cancelar";
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "{$nomeMenu} obra"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+
+        $this->breadcrumb($nomeMenu . ' obra', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
 
         return $retorno;
     }
@@ -322,9 +319,8 @@ class indice extends clsCadastro
             $this->gravaCategorias($cadastrou);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_acervo_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('educar_acervo_lst.php');
         }
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
         echo "<!--\nErro ao cadastrar clsPmieducarAcervo\nvalores obrigatorios\nis_numeric( $this->ref_cod_exemplar_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_acervo_colecao ) && is_numeric( $this->ref_cod_acervo_idioma ) && is_numeric( $this->ref_cod_acervo_editora ) && is_string( $this->titulo ) && is_string( $this->isbn )\n-->";
@@ -333,7 +329,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11,  "educar_acervo_lst.php" );
@@ -355,9 +351,8 @@ class indice extends clsCadastro
             $this->gravaCategorias($this->cod_acervo);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_acervo_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('educar_acervo_lst.php');
         }
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
         echo "<!--\nErro ao editar clsPmieducarAcervo\nvalores obrigatorios\nif( is_numeric( $this->cod_acervo ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
@@ -366,7 +361,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 598, $this->pessoa_logada, 11,  "educar_acervo_lst.php" );
@@ -384,9 +379,8 @@ class indice extends clsCadastro
             $objCategoria = new clsPmieducarCategoriaAcervo();
             $objCategoria->deletaCategoriaDaObra($this->cod_acervo);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_acervo_lst.php" );
-            die();
-            return true;
+
+            $this->simpleRedirect('educar_acervo_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

@@ -63,7 +63,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Calend&aacute;rio Dia Motivo - Detalhe";
-        
+
 
         $this->cod_calendario_dia_motivo=$_GET["cod_calendario_dia_motivo"];
 
@@ -72,8 +72,7 @@ class indice extends clsDetalhe
 
         if( ! $registro )
         {
-            header( "location: educar_calendario_dia_motivo_lst.php" );
-            die();
+            $this->simpleRedirect('educar_calendario_dia_motivo_lst.php');
         }
 
         if( class_exists( "clsPmieducarEscola" ) )
@@ -143,13 +142,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_calendario_dia_motivo_lst.php";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""                                  => "Detalhe do motivo de dias do calend&aacute;rio"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());                
+        $this->breadcrumb('Detalhe do motivo de dias do calendário', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

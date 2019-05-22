@@ -259,15 +259,12 @@ class indice extends clsListagem
       $this->acao = "go(\"educar_curso_cad.php\")";
       $this->nome_acao = "Novo";
     }
+
     $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "Listagem de cursos"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Listagem de cursos', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
 }
 

@@ -97,10 +97,9 @@ class indice extends clsDetalhe
     $registro = $tmp_obj->lista($this->cod_falta_atraso);
 
     if (!$registro) {
-      header('Location: ' . sprintf(
-        'educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
-        $this->ref_cod_servidor, $this->ref_ref_cod_instituicao));
-      die();
+        $this->simpleRedirect(sprintf(
+            'educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
+            $this->ref_cod_servidor, $this->ref_ref_cod_instituicao));
     }
     else {
       $tabela = '<table>
@@ -177,13 +176,9 @@ class indice extends clsDetalhe
 
     $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Detalhe da falta/atraso do servidor"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Detalhe da falta/atraso do servidor', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
   }
 }
 

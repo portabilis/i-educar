@@ -24,6 +24,10 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\RedirectResponse;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -68,7 +72,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->ref_serie_origem=$_GET["ref_serie_origem"];
         $this->ref_serie_destino=$_GET["ref_serie_destino"];
@@ -110,15 +114,13 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_sequencia_serie_det.php?ref_serie_origem={$registro["ref_serie_origem"]}&ref_serie_destino={$registro["ref_serie_destino"]}" : "educar_sequencia_serie_lst.php";
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} sequ&ecirc;ncia de enturma&ccedil;&atilde;o"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' sequência de enturmação', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
+
         return $retorno;
     }
 
@@ -132,7 +134,6 @@ class indice extends clsCadastro
         // foreign keys
         if( $nivel_usuario == 1 )
         {
-//      echo "<pre>"; print_r($GLOBALS); die();
             $GLOBALS["nivel_usuario_fora"] = 1;
             $objInstituicao = new clsPmieducarInstituicao();
             $opcoes = array( "" => "Selecione" );
@@ -258,7 +259,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 587, $this->pessoa_logada, 3,  "educar_sequencia_serie_lst.php" );
@@ -272,9 +273,10 @@ class indice extends clsCadastro
             if( $cadastrou )
             {
                 $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                header( "Location: educar_sequencia_serie_lst.php" );
-                die();
-                return true;
+
+                throw new HttpResponseException(
+                    new RedirectResponse('educar_sequencia_serie_lst.php')
+                );
             }
         }
         else
@@ -284,9 +286,10 @@ class indice extends clsCadastro
             if( $editou )
             {
                 $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-                header( "Location: educar_sequencia_serie_lst.php" );
-                die();
-                return true;
+
+                throw new HttpResponseException(
+                    new RedirectResponse('educar_sequencia_serie_lst.php')
+                );
             }
         }
 
@@ -297,7 +300,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 587, $this->pessoa_logada, 3,  "educar_sequencia_serie_lst.php" );
@@ -311,9 +314,10 @@ class indice extends clsCadastro
             if( $editou )
             {
                 $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-                header( "Location: educar_sequencia_serie_lst.php" );
-                die();
-                return true;
+
+                throw new HttpResponseException(
+                    new RedirectResponse('educar_sequencia_serie_lst.php')
+                );
             }
             $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
             echo "<!--\nErro ao editar clsPmieducarSequenciaSerie\nvalores obrigat&oacute;rios\nif( is_numeric( $this->ref_serie_origem ) && is_numeric( $this->ref_serie_destino ) && is_numeric( $this->pessoa_logada ) )\n-->";
@@ -326,7 +330,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 587, $this->pessoa_logada, 3,  "educar_sequencia_serie_lst.php" );
@@ -337,9 +341,10 @@ class indice extends clsCadastro
         if( $excluiu )
         {
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_sequencia_serie_lst.php" );
-            die();
-            return true;
+
+            throw new HttpResponseException(
+                new RedirectResponse('educar_sequencia_serie_lst.php')
+            );
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
