@@ -56,15 +56,15 @@ class LocalizacaoSistema {
         $i = 1;
         $linkVazio="#";
 
-        $this->html = '<div id="localizacao">';
+        $this->html = '<div class="breadcrumb">';
         foreach( $this->localizacao as $link => $inner ) {
             $href .= ( $i === 1 ) ? $this->protocolo . $link : "/$link";
             if( $i === $localizacao_count )
-                $this->html .= "<a href=\"$linkVazio\" class='pagina_atual'>$inner</a>";
+                $this->html .= "<a href=\"$linkVazio\" class='breadcrumb-current'>$inner</a>";
             elseif($i == 1)
-                $this->html .= "<a href=\"$href\" title=\"Ir para o $inner\"><i class='fa fa-home' aria-hidden='true'></i><span> $inner</span></a> <a class='flechinha' href=\"$linkVazio\"> / </a> {$this->separador} ";
+                $this->html .= "<a href=\"$href\" title=\"Ir para o $inner\"><i class='fa fa-home' aria-hidden='true'></i> <span> $inner</span></a> <a class='breadcrumb-separator' href=\"$linkVazio\"> / </a> {$this->separador} ";
             else
-                $this->html .= "<a href=\"$href\" title=\"Ir para o $inner\">$inner</a> <a class='flechinha' href=\"$linkVazio\"> / </a> {$this->separador} ";
+                $this->html .= "<a href=\"$href\" title=\"Ir para o $inner\">$inner</a> <a class='breadcrumb-separator' href=\"$linkVazio\"> / </a> {$this->separador} ";
 
             $i++;
         }

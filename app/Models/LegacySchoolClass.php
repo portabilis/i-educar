@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use DateTime;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -19,8 +19,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int                $course_id
  * @property int                $grade_id
  * @property int                $vacancies
- * @property DateTime           $begin_academic_year
- * @property DateTime           $end_academic_year
+ * @property Carbon             $begin_academic_year
+ * @property Carbon             $end_academic_year
  * @property LegacyCourse       $course
  * @property LegacyLevel        $grade
  * @property LegacySchool       $school
@@ -185,6 +185,33 @@ class LegacySchoolClass extends Model
     public function enrollments()
     {
         return $this->hasMany(LegacyEnrollment::class, 'ref_cod_turma', 'cod_turma');
+    }
+
+    /**
+     * Retorna os dias da semana em um array
+     *
+     * @param  string  $value
+     * @return array|null
+     */
+    public function getDiasSemanaAttribute($value)
+    {
+        if (is_string($value)) {
+            $value = explode(',', str_replace(['{', '}'], '', $value));
+        }
+        return $value;
+    }
+    /**
+     * Seta os dias da semana transformando um array em uma string
+     *
+     * @param  array  $values
+     * @return void
+     */
+    public function setDiasSemanaAttribute($values)
+    {
+        if (is_array($values)) {
+            $values = '{' . implode(',', $values) . '}';
+        }
+        $this->attributes['dias_semana'] = $values;
     }
 
     /**

@@ -106,11 +106,13 @@ var getPersonByCpf = function(cpf) {
 // hide or show #pais_origem_nome by #tipo_nacionalidade
 var checkTipoNacionalidade = function() {
   if ($j.inArray($j('#tipo_nacionalidade').val(), ['2', '3']) > -1) {
+    $j('#naturalidade_nome').makeUnrequired();
     if (obrigarCamposCenso) {
       $j('#pais_origem_nome').makeRequired();
     }
     $j('#pais_origem_nome').show();
   } else {
+    $j('#naturalidade_nome').makeRequired();
     $j('#pais_origem_nome').hide();
   }
 }
@@ -220,6 +222,22 @@ var submitForm = function(event) {
     formUtils.submit();
 }
 
+let verificaCampoZonaResidencia = () => {
+  let $field = $j('#zona_localizacao_censo');
+  let isBrasil = $j('#pais_residencia').val() == '76';
+  if (isBrasil) {
+    $field.removeAttr('disabled');
+
+    if (obrigarCamposCenso) {
+      $field.makeRequired();
+    }
+  } else {
+    $field.val('');
+    $field.makeUnrequired();
+    $field.attr('disabled', 'disabled');
+  }
+};
+
 // when page is ready
 
 $j(document).ready(function() {
@@ -227,6 +245,8 @@ $j(document).ready(function() {
 
   changeVisibilityOfLinksToPessoaPai();
   changeVisibilityOfLinksToPessoaMae();
+  verificaCampoZonaResidencia();
+  $j('#pais_residencia').on('change', verificaCampoZonaResidencia);
 
   // style fixup
 

@@ -23,6 +23,7 @@ class indice extends clsCadastro
   var $ref_cod_instituicao;
   var $permite_relacionamento_posvendas;
   var $url_novo_educacao;
+  var $token_novo_educacao;
   var $mostrar_codigo_inep_aluno;
   var $justificativa_falta_documentacao_obrigatorio;
   var $tamanho_min_rede_estadual;
@@ -39,10 +40,11 @@ class indice extends clsCadastro
   var $linkedin_url;
   var $ieducar_suspension_message;
   var $bloquear_cadastro_aluno;
+  var $situacoes_especificas_atestados;
 
   function Inicializar()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
 
@@ -56,20 +58,16 @@ class indice extends clsCadastro
       'educar_index.php');
     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_configuracoes_index.php"                  => "Configurações",
-         ""                                  => "Configura&ccedil;&otilde;es gerais"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Configurações gerais', [
+        url('intranet/educar_configuracoes_index.php') => 'Configurações',
+    ]);
 
     return 'Editar';
   }
 
   function Gerar()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
@@ -79,7 +77,9 @@ class indice extends clsCadastro
 
     $this->permite_relacionamento_posvendas = $configuracoes['permite_relacionamento_posvendas'];
     $this->bloquear_cadastro_aluno = dbBool($configuracoes['bloquear_cadastro_aluno']);
+    $this->situacoes_especificas_atestados = dbBool($configuracoes['situacoes_especificas_atestados']);
     $this->url_novo_educacao = $configuracoes['url_novo_educacao'];
+    $this->token_novo_educacao = $configuracoes['token_novo_educacao'];
     $this->mostrar_codigo_inep_aluno = $configuracoes['mostrar_codigo_inep_aluno'];
     $this->justificativa_falta_documentacao_obrigatorio = $configuracoes['justificativa_falta_documentacao_obrigatorio'];
     $this->tamanho_min_rede_estadual = $configuracoes['tamanho_min_rede_estadual'];
@@ -98,12 +98,17 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->checkbox('permite_relacionamento_posvendas', array(
         'label' => 'Permite relacionamento direto no pós-venda?',
-        'value' => $this->permite_relacionamento_posvendas
+        'value' => $this->permite_relacionamento_posvendas ? 'on' : ''
     ));
 
     $this->inputsHelper()->checkbox('bloquear_cadastro_aluno', array(
         'label' => 'Bloquear o cadastro de novos alunos',
-        'value' => $this->bloquear_cadastro_aluno
+        'value' => $this->bloquear_cadastro_aluno ? 'on' : ''
+    ));
+
+    $this->inputsHelper()->checkbox('situacoes_especificas_atestados', array(
+        'label' => 'Exibir apenas matrículas em situações específicas para os atestados',
+        'value' => $this->situacoes_especificas_atestados ? 'on' : ''
     ));
 
     $this->inputsHelper()->text('url_novo_educacao', array(
@@ -113,6 +118,14 @@ class indice extends clsCadastro
         'required' => false,
         'placeholder' => 'Ex: http://cliente.provedor.com.br/api/v1/',
         'value' => $this->url_novo_educacao
+    ));
+
+    $this->inputsHelper()->text('token_novo_educacao', array(
+        'label' => 'Token de integração (API)',
+        'size' => 100,
+        'max_length' => 100,
+        'required' => false,
+        'value' => $this->token_novo_educacao
     ));
 
     $options = array('label' => 'Mostrar código INEP nas telas de cadastro de aluno?',
@@ -263,17 +276,20 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
     $permiteRelacionamentoPosvendas = ($this->permite_relacionamento_posvendas == 'on' ? 1 : 0);
     $bloquearCadastroAluno = $this->bloquear_cadastro_aluno == 'on' ? 1 : 0;
+    $situacoesEspecificasAtestados = $this->situacoes_especificas_atestados == 'on' ? 1 : 0;
 
     $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao, array(
         'permite_relacionamento_posvendas' => $permiteRelacionamentoPosvendas,
         'bloquear_cadastro_aluno' => $bloquearCadastroAluno,
+        'situacoes_especificas_atestados' => $situacoesEspecificasAtestados,
         'url_novo_educacao' => $this->url_novo_educacao,
+        'token_novo_educacao' => $this->token_novo_educacao,
         'mostrar_codigo_inep_aluno' => $this->mostrar_codigo_inep_aluno,
         'justificativa_falta_documentacao_obrigatorio' => $this->justificativa_falta_documentacao_obrigatorio,
         'tamanho_min_rede_estadual' => $this->tamanho_min_rede_estadual,

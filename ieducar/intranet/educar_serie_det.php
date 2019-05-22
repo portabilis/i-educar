@@ -130,10 +130,10 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Etapa Curso', $registro['etapa_curso']));
     }
 
-    if ($regraId = $registro['regra_avaliacao_id']) {
-      $mapper = new RegraAvaliacao_Model_RegraDataMapper();
-      $regra = $mapper->find($regraId);
-      $this->addDetalhe(array('Regra Avaliação', $regra));
+    $regras = $this->getRegrasAvaliacao();
+
+    if ($regras) {
+        $this->addDetalhe(['Regras de avaliação', $regras]);
     }
 
     if ($registro['concluinte']) {
@@ -167,15 +167,60 @@ class indice extends clsDetalhe
     $this->url_cancelar = 'educar_serie_lst.php';
     $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "Detalhe da s&eacute;rie"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());  
-
+    $this->breadcrumb('Detalhe da série', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
+
+    public function getRegrasAvaliacao()
+    {
+        $query = <<<SQL
+            SELECT
+                ra.id,
+                ra.nome,
+                rasa.ano_letivo
+            FROM
+                modules.regra_avaliacao AS ra
+            INNER JOIN
+                modules.regra_avaliacao_serie_ano AS rasa ON rasa.regra_avaliacao_id = ra.id
+            INNER JOIN
+                pmieducar.serie AS s ON s.cod_serie = rasa.serie_id
+            WHERE TRUE
+                AND s.cod_serie = $1
+            ORDER BY
+                ra.id, rasa.ano_letivo
+SQL;
+
+        $regras = Portabilis_Utils_Database::fetchPreparedQuery($query, [
+            'params' => [$this->cod_serie]
+        ]);
+
+        if (empty($regras)) {
+            return '';
+        }
+
+        $retorno = [];
+
+        foreach ($regras as $regra) {
+            $regra['id'] = (int) $regra['id'];
+            if (!isset($retorno[$regra['id']])) {
+                $retorno[$regra['id']] = [
+                    'nome' => $regra['nome'],
+                    'anos' => [(int) $regra['ano_letivo']]
+                ];
+            } else {
+                $retorno[$regra['id']]['anos'][] = (int) $regra['ano_letivo'];
+            }
+        }
+
+        $html = [];
+
+        foreach ($retorno as $r) {
+            $html[] = sprintf('%s (%s)', $r['nome'], join(', ', $r['anos']));
+        }
+
+        return join('<br>', $html);
+    }
 }
 
 // Instancia objeto de página

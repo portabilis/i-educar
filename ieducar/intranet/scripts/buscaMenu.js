@@ -55,10 +55,10 @@
         if(caminho){
 
           if(caminho.search(".php") > -1){
-            var caminhoCompleto = '/intranet/' + caminho;
+            var caminhoCompleto = caminho;
             loc.href = caminhoCompleto;
           }else{
-            loc.pathname = '/' + caminho;
+            loc.pathname = caminho;
           }
         }
       }

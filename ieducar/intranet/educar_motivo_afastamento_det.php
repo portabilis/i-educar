@@ -69,7 +69,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Motivo Afastamento - Detalhe";
-        
+
 
         $this->cod_motivo_afastamento=$_GET["cod_motivo_afastamento"];
 
@@ -140,13 +140,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_motivo_afastamento_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Detalhe do motivo de afastamento"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhe do motivo de afastamento', [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
     }
 }
 

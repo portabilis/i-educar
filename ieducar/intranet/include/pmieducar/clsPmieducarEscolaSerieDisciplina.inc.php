@@ -111,9 +111,9 @@ class clsPmieducarEscolaSerieDisciplina
         $ref_ref_cod_escola = NULL,
         $ref_cod_disciplina = NULL,
         $ativo = NULL,
-        $carga_horaria = NULL,
-        $etapas_especificas = NULL,
-        $etapas_utilizadas = NULL,
+        $carga_horaria = false,
+        $etapas_especificas = false,
+        $etapas_utilizadas = false,
         $anos_letivos = []
     )
     {
@@ -164,14 +164,21 @@ class clsPmieducarEscolaSerieDisciplina
 
         if (is_numeric($carga_horaria)) {
             $this->carga_horaria = $carga_horaria;
-        }
-
-        if (is_numeric($etapas_especificas)) {
-            $this->etapas_especificas = $etapas_especificas;
+        } elseif (is_null($carga_horaria)) {
+            $this->carga_horaria = null;
         }
 
         if (is_string($etapas_utilizadas)) {
             $this->etapas_utilizadas = $etapas_utilizadas;
+        } elseif (is_null($etapas_utilizadas)) {
+            $this->etapas_utilizadas = null;
+        }
+
+        if (is_numeric($etapas_especificas)) {
+            $this->etapas_especificas = $etapas_especificas;
+        } elseif (is_null($etapas_especificas)) {
+            $this->etapas_especificas = 0;
+            $this->etapas_utilizadas = null;
         }
 
         if( is_array( $anos_letivos ) )
@@ -271,16 +278,17 @@ class clsPmieducarEscolaSerieDisciplina
 
             if (is_numeric($this->carga_horaria)) {
                 $set[] = "carga_horaria = '{$this->carga_horaria}'";
-            } else if (is_null($this->carga_horaria)) {
+            } elseif (is_null($this->carga_horaria)) {
+                $set[] = "carga_horaria = NULL";
             }
 
-            if (is_string($this->etapas_especificas)) {
+            if (is_numeric($this->etapas_especificas)) {
                 $set[] = "etapas_especificas = '{$this->etapas_especificas}'";
             }
 
             if (is_string($this->etapas_utilizadas)) {
                 $set[] = "etapas_utilizadas = '{$this->etapas_utilizadas}'";
-            } else if (is_null($this->etapas_utilizadas)) {
+            } elseif (is_null($this->etapas_utilizadas)) {
                 $set[] = "etapas_utilizadas = NULL";
             }
 

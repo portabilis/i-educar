@@ -56,7 +56,7 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = "Editar";
-    
+
 
     $this->ref_cod_matricula=$_GET["ref_cod_matricula"];
     $this->ref_cod_turma=$_GET["ref_cod_turma"];
@@ -66,14 +66,12 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada,3, "educar_matricula_historico_lst.php?ref_cod_matricula=".$this->ref_cod_matricula);
     $this->fexcluir = $obj_permissoes->permissao_excluir(578,$this->pessoa_logada,3);
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Histórico de enturmações da matrícula"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Histórico de enturmações da matrícula', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
+
     $this->url_cancelar = "educar_matricula_historico_lst.php?ref_cod_matricula=".$this->ref_cod_matricula;
+
     return $retorno;
   }
 
@@ -146,7 +144,7 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    
+
 
     $enturmacao = new clsPmieducarMatriculaTurma();
     $enturmacao->ref_cod_matricula = $this->ref_cod_matricula;
@@ -218,7 +216,7 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-    
+
 
     $enturmacao = new clsPmieducarMatriculaTurma();
     $enturmacao->ref_cod_matricula = $this->ref_cod_matricula;

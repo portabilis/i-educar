@@ -5,7 +5,7 @@ require_once 'include/pmieducar/geral.inc.php';
 class clsPmieducarServidor
 {
     public $cod_servidor;
-    public $ref_idesco;
+    public $ref_idesco = false;
     public $carga_horaria;
     public $data_cadastro;
     public $data_exclusao;
@@ -33,6 +33,7 @@ class clsPmieducarServidor
     public $pos_graduacao;
     public $curso_formacao_continuada;
     public $multi_seriado;
+    public $tipo_ensino_medio_cursado;
 
     /**
      * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -115,33 +116,19 @@ class clsPmieducarServidor
     situacao_curso_superior_1, formacao_complementacao_pedagogica_1, codigo_curso_superior_1, ano_inicio_curso_superior_1, ano_conclusao_curso_superior_1, instituicao_curso_superior_1,
     situacao_curso_superior_2, formacao_complementacao_pedagogica_2, codigo_curso_superior_2, ano_inicio_curso_superior_2, ano_conclusao_curso_superior_2, instituicao_curso_superior_2,
     situacao_curso_superior_3, formacao_complementacao_pedagogica_3, codigo_curso_superior_3, ano_inicio_curso_superior_3, ano_conclusao_curso_superior_3, instituicao_curso_superior_3,
-    pos_graduacao, curso_formacao_continuada, multi_seriado
+    pos_graduacao, curso_formacao_continuada, multi_seriado, tipo_ensino_medio_cursado
     ';
         $this->_campos_lista2 = $this->_todos_campos2 = 's.cod_servidor, s.ref_idesco, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.ref_cod_instituicao,s.ref_cod_subnivel,
     s.situacao_curso_superior_1, s.formacao_complementacao_pedagogica_1, s.codigo_curso_superior_1, s.ano_inicio_curso_superior_1, s.ano_conclusao_curso_superior_1, s.instituicao_curso_superior_1,
     s.situacao_curso_superior_2, s.formacao_complementacao_pedagogica_2, s.codigo_curso_superior_2, s.ano_inicio_curso_superior_2, s.ano_conclusao_curso_superior_2, s.instituicao_curso_superior_2,
     s.situacao_curso_superior_3, s.formacao_complementacao_pedagogica_3, s.codigo_curso_superior_3, s.ano_inicio_curso_superior_3, s.ano_conclusao_curso_superior_3, s.instituicao_curso_superior_3,
-    s.pos_graduacao, s.curso_formacao_continuada, s.multi_seriado,
+    s.pos_graduacao, s.curso_formacao_continuada, s.multi_seriado, s.tipo_ensino_medio_cursado,
     (SELECT replace(textcat_all(matricula),\' <br>\',\',\')
           FROM pmieducar.servidor_funcao sf
          WHERE s.cod_servidor = sf.ref_cod_servidor) as matricula_servidor
     ';
-        if (is_numeric($ref_idesco)) {
-            if (class_exists('clsCadastroEscolaridade')) {
-                $tmp_obj = new clsCadastroEscolaridade($ref_idesco);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_idesco = $ref_idesco;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_idesco = $ref_idesco;
-                    }
-                }
-            } elseif ($db->CampoUnico("SELECT 1 FROM cadastro.escolaridade WHERE idesco = '{$ref_idesco}'")) {
-                $this->ref_idesco = $ref_idesco;
-            }
-        }
+        $this->ref_idesco = $ref_idesco;
+
         /**
          * Filtrar cod_servidor
          */
@@ -339,6 +326,11 @@ class clsPmieducarServidor
                 $valores .= "{$gruda}'{$this->instituicao_curso_superior_3}'";
                 $gruda = ', ';
             }
+            if (is_numeric($this->tipo_ensino_medio_cursado)) {
+                $campos .= "{$gruda}tipo_ensino_medio_cursado";
+                $valores .= "{$gruda}'{$this->tipo_ensino_medio_cursado}'";
+                $gruda = ', ';
+            }
             if (is_string($this->pos_graduacao)) {
                 $campos .= "{$gruda}pos_graduacao";
                 $valores .= "{$gruda}'{$this->pos_graduacao}'";
@@ -377,10 +369,15 @@ class clsPmieducarServidor
             $db = new clsBanco();
             $set = '';
             $gruda = '';
+
             if (is_numeric($this->ref_idesco)) {
                 $set .= "{$gruda}ref_idesco = '{$this->ref_idesco}'";
                 $gruda = ', ';
+            } elseif ($this->ref_idesco !== false) {
+                $set .= "{$gruda}ref_idesco = NULL";
+                $gruda = ', ';
             }
+
             if (is_numeric($this->carga_horaria)) {
                 $set .= "{$gruda}carga_horaria = '{$this->carga_horaria}'";
                 $gruda = ', ';
@@ -514,6 +511,13 @@ class clsPmieducarServidor
                 $gruda = ', ';
             } else {
                 $set .= "{$gruda}instituicao_curso_superior_3 = NULL";
+                $gruda = ', ';
+            }
+            if (is_numeric($this->tipo_ensino_medio_cursado)) {
+                $set .= "{$gruda}tipo_ensino_medio_cursado = '{$this->tipo_ensino_medio_cursado}'";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}tipo_ensino_medio_cursado = NULL";
                 $gruda = ', ';
             }
             if (is_string($this->pos_graduacao)) {
@@ -1072,7 +1076,7 @@ class clsPmieducarServidor
               OR ('{$array_horario[2]}' > qhh.hora_inicial AND '{$array_horario[2]}' < qhh.hora_final))
             OR ('{$array_horario[1]}' = qhh.hora_inicial AND '{$array_horario[2]}' = qhh.hora_final)
             OR ('{$array_horario[1]}' <= qhh.hora_inicial AND '{$array_horario[2]}' >= qhh.hora_final))
-        AND qhh.ativo = '1' 
+        AND qhh.ativo = '1'
         {$whereAno}";
             if (is_string($lst_matriculas)) {
                 $filtros .= "AND qhh.ref_servidor NOT IN ({$lst_matriculas})";

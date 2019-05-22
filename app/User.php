@@ -5,6 +5,7 @@ namespace App;
 use App\Models\LegacyEmployee;
 use App\Models\LegacyUserType;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -114,10 +115,41 @@ class User extends Authenticatable
     }
 
     /**
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->type->level === LegacyUserType::LEVEL_ADMIN;
+    }
+
+    /**
      * @return BelongsTo
      */
     public function employee()
     {
         return $this->belongsTo(LegacyEmployee::class, 'cod_usuario', 'ref_cod_pessoa_fj');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function processes()
+    {
+        return $this->belongsToMany(
+            Menu::class,
+            'pmieducar.menu_tipo_usuario',
+            'ref_cod_tipo_usuario',
+            'ref_cod_menu_submenu',
+            'ref_cod_tipo_usuario',
+            'process'
+        );
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function menu()
+    {
+        return $this->processes()->wherePivot('visualiza', 1);
     }
 }

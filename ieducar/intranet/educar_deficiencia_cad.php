@@ -7,6 +7,9 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
+use iEducar\Modules\Educacenso\Model\Deficiencias;
+use iEducar\Support\View\SelectOptions;
+
 class clsIndexBase extends clsBase
 {
     public function Formular()
@@ -58,13 +61,10 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == 'Editar') ? "educar_deficiencia_det.php?cod_deficiencia={$registro['cod_deficiencia']}" : 'educar_deficiencia_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-             $_SERVER['SERVER_NAME'].'/intranet' => 'Início',
-             'educar_pessoas_index.php'          => 'Pessoas',
-             ''        => "{$nomeMenu} deficiência"
+
+        $this->breadcrumb($nomeMenu . ' deficiência', [
+            url('intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
-        $this->enviaLocalizacao($localizacao->montar());
 
         $this->nome_url_cancelar = 'Cancelar';
 
@@ -81,28 +81,12 @@ class indice extends clsCadastro
         // text
         $this->campoTexto('nm_deficiencia', 'Deficiência', $this->nm_deficiencia, 30, 255, true);
 
-        $resources = [
-            null => 'Selecione',
-            1 => 'Cegueira',
-            2 => 'Baixa visão',
-            3 => 'Surdez',
-            4 => 'Deficiência auditiva',
-            5 => 'Surdocegueira',
-            6 => 'Deficiência física',
-            7 => 'Deficiência intelectual',
-            9 => 'Autismo infantil',
-            10 => 'Síndrome de Asperger',
-            11 => 'Síndrome de Rett',
-            12 => 'Transtorno desintegrativo da infância',
-            13 => 'Altas habilidades/Superdotação'
-        ];
-
         $options = [
             'label' => 'Deficiência educacenso',
-            'resources' => $resources,
+            'resources' => SelectOptions::educacensoDeficiencies(),
             'value' => $this->deficiencia_educacenso
         ];
-        
+
         $this->inputsHelper()->select('deficiencia_educacenso', $options);
         $this->campoCheck('desconsidera_regra_diferenciada', 'Desconsiderar deficiência na regra de avaliação diferenciada', dbBool($this->desconsidera_regra_diferenciada));
     }

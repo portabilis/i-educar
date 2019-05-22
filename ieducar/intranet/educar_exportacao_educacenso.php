@@ -58,10 +58,11 @@ class indice extends clsCadastro
   var $ref_cod_instituicao;
   var $escola_em_andamento;
   var $segunda_fase = false;
+  var $nome_url_sucesso = 'Analisar';
 
   function Inicializar()
   {
-    
+
 
     $this->segunda_fase = ($_REQUEST['fase2'] == 1);
 
@@ -74,13 +75,9 @@ class indice extends clsCadastro
 
     $nomeTela = $this->segunda_fase ? '2ª fase - Situação final' : '1ª fase - Matrícula inicial';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_educacenso_index.php"       => "Educacenso",
-         ""                                  => $nomeTela
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb($nomeTela, [
+        url('intranet/educar_educacenso_index.php') => 'Educacenso',
+    ]);
 
     $exportacao = $_POST["exportacao"];
 
@@ -114,13 +111,7 @@ class indice extends clsCadastro
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
     $this->inputsHelper()->hidden('escola_em_andamento', [ 'value' => $this->escola_em_andamento ]);
 
-    $this->inputsHelper()->date('data_ini',array('label' => 'Data início',
-                                                 'value' => $this->data_ini,
-                                                 'dica' => $dicaCampoData));
-    $this->inputsHelper()->date('data_fim',array('label' => 'Data fim',
-                                                 'value' => $this->data_fim,
-                                                 'dica' => $dicaCampoData));
-    if (!empty($this->data_ini) && !empty($this->data_fim) && !empty($this->ref_cod_escola)) {
+    if (!empty($this->ref_cod_escola)) {
         Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Educacenso/Assets/Javascripts/Educacenso.js');
     }
 
@@ -193,7 +184,7 @@ function acaoExportar() {
     document.formcadastro.target='_blank';
     acao();
     document.getElementById( 'btn_enviar' ).disabled = false;
-    document.getElementById( 'btn_enviar' ).value = 'Exportar';
+    document.getElementById( 'btn_enviar' ).value = 'Analisar';
 }
 
 function marcarCheck(idValue) {
