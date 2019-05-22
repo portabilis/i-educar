@@ -359,7 +359,7 @@ class MatriculaController extends ApiCoreController
 
             $sql = '(SELECT 
                        matricula_turma.id,
-                       pmieducar.matricula.cod_matricula as matricula_id,
+                       matricula.cod_matricula as matricula_id,
                        matricula_turma.ref_cod_turma AS turma_id,
                        matricula_turma.sequencial AS sequencial,
                        matricula_turma.sequencial_fechamento AS sequencial_fechamento,
@@ -391,7 +391,7 @@ class MatriculaController extends ApiCoreController
                  UNION ALL
                  (SELECT 
                        matricula_turma_excluidos.id,
-                       pmieducar.matricula.cod_matricula as matricula_id,
+                       matricula.cod_matricula as matricula_id,
                        matricula_turma_excluidos.ref_cod_turma AS turma_id,
                        matricula_turma_excluidos.sequencial AS sequencial,
                        matricula_turma_excluidos.sequencial_fechamento AS sequencial_fechamento,
@@ -408,7 +408,7 @@ class MatriculaController extends ApiCoreController
                                 matricula_turma_excluidos.data_exclusao > ($1 || to_char(instituicao.data_base_remanejamento, \'-mm-dd\'))::DATE THEN TRUE
                            ELSE FALSE
                        END AS apresentar_fora_da_data,
-                       turno_id,
+                       matricula_turma_excluidos.turno_id,
                        matricula_turma_excluidos.deleted_at
                   FROM pmieducar.matricula
             INNER JOIN pmieducar.escola
