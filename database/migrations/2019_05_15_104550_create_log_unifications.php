@@ -15,15 +15,13 @@ class CreateLogUnifications extends Migration
     {
         Schema::create('log_unifications', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('type_id')->unsigned();
+            $table->string('type');
             $table->integer('main_id');
             $table->json('duplicates_id');
             $table->integer('created_by');
             $table->integer('updated_by');
             $table->boolean('active')->default(true);
             $table->timestamps();
-
-            $table->foreign('type_id')->references('id')->on('log_unification_types');
         });
     }
 
