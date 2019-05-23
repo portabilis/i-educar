@@ -299,6 +299,7 @@ SQL;
                    turma.ref_cod_curso AS "codCurso",
                    turma.ref_ref_cod_serie AS "codSerie",
                    turma.nm_turma AS "nomeTurma",
+                   turma.ano AS "anoTurma",
                    turma.hora_inicial AS "horaInicial",
                    turma.hora_final AS "horaFinal",
                    turma.dias_semana AS "diasSemana",
