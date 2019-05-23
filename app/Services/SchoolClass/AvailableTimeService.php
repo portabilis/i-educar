@@ -58,8 +58,9 @@ class AvailableTimeService
         // - O horário de funcionamento da turma de escolarização seja igual ou superior a 7 horas diárias;
 
         if ($this->hasEscolarizacaoAndAee($schoolClass, $otherSchoolClass)) {
-            $schoolClassAee = $this->getSchoolClassAee($schoolClass, $otherSchoolClass);
-            if ($schoolClassAee->getClassTime() >= 7) {
+            $schoolClassEscolarizacao = $this->getSchoolClassEscolarizacao($schoolClass, $otherSchoolClass);
+
+            if ($schoolClassEscolarizacao->getClassTime() >= 7) {
                 return false;
             }
         }
@@ -123,9 +124,9 @@ class AvailableTimeService
      * @param LegacySchoolClass $otherSchoolClass
      * @return LegacySchoolClass
      */
-    private function getSchoolClassAee(LegacySchoolClass $schoolClass, LegacySchoolClass $otherSchoolClass)
+    private function getSchoolClassEscolarizacao(LegacySchoolClass $schoolClass, LegacySchoolClass $otherSchoolClass)
     {
-        if ($schoolClass->tipo_atendimento == TipoAtendimentoTurma::AEE) {
+        if ($schoolClass->tipo_atendimento == TipoAtendimentoTurma::ESCOLARIZACAO) {
             return $schoolClass;
         }
 
