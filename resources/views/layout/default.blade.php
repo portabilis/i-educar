@@ -323,5 +323,6 @@
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/pt-BR.js") }}"></script>
 <link type="text/css" rel="stylesheet" href="{{ Asset::get("/intranet/scripts/select2/select2.min.css") }}"/>
 @include('layout.vue')
+@stack('scripts')
 </body>
 </html>

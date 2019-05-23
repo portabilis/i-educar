@@ -65,4 +65,22 @@ class LogUnification extends Model
 
         return $adapter;
     }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeStudent($query)
+    {
+        return $query->where('type', Student::class);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePerson($query)
+    {
+        return $query->where('type', Individual::class);
+    }
 }

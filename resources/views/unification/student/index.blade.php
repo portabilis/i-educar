@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <form id="formcadastro" action="" method="post">
+    <form id="formcadastro" action="" method="get">
         <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
             <tbody>
             <tr>
@@ -13,16 +13,26 @@
             </tr>
             <tr id="tr_nm_instituicao">
                 <td class="formmdtd" valign="top"><span class="form">Instituição:</span></td>
-                <td class="formmdtd" valign="top"><span class="form"></span></td>
+                <td class="formmdtd" valign="top">
+                    @include('form.select-institution')
+                </td>
             </tr>
             <tr id="tr_nm_escola">
                 <td class="formlttd" valign="top"><span class="form">Escola:</span></td>
-                <td class="formlttd" valign="top"><span class="form"></span></td>
+                <td class="formlttd" valign="top">
+                    @include('form.select-school')
+                </td>
             </tr>
             </tbody>
         </table>
-    </form>
 
+        <div class="separator"></div>
+
+        <div style="text-align: center">
+            <button class="btn-green" type="submit">Buscar</button>
+        </div>
+
+    </form>
 
     <table class="table-default">
         <thead>
@@ -36,10 +46,18 @@
         <tbody>
         @foreach($unifications as $unification)
             <tr>
-                <td><a href="{{ route('student_log_unification.show', ['unification' => $unification->id]) }}">{{ $unification->getMainName()  }}</a></td>
-                <td><a href="{{ route('student_log_unification.show', ['unification' => $unification->id]) }}">{{ implode(', ', $unification->getDuplicatesName()) }}</a></td>
-                <td><a href="{{ route('student_log_unification.show', ['unification' => $unification->id]) }}">{{ $unification->created_at->format('d/m/Y')  }}</a></td>
-                <td><a href="{{ route('student_log_unification.show', ['unification' => $unification->id]) }}">{{ $unification->createdBy->real_name  }}</a></td>
+                <td>
+                    <a href="{{ route('student_log_unification.show', ['unification' => $unification->id]) }}">{{ $unification->getMainName()  }}</a>
+                </td>
+                <td>
+                    <a href="{{ route('student_log_unification.show', ['unification' => $unification->id]) }}">{{ implode(', ', $unification->getDuplicatesName()) }}</a>
+                </td>
+                <td>
+                    <a href="{{ route('student_log_unification.show', ['unification' => $unification->id]) }}">{{ $unification->created_at->format('d/m/Y')  }}</a>
+                </td>
+                <td>
+                    <a href="{{ route('student_log_unification.show', ['unification' => $unification->id]) }}">{{ $unification->createdBy->real_name  }}</a>
+                </td>
             </tr>
         @endforeach
 
@@ -95,3 +113,12 @@
 
     </form>
 @endsection
+
+@push('scripts')
+    <script type="text/javascript"
+            src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
+    <script type="text/javascript"
+            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/DynamicInput.js") }}"></script>
+    <script type="text/javascript"
+            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Escola.js") }}"></script>
+@endpush
