@@ -127,4 +127,9 @@ class Individual extends Model
 
         return $value;
     }
+
+    public function unification()
+    {
+        return $this->morphOne(LogUnification::class, 'main', 'type', 'main_id');
+    }
 }

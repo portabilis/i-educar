@@ -41,6 +41,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/escolaridade/{schoolingDegree}', 'SchoolingDegreeController@show')
         ->name('schooling_degrees.show');
 
+    Route::get('/student-log-unification', 'StudentLogUnificationController@index')->name('student_log_unification.index');
+    Route::get('/student-log-unification/{unification}', 'StudentLogUnificationController@show')->name('student_log_unification.show');
+
     Route::get('intranet/index.php', 'LegacyController@intranet')
         ->defaults('uri', 'index.php')
         ->name('home');

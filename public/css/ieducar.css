@@ -30,6 +30,12 @@ input.form-input {
   font-size: 16px;
 }
 
+.table-default a{
+  color: #47728f;
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px;
+}
+
 .table-default thead tr {
   font-weight: bold;
   background-color: #ccdce6;

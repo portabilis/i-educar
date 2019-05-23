@@ -131,7 +131,7 @@ class indice extends clsCadastro
   private function createLog($mainId, $duplicatesId, $createdBy)
   {
     $log = new LogUnification();
-    $log->type_id = StudentLogUnification::ID;
+    $log->type = StudentLogUnification::getType();
     $log->main_id = $mainId;
     $log->duplicates_id = json_encode($duplicatesId);
     $log->created_by = $createdBy;
