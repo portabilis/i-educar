@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use iEducar\Modules\Unification\LogUnificationTypeInterface;
 use iEducar\Modules\Unification\PersonLogUnification;
 use iEducar\Modules\Unification\StudentLogUnification;
 use Illuminate\Database\Eloquent\Model;
@@ -32,6 +33,11 @@ class LogUnification extends Model
         return $this->morphTo(null, 'type', 'main_id');
     }
 
+    public function oldData()
+    {
+        return $this->hasMany(LogUnificationOldData::class, 'unification_id', 'id');
+    }
+
     public function getDuplicatesIdAttribute($value)
     {
         return json_decode($value, false);
@@ -51,9 +57,9 @@ class LogUnification extends Model
     }
 
     /**
-     * @return PersonLogUnification|StudentLogUnification
+     * @return LogUnificationTypeInterface
      */
-    private function getAdapter()
+    public function getAdapter()
     {
         if ($this->type == Individual::class) {
             $adapter = new PersonLogUnification();

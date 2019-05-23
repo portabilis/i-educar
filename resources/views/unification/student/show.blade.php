@@ -21,7 +21,7 @@
             </tr>
             <tr>
                 <td class="formmdtd" valign="top"><span class="form">Data da unificação:</span></td>
-                <td class="formmdtd" valign="top"><span class="form">{{$unification->created_at->format('d/m/Y H:i:s') }}</span></td>
+                <td class="formmdtd" valign="top"><span class="form">{{ $unification->created_at->format('d/m/Y H:i:s') }}</span></td>
             </tr>
             <tr>
                 <td class="formmdtd" valign="top"><span class="form">Feita por:</span></td>
@@ -31,6 +31,16 @@
                 <td class="formmdtd" valign="top"><span class="form">Aluno principal:</span></td>
                 <td class="formmdtd" valign="top"><span class="form">{{ $unification->createdBy->real_name }}</span></td>
             </tr>
+            @if(!$unification->active)
+                <tr>
+                    <td class="formmdtd" valign="top"><span class="form">Desfeita em:</span></td>
+                    <td class="formmdtd" valign="top"><span class="form">{{ $unification->updated_at->format('d/m/Y H:i:s') }}</span></td>
+                </tr>
+                <tr>
+                    <td class="formmdtd" valign="top"><span class="form">Desfeita por:</span></td>
+                    <td class="formmdtd" valign="top"><span class="form">{{ $unification->updatedBy->real_name }}</span></td>
+                </tr>
+            @endif
             </tbody>
         </table>
     </form>
@@ -43,7 +53,7 @@
                 <button class="btn-green" type="button">Desfazer</button>
             </a>
         @endif
-        <a href="{{ url()->previous() }}" class="btn">Voltar</a>
+        <a href="{{ url()->previous() }}"><button class="btn-green" type="button">Voltar</button></a>
     </div>
 
     </form>
@@ -56,4 +66,10 @@
             src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/DynamicInput.js") }}"></script>
     <script type="text/javascript"
             src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Escola.js") }}"></script>
+
+    @if($errors->any())
+        <script>
+            messageUtils.error('{{$errors->first()}}');
+        </script>
+    @endif
 @endprepend

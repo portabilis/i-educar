@@ -22,4 +22,6 @@ interface LogUnificationTypeInterface
      * @return string
      */
     public static function getType();
+
+    public function undo(LogUnification $logUnification);
 }
