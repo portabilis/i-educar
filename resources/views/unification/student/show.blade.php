@@ -21,7 +21,7 @@
             </tr>
             <tr>
                 <td class="formmdtd" valign="top"><span class="form">Data da unificação:</span></td>
-                <td class="formmdtd" valign="top"><span class="form">{{$unification->created_at->format('d/m/Y') }}</span></td>
+                <td class="formmdtd" valign="top"><span class="form">{{$unification->created_at->format('d/m/Y H:i:s') }}</span></td>
             </tr>
             <tr>
                 <td class="formmdtd" valign="top"><span class="form">Feita por:</span></td>
