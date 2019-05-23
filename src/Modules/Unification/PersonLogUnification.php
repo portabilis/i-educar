@@ -2,7 +2,23 @@
 
 namespace iEducar\Modules\Unification;
 
-class PersonLogUnification
+use App\Models\Individual;
+use App\Models\LogUnification;
+
+class PersonLogUnification implements LogUnificationTypeInterface
 {
-    const ID = 1;
+    public function getMainPersonName(LogUnification $logUnification)
+    {
+        // TODO: Implement getMainPersonName() method.
+    }
+
+    public function getDuplicatedPeopleName(LogUnification $logUnification)
+    {
+        // TODO: Implement getDuplicatedPeopleName() method.
+    }
+
+    public static function getType()
+    {
+        return Individual::class;
+    }
 }
