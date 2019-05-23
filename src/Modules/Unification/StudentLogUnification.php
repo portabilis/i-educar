@@ -7,11 +7,19 @@ use App\Models\Student;
 
 class StudentLogUnification implements LogUnificationTypeInterface
 {
+    /**
+     * @param LogUnification $logUnification
+     * @return string
+     */
     public function getMainPersonName(LogUnification $logUnification)
     {
         return $logUnification->main->individual->real_name;
     }
 
+    /**
+     * @param LogUnification $logUnification
+     * @return array
+     */
     public function getDuplicatedPeopleName(LogUnification $logUnification)
     {
         $studentIds = $logUnification->duplicates_id;
@@ -30,6 +38,9 @@ class StudentLogUnification implements LogUnificationTypeInterface
         return $arrayNames;
     }
 
+    /**
+     * @return string
+     */
     public static function getType()
     {
         return Student::class;

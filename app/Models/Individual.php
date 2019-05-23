@@ -128,6 +128,9 @@ class Individual extends Model
         return $value;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
     public function unification()
     {
         return $this->morphOne(LogUnification::class, 'main', 'type', 'main_id');

@@ -10,6 +10,9 @@ class LogUnificationOldData extends Model
 
     public $timestamps = false;
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function unification()
     {
         return $this->belongsTo(LogUnification::class, 'unification_id', 'id');

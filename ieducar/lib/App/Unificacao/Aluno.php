@@ -67,6 +67,10 @@ class App_Unificacao_Aluno
         }
     }
 
+    /**
+     * @param $codAlunos
+     * @param $unificationId
+     */
     private static function logData($codAlunos, $unificationId)
     {
         self::logHistoricos($codAlunos, $unificationId);
@@ -74,6 +78,10 @@ class App_Unificacao_Aluno
         self::logAlunos($codAlunos, $unificationId);
     }
 
+    /**
+     * @param $duplicatesId
+     * @param $unificationId
+     */
     private static function logHistoricos($duplicatesId, $unificationId)
     {
         $historicos = DB::table('pmieducar.historico_escolar')->whereIn('ref_cod_aluno', $duplicatesId)->get();
@@ -87,6 +95,10 @@ class App_Unificacao_Aluno
         }
     }
 
+    /**
+     * @param $duplicatesId
+     * @param $unificationId
+     */
     private static function logMatriculas($duplicatesId, $unificationId)
     {
         $matriculas = DB::table('pmieducar.matricula')->whereIn('ref_cod_aluno', $duplicatesId)->get();
@@ -100,6 +112,10 @@ class App_Unificacao_Aluno
         }
     }
 
+    /**
+     * @param $duplicatesId
+     * @param $unificationId
+     */
     private static function logAlunos($duplicatesId, $unificationId)
     {
         $alunos = DB::table('pmieducar.aluno')->whereIn('cod_aluno', $duplicatesId)->get();
