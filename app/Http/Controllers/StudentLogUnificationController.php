@@ -26,7 +26,8 @@ class StudentLogUnificationController extends Controller
 
         $this->menu(659);
 
-        $unifications = LogUnification::query()->with('main.registrations')->student()->get();
+        //todo: implementar paginação
+        $unifications = LogUnification::query()->with('main.registrations')->student()->limit(20)->get();
 
         if ($request->get('ref_cod_escola')) {
             $schoolId = $request->get('ref_cod_escola');
