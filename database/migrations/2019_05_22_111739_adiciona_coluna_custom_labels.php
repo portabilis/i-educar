@@ -2,16 +2,15 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
-require_once 'Portabilis/Utils/CustomLabel.php';
 
 class AdicionaColunaCustomLabels extends Migration
 {
 
     private function getDefaultCustomLabels()
     {
-            $customLabel = new CustomLabel();
-            $defaults = $customLabel->getDefaults();
-            $defaults['report.termo_resultado_final'] = '';
+        $customLabel = new CustomLabel();
+        $defaults = $customLabel->getDefaults();
+        $defaults['report.termo_resultado_final'] = '';
 
         return $defaults;
     }
