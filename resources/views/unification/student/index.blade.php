@@ -43,7 +43,7 @@
         </tr>
         </thead>
         <tbody>
-        @foreach($unifications as $unification)
+        @forelse($unifications as $unification)
             <tr>
                 <td>
                     <a href="{{ route('student_log_unification.show', ['unification' => $unification->id]) }}">{{ $unification->getMainName()  }}</a>
@@ -55,7 +55,11 @@
                     <a href="{{ route('student_log_unification.show', ['unification' => $unification->id]) }}">{{ $unification->created_at->format('d/m/Y')  }}</a>
                 </td>
             </tr>
-        @endforeach
+        @empty
+            <tr>
+                <td colspan="3">Não foi encontrado nenhum log de unificação</td>
+            </tr>
+        @endforelse
 
         </tbody>
     </table>
