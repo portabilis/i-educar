@@ -32,6 +32,30 @@ class LogUnification extends Model
         return $this->morphTo(null, 'type', 'main_id');
     }
 
+    /**
+     * Abordagem para permitir usar whereHas ou has em relacionamentos polimórficos
+     * https://github.com/laravel/framework/issues/5429
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function studentMain()
+    {
+        return $this->belongsTo(Student::class, 'main_id')
+            ->where('type', Student::class);
+    }
+
+    /**
+     * Abordagem para permitir usar whereHas ou has em relacionamentos polimórficos
+     * https://github.com/laravel/framework/issues/5429
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function personMain()
+    {
+        return $this->belongsTo(Individual::class, 'main_id')
+            ->where('type', Individual::class);
+    }
+
     public function getDuplicatesIdAttribute($value)
     {
         return json_decode($value, false);

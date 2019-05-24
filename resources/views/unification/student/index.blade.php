@@ -67,6 +67,10 @@
     <div class="separator"></div>
 
     <div style="text-align: center">
+        {{ $unifications->links() }}
+    </div>
+
+    <div style="text-align: center">
         <a href="/intranet/educar_unifica_aluno.php">
             <button class="btn-green" type="button">Novo</button>
         </a>

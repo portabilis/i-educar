@@ -15,17 +15,18 @@ class StudentLogUnificationController extends Controller
 
         $this->menu(999847);
 
-        //todo: implementar paginação
-        $unifications = LogUnification::query()->with('main.registrations')->student()->limit(20)->get();
+        $unificationsQuery = LogUnification::query()->with('main.registrations');
 
         if ($request->get('ref_cod_escola')) {
             $schoolId = $request->get('ref_cod_escola');
-            $unifications = $unifications->filter(function ($item) use ($schoolId) {
-                return in_array($schoolId, $item->main->registrations->pluck('school_id')->all());
+            $unificationsQuery->whereHas('studentMain', function ($studentQuery) use ($schoolId) {
+                $studentQuery->whereHas('registrations', function ($registrationsQuery) use ($schoolId){
+                    $registrationsQuery->where('school_id', $schoolId);
+                });
             });
         }
 
-        return view('unification.student.index', ['unifications' => $unifications]);
+        return view('unification.student.index', ['unifications' => $unificationsQuery->paginate(20)]);
     }
 
     public function show(LogUnification $unification)
