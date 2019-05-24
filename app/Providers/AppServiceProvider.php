@@ -12,6 +12,7 @@ use iEducar\Modules\ErrorTracking\HoneyBadgerTracker;
 use iEducar\Modules\ErrorTracking\Tracker;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -83,6 +84,8 @@ class AppServiceProvider extends ServiceProvider
 
         // https://laravel.com/docs/5.5/migrations#indexes
         Schema::defaultStringLength(191);
+
+        Paginator::defaultView('vendor.pagination.default');
     }
 
     /**
