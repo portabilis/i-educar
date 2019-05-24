@@ -23,13 +23,9 @@ trait PrimaryKey
 
             DB::statement("alter table {$tableName} drop constraint if exists " . $keyName);
 
-            $columnsOldKeyString = implode(',', $arrayColumns);
-            $underscoreColumns = str_replace(',', '_', $columnsOldKeyString);
-
-            $tableNameWithoutSchema = $this->getTableName($tableName);
-
-            DB::statement("create unique index if not exists {$tableNameWithoutSchema}_uindex_{$underscoreColumns}
-                                on {$tableName} ({$columnsOldKeyString});");
+            Schema::table($tableName, function (Blueprint $table) use ($arrayColumns){
+                $table->unique($arrayColumns);
+            });
         }
 
         Schema::table($tableName, function (Blueprint $table) {
@@ -44,13 +40,15 @@ trait PrimaryKey
     public function removePrimaryKey($tableName, $keyColumns)
     {
         Schema::table($tableName, function (Blueprint $table) use ($tableName, $keyColumns) {
+            $table->dropColumn('id');
+        });
+
+        Schema::table($tableName, function (Blueprint $table) use ($tableName, $keyColumns) {
             if ($keyColumns) {
-                $underscoreColumns = implode('_', $keyColumns);
-                $table->dropIndex( "{$tableName}_uindex_{$underscoreColumns}");
+                $table->dropUnique($keyColumns);
+                
                 $table->primary($keyColumns);
             }
-
-            $table->dropColumn('id');
         });
     }
 
