@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Support\Navigation\Breadcrumb;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 require_once 'include/clsCampos.inc.php';
@@ -51,6 +52,48 @@ class clsListagem extends clsCampos
     public $campos_ordenacao;
     public $fonte;
     public $exibirBotaoSubmit = true;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->SalvaFiltros();
+    }
+
+    public function SalvaFiltros()
+    {
+        $pathInfoParts = explode('/', $_SERVER['PATH_INFO']);
+        $file = array_pop($pathInfoParts);
+        $previousFilters = Session::get('previous_filters') ?? [];
+
+        if (empty($_GET)) {
+            if (!empty($previousFilters[$file])) {
+                list($path, $ts) = explode('|', $previousFilters[$file]);
+                $diff = now() - (int) $ts;
+
+                if ($diff > 7200) { //duas horas
+                    unset($previousFilters[$file]);
+                    Session::put('previous_filters', $previousFilters);
+
+                    return;
+                }
+
+                $path = $_SERVER['PATH_INFO'] . '?' . $path;
+
+                return $this->simpleRedirect($path);
+            }
+        } else {
+            $params = http_build_query($_GET) . '|' . now();
+
+            if (count($previousFilters) > 3) {
+                array_shift($previousFilters);
+            }
+
+            $previousFilters[$file] = $params;
+
+            Session::put('previous_filters', $previousFilters);
+        }
+    }
 
     public function Gerar()
     {
