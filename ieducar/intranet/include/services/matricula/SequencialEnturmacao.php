@@ -165,7 +165,7 @@ class SequencialEnturmacao
                            WHEN matricula_turma.reclassificado THEN TRUE
                            ELSE FALSE END)";
 
-        $sqlMatriculaDependencia = $sql . "
+        $sqlMatriculaDependenciaPorNome = $sql . "
             AND matricula.dependencia = true
             AND matricula_turma.data_enturmacao <= '{$this->dataEnturmacao}'
             AND (CASE WHEN matricula_turma.data_enturmacao = '{$this->dataEnturmacao}'
@@ -175,11 +175,18 @@ class SequencialEnturmacao
                                             INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
                                             WHERE matricula.cod_matricula = {$this->refCodMatricula})
                      ELSE TRUE
-                 END)";
+                 END)
+        ";
+        
+        $sqlMatriculaDependencia = $sql . "
+            AND matricula.dependencia = true
+            AND matricula_turma.data_enturmacao <= '{$this->dataEnturmacao}'
+        ";
 
         $sqlSemMatriculaDependencia = $sql . " AND matricula.dependencia = false";
 
-        $novoSequencial = DB::selectOne($sqlMatriculaDependencia)->sequencial ?: DB::selectOne($sqlSemMatriculaDependencia)->sequencial;
+        $novoSequencialDependencia = DB::selectOne($sqlMatriculaDependenciaPorNome)->sequencial ?: DB::selectOne($sqlMatriculaDependencia)->sequencial;
+        $novoSequencial = $novoSequencialDependencia ?: DB::selectOne($sqlSemMatriculaDependencia)->sequencial;
 
         $novoSequencial = $novoSequencial ? $novoSequencial : 1;
 
