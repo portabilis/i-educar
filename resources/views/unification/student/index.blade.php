@@ -9,7 +9,7 @@
         <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
             <tbody>
             <tr>
-                <td class="formdktd" colspan="2" height="24"><b>Enturmar em lote</b></td>
+                <td class="formdktd" colspan="2" height="24"><b>Log de unificações de aluno</b></td>
             </tr>
             <tr id="tr_nm_instituicao">
                 <td class="formmdtd" valign="top"><span class="form">Instituição:</span></td>
@@ -65,6 +65,10 @@
     </table>
 
     <div class="separator"></div>
+
+    <div style="text-align: center">
+        {{ $unifications->links() }}
+    </div>
 
     <div style="text-align: center">
         <a href="/intranet/educar_unifica_aluno.php">

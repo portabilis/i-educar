@@ -30,14 +30,11 @@ class StudentLogUnification implements LogUnificationTypeInterface
             ->with('individual')
             ->whereIn('id', $studentIds)
             ->withTrashed()
-            ->get();
+            ->get()
+            ->pluck('individual.real_name')
+            ->toArray();
 
-        $arrayNames = [];
-        foreach ($students as $student) {
-            $arrayNames[] = $student->individual->real_name;
-        }
-
-        return $arrayNames;
+        return $students;
     }
 
     /**
