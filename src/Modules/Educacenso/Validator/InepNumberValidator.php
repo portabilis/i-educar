@@ -22,13 +22,13 @@ class InepNumberValidator implements EducacensoValidator
         if (!$this->number) {
             return true;
         }
-        
+
         return strlen($this->number) == 12;
     }
 
 
     public function getMessage()
     {
-        return 'Verifica se o INEP possui 12 dígitos';
+        return 'Verifique se o INEP possui 12 dígitos';
     }
 }
