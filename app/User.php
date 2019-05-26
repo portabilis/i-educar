@@ -142,7 +142,7 @@ class User extends Authenticatable
             'ref_cod_menu_submenu',
             'ref_cod_tipo_usuario',
             'process'
-        );
+        )->withPivot(['visualiza', 'cadastra', 'exclui']);
     }
 
     /**
@@ -150,6 +150,8 @@ class User extends Authenticatable
      */
     public function menu()
     {
-        return $this->processes()->wherePivot('visualiza', 1);
+        return $this->processes()
+            ->wherePivot('visualiza', 1)
+            ->withPivot(['visualiza', 'cadastra', 'exclui']);
     }
 }
