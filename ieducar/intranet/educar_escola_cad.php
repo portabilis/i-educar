@@ -2689,7 +2689,7 @@ class indice extends clsCadastro
             'required' => false,
         ];
         $this->inputsHelper()->select('managers_role_id', $options);
-        $this->campoRotulo('detalhes', 'Detalhes', '<a class="btn-detalhes" onclick="modalOpen(this)">Dados adicionais do gestor(a)</a>');
+        $this->campoRotulo('detalhes', 'Detalhes', '<a class="btn-detalhes" onclick="modalOpen(this)">Dados adicionais do(a) gestor(a)</a>');
         $this->campoOculto('managers_access_criteria_id', null);
         $this->campoOculto('managers_access_criteria_description', null);
         $this->campoOculto('managers_link_type_id', null);

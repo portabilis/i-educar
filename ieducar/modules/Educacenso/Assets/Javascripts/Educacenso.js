@@ -42,9 +42,14 @@ $j(document).ready(function(){
             ' <p style=" margin-top: 20px;font-family: verdana, arial; font-size: 18px;">Exporta&ccedil;&atilde;o realizada com sucesso.</p>' +
             ' <a id="download_file" href="#" style="margin-top: 10px;font-family: verdana, arial;font-size: 14px;">Clique aqui para realizar o download</a>' +
             '</div>'+
-             '<div id="modal_mensagem_desabilitado" style="width:400px;display:none;">'+
-             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px;">A exportação foi desabilitada temporariamente</p>' +
-             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">Mas não se preocupe, os dados da escola foram validados e até o momento está tudo correto</p>' +
+             '<div id="modal_mensagem_desabilitado" style="width:400px;display:none; text-align:left">'+
+             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px; font-weight: bold;">Parabéns! Até o momento todos os dados da sua escola, foram validados com sucesso!</p>' +
+             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">Isso não significa que o trabalho acabou, ainda podem surgir novos ajustes… Fique atento e repita o processo de exportação periodicamente até o dia <b>29/05</b>. Isso evitará surpresas e transtornos! 😉</p>' +
+             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px; font-weight: bold;">Próximos passos</p>' +
+             ' <ul>' +
+             ' <li><p style="margin-top: 30px;font-family: verdana, arial; font-size: 14px;">A partir do dia 29/05, clique no botão: [Exportar] novamente para gerar o arquivo com os dados para o Educacenso;</p></li>' +
+             ' <li><p style="font-family: verdana, arial; font-size: 14px;">Após salvar o arquivo em seu computador, acesse o link: <a href="http://treinamento.censobasico.inep.gov.br/censobasico" target="_new"> http://treinamento.censobasico.inep.gov.br/censobasico</a> e utilize suas credenciais para acessar a página de importação. Para saber mais sobre esses passos, <a href="https://www.youtube.com/watch?v=AzU8ltLF8Ig&feature=youtu.be&t=5080" target="_new">clique aqui.</a></p></li>' +
+             ' </ul>' +
              '</div>'+
             '</div>';
 

@@ -28,6 +28,7 @@
  * @version   $Id$
  */
 
+use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/clsBase.inc.php';
@@ -113,7 +114,7 @@ class indice extends clsConfig
       return $retorno;
     }
 
-    $this->breadcrumb('Quadros de horários', [
+    app(Breadcrumb::class)->current('Quadros de horários', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
 
