@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
+
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
@@ -18,47 +20,34 @@ class DeficienciaController extends ApiCoreController
 
     protected function getDeficiencias()
     {
-        $params = [];
-        $modified = $this->getRequest()->modified ?: null;
+        $modified = $this->getRequest()->modified ?: '';
 
-        if ($modified) {
-            $params[] = $modified;
-            $modified = 'AND updated_at >= $1';
-        }
+        $query = DB::table('cadastro.deficiencia')->selectRaw(
+            'cod_deficiencia as id, nm_deficiencia as nome, desconsidera_regra_diferenciada, updated_at, null as deleted_at'
+        )->when($modified, function ($query) use ($modified) {
+            $query->where('updated_at', '>=', $modified);
+        });
 
-        $sql = "
-            (
-                SELECT cod_deficiencia, nm_deficiencia, desconsidera_regra_diferenciada, updated_at, null as deleted_at
-                FROM cadastro.deficiencia
-                {$modified}
-            )
-            
-            UNION ALL
-            
-            (
-                SELECT cod_deficiencia, nm_deficiencia, desconsidera_regra_diferenciada, updated_at, deleted_at
-                FROM cadastro.deficiencia_excluidos
-                {$modified} 
-            )
-        ";
+        $queryExcluded = DB::table('cadastro.deficiencia_excluidos')->selectRaw(
+            'cod_deficiencia as id, nm_deficiencia as nome, desconsidera_regra_diferenciada, updated_at, deleted_at'
+        )->when($modified, function ($query) use ($modified) {
+            $query->where('updated_at', '>=', $modified);
+        });
 
-        $deficiencias = $this->fetchPreparedQuery($sql, $params);
+        $deficiencias = $query->unionAll($queryExcluded)->orderBy('id')->get()->map(function ($deficiencia) {
 
-        $attrs = [
-            'cod_deficiencia' => 'id',
-            'nm_deficiencia' => 'nome',
-            'desconsidera_regra_diferenciada' => 'desconsidera_regra_diferenciada',
-            'updated_at' => 'updated_at',
-            'deleted_at' => 'deleted_at',
-        ];
+            $deficiencia = (array) $deficiencia;
 
-        $deficiencias = Portabilis_Array_Utils::filterSet($deficiencias, $attrs);
+            $alunos = DB::table('cadastro.fisica_deficiencia')
+                ->where('ref_cod_deficiencia', $deficiencia['id'])
+                ->orderBy('ref_idpes')
+                ->pluck('ref_idpes')
+                ->toArray();
 
-        $deficiencias = array_map(function ($deficiencia) {
-            $deficiencia['desconsidera_regra_diferenciada'] = dbBool($deficiencia['desconsidera_regra_diferenciada']);
+            $deficiencia['alunos'] = $alunos;
 
             return $deficiencia;
-        }, $deficiencias);
+        });
 
         return [
             'deficiencias' => $deficiencias
