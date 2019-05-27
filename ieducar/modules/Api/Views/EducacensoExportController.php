@@ -630,7 +630,7 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosRegistro99()
     {
-        return "99|\n";
+        return "99|";
     }
 
     protected function exportaDadosRegistro89($escolaId)
