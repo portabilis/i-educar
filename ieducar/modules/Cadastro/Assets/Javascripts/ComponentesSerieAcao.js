@@ -43,7 +43,9 @@ function atualizaComponentesSerie(componentes){
 function handleAtualizaComponentesSerie(response) {
 
         if (response.msgErro) {
-            messageUtils.error(response.msgErro);
+            let msgs = response.msgErro.split("\n");
+
+            msgs.forEach(msg => messageUtils.error(msg));
         }else{
             let nmSerie = $j('#ref_cod_serie option:selected').map(function() {
                 return this.text;
