@@ -1254,7 +1254,7 @@ class AlunoController extends ApiCoreController
                     ELSE 
                         null
                     END 
-                ) as deleted_at,
+                ) as deleted_at
                 FROM pmieducar.aluno a
                 INNER JOIN cadastro.pessoa p ON p.idpes = a.ref_idpes
                 INNER JOIN cadastro.fisica f ON f.idpes = p.idpes
@@ -1264,7 +1264,7 @@ class AlunoController extends ApiCoreController
                     select * from pmieducar.matricula where ref_ref_cod_escola in ({$escola}) and ref_cod_aluno = a.cod_aluno
                 )
                 {$where}
-                ORDER BY nome_aluno ASC
+                ORDER BY p.nome ASC
             ";
 
             $alunos = $this->fetchPreparedQuery($sql, $params);
