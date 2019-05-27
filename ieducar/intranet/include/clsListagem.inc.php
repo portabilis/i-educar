@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Support\Navigation\Breadcrumb;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
@@ -62,7 +63,7 @@ class clsListagem extends clsCampos
 
     public function SalvaFiltros()
     {
-        $pathInfoParts = explode('/', $_SERVER['PATH_INFO']);
+        $pathInfoParts = explode('/', Request::server('PATH_INFO'));
         $file = array_pop($pathInfoParts);
         $previousFilters = Session::get('previous_filters') ?? [];
 
@@ -78,7 +79,7 @@ class clsListagem extends clsCampos
                     return;
                 }
 
-                $path = $_SERVER['PATH_INFO'] . '?' . $path;
+                $path = Request::server('PATH_INFO') . '?' . $path;
 
                 return $this->simpleRedirect($path);
             }
