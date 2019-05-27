@@ -27,17 +27,19 @@ class DeficienciaController extends ApiCoreController
         }
 
         $sql = "
-            SELECT cod_deficiencia, nm_deficiencia, updated_at, null as deleted_at
-            FROM cadastro.deficiencia
-            WHERE desconsidera_regra_diferenciada = 'FALSE'
-            {$modified}
+            (
+                SELECT cod_deficiencia, nm_deficiencia, desconsidera_regra_diferenciada, updated_at, null as deleted_at
+                FROM cadastro.deficiencia
+                {$modified}
+            )
             
             UNION ALL
             
-            SELECT cod_deficiencia, nm_deficiencia, updated_at, deleted_at
-            FROM cadastro.deficiencia_excluidos
-            WHERE desconsidera_regra_diferenciada = 'FALSE'
-            {$modified} 
+            (
+                SELECT cod_deficiencia, nm_deficiencia, desconsidera_regra_diferenciada, updated_at, deleted_at
+                FROM cadastro.deficiencia_excluidos
+                {$modified} 
+            )
         ";
 
         $deficiencias = $this->fetchPreparedQuery($sql, $params);
@@ -45,11 +47,18 @@ class DeficienciaController extends ApiCoreController
         $attrs = [
             'cod_deficiencia' => 'id',
             'nm_deficiencia' => 'nome',
+            'desconsidera_regra_diferenciada' => 'desconsidera_regra_diferenciada',
             'updated_at' => 'updated_at',
             'deleted_at' => 'deleted_at',
         ];
 
         $deficiencias = Portabilis_Array_Utils::filterSet($deficiencias, $attrs);
+
+        $deficiencias = array_map(function ($deficiencia) {
+            $deficiencia['desconsidera_regra_diferenciada'] = dbBool($deficiencia['desconsidera_regra_diferenciada']);
+
+            return $deficiencia;
+        }, $deficiencias);
 
         return [
             'deficiencias' => $deficiencias
