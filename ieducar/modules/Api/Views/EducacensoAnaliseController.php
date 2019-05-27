@@ -1387,7 +1387,7 @@ class EducacensoAnaliseController extends ApiCoreController
             if (!(new InepNumberValidator($aluno->inepAluno))->isValid()) {
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verifique se o código INEP do aluno {$nomeAluno} possui 12 dígitos.",
-                    'path' => '(S Escola > Cadastros > Alunos > Editar > Aba: Dados gerais > Campo: Código INEP)',
+                    'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados gerais > Campo: Código INEP)',
                     'linkPath' => "/module/Cadastro/aluno?id={$codigoAluno}",
                     'fail' => true
                 ];
