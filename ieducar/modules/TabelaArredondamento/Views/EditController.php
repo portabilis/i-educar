@@ -35,6 +35,10 @@ class EditController extends Core_Controller_Page_EditController
             'label' => '<span style="padding-left: 10px"></span>Descrição:',
             'help' => 'Exemplos: Bom, Regular, Em Processo.'
         ],
+        'valor_observacao' => [
+            'label' => '<span style="padding-left: 10px"></span>Observação:',
+            'help' => 'Exemplos: Quando o(a) aluno(a) desenvolve as atividades sem dificuldades.'
+        ],
         'valor_valor_minimo' => [
             'label' => '<span style="padding-left: 10px"></span>Valor mínimo:',
             'help' => 'O valor numérico mínimo da nota.'
@@ -236,6 +240,7 @@ class EditController extends Core_Controller_Page_EditController
             $this->tabela_arredondamento_valor[$i][] = $valorNota->id;
             $this->tabela_arredondamento_valor[$i][] = $valorNota->nome;
             $this->tabela_arredondamento_valor[$i][] = $valorNota->descricao;
+            $this->tabela_arredondamento_valor[$i][] = $valorNota->observacao;
             $this->tabela_arredondamento_valor[$i][] = $valorNota->valorMinimo;
             $this->tabela_arredondamento_valor[$i][] = $valorNota->valorMaximo;
         }
@@ -248,6 +253,7 @@ class EditController extends Core_Controller_Page_EditController
                 'ID',
                 'Rótulo da nota',
                 'Descrição',
+                'Observação',
                 'Valor mínimo',
                 'Valor máximo'
             ],
@@ -290,6 +296,19 @@ class EditController extends Core_Controller_Page_EditController
             false,
             false,
             $this->_getHelp('valor_descricao')
+        );
+
+        // Observação
+        $this->campoTexto(
+            'valor_observacao',
+            'valor_observacao',
+            $valorNota->observacao,
+            null,
+            125,
+            false,
+            false,
+            false,
+            $this->_getHelp('valor_observacao')
         );
 
         // Valor mínimo
@@ -494,6 +513,7 @@ class EditController extends Core_Controller_Page_EditController
                 'id' => $this->valor_id[$i],
                 'nome' => $this->valor_nome[$i],
                 'descricao' => $this->valor_descricao[$i],
+                'observacao' => $this->valor_observacao[$i],
                 'valor_minimo' => $this->valor_minimo[$i],
                 'valor_maximo' => $this->valor_maximo[$i],
                 'valor_acao' => $this->valor_acao[$i],
@@ -514,6 +534,7 @@ class EditController extends Core_Controller_Page_EditController
                 //'id' => $id,
                 'nome' => $valores[$i]['nome'],
                 'descricao' => $valores[$i]['descricao'],
+                'observacao' => $valores[$i]['observacao'],
                 'valorMinimo' => str_replace(',', '.', $valores[$i]['valor_minimo']),
                 'valorMaximo' => str_replace(',', '.', $valores[$i]['valor_maximo']),
                 'acao' => $valores[$i]['valor_acao'],

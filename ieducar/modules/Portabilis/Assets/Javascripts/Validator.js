@@ -196,8 +196,6 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
       if ($requiredField.is(':hidden,select')) {
         $requiredField.parent().find('ul.chosen-choices').addClass('error');
       }
-
-      messageUtils.removeStyle($requiredField);
     }
     else if ($requiredField.length > 0)
       $requiredField.removeClass('error');
