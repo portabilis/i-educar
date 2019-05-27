@@ -241,9 +241,6 @@ class indice extends clsCadastro
             'size' => 10
         ]);
 
-        /*----------------------------------
-        ----------------------------------*/
-
         $this->inputsHelper()->integer('calca_jeans_qtd', [
             'required' => false,
             'label' => 'Quantidade de calças jeans',
@@ -261,10 +258,6 @@ class indice extends clsCadastro
             'max_length'  => 10,
             'size' => 10
         ]);
-
-
-        /*----------------------------------
-        ----------------------------------*/
 
         $this->inputsHelper()->integer('meias_qtd', [
             'required' => false,
