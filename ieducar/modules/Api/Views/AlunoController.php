@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Deficiency;
+use App\Models\LegacyDeficiency;
 use App\Models\Individual;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
@@ -1971,7 +1971,7 @@ class AlunoController extends ApiCoreController
 
     private function replaceByEducacensoDeficiencies($deficiencies)
     {
-        $databaseDeficiencies = Deficiency::all()->getKeyValueArray('deficiencia_educacenso');
+        $databaseDeficiencies = LegacyDeficiency::all()->getKeyValueArray('deficiencia_educacenso');
 
         $arrayEducacensoDeficiencies = [];
         foreach ($deficiencies as $deficiency) {

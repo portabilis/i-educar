@@ -1,5 +1,5 @@
 <?php
-use App\Models\Deficiency;
+use App\Models\LegacyDeficiency;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
@@ -245,7 +245,7 @@ class ServidorController extends ApiCoreController
      */
     private function replaceByEducacensoDeficiencies($deficiencies)
     {
-        $databaseDeficiencies = Deficiency::all()->getKeyValueArray('deficiencia_educacenso');
+        $databaseDeficiencies = LegacyDeficiency::all()->getKeyValueArray('deficiencia_educacenso');
         $arrayEducacensoDeficiencies = [];
 
         foreach ($deficiencies as $deficiency) {
