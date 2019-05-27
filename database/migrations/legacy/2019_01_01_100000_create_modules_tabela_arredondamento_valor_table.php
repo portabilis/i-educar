@@ -32,7 +32,8 @@ class CreateModulesTabelaArredondamentoValorTable extends Migration
                     valor_minimo numeric(5,3),
                     valor_maximo numeric(5,3),
                     casa_decimal_exata smallint,
-                    acao smallint
+                    acao smallint,
+                    observacao varchar(191) NULL
                 );
 
                 ALTER SEQUENCE modules.tabela_arredondamento_valor_id_seq OWNED BY modules.tabela_arredondamento_valor.id;
