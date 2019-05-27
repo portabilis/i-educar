@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Deficiency;
 use App\Models\Individual;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
@@ -253,8 +254,10 @@ class AlunoController extends ApiCoreController
      */
     private function validateDeficiencies()
     {
-
         $deficiencias = array_filter((array) $this->getRequest()->deficiencias);
+
+        $deficiencias = $this->replaceByEducacensoDeficiencies($deficiencias);
+
         $validator = new DeficiencyValidator($deficiencias);
 
         if ($validator->isValid()) {
@@ -308,6 +311,9 @@ class AlunoController extends ApiCoreController
     {
         $resources = array_filter((array) $this->getRequest()->recursos_prova_inep__);
         $deficiencies = array_filter((array) $this->getRequest()->deficiencias);
+
+        $deficiencies = $this->replaceByEducacensoDeficiencies($deficiencies);
+
         $validator = new InepExamValidator($resources, $deficiencies);
 
         if ($validator->isValid()) {
@@ -1952,5 +1958,17 @@ class AlunoController extends ApiCoreController
         } else {
             $this->notImplementedOperationError();
         }
+    }
+
+    private function replaceByEducacensoDeficiencies($deficiencies)
+    {
+        $databaseDeficiencies = Deficiency::all()->getKeyValueArray('deficiencia_educacenso');
+
+        $arrayEducacensoDeficiencies = [];
+        foreach ($deficiencies as $deficiency) {
+            $arrayEducacensoDeficiencies[] = $databaseDeficiencies[$deficiency];
+        }
+
+        return $arrayEducacensoDeficiencies;
     }
 }

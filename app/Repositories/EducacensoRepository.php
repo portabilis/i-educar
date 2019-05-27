@@ -519,6 +519,7 @@ SQL;
                   AND turma.visivel = true
                   AND escola.ativo = 1
                   AND escola.cod_escola = :school
+                  AND COALESCE(turma.nao_informar_educacenso, 0) = 0
                   AND servidor.ativo = 1
                   AND coalesce(servidor_alocacao.data_admissao, '1900-01-01'::date) <= instituicao.data_educacenso
                   AND coalesce(servidor_alocacao.data_saida, '2999-01-01'::date) >= instituicao.data_educacenso
@@ -555,8 +556,8 @@ SQL;
                     COALESCE((ARRAY[10] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoCaa",
                     COALESCE((ARRAY[11] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoRecursosOpticosNaoOpticos",
                     aluno.recebe_escolarizacao_em_outro_espaco AS "recebeEscolarizacaoOutroEspacao",
-                    (CASE WHEN transporte_aluno.responsavel = 0 OR transporte_aluno.responsavel IS NULL THEN 0
-                        ELSE 1 END) AS "transportePublico",
+                    (CASE WHEN transporte_aluno.responsavel > 0 THEN 1
+                        ELSE transporte_aluno.responsavel END) AS "transportePublico",
                     transporte_aluno.responsavel AS "poderPublicoResponsavelTransporte",
                     (ARRAY[4] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteBicicleta",
                     (ARRAY[2] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteMicroonibus",
@@ -595,6 +596,7 @@ SQL;
                     WHERE matricula.ano = :year
                       AND matricula.ativo = 1
                       AND escola.cod_escola = :school
+                      AND COALESCE(turma.nao_informar_educacenso, 0) = 0
                       AND (
                           (
                             matricula_turma.data_enturmacao < instituicao.data_educacenso
@@ -693,7 +695,7 @@ SQL;
                  ) dadosescola ON true
             LEFT JOIN LATERAL (
                  SELECT fisica_deficiencia.ref_idpes,
-                        ARRAY_AGG(fisica_deficiencia.ref_cod_deficiencia) as array_deficiencias
+                        ARRAY_AGG(deficiencia.deficiencia_educacenso) as array_deficiencias
                  FROM cadastro.fisica_deficiencia
                  JOIN cadastro.deficiencia ON deficiencia.cod_deficiencia = fisica_deficiencia.ref_cod_deficiencia
                  WHERE fisica_deficiencia.ref_idpes = fisica.idpes
