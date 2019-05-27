@@ -199,6 +199,7 @@ class clsCadastroFisicaDeficiencia
 
 
             $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
+            $db->Consulta( "UPDATE cadastro.deficiencia SET updated_at = now() WHERE cod_deficiencia = {$this->ref_cod_deficiencia}" );
             return true;
         }
         return false;
@@ -222,6 +223,7 @@ class clsCadastroFisicaDeficiencia
             if( $set )
             {
                 $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE ref_idpes = '{$this->ref_idpes}' AND ref_cod_deficiencia = '{$this->ref_cod_deficiencia}'" );
+                $db->Consulta( "UPDATE cadastro.deficiencia SET updated_at = now() WHERE cod_deficiencia = {$this->ref_cod_deficiencia}" );
                 return true;
             }
         }
@@ -330,17 +332,12 @@ class clsCadastroFisicaDeficiencia
      */
     function excluir()
     {
-        if( is_numeric( $this->ref_idpes ) && is_numeric( $this->ref_cod_deficiencia ) )
-        {
+        if( is_numeric( $this->ref_idpes ) && is_numeric( $this->ref_cod_deficiencia ) ) {
+            $db = new clsBanco();
+            $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_idpes = '{$this->ref_idpes}' AND ref_cod_deficiencia = '{$this->ref_cod_deficiencia}'" );
+            $db->Consulta( "UPDATE cadastro.deficiencia SET updated_at = now() WHERE cod_deficiencia = {$this->ref_cod_deficiencia}" );
 
-
-            //delete
-        $db = new clsBanco();
-        $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_idpes = '{$this->ref_idpes}' AND ref_cod_deficiencia = '{$this->ref_cod_deficiencia}'" );
-        return true;
-
-
-
+            return true;
         }
         return false;
     }
