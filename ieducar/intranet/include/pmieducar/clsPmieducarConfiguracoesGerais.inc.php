@@ -66,6 +66,7 @@ class clsPmieducarConfiguracoesGerais
   var $bloquear_cadastro_aluno;
   var $situacoes_especificas_atestados;
   var $emitir_ato_autorizativo;
+  var $emitir_ato_criacao_credenciamento;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -136,7 +137,8 @@ class clsPmieducarConfiguracoesGerais
         tamanho_min_rede_estadual, modelo_boletim_professor, custom_labels, url_cadastro_usuario,
         active_on_ieducar, ieducar_image, ieducar_entity_name, ieducar_login_footer,
         ieducar_external_footer, ieducar_internal_footer, facebook_url, twitter_url, linkedin_url,
-        ieducar_suspension_message, bloquear_cadastro_aluno, situacoes_especificas_atestados, emitir_ato_autorizativo';
+        ieducar_suspension_message, bloquear_cadastro_aluno, situacoes_especificas_atestados, emitir_ato_autorizativo,
+        emitir_ato_criacao_credenciamento';
 
     if (is_numeric($campos['ref_cod_instituicao'] ?? null)) {
       $this->ref_cod_instituicao = $campos['ref_cod_instituicao'];
@@ -228,6 +230,10 @@ class clsPmieducarConfiguracoesGerais
 
     if (isset($campos['emitir_ato_autorizativo'])) {
         $this->emitir_ato_autorizativo = boolval($campos['emitir_ato_autorizativo']);
+    }
+
+    if (isset($campos['emitir_ato_criacao_credenciamento'])) {
+        $this->emitir_ato_criacao_credenciamento = boolval($campos['emitir_ato_criacao_credenciamento']);
     }
   }
 
@@ -340,6 +346,11 @@ class clsPmieducarConfiguracoesGerais
     if (isset($this->emitir_ato_autorizativo)) {
         $flag = $this->emitir_ato_autorizativo ? 'true' : 'false';
         $set[] = "emitir_ato_autorizativo = {$flag}";
+    }
+
+    if (isset($this->emitir_ato_criacao_credenciamento)) {
+        $flag = $this->emitir_ato_criacao_credenciamento ? 'true' : 'false';
+        $set[] = "emitir_ato_criacao_credenciamento = {$flag}";
     }
 
     if (!empty($set)) {
