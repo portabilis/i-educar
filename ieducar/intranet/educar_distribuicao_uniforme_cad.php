@@ -71,6 +71,10 @@ class indice extends clsCadastro
 
     public $camiseta_infantil_tm;
 
+    public $calca_jeans_qtd;
+
+    public $calca_jeans_tm;
+
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -237,6 +241,31 @@ class indice extends clsCadastro
             'size' => 10
         ]);
 
+        /*----------------------------------
+        ----------------------------------*/
+
+        $this->inputsHelper()->integer('calca_jeans_qtd', [
+            'required' => false,
+            'label' => 'Quantidade de calças jeans',
+            'value' => $this->calca_jeans_qtd,
+            'max_length' => 2,
+            'size' => 2,
+            'inline' => true,
+            'placeholder' => ''
+        ]);
+
+        $this->inputsHelper()->text('calca_jeans_tm', [
+            'required' => false,
+            'label' => ' Tamanho',
+            'value' => $this->calca_jeans_tm,
+            'max_length'  => 10,
+            'size' => 10
+        ]);
+
+
+        /*----------------------------------
+        ----------------------------------*/
+
         $this->inputsHelper()->integer('meias_qtd', [
             'required' => false,
             'label' => 'Quantidade de meias',
@@ -348,7 +377,9 @@ class indice extends clsCadastro
             $this->tenis_tm,
             $this->ref_cod_escola,
             $this->camiseta_infantil_qtd,
-            $this->camiseta_infantil_tm
+            $this->camiseta_infantil_tm,
+            $this->calca_jeans_qtd,
+            $this->calca_jeans_tm
         );
 
         $this->cod_distribuicao_uniforme = $cadastrou = $obj->cadastra();
@@ -410,7 +441,9 @@ class indice extends clsCadastro
             $this->tenis_tm,
             $this->ref_cod_escola,
             $this->camiseta_infantil_qtd,
-            $this->camiseta_infantil_tm
+            $this->camiseta_infantil_tm,
+            $this->calca_jeans_qtd,
+            $this->calca_jeans_tm
         );
 
         $detalheAntigo = $obj->detalhe();
