@@ -408,18 +408,33 @@ class clsPmieducarCandidatoFilaUnica
                        f.data_nasc,
                        f.sexo,
                        f.ideciv,
+                       s.nm_serie,
+                       ep.observacoes,
                        (cfu.ano_letivo || to_char(cfu.cod_candidato_fila_unica, 'fm00000000')) AS protocolo,
-                       (SELECT (replace(textcat_all(nome),' <br>',','))
+                       (CASE cfu.situacao
+                        WHEN 'A' THEN 'Atendida'
+                        WHEN 'I' THEN 'Indeferida'
+                        WHEN 'D' THEN 'Desistente'
+                        ELSE 'Em espera' END) AS situacao_desc,
+                       (SELECT (STRING_AGG(nome, ', '))
                           FROM (SELECT p.nome
                                   FROM pmieducar.responsaveis_aluno ra
                                  INNER JOIN cadastro.pessoa p ON (p.idpes = ra.ref_idpes)
                                  WHERE ref_cod_aluno = cfu.ref_cod_aluno
                                  ORDER BY vinculo_familiar
-                                 LIMIT 3) r) AS responsaveis
+                                 LIMIT 3) r) AS responsaveis,
+                       (SELECT string_agg(j.fantasia, ', ')
+                          FROM pmieducar.escola_candidato_fila_unica ecfu
+                    INNER JOIN pmieducar.escola e ON e.cod_escola = ecfu.ref_cod_escola
+                    INNER JOIN cadastro.juridica j ON j.idpes = e.ref_idpes
+                         WHERE ecfu.ref_cod_candidato_fila_unica = cfu.cod_candidato_fila_unica
+                      GROUP BY ecfu.ref_cod_candidato_fila_unica) AS escolas
                   FROM {$this->_tabela} cfu
             INNER JOIN pmieducar.aluno a ON (a.cod_aluno = cfu.ref_cod_aluno)
             INNER JOIN cadastro.pessoa p ON (p.idpes = a.ref_idpes)
             INNER JOIN cadastro.fisica f ON (f.idpes = a.ref_idpes)
+            INNER JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
+            INNER JOIN pmieducar.serie s ON (s.cod_serie = cfu.ref_cod_serie)
              LEFT JOIN cadastro.documento d ON (d.idpes = a.ref_idpes)";
 
         $filtros = '';
@@ -502,7 +517,12 @@ class clsPmieducarCandidatoFilaUnica
         }
 
         if (is_string($this->situacao)) {
-            $filtros .= "{$whereAnd} situacao = '{$this->situacao}'";
+            if ($this->situacao === 'E') {
+                $filtros .= "{$whereAnd} cfu.situacao IS NULL";
+            } else {
+                $filtros .= "{$whereAnd} cfu.situacao = '{$this->situacao}'";
+            }
+
             $whereAnd = ' AND ';
         }
 

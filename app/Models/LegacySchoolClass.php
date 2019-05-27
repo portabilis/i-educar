@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use DateTime;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -19,8 +19,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int                $course_id
  * @property int                $grade_id
  * @property int                $vacancies
- * @property DateTime           $begin_academic_year
- * @property DateTime           $end_academic_year
+ * @property Carbon             $begin_academic_year
+ * @property Carbon             $end_academic_year
  * @property LegacyCourse       $course
  * @property LegacyLevel        $grade
  * @property LegacySchool       $school
@@ -127,12 +127,10 @@ class LegacySchoolClass extends Model
     {
         if ($this->course->is_standard_calendar) {
             return $this->hasMany(LegacyAcademicYearStage::class, 'ref_ref_cod_escola', 'ref_ref_cod_escola')
-                ->where('ref_ano', $this->year)
-                ->orderBy('sequencial');
+                ->where('ref_ano', $this->year);
         }
 
-        return $this->hasMany(LegacySchoolClassStage::class, 'ref_cod_turma', 'cod_turma')
-            ->orderBy('sequencial');
+        return $this->hasMany(LegacySchoolClassStage::class, 'ref_cod_turma', 'cod_turma');
     }
 
     /**
@@ -262,5 +260,22 @@ class LegacySchoolClass extends Model
         }
 
         return (boolean) $schoolGrade->bloquear_enturmacao_sem_vagas;
+    }
+
+    /**
+     * Retorna o tempo de aula da turma em horas
+     *
+     * @return int
+     */
+    public function getClassTime()
+    {
+        if (!$this->hora_inicial || !$this->hora_final) {
+            return 0;
+        }
+
+        $startTime = Carbon::createFromTimeString($this->hora_inicial);
+        $endTime = Carbon::createFromTimeString($this->hora_final);
+
+        return $startTime->diff($endTime)->h;
     }
 }
