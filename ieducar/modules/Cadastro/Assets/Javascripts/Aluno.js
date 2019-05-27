@@ -1732,7 +1732,7 @@ function canShowParentsFields() {
         `);
 
         $j('body').append(`
-          <div id="dialog-recursos-prova-inep" style="font-size: 85%;">
+          <div id="dialog-recursos-prova-inep" style="font-size: 85%; z-index: 9999;">
           <ul style="padding-right: 30px;">
             <li>Dentre as opções: Prova Ampliada (Fonte 18), Prova superampliada (Fonte 24) ou Material didático e Prova em Braille, apenas uma deve ser informada;</li>
             <li><b>Auxílio ledor</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira, Baixa visão, Surdocegueira, Deficiência física, Deficiência intelectual e Transtorno do espectro autista. <b>Exceto</b> se possuir também Surdez;</li>
@@ -1772,6 +1772,12 @@ function canShowParentsFields() {
             "Fechar": function () {
               $j(this).dialog("close");
             }
+          },
+          open: function (event, ui) {
+            $j('#dialog-recursos-prova-inep')
+              .parent('.ui-dialog').css('z-index', 99998);
+
+            $j('.ui-widget-overlay').css('z-index', 99997);
           }
         });
         $j('body').on('click', '.open-dialog-recursos-prova-inep', () => {

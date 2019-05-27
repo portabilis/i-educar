@@ -142,6 +142,11 @@ class Registro20 implements RegistroEducacenso
     public $codCursoProfissional;
 
     /**
+      * @var string
+      */
+    public $anoTurma;
+
+    /**
       * @return bool
       */
     public function horarioFuncionamentoValido()
@@ -334,7 +339,7 @@ class Registro20 implements RegistroEducacenso
     public function componentes()
     {
         if (!isset($this->componentes)) {
-            $this->componentes = App_Model_IedFinder::getComponentesTurma($this->codSerie, $this->codEscola, $this->codTurma);
+            $this->componentes = App_Model_IedFinder::getComponentesTurma($this->codSerie, $this->codEscola, $this->codTurma, null, null, null, null, true, $this->anoTurma);
         }
 
         return $this->componentes;
