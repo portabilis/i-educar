@@ -45,17 +45,12 @@ class DeficienciaController extends ApiCoreController
             $deficiencia = (array) $deficiencia;
 
             $alunos = DB::table('cadastro.fisica_deficiencia')
+                ->join('pmieducar.aluno', 'fisica_deficiencia.ref_idpes', '=', 'aluno.ref_idpes')
+                ->join('pmieducar.matricula', 'matricula.ref_cod_aluno', '=', 'aluno.cod_aluno')
                 ->where('ref_cod_deficiencia', $deficiencia['id'])
-                ->whereExists(function ($query) use ($schools) {
-                    /** @var Builder $query */
-                    $query->select(DB::raw(1))
-                        ->from('pmieducar.aluno')
-                        ->join('pmieducar.matricula', 'matricula.ref_cod_aluno', '=', 'aluno.cod_aluno')
-                        ->whereRaw('fisica_deficiencia.ref_idpes = aluno.ref_idpes')
-                        ->whereIn('matricula.ref_ref_cod_escola', $schools);
-                })
-                ->orderBy('ref_idpes')
-                ->pluck('ref_idpes')
+                ->whereIn('matricula.ref_ref_cod_escola', $schools)
+                ->orderBy('aluno.ref_idpes')
+                ->pluck('aluno.cod_aluno')
                 ->toArray();
 
             $deficiencia['alunos'] = $alunos;
