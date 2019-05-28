@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Exports\DisciplineExport;
 use App\Imports\DisciplineImport;
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
 
 class ImportDisciplineCommand extends Command
 {
@@ -27,11 +28,15 @@ class ImportDisciplineCommand extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(Filesystem $filesystem)
     {
+        $filename = $this->argument('filename');
+
         $importer = new DisciplineImport();
 
-        $importer->withOutput($this->output)->import($this->argument('filename'));
+        $importer->withOutput($this->output)->import($filename);
+
+        $filesystem->delete($filename);
 
         // Importa as disciplinas para o banco de dados e após, faz a
         // exportação dos IDs gerados para as disciplinas.
@@ -47,6 +52,6 @@ class ImportDisciplineCommand extends Command
 
         $exporter = new DisciplineExport($export);
 
-        $exporter->store($this->argument('filename'));
+        $exporter->store($filename);
     }
 }
