@@ -20,4 +20,13 @@ class AdicionaMenuAtaResultadoFinal extends Migration
 
         DB::statement("INSERT INTO menus (parent_id, title, description, link, icon, \"order\", type, process, old, parent_old, active) VALUES (77,'Ata de resultado final', 'Ata de resultado final', '/module/Reports/AtaResultadoFinal','',0,4,9998911,9998911,999925,true);");
     }
+
+    public function down()
+    {
+        DB::statement('delete from menus where parent_old = 999925 and old = 9998911 and process = 9998911;');
+        DB::statement('delete from pmieducar.menu_tipo_usuario where ref_cod_tipo_usuario = 1 and ref_cod_menu_submenu = 9998911;');
+        DB::statement('delete from pmicontrolesis.menu where cod_menu = 9998911;');
+        DB::statement('delete from portal.menu_submenu where cod_menu_submenu = 9998911;');
+
+    }
 }
