@@ -13,7 +13,7 @@ class ImportDisciplineCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'import:discipline {filename} {output}';
+    protected $signature = 'import:discipline {filename}';
 
     /**
      * The console command description.
@@ -33,8 +33,20 @@ class ImportDisciplineCommand extends Command
 
         $importer->withOutput($this->output)->import($this->argument('filename'));
 
-        $exporter = new DisciplineExport($importer->getCollection());
+        // Importa as disciplinas para o banco de dados e após, faz a
+        // exportação dos IDs gerados para as disciplinas.
 
-        $exporter->store($this->argument('output'));
+        $export = $importer->getCollection()->map(function ($item) {
+            $row = $item->get('row');
+            $discipline = $item->get('discipline');
+
+            $row['discipline_id'] = $discipline->getKey();
+
+            return $row;
+        });
+
+        $exporter = new DisciplineExport($export);
+
+        $exporter->store($this->argument('filename'));
     }
 }
