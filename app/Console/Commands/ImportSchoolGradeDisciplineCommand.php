@@ -12,7 +12,7 @@ class ImportSchoolGradeDisciplineCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'import:school-grade-discipline {filename}';
+    protected $signature = 'import:school-grade-discipline {filename} {school?}';
 
     /**
      * The console command description.
@@ -28,7 +28,9 @@ class ImportSchoolGradeDisciplineCommand extends Command
      */
     public function handle()
     {
-        $importer = new SchoolGradeDisciplineImport();
+        $importer = new SchoolGradeDisciplineImport(
+            $this->argument('school')
+        );
 
         $importer->withOutput($this->output)->import($this->argument('filename'));
     }
