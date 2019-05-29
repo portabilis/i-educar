@@ -318,6 +318,7 @@ class MatriculaController extends ApiCoreController
             WHERE m.ano = $1
                 AND m.ref_ref_cod_escola in ({$escola})
                 {$where}
+            ORDER BY m.updated_at
         ";
 
         $matriculas = $this->fetchPreparedQuery($sql, $params, false);
@@ -418,7 +419,9 @@ class MatriculaController extends ApiCoreController
             INNER JOIN matricula_turma_excluidos
                     ON matricula_turma_excluidos.ref_cod_matricula = matricula.cod_matricula
                  WHERE matricula.ref_ref_cod_escola in (' . $escola . ') 
-                   AND matricula.ano = $1::integer ' . $whereMatriculaExcluidos . ')';
+                   AND matricula.ano = $1::integer ' . $whereMatriculaExcluidos . ')
+                   
+                   ORDER BY updated_at';
 
             $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
 
@@ -787,6 +790,7 @@ class MatriculaController extends ApiCoreController
                 AND m.ano = $1
                 {$where}
             )
+            order by updated_at
         ";
 
         $matriculas = $this->fetchPreparedQuery($sql, $params);
@@ -838,6 +842,7 @@ class MatriculaController extends ApiCoreController
                 {$where}
                 GROUP BY dd.ref_cod_matricula, dd.ref_cod_disciplina, dd.updated_at, dd.deleted_at
             )
+            order by updated_at
         ";
 
         $dispensas = $this->fetchPreparedQuery($sql, $params);

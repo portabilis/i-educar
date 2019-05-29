@@ -78,7 +78,7 @@ class ComponenteCurricularController extends ApiCoreController
                INNER JOIN modules.area_conhecimento ON (area_conhecimento.id = componente_curricular.area_conhecimento_id)
                 WHERE componente_curricular.instituicao_id = $1
                 ' . $where . '
-                ORDER BY nome ';
+                ORDER BY componente_curricular.updated_at, componente_curricular.nome ';
       $disciplinas = $this->fetchPreparedQuery($sql, $params);
 
       $attrs = array('id', 'nome', 'area_conhecimento_id', 'nome_area', 'ordenamento', 'updated_at');

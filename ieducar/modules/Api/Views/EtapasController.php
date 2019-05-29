@@ -143,6 +143,7 @@ class EtapasController extends ApiCoreController
                         AND i.componente_curricular_turma
                     )
             )
+            order by updated_at
         ";
 
         $etapas = $this->fetchPreparedQuery($sql, $params);

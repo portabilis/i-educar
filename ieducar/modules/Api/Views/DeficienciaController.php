@@ -40,7 +40,7 @@ class DeficienciaController extends ApiCoreController
             $query->where('updated_at', '>=', $modified);
         });
 
-        $deficiencias = $query->unionAll($queryExcluded)->orderBy('id')->get()->map(function ($deficiencia) use ($schools) {
+        $deficiencias = $query->unionAll($queryExcluded)->orderBy('updated_at')->get()->map(function ($deficiencia) use ($schools) {
 
             $deficiencia = (array) $deficiencia;
 

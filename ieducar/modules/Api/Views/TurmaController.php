@@ -164,7 +164,7 @@ class TurmaController extends ApiCoreController
                     AND ano = $2
                     {$turnoId}
                     {$modified}
-                ORDER BY ref_ref_cod_escola, nm_turma
+                ORDER BY updated_at, ref_ref_cod_escola, nm_turma
             ";
 
             $turmas = $this->fetchPreparedQuery($sql, $params);

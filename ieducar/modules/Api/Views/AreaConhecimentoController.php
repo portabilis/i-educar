@@ -42,7 +42,7 @@ class AreaConhecimentoController extends ApiCoreController
                     WHERE instituicao_id = $1
                     {$where}
                 )
-                ORDER BY nome 
+                ORDER BY updated_at, nome 
             ";
 
             $areas = $this->fetchPreparedQuery($sql, $params);

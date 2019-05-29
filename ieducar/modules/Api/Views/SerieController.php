@@ -43,7 +43,7 @@ class SerieController extends ApiCoreController
                         ELSE 
                             es.updated_at
                         END 
-                    ),
+                    ) AS updated_at,
                     (
                         CASE s.ativo WHEN 1 THEN 
                             NULL 
@@ -69,7 +69,7 @@ class SerieController extends ApiCoreController
                 $sql .= ' AND (s.updated_at >= $2 OR es.updated_at >= $2)';
             }
 
-            $sql .= " ORDER BY s.nm_serie ASC";
+            $sql .= " ORDER BY updated_at, s.nm_serie ASC";
 
             $series = $this->fetchPreparedQuery($sql, $params);
 

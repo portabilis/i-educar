@@ -59,6 +59,7 @@ class RegraController extends ApiCoreController
                     ON tav.tabela_arredondamento_id = ta.id
                 WHERE ta.instituicao_id = $1
                 {$modified}
+                ORDER BY ta.updated_at
             ";
 
             $tabelas = $this->fetchPreparedQuery($sql, $params);
@@ -106,37 +107,42 @@ class RegraController extends ApiCoreController
             }
 
             $sql = "
-                SELECT
-                    rar.id,
-                    rar.regra_avaliacao_id,
-                    rar.descricao,
-                    rar.etapas_recuperadas,
-                    rar.media,
-                    rar.nota_maxima,
-                    rar.updated_at,
-                    null as deleted_at
-                FROM modules.regra_avaliacao_recuperacao rar
-                INNER JOIN modules.regra_avaliacao ra
-                    ON rar.regra_avaliacao_id = ra.id
-                WHERE ra.instituicao_id = $1
-                {$where}
+                (
+                    SELECT
+                        rar.id,
+                        rar.regra_avaliacao_id,
+                        rar.descricao,
+                        rar.etapas_recuperadas,
+                        rar.media,
+                        rar.nota_maxima,
+                        rar.updated_at,
+                        null as deleted_at
+                    FROM modules.regra_avaliacao_recuperacao rar
+                    INNER JOIN modules.regra_avaliacao ra
+                        ON rar.regra_avaliacao_id = ra.id
+                    WHERE ra.instituicao_id = $1
+                    {$where}
+                )
                 
                 UNION ALL
                 
-                SELECT
-                    rar.id,
-                    rar.regra_avaliacao_id,
-                    rar.descricao,
-                    rar.etapas_recuperadas,
-                    rar.media,
-                    rar.nota_maxima,
-                    rar.updated_at,
-                    rar.deleted_at
-                FROM modules.regra_avaliacao_recuperacao_excluidos rar
-                INNER JOIN modules.regra_avaliacao ra
-                    ON rar.regra_avaliacao_id = ra.id
-                WHERE ra.instituicao_id = $1
-                {$where}
+                (
+                    SELECT
+                        rar.id,
+                        rar.regra_avaliacao_id,
+                        rar.descricao,
+                        rar.etapas_recuperadas,
+                        rar.media,
+                        rar.nota_maxima,
+                        rar.updated_at,
+                        rar.deleted_at
+                    FROM modules.regra_avaliacao_recuperacao_excluidos rar
+                    INNER JOIN modules.regra_avaliacao ra
+                        ON rar.regra_avaliacao_id = ra.id
+                    WHERE ra.instituicao_id = $1
+                    {$where}
+                )
+                ORDER BY updated_at
             ";
 
             $regrasRecuperacao = $this->fetchPreparedQuery($sql, $params);
@@ -207,6 +213,7 @@ class RegraController extends ApiCoreController
               WHERE true
                   AND ra.instituicao_id = $1 '. $where . '
               ORDER BY 
+                ra.updated_at,
                 COALESCE(ra.regra_diferenciada_id,0),
                 ra.id';
 

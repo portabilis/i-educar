@@ -1264,7 +1264,7 @@ class AlunoController extends ApiCoreController
                     select * from pmieducar.matricula where ref_ref_cod_escola in ({$escola}) and ref_cod_aluno = a.cod_aluno
                 )
                 {$where}
-                ORDER BY p.nome ASC
+                ORDER BY updated_at, p.nome ASC
             ";
 
             $alunos = $this->fetchPreparedQuery($sql, $params);

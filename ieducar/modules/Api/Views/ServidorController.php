@@ -102,6 +102,7 @@ class ServidorController extends ApiCoreController
             INNER JOIN cadastro.pessoa p ON s.cod_servidor = p.idpes
             WHERE s.ref_cod_instituicao = $1
             {$where}
+            order by updated_at
         ";
 
         $servidores = $this->fetchPreparedQuery($sql, $params);
@@ -174,6 +175,7 @@ class ServidorController extends ApiCoreController
                     and pt.ano = $2
                     {$whereDeleted}
                 )
+                order by updated_at
             ";
 
             $vinculos = $this->fetchPreparedQuery($sql, $params);

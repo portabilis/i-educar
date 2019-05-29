@@ -42,7 +42,7 @@ class CursoController extends ApiCoreController
                             ELSE 
                                 ec.updated_at
                             END 
-                        ),
+                        ) as updated_at,
                         (
                             CASE c.ativo WHEN 1 THEN 
                                 NULL 
@@ -70,7 +70,7 @@ class CursoController extends ApiCoreController
                         : ' AND $2 = ANY(ec.anos_letivos) ';
                 }
 
-                $sql .= ' ORDER BY c.nm_curso ASC ';
+                $sql .= ' ORDER BY updated_at, c.nm_curso ASC ';
             } else {
 
                 $sql = "
@@ -95,7 +95,7 @@ class CursoController extends ApiCoreController
                     $sql .= ' AND updated_at >= $2';
                 }
 
-                $sql .= ' ORDER BY nm_curso ASC';
+                $sql .= ' ORDER BY updated_at, nm_curso ASC';
             }
 
             $cursos = $this->fetchPreparedQuery($sql, $params);
