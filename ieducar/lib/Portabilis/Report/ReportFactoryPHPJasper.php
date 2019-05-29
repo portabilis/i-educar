@@ -139,32 +139,13 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
 
         $outputFile .= '.pdf';
 
-        $this->showPDF($outputFile);
+        $result = file_exists($outputFile)
+            ? file_get_contents($outputFile)
+            : null;
+
         $this->destroyPDF($outputFile);
-    }
 
-    /**
-     * Lê o PDF gerado para a saída de conteúdo.
-     *
-     * @param string $file
-     *
-     * @return void
-     */
-    public function showPDF($file)
-    {
-        header('Pragma: public');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Cache-Control: private', false);
-        header('Content-Type: application/pdf;');
-        header('Content-Disposition: inline;');
-        header('Content-Transfer-Encoding: binary');
-        header('Content-Length: ' . filesize($file));
-
-        ob_clean();
-        flush();
-
-        readfile($file);
+        return $result;
     }
 
     /**
@@ -176,6 +157,8 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
      */
     public function destroyPDF($file)
     {
-        unlink($file);
+        if (file_exists($file)) {
+            unlink($file);
+        }
     }
 }

@@ -1,5 +1,37 @@
 $j('#btn_enviar').removeAttr('onclick');
 $j('#btn_enviar').on('click', () => {
+  verificaDeficiencias();
+});
+
+function verificaDeficiencias() {
+  if($j('#deficiencias').val()) {
+    var options = {
+      dataType : 'json',
+      url : getResourceUrlBuilder.buildUrl(
+          '/module/Api/Servidor',
+          'verifica-deficiencias',
+          {deficiencias : $j('#deficiencias').val()}
+      ),
+      success : function(dataResponse) {
+        if (dataResponse.msgs.length > 0) {
+
+          dataResponse.msgs.each(function(m){
+            messageUtils.error(m.msg);
+          });
+
+          return false
+        }
+
+        return submitForm();
+      }
+    }
+    getResource(options);
+  } else {
+    return submitForm();
+  }
+}
+
+function submitForm() {
   if (!validaServidor() || !validaPosGraduacao() || !validaCursoFormacaoContinuada() || !validationUtils.validatesFields(false) || !validateGraduations()) {
     return false;
   }
@@ -21,7 +53,7 @@ $j('#btn_enviar').on('click', () => {
   } else {
     acao();
   }
-});
+}
 
 function confirmaEnvio() {
   const dialogId = 'dialog-confirma';

@@ -10,7 +10,7 @@ $j("#modal_school_managers").dialog({
     modal: true,
     resizable: false,
     draggable: false,
-    title: 'Dados adicionais do diretor(a)',
+    title: 'Dados adicionais do(a) gestor(a)',
     buttons: {
         "Gravar": function () {
             if (validateAccessCriteriaId() && validateAccessCriteriaDescription() && validateLinkType()) {

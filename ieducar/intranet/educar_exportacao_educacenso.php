@@ -58,6 +58,7 @@ class indice extends clsCadastro
   var $ref_cod_instituicao;
   var $escola_em_andamento;
   var $segunda_fase = false;
+  var $nome_url_sucesso = 'Analisar';
 
   function Inicializar()
   {
@@ -91,7 +92,6 @@ class indice extends clsCadastro
     }
 
     $this->acao_enviar      = "acaoExportar();";
-    $this->nome_url_sucesso = 'Analisar';
 
     return 'Nova exportação';
   }
@@ -184,7 +184,7 @@ function acaoExportar() {
     document.formcadastro.target='_blank';
     acao();
     document.getElementById( 'btn_enviar' ).disabled = false;
-    document.getElementById( 'btn_enviar' ).value = 'Exportar';
+    document.getElementById( 'btn_enviar' ).value = 'Analisar';
 }
 
 function marcarCheck(idValue) {
