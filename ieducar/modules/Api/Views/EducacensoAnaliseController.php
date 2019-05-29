@@ -1286,7 +1286,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
             if (!(new InepNumberValidator($docente->inepDocente))->isValid()) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 50 da escola {$docente->nomeEscola} possui valor inválido. Verifique se o código INEP do docente {$docente->nomeDocente} possui 12 dígitos.",
+                    'text' => "Dados para formular o registro 50 da escola {$docente->nomeEscola} possui valor inválido. Verifique se o código INEP do docente {$docente->nomeDocente}, vinculado à turma {$docente->nomeTurma}, possui 12 dígitos.",
                     'path' => '(Servidores > Cadastros > Servidores > Editar > Aba: Dados gerais > Campo: Código INEP)',
                     'linkPath' => "/intranet/educar_servidor_cad.php?cod_servidor={$docente->idServidor}&ref_cod_instituicao={$docente->idInstituicao}",
                     'fail' => true
@@ -1386,7 +1386,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
             if (!(new InepNumberValidator($aluno->inepAluno))->isValid()) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verifique se o código INEP do aluno {$nomeAluno} possui 12 dígitos.",
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verifique se o código INEP do aluno {$nomeAluno}, matriculado na turma {$nomeTurma}, possui 12 dígitos.",
                     'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados gerais > Campo: Código INEP)',
                     'linkPath' => "/module/Cadastro/aluno?id={$codigoAluno}",
                     'fail' => true
