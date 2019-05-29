@@ -776,6 +776,7 @@ JS;
   {
     $cursos_disciplina = Session::get('cursos_disciplina');
     $cursos_servidor = Session::get('cursos_servidor');
+    $existe_funcao_professor = false;
 
     $listFuncoesCadastradas = array();
 
@@ -783,7 +784,10 @@ JS;
         foreach ($this->ref_cod_funcao as $k => $funcao) {
             list($funcao, $professor) = explode('-', $funcao);
 
-            $existe_funcao_professor = (bool) $professor;
+            if ((bool) $professor) {
+              $existe_funcao_professor = true;
+            }
+
             $cod_servidor_funcao = $this->cod_servidor_funcao[$k];
             $obj_servidor_funcao = new clsPmieducarServidorFuncao(null, null, null, null, $cod_servidor_funcao);
 
