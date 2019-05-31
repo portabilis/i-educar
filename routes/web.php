@@ -28,6 +28,11 @@ Route::any('intranet/suspenso.php', 'LegacyController@intranet')
 
 Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth']], function () {
 
+    Route::get('/matricula/{registration}/enturmacao/{schoolClass}', 'EnrollmentController@createEnroll')
+        ->name('enrollments.enroll.create');
+    Route::post('/matricula/{registration}/enturmacao/{schoolClass}', 'EnrollmentController@enroll')
+        ->name('enrollments.enroll');
+
     Route::get('/enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@indexEnroll')
         ->name('enrollments.batch.enroll.index');
     Route::post('/enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@enroll')

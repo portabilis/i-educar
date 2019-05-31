@@ -74,6 +74,39 @@ class EnrollmentService
     }
 
     /**
+     * Retorna se matrícula está enturmada na turma
+     *
+     * @param LegacySchoolClass $schoolClass
+     * @param LegacyRegistration $registration
+     *
+     * @return boolean
+     */
+    public function isEnrolled($schoolClass, $registration)
+    {
+        return LegacyEnrollment::where('ref_cod_matricula', $registration->id)
+            ->where('ref_cod_turma', $schoolClass->id)
+            ->active()
+            ->exists();
+    }
+
+    /**
+     * Retorna se enturmações da matrícula em  outras turmas
+     *
+     * @param LegacySchoolClass $schoolClass
+     * @param LegacyRegistration $registration
+     *
+     * @return Collection
+     */
+    public function anotherClassroomEnrollments($schoolClass, $registration)
+    {
+        return LegacyEnrollment::where('ref_cod_matricula', $registration->id)
+            ->where('ref_cod_turma', '<>', $schoolClass->id)
+            ->active()
+            ->with('schoolClass')
+            ->get();
+    }
+
+    /**
      * @param array $ids
      *
      * @return Collection

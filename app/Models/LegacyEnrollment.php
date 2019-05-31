@@ -54,6 +54,11 @@ class LegacyEnrollment extends Model
      */
     public $timestamps = false;
 
+    public function scopeActive($query)
+    {
+        return $query->where("{$this->table}.ativo", true);
+    }
+
     /**
      * @return DateTime
      */

@@ -232,11 +232,11 @@ WHERE
       else
         $enturmado = "Não";
 
-      $script = sprintf('onclick="enturmar(\'%s\',\'%s\',\'%s\',\'%s\',\'%d\');"',
-                        $this->ref_cod_escola, $turma['ref_ref_cod_serie'],
-                        $this->ref_cod_matricula, $turma['cod_turma'], $this->ano_letivo);
-
-      $this->addLinhas(array(sprintf('<a href="#" %s>%s</a>', $script, $turma['nm_turma']), $enturmado));
+        $link = route('enrollments.enroll.create', [
+            'registration' => $this->ref_cod_matricula,
+            'schoolClass' => $turma['cod_turma'],
+        ]);
+        $this->addLinhas(["<a href='{$link}'>{$turma['nm_turma']}</a>", $enturmado]);
     }
 
     $this->addPaginador2("educar_matricula_turma_lst.php", $total, $_GET,
