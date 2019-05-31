@@ -326,7 +326,7 @@ class AlunoController extends ApiCoreController
 
     protected function canGetOcorrenciasDisciplinares()
     {
-        return $this->validatesPresenceOf('aluno');
+        return $this->validatesPresenceOf('ano') && $this->validatesPresenceOf('escola');
     }
 
     // load resources
@@ -767,11 +767,12 @@ class AlunoController extends ApiCoreController
 
     protected function loadOcorrenciasDisciplinares()
     {
-        $alunoId = $this->getRequest()->aluno;
+        $ano = $this->getRequest()->ano;
+        $escola = $this->getRequest()->escola;
         $modified = $this->getRequest()->modified;
 
-        if (is_array($alunoId)) {
-            $alunoId = implode(',', $alunoId);
+        if (is_array($escola)) {
+            $escola = implode(',', $escola);
         }
 
         $params = [];
@@ -805,7 +806,8 @@ class AlunoController extends ApiCoreController
             on tod.cod_tipo_ocorrencia_disciplinar = od.ref_cod_tipo_ocorrencia_disciplinar
             where true 
                 and od.visivel_pais = 1
-                and m.ref_cod_aluno IN ({$alunoId})     
+                and m.ano = {$ano}::integer
+                and m.ref_ref_cod_escola IN ({$escola})     
                 {$where}
         ";
 
