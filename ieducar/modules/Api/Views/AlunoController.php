@@ -326,7 +326,7 @@ class AlunoController extends ApiCoreController
 
     protected function canGetOcorrenciasDisciplinares()
     {
-        return $this->validatesPresenceOf('ano') && $this->validatesPresenceOf('escola');
+        return $this->validatesPresenceOf('escola');
     }
 
     // load resources
