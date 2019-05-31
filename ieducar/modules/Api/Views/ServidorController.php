@@ -25,7 +25,8 @@ class ServidorController extends ApiCoreController
     {
         return (
             $this->validatesPresenceOf('ano') &&
-            $this->validatesPresenceOf('instituicao_id')
+            $this->validatesPresenceOf('instituicao_id') &&
+            $this->validatesPresenceOf('escola')
         );
     }
 
@@ -119,9 +120,14 @@ class ServidorController extends ApiCoreController
         if ($this->canGetServidoresDisciplinasTurmas()) {
             $instituicaoId = $this->getRequest()->instituicao_id;
             $ano = $this->getRequest()->ano;
+            $escola = $this->getRequest()->escola;
             $modified = $this->getRequest()->modified;
 
             $params = [$instituicaoId, $ano];
+
+            if (is_array($escola)) {
+                $escola = implode(', ', $escola);
+            }
 
             $where = '';
 
@@ -154,6 +160,7 @@ class ServidorController extends ApiCoreController
                     where true
                     and pt.instituicao_id = $1
                     and pt.ano = $2
+                    and t.ref_ref_cod_escola in ({$escola})
                     {$where}
                     group by id, ccae.tipo_nota, ccae.updated_at
                 )
@@ -170,9 +177,12 @@ class ServidorController extends ApiCoreController
                         pt.updated_at,
                         pt.deleted_at
                     from modules.professor_turma_excluidos pt 
+                    inner join pmieducar.turma t 
+                    on t.cod_turma = pt.turma_id
                     where true 
                     and pt.instituicao_id = $1
                     and pt.ano = $2
+                    and t.ref_ref_cod_escola in ({$escola})
                     {$whereDeleted}
                 )
                 order by updated_at
