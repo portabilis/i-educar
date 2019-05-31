@@ -741,7 +741,7 @@ class MatriculaController extends ApiCoreController
 
     protected function canGetMatriculasDependencia()
     {
-        return $this->validatesPresenceOf('ano');
+        return $this->validatesPresenceOf('ano') && $this->validatesPresenceOf('escola');
     }
 
     protected function getMatriculasDependencia()
@@ -751,9 +751,14 @@ class MatriculaController extends ApiCoreController
         }
 
         $ano = $this->getRequest()->ano;
+        $escola = $this->getRequest()->escola;
         $modified = $this->getRequest()->modified;
 
         $params = [$ano];
+
+        if (is_array($escola)) {
+            $escola = implode(', ', $escola);
+        }
 
         $where = '';
 
@@ -774,6 +779,7 @@ class MatriculaController extends ApiCoreController
                 ON m.cod_matricula = dd.ref_cod_matricula
                 WHERE m.dependencia = 't'
                 AND m.ano = $1
+                AND m.ref_ref_cod_escola IN ({$escola})
                 {$where}
             )
             UNION ALL
@@ -788,6 +794,7 @@ class MatriculaController extends ApiCoreController
                 ON m.cod_matricula = dd.ref_cod_matricula
                 WHERE m.dependencia = 't'
                 AND m.ano = $1
+                AND m.ref_ref_cod_escola IN ({$escola})
                 {$where}
             )
             order by updated_at
