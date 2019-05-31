@@ -13,10 +13,7 @@ class RegraController extends ApiCoreController
 
     protected function canGetRegras()
     {
-        return (
-            $this->validatesPresenceOf('instituicao_id') &&
-            $this->validatesPresenceOf('ano')
-        );
+        return $this->validatesPresenceOf('instituicao_id');
     }
 
     protected function canGetRegrasRecuperacao()
@@ -165,7 +162,6 @@ class RegraController extends ApiCoreController
     {
         if ($this->canGetRegras()) {
             $instituicaoId = $this->getRequest()->instituicao_id;
-            $ano = $this->getRequest()->ano;
             $modified = $this->getRequest()->modified;
 
             $params = [$instituicaoId];
