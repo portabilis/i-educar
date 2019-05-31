@@ -809,6 +809,11 @@ class MatriculaController extends ApiCoreController
 
     protected function getDispensaDisciplina()
     {
+        if (!$this->validatesPresenceOf('escola')) {
+            return false;
+        }
+
+        $escola = $this->getRequest()->escola;
         $modified = $this->getRequest()->modified;
 
         $where = '';
@@ -828,9 +833,12 @@ class MatriculaController extends ApiCoreController
                     dd.updated_at,
                     null as deleted_at
                 FROM pmieducar.dispensa_disciplina AS dd
+                INNER JOIN pmieducar.matricula m
+                ON m.cod_matricula = dd.ref_cod_matricula
                 LEFT JOIN pmieducar.dispensa_etapa de
                 ON de.ref_cod_dispensa = dd.cod_dispensa
                 WHERE dd.ativo = 1
+                AND m.ref_ref_cod_escola IN ({$escola})
                 {$where}
                 GROUP BY dd.ref_cod_matricula, dd.ref_cod_disciplina, dd.updated_at
             )
@@ -843,9 +851,12 @@ class MatriculaController extends ApiCoreController
                     dd.updated_at,
                     dd.deleted_at
                 FROM pmieducar.dispensa_disciplina_excluidos AS dd
+                INNER JOIN pmieducar.matricula m
+                ON m.cod_matricula = dd.ref_cod_matricula
                 LEFT JOIN pmieducar.dispensa_etapa de
                 ON de.ref_cod_dispensa = dd.cod_dispensa
                 WHERE dd.ativo = 1
+                AND m.ref_ref_cod_escola IN ({$escola})
                 {$where}
                 GROUP BY dd.ref_cod_matricula, dd.ref_cod_disciplina, dd.updated_at, dd.deleted_at
             )
