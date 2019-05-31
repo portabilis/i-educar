@@ -200,13 +200,13 @@ class AvailableTimeServiceTest extends TestCase
             [
                 'tipo_mediacao_didatico_pedagogico' => 1,
                 'tipo_atendimento' => TipoAtendimentoTurma::AEE,
-                'hora_final' => '15:45'
             ]
         );
         $otherSchoolClass = factory(LegacySchoolClass::class, 'morning')->create(
             [
                 'tipo_mediacao_didatico_pedagogico' => 1,
-                'tipo_atendimento' => TipoAtendimentoTurma::ESCOLARIZACAO
+                'tipo_atendimento' => TipoAtendimentoTurma::ESCOLARIZACAO,
+                'hora_final' => '15:45',
             ]
         );
 
