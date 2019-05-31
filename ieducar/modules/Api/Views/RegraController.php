@@ -170,7 +170,7 @@ class RegraController extends ApiCoreController
 
             if ($modified) {
                 $params[] = $modified;
-                $where = ' AND ra.updated_at >= $3';
+                $where = ' AND ra.updated_at >= $2';
             }
 
             $sql = '
