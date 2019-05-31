@@ -767,7 +767,6 @@ class AlunoController extends ApiCoreController
 
     protected function loadOcorrenciasDisciplinares()
     {
-        $ano = $this->getRequest()->ano;
         $escola = $this->getRequest()->escola;
         $modified = $this->getRequest()->modified;
 
@@ -806,7 +805,6 @@ class AlunoController extends ApiCoreController
             on tod.cod_tipo_ocorrencia_disciplinar = od.ref_cod_tipo_ocorrencia_disciplinar
             where true 
                 and od.visivel_pais = 1
-                and m.ano = {$ano}::integer
                 and m.ref_ref_cod_escola IN ({$escola})     
                 {$where}
         ";
