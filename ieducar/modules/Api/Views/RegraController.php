@@ -168,9 +168,7 @@ class RegraController extends ApiCoreController
             $ano = $this->getRequest()->ano;
             $modified = $this->getRequest()->modified;
 
-            $params = [
-                $instituicaoId, $ano
-            ];
+            $params = [$instituicaoId];
 
             $where = '';
 
@@ -187,22 +185,6 @@ class RegraController extends ApiCoreController
                   ra.tipo_nota,
                   ra.tipo_presenca,
                   ra.parecer_descritivo,
-                  (
-                      SELECT
-                          jsonb_agg(json_build_object(\'turma_id\', t.cod_turma) ORDER BY t.cod_turma)
-                      FROM
-                          pmieducar.turma t
-                      INNER JOIN pmieducar.serie s ON true
-                          AND s.cod_serie = t.ref_ref_cod_serie
-                      INNER JOIN modules.regra_avaliacao_serie_ano rasa ON true
-                          AND rasa.serie_id = s.cod_serie
-                          AND rasa.ano_letivo = $2
-                      WHERE true
-                          AND rasa.regra_avaliacao_id = ra.id
-                          AND t.ano = $2
-                          AND t.ativo = 1
-                          AND s.ativo = 1
-                  ) AS turmas,
                   ra.tipo_recuperacao_paralela AS tipo_recuperacao,
                   ra.media_recuperacao_paralela,
                   ra.nota_maxima_geral,
@@ -221,27 +203,14 @@ class RegraController extends ApiCoreController
 
             $attrs = [
                 'id', 'tabela_arredondamento_id', 'tabela_arredondamento_id_conceitual',
-                'tipo_nota', 'tipo_presenca', 'parecer_descritivo', 'turmas',
+                'tipo_nota', 'tipo_presenca', 'parecer_descritivo',
                 'tipo_recuperacao', 'media_recuperacao_paralela', 'nota_maxima_geral',
-                'nota_maxima_exame', 'regra_diferenciada_id', 'updated_at'
+                'nota_maxima_exame', 'updated_at'
             ];
 
             $_regras = Portabilis_Array_Utils::filterSet($_regras, $attrs);
-            $regras = [];
-            $__regras = [];
 
-            foreach ($_regras as $regra) {
-                $__regras[$regra['id']] = $regra;
-                $__regras[$regra['id']]['regra_diferenciada_id']= $regra['regra_diferenciada_id'] ?: null;
-                $__regras[$regra['id']]['turmas'] = empty($regra['turmas']) ? [] : json_decode($regra['turmas']);
-
-            }
-
-            foreach ($__regras as $regra) {
-                $regras[] = $regra;
-            }
-
-            return ['regras' => $regras];
+            return ['regras' => $_regras];
         }
     }
 

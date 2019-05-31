@@ -134,42 +134,47 @@ class TurmaController extends ApiCoreController
             $params = [$instituicaoId, $ano];
 
             if ($turnoId) {
-                $turnoId = " AND turma_turno_id = {$turnoId} ";
+                $turnoId = " AND t.turma_turno_id = {$turnoId} ";
             }
 
             if ($modified) {
                 $params[] = $modified;
-                $modified = 'AND updated_at >= $3';
+                $modified = 'AND t.updated_at >= $3';
             }
 
             $sql = "
                 SELECT 
-                    cod_turma as id, 
-                    nm_turma as nome, 
-                    ano, 
-                    ref_ref_cod_escola as escola_id, 
-                    turma_turno_id as turno_id,
-                    ref_cod_curso as curso_id,
-                    ref_ref_cod_serie as serie_id,
-                    updated_at,
+                    t.cod_turma as id, 
+                    t.nm_turma as nome, 
+                    t.ano, 
+                    t.ref_ref_cod_escola as escola_id, 
+                    t.turma_turno_id as turno_id,
+                    t.ref_cod_curso as curso_id,
+                    t.ref_ref_cod_serie as serie_id,
+                   rasa.regra_avaliacao_id,
+                   rasa.regra_avaliacao_diferenciada_id,
+                    t.updated_at,
                     (
-                        CASE ativo WHEN 1 THEN 
+                        CASE t.ativo WHEN 1 THEN 
                             NULL 
                         ELSE 
-                            data_exclusao::timestamp(0)
+                            t.data_exclusao::timestamp(0)
                         END
                     ) AS deleted_at
-                FROM pmieducar.turma
-                WHERE ref_cod_instituicao = $1
-                    AND ano = $2
+                FROM pmieducar.turma t 
+                INNER JOIN modules.regra_avaliacao_serie_ano rasa ON true
+                    AND rasa.serie_id = t.ref_ref_cod_serie
+                    AND rasa.ano_letivo = $2
+                WHERE t.ref_cod_instituicao = $1
+                    AND t.ano = $2
                     {$turnoId}
                     {$modified}
-                ORDER BY updated_at, ref_ref_cod_escola, nm_turma
+                ORDER BY t.updated_at, t.ref_ref_cod_escola, t.nm_turma
             ";
 
             $turmas = $this->fetchPreparedQuery($sql, $params);
 
-            $attrs = ['id', 'nome', 'ano', 'escola_id', 'turno_id', 'curso_id', 'serie_id', 'updated_at', 'deleted_at'];
+            $attrs = ['id', 'nome', 'ano', 'escola_id', 'turno_id', 'curso_id', 'serie_id', 'regra_avaliacao_id', 'regra_avaliacao_diferenciada_id', 'updated_at', 'deleted_at'];
             $turmas = Portabilis_Array_Utils::filterSet($turmas, $attrs);
 
             return ['turmas' => $turmas];
