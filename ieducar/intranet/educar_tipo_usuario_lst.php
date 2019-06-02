@@ -111,11 +111,13 @@ class indice extends clsListagem
 
                 // pega detalhes de foreign_keys
 
+                $url = route('usertype.show', ['userType' => $registro['cod_tipo_usuario']]);
+
                 $this->addLinhas([
-                    "<a href=\"educar_tipo_usuario_det.php?cod_tipo_usuario={$registro['cod_tipo_usuario']}\">{$registro['cod_tipo_usuario']}</a>",
-                    "<a href=\"educar_tipo_usuario_det.php?cod_tipo_usuario={$registro['cod_tipo_usuario']}\">{$registro['nm_tipo']}</a>",
-                    "<a href=\"educar_tipo_usuario_det.php?cod_tipo_usuario={$registro['cod_tipo_usuario']}\">{$registro['descricao']}</a>",
-                    "<a href=\"educar_tipo_usuario_det.php?cod_tipo_usuario={$registro['cod_tipo_usuario']}\">{$array_nivel[$registro['nivel']]}</a>"
+                    "<a href=\"{$url}\">{$registro['cod_tipo_usuario']}</a>",
+                    "<a href=\"{$url}\">{$registro['nm_tipo']}</a>",
+                    "<a href=\"{$url}\">{$registro['descricao']}</a>",
+                    "<a href=\"{$url}\">{$array_nivel[$registro['nivel']]}</a>"
                 ]);
             }
         }
@@ -125,7 +127,7 @@ class indice extends clsListagem
         $obj_permissao = new clsPermissoes();
 
         if ($obj_permissao->permissao_cadastra(554, $this->pessoa_logada, 7, null, true)) {
-            $this->acao = 'go("educar_tipo_usuario_cad.php")';
+            $this->acao = 'go("' . route('usertype.new') . '")';
             $this->nome_acao = 'Novo';
         }
 
