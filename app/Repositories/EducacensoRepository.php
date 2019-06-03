@@ -538,7 +538,7 @@ SQL;
     {
         $sql = <<<'SQL'
                   SELECT  '60' AS registro,
-                    educacenso_cod_escola.cod_escola "inepEscola",
+                    educacenso_cod_escola.cod_escola_inep "inepEscola",
                     aluno.ref_idpes "codigoPessoa",
                     educacenso_cod_aluno.cod_aluno_inep "inepAluno",
                     turma.cod_turma "codigoTurma",
