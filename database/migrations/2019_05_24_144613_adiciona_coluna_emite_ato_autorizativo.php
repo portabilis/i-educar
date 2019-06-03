@@ -14,7 +14,7 @@ class AdicionaColunaEmiteAtoAutorizativo extends Migration
     public function up()
     {
         Schema::table('pmieducar.configuracoes_gerais', function (Blueprint $table) {
-            $table->boolean('emitir_ato_autorizativo')->default(true);
+            $table->boolean('emitir_ato_autorizativo')->default(false);
         });
     }
 

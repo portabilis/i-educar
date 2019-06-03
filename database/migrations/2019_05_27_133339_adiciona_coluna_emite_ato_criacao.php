@@ -14,7 +14,7 @@ class AdicionaColunaEmiteAtoCriacao extends Migration
     public function up()
     {
         Schema::table('pmieducar.configuracoes_gerais', function (Blueprint $table) {
-            $table->boolean('emitir_ato_criacao_credenciamento')->default(true);
+            $table->boolean('emitir_ato_criacao_credenciamento')->default(false);
         });
     }
 
