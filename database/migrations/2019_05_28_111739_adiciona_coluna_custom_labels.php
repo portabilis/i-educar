@@ -10,7 +10,7 @@ class AdicionaColunaCustomLabels extends Migration
     {
         $customLabel = new CustomLabel();
         $defaults = $customLabel->getDefaults();
-        $defaults['report.termo_recuperacao_final'] = '';
+        $defaults['report.termo_recuperacao_final'] = 'Exame final';
 
         return $defaults;
     }
