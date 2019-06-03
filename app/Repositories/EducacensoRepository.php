@@ -801,7 +801,7 @@ SQL;
                 (ARRAY[12] <@ aluno.recursos_prova_inep)::INT "recursoLinguaPortuguesaSegundaLingua",
                 (ARRAY[13] <@ aluno.recursos_prova_inep)::INT "recursoVideoLibras",
                 (ARRAY[9] <@ aluno.recursos_prova_inep)::INT "recursoBraile",
-                (aluno.recursos_prova_inep IS NOT NULL)::INT "recursoNenhum",
+                (ARRAY[14] <@ aluno.recursos_prova_inep)::INT "recursoNenhum",
                 fisica.nis_pis_pasep AS "nis",
                 documento.certidao_nascimento AS "certidaoNascimento",
                 aluno.justificativa_falta_documentacao AS "justificativaFaltaDocumentacao"
