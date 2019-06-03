@@ -125,7 +125,14 @@ class indice extends clsCadastro
     DB::beginTransaction();
     $unificationId = $this->createLog($cod_aluno_principal, $cod_alunos, $this->pessoa_logada);
     App_Unificacao_Aluno::unifica($cod_aluno_principal, $cod_alunos, $this->pessoa_logada, new clsBanco(), $unificationId);
-    DB::commit();
+
+    try {
+        DB::commit();
+    } catch (Throwable $throable) {
+        DB::rollBack();
+        $this->mensagem = 'Não foi possível realizar a unificação';
+        return false;
+    }
 
     $this->mensagem = "<span>Alunos unificados com sucesso.</span>";
     return true;
