@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use Exception;
 use iEducar\Modules\Unification\PersonLogUnification;
 use iEducar\Modules\Unification\StudentLogUnification;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class LogUnification extends Model
 {
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function updatedBy()
     {
@@ -17,7 +21,7 @@ class LogUnification extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function createdBy()
     {
@@ -25,7 +29,7 @@ class LogUnification extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     * @return MorphTo
      */
     public function main()
     {
@@ -36,7 +40,7 @@ class LogUnification extends Model
      * Abordagem para permitir usar whereHas ou has em relacionamentos polimórficos
      * https://github.com/laravel/framework/issues/5429
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function studentMain()
     {
@@ -48,7 +52,7 @@ class LogUnification extends Model
      * Abordagem para permitir usar whereHas ou has em relacionamentos polimórficos
      * https://github.com/laravel/framework/issues/5429
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function personMain()
     {
@@ -56,6 +60,10 @@ class LogUnification extends Model
             ->where('type', Individual::class);
     }
 
+    /**
+     * @param $value
+     * @return mixed
+     */
     public function getDuplicatesIdAttribute($value)
     {
         return json_decode($value, false);
@@ -63,12 +71,17 @@ class LogUnification extends Model
 
     /**
      * @return string
+     * @throws Exception
      */
     public function getMainName()
     {
         return $this->getAdapter()->getMainPersonName($this);
     }
 
+    /**
+     * @return array
+     * @throws Exception
+     */
     public function getDuplicatesName()
     {
         return $this->getAdapter()->getDuplicatedPeopleName($this);
@@ -76,23 +89,24 @@ class LogUnification extends Model
 
     /**
      * @return PersonLogUnification|StudentLogUnification
+     * @throws Exception
      */
     private function getAdapter()
     {
         if ($this->type == Individual::class) {
-            $adapter = new PersonLogUnification();
+            return new PersonLogUnification();
         }
 
         if ($this->type == Student::class) {
-            $adapter = new StudentLogUnification();
+            return new StudentLogUnification();
         }
 
-        return $adapter;
+        throw new Exception('Tipo de unificação inválido');
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public function scopeStudent($query)
     {
@@ -100,8 +114,8 @@ class LogUnification extends Model
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public function scopePerson($query)
     {
