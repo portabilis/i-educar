@@ -299,6 +299,7 @@ SQL;
                    turma.ref_cod_curso AS "codCurso",
                    turma.ref_ref_cod_serie AS "codSerie",
                    turma.nm_turma AS "nomeTurma",
+                   turma.ano AS "anoTurma",
                    turma.hora_inicial AS "horaInicial",
                    turma.hora_final AS "horaFinal",
                    turma.dias_semana AS "diasSemana",
@@ -649,7 +650,7 @@ SQL;
                 CASE WHEN fisica.sexo = 'M' THEN 1 ELSE 2 END AS "sexo",
                 fisica_raca.ref_cod_raca AS "raca",
                 fisica.nacionalidade AS "nacionalidade",
-                CASE WHEN fisica.nacionalidade = 3 THEN fisica.idpais_estrangeiro ELSE 76 END AS "paisNacionalidade",
+                CASE WHEN fisica.nacionalidade = 3 THEN pais.cod_ibge ELSE 76 END AS "paisNacionalidade",
                 fisica.idmun_nascimento AS "municipioNascimento",
                 CASE WHEN
                     true = (SELECT true FROM cadastro.fisica_deficiencia WHERE fisica_deficiencia.ref_idpes = fisica.idpes LIMIT 1) THEN 1

@@ -837,8 +837,6 @@ class indice extends clsCadastro
      */
     public function nomeEstaDisponivel($ano, $curso, $serie, $escola, $nome, $id = null)
     {
-        $this->mensagem = 'O nome da turma já está sendo utilizado nesta escola, para o curso, série e anos informados.';
-
         $service = new SchoolClassService();
 
         return $service->isAvailableName($nome, $curso, $serie, $escola, $ano, $id);
@@ -859,6 +857,8 @@ class indice extends clsCadastro
         }
 
         if (!$this->nomeEstaDisponivel($this->ano_letivo, $this->ref_cod_curso, $this->ref_cod_serie, $this->ref_cod_escola, $this->nm_turma)) {
+            $this->mensagem = 'O nome da turma já está sendo utilizado nesta escola, para o curso, série e anos informados.';
+
             return false;
         }
 
@@ -899,7 +899,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        $this->mensagem .= 'Cadastro efetuado com sucesso.';
+        $this->mensagem = 'Cadastro efetuado com sucesso.';
         $this->simpleRedirect('educar_turma_lst.php');
     }
 
@@ -965,7 +965,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        $this->message = 'Edição efetuada com sucesso.';
+        $this->mensagem = 'Edição efetuada com sucesso.';
 
         throw new HttpResponseException(
             new RedirectResponse('educar_turma_lst.php')
@@ -1476,7 +1476,7 @@ class indice extends clsCadastro
                 $auditoria = new clsModulesAuditoriaGeral('turma', $this->pessoa_logada, $this->cod_turma);
                 $auditoria->exclusao($turma);
 
-                $this->mensagem .= 'Exclusão efetuada com sucesso.';
+                $this->mensagem = 'Exclusão efetuada com sucesso.';
 
                 throw new HttpResponseException(
                     new RedirectResponse('educar_turma_lst.php')

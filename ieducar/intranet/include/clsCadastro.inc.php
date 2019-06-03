@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Support\Navigation\Breadcrumb;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 require_once 'include/clsCampos.inc.php';
@@ -23,7 +24,7 @@ class clsCadastro extends clsCampos
     public $tipoacao;
     public $campos = [];
     public $erros;
-    public $mensagem;
+    private $_mensagem;
     public $nome_pai;
     public $chave;
     public $item_campo_pai;
@@ -120,30 +121,33 @@ class clsCadastro extends clsCampos
             </script>";
                 }
 
-                if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
-                    $this->mensagem = 'N&atilde;o foi poss&iacute;vel inserir a informa&ccedil;&atilde;o. [CAD01]';
+                if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
+                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel inserir a informa&ccedil;&atilde;o. [CAD01]';
                 }
             } elseif ($this->tipoacao == 'Editar') {
                 $this->sucesso = $this->Editar();
-                if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
-                    $this->mensagem = 'N&atilde;o foi poss&iacute;vel editar a informa&ccedil;&atilde;o. [CAD02]';
+                if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
+                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel editar a informa&ccedil;&atilde;o. [CAD02]';
                 }
             } elseif ($this->tipoacao == 'Excluir') {
                 $this->sucesso = $this->Excluir();
-                if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
-                    $this->mensagem = 'N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD03]';
+                if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
+                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD03]';
                 }
             } elseif ($this->tipoacao == 'ExcluirImg') {
                 $this->sucesso = $this->ExcluirImg();
-                if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
-                    $this->mensagem = 'N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD04]';
+                if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
+                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD04]';
                 }
             } elseif ($this->tipoacao == 'Enturmar') {
                 $this->sucesso = $this->Enturmar();
-                if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
-                    $this->mensagem = 'N&atilde;o foi poss&iacute;vel copiar as entruma&ccedil;&otilde;es. [CAD05]';
+                if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
+                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel copiar as entruma&ccedil;&otilde;es. [CAD05]';
                 }
             }
+
+            $this->setFlashMessage();
+
             if (empty($script) && $this->sucesso && !empty($this->url_sucesso)) {
                 redirecionar($this->url_sucesso);
             } else {
@@ -153,58 +157,68 @@ class clsCadastro extends clsCampos
     }
 
 
-  function Inicializar()
-  {
-  }
-
-  function Formular()
-  {
-  }
-
-  function Novo()
-  {
-    return FALSE;
-  }
-
-  function Editar()
-  {
-    return FALSE;
-  }
-
-  function Excluir()
-  {
-    return FALSE;
-  }
-
-  function ExcluirImg()
-  {
-    return FALSE;
-  }
-
-  function Gerar()
-  {
-    return FALSE;
-  }
-
-    protected function flashMessage()
+    function Inicializar()
     {
-        if (Session::has('errors')) {
-            $messages = [];
-            foreach (Session::get('errors')->all() as $message) {
-                $messages[] = $message;
+    }
+
+    function Formular()
+    {
+    }
+
+    function Novo()
+    {
+        return FALSE;
+    }
+
+    function Editar()
+    {
+        return FALSE;
+    }
+
+    function Excluir()
+    {
+        return FALSE;
+    }
+
+    function ExcluirImg()
+    {
+        return FALSE;
+    }
+
+    function Gerar()
+    {
+        return FALSE;
+    }
+
+    protected function setFlashMessage()
+    {
+        Session::remove('legacy');
+
+        $hasMessage = false;
+        $flashKeys = ['success', 'error', 'notice', 'info', 'legacy'];
+
+        foreach ($flashKeys as $k) {
+            if (Session::has($k)) {
+                $hasMessage = true;
+                break;
             }
-            $this->mensagem = implode('<br>', $messages);
         }
 
-        if (empty($this->mensagem) && isset($_GET['mensagem']) && $_GET['mensagem'] == 'sucesso') {
-            $this->mensagem = 'Registro incluido com sucesso!';
+        if ($hasMessage) {
+            return;
         }
 
-        if ($this->sucesso) {
-            return "<p class='success'>$this->mensagem</p>";
+        if (empty($this->_mensagem)) {
+            if ($_GET['mensagem'] ?? '' === 'sucesso') {
+                Session::now('success', 'Registro incluido com sucesso!');
+            }
+        } else {
+            if ($this->sucesso) {
+                Session::now('success', $this->_mensagem);
+            } else {
+                Session::now('error', $this->_mensagem);
+            }
         }
-
-        return empty($this->mensagem) ? "" : "<p class='form_erro error'>$this->mensagem</p>";
     }
 
     public function RenderHTML()
@@ -253,12 +267,6 @@ class clsCadastro extends clsCampos
         $barra = $titulo;
 
         $retorno .= "<tr><td class='formdktd' colspan='2' height='24'>{$barra}</td></tr>";
-
-        $flashMessage = $this->flashMessage();
-
-        if (!empty($flashMessage)) {
-            $retorno .= "<tr><td class='formmdtd' colspan='2' height='24'><div id='flash-container'>{$flashMessage}</div></td></tr>";
-        }
 
         if (empty($this->campos)) {
             $retorno .= '<tr><td class=\'linhaSim\' colspan=\'2\'><span class=\'form\'>N&atilde;o existe informa&ccedil;&atilde;o dispon&iacute;vel</span></td></tr>';
@@ -725,5 +733,16 @@ class clsCadastro extends clsCampos
         }
 
         return '';
+    }
+
+    public function __set($name, $value)
+    {
+        if ($name === 'mensagem') {
+            $this->_mensagem = $value;
+
+            Session::flash('legacy', $value);
+        } else {
+            $this->{$name} = $value;
+        }
     }
 }

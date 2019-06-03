@@ -8,6 +8,7 @@ use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassStage;
 use App\Models\LegacyStudent;
 use App\Services\SchoolClass\AvailableTimeService;
+use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -188,5 +189,42 @@ class AvailableTimeServiceTest extends TestCase
         ]);
 
         $this->assertTrue($this->service->isAvailable($otherRegistration->ref_cod_aluno, $otherSchoolClass->cod_turma));
+    }
+
+    /**
+     * @return void
+     */
+    public function testWithEnrollmentsSameDaySameTimeSameYearAndOneAeeOtherEscolarizacaoReturnsTrue()
+    {
+        $schoolClass = factory(LegacySchoolClass::class, 'morning')->create(
+            [
+                'tipo_mediacao_didatico_pedagogico' => 1,
+                'tipo_atendimento' => TipoAtendimentoTurma::AEE,
+            ]
+        );
+        $otherSchoolClass = factory(LegacySchoolClass::class, 'morning')->create(
+            [
+                'tipo_mediacao_didatico_pedagogico' => 1,
+                'tipo_atendimento' => TipoAtendimentoTurma::ESCOLARIZACAO,
+                'hora_final' => '15:45',
+            ]
+        );
+
+        $registration = factory(LegacyRegistration::class)->create(['ano' => $schoolClass->ano]);
+
+        factory(LegacySchoolClassStage::class)->create([
+            'ref_cod_turma' => $schoolClass,
+        ]);
+
+        factory(LegacySchoolClassStage::class)->create([
+            'ref_cod_turma' => $otherSchoolClass,
+        ]);
+
+        factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $otherSchoolClass->cod_turma,
+            'ref_cod_matricula' => $registration->cod_matricula,
+        ]);
+
+        $this->assertTrue($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
     }
 }

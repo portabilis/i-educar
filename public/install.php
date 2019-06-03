@@ -58,7 +58,7 @@ $isOld = Comparator::greaterThan(
     $latestIeducarVersion['version'],
     $currIeducarVersion
 );
-$minPhpVersion = $installer->composerData->require->php;
+$minPhpVersion = str_replace(['~', '^'], '', $installer->composerData->require->php);
 $phpVersionCheck = version_compare(PHP_VERSION, $minPhpVersion) >= 0;
 $extensionsCheck = $installer->checkExtensions();
 $extensionsReport = $installer->getExtensionsReport();
