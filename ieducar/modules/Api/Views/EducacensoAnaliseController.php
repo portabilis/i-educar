@@ -465,7 +465,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->possuiDependencias == 1 && !$escola->existeDependencia()) {
+        if ($escola->possuiDependencias == 1 && $escola->naoPossuiDependencias()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a escola possui dependências, portanto é necessário informar pelo menos uma dependência.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dependências > Campos: Salas gerais, Sala funcionais, Banheiros, Laboratórios, Salas de atividades, Dormitórios e Áreas externas)',
