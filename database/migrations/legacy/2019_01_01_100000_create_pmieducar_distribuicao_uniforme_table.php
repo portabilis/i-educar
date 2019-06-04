@@ -46,7 +46,9 @@ class CreatePmieducarDistribuicaoUniformeTable extends Migration
                     tenis_tm character varying(20),
                     ref_cod_escola integer,
                     camiseta_infantil_qtd smallint,
-                    camiseta_infantil_tm character varying(20)
+                    camiseta_infantil_tm character varying(20),
+                    calca_jeans_qtd int4 NULL,
+                    calca_jeans_tm varchar(191) NULL
                 );
                 
                 ALTER TABLE ONLY pmieducar.distribuicao_uniforme
