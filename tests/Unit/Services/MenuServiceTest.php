@@ -24,7 +24,7 @@ class MenuServiceTest extends TestCase
      */
     private $repository;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->service = app(MenuService::class);

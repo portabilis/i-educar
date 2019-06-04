@@ -57,7 +57,7 @@ class FormulaTest extends UnitBaseTest
       'Rc' => 0
     );
 
-  protected function setUp()
+  protected function setUp(): void
   {
     $this->_entity = new FormulaMedia_Model_Formula();
   }
