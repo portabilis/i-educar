@@ -116,12 +116,12 @@ class indice extends clsCadastro
         ]);
 
         $this->inputsHelper()->checkbox('emitir_ato_autorizativo', [
-            'label' => 'Emite ato autorizativo nos cabeçalhos de histórico escolar (modelos padrões)',
+            'label' => 'Emite ato autorizativo nos cabeçalhos de histórico escolar (modelos padrão)',
             'value' => $this->emitir_ato_autorizativo ? 'on' : ''
         ]);
 
         $this->inputsHelper()->checkbox('emitir_ato_criacao_credenciamento', [
-            'label' => 'Emite lei de criação e credenciamento nos cabeçalhos de histórico escolar (modelos padrões)',
+            'label' => 'Emite lei de criação e credenciamento nos cabeçalhos de histórico escolar (modelos padrão)',
             'value' => $this->emitir_ato_criacao_credenciamento ? 'on' : ''
         ]);
 
