@@ -12,7 +12,7 @@ matrix:
           - $HOME/.composer/cache
 
       before_script:
-        - git clone https://github.com/portabilis/i-educar-reports-package.git ieducar/modules/Reports
+        - git clone https://github.com/portabilis/i-educar-reports-package.git -b 2.2 ieducar/modules/Reports
 
       script:
         - docker-compose up -d --build
