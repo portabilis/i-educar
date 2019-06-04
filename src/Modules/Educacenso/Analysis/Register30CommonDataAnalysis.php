@@ -119,7 +119,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
             ];
         }
 
-        if (!$data->raca) {
+        if (is_null($data->raca)) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verifique se a raça da pessoa {$data->nomePessoa} foi informado.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Raça)',

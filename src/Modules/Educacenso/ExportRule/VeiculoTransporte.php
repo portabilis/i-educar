@@ -13,7 +13,7 @@ class VeiculoTransporte implements EducacensoExportRule
      */
     public static function handle(RegistroEducacenso $registro60): RegistroEducacenso
     {
-        if (is_null($registro60->transportePublico)) {
+        if (empty($registro60->transportePublico)) {
             $registro60->veiculoTransporteBicicleta = null;
             $registro60->veiculoTransporteMicroonibus = null;
             $registro60->veiculoTransporteOnibus = null;
