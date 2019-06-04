@@ -51,7 +51,7 @@ class CoreExt_Validate_ChoiceTest extends PHPUnit\Framework\TestCase
     'various' => array('sim', 'não', 'nda')
   );
 
-  protected function setUp()
+  protected function setUp(): void
   {
     $this->_validator = new CoreExt_Validate_Choice();
   }

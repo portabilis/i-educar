@@ -15,7 +15,7 @@ class Core_ViewTest extends TestCase
       parent::__construct($name, $data, $dataName);
   }
 
-  protected function setUp()
+  protected function setUp(): void
   {
       parent::setUp();
 
