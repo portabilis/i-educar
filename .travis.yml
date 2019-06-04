@@ -2,11 +2,101 @@ matrix:
 
   include:
 
+    - language: generic
+
+      services:
+        - docker
+
+      cache:
+        directories:
+          - $HOME/.composer/cache
+
+      script:
+        - docker-compose build
+        - docker-compose up -d
+        - docker-compose exec php composer new-install
+
     - language: php
 
       php:
         - '7.1'
+
+      sudo: required
+
+      dist: xenial
+
+      addons:
+        postgresql: '9.5'
+        chrome: stable
+
+      cache:
+        directories:
+          - $HOME/.composer/cache
+
+      before_script:
+        - composer new-install
+        - php artisan dusk:chrome-driver
+        - vendor/laravel/dusk/bin/chromedriver-linux > /dev/null 2>&1 &
+        - php artisan serve > /dev/null 2>&1 &
+
+      script:
+        - vendor/bin/phpunit
+        - php artisan dusk
+
+      env:
+        - APP_URL=http://localhost:8000
+        - APP_ENV=testing
+        - DB_CONNECTION=pgsql
+        - DB_HOST=localhost
+        - DB_PORT=5432
+        - DB_DATABASE=travis
+        - DB_USERNAME=postgres
+        - DB_PASSWORD=
+        - API_ACCESS_KEY=ieducar-access-key
+        - API_SECRET_KEY=ieducar-secret-key
+
+    - language: php
+
+      php:
         - '7.2'
+
+      sudo: required
+
+      dist: xenial
+
+      addons:
+        postgresql: '9.5'
+        chrome: stable
+
+      cache:
+        directories:
+          - $HOME/.composer/cache
+
+      before_script:
+        - composer new-install
+        - php artisan dusk:chrome-driver
+        - vendor/laravel/dusk/bin/chromedriver-linux > /dev/null 2>&1 &
+        - php artisan serve > /dev/null 2>&1 &
+
+      script:
+        - vendor/bin/phpunit
+        - php artisan dusk
+
+      env:
+        - APP_URL=http://localhost:8000
+        - APP_ENV=testing
+        - DB_CONNECTION=pgsql
+        - DB_HOST=localhost
+        - DB_PORT=5432
+        - DB_DATABASE=travis
+        - DB_USERNAME=postgres
+        - DB_PASSWORD=
+        - API_ACCESS_KEY=ieducar-access-key
+        - API_SECRET_KEY=ieducar-secret-key
+
+    - language: php
+
+      php:
         - '7.3'
 
       sudo: required
