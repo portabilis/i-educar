@@ -52,10 +52,6 @@ class AddForeignKeysOnPmieducarEscolaTable extends Migration
                ->onUpdate('restrict')
                ->onDelete('restrict');
 
-            $table->foreign('codigo_lingua_indigena')
-               ->references('id')
-               ->on('modules.lingua_indigena_educacenso');
-
             $table->foreign('codigo_ies')
                 ->references('id')
                 ->on('modules.educacenso_ies');
