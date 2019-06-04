@@ -9,6 +9,9 @@ php:
   - '7.2'
   - '7.3'
 
+services:
+  - docker
+
 addons:
   postgresql: '9.5'
   chrome: stable
@@ -26,6 +29,7 @@ before_script:
 script:
   - vendor/bin/phpunit
   - php artisan dusk
+  - docker-compose build
 
 env:
   global:
