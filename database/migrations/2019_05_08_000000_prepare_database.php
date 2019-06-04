@@ -6,6 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 class PrepareDatabase extends Migration
 {
     /**
+     * @see https://github.com/portabilis/i-educar/pull/576
      * @see https://github.com/portabilis/i-educar/pull/496
      * @see https://github.com/portabilis/i-educar/pull/497
      * @see https://github.com/portabilis/i-educar/pull/498
@@ -17,6 +18,7 @@ class PrepareDatabase extends Migration
      */
     private function dropSchemas()
     {
+        DB::unprepared('DROP SCHEMA IF EXISTS acesso CASCADE;');
         DB::unprepared('DROP SCHEMA IF EXISTS alimentos CASCADE;');
         DB::unprepared('DROP SCHEMA IF EXISTS consistenciacao CASCADE;');
         DB::unprepared('DROP SCHEMA IF EXISTS conv_functions CASCADE;');
