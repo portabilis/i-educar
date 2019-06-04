@@ -228,6 +228,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        'Asset' => Tooleks\LaravelAssetVersion\Facades\Asset::class,
     ],
 
     'trackerror' => env('APP_TRACK_ERROR', false),
