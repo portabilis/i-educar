@@ -525,10 +525,6 @@ JS;
 
   function Novo()
   {
-    if (!$this->validaDeficiencias()) {
-        return false;
-    }
-
     $this->cod_servidor = (int) $this->cod_servidor;
     $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao;
 
@@ -616,10 +612,6 @@ JS;
 
   function Editar()
   {
-    if (!$this->validaDeficiencias()) {
-        return false;
-    }
-
     $timesep = explode(':', $this->carga_horaria);
     $hour    = $timesep[0] + ((int) ($timesep[1] / 60));
     $min     = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
@@ -773,19 +765,6 @@ JS;
     return false;
   }
 
-  private function validaDeficiencias()
-  {
-    $deficiencias = array_filter((array) $this->deficiencias);
-    $validator = new DeficiencyValidator($deficiencias);
-
-    if ($validator->isValid()) {
-        return true;
-    } else {
-        $this->mensagem = $validator->getMessage();
-        return false;
-    }
-  }
-
   function addCamposCenso($obj){
     $obj->tipo_ensino_medio_cursado = $this->tipo_ensino_medio_cursado;
     $obj->pos_graduacao = $this->pos_graduacao;
@@ -797,6 +776,7 @@ JS;
   {
     $cursos_disciplina = Session::get('cursos_disciplina');
     $cursos_servidor = Session::get('cursos_servidor');
+    $existe_funcao_professor = false;
 
     $listFuncoesCadastradas = array();
 
@@ -804,7 +784,10 @@ JS;
         foreach ($this->ref_cod_funcao as $k => $funcao) {
             list($funcao, $professor) = explode('-', $funcao);
 
-            $existe_funcao_professor = (bool) $professor;
+            if ((bool) $professor) {
+              $existe_funcao_professor = true;
+            }
+
             $cod_servidor_funcao = $this->cod_servidor_funcao[$k];
             $obj_servidor_funcao = new clsPmieducarServidorFuncao(null, null, null, null, $cod_servidor_funcao);
 

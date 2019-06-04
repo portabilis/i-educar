@@ -3,7 +3,7 @@
 namespace App\Imports;
 
 use App\Models\LegacySchoolGradeDiscipline;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Model;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -14,15 +14,28 @@ class SchoolGradeDisciplineImport implements ToModel, WithProgressBar, WithHeadi
     use Importable;
 
     /**
+     * @var int
+     */
+    private $school;
+
+    /**
+     * @param int $school
+     */
+    public function __construct($school)
+    {
+        $this->school = $school;
+    }
+
+    /**
     * @param array $row
     *
-    * @return \Illuminate\Database\Eloquent\Model|null
+    * @return Model
     */
     public function model(array $row)
     {
         return LegacySchoolGradeDiscipline::query()->firstOrNew([
             'ref_ref_cod_serie' => $row['grade_id'],
-            'ref_ref_cod_escola' => $row['school_id'],
+            'ref_ref_cod_escola' => $row['school_id'] ?? $this->school,
             'ref_cod_disciplina' => $row['discipline_id'],
         ], [
             // FIXME

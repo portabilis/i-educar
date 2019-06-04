@@ -70,22 +70,23 @@ class indice extends clsDetalhe
             if (is_array($lst_escola)) {
                 $det_escola = array_shift($lst_escola);
                 $nm_escola = $det_escola['nome'];
-                $this->addDetalhe(['Escola fornecedora', Portabilis_String_Utils::toLatin1($nm_escola)]);
+                $this->addDetalhe(['Escola fornecedora', $nm_escola]);
             }
         }
 
         if (dbBool($registro['kit_completo'])) {
             $this->addDetalhe(['Recebeu kit completo', 'Sim']);
         } else {
-            $this->addDetalhe(['Recebeu kit completo', Portabilis_String_Utils::toLatin1('Não')]);
-            $this->addDetalhe([Portabilis_String_Utils::toLatin1('Quantidade de agasalhos (jaqueta e calça)'), $registro['agasalho_qtd'] ?: '0']);
+            $this->addDetalhe(['Recebeu kit completo', 'Não']);
+            $this->addDetalhe(['Quantidade de agasalhos (jaqueta e calça)', $registro['agasalho_qtd'] ?: '0']);
             $this->addDetalhe(['Quantidade de camisetas (manga curta)', $registro['camiseta_curta_qtd'] ?: '0']);
             $this->addDetalhe(['Quantidade de camisetas (manga longa)', $registro['camiseta_longa_qtd'] ?: '0']);
             $this->addDetalhe(['Quantidade de camisetas infantis (sem manga)', $registro['camiseta_infantil_qtd'] ?: '0']);
+            $this->addDetalhe(['Quantidade de calça jeans', $registro['calca_jeans_qtd'] ?: '0']);
             $this->addDetalhe(['Quantidade de meias', $registro['meias_qtd'] ?: '0']);
             $this->addDetalhe(['Bermudas tectels (masculino)', $registro['bermudas_tectels_qtd'] ?: '0']);
             $this->addDetalhe(['Bermudas coton (feminino)', $registro['bermudas_coton_qtd'] ?: '0']);
-            $this->addDetalhe([Portabilis_String_Utils::toLatin1('Quantidade de tênis'), $registro['tenis_qtd'] ?: '0']);
+            $this->addDetalhe(['Quantidade de tênis', $registro['tenis_qtd'] ?: '0']);
         }
 
         $obj_permissoes = new clsPermissoes();

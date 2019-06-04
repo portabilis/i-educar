@@ -10,6 +10,7 @@ use App\Services\EnrollmentService;
 use App\Services\RegistrationService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\MessageBag;
 use Illuminate\View\View;
 use Throwable;
@@ -37,6 +38,8 @@ class BatchEnrollmentController extends Controller
         ]);
 
         $this->menu(659); // Código: ieducar/intranet/educar_matriculas_turma_lst.php
+
+        $this->setMessages($fails, $success, 'cancel');
 
         return view('enrollments.batch.cancel', [
             'schoolClass' => $schoolClass,
@@ -67,6 +70,8 @@ class BatchEnrollmentController extends Controller
         ]);
 
         $this->menu(659); // Código: ieducar/intranet/educar_matriculas_turma_lst.php
+
+        $this->setMessages($fails, $success, 'enroll');
 
         return view('enrollments.batch.enroll', [
             'schoolClass' => $schoolClass,
@@ -182,5 +187,52 @@ class BatchEnrollmentController extends Controller
         });
 
         return $this->viewEnroll($schoolClass, $registrations, $fails, $success);
+    }
+
+    /**
+     * @param MessageBag $fail
+     * @param MessageBag $success
+     * @param string     $type
+     *
+     * @return void
+     */
+    protected function setMessages(
+        ?MessageBag $fail,
+        ?MessageBag $success,
+        string $type = 'enroll'
+    ) {
+        $fail = $fail ?? new MessageBag;
+        $success = $success ?? new MessageBag;
+
+        switch ($type) {
+            case 'enroll':
+                if ($fail->count() === 1) {
+                    Session::now('error', 'Não foi possível enturmar 1 aluno.');
+                } elseif ($fail->count() > 1) {
+                    Session::now('error', sprintf('Não foi possível enturmar %d alunos.', $fail->count()));
+                }
+
+                if ($success->count() === 1) {
+                    Session::now('success', 'Foi enturmado 1 aluno.');
+                } elseif ($success->count() > 1) {
+                    Session::now('success', sprintf('Foram enturmados %s alunos.', $success->count()));
+                }
+
+                break;
+            case 'cancel':
+                if ($fail->count() === 1) {
+                    Session::now('error', 'Não foi possível desenturmar 1 aluno.');
+                } elseif ($fail->count() > 1) {
+                    Session::now('error', sprintf('Não foi possível desenturmar %d alunos.', $fail->count()));
+                }
+
+                if ($success->count() === 1) {
+                    Session::now('success', 'Foi desenturmado 1 aluno.');
+                } elseif ($success->count() > 1) {
+                    Session::now('success', sprintf('Foram desenturmados %s alunos.', $success->count()));
+                }
+
+                break;
+        }
     }
 }

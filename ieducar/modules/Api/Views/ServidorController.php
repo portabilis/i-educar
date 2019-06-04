@@ -1,5 +1,6 @@
 <?php
-
+use App\Models\Deficiency;
+use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'intranet/include/clsBanco.inc.php';
@@ -158,6 +159,39 @@ class ServidorController extends ApiCoreController
         return ['result' => $result[0]];
     }
 
+    /**
+     * @return bool
+     */
+    private function validateDeficiencies()
+    {
+        $deficiencias = explode(',', $this->getRequest()->deficiencias);
+        $deficiencias = array_filter((array) $deficiencias);
+        $deficiencias = $this->replaceByEducacensoDeficiencies($deficiencias);
+        $validator = new DeficiencyValidator($deficiencias);
+
+        if ($validator->isValid()) {
+            return true;
+        } else {
+            $this->messenger->append($validator->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function replaceByEducacensoDeficiencies($deficiencies)
+    {
+        $databaseDeficiencies = Deficiency::all()->getKeyValueArray('deficiencia_educacenso');
+        $arrayEducacensoDeficiencies = [];
+
+        foreach ($deficiencies as $deficiency) {
+            $arrayEducacensoDeficiencies[] = $databaseDeficiencies[(int)$deficiency];
+        }
+
+        return $arrayEducacensoDeficiencies;
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'servidor-search')) {
@@ -168,6 +202,8 @@ class ServidorController extends ApiCoreController
             $this->appendResponse($this->getServidoresDisciplinasTurmas());
         } elseif ($this->isRequestFor('get', 'dados-servidor')) {
             $this->appendResponse($this->getDadosServidor());
+        } elseif ($this->isRequestFor('get', 'verifica-deficiencias')) {
+            $this->appendResponse($this->validateDeficiencies());
         } else {
             $this->notImplementedOperationError();
         }

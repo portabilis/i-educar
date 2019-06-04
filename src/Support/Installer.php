@@ -8,9 +8,12 @@ class Installer
 
     protected $extensions = [
         'bcmath',
+        'ctype',
         'curl',
         'dom',
         'fileinfo',
+        'gd',
+        'iconv',
         'json',
         'libxml',
         'mbstring',
@@ -21,8 +24,10 @@ class Installer
         'SimpleXML',
         'tokenizer',
         'xml',
+        'xmlreader',
         'xmlwriter',
         'zip',
+        'zlib',
         'pcre',
     ];
 
