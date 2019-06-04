@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
 
-class Migrations extends Migration
+class BatchMigrations extends Migration
 {
     /**
      * @return array
@@ -28,15 +28,5 @@ class Migrations extends Migration
                 'batch' => 1,
             ]);
         }
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        //
     }
 }
