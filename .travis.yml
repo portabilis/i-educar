@@ -5,12 +5,12 @@ sudo: required
 dist: xenial
 
 php:
-  - 7.1
-  - 7.2
-  - 7.3
+  - '7.1'
+  - '7.2'
+  - '7.3'
 
 addons:
-  postgresql: 9.5
+  postgresql: '9.5'
   chrome: stable
 
 cache:
