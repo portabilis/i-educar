@@ -155,7 +155,7 @@ class Register30CommonDataAnalysis implements AnalysisInterface
             ];
         }
 
-        if (!$data->municipioNascimento && $data->nacionalidade != Nacionalidade::ESTRANGEIRA) {
+        if (!$data->municipioNascimento && $data->nacionalidade == Nacionalidade::BRASILEIRA) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verifique se a naturalidade da pessoa {$data->nomePessoa} foi informada.",
                 'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: Naturalidade)',
