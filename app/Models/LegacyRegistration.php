@@ -87,6 +87,14 @@ class LegacyRegistration extends Model
     }
 
     /**
+     * @return HasMany
+     */
+    public function activeEnrollments()
+    {
+        return $this->hasMany(LegacyEnrollment::class, 'ref_cod_matricula')->where('ativo', 1);
+    }
+
+    /**
      * @return HasOne
      */
     public function lastEnrollment()

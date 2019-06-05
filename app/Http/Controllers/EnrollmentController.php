@@ -6,7 +6,10 @@ use App\Http\Requests\EnrollmentRequest;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
 use App\Services\EnrollmentService;
+use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Throwable;
 
 class EnrollmentController extends Controller
 {
@@ -24,7 +27,7 @@ class EnrollmentController extends Controller
         LegacySchoolClass $schoolClass,
         EnrollmentService $enrollmentService
     ) {
-        $this->breadcrumb('Enturmações da matrícula', [
+        $this->breadcrumb('Enturmar matrícula', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
@@ -35,6 +38,7 @@ class EnrollmentController extends Controller
 
         return view('enrollments.enroll', [
             'registration' => $registration,
+            'enrollments' => $registration->activeEnrollments()->get(),
             'schoolClass' => $schoolClass,
             'enableCancelButton' => $enableCancelButton,
             'anotherClassroomEnrollments' => $anotherClassroomEnrollments,
@@ -57,17 +61,48 @@ class EnrollmentController extends Controller
     }
 
     /**
-     * @param EnrollmentRequest $request
-     * @param LegacySchoolClass $schoolClass
-     * @param EnrollmentService $enrollmentService
+     * @param EnrollmentService  $enrollmentService
+     * @param EnrollmentRequest  $request
+     * @param LegacyRegistration $registration
+     * @param LegacySchoolClass  $schoolClass
      *
-     * @return View
+     * @return RedirectResponse
      */
     public function enroll(
+        EnrollmentService $enrollmentService,
         EnrollmentRequest $request,
-        LegacySchoolClass $schoolClass,
-        EnrollmentService $enrollmentService
+        LegacyRegistration $registration,
+        LegacySchoolClass $schoolClass
     ) {
-        return $this->viewEnroll($schoolClass, $registrations, $fails, $success);
+        $date = Carbon::createFromFormat('d/m/Y', $request->input('enrollment_date'));
+
+        if ($request->input('is_relocation') || $request->input('is_cancellation')) {
+            $enrollmentFromId = $request->input('enrollment_from_id');
+            $enrollment = $registration->enrollments()->whereKey($enrollmentFromId)->firstOrFail();
+
+            try {
+                $enrollmentService->cancelEnrollment($enrollment, $date);
+            } catch (Throwable $throwable) {
+                return redirect()->back()->with('error', $throwable->getMessage());
+            }
+        }
+
+        if ($request->input('is_cancellation')) {
+            return redirect()->route('enrollments.index', [
+                'ref_cod_matricula' => $registration->id,
+                'ano_letivo' => $registration->year,
+            ])->with('success', 'Enturmação feita com sucesso.');
+        }
+
+        try {
+            $enrollmentService->enroll($registration, $schoolClass, $date);
+        } catch (Throwable $throwable) {
+            return redirect()->back()->with('error', $throwable->getMessage());
+        }
+
+        return redirect()->route('enrollments.index', [
+            'ref_cod_matricula' => $registration->id,
+            'ano_letivo' => $registration->year,
+        ])->with('success', 'Enturmação feita com sucesso.');
     }
 }

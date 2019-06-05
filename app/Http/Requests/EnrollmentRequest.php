@@ -14,7 +14,7 @@ class EnrollmentRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
+        return [
             'enrollment_date' => [
                 'required',
                 'date_format:d/m/Y',
@@ -23,8 +23,6 @@ class EnrollmentRequest extends FormRequest
                 'date_format:d/m/Y',
             ]
         ];
-
-        return $rules;
     }
 
     /**
