@@ -201,7 +201,7 @@ class RegraController extends ApiCoreController
                 'id', 'tabela_arredondamento_id', 'tabela_arredondamento_id_conceitual',
                 'tipo_nota', 'tipo_presenca', 'parecer_descritivo',
                 'tipo_recuperacao', 'media_recuperacao_paralela', 'nota_maxima_geral',
-                'nota_maxima_exame', 'updated_at'
+                'nota_maxima_exame', 'updated_at', 'regra_diferenciada_id'
             ];
 
             $_regras = Portabilis_Array_Utils::filterSet($_regras, $attrs);
