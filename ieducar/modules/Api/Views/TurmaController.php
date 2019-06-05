@@ -151,8 +151,8 @@ class TurmaController extends ApiCoreController
                     t.turma_turno_id as turno_id,
                     t.ref_cod_curso as curso_id,
                     t.ref_ref_cod_serie as serie_id,
-                   rasa.regra_avaliacao_id,
-                   rasa.regra_avaliacao_diferenciada_id,
+                   ra.id as regra_avaliacao_id,
+                   ra.regra_diferenciada_id as regra_avaliacao_diferenciada_id,
                     t.updated_at,
                     (
                         CASE t.ativo WHEN 1 THEN 
@@ -162,9 +162,13 @@ class TurmaController extends ApiCoreController
                         END
                     ) AS deleted_at
                 FROM pmieducar.turma t 
+                INNER JOIN pmieducar.escola e 
+                    ON e.cod_escola = t.ref_ref_cod_escola 
                 INNER JOIN modules.regra_avaliacao_serie_ano rasa ON true
                     AND rasa.serie_id = t.ref_ref_cod_serie
                     AND rasa.ano_letivo = $2
+                INNER JOIN modules.regra_avaliacao ra 
+                    ON ra.id = (case when e.utiliza_regra_diferenciada then rasa.regra_avaliacao_diferenciada_id else rasa.regra_avaliacao_id end)
                 WHERE t.ref_cod_instituicao = $1
                     AND t.ano = $2
                     {$turnoId}
