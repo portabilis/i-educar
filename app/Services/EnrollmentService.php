@@ -41,8 +41,8 @@ class EnrollmentService
 
     /**
      * @param LegacyRegistration $registration
-     * @param LegacySchoolClass $schoolClass
-     * @param DateTime $date
+     * @param LegacySchoolClass  $schoolClass
+     * @param DateTime           $date
      *
      * @return null
      */
@@ -54,6 +54,14 @@ class EnrollmentService
         $enrollmentSequence = new SequencialEnturmacao($registration->id, $schoolClass->id, $date->format('Y-m-d'));
 
         return $enrollmentSequence->ordenaSequencialNovaMatricula();
+    }
+
+    /**
+     * @return AvailableTimeService
+     */
+    private function getAvailableTimeService()
+    {
+        return new AvailableTimeService();
     }
 
     /**
@@ -74,12 +82,12 @@ class EnrollmentService
     }
 
     /**
-     * Retorna se matrícula está enturmada na turma
+     * Retorna se matrícula está enturmada na turma.
      *
-     * @param LegacySchoolClass $schoolClass
+     * @param LegacySchoolClass  $schoolClass
      * @param LegacyRegistration $registration
      *
-     * @return boolean
+     * @return bool
      */
     public function isEnrolled($schoolClass, $registration)
     {
@@ -90,9 +98,9 @@ class EnrollmentService
     }
 
     /**
-     * Retorna se enturmações da matrícula em  outras turmas
+     * Retorna as enturmações da matrícula em outras turmas.
      *
-     * @param LegacySchoolClass $schoolClass
+     * @param LegacySchoolClass  $schoolClass
      * @param LegacyRegistration $registration
      *
      * @return Collection
@@ -192,10 +200,9 @@ class EnrollmentService
             throw new PreviousEnrollDateException($date, $registration->lastEnrollment);
         }
 
-        $availableTimeService = new AvailableTimeService();
-        $validateCenso = LegacyInstitution::active()->first()->obrigar_campos_censo ?? false;
+        $isMandatoryCensoFields = $schoolClass->school->institution->isMandatoryCensoFields();
 
-        if ($validateCenso && !$availableTimeService->isAvailable($registration->ref_cod_aluno, $schoolClass->id)) {
+        if ($isMandatoryCensoFields && !$this->getAvailableTimeService()->isAvailable($registration->ref_cod_aluno, $schoolClass->id)) {
             throw new ExistsActiveEnrollmentSameTimeException($registration);
         }
 
