@@ -5,56 +5,72 @@
 @endpush
 
 @section('content')
-    <form id="formcadastro" action="{{ route('enrollments.batch.enroll', ['schoolClass' => $schoolClass->id]) }}" method="post" class="open-sans">
-        <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
+    <form action="{{ route('enrollments.batch.enroll', ['schoolClass' => $schoolClass->id]) }}" method="post">
+        <table class="table-default">
+            <thead>
+                <tr>
+                    <td colspan="2"><b>Enturmar</b></td>
+                </tr>
+            </thead>
             <tbody>
                 <tr>
-                    <td class="formdktd" colspan="2" height="24"><b>Enturmar</b></td>
+                    <td>Nome do aluno:</td>
+                    <td>{{ $registration->student->person->name ?? null }}</td>
                 </tr>
-                <tr id="tr_nm_aluno">
-                    <td class="formmdtd" valign="top"><span class="form">Nome do aluno:</span></td>
-                    <td class="formmdtd" valign="top"><span class="form">{{ $registration->student->person->name ?? null }}</span></td>
+                <tr>
+                    <td>Escola:</td>
+                    <td>{{ $schoolClass->school->person->name ?? null }}</td>
                 </tr>
-                <tr id="tr_nm_escola">
-                    <td class="formlttd" valign="top"><span class="form">Escola:</span></td>
-                    <td class="formlttd" valign="top"><span class="form">{{ $schoolClass->school->person->name ?? null }}</span></td>
+                <tr>
+                    <td>Curso:</td>
+                    <td>{{ $schoolClass->course->name ?? null }}</td>
                 </tr>
-                <tr id="tr_nm_curso">
-                    <td class="formmdtd" valign="top"><span class="form">Curso:</span></td>
-                    <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->course->name ?? null }}</span></td>
+                <tr>
+                    <td>Série:</td>
+                    <td>{{ $schoolClass->grade->name ?? null }}</td>
                 </tr>
-                <tr id="tr_nm_serie">
-                    <td class="formlttd" valign="top"><span class="form">Série:</span></td>
-                    <td class="formlttd" valign="top"><span class="form">{{ $schoolClass->grade->name ?? null }}</span></td>
+                <tr>
+                    <td>Turma selecionada:</td>
+                    <td>{{ $schoolClass->name ?? null }}</td>
                 </tr>
-                <tr id="tr_nm_turma">
-                    <td class="formmdtd" valign="top"><span class="form">Turma selecionada:</span></td>
-                    <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->name ?? null }}</span></td>
+                <tr>
+                    <td>Total de vagas:</td>
+                    <td>{{ $schoolClass->max_aluno }}</td>
                 </tr>
-                <tr id="tr_total_vagas">
-                    <td class="formlttd" valign="top"><span class="form">Total de vagas:</span></td>
-                    <td class="formlttd" valign="top"><span class="form">{{ $schoolClass->max_aluno }}</span></td>
+                <tr>
+                    <td>Vagas disponíveis:</td>
+                    <td>{{ $schoolClass->vacancies }}</td>
                 </tr>
-                <tr id="tr_vagas_disponiveis">
-                    <td class="formmdtd" valign="top"><span class="form">Vagas disponíveis:</span></td>
-                    <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->vacancies }}</span></td>
+                <tr>
+                    <td>Alunos enturmados:</td>
+                    <td>{{ $schoolClass->getTotalEnrolled() }}</td>
                 </tr>
-                <tr id="tr_data_enturmacao">
-                    <td class="formlttd" valign="top"><span class="form">
-                        <label for="">
-                            <div>Data da enturmação<span class="campo_obrigatorio">*</span></div>
-                            <div><small class="text-muted">dd/mm/aaaa</small></div>
-                        </label>
-                        </span>
+                <tr>
+                    <td>Período de enturmação:</td>
+                    <td>{{ $schoolClass->begin_academic_year->format('d/m/Y') }} à {{ $schoolClass->end_academic_year->format('d/m/Y') }}</td>
+                </tr>
+                <tr>
+                    <td>
+                        Data da enturmação<span class="campo_obrigatorio">*</span>
+                        <br>
+                        <small class="text-muted">dd/mm/aaaa</small>
                     </td>
-                    <td class="formlttd" valign="top">
-                        <span class="form">
-                            <input name="enrollment_date" value="{{ old('enrollment_date') }}" onkeypress="formataData(this, event);" class="form-input {{ $errors->has('enrollment_date') ? 'error' : '' }}" type="text" maxlength="10" placeholder="Data da enturmação">
-
-                        </span>
+                    <td>
+                        <input name="enrollment_date" value="{{ old('enrollment_date') }}" onkeypress="formataData(this, event);" class="form-input {{ $errors->has('enrollment_date') ? 'error' : '' }}" type="text" maxlength="10" placeholder="Data da enturmação">
                     </td>
                 </tr>
             </tbody>
         </table>
+
+        <div class="separator"></div>
+
+        <div style="text-align: center">
+            <button class="btn-green" type="submit">Enturmar</button>
+            <a href="javascript:void(0)" class="btn registration-btn-check" >Selecionar todos</a>
+            <a href="{{ route('enrollments.batch.cancel.index', ['schoolClass' => $schoolClass->id]) }}" class="btn">Desenturmar em lote</a>
+            <a href="{{ url('intranet/educar_matricula_cad.php?ref_cod_turma_copiar_enturmacoes=' . $schoolClass->id) }}" class="btn">Copiar enturmações</a>
+            <a href="{{ url('intranet/educar_matriculas_turma_lst.php') }}" class="btn">Cancelar</a>
+        </div>
+
     </form>
 @endsection
