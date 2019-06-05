@@ -14,7 +14,6 @@ use App\Exceptions\Enrollment\PreviousCancellationDateException;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacyEnrollment;
-use App\Models\LegacyInstitution;
 use App\Services\SchoolClass\AvailableTimeService;
 use App\User;
 use Carbon\Carbon;
@@ -196,7 +195,11 @@ class EnrollmentService
             throw new ExistsActiveEnrollmentException($registration);
         }
 
-        if ($registration->lastEnrollment && $registration->lastEnrollment->date_departed->format('Y-m-d') > $date->format('Y-m-d')) {
+        if (
+            $registration->lastEnrollment
+            && $registration->lastEnrollment->date_departed
+            && $registration->lastEnrollment->date_departed->format('Y-m-d') > $date->format('Y-m-d')
+        ) {
             throw new PreviousEnrollDateException($date, $registration->lastEnrollment);
         }
 
