@@ -2,7 +2,9 @@
 //error_reporting(E_ALL);
 //ini_set("display_errors", 1);
 
-ini_set("max_execution_time", 30000);
+use iEducar\Modules\Educacenso\RunMigrations;
+
+ini_set("max_execution_time", 0);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -157,9 +159,18 @@ class indice extends clsCadastro
       }
       //echo 'Tempo para importar registro '.$numeroRegistro.': ' . (microtime(true) - $time_start) . '<br/>';
     }
+
+    $this->runMigrations();
+
     @header_remove('Set-Cookie');
     $this->mensagem = "Arquivo importado!";
     return true;
+  }
+
+  private function runMigrations()
+  {
+    $runMigrationsService = new RunMigrations();
+    $runMigrationsService->run();
   }
 
   function importaRegistro00($dadosRegistro) {
