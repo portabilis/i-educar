@@ -5,7 +5,7 @@ namespace iEducar\Modules\Educacenso\Migrations;
 use iEducar\Modules\Educacenso\Model\Dormitorios;
 use Illuminate\Support\Facades\DB;
 
-class MigraDadosDormitorioEscola
+class MigraDadosDormitorioEscola implements EducacensoMigrationInterface
 {
     public static function execute()
     {

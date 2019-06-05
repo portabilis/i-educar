@@ -6,7 +6,7 @@ use App\Services\EmployeeGraduationService;
 use iEducar\Modules\ValueObjects\EmployeeGraduationValueObject;
 use Illuminate\Support\Facades\DB;
 
-class InsertEmployeeGraduations
+class InsertEmployeeGraduations implements EducacensoMigrationInterface
 {
     public static function execute()
     {

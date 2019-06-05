@@ -4,7 +4,7 @@ namespace iEducar\Modules\Educacenso\Migrations;
 
 use Illuminate\Support\Facades\DB;
 
-class MigraDadosCartorio
+class MigraDadosCartorio implements EducacensoMigrationInterface
 {
     public static function execute()
     {

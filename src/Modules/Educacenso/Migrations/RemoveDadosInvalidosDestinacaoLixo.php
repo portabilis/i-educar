@@ -4,7 +4,7 @@ namespace iEducar\Modules\Educacenso\Migrations;
 
 use Illuminate\Support\Facades\DB;
 
-class RemoveDadosInvalidosDestinacaoLixo
+class RemoveDadosInvalidosDestinacaoLixo implements EducacensoMigrationInterface
 {
     public static function execute()
     {

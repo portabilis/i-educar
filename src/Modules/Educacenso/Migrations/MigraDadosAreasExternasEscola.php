@@ -5,7 +5,7 @@ namespace iEducar\Modules\Educacenso\Migrations;
 use iEducar\Modules\Educacenso\Model\AreasExternas;
 use Illuminate\Support\Facades\DB;
 
-class MigraDadosAreasExternasEscola
+class MigraDadosAreasExternasEscola implements EducacensoMigrationInterface
 {
     public static function execute()
     {

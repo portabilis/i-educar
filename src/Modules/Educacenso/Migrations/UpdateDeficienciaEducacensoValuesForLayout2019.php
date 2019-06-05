@@ -4,7 +4,7 @@ namespace iEducar\Modules\Educacenso\Migrations;
 
 use Illuminate\Support\Facades\DB;
 
-class UpdateDeficienciaEducacensoValuesForLayout2019
+class UpdateDeficienciaEducacensoValuesForLayout2019 implements EducacensoMigrationInterface
 {
     public static function execute()
     {

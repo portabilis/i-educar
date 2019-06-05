@@ -4,7 +4,7 @@ namespace iEducar\Modules\Educacenso\Migrations;
 
 use Illuminate\Support\Facades\DB;
 
-class MigraDadosTurmaUnificadaEtapaEducacenso
+class MigraDadosTurmaUnificadaEtapaEducacenso implements EducacensoMigrationInterface
 {
     public static function execute()
     {

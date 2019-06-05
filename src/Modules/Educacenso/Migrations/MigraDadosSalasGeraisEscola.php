@@ -5,7 +5,7 @@ namespace iEducar\Modules\Educacenso\Migrations;
 use iEducar\Modules\Educacenso\Model\SalasGerais;
 use Illuminate\Support\Facades\DB;
 
-class MigraDadosSalasGeraisEscola
+class MigraDadosSalasGeraisEscola implements EducacensoMigrationInterface
 {
     public static function execute()
     {
