@@ -12,12 +12,12 @@
                 <td class="formdktd" colspan="2" height="24"><b>Unificação de alunos</b></td>
             </tr>
             <tr>
-                <td class="formmdtd" valign="top"><span class="form">Aluno(s) unificado(s):</span></td>
-                <td class="formmdtd" valign="top"><span class="form">{{ $unification->getMainName() }}</span></td>
-            </tr>
-            <tr>
                 <td class="formmdtd" valign="top"><span class="form">Aluno principal:</span></td>
                 <td class="formmdtd" valign="top"><span class="form">{{  implode(', ', $unification->getDuplicatesName()) }}</span></td>
+            </tr>
+            <tr>
+                <td class="formmdtd" valign="top"><span class="form">Aluno(s) unificado(s):</span></td>
+                <td class="formmdtd" valign="top"><span class="form">{{ $unification->getMainName() }}</span></td>
             </tr>
             <tr>
                 <td class="formmdtd" valign="top"><span class="form">Data da unificação:</span></td>
@@ -25,11 +25,7 @@
             </tr>
             <tr>
                 <td class="formmdtd" valign="top"><span class="form">Feita por:</span></td>
-                <td class="formmdtd" valign="top"><span class="form">{{ $unification->getMainName() }}</span></td>
-            </tr>
-            <tr>
-                <td class="formmdtd" valign="top"><span class="form">Aluno principal:</span></td>
-                <td class="formmdtd" valign="top"><span class="form">{{ $unification->createdBy->real_name }}</span></td>
+                <td class="formmdtd" valign="top"><span class="form"></span>{{ $unification->createdBy->real_name }}</td>
             </tr>
             @if(!$unification->active)
                 <tr>

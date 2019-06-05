@@ -145,6 +145,7 @@ class indice extends clsCadastro
     $log->main_id = $mainId;
     $log->duplicates_id = json_encode($duplicatesId);
     $log->created_by = $createdBy;
+    $log->updated_by = $createdBy;
     $log->save();
     return $log->id;
   }
