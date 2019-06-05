@@ -11,10 +11,11 @@ use Illuminate\View\View;
 class EnrollmentController extends Controller
 {
     /**
-     * Renderiza a view da enturmação
+     * Renderiza a view da enturmação.
      *
      * @param LegacyRegistration $registration
-     * @param LegacySchoolClass $schoolClass
+     * @param LegacySchoolClass  $schoolClass
+     * @param EnrollmentService  $enrollmentService
      *
      * @return View
      */
@@ -26,6 +27,7 @@ class EnrollmentController extends Controller
         $this->breadcrumb('Enturmações da matrícula', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
+
         $this->menu(578);
 
         $enableCancelButton = $enrollmentService->isEnrolled($schoolClass, $registration);
@@ -41,7 +43,8 @@ class EnrollmentController extends Controller
 
     /**
      * @param LegacyRegistration $registration
-     * @param LegacySchoolClass $schoolClass
+     * @param LegacySchoolClass  $schoolClass
+     * @param EnrollmentService  $enrollmentService
      *
      * @return View
      */
@@ -55,8 +58,8 @@ class EnrollmentController extends Controller
 
     /**
      * @param EnrollmentRequest $request
-     * @param LegacySchoolClass      $schoolClass
-     * @param EnrollmentService      $enrollmentService
+     * @param LegacySchoolClass $schoolClass
+     * @param EnrollmentService $enrollmentService
      *
      * @return View
      */
