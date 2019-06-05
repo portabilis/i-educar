@@ -40,6 +40,7 @@ class LegacyEnrollment extends Model
         'data_cadastro',
         'data_enturmacao',
         'sequencial_fechamento',
+        'ativo',
     ];
 
     /**

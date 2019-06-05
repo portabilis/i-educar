@@ -29,7 +29,7 @@ class LegacyRegistration extends Model
      * @var array
      */
     protected $fillable = [
-        'ref_cod_aluno', 'data_cadastro', 'ano', 'ref_usuario_cad',
+        'ref_cod_aluno', 'data_cadastro', 'ano', 'ref_usuario_cad', 'dependencia',
     ];
 
     /**
