@@ -1,7 +1,7 @@
 <?php
 
-use iEducar\Modules\Educacenso\Migrations\RemoveValoresInvalidosDaLocalizacaoDiferenciada as RemoveValoresInvalidosDaLocalizacaoDiferenciadaClass;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class RemoveDadosInvalidosLocalFuncionamentoEscola extends Migration
 {
@@ -12,7 +12,9 @@ class RemoveDadosInvalidosLocalFuncionamentoEscola extends Migration
      */
     public function up()
     {
-        RemoveValoresInvalidosDaLocalizacaoDiferenciadaClass::execute();
+        DB::table('pmieducar.escola')
+            ->whereIn('local_funcionamento', [4,5,6])
+            ->update(['local_funcionamento' => null]);
     }
 
     /**

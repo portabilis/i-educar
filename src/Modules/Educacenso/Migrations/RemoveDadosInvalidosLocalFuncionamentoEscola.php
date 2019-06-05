@@ -9,7 +9,10 @@ class RemoveDadosInvalidosLocalFuncionamentoEscola implements EducacensoMigratio
     public static function execute()
     {
         DB::table('pmieducar.escola')
-            ->whereIn('local_funcionamento', [4,5,6])
-            ->update(['local_funcionamento' => null]);
+            ->update(
+                [
+                    'local_funcionamento' => DB::raw('array_remove(array_remove(array_remove(local_funcionamento, 4), 5), 6)'),
+                ]
+            );
     }
 }
