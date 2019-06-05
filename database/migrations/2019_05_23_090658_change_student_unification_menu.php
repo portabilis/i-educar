@@ -13,7 +13,7 @@ class ChangeStudentUnificationMenu extends Migration
     public function up()
     {
         DB::table('menus')
-            ->where('id', 291)
+            ->where('process', 999847)
             ->update(['link' => '/student-log-unification']);
     }
 
@@ -25,7 +25,7 @@ class ChangeStudentUnificationMenu extends Migration
     public function down()
     {
         DB::table('menus')
-            ->where('id', 291)
+            ->where('process', 999847)
             ->update(['link' => '/intranet/educar_unifica_aluno.php']);
     }
 }
