@@ -22,7 +22,7 @@ class EnrollmentController extends Controller
      *
      * @return View
      */
-    private function viewEnroll(
+    public function viewEnroll(
         LegacyRegistration $registration,
         LegacySchoolClass $schoolClass,
         EnrollmentService $enrollmentService
@@ -43,21 +43,6 @@ class EnrollmentController extends Controller
             'enableCancelButton' => $enableCancelButton,
             'anotherClassroomEnrollments' => $anotherClassroomEnrollments,
         ]);
-    }
-
-    /**
-     * @param LegacyRegistration $registration
-     * @param LegacySchoolClass  $schoolClass
-     * @param EnrollmentService  $enrollmentService
-     *
-     * @return View
-     */
-    public function createEnroll(
-        LegacyRegistration $registration,
-        LegacySchoolClass $schoolClass,
-        EnrollmentService $enrollmentService
-    ) {
-        return $this->viewEnroll($registration, $schoolClass, $enrollmentService);
     }
 
     /**
