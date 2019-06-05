@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
+use iEducar\Modules\Educacenso\Migrations\MigraDadosTurmaUnificadaEtapaEducacenso as MigraDadosTurmaUnificadaEtapaEducacensoClass;
 use Illuminate\Database\Migrations\Migration;
 
 class MigraDadosTurmaUnificadaEtapaEducacenso extends Migration
@@ -12,10 +12,6 @@ class MigraDadosTurmaUnificadaEtapaEducacenso extends Migration
      */
     public function up()
     {
-        DB::table('pmieducar.matricula_turma')
-            ->whereNotNull('turma_unificada')
-            ->where('turma_unificada', '<>', 0)
-            ->where('ativo', 1)
-            ->update(['etapa_educacenso' => DB::raw('turma_unificada')]);
+        MigraDadosTurmaUnificadaEtapaEducacensoClass::execute();
     }
 }

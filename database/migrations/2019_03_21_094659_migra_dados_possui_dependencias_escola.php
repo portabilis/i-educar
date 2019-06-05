@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
+use iEducar\Modules\Educacenso\Migrations\MigraDadosPossuiDependenciasEscola as MigraDadosPossuiDependenciasEscolaClass;
 use Illuminate\Database\Migrations\Migration;
 
 class MigraDadosPossuiDependenciasEscola extends Migration
@@ -12,15 +12,7 @@ class MigraDadosPossuiDependenciasEscola extends Migration
      */
     public function up()
     {
-        DB::table('pmieducar.escola')
-            ->whereNotNull('salas_gerais', 'or')
-            ->whereNotNull('salas_funcionais', 'or')
-            ->whereNotNull('banheiros', 'or')
-            ->whereNotNull('laboratorios', 'or')
-            ->whereNotNull('salas_atividades', 'or')
-            ->whereNotNull('dormitorios', 'or')
-            ->whereNotNull('areas_externas', 'or')
-            ->update(['possui_dependencias' => 1]);
+        MigraDadosPossuiDependenciasEscolaClass::execute();
     }
 
     /**

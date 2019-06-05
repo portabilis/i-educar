@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use iEducar\Modules\Educacenso\Migrations\MigraTipoAtendimentoDaTurmaEducacenso as MigraTipoAtendimentoDaTurmaEducacensoClass;
 use Illuminate\Database\Migrations\Migration;
 
 class MigraTipoAtendimentoDaTurmaEducacenso extends Migration
@@ -13,25 +12,7 @@ class MigraTipoAtendimentoDaTurmaEducacenso extends Migration
      */
     public function up()
     {
-        DB::table('pmieducar.turma')
-            ->where('tipo_atendimento', 2)
-            ->update([
-                'tipo_atendimento' => null,
-                'local_funcionamento_diferenciado' => 2,
-            ]);
-
-        DB::table('pmieducar.turma')
-            ->where('tipo_atendimento', 3)
-            ->update([
-                'tipo_atendimento' => null,
-                'local_funcionamento_diferenciado' => 3,
-            ]);
-
-        DB::table('pmieducar.turma')
-            ->where('tipo_atendimento', 1)
-            ->update([
-                'tipo_atendimento' => null,
-            ]);
+        MigraTipoAtendimentoDaTurmaEducacensoClass::execute();
     }
 
     /**
