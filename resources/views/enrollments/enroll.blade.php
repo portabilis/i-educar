@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <form action="{{ route('enrollments.batch.enroll', ['schoolClass' => $schoolClass->id]) }}" method="post">
+    <form action="{{ route('enrollments.enroll', ['schoolClass' => $schoolClass, 'registration' => $registration]) }}" method="post">
         <table class="table-default">
             <thead>
                 <tr>
@@ -49,14 +49,32 @@
                     <td>Período de enturmação:</td>
                     <td>{{ $schoolClass->begin_academic_year->format('d/m/Y') }} à {{ $schoolClass->end_academic_year->format('d/m/Y') }}</td>
                 </tr>
+                @if($enrollments->count())
+                <tr>
+                    <td>Turma de origem:</td>
+                    <td>
+                        <select name="enrollment_from_id" class="select-default">
+                            @foreach($enrollments as $enrollment)
+                                @if($enableCancelButton)
+                                    @if($enrollment->schoolClass->id == $schoolClass->id)
+                                        <option value="{{ $enrollment->id }}">{{ $enrollment->schoolClass->name }}</option>
+                                    @endif
+                                @else
+                                    <option value="{{ $enrollment->id }}">{{ $enrollment->schoolClass->name }}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </td>
+                </tr>
+                @endif
                 <tr>
                     <td>
-                        Data da enturmação<span class="campo_obrigatorio">*</span>
+                        Data da enturmação/saída<span class="campo_obrigatorio">*</span>
                         <br>
                         <small class="text-muted">dd/mm/aaaa</small>
                     </td>
                     <td>
-                        <input name="enrollment_date" value="{{ old('enrollment_date') }}" onkeypress="formataData(this, event);" class="form-input {{ $errors->has('enrollment_date') ? 'error' : '' }}" type="text" maxlength="10" placeholder="Data da enturmação">
+                        <input name="enrollment_date" value="{{ old('enrollment_date') }}" onkeypress="formataData(this, event);" class="form-input {{ $errors->has('enrollment_date') ? 'error' : '' }}" type="text" maxlength="10">
                     </td>
                 </tr>
             </tbody>
@@ -65,11 +83,15 @@
         <div class="separator"></div>
 
         <div style="text-align: center">
-            <button class="btn-green" type="submit">Enturmar</button>
-            <a href="javascript:void(0)" class="btn registration-btn-check" >Selecionar todos</a>
-            <a href="{{ route('enrollments.batch.cancel.index', ['schoolClass' => $schoolClass->id]) }}" class="btn">Desenturmar em lote</a>
-            <a href="{{ url('intranet/educar_matricula_cad.php?ref_cod_turma_copiar_enturmacoes=' . $schoolClass->id) }}" class="btn">Copiar enturmações</a>
-            <a href="{{ url('intranet/educar_matriculas_turma_lst.php') }}" class="btn">Cancelar</a>
+            @if($enableCancelButton)
+                <button class="btn" type="submit" name="is_cancellation" value="1">Desenturmar</button>
+            @else
+                <button class="btn" type="submit">Enturmar</button>
+                @if($anotherClassroomEnrollments->count())
+                    <button class="btn" type="submit" name="is_relocation" value="1">Transferir para turma (remanejar)</button>
+                @endif
+            @endif
+            <a href="{{ route('enrollments.index', ['ref_cod_matricula' => $registration->id, 'ano_letivo' => $registration->year]) }}" class="btn">Cancelar</a>
         </div>
 
     </form>
