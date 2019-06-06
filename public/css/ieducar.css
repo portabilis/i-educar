@@ -130,7 +130,11 @@ a.btn:hover {
   border: solid 1px #cddce6;
   border-radius: 3px;
 }
-.radiogroup input[type=radio] {
+.radiogroup .radiogroup-icon {
+  display: inline-block;
+  width: 16px;
+}
+.radiogroup input[type=checkbox] {
   display: none;
 }
 .radiogroup button[type=button],

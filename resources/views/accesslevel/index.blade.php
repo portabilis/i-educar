@@ -16,21 +16,17 @@
     <div id="access-level-menu-radiogroup" class="vue-template">
         <div id="radiogroup">
             <div class="radiogroup">
-                <input v-if="process.allow >= 3" :id="'acl-3' + hash" :checked="value === 3" @input="$emit('input', 3)" type="radio" :name="'processes[' + process.process + ']'" value="3">
+                <input v-if="process.allow >= 3" :id="'acl-3' + hash" :checked="value === 3" @input="$emit('input', value === 3 ? 2 : 3)" type="checkbox" :name="'processes[' + process.process + ']'" value="3">
                 <label v-if="process.allow >= 3" :for="'acl-3' + hash">
-                    <span>Exclui</span>
+                    <span class="radiogroup-icon"><i class="fa" :class="{ 'fa-check': value >= 3, 'fa-remove': value < 3 }"></i></span> <span>Exclui</span>
                 </label>
-                <input v-if="process.allow >= 2" :id="'acl-2' + hash" :checked="value === 2" @input="$emit('input', 2)" type="radio" :name="'processes[' + process.process + ']'" value="2">
+                <input v-if="process.allow >= 2" :id="'acl-2' + hash" :checked="value === 2" @input="$emit('input', value === 2 ? 1 : 2)" type="checkbox" :name="'processes[' + process.process + ']'" value="2">
                 <label v-if="process.allow >= 2" :for="'acl-2' + hash">
-                    <span>Cadastra</span>
+                    <span class="radiogroup-icon"><i class="fa" :class="{ 'fa-check': value >= 2, 'fa-remove': value < 2 }"></i></span> <span>Cadastra</span>
                 </label>
-                <input v-if="process.allow >= 1" :id="'acl-1' + hash" :checked="value === 1" @input="$emit('input', 1)" type="radio" :name="'processes[' + process.process + ']'" value="1">
+                <input v-if="process.allow >= 1" :id="'acl-1' + hash" :checked="value === 1" @input="$emit('input', value === 1 ? 0 : 1)" type="checkbox" :name="'processes[' + process.process + ']'" value="1">
                 <label v-if="process.allow >= 1" :for="'acl-1' + hash">
-                    <span>Visualiza</span>
-                </label>
-                <input :id="'acl-0' + hash" :checked="value === 0" @input="$emit('input', 0)" type="radio" :name="'processes[' + process.process + ']'" value="0">
-                <label :for="'acl-0' + hash">
-                    <span>Sem permissão</span>
+                    <span class="radiogroup-icon"><i class="fa" :class="{ 'fa-check': value >= 1, 'fa-remove': value < 1 }"></i></span> <span>Visualiza</span>
                 </label>
             </div>
         </div>
