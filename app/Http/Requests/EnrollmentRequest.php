@@ -19,9 +19,6 @@ class EnrollmentRequest extends FormRequest
                 'required',
                 'date_format:d/m/Y',
             ],
-            'cancelled_enrollment_exit_date' => [
-                'date_format:d/m/Y',
-            ]
         ];
     }
 
