@@ -22,6 +22,7 @@ class TurmaController extends ApiCoreController
     protected function canGetTurmasPorEscola()
     {
         return (
+            $this->validatesPresenceOf('escola') &&
             $this->validatesPresenceOf('ano') &&
             $this->validatesPresenceOf('instituicao_id')
         );
@@ -127,6 +128,7 @@ class TurmaController extends ApiCoreController
     {
         if ($this->canGetTurmasPorEscola()) {
             $ano = $this->getRequest()->ano;
+            $escola = $this->getRequest()->escola;
             $instituicaoId = $this->getRequest()->instituicao_id;
             $turnoId = $this->getRequest()->turno_id;
             $modified = $this->getRequest()->modified ?: null;
@@ -135,6 +137,10 @@ class TurmaController extends ApiCoreController
 
             if ($turnoId) {
                 $turnoId = " AND t.turma_turno_id = {$turnoId} ";
+            }
+
+            if (is_array($escola)) {
+                $escola = implode(',', $escola);
             }
 
             if ($modified) {
@@ -171,6 +177,7 @@ class TurmaController extends ApiCoreController
                     ON ra.id = (case when e.utiliza_regra_diferenciada then rasa.regra_avaliacao_diferenciada_id else rasa.regra_avaliacao_id end)
                 WHERE t.ref_cod_instituicao = $1
                     AND t.ano = $2
+                    AND t.ref_ref_cod_escola IN ({$escola})
                     {$turnoId}
                     {$modified}
                 ORDER BY t.updated_at, t.ref_ref_cod_escola, t.nm_turma
