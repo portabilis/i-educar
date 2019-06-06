@@ -281,8 +281,13 @@ $j(document).ready(function(){
       hiddenField.setAttribute("type", "hidden");
       hiddenField.setAttribute("name", "exportacao");
       hiddenField.setAttribute("value", conteudo);
-
       form.appendChild(hiddenField);
+
+      var escola = document.createElement("input");
+      escola.setAttribute("type", "hidden");
+      escola.setAttribute("name", "escola");
+      escola.setAttribute("value",  $j("#ref_cod_escola").val());
+      form.appendChild(escola);
 
       document.body.appendChild(form);
       form.submit();

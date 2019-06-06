@@ -29,6 +29,8 @@
  * @version   $Id$
  */
 
+use Illuminate\Support\Str;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 
@@ -84,9 +86,14 @@ class indice extends clsCadastro
     if ($exportacao) {
       $converted_to_iso88591 = utf8_decode($exportacao);
 
+      $clsEscola = new clsPmieducarEscola($_POST["escola"]);
+      $dadosEscola = $clsEscola->detalhe();
+
+      $nomeArquivo = Str::slug($dadosEscola['nome']) . '-' . date('d-m-Y-H-i-s') . '.txt';
+
       header('Content-type: text/plain');
       header('Content-Length: ' . strlen($converted_to_iso88591));
-      header('Content-Disposition: attachment; filename=exportacao.txt');
+      header('Content-Disposition: attachment; filename=' . $nomeArquivo);
       echo $converted_to_iso88591;
       die();
     }
