@@ -29,6 +29,10 @@
  * @version     $Id$
  */
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
+
+
 class PictureController {
 
     var $imageFile;
@@ -73,21 +77,17 @@ class PictureController {
     * @author Lucas Schmoeller da Silva - lucas@portabilis.com
     * @return String
     */
-    function sendPicture($imageName){
-
-        $this->imageName = $imageName;
+    function sendPicture(){
+        
         $tmp = $this->imageFile["tmp_name"];
-        include('s3_config.php');
-        //Rename image name.
+        
+        $file = new File($tmp);
 
-        $actual_image_name = $directory.$this->imageName; 
-        if($s3->putObjectFile($tmp, $bucket , $actual_image_name, S3::ACL_PUBLIC_READ) )
-        {
-                                                
-            $s3file='http://'.$bucket.'.s3.amazonaws.com/'.$actual_image_name;
-            return $s3file;
-        }
-        else{
+        $this->imageName = $file->hashName();
+        if (Storage::put('/', $file, 'public')) {
+            $filePath= Storage::url($file->hashName());
+            return $filePath;
+        } else {
             $this->errorMessage = "Ocorreu um erro no servidor ao enviar foto. Tente novamente.";
             return '';
         }

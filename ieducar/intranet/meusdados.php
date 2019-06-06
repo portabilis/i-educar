@@ -6,6 +6,9 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/RDStationAPI.class.php';
 require_once 'image_check.php';
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
+
 class clsIndex extends clsBase
 {
     public function Formular()
@@ -113,7 +116,7 @@ class indice extends clsCadastro
         }
 
         if ($foto) {
-            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . $foto . '"/>');
+            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' .$foto. '"/>');
             $this->inputsHelper()->checkbox('file_delete', ['label' => 'Excluir a foto']);
             $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</span>');
         } else {
@@ -342,7 +345,7 @@ class indice extends clsCadastro
     public function savePhoto($id)
     {
         if ($this->objPhoto != null) {
-            $caminhoFoto = $this->objPhoto->sendPicture($id);
+            $caminhoFoto = $this->objPhoto->sendPicture();
             if ($caminhoFoto != '') {
                 $obj = new clsCadastroFisicaFoto($id, $caminhoFoto);
                 $detalheFoto = $obj->detalhe();
