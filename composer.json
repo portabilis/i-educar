@@ -96,12 +96,14 @@
             "@php artisan key:generate --ansi",
             "@php artisan legacy:database --ansi",
             "@php artisan legacy:link --ansi",
+            "@php artisan storage:link --ansi",
             "@php artisan migrate --force --ansi"
         ],
         "update-install": [
             "@composer install",
             "@set-permissions",
             "@php artisan legacy:link --ansi",
+            "@php artisan storage:link --ansi",
             "@php artisan migrate --force --ansi"
         ],
         "post-install-cmd": [
