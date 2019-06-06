@@ -94,6 +94,7 @@
                                 <span class="form">Procure pelo nome do menu: </span><input type="text" v-model="search" placeholder="Digite o menu que procura" style="width: 300px;">
                             </td>
                             <td class="formlttd">
+                                <div style="clear: both;"><small class="text-muted">Marcar opção para todos</small></div>
                                 <div class="radiogroup">
                                     <button type="button" @click="menus.forEach(menu => menu.processes.forEach(item => processes[item.process] = 3))">Exclui</button>
                                     <button type="button" @click="menus.forEach(menu => menu.processes.forEach(item => processes[item.process] = 2))">Cadastra</button>
@@ -106,9 +107,10 @@
                             <tr><td colspan="2"><hr></td></tr>
                             <tr>
                                 <td class="formlttd" height="24">
-                                    <b>@{{ menu.menu.title }}</b>
+                                    <b style="font-size: 16px">@{{ menu.menu.title }}</b>
                                 </td>
                                 <td class="formlttd" height="24">
+                                    <div style="clear: both;"><small class="text-muted">Marcar opção para todos os itens: <b>@{{ menu.menu.title }}</b></small></div>
                                     <div class="radiogroup">
                                         <button type="button" @click="menu.processes.forEach(item => processes[item.process] = 3)">Exclui</button>
                                         <button type="button" @click="menu.processes.forEach(item => processes[item.process] = 2)">Cadastra</button>
