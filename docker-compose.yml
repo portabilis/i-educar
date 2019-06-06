@@ -19,6 +19,7 @@ services:
     links:
       - postgres
       - redis
+      - minio
     environment:
       CORE_EXT_CONFIGURATION_ENV: development
       XDEBUG_IDEKEY: xdebug
@@ -48,3 +49,16 @@ services:
     restart: always
     ports:
       - 6379
+
+  minio:
+    container_name: ieducar-minio
+    image: minio/minio
+    volumes:
+      - ./data1:/data
+    restart: always
+    ports:
+      - 9001:9000
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+    command: server /data

@@ -1341,7 +1341,7 @@ class indice extends clsCadastro
     protected function savePhoto($id)
     {
         if ($this->objPhoto!=null) {
-            $caminhoFoto = $this->objPhoto->sendPicture($id);
+            $caminhoFoto = $this->objPhoto->sendPicture();
             if ($caminhoFoto!='') {
                 //new clsCadastroFisicaFoto($id)->exclui();
                 $obj = new clsCadastroFisicaFoto($id, $caminhoFoto);

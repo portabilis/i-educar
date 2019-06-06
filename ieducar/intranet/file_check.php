@@ -54,21 +54,14 @@ class FileController {
     }
 
     function sendFile(){
-
-
         $tmp = $this->file["tmp_name"];
-        include('s3_config.php');
-        
-        //Rename file name.
-        $actual_file_name = $directory.time().md5($this->file["name"]);
-        if($s3->putObjectFile($tmp, $bucket , $actual_file_name, S3::ACL_PUBLIC_READ) )
-        {
-                                                
-            $s3file='http://'.$bucket.'.s3.amazonaws.com/'.$actual_file_name;
-            return $s3file;
-        }
-        else{
-            $this->errorMessage = "Ocorreu um erro no servidor ao enviar arquivo. Tente novamente.";
+
+        $file = new File($tmp);
+        if (Storage::put('/', $file, 'public')) {
+            $filePath= Storage::url($file->hashName());
+            return $filePath;
+        } else {
+            $this->errorMessage = "Ocorreu um erro no servidor ao enviar foto. Tente novamente.";
             return '';
         }
     }
