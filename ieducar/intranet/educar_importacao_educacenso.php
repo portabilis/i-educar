@@ -430,6 +430,9 @@ class indice extends clsCadastro
 
       foreach ($fields as $key => $value) {
         if(property_exists($objEscola, $key)){
+          if ($this->isPostgresArray($value)) {
+            $value = $this->cleanPostgresArray($value);
+          }
           $objEscola->{$key} = $value;
         }
       }
@@ -439,6 +442,20 @@ class indice extends clsCadastro
       $objEscola->edita();
     }
 
+  }
+
+  private function isPostgresArray($value)
+  {
+    if (substr($value, 0, 1) == '{' && substr($value, -1) == '}') {
+      return true;
+    }
+
+    return false;
+  }
+
+  private function cleanPostgresArray($value)
+  {
+    return str_replace(['{','}'], '', $value);
   }
 
   function importaRegistro20($dadosRegistro){
@@ -1757,6 +1774,9 @@ class indice extends clsCadastro
 
     foreach ($fields as $key => $value){
       if(property_exists($escola, $key)){
+         if ($this->isPostgresArray($value)) {
+           $value = $this->cleanPostgresArray($value);
+         }
         $escola->{$key} = $value;
       }
     }
