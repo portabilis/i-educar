@@ -538,7 +538,7 @@ SQL;
     {
         $sql = <<<'SQL'
                   SELECT  '60' AS registro,
-                    educacenso_cod_escola.cod_escola "inepEscola",
+                    educacenso_cod_escola.cod_escola_inep "inepEscola",
                     aluno.ref_idpes "codigoPessoa",
                     educacenso_cod_aluno.cod_aluno_inep "inepAluno",
                     turma.cod_turma "codigoTurma",
@@ -648,10 +648,10 @@ SQL;
                 pessoa_mae.nome AS "filiacao1",
                 pessoa_pai.nome AS "filiacao2",
                 CASE WHEN fisica.sexo = 'M' THEN 1 ELSE 2 END AS "sexo",
-                fisica_raca.ref_cod_raca AS "raca",
+                raca.raca_educacenso AS "raca",
                 fisica.nacionalidade AS "nacionalidade",
-                CASE WHEN fisica.nacionalidade = 3 THEN fisica.idpais_estrangeiro ELSE 76 END AS "paisNacionalidade",
-                fisica.idmun_nascimento AS "municipioNascimento",
+                CASE WHEN fisica.nacionalidade = 3 THEN pais.cod_ibge ELSE 76 END AS "paisNacionalidade",
+                municipio_nascimento.cod_ibge AS "municipioNascimento",
                 CASE WHEN
                     true = (SELECT true FROM cadastro.fisica_deficiencia WHERE fisica_deficiencia.ref_idpes = fisica.idpes LIMIT 1) THEN 1
                     ELSE 0 END
@@ -679,10 +679,12 @@ SQL;
                  FROM cadastro.fisica
                  JOIN cadastro.pessoa ON pessoa.idpes = fisica.idpes
             LEFT JOIN cadastro.fisica_raca ON fisica_raca.ref_idpes = fisica.idpes
+            LEFT JOIN cadastro.raca ON (raca.cod_raca = fisica_raca.ref_cod_raca)
             LEFT JOIN cadastro.pessoa as pessoa_mae
             ON fisica.idpes_mae = pessoa_mae.idpes
             LEFT JOIN cadastro.pessoa as pessoa_pai
             ON fisica.idpes_pai = pessoa_pai.idpes
+            LEFT JOIN public.municipio municipio_nascimento ON municipio_nascimento.idmun = fisica.idmun_nascimento
             LEFT JOIN cadastro.endereco_pessoa ON endereco_pessoa.idpes = pessoa.idpes
             LEFT JOIN public.logradouro ON logradouro.idlog = endereco_pessoa.idlog
             LEFT JOIN public.municipio ON municipio.idmun = logradouro.idmun
@@ -799,7 +801,7 @@ SQL;
                 (ARRAY[12] <@ aluno.recursos_prova_inep)::INT "recursoLinguaPortuguesaSegundaLingua",
                 (ARRAY[13] <@ aluno.recursos_prova_inep)::INT "recursoVideoLibras",
                 (ARRAY[9] <@ aluno.recursos_prova_inep)::INT "recursoBraile",
-                (aluno.recursos_prova_inep IS NOT NULL)::INT "recursoNenhum",
+                (ARRAY[14] <@ aluno.recursos_prova_inep)::INT "recursoNenhum",
                 fisica.nis_pis_pasep AS "nis",
                 documento.certidao_nascimento AS "certidaoNascimento",
                 aluno.justificativa_falta_documentacao AS "justificativaFaltaDocumentacao"
