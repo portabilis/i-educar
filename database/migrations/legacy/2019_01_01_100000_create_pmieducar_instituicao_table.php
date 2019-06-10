@@ -75,8 +75,6 @@ class CreatePmieducarInstituicaoTable extends Migration
                     exibir_apenas_professores_alocados boolean DEFAULT false
                 );
 
-                COMMENT ON COLUMN pmieducar.instituicao.exibir_apenas_professores_alocados IS \'Para filtros de emissão de relatórios\';
-                
                 ALTER TABLE ONLY pmieducar.instituicao
                     ADD CONSTRAINT instituicao_pkey PRIMARY KEY (cod_instituicao);
 

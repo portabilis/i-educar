@@ -41,18 +41,6 @@ class CreatePmieducarConfiguracoesGeraisTable extends Migration
 	                token_novo_educacao varchar(191) NULL,
 	                situacoes_especificas_atestados bool NOT NULL DEFAULT false
                 );
-
-                COMMENT ON COLUMN pmieducar.configuracoes_gerais.mostrar_codigo_inep_aluno IS \'Mostrar código INEP do aluno nas telas de cadastro\';
-
-                COMMENT ON COLUMN pmieducar.configuracoes_gerais.justificativa_falta_documentacao_obrigatorio IS \'Campo "Justificativa para a falta de documentação" obrigatório no cadastro de alunos\';
-
-                COMMENT ON COLUMN pmieducar.configuracoes_gerais.tamanho_min_rede_estadual IS \'Tamanho mínimo do campo "Código rede estadual"\';
-
-                COMMENT ON COLUMN pmieducar.configuracoes_gerais.modelo_boletim_professor IS \'Modelo do boletim do professor. 1 - Padrão, 2 - Modelo recuperação por etapa, 3 - Modelo recuperação paralela\';
-
-                COMMENT ON COLUMN pmieducar.configuracoes_gerais.custom_labels IS \'Guarda customizações em labels e textos do sistema.\';
-
-                COMMENT ON COLUMN pmieducar.configuracoes_gerais.url_cadastro_usuario IS \'URL da ferramenta externa de cadastro de usuários\';
             '
         );
     }
