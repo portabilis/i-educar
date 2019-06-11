@@ -510,7 +510,7 @@ class indice extends clsCadastro
             'inline' => true
         ];
 
-        $this->inputsHelper()->text('certidao_nascimento', $options);
+        $this->inputsHelper()->integer('certidao_nascimento', $options);
 
         // certidao casamento (novo padrão)
 
