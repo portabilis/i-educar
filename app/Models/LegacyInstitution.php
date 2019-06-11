@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string   $city            Noda da cidade da instituição
  * @property string   $state           Sigla do estado da instituição
  * @property DateTime $relocation_date Data base para remanejamento
+ * @property DateTime $educacenso_date Data de corte do Educacenso
  */
 class LegacyInstitution extends Model
 {
@@ -40,7 +41,7 @@ class LegacyInstitution extends Model
      * @var array
      */
     protected $dates = [
-        'data_base_remanejamento'
+        'data_base_remanejamento', 'data_educacenso',
     ];
 
     /**
@@ -96,6 +97,14 @@ class LegacyInstitution extends Model
     public function getRelocationDateAttribute()
     {
         return $this->data_base_remanejamento;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getEducacensoDateAttribute()
+    {
+        return $this->data_educacenso;
     }
 
     /**
