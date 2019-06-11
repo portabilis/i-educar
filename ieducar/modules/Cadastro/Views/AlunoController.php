@@ -601,7 +601,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'size' => 50,
         );
 
-        $this->inputsHelper()->text('certidao_casamento', $options);
+        $this->inputsHelper()->integer('certidao_casamento', $options);
 
         // uf emissão certidão civil
         $options = array(
