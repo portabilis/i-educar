@@ -588,7 +588,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'inline' => true
         );
 
-        $this->inputsHelper()->text('certidao_nascimento', $options);
+        $this->inputsHelper()->integer('certidao_nascimento', $options);
 
         // certidao casamento (novo padrão)
         $placeholderCertidao = Portabilis_String_Utils::toLatin1('Certidão casamento');
