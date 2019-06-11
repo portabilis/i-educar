@@ -5,6 +5,7 @@ namespace App\Models;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -118,5 +119,13 @@ class LegacyInstitution extends Model
     public function getAllowRegistrationOutAcademicYearAttribute()
     {
         return boolval($this->permitir_matricula_fora_periodo_letivo);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function schools()
+    {
+        return $this->hasMany(LegacySchool::class, 'ref_cod_instituicao', 'cod_instituicao');
     }
 }

@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 /**
  * LegacySchool
  *
+ * @property string $name
+ *
  * @property LegacyInstitution $institution
  */
 class LegacySchool extends Model
@@ -67,6 +69,14 @@ class LegacySchool extends Model
     public function getIdAttribute()
     {
         return $this->cod_escola;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameAttribute()
+    {
+        return $this->person->nome;
     }
 
     /**
