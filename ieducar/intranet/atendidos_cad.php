@@ -523,7 +523,7 @@ class indice extends clsCadastro
             'size' => 32
         ];
 
-        $this->inputsHelper()->text('certidao_casamento', $options);
+        $this->inputsHelper()->integer('certidao_casamento', $options);
 
         // uf emissão certidão civil
 
