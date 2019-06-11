@@ -48,6 +48,10 @@ class clsPmieducarDistribuicaoUniforme
 
     public $camiseta_infantil_tm;
 
+    public $calca_jeans_qtd;
+
+    public $calca_jeans_tm;
+
     /**
      * Armazena o total de resultados obtidos na última chamada ao método lista().
      *
@@ -131,7 +135,9 @@ class clsPmieducarDistribuicaoUniforme
         $tenis_tm = null,
         $ref_cod_escola = null,
         $camiseta_infantil_qtd = null,
-        $camiseta_infantil_tm = null
+        $camiseta_infantil_tm = null,
+        $calca_jeans_qtd = null,
+        $calca_jeans_tm = null
     ) {
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}distribuicao_uniforme";
@@ -142,7 +148,8 @@ class clsPmieducarDistribuicaoUniforme
             bermudas_tectels_qtd, bermudas_coton_qtd, tenis_qtd, data, 
             agasalho_tm, camiseta_curta_tm, camiseta_longa_tm, meias_tm, 
             bermudas_tectels_tm, bermudas_coton_tm, tenis_tm, ref_cod_escola,
-            camiseta_infantil_qtd, camiseta_infantil_tm
+            camiseta_infantil_qtd, camiseta_infantil_tm, calca_jeans_qtd, 
+            calca_jeans_tm
         ';
 
         if (is_numeric($cod_distribuicao_uniforme)) {
@@ -199,6 +206,10 @@ class clsPmieducarDistribuicaoUniforme
             $this->camiseta_infantil_tm = $camiseta_infantil_tm;
         }
 
+        if (is_numeric($calca_jeans_qtd)) {
+            $this->calca_jeans_qtd = $calca_jeans_qtd;
+        }
+
         $this->agasalho_tm = $agasalho_tm;
         $this->camiseta_curta_tm = $camiseta_curta_tm;
         $this->camiseta_longa_tm = $camiseta_longa_tm;
@@ -207,6 +218,7 @@ class clsPmieducarDistribuicaoUniforme
         $this->bermudas_coton_tm = $bermudas_coton_tm;
         $this->tenis_tm = $tenis_tm;
         $this->ref_cod_escola = $ref_cod_escola;
+        $this->calca_jeans_tm = $calca_jeans_tm;
     }
 
     /**
@@ -348,6 +360,18 @@ class clsPmieducarDistribuicaoUniforme
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->calca_jeans_qtd)) {
+                $campos .= "{$gruda}calca_jeans_qtd";
+                $valores .= "{$gruda}{$this->calca_jeans_qtd}";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->calca_jeans_tm)) {
+                $campos .= "{$gruda}calca_jeans_tm";
+                $valores .= "{$gruda}'{$this->calca_jeans_tm}'";
+                $gruda = ', ';
+            }
+
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
             return $db->insertId("{$this->_tabela}_seq");
@@ -482,6 +506,18 @@ class clsPmieducarDistribuicaoUniforme
                 $set .= ",camiseta_infantil_tm = '{$this->camiseta_infantil_tm}'";
             } else {
                 $set .= ',camiseta_infantil_tm = NULL';
+            }
+
+            if ($this->calca_jeans_qtd) {
+                $set .= ",calca_jeans_qtd = '{$this->calca_jeans_qtd}'";
+            } else {
+                $set .= ',calca_jeans_qtd = NULL';
+            }
+
+            if ($this->calca_jeans_tm) {
+                $set .= ",calca_jeans_tm = '{$this->calca_jeans_tm}'";
+            } else {
+                $set .= ',calca_jeans_tm = NULL';
             }
 
             if ($set) {
