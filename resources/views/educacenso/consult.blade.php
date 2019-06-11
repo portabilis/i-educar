@@ -49,7 +49,7 @@
                 <tr>
                     <td>Data de referência do Censo Escolar</td>
                     <td>
-                        29/05/2019
+                        {{ $institution->educacenso_date ? $institution->educacenso_date->format('d/m/Y') : 'Não definida.' }}
                     </td>
                 </tr>
             </tbody>

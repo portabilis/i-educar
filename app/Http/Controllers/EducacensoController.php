@@ -28,6 +28,7 @@ class EducacensoController extends Controller
         });
 
         return view('educacenso.consult', [
+            'institution' => $institution,
             'schools' => $schools,
             'record20' => $records['record20'] ?? null,
             'record40' => $records['record40'] ?? null,
