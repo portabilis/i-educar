@@ -63,7 +63,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($record20 as $item)
+            @forelse($record20 as $item)
                 <tr>
                     <td>{{ $item->codigoEscolaInep }}</td>
                     <td>{{ $item->nomeEscola }}</td>
@@ -71,12 +71,11 @@
                     <td>{{ \iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma::getDescription($item->tipoAtendimento) }}</td>
                     <td>{{ $item->horaInicial }} - {{ $item->horaFinal }}</td>
                 </tr>
-            @endforeach
-            @empty($record20)
+            @empty
             <tr>
                 <td colspan="5">Nenhum registro encontrado.</td>
             </tr>
-            @endempty
+            @endforelse
         </tbody>
     </table>
     <div class="separator"></div>
@@ -98,22 +97,21 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($record40 as $item)
+            @forelse($record40 as $item)
                 <tr>
                     <td>{{ $item->inepEscola }}</td>
                     <td>{{ $item->nomeEscola }}</td>
                     <td>{{ $item->codigoPessoa }}</td>
-                    <td>{{ $item->nomePessoa }}</td>
                     <td>{{ $item->inepGestor }}</td>
+                    <td>{{ $item->nomePessoa }}</td>
                     <td>{{ \iEducar\Modules\Educacenso\Model\SchoolManagerRole::getDescription($item->cargo) }}</td>
                     <td>{{ \iEducar\Modules\Servidores\Model\TipoVinculo::getDescription($item->tipoVinculo) }}</td>
                 </tr>
-            @endforeach
-            @empty($record40)
+            @empty
                 <tr>
                     <td colspan="7">Nenhum registro encontrado.</td>
                 </tr>
-            @endempty
+            @endforelse
         </tbody>
     </table>
     <div class="separator"></div>
@@ -135,7 +133,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($record50 as $item)
+            @forelse($record50 as $item)
                 <tr>
                     <td>{{ $item->inepEscola }}</td>
                     <td>{{ $item->nomeEscola }}</td>
@@ -145,7 +143,11 @@
                     <td>{{ \iEducar\Modules\Servidores\Model\FuncaoExercida::getDescription($item->funcaoDocente) }}</td>
                     <td>{{ implode(',', $item->componentes) }}</td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="7">Nenhum registro encontrado.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
     <div class="separator"></div>
@@ -166,7 +168,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($record60 as $item)
+            @forelse($record60 as $item)
                 <tr>
                     <td>{{ $item->inepEscola }}</td>
                     <td>{{ $item->nomeEscola }}</td>
@@ -175,12 +177,11 @@
                     <td>{{ $item->nomeAluno }}</td>
                     <td>{{ $item->nomeTurma }}</td>
                 </tr>
-            @endforeach
-            @empty($record60)
+            @empty
                 <tr>
-                    <td colspan="7">Nenhum registro encontrado.</td>
+                    <td colspan="6">Nenhum registro encontrado.</td>
                 </tr>
-            @endempty
+            @endforelse
         </tbody>
     </table>
     <div class="separator"></div>
