@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LegacyInstitution;
 use App\Repositories\EducacensoRepository;
+use ComponenteCurricular_Model_CodigoEducacenso;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -74,10 +75,18 @@ class EducacensoController extends Controller
         }
 
         if ($record == '50') {
+            require_once base_path('ieducar/modules/ComponenteCurricular/Model/CodigoEducacenso.php');
+
             $records['record50'] = $repository->getDataForRecord50($year, $school);
 
             $records['record50'] = collect($records['record50'])->map(function ($item) {
-                $item->componentes = array_unique(explode(',', substr($item->componentes, 1, -1)));
+                $disciplines = explode(',', substr($item->componentes, 1, -1));
+
+                $item->componentes = collect($disciplines)->unique()->map(function ($discipline) {
+                    $data = ComponenteCurricular_Model_CodigoEducacenso::getDescription($discipline);
+
+                    return $data;
+                })->toArray();
 
                 return $item;
             })->values();
