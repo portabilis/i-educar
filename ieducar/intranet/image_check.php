@@ -84,7 +84,7 @@ class PictureController {
         $file = new File($tmp);
 
         $this->imageName = $file->hashName();
-        if (Storage::put('/', $file, 'public')) {
+        if (Storage::put('/', $file)) {
             $filePath= Storage::url($file->hashName());
             return $filePath;
         } else {

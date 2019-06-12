@@ -31,13 +31,13 @@
 
 Altere essas linhas no arquivo .env colocando suas credenciais do serviço S3 da AWS.
 ```
-FILESYSTEM_CLOUD=s3
+FILESYSTEM_DRIVER=s3
 
 # S3 config
 AWS_URL = 
 AWS_KEY=
 AWS_SECRET=
-AWS_REGION=
+AWS_DEFAULT_REGION=
 AWS_BUCKET=
 ```
 
@@ -45,19 +45,22 @@ AWS_BUCKET=
 
 Altere essas linhas no arquivo ``.env`` colocando suas credenciais do serviço Min.IO.
 ```
-FILESYSTEM_CLOUD=minio
+FILESYSTEM_DRIVER=minio
 
 # MINIO config
 MINIO_ENDPOINT = 
 AWS_KEY=
 AWS_SECRET=
-AWS_REGION=
+AWS_DEFAULT_REGION=
 AWS_BUCKET=
 ```
 
 ### Local
 
-Comente a linha ``FILESYSTEM_CLOUD=minio``utilizando ``#`` no ``.env``.
+Altere essas linhas no arquivo ``.env`` colocando suas credenciais do serviço Min.IO.
+```
+FILESYSTEM_DRIVER=local
+```
 
 Todos os arquivos armazenados pelo modo local fica na pasta ``public/storage``.
 
