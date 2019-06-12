@@ -29,6 +29,10 @@
  * @version     $Id$
  */
 
+
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
+
 class FileController {
 
     var $file;
@@ -57,7 +61,7 @@ class FileController {
         $tmp = $this->file["tmp_name"];
 
         $file = new File($tmp);
-        if (Storage::put('/', $file, 'public')) {
+        if (Storage::put('/', $file)) {
             $filePath= Storage::url($file->hashName());
             return $filePath;
         } else {

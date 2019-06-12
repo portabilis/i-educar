@@ -54,11 +54,11 @@ services:
     container_name: ieducar-minio
     image: minio/minio
     volumes:
-      - ./data1:/data
+      - ./storage/data:/data
     restart: always
     ports:
       - 9001:9000
     environment:
-      MINIO_ACCESS_KEY: minio
-      MINIO_SECRET_KEY: minio123
+      MINIO_ACCESS_KEY: minio-key
+      MINIO_SECRET_KEY: minio-secret
     command: server /data
