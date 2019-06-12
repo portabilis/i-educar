@@ -6,7 +6,7 @@
 
 @section('content')
     <form id="formcadastro" method="post" action="{{ route('educacenso.consult') }}">
-        <table class="table-default">
+        <table class="table-default table-form">
             <thead>
                 <tr>
                     <th colspan="2">Consulta</th>
@@ -20,30 +20,19 @@
                         <sub style="vertical-align:top;" class="text-muted">somente números</sub>
                     </td>
                     <td>
-                        <input name="year" class="obrigatorio" type="text" value="2019" size="4" maxlength="4">
+                        @include('layout.input.year')
                     </td>
                 </tr>
                 <tr>
                     <td>Escola<span class="campo_obrigatorio">*</span></td>
                     <td>
-                        <select name="school" class="obrigatorio" style="width: 314px;">
-                            <option value="">Selecione uma escola</option>
-                            @foreach($schools as $school)
-                                <option value="{{ $school->getKey() }}">{{ $school->name }}</option>
-                            @endforeach
-                        </select>
+                        @include('layout.select.school')
                     </td>
                 </tr>
                 <tr>
                     <td>Registro<span class="campo_obrigatorio">*</span></td>
                     <td>
-                        <select name="record" class="obrigatorio" style="width: 314px;">
-                            <option value="">Selecione um registro</option>
-                            <option value="20">Registro 20</option>
-                            <option value="40">Registro 40</option>
-                            <option value="50">Registro 50</option>
-                            <option value="60">Registro 60</option>
-                        </select>
+                        @include('layout.select.educacenso-records', ['records' => [20, 40, 50, 60]])
                     </td>
                 </tr>
                 <tr>
@@ -54,12 +43,11 @@
                 </tr>
             </tbody>
         </table>
-        <div class="text-center">
+        <div class="separator"></div>
+        <div style="text-align: center;">
             <button class="btn-green">Consultar</button>
         </div>
     </form>
-
-    <div style="height: 30px;"></div>
 
     @isset($record20)
     <h2>Registro 20</h2>
@@ -91,6 +79,7 @@
             @endempty
         </tbody>
     </table>
+    <div class="separator"></div>
     @endisset
 
     @isset($record40)
@@ -127,6 +116,7 @@
             @endempty
         </tbody>
     </table>
+    <div class="separator"></div>
     @endisset
 
     @isset($record50)
@@ -158,6 +148,7 @@
             @endforeach
         </tbody>
     </table>
+    <div class="separator"></div>
     @endisset
 
     @isset($record60)
@@ -192,6 +183,8 @@
             @endempty
         </tbody>
     </table>
+    <div class="separator"></div>
     @endif
 
+    <div style="height: 30px;"></div>
 @endsection
