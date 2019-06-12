@@ -868,7 +868,7 @@ class indice extends clsCadastro
                 $this->inputTelefone('2', 'Telefone 2');
                 $this->inputTelefone('mov', 'Celular');
                 $this->inputTelefone('fax', 'Fax');
-                $this->campoTexto("p_email", "E-mail", $this->p_email, "50", "255", false);
+                $this->campoTexto("p_email", "E-mail", $this->p_email, "50", "100", false);
                 $this->campoTexto("p_http", "Site/Blog/Rede social", $this->p_http, "50", "255", false);
                 $this->passou = true;
                 $this->campoOculto("passou", $this->passou);
