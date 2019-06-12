@@ -670,7 +670,7 @@ class indice extends clsCadastro
                 $this->campoTexto("p_telefone_1", "Telefone 1", $this->p_telefone_1, "10", "15", false);
                 $this->campoTexto("p_ddd_telefone_fax", "DDD Fax", $this->p_ddd_telefone_fax, "2", "2", false);
                 $this->campoTexto("p_telefone_fax", "Fax", $this->p_telefone_fax, "10", "15", false);
-                $this->campoTexto("p_email", "E-mail", $this->p_email, "50", "255", false);
+                $this->campoTexto("p_email", "E-mail", $this->p_email, "50", "100", false);
             }
 
             if ($this->com_cnpj) {
