@@ -1338,7 +1338,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
         $avaliableTimeService = new AvailableTimeService();
 
-        $avaliableTimeService->onlyUntilEnrollmentDate($educacensoDate);
+        $avaliableTimeService->onlyUntilEnrollmentDate($educacensoDate)->onlySchoolClassesInformedOnCensus();
 
         foreach ($alunos as $aluno) {
             $nomeEscola = strtoupper($aluno->nomeEscola);

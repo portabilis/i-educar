@@ -14,6 +14,11 @@ class AvailableTimeService
     private $enrollmentDate;
 
     /**
+     * @var boolean
+     */
+    private $onlySchoolClassesInformedOnCensus = false;
+
+    /**
      * Retorna se matrícula não possui enturmação em horário conflitante com a
      * turma enviada por parâmetro.
      *
@@ -30,7 +35,7 @@ class AvailableTimeService
             return true;
         }
 
-        $otherSchoolClass = LegacySchoolClass::where('cod_turma', '<>', $schoolClassId)
+        $schoolClassQuery = LegacySchoolClass::where('cod_turma', '<>', $schoolClassId)
             ->where('ano', $schoolClass->ano)
             ->whereHas('enrollments', function ($enrollmentsQuery) use ($studentId, $schoolClass) {
                 $enrollmentsQuery->whereHas('registration', function ($registrationQuery) use ($studentId, $schoolClass) {
@@ -42,7 +47,13 @@ class AvailableTimeService
                     $enrollmentsQuery->where('data_enturmacao', '<', $this->enrollmentDate->format('Y-m-d'));
                 }
 
-            })->get();
+            });
+
+        if ($this->onlySchoolClassesInformedOnCensus) {
+            $schoolClassQuery->where('nao_informar_educacenso', '<>', 1);
+        }
+
+        $otherSchoolClass = $schoolClassQuery->get();
 
         foreach ($otherSchoolClass as $otherSchoolClass) {
             if ($this->schedulesMatch($schoolClass, $otherSchoolClass)) {
@@ -64,6 +75,18 @@ class AvailableTimeService
     public function onlyUntilEnrollmentDate(DateTime $date)
     {
         $this->enrollmentDate = $date;
+
+        return $this;
+    }
+
+    /**
+     * Flag para somente considerar turmas que serão exportadas no Educacenso
+     *
+     * @return $this
+     */
+    public function onlySchoolClassesInformedOnCensus()
+    {
+        $this->onlySchoolClassesInformedOnCensus = true;
 
         return $this;
     }
