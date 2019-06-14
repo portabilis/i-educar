@@ -87,14 +87,6 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         Paginator::defaultView('vendor.pagination.default');
-
-        Blade::directive('selectInstitution', function () {
-            return view('form.select-institution')->render();
-        });
-
-        Blade::directive('selectSchool', function () {
-            return view('form.select-school')->render();
-        });
     }
 
     /**

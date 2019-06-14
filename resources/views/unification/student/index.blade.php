@@ -14,13 +14,13 @@
             <tr id="tr_nm_instituicao">
                 <td class="formmdtd" valign="top"><span class="form">Instituição:</span></td>
                 <td class="formmdtd" valign="top">
-                    @selectInstitution
+                    @include('form.select-institution')
                 </td>
             </tr>
             <tr id="tr_nm_escola">
                 <td class="formlttd" valign="top"><span class="form">Escola:</span></td>
                 <td class="formlttd" valign="top">
-                    @selectSchool
+                    @include('form.select-school')
                 </td>
             </tr>
             </tbody>
