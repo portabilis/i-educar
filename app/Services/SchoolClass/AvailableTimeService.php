@@ -128,6 +128,11 @@ class AvailableTimeService
             return false;
         }
 
+        if (!$this->hasDates($schoolClass) || !$this->hasDates($otherSchoolClass)) {
+            return false;
+        }
+
+
         // Valida se o início e fim do ano letivo da turma de destino não está
         // entre o período de início e fim da turma da outra enturmação.
 
@@ -180,5 +185,18 @@ class AvailableTimeService
         }
 
         return $otherSchoolClass;
+    }
+
+    public function hasDates(LegacySchoolClass $schoolClass)
+    {
+        if (!$schoolClass->begin_academic_year) {
+            return false;
+        }
+
+        if (!$schoolClass->end_academic_year) {
+            return false;
+        }
+
+        return true;
     }
 }
