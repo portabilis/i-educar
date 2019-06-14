@@ -141,4 +141,3 @@ require_once 'include/pmieducar/clsPmieducarBackup.inc.php';
 require_once 'include/pmieducar/clsPmieducarAlunoCmf.inc.php';
 require_once 'include/pessoa/clsCadastroRaca.inc.php';
 require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
-require_once 'include/pmieducar/alteraAtestadoParaDeclaracao.php';
