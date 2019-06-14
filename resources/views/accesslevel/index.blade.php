@@ -28,8 +28,8 @@
                 <label v-if="process.allow >= 1" :for="'acl-1' + hash">
                     <span class="radiogroup-icon"><i class="fa" :class="{ 'fa-check': value >= 1, 'fa-remove': value < 1 }"></i></span> <span>Visualiza</span>
                 </label>
-                <input v-if="process.allow >= 0" :id="'acl-0' + hash" :checked="value === 0" @input="$emit('input', value === 0 ? 0 : 0)" type="checkbox" :name="'processes[' + process.process + ']'" value="0">
             </div>
+            <input v-show="false" v-if="process.allow >= 0" :id="'acl-0' + hash" :checked="value === 0" @input="$emit('input', value === 0 ? 0 : 0)" type="checkbox" :name="'processes[' + process.process + ']'" value="0">
         </div>
     </div>
     <div id="access-level-menu" class="vue-template">
