@@ -560,7 +560,7 @@ class indice extends clsCadastro
             $parametros->setPessoaCampo('sem_cnpj');
             $parametros->setPessoaNovo("S");
             $parametros->setPessoaCPF("N");
-            $parametros->setPessoaTela('window');
+            $parametros->setPessoaTela('frame');
             $this->campoOculto("sem_cnpj", "");
             $parametros->setCodSistema(13);
             $parametros->adicionaCampoTexto("cnpj", "cnpj");
