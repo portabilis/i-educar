@@ -1,4 +1,6 @@
-DROP VIEW relatorio.view_historico_9anos;
+SET search_path = relatorio, pmieducar, public, pg_catalog;
+
+DROP VIEW IF EXISTS relatorio.view_historico_9anos;
 
 CREATE OR REPLACE VIEW relatorio.view_historico_9anos AS
 SELECT
