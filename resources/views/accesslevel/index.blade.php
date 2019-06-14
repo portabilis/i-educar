@@ -124,7 +124,7 @@
                                 <td :class="{ formmdtd: i % 2 == 0, formlttd: i % 2 != 0 }">
                                     <span class="form">@{{ process.title }}</span>
                                     <br>
-                                    <a :href="process.link"><sup>@{{ process.description }}</sup></a>
+                                    <a :href="process.link" target="_blank"><sup>@{{ process.description }}</sup></a>
                                 </td>
                                 <td :class="{ formmdtd: i % 2 == 0, formlttd: i % 2 != 0 }" width="500">
                                     <access-level-menu-radiogroup :process="process" v-model="processes[process.process]"></access-level-menu-radiogroup>
