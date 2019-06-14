@@ -29,6 +29,9 @@
  * @version   $Id$
  */
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 
@@ -84,9 +87,13 @@ class indice extends clsCadastro
     if ($exportacao) {
       $converted_to_iso88591 = utf8_decode($exportacao);
 
+      $inepEscola = DB::selectOne('SELECT cod_escola_inep FROM modules.educacenso_cod_escola WHERE cod_escola = ?', [$_POST["escola"]]);
+
+      $nomeArquivo = $inepEscola->cod_escola_inep . '_' . date('dm_Hi') . '.txt';
+
       header('Content-type: text/plain');
       header('Content-Length: ' . strlen($converted_to_iso88591));
-      header('Content-Disposition: attachment; filename=exportacao.txt');
+      header('Content-Disposition: attachment; filename=' . $nomeArquivo);
       echo $converted_to_iso88591;
       die();
     }

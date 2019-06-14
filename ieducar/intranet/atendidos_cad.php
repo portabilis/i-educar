@@ -510,7 +510,7 @@ class indice extends clsCadastro
             'inline' => true
         ];
 
-        $this->inputsHelper()->text('certidao_nascimento', $options);
+        $this->inputsHelper()->integer('certidao_nascimento', $options);
 
         // certidao casamento (novo padrão)
 
@@ -523,7 +523,7 @@ class indice extends clsCadastro
             'size' => 32
         ];
 
-        $this->inputsHelper()->text('certidao_casamento', $options);
+        $this->inputsHelper()->integer('certidao_casamento', $options);
 
         // uf emissão certidão civil
 
