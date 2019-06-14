@@ -111,7 +111,7 @@ class LegacyUserType extends EloquentBaseModel implements Transformable
             Menu::class,
             'pmieducar.menu_tipo_usuario',
             'ref_cod_tipo_usuario',
-            'ref_cod_menu_submenu',
+            'menu_id',
             'cod_tipo_usuario',
             'process'
         )->withPivot(['visualiza', 'cadastra', 'exclui']);

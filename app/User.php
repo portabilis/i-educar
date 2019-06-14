@@ -139,7 +139,7 @@ class User extends Authenticatable
             Menu::class,
             'pmieducar.menu_tipo_usuario',
             'ref_cod_tipo_usuario',
-            'ref_cod_menu_submenu',
+            'menu_id',
             'ref_cod_tipo_usuario',
             'process'
         )->withPivot(['visualiza', 'cadastra', 'exclui']);
