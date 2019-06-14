@@ -117,6 +117,10 @@ input.form-input {
   border-color: #cddce6 !important;
 }
 
+.btn:active {
+  border-style: solid;
+}
+
 a.btn {
   border: 1px solid #cddce6;
 }
