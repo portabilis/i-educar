@@ -83,9 +83,12 @@ class PictureController {
         
         $file = new File($tmp);
 
-        $this->imageName = $file->hashName();
+        $tenant = config('legacy.app.database.dbname');
+
+        $this->imageName = $file->hashName($tenant);
+
         if (Storage::put('/', $file)) {
-            $filePath= Storage::url($file->hashName());
+            $filePath= Storage::url($file->hashName($tenant));
             return $filePath;
         } else {
             $this->errorMessage = "Ocorreu um erro no servidor ao enviar foto. Tente novamente.";

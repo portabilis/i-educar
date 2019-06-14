@@ -60,9 +60,11 @@ class FileController {
     function sendFile(){
         $tmp = $this->file["tmp_name"];
 
+        $tenant = config('legacy.app.database.dbname');
+
         $file = new File($tmp);
         if (Storage::put('/', $file)) {
-            $filePath= Storage::url($file->hashName());
+            $filePath= Storage::url($file->hashName($tenant));
             return $filePath;
         } else {
             $this->errorMessage = "Ocorreu um erro no servidor ao enviar foto. Tente novamente.";
