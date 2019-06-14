@@ -78,7 +78,7 @@ class AccessLevelController extends Controller
      */
     public function show(Request $request, LegacyUserType $userType)
     {
-        $this->menu(659)->breadcrumb('Editar tipo de usuário');
+        $this->menu(554)->breadcrumb('Editar tipo de usuário');
 
         $processes = $userType->load('menus')->getProcesses();
 
