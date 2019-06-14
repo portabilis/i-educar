@@ -113,7 +113,7 @@ class LegacyUserType extends EloquentBaseModel implements Transformable
             'ref_cod_tipo_usuario',
             'menu_id',
             'cod_tipo_usuario',
-            'process'
+            'id'
         )->withPivot(['visualiza', 'cadastra', 'exclui']);
     }
 
@@ -139,7 +139,7 @@ class LegacyUserType extends EloquentBaseModel implements Transformable
                 $level = 3;
             }
 
-            return [$menu->process => $level];
+            return [$menu->id => $level];
         });
     }
 

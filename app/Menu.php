@@ -132,7 +132,7 @@ class Menu extends Model
                 'title' => $this->title,
                 'description' => $this->description,
                 'link' => $this->link,
-                'process' => $this->process,
+                'process' => $this->id,
                 'allow' => 3,
             ]));
         }
@@ -153,38 +153,38 @@ class Menu extends Model
             return static::roots();
         }
 
-        $ids = $user->menu()->pluck('process')->sortBy('process')->toArray();
+        $ids = $user->menu()->pluck('id')->sortBy('id')->toArray();
 
         return static::query()
             ->with([
                 'children' => function ($query) use ($ids) {
                     /** @var Builder $query */
                     $query->whereNull('process');
-                    $query->orWhereIn('process', $ids);
+                    $query->orWhereIn('id', $ids);
                     $query->orderBy('order');
                     $query->with([
                         'children' => function ($query) use ($ids) {
                             /** @var Builder $query */
                             $query->whereNull('process');
-                            $query->orWhereIn('process', $ids);
+                            $query->orWhereIn('id', $ids);
                             $query->orderBy('order');
                             $query->with([
                                 'children' => function ($query) use ($ids) {
                                     /** @var Builder $query */
                                     $query->whereNull('process');
-                                    $query->orWhereIn('process', $ids);
+                                    $query->orWhereIn('id', $ids);
                                     $query->orderBy('order');
                                     $query->with([
                                         'children' => function ($query) use ($ids) {
                                             /** @var Builder $query */
                                             $query->whereNull('process');
-                                            $query->orWhereIn('process', $ids);
+                                            $query->orWhereIn('id', $ids);
                                             $query->orderBy('order');
                                             $query->with([
                                                 'children' => function ($query) use ($ids) {
                                                     /** @var Builder $query */
                                                     $query->whereNull('process');
-                                                    $query->orWhereIn('process', $ids);
+                                                    $query->orWhereIn('id', $ids);
                                                     $query->orderBy('order');
                                                 }
                                             ]);

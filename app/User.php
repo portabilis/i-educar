@@ -141,7 +141,7 @@ class User extends Authenticatable
             'ref_cod_tipo_usuario',
             'menu_id',
             'ref_cod_tipo_usuario',
-            'process'
+            'id'
         )->withPivot(['visualiza', 'cadastra', 'exclui']);
     }
 
