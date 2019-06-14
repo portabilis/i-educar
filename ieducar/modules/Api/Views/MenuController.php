@@ -25,10 +25,10 @@ class MenuController extends ApiCoreController
         $sqls[] = "
             select 
                 m.link as id, 
-                coalesce(m.description, m.title) as name
+                coalesce(m.title, m.description) as name
             from public.menus m 
             inner join pmieducar.menu_tipo_usuario mst
-            on mst.ref_cod_menu_submenu = m.process
+            on mst.menu_id = m.id
             inner join pmieducar.usuario u 
             on u.ref_cod_tipo_usuario = mst.ref_cod_tipo_usuario
             where true 
@@ -50,10 +50,10 @@ class MenuController extends ApiCoreController
         $sqls[] = "
             select 
                 m.link as id, 
-                coalesce(m.description, m.title) as name
+                coalesce(m.title, m.description) as name
             from public.menus m 
             inner join pmieducar.menu_tipo_usuario mst
-            on mst.ref_cod_menu_submenu = m.process
+            on mst.menu_id = m.id
             inner join pmieducar.usuario u 
             on u.ref_cod_tipo_usuario = mst.ref_cod_tipo_usuario
             where true 
