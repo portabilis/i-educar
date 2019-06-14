@@ -50,7 +50,6 @@ require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 require_once 'include/pmieducar/clsPmieducarMatriculaExcessao.inc.php';
 require_once 'include/pmieducar/clsPmieducarMatriculaOcorrenciaDisciplinar.inc.php';
 require_once 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php';
-require_once 'include/pmieducar/clsPmieducarMenuTipoUsuario.inc.php';
 require_once 'include/pmieducar/clsPmieducarMotivoAfastamento.inc.php';
 require_once 'include/pmieducar/clsPmieducarNivelEnsino.inc.php';
 require_once 'include/pmieducar/clsPmieducarNotaAluno.inc.php';
