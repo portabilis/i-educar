@@ -245,7 +245,7 @@ class indice extends clsCadastro
     $this->campoLista('zona_localizacao', 'Zona Localização', $zona->getEnums(),
       $this->zona_localizacao);
 
-    $this->campoTexto('nome', 'Nome', $this->nome, 30, 255, TRUE);
+    $this->campoTexto('nome', 'Nome', $this->nome, 30, 80, TRUE);
   }
 
   function Novo()
