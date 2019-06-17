@@ -114,7 +114,7 @@ input.form-input {
   margin: 15px 0;
   font-family: "Open Sans", sans-serif;
   cursor: pointer;
-  border-color: #cddce6 !important;
+  border: 1px solid #cddce6;
 }
 
 .btn:active {
