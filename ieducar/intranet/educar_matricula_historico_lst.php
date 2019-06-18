@@ -1,5 +1,7 @@
 <?php
 
+use App\Process;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -13,7 +15,7 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo('Histórico de enturmações da matrícula');
 
-        $this->processoAp = 578;
+        $this->processoAp = Process::ENROLLMENT_HISTORY;
     }
 }
 

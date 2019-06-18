@@ -12,4 +12,6 @@ class Process
     const MENU_TRANSPORT = 69;
     const MENU_LIBRARY = 57;
     const MENU_CONFIGURATIONS = 25;
+
+    const ENROLLMENT_HISTORY = 1001;
 }

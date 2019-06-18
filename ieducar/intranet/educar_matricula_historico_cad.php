@@ -1,5 +1,7 @@
 <?php
 
+use App\Process;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -12,7 +14,7 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo("{$this->_instituicao} i-Educar - Bloqueio do ano letivo");
 
-        $this->processoAp = '21251';
+        $this->processoAp = Process::ENROLLMENT_HISTORY;
     }
 }
 
