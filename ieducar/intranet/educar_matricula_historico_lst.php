@@ -121,15 +121,15 @@ class indice extends clsListagem
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
-                $ativo = $registro['ativo'] ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
+                $ativo = $registro['ativo'] ? 'Sim' : 'Não';
                 $dataEnturmacao = dataToBrasil($registro['data_enturmacao']);
                 $dataSaida = dataToBrasil($registro['data_exclusao']);
                 $dataSaidaMatricula = dataToBrasil($detalhe_matricula['data_cancel']);
-                $transferido = $registro['transferido'] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
-                $remanejado = $registro['remanejado'] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
-                $abandono = $registro['abandono'] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
-                $reclassificado = $registro['reclassificado'] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
-                $falecido = $registro['falecido'] == 't' ? 'Sim' : Portabilis_String_Utils::toLatin1('Não');
+                $transferido = $registro['transferido'] == 't' ? 'Sim' : 'Não';
+                $remanejado = $registro['remanejado'] == 't' ? 'Sim' : 'Não';
+                $abandono = $registro['abandono'] == 't' ? 'Sim' : 'Não';
+                $reclassificado = $registro['reclassificado'] == 't' ? 'Sim' : 'Não';
+                $falecido = $registro['falecido'] == 't' ? 'Sim' : 'Não';
 
                 $usuarioCriou = new clsPessoa_($registro['ref_usuario_cad']);
                 $usuarioCriou = $usuarioCriou->detalhe();
@@ -142,23 +142,43 @@ class indice extends clsListagem
                     $turno = Portabilis_Utils_Database::selectField('SELECT nome FROM pmieducar.turma_turno WHERE id = $1', [$registro['turno_id']]);
                 }
 
-                $this->addLinhas(
-                    [
-                        "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$registro['sequencial']}</a>",
-                        "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$registro['nm_turma']}</a>",
-                        "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$turno}</a>",
-                        "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$ativo}</a>",
-                        "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$dataEnturmacao}</a>",
-                        "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$dataSaida}</a>",
-                        "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$transferido}</a>",
-                        "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$remanejado}</a>",
-                        "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$reclassificado}</a>",
-                        "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$abandono}</a>",
-                        "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$falecido}</a>",
-                        "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$usuarioCriou['nome']}</a>",
-                        "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$usuarioEditou['nome']}</a>",
-                    ]
-                );
+                if ($this->user()->can('modify', Process::ENROLLMENT_HISTORY)) {
+                    $this->addLinhas(
+                        [
+                            "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$registro['sequencial']}</a>",
+                            "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$registro['nm_turma']}</a>",
+                            "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$turno}</a>",
+                            "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$ativo}</a>",
+                            "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$dataEnturmacao}</a>",
+                            "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$dataSaida}</a>",
+                            "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$transferido}</a>",
+                            "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$remanejado}</a>",
+                            "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$reclassificado}</a>",
+                            "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$abandono}</a>",
+                            "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$falecido}</a>",
+                            "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$usuarioCriou['nome']}</a>",
+                            "<a href=\"educar_matricula_historico_cad.php?ref_cod_matricula={$registro['ref_cod_matricula']}&ref_cod_turma={$registro['ref_cod_turma']}&sequencial={$registro['sequencial']}  \">{$usuarioEditou['nome']}</a>",
+                        ]
+                    );
+                } else {
+                    $this->addLinhas(
+                        [
+                            $registro['sequencial'],
+                            $registro['nm_turma'],
+                            $turno,
+                            $ativo,
+                            $dataEnturmacao,
+                            $dataSaida,
+                            $transferido,
+                            $remanejado,
+                            $reclassificado,
+                            $abandono,
+                            $falecido,
+                            $usuarioCriou['nome'],
+                            $usuarioEditou['nome'],
+                        ]
+                    );
+                }
             }
         }
 

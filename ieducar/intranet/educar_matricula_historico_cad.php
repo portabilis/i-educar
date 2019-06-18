@@ -32,9 +32,11 @@ class indice extends clsCadastro
         $this->ref_cod_turma = $_GET['ref_cod_turma'];
         $this->sequencial = $_GET['sequencial'];
 
-        $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 3, 'educar_matricula_historico_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
-        $this->fexcluir = $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 3);
+        if ($this->user()->cannot('modify', Process::ENROLLMENT_HISTORY)) {
+            $this->simpleRedirect(url('intranet/educar_matricula_historico_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula));
+        }
+
+        $this->fexcluir = $this->user()->can('remove', Process::ENROLLMENT_HISTORY);
 
         $this->breadcrumb('Histórico de enturmações da matrícula', [
             url('intranet/educar_index.php') => 'Escola',
@@ -194,11 +196,11 @@ class indice extends clsCadastro
                 $matricula_get->edita();
             }
 
-            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+            $this->mensagem = 'Edição efetuada com sucesso.';
             $this->simpleRedirect('educar_matricula_historico_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
-        $this->mensagem = 'Edição não realizada.<br>';
+        $this->mensagem = 'Edição não realizada.';
 
         return false;
     }
@@ -213,11 +215,11 @@ class indice extends clsCadastro
         $excluiu = $enturmacao->excluir();
 
         if ($excluiu) {
-            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
+            $this->mensagem = 'Exclusão efetuada com sucesso.';
             $this->simpleRedirect('educar_matricula_historico_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
-        $this->mensagem = 'Exclusão não realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.';
 
         return false;
     }
