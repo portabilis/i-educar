@@ -26,6 +26,8 @@ class indice extends clsListagem
     {
         $this->titulo = 'Lista de enturmações da matrí­cula';
 
+        $this->exibirBotaoSubmit = false;
+
         $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
 
         if (!$this->ref_cod_matricula) {
@@ -179,8 +181,3 @@ $miolo = new indice();
 
 $pagina->addForm($miolo);
 $pagina->MakeAll();
-
-?>
-<script type="text/javascript">
-    document.getElementById('botao_busca').style.visibility = 'hidden';
-</script>
