@@ -73,7 +73,6 @@ class AddForeignKeysOnPmieducarEscolaTable extends Migration
             $table->dropForeign(['ref_idpes']);
             $table->dropForeign(['ref_cod_instituicao']);
             $table->dropForeign(['ref_cod_escola_rede_ensino']);
-            $table->dropForeign(['codigo_lingua_indigena']);
             $table->dropForeign(['codigo_ies']);
         });
     }
