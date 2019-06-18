@@ -1,9 +1,7 @@
 <?php
 
 use App\Process;
-use App\User;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
-use Illuminate\Support\Facades\Auth;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
@@ -403,10 +401,7 @@ class indice extends clsDetalhe
             }
         }
 
-        /** @var User $user */
-        $user = Auth::user();
-
-        if ($user->can('view', Process::ENROLLMENT_HISTORY)) {
+        if ($this->user()->can('view', Process::ENROLLMENT_HISTORY)) {
             $this->array_botao[] = 'Histórico de enturmações';
             $this->array_botao_url_script[] = "go(\"educar_matricula_historico_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
         }
