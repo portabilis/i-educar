@@ -39,7 +39,9 @@ class CreatePmieducarConfiguracoesGeraisTable extends Migration
                     ieducar_suspension_message text,
 	                bloquear_cadastro_aluno bool NOT NULL DEFAULT false,
 	                token_novo_educacao varchar(191) NULL,
-	                situacoes_especificas_atestados bool NOT NULL DEFAULT false
+	                situacoes_especificas_atestados bool NOT NULL DEFAULT false,
+                    emitir_ato_autorizativo bool NOT NULL DEFAULT false,
+                    emitir_ato_criacao_credenciamento bool NOT NULL DEFAULT false
                 );
             '
         );
