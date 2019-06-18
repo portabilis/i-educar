@@ -48,7 +48,16 @@ class PrepareDatabase extends Migration
     }
 
     /**
+     * @see https://github.com/portabilis/i-educar/pull/601
+     */
+    private function dropFromPmieducar()
+    {
+        DB::unprepared('DROP TABLE IF EXISTS pmieducar.historico_educar CASCADE;');
+    }
+
+    /**
      * @see https://github.com/portabilis/i-educar/pull/509
+     * @see https://github.com/portabilis/i-educar/pull/602
      */
     private function dropFromPortal()
     {
@@ -82,6 +91,7 @@ class PrepareDatabase extends Migration
         DB::unprepared('DROP TABLE IF EXISTS portal.pessoa_fj_pessoa_atividade CASCADE;');
         DB::unprepared('DROP TABLE IF EXISTS portal.pessoa_ramo_atividade CASCADE;');
         DB::unprepared('DROP TABLE IF EXISTS portal.portal_concurso CASCADE;');
+        DB::unprepared('DROP TABLE IF EXISTS portal.sistema CASCADE;');
     }
 
     /**
@@ -153,6 +163,7 @@ class PrepareDatabase extends Migration
     {
         $this->dropSchemas();
         $this->dropFromPmicontrolesis();
+        $this->dropFromPmieducar();
         $this->dropFromPortal();
         $this->dropFromPublic();
     }
