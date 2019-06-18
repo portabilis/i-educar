@@ -26,7 +26,9 @@ class SchoolClassService
             ->where('ref_ref_cod_serie', $level)
             ->where('ref_cod_curso', $course)
             ->where('ref_ref_cod_escola', $school)
-            ->where('ano', $academicYear);
+            ->where('ano', $academicYear)
+            ->where('visivel', true)
+            ->where('ativo', 1);
 
         if ($idToIgnore) {
             $query->where('cod_turma', '!=', $idToIgnore);
