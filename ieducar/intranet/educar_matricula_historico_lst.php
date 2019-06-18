@@ -11,20 +11,19 @@ class clsIndexBase extends clsBase
 {
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Matricula Turma');
+        $this->SetTitulo('Histórico de enturmações da matrícula');
+
         $this->processoAp = 578;
-        $this->addEstilo('localizacaoSistema');
     }
 }
 
 class indice extends clsListagem
 {
-    public $pessoa_logada;
     public $ref_cod_matricula;
 
     public function Gerar()
     {
-        $this->titulo = 'Lista de enturmações da matrí­cula';
+        $this->titulo = 'Lista de enturmações da matrícula';
 
         $this->exibirBotaoSubmit = false;
 
@@ -170,7 +169,7 @@ class indice extends clsListagem
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Histórico de enturmações da matrí­cula', [
+        $this->breadcrumb('Histórico de enturmações da matrícula', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
