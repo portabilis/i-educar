@@ -11,14 +11,14 @@ class SerieController extends ApiCoreController
 {
     protected function canGetSeries()
     {
-        return $this->validatesPresenceOf('instituicao_id') && $this->validatesPresenceOf('escola_id');
+        return $this->validatesPresenceOf('instituicao_id');
     }
 
     protected function getSeries()
     {
         if ($this->canGetSeries()) {
             $instituicaoId = $this->getRequest()->instituicao_id;
-            $escolaId = $this->getRequest()->escola_id;
+            $escolaId = $this->getRequest()->escola_id ?: null;
             $cursoId = $this->getRequest()->curso_id;
             $modified = $this->getRequest()->modified ?: null;
 
@@ -57,8 +57,11 @@ class SerieController extends ApiCoreController
                 WHERE TRUE 
                 AND c.ref_cod_instituicao = $1
                 AND c.ativo = 1
-                AND es.ref_cod_escola IN ({$escolaId})
             ";
+
+            if ($escolaId) {
+                $sql .= " AND es.ref_cod_escola IN ({$escolaId}) ";
+            }
 
             if ($cursoId) {
                 $sql .= " AND c.cod_curso IN ({$cursoId}) ";
