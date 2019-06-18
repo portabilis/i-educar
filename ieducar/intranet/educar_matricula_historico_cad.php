@@ -11,19 +11,13 @@ class clsIndexBase extends clsBase
     public function Formular()
     {
         $this->SetTitulo("{$this->_instituicao} i-Educar - Bloqueio do ano letivo");
+
         $this->processoAp = '21251';
-        $this->addEstilo('localizacaoSistema');
     }
 }
 
 class indice extends clsCadastro
 {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
     public $ref_cod_matricula;
     public $ref_cod_turma;
     public $sequencial;
@@ -139,13 +133,13 @@ class indice extends clsCadastro
         $seqUltimaEnturmacao = $enturmacao->getUltimaEnturmacao($this->ref_cod_matricula);
 
         if ($enturmacao->data_exclusao && ($enturmacao->data_exclusao < $enturmacao->data_enturmacao)) {
-            $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br> A data de sa&iacute;da n&atilde;o pode ser anterior a data de enturma&ccedil;&atilde;o.';
+            $this->mensagem = 'Edição não realizada.<br> A data de saída não pode ser anterior a data de enturmação.';
 
             return false;
         }
 
         if ($dataSaidaEnturmacaoAnterior && ($enturmacao->data_enturmacao < $dataSaidaEnturmacaoAnterior)) {
-            $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br> A data de enturma&ccedil;&atilde;o n&atilde;o pode ser anterior a data de sa&iacute;da da enturma&ccedil;&atilde;o antecessora.';
+            $this->mensagem = 'Edição não realizada.<br> A data de enturmação não pode ser anterior a data de saída da enturmação antecessora.';
 
             return false;
         }
@@ -159,7 +153,7 @@ class indice extends clsCadastro
                 || App_Model_MatriculaSituacao::RECLASSIFICADO == $matricula['aprovado']
             ) && ($this->sequencial == $seqUltimaEnturmacao)
         ) {
-            $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br> A data de sa&iacute;da n&atilde;o pode ser posterior a data de sa&iacute;da da matricula.';
+            $this->mensagem = 'Edição não realizada.<br> A data de saída não pode ser posterior a data de saída da matricula.';
 
             return false;
         }
@@ -198,11 +192,11 @@ class indice extends clsCadastro
                 $matricula_get->edita();
             }
 
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_matricula_historico_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -217,11 +211,11 @@ class indice extends clsCadastro
         $excluiu = $enturmacao->excluir();
 
         if ($excluiu) {
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_matricula_historico_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }
