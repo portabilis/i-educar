@@ -510,7 +510,7 @@ SQL;
             LEFT JOIN modules.educacenso_cod_turma ON educacenso_cod_turma.cod_turma = turma.cod_turma
             LEFT JOIN modules.professor_turma_disciplina ON professor_turma_disciplina.professor_turma_id = professor_turma.id,
               LATERAL (
-                         SELECT DISTINCT array_agg(cc.codigo_educacenso) AS componentes
+                         SELECT DISTINCT array_agg(DISTINCT cc.codigo_educacenso) AS componentes
                          FROM modules.componente_curricular cc
                                   INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
                          WHERE   ptd.professor_turma_id = professor_turma.id

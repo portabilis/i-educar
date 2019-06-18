@@ -20,10 +20,14 @@ class Controller extends BaseController
      *
      * @param $currentPage
      * @param array $pages
+     *
+     * @return $this
      */
     public function breadcrumb($currentPage, $pages = [])
     {
         app(Breadcrumb::class)->current($currentPage, $pages);
+
+        return $this;
     }
 
     /**
@@ -31,7 +35,7 @@ class Controller extends BaseController
      * 
      * @param int $process
      *
-     * @return void
+     * @return $this
      */
     public function menu($process)
     {
@@ -48,5 +52,7 @@ class Controller extends BaseController
 
         View::share('menu', $menu);
         View::share('title', '');
+
+        return $this;
     }
 }

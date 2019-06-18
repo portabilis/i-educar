@@ -108,12 +108,6 @@ class indice extends clsCadastro
                 $retorno = "Editar";
             }
 
-            $obj_menu_funcionario = new clsPortalMenuFuncionario($this->ref_pessoa, null, null, 0);
-            $det_menu_funcionario = $obj_menu_funcionario->detalhe();
-            if( $det_menu_funcionario )
-            {
-                $this->super = true;
-            }
             $this->status = $this->ativo;
             $obj = new clsPmieducarUsuario( $this->ref_pessoa);
             $registro  = $obj->detalhe();

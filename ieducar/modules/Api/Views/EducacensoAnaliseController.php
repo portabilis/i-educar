@@ -935,7 +935,17 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            $componentes = $turma->componentes();
+            try {
+                $componentes = $turma->componentes();
+            } catch (Throwable $exception) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se alguma disciplina da turma {$nomeTurma} foi informada",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados gerais > Seção: Componentes curriculares definidos em séries da escola)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+                continue;
+            }
 
             if (empty($componentes)) {
                 $mensagem[] = [
@@ -1328,7 +1338,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
         $avaliableTimeService = new AvailableTimeService();
 
-        $avaliableTimeService->onlyUntilEnrollmentDate($educacensoDate);
+        $avaliableTimeService->onlyUntilEnrollmentDate($educacensoDate)->onlySchoolClassesInformedOnCensus();
 
         foreach ($alunos as $aluno) {
             $nomeEscola = strtoupper($aluno->nomeEscola);

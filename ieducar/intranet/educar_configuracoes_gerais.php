@@ -41,6 +41,8 @@ class indice extends clsCadastro
     public $ieducar_suspension_message;
     public $bloquear_cadastro_aluno;
     public $situacoes_especificas_atestados;
+    public $emitir_ato_autorizativo;
+    public $emitir_ato_criacao_credenciamento;
 
     public function Inicializar()
     {
@@ -95,6 +97,8 @@ class indice extends clsCadastro
         $this->twitter_url = $configuracoes['twitter_url'];
         $this->linkedin_url = $configuracoes['linkedin_url'];
         $this->ieducar_suspension_message = $configuracoes['ieducar_suspension_message'];
+        $this->emitir_ato_autorizativo = dbBool($configuracoes['emitir_ato_autorizativo']);
+        $this->emitir_ato_criacao_credenciamento = dbBool($configuracoes['emitir_ato_criacao_credenciamento']);
 
         $this->inputsHelper()->checkbox('permite_relacionamento_posvendas', [
             'label' => 'Permite relacionamento direto no pós-venda?',
@@ -109,6 +113,16 @@ class indice extends clsCadastro
         $this->inputsHelper()->checkbox('situacoes_especificas_atestados', [
             'label' => 'Exibir apenas matrículas em situações específicas para os atestados',
             'value' => $this->situacoes_especificas_atestados ? 'on' : ''
+        ]);
+
+        $this->inputsHelper()->checkbox('emitir_ato_autorizativo', [
+            'label' => 'Emite ato autorizativo nos cabeçalhos de histórico escolar (modelos padrão)',
+            'value' => $this->emitir_ato_autorizativo ? 'on' : ''
+        ]);
+
+        $this->inputsHelper()->checkbox('emitir_ato_criacao_credenciamento', [
+            'label' => 'Emite lei de criação e credenciamento nos cabeçalhos de histórico escolar (modelos padrão)',
+            'value' => $this->emitir_ato_criacao_credenciamento ? 'on' : ''
         ]);
 
         $this->inputsHelper()->text('url_novo_educacao', [
@@ -261,6 +275,8 @@ class indice extends clsCadastro
         $permiteRelacionamentoPosvendas = ($this->permite_relacionamento_posvendas == 'on' ? 1 : 0);
         $bloquearCadastroAluno = $this->bloquear_cadastro_aluno == 'on' ? 1 : 0;
         $situacoesEspecificasAtestados = $this->situacoes_especificas_atestados == 'on' ? 1 : 0;
+        $emitir_ato_autorizativo = $this->emitir_ato_autorizativo == 'on' ? 1 : 0;
+        $emitir_ato_criacao_credenciamento = $this->emitir_ato_criacao_credenciamento == 'on' ? 1 : 0;
 
         $configuracoes = new clsPmieducarConfiguracoesGerais($ref_cod_instituicao, [
             'permite_relacionamento_posvendas' => $permiteRelacionamentoPosvendas,
@@ -282,7 +298,9 @@ class indice extends clsCadastro
             'facebook_url' => $this->facebook_url,
             'twitter_url' => $this->twitter_url,
             'linkedin_url' => $this->linkedin_url,
-            'ieducar_suspension_message' => $this->ieducar_suspension_message
+            'ieducar_suspension_message' => $this->ieducar_suspension_message,
+            'emitir_ato_autorizativo' => $emitir_ato_autorizativo,
+            'emitir_ato_criacao_credenciamento' => $emitir_ato_criacao_credenciamento,
         ]);
 
         $detalheAntigo = $configuracoes->detalhe();
