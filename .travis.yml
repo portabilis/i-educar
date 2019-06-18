@@ -9,11 +9,10 @@ matrix:
       dist: xenial
 
       php:
-        - 7.1
-        - 7.2
+        - '7.2'
 
       addons:
-        postgresql: 9.5
+        postgresql: '9.5'
         chrome: stable
 
       env:
@@ -34,8 +33,7 @@ matrix:
 
       before_script:
         - composer new-install
-        - php artisan dusk:chrome-driver
-        - vendor/laravel/dusk/bin/chromedriver-linux > /dev/null 2>&1 &
+        - php artisan dusk:chrome-driver 74
         - php artisan serve > /dev/null 2>&1 &
 
       script:

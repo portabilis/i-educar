@@ -1,12 +1,12 @@
 <?php
 
+use Illuminate\Support\Facades\Gate;
+
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'intranet/include/clsBanco.inc.php';
 require_once 'intranet/include/funcoes.inc.php';
-require_once 'intranet/include/pmieducar/clsPmieducarUsuario.inc.php';
-require_once 'intranet/include/pmieducar/clsPmieducarMenuTipoUsuario.inc.php';
 
 class EnderecoController extends ApiCoreController
 {
@@ -56,15 +56,7 @@ class EnderecoController extends ApiCoreController
 
     protected function getPermissaoEditar()
     {
-        $usuario = new clsPmieducarUsuario($this->getSession()->id_pessoa);
-        $usuario = $usuario->detalhe();
-
-        $tipoUsuario = new clsPmieducarMenuTipoUsuario($usuario['ref_cod_tipo_usuario'], 999878);
-        $tipoUsuario = $tipoUsuario->detalhe();
-
-        $permissao = ($tipoUsuario['cadastra'] == 1 ? true : false);
-
-        return ['permite_editar' => $permissao];
+        return ['permite_editar' => Gate::allows('modify', 999878)];
     }
 
     protected function deleteEndereco()

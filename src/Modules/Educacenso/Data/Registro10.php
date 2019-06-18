@@ -106,7 +106,7 @@ class Registro10 extends AbstractRegistro
             $data->salasGeraisSalaProfessores() ?: 0, // 71
             $data->salasAtividadesRecursosAee() ?: 0, // 72
             $data->salasGeraisSalaSecretaria() ?: 0, // 73
-            $data->existeDependencia() ?: 0, // 74
+            $data->naoPossuiDependencias() ?: 0, // 74
             $data->recursosAcessibilidadeCorrimao() ?: 0, // 75
             $data->recursosAcessibilidadeElevador() ?: 0, // 76
             $data->recursosAcessibilidadePisosTateis() ?: 0, // 77
