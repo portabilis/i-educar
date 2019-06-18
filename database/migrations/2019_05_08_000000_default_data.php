@@ -39,7 +39,6 @@ class DefaultData extends Migration
         Artisan::call('db:seed', ['--class' => DefaultModulesRegraAvaliacaoTableSeeder::class]);
         Artisan::call('db:seed', ['--class' => DefaultModulesTipoVeiculoTableSeeder::class]);
 
-        Artisan::call('db:seed', ['--class' => DefaultPortalAcessoTableSeeder::class]);
         Artisan::call('db:seed', ['--class' => DefaultPortalFuncionarioTableSeeder::class]);
         Artisan::call('db:seed', ['--class' => DefaultPortalFuncionarioVinculoTableSeeder::class]);
         Artisan::call('db:seed', ['--class' => DefaultPortalAgendaTableSeeder::class]);
