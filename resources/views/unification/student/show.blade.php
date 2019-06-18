@@ -49,7 +49,7 @@
                 <button class="btn-green" type="button">Desfazer</button>
             </a>
         @endif
-        <a href="{{ url()->previous() }}"><button class="btn-green" type="button">Voltar</button></a>
+        <a href="{{ url()->previous() }}"><button class="btn" type="button">Voltar</button></a>
     </div>
 
     </form>

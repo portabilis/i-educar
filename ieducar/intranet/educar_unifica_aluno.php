@@ -66,15 +66,16 @@ class indice extends clsCadastro
   {
     $retorno = 'Novo';
 
-
-
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(999847, $this->pessoa_logada, 7,
       'index.php');
 
-    $this->breadcrumb('Unificação de alunos', [
+    $this->breadcrumb('Cadastrar unificação', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
+
+    $this->url_cancelar = route('student_log_unification.index');
+    $this->nome_url_cancelar = "Cancelar";
 
     return $retorno;
   }
