@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\LogUnification;
+use App\Services\StudentUnificationService;
 use Illuminate\Http\Request;
+use Throwable;
 
 class StudentLogUnificationController extends Controller
 {
@@ -41,8 +43,17 @@ class StudentLogUnificationController extends Controller
         return view('unification.student.show', ['unification' => $unification]);
     }
 
-    public function undo(LogUnification $unification)
+    public function undo(LogUnification $unification, StudentUnificationService $unificationService)
     {
+        try {
+            $unificationService->undo($unification);
+        } catch (Throwable $exception) {
+            return redirect(
+                route('student_log_unification.show', ['unification' => $unification->id]))
+                ->withErrors([$exception->getMessage()]
+                );
+        }
 
+        return redirect(route('student_log_unification.index'));
     }
 }

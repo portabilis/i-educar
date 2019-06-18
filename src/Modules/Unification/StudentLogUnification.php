@@ -3,7 +3,9 @@
 namespace iEducar\Modules\Unification;
 
 use App\Models\LogUnification;
+use App\Models\LogUnificationOldData;
 use App\Models\Student;
+use Illuminate\Support\Facades\DB;
 
 class StudentLogUnification implements LogUnificationTypeInterface
 {
@@ -41,5 +43,32 @@ class StudentLogUnification implements LogUnificationTypeInterface
     public static function getType()
     {
         return Student::class;
+    }
+
+    public function undo(LogUnification $logUnification)
+    {
+        $oldData = $logUnification->oldData;
+
+        DB::beginTransaction();
+
+        foreach ($oldData as $data) {
+            $this->undoData($data);
+        }
+
+        DB::commit();
+    }
+
+    /**
+     * @param LogUnificationOldData $data
+     */
+    private function undoData($data)
+    {
+        $query = DB::table($data->table)->select();
+
+        foreach ($data->keys as $key) {
+            $query->where(key($key), $key);
+        }
+
+        $query->update($data->old_data);
     }
 }

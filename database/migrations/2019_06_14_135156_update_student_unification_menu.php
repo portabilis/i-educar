@@ -1,9 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ChangeStudentUnificationMenu extends Migration
+class UpdateStudentUnificationMenu extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +15,7 @@ class ChangeStudentUnificationMenu extends Migration
     {
         DB::table('menus')
             ->where('process', 999847)
-            ->update(['link' => '/student-log-unification']);
+            ->update(['link' => '/unificacao-aluno']);
     }
 
     /**
@@ -26,6 +27,6 @@ class ChangeStudentUnificationMenu extends Migration
     {
         DB::table('menus')
             ->where('process', 999847)
-            ->update(['link' => '/intranet/educar_unifica_aluno.php']);
+            ->update(['link' => '/student-log-unification']);
     }
 }

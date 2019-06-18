@@ -32,4 +32,9 @@ class PersonLogUnification implements LogUnificationTypeInterface
     {
         return Individual::class;
     }
+
+    public function undo(LogUnification $logUnification)
+    {
+        // TODO: Implement undo() method.
+    }
 }

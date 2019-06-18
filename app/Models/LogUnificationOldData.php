@@ -17,4 +17,14 @@ class LogUnificationOldData extends Model
     {
         return $this->belongsTo(LogUnification::class, 'unification_id', 'id');
     }
+
+    public function getKeysAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
+    public function getOldDataAttribute($value)
+    {
+        return json_decode($value, true);
+    }
 }

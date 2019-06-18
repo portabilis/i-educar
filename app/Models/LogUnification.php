@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use iEducar\Modules\Unification\LogUnificationTypeInterface;
 use Exception;
 use iEducar\Modules\Unification\PersonLogUnification;
 use iEducar\Modules\Unification\StudentLogUnification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class LogUnification extends Model
@@ -26,6 +28,14 @@ class LogUnification extends Model
     public function createdBy()
     {
         return $this->belongsTo(Individual::class, 'created_by', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function oldData()
+    {
+        return $this->hasMany(LogUnificationOldData::class, 'unification_id', 'id');
     }
 
     /**
@@ -88,10 +98,10 @@ class LogUnification extends Model
     }
 
     /**
-     * @return PersonLogUnification|StudentLogUnification
+     * @return LogUnificationTypeInterface
      * @throws Exception
      */
-    private function getAdapter()
+    public function getAdapter()
     {
         if ($this->type == Individual::class) {
             return new PersonLogUnification();
