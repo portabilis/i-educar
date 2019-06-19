@@ -1091,20 +1091,14 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (LegacyIndividual::query()->where('idpes_mae', $idPes)->exists()) {
-            $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo como mãe.';
+        $inUse = LegacyIndividual::query()
+            ->where('idpes_responsavel', $idPes)
+            ->orWhere('idpes_pai', $idPes)
+            ->orWhere('idpes_mae', $idPes)
+            ->exists();
 
-            return false;
-        }
-
-        if (LegacyIndividual::query()->where('idpes_pai', $idPes)->exists()) {
-            $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo como pai.';
-
-            return false;
-        }
-
-        if (LegacyIndividual::query()->where('idpes_responsavel', $idPes)->exists()) {
-            $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo como pai.';
+        if ($inUse) {
+            $this->mensagem = 'Não foi possível excluir. A pessoa possuí vínculo(s) com aluno(s) como mãe, pai ou outro responsável.';
 
             return false;
         }
