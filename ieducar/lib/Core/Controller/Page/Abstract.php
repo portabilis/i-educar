@@ -1,6 +1,8 @@
 <?php
 
+use App\User;
 use iEducar\Modules\Navigation\Breadcrumb;
+use Illuminate\Support\Facades\Auth;
 
 require_once 'CoreExt/Controller/Abstract.php';
 require_once 'Core/Controller/Page/Interface.php';
@@ -116,6 +118,19 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
     {
         $this->_options['id_usuario'] = $this->getSession()->id_pessoa;
         $this->pessoa_logada = $this->getSession()->id_pessoa ?? null;
+    }
+
+    /**
+     * Retorna o usuário autenticado.
+     *
+     * @return User
+     */
+    public function user()
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        return $user;
     }
 
     /**
