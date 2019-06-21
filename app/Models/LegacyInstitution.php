@@ -68,4 +68,14 @@ class LegacyInstitution extends Model
     {
         return $this->data_base_remanejamento;
     }
+
+    /**
+     * Indica se os campos do Censo são obrigatórios.
+     * 
+     * @return bool
+     */
+    public function isMandatoryCensoFields()
+    {
+        return boolval($this->obrigar_campos_censo);
+    }
 }

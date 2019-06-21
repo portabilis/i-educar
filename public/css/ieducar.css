@@ -104,7 +104,8 @@ input.form-input {
 }
 
 .btn,
-.btn-green {
+.btn-green,
+.select-default {
   background-color: #FFF;
   font-size: 14px;
   color: #47728f;
@@ -119,6 +120,11 @@ input.form-input {
 
 .btn:active {
   border-style: solid;
+}
+
+.select-default {
+  margin: 0;
+  cursor: default;
 }
 
 a.btn {
