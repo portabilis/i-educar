@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyIndividual;
 use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
@@ -1085,8 +1086,19 @@ class indice extends clsCadastro
         $aluno = $aluno->lista(null, null, null, null, null, $idPes, null, null, null, null, 1);
 
         if ($aluno) {
-            $this->mensagem = 'Exclusão não realizada.';
-            $this->mensagem .= '<br />Esta pessoa possuí vínculo com aluno.';
+            $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com aluno.';
+
+            return false;
+        }
+
+        $inUse = LegacyIndividual::query()
+            ->where('idpes_responsavel', $idPes)
+            ->orWhere('idpes_pai', $idPes)
+            ->orWhere('idpes_mae', $idPes)
+            ->exists();
+
+        if ($inUse) {
+            $this->mensagem = 'Não foi possível excluir. A pessoa possuí vínculo(s) com aluno(s) como mãe, pai ou outro responsável.';
 
             return false;
         }
@@ -1098,8 +1110,7 @@ class indice extends clsCadastro
         $funcionario = $funcionario->lista(null, null, 1);
 
         if ($funcionario && $usuario) {
-            $this->mensagem = 'Exclusão não realizada.';
-            $this->mensagem .= '<br />Esta pessoa possuí vínculo com usuário do sistema.';
+            $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com usuário do sistema.';
 
             return false;
         }
@@ -1108,8 +1119,7 @@ class indice extends clsCadastro
         $servidor = $servidor->lista($idPes, null, null, null, null, null, null, null, 1);
 
         if ($servidor) {
-            $this->mensagem = 'Exclusão não realizada.';
-            $this->mensagem .= '<br />Esta pessoa possuí vínculo com servidor.';
+            $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com servidor.';
 
             return false;
         }
@@ -1118,8 +1128,7 @@ class indice extends clsCadastro
         $cliente = $cliente->lista(null, null, null, $idPes, null, null, null, null, null, null, 1);
 
         if ($cliente) {
-            $this->mensagem = 'Exclusão não realizada.';
-            $this->mensagem .= '<br />Esta pessoa possuí vínculo com cliente.';
+            $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com cliente.';
 
             return false;
         }
@@ -1128,8 +1137,7 @@ class indice extends clsCadastro
         $usuarioTransporte = $usuarioTransporte->lista(null, $idPes);
 
         if ($usuarioTransporte) {
-            $this->mensagem = 'Exclusão não realizada.';
-            $this->mensagem .= '<br />Esta pessoa possuí vínculo com usuário de transporte.';
+            $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com usuário de transporte.';
 
             return false;
         }
@@ -1138,8 +1146,7 @@ class indice extends clsCadastro
         $motorista = $motorista->lista(null, null, null, null, null, $idPes);
 
         if ($motorista) {
-            $this->mensagem = 'Exclusão não realizada.';
-            $this->mensagem .= '<br />Esta pessoa possuí vínculo com motorista.';
+            $this->mensagem = 'Não foi possível excluir. Esta pessoa possuí vínculo com motorista.';
 
             return false;
         }
@@ -1147,7 +1154,7 @@ class indice extends clsCadastro
         $pessoaFisica = new clsPessoaFisica($idPes);
         $pessoaFisica->excluir();
 
-        $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.';
+        $this->mensagem = 'Exclusão efetuada com sucesso.';
 
         $this->simpleRedirect('atendidos_lst.php');
     }
