@@ -40,6 +40,14 @@ class LegacySchool extends Model
     public $timestamps = false;
 
     /**
+     * @return int
+     */
+    public function getIdAttribute()
+    {
+        return $this->cod_escola;
+    }
+
+    /**
      * Relacionamento com a instituição.
      *
      * @return BelongsTo

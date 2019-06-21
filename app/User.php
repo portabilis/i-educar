@@ -139,10 +139,10 @@ class User extends Authenticatable
             Menu::class,
             'pmieducar.menu_tipo_usuario',
             'ref_cod_tipo_usuario',
-            'ref_cod_menu_submenu',
+            'menu_id',
             'ref_cod_tipo_usuario',
-            'process'
-        );
+            'id'
+        )->withPivot(['visualiza', 'cadastra', 'exclui']);
     }
 
     /**
@@ -150,6 +150,8 @@ class User extends Authenticatable
      */
     public function menu()
     {
-        return $this->processes()->wherePivot('visualiza', 1);
+        return $this->processes()
+            ->wherePivot('visualiza', 1)
+            ->withPivot(['visualiza', 'cadastra', 'exclui']);
     }
 }

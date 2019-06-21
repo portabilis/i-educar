@@ -325,6 +325,7 @@
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/flash-messages.js") }}"></script>
 
 @include('layout.vue')
+@stack('end')
 
 </body>
 </html>
