@@ -536,7 +536,7 @@ class indice extends clsCadastro
             null
         );
 
-        $opcoesCampoModulo = [null => 'Selecione'];
+        $opcoesCampoModulo = [];
 
         if (is_array($lista) && count($lista)) {
             $this->modulos = $lista;
