@@ -842,9 +842,11 @@ class clsPmieducarTurma
                 $gruda = ", ";
             }
 
-            if (is_bool($this->visivel)) {
-                $this->visivel = dbBool($this->visivel) ? 'TRUE' : 'FALSE';
-                $set .= "{$gruda}visivel = '{$this->visivel}'";
+            if (isset($this->visivel)) {
+                $set .= "{$gruda}visivel = TRUE";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}visivel = FALSE";
                 $gruda = ', ';
             }
 
