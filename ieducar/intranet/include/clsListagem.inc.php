@@ -63,19 +63,15 @@ class clsListagem extends clsCampos
 
     public function SalvaFiltros()
     {
-        $pathInfoParts = explode('/', Request::server('PATH_INFO'));
-        $file = array_pop($pathInfoParts);
+        $uri = parse_url(Request::server('REQUEST_URI'), PHP_URL_PATH);
         $previousFilters = Session::get('previous_filters') ?? [];
 
         if (empty($_GET)) {
-            if (!empty($previousFilters[$file])) {
-                list($path, $ts) = explode('|', $previousFilters[$file]);
+            if (!empty($previousFilters[$uri])) {
+                list($path, $ts) = explode('|', $previousFilters[$uri]);
                 $diff = now() - (int) $ts;
 
                 if ($diff > 7200) { //duas horas
-                    unset($previousFilters[$file]);
-                    Session::put('previous_filters', $previousFilters);
-
                     return;
                 }
 
@@ -90,7 +86,7 @@ class clsListagem extends clsCampos
                 array_shift($previousFilters);
             }
 
-            $previousFilters[$file] = $params;
+            $previousFilters[$uri] = $params;
 
             Session::put('previous_filters', $previousFilters);
         }
