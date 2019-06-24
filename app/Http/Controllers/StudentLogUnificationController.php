@@ -35,7 +35,7 @@ class StudentLogUnificationController extends Controller
     {
         $this->breadcrumb('Detalhe da unificação', [
             url('intranet/educar_index.php') => 'Escola',
-            route('student_log_unification.index') => 'Log de unificações de aluno',
+            route('student-log-unification.index') => 'Log de unificações de aluno',
         ]);
 
         $this->menu(999847);
@@ -49,11 +49,11 @@ class StudentLogUnificationController extends Controller
             $unificationService->undo($unification);
         } catch (Throwable $exception) {
             return redirect(
-                route('student_log_unification.show', ['unification' => $unification->id]))
+                route('student-log-unification.show', ['unification' => $unification->id]))
                 ->withErrors([$exception->getMessage()]
                 );
         }
 
-        return redirect(route('student_log_unification.index'))->with('success', 'Unificação desfeita com sucesso');
+        return redirect(route('student-log-unification.index'))->with('success', 'Unificação desfeita com sucesso');
     }
 }

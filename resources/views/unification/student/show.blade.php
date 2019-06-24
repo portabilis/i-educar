@@ -46,7 +46,7 @@
     <div style="text-align: center">
         @if($unification->active)
             @can('modify', \App\Process::UNDO_STUDENT_UNIFICATION)
-                <a href="{{ route('student_log_unification.undo', ['unification' => $unification->id]) }}">
+                <a href="{{ route('student-log-unification.undo', ['unification' => $unification->id]) }}">
                     <button class="btn-green" type="button">Desfazer</button>
                 </a>
             @endcan

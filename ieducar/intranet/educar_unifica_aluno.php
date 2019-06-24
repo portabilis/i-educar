@@ -74,7 +74,7 @@ class indice extends clsCadastro
         url('intranet/educar_index.php') => 'Escola',
     ]);
 
-    $this->url_cancelar = route('student_log_unification.index');
+    $this->url_cancelar = route('student-log-unification.index');
     $this->nome_url_cancelar = "Cancelar";
 
     return $retorno;
@@ -136,7 +136,7 @@ class indice extends clsCadastro
     }
 
     $this->mensagem = "<span>Alunos unificados com sucesso.</span>";
-    $this->simpleRedirect(route('student_log_unification.index'));
+    $this->simpleRedirect(route('student-log-unification.index'));
   }
 
   private function createLog($mainId, $duplicatesId, $createdBy)
