@@ -124,6 +124,31 @@ class User extends Authenticatable
     }
 
     /**
+     * @return bool
+     */
+    public function isSchooling()
+    {
+        return $this->type->level === LegacyUserType::LEVEL_SCHOOLING;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInstitutional()
+    {
+        return $this->type->level === LegacyUserType::LEVEL_INSTITUTIONAL;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isLibrary()
+    {
+        return $this->type->level === LegacyUserType::LEVEL_LIBRARY;
+    }
+
+    /**
      * @return BelongsTo
      */
     public function employee()
