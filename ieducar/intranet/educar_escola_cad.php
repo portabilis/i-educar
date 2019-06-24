@@ -2646,7 +2646,7 @@ class indice extends clsCadastro
     {
         /** @var SchoolManagerService $schoolService */
         $schoolService = app(SchoolManagerService::class);
-        $managers = $schoolService->getSchoolManagers($this->cod_escola);
+        $managers = $schoolService->getSchoolManagers($this->cod_escola ?: 0);
 
         if (old('servidor_id')) {
             foreach (old('servidor_id') as $key => $value) {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Menu;
 use App\Models\LegacyUserType;
+use App\User;
 use Exception;
 use Illuminate\Database\Connection;
 use Illuminate\Http\RedirectResponse;
@@ -82,19 +83,16 @@ class AccessLevelController extends Controller
 
         $processes = $userType->load('menus')->getProcesses();
 
-        $menus = Menu::user($request->user())->map(function (Menu $menu) {
+        /** @var User $user */
+        $user = $request->user();
+
+        $userProcesses = $user->type->getProcesses();
+
+        $menus = Menu::user($user)->map(function (Menu $menu) use ($userProcesses) {
             return new Collection([
                 'menu' => $menu,
-                'processes' => $menu->processes($menu->title),
+                'processes' => $menu->processes($menu->title, $userProcesses),
             ]);
-        });
-
-        $menus->flatMap(function (Collection $collection) {
-            return $collection->get('processes');
-        })->filter(function (Collection $collection) use ($processes) {
-            return ! $processes->has($collection->get('process'));
-        })->each(function (Collection $collection) use ($processes) {
-            $processes->put($collection->get('process'), 0);
         });
 
         return view('accesslevel.index', [

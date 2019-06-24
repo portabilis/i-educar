@@ -115,14 +115,15 @@ class Menu extends Model
     }
 
     /**
-     * @param string $path
+     * @param string            $path
+     * @param LaravelCollection $process
      *
      * @return mixed
      */
-    public function processes($path)
+    public function processes($path, $process)
     {
-        $collect = $this->children->reduce(function (LaravelCollection $collect, Menu $menu) use ($path) {
-            return $collect->merge($menu->processes($path . ' > ' . $menu->title));
+        $collect = $this->children->reduce(function (LaravelCollection $collect, Menu $menu) use ($path, $process) {
+            return $collect->merge($menu->processes($path . ' > ' . $menu->title, $process));
         }, new LaravelCollection());
 
         $this->description = $path;
@@ -133,7 +134,7 @@ class Menu extends Model
                 'description' => $this->description,
                 'link' => $this->link,
                 'process' => $this->id,
-                'allow' => 3,
+                'allow' => $process->get($this->id, 0),
             ]));
         }
 

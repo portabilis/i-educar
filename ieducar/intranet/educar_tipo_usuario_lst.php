@@ -71,7 +71,7 @@ class indice extends clsListagem
         ]);
 
         //niveis
-        $array_nivel = ['-1' => 'Selecione', '8' => 'Biblioteca', '4' => 'Escola', '2' => 'Institucional', '1' => 'Poli-institucional'];
+        $array_nivel = ['-1' => 'Selecione'] + $this->user()->type->getLevelDescriptions()->toArray();
 
         if (!isset($this->nivel)) {
             $this->nivel = -1;
@@ -101,7 +101,8 @@ class indice extends clsListagem
             $this->nivel,
             null,
             null,
-            1
+            1,
+            $this->user()->type->level
         );
 
         $total = $obj_tipo_usuario->_total;

@@ -124,6 +124,12 @@ class LegacyUserType extends EloquentBaseModel implements Transformable
      */
     public function getProcesses()
     {
+        if ($this->level === self::LEVEL_ADMIN) {
+            return collect(Menu::all()->pluck('id')->mapWithKeys(function ($id) {
+                return [$id => self::CAN_REMOVE];
+            }));
+        }
+
         return $this->menus()->get()->mapWithKeys(function ($menu) {
             $level = 0;
 
