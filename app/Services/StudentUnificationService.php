@@ -8,12 +8,22 @@ use App\Exceptions\Unification\WithoutPermission;
 use App\Models\LegacyUserType;
 use App\Models\LogUnification;
 use App\User;
-use Illuminate\Support\Facades\Auth;
 
 class StudentUnificationService
 {
     /**
+     * @var User
+     */
+    private $user;
+
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
      * @param LogUnification $unification
+     * @throws \Exception
      */
     public function undo(LogUnification $unification)
     {
@@ -24,7 +34,7 @@ class StudentUnificationService
         $adapter->undo($unification);
 
         $unification->active = false;
-        $unification->updated_by = Auth::user()->cod_usuario;
+        $unification->updated_by = $this->user->cod_usuario;
         $unification->save();
     }
 
@@ -49,15 +59,14 @@ class StudentUnificationService
      */
     private function checkPermission($unification)
     {
-        /** @var User $user */
-        $user = Auth::user();
+        $user = $this->user;
         $unificationOwner = $unification->createdBy->user;
 
         if ($user->type->level > LegacyUserType::LEVEL_INSTITUTIONAL) {
             $this->checkPermissionSchoolingLevel($user, $unificationOwner);
         }
 
-        if ($user->type->level == LegacyUserType::LEVEL_INSTITUTIONAL) {
+        if ($user->isInstitutional()) {
             $this->checkPermissionInstitutionalLevel($user, $unificationOwner);
         }
     }
