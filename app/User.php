@@ -4,6 +4,7 @@ namespace App;
 
 use App\Models\LegacyEmployee;
 use App\Models\LegacyUserType;
+use App\Models\School;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
@@ -153,5 +154,20 @@ class User extends Authenticatable
         return $this->processes()
             ->wherePivot('visualiza', 1)
             ->withPivot(['visualiza', 'cadastra', 'exclui']);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function schools()
+    {
+        return $this->belongsToMany(
+            School::class,
+            'pmieducar.escola_usuario',
+            'ref_cod_usuario',
+            'ref_cod_escola',
+            'cod_usuario',
+            'cod_escola'
+        );
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\{Model, SoftDeletes};
 
 class Individual extends Model
@@ -134,5 +135,10 @@ class Individual extends Model
     public function unification()
     {
         return $this->morphOne(LogUnification::class, 'main', 'type', 'main_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id', 'cod_usuario');
     }
 }
