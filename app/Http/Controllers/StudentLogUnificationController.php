@@ -11,7 +11,7 @@ class StudentLogUnificationController extends Controller
 {
     public function index(Request $request)
     {
-        $this->breadcrumb('Detalhe da unificação', [
+        $this->breadcrumb('Log de unificações de aluno', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
@@ -33,7 +33,7 @@ class StudentLogUnificationController extends Controller
 
     public function show(LogUnification $unification)
     {
-        $this->breadcrumb('Unificação de aluno', [
+        $this->breadcrumb('Detalhe da unificação', [
             url('intranet/educar_index.php') => 'Escola',
             route('student_log_unification.index') => 'Log de unificações de aluno',
         ]);
