@@ -136,7 +136,7 @@ class indice extends clsCadastro
     }
 
     $this->mensagem = "<span>Alunos unificados com sucesso.</span>";
-    return true;
+    $this->simpleRedirect(route('student_log_unification.index'));
   }
 
   private function createLog($mainId, $duplicatesId, $createdBy)
