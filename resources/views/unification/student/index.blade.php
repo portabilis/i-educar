@@ -56,7 +56,7 @@
                     <a href="{{ route('student_log_unification.show', ['unification' => $unification->id]) }}">{{ $unification->created_at->format('d/m/Y')  }}</a>
                 </td>
                 <td>
-                    <a href="{{ route('student_log_unification.show', ['unification' => $unification->id]) }}">@if($unification->active) ATIVA @else INATIVA @endif</a>
+                    <a href="{{ route('student_log_unification.show', ['unification' => $unification->id]) }}">@if($unification->active) Ativa @else Inativa @endif</a>
                 </td>
             </tr>
         @empty

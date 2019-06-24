@@ -13,11 +13,11 @@
             </tr>
             <tr>
                 <td class="formmdtd" valign="top"><span class="form">Aluno principal:</span></td>
-                <td class="formmdtd" valign="top"><span class="form">{{  implode(', ', $unification->getDuplicatesName()) }}</span></td>
+                <td class="formmdtd" valign="top"><span class="form">{{ $unification->getMainName() }}</span></td>
             </tr>
             <tr>
                 <td class="formmdtd" valign="top"><span class="form">Aluno(s) unificado(s):</span></td>
-                <td class="formmdtd" valign="top"><span class="form">{{ $unification->getMainName() }}</span></td>
+                <td class="formmdtd" valign="top"><span class="form">{{  implode(', ', $unification->getDuplicatesName()) }}</span></td>
             </tr>
             <tr>
                 <td class="formmdtd" valign="top"><span class="form">Data da unificação:</span></td>
