@@ -283,7 +283,7 @@ class EnrollmentServiceTest extends TestCase
     public function testRelocatePreviousEnrollment()
     {
         /** @var LegacyEnrollment $enrollment */
-        $enrollment = factory(LegacyEnrollment::class)->make([
+        $enrollment = factory(LegacyEnrollment::class)->create([
             'ref_cod_turma' => $this->schoolClass,
             'ativo' => false,
         ]);
@@ -298,7 +298,8 @@ class EnrollmentServiceTest extends TestCase
 
         $this->service->enroll($registration, $schoolClass, now());
 
-        $registration->syncChanges();
+        $enrollment->refresh();
+
         $this->assertTrue($enrollment->remanejado);
     }
 }
