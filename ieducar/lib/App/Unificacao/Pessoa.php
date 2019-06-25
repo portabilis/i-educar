@@ -73,10 +73,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
 
     protected $chavesManterTodosVinculos = [
         [
-            'tabela' => 'cadastro.aviso_nome',
-            'coluna' => 'idpes'
-        ],
-        [
             'tabela' => 'cadastro.fisica',
             'coluna' => 'idpes_mae'
         ],
