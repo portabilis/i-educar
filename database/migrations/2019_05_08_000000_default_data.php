@@ -43,7 +43,6 @@ class DefaultData extends Migration
         Artisan::call('db:seed', ['--class' => DefaultPortalFuncionarioVinculoTableSeeder::class]);
         Artisan::call('db:seed', ['--class' => DefaultPortalAgendaTableSeeder::class]);
         Artisan::call('db:seed', ['--class' => DefaultPortalImagemTipoTableSeeder::class]);
-        Artisan::call('db:seed', ['--class' => DefaultPortalImagemTableSeeder::class]);
 
         Artisan::call('db:seed', ['--class' => DefaultUrbanoTipoLogradouroTableSeeder::class]);
 
@@ -90,7 +89,6 @@ class DefaultData extends Migration
         DB::raw('TRUNCATE pmieducar.usuario CASCADE;');
         DB::raw('TRUNCATE pmieducar.tipo_usuario CASCADE;');
         DB::raw('TRUNCATE urbano.tipo_logradouro CASCADE;');
-        DB::raw('TRUNCATE portal.imagem CASCADE;');
         DB::raw('TRUNCATE portal.imagem_tipo CASCADE;');
         DB::raw('TRUNCATE portal.agenda CASCADE;');
         DB::raw('TRUNCATE portal.funcionario_vinculo CASCADE;');
