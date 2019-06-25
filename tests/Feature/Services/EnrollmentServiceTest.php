@@ -16,6 +16,7 @@ use App\Models\LegacySchoolClassStage;
 use App\Models\LegacyUser;
 use App\Services\EnrollmentService;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Throwable;
@@ -280,6 +281,13 @@ class EnrollmentServiceTest extends TestCase
         );
     }
 
+    /**
+     * Matrícula com enturmaçao inativa, a ultima terá que ficar como remanejada
+     *
+     * @return void
+     *
+     * @throws Throwable
+     */
     public function testRelocatePreviousEnrollment()
     {
         /** @var LegacyEnrollment $enrollment */
@@ -301,5 +309,40 @@ class EnrollmentServiceTest extends TestCase
         $enrollment->refresh();
 
         $this->assertTrue($enrollment->remanejado);
+    }
+
+    /**
+     * Matrícula com enturmaçao inativa com saída antes da data base,
+     * a ultima enturmação não pode ficar como remanejada
+     *
+     * @return void
+     *
+     * @throws Throwable
+     */
+    public function testRelocatePreviousEnrollmentBeforeRelocateData()
+    {
+        /** @var LegacyEnrollment $enrollment */
+        $enrollment = factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $this->schoolClass,
+            'ativo' => false,
+            'data_exclusao' => Carbon::yesterday(),
+        ]);
+
+        $enrollment->schoolClass->school->institution->data_base_remanejamento = now();
+        $enrollment->schoolClass->school->institution->save();
+
+        $registration = $enrollment->registration;
+
+        $schoolClass = factory(LegacySchoolClass::class)->create();
+
+        factory(LegacySchoolClassStage::class)->create([
+            'ref_cod_turma' => $schoolClass,
+        ]);
+
+        $this->service->enroll($registration, $schoolClass, now());
+
+        $enrollment->refresh();
+
+        $this->assertNull($enrollment->remanejado);
     }
 }
