@@ -177,7 +177,7 @@ class DatabaseRestoreCommand extends Command
      */
     private function alterSearchPathInDatabase($database)
     {
-        $definition = 'echo "ALTER DATABASE %s SET search_path = \"\$user\", public, portal, cadastro, historico, pmicontrolesis, pmieducar, urbano, modules;" | psql -h %s -p %s -U %s';
+        $definition = 'echo "ALTER DATABASE %s SET search_path = \"\$user\", public, portal, cadastro, historico, pmieducar, urbano, modules;" | psql -h %s -p %s -U %s';
 
         $command = sprintf(
             $definition,

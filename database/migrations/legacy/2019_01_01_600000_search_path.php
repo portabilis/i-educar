@@ -16,7 +16,7 @@ class SearchPath extends Migration
             '
                 ALTER DATABASE ' . env('DB_DATABASE') . ' 
                 SET search_path = "$user", public, portal, cadastro, 
-                pmicontrolesis, pmieducar, urbano, modules;
+                pmieducar, urbano, modules;
             '
         );
     }
