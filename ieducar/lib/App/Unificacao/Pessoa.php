@@ -62,10 +62,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'cod_usuario'
         ],
         [
-            'tabela' => 'cadastro.fisica_sangue',
-            'coluna' => 'idpes'
-        ],
-        [
             'tabela' => 'modules.pessoa_transporte',
             'coluna' => 'cod_pessoa_transporte'
         ],
@@ -76,10 +72,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
     ];
 
     protected $chavesManterTodosVinculos = [
-        [
-            'tabela' => 'cadastro.aviso_nome',
-            'coluna' => 'idpes'
-        ],
         [
             'tabela' => 'cadastro.fisica',
             'coluna' => 'idpes_mae'
@@ -134,22 +126,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         ],
         [
             'tabela' => 'cadastro.raca',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'cadastro.socio',
-            'coluna' => 'idpes_juridica'
-        ],
-        [
-            'tabela' => 'cadastro.socio',
-            'coluna' => 'idpes_fisica'
-        ],
-        [
-            'tabela' => 'cadastro.socio',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'cadastro.socio',
             'coluna' => 'idpes_cad'
         ],
         [
@@ -219,26 +195,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         [
             'tabela' => 'urbano.cep_logradouro_bairro',
             'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'cadastro.funcionario',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'cadastro.funcionario',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'cadastro.funcionario',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'cadastro.historico_cartao',
-            'coluna' => 'idpes_cidadao'
-        ],
-        [
-            'tabela' => 'cadastro.historico_cartao',
-            'coluna' => 'idpes_emitiu'
         ],
         [
             'tabela' => 'cadastro.documento',
@@ -322,12 +278,7 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         ],
     ];
 
-    protected $chavesDeletarDuplicados = [
-        [
-            'tabela' => 'cadastro.pessoa_fonetico',
-            'coluna' => 'idpes'
-        ]
-    ];
+    protected $chavesDeletarDuplicados = [];
 
     public function __construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, clsBanco $db, bool $transacao = true)
     {
