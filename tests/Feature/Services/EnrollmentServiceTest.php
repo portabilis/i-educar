@@ -279,4 +279,26 @@ class EnrollmentServiceTest extends TestCase
             $enrollment->registration, $enrollment->schoolClass, now()->subDay(1)
         );
     }
+
+    public function testRelocatePreviousEnrollment()
+    {
+        /** @var LegacyEnrollment $enrollment */
+        $enrollment = factory(LegacyEnrollment::class)->make([
+            'ref_cod_turma' => $this->schoolClass,
+            'ativo' => false,
+        ]);
+
+        $registration = $enrollment->registration;
+
+        $schoolClass = factory(LegacySchoolClass::class)->create();
+
+        factory(LegacySchoolClassStage::class)->create([
+            'ref_cod_turma' => $schoolClass,
+        ]);
+
+        $this->service->enroll($registration, $schoolClass, now());
+
+        $registration->syncChanges();
+        $this->assertTrue($enrollment->remanejado);
+    }
 }

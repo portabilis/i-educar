@@ -72,14 +72,6 @@ class EnrollmentController extends Controller
             }
         }
 
-        if ($request->input('is_relocation')) {
-            try {
-                $enrollmentService->relocateEnrollment($enrollment, $date);
-            } catch (Throwable $throwable) {
-                return redirect()->back()->with('error', $throwable->getMessage());
-            }
-        }
-
         if ($request->input('is_cancellation')) {
             return redirect()->route('enrollments.index', [
                 'ref_cod_matricula' => $registration->id,
