@@ -228,54 +228,6 @@ class indice extends clsCadastro
         //-----------------------------------------------------------------------------------------------
 
         $this->campoRotulo("rotulo_permissoes", "<b><i>Permiss&otilde;es</i></b>", "");
-
-        $obj_menu = new clsPortalMenuMenu();
-        $obj_menu->setOrderby("nm_menu ASC");
-        $lst_menu = $obj_menu->lista();
-
-        if( is_array($lst_menu) && count($lst_menu) )
-        {
-            foreach ($lst_menu as $key => $menu)
-            {
-                $array_valores = array();
-                if($menu["cod_menu_menu"] != 1)
-                {
-/*                  if( $menu['nm_menu'] == "i-Frotas")
-                    {
-                        echo $menu["cod_menu_menu"];
-                    }*/
-
-                    $obj_submenu = new clsPortalMenuSubmenu();
-                    $obj_submenu->setOrderby("nm_submenu ASC");
-                    $lst_submenu = $obj_submenu->lista($menu["cod_menu_menu"], 2);
-                    $opcoes = array("" => "Selecione");
-
-                    if( is_array($lst_submenu) && count($lst_submenu) )
-                    {
-                        foreach ($lst_submenu as $submenu)
-                        {
-                            $opcoes[$submenu["cod_menu_submenu"]] = $submenu["nm_submenu"];
-                        }
-                    }
-
-                    if( is_numeric($this->ref_pessoa) )
-                    {
-                        if(is_array($array_submenu) && count($array_submenu))
-                        {
-                            //faz a interseccao dos submenus do funcionario e os submenus do menu atual (do foreach)
-                            $array_menu_submenu = array_intersect(array_flip($opcoes), $array_submenu);
-                        }
-                        $contador = 0;
-                    }
-                    $this->campoTabelaInicio(str_replace(" ", "_", limpa_acentos(strtolower($menu["nm_menu"]))), $menu["nm_menu"], array("Submenu", "Cadastrar", "Excluir"), $array_valores, "500");
-                        $this->campoLista(str_replace(" ", "_", limpa_acentos(strtolower($menu["nm_menu"])))."_", "", $opcoes, "", "", false, "", "", false, false);
-                        $this->campoCheck("cad_".str_replace(" ", "_", limpa_acentos(strtolower($menu["nm_menu"]))), "", "");
-                        $this->campoCheck("exc_".str_replace(" ", "_", limpa_acentos(strtolower($menu["nm_menu"]))), "", "");
-                    $this->campoTabelaFim();
-                }
-            }
-        }
-
     }
 
     function cadastrarTabelas()
