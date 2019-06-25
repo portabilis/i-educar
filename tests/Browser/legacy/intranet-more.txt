@@ -15,7 +15,6 @@ image_check.php
 logof.php
 manutencao.php
 pesquisa_cep.php
-pesquisa_imagens.php
 s3_config.php
 upload.php
 upload_just_pdf.php

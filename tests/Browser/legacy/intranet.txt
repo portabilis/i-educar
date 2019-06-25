@@ -366,9 +366,6 @@ funcionario_lst.php
 funcionario_vinculo_cad.php
 funcionario_vinculo_det.php
 funcionario_vinculo_lst.php
-imagem_cad.php
-imagem_det.php
-imagem_lst.php
 index.php
 meusdados.php
 pesquisa_cep_lst.php
