@@ -217,14 +217,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'idpes_cad'
         ],
         [
-            'tabela' => 'cadastro.historico_cartao',
-            'coluna' => 'idpes_cidadao'
-        ],
-        [
-            'tabela' => 'cadastro.historico_cartao',
-            'coluna' => 'idpes_emitiu'
-        ],
-        [
             'tabela' => 'cadastro.documento',
             'coluna' => 'idpes_rev'
         ],
