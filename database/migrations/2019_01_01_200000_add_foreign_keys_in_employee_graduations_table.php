@@ -28,9 +28,9 @@ class AddForeignKeysInEmployeeGraduationsTable extends Migration
     public function down()
     {
         Schema::table('employee_graduations', function (Blueprint $table) {
-            $table->dropForeign('course_id');
-            $table->dropForeign('college_id');
-            $table->dropForeign('discipline_id');
+            $table->dropForeign(['course_id']);
+            $table->dropForeign(['college_id']);
+            $table->dropForeign(['discipline_id']);
         });
     }
 }
