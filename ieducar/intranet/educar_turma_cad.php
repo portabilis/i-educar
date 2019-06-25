@@ -865,7 +865,7 @@ class indice extends clsCadastro
         $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
 
         $this->multiseriada = isset($this->multiseriada) ? 1 : 0;
-        $this->visivel = isset($this->visivel) ? 'true' : 'false';
+        $this->visivel = isset($this->visivel) ? true : false;
 
         $objTurma = $this->montaObjetoTurma(null, $this->pessoa_logada);
 
@@ -919,9 +919,9 @@ class indice extends clsCadastro
             return false;
         }
 
-        $this->visivel = isset($this->visivel) ? 'true' : 'false';
+        $this->visivel = isset($this->visivel) ? true : false;
 
-        if ($this->visivel == 'false' && $possuiAlunosVinculados) {
+        if (!$this->visivel && $possuiAlunosVinculados) {
             $this->mensagem = 'Não foi possível inativar a turma, pois a mesma possui matrículas vinculadas.';
 
             return false;
