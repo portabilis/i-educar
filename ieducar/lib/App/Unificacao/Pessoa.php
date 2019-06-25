@@ -205,18 +205,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'idpes_cad'
         ],
         [
-            'tabela' => 'cadastro.funcionario',
-            'coluna' => 'idpes'
-        ],
-        [
-            'tabela' => 'cadastro.funcionario',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'cadastro.funcionario',
-            'coluna' => 'idpes_cad'
-        ],
-        [
             'tabela' => 'cadastro.documento',
             'coluna' => 'idpes_rev'
         ],
