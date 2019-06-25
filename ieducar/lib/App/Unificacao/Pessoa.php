@@ -137,22 +137,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'idpes_cad'
         ],
         [
-            'tabela' => 'cadastro.socio',
-            'coluna' => 'idpes_juridica'
-        ],
-        [
-            'tabela' => 'cadastro.socio',
-            'coluna' => 'idpes_fisica'
-        ],
-        [
-            'tabela' => 'cadastro.socio',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'cadastro.socio',
-            'coluna' => 'idpes_cad'
-        ],
-        [
             'tabela' => 'cadastro.juridica',
             'coluna' => 'idpes'
         ],
