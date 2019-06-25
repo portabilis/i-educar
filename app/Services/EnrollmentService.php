@@ -223,4 +223,24 @@ class EnrollmentService
 
         return $enrollment;
     }
+
+    /**
+     * Remaneja uma enturmação.
+     *
+     * @param LegacyEnrollment $enrollment
+     * @param DateTime         $date
+     *
+     * @return void
+     *
+     * @throws Throwable
+     */
+    public function relocateEnrollment(LegacyEnrollment $enrollment, DateTime $date)
+    {
+        $relocationDate = $enrollment->schoolClass->school->institution->relocation_date;
+
+        if (!$relocationDate || $relocationDate < $date) {
+            $enrollment->remanejado = true;
+            $enrollment->saveOrFail();
+        }
+    }
 }
