@@ -1,7 +1,6 @@
 CREATE TRIGGER trg_aft_documento AFTER INSERT OR UPDATE ON cadastro.documento FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_documento();
 CREATE TRIGGER trg_aft_documento_provisorio AFTER INSERT OR UPDATE ON cadastro.documento FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_documento_provisorio();
 CREATE TRIGGER trg_aft_fisica AFTER INSERT OR UPDATE ON cadastro.fisica FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_fisica();
-CREATE TRIGGER trg_aft_fisica_cpf_provisorio AFTER INSERT OR UPDATE ON cadastro.fisica_cpf FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_fisica_cpf_provisorio();
 CREATE TRIGGER trg_aft_fisica_provisorio AFTER INSERT OR UPDATE ON cadastro.fisica FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_fisica_provisorio();
 CREATE TRIGGER trg_aft_ins_endereco_externo AFTER INSERT OR UPDATE ON cadastro.endereco_externo FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_ins_endereco_externo();
 CREATE TRIGGER trg_aft_ins_endereco_pessoa AFTER INSERT OR UPDATE ON cadastro.endereco_pessoa FOR EACH ROW EXECUTE PROCEDURE cadastro.fcn_aft_ins_endereco_pessoa();
