@@ -62,10 +62,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'cod_usuario'
         ],
         [
-            'tabela' => 'cadastro.fisica_sangue',
-            'coluna' => 'idpes'
-        ],
-        [
             'tabela' => 'modules.pessoa_transporte',
             'coluna' => 'cod_pessoa_transporte'
         ],
