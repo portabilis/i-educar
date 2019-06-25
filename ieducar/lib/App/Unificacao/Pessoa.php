@@ -322,12 +322,7 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         ],
     ];
 
-    protected $chavesDeletarDuplicados = [
-        [
-            'tabela' => 'cadastro.pessoa_fonetico',
-            'coluna' => 'idpes'
-        ]
-    ];
+    protected $chavesDeletarDuplicados = [];
 
     public function __construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, clsBanco $db, bool $transacao = true)
     {
