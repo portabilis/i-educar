@@ -32,8 +32,8 @@ class AddForeignKeysOnPmieducarMenuTipoUsuarioTable extends Migration
     public function down()
     {
         Schema::table('pmieducar.menu_tipo_usuario', function (Blueprint $table) {
-            $table->dropForeign('ref_cod_tipo_usuario');
-            $table->dropForeign('menu_id');
+            $table->dropForeign(['ref_cod_tipo_usuario']);
+            $table->dropForeign(['menu_id']);
         });
     }
 }

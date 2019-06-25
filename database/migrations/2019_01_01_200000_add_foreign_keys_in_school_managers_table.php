@@ -29,10 +29,10 @@ class AddForeignKeysInSchoolManagersTable extends Migration
     public function down()
     {
         Schema::table('school_managers', function (Blueprint $table) {
-            $table->dropForeign('school_id');
-            $table->dropForeign('role_id');
-            $table->dropForeign('access_criteria_id');
-            $table->dropForeign('link_type_id');
+            $table->dropForeign(['school_id']);
+            $table->dropForeign(['role_id']);
+            $table->dropForeign(['access_criteria_id']);
+            $table->dropForeign(['link_type_id']);
         });
     }
 }
