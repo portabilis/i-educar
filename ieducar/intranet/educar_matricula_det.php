@@ -1,5 +1,6 @@
 <?php
 
+use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 
 require_once 'include/clsBase.inc.php';
@@ -400,11 +401,7 @@ class indice extends clsDetalhe
             }
         }
 
-        $obj_permissoes = new clsPermissoes();
-        $nivelUsuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-        $administrador = 1;
-
-        if ($nivelUsuario == $administrador) {
+        if ($this->user()->can('view', Process::ENROLLMENT_HISTORY)) {
             $this->array_botao[] = 'Histórico de enturmações';
             $this->array_botao_url_script[] = "go(\"educar_matricula_historico_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
         }

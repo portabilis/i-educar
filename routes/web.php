@@ -28,10 +28,32 @@ Route::any('intranet/suspenso.php', 'LegacyController@intranet')
 
 Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth']], function () {
 
+    Route::get('/intranet/educar_matricula_turma_lst.php', 'LegacyController@intranet')
+        ->defaults('uri', 'educar_matricula_turma_lst.php')
+        ->name('enrollments.index');
+    Route::get('/matricula/{registration}/enturmar/{schoolClass}', 'EnrollmentController@viewEnroll')
+        ->name('enrollments.enroll.create');
+    Route::post('/matricula/{registration}/enturmar/{schoolClass}', 'EnrollmentController@enroll')
+        ->name('enrollments.enroll');
+
     Route::get('/enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@indexEnroll')
         ->name('enrollments.batch.enroll.index');
     Route::post('/enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@enroll')
         ->name('enrollments.batch.enroll');
+
+    Route::get('/usuarios/tipos', 'LegacyController@intranet')
+        ->defaults('uri', 'educar_tipo_usuario_lst.php')
+        ->name('usertype.index');
+    Route::get('/usuarios/tipos/novo', 'AccessLevelController@new')
+        ->name('usertype.new');
+    Route::get('/usuarios/tipos/{userType}', 'AccessLevelController@show')
+        ->name('usertype.show');
+    Route::post('/usuarios/tipos', 'AccessLevelController@create')
+        ->name('usertype.create');
+    Route::put('/usuarios/tipos/{userType}', 'AccessLevelController@update')
+        ->name('usertype.update');
+    Route::delete('/usuarios/tipos/{userType}', 'AccessLevelController@delete')
+        ->name('usertype.delete');
 
     Route::get('/cancelar-enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@indexCancelEnrollments')
         ->name('enrollments.batch.cancel.index');

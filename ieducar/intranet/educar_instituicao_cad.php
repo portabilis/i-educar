@@ -359,8 +359,6 @@ class indice extends clsCadastro
             $detalheAtual = $obj->detalhe();
             $auditoria = new clsModulesAuditoriaGeral('instituicao', $this->pessoa_logada, $this->cod_instituicao);
             $auditoria->alteracao($detalheAntigo, $detalheAtual);
-            $obj_altera = new alteraAtestadoParaDeclaracao(is_null($this->altera_atestado_para_declaracao) ? false : true);
-            $obj_altera->editaMenus();
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_instituicao_lst.php');
         }
