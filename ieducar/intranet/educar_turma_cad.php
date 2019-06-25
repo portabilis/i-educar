@@ -906,6 +906,7 @@ class indice extends clsCadastro
     public function Editar()
     {
         $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
+        $possuiAlunosVinculados = $turmaDetalhe->possuiAlunosVinculados();
         $turmaDetalhe = $turmaDetalhe->detalhe();
         $this->ref_cod_curso = $turmaDetalhe['ref_cod_curso'];
         $this->ref_ref_cod_escola = $turmaDetalhe['ref_ref_cod_escola'];
@@ -919,6 +920,12 @@ class indice extends clsCadastro
         }
 
         $this->visivel = isset($this->visivel) ? 'true' : 'false';
+
+        if ($this->visivel == 'false' && $possuiAlunosVinculados) {
+            $this->mensagem = 'Não foi possível inativar a turma, pois a mesma possui matrículas vinculadas.';
+
+            return false;
+        }
 
         $objTurma = $this->montaObjetoTurma($this->cod_turma, null, $this->pessoa_logada);
         $dadosTurma = $objTurma->detalhe();
