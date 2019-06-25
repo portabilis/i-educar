@@ -239,6 +239,10 @@ class Registro30 implements RegistroEducacenso
             $this->deficienciaIntelectual,
         ];
 
+        if (empty($this->arrayDeficiencias)) {
+            return null;
+        }
+
         return count(array_keys($arrayDeficienciasMultiplas, 1)) > 1 ? 1 : 0;
     }
 
