@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSchoolManagers extends Migration
+class CreateSchoolManagersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -23,11 +23,6 @@ class CreateSchoolManagers extends Migration
             $table->integer('link_type_id')->nullable()->unsigned();
             $table->boolean('chief')->default(false);
             $table->timestamps();
-
-            $table->foreign('school_id')->references('cod_escola')->on('pmieducar.escola');
-            $table->foreign('role_id')->references('id')->on('manager_roles');
-            $table->foreign('access_criteria_id')->references('id')->on('manager_access_criterias');
-            $table->foreign('link_type_id')->references('id')->on('manager_link_types');
         });
     }
 

@@ -60,7 +60,6 @@ class DefaultData extends Migration
         Artisan::call('db:seed', ['--class' => DefaultPmieducarConfiguracoesGeraisTableSeeder::class]);
         Artisan::call('db:seed', ['--class' => DefaultPmieducarEscolaLocalizacaoTableSeeder::class]);
         Artisan::call('db:seed', ['--class' => DefaultPmieducarHistoricoGradeCursoTableSeeder::class]);
-        Artisan::call('db:seed', ['--class' => DefaultPmieducarMenuTipoUsuarioTableSeeder::class]);
         Artisan::call('db:seed', ['--class' => DefaultPmieducarTipoAutorTableSeeder::class]);
         Artisan::call('db:seed', ['--class' => DefaultPmieducarTurmaTurnoTableSeeder::class]);
 
@@ -89,7 +88,6 @@ class DefaultData extends Migration
         DB::raw('TRUNCATE relatorio.situacao_matricula CASCADE;');
         DB::raw('TRUNCATE pmieducar.turma_turno CASCADE;');
         DB::raw('TRUNCATE pmieducar.tipo_autor CASCADE;');
-        DB::raw('TRUNCATE pmieducar.menu_tipo_usuario CASCADE;');
         DB::raw('TRUNCATE pmieducar.historico_grade_curso CASCADE;');
         DB::raw('TRUNCATE pmieducar.escola_localizacao CASCADE;');
         DB::raw('TRUNCATE pmieducar.configuracoes_gerais CASCADE;');

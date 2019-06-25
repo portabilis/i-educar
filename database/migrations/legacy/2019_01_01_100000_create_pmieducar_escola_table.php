@@ -103,7 +103,7 @@ class CreatePmieducarEscolaTable extends Migration
                     lingua_ministrada integer,
                     espaco_brasil_aprendizado integer,
                     abre_final_semana integer,
-                    codigo_lingua_indigena integer,
+	                codigo_lingua_indigena int4[] NULL,
                     proposta_pedagogica integer,
                     televisoes smallint,
                     videocassetes smallint,

@@ -7,7 +7,23 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection as LaravelCollection;
 
+/**
+ * @property int    id
+ * @property int    parent_id
+ * @property string title
+ * @property string description
+ * @property string link
+ * @property string icon
+ * @property int    order
+ * @property int    type
+ * @property int    process
+ * @property bool   active
+ *
+ * @property Menu              $parent
+ * @property Collection|Menu[] $children
+ */
 class Menu extends Model
 {
     /**
@@ -21,6 +37,8 @@ class Menu extends Model
         'icon',
         'order',
         'type',
+        'parent_old',
+        'old',
         'process',
         'active',
     ];
@@ -99,6 +117,33 @@ class Menu extends Model
     }
 
     /**
+     * @param string            $path
+     * @param LaravelCollection $process
+     *
+     * @return mixed
+     */
+    public function processes($path, $process)
+    {
+        $collect = $this->children->reduce(function (LaravelCollection $collect, Menu $menu) use ($path, $process) {
+            return $collect->merge($menu->processes($path . ' > ' . $menu->title, $process));
+        }, new LaravelCollection());
+
+        $this->description = $path;
+
+        if ($this->process && $this->parent_id) {
+            $collect->push(new LaravelCollection([
+                'title' => $this->title,
+                'description' => $this->description,
+                'link' => $this->link,
+                'process' => $this->id,
+                'allow' => $process->get($this->id, 0),
+            ]));
+        }
+
+        return $collect;
+    }
+
+    /**
      * Retorna os menus disponíveis para um determinado usuário.
      *
      * @param User $user
@@ -108,45 +153,41 @@ class Menu extends Model
     public static function user(User $user)
     {
         if ($user->isAdmin()) {
-            return static::query()
-                ->with('children.children.children.children.children')
-                ->whereNull('parent_id')
-                ->orderBy('order')
-                ->get();
+            return static::roots();
         }
 
-        $ids = $user->menu()->pluck('process')->sortBy('process')->toArray();
+        $ids = $user->menu()->pluck('id')->sortBy('id')->toArray();
 
         return static::query()
             ->with([
                 'children' => function ($query) use ($ids) {
                     /** @var Builder $query */
                     $query->whereNull('process');
-                    $query->orWhereIn('process', $ids);
+                    $query->orWhereIn('id', $ids);
                     $query->orderBy('order');
                     $query->with([
                         'children' => function ($query) use ($ids) {
                             /** @var Builder $query */
                             $query->whereNull('process');
-                            $query->orWhereIn('process', $ids);
+                            $query->orWhereIn('id', $ids);
                             $query->orderBy('order');
                             $query->with([
                                 'children' => function ($query) use ($ids) {
                                     /** @var Builder $query */
                                     $query->whereNull('process');
-                                    $query->orWhereIn('process', $ids);
+                                    $query->orWhereIn('id', $ids);
                                     $query->orderBy('order');
                                     $query->with([
                                         'children' => function ($query) use ($ids) {
                                             /** @var Builder $query */
                                             $query->whereNull('process');
-                                            $query->orWhereIn('process', $ids);
+                                            $query->orWhereIn('id', $ids);
                                             $query->orderBy('order');
                                             $query->with([
                                                 'children' => function ($query) use ($ids) {
                                                     /** @var Builder $query */
                                                     $query->whereNull('process');
-                                                    $query->orWhereIn('process', $ids);
+                                                    $query->orWhereIn('id', $ids);
                                                     $query->orderBy('order');
                                                 }
                                             ]);
@@ -161,5 +202,19 @@ class Menu extends Model
             ->whereNull('parent_id')
             ->orderBy('order')
             ->get();
+    }
+
+    /**
+     * Retorna todos os menus disponíveis.
+     *
+     * @return Collection
+     */
+    public static function roots()
+    {
+        return static::query()
+                ->with('children.children.children.children.children')
+                ->whereNull('parent_id')
+                ->orderBy('order')
+                ->get();
     }
 }

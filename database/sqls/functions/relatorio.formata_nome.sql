@@ -14,6 +14,3 @@ CREATE FUNCTION relatorio.formata_nome(var text) RETURNS text
                                         FROM string_to_array(cast($1 AS text),' ') AS id_unico) AS x,
             generate_series(1,array_upper(string_to_array(cast($1 as text),' '),1)) AS i) AS x;
                         $_$;
-
-
-COMMENT ON FUNCTION relatorio.formata_nome(var text) IS 'Função que formata um nome, colocando iniciais em maiúsculas e demais em minúsculas';

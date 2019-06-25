@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEmployeeGraduationDisciplines extends Migration
+class CreateManagerLinkTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateEmployeeGraduationDisciplines extends Migration
      */
     public function up()
     {
-        Schema::create('employee_graduation_disciplines', function (Blueprint $table) {
+        Schema::create('manager_link_types', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
         });
@@ -26,6 +26,6 @@ class CreateEmployeeGraduationDisciplines extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employee_graduation_disciplines');
+        Schema::dropIfExists('manager_link_types');
     }
 }

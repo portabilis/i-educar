@@ -20,11 +20,7 @@ class AddForeignKeysOnPmieducarMenuTipoUsuarioTable extends Migration
                ->onUpdate('restrict')
                ->onDelete('restrict');
 
-            $table->foreign('ref_cod_menu_submenu')
-               ->references('cod_menu_submenu')
-               ->on('portal.menu_submenu')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+            $table->foreign('menu_id')->on('menus')->references('id');
         });
     }
 
@@ -36,8 +32,8 @@ class AddForeignKeysOnPmieducarMenuTipoUsuarioTable extends Migration
     public function down()
     {
         Schema::table('pmieducar.menu_tipo_usuario', function (Blueprint $table) {
-            $table->dropForeign(['ref_cod_tipo_usuario']);
-            $table->dropForeign(['ref_cod_menu_submenu']);
+            $table->dropForeign('ref_cod_tipo_usuario');
+            $table->dropForeign('menu_id');
         });
     }
 }

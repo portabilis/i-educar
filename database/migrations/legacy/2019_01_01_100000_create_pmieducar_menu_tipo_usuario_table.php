@@ -19,14 +19,14 @@ class CreatePmieducarMenuTipoUsuarioTable extends Migration
                 
                 CREATE TABLE pmieducar.menu_tipo_usuario (
                     ref_cod_tipo_usuario integer NOT NULL,
-                    ref_cod_menu_submenu integer NOT NULL,
+	                menu_id int4 NOT NULL,
                     cadastra smallint DEFAULT 0 NOT NULL,
                     visualiza smallint DEFAULT 0 NOT NULL,
                     exclui smallint DEFAULT 0 NOT NULL
                 );
                 
                 ALTER TABLE ONLY pmieducar.menu_tipo_usuario
-                    ADD CONSTRAINT menu_tipo_usuario_pkey PRIMARY KEY (ref_cod_tipo_usuario, ref_cod_menu_submenu);
+                    ADD CONSTRAINT menu_tipo_usuario_pkey PRIMARY KEY (ref_cod_tipo_usuario, menu_id);
             '
         );
     }
