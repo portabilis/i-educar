@@ -51,7 +51,7 @@
                 </a>
             @endcan
         @endif
-        <a href="{{ url()->previous() }}"><button class="btn" type="button">Voltar</button></a>
+        <a href="{{ route('student-log-unification.index') }}"><button class="btn" type="button">Voltar</button></a>
     </div>
 
     </form>
@@ -64,10 +64,4 @@
             src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/DynamicInput.js") }}"></script>
     <script type="text/javascript"
             src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Escola.js") }}"></script>
-
-    @if($errors->any())
-        <script>
-            messageUtils.error('{{$errors->first()}}');
-        </script>
-    @endif
 @endprepend
