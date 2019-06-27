@@ -162,7 +162,7 @@ trait Avaliacao_Service_Boletim_Avaliacao
      *
      * @return $this
      */
-    public function setMediasGerais(array $mediasGerais)
+    public function setMediasGerais($mediasGerais)
     {
         $this->_mediasGerais = $mediasGerais;
 
