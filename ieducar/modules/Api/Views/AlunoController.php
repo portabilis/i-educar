@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Deficiency;
+use App\Models\LegacyDeficiency;
 use App\Models\Individual;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
@@ -206,7 +206,7 @@ class AlunoController extends ApiCoreController
 
     protected function canGetTodosAlunos()
     {
-        return $this->validatesPresenceOf('instituicao_id');
+        return $this->validatesPresenceOf('instituicao_id') && $this->validatesPresenceOf('escola');
     }
 
     protected function canGetAlunosByGuardianCpf()
@@ -326,7 +326,7 @@ class AlunoController extends ApiCoreController
 
     protected function canGetOcorrenciasDisciplinares()
     {
-        return $this->validatesId('aluno');
+        return $this->validatesPresenceOf('escola');
     }
 
     // load resources
@@ -767,77 +767,64 @@ class AlunoController extends ApiCoreController
 
     protected function loadOcorrenciasDisciplinares()
     {
-        $ocorrenciasAluno = [];
-        $alunoId = $this->getRequest()->aluno_id;
+        $escola = $this->getRequest()->escola;
+        $modified = $this->getRequest()->modified;
 
-        if (is_array($alunoId)) {
-            $alunoId = implode(',', $alunoId);
+        if (is_array($escola)) {
+            $escola = implode(',', $escola);
         }
 
-        if (is_numeric($this->getRequest()->escola_id)) {
-            $sql = "
-                SELECT cod_matricula as matricula_id, ref_cod_aluno as aluno_id from pmieducar.matricula, pmieducar.escola where
-                cod_escola = ref_ref_cod_escola and ref_cod_aluno in ({$alunoId}) and ref_ref_cod_escola =
-                $1 and matricula.ativo = 1 order by ano desc, matricula_id
-            ";
+        $params = [];
+        $where = '';
 
-            $params = [$this->getRequest()->escola_id];
-        } else {
-            $sql = "
-                SELECT cod_matricula as matricula_id,
-                ref_cod_aluno as aluno_id,
-                ref_ref_cod_escola as escola_id
-                FROM pmieducar.matricula
-                WHERE ref_cod_aluno IN ({$alunoId})
-                AND matricula.ativo = 1
-                ORDER BY ano DESC, matricula_id
-            ";
-
-            $params = [];
+        if ($modified) {
+            $where = ' AND od.updated_at >= $1';
+            $params[] = $modified;
         }
 
-        $matriculas = $this->fetchPreparedQuery($sql, $params);
+        $sql = "
+            select 
+                tod.nm_tipo as tipo,
+                od.data_cadastro as data_hora,
+                od.observacao as descricao,
+                od.cod_ocorrencia_disciplinar as ocorrencia_disciplinar_id,
+                m.ref_cod_aluno as aluno_id,
+                m.ref_ref_cod_escola as escola_id,
+                od.updated_at as updated_at,
+                (
+                    CASE WHEN od.ativo = 1 THEN 
+                        null 
+                    ELSE
+                        od.data_exclusao::timestamp(0)
+                    END
+                ) as deleted_at
+            from pmieducar.matricula_ocorrencia_disciplinar od 
+            inner join pmieducar.matricula m 
+            on m.cod_matricula = od.ref_cod_matricula
+            inner join pmieducar.tipo_ocorrencia_disciplinar tod 
+            on tod.cod_tipo_ocorrencia_disciplinar = od.ref_cod_tipo_ocorrencia_disciplinar
+            where true 
+                and od.visivel_pais = 1
+                and m.ref_ref_cod_escola IN ({$escola})     
+                {$where}
+        ";
 
-        $_ocorrenciasMatricula = new clsPmieducarMatriculaOcorrenciaDisciplinar();
+        $ocorrencias = $this->fetchPreparedQuery($sql, $params);
 
-        foreach ($matriculas as $matricula) {
-            $ocorrenciasMatricula = $_ocorrenciasMatricula->lista(
-                $matricula['matricula_id'],
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                $visivel_pais = 1
-            );
+        $attrsFilter = [
+            'tipo',
+            'data_hora',
+            'descricao',
+            'ocorrencia_disciplinar_id',
+            'aluno_id',
+            'escola_id',
+            'updated_at',
+            'deleted_at'
+        ];
 
-            if (is_array($ocorrenciasMatricula)) {
-                $attrsFilter = [
-                    'ref_cod_tipo_ocorrencia_disciplinar' => 'tipo',
-                    'data_cadastro' => 'data_hora',
-                    'observacao' => 'descricao',
-                    'cod_ocorrencia_disciplinar' => 'ocorrencia_disciplinar_id'
-                ];
+        $ocorrencias = Portabilis_Array_Utils::filterSet($ocorrencias, $attrsFilter);
 
-                $ocorrenciasMatricula = Portabilis_Array_Utils::filterSet($ocorrenciasMatricula, $attrsFilter);
-
-                foreach ($ocorrenciasMatricula as $ocorrenciaMatricula) {
-                    $ocorrenciaMatricula['tipo'] = $this->loadTipoOcorrenciaDisciplinar($ocorrenciaMatricula['tipo']);
-                    $ocorrenciaMatricula['data_hora'] = Portabilis_Date_Utils::pgSQLToBr($ocorrenciaMatricula['data_hora']);
-                    $ocorrenciaMatricula['descricao'] = $this->toUtf8($ocorrenciaMatricula['descricao']);
-                    $ocorrenciaMatricula['aluno_id'] = $matricula['aluno_id'];
-                    $ocorrenciaMatricula['escola_id'] = $matricula['escola_id'];
-                    $ocorrenciasAluno[] = $ocorrenciaMatricula;
-                }
-            }
-        }
-
-        return ['ocorrencias_disciplinares' => $ocorrenciasAluno];
+        return ['ocorrencias_disciplinares' => $ocorrencias];
     }
 
     protected function getGradeUltimoHistorico()
@@ -1237,37 +1224,59 @@ class AlunoController extends ApiCoreController
     protected function getTodosAlunos()
     {
         if ($this->canGetTodosAlunos()) {
-            $sql = '
+
+            $modified = $this->getRequest()->modified;
+            $escola = $this->getRequest()->escola;
+
+            if (is_array($escola)) {
+                $escola = implode(', ', $escola);
+            }
+
+            $params = [];
+
+            $where = '';
+
+            if ($modified) {
+                $params[] = $modified;
+                $where = 'AND greatest(p.data_rev::timestamp(0), f.data_rev::timestamp(0), a.updated_at, ff.updated_at) >= $1';
+            }
+
+            $sql = "
                 SELECT a.cod_aluno AS aluno_id,
                 p.nome as nome_aluno,
                 f.nome_social,
                 f.data_nasc as data_nascimento,
                 ff.caminho as foto_aluno,
-                COALESCE((SELECT NOT d.desconsidera_regra_diferenciada
-                            FROM cadastro.fisica_deficiencia fd
-                            JOIN cadastro.deficiencia d ON (d.cod_deficiencia = fd.ref_cod_deficiencia)
-                            WHERE fd.ref_idpes = p.idpes AND
-                                    d.nm_deficiencia NOT ILIKE \'nenhuma\'
-                            ORDER BY d.desconsidera_regra_diferenciada
-                            LIMIT 1), false) as utiliza_regra_diferenciada
+                greatest(p.data_rev::timestamp(0), f.data_rev::timestamp(0), a.updated_at, ff.updated_at) as updated_at,
+                (
+                    CASE WHEN a.ativo = 0 THEN
+                        p.data_rev::timestamp(0)
+                    ELSE 
+                        null
+                    END 
+                ) as deleted_at
                 FROM pmieducar.aluno a
                 INNER JOIN cadastro.pessoa p ON p.idpes = a.ref_idpes
                 INNER JOIN cadastro.fisica f ON f.idpes = p.idpes
                 LEFT JOIN cadastro.fisica_foto ff ON p.idpes = ff.idpes
-                WHERE a.ativo = 1
-                ORDER BY nome_aluno ASC
-            ';
+                WHERE TRUE
+                and exists (
+                    select * from pmieducar.matricula where ref_ref_cod_escola in ({$escola}) and ref_cod_aluno = a.cod_aluno
+                )
+                {$where}
+                ORDER BY updated_at, p.nome ASC
+            ";
 
-            $alunos = $this->fetchPreparedQuery($sql);
+            $alunos = $this->fetchPreparedQuery($sql, $params);
 
-            $attrs = ['aluno_id', 'nome_aluno', 'nome_social', 'foto_aluno', 'data_nascimento', 'utiliza_regra_diferenciada'];
-            $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
+            $alunos = Portabilis_Array_Utils::filterSet($alunos, [
+                'aluno_id', 'nome_aluno', 'nome_social', 'foto_aluno',
+                'data_nascimento', 'updated_at', 'deleted_at'
+            ]);
 
-            foreach ($alunos as &$aluno) {
-                $aluno['utiliza_regra_diferenciada'] = dbBool($aluno['utiliza_regra_diferenciada']);
-            }
-
-            return ['alunos' => $alunos];
+            return [
+                'alunos' => $alunos
+            ];
         }
     }
 
@@ -1962,7 +1971,7 @@ class AlunoController extends ApiCoreController
 
     private function replaceByEducacensoDeficiencies($deficiencies)
     {
-        $databaseDeficiencies = Deficiency::all()->getKeyValueArray('deficiencia_educacenso');
+        $databaseDeficiencies = LegacyDeficiency::all()->getKeyValueArray('deficiencia_educacenso');
 
         $arrayEducacensoDeficiencies = [];
         foreach ($deficiencies as $deficiency) {

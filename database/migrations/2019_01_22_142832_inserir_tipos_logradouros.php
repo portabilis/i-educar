@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class InserirTiposLogradouros extends Migration
 {
@@ -14,8 +14,7 @@ class InserirTiposLogradouros extends Migration
     {
         DB::table('urbano.tipo_logradouro')->updateOrInsert([
             'idtlog' => 'POVO',
-        ],
-            [
+        ], [
             'descricao' => 'Povoado'
         ]);
 

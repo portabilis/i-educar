@@ -865,7 +865,7 @@ class indice extends clsCadastro
         $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
 
         $this->multiseriada = isset($this->multiseriada) ? 1 : 0;
-        $this->visivel = isset($this->visivel);
+        $this->visivel = isset($this->visivel) ? 'true' : 'false';
 
         $objTurma = $this->montaObjetoTurma(null, $this->pessoa_logada);
 
@@ -918,6 +918,9 @@ class indice extends clsCadastro
             return false;
         }
 
+        $this->visivel = isset($this->visivel) ? 'true' : 'false';
+        $this->multiseriada = isset($this->multiseriada) ? 1 : 0;
+
         $objTurma = $this->montaObjetoTurma($this->cod_turma, null, $this->pessoa_logada);
         $dadosTurma = $objTurma->detalhe();
 
@@ -937,9 +940,6 @@ class indice extends clsCadastro
         } else {
             $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
         }
-
-        $this->multiseriada = isset($this->multiseriada) ? 1 : 0;
-        $this->visivel = isset($this->visivel);
 
         $editou = $objTurma->edita();
 
