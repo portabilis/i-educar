@@ -147,7 +147,7 @@ class ServidorController extends ApiCoreController
                         pt.permite_lancar_faltas_componente,
                         string_agg(ptd.componente_curricular_id::varchar, ',') as disciplinas,
                         ccae.tipo_nota,
-                        greatest(pt.updated_at, ccae.updated_at) as updated_at,
+                        greatest(pt.updated_at, date(ccae.updated_at)) as updated_at,
                         null as deleted_at
                     from modules.professor_turma pt 
                     left join modules.professor_turma_disciplina ptd 
@@ -162,7 +162,7 @@ class ServidorController extends ApiCoreController
                     and pt.ano = $2
                     and t.ref_ref_cod_escola in ({$escola})
                     {$where}
-                    group by id, ccae.tipo_nota, ccae.updated_at
+                    group by id, ccae.tipo_nota, date(ccae.updated_at)
                 )
                 union all
                 (
