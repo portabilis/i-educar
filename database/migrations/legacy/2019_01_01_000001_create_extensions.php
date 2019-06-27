@@ -18,6 +18,8 @@ class CreateExtensions extends Migration
                 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
                 
                 CREATE EXTENSION IF NOT EXISTS unaccent WITH SCHEMA public;
+                
+                CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA relatorio;
             '
         );
     }
@@ -31,6 +33,8 @@ class CreateExtensions extends Migration
     {
         DB::unprepared(
             '
+                DROP EXTENSION hstore;
+                
                 DROP EXTENSION plpgsql;
                 
                 DROP EXTENSION unaccent;
