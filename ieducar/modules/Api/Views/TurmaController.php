@@ -74,7 +74,7 @@ class TurmaController extends ApiCoreController
         return $turma;
     }
 
-    protected function ordenaAlunosPorDataBase()
+    protected function ordenaMatriculasPorDataBase()
     {
         $codTurma = $this->getRequest()->id;
         $parametros = [$codTurma];
@@ -351,8 +351,8 @@ class TurmaController extends ApiCoreController
             $this->appendResponse($this->get());
         } elseif ($this->isRequestFor('get', 'tipo-boletim')) {
             $this->appendResponse($this->getTipoBoletim());
-        } elseif ($this->isRequestFor('get', 'ordena-turma-data-base')) {
-            $this->appendResponse($this->ordenaAlunosPorDataBase());
+        } elseif ($this->isRequestFor('get', 'ordena-matriculas-data-base')) {
+            $this->appendResponse($this->ordenaMatriculasPorDataBase());
         } elseif ($this->isRequestFor('get', 'ordena-turma-alfabetica')) {
             $this->appendResponse($this->ordenaSequencialAlunosTurma());
         } elseif ($this->isRequestFor('get', 'turmas-por-escola')) {
