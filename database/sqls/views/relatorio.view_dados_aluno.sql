@@ -2,7 +2,7 @@ CREATE OR REPLACE VIEW relatorio.view_dados_aluno AS
 SELECT pessoa.idpes,
     fisica.cpf,
     aluno.cod_aluno,
-    fcn_upper(pessoa.nome::text) AS nome_aluno,
+    public.fcn_upper(pessoa.nome::text) AS nome_aluno,
     endereco_pessoa.cep,
     logradouro.nome AS nome_logradouro,
     endereco_pessoa.complemento,
