@@ -32,6 +32,7 @@ class CreatePmieducarMatriculaTurmaExcluidosTable extends Migration
             $table->boolean('falecido')->nullable();
             $table->smallInteger('etapa_educacenso')->nullable();
             $table->smallInteger('turma_unificada')->nullable();
+            $table->integer('turno_id')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->softDeletes();
         });
