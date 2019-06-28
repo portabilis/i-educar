@@ -1,4 +1,4 @@
-CREATE FUNCTION modules.frequencia_por_componente(cod_matricula_id integer, cod_disciplina_id integer, cod_turma_id integer) RETURNS character varying
+CREATE OR REPLACE FUNCTION modules.frequencia_por_componente(cod_matricula_id integer, cod_disciplina_id integer, cod_turma_id integer) RETURNS character varying
     LANGUAGE plpgsql
     AS $$
             DECLARE

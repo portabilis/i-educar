@@ -1,4 +1,4 @@
-CREATE FUNCTION public.verifica_existe_matricula_posterior_mesma_turma(cod_matricula integer, cod_turma integer) RETURNS boolean
+CREATE OR REPLACE FUNCTION public.verifica_existe_matricula_posterior_mesma_turma(cod_matricula integer, cod_turma integer) RETURNS boolean
     LANGUAGE plpgsql
     AS $$
                       DECLARE existe_matricula boolean;

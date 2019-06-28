@@ -1,4 +1,4 @@
-CREATE FUNCTION pmieducar.unifica_tipos_transferencia() RETURNS void
+CREATE OR REPLACE FUNCTION pmieducar.unifica_tipos_transferencia() RETURNS void
     LANGUAGE plpgsql
     AS $$
   DECLARE

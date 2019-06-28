@@ -1,4 +1,4 @@
-CREATE FUNCTION pmieducar.migra_beneficios_para_tabela_aluno_aluno_beneficio() RETURNS void
+CREATE OR REPLACE FUNCTION pmieducar.migra_beneficios_para_tabela_aluno_aluno_beneficio() RETURNS void
     LANGUAGE plpgsql
     AS $$
   DECLARE

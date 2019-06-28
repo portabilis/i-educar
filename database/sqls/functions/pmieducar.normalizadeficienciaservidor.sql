@@ -1,4 +1,4 @@
-CREATE FUNCTION pmieducar.normalizadeficienciaservidor() RETURNS void
+CREATE OR REPLACE FUNCTION pmieducar.normalizadeficienciaservidor() RETURNS void
     LANGUAGE plpgsql
     AS $$
   DECLARE

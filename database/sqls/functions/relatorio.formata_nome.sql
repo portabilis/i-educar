@@ -1,4 +1,4 @@
-CREATE FUNCTION relatorio.formata_nome(var text) RETURNS text
+CREATE OR REPLACE FUNCTION relatorio.formata_nome(var text) RETURNS text
     LANGUAGE sql
     AS $_$
                         SELECT array_to_string(array_agg(nomes),' ')

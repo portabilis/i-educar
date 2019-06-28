@@ -1,4 +1,4 @@
-CREATE FUNCTION public.retira_data_cancel_matricula_fun() RETURNS trigger
+CREATE OR REPLACE FUNCTION public.retira_data_cancel_matricula_fun() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
   BEGIN

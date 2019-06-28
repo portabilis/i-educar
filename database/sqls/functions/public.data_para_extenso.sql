@@ -1,4 +1,4 @@
-CREATE FUNCTION public.data_para_extenso(data date) RETURNS character varying
+CREATE OR REPLACE FUNCTION public.data_para_extenso(data date) RETURNS character varying
     LANGUAGE plpgsql
     AS $$
 DECLARE

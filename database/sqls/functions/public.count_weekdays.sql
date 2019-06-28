@@ -1,4 +1,4 @@
-CREATE FUNCTION public.count_weekdays(date, date) RETURNS integer
+CREATE OR REPLACE FUNCTION public.count_weekdays(date, date) RETURNS integer
     LANGUAGE plpgsql STABLE
     AS $_$
      DECLARE

@@ -1,4 +1,4 @@
-CREATE FUNCTION cadastro.fcn_aft_ins_endereco_pessoa() RETURNS trigger
+CREATE OR REPLACE FUNCTION cadastro.fcn_aft_ins_endereco_pessoa() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 DECLARE

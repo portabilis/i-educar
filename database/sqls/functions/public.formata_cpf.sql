@@ -1,4 +1,4 @@
-CREATE FUNCTION public.formata_cpf(cpf numeric) RETURNS character varying
+CREATE OR REPLACE FUNCTION public.formata_cpf(cpf numeric) RETURNS character varying
     LANGUAGE plpgsql
     AS $$
 DECLARE

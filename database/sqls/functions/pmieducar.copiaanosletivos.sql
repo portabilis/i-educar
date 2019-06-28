@@ -1,4 +1,4 @@
-CREATE FUNCTION pmieducar.copiaanosletivos(ianonovo smallint, icodescola integer) RETURNS void
+CREATE OR REPLACE FUNCTION pmieducar.copiaanosletivos(ianonovo smallint, icodescola integer) RETURNS void
     LANGUAGE plpgsql
     AS $$
             DECLARE
