@@ -42,6 +42,9 @@ class PrepareDatabase extends Migration
     /**
      * @see https://github.com/portabilis/i-educar/pull/509
      * @see https://github.com/portabilis/i-educar/pull/602
+     * @see https://github.com/portabilis/i-educar/pull/607
+     * @see https://github.com/portabilis/i-educar/pull/608
+     * @see https://github.com/portabilis/i-educar/pull/609
      */
     private function dropFromPortal()
     {
@@ -57,6 +60,9 @@ class PrepareDatabase extends Migration
         DB::unprepared('DROP TABLE IF EXISTS portal.compras_prestacao_contas CASCADE;');
         DB::unprepared('DROP TABLE IF EXISTS portal.foto_portal CASCADE;');
         DB::unprepared('DROP TABLE IF EXISTS portal.foto_secao CASCADE;');
+        DB::unprepared('DROP TABLE IF EXISTS portal.imagem CASCADE;');
+        DB::unprepared('DROP TABLE IF EXISTS portal.imagem_tipo CASCADE;');
+        DB::unprepared('DROP TABLE IF EXISTS portal.intranet_segur_permissao_negada CASCADE;');
         DB::unprepared('DROP TABLE IF EXISTS portal.jor_arquivo CASCADE;');
         DB::unprepared('DROP TABLE IF EXISTS portal.jor_edicao CASCADE;');
         DB::unprepared('DROP TABLE IF EXISTS portal.mailling_email CASCADE;');
@@ -65,6 +71,9 @@ class PrepareDatabase extends Migration
         DB::unprepared('DROP TABLE IF EXISTS portal.mailling_grupo CASCADE;');
         DB::unprepared('DROP TABLE IF EXISTS portal.mailling_grupo_email CASCADE;');
         DB::unprepared('DROP TABLE IF EXISTS portal.mailling_historico CASCADE;');
+        DB::unprepared('DROP TABLE IF EXISTS portal.menu_funcionario CASCADE;');
+        DB::unprepared('DROP TABLE IF EXISTS portal.menu_menu CASCADE;');
+        DB::unprepared('DROP TABLE IF EXISTS portal.menu_submenu CASCADE;');
         DB::unprepared('DROP TABLE IF EXISTS portal.not_portal CASCADE;');
         DB::unprepared('DROP TABLE IF EXISTS portal.not_portal_tipo CASCADE;');
         DB::unprepared('DROP TABLE IF EXISTS portal.not_tipo CASCADE;');
