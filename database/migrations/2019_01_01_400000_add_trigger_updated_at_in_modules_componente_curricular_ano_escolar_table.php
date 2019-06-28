@@ -3,7 +3,7 @@
 use App\Support\Database\UpdatedAtTrigger;
 use Illuminate\Database\Migrations\Migration;
 
-class AddUpdatedAtColumnInModulesComponenteCurricularAnoEscolar extends Migration
+class AddTriggerUpdatedAtInModulesComponenteCurricularAnoEscolarTable extends Migration
 {
     use UpdatedAtTrigger;
 

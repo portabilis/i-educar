@@ -3,7 +3,7 @@
 use App\Support\Database\UpdatedAtTrigger;
 use Illuminate\Database\Migrations\Migration;
 
-class AdicionaColunaUpdatedAtEmModulesAreaConhecimento extends Migration
+class AddTriggerUpdatedAtInModulesAreaConhecimentoTable extends Migration
 {
     use UpdatedAtTrigger;
 

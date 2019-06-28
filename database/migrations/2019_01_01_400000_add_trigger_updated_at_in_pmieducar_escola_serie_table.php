@@ -3,7 +3,7 @@
 use App\Support\Database\UpdatedAtTrigger;
 use Illuminate\Database\Migrations\Migration;
 
-class AdicionaColunaUpdatedAtEmPmieducarEscolaSerie extends Migration
+class AddTriggerUpdatedAtInPmieducarEscolaSerieTable extends Migration
 {
     use UpdatedAtTrigger;
 

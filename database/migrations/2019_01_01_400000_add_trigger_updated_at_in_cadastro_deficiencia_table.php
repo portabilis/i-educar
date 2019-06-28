@@ -3,7 +3,7 @@
 use App\Support\Database\UpdatedAtTrigger;
 use Illuminate\Database\Migrations\Migration;
 
-class AdicionaColunaUpdatedAtEmCadastroDeficiencia extends Migration
+class AddTriggerUpdatedAtInCadastroDeficienciaTable extends Migration
 {
     use UpdatedAtTrigger;
 

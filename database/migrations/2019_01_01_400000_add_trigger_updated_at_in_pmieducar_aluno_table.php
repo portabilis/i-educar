@@ -3,7 +3,7 @@
 use App\Support\Database\UpdatedAtTrigger;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTimestampsColumnsInPmieducarAlunoTable extends Migration
+class AddTriggerUpdatedAtInPmieducarAlunoTable extends Migration
 {
     use UpdatedAtTrigger;
 
