@@ -1,4 +1,4 @@
-CREATE VIEW cadastro.v_pessoafj_count AS
+CREATE OR REPLACE VIEW cadastro.v_pessoafj_count AS
  SELECT fisica.ref_cod_sistema,
     fisica.cpf AS id_federal
    FROM cadastro.fisica

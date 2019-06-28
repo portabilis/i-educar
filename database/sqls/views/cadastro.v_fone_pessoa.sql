@@ -1,5 +1,4 @@
-
-CREATE VIEW cadastro.v_fone_pessoa AS
+CREATE OR REPLACE VIEW cadastro.v_fone_pessoa AS
  SELECT DISTINCT t.idpes,
     ( SELECT t1.ddd
            FROM cadastro.fone_pessoa t1
