@@ -36,7 +36,8 @@ class CreatePmieducarDispensaDisciplinaTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     observacao text,
-                    cod_dispensa integer DEFAULT nextval(\'pmieducar.dispensa_disciplina_cod_dispensa_seq\'::regclass) NOT NULL
+                    cod_dispensa integer DEFAULT nextval(\'pmieducar.dispensa_disciplina_cod_dispensa_seq\'::regclass) NOT NULL,
+	                updated_at timestamp NULL DEFAULT now()
                 );
                 
                 ALTER TABLE ONLY pmieducar.dispensa_disciplina

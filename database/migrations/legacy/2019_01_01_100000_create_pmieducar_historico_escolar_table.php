@@ -18,6 +18,7 @@ class CreatePmieducarHistoricoEscolarTable extends Migration
                 SET default_with_oids = true;
                 
                 CREATE TABLE pmieducar.historico_escolar (
+	                id serial NOT NULL,
                     ref_cod_aluno integer NOT NULL,
                     sequencial integer NOT NULL,
                     ref_usuario_exc integer,

@@ -411,7 +411,7 @@ class EducacensoExportController extends ApiCoreController
                 $pessoa->deficienciaSurdoCegueira,
                 $pessoa->deficienciaFisica,
                 $pessoa->deficienciaIntelectual,
-                $pessoa->deficienciaMultipla,
+                $pessoa->deficienciaMultipla(),
                 $pessoa->deficienciaAutismo,
                 $pessoa->deficienciaAltasHabilidades,
                 $pessoa->recursoLedor,

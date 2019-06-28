@@ -17,7 +17,7 @@ class DefaultMenusTableSeeder extends Seeder
         );
 
         DB::unprepared(
-            'SELECT pg_catalog.setval(\'menus_id_seq\', 169, true);'
+            'SELECT pg_catalog.setval(\'menus_id_seq\', 170, true);'
         );
     }
 }

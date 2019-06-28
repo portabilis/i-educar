@@ -334,7 +334,7 @@ class DiarioController extends ApiCoreController
 
                             $regra = $serviceBoletim->getRegra();
 
-                            if ($valorNota > $regra->notaMaximaExameFinal) {
+                            if ($valorNota > $regra->notaMaximaGeral) {
                                 $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaGeral}.", 'error');
 
                                 return false;

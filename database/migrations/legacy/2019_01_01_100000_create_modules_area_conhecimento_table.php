@@ -29,7 +29,8 @@ class CreateModulesAreaConhecimentoTable extends Migration
                     instituicao_id integer NOT NULL,
                     nome character varying(200) NOT NULL,
                     secao character varying(50),
-                    ordenamento_ac integer DEFAULT 99999
+                    ordenamento_ac integer DEFAULT 99999,
+	                updated_at timestamp NULL DEFAULT now()
                 );
                 
                 ALTER SEQUENCE modules.area_conhecimento_id_seq OWNED BY modules.area_conhecimento.id;

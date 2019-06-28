@@ -55,7 +55,8 @@ class CreatePmieducarAlunoTable extends Migration
                     parentesco_cinco character varying(150),
                     url_documento json,
 	                recebe_escolarizacao_em_outro_espaco int2 NOT NULL DEFAULT 1,
-                    recursos_prova_inep integer[]
+                    recursos_prova_inep integer[],
+	                updated_at timestamp NULL DEFAULT now()
                 );
                 
                 ALTER TABLE ONLY pmieducar.aluno

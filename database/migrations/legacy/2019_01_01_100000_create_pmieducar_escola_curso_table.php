@@ -26,7 +26,8 @@ class CreatePmieducarEscolaCursoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     autorizacao character varying(255),
-                    anos_letivos smallint[] DEFAULT \'{}\'::smallint[] NOT NULL
+                    anos_letivos smallint[] DEFAULT \'{}\'::smallint[] NOT NULL,
+	                updated_at timestamp NULL DEFAULT now()
                 );
                 
                 ALTER TABLE ONLY pmieducar.escola_curso

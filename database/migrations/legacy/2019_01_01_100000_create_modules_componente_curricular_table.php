@@ -32,7 +32,8 @@ class CreateModulesComponenteCurricularTable extends Migration
                     abreviatura character varying(25) NOT NULL,
                     tipo_base smallint NOT NULL,
                     codigo_educacenso smallint,
-                    ordenamento integer DEFAULT 99999
+                    ordenamento integer DEFAULT 99999,
+	                updated_at timestamp NULL DEFAULT now()
                 );
                 
                 ALTER TABLE ONLY modules.componente_curricular

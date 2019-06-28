@@ -23,7 +23,8 @@ class CreatePmieducarDisciplinaDependenciaTable extends Migration
                     ref_cod_escola integer NOT NULL,
                     ref_cod_serie integer NOT NULL,
                     observacao text,
-                    cod_disciplina_dependencia integer NOT NULL
+                    cod_disciplina_dependencia integer NOT NULL,
+	                updated_at timestamp NULL DEFAULT now()
                 );
                 
                 ALTER TABLE ONLY pmieducar.disciplina_dependencia

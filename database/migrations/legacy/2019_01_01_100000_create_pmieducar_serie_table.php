@@ -46,7 +46,8 @@ class CreatePmieducarSerieTable extends Migration
                     alerta_faixa_etaria boolean,
                     bloquear_matricula_faixa_etaria boolean,
                     idade_ideal integer,
-                    exigir_inep boolean
+                    exigir_inep boolean,
+	                updated_at timestamp NULL DEFAULT now()
                 );
                 
                 ALTER TABLE ONLY pmieducar.serie

@@ -85,7 +85,8 @@ class CreatePmieducarTurmaTable extends Migration
                     atividades_complementares integer[],
                     atividades_aee integer[],
                     tipo_boletim_diferenciado int2 NULL,
-                    local_funcionamento_diferenciado int2 NULL
+                    local_funcionamento_diferenciado int2 NULL,
+	                updated_at timestamp NULL DEFAULT now()
                 );
                 
                 ALTER TABLE ONLY pmieducar.turma

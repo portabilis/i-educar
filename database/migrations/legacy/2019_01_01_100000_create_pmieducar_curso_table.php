@@ -45,7 +45,8 @@ class CreatePmieducarCursoTable extends Migration
                     padrao_ano_escolar smallint DEFAULT (0)::smallint NOT NULL,
                     hora_falta double precision DEFAULT 0.00 NOT NULL,
                     multi_seriado integer,
-                    modalidade_curso integer
+                    modalidade_curso integer,
+	                updated_at timestamp NULL DEFAULT now()
                 );
                 
                 ALTER TABLE ONLY pmieducar.curso

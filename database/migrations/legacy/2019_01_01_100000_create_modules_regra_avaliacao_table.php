@@ -51,7 +51,8 @@ class CreateModulesRegraAvaliacaoTable extends Migration
                     qtd_matriculas_dependencia smallint DEFAULT 0 NOT NULL,
                     nota_minima_geral integer DEFAULT 0,
                     tabela_arredondamento_id_conceitual integer,
-                    regra_diferenciada_id integer
+                    regra_diferenciada_id integer,
+	                updated_at timestamp NULL DEFAULT now()
                 );
 
                 ALTER SEQUENCE modules.regra_avaliacao_id_seq OWNED BY modules.regra_avaliacao.id;
