@@ -25,7 +25,7 @@ class AddForeignKeysInLogUnificationOldDataTable extends Migration
      */
     public function down()
     {
-        Schema::table('school_managers', function (Blueprint $table) {
+        Schema::table('log_unification_old_data', function (Blueprint $table) {
             $table->dropForeign(['unification_id']);
         });
     }
