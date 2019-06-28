@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLogUnificationOldData extends Migration
+class CreateLogUnificationOldDataTable extends Migration
 {
     /**
      * Run the migrations.
@@ -19,8 +19,6 @@ class CreateLogUnificationOldData extends Migration
             $table->string('table');
             $table->json('keys');
             $table->json('old_data');
-
-            $table->foreign('unification_id')->references('id')->on('log_unifications');
         });
     }
 
