@@ -15,6 +15,7 @@ class PrepareDatabase extends Migration
      * @see https://github.com/portabilis/i-educar/pull/501
      * @see https://github.com/portabilis/i-educar/pull/503
      * @see https://github.com/portabilis/i-educar/pull/499
+     * @see https://github.com/portabilis/i-educar/pull/606
      */
     private function dropSchemas()
     {
@@ -24,27 +25,10 @@ class PrepareDatabase extends Migration
         DB::unprepared('DROP SCHEMA IF EXISTS conv_functions CASCADE;');
         DB::unprepared('DROP SCHEMA IF EXISTS historico CASCADE;');
         DB::unprepared('DROP SCHEMA IF EXISTS pmiacoes CASCADE;');
+        DB::unprepared('DROP SCHEMA IF EXISTS pmicontrolesis CASCADE;');
         DB::unprepared('DROP SCHEMA IF EXISTS pmidrh CASCADE;');
         DB::unprepared('DROP SCHEMA IF EXISTS pmiotopic CASCADE;');
         DB::unprepared('DROP SCHEMA IF EXISTS serieciasc CASCADE;');
-    }
-
-    /**
-     * @see https://github.com/portabilis/i-educar/pull/508
-     */
-    private function dropFromPmicontrolesis()
-    {
-        DB::unprepared('DROP TABLE IF EXISTS pmicontrolesis.acontecimento CASCADE;');
-        DB::unprepared('DROP TABLE IF EXISTS pmicontrolesis.artigo CASCADE;');
-        DB::unprepared('DROP TABLE IF EXISTS pmicontrolesis.foto_evento CASCADE;');
-        DB::unprepared('DROP TABLE IF EXISTS pmicontrolesis.foto_vinc CASCADE;');
-        DB::unprepared('DROP TABLE IF EXISTS pmicontrolesis.itinerario CASCADE;');
-        DB::unprepared('DROP TABLE IF EXISTS pmicontrolesis.portais CASCADE;');
-        DB::unprepared('DROP TABLE IF EXISTS pmicontrolesis.servicos CASCADE;');
-        DB::unprepared('DROP TABLE IF EXISTS pmicontrolesis.sistema CASCADE;');
-        DB::unprepared('DROP TABLE IF EXISTS pmicontrolesis.telefones CASCADE;');
-        DB::unprepared('DROP TABLE IF EXISTS pmicontrolesis.tipo_acontecimento CASCADE;');
-        DB::unprepared('DROP TABLE IF EXISTS pmicontrolesis.topo_portal CASCADE;');
     }
 
     /**
@@ -162,7 +146,6 @@ class PrepareDatabase extends Migration
     public function up()
     {
         $this->dropSchemas();
-        $this->dropFromPmicontrolesis();
         $this->dropFromPmieducar();
         $this->dropFromPortal();
         $this->dropFromPublic();
