@@ -23,7 +23,7 @@ class DropSequences extends Migration
                 DROP SEQUENCE setor_idset_seq;
          
                 SET search_path = portal, pg_catalog;
-                
+                                
                 DROP SEQUENCE agenda_pref_cod_comp_seq;
                 
                 DROP SEQUENCE compras_editais_editais_cod_compras_editais_editais_seq;
@@ -44,6 +44,12 @@ class DropSequences extends Migration
                 
                 DROP SEQUENCE foto_secao_cod_foto_secao_seq;
                 
+                DROP SEQUENCE imagem_cod_imagem_seq;
+                
+                DROP SEQUENCE imagem_tipo_cod_imagem_tipo_seq;
+                
+                DROP SEQUENCE intranet_segur_permissao_nega_cod_intranet_segur_permissao__seq;
+                
                 DROP SEQUENCE jor_edicao_cod_jor_edicao_seq;
                 
                 DROP SEQUENCE mailling_email_cod_mailling_email_seq;
@@ -56,6 +62,10 @@ class DropSequences extends Migration
                 
                 DROP SEQUENCE mailling_historico_cod_mailling_historico_seq;
                 
+                DROP SEQUENCE menu_menu_cod_menu_menu_seq;
+                
+                DROP SEQUENCE menu_submenu_cod_menu_submenu_seq;
+
                 DROP SEQUENCE not_portal_cod_not_portal_seq;
                 
                 DROP SEQUENCE not_tipo_cod_not_tipo_seq;
