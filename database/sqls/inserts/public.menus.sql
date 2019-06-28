@@ -116,7 +116,7 @@ INSERT INTO public.menus VALUES (115, 51, 'Séries', NULL, NULL, NULL, 6, 4, NUL
 INSERT INTO public.menus VALUES (116, 51, 'Turmas', NULL, NULL, NULL, 7, 4, NULL, 21165, 999917, true, NULL, NULL);
 INSERT INTO public.menus VALUES (117, 51, 'Infraestrutura', NULL, NULL, NULL, 8, 4, NULL, 21162, 999917, true, NULL, NULL);
 INSERT INTO public.menus VALUES (118, 51, 'Calendários', NULL, NULL, NULL, 9, 4, NULL, 21169, 999917, true, NULL, NULL);
-INSERT INTO public.menus VALUES (119, 82, 'Unificação de alunos', 'Unificação de alunos', '/intranet/educar_unifica_aluno.php', NULL, 0, 4, 999847, 999847, 999927, true, NULL, NULL);
+INSERT INTO public.menus VALUES (119, 82, 'Unificação de alunos', 'Unificação de alunos', '/unificacao-aluno', NULL, 0, 4, 999847, 999847, 999927, true, NULL, NULL);
 INSERT INTO public.menus VALUES (120, 83, 'Bloqueio de lançamento de notas e faltas', 'Bloqueio de lançamento de notas e faltas', '/intranet/educar_bloqueio_lancamento_faltas_notas_lst.php', NULL, 0, 4, 999848, 999848, 999928, true, NULL, NULL);
 INSERT INTO public.menus VALUES (121, 83, 'Bloqueio do ano letivo', 'Bloqueio do ano letivo', '/intranet/educar_bloqueio_ano_letivo_lst.php', NULL, 0, 4, 21251, 21251, 999928, true, NULL, NULL);
 INSERT INTO public.menus VALUES (122, 83, 'Vagas por série/ano', 'Vagas por série/ano', '/intranet/educar_serie_vaga_lst.php', NULL, 2, 4, 21253, 21253, 999928, true, NULL, NULL);
@@ -167,3 +167,4 @@ INSERT INTO public.menus VALUES (166, 3, 'Alterar média final do aluno e situa�
 INSERT INTO public.menus VALUES (167, 3, 'Permitir lançamento de notas/faltas fora do período de bloqueio por etapa', NULL, NULL, NULL, 9999, 2, 999849, 999849, 55, true, NULL, NULL);
 INSERT INTO public.menus VALUES (168, 3, 'Permitir editar endereço no cadastro de pessoa física', NULL, NULL, NULL, 9999, 2, 999878, 999878, 55, true, NULL, NULL);
 INSERT INTO public.menus VALUES (169, 3, 'Histórico de enturmações da matrícula', NULL, NULL, NULL, 99, 1, 1001, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (170, 3, 'Desfazer unificação de alunos', NULL, NULL, NULL, 99, 1, 2001, NULL, NULL, true, NULL, NULL);
