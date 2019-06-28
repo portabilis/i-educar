@@ -32,6 +32,19 @@ class PrepareDatabase extends Migration
     }
 
     /**
+     * @see hhttps://github.com/portabilis/i-educar/pull/610
+     */
+    private function dropFromCadastro()
+    {
+        DB::unprepared('DROP TABLE IF EXISTS cadastro.aviso_nome CASCADE;');
+        DB::unprepared('DROP TABLE IF EXISTS cadastro.fisica_sangue CASCADE;');
+        DB::unprepared('DROP TABLE IF EXISTS cadastro.funcionario CASCADE;');
+        DB::unprepared('DROP TABLE IF EXISTS cadastro.historico_cartao CASCADE;');
+        DB::unprepared('DROP TABLE IF EXISTS cadastro.pessoa_fonetico CASCADE;');
+        DB::unprepared('DROP TABLE IF EXISTS cadastro.socio CASCADE;');
+    }
+
+    /**
      * @see https://github.com/portabilis/i-educar/pull/601
      */
     private function dropFromPmieducar()
@@ -155,6 +168,7 @@ class PrepareDatabase extends Migration
     public function up()
     {
         $this->dropSchemas();
+        $this->dropFromCadastro();
         $this->dropFromPmieducar();
         $this->dropFromPortal();
         $this->dropFromPublic();
