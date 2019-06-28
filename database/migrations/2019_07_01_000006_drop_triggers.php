@@ -14,6 +14,14 @@ class DropTriggers extends Migration
     {
         DB::unprepared(
             '
+                SET search_path = cadastro, pg_catalog;
+                
+                DROP TRIGGER trg_aft_fisica ON fisica;
+                
+                DROP TRIGGER trg_aft_fisica_provisorio ON fisica;
+                
+                DROP TRIGGER trg_aft_fisica_cpf_provisorio ON fisica_cpf;
+
                 SET search_path = pmieducar, pg_catalog;
                 
                 DROP TRIGGER fcn_aft_update ON acervo;
