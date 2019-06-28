@@ -11,8 +11,8 @@ SELECT escola.cod_escola,
     COALESCE(municipio.nome, endereco_externo.cidade) AS municipio,
     COALESCE(municipio.sigla_uf, endereco_externo.sigla_uf::character varying) AS uf_municipio,
     educacenso_cod_escola.cod_escola_inep AS inep,
-    null AS telefone_ddd,
-    null AS telefone,
+    fone_pessoa.ddd AS telefone_ddd,
+    to_char(fone_pessoa.fone, '99999-9999'::text) AS telefone,
     fone_pessoa.ddd AS celular_ddd,
     to_char(fone_pessoa.fone, '99999-9999'::text) AS celular
 FROM pmieducar.escola
