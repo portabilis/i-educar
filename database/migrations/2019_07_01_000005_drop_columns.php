@@ -62,20 +62,11 @@ class DropColumns extends Migration
                     DROP COLUMN idsis_rev,
                     DROP COLUMN idsis_cad;
                 
-                ALTER TABLE funcionario
-                    DROP COLUMN idins,
-                    DROP COLUMN idsis_rev,
-                    DROP COLUMN idsis_cad;
-                
                 ALTER TABLE juridica
                     DROP COLUMN idsis_rev,
                     DROP COLUMN idsis_cad;
                 
                 ALTER TABLE pessoa
-                    DROP COLUMN idsis_rev,
-                    DROP COLUMN idsis_cad;
-                
-                ALTER TABLE socio
                     DROP COLUMN idsis_rev,
                     DROP COLUMN idsis_cad;
                 
