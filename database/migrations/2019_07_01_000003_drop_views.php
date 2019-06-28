@@ -1,10 +1,13 @@
 <?php
 
+use App\Support\Database\AsView;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
 
 class DropViews extends Migration
 {
+    use AsView;
+
     /**
      * Run the migrations.
      *
@@ -21,5 +24,11 @@ class DropViews extends Migration
                 SET search_path = public, pg_catalog;
             '
         );
+
+        $this->dropView('relatorio.view_dados_aluno');
+        $this->createView('relatorio.view_dados_aluno');
+
+        $this->dropView('relatorio.view_dados_escola');
+        $this->createView('relatorio.view_dados_escola');
     }
 }
