@@ -1,4 +1,4 @@
-CREATE FUNCTION public.unifica_logradouro(p_idlog_duplicado integer, p_idlog_principal integer) RETURNS void
+CREATE OR REPLACE FUNCTION public.unifica_logradouro(p_idlog_duplicado integer, p_idlog_principal integer) RETURNS void
     LANGUAGE plpgsql
     AS $$
 DECLARE

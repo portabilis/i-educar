@@ -1,4 +1,4 @@
-CREATE FUNCTION pmieducar.delete_matricula_turma() RETURNS TRIGGER
+CREATE OR REPLACE FUNCTION pmieducar.delete_matricula_turma() RETURNS TRIGGER
 LANGUAGE plpgsql
 AS
 $$

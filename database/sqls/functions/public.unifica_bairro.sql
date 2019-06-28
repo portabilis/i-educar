@@ -1,4 +1,4 @@
-CREATE FUNCTION public.unifica_bairro(p_idbai_duplicado integer, p_idbai_principal integer) RETURNS void
+CREATE OR REPLACE FUNCTION public.unifica_bairro(p_idbai_duplicado integer, p_idbai_principal integer) RETURNS void
     LANGUAGE plpgsql
     AS $$
 DECLARE
