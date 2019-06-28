@@ -253,6 +253,7 @@ $j(function () {
             container.dialog(params);
         },
         setupModule: function () {
+            var defineEtapaNaTurma = $j('#padrao_ano_escolar').val() === '0';
             var $select = $j('#ref_cod_modulo'),
                 val = $select.val(),
                 availableModules = window.modulosDisponiveis || [],
@@ -276,7 +277,7 @@ $j(function () {
 
             this.setCurrentModule();
 
-            if (etapas > rows) {
+            if (etapas > rows && defineEtapaNaTurma) {
                 var diff = etapas - rows;
 
                 content += (diff == 1)
@@ -312,7 +313,7 @@ $j(function () {
                 });
             }
 
-            if (etapas < rows) {
+            if (etapas < rows && defineEtapaNaTurma) {
                 var diff = rows - etapas;
 
                 content += (diff == 1)
