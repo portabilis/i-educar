@@ -12,8 +12,7 @@ class RemoveForeignKeysHistorico extends Migration
      */
     public function up()
     {
-        DB::statement('alter table pmieducar.historico_disciplinas
-    drop constraint if exists historico_disciplinas_ref_ref_cod_aluno_fkey;');
+        DB::statement('alter table pmieducar.historico_disciplinas drop constraint if exists pmieducar_historico_disciplinas_ref_ref_cod_aluno_ref_sequencia;');
     }
 
     /**
