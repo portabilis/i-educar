@@ -1,4 +1,4 @@
-CREATE FUNCTION public.fcn_obter_primeiro_ultimo_nome(text) RETURNS text
+CREATE OR REPLACE FUNCTION public.fcn_obter_primeiro_ultimo_nome(text) RETURNS text
     LANGUAGE plpgsql
     AS $_$
 DECLARE

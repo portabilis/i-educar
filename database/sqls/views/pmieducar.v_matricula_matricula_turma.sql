@@ -1,4 +1,4 @@
-CREATE VIEW pmieducar.v_matricula_matricula_turma AS
+CREATE OR REPLACE VIEW pmieducar.v_matricula_matricula_turma AS
  SELECT ma.cod_matricula,
     ma.ref_ref_cod_escola AS ref_cod_escola,
     ma.ref_ref_cod_serie AS ref_cod_serie,

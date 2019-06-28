@@ -1,4 +1,4 @@
-CREATE FUNCTION public.fcn_fonetiza(text) RETURNS SETOF text
+CREATE OR REPLACE FUNCTION public.fcn_fonetiza(text) RETURNS SETOF text
     LANGUAGE plpgsql
     AS $_$
    DECLARE

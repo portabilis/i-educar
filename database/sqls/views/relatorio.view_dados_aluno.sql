@@ -2,7 +2,7 @@ CREATE OR REPLACE VIEW relatorio.view_dados_aluno AS
 SELECT pessoa.idpes,
     fisica.cpf,
     aluno.cod_aluno,
-    fcn_upper(pessoa.nome::text) AS nome_aluno,
+    public.fcn_upper(pessoa.nome::text) AS nome_aluno,
     endereco_pessoa.cep,
     logradouro.nome AS nome_logradouro,
     endereco_pessoa.complemento,
@@ -37,4 +37,4 @@ LEFT JOIN public.logradouro ON logradouro.idlog = endereco_pessoa.idlog
 LEFT JOIN public.municipio ON municipio.idmun = bairro.idmun
 LEFT JOIN public.uf ON uf.sigla_uf::text = municipio.sigla_uf::text
 LEFT JOIN public.pais ON pais.idpais = uf.idpais
-WHERE matricula_turma.sequencial = (SELECT MAX(sequencial) FROM pmieducar.matricula_turma submt where submt.ref_cod_matricula = matricula_turma.ref_cod_matricula);
+WHERE matricula_turma.sequencial = (SELECT MAX(submt.sequencial) FROM pmieducar.matricula_turma submt where submt.ref_cod_matricula = matricula_turma.ref_cod_matricula);

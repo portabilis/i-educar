@@ -1,4 +1,4 @@
-CREATE FUNCTION modules.frequencia_matricula_por_etapa(matricula integer, etapa character varying) RETURNS numeric
+CREATE OR REPLACE FUNCTION modules.frequencia_matricula_por_etapa(matricula integer, etapa character varying) RETURNS numeric
     LANGUAGE plpgsql
     AS $_$
                           DECLARE

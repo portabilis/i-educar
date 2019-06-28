@@ -1,4 +1,4 @@
-CREATE FUNCTION pmieducar.unifica_alunos(alunoprincipal numeric, alunos numeric[], usuario integer) RETURNS void
+CREATE OR REPLACE FUNCTION pmieducar.unifica_alunos(alunoprincipal numeric, alunos numeric[], usuario integer) RETURNS void
     LANGUAGE plpgsql
     AS $_$
         DECLARE

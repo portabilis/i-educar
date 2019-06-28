@@ -13,6 +13,10 @@ class CreateCadastroVPessoaJuridicaView extends Migration
     public function up()
     {
         DB::unprepared(
+            'DROP VIEW IF EXISTS cadastro.v_pessoa_juridica;'
+        );
+
+        DB::unprepared(
             file_get_contents(__DIR__ . '/../../sqls/views/cadastro.v_pessoa_juridica.sql')
         );
     }
@@ -25,7 +29,7 @@ class CreateCadastroVPessoaJuridicaView extends Migration
     public function down()
     {
         DB::unprepared(
-            'DROP VIEW cadastro.v_pessoa_juridica;'
+            'DROP VIEW IF EXISTS cadastro.v_pessoa_juridica;'
         );
     }
 }

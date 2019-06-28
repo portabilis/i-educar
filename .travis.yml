@@ -17,7 +17,6 @@ matrix:
       script:
         - docker-compose up -d --build
         - docker-compose exec php composer new-install
-        - docker-compose exec php artisan reports:install
         - docker-compose exec php vendor/bin/phpunit
 
     - language: php

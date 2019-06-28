@@ -1,4 +1,4 @@
-CREATE FUNCTION modules.impede_duplicacao_falta_aluno() RETURNS trigger
+CREATE OR REPLACE FUNCTION modules.impede_duplicacao_falta_aluno() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
                     BEGIN

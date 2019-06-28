@@ -14,6 +14,7 @@ class CreateRelatorioViewDadosAlunoView extends Migration
      */
     public function up()
     {
+        $this->dropView('relatorio.view_dados_aluno');
         $this->createView('relatorio.view_dados_aluno');
     }
 

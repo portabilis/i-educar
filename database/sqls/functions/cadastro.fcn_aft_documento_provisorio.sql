@@ -1,4 +1,4 @@
-CREATE FUNCTION cadastro.fcn_aft_documento_provisorio() RETURNS trigger
+CREATE OR REPLACE FUNCTION cadastro.fcn_aft_documento_provisorio() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
   DECLARE

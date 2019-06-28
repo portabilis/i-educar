@@ -1,4 +1,4 @@
-CREATE FUNCTION public.commacat_ignore_nulls(acc text, instr text) RETURNS text
+CREATE OR REPLACE FUNCTION public.commacat_ignore_nulls(acc text, instr text) RETURNS text
     LANGUAGE plpgsql
     AS $$
   BEGIN

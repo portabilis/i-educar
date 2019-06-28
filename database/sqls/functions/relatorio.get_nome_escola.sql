@@ -1,4 +1,4 @@
-CREATE FUNCTION relatorio.get_nome_escola(integer) RETURNS character varying
+CREATE OR REPLACE FUNCTION relatorio.get_nome_escola(integer) RETURNS character varying
     LANGUAGE sql
     AS $_$SELECT COALESCE(
                (SELECT COALESCE (fcn_upper(ps.nome),fcn_upper(juridica.fantasia))

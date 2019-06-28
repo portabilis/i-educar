@@ -1,4 +1,4 @@
-CREATE FUNCTION relatorio.count_weekdays(start_date date, end_date date) RETURNS integer
+CREATE OR REPLACE FUNCTION relatorio.count_weekdays(start_date date, end_date date) RETURNS integer
     LANGUAGE plpgsql
     AS $$
                         DECLARE

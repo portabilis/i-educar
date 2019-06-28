@@ -1,4 +1,4 @@
-CREATE VIEW cadastro.v_pessoa_juridica AS
+CREATE OR REPLACE VIEW cadastro.v_pessoa_juridica AS
  SELECT j.idpes,
     j.fantasia,
     j.cnpj,

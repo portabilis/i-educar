@@ -1,4 +1,4 @@
-CREATE FUNCTION public.fcn_compara_nome_pessoa_fonetica(text, numeric) RETURNS integer
+CREATE OR REPLACE FUNCTION public.fcn_compara_nome_pessoa_fonetica(text, numeric) RETURNS integer
     LANGUAGE plpgsql
     AS $_$
 DECLARE

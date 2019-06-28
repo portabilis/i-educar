@@ -1,4 +1,4 @@
-CREATE FUNCTION modules.preve_data_emprestimo(biblioteca_id integer, data_prevista date) RETURNS date
+CREATE OR REPLACE FUNCTION modules.preve_data_emprestimo(biblioteca_id integer, data_prevista date) RETURNS date
     LANGUAGE plpgsql
     AS $$
   DECLARE

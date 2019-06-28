@@ -1,4 +1,4 @@
-CREATE VIEW cadastro.v_pessoa_fj AS
+CREATE OR REPLACE VIEW cadastro.v_pessoa_fj AS
  SELECT p.idpes,
     p.nome,
     ( SELECT fisica.ref_cod_sistema

@@ -1,4 +1,4 @@
-CREATE FUNCTION modules.frequencia_da_matricula(p_matricula_id integer) RETURNS double precision
+CREATE OR REPLACE FUNCTION modules.frequencia_da_matricula(p_matricula_id integer) RETURNS double precision
     LANGUAGE plpgsql
     AS $$
                       DECLARE

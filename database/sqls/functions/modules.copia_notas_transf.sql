@@ -1,4 +1,4 @@
-CREATE FUNCTION modules.copia_notas_transf(old_matricula_id integer, new_matricula_id integer) RETURNS character varying
+CREATE OR REPLACE FUNCTION modules.copia_notas_transf(old_matricula_id integer, new_matricula_id integer) RETURNS character varying
     LANGUAGE plpgsql
     AS $$
               DECLARE

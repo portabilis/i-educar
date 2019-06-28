@@ -1,4 +1,4 @@
-CREATE FUNCTION public.fcn_upper_nrm(text) RETURNS text
+CREATE OR REPLACE FUNCTION public.fcn_upper_nrm(text) RETURNS text
     LANGUAGE plpgsql
     AS $_$
    DECLARE

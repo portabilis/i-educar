@@ -1,4 +1,4 @@
-CREATE FUNCTION public.isnumeric(text) RETURNS boolean
+CREATE OR REPLACE FUNCTION public.isnumeric(text) RETURNS boolean
     LANGUAGE plpgsql IMMUTABLE
     AS $_$
   DECLARE x NUMERIC;

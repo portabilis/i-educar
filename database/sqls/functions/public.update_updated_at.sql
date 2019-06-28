@@ -1,4 +1,4 @@
-CREATE FUNCTION public.update_updated_at() RETURNS trigger
+CREATE OR REPLACE FUNCTION public.update_updated_at() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
             BEGIN
