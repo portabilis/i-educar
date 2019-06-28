@@ -51,7 +51,6 @@ class CreatePmieducarMatriculaTable extends Migration
                     ref_cod_abandono_tipo integer,
                     turno_pre_matricula smallint,
                     dependencia boolean DEFAULT false,
-                    updated_at timestamp without time zone,
                     saida_escola boolean DEFAULT false,
                     data_saida_escola date,
 	                updated_at timestamp NULL DEFAULT now()

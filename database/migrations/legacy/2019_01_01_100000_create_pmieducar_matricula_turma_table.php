@@ -32,7 +32,6 @@ class CreatePmieducarMatriculaTurmaTable extends Migration
                     remanejado boolean,
                     reclassificado boolean,
                     abandono boolean,
-                    updated_at timestamp without time zone,
                     falecido boolean,
                     etapa_educacenso smallint,
                     turma_unificada smallint,
