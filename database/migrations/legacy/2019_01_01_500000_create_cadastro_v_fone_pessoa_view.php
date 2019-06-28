@@ -13,6 +13,10 @@ class CreateCadastroVFonePessoaView extends Migration
     public function up()
     {
         DB::unprepared(
+            'DROP VIEW IF EXISTS cadastro.v_fone_pessoa;'
+        );
+
+        DB::unprepared(
             file_get_contents(__DIR__ . '/../../sqls/views/cadastro.v_fone_pessoa.sql')
         );
     }
@@ -25,7 +29,7 @@ class CreateCadastroVFonePessoaView extends Migration
     public function down()
     {
         DB::unprepared(
-            'DROP VIEW cadastro.v_fone_pessoa;'
+            'DROP VIEW IF EXISTS cadastro.v_fone_pessoa;'
         );
     }
 }

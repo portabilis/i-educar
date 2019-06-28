@@ -13,6 +13,10 @@ class CreatePmieducarVMatriculaMatriculaTurmaView extends Migration
     public function up()
     {
         DB::unprepared(
+            'DROP VIEW IF EXISTS pmieducar.v_matricula_matricula_turma;'
+        );
+
+        DB::unprepared(
             file_get_contents(__DIR__ . '/../../sqls/views/pmieducar.v_matricula_matricula_turma.sql')
         );
     }
@@ -25,7 +29,7 @@ class CreatePmieducarVMatriculaMatriculaTurmaView extends Migration
     public function down()
     {
         DB::unprepared(
-            'DROP VIEW pmieducar.v_matricula_matricula_turma;'
+            'DROP VIEW IF EXISTS pmieducar.v_matricula_matricula_turma;'
         );
     }
 }

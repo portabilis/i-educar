@@ -14,6 +14,7 @@ class CreateStatesView extends Migration
      */
     public function up()
     {
+        $this->dropView('states');
         $this->createView('states');
     }
 

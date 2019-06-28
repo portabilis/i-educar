@@ -13,6 +13,10 @@ class CreateRelatorioViewComponenteCurricularView extends Migration
     public function up()
     {
         DB::unprepared(
+            'DROP VIEW IF EXISTS relatorio.view_componente_curricular;'
+        );
+        
+        DB::unprepared(
             file_get_contents(__DIR__ . '/../../sqls/views/relatorio.view_componente_curricular.sql')
         );
     }
@@ -25,7 +29,7 @@ class CreateRelatorioViewComponenteCurricularView extends Migration
     public function down()
     {
         DB::unprepared(
-            'DROP VIEW relatorio.view_componente_curricular;'
+            'DROP VIEW IF EXISTS relatorio.view_componente_curricular;'
         );
     }
 }
