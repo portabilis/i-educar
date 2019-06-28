@@ -14,8 +14,8 @@ class DropFunctions extends Migration
     {
         DB::unprepared(
             '
-                SET search_path = public, pg_catalog;
-                
+                SET search_path = cadastro, pg_catalog;
+
                 DROP FUNCTION fcn_aft_fisica();
                 
                 DROP FUNCTION fcn_aft_fisica_cpf_provisorio();
