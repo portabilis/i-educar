@@ -22,30 +22,6 @@ class DropSequences extends Migration
                 
                 DROP SEQUENCE setor_idset_seq;
          
-                SET search_path = pmicontrolesis, pg_catalog;
-                
-                DROP SEQUENCE acontecimento_cod_acontecimento_seq;
-                
-                DROP SEQUENCE artigo_cod_artigo_seq;
-                
-                DROP SEQUENCE foto_evento_cod_foto_evento_seq;
-                
-                DROP SEQUENCE foto_vinc_cod_foto_vinc_seq;
-                
-                DROP SEQUENCE itinerario_cod_itinerario_seq;
-                
-                DROP SEQUENCE portais_cod_portais_seq;
-                
-                DROP SEQUENCE servicos_cod_servicos_seq;
-                
-                DROP SEQUENCE sistema_cod_sistema_seq;
-                
-                DROP SEQUENCE telefones_cod_telefones_seq;
-                
-                DROP SEQUENCE tipo_acontecimento_cod_tipo_acontecimento_seq;
-                
-                DROP SEQUENCE topo_portal_cod_topo_portal_seq;
-                
                 SET search_path = portal, pg_catalog;
                 
                 DROP SEQUENCE agenda_pref_cod_comp_seq;
