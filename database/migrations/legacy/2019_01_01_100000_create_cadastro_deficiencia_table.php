@@ -28,7 +28,8 @@ class CreateCadastroDeficienciaTable extends Migration
                     cod_deficiencia integer DEFAULT nextval(\'cadastro.deficiencia_cod_deficiencia_seq\'::regclass) NOT NULL,
                     nm_deficiencia character varying(70) NOT NULL,
                     deficiencia_educacenso smallint,
-                    desconsidera_regra_diferenciada boolean DEFAULT false
+                    desconsidera_regra_diferenciada boolean DEFAULT false,
+	                updated_at timestamp NULL DEFAULT now()
                 );
 
                 ALTER TABLE ONLY cadastro.deficiencia

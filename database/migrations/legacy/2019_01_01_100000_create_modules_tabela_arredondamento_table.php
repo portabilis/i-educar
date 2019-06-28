@@ -28,7 +28,8 @@ class CreateModulesTabelaArredondamentoTable extends Migration
                     id integer NOT NULL,
                     instituicao_id integer NOT NULL,
                     nome character varying(50) NOT NULL,
-                    tipo_nota smallint DEFAULT 1 NOT NULL
+                    tipo_nota smallint DEFAULT 1 NOT NULL,
+	                updated_at timestamp NULL DEFAULT now()
                 );
 
                 ALTER SEQUENCE modules.tabela_arredondamento_id_seq OWNED BY modules.tabela_arredondamento.id;

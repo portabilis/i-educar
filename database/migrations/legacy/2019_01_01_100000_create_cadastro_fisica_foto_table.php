@@ -19,7 +19,8 @@ class CreateCadastroFisicaFotoTable extends Migration
                 
                 CREATE TABLE cadastro.fisica_foto (
                     idpes integer NOT NULL,
-                    caminho character varying(255)
+                    caminho character varying(255),
+	                updated_at timestamp NULL DEFAULT now()
                 );
                 
                 ALTER TABLE ONLY cadastro.fisica_foto

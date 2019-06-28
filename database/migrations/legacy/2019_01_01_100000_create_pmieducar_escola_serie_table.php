@@ -31,7 +31,8 @@ class CreatePmieducarEscolaSerieTable extends Migration
                     hora_fim_intervalo time without time zone,
                     bloquear_enturmacao_sem_vagas integer,
                     bloquear_cadastro_turma_para_serie_com_vagas integer,
-                    anos_letivos smallint[] DEFAULT \'{}\'::smallint[] NOT NULL
+                    anos_letivos smallint[] DEFAULT \'{}\'::smallint[] NOT NULL,
+	                updated_at timestamp NULL DEFAULT now()
                 );
                 
                 ALTER TABLE ONLY pmieducar.escola_serie

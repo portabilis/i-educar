@@ -31,7 +31,8 @@ class CreateModulesRegraAvaliacaoRecuperacaoTable extends Migration
                     etapas_recuperadas character varying(25) NOT NULL,
                     substitui_menor_nota boolean,
                     media numeric(8,4) NOT NULL,
-                    nota_maxima numeric(8,4) NOT NULL
+                    nota_maxima numeric(8,4) NOT NULL,
+	                updated_at timestamp NULL DEFAULT now()
                 );
 
                 ALTER TABLE ONLY modules.regra_avaliacao_recuperacao

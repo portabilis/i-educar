@@ -22,7 +22,8 @@ class CreateModulesComponenteCurricularAnoEscolarTable extends Migration
                     ano_escolar_id integer NOT NULL,
                     carga_horaria numeric(7,3),
                     tipo_nota integer,
-                    anos_letivos smallint[] DEFAULT \'{}\'::smallint[] NOT NULL
+                    anos_letivos smallint[] DEFAULT \'{}\'::smallint[] NOT NULL,
+	                updated_at timestamp NULL DEFAULT now()
                 );
 
                 ALTER TABLE ONLY modules.componente_curricular_ano_escolar

@@ -35,7 +35,8 @@ class CreatePmieducarMatriculaOcorrenciaDisciplinarTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     visivel_pais integer,
-                    cod_ocorrencia_disciplinar integer DEFAULT nextval(\'pmieducar.ocorrencia_disciplinar_seq\'::regclass) NOT NULL
+                    cod_ocorrencia_disciplinar integer DEFAULT nextval(\'pmieducar.ocorrencia_disciplinar_seq\'::regclass) NOT NULL,
+	                updated_at timestamp NULL DEFAULT now()
                 );
                 
                 ALTER TABLE ONLY pmieducar.matricula_ocorrencia_disciplinar
