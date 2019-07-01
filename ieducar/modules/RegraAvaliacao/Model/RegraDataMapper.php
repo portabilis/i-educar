@@ -6,9 +6,10 @@ require_once 'FormulaMedia/Model/TipoFormula.php';
 
 class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
 {
-
     protected $_entityClass = 'RegraAvaliacao_Model_Regra';
+
     protected $_tableName = 'regra_avaliacao';
+
     protected $_tableSchema = 'modules';
 
     protected $_attributeMap = [
@@ -26,6 +27,7 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
         'mediaRecuperacao' => 'media_recuperacao',
         'tipoRecuperacaoParalela' => 'tipo_recuperacao_paralela',
         'mediaRecuperacaoParalela' => 'media_recuperacao_paralela',
+        'calculaMediaRecParalela' => 'calcula_media_rec_paralela',
         'notaMaximaGeral' => 'nota_maxima_geral',
         'notaMinimaGeral' => 'nota_minima_geral',
         'notaMaximaExameFinal' => 'nota_maxima_exame_final',
