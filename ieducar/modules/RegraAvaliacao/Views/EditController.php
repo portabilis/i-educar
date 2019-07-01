@@ -266,20 +266,6 @@ class EditController extends Core_Controller_Page_EditController
             : null;
     }
 
-    /**
-     * @see Core_Controller_Page_EditController::_preConstruct()
-     *
-     * @todo Interação com a API está errada. Isso já é feito em _initNovo()
-     *   na superclasse. VER.
-     */
-    protected function _preConstruct()
-    {
-        if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
-            //$this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
-            //$this->_setRecuperacoes($this->getDataMapper()->findRegraRecuperacao($this->getEntity()));
-        }
-    }
-
     protected function _preRender()
     {
         parent::_preRender();
