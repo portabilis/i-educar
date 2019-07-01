@@ -331,6 +331,7 @@ class indice extends clsCadastro
     }
 
     $camposEscola = array(
+      'possui_dependencias' => 0,
       'local_funcionamento' => (string) $localFuncionamento,
       'predio_compartilhado_outra_escola' => $dadosRegistro[13-1],
       'condicao' => $dadosRegistro[12-1],
