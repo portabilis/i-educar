@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Storage;
+
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'intranet/include/clsBanco.inc.php';
@@ -37,8 +39,13 @@ class InstituicaoDocumentacaoController extends ApiCoreController
     protected function deleteDocuments()
     {
         $var1 = $this->getRequest()->id;
+        $sql = "SELECT url_documento FROM pmieducar.instituicao_documentacao WHERE id = $var1";
+        $registro = $this->fetchPreparedQuery($sql);
+
         $sql = "DELETE FROM pmieducar.instituicao_documentacao WHERE id = $var1";
         $instituicao = $this->fetchPreparedQuery($sql);
+
+        Storage::delete($registro[0]['url_documento']);
 
         return $instituicao;
     }
