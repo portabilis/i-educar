@@ -225,18 +225,22 @@ class DiarioController extends ApiCoreController
                         continue;
                     }
 
+                    $regra = $serviceBoletim->getRegra();
+
                     $valor = $notaTurmaAlunoDisciplina['nota'];
                     $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
                     $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
                     $valor = $this->truncate($valor, 4);
 
+                    if ($regra->calculaMediaRecParalela) {
+                        $notaAposRecuperacao = (floatval($notaRecuperacao) + floatval($valor)) / 2;
+                    } else {
+                        $notaAposRecuperacao = $notaRecuperacao > $valor ? $notaRecuperacao : $valor;
+                    }
+
                     $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
 
-                    $notaAposRecuperacao = (($notaRecuperacao > $valor) ? $notaRecuperacao : $valor);
-
                     $valorNota = $recuperacaoEspecifica ? $valor : $notaAposRecuperacao;
-
-                    $regra = $serviceBoletim->getRegra();
 
                     if ($etapa == 'Rc' && $valorNota > $regra->notaMaximaExameFinal) {
                         $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaExameFinal}.", 'error');
@@ -324,18 +328,23 @@ class DiarioController extends ApiCoreController
                                 }
                             }
 
-                            $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
-                            $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
-
-                            $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
-                            $notaAposRecuperacao = (($notaRecuperacao > $notaOriginal) ? $notaRecuperacao : $notaOriginal);
-                            $valorNota = is_null($recuperacaoEspecifica) ? $notaOriginal : $notaAposRecuperacao;
-
                             if (! $serviceBoletim = $this->serviceBoletim($turmaId, $alunoId)) {
                                 continue;
                             }
 
                             $regra = $serviceBoletim->getRegra();
+
+                            $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
+                            $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
+
+                            if ($regra->calculaMediaRecParalela) {
+                                $notaAposRecuperacao = (floatval($notaRecuperacao) + floatval($notaOriginal)) / 2;
+                            } else {
+                                $notaAposRecuperacao = $notaRecuperacao > $notaOriginal ? $notaRecuperacao : $notaOriginal;
+                            }
+
+                            $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
+                            $valorNota = is_null($recuperacaoEspecifica) ? $notaOriginal : $notaAposRecuperacao;
 
                             if ($valorNota > $regra->notaMaximaGeral) {
                                 $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaGeral}.", 'error');
