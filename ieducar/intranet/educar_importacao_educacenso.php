@@ -331,7 +331,7 @@ class indice extends clsCadastro
     }
 
     $camposEscola = array(
-      'local_funcionamento' => $localFuncionamento,
+      'local_funcionamento' => (string) $localFuncionamento,
       'predio_compartilhado_outra_escola' => $dadosRegistro[13-1],
       'condicao' => $dadosRegistro[12-1],
       'codigo_inep_escola_compartilhada' => $dadosRegistro[14-1],
@@ -453,7 +453,6 @@ class indice extends clsCadastro
       }
       $objEscola->edita();
     }
-
   }
 
   private function isPostgresArray($value)
