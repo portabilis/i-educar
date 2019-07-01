@@ -56,6 +56,10 @@ class EditController extends Core_Controller_Page_EditController
                 do aluno, aceita até 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
                 Desconsidere esse campo caso selecione o tipo de nota "conceitual"'
         ],
+        'calculaMediaRecParalela' => [
+            'label' => 'Calcula a média',
+            'help' => 'A média da etapa será calculada a partir da soma da nota da etapa mais a nota da recuperação divido por dois.'
+        ],
         'formulaMedia' => [
             'label' => 'Fórmula de cálculo da média',
             'help' => '',
@@ -703,6 +707,17 @@ class EditController extends Core_Controller_Page_EditController
             $this->_getHelp('mediaRecuperacaoParalela')
         );
 
+        $this->campoCheck(
+            'calculaMediaRecParalela',
+            $this->_getLabel('calculaMediaRecParalela'),
+            $this->getEntity()->calculaMediaRecParalela,
+            '',
+            false,
+            false,
+            false,
+            $this->_getHelp('calculaMediaRecParalela')
+        );
+
         // Parte condicional
         if (!$this->getEntity()->isNew()) {
             // Quebra
@@ -871,6 +886,11 @@ class EditController extends Core_Controller_Page_EditController
         //fixup for checkbox
         if (!isset($data['aprovaMediaDisciplina'])) {
             $data['aprovaMediaDisciplina'] = '0';
+        }
+
+        //fixup for checkbox
+        if (!isset($data['calculaMediaRecParalela'])) {
+            $data['calculaMediaRecParalela'] = '0';
         }
 
         if (isset($entity)) {
