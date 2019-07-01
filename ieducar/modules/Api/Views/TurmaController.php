@@ -104,7 +104,7 @@ class TurmaController extends ApiCoreController
                         ELSE FALSE
                     END
                 )
-            ORDER BY ord_dependencia, data_fechamento, aluno;
+            ORDER BY ord_dependencia, data_fechamento, data_enturmacao, aluno;
         ";
 
         $alunos = $this->fetchPreparedQuery($sql, $parametros);
