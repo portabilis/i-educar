@@ -4,6 +4,7 @@ namespace iEducar\Modules\Educacenso;
 
 use iEducar\Modules\Educacenso\Migrations\AjustaValoresAbastecimentoEnergia;
 use iEducar\Modules\Educacenso\Migrations\AjustaValoresEsgotoSanitario;
+use iEducar\Modules\Educacenso\Migrations\AtualizaValoresEscolaridadeServidorEducacenso;
 use iEducar\Modules\Educacenso\Migrations\InsereDadosPredioCompartilhadoOutraEscola;
 use iEducar\Modules\Educacenso\Migrations\InsertEmployeeGraduations;
 use iEducar\Modules\Educacenso\Migrations\InsertEmployees;
@@ -71,6 +72,7 @@ class RunMigrations
             RemoveValoresInvalidosDaLocalizacaoDiferenciada::class,
             UpdateDeficienciaEducacensoValuesForLayout2019::class,
             UpdateEscolaridadeEducacensoValuesToEducacensoLayout2019::class,
+            AtualizaValoresEscolaridadeServidorEducacenso::class,
         ];
     }
 }
