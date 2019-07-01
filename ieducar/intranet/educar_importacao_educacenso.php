@@ -577,7 +577,7 @@ class indice extends clsCadastro
         $turma->max_aluno = 99;
         $turma->ativo = 1;
         $turma->multiseriada = 0;
-        $turma->visivel = 1;
+        $turma->visivel = true;
         $turma->ref_cod_turma_tipo = $codTurmaTipo;
         $turma->hora_inicial = $horaInicial;
         $turma->hora_final = $horaFinal;
