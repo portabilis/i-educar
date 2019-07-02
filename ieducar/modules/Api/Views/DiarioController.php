@@ -232,13 +232,13 @@ class DiarioController extends ApiCoreController
                     $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
                     $valor = $this->truncate($valor, 4);
 
-                    if ($regra->calculaMediaRecParalela) {
+                    $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
+
+                    if ($recuperacaoEspecifica != false && $regra->calculaMediaRecParalela) {
                         $notaAposRecuperacao = (floatval($notaRecuperacao) + floatval($valor)) / 2;
                     } else {
                         $notaAposRecuperacao = $notaRecuperacao > $valor ? $notaRecuperacao : $valor;
                     }
-
-                    $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
 
                     $valorNota = $recuperacaoEspecifica ? $valor : $notaAposRecuperacao;
 
@@ -337,13 +337,14 @@ class DiarioController extends ApiCoreController
                             $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
                             $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
 
-                            if ($regra->calculaMediaRecParalela) {
+                            $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
+
+                            if ($recuperacaoEspecifica != false && $regra->calculaMediaRecParalela) {
                                 $notaAposRecuperacao = (floatval($notaRecuperacao) + floatval($notaOriginal)) / 2;
                             } else {
                                 $notaAposRecuperacao = $notaRecuperacao > $notaOriginal ? $notaRecuperacao : $notaOriginal;
                             }
 
-                            $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
                             $valorNota = is_null($recuperacaoEspecifica) ? $notaOriginal : $notaAposRecuperacao;
 
                             if ($valorNota > $regra->notaMaximaGeral) {
