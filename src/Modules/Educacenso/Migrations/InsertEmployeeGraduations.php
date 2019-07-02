@@ -2,6 +2,7 @@
 
 namespace iEducar\Modules\Educacenso\Migrations;
 
+use App\Models\EmployeeGraduation;
 use App\Services\EmployeeGraduationService;
 use iEducar\Modules\ValueObjects\EmployeeGraduationValueObject;
 use Illuminate\Support\Facades\DB;
@@ -77,6 +78,11 @@ class InsertEmployeeGraduations implements EducacensoMigrationInterface
         $courseProperty = "codigo_curso_superior_{$field}";
         $yearProperty = "ano_conclusao_curso_superior_{$field}";
         $collegeProperty = "instituicao_curso_superior_{$field}";
+
+        $duplicated = EmployeeGraduation::where('course_id', $graduation->$courseProperty)->where('employee_id', $graduation->cod_servidor)->exists();
+        if ($duplicated) {
+            return false;
+        }
 
         if (
             $graduation->$courseProperty &&
