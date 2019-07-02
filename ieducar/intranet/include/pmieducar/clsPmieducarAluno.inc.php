@@ -590,6 +590,9 @@ class clsPmieducarAluno
       if (is_numeric($this->justificativa_falta_documentacao)) {
         $set .= "{$gruda}justificativa_falta_documentacao = '{$this->justificativa_falta_documentacao}'";
         $gruda = ', ';
+      } else {
+        $set .= "{$gruda}justificativa_falta_documentacao = null";
+        $gruda = ', ';
       }
 
       if (is_string($this->url_documento) && $this->url_documento != '') {
