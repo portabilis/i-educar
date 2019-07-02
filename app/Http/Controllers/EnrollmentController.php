@@ -73,10 +73,7 @@ class EnrollmentController extends Controller
         }
 
         if ($request->input('is_cancellation')) {
-            return redirect()->route('enrollments.index', [
-                'ref_cod_matricula' => $registration->id,
-                'ano_letivo' => $registration->year,
-            ])->with('success', 'Enturmação feita com sucesso.');
+            return redirect('/intranet/educar_matricula_det.php?cod_matricula=' . $registration->id)->with('success', 'Enturmação feita com sucesso.');
         }
 
         try {
@@ -85,9 +82,6 @@ class EnrollmentController extends Controller
             return redirect()->back()->with('error', $throwable->getMessage());
         }
 
-        return redirect()->route('enrollments.index', [
-            'ref_cod_matricula' => $registration->id,
-            'ano_letivo' => $registration->year,
-        ])->with('success', 'Enturmação feita com sucesso.');
+        return redirect('/intranet/educar_matricula_det.php?cod_matricula=' . $registration->id)->with('success', 'Enturmação feita com sucesso.');
     }
 }
