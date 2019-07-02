@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class CorrigeGestoresNasEscolas extends Migration
@@ -21,6 +19,7 @@ class CorrigeGestoresNasEscolas extends Migration
                      SELECT cod_escola, school_managers.employee_id
                      FROM pmieducar.escola
                      JOIN school_managers ON school_managers.school_id = escola.cod_escola
+                     JOIN cadastro.pessoa ON pessoa.idpes = school_managers.employee_id
                     WHERE school_managers.chief
                  ) aux
             WHERE escola.cod_escola = aux.cod_escola
