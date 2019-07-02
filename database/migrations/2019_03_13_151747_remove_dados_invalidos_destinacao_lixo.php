@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
+use iEducar\Modules\Educacenso\Migrations\RemoveValoresInvalidosDaLocalizacaoDiferenciada as RemoveValoresInvalidosDaLocalizacaoDiferenciadaClass;
 use Illuminate\Database\Migrations\Migration;
 
 class RemoveDadosInvalidosDestinacaoLixo extends Migration
@@ -12,8 +12,7 @@ class RemoveDadosInvalidosDestinacaoLixo extends Migration
      */
     public function up()
     {
-        DB::statement('UPDATE pmieducar.escola SET destinacao_lixo = array_remove(destinacao_lixo, 4)');
-        DB::statement('UPDATE pmieducar.escola SET destinacao_lixo = array_remove(destinacao_lixo, 6)');
+        RemoveValoresInvalidosDaLocalizacaoDiferenciadaClass::execute();
     }
 
     /**

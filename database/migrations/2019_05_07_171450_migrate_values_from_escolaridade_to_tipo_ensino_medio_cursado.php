@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use iEducar\Modules\Educacenso\Migrations\MigrateValuesFromEscolaridadeToTipoEnsinoMedioCursado as MigrateValuesFromEscolaridadeToTipoEnsinoMedioCursadoClass;
 use Illuminate\Database\Migrations\Migration;
 
 class MigrateValuesFromEscolaridadeToTipoEnsinoMedioCursado extends Migration
@@ -13,13 +12,6 @@ class MigrateValuesFromEscolaridadeToTipoEnsinoMedioCursado extends Migration
      */
     public function up()
     {
-        DB::statement('
-            UPDATE pmieducar.servidor
-            set tipo_ensino_medio_cursado = CASE WHEN escolaridade.escolaridade = 3 then 2 else 4 end
-            from cadastro.escolaridade
-            where servidor.ref_idesco = escolaridade.idesco
-            and escolaridade.escolaridade IN (3,4)
-
-        ');
+        MigrateValuesFromEscolaridadeToTipoEnsinoMedioCursadoClass::execute();
     }
 }
