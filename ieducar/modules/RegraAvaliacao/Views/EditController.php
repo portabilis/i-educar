@@ -57,7 +57,7 @@ class EditController extends Core_Controller_Page_EditController
                 Desconsidere esse campo caso selecione o tipo de nota "conceitual"'
         ],
         'calculaMediaRecParalela' => [
-            'label' => 'Calcula a média',
+            'label' => 'Calcular a média',
             'help' => 'A média da etapa será calculada a partir da soma da nota da etapa mais a nota da recuperação divido por dois.'
         ],
         'formulaMedia' => [
