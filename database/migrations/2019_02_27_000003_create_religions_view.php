@@ -14,6 +14,7 @@ class CreateReligionsView extends Migration
      */
     public function up()
     {
+        $this->dropView('religions');
         $this->createView('religions');
     }
 

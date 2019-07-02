@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\DB;
 
-require_once 'includes/bootstrap.php';
 require_once 'include/clsBancoPgSql.inc.php';
 
 class clsBanco extends clsBancoSQL_

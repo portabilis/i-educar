@@ -310,34 +310,6 @@ class clsPortalFuncionario
                 }
             }
         }
-        if( is_numeric( $ref_cod_setor_new ) )
-        {
-            if( class_exists( "clsPmidrhSetor" ) )
-            {
-                $tmp_obj = new clsPmidrhSetor( $ref_cod_setor_new );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
-                        $this->ref_cod_setor_new = $ref_cod_setor_new;
-                    }
-                }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_setor_new = $ref_cod_setor_new;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmidrh.setor WHERE cod_setor = '{$ref_cod_setor_new}'" ) )
-                {
-                    $this->ref_cod_setor_new = $ref_cod_setor_new;
-                }
-            }
-        }
 
 
         if( is_string( $matricula ) )

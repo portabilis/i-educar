@@ -9,24 +9,16 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
-require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/clsLogAcesso.inc.php';
 require_once 'include/Geral.inc.php';
-require_once 'include/pmicontrolesis/geral.inc.php';
 require_once 'include/funcoes.inc.php';
 require_once 'Portabilis/Utils/Database.php';
 require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/String/Utils.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
-if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente) {
-    throw new HttpResponseException(
-        new RedirectResponse('404.html')
-    );
-}
-
-class clsBase extends clsConfig
+class clsBase
 {
     public $titulo = 'Prefeitura Municipal';
     public $clsForm = [];
@@ -39,6 +31,25 @@ class clsBase extends clsConfig
     public $estilos;
     public $scripts;
     public $prog_alert;
+    public $_instituicao;
+
+    public function __construct()
+    {
+        $this->_instituicao = config('legacy.app.template.vars.instituicao');
+    }
+
+    public function OpenTpl($template)
+    {
+        $prefix = 'nvp_';
+        $file = 'templates/' . $prefix . $template . '.tpl';
+
+        ob_start();
+        include $file;
+        $contents = ob_get_contents();
+        ob_end_clean();
+
+        return $contents;
+    }
 
     public function SetTitulo($titulo)
     {
@@ -48,6 +59,61 @@ class clsBase extends clsConfig
     public function AddForm($form)
     {
         $this->clsForm[] = $form;
+    }
+
+    public function MakeHeadHtml()
+    {
+        $saida = $this->OpenTpl('htmlhead');
+        $saida = str_replace('<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->', config('app.env'), $saida);
+        $saida = str_replace('<!-- #&USER_ID&# -->', Session::get('id_pessoa'), $saida);
+        $saida = str_replace('<!-- #&TITULO&# -->', $this->titulo, $saida);
+
+        if ($this->refresh) {
+            $saida = str_replace('<!-- #&REFRESH&# -->', '<meta http-equiv=\'refresh\' content=\'60\'>', $saida);
+        }
+
+        if (is_array($this->estilos) && count($this->estilos)) {
+            $estilos = '';
+            foreach ($this->estilos as $estilo) {
+                $estilos .= "<link rel=stylesheet type='text/css' href='" . Asset::get('/intranet/scripts/' . $estilo . '.js') . ".css' />";
+            }
+            $saida = str_replace('<!-- #&ESTILO&# -->', $estilos, $saida);
+        }
+
+        if (is_array($this->scripts) && count($this->scripts)) {
+            $scripts = '';
+            foreach ($this->scripts as $script) {
+                $scripts .= "<script type='text/javascript' src='" . Asset::get('/intranet/scripts/' . $script . '.js') . '\'></script>';
+            }
+            $saida = str_replace('<!-- #&SCRIPT&# -->', $scripts, $saida);
+        }
+
+        if ($this->bodyscript) {
+            $saida = str_replace('<!-- #&BODYSCRIPTS&# -->', $this->bodyscript, $saida);
+        } else {
+            $saida = str_replace('<!-- #&BODYSCRIPTS&# -->', '', $saida);
+        }
+
+        if ($this->script_header) {
+            $saida = str_replace('<!-- #&SCRIPT_HEADER&# -->', $this->script_header, $saida);
+        } else {
+            $saida = str_replace('<!-- #&SCRIPT_HEADER&# -->', '', $saida);
+        }
+
+        $saida = str_replace('<!-- #&GOOGLE_TAG_MANAGER_ID&# -->', config('legacy.app.gtm.id'), $saida);
+
+        // nome completo usuario
+        // @TODO: jeito mais eficiente de usar estes dados, já que eles são
+        //         usados em mais um método aqui...
+        $nomePessoa = new clsPessoaFisica();
+        list($nomePessoa, $email) = $nomePessoa->queryRapida($this->currentUserId(), 'nome', 'email');
+        $nomePessoa = ($nomePessoa) ? $nomePessoa : 'Visitante';
+
+        $saida = str_replace('<!-- #&SLUG&# -->', config('legacy.app.database.dbname'), $saida);
+        $saida = str_replace('<!-- #&USERLOGADO&# -->', trim($nomePessoa), $saida);
+        $saida = str_replace('<!-- #&USEREMAIL&# -->', trim($email), $saida);
+
+        return $saida;
     }
 
     public function addEstilo($estilo_nome)
