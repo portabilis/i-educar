@@ -209,6 +209,12 @@ class EnrollmentService
             throw new ExistsActiveEnrollmentSameTimeException($registration);
         }
 
+        $previousEnrollment = $this->getPreviousEnrollment($registration);
+
+        if ($previousEnrollment) {
+            $this->markAsRelocated($previousEnrollment);
+        }
+
         $sequenceInSchoolClass = $this->getSequenceSchoolClass($registration, $schoolClass, $date);
 
         /** @var LegacyEnrollment $enrollment */
@@ -222,5 +228,41 @@ class EnrollmentService
         ]);
 
         return $enrollment;
+    }
+
+    /**
+     * Atualiza o campo remanejado na enturmação para TRUE
+     *
+     * @param LegacyEnrollment $enrollment
+     * @throws Throwable
+     */
+    private function markAsRelocated(LegacyEnrollment $enrollment)
+    {
+        $enrollment->remanejado = true;
+        $enrollment->saveOrFail();
+    }
+
+    /**
+     * Verifica se a matrícula tem enturmação anterior, com data de saída posterior a data base,
+     * ou data base vazia
+     *
+     * @param LegacyRegistration $registration
+     * @return LegacyEnrollment|void
+     */
+    private function getPreviousEnrollment(LegacyRegistration $registration)
+    {
+        $previousEnrollment = $registration->lastEnrollment;
+
+        if (!$previousEnrollment) {
+            return;
+        }
+
+        $dateDeparted = $previousEnrollment->date_departed;
+
+        $relocationDate = $previousEnrollment->schoolClass->school->institution->relocation_date;
+
+        if (!$relocationDate || $relocationDate < $dateDeparted) {
+           return $previousEnrollment;
+        }
     }
 }
