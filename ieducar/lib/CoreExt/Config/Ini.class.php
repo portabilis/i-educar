@@ -266,7 +266,9 @@ class CoreExt_Config_Ini extends CoreExt_Config
         });
 
         if (empty($item)) {
-            return [];
+            $item = collect($this->iniArr)->first(function ($item) use ($tenant) {
+                return $item['app']['database']['dbname'] === 'production';
+            });
         }
 
         return $this->dotCompact([], 'legacy', $item);
