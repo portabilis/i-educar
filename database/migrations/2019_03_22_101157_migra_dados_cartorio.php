@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
+use iEducar\Modules\Educacenso\Migrations\MigraDadosCartorio as MigraDadosCartorioClass;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -18,22 +18,7 @@ class MigraDadosCartorio extends Migration
             $table->string('cartorio_cert_civil', 255)->change();
         });
 
-        $sql = <<<'SQL'
-                    UPDATE cadastro.documento
-                    SET cartorio_cert_civil = aux.id_cartorio || ' - ' || aux.descricao
-                    FROM (
-                           SELECT id,
-                                  descricao,
-                                  id_cartorio
-                           FROM cadastro.codigo_cartorio_inep
-                    
-                         ) aux
-                    WHERE aux.id = cadastro.documento.cartorio_cert_civil_inep
-                    AND cartorio_cert_civil IS NULL
-SQL;
-
-
-        DB::statement($sql);
+        MigraDadosCartorioClass::execute();
     }
 
     /**

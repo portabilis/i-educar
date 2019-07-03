@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use iEducar\Modules\Educacenso\Migrations\UpdateDeficienciaEducacensoValuesForLayout2019 as UpdateDeficienciaEducacensoValuesForLayout2019Alias;
 use Illuminate\Database\Migrations\Migration;
 
 class UpdateDeficienciaEducacensoValuesForLayout2019 extends Migration
@@ -13,9 +12,7 @@ class UpdateDeficienciaEducacensoValuesForLayout2019 extends Migration
      */
     public function up()
     {
-        DB::table('cadastro.deficiencia')
-            ->whereIn('deficiencia_educacenso', [9, 10, 11, 12])
-            ->update(['deficiencia_educacenso' => null]);
+        UpdateDeficienciaEducacensoValuesForLayout2019Alias::execute();
     }
 
     /**

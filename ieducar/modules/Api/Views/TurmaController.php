@@ -22,6 +22,7 @@ class TurmaController extends ApiCoreController
     protected function canGetTurmasPorEscola()
     {
         return (
+            $this->validatesPresenceOf('escola') &&
             $this->validatesPresenceOf('ano') &&
             $this->validatesPresenceOf('instituicao_id')
         );
@@ -127,36 +128,65 @@ class TurmaController extends ApiCoreController
     {
         if ($this->canGetTurmasPorEscola()) {
             $ano = $this->getRequest()->ano;
+            $escola = $this->getRequest()->escola;
             $instituicaoId = $this->getRequest()->instituicao_id;
             $turnoId = $this->getRequest()->turno_id;
+            $modified = $this->getRequest()->modified ?: null;
+
+            $params = [$instituicaoId, $ano];
 
             if ($turnoId) {
-                $sql = 'SELECT cod_turma as id, nm_turma as nome, ref_ref_cod_escola as escola_id, turma_turno_id as turno_id
-                  FROM pmieducar.turma
-                  WHERE ref_cod_instituicao = $1
-                  AND ano = $2
-                  AND ativo = 1
-                  AND turma_turno_id = $3
-                  ORDER BY ref_ref_cod_escola, nm_turma';
-
-                $turmas = $this->fetchPreparedQuery($sql, [$instituicaoId, $ano, $turnoId]);
-            } else {
-                $sql = 'SELECT cod_turma as id, nm_turma as nome, ref_ref_cod_escola as escola_id, turma_turno_id as turno_id
-                  FROM pmieducar.turma
-                  WHERE ref_cod_instituicao = $1
-                  AND ano = $2
-                  AND ativo = 1
-                  ORDER BY ref_ref_cod_escola, nm_turma';
-
-                $turmas = $this->fetchPreparedQuery($sql, [$instituicaoId, $ano]);
+                $turnoId = " AND t.turma_turno_id = {$turnoId} ";
             }
 
-            $attrs = ['id', 'nome', 'escola_id', 'turno_id'];
+            if (is_array($escola)) {
+                $escola = implode(',', $escola);
+            }
+
+            if ($modified) {
+                $params[] = $modified;
+                $modified = 'AND t.updated_at >= $3';
+            }
+
+            $sql = "
+                SELECT 
+                    t.cod_turma as id, 
+                    t.nm_turma as nome, 
+                    t.ano, 
+                    t.ref_ref_cod_escola as escola_id, 
+                    t.turma_turno_id as turno_id,
+                    t.ref_cod_curso as curso_id,
+                    t.ref_ref_cod_serie as serie_id,
+                   ra.id as regra_avaliacao_id,
+                   ra.regra_diferenciada_id as regra_avaliacao_diferenciada_id,
+                    t.updated_at,
+                    (
+                        CASE t.ativo WHEN 1 THEN 
+                            NULL 
+                        ELSE 
+                            t.data_exclusao::timestamp(0)
+                        END
+                    ) AS deleted_at
+                FROM pmieducar.turma t 
+                INNER JOIN pmieducar.escola e 
+                    ON e.cod_escola = t.ref_ref_cod_escola 
+                INNER JOIN modules.regra_avaliacao_serie_ano rasa ON true
+                    AND rasa.serie_id = t.ref_ref_cod_serie
+                    AND rasa.ano_letivo = $2
+                INNER JOIN modules.regra_avaliacao ra 
+                    ON ra.id = (case when e.utiliza_regra_diferenciada then rasa.regra_avaliacao_diferenciada_id else rasa.regra_avaliacao_id end)
+                WHERE t.ref_cod_instituicao = $1
+                    AND t.ano = $2
+                    AND t.ref_ref_cod_escola IN ({$escola})
+                    {$turnoId}
+                    {$modified}
+                ORDER BY t.updated_at, t.ref_ref_cod_escola, t.nm_turma
+            ";
+
+            $turmas = $this->fetchPreparedQuery($sql, $params);
+
+            $attrs = ['id', 'nome', 'ano', 'escola_id', 'turno_id', 'curso_id', 'serie_id', 'regra_avaliacao_id', 'regra_avaliacao_diferenciada_id', 'updated_at', 'deleted_at'];
             $turmas = Portabilis_Array_Utils::filterSet($turmas, $attrs);
-
-            foreach ($turmas as &$turma) {
-                $turma['nome'] = Portabilis_String_Utils::toUtf8($turma['nome']);
-            }
 
             return ['turmas' => $turmas];
         }

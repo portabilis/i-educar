@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use iEducar\Modules\Educacenso\Migrations\MigraDisciplinaEducacensoRemovidas as MigraDisciplinaEducacensoRemovidasClass;
 use Illuminate\Database\Migrations\Migration;
 
 class MigraDisciplinaEducacensoRemovidas extends Migration
@@ -13,11 +12,7 @@ class MigraDisciplinaEducacensoRemovidas extends Migration
      */
     public function up()
     {
-        DB::table('modules.componente_curricular')
-            ->whereIn('codigo_educacenso', [20, 21])
-            ->update([
-                'codigo_educacenso' => 99
-            ]);
+        MigraDisciplinaEducacensoRemovidasClass::execute();
     }
 
     /**

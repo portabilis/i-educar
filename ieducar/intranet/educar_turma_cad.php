@@ -104,6 +104,8 @@ class indice extends clsCadastro
     ];
     public $nao_informar_educacenso;
     public $ano_letivo;
+    public $nome_url_cancelar = 'Cancelar';
+    public $url_cancelar = 'educar_turma_lst.php';
 
     public function Inicializar()
     {
@@ -190,8 +192,6 @@ class indice extends clsCadastro
         $this->breadcrumb($nomeMenu . ' turma', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->nome_url_cancelar = 'Cancelar';
 
         $this->retorno = $retorno;
 
@@ -919,6 +919,7 @@ class indice extends clsCadastro
             return false;
         }
 
+
         $this->visivel = isset($this->visivel);
 
         if (!$this->visivel && $possuiAlunosVinculados) {
@@ -926,6 +927,8 @@ class indice extends clsCadastro
 
             return false;
         }
+
+        $this->multiseriada = isset($this->multiseriada) ? 1 : 0;
 
         $objTurma = $this->montaObjetoTurma($this->cod_turma, null, $this->pessoa_logada);
         $dadosTurma = $objTurma->detalhe();
@@ -946,8 +949,6 @@ class indice extends clsCadastro
         } else {
             $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
         }
-
-        $this->multiseriada = isset($this->multiseriada) ? 1 : 0;
 
         $editou = $objTurma->edita();
 

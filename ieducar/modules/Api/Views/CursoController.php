@@ -23,34 +23,79 @@ class CursoController extends ApiCoreController
             $getTurmas = (bool) $this->getRequest()->get_turmas;
             $ano = $this->getRequest()->ano ? $this->getRequest()->ano : 0;
             $turnoId = $this->getRequest()->turno_id;
+            $modified = $this->getRequest()->modified ?: null;
 
-            $params = [ $this->getRequest()->instituicao_id ];
+            $params = [$instituicaoId];
 
             if ($escolaId) {
                 if (is_array($escolaId)) {
                     $escolaId = implode(",", $escolaId);
                 }
 
-                $sql = "SELECT DISTINCT c.cod_curso, c.nm_curso
-                  FROM pmieducar.curso c
-                  INNER JOIN pmieducar.escola_curso ec ON ec.ref_cod_curso = c.cod_curso
-                  WHERE c.ativo = 1
-                  AND ec.ativo = 1
-                  AND c.ref_cod_instituicao = $1
-                  AND ec.ref_cod_escola IN ($escolaId) ";
+                $sql = "
+                    SELECT DISTINCT 
+                        c.cod_curso, 
+                        c.nm_curso,
+                        (
+                            CASE c.updated_at >= ec.updated_at WHEN TRUE THEN
+                                c.updated_at
+                            ELSE 
+                                ec.updated_at
+                            END 
+                        ) as updated_at,
+                        (
+                            CASE c.ativo WHEN 1 THEN 
+                                NULL 
+                            ELSE 
+                                c.data_exclusao::timestamp(0)
+                            END
+                        ) AS deleted_at
+                    FROM pmieducar.curso c
+                    INNER JOIN pmieducar.escola_curso ec ON TRUE 
+                        AND ec.ref_cod_curso = c.cod_curso
+                    WHERE TRUE 
+                        AND c.ref_cod_instituicao = $1
+                        AND ec.ref_cod_escola IN ($escolaId) 
+                ";
+
+                if ($modified) {
+                    $params[] = $modified;
+                    $sql .= ' AND (c.updated_at >= $2 OR ec.updated_at >= $2)';
+                }
 
                 if (!empty($ano)) {
                     $params[] = $ano;
-                    $sql .= ' AND $2 = ANY(ec.anos_letivos) ';
+                    $sql .= $modified
+                        ? ' AND $3 = ANY(ec.anos_letivos) '
+                        : ' AND $2 = ANY(ec.anos_letivos) ';
                 }
 
-                $sql .= ' ORDER BY c.nm_curso ASC ';
+                $sql .= ' ORDER BY updated_at, c.nm_curso ASC ';
             } else {
-                $sql = "SELECT cod_curso, nm_curso
-                  FROM pmieducar.curso
-                    WHERE ref_cod_instituicao = $1
-                    AND ativo = 1
-                    ORDER BY nm_curso ASC ";
+
+                $sql = "
+                    SELECT 
+                        cod_curso, 
+                        nm_curso, 
+                        updated_at,
+                        (
+                            CASE ativo WHEN 1 THEN 
+                                NULL 
+                            ELSE 
+                                data_exclusao::timestamp(0)
+                            END
+                        ) AS deleted_at
+                    FROM pmieducar.curso
+                    WHERE TRUE 
+                        AND ref_cod_instituicao = $1
+                ";
+
+                if ($modified) {
+                    $params[] = $modified;
+                    $sql .= ' AND updated_at >= $2';
+                }
+
+                $sql .= ' ORDER BY updated_at, nm_curso ASC';
             }
 
             $cursos = $this->fetchPreparedQuery($sql, $params);
@@ -76,21 +121,16 @@ class CursoController extends ApiCoreController
                     AND t.ref_ref_cod_escola IN ({$escolaId}) ";
 
             foreach ($cursos as &$curso) {
-                $curso['nm_curso'] = Portabilis_String_Utils::toUtf8($curso['nm_curso']);
                 if ($getSeries) {
                     $series = $this->fetchPreparedQuery($sqlSerie . " AND s.ref_cod_curso = {$curso['cod_curso']} ORDER BY s.nm_serie ASC", $paramsSerie);
 
                     $attrs = array('cod_serie' => 'id', 'nm_serie' => 'nome');
                     foreach ($series as &$serie) {
-                        $serie['nm_serie'] = Portabilis_String_Utils::toUtf8($serie['nm_serie']);
-
                         if ($getTurmas && is_numeric($ano) && !empty($escolaId)) {
                             $turmas = $this->fetchPreparedQuery($sqlTurma . " AND t.ref_cod_curso = {$curso['cod_curso']} AND t.ref_ref_cod_serie = {$serie['cod_serie']}
                   " . (is_numeric($turnoId) ? " AND t.turma_turno_id = {$turnoId} " : "") . "
                ORDER BY t.nm_turma ASC");
-                            foreach ($turmas as &$turma) {
-                                $turma['nm_turma'] = Portabilis_String_Utils::toUtf8($turma['nm_turma']);
-                            }
+
                             $attrs['turmas'] = 'turmas';
                             $serie['turmas'] = Portabilis_Array_Utils::filterSet($turmas, ['cod_turma', 'nm_turma', 'escola_id', 'turma_turno_id', 'ano']);
                         }
@@ -101,7 +141,9 @@ class CursoController extends ApiCoreController
 
             $attrs = [
                 'cod_curso' => 'id',
-                'nm_curso' => 'nome'
+                'nm_curso' => 'nome',
+                'updated_at' => 'updated_at',
+                'deleted_at' => 'deleted_at',
             ];
 
             if ($getSeries) {
@@ -126,10 +168,6 @@ class CursoController extends ApiCoreController
                AND instituicao.cod_instituicao = $instituicaoId";
 
         $cursos = $this->fetchPreparedQuery($sql);
-
-        foreach ($cursos as &$curso) {
-            $curso['nome'] = Portabilis_String_Utils::toUtf8($curso['nome']);
-        }
 
         $cursos = Portabilis_Array_Utils::setAsIdValue($cursos, 'id', 'nome');
 
