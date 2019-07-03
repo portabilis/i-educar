@@ -293,4 +293,17 @@ class LegacySchoolClass extends Model
 
         return $startTime->diff($endTime)->h;
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function disciplines()
+    {
+        return $this->belongsToMany(
+            LegacyDiscipline::class,
+            'modules.componente_curricular_turma',
+            'turma_id',
+            'componente_curricular_id'
+        )->withPivot('ano_escolar_id', 'escola_id');
+    }
 }
