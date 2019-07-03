@@ -16,7 +16,7 @@ $j(function () {
             this.setupEnv();
             this.removeTableCellsAndRows();
             this.setCurrentModule();
-            this.setupModule();
+            this.initModule();
             this.selectModule();
         },
         getSelector: function (key) {
@@ -252,8 +252,25 @@ $j(function () {
 
             container.dialog(params);
         },
+        initModule: function () {
+            var $select = $j('#ref_cod_modulo'),
+                val = $select.val(),
+                availableModules = window.modulosDisponiveis || [],
+                moduleInfo = availableModules[val] || {},
+                etapas = moduleInfo.etapas || undefined,
+                rows = this.countRows();
+
+                if (etapas > rows) {
+                    var diff = etapas - rows;
+                    this.addRows(diff);
+                }
+
+                if (etapas < rows) {
+                    var diff = rows - etapas;
+                    this.removeRows(diff);
+                }
+        },
         setupModule: function () {
-            var defineEtapaNaTurma = $j('#padrao_ano_escolar').val() === '0';
             var $select = $j('#ref_cod_modulo'),
                 val = $select.val(),
                 availableModules = window.modulosDisponiveis || [],
@@ -277,7 +294,7 @@ $j(function () {
 
             this.setCurrentModule();
 
-            if (etapas > rows && defineEtapaNaTurma) {
+            if (etapas > rows) {
                 var diff = etapas - rows;
 
                 content += (diff == 1)
@@ -313,7 +330,7 @@ $j(function () {
                 });
             }
 
-            if (etapas < rows && defineEtapaNaTurma) {
+            if (etapas < rows) {
                 var diff = rows - etapas;
 
                 content += (diff == 1)
