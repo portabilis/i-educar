@@ -78,4 +78,9 @@ class LegacyInstitution extends Model
     {
         return boolval($this->obrigar_campos_censo);
     }
+
+    public function getIdAttribute()
+    {
+        return $this->cod_instituicao;
+    }
 }
