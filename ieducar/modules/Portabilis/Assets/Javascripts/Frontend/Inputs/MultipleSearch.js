@@ -84,7 +84,9 @@ var updateChozen = function(input, values){
   });
 
   for (let option in orderedList) {
-    input.append('<option value="' + orderedList[option].value + '"> ' + orderedList[option].label + '</option>');
+    if (orderedList[option ].value !== undefined) {
+      input.append('<option value="' + orderedList[option].value + '"> ' + orderedList[option].label + '</option>');
+    }
   }
 
   input.trigger("chosen:updated");
