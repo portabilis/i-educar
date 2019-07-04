@@ -2,6 +2,7 @@
 
 use iEducar\Modules\ErrorTracking\TrackerFactory;
 use Illuminate\Database\Connection;
+use Illuminate\Support\Facades\DB;
 
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsCronometro.inc.php';
@@ -349,9 +350,10 @@ abstract class clsBancoSQL_
 
     $start = microtime(true);
 
-    $this->bConsulta_ID = pg_query($this->bLink_ID, $this->strStringSQL);
-    $this->strErro = pg_result_error($this->bConsulta_ID);
-    $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
+//    $this->bConsulta_ID = pg_query($this->bLink_ID, $this->strStringSQL);
+//    $this->strErro = pg_result_error($this->bConsulta_ID);
+//    $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
+      $this->run($this->strStringSQL);
 
     $this->logQuery($this->strStringSQL, [], $this->getElapsedTime($start));
 
@@ -415,17 +417,7 @@ abstract class clsBancoSQL_
           return false;
       }
 
-    // Fetch do resultado
-    if ($this->getFetchMode() == self::FETCH_ARRAY) {
-      $this->arrayStrRegistro = @pg_fetch_array($this->bConsulta_ID);
-    }
-    elseif ($this->getFetchMode() == self::FETCH_ASSOC) {
-      $this->arrayStrRegistro = @pg_fetch_assoc($this->bConsulta_ID);
-    }
-
-    // Verifica se houve erros
-    $this->strErro = @pg_result_error($this->bConsulta_ID);
-    $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
+      $this->arrayStrRegistro = $this->bConsulta_ID->fetch();
 
     // Testa se está vazio e verifica se Auto_Limpa é TRUE
     $stat = is_array($this->arrayStrRegistro);
@@ -439,16 +431,6 @@ abstract class clsBancoSQL_
   function Linhas_Afetadas()
   {
     return @pg_affected_rows($this->bConsulta_ID);
-  }
-
-  /**
-   * Libera os resultados da memória.
-   */
-  function Libera()
-  {
-    pg_free_result($this->bConsulta_ID);
-    $this->bConsulta_ID = 0;
-    $this->strStringSQL = '';
   }
 
   /**
@@ -513,8 +495,9 @@ abstract class clsBancoSQL_
   {
     $this->Consulta($consulta);
     if ($this->ProximoRegistro()) {
-      list ($campo) = $this->Tupla();
-      $this->Libera();
+        $campo = $this->Tupla();
+        $campo = array_shift($campo);
+
       return $campo;
     }
     return FALSE;
@@ -550,9 +533,7 @@ abstract class clsBancoSQL_
 
       $start = microtime(true);
 
-      $this->bConsulta_ID = @pg_query_params($dbConn, $query, $params);
-      $resultError = @pg_result_error($this->bConsulta_ID);
-      $errorMsgs .= trim($resultError) != '' ? $resultError : @pg_last_error($dbConn);
+        $this->run($query, $params);
 
       $this->logQuery($query, $params, $this->getElapsedTime($start));
 
@@ -602,5 +583,29 @@ abstract class clsBancoSQL_
     protected function getElapsedTime($start)
     {
         return round((microtime(true) - $start) * 1000, 2);
+    }
+
+    /**
+     * Método mockavel para execução de query
+     *
+     * @param string $query
+     * @param array $params
+     */
+    private function run(string $query, $params = [])
+    {
+        if (is_numeric(key($params))) {
+            $params = array_combine(range('a', chr(96 + count($params))), $params);
+            $query = preg_replace_callback('/(\$\d{1,})/', function ($matches) {
+                return ':' . chr(substr($matches[0], 1) + 96);
+            }, $query);
+        }
+
+        if ($this->getFetchMode() == self::FETCH_ARRAY) {
+            DB::setFetchMode(PDO::FETCH_BOTH);
+        } else {
+            DB::setFetchMode($this->getFetchMode());
+        }
+
+        $this->bConsulta_ID = DB::publicRun($query, $params);
     }
 }

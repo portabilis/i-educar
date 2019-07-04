@@ -144,7 +144,7 @@ class clsPortalNotificacao
             }
             else
             {
-                if( $db->CampoUnico( "SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_cod_funcionario}'" ) )
+                if( $db->CampoUnico( "SELECT 1 FROM portal.funcionario WHERE ref_cod_pessoa_fj = '{$ref_cod_funcionario}'" ) )
                 {
                     $this->ref_cod_funcionario = $ref_cod_funcionario;
                 }
