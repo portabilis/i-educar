@@ -12,7 +12,7 @@ $factory->define(LegacyEvaluationRule::class, function (Faker $faker) {
         'nome' => $faker->words(3, true),
         'tipo_nota' => $faker->randomElement([1, 2, 3, 4]),
         'tipo_progressao' => $faker->randomElement([1, 2, 3, 4]),
-        'tipo_presenca' => $faker->randomElement([1, 2, 3, 4]),
+        'tipo_presenca' => $faker->randomElement([1, 2]),
     ];
 });
 

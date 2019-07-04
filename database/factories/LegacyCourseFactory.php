@@ -19,5 +19,6 @@ $factory->define(LegacyCourse::class, function (Faker $faker) {
         'carga_horaria' => $faker->randomElement([200, 400, 800]),
         'data_cadastro' => now(),
         'ref_cod_instituicao' => factory(LegacyInstitution::class)->states('unique')->make(),
+        'padrao_ano_escolar' => 1,
     ];
 });
