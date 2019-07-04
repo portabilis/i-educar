@@ -249,6 +249,15 @@ function safeUtf8Decode(s) {
   return stringUtils.toUtf8(s);
 }
 
+function formatDate(data) {
+  data = new Date();
+  var dia = data.getDate().toString().padStart(2, "0");
+  var mes = data.getMonth().toString().padStart(2, "0");
+  var ano = data.getFullYear();
+
+  return dia + '/' + mes + '/' + ano;
+}
+
 // feedback messages
 
 // #TODO migrar todas referencias de "handleMessages([{type*" para "messageUtils.<type>"
