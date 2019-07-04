@@ -64,4 +64,17 @@ class LegacySchool extends Model
     {
         return $this->belongsTo(LegacyPerson::class, 'ref_idpes');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function courses()
+    {
+        return $this->belongsToMany(
+            LegacyCourse::class,
+            'pmieducar.escola_curso',
+            'ref_cod_escola',
+            'ref_cod_curso'
+        )->withPivot('ativo', 'anos_letivos');
+    }
 }
