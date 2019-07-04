@@ -14,18 +14,6 @@ class AddForeignKeysOnPmieducarExemplarEmprestimoTable extends Migration
     public function up()
     {
         Schema::table('pmieducar.exemplar_emprestimo', function (Blueprint $table) {
-            $table->foreign('ref_usuario_devolucao')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
-            $table->foreign('ref_usuario_cad')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
             $table->foreign('ref_cod_exemplar')
                ->references('cod_exemplar')
                ->on('pmieducar.exemplar')
@@ -48,8 +36,6 @@ class AddForeignKeysOnPmieducarExemplarEmprestimoTable extends Migration
     public function down()
     {
         Schema::table('pmieducar.exemplar_emprestimo', function (Blueprint $table) {
-            $table->dropForeign(['ref_usuario_devolucao']);
-            $table->dropForeign(['ref_usuario_cad']);
             $table->dropForeign(['ref_cod_exemplar']);
             $table->dropForeign(['ref_cod_cliente']);
         });

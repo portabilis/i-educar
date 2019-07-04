@@ -14,18 +14,6 @@ class AddForeignKeysOnPmieducarReservasTable extends Migration
     public function up()
     {
         Schema::table('pmieducar.reservas', function (Blueprint $table) {
-            $table->foreign('ref_usuario_libera')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
-            $table->foreign('ref_usuario_cad')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
             $table->foreign('ref_cod_cliente')
                ->references('cod_cliente')
                ->on('pmieducar.cliente')
@@ -48,8 +36,6 @@ class AddForeignKeysOnPmieducarReservasTable extends Migration
     public function down()
     {
         Schema::table('pmieducar.reservas', function (Blueprint $table) {
-            $table->dropForeign(['ref_usuario_libera']);
-            $table->dropForeign(['ref_usuario_cad']);
             $table->dropForeign(['ref_cod_cliente']);
             $table->dropForeign(['ref_cod_exemplar']);
         });

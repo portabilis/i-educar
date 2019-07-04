@@ -14,18 +14,6 @@ class AddForeignKeysOnPmieducarAcervoTable extends Migration
     public function up()
     {
         Schema::table('pmieducar.acervo', function (Blueprint $table) {
-            $table->foreign('ref_usuario_exc')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
-            $table->foreign('ref_usuario_cad')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
             $table->foreign('ref_cod_exemplar_tipo')
                ->references('cod_exemplar_tipo')
                ->on('pmieducar.exemplar_tipo')
@@ -72,8 +60,6 @@ class AddForeignKeysOnPmieducarAcervoTable extends Migration
     public function down()
     {
         Schema::table('pmieducar.acervo', function (Blueprint $table) {
-            $table->dropForeign(['ref_usuario_exc']);
-            $table->dropForeign(['ref_usuario_cad']);
             $table->dropForeign(['ref_cod_exemplar_tipo']);
             $table->dropForeign(['ref_cod_biblioteca']);
             $table->dropForeign(['ref_cod_acervo_idioma']);

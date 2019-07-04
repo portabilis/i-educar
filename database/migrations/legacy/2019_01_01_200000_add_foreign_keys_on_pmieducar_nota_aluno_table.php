@@ -14,18 +14,6 @@ class AddForeignKeysOnPmieducarNotaAlunoTable extends Migration
     public function up()
     {
         Schema::table('pmieducar.nota_aluno', function (Blueprint $table) {
-            $table->foreign('ref_usuario_exc')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
-            $table->foreign('ref_usuario_cad')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
             $table->foreign(['ref_ref_cod_tipo_avaliacao', 'ref_sequencial'])
                ->references(['ref_cod_tipo_avaliacao', 'sequencial'])
                ->on('pmieducar.tipo_avaliacao_valores')
@@ -60,8 +48,6 @@ class AddForeignKeysOnPmieducarNotaAlunoTable extends Migration
     public function down()
     {
         Schema::table('pmieducar.nota_aluno', function (Blueprint $table) {
-            $table->dropForeign(['ref_usuario_exc']);
-            $table->dropForeign(['ref_usuario_cad']);
             $table->dropForeign(['ref_ref_cod_tipo_avaliacao', 'ref_sequencial']);
             $table->dropForeign(['ref_cod_serie', 'ref_cod_escola', 'ref_cod_disciplina']);
             $table->dropForeign(['ref_cod_matricula']);

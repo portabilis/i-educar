@@ -14,18 +14,6 @@ class AddForeignKeysOnPmieducarClienteSuspensaoTable extends Migration
     public function up()
     {
         Schema::table('pmieducar.cliente_suspensao', function (Blueprint $table) {
-            $table->foreign('ref_usuario_suspende')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
-            $table->foreign('ref_usuario_libera')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
             $table->foreign('ref_cod_motivo_suspensao')
                ->references('cod_motivo_suspensao')
                ->on('pmieducar.motivo_suspensao')
@@ -48,8 +36,6 @@ class AddForeignKeysOnPmieducarClienteSuspensaoTable extends Migration
     public function down()
     {
         Schema::table('pmieducar.cliente_suspensao', function (Blueprint $table) {
-            $table->dropForeign(['ref_usuario_suspende']);
-            $table->dropForeign(['ref_usuario_libera']);
             $table->dropForeign(['ref_cod_motivo_suspensao']);
             $table->dropForeign(['ref_cod_cliente']);
         });

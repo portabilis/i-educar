@@ -14,18 +14,6 @@ class AddForeignKeysOnPmieducarReservaVagaTable extends Migration
     public function up()
     {
         Schema::table('pmieducar.reserva_vaga', function (Blueprint $table) {
-            $table->foreign('ref_usuario_exc')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
-            $table->foreign('ref_usuario_cad')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
             $table->foreign(['ref_ref_cod_serie', 'ref_ref_cod_escola'])
                ->references(['ref_cod_serie', 'ref_cod_escola'])
                ->on('pmieducar.escola_serie')
@@ -48,8 +36,6 @@ class AddForeignKeysOnPmieducarReservaVagaTable extends Migration
     public function down()
     {
         Schema::table('pmieducar.reserva_vaga', function (Blueprint $table) {
-            $table->dropForeign(['ref_usuario_exc']);
-            $table->dropForeign(['ref_usuario_cad']);
             $table->dropForeign(['ref_ref_cod_serie', 'ref_ref_cod_escola']);
             $table->dropForeign(['ref_cod_aluno']);
         });

@@ -14,18 +14,6 @@ class AddForeignKeysOnPmieducarCursoTable extends Migration
     public function up()
     {
         Schema::table('pmieducar.curso', function (Blueprint $table) {
-            $table->foreign('ref_usuario_exc')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
-            $table->foreign('ref_usuario_cad')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
             $table->foreign('ref_cod_tipo_regime')
                ->references('cod_tipo_regime')
                ->on('pmieducar.tipo_regime')
@@ -60,8 +48,6 @@ class AddForeignKeysOnPmieducarCursoTable extends Migration
     public function down()
     {
         Schema::table('pmieducar.curso', function (Blueprint $table) {
-            $table->dropForeign(['ref_usuario_exc']);
-            $table->dropForeign(['ref_usuario_cad']);
             $table->dropForeign(['ref_cod_tipo_regime']);
             $table->dropForeign(['ref_cod_tipo_ensino']);
             $table->dropForeign(['ref_cod_nivel_ensino']);

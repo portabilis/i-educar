@@ -14,18 +14,6 @@ class AddForeignKeysOnPmieducarInfraPredioComodoTable extends Migration
     public function up()
     {
         Schema::table('pmieducar.infra_predio_comodo', function (Blueprint $table) {
-            $table->foreign('ref_usuario_exc')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
-            $table->foreign('ref_usuario_cad')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
             $table->foreign('ref_cod_infra_predio')
                ->references('cod_infra_predio')
                ->on('pmieducar.infra_predio')
@@ -48,8 +36,6 @@ class AddForeignKeysOnPmieducarInfraPredioComodoTable extends Migration
     public function down()
     {
         Schema::table('pmieducar.infra_predio_comodo', function (Blueprint $table) {
-            $table->dropForeign(['ref_usuario_exc']);
-            $table->dropForeign(['ref_usuario_cad']);
             $table->dropForeign(['ref_cod_infra_predio']);
             $table->dropForeign(['ref_cod_infra_comodo_funcao']);
         });

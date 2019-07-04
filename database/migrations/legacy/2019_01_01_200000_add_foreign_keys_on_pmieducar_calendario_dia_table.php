@@ -14,18 +14,6 @@ class AddForeignKeysOnPmieducarCalendarioDiaTable extends Migration
     public function up()
     {
         Schema::table('pmieducar.calendario_dia', function (Blueprint $table) {
-            $table->foreign('ref_usuario_exc')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
-            $table->foreign('ref_usuario_cad')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
             $table->foreign('ref_cod_calendario_dia_motivo')
                ->references('cod_calendario_dia_motivo')
                ->on('pmieducar.calendario_dia_motivo')
@@ -48,8 +36,6 @@ class AddForeignKeysOnPmieducarCalendarioDiaTable extends Migration
     public function down()
     {
         Schema::table('pmieducar.calendario_dia', function (Blueprint $table) {
-            $table->dropForeign(['ref_usuario_exc']);
-            $table->dropForeign(['ref_usuario_cad']);
             $table->dropForeign(['ref_cod_calendario_dia_motivo']);
             $table->dropForeign(['ref_cod_calendario_ano_letivo']);
         });
