@@ -14,6 +14,7 @@ use App\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
+
 class WithoutScoreDiarioApiTest extends TestCase
 {
     use DatabaseTransactions, DiarioApiTestTrait;
@@ -70,7 +71,6 @@ class WithoutScoreDiarioApiTest extends TestCase
             'ref_ref_cod_escola' => $school->id,
         ]);
 
-        //$response = $this->postScore($enrollment, $disciplines[0]->id, 1, 10);
-        //dd($response->content());
+        $response = $this->postAbsence($enrollment, $disciplines[0]->id, 1, 10);
     }
 }

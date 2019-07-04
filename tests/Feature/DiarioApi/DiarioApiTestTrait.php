@@ -3,7 +3,9 @@
 namespace Tests\Feature\DiarioApi;
 
 use App\Models\LegacyEnrollment;
-use Illuminate\Foundation\Testing\TestResponse;
+use CoreExt_Controller_Request;
+
+require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Views/DiarioApiController.php';
 
 trait DiarioApiTestTrait
 {
@@ -12,9 +14,9 @@ trait DiarioApiTestTrait
      * @param $disciplineId
      * @param $stage
      * @param $score
-     * @return TestResponse
+     * @return array
      */
-    public function postScore($enrollment, $disciplineId, $stage, $score)
+    public function postAbsence($enrollment, $disciplineId, $stage, $score)
     {
         $schoolClass = $enrollment->schoolClass;
 
@@ -35,8 +37,15 @@ trait DiarioApiTestTrait
             'secret_key' => env('API_SECRET_KEY'),
         ];
 
-        $response = $this->get(env('APP_URL') . '/module/Avaliacao/diarioApi?' . http_build_query($data));
+        // Necessário porque um lugar em Boletim.php pega o valor da global $_GET
+        $_GET['etapa'] = $data['etapa'];
 
-        return $response;
+        $fakeRequest = new CoreExt_Controller_Request(['data' => $data]);
+
+        $diarioApiController = new \DiarioApiController();
+        $diarioApiController->setRequest($fakeRequest);
+        $diarioApiController->postFalta();
+
+        return $diarioApiController->response;
     }
 }
