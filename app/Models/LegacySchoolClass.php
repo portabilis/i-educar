@@ -137,7 +137,7 @@ class LegacySchoolClass extends Model
      */
     public function getBeginAcademicYearAttribute()
     {
-        return $this->stages()->first()->data_inicio;
+        return $this->stages()->orderBy('sequencial')->first()->data_inicio;
     }
 
     /**

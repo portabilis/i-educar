@@ -495,7 +495,8 @@ class clsPmieducarTurma
                 $gruda = ', ';
             }
 
-            if (!is_null($this->visivel)) {
+            if (is_bool($this->visivel)) {
+                $this->visivel =  $this->visivel ? 'true' : 'false';
                 $campos .= "{$gruda}visivel";
                 $valores .= "{$gruda}'{$this->visivel}'";
                 $gruda = ', ';
@@ -844,7 +845,8 @@ class clsPmieducarTurma
                 $gruda = ", ";
             }
 
-            if (!is_null($this->visivel)) {
+            if (is_bool($this->visivel)) {
+                $this->visivel =  $this->visivel ? 'true' : 'false';
                 $set .= "{$gruda}visivel = {$this->visivel}";
                 $gruda = ', ';
             }
