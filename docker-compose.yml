@@ -19,7 +19,6 @@ services:
     links:
       - postgres
       - redis
-      - minio
     environment:
       CORE_EXT_CONFIGURATION_ENV: development
       XDEBUG_IDEKEY: xdebug
