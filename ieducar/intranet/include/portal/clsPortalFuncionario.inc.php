@@ -183,7 +183,7 @@ class clsPortalFuncionario
             }
             else
             {
-                if( $db->CampoUnico( "SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_ref_cod_pessoa_fj}'" ) )
+                if( $db->CampoUnico( "SELECT 1 FROM portal.funcionario WHERE ref_cod_pessoa_fj = '{$ref_ref_cod_pessoa_fj}'" ) )
                 {
                     $this->ref_ref_cod_pessoa_fj = $ref_ref_cod_pessoa_fj;
                 }

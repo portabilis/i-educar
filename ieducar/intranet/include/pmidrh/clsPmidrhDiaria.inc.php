@@ -177,7 +177,7 @@ class clsPmidrhDiaria
             }
             else
             {
-                if( $db->CampoUnico( "SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_cadastro}'" ) )
+                if( $db->CampoUnico( "SELECT 1 FROM portal.funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_cadastro}'" ) )
                 {
                     $this->ref_funcionario_cadastro = $ref_funcionario_cadastro;
                 }
@@ -233,7 +233,7 @@ class clsPmidrhDiaria
             }
             else
             {
-                if( $db->CampoUnico( "SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario}'" ) )
+                if( $db->CampoUnico( "SELECT 1 FROM portal.funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario}'" ) )
                 {
                     $this->ref_funcionario = $ref_funcionario;
                 }

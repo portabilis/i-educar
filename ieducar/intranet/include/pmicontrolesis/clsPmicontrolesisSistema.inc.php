@@ -136,7 +136,7 @@ class clsPmicontrolesisSistema
             }
             else
             {
-                if( $db->CampoUnico( "SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_cod_funcionario_exc}'" ) )
+                if( $db->CampoUnico( "SELECT 1 FROM portal.funcionario WHERE ref_cod_pessoa_fj = '{$ref_cod_funcionario_exc}'" ) )
                 {
                     $this->ref_cod_funcionario_exc = $ref_cod_funcionario_exc;
                 }
@@ -164,7 +164,7 @@ class clsPmicontrolesisSistema
             }
             else
             {
-                if( $db->CampoUnico( "SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_cod_funcionario_cad}'" ) )
+                if( $db->CampoUnico( "SELECT 1 FROM portal.funcionario WHERE ref_cod_pessoa_fj = '{$ref_cod_funcionario_cad}'" ) )
                 {
                     $this->ref_cod_funcionario_cad = $ref_cod_funcionario_cad;
                 }
