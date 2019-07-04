@@ -29,6 +29,7 @@ class DiarioApiController extends ApiCoreController
 {
     protected $_dataMapper = 'Avaliacao_Model_NotaComponenteDataMapper';
     protected $_processoAp = 642;
+    protected $_currentMatriculaId;
 
     protected function validatesValueOfAttValueIsInOpcoesNotas()
     {
@@ -392,7 +393,7 @@ class DiarioApiController extends ApiCoreController
 
     // post
 
-    protected function postNota()
+    public function postNota()
     {
         if ($this->canPostNota()) {
             $array_nota = array(
@@ -581,7 +582,7 @@ class DiarioApiController extends ApiCoreController
     }
 
     // TODO mover validacao para canPostFalta
-    protected function postFalta()
+    public function postFalta()
     {
 
         $canPost = $this->canPostFalta();
