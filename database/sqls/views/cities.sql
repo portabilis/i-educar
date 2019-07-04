@@ -20,7 +20,5 @@ SELECT
         WHEN 'U' THEN 3 -- unificação
         WHEN 'O' THEN 4 -- outro
     END) AS registry_origin
-    -- operacao,
-    -- idsis_rev,
-    -- idsis_cad
+    -- operacao
 FROM public.municipio;

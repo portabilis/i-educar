@@ -82,7 +82,7 @@ class clsCepLogradouro
                 $valores .= ", '$this->nrofin' ";
             }
 
-            $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (cep,  idlog, origem_gravacao, data_cad, operacao, idsis_Cad  $campos) VALUES ( '{$this->cep}', '{$this->idlog}','U', NOW(), 'I', '9' $values )" );
+            $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (cep,  idlog, origem_gravacao, data_cad, operacao, $campos) VALUES ( '{$this->cep}', '{$this->idlog}','U', NOW(), 'I', $values )" );
 
         }
         return false;

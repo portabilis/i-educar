@@ -44,7 +44,7 @@ require_once 'CoreExt/View/Helper/UrlHelper.php';
  */
 class CoreExt_View_UrlHelperTest extends PHPUnit\Framework\TestCase
 {
-  protected function setUp()
+  protected function setUp(): void
   {
     CoreExt_View_Helper_UrlHelper::setBaseUrl('');
   }

@@ -340,7 +340,7 @@ class AlunoController extends ApiCoreController
 
     protected function validaTurnoProjeto($alunoId, $turnoId)
     {
-        if ($GLOBALS['coreExt']['Config']->app->projetos->ignorar_turno_igual_matricula == 1) {
+        if (config('legacy.app.projetos.ignorar_turno_igual_matricula') == 1) {
             return true;
         }
 
@@ -601,7 +601,7 @@ class AlunoController extends ApiCoreController
             $aluno->ref_idpes = $this->getRequest()->pessoa_id;
         }
 
-        if (!$GLOBALS['coreExt']['Config']->app->alunos->nao_apresentar_campo_alfabetizado) {
+        if (!config('legacy.app.alunos.nao_apresentar_campo_alfabetizado')) {
             $aluno->analfabeto = $this->getRequest()->alfabetizado ? 0 : 1;
         }
 

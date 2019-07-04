@@ -20,7 +20,7 @@ $frontController->setRequest($request);
 
 // Configura o caminho aonde os módulos estão instalados
 $frontController->setOptions(
-    ['basepath' => PROJECT_ROOT . DS . 'modules']
+    ['basepath' => base_path('ieducar/modules')]
 );
 
 $frontController->dispatch();

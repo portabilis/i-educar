@@ -2,8 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\SchoolManager;
-use App\Observers\SchoolManagerObserver;
+use Exception;
 use App\Services\CacheManager;
 use App\Models\LegacyInstitution;
 use App\Services\StudentUnificationService;
@@ -57,9 +56,24 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
+     * Load legacy bootstrap application.
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
+    private function loadLegacyBootstrap()
+    {
+        setlocale(LC_ALL, 'en_US.UTF-8');
+        date_default_timezone_set(config('legacy.app.locale.timezone'));
+    }
+
+    /**
      * Bootstrap any application services.
      *
      * @return void
+     *
+     * @throws Exception
      */
     public function boot()
     {
@@ -71,10 +85,7 @@ class AppServiceProvider extends ServiceProvider
             $this->loadLegacyMigrations();
         }
 
-        Request::macro('getSubdomain', function () {
-            $host = str_replace('-', '', $this->getHost());
-            return Str::replaceFirst('.' . config('app.default_host'), '', $host);
-        });
+        $this->loadLegacyBootstrap();
 
         Collection::macro('getKeyValueArray', function ($valueField) {
             $keyValueArray = [];

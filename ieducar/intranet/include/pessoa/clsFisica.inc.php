@@ -436,7 +436,7 @@ class clsFisica
                 $valores .= ', NULL';
             }
 
-            $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} (idpes, origem_gravacao, idsis_cad, data_cad, operacao, idpes_cad $campos) VALUES ( '{$this->idpes}', 'M', 17, NOW(), 'I', '$this->idpes_cad' $valores )");
+            $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} (idpes, origem_gravacao, data_cad, operacao, idpes_cad $campos) VALUES ( '{$this->idpes}', 'M', NOW(), 'I', '$this->idpes_cad' $valores )");
 
             if ($this->idpes) {
                 $detalhe = $this->detalheSimples();

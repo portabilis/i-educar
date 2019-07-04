@@ -37,8 +37,6 @@ class clsBairro
     var $idpes_rev;
     var $origem_gravacao;
     var $operacao;
-    var $idsis_cad;
-    var $idsis_rev;
     var $zona_localizacao;
     var $iddi;
     
@@ -64,8 +62,6 @@ class clsBairro
         $this->nome = $str_nome;
         $this->idpes_cad = $int_idpes_cad;
         $this->idpes_rev = $int_idpes_rev;
-        $this->idsis_cad = $int_idsis_cad;
-        $this->idsis_rev = $int_idsis_rev;
         $this->operacao = $str_operacao;
         $this->origem_gravacao = $str_origem_gravacao;
         $this->zona_localizacao = $zona_localizacao;
@@ -96,11 +92,6 @@ class clsBairro
                 $campos .= ", idpes_cad";
                 $values .= ", '{$this->idpes_cad}'";
             }
-            if( is_numeric( $this->idsis_cad ) )
-            {
-                $campos .= ", idsis_cad";
-                $values .= ", '{$this->idsis_cad}'";
-            }
             if( is_string( $this->operacao) )
             {
                 $campos .= ", operacao";
@@ -124,7 +115,7 @@ class clsBairro
 
             $this->checkSequenceofBairro();
 
-            $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} ( idmun, origem_gravacao, operacao, idsis_cad, nome, data_cad$campos ) VALUES ( '{$this->idmun}', 'U', 'I', '9', '{$this->nome}', NOW()$values )" );
+            $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} ( idmun, origem_gravacao, operacao, nome, data_cad$campos ) VALUES ( '{$this->idmun}', 'U', 'I', '{$this->nome}', NOW()$values )" );
             return $db->InsertId("{$this->schema}.seq_bairro");
         }
         return false;
