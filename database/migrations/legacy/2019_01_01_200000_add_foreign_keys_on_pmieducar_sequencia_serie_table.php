@@ -14,18 +14,6 @@ class AddForeignKeysOnPmieducarSequenciaSerieTable extends Migration
     public function up()
     {
         Schema::table('pmieducar.sequencia_serie', function (Blueprint $table) {
-            $table->foreign('ref_usuario_exc')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
-            $table->foreign('ref_usuario_cad')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
             $table->foreign('ref_serie_origem')
                ->references('cod_serie')
                ->on('pmieducar.serie')
@@ -48,8 +36,6 @@ class AddForeignKeysOnPmieducarSequenciaSerieTable extends Migration
     public function down()
     {
         Schema::table('pmieducar.sequencia_serie', function (Blueprint $table) {
-            $table->dropForeign(['ref_usuario_exc']);
-            $table->dropForeign(['ref_usuario_cad']);
             $table->dropForeign(['ref_serie_origem']);
             $table->dropForeign(['ref_serie_destino']);
         });

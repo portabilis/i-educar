@@ -19,18 +19,6 @@ class AddForeignKeysOnPmieducarAcervoAutorTable extends Migration
                ->on('pmieducar.biblioteca')
                ->onUpdate('restrict')
                ->onDelete('restrict');
-
-            $table->foreign('ref_usuario_exc')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
-            $table->foreign('ref_usuario_cad')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
         });
     }
 
@@ -43,8 +31,6 @@ class AddForeignKeysOnPmieducarAcervoAutorTable extends Migration
     {
         Schema::table('pmieducar.acervo_autor', function (Blueprint $table) {
             $table->dropForeign(['ref_cod_biblioteca']);
-            $table->dropForeign(['ref_usuario_exc']);
-            $table->dropForeign(['ref_usuario_cad']);
         });
     }
 }

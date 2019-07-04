@@ -25,18 +25,6 @@ class AddForeignKeysOnPmieducarSerieTable extends Migration
                ->on('modules.regra_avaliacao')
                ->onDelete('restrict');
 
-            $table->foreign('ref_usuario_exc')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
-            $table->foreign('ref_usuario_cad')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
             $table->foreign('ref_cod_curso')
                ->references('cod_curso')
                ->on('pmieducar.curso')
@@ -55,8 +43,6 @@ class AddForeignKeysOnPmieducarSerieTable extends Migration
         Schema::table('pmieducar.serie', function (Blueprint $table) {
             $table->dropForeign(['regra_avaliacao_id']);
             $table->dropForeign(['regra_avaliacao_diferenciada_id']);
-            $table->dropForeign(['ref_usuario_exc']);
-            $table->dropForeign(['ref_usuario_cad']);
             $table->dropForeign(['ref_cod_curso']);
         });
     }

@@ -14,12 +14,6 @@ class AddForeignKeysOnPmieducarFaltasTable extends Migration
     public function up()
     {
         Schema::table('pmieducar.faltas', function (Blueprint $table) {
-            $table->foreign('ref_usuario_cad')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
             $table->foreign('ref_cod_matricula')
                ->references('cod_matricula')
                ->on('pmieducar.matricula')
@@ -36,7 +30,6 @@ class AddForeignKeysOnPmieducarFaltasTable extends Migration
     public function down()
     {
         Schema::table('pmieducar.faltas', function (Blueprint $table) {
-            $table->dropForeign(['ref_usuario_cad']);
             $table->dropForeign(['ref_cod_matricula']);
         });
     }

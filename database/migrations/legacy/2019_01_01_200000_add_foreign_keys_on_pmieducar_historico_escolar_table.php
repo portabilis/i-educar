@@ -20,18 +20,6 @@ class AddForeignKeysOnPmieducarHistoricoEscolarTable extends Migration
                ->onUpdate('restrict')
                ->onDelete('restrict');
 
-            $table->foreign('ref_usuario_exc')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
-            $table->foreign('ref_usuario_cad')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
             $table->foreign('ref_cod_escola')
                ->references('cod_escola')
                ->on('pmieducar.escola');
@@ -53,8 +41,6 @@ class AddForeignKeysOnPmieducarHistoricoEscolarTable extends Migration
     {
         Schema::table('pmieducar.historico_escolar', function (Blueprint $table) {
             $table->dropForeign(['historico_grade_curso_id']);
-            $table->dropForeign(['ref_usuario_exc']);
-            $table->dropForeign(['ref_usuario_cad']);
             $table->dropForeign(['ref_cod_escola']);
             $table->dropForeign(['ref_cod_aluno']);
         });

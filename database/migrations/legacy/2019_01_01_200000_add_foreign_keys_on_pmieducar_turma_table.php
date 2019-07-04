@@ -26,18 +26,6 @@ class AddForeignKeysOnPmieducarTurmaTable extends Migration
                ->onUpdate('restrict')
                ->onDelete('restrict');
 
-            $table->foreign('ref_usuario_exc')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
-            $table->foreign('ref_usuario_cad')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
             $table->foreign(['ref_ref_cod_escola', 'ref_ref_cod_serie'])
                ->references(['ref_cod_escola', 'ref_cod_serie'])
                ->on('pmieducar.escola_serie')
@@ -90,8 +78,6 @@ class AddForeignKeysOnPmieducarTurmaTable extends Migration
         Schema::table('pmieducar.turma', function (Blueprint $table) {
             $table->dropForeign(['turma_turno_id']);
             $table->dropForeign(['ref_cod_turma_tipo']);
-            $table->dropForeign(['ref_usuario_exc']);
-            $table->dropForeign(['ref_usuario_cad']);
             $table->dropForeign(['ref_ref_cod_escola', 'ref_ref_cod_serie']);
             $table->dropForeign(['ref_cod_regente', 'ref_cod_instituicao_regente']);
             $table->dropForeign(['ref_cod_instituicao']);

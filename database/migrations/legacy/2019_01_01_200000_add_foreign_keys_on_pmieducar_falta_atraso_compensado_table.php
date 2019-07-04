@@ -14,18 +14,6 @@ class AddForeignKeysOnPmieducarFaltaAtrasoCompensadoTable extends Migration
     public function up()
     {
         Schema::table('pmieducar.falta_atraso_compensado', function (Blueprint $table) {
-            $table->foreign('ref_usuario_exc')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
-            $table->foreign('ref_usuario_cad')
-               ->references('cod_usuario')
-               ->on('pmieducar.usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
-
             $table->foreign(['ref_cod_servidor', 'ref_ref_cod_instituicao'])
                ->references(['cod_servidor', 'ref_cod_instituicao'])
                ->on('pmieducar.servidor')
@@ -48,8 +36,6 @@ class AddForeignKeysOnPmieducarFaltaAtrasoCompensadoTable extends Migration
     public function down()
     {
         Schema::table('pmieducar.falta_atraso_compensado', function (Blueprint $table) {
-            $table->dropForeign(['ref_usuario_exc']);
-            $table->dropForeign(['ref_usuario_cad']);
             $table->dropForeign(['ref_cod_servidor', 'ref_ref_cod_instituicao']);
             $table->dropForeign(['ref_cod_escola']);
         });
