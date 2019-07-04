@@ -41,7 +41,6 @@ class PictureController {
     var $maxHeight;
     var $maxSize;
     var $suportedExtensions;
-    var $imageName;
 
     function __construct($imageFile, $maxWidth = NULL, $maxHeight = NULL, $maxSize = NULL,
                              $suportedExtensions = NULL){
@@ -85,11 +84,8 @@ class PictureController {
 
         $tenant = config('legacy.app.database.dbname');
 
-        $this->imageName = $file->hashName($tenant);
-
-        if (Storage::put('/', $file)) {
-            $filePath= Storage::url($file->hashName($tenant));
-            return $filePath;
+        if (Storage::put($tenant, $file, 'public')) {
+            return Storage::url($file->hashName($tenant));
         } else {
             $this->errorMessage = "Ocorreu um erro no servidor ao enviar foto. Tente novamente.";
             return '';

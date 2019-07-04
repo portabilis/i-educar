@@ -6,9 +6,6 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/RDStationAPI.class.php';
 require_once 'image_check.php';
 
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\File;
-
 class clsIndex extends clsBase
 {
     public function Formular()
