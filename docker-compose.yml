@@ -49,16 +49,3 @@ services:
     restart: always
     ports:
       - 6379
-
-  minio:
-    container_name: ieducar-minio
-    image: minio/minio
-    volumes:
-      - ./storage/data:/data
-    restart: always
-    ports:
-      - 9001:9000
-    environment:
-      MINIO_ACCESS_KEY: minio-key
-      MINIO_SECRET_KEY: minio-secret
-    command: server /data
