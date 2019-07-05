@@ -1,47 +1,11 @@
 <?php
 
-#error_reporting(E_ALL);
-#ini_set("display_errors", 1);
-
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   Api
- * @subpackage  Modules
- * @since   Arquivo disponível desde a versão ?
- * @version   $Id$
- */
-
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/App/Model/IedFinder.php';
 
-/**
- * Class ComponenteCurricularController
- * @deprecated Essa versão da API pública será descontinuada
- */
 class ComponenteCurricularController extends ApiCoreController
 {
   // search options
@@ -91,23 +55,34 @@ class ComponenteCurricularController extends ApiCoreController
 
       $instituicaoId = $this->getRequest()->instituicao_id;
       $areaConhecimentoId = $this->getRequest()->area_conhecimento_id;
+      $modified = $this->getRequest()->modified;
 
-      $areaConhecimentoId ? $where = 'AND area_conhecimento_id = '. $areaConhecimentoId : '';
+      $where = '';
+      $params = [$instituicaoId];
 
-      $sql = 'SELECT componente_curricular.id, componente_curricular.nome, area_conhecimento_id, area_conhecimento.nome AS nome_area, ordenamento
+      if ($areaConhecimentoId) {
+          $wheres[] = 'area_conhecimento_id = '. $areaConhecimentoId;
+      }
+
+      if ($modified) {
+          $params[] = $modified;
+          $wheres[] = 'componente_curricular.updated_at >= $2';
+      }
+
+      if (count($wheres)) {
+          $where = ' AND ' . implode(' AND ', $wheres);
+      }
+
+      $sql = 'SELECT componente_curricular.id, componente_curricular.nome, area_conhecimento_id, area_conhecimento.nome AS nome_area, ordenamento, componente_curricular.updated_at
                 FROM modules.componente_curricular
                INNER JOIN modules.area_conhecimento ON (area_conhecimento.id = componente_curricular.area_conhecimento_id)
                 WHERE componente_curricular.instituicao_id = $1
                 ' . $where . '
-                ORDER BY nome ';
-      $disciplinas = $this->fetchPreparedQuery($sql, array($instituicaoId));
+                ORDER BY componente_curricular.updated_at, componente_curricular.nome ';
+      $disciplinas = $this->fetchPreparedQuery($sql, $params);
 
-      $attrs = array('id', 'nome', 'area_conhecimento_id', 'nome_area', 'ordenamento');
+      $attrs = array('id', 'nome', 'area_conhecimento_id', 'nome_area', 'ordenamento', 'updated_at');
       $disciplinas = Portabilis_Array_Utils::filterSet($disciplinas, $attrs);
-
-      foreach ($disciplinas as &$disciplina){
-        $disciplina['nome'] = Portabilis_String_Utils::toUtf8($disciplina['nome']);
-      }
 
       return array('disciplinas' => $disciplinas);
     }

@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
+use iEducar\Modules\Educacenso\Migrations\AjustaValoresAbastecimentoEnergia as AjustaValoresAbastecimentoEnergiaClass;
 use Illuminate\Database\Migrations\Migration;
 
 class AjustaValoresEsgotoSanitario extends Migration
@@ -12,9 +12,7 @@ class AjustaValoresEsgotoSanitario extends Migration
      */
     public function up()
     {
-        DB::statement('UPDATE pmieducar.escola
-                                SET esgoto_sanitario = NULL
-                              WHERE 2 = ANY (esgoto_sanitario)');
+        AjustaValoresAbastecimentoEnergiaClass::execute();
     }
 
     /**

@@ -305,8 +305,6 @@ class indice extends clsCadastro
             }
         }
 
-        $opcoes = array('' => 'Selecione');
-
         // Editar
         $disciplinas = 'Nenhum ano letivo selecionado';
 

@@ -335,7 +335,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     $this->setMediasComponentes($mediasComponentes);
-    $this->setMediasGerais($mediasGerais);
+    $this->setMediaGeral($mediasGerais);
 
     return $this;
   }
@@ -725,7 +725,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     if($this->getRegraAvaliacaoNotaGeralPorEtapa() == "1"){
 
-       $mediaGeral = $this->getMediasGerais();
+       $mediaGeral = $this->getMediaGeral();
 
       if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
         $media = $mediaGeral->mediaArredondada;

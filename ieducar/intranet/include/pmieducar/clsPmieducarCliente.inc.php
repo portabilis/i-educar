@@ -637,7 +637,7 @@ class clsPmieducarCliente
               (SELECT 'S'::text
                 FROM pmieducar.cliente_suspensao cs
                 WHERE cs.ref_cod_cliente = c.cod_cliente
-                AND cs.data_liberacao IS NULL) AS id_suspensao ";
+                AND cs.data_liberacao IS NULL LIMIT 1) AS id_suspensao ";
     $sql = "
             FROM
               pmieducar.cliente                c,

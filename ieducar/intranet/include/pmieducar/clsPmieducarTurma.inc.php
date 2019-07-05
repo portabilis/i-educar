@@ -494,10 +494,13 @@ class clsPmieducarTurma
                 $valores .= "{$gruda}'{$this->ref_ref_cod_serie_mult}'";
                 $gruda = ', ';
             }
-            $this->visivel = dbBool($this->visivel) ? 'TRUE' : 'FALSE';
-            $campos .= "{$gruda}visivel";
-            $valores .= "{$gruda}'{$this->visivel}'";
-            $gruda = ', ';
+
+            if (is_bool($this->visivel)) {
+                $this->visivel =  $this->visivel ? 'true' : 'false';
+                $campos .= "{$gruda}visivel";
+                $valores .= "{$gruda}'{$this->visivel}'";
+                $gruda = ', ';
+            }
 
             if (is_numeric($this->turma_turno_id)) {
                 $campos .= "{$gruda}turma_turno_id";
@@ -843,8 +846,8 @@ class clsPmieducarTurma
             }
 
             if (is_bool($this->visivel)) {
-                $this->visivel = dbBool($this->visivel) ? 'TRUE' : 'FALSE';
-                $set .= "{$gruda}visivel = '{$this->visivel}'";
+                $this->visivel =  $this->visivel ? 'true' : 'false';
+                $set .= "{$gruda}visivel = {$this->visivel}";
                 $gruda = ', ';
             }
 

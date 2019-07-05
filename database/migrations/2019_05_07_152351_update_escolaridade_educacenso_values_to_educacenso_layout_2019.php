@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use iEducar\Modules\Educacenso\Migrations\UpdateEscolaridadeEducacensoValuesToEducacensoLayout2019 as UpdateEscolaridadeEducacensoValuesToEducacensoLayout2019Class;
 use Illuminate\Database\Migrations\Migration;
 
 class UpdateEscolaridadeEducacensoValuesToEducacensoLayout2019 extends Migration
@@ -13,11 +12,7 @@ class UpdateEscolaridadeEducacensoValuesToEducacensoLayout2019 extends Migration
      */
     public function up()
     {
-        DB::table('cadastro.escolaridade')
-            ->where('escolaridade', 5)
-            ->update([
-                'escolaridade' => 7
-            ]);
+        UpdateEscolaridadeEducacensoValuesToEducacensoLayout2019Class::execute();
     }
 
     /**
