@@ -350,10 +350,7 @@ abstract class clsBancoSQL_
 
     $start = microtime(true);
 
-//    $this->bConsulta_ID = pg_query($this->bLink_ID, $this->strStringSQL);
-//    $this->strErro = pg_result_error($this->bConsulta_ID);
-//    $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
-      $this->run($this->strStringSQL);
+    $this->run($this->strStringSQL);
 
     $this->logQuery($this->strStringSQL, [], $this->getElapsedTime($start));
 
