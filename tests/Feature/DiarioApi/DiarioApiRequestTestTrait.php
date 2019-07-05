@@ -3,13 +3,10 @@
 namespace Tests\Feature\DiarioApi;
 
 use App\Models\LegacyEnrollment;
-use CoreExt_Controller_Request;
-use CoreExt_Session;
-use DiarioApiController;
+use App\User;
+use Illuminate\Foundation\Testing\TestResponse;
 
-require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Views/DiarioApiController.php';
-
-trait DiarioApiTestTrait
+trait DiarioApiRequestTestTrait
 {
     /**
      * @param LegacyEnrollment $enrollment
@@ -35,20 +32,15 @@ trait DiarioApiTestTrait
             'etapa' => $stage,
             'matricula_id' => $enrollment->registration->id,
             'att_value' => $score,
+            'access_key' => env('API_ACCESS_KEY'),
+            'secret_key' => env('API_SECRET_KEY'),
         ];
 
-        // Necessário porque um lugar em Boletim.php pega o valor da global $_GET
-        $_GET['etapa'] = $data['etapa'];
+        $user = factory(User::class, 'admin')->make();
 
-        $fakeRequest = new CoreExt_Controller_Request(['data' => $data]);
+        /** @var TestResponse $response */
+        $response = $this->actingAs($user)->get(env('APP_URL') . '/module/Avaliacao/diarioApi?' . http_build_query($data));
 
-        $diarioApiController = new DiarioApiController();
-        $diarioApiController->setRequest($fakeRequest);
-        $session = new CoreExt_Session();
-        $session->id_pessoa = 1;
-        $diarioApiController->setSession($session);
-        $diarioApiController->postFalta();
-
-        return $diarioApiController->response;
+        return json_decode($response->content());
     }
 }
