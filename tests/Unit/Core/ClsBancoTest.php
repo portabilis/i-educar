@@ -9,21 +9,12 @@ class ClsBancoTest extends TestCase
     public function testDoCountFromObj()
     {
         $db = new clsBanco();
-        $db->Conecta();
 
         $obj = new clsPmieducarClienteSuspensao();
 
         $this->assertNotEquals(true, is_null($db->doCountFromObj($obj)));
     }
-
-    public function testConexao()
-    {
-        $db = new clsBanco();
-        $db->Conecta();
-
-        $this->assertTrue((bool) $db->bLink_ID);
-    }
-
+    
     public function testFormatacaoDeValoresBooleanos()
     {
         $data = [

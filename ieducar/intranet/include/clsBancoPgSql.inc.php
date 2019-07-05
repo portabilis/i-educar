@@ -280,26 +280,6 @@ abstract class clsBancoSQL_
   }
 
   /**
-   * Conecta com o banco de dados
-   *
-   * Verifica se o link está inativo e conecta. Se a conexão não obtiver
-   * sucesso, interrompe o script
-   *
-   * @throws Exception
-   */
-  public function Conecta() {
-    // Verifica se o link de conexão está inativo e conecta
-    if (0 == $this->bLink_ID) {
-      $this->FraseConexao();
-      $this->bLink_ID = pg_connect($this->strFraseConexao);
-
-      if (! $this->bLink_ID) {
-        throw new Exception('Não foi possível conectar ao banco de dados');
-      }
-    }
-  }
-
-  /**
    * Executa uma consulta SQL.
    *
    * @param  string  $consulta    Consulta SQL.
@@ -318,8 +298,6 @@ abstract class clsBancoSQL_
     else {
       $this->strStringSQL = $consulta;
     }
-
-    $this->Conecta();
 
     // Alterações de padrão MySQL para PostgreSQL
     if ($reescrever) {
@@ -350,27 +328,13 @@ abstract class clsBancoSQL_
 
     $start = microtime(true);
 
-//    $this->bConsulta_ID = pg_query($this->bLink_ID, $this->strStringSQL);
-//    $this->strErro = pg_result_error($this->bConsulta_ID);
-//    $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
-      $this->run($this->strStringSQL);
+    $this->run($this->strStringSQL);
 
     $this->logQuery($this->strStringSQL, [], $this->getElapsedTime($start));
 
     if (!$this->bConsulta_ID) {
-      if ($this->getThrowException()) {
-        $message  = $this->bErro_no ? "($this->bErro_no) " . $this->strErro :
-                                      pg_last_error($this->bLink_ID);
-
-        $message .= PHP_EOL . $this->strStringSQL;
-
-        throw new Exception($message);
-      }
-      else
-      {
         $erroMsg = "SQL invalido: {$this->strStringSQL}<br>\n";
         throw new Exception("Erro ao executar uma ação no banco de dados: $erroMsg");
-      }
     }
 
     return $this->bConsulta_ID;
@@ -525,8 +489,6 @@ abstract class clsBancoSQL_
   public function execPreparedQuery($query, $params = array()) {
     try {
       $errorMsgs = '';
-      $this->Conecta();
-      $dbConn = $this->bLink_ID;
 
       if (! is_array($params))
         $params = array($params);
