@@ -225,7 +225,7 @@ trait Avaliacao_Service_Boletim_Acessores
      */
     public function getOption($key)
     {
-        return $this->_options[$key];
+        return $this->_options[$key] ?? null;
     }
 
     /**
