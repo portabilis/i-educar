@@ -27,7 +27,7 @@ class indice extends clsListagem
         $this->campoTexto('nome_', 'Nome', $nome_, '50', '255', true);
 
         $db = new clsBanco();
-        $sql  = 'SELECT cod_funcionario_vinculo, nm_vinculo FROM funcionario_vinculo';
+        $sql  = 'SELECT cod_funcionario_vinculo, nm_vinculo FROM portal.funcionario_vinculo';
         $where = '';
         $where_and = '';
 
@@ -42,7 +42,7 @@ class indice extends clsListagem
 
         $sql .= $where.' ORDER BY nm_vinculo';
 
-        $db->Consulta("SELECT count(*) FROM funcionario_vinculo $where");
+        $db->Consulta("SELECT count(*) FROM portal.funcionario_vinculo $where");
         $db->ProximoRegistro();
 
         list($total) = $db->Tupla();
