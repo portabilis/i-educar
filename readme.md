@@ -268,43 +268,11 @@ Para instalar o pacote de relatórios visite o repositório do projeto
 [https://github.com/portabilis/i-educar-reports-package](https://github.com/portabilis/i-educar-reports-package)
 e siga as instruções de instalação.
 
-### Upgrade para 2.1
+### Upgrade
 
-Para fazer o upgrade da versão 2.0 para a 2.1 do i-Educar, você precisará
-executar os seguintes passos:
-
-```bash
-git fetch
-git checkout 2.0.11
-
-git -C ieducar/modules/Reports fetch
-git checkout 2.0.0
-
-docker-compose exec ieducar_1604 ieducar/vendor/bin/phinx migrate
-```
-
-Após este passo, você precisará fazer o backup do seu banco de dados para
-restaurá-lo após a atualização do seu código fonte.
-
-```bash
-docker-compose down
-
-git checkout master
-git pull
-rm -rf ieducar/vendor
-git checkout ieducar/vendor
-
-git -C ieducar/modules/Reports checkout master
-git -C ieducar/modules/Reports pull
-
-docker-compose build
-docker-compose up -d
-docker-compose exec php composer update-install
-```
-
-Sua instalação estará atualizada e você poderá realizar seu
-[primeiro acesso](#primeiro-acesso) na nova versão do i-Educar.
-
+- [Upgrade para 2.2 da 2.1](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.2-da-2.1).
+- [Upgrade para 2.1 da 2.0](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.1-da-2.0).
+ 
 ### Criando um build de distribuição
 
 Para criar um build de distribuição de uma nova versão do i-Educar basta
