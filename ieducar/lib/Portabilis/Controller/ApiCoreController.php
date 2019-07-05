@@ -372,19 +372,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     protected function validatesIsNumeric($expectedNumericParamNames)
     {
-        if (!is_array($expectedNumericParamNames)) {
-            $expectedNumericParamNames = [$expectedNumericParamNames];
-        }
-
-        $valid = true;
-
-        foreach ($requiredParamNames as $param) {
-            if (!$this->validator->validatesValueIsNumeric($this->getRequest()->$param, $param) and $valid) {
-                $valid = false;
-            }
-        }
-
-        return $valid;
+        return true;
     }
 
     protected function fetchPreparedQuery($sql, $params = [], $hideExceptions = true, $returnOnly = '')
