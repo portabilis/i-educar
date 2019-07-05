@@ -12,7 +12,7 @@ $factory->define(LegacyAcademicYearStage::class, function (Faker $faker) {
     return [
         'ref_ano' => $schooAcademicYear->ano,
         'ref_ref_cod_escola' => $schooAcademicYear->ref_cod_escola,
-        'sequencial' => $faker->unique()->numberBetween(1, 9),
+        'sequencial' => 1,
         'ref_cod_modulo' => factory(LegacyStageType::class)->create(),
         'data_inicio' => now()->subMonths(3),
         'data_fim' => now()->addMonths(3),

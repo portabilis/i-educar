@@ -22,5 +22,6 @@ $factory->defineAs(LegacyEvaluationRule::class, 'without-score', function (Faker
     return array_merge($evaluationRule, [
         'tipo_nota' => RegraAvaliacao_Model_Nota_TipoValor::NENHUM,
         'tipo_progressao' => RegraAvaliacao_Model_TipoProgressao::CONTINUADA,
+        'tipo_presenca' => RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE,
     ]);
 });
