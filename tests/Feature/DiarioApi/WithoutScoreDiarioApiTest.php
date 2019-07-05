@@ -10,14 +10,17 @@ use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolClass;
+use App\Process;
 use App\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 
 class WithoutScoreDiarioApiTest extends TestCase
 {
     use DatabaseTransactions, DiarioApiTestTrait;
+    const MENU_DIARIOAPI = 107;
 
     /**
      * @inheritdoc
@@ -36,11 +39,11 @@ class WithoutScoreDiarioApiTest extends TestCase
 
         $level->evaluationRules()->attach($evaluationRule->id, ['ano_letivo' => 2019]);
 
-        $disciplines = factory(LegacyDiscipline::class, 2)->create();
+        $disciplines = factory(LegacyDiscipline::class)->create();
 
         $school = $schoolClass->school;
 
-        $schoolClass->disciplines()->attach($disciplines[0]->id, ['ano_escolar_id' => 1, 'escola_id' => $school->id]);
+        $schoolClass->disciplines()->attach($disciplines->id, ['ano_escolar_id' => 1, 'escola_id' => $school->id]);
         $school->courses()->attach($schoolClass->course_id, [
             'ativo' => 1,
             'anos_letivos' => '{'.now()->year.'}',
@@ -49,7 +52,7 @@ class WithoutScoreDiarioApiTest extends TestCase
         ]);
 
         factory(LegacyDisciplineAcademicYear::class)->create([
-            'componente_curricular_id' => $disciplines[0]->id,
+            'componente_curricular_id' => $disciplines->id,
             'ano_escolar_id' => $schoolClass->grade_id,
         ]);
 
@@ -61,6 +64,7 @@ class WithoutScoreDiarioApiTest extends TestCase
                 'ref_cod_curso' => $schoolClass->course_id,
             ]),
         ]);
+        $registration = $enrollment->registration;
 
         factory(LegacySchoolAcademicYear::class)->create([
             'ref_cod_escola' => $school->id,
@@ -71,6 +75,14 @@ class WithoutScoreDiarioApiTest extends TestCase
             'ref_ref_cod_escola' => $school->id,
         ]);
 
-        $response = $this->postAbsence($enrollment, $disciplines[0]->id, 1, 10);
+        /** @var User $user */
+        $user = factory(User::class, 'admin')->make();
+        $user->processes()->attach(self::MENU_DIARIOAPI,['cadastra' => 1]);
+        Auth::setUser($user);
+
+        $response = $this->postAbsence($enrollment, $disciplines->id, 1, 10);
+
+        $this->assertEquals('Aprovado', $response['situacao']);
+        $this->assertEquals(1,$registration->refresh()->aprovado);
     }
 }

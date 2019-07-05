@@ -4,6 +4,8 @@ namespace Tests\Feature\DiarioApi;
 
 use App\Models\LegacyEnrollment;
 use CoreExt_Controller_Request;
+use CoreExt_Session;
+use DiarioApiController;
 
 require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Views/DiarioApiController.php';
 
@@ -33,8 +35,6 @@ trait DiarioApiTestTrait
             'etapa' => $stage,
             'matricula_id' => $enrollment->registration->id,
             'att_value' => $score,
-            'access_key' => env('API_ACCESS_KEY'),
-            'secret_key' => env('API_SECRET_KEY'),
         ];
 
         // Necessário porque um lugar em Boletim.php pega o valor da global $_GET
@@ -42,8 +42,11 @@ trait DiarioApiTestTrait
 
         $fakeRequest = new CoreExt_Controller_Request(['data' => $data]);
 
-        $diarioApiController = new \DiarioApiController();
+        $diarioApiController = new DiarioApiController();
         $diarioApiController->setRequest($fakeRequest);
+        $session = new CoreExt_Session();
+        $session->id_pessoa = 1;
+        $diarioApiController->setSession($session);
         $diarioApiController->postFalta();
 
         return $diarioApiController->response;
