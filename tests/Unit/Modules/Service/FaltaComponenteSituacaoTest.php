@@ -448,4 +448,9 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
 
     $this->assertEquals($expected, $actual);
   }
+
+  public function tearDown()
+  {
+    Portabilis_Utils_Database::$_db = null;
+  }
 }
