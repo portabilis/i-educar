@@ -5,6 +5,10 @@ use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyInstitution;
 use Faker\Generator as Faker;
 
+require_once __DIR__ . '/../../ieducar/modules/RegraAvaliacao/Model/Nota/TipoValor.php';
+require_once __DIR__ . '/../../ieducar/modules/RegraAvaliacao/Model/TipoProgressao.php';
+require_once __DIR__ . '/../../ieducar/modules/RegraAvaliacao/Model/TipoPresenca.php';
+
 $factory->define(LegacyEvaluationRule::class, function (Faker $faker) {
     return [
         'formula_media_id' => factory(LegacyAverageFormula::class)->create(),
