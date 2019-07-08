@@ -47,6 +47,7 @@ class clsPmieducarInstituicao
     public $orgao_regional;
     public $exigir_lancamentos_anteriores;
     public $exibir_apenas_professores_alocados;
+    public $bloquear_vinculo_professor_sem_alocacao_escola;
 
     /**
      * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -136,7 +137,8 @@ class clsPmieducarInstituicao
         $obrigar_campos_censo = null,
         $obrigar_documento_pessoa = null,
         $exigir_lancamentos_anteriores = null,
-        $exibir_apenas_professores_alocados = null
+        $exibir_apenas_professores_alocados = null,
+        $bloquear_vinculo_professor_sem_alocacao_escola = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
@@ -189,7 +191,8 @@ class clsPmieducarInstituicao
             obrigar_documento_pessoa,
             orgao_regional,
             exigir_lancamentos_anteriores,
-            exibir_apenas_professores_alocados 
+            exibir_apenas_professores_alocados,
+            bloquear_vinculo_professor_sem_alocacao_escola
         ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -338,6 +341,10 @@ class clsPmieducarInstituicao
 
         if (is_bool($exibir_apenas_professores_alocados)) {
             $this->exibir_apenas_professores_alocados = $exibir_apenas_professores_alocados;
+        }
+
+        if (is_bool($bloquear_vinculo_professor_sem_alocacao_escola)) {
+            $this->bloquear_vinculo_professor_sem_alocacao_escola = $bloquear_vinculo_professor_sem_alocacao_escola;
         }
     }
 
@@ -705,6 +712,16 @@ class clsPmieducarInstituicao
                 $gruda = ', ';
             }
 
+            if (dbBool($this->bloquear_vinculo_professor_sem_alocacao_escola)) {
+                $campos .= "{$gruda}bloquear_vinculo_professor_sem_alocacao_escola";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}bloquear_vinculo_professor_sem_alocacao_escola";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
             if (is_string($this->orgao_regional) and !empty($this->orgao_regional)) {
                 $campos .= "{$gruda}orgao_regional";
                 $valores .= "{$gruda}'{$this->orgao_regional}'";
@@ -1045,6 +1062,14 @@ class clsPmieducarInstituicao
                 $gruda = ', ';
             } else {
                 $set .= "{$gruda}exibir_apenas_professores_alocados = false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->bloquear_vinculo_professor_sem_alocacao_escola)) {
+                $set .= "{$gruda}bloquear_vinculo_professor_sem_alocacao_escola = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}bloquear_vinculo_professor_sem_alocacao_escola = false ";
                 $gruda = ', ';
             }
 
