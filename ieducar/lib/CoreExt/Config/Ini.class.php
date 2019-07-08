@@ -226,4 +226,51 @@ class CoreExt_Config_Ini extends CoreExt_Config
 
         return $config;
     }
+
+    /**
+     * Transforma uma array multidimensional em uma array de chave: valor
+     * utilizando a dot syntax.
+     *
+     * @param array  $array
+     * @param string $key
+     * @param mixed  $value
+     *
+     * @return mixed
+     */
+    private function dotCompact($array, $key, $value)
+    {
+        if (is_array($value)) {
+            foreach ($value as $internKey => $internValue) {
+                $array = $this->dotCompact($array, "{$key}.{$internKey}", $internValue);
+            }
+        }
+
+        if (is_scalar($value)) {
+            $array[$key] = $value;
+        }
+
+        return $array;
+    }
+
+    /**
+     * Retorna uma array com as configurações que existiam no arquivo .ini.
+     *
+     * @param string $tenant
+     *
+     * @return array
+     */
+    public function getSettings($tenant)
+    {
+        $item = collect($this->iniArr)->first(function ($item) use ($tenant) {
+            return $item['app']['database']['dbname'] === $tenant;
+        });
+
+        if (empty($item)) {
+            $item = collect($this->iniArr)->first(function ($item, $key) use ($tenant) {
+                return $key === 'production';
+            });
+        }
+
+        return $this->dotCompact([], 'legacy', $item);
+    }
 }

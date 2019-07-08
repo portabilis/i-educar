@@ -104,6 +104,8 @@ class indice extends clsCadastro
     ];
     public $nao_informar_educacenso;
     public $ano_letivo;
+    public $nome_url_cancelar = 'Cancelar';
+    public $url_cancelar = 'educar_turma_lst.php';
 
     public function Inicializar()
     {
@@ -190,8 +192,6 @@ class indice extends clsCadastro
         $this->breadcrumb($nomeMenu . ' turma', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->nome_url_cancelar = 'Cancelar';
 
         $this->retorno = $retorno;
 
@@ -906,6 +906,7 @@ class indice extends clsCadastro
     public function Editar()
     {
         $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
+        $possuiAlunosVinculados = $turmaDetalhe->possuiAlunosVinculados();
         $turmaDetalhe = $turmaDetalhe->detalhe();
         $this->ref_cod_curso = $turmaDetalhe['ref_cod_curso'];
         $this->ref_ref_cod_escola = $turmaDetalhe['ref_ref_cod_escola'];
@@ -917,6 +918,17 @@ class indice extends clsCadastro
         if (!$this->verificaCamposCenso()) {
             return false;
         }
+
+
+        $this->visivel = isset($this->visivel);
+
+        if (!$this->visivel && $possuiAlunosVinculados) {
+            $this->mensagem = 'Não foi possível inativar a turma, pois a mesma possui matrículas vinculadas.';
+
+            return false;
+        }
+
+        $this->multiseriada = isset($this->multiseriada) ? 1 : 0;
 
         $objTurma = $this->montaObjetoTurma($this->cod_turma, null, $this->pessoa_logada);
         $dadosTurma = $objTurma->detalhe();
@@ -937,9 +949,6 @@ class indice extends clsCadastro
         } else {
             $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
         }
-
-        $this->multiseriada = isset($this->multiseriada) ? 1 : 0;
-        $this->visivel = isset($this->visivel);
 
         $editou = $objTurma->edita();
 

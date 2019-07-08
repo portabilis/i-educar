@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use iEducar\Modules\Educacenso\Migrations\RemoveValoresInvalidosDaLocalizacaoDiferenciada as RemoveValoresInvalidosDaLocalizacaoDiferenciadaClass;
 use Illuminate\Database\Migrations\Migration;
 
 class RemoveValoresInvalidosDaLocalizacaoDiferenciada extends Migration
@@ -13,10 +12,6 @@ class RemoveValoresInvalidosDaLocalizacaoDiferenciada extends Migration
      */
     public function up()
     {
-        DB::statement('
-            UPDATE pmieducar.escola
-            SET localizacao_diferenciada = null
-            WHERE localizacao_diferenciada IN (4,5,6);
-        ');
+        RemoveValoresInvalidosDaLocalizacaoDiferenciadaClass::execute();
     }
 }

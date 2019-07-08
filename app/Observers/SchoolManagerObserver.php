@@ -14,11 +14,12 @@ class SchoolManagerObserver
      */
     public function created(SchoolManager $schoolManager)
     {
+
         if (!$schoolManager->isChief()) {
             return;
         }
 
-        $this->updateManagerDataSchool($schoolManager, $schoolManager->individual_id, $schoolManager->role_id, $schoolManager->individual->person->email);
+        $this->updateManagerDataSchool($schoolManager, $schoolManager->employee_id, $schoolManager->role_id, $schoolManager->individual->person->email);
     }
 
     /**
