@@ -540,6 +540,7 @@ class indice extends clsCadastro
                 'visivel',
                 'turma_turno_id',
                 'tipo_boletim',
+                'tipo_boletim_diferenciado',
                 'ano',
                 'dias_semana',
                 'atividades_complementares',
