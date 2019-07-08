@@ -13,7 +13,7 @@ class DefaultDataModulesEtapasEducacenso extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultModulesEtapasEducacensoTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultModulesEtapasEducacensoTableSeeder::class, '--force' => true]);
     }
 
     /**

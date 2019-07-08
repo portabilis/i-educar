@@ -13,7 +13,7 @@ class DefaultDataCadastroCodigoCartorioInep extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultCadastroCodigoCartorioInepTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultCadastroCodigoCartorioInepTableSeeder::class, '--force' => true]);
     }
 
     /**

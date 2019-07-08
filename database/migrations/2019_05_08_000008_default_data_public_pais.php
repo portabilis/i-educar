@@ -13,7 +13,7 @@ class DefaultDataPublicPais extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultPublicPaisTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultPublicPaisTableSeeder::class, '--force' => true]);
     }
 
     /**

@@ -13,7 +13,7 @@ class DefaultDataPortalFuncionarioVinculo extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultPortalFuncionarioVinculoTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultPortalFuncionarioVinculoTableSeeder::class, '--force' => true]);
     }
 
     /**

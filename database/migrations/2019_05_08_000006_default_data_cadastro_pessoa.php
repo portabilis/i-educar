@@ -13,7 +13,7 @@ class DefaultDataCadastroPessoa extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultCadastroPessoaTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultCadastroPessoaTableSeeder::class, '--force' => true]);
     }
 
     /**

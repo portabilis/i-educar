@@ -13,7 +13,7 @@ class DefaultDataPmieducarEscolaLocalizacao extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultPmieducarEscolaLocalizacaoTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultPmieducarEscolaLocalizacaoTableSeeder::class, '--force' => true]);
     }
 
     /**

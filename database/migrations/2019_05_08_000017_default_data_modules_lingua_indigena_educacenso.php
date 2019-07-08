@@ -13,7 +13,7 @@ class DefaultDataModulesLinguaIndigenaEducacenso extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultModulesLinguaIndigenaEducacensoTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultModulesLinguaIndigenaEducacensoTableSeeder::class, '--force' => true]);
     }
 
     /**

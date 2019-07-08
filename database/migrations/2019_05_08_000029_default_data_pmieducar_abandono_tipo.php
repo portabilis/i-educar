@@ -13,7 +13,7 @@ class DefaultDataPmieducarAbandonoTipo extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultPmieducarAbandonoTipoTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultPmieducarAbandonoTipoTableSeeder::class, '--force' => true]);
     }
 
     /**

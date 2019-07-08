@@ -13,7 +13,7 @@ class DefaultDataModulesTabelaArredondamentoValor extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultModulesTabelaArredondamentoValorTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultModulesTabelaArredondamentoValorTableSeeder::class, '--force' => true]);
     }
 
     /**

@@ -13,7 +13,7 @@ class DefaultDataCadastroRaca extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultCadastroRacaTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultCadastroRacaTableSeeder::class, '--force' => true]);
     }
 
     /**

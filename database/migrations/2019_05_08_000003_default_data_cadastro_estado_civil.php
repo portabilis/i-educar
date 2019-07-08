@@ -13,7 +13,7 @@ class DefaultDataCadastroEstadoCivil extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultCadastroEstadoCivilTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultCadastroEstadoCivilTableSeeder::class, '--force' => true]);
     }
 
     /**

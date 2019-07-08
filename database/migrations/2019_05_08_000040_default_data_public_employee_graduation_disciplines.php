@@ -13,7 +13,7 @@ class DefaultDataPublicEmployeeGraduationDisciplines extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultEmployeeGraduationDisciplines::class]);
+        Artisan::call('db:seed', ['--class' => DefaultEmployeeGraduationDisciplines::class, '--force' => true]);
     }
 
     /**

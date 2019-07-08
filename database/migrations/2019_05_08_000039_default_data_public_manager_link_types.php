@@ -13,7 +13,7 @@ class DefaultDataPublicManagerLinkTypes extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultManagerLinkTypesTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultManagerLinkTypesTableSeeder::class, '--force' => true]);
     }
 
     /**

@@ -13,7 +13,7 @@ class DefaultDataUrbanoTipoLogradouro extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultUrbanoTipoLogradouroTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultUrbanoTipoLogradouroTableSeeder::class, '--force' => true]);
     }
 
     /**

@@ -13,7 +13,7 @@ class DefaultDataCadastroEscolaridade extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultCadastroEscolaridadeTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultCadastroEscolaridadeTableSeeder::class, '--force' => true]);
     }
 
     /**

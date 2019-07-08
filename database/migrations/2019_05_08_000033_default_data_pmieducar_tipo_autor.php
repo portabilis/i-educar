@@ -13,7 +13,7 @@ class DefaultDataPmieducarTipoAutor extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultPmieducarTipoAutorTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultPmieducarTipoAutorTableSeeder::class, '--force' => true]);
     }
 
     /**

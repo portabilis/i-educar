@@ -13,7 +13,7 @@ class DefaultDataPmieducarUsuario extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultPmieducarUsuarioTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultPmieducarUsuarioTableSeeder::class, '--force' => true]);
     }
 
     /**

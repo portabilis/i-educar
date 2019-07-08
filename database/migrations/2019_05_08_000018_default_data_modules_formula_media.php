@@ -13,7 +13,7 @@ class DefaultDataModulesFormulaMedia extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultModulesFormulaMediaTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultModulesFormulaMediaTableSeeder::class, '--force' => true]);
     }
 
     /**

@@ -13,7 +13,7 @@ class DefaultDataPublicMunicipio extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultPublicMunicipioTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultPublicMunicipioTableSeeder::class, '--force' => true]);
     }
 
     /**

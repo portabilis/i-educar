@@ -13,7 +13,7 @@ class DefaultDataRelatorioSituacaoMatricula extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultRelatorioSituacaoMatriculaTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultRelatorioSituacaoMatriculaTableSeeder::class, '--force' => true]);
     }
 
     /**

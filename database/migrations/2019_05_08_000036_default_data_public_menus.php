@@ -13,7 +13,7 @@ class DefaultDataPublicMenus extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultMenusTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultMenusTableSeeder::class, '--force' => true]);
     }
 
     /**

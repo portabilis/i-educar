@@ -13,7 +13,7 @@ class DefaultDataModulesRegraAvaliacao extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultModulesRegraAvaliacaoTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultModulesRegraAvaliacaoTableSeeder::class, '--force' => true]);
     }
 
     /**

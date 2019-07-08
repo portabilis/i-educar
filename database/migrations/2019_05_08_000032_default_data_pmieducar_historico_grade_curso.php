@@ -13,7 +13,7 @@ class DefaultDataPmieducarHistoricoGradeCurso extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultPmieducarHistoricoGradeCursoTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultPmieducarHistoricoGradeCursoTableSeeder::class, '--force' => true]);
     }
 
     /**

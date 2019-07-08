@@ -13,7 +13,7 @@ class DefaultDataPortalFuncionario extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultPortalFuncionarioTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultPortalFuncionarioTableSeeder::class, '--force' => true]);
     }
 
     /**

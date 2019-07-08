@@ -13,7 +13,7 @@ class DefaultDataPublicUf extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultPublicUfTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultPublicUfTableSeeder::class, '--force' => true]);
     }
 
     /**

@@ -13,7 +13,7 @@ class DefaultDataCadastroDeficiencia extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultCadastroDeficienciaTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultCadastroDeficienciaTableSeeder::class, '--force' => true]);
     }
 
     /**

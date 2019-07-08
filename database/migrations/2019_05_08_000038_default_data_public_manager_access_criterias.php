@@ -13,7 +13,7 @@ class DefaultDataPublicManagerAccessCriterias extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultManagerAccessCriteriasTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultManagerAccessCriteriasTableSeeder::class, '--force' => true]);
     }
 
     /**

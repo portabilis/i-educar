@@ -13,7 +13,7 @@ class DefaultDataPublicManagerRoles extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultManagerRolesTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultManagerRolesTableSeeder::class, '--force' => true]);
     }
 
     /**

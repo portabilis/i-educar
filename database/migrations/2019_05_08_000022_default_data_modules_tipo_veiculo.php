@@ -13,7 +13,7 @@ class DefaultDataModulesTipoVeiculo extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultModulesTipoVeiculoTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultModulesTipoVeiculoTableSeeder::class, '--force' => true]);
     }
 
     /**

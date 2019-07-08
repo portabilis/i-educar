@@ -13,7 +13,7 @@ class DefaultDataModulesEducacensoOrgaoRegional extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultModulesEducacensoOrgaoRegionalTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultModulesEducacensoOrgaoRegionalTableSeeder::class, '--force' => true]);
     }
 
     /**

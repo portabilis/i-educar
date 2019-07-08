@@ -13,7 +13,7 @@ class DefaultDataPmieducarConfiguracoesGerais extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultPmieducarConfiguracoesGeraisTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultPmieducarConfiguracoesGeraisTableSeeder::class, '--force' => true]);
     }
 
     /**

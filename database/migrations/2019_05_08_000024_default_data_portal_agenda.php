@@ -13,7 +13,7 @@ class DefaultDataPortalAgenda extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultPortalAgendaTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultPortalAgendaTableSeeder::class, '--force' => true]);
     }
 
     /**

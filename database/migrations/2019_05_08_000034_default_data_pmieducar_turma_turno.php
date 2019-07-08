@@ -13,7 +13,7 @@ class DefaultDataPmieducarTurmaTurno extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', ['--class' => DefaultPmieducarTurmaTurnoTableSeeder::class]);
+        Artisan::call('db:seed', ['--class' => DefaultPmieducarTurmaTurnoTableSeeder::class, '--force' => true]);
     }
 
     /**
