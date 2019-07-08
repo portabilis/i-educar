@@ -18,6 +18,8 @@ use App\User;
 trait DiarioApiFakeDataTestTrait
 {
     /**
+     * Cria dados base para testes das regras de avaliação
+     *
      * @param LegacyEvaluationRule $evaluationRule
      * @return LegacyEnrollment
      */
@@ -79,5 +81,20 @@ trait DiarioApiFakeDataTestTrait
         ]);
 
         return $enrollment;
+    }
+
+    /**
+     * Adiciona uma etapa ao ano letivo (pmieducar.ano_letivo_modulo)
+     *
+     * @param LegacySchoolClass $schoolClass
+     * @param $number
+     */
+    public function addAcademicYearStage($schoolClass, $number)
+    {
+        factory(LegacyAcademicYearStage::class)->create([
+            'ref_ano' => now()->year,
+            'ref_ref_cod_escola' => $schoolClass->school_id,
+            'sequencial' => $number,
+        ]);
     }
 }
