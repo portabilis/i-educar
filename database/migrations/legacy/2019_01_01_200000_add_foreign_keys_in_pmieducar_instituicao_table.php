@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddForeignKeysOnPmieducarInstituicaoTable extends Migration
+class AddForeignKeysInPmieducarInstituicaoTable extends Migration
 {
     /**
      * Run the migrations.
