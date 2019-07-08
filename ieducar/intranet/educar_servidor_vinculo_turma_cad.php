@@ -263,6 +263,9 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!$this->validaVinculoEscola()) {
+            return false;
+        }
 
         if ($professorTurma->existe2()) {
             $this->mensagem .= 'Não é possível cadastrar pois já existe um vínculo com essa turma.<br>';
@@ -321,7 +324,7 @@ class indice extends clsCadastro
 
         /** @var Employee $servidor */
         $servidor = Employee::findOrFail($this->servidor_id);
-        
+
         $vinculoEscola = $servidor->schools()
             ->where('ref_cod_escola', $this->ref_cod_escola)
             ->withPivotValue('ano', $this->ano)
