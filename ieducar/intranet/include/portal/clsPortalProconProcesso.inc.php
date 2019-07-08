@@ -156,7 +156,7 @@ class clsPortalProconProcesso
             }
             else
             {
-                if( $db->CampoUnico( "SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_finaliza}'" ) )
+                if( $db->CampoUnico( "SELECT 1 FROM portal.funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_finaliza}'" ) )
                 {
                     $this->ref_funcionario_finaliza = $ref_funcionario_finaliza;
                 }
@@ -184,7 +184,7 @@ class clsPortalProconProcesso
             }
             else
             {
-                if( $db->CampoUnico( "SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_cad}'" ) )
+                if( $db->CampoUnico( "SELECT 1 FROM portal.funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_cad}'" ) )
                 {
                     $this->ref_funcionario_cad = $ref_funcionario_cad;
                 }

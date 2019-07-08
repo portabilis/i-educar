@@ -144,7 +144,7 @@ class clsPmieducarServidor
                     $this->cod_servidor = $cod_servidor;
                     // }
                 }
-            } elseif ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$cod_servidor}'")) {
+            } elseif ($db->CampoUnico("SELECT 1 FROM portal.funcionario WHERE ref_cod_pessoa_fj = '{$cod_servidor}'")) {
                 $this->cod_servidor = $cod_servidor;
             }
         }
