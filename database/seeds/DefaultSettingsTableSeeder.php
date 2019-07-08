@@ -39,7 +39,7 @@ class DefaultSettingsTableSeeder extends Seeder
             'legacy.app.locale.timezone' => 'America/Sao_Paulo',
             'legacy.app.admin.reports.sql_tempo' => '3',
             'legacy.app.admin.reports.pagina_tempo' => '5',
-            'legacy.app.admin.reports.emails.0' => '',
+            'legacy.app.admin.reports.emails' => '',
             'legacy.app.user_accounts.default_password_expiration_period' => '180',
             'legacy.app.auditoria.notas' => '1',
             'legacy.app.matricula.dependencia' => '1',
