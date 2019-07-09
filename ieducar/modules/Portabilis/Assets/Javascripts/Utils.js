@@ -250,7 +250,7 @@ function safeUtf8Decode(s) {
 }
 
 function formatDate(data) {
-  data = new Date();
+  data = new Date(data);
   var dia = data.getDate().toString().padStart(2, "0");
   var mes = data.getMonth().toString().padStart(2, "0");
   var ano = data.getFullYear();
