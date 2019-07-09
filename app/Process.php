@@ -14,5 +14,6 @@ class Process
     const MENU_CONFIGURATIONS = 25;
 
     const ENROLLMENT_HISTORY = 1001;
+    const ATTENDED_CANDIDATE = 1002;
     const UNDO_STUDENT_UNIFICATION = 2001;
 }
