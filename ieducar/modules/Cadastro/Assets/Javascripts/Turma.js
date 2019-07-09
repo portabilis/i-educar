@@ -201,8 +201,8 @@ $j('#tipo_mediacao_didatico_pedagogico').on('change', function(){
 
 function buscaEtapasDaEscola() {  
   var urlApi = getResourceUrlBuilder.buildUrl('/module/Api/Escola', 'etapas-da-escola-por-ano', {
-    escola_id : 19,
-    ano : 2019
+    escola_id : $j('#ref_cod_escola').val(),
+    ano : new Date().getFullYear()
   });
 
   var options = {
