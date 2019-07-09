@@ -370,11 +370,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
         );
     }
 
-    protected function validatesIsNumeric($expectedNumericParamNames)
-    {
-        return true;
-    }
-
     protected function fetchPreparedQuery($sql, $params = [], $hideExceptions = true, $returnOnly = '')
     {
         $options = [

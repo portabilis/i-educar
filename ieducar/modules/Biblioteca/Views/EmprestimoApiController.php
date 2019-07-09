@@ -134,8 +134,6 @@ class EmprestimoApiController extends ApiCoreController
                                                 'biblioteca_id',
                                                 'cliente_id',
                                                 'tombo_exemplar'))
-
-           && $this->validatesIsNumeric('tombo_exemplar')
            && $this->validatesExistenceOfExemplar()
            && $this->validatesExistenceOfCliente();
   }
