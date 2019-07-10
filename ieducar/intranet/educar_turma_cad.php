@@ -970,7 +970,7 @@ class indice extends clsCadastro
         }
 
         if (!$this->temBoletimDiferenciado($dadosTurma['ref_ref_cod_serie'], $dadosTurma['ano'], $this->tipo_boletim_diferenciado)) {
-            $this->mensagem = 'O campo Boletim difenciado é obrigatório quando regra de avaliação da série possui uma regra diferenciada definida';
+            $this->mensagem = 'O campo \'<b>Boletim diferenciado</b>\' é obrigatório quando a regra de avaliação da série possui regra diferenciada definida.';
 
             return false;
         }
