@@ -1481,6 +1481,18 @@ class clsPmieducarMatriculaTurma
     return false;
   }
 
+    function getDataEntradaEnturmacaoSeguinte($ref_matricula, $sequencial){
+        if (is_numeric($ref_matricula) && is_numeric($sequencial)){
+            $db = new clsBanco();
+            return $db->CampoUnico("SELECT to_char(data_enturmacao, 'YYYY-MM-DD')
+                                FROM $this->_tabela
+                               WHERE ref_cod_matricula = $ref_matricula
+                                 AND sequencial > $sequencial
+                               GROUP BY data_enturmacao");
+        }
+        return false;
+    }
+
   public function getDataExclusaoUltimaEnturmacao(int $codMatricula)
   {
     $db = new clsBanco();
