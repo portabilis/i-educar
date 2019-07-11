@@ -109,6 +109,8 @@ class indice extends clsCadastro
                 break;
         }
 
+        $required = false;
+
         if (!$enturmacao['ativo']) {
             $required = true;
         }
