@@ -224,4 +224,26 @@ class Registro30 implements RegistroEducacenso
         return $this->inepServidor;
     }
 
+    /**
+     * @return integer
+     */
+    public function deficienciaMultipla()
+    {
+        $arrayDeficienciasMultiplas = [
+            $this->deficienciaCegueira,
+            $this->deficienciaBaixaVisao,
+            $this->deficienciaSurdez,
+            $this->deficienciaAuditiva,
+            $this->deficienciaSurdoCegueira,
+            $this->deficienciaFisica,
+            $this->deficienciaIntelectual,
+        ];
+
+        if (empty($this->arrayDeficiencias)) {
+            return null;
+        }
+
+        return count(array_keys($arrayDeficienciasMultiplas, 1)) > 1 ? 1 : 0;
+    }
+
 }

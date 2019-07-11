@@ -16,7 +16,7 @@ $j(function () {
             this.setupEnv();
             this.removeTableCellsAndRows();
             this.setCurrentModule();
-            this.setupModule();
+            this.initModule();
             this.selectModule();
         },
         getSelector: function (key) {
@@ -251,6 +251,24 @@ $j(function () {
             delete params['content'];
 
             container.dialog(params);
+        },
+        initModule: function () {
+            var $select = $j('#ref_cod_modulo'),
+                val = $select.val(),
+                availableModules = window.modulosDisponiveis || [],
+                moduleInfo = availableModules[val] || {},
+                etapas = moduleInfo.etapas || undefined,
+                rows = this.countRows();
+
+                if (etapas > rows) {
+                    var diff = etapas - rows;
+                    this.addRows(diff);
+                }
+
+                if (etapas < rows) {
+                    var diff = rows - etapas;
+                    this.removeRows(diff);
+                }
         },
         setupModule: function () {
             var $select = $j('#ref_cod_modulo'),

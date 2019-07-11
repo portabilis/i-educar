@@ -31,8 +31,8 @@ use Illuminate\Support\Facades\Storage;
  * @since       Arquivo disponÃ­vel desde a versÃ£o ?
  * @version     $Id$
  */
-class FileController
-{
+
+class FileController {
 
     var $file;
     var $errorMessage;
@@ -40,15 +40,14 @@ class FileController
     var $suportedExtensions;
 
     function __construct($file, $maxSize = NULL,
-                         $suportedExtensions = NULL)
-    {
+                             $suportedExtensions = NULL){
 
         $this->file = $file;
 
-        if ($maxSize != null)
+        if ($maxSize!=null)
             $this->maxSize = $maxSize;
         else
-            $this->maxSize = 2048 * 1024;
+            $this->maxSize = 2048*1024;
 
         if ($suportedExtensions != null)
             $this->suportedExtensions = $suportedExtensions;
@@ -82,31 +81,35 @@ class FileController
         }
     }
 
-    function validateFile()
-    {
+    function validateFile(){
 
-        $msg = '';
+        $msg='';
 
         $name = $this->file["name"];
         $size = $this->file["size"];
         $ext = $this->getExtension($name);
 
 
-        if (strlen($name) > 0) {
+        if(strlen($name) > 0)
+        {
             // File format validation
-            if (in_array($ext, $this->suportedExtensions)) {
+            if(in_array($ext,$this->suportedExtensions))
+            {
                 // File size validation
-                if ($size < $this->maxSize) {
+                if($size < $this->maxSize){
                     return true;
-                } else {
+                }
+                else{
                     $this->errorMessage = "NÃ£o sÃ£o permitidos arquivos com mais de 2MB.";
                     return false;
                 }
-            } else {
+            }
+            else{
                 $this->errorMessage = "Deve ser enviado um arquivo do tipo pdf.";
                 return false;
             }
-        } else {
+        }
+        else{
             $this->errorMessage = "Selecione um arquivo.";
             return false;
         }
@@ -114,19 +117,18 @@ class FileController
         return false;
     }
 
-    function getErrorMessage()
-    {
+    function getErrorMessage(){
         return $this->errorMessage;
     }
 
 
-    function getExtension($name)
+    function getExtension($name) 
     {
-        $i = strrpos($name, ".");
+        $i = strrpos($name,".");
         if (!$i)
-            return "";
+          return "";
         $l = strlen($name) - $i;
-        $ext = substr($name, $i + 1, $l);
+        $ext = substr($name,$i+1,$l);
 
         return $ext;
     }

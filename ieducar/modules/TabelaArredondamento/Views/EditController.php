@@ -503,6 +503,8 @@ class EditController extends Core_Controller_Page_EditController
             return parent::_save();
         }
 
+        $this->getDataMapper()->save($entity);
+
         //Exclui todos os valores para inserir corretamente
         $entity->deleteAllValues();
 

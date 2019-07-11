@@ -57,7 +57,7 @@ class clsPmieducarAluno
   var $tipo_responsavel;
   var $recursos_prova_inep;
   var $recebe_escolarizacao_em_outro_espaco;
-  var $justificativa_falta_documentacao;
+  var $justificativa_falta_documentacao = false;
   var $url_laudo_medico;
   var $url_documento;
   var $codigo_sistema;
@@ -589,6 +589,9 @@ class clsPmieducarAluno
 
       if (is_numeric($this->justificativa_falta_documentacao)) {
         $set .= "{$gruda}justificativa_falta_documentacao = '{$this->justificativa_falta_documentacao}'";
+        $gruda = ', ';
+      } elseif ($this->justificativa_falta_documentacao !== false) {
+        $set .= "{$gruda}justificativa_falta_documentacao = null";
         $gruda = ', ';
       }
 
