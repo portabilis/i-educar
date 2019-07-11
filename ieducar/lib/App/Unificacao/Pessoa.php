@@ -572,6 +572,10 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'tabela' => 'portal.agenda_responsavel',
             'coluna' => 'ref_ref_cod_pessoa_fj'
         ],
+        [
+            'tabela' => 'pmieducar.aluno_excluidos',
+            'coluna' => 'ref_idpes'
+        ],
     ];
 
     protected $chavesDeletarDuplicados = [
@@ -582,6 +586,13 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         [
             'tabela' => 'cadastro.pessoa_fonetico',
             'coluna' => 'idpes'
+        ]
+    ];
+
+    protected $triggersNecessarias = [
+        [
+            'tabela' => 'pmieducar.aluno',
+            'trigger' => 'trigger_when_deleted_pmieducar_aluno'
         ]
     ];
 
