@@ -1472,11 +1472,13 @@ class clsPmieducarMatriculaTurma
   function getDataSaidaEnturmacaoAnterior($ref_matricula, $sequencial){
     if (is_numeric($ref_matricula) && is_numeric($sequencial)){
       $db = new clsBanco();
-      return $db->CampoUnico("SELECT to_char(data_exclusao, 'YYYY-MM-DD')
-                                FROM $this->_tabela
-                               WHERE ref_cod_matricula = $ref_matricula
-                                 AND sequencial < $sequencial
-                               GROUP BY data_exclusao");
+      return $db->CampoUnico("SELECT to_char(mtbefore.data_exclusao, 'YYYY-MM-DD')
+                                      FROM {$this->_tabela} mt
+                                      LEFT JOIN {$this->_tabela}  mtbefore
+                                      ON mtbefore.ref_cod_matricula = mt.ref_cod_matricula
+                                      AND mtbefore.sequencial = (SELECT max(sequencial) FROM {$this->_tabela} WHERE ref_cod_matricula = mt.ref_cod_matricula AND sequencial < mt.sequencial)
+                                      WHERE mt.ref_cod_matricula = {$ref_matricula}
+                                      AND mt.sequencial = {$sequencial}");
     }
     return false;
   }
@@ -1484,11 +1486,13 @@ class clsPmieducarMatriculaTurma
     function getDataEntradaEnturmacaoSeguinte($ref_matricula, $sequencial){
         if (is_numeric($ref_matricula) && is_numeric($sequencial)){
             $db = new clsBanco();
-            return $db->CampoUnico("SELECT to_char(data_enturmacao, 'YYYY-MM-DD')
-                                FROM $this->_tabela
-                               WHERE ref_cod_matricula = $ref_matricula
-                                 AND sequencial > $sequencial
-                               GROUP BY data_enturmacao");
+            return $db->CampoUnico("SELECT to_char(mtnext.data_enturmacao, 'YYYY-MM-DD')
+                                            FROM {$this->_tabela} mt
+                                            LEFT JOIN {$this->_tabela} mtnext
+                                            ON mtnext.ref_cod_matricula = mt.ref_cod_matricula
+                                            AND mtnext.sequencial = (SELECT min(sequencial) FROM {$this->_tabela} WHERE ref_cod_matricula = mt.ref_cod_matricula AND sequencial > mt.sequencial)
+                                            WHERE mt.ref_cod_matricula = {$ref_matricula}
+                                              AND mt.sequencial = {$sequencial}");
         }
         return false;
     }
