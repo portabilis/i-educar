@@ -39,7 +39,7 @@ trait DiarioApiRequestTestTrait
         $user = factory(User::class, 'admin')->make();
 
         /** @var TestResponse $response */
-        $response = $this->actingAs($user)->get(env('APP_URL') . '/module/Avaliacao/diarioApi?' . http_build_query($data));
+        $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
 
         return json_decode($response->content());
     }
