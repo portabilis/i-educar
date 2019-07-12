@@ -27,4 +27,20 @@ class LegacyEvaluationRule extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @return bool
+     */
+    public function isAverageBetweenScoreAndRemedialCalculation()
+    {
+        return $this->tipo_recuperacao_paralela == 1 && $this->tipo_calculo_recuperacao_paralela == 2;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDoubleScoreCalculation()
+    {
+        return $this->tipo_recuperacao_paralela == 1 && $this->tipo_calculo_recuperacao_paralela == 3;
+    }
 }
