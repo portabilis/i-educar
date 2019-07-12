@@ -232,16 +232,7 @@ class DiarioController extends ApiCoreController
                     $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
                     $valor = $this->truncate($valor, 4);
 
-                    $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
-                    $recuperacaoParalela = $nomeCampoRecuperacao == 'notaRecuperacaoParalela';
-
-                    if (is_numeric($notaRecuperacao) && $recuperacaoParalela && $regra->calculaMediaRecParalela) {
-                        $valorNota = (floatval($notaRecuperacao) + floatval($valor)) / 2;
-                    } else {
-                        $notaAposRecuperacao = $notaRecuperacao > $valor ? $notaRecuperacao : $valor;
-
-                        $valorNota = $recuperacaoEspecifica ? $valor : $notaAposRecuperacao;
-                    }
+                    $valorNota = $serviceBoletim->calculateStageScore($valor, $notaRecuperacao);
 
                     if ($etapa == 'Rc' && $valorNota > $regra->notaMaximaExameFinal) {
                         $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaExameFinal}.", 'error');
@@ -339,16 +330,7 @@ class DiarioController extends ApiCoreController
                             $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
                             $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
 
-                            $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
-                            $recuperacaoParalela = $nomeCampoRecuperacao == 'notaRecuperacaoParalela';
-
-                            if (is_numeric($notaRecuperacao) && $recuperacaoParalela && $regra->calculaMediaRecParalela) {
-                                $valorNota = (floatval($notaRecuperacao) + floatval($notaOriginal)) / 2;
-                            } else {
-                                $notaAposRecuperacao = $notaRecuperacao > $notaOriginal ? $notaRecuperacao : $notaOriginal;
-
-                                $valorNota = is_null($recuperacaoEspecifica) ? $notaOriginal : $notaAposRecuperacao;
-                            }
+                            $valorNota = $serviceBoletim->calculateStageScore($notaOriginal, $notaRecuperacao);
 
                             if ($valorNota > $regra->notaMaximaGeral) {
                                 $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaGeral}.", 'error');

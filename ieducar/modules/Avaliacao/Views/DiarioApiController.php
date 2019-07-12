@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyEvaluationRule;
+use App\Services\StageScoreCalculationService;
 use Cocur\Slugify\Slugify;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use Illuminate\Support\Facades\Session;
@@ -392,14 +394,24 @@ class DiarioApiController extends ApiCoreController
 
     // post
 
+    /**
+     * @throws CoreExt_Exception
+     */
     protected function postNota()
     {
         if ($this->canPostNota()) {
+
+            $nota = urldecode($this->getRequest()->att_value);
+            $notaOriginal = urldecode($this->getRequest()->nota_original);
+
+            $nota = $this->serviceBoletim()->calculateStageScore($nota, null);
+
             $array_nota = array(
                 'componenteCurricular' => $this->getRequest()->componente_curricular_id,
-                'nota' => urldecode($this->getRequest()->att_value),
+                'nota' => $nota,
                 'etapa' => $this->getRequest()->etapa,
-                'notaOriginal' => urldecode($this->getRequest()->nota_original));
+                'notaOriginal' => $notaOriginal,
+            );
 
             if ($_notaAntiga = $this->serviceBoletim()->getNotaComponente($this->getRequest()->componente_curricular_id, $this->getRequest()->etapa)) {
                 $array_nota['notaRecuperacaoParalela'] = $_notaAntiga->notaRecuperacaoParalela;
@@ -509,19 +521,18 @@ class DiarioApiController extends ApiCoreController
         return true;
     }
 
+    /**
+     * @throws CoreExt_Exception
+     */
     protected function postNotaRecuperacaoParalela()
     {
         if ($this->canPostNota()) {
             $notaOriginal = $this->getNotaOriginal();
             $notaRecuperacaoParalela = urldecode($this->getRequest()->att_value);
 
-            $regra = $this->getRegraAvaliacao();
-
-            if ($regra['calcula_media_rec_paralela']) {
-                $notaNova = (floatval($notaRecuperacaoParalela) + floatval($notaOriginal)) / 2;
-            } else {
-                $notaNova = $notaRecuperacaoParalela > $notaOriginal ? $notaRecuperacaoParalela : $notaOriginal;
-            }
+            $notaNova = $this->serviceBoletim()->calculateStageScore(
+                $notaOriginal, $notaRecuperacaoParalela
+            );
 
             $nota = new Avaliacao_Model_NotaComponente(array(
                 'componenteCurricular' => $this->getRequest()->componente_curricular_id,
