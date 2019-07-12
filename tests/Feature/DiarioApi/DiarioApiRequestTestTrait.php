@@ -17,6 +17,8 @@ trait DiarioApiRequestTestTrait
      */
     public function postAbsence($enrollment, $disciplineId, $stage, $score)
     {
+        $this->cleanGlobals();
+
         $schoolClass = $enrollment->schoolClass;
 
         $data = [
@@ -42,5 +44,14 @@ trait DiarioApiRequestTestTrait
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
 
         return json_decode($response->content());
+    }
+
+    /**
+     * Limpa variáveis globais que podem interferir testes no código legado
+     */
+    public function cleanGlobals()
+    {
+        $_GET = null;
+        $_POST = null;
     }
 }
