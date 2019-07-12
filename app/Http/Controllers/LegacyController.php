@@ -123,7 +123,7 @@ class LegacyController extends Controller
     private function loadFileOrAbort($filename)
     {
         try {
-            require_once $filename;
+            require $filename;
             return;
         } catch (HttpResponseException $exception) {
 
