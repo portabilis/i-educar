@@ -235,7 +235,7 @@ class DiarioController extends ApiCoreController
                     $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
                     $recuperacaoParalela = $nomeCampoRecuperacao == 'notaRecuperacaoParalela';
 
-                    if ($recuperacaoParalela && $regra->calculaMediaRecParalela) {
+                    if (is_numeric($notaRecuperacao) && $recuperacaoParalela && $regra->calculaMediaRecParalela) {
                         $valorNota = (floatval($notaRecuperacao) + floatval($valor)) / 2;
                     } else {
                         $notaAposRecuperacao = $notaRecuperacao > $valor ? $notaRecuperacao : $valor;
@@ -342,7 +342,7 @@ class DiarioController extends ApiCoreController
                             $recuperacaoEspecifica = $nomeCampoRecuperacao == 'notaRecuperacaoEspecifica';
                             $recuperacaoParalela = $nomeCampoRecuperacao == 'notaRecuperacaoParalela';
 
-                            if ($recuperacaoParalela && $regra->calculaMediaRecParalela) {
+                            if (is_numeric($notaRecuperacao) && $recuperacaoParalela && $regra->calculaMediaRecParalela) {
                                 $valorNota = (floatval($notaRecuperacao) + floatval($notaOriginal)) / 2;
                             } else {
                                 $notaAposRecuperacao = $notaRecuperacao > $notaOriginal ? $notaRecuperacao : $notaOriginal;
