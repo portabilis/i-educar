@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyEvaluationRule;
+use App\Services\StageScoreCalculationService;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
@@ -2784,5 +2786,38 @@ public function alterarSituacao($novaSituacao, $matriculaId){
     public function getRegrasRecuperacao()
     {
         return $this->getRegraAvaliacao()->findRegraRecuperacao();
+    }
+
+    /**
+     * @return LegacyEvaluationRule
+     */
+    public function getEvaluationRule()
+    {
+        return LegacyEvaluationRule::findOrFail(
+            $this->getRegra()->get('id')
+        );
+    }
+
+    /**
+     * @param float $score
+     * @param float $remedial
+     *
+     * @return float
+     */
+    public function calculateStageScore($score, $remedial)
+    {
+        $evaluationRule = $this->getEvaluationRule();
+
+        $service = new StageScoreCalculationService();
+
+        if ($evaluationRule->isAverageBetweenScoreAndRemedialCalculation()) {
+            return $service->calculateAverageBetweenScoreAndRemedial($score, $remedial);
+        }
+
+        if ($evaluationRule->isDoubleScoreCalculation()) {
+            return $service->calculateDoubleScore($score, $remedial);
+        }
+
+        return $service->calculateRemedial($score, $remedial);
     }
 }
