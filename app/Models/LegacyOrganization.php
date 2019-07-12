@@ -2,15 +2,9 @@
 
 namespace App\Models;
 
-use Prettus\Repository\Contracts\Transformable;
-use Prettus\Repository\Traits\TransformableTrait;
+use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class Pessoa.
- *
- * @package namespace App\Entities;
- */
-class LegacyCompany extends EloquentBaseModel
+class LegacyOrganization extends Model
 {
     /**
      * @var string

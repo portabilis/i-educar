@@ -1,10 +1,10 @@
 <?php
 
-use App\Models\LegacyCompany;
+use App\Models\LegacyOrganization;
 use App\Models\LegacyPerson;
 use Faker\Generator as Faker;
 
-$factory->define(LegacyCompany::class, function (Faker $faker) {
+$factory->define(LegacyOrganization::class, function (Faker $faker) {
     return [
         'idpes' => factory(LegacyPerson::class)->create(['tipo' => 'J']),
         'cnpj' => $faker->randomNumber(8),
