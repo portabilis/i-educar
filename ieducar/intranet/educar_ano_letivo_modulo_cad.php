@@ -540,6 +540,7 @@ class indice extends clsCadastro
                 'visivel',
                 'turma_turno_id',
                 'tipo_boletim',
+                'tipo_boletim_diferenciado',
                 'ano',
                 'dias_semana',
                 'atividades_complementares',
@@ -562,6 +563,7 @@ class indice extends clsCadastro
             $turmaDestino->ano = $anoDestino;
             $turmaDestino->ref_usuario_cad = $this->pessoa_logada;
             $turmaDestino->ref_usuario_exc = $this->pessoa_logada;
+            $turmaDestino->visivel = dbBool($turmaOrigem['visivel']);
             $turmaDestinoId = $turmaDestino->cadastra();
 
             $this->copiarComponenteCurricularTurma($turmaOrigem['cod_turma'], $turmaDestinoId);

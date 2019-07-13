@@ -41,7 +41,7 @@ class clsIndex extends clsBase
     function Formular()
     {
         $this->SetTitulo( "{$this->_instituicao} Agenda Particular" );
-        $this->processoAp = "345";
+        $this->processoAp = '0';
         $this->addEstilo( "agenda" );
         $this->addScript( "agenda" );
         $this->addEstilo('localizacaoSistema');

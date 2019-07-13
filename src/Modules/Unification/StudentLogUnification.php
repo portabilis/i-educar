@@ -15,7 +15,11 @@ class StudentLogUnification implements LogUnificationTypeInterface
      */
     public function getMainPersonName(LogUnification $logUnification)
     {
-        return $logUnification->main->individual->real_name;
+        if ($logUnification->main) {
+            return $logUnification->main->individual->real_name;
+        }
+
+        return 'Aluno removido pela unificação de pessoas (' . $logUnification->main_id . ')';
     }
 
     /**
@@ -33,6 +37,10 @@ class StudentLogUnification implements LogUnificationTypeInterface
             ->get()
             ->pluck('individual.real_name')
             ->toArray();
+
+        if (empty($students)) {
+            $students[] = 'Aluno(s) removido(s) pela unificação de pessoas (' . implode(',', $studentIds) . ')';
+        }
 
         return $students;
     }
