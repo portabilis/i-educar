@@ -33,7 +33,7 @@ class EnderecoController extends ApiCoreController
                 INNER JOIN public.bairro b ON b.idbai = c.idbai
                 INNER JOIN public.logradouro l ON l.idlog = c.idlog
                 INNER JOIN urbano.tipo_logradouro t ON t.idtlog = l.idtlog
-                INNER JOIN public.distrito d ON d.idmun = l.idmun
+                INNER JOIN public.distrito d ON d.iddis = b.iddis
                 INNER JOIN public.municipio m ON m.idmun = l.idmun
                                              AND m.idmun = d.idmun
                 INNER JOIN public.uf u ON u.sigla_uf = m.sigla_uf
