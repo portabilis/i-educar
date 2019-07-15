@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\LegacyLevel;
 use App\Models\LegacySchoolClass;
 
 class SchoolClassService
@@ -37,5 +38,27 @@ class SchoolClassService
         $isAvailable = $query->count() === 0;
 
         return $isAvailable;
+    }
+
+    /**
+     * Valida se é obrigatório preencher o boletim diferenciado da turma.
+     * Caso a série tenha regra de avaliação diferenciada configurada
+     *
+     * @param integer $levelId
+     * @param integer $academicYear
+     * @return bool
+     */
+    public function isRequiredAlternativeReportCard($levelId, $academicYear): bool
+    {
+        $evaluationRule = LegacyLevel::findOrFail($levelId)->evaluationRules()
+            ->wherePivot('ano_letivo', $academicYear)
+            ->get()
+            ->first();
+        
+        if (empty($evaluationRule->regra_diferenciada_id)) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -37,6 +37,7 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
         'aprovaMediaDisciplina' => null,
         'reprovacaoAutomatica' => null,
         'regraDiferenciada' => null,
+        'calculaMediaRecParalela' => null,
     ];
 
     protected $_dataTypes = [
