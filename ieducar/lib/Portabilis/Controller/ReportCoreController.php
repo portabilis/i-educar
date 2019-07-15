@@ -227,7 +227,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
     public function addValidationError($message)
     {
         $this->validationErrors[] = [
-            'message' => utf8_encode($message)
+            'message' => $message
         ];
     }
 

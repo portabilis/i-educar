@@ -3,7 +3,7 @@
     "description": "Software livre de gestão escolar",
     "type": "project",
     "license": "GPL-2.0-or-later",
-    "version": "2.1.18",
+    "version": "2.1.19",
     "keywords": [
         "Portabilis",
         "i-Educar"
@@ -29,7 +29,9 @@
         "predis/predis": "^1.1",
         "prettus/l5-repository": "^2.6",
         "swiftmailer/swiftmailer": "^6.1",
-        "tooleks/laravel-asset-version": "^1.0"
+        "tooleks/laravel-asset-version": "^1.0",
+        "league/flysystem-aws-s3-v3": "~1.0",
+        "league/flysystem-cached-adapter": "~1.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
@@ -95,7 +97,6 @@
         "update-install": [
             "@composer install",
             "@set-permissions",
-            "@php artisan update --ansi",
             "@php artisan legacy:link --ansi",
             "@php artisan migrate --force --ansi"
         ],

@@ -199,6 +199,32 @@ $j('#tipo_mediacao_didatico_pedagogico').on('change', function(){
   }
 }).trigger('change');
 
+function buscaEtapasDaEscola() {  
+  var urlApi = getResourceUrlBuilder.buildUrl('/module/Api/Escola', 'etapas-da-escola-por-ano', {
+    escola_id : $j('#ref_cod_escola').val(),
+    ano : new Date().getFullYear()
+  });
+
+  var options = {
+    url : urlApi,
+    dataType : 'json',
+    success  : function(dataResponse){
+      $j('#ref_cod_modulo').val(dataResponse.modulo).trigger('change');
+      preencheEtapasNaTurma(dataResponse.etapas);
+    }
+  };
+
+  getResources(options);
+}
+
+function preencheEtapasNaTurma(etapas) {
+  $j.each( etapas, function( key, etapa ) {
+    $j('input[name^="data_inicio[' + key + '"]').val(formatDate(etapa.data_inicio));
+    $j('input[name^="data_fim[' + key + '"]').val(formatDate(etapa.data_fim));
+    $j('input[name^="dias_letivos[' + key + '"]').val(etapa.dias_letivos);
+  });
+}
+
 $j(document).ready(function() {
 
   // on click das abas

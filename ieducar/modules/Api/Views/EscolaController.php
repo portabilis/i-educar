@@ -185,7 +185,8 @@ class EscolaController extends ApiCoreController
     {
         $sql = 'SELECT sequencial AS etapa,
                        data_inicio,
-                       data_fim
+                       data_fim,
+                       dias_letivos
                   FROM pmieducar.ano_letivo_modulo
                  WHERE ref_ano = $1
                    AND ref_ref_cod_escola = $2
@@ -193,10 +194,40 @@ class EscolaController extends ApiCoreController
 
         $etapas = [];
         $etapas = $this->fetchPreparedQuery($sql, [$ano, $escola]);
-        $attrs = ['etapa', 'data_inicio', 'data_fim'];
+        $attrs = ['etapa', 'data_inicio', 'data_fim', 'dias_letivos'];
         $etapas = Portabilis_Array_Utils::filterSet($etapas, $attrs);
 
         return ['etapas' => $etapas];
+    }
+
+    private function getModuloDaEscola($ano, $escola)
+    {
+        $sql = '
+            SELECT max(ref_cod_modulo) as modulo
+            FROM pmieducar.ano_letivo_modulo
+            WHERE ref_ano = $1
+            AND ref_ref_cod_escola = $2
+        ';
+        $modulo = $this->fetchPreparedQuery($sql, [$ano, $escola], false, 'first-line');
+
+        return $modulo['modulo'];
+    }
+
+    protected function getEtapasDaEscolaPorAno()
+    {
+        if ($this->canGetEtapasDaEscolaPorAno()) {
+            $ano = $this->getRequest()->ano;
+            $escolaId = $this->getRequest()->escola_id;
+            $dadosDasEtapas = $this->getEtapasAnoEscola($ano, $escolaId);
+            $dadosDasEtapas['modulo'] = $this->getModuloDaEscola($ano, $escolaId);
+
+            return $dadosDasEtapas;
+        }
+    }
+
+    protected function canGetEtapasDaEscolaPorAno()
+    {
+        return $this->validatesPresenceOf('ano') && $this->validatesPresenceOf('escola_id');
     }
 
     private function getEtapasTurmasAnoEscola($ano, $escola)
@@ -617,6 +648,8 @@ class EscolaController extends ApiCoreController
             $this->appendResponse($this->getEscolas());
         } elseif ($this->isRequestFor('get', 'etapas-por-escola')) {
             $this->appendResponse($this->getEtapasPorEscola());
+        } elseif ($this->isRequestFor('get', 'etapas-da-escola-por-ano')) {
+            $this->appendResponse($this->getEtapasDaEscolaPorAno());
         } elseif ($this->isRequestFor('get', 'info-escolas')) {
             $this->appendResponse($this->getInformacaoEscolas());
         } elseif ($this->isRequestFor('get', 'escolas-multiple-search')) {

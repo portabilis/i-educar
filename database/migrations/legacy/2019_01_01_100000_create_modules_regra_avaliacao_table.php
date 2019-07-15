@@ -52,7 +52,8 @@ class CreateModulesRegraAvaliacaoTable extends Migration
                     nota_minima_geral integer DEFAULT 0,
                     tabela_arredondamento_id_conceitual integer,
                     regra_diferenciada_id integer,
-	                updated_at timestamp NULL DEFAULT now()
+	                updated_at timestamp NULL DEFAULT now(),
+	                calcula_media_rec_paralela int2 NOT NULL DEFAULT \'0\'::smallint
                 );
 
                 ALTER SEQUENCE modules.regra_avaliacao_id_seq OWNED BY modules.regra_avaliacao.id;
