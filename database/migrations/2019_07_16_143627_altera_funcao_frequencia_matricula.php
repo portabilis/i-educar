@@ -72,7 +72,7 @@ class AlteraFuncaoFrequenciaMatricula extends Migration
                 alter function modules.frequencia_da_matricula(integer) owner to ieducar;
 SQL;
 
-        DB::statement($sql);
+        DB::unprepared($sql);
     }
 
     /**
@@ -140,6 +140,6 @@ SQL;
                 alter function modules.frequencia_da_matricula(integer) owner to ieducar;
 SQL;
 
-        DB::statement($sql);
+        DB::unprepared($sql);
     }
 }
