@@ -312,13 +312,13 @@ class indice extends clsCadastro
 
         $this->campoCheck(
             'bloquear_vinculo_professor_sem_alocacao_escola',
-            'Bloquear vínculos de professores em turmas pertencentes à escolas quais ele não está alocado',
+            'Bloquear vínculos de professores em turmas pertencentes às escolas em que eles não estão alocados',
             $this->bloquear_vinculo_professor_sem_alocacao_escola,
             null,
             false,
             false,
             false,
-            'Caso marcado, o vínculo de professores em turmas pertencentes à escolas quais ele não está alocado será bloqueado.'
+            'Caso marcado, os vínculos de professores em turmas pertencentes às escolas em que eles não estão alocados será bloqueado.'
         );
 
         $scripts = ['/modules/Cadastro/Assets/Javascripts/Instituicao.js'];

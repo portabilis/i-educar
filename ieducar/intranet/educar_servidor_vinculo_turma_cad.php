@@ -334,7 +334,7 @@ class indice extends clsCadastro
             return true;
         }
 
-        $this->mensagem = 'Não é possível cadastrar o vínculo pois o servidor não está alocado na escola selecionada ';
+        $this->mensagem = 'Não é possível cadastrar o vínculo pois o servidor não está alocado na escola selecionada.';
         return false;
     }
 
