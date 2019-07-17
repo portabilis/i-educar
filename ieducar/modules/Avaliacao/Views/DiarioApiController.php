@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\LegacyEvaluationRule;
-use App\Services\StageScoreCalculationService;
 use Cocur\Slugify\Slugify;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use Illuminate\Support\Facades\Session;
@@ -400,7 +398,6 @@ class DiarioApiController extends ApiCoreController
     protected function postNota()
     {
         if ($this->canPostNota()) {
-
             $nota = urldecode($this->getRequest()->att_value);
             $notaOriginal = urldecode($this->getRequest()->nota_original);
 
