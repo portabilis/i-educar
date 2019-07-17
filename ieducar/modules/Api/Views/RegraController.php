@@ -41,15 +41,15 @@ class RegraController extends ApiCoreController
             }
 
             $sql = "
-                SELECT 
-                    ta.id, 
-                    ta.nome, 
-                    ta.tipo_nota, 
+                SELECT
+                    ta.id,
+                    ta.nome,
+                    ta.tipo_nota,
                     tav.nome as rotulo,
-                    tav.descricao, 
-                    tav.valor_maximo, 
-                    tav.casa_decimal_exata, 
-                    tav.acao, 
+                    tav.descricao,
+                    tav.valor_maximo,
+                    tav.casa_decimal_exata,
+                    tav.acao,
                     ta.updated_at
                 FROM modules.tabela_arredondamento ta
                 INNER JOIN modules.tabela_arredondamento_valor tav
@@ -120,9 +120,9 @@ class RegraController extends ApiCoreController
                     WHERE ra.instituicao_id = $1
                     {$where}
                 )
-                
+
                 UNION ALL
-                
+
                 (
                     SELECT
                         rar.id,
@@ -183,6 +183,7 @@ class RegraController extends ApiCoreController
                   ra.parecer_descritivo,
                   ra.tipo_recuperacao_paralela AS tipo_recuperacao,
                   ra.media_recuperacao_paralela,
+                  ra.calcula_media_rec_paralela,
                   ra.nota_maxima_geral,
                   ra.nota_maxima_exame_final AS nota_maxima_exame,
                   COALESCE(ra.regra_diferenciada_id, 0) AS regra_diferenciada_id,
@@ -190,7 +191,7 @@ class RegraController extends ApiCoreController
               FROM modules.regra_avaliacao ra
               WHERE true
                   AND ra.instituicao_id = $1 '. $where . '
-              ORDER BY 
+              ORDER BY
                 ra.updated_at,
                 COALESCE(ra.regra_diferenciada_id,0),
                 ra.id';
@@ -201,7 +202,8 @@ class RegraController extends ApiCoreController
                 'id', 'tabela_arredondamento_id', 'tabela_arredondamento_id_conceitual',
                 'tipo_nota', 'tipo_presenca', 'parecer_descritivo',
                 'tipo_recuperacao', 'media_recuperacao_paralela', 'nota_maxima_geral',
-                'nota_maxima_exame', 'updated_at', 'regra_diferenciada_id'
+                'nota_maxima_exame', 'updated_at', 'regra_diferenciada_id',
+                'calcula_media_rec_paralela'
             ];
 
             $_regras = Portabilis_Array_Utils::filterSet($_regras, $attrs);
