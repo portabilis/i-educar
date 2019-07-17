@@ -81,7 +81,8 @@ class LegacyUserProvider implements UserProvider
         }
 
         $pass = $this->hasher->check(
-            $credentials['password'], $user->getAuthPassword()
+            $credentials['password'],
+            $user->getAuthPassword()
         );
 
         if (empty($pass)) {
