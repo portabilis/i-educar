@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Listeners\AuthenticatedUser;
 use App\Models\SchoolManager;
 use App\Observers\SchoolManagerObserver;
 use App\Listeners\LoginLegacySession;
 use App\Listeners\NotificationWhenResetPassword;
+use Illuminate\Auth\Events\Authenticated;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
@@ -29,6 +31,9 @@ class EventServiceProvider extends ServiceProvider
         PasswordReset::class => [
             NotificationWhenResetPassword::class,
         ],
+        Authenticated::class => [
+            AuthenticatedUser::class
+        ],
     ];
 
     /**
@@ -39,7 +44,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-        
+
         SchoolManager::observe(SchoolManagerObserver::class);
     }
 }
