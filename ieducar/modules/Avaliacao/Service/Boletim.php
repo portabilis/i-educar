@@ -2814,8 +2814,8 @@ public function alterarSituacao($novaSituacao, $matriculaId){
             return $service->calculateAverageBetweenScoreAndRemedial($score, $remedial);
         }
 
-        if ($evaluationRule->isDoubleScoreCalculation()) {
-            return $service->calculateDoubleScore($score, $remedial);
+        if ($evaluationRule->isSumScoreCalculation()) {
+            return $service->calculateSumScore($score, $remedial);
         }
 
         return $service->calculateRemedial($score, $remedial);

@@ -68,7 +68,7 @@ class StageScoreCalculationServiceTest extends TestCase
     /**
      * @return void
      */
-    public function testCalculateDoubleScore()
+    public function testCalculateSumScore()
     {
         // 5 + 9 = 14
         $score1 = 5;
@@ -91,15 +91,15 @@ class StageScoreCalculationServiceTest extends TestCase
         $remedial3 = 0;
         $expected3 = 6;
 
-        $result1 = $this->service->calculateDoubleScore(
+        $result1 = $this->service->calculateSumScore(
             $score1, $remedial1
         );
 
-        $result2 = $this->service->calculateDoubleScore(
+        $result2 = $this->service->calculateSumScore(
             $score2, $remedial2
         );
 
-        $result3 = $this->service->calculateDoubleScore(
+        $result3 = $this->service->calculateSumScore(
             $score3, $remedial3
         );
 

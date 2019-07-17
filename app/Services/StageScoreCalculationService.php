@@ -26,14 +26,14 @@ class StageScoreCalculationService
     /**
      * Dobra a nota da etapa ou soma a nota de recuperação a ela.
      *
-     * @see StageScoreCalculationServiceTest::testCalculateDoubleScore()
+     * @see StageScoreCalculationServiceTest::testCalculateSumScore()
      *
      * @param float      $score
      * @param float|null $remedial
      *
      * @return float
      */
-    public function calculateDoubleScore($score, $remedial = null)
+    public function calculateSumScore($score, $remedial = null)
     {
         if (is_numeric($remedial)) {
             return floatval($score) + floatval($remedial);
