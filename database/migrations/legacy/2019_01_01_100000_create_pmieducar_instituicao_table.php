@@ -72,7 +72,8 @@ class CreatePmieducarInstituicaoTable extends Migration
                     obrigar_campos_censo boolean,
                     obrigar_documento_pessoa boolean DEFAULT false,
                     exigir_lancamentos_anteriores boolean DEFAULT false,
-                    exibir_apenas_professores_alocados boolean DEFAULT false
+                    exibir_apenas_professores_alocados boolean DEFAULT false,
+	                bloquear_vinculo_professor_sem_alocacao_escola bool NOT NULL DEFAULT false
                 );
 
                 ALTER TABLE ONLY pmieducar.instituicao

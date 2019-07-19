@@ -12,6 +12,7 @@ use Prettus\Repository\Traits\TransformableTrait;
  * @property int    $menu_type
  * @property string $email
  * @property string $remember_token
+ * @property bool   $active
  */
 class LegacyEmployee extends EloquentBaseModel implements Transformable
 {
@@ -90,5 +91,13 @@ class LegacyEmployee extends EloquentBaseModel implements Transformable
     public function setRememberTokenAttribute($token)
     {
         $this->status_token = $token;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getActiveAttribute()
+    {
+        return boolval($this->ativo);
     }
 }
