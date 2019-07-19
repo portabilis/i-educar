@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.107.1",
+            "version": "3.107.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "ccd3d13ae49a45bdf6a394d701f207c276dbf05a"
+                "reference": "2ea91e93b9b1d9b01055896ac5e4f2e8448d141f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ccd3d13ae49a45bdf6a394d701f207c276dbf05a",
-                "reference": "ccd3d13ae49a45bdf6a394d701f207c276dbf05a",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/2ea91e93b9b1d9b01055896ac5e4f2e8448d141f",
+                "reference": "2ea91e93b9b1d9b01055896ac5e4f2e8448d141f",
                 "shasum": ""
             },
             "require": {
@@ -87,7 +87,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-07-12T18:07:41+00:00"
+            "time": "2019-07-18T19:28:55+00:00"
         },
         {
             "name": "cocur/slugify",
@@ -1164,16 +1164,16 @@
         },
         {
             "name": "honeybadger-io/honeybadger-php",
-            "version": "v1.5.1",
+            "version": "v1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/honeybadger-io/honeybadger-php.git",
-                "reference": "92da2600c452e8f7730d1d255df1091d3a973171"
+                "reference": "329c2f6682e88012e33b84c8fa6b2f4b4080a9e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/honeybadger-io/honeybadger-php/zipball/92da2600c452e8f7730d1d255df1091d3a973171",
-                "reference": "92da2600c452e8f7730d1d255df1091d3a973171",
+                "url": "https://api.github.com/repos/honeybadger-io/honeybadger-php/zipball/329c2f6682e88012e33b84c8fa6b2f4b4080a9e7",
+                "reference": "329c2f6682e88012e33b84c8fa6b2f4b4080a9e7",
                 "shasum": ""
             },
             "require": {
@@ -1215,7 +1215,7 @@
                 "logging",
                 "monitoring"
             ],
-            "time": "2019-06-10T10:10:42+00:00"
+            "time": "2019-07-18T10:51:25+00:00"
         },
         {
             "name": "jakub-onderka/php-console-color",
@@ -6719,16 +6719,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.5.13",
+            "version": "7.5.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "b9278591caa8630127f96c63b598712b699e671c"
+                "reference": "2834789aeb9ac182ad69bfdf9ae91856a59945ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b9278591caa8630127f96c63b598712b699e671c",
-                "reference": "b9278591caa8630127f96c63b598712b699e671c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2834789aeb9ac182ad69bfdf9ae91856a59945ff",
+                "reference": "2834789aeb9ac182ad69bfdf9ae91856a59945ff",
                 "shasum": ""
             },
             "require": {
@@ -6799,7 +6799,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-06-19T12:01:51+00:00"
+            "time": "2019-07-15T06:24:08+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
