@@ -271,7 +271,7 @@ class indice
         $data_array = "{$data_array[2]}/{$data_array[1]}/{$data_array[0]}";
 
         $db = new clsBanco();
-        $db->Consulta( "SELECT ref_cod_agenda FROM agenda_responsavel WHERE ref_ref_cod_pessoa_fj = '{$id_pessoa}' AND principal = 1" );
+        $db->Consulta( "SELECT ref_cod_agenda FROM portal.agenda_responsavel WHERE ref_ref_cod_pessoa_fj = '{$id_pessoa}' AND principal = 1" );
 
         if ($db->ProximoRegistro()) {
           list($cod_agenda) = $db->Tupla();

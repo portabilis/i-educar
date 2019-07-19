@@ -83,7 +83,7 @@ class PessoaController extends ApiCoreController
             throw new Exception('CPF deve conter caracteres numéricos');
         }
 
-        $sql = 'select pessoa.idpes as id, nome from cadastro.pessoa, fisica
+        $sql = 'select pessoa.idpes as id, nome from cadastro.pessoa, cadastro.fisica
             where fisica.idpes = pessoa.idpes and cpf = $1 limit 1';
 
         $pessoa = $this->fetchPreparedQuery($sql, $cpf, false, 'first-row');

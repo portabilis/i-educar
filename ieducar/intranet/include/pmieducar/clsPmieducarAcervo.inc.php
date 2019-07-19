@@ -1118,8 +1118,8 @@ class clsPmieducarAcervo
                                 (SELECT DISTINCT '' || (replace(textcat_all(aa.nm_autor),'',', ')))
                         END) AS nm_autor
                 FROM {$this->_tabela} a ".
-               "LEFT JOIN acervo_acervo_autor aaa ON (aaa.ref_cod_acervo = a.cod_acervo) ".
-               "LEFT JOIN acervo_autor aa ON (aa.cod_acervo_autor = aaa.ref_cod_acervo_autor)";
+               "LEFT JOIN pmieducar.acervo_acervo_autor aaa ON (aaa.ref_cod_acervo = a.cod_acervo) ".
+               "LEFT JOIN pmieducar.acervo_autor aa ON (aa.cod_acervo_autor = aaa.ref_cod_acervo_autor)";
 
         $whereAnd = " WHERE ";
         if(is_array($int_ref_cod_biblioteca))
@@ -1197,8 +1197,8 @@ class clsPmieducarAcervo
 
         $db = new clsBanco();
         $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} a
-                                         LEFT JOIN acervo_acervo_autor aaa ON (aaa.ref_cod_acervo = a.cod_acervo)
-                                         LEFT JOIN acervo_autor aa ON (aa.cod_acervo_autor = aaa.ref_cod_acervo_autor)
+                                         LEFT JOIN pmieducar.acervo_acervo_autor aaa ON (aaa.ref_cod_acervo = a.cod_acervo)
+                                         LEFT JOIN pmieducar.acervo_autor aa ON (aa.cod_acervo_autor = aaa.ref_cod_acervo_autor)
                                          {$filtros}" );
 
         $db->Consulta( $sql );

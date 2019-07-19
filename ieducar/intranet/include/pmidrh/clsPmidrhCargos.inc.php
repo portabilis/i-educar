@@ -144,7 +144,7 @@ class clsPmidrhCargos
             }
             else
             {
-                if( $db->CampoUnico( "SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_pessoa_exc}'" ) )
+                if( $db->CampoUnico( "SELECT 1 FROM portal.funcionario WHERE ref_cod_pessoa_fj = '{$ref_pessoa_exc}'" ) )
                 {
                     $this->ref_pessoa_exc = $ref_pessoa_exc;
                 }
@@ -172,7 +172,7 @@ class clsPmidrhCargos
             }
             else
             {
-                if( $db->CampoUnico( "SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_pessoa_cad}'" ) )
+                if( $db->CampoUnico( "SELECT 1 FROM portal.funcionario WHERE ref_cod_pessoa_fj = '{$ref_pessoa_cad}'" ) )
                 {
                     $this->ref_pessoa_cad = $ref_pessoa_cad;
                 }
