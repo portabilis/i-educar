@@ -2799,13 +2799,18 @@ public function alterarSituacao($novaSituacao, $matriculaId){
     }
 
     /**
-     * @param float $score
-     * @param float $remedial
+     * @param int|string $stage
+     * @param float      $score
+     * @param float      $remedial
      *
      * @return float
      */
-    public function calculateStageScore($score, $remedial)
+    public function calculateStageScore($stage, $score, $remedial)
     {
+        if ($stage === 'Rc') {
+            return $score;
+        }
+
         $evaluationRule = $this->getEvaluationRule();
 
         $service = new StageScoreCalculationService();

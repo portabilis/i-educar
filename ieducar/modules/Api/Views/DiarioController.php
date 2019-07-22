@@ -232,7 +232,7 @@ class DiarioController extends ApiCoreController
                     $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
                     $valor = $this->truncate($valor, 4);
 
-                    $valorNota = $serviceBoletim->calculateStageScore($valor, $notaRecuperacao);
+                    $valorNota = $serviceBoletim->calculateStageScore($etapa, $valor, $notaRecuperacao);
 
                     if ($etapa == 'Rc' && $valorNota > $regra->notaMaximaExameFinal) {
                         $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaExameFinal}.", 'error');
@@ -330,9 +330,9 @@ class DiarioController extends ApiCoreController
                             $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
                             $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
 
-                            $valorNota = $serviceBoletim->calculateStageScore($notaOriginal, $notaRecuperacao);
+                            $valorNota = $serviceBoletim->calculateStageScore($etapa, $notaOriginal, $notaRecuperacao);
 
-                            if ($valorNota > $regra->notaMaximaGeral) {
+                            if ($notaRecuperacao > $regra->notaMaximaGeral) {
                                 $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaGeral}.", 'error');
 
                                 return false;

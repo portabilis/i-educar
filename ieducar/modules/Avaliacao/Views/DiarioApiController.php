@@ -400,13 +400,14 @@ class DiarioApiController extends ApiCoreController
         if ($this->canPostNota()) {
             $nota = urldecode($this->getRequest()->att_value);
             $notaOriginal = urldecode($this->getRequest()->nota_original);
+            $etapa = $this->getRequest()->etapa;
 
-            $nota = $this->serviceBoletim()->calculateStageScore($nota, null);
+            $nota = $this->serviceBoletim()->calculateStageScore($etapa, $nota, null);
 
             $array_nota = array(
                 'componenteCurricular' => $this->getRequest()->componente_curricular_id,
                 'nota' => $nota,
-                'etapa' => $this->getRequest()->etapa,
+                'etapa' => $etapa,
                 'notaOriginal' => $notaOriginal,
             );
 
@@ -526,14 +527,15 @@ class DiarioApiController extends ApiCoreController
         if ($this->canPostNota()) {
             $notaOriginal = $this->getNotaOriginal();
             $notaRecuperacaoParalela = urldecode($this->getRequest()->att_value);
+            $etapa = $this->getRequest()->etapa;
 
             $notaNova = $this->serviceBoletim()->calculateStageScore(
-                $notaOriginal, $notaRecuperacaoParalela
+                $etapa, $notaOriginal, $notaRecuperacaoParalela
             );
 
             $nota = new Avaliacao_Model_NotaComponente(array(
                 'componenteCurricular' => $this->getRequest()->componente_curricular_id,
-                'etapa' => $this->getRequest()->etapa,
+                'etapa' => $etapa,
                 'nota' => $notaNova,
                 'notaRecuperacaoParalela' => $notaRecuperacaoParalela,
                 'notaOriginal' => $notaOriginal)
