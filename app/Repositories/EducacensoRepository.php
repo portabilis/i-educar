@@ -596,6 +596,7 @@ SQL;
                 LEFT JOIN modules.transporte_aluno ON transporte_aluno.aluno_id = aluno.cod_aluno
                     WHERE matricula.ano = :year
                       AND matricula.ativo = 1
+                      AND turma.ativo = 1
                       AND escola.cod_escola = :school
                       AND COALESCE(turma.nao_informar_educacenso, 0) = 0
                       AND (
