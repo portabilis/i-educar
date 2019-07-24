@@ -13,7 +13,7 @@ class AlteraFuncaoFrequenciaComponente extends Migration
     public function up()
     {
         $sql = <<<'SQL'
-                    create function modules.frequencia_por_componente(cod_matricula_id integer, cod_disciplina_id integer, cod_turma_id integer) returns character varying
+                    create or replace function modules.frequencia_por_componente(cod_matricula_id integer, cod_disciplina_id integer, cod_turma_id integer) returns character varying
                         language plpgsql
                     as $$
                     DECLARE
@@ -70,7 +70,7 @@ SQL;
     public function down()
     {
         $sql = <<<'SQL'
-                    create function modules.frequencia_por_componente(cod_matricula_id integer, cod_disciplina_id integer, cod_turma_id integer) returns character varying
+                    create or replace function modules.frequencia_por_componente(cod_matricula_id integer, cod_disciplina_id integer, cod_turma_id integer) returns character varying
                         language plpgsql
                     as $$
                     DECLARE
