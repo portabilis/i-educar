@@ -227,14 +227,14 @@ class DiarioController extends ApiCoreController
 
                     $regra = $serviceBoletim->getRegra();
 
-                    $valor = $notaTurmaAlunoDisciplina['nota'];
+                    $notaOriginal = $notaTurmaAlunoDisciplina['nota'];
                     $notaRecuperacao = $notaTurmaAlunoDisciplina['recuperacao'];
                     $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
-                    $valor = $this->truncate($valor, 4);
+                    $notaOriginal = $this->truncate($notaOriginal, 4);
 
-                    $valorNota = $serviceBoletim->calculateStageScore($etapa, $valor, $notaRecuperacao);
+                    $valorNota = $serviceBoletim->calculateStageScore($etapa, $notaOriginal, $notaRecuperacao);
 
-                    if ($etapa == 'Rc' && $valorNota > $regra->notaMaximaExameFinal) {
+                    if ($etapa == 'Rc' && $notaOriginal > $regra->notaMaximaExameFinal) {
                         $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaExameFinal}.", 'error');
                         $this->appendResponse('error', [
                             'code' => Error::EXAM_SCORE_GREATER_THAN_MAX_ALLOWED,
@@ -244,7 +244,7 @@ class DiarioController extends ApiCoreController
                         return false;
                     }
 
-                    if ($etapa != 'Rc' && $valorNota > $regra->notaMaximaGeral) {
+                    if ($etapa != 'Rc' && $notaOriginal > $regra->notaMaximaGeral) {
                         $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima geral que é {$regra->notaMaximaGeral}.", 'error');
                         $this->appendResponse('error', [
                             'code' => Error::SCORE_GREATER_THAN_MAX_ALLOWED,
@@ -254,7 +254,7 @@ class DiarioController extends ApiCoreController
                         return false;
                     }
 
-                    if ($valorNota < $regra->notaMinimaGeral) {
+                    if ($notaOriginal < $regra->notaMinimaGeral) {
                         $this->messenger->append("A nota {$valorNota} está abaixo da configurada para nota mínima geral que é {$regra->notaMinimaGeral}.", 'error');
                         $this->appendResponse('error', [
                             'code' => Error::SCORE_LESSER_THAN_MIN_ALLOWED,
@@ -268,7 +268,7 @@ class DiarioController extends ApiCoreController
                         'componenteCurricular' => $componenteCurricularId,
                         'nota' => $valorNota,
                         'etapa' => $etapa,
-                        'notaOriginal' => $valor
+                        'notaOriginal' => $notaOriginal
                     ];
 
                     if (!empty($nomeCampoRecuperacao)) {
