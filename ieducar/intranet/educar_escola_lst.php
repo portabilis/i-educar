@@ -140,6 +140,7 @@ class indice extends clsListagem
         } else {
             $obj_escola->setLimite( $this->limite );
         }
+        $obj_escola->setOrderby('nome');
         $lista = $obj_escola->lista(
             null,
             null,

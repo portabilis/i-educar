@@ -15,5 +15,6 @@ return [
 
     'failed' => 'Usuário ou senha incorreta.',
     'throttle' => 'Você errou a senha muitas vezes, por favor, aguarde :seconds segundos.',
+    'inactive' => 'Sua conta de usuário foi desativada ou expirou, por favor, entre em contato com o responsável pelo sistema do seu município.',
 
 ];

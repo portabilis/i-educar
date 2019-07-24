@@ -842,6 +842,30 @@ class indice extends clsCadastro
         return $service->isAvailableName($nome, $curso, $serie, $escola, $ano, $id);
     }
 
+    /**
+     * Valida o campo Boletim Diferenciado
+     *
+     * @param $levelId
+     * @param $academicYear
+     * @param $alternativeReportCard
+     * @return bool
+     */
+    public function temBoletimDiferenciado($levelId, $academicYear, $alternativeReportCard)
+    {
+
+        if ($alternativeReportCard) {
+            return true;
+        }
+
+        $service = new SchoolClassService();
+
+        if ($service->isRequiredAlternativeReportCard($levelId, $academicYear)) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function Novo()
     {
         if (!$this->canCreateTurma($this->ref_cod_escola, $this->ref_cod_serie, $this->turma_turno_id)) {
@@ -858,6 +882,12 @@ class indice extends clsCadastro
 
         if (!$this->nomeEstaDisponivel($this->ano_letivo, $this->ref_cod_curso, $this->ref_cod_serie, $this->ref_cod_escola, $this->nm_turma)) {
             $this->mensagem = 'O nome da turma já está sendo utilizado nesta escola, para o curso, série e anos informados.';
+
+            return false;
+        }
+
+        if (!$this->temBoletimDiferenciado($this->ref_cod_serie, $this->ano_letivo, $this->tipo_boletim_diferenciado)) {
+            $this->mensagem = 'O campo \'<b>Boletim diferenciado</b>\' é obrigatório quando a regra de avaliação da série possui regra diferenciada definida.';
 
             return false;
         }
@@ -935,6 +965,12 @@ class indice extends clsCadastro
 
         if (!$this->nomeEstaDisponivel($dadosTurma['ano'], $this->ref_cod_curso, $dadosTurma['ref_ref_cod_serie'], $dadosTurma['ref_ref_cod_escola'], $this->nm_turma, $this->cod_turma)) {
             $this->mensagem = 'O nome da turma já está sendo utilizado nesta escola, para o curso, série e anos informados.';
+
+            return false;
+        }
+
+        if (!$this->temBoletimDiferenciado($dadosTurma['ref_ref_cod_serie'], $dadosTurma['ano'], $this->tipo_boletim_diferenciado)) {
+            $this->mensagem = 'O campo \'<b>Boletim diferenciado</b>\' é obrigatório quando a regra de avaliação da série possui regra diferenciada definida.';
 
             return false;
         }
@@ -1882,6 +1918,7 @@ $pagina->MakeAll();
 
         if (document.getElementById('padrao_ano_escolar').value == 0) {
             setModuleAndPhasesVisibility(true);
+            buscaEtapasDaEscola();
         }
     }
 
