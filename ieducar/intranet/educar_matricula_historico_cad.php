@@ -144,19 +144,19 @@ class indice extends clsCadastro
         $seqUltimaEnturmacao = $enturmacao->getUltimaEnturmacao($this->ref_cod_matricula);
 
         if ($enturmacao->data_exclusao && ($enturmacao->data_exclusao < $enturmacao->data_enturmacao)) {
-            $this->mensagem = 'Edição não realizada.<br> A data de saída não pode ser anterior a data de enturmação.';
+            $this->mensagem = 'Edição não realizada. A data de saída não pode ser anterior a data de enturmação.';
 
             return false;
         }
 
         if ($enturmacao->data_exclusao && $dataEntradaEnturmacaoSeguinte && ($enturmacao->data_exclusao > $dataEntradaEnturmacaoSeguinte)) {
-            $this->mensagem = 'Edição não realizada.<br> A data de saída não pode ser posterior a data de entrada da enturmação seguinte.';
+            $this->mensagem = 'Edição não realizada. A data de saída não pode ser posterior a data de entrada da enturmação seguinte.';
 
             return false;
         }
 
         if ($dataSaidaEnturmacaoAnterior && ($enturmacao->data_enturmacao < $dataSaidaEnturmacaoAnterior)) {
-            $this->mensagem = 'Edição não realizada.<br> A data de enturmação não pode ser anterior a data de saída da enturmação antecessora.';
+            $this->mensagem = 'Edição não realizada. A data de enturmação não pode ser anterior a data de saída da enturmação antecessora.';
 
             return false;
         }
@@ -170,7 +170,7 @@ class indice extends clsCadastro
                 || App_Model_MatriculaSituacao::RECLASSIFICADO == $matricula['aprovado']
             ) && ($this->sequencial == $seqUltimaEnturmacao)
         ) {
-            $this->mensagem = 'Edição não realizada.<br> A data de saída não pode ser posterior a data de saída da matricula.';
+            $this->mensagem = 'Edição não realizada. A data de saída não pode ser posterior a data de saída da matricula.';
 
             return false;
         }
