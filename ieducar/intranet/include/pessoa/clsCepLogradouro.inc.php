@@ -53,11 +53,11 @@ class clsCepLogradouro
         $this->cep    = $cep;
         $this->nroini = $nroini;
         $this->nrofin = $nrofin;
-        
+
         $this->tabela = "cep_logradouro";
         $this->schema = "urbano";
     }
-    
+
     /**
      * Funcao que cadastra um novo registro com os valores atuais
      *
@@ -82,12 +82,12 @@ class clsCepLogradouro
                 $valores .= ", '$this->nrofin' ";
             }
 
-            $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (cep,  idlog, origem_gravacao, data_cad, operacao, $campos) VALUES ( '{$this->cep}', '{$this->idlog}','U', NOW(), 'I', $values )" );
+            $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (cep,  idlog, origem_gravacao, data_cad, operacao $campos) VALUES ( '{$this->cep}', '{$this->idlog}','U', NOW(), 'I' $values )" );
 
         }
         return false;
     }
-    
+
     /**
      * Edita o registro atual
      *
@@ -104,22 +104,22 @@ class clsCepLogradouro
                $set .= " nroini = '{$this->nroini}'";
                $gruda = ", ";
             }
-            else 
+            else
             {
                 $set .= " nroini = NULL";
                 $gruda = ", ";
             }
-            
+
             if($this->nrofin)
             {
                $set .= "$gruda nrofin = '{$this->nrofin}'";
             }
-            else 
+            else
             {
                 $set .= " nrofin = NULL";
                 $gruda = ", ";
             }
-    
+
             if ($set)
             {
                 $set = "SET {$set}";
@@ -130,7 +130,7 @@ class clsCepLogradouro
         }
         return false;
     }
-    
+
     /**
     * Retorna um array com os dados de um registro.
     * @return array
@@ -163,7 +163,7 @@ class clsCepLogradouro
         }
         return false;
     }
-    
+
     /**
      * Exibe uma lista baseada nos parametros de filtragem passados
      *
@@ -192,7 +192,7 @@ class clsCepLogradouro
         {
             $where .= "{$whereAnd}nrofin =  '$int_nrofin'";
         }
-        
+
         $orderBy = "";
         if(is_string($str_ordenacao))
         {
@@ -203,14 +203,14 @@ class clsCepLogradouro
         {
             $limit = " LIMIT $int_limite_qtd OFFSET $int_limite_ini";
         }
-        
+
         $db = new clsBanco();
         $db->Consulta( "SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where" );
         $db->ProximoRegistro();
         $total = $db->Campo( "total" );
         $db->Consulta( "SELECT cep, idlog, nroini, nrofin FROM {$this->schema}.{$this->tabela} $where $orderBy $limit" );
         $resultado = array();
-        while ( $db->ProximoRegistro() ) 
+        while ( $db->ProximoRegistro() )
         {
             $tupla = $db->Tupla();
             $tupla["idlog"] = new clsLogradouro( $tupla["idlog"]);
@@ -222,8 +222,8 @@ class clsCepLogradouro
             return $resultado;
         }
         return false;
-    } 
-    
+    }
+
     /**
      * Retorna um array com os detalhes do objeto
      *
@@ -238,9 +238,9 @@ class clsCepLogradouro
             if( $db->ProximoRegistro() )
             {
                 $tupla = $db->Tupla();
-    
+
                 $tupla["idlog"] = new clsLogradouro( $tupla["idlog"] );
-    
+
                 return $tupla;
             }
         }
