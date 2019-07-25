@@ -17,12 +17,11 @@ class AlterModulesComponenteCurricularAnoEscolarExcluidosTable extends Migration
      */
     public function up()
     {
-        Schema::drop('modules.componente_curricular_ano_escolar_excluidos');
-        DB::statement('drop trigger trigger_when_deleted_modules_componente_curricular_ano_escolar on modules.componente_curricular_ano_escolar');
-        DB::statement('drop function public.when_deleted_modules_componente_curricular_ano_escolar()');
+        $this->dropTriggerWhenDeleted('modules.componente_curricular_ano_escolar');
+        Schema::dropIfExists('modules.componente_curricular_ano_escolar_excluidos');
 
         Schema::create('modules.componente_curricular_ano_escolar_excluidos', function (Blueprint $table) {
-            $table->integer('id')->index();
+            $table->increments('id');
             $table->integer('componente_curricular_id');
             $table->integer('ano_escolar_id');
             $table->decimal('carga_horaria',7,3)->nullable();
@@ -36,14 +35,11 @@ class AlterModulesComponenteCurricularAnoEscolarExcluidosTable extends Migration
         DB::statement("ALTER TABLE modules.componente_curricular_ano_escolar_excluidos ALTER COLUMN anos_letivos SET DEFAULT '{}'::smallint[]");
 
         $this->whenDeletedMoveTo('modules.componente_curricular_ano_escolar', 'modules.componente_curricular_ano_escolar_excluidos', [
-            'id',
             'componente_curricular_id',
             'ano_escolar_id',
             'carga_horaria',
-            'servidor_id',
             'tipo_nota',
             'anos_letivos',
-            'updated_at',
         ]);
     }
 
