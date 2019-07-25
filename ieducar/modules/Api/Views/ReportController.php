@@ -86,6 +86,10 @@ class ReportController extends ApiCoreController
             $boletimReport->addArg('situacao_matricula', 10);
             $boletimReport->addArg('SUBREPORT_DIR', $GLOBALS['coreExt']['Config']->report->source_path);
 
+            if ($this->getRequest()->etapa) {
+                $boletimReport->addArg('etapa', (int)$this->getRequest()->etapa);
+            }
+
             $encoding = 'base64';
             $dumpsOptions = ['options' => ['encoding' => $encoding]];
             $encoded = $boletimReport->dumps($dumpsOptions);
