@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 class DatabaseRestoreCommand extends Command
 {
@@ -89,10 +90,14 @@ class DatabaseRestoreCommand extends Command
      */
     private function removeTableDataFromDatabaseList(array $tables)
     {
+        $definition = 'sed -i \'/TABLE DATA %s/d\' %s';
+
+        if (Str::contains(PHP_OS, 'Darwin')) {
+            $definition = 'sed -i \'\' \'/TABLE DATA %s/d\' %s';
+        }
+
         foreach ($tables as $table) {
             $table = str_replace('.', ' ', $table);
-
-            $definition = 'sed -i \'/TABLE DATA %s/d\' %s';
 
             $command = sprintf(
                 $definition,
