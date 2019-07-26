@@ -279,7 +279,7 @@ class DiarioApiController extends ApiCoreController
         return true;
     }
 
-    protected function validatesPeriodoLancamentoFaltasNotas()
+    protected function validatesPeriodoLancamentoFaltasNotas($showMessage = true)
     {
 
         $bloqueioLancamentoFaltasNotas = new clsPmieducarBloqueioLancamentoFaltasNotas(null,
@@ -293,13 +293,16 @@ class DiarioApiController extends ApiCoreController
         $processoAp = 999849;
         $obj_permissao = new clsPermissoes();
 
-        $permissaoLancamento = $obj_permissao->permissao_cadastra($processoAp, $user, 7);
+        $permissaoLancamento = false;//$obj_permissao->permissao_cadastra($processoAp, $user, 7);
 
         if ($bloquearLancamento || $permissaoLancamento) {
             return true;
         }
 
-        $this->messenger->append('Não é permitido realizar esta alteração fora do período de lançamento de notas/faltas', 'error');
+        if ($showMessage) {
+            $this->messenger->append('Não é permitido realizar esta alteração fora do período de lançamento de notas/faltas', 'error');
+        }
+
         return false;
     }
 
@@ -1748,6 +1751,7 @@ class DiarioApiController extends ApiCoreController
             $this->appendResponse('matriculas', $this->getMatriculas());
             $this->appendResponse('navegacao_tab', $this->getNavegacaoTab());
             $this->appendResponse('can_change', $this->canChange());
+            $this->appendResponse('locked', !$this->validatesPeriodoLancamentoFaltasNotas(false));
         } elseif ($this->isRequestFor('post', 'nota') || $this->isRequestFor('post', 'nota_exame')) {
             $this->postNota();
         } elseif ($this->isRequestFor('post', 'nota_recuperacao_paralela')) {
