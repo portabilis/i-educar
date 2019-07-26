@@ -293,7 +293,7 @@ class DiarioApiController extends ApiCoreController
         $processoAp = 999849;
         $obj_permissao = new clsPermissoes();
 
-        $permissaoLancamento = false;//$obj_permissao->permissao_cadastra($processoAp, $user, 7);
+        $permissaoLancamento = $obj_permissao->permissao_cadastra($processoAp, $user, 7);
 
         if ($bloquearLancamento || $permissaoLancamento) {
             return true;
