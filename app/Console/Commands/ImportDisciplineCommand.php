@@ -26,6 +26,8 @@ class ImportDisciplineCommand extends Command
     /**
      * Execute the console command.
      *
+     * @param Filesystem $filesystem
+     *
      * @return mixed
      */
     public function handle(Filesystem $filesystem)
@@ -52,6 +54,6 @@ class ImportDisciplineCommand extends Command
 
         $exporter = new DisciplineExport($export);
 
-        $exporter->store($filename);
+        $exporter->store($filename, 'local');
     }
 }
