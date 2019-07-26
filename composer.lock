@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.107.7",
+            "version": "3.107.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "c3ebca7fc5d01098701bbc34f4c3396eae7abe49"
+                "reference": "b4cf7c02557e8443ad4f058f6d95c6fbe88770f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/c3ebca7fc5d01098701bbc34f4c3396eae7abe49",
-                "reference": "c3ebca7fc5d01098701bbc34f4c3396eae7abe49",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b4cf7c02557e8443ad4f058f6d95c6fbe88770f7",
+                "reference": "b4cf7c02557e8443ad4f058f6d95c6fbe88770f7",
                 "shasum": ""
             },
             "require": {
@@ -87,7 +87,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-07-24T18:18:53+00:00"
+            "time": "2019-07-25T18:09:11+00:00"
         },
         {
             "name": "cocur/slugify",
