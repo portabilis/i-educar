@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "88a086a204348825091688b3c294925e",
+    "content-hash": "3e154e18e82631decb62061ba2cc8a2e",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1908,16 +1908,16 @@
         },
         {
             "name": "maatwebsite/excel",
-            "version": "3.1.14",
+            "version": "3.1.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Maatwebsite/Laravel-Excel.git",
-                "reference": "002dad9fa08ac19902dded3ca3c2cafa0de399a7"
+                "reference": "7d47c7af2ddcf93b4fee4f167e10702e918f69f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/002dad9fa08ac19902dded3ca3c2cafa0de399a7",
-                "reference": "002dad9fa08ac19902dded3ca3c2cafa0de399a7",
+                "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/7d47c7af2ddcf93b4fee4f167e10702e918f69f1",
+                "reference": "7d47c7af2ddcf93b4fee4f167e10702e918f69f1",
                 "shasum": ""
             },
             "require": {
@@ -1972,7 +1972,7 @@
                 "php",
                 "phpspreadsheet"
             ],
-            "time": "2019-06-19T11:52:55+00:00"
+            "time": "2019-07-16T08:40:48+00:00"
         },
         {
             "name": "markbaker/complex",

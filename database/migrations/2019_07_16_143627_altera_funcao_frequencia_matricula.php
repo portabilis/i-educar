@@ -68,8 +68,6 @@ class AlteraFuncaoFrequenciaMatricula extends Migration
                                           END IF;
                                       END;
                 $$;
-                
-                alter function modules.frequencia_da_matricula(integer) owner to ieducar;
 SQL;
 
         DB::unprepared($sql);
@@ -136,8 +134,6 @@ SQL;
                                           END IF;
                                       END;
                 $$;
-                
-                alter function modules.frequencia_da_matricula(integer) owner to ieducar;
 SQL;
 
         DB::unprepared($sql);
