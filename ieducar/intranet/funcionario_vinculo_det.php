@@ -29,7 +29,7 @@ class indice extends clsDetalhe
 
         $db = new clsBanco();
 
-        $db->Consulta("SELECT nm_vinculo, abreviatura FROM funcionario_vinculo WHERE cod_funcionario_vinculo = '$cod_func'");
+        $db->Consulta("SELECT nm_vinculo, abreviatura FROM portal.funcionario_vinculo WHERE cod_funcionario_vinculo = '$cod_func'");
 
         if ($db->ProximoRegistro()) {
             list($nm_vinculo, $abreviatura) = $db->Tupla();

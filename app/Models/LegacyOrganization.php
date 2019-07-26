@@ -17,15 +17,26 @@ class LegacyOrganization extends Model
     protected $primaryKey = 'idpes';
 
     /**
+     * @var array
+     */
+    protected $fillable = [
+        'idpes',
+        'cnpj',
+        'insc_estadual',
+        'idpes_rev',
+        'data_rev',
+        'origem_gravacao',
+        'idpes_cad',
+        'data_cad',
+        'operacao',
+        'idsis_rev',
+        'idsis_cad',
+        'fantasia',
+        'capital_social',
+    ];
+
+    /**
      * @var bool
      */
     public $timestamps = false;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [];
-
 }

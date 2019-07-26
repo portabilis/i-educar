@@ -3,7 +3,6 @@
 use App\Models\LegacyOrganization;
 use App\Models\LegacyEducationNetwork;
 use App\Models\LegacyInstitution;
-use App\Models\LegacyPerson;
 use App\Models\LegacySchool;
 use App\Models\LegacyUser;
 use Faker\Generator as Faker;

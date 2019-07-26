@@ -384,7 +384,7 @@ class MatriculaController extends ApiCoreController
                     ON escola.cod_escola = matricula.ref_ref_cod_escola
             INNER JOIN pmieducar.instituicao
                     ON instituicao.cod_instituicao = escola.ref_cod_instituicao
-            INNER JOIN matricula_turma
+            INNER JOIN pmieducar.matricula_turma
                     ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
                  WHERE matricula.ref_ref_cod_escola in (' . $escola . ')
                    AND matricula.ano = $1::integer
@@ -416,7 +416,7 @@ class MatriculaController extends ApiCoreController
                     ON escola.cod_escola = matricula.ref_ref_cod_escola
             INNER JOIN pmieducar.instituicao
                     ON instituicao.cod_instituicao = escola.ref_cod_instituicao
-            INNER JOIN matricula_turma_excluidos
+            INNER JOIN pmieducar.matricula_turma_excluidos
                     ON matricula_turma_excluidos.ref_cod_matricula = matricula.cod_matricula
                  WHERE matricula.ref_ref_cod_escola in (' . $escola . ') 
                    AND matricula.ano = $1::integer ' . $whereMatriculaExcluidos . ')
