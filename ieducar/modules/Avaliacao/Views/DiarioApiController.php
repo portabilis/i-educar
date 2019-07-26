@@ -300,7 +300,7 @@ class DiarioApiController extends ApiCoreController
         }
 
         if ($showMessage) {
-            $this->messenger->append('Não é permitido realizar esta alteração fora do período de lançamento de notas/faltas', 'error');
+            $this->messenger->append('Não é permitido realizar esta alteração fora do período de lançamento de notas/faltas.', 'error');
         }
 
         return false;

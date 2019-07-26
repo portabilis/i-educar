@@ -1943,5 +1943,5 @@ function criaBotaoReplicarNotas(){
 })(jQuery);
 
 function handleLockedMessage() {
-  handleMessages([{type : 'error', msg : 'Não é permitido realizar esta alteração fora do período de lançamento de notas/faltas'}]);
+  handleMessages([{type : 'error', msg : 'Não é permitido realizar esta alteração fora do período de lançamento de notas/faltas.'}]);
 }
