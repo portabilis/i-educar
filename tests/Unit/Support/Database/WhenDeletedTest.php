@@ -73,7 +73,7 @@ class WhenDeletedTest extends TestCase
      */
     public function testDropFunctionSql()
     {
-        $expected = "DROP FUNCTION when_deleted_other_table();";
+        $expected = "DROP FUNCTION IF EXISTS when_deleted_other_table();";
 
         $this->assertEquals($expected, $this->instance->getDropFunctionSql('other_table'));
     }
@@ -97,7 +97,7 @@ class WhenDeletedTest extends TestCase
      */
     public function getDropTriggerSql()
     {
-        $expected = "DROP TRIGGER trigger_when_deleted_public_table on public.table;";
+        $expected = "DROP TRIGGER IF EXISTS trigger_when_deleted_public_table on public.table;";
 
         $this->assertEquals($expected, $this->instance->getTriggerName('public.table'));
 
@@ -142,8 +142,8 @@ class WhenDeletedTest extends TestCase
      */
     public function testDrop()
     {
-        $expectedTrigger = 'DROP TRIGGER trigger_when_deleted_some_table on some_table;';
-        $expectedFunction = 'DROP FUNCTION when_deleted_some_table();';
+        $expectedTrigger = 'DROP TRIGGER IF EXISTS trigger_when_deleted_some_table on some_table;';
+        $expectedFunction = 'DROP FUNCTION IF EXISTS when_deleted_some_table();';
 
         DB::shouldReceive('unprepared')
             ->once()
