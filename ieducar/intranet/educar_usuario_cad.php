@@ -31,7 +31,6 @@ class indice extends clsCadastro
     public $_senha;
     public $ativo;
     public $ref_cod_funcionario_vinculo;
-    public $tempo_expira_conta;
     public $ramal;
     public $super;
     public $proibido;
@@ -170,32 +169,6 @@ class indice extends clsCadastro
         $opcoes = ['' => 'Selecione'] + $objFuncionarioVinculo->lista();
         $this->campoLista('ref_cod_funcionario_vinculo', 'Vínculo', $opcoes, $this->ref_cod_funcionario_vinculo);
 
-        $opcoes = [
-            '' => 'Selecione',
-            5 => '5',
-            6 => '6',
-            7 => '7',
-            10 => '10',
-            14 => '14',
-            20 => '20',
-            21 => '21',
-            28 => '28',
-            30 => '30',
-            35 => '35',
-            60 => '60',
-            90 => '90',
-            120 => '120',
-            150 => '150',
-            180 => '180',
-            210 => '210',
-            240 => '240',
-            270 => '270',
-            300 => '300',
-            365 => '365'
-        ];
-
-        $this->campoLista('tempo_expira_conta', 'Dias p/ expirar a conta', $opcoes, $this->tempo_expira_conta);
-
         $tempoExpiraSenha = config('legacy.app.user_accounts.default_password_expiration_period');
 
         if (is_numeric($tempoExpiraSenha)) {
@@ -294,7 +267,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, md5($this->_senha), $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->tempo_expira_conta, 'NOW()', 'NOW()', $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente) ? 0 : 1, 1, $this->email, $this->matricula_interna);
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, md5($this->_senha), $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, null, 'NOW()', 'NOW()', $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente) ? 0 : 1, 1, $this->email, $this->matricula_interna);
 
         if ($obj_funcionario->cadastra()) {
             $funcionario = $obj_funcionario->detalhe();
@@ -365,7 +338,7 @@ class indice extends clsCadastro
             $this->_senha = md5($this->_senha);
         }
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $this->_senha, $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->tempo_expira_conta, 'NOW()', 'NOW()', $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente) ? 0 : 1, null, $this->email, $this->matricula_interna);
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $this->_senha, $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, null, 'NOW()', 'NOW()', $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente) ? 0 : 1, null, $this->email, $this->matricula_interna);
         $detalheAntigo = $obj_funcionario->detalhe();
 
         if ($obj_funcionario->edita()) {
