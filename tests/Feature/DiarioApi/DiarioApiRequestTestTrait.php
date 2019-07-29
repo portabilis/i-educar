@@ -5,6 +5,7 @@ namespace Tests\Feature\DiarioApi;
 use App\Models\LegacyEnrollment;
 use App\User;
 use Illuminate\Foundation\Testing\TestResponse;
+use Illuminate\Http\Request;
 
 trait DiarioApiRequestTestTrait
 {
@@ -38,6 +39,8 @@ trait DiarioApiRequestTestTrait
             'secret_key' => env('API_SECRET_KEY'),
         ];
 
+        $_GET = $data;
+
         $user = factory(User::class, 'admin')->make();
 
         /** @var TestResponse $response */
@@ -69,12 +72,13 @@ trait DiarioApiRequestTestTrait
             'secret_key' => env('API_SECRET_KEY'),
         ];
 
+        $_GET = $data;
+
         $user = factory(User::class, 'admin')->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
 
-        dump($response->content());
         return json_decode($response->content());
     }
 

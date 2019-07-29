@@ -21,7 +21,7 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
         factory(LegacyValueRoundingTable::class, 10)->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
-    
+
         $evaluationRule = factory(LegacyEvaluationRule::class, 'media-presenca-sem-recuperacao')->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
@@ -29,7 +29,7 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
         $enrollment = $this->getCommonFakeData($evaluationRule);
         $schoolClass = $enrollment->schoolClass;
         $school = $schoolClass->school;
-    
+
         factory(LegacyAcademicYearStage::class)->create([
             'ref_ano' => now()->year,
             'ref_ref_cod_escola' => $school->id,
@@ -63,7 +63,7 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
 
         foreach ($disciplines as $key => $discipline) {
             for ($stage = 1; $stage <= 4; $stage++) {
-                // $this->postAbsence($enrollment, $discipline->id, $stage, '2');
+                $this->postAbsence($enrollment, $discipline->id, $stage, '2');
                 $this->postGrade($enrollment, $discipline->id, $stage, '8');
             }
         }
