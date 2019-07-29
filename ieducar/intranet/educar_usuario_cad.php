@@ -3,9 +3,6 @@
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
-error_reporting(E_ERROR);
-ini_set('display_errors', 1);
-
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -18,16 +15,13 @@ class clsIndexBase extends clsBase
 {
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} Cadastro de usu&aacute;rios");
-        $this->processoAp = '555';
-        $this->addEstilo('localizacaoSistema');
+        $this->SetTitulo('Cadastro de usuários');
+        $this->processoAp = 555;
     }
 }
 
 class indice extends clsCadastro
 {
-    public $pessoa_logada;
-
     public $ref_pessoa;
     public $ref_cod_setor_new;
 
@@ -159,10 +153,10 @@ class indice extends clsCadastro
             $this->campoOculto('ref_pessoa', $this->ref_pessoa);
         }
 
-        $this->campoTexto('matricula', 'Matr&iacute;cula', $this->matricula, 12, 12, true);
+        $this->campoTexto('matricula', 'Matrícula', $this->matricula, 12, 12, true);
         $this->campoSenha('_senha', 'Senha', $this->_senha, true);
         $this->campoEmail('email', 'E-mail usuário', $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
-        $this->campoTexto('matricula_interna', 'Matr&iacute;cula interna', $this->matricula_interna, 30, 30, false, false, false, 'Utilizado somente para registro, caso a institui&ccedil;&atilde;o deseje que a matr&iacute;cula interna deste funcion&aacute;rio seja registrada no sistema.');
+        $this->campoTexto('matricula_interna', 'Matrícula interna', $this->matricula_interna, 30, 30, false, false, false, 'Utilizado somente para registro, caso a instituição deseje que a matrícula interna deste funcionário seja registrada no sistema.');
 
         $opcoes = [0 => 'Inativo', 1 => 'Ativo'];
 
@@ -174,7 +168,7 @@ class indice extends clsCadastro
 
         $objFuncionarioVinculo = new clsPmieducarFuncionarioVinculo;
         $opcoes = ['' => 'Selecione'] + $objFuncionarioVinculo->lista();
-        $this->campoLista('ref_cod_funcionario_vinculo', 'V&iacute;nculo', $opcoes, $this->ref_cod_funcionario_vinculo);
+        $this->campoLista('ref_cod_funcionario_vinculo', 'Vínculo', $opcoes, $this->ref_cod_funcionario_vinculo);
 
         $opcoes = [
             '' => 'Selecione',
@@ -214,39 +208,34 @@ class indice extends clsCadastro
         $this->campoTexto('ramal', 'Ramal', $this->ramal, 11, 30);
 
         $opcoes = [null => 'Não', 'S' => 'Sim'];
-        $this->campoLista('super', 'Super usu&aacute;rio', $opcoes, $this->super, '', false, '', '', false, false);
+        $this->campoLista('super', 'Super usuário', $opcoes, $this->super, '', false, '', '', false, false);
 
         $opcoes = [null => 'Não', 1 => 'Sim'];
         $this->campoLista('proibido', 'Banido', $opcoes, $this->proibido, '', false, '', '', false, false);
 
         $opcoes = [null => 'Não', 1 => 'Sim'];
-        $this->campoLista('matricula_permanente', 'Matr&iacute;cula permanente', $opcoes, $this->matricula_permanente, '', false, '', '', false, false);
+        $this->campoLista('matricula_permanente', 'Matrícula permanente', $opcoes, $this->matricula_permanente, '', false, '', '', false, false);
 
         $opcoes = ['' => 'Selecione'];
 
-        if (class_exists('clsPmieducarTipoUsuario')) {
-            $objTemp = new clsPmieducarTipoUsuario();
-            $objTemp->setOrderby('nm_tipo ASC');
+        $objTemp = new clsPmieducarTipoUsuario();
+        $objTemp->setOrderby('nm_tipo ASC');
 
-            /** @var User $user */
-            $user = Auth::user();
+        /** @var User $user */
+        $user = Auth::user();
 
-            // verifica se pessoa logada é super-usuario
-            if ($user->isAdmin()) {
-                $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1);
-            } else {
-                $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $obj_permissao->nivel_acesso($this->pessoa_logada));
-            }
-
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes["{$registro['cod_tipo_usuario']}"] = "{$registro['nm_tipo']}";
-                    $opcoes_["{$registro['cod_tipo_usuario']}"] = "{$registro['nivel']}";
-                }
-            }
+        // verifica se pessoa logada é super-usuario
+        if ($user->isAdmin()) {
+            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1);
         } else {
-            echo "<!--\nErro\nClasse clsPmieducarTipoUsuario n&atilde;o encontrada\n-->";
-            $opcoes = ['' => 'Erro na geração'];
+            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $obj_permissao->nivel_acesso($this->pessoa_logada));
+        }
+
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $opcoes["{$registro['cod_tipo_usuario']}"] = "{$registro['nm_tipo']}";
+                $opcoes_["{$registro['cod_tipo_usuario']}"] = "{$registro['nivel']}";
+            }
         }
 
         $tamanho = sizeof($opcoes_);
@@ -259,7 +248,7 @@ class indice extends clsCadastro
 
         echo '</script>';
 
-        $this->campoLista('ref_cod_tipo_usuario', 'Tipo Usu&aacute;rio', $opcoes, $this->ref_cod_tipo_usuario, '', null, null, null, null, true);
+        $this->campoLista('ref_cod_tipo_usuario', 'Tipo Usuário', $opcoes, $this->ref_cod_tipo_usuario, '', null, null, null, null, true);
 
         $nivel = $obj_permissao->nivel_acesso($this->ref_pessoa);
 
@@ -340,9 +329,7 @@ class indice extends clsCadastro
             }
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-
-        echo "<!--\nErro ao cadastrar -->";
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -419,8 +406,6 @@ class indice extends clsCadastro
                         foreach ($lista_bibliotecas_usuario as $usuario) {
                             $obj_usuario_bib = new clsPmieducarBibliotecaUsuario($usuario['ref_cod_biblioteca'], $this->pessoa_logada);
                             if (!$obj_usuario_bib->excluir()) {
-                                echo "<!--\nErro ao excluir usuarios biblioteca\n-->";
-
                                 return false;
                             }
                         }
@@ -440,14 +425,12 @@ class indice extends clsCadastro
             }
 
             if ($editou) {
-                $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+                $this->mensagem .= 'Edição efetuada com sucesso.<br>';
                 $this->simpleRedirect('educar_usuario_lst.php');
             }
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-
-        echo "<!--\nErro ao editar clsPortalFuncionario-->";
+        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
@@ -460,13 +443,11 @@ class indice extends clsCadastro
         if ($obj_funcionario->excluir()) {
             $auditoria = new clsModulesAuditoriaGeral('funcionario', $this->pessoa_logada, $this->ref_pessoa);
             $auditoria->exclusao($detalhe);
-            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_usuario_lst.php');
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-
-        echo "<!--\nErro ao excluir clsPortalFuncionario\n-->";
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }
