@@ -1,5 +1,7 @@
 <?php
 
+use iEducar\Modules\EvaluationRules\Models\ParallelRemedialCalculationType;
+
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 require_once 'RegraAvaliacao/Model/RegraRecuperacaoDataMapper.php';
@@ -56,9 +58,9 @@ class EditController extends Core_Controller_Page_EditController
                 do aluno, aceita até 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
                 Desconsidere esse campo caso selecione o tipo de nota "conceitual"'
         ],
-        'calculaMediaRecParalela' => [
-            'label' => 'Calcular a média',
-            'help' => 'A média da etapa será calculada a partir da soma da nota da etapa mais a nota da recuperação divido por dois.'
+        'tipoCalculoRecuperacaoParalela' => [
+            'label' => 'Cálculo da média',
+            'help' => 'Determina o cálculo que será utilizado para definir a média da etapa.'
         ],
         'formulaMedia' => [
             'label' => 'Fórmula de cálculo da média',
@@ -707,15 +709,17 @@ class EditController extends Core_Controller_Page_EditController
             $this->_getHelp('mediaRecuperacaoParalela')
         );
 
-        $this->campoCheck(
-            'calculaMediaRecParalela',
-            $this->_getLabel('calculaMediaRecParalela'),
-            $this->getEntity()->calculaMediaRecParalela,
+        $this->campoLista(
+            'tipoCalculoRecuperacaoParalela',
+            $this->_getLabel('tipoCalculoRecuperacaoParalela'),
+            ParallelRemedialCalculationType::getDescriptiveValues(),
+            $this->getEntity()->get('tipoCalculoRecuperacaoParalela'),
             '',
             false,
+            $this->_getHelp('tipoCalculoRecuperacaoParalela'),
+            '',
             false,
-            false,
-            $this->_getHelp('calculaMediaRecParalela')
+            false
         );
 
         // Parte condicional

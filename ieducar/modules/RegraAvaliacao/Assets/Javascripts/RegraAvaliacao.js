@@ -38,11 +38,11 @@ $j(function(){
 	function tipoRecuperacaoParalelaChange(){
 		if($j(this).val() == 1 ) {
       $j('#mediaRecuperacaoParalela').closest('tr').show();
-      $j('#calculaMediaRecParalela').closest('tr').show();
+      $j('#tipoCalculoRecuperacaoParalela').closest('tr').show();
 		}else{
       $j('#mediaRecuperacaoParalela').val("");
       $j('#mediaRecuperacaoParalela').closest('tr').hide();
-      $j('#calculaMediaRecParalela').closest('tr').hide();
+      $j('#tipoCalculoRecuperacaoParalela').closest('tr').hide();
 		}
 
     if($j(this).val() == 2){
@@ -64,7 +64,7 @@ $j('[name^="recuperacao[excluir]"]').on('change', function(){
     $j(this).val('');
 });
 
-$j('#notaGeralPorEtapa, #aprovaMediaDisciplina, #reprovacaoAutomatica, #definirComponentePorEtapa, #calculaMediaRecParalela').on('change', function(){
+$j('#notaGeralPorEtapa, #aprovaMediaDisciplina, #reprovacaoAutomatica, #definirComponentePorEtapa').on('change', function(){
   if($j(this).is(':checked'))
     $j(this).val('1');
   else
