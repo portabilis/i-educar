@@ -31,7 +31,6 @@ class indice extends clsCadastro
     public $_senha;
     public $ativo;
     public $ref_cod_funcionario_vinculo;
-    public $super;
     public $proibido;
     public $matricula_permanente;
     public $matricula_interna;
@@ -176,9 +175,6 @@ class indice extends clsCadastro
             $opcoes = ['' => 'Selecione', 5 => '5', 30 => '30', 60 => '60', 90 => '90', 120 => '120', 180 => '180'];
             $this->campoLista('tempo_expira_senha', 'Dias p/ expirar a senha', $opcoes, $this->tempo_expira_senha);
         }
-
-        $opcoes = [null => 'Não', 'S' => 'Sim'];
-        $this->campoLista('super', 'Super usuário', $opcoes, $this->super, '', false, '', '', false, false);
 
         $opcoes = [null => 'Não', 1 => 'Sim'];
         $this->campoLista('proibido', 'Banido', $opcoes, $this->proibido, '', false, '', '', false, false);
