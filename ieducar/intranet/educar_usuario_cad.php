@@ -31,7 +31,6 @@ class indice extends clsCadastro
     public $_senha;
     public $ativo;
     public $ref_cod_funcionario_vinculo;
-    public $matricula_permanente;
     public $matricula_interna;
     public $escola;
 
@@ -175,9 +174,6 @@ class indice extends clsCadastro
             $this->campoLista('tempo_expira_senha', 'Dias p/ expirar a senha', $opcoes, $this->tempo_expira_senha);
         }
 
-        $opcoes = [null => 'Não', 1 => 'Sim'];
-        $this->campoLista('matricula_permanente', 'Matrícula permanente', $opcoes, $this->matricula_permanente, '', false, '', '', false, false);
-
         $opcoes = ['' => 'Selecione'];
 
         $objTemp = new clsPmieducarTipoUsuario();
@@ -256,7 +252,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, md5($this->_senha), $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, null, 'NOW()', 'NOW()', $this->pessoa_logada, 0, $this->ref_cod_setor_new, null, empty($this->matricula_permanente) ? 0 : 1, 1, $this->email, $this->matricula_interna);
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, md5($this->_senha), $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, null, 'NOW()', 'NOW()', $this->pessoa_logada, 0, $this->ref_cod_setor_new, null, 0, 1, $this->email, $this->matricula_interna);
 
         if ($obj_funcionario->cadastra()) {
             $funcionario = $obj_funcionario->detalhe();
@@ -327,7 +323,7 @@ class indice extends clsCadastro
             $this->_senha = md5($this->_senha);
         }
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $this->_senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, null, 'NOW()', 'NOW()', $this->pessoa_logada, 0, $this->ref_cod_setor_new, null, empty($this->matricula_permanente) ? 0 : 1, null, $this->email, $this->matricula_interna);
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $this->_senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, null, 'NOW()', 'NOW()', $this->pessoa_logada, 0, $this->ref_cod_setor_new, null, 0, null, $this->email, $this->matricula_interna);
         $detalheAntigo = $obj_funcionario->detalhe();
 
         if ($obj_funcionario->edita()) {
