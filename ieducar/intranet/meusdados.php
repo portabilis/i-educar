@@ -294,8 +294,8 @@ class indice extends clsCadastro
         ];
 
         $rdStationParams = [
-            'token' => $GLOBALS['coreExt']['Config']->app->rdstation->token,
-            'private_token' => $GLOBALS['coreExt']['Config']->app->rdstation->private_token
+            'token' => config('legacy.app.rdstation.token'),
+            'private_token' => config('legacy.app.rdstation.private_token')
         ];
 
         if (!empty($rdStationParams['token']) && !empty($rdStationParams['private_token'])) {

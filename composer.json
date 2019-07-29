@@ -22,7 +22,7 @@
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^6.3",
         "honeybadger-io/honeybadger-laravel": "^1.4",
-        "laravel/framework": "5.7.*",
+        "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
         "maatwebsite/excel": "^3.1",
         "phpoffice/phpspreadsheet": "^1.6",
@@ -41,12 +41,9 @@
         "fzaninotto/faker": "^1.4",
         "laravel/dusk": "^5.1",
         "laravel/telescope": "^1.0",
-        "myclabs/deep-copy": "^1.7",
         "mockery/mockery": "^1.0",
-        "nunomaduro/collision": "^2.0",
-        "phpunit/phpunit": "^7.0",
-        "league/flysystem-aws-s3-v3": "~1.0",
-        "league/flysystem-cached-adapter": "~1.0"
+        "nunomaduro/collision": "^3.0",
+        "phpunit/phpunit": "^7.5"
     },
     "autoload": {
         "classmap": [
@@ -94,9 +91,8 @@
             "@composer install",
             "@set-permissions",
             "@php artisan key:generate --ansi",
-            "@php artisan legacy:database --ansi",
             "@php artisan legacy:link --ansi",
-            "@php artisan migrate --force --ansi"
+            "@php artisan migrate --seed --force --ansi"
         ],
         "update-install": [
             "@composer install",
@@ -105,8 +101,7 @@
             "@php artisan migrate --force --ansi"
         ],
         "post-install-cmd": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
-            "@php -r \"file_exists('ieducar/configuration/ieducar.ini') || copy('ieducar/configuration/ieducar.ini.example', 'ieducar/configuration/ieducar.ini');\""
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"

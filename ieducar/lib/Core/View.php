@@ -96,17 +96,13 @@ class Core_View extends clsBase
     }
 
     /**
-     * Configura algumas variáveis de instância usando o container global
-     * $coreExt.
-     *
-     * @global $coreExt
+     * Configura algumas variáveis de instância.
      *
      * @see clsBase#Formular()
      */
     public function Formular()
     {
-        global $coreExt;
-        $instituicao = $coreExt['Config']->app->template->vars->instituicao;
+        $instituicao = config('legacy.app.template.vars.instituicao');
 
         $this->setTitulo($instituicao . ' | ' . $this->_getPageController()->getBaseTitulo())
             ->setProcessoAp($this->_getPageController()->getBaseProcessoAp());

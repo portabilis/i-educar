@@ -39,14 +39,10 @@ class clsMunicipio
     var $geom;
     var $tipo;
     var $idmun_pai;
-
     var $idpes_cad;
     var $idpes_rev;
     var $origem_gravacao;
     var $operacao;
-    var $idsis_cad;
-    var $idsis_rev;
-
     var $tabela;
     var $schema = "public";
 
@@ -57,7 +53,7 @@ class clsMunicipio
      *
      * @return Object:clsMunicipio
      */
-    function __construct( $int_idmun = false, $str_nome = false, $str_sigla_uf = false, $int_area_km2 = false, $int_idmreg = false, $int_idasmun = false, $int_cod_ibge = false, $str_geom =false, $str_tipo = false, $int_idmun_pai = false, $int_idpes_cad = false, $int_idpes_rev = false, $str_origem_gravacao = false, $str_operacao=false, $int_idsis_cad=false, $int_idsis_rev=false )
+    function __construct( $int_idmun = false, $str_nome = false, $str_sigla_uf = false, $int_area_km2 = false, $int_idmreg = false, $int_idasmun = false, $int_cod_ibge = false, $str_geom =false, $str_tipo = false, $int_idmun_pai = false, $int_idpes_cad = false, $int_idpes_rev = false, $str_origem_gravacao = false, $str_operacao=false)
     {
         if($int_idmun)
         {
@@ -86,8 +82,6 @@ class clsMunicipio
         $this->tipo = $str_tipo;
         $this->idpes_cad = $int_idpes_cad;
         $this->idpes_rev = $int_idpes_rev;
-        $this->idsis_cad = $int_idsis_cad;
-        $this->idsis_rev = $int_idsis_rev;
         $this->operacao = $str_operacao;
         $this->origem_gravacao = $str_origem_gravacao;
 
@@ -110,7 +104,7 @@ class clsMunicipio
     {
         $db = new clsBanco();
         // verificacoes de campos obrigatorios para insercao
-        if( is_numeric( $this->idmun )  && is_string( $this->nome ) && is_string( $this->sigla_uf ) && is_string( $this->tipo ) && is_numeric( $this->idpes_cad ) && is_numeric( $this->idsis_cad ) && is_string( $this->operacao ) && is_string($this->origem_gravacao ) )
+        if( is_numeric( $this->idmun )  && is_string( $this->nome ) && is_string( $this->sigla_uf ) && is_string( $this->tipo ) && is_numeric( $this->idpes_cad ) && is_string( $this->operacao ) && is_string($this->origem_gravacao ) )
         {
             $campos = "";
             $values = "";
@@ -124,11 +118,6 @@ class clsMunicipio
             {
                 $campos .= ", idpes_cad";
                 $values .= ", '{$this->idpes_cad}'";
-            }
-            if( is_numeric( $this->idsis_cad ) )
-            {
-                $campos .= ", idsis_cad";
-                $values .= ", '{$this->idsis_cad}'";
             }
             if( is_string( $this->operacao) )
             {
@@ -258,13 +247,10 @@ class clsMunicipio
             $objBairro = new clsBairro();
             $listaBairro = $objBairro->lista($this->idmun);
 
-            $objVila = new clsVila();
-            $listaVila = $objVila->lista($this->idmun);
-
             $objLog = new clsLogradouro();
             $listaLog = $objLog->lista(false, false, $this->idmun);
 
-            if(!count($listaBairro) && !count($listaVila) && !count($listaLog))
+            if(!count($listaBairro) && !count($listaLog))
             {
                 $db = new clsBanco();
                 //$db->Consulta("DELETE FROM {$this->schema}.{$this->tabela} WHERE idmun={$this->idmun}");

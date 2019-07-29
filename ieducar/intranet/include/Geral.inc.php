@@ -1,6 +1,5 @@
 <?php
 
-require_once 'includes/bootstrap.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
 require_once 'include/pessoa/clsPessoa_.inc.php';
 require_once 'include/pessoa/clsPessoaFj.inc.php';
@@ -20,7 +19,6 @@ require_once 'include/pessoa/clsBairro.inc.php';
 require_once 'include/pessoa/clsMunicipio.inc.php';
 require_once 'include/pessoa/clsUf.inc.php';
 require_once 'include/pessoa/clsPais.inc.php';
-require_once 'include/pessoa/clsVila.inc.php';
 require_once 'include/pessoa/clsTipoLogradouro.inc.php';
 require_once 'include/pessoa/clsFuncionario.inc.php';
 require_once 'include/pessoa/clsEscolaridade.inc.php';
@@ -29,14 +27,10 @@ require_once 'include/pessoa/clsOcupacao.inc.php';
 require_once 'include/pessoa/clsFisica.inc.php';
 require_once 'include/pessoa/clsOrgaoEmissorRg.inc.php';
 require_once 'include/pessoa/clsDocumento.inc.php';
-require_once 'include/pessoa/clsRegiao.inc.php';
 require_once 'include/pessoa/clsEscolaridade.inc.php';
 require_once 'include/pessoa/clsCadastroEscolaridade.inc.php';
 require_once 'include/pessoa/clsCadastroDeficiencia.inc.php';
 require_once 'include/pessoa/clsCadastroFisicaDeficiencia.inc.php';
-require_once 'include/pmidrh/clsSetor.inc.php';
-require_once 'include/pmidrh/geral.inc.php';
-require_once 'include/pessoa/clsBairroRegiao.inc.php';
 require_once 'include/funcoes.inc.php';
 require_once 'include/clsParametrosPesquisas.inc.php';
 require_once 'include/portal/geral.inc.php';

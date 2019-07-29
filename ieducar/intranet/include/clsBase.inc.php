@@ -9,24 +9,16 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
-require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/clsLogAcesso.inc.php';
 require_once 'include/Geral.inc.php';
-require_once 'include/pmicontrolesis/geral.inc.php';
 require_once 'include/funcoes.inc.php';
 require_once 'Portabilis/Utils/Database.php';
 require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/String/Utils.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
-if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente) {
-    throw new HttpResponseException(
-        new RedirectResponse('404.html')
-    );
-}
-
-class clsBase extends clsConfig
+class clsBase
 {
     public $titulo = 'Prefeitura Municipal';
     public $clsForm = [];
@@ -39,6 +31,12 @@ class clsBase extends clsConfig
     public $estilos;
     public $scripts;
     public $prog_alert;
+    public $_instituicao;
+
+    public function __construct()
+    {
+        $this->_instituicao = config('legacy.app.template.vars.instituicao');
+    }
 
     public function SetTitulo($titulo)
     {

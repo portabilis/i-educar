@@ -10,7 +10,7 @@ class PessoaFjTest extends TestCase
     {
         $pdo = $this->getConnection()->getPdo();
         $pdo->exec(
-            'INSERT INTO cadastro.pessoa (nome, data_cad, tipo, situacao, origem_gravacao, operacao, idsis_cad) VALUES (\'Fulano\', now(), \'F\', \'P\', \'U\', \'I\', 17)'
+            'INSERT INTO cadastro.pessoa (nome, data_cad, tipo, situacao, origem_gravacao, operacao) VALUES (\'Fulano\', now(), \'F\', \'P\', \'U\', \'I\')'
         );
         $id = $pdo->lastInsertId('cadastro.seq_pessoa');
 
