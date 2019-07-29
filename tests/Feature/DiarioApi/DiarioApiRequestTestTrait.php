@@ -49,7 +49,7 @@ trait DiarioApiRequestTestTrait
         return json_decode($response->content());
     }
 
-    public function postGrade($enrollment, $disciplineId, $stage, $score)
+    public function postScore($enrollment, $disciplineId, $stage, $score)
     {
         $this->cleanGlobals();
 

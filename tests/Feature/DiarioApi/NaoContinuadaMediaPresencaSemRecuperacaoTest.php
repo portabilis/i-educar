@@ -13,9 +13,11 @@ use App\Models\LegacyDisciplineAcademicYear;
 
 class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
 {
-    use DiarioApiFakeDataTestTrait, DiarioApiRequestTestTrait;
-
-    public function testAprovacaoAposTodasFaltasENotasLancadas()
+    use DiarioApiFakeDataTestTrait, DiarioApiRequestTestTrait, DatabaseTransactions;
+    
+    private $enrollment;
+    
+    public function setUp()
     {
         $roundingTable = factory(LegacyRoundingTable::class, 'numeric')->create();
         factory(LegacyValueRoundingTable::class, 10)->create([
@@ -26,27 +28,17 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
 
-        $enrollment = $this->getCommonFakeData($evaluationRule);
-        $schoolClass = $enrollment->schoolClass;
+        $this->enrollment = $this->getCommonFakeData($evaluationRule);
+    }
+
+    public function testAprovacaoAposTodasFaltasENotasLancadas()
+    {
+        $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
 
-        factory(LegacyAcademicYearStage::class)->create([
-            'ref_ano' => now()->year,
-            'ref_ref_cod_escola' => $school->id,
-            'sequencial' => 2,
-        ]);
-
-        factory(LegacyAcademicYearStage::class)->create([
-            'ref_ano' => now()->year,
-            'ref_ref_cod_escola' => $school->id,
-            'sequencial' => 3,
-        ]);
-
-        factory(LegacyAcademicYearStage::class)->create([
-            'ref_ano' => now()->year,
-            'ref_ref_cod_escola' => $school->id,
-            'sequencial' => 4,
-        ]);
+        $this->addAcademicYearStage($schoolClass, 2);
+        $this->addAcademicYearStage($schoolClass, 3);
+        $this->addAcademicYearStage($schoolClass, 4);
 
         $discipline = factory(LegacyDiscipline::class)->create();
         $schoolClass->disciplines()->attach($discipline->id, [
@@ -61,13 +53,14 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
 
         $disciplines = $schoolClass->disciplines;
 
-        foreach ($disciplines as $key => $discipline) {
+        foreach ($disciplines as $discipline) {
             for ($stage = 1; $stage <= 4; $stage++) {
-                $this->postAbsence($enrollment, $discipline->id, $stage, '2');
-                $this->postGrade($enrollment, $discipline->id, $stage, '8');
+                $this->postAbsence($this->enrollment, $discipline->id, $stage, '3');
+                $response = $this->postScore($this->enrollment, $discipline->id, $stage, '8');
             }
+            $this->assertEquals('Aprovado', $response->situacao);
         }
-
-        $this->assertEquals('Aprovado', 'Aprovado');
+        $registration = $this->enrollment->registration;
+        $this->assertEquals(1, $registration->refresh()->aprovado);
     }
 }

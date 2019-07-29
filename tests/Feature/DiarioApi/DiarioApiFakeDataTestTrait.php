@@ -28,7 +28,8 @@ trait DiarioApiFakeDataTestTrait
         $course = factory(LegacyCourse::class, 'padrao-ano-escolar')->create();
 
         $level = factory(LegacyLevel::class)->create([
-            'ref_cod_curso' => $course
+            'ref_cod_curso' => $course,
+            'dias_letivos' => '200'
         ]);
 
         $schoolGrade = factory(LegacySchoolGrade::class)->create([
@@ -89,10 +90,14 @@ trait DiarioApiFakeDataTestTrait
      * @param LegacySchoolClass $schoolClass
      * @param $number
      */
-    public function addAcademicYearStage($schoolClass, $number)
+    public function addAcademicYearStage($schoolClass, $number, $year = null)
     {
+        if (!$year) {
+            $year = now()->year;
+        }
+
         factory(LegacyAcademicYearStage::class)->create([
-            'ref_ano' => now()->year,
+            'ref_ano' => $year,
             'ref_ref_cod_escola' => $schoolClass->school_id,
             'sequencial' => $number,
         ]);
