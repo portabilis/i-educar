@@ -13,10 +13,10 @@ use App\Models\LegacyDisciplineAcademicYear;
 class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
 {
     use DiarioApiFakeDataTestTrait, DiarioApiRequestTestTrait, DatabaseTransactions;
-    
+
     private $enrollment;
-    
-    public function setUp()
+
+    public function setUp(): void
     {
         parent::setUp();
         $roundingTable = factory(LegacyRoundingTable::class, 'numeric')->create();

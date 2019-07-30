@@ -270,7 +270,7 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
     $service->savePareceres();
   }
 
-  public function tearDown()
+  public function tearDown(): void
   {
     Portabilis_Utils_Database::$_db = null;
   }

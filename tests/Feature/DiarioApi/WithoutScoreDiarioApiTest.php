@@ -19,7 +19,7 @@ class WithoutScoreDiarioApiTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->evaluationRule = factory(LegacyEvaluationRule::class, 'without-score')->create();
