@@ -46,7 +46,7 @@ class CoreExt_Validate_StringTest extends PHPUnit\Framework\TestCase
 {
   protected $_validator = NULL;
 
-  protected function setUp()
+  protected function setUp(): void
   {
     $this->_validator = new CoreExt_Validate_String();
   }

@@ -24,14 +24,6 @@
  * @version   $Id$
  */
 
-function openfoto(foto, altura, largura)
-{
-  abrir = 'visualizarfoto.php?id_foto=' + foto;
-  apr   = 'width=' + altura + ', height=' + largura + ', scrollbars=no, top=10, left=10';
-  var foto_ = window.open(abrir, 'JANELA_FOTO',  apr);
-  foto_.focus();
-}
-
 /**
  * @TODO Remover função, chamadas no i-Educar comentadas (código nunca invocado).
  *   Ver: $ egrep -rn 'setFocus[ ]{0,3}\(' intranet/

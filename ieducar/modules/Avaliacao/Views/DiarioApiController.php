@@ -22,9 +22,6 @@ require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Object/Utils.php';
 
-//todo: Mover pra algum outro lugar
-require_once __DIR__ . '/../../../vendor/autoload.php';
-
 class DiarioApiController extends ApiCoreController
 {
     protected $_dataMapper = 'Avaliacao_Model_NotaComponenteDataMapper';
@@ -389,15 +386,24 @@ class DiarioApiController extends ApiCoreController
     // responders
 
     // post
-
-    public function postNota()
+    /**
+     * @throws CoreExt_Exception
+     */
+    protected function postNota()
     {
         if ($this->canPostNota()) {
+            $nota = urldecode($this->getRequest()->att_value);
+            $notaOriginal = urldecode($this->getRequest()->nota_original);
+            $etapa = $this->getRequest()->etapa;
+
+            $nota = $this->serviceBoletim()->calculateStageScore($etapa, $nota, null);
+
             $array_nota = array(
                 'componenteCurricular' => $this->getRequest()->componente_curricular_id,
-                'nota' => urldecode($this->getRequest()->att_value),
-                'etapa' => $this->getRequest()->etapa,
-                'notaOriginal' => urldecode($this->getRequest()->nota_original));
+                'nota' => $nota,
+                'etapa' => $etapa,
+                'notaOriginal' => $notaOriginal,
+            );
 
             if ($_notaAntiga = $this->serviceBoletim()->getNotaComponente($this->getRequest()->componente_curricular_id, $this->getRequest()->etapa)) {
                 $array_nota['notaRecuperacaoParalela'] = $_notaAntiga->notaRecuperacaoParalela;
@@ -507,23 +513,23 @@ class DiarioApiController extends ApiCoreController
         return true;
     }
 
+    /**
+     * @throws CoreExt_Exception
+     */
     protected function postNotaRecuperacaoParalela()
     {
         if ($this->canPostNota()) {
             $notaOriginal = $this->getNotaOriginal();
             $notaRecuperacaoParalela = urldecode($this->getRequest()->att_value);
+            $etapa = $this->getRequest()->etapa;
 
-            $regra = $this->getRegraAvaliacao();
-
-            if ($regra['calcula_media_rec_paralela']) {
-                $notaNova = (floatval($notaRecuperacaoParalela) + floatval($notaOriginal)) / 2;
-            } else {
-                $notaNova = $notaRecuperacaoParalela > $notaOriginal ? $notaRecuperacaoParalela : $notaOriginal;
-            }
+            $notaNova = $this->serviceBoletim()->calculateStageScore(
+                $etapa, $notaOriginal, $notaRecuperacaoParalela
+            );
 
             $nota = new Avaliacao_Model_NotaComponente(array(
                 'componenteCurricular' => $this->getRequest()->componente_curricular_id,
-                'etapa' => $this->getRequest()->etapa,
+                'etapa' => $etapa,
                 'nota' => $notaNova,
                 'notaRecuperacaoParalela' => $notaRecuperacaoParalela,
                 'notaOriginal' => $notaOriginal)
@@ -1655,7 +1661,7 @@ class DiarioApiController extends ApiCoreController
             $itensRegra['quantidade_etapas'] = $this->serviceBoletim()->getOption('etapas');
         }
 
-        $itensRegra['nomenclatura_exame'] = ($GLOBALS['coreExt']['Config']->app->diario->nomenclatura_exame == 0 ? 'exame' : 'conselho');
+        $itensRegra['nomenclatura_exame'] = (config('legacy.app.diario.nomenclatura_exame') == 0 ? 'exame' : 'conselho');
 
         //tipo de recuperação paralela
         $tipoRecuperacaoParalela = $regra->get('tipoRecuperacaoParalela');
@@ -1702,7 +1708,7 @@ class DiarioApiController extends ApiCoreController
 
     protected function usaAuditoriaNotas()
     {
-        return ($GLOBALS['coreExt']['Config']->app->auditoria->notas == "1");
+        return (config('legacy.app.auditoria.notas') == "1");
     }
 
     public function canChange()

@@ -60,7 +60,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
         $valid = false;
 
         if (!is_null($this->getRequest()->access_key)) {
-            $accessKey = $GLOBALS['coreExt']['Config']->apis->access_key;
+            $accessKey = config('legacy.apis.access_key');
             $valid = $accessKey == $this->getRequest()->access_key;
 
             if (!$valid) {

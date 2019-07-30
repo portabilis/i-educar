@@ -109,8 +109,8 @@ class clsPessoaEndereco
 
       $sql = sprintf(
         'INSERT INTO %s.%s (idpes, tipo, cep, idlog, idbai, origem_gravacao, ' .
-        'idsis_cad, data_cad, operacao, idpes_cad %s) VALUES (\'%d\', \'1\', ' .
-        '\'%s\', \'%s\', \'%d\', \'M\', 17, NOW(), \'I\', \'%d\' %s)',
+        'data_cad, operacao, idpes_cad %s) VALUES (\'%d\', \'1\', ' .
+        '\'%s\', \'%s\', \'%d\', \'M\', NOW(), \'I\', \'%d\' %s)',
         $this->schema_cadastro, $this->tabela, $campos, $this->idpes,
         $this->cep, $this->idlog, $this->idbai, $this->idpes_cad, $valores
       );

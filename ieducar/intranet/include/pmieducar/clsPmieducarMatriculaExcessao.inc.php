@@ -470,11 +470,11 @@ class clsPmieducarMatriculaExcessao
         }
         if( ! is_null( $bool_permite_exame ) )
         {
-            if( $bool_permite_exame == IS_NULL )
+            if( $bool_permite_exame == "!-! is null !-!" )
             {
                 $filtros .= "{$whereAnd} permite_exame IS NULL";
             }
-            else if( $bool_permite_exame == IS_NOT_NULL )
+            else if( $bool_permite_exame == "!-! is not null !-!" )
             {
                 $filtros .= "{$whereAnd} permite_exame IS NOT NULL";
             }

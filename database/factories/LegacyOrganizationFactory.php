@@ -19,7 +19,6 @@ $factory->define(LegacyOrganization::class, function (Faker $faker) {
         'idpes_cad' => factory(LegacyUser::class)->state('unique')->make(),
         'data_cad' => now(),
         'operacao' => $faker->randomElement(['I', 'A', 'E']),
-        'idsis_cad' => 1,
         'fantasia' => $person->name,
     ];
 });

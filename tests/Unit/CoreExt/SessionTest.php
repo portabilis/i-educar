@@ -8,7 +8,7 @@ class CoreExt_SessionTest extends TestCase
 {
   protected $_session = NULL;
 
-  protected function setUp()
+  protected function setUp(): void
   {
     parent::setUp();
 
