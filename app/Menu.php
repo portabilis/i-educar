@@ -37,6 +37,8 @@ class Menu extends Model
         'icon',
         'order',
         'type',
+        'parent_old',
+        'old',
         'process',
         'active',
     ];

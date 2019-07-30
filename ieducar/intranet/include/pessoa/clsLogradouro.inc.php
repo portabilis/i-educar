@@ -90,7 +90,7 @@ class clsLogradouro
                 $values .= ", '{$this->idpes_cad}'";
             }
 
-            $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} ( idtlog, nome, idmun, origem_gravacao, ident_oficial,data_cad, OPERACAO, idsis_cad$campos ) VALUES ( '{$this->idtlog}', '{$this->nome}', '{$this->idmun}', 'U', '{$this->ident_oficial}', NOW(), 'I', '9' $values )" );
+            $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} ( idtlog, nome, idmun, origem_gravacao, ident_oficial,data_cad, OPERACAO $campos ) VALUES ( '{$this->idtlog}', '{$this->nome}', '{$this->idmun}', 'U', '{$this->ident_oficial}', NOW(), 'I' $values )" );
             
             return $db->InsertId("{$this->schema}.seq_logradouro");
         }

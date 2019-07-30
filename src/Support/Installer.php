@@ -237,15 +237,4 @@ class Installer
 
         return strpos($output, '| No') !== false;
     }
-
-    public function checkIniConfig(string $host): bool
-    {
-        $file = $this->rootDir . '/ieducar/configuration/ieducar.ini';
-
-        if (!file_exists($file)) {
-            return false;
-        }
-
-        return (new \CoreExt_Config_Ini($file))->hasEnviromentSection($host);
-    }
 }

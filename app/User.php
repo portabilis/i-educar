@@ -4,6 +4,7 @@ namespace App;
 
 use App\Models\LegacyEmployee;
 use App\Models\LegacyUserType;
+use App\Models\School;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
@@ -123,6 +124,47 @@ class User extends Authenticatable
     }
 
     /**
+     * @return bool
+     */
+    public function isSchooling()
+    {
+        return $this->type->level === LegacyUserType::LEVEL_SCHOOLING;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInstitutional()
+    {
+        return $this->type->level === LegacyUserType::LEVEL_INSTITUTIONAL;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isLibrary()
+    {
+        return $this->type->level === LegacyUserType::LEVEL_LIBRARY;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return boolval($this->employee->ativo && $this->ativo);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInactive()
+    {
+        return ! $this->isActive();
+    }
+
+    /**
      * @return BelongsTo
      */
     public function employee()
@@ -153,5 +195,20 @@ class User extends Authenticatable
         return $this->processes()
             ->wherePivot('visualiza', 1)
             ->withPivot(['visualiza', 'cadastra', 'exclui']);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function schools()
+    {
+        return $this->belongsToMany(
+            School::class,
+            'pmieducar.escola_usuario',
+            'ref_cod_usuario',
+            'ref_cod_escola',
+            'cod_usuario',
+            'cod_escola'
+        );
     }
 }

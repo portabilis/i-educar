@@ -201,7 +201,7 @@ class indice extends clsCadastro
 
                         // vamos ver se tem alguma excessao que precisa de nota de exame
                         $objExcessoes = new clsPmieducarMatriculaExcessao();
-                        $lista_excessoes = $objExcessoes->lista(null,$this->ref_cod_turma,null,$this->ref_ref_cod_serie,$this->ref_ref_cod_escola,null,true,true,IS_NULL);
+                        $lista_excessoes = $objExcessoes->lista(null,$this->ref_cod_turma,null,$this->ref_ref_cod_serie,$this->ref_ref_cod_escola,null,true,true,"!-! is null !-!");
                         if( is_array($lista_excessoes) )
                         {
                             // existe alguma excessao, mostra a tela de excessoes
@@ -658,7 +658,7 @@ class indice extends clsCadastro
                 $boletim = false;
                 $descricao = "";
                 $objExcessoes = new clsPmieducarMatriculaExcessao();
-                $lista_excessoes = $objExcessoes->lista(null,$this->ref_cod_turma,null,$this->ref_ref_cod_serie,$this->ref_ref_cod_escola,null,true,true,IS_NULL);
+                $lista_excessoes = $objExcessoes->lista(null,$this->ref_cod_turma,null,$this->ref_ref_cod_serie,$this->ref_ref_cod_escola,null,true,true,"!-! is null !-!");
                 if( is_array($lista_excessoes) )
                 {
                     $this->campoQuebra2();

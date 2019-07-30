@@ -52,6 +52,7 @@ class LegacySchoolClass extends Model
         'ref_ref_cod_escola',
         'ref_ref_cod_serie',
         'ref_cod_curso',
+        'visivel',
     ];
 
     /**
@@ -137,7 +138,7 @@ class LegacySchoolClass extends Model
      */
     public function getBeginAcademicYearAttribute()
     {
-        return $this->stages()->first()->data_inicio;
+        return $this->stages()->orderBy('sequencial')->first()->data_inicio;
     }
 
     /**

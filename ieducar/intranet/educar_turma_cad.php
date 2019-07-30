@@ -104,6 +104,8 @@ class indice extends clsCadastro
     ];
     public $nao_informar_educacenso;
     public $ano_letivo;
+    public $nome_url_cancelar = 'Cancelar';
+    public $url_cancelar = 'educar_turma_lst.php';
 
     public function Inicializar()
     {
@@ -190,8 +192,6 @@ class indice extends clsCadastro
         $this->breadcrumb($nomeMenu . ' turma', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->nome_url_cancelar = 'Cancelar';
 
         $this->retorno = $retorno;
 
@@ -842,6 +842,30 @@ class indice extends clsCadastro
         return $service->isAvailableName($nome, $curso, $serie, $escola, $ano, $id);
     }
 
+    /**
+     * Valida o campo Boletim Diferenciado
+     *
+     * @param $levelId
+     * @param $academicYear
+     * @param $alternativeReportCard
+     * @return bool
+     */
+    public function temBoletimDiferenciado($levelId, $academicYear, $alternativeReportCard)
+    {
+
+        if ($alternativeReportCard) {
+            return true;
+        }
+
+        $service = new SchoolClassService();
+
+        if ($service->isRequiredAlternativeReportCard($levelId, $academicYear)) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function Novo()
     {
         if (!$this->canCreateTurma($this->ref_cod_escola, $this->ref_cod_serie, $this->turma_turno_id)) {
@@ -862,10 +886,16 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!$this->temBoletimDiferenciado($this->ref_cod_serie, $this->ano_letivo, $this->tipo_boletim_diferenciado)) {
+            $this->mensagem = 'O campo \'<b>Boletim diferenciado</b>\' é obrigatório quando a regra de avaliação da série possui regra diferenciada definida.';
+
+            return false;
+        }
+
         $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
 
         $this->multiseriada = isset($this->multiseriada) ? 1 : 0;
-        $this->visivel = isset($this->visivel) ? 'true' : 'false';
+        $this->visivel = isset($this->visivel);
 
         $objTurma = $this->montaObjetoTurma(null, $this->pessoa_logada);
 
@@ -906,6 +936,7 @@ class indice extends clsCadastro
     public function Editar()
     {
         $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
+        $possuiAlunosVinculados = $turmaDetalhe->possuiAlunosVinculados();
         $turmaDetalhe = $turmaDetalhe->detalhe();
         $this->ref_cod_curso = $turmaDetalhe['ref_cod_curso'];
         $this->ref_ref_cod_escola = $turmaDetalhe['ref_ref_cod_escola'];
@@ -918,13 +949,28 @@ class indice extends clsCadastro
             return false;
         }
 
-        $this->visivel = isset($this->visivel) ? 'true' : 'false';
+
+        $this->visivel = isset($this->visivel);
+
+        if (!$this->visivel && $possuiAlunosVinculados) {
+            $this->mensagem = 'Não foi possível inativar a turma, pois a mesma possui matrículas vinculadas.';
+
+            return false;
+        }
+
+        $this->multiseriada = isset($this->multiseriada) ? 1 : 0;
 
         $objTurma = $this->montaObjetoTurma($this->cod_turma, null, $this->pessoa_logada);
         $dadosTurma = $objTurma->detalhe();
 
         if (!$this->nomeEstaDisponivel($dadosTurma['ano'], $this->ref_cod_curso, $dadosTurma['ref_ref_cod_serie'], $dadosTurma['ref_ref_cod_escola'], $this->nm_turma, $this->cod_turma)) {
             $this->mensagem = 'O nome da turma já está sendo utilizado nesta escola, para o curso, série e anos informados.';
+
+            return false;
+        }
+
+        if (!$this->temBoletimDiferenciado($dadosTurma['ref_ref_cod_serie'], $dadosTurma['ano'], $this->tipo_boletim_diferenciado)) {
+            $this->mensagem = 'O campo \'<b>Boletim diferenciado</b>\' é obrigatório quando a regra de avaliação da série possui regra diferenciada definida.';
 
             return false;
         }
@@ -939,8 +985,6 @@ class indice extends clsCadastro
         } else {
             $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
         }
-
-        $this->multiseriada = isset($this->multiseriada) ? 1 : 0;
 
         $editou = $objTurma->edita();
 
@@ -1874,6 +1918,7 @@ $pagina->MakeAll();
 
         if (document.getElementById('padrao_ano_escolar').value == 0) {
             setModuleAndPhasesVisibility(true);
+            buscaEtapasDaEscola();
         }
     }
 

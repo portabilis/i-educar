@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Employee;
+use App\Models\LegacyInstitution;
+use App\Models\LegacySchoolClass;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
@@ -205,6 +208,10 @@ class indice extends clsCadastro
                 return false;
             }
 
+            if (!$this->validaVinculoEscola()) {
+                return false;
+            }
+
             $professorTurma = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $this->ref_cod_turma, $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente, $this->turma_turno_id);
             if ($professorTurma->existe2()) {
                 $this->mensagem .= 'Não é possível cadastrar pois já existe um vínculo com essa turma.<br>';
@@ -256,6 +263,9 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!$this->validaVinculoEscola()) {
+            return false;
+        }
 
         if ($professorTurma->existe2()) {
             $this->mensagem .= 'Não é possível cadastrar pois já existe um vínculo com essa turma.<br>';
@@ -302,6 +312,30 @@ class indice extends clsCadastro
         }
 
         return $this->validaFuncaoExercida();
+    }
+
+    public function validaVinculoEscola()
+    {
+        $instituicao = LegacyInstitution::find($this->ref_cod_instituicao);
+
+        if (!$instituicao->bloquear_vinculo_professor_sem_alocacao_escola) {
+            return true;
+        }
+
+        /** @var Employee $servidor */
+        $servidor = Employee::findOrFail($this->servidor_id);
+
+        $vinculoEscola = $servidor->schools()
+            ->where('ref_cod_escola', $this->ref_cod_escola)
+            ->withPivotValue('ano', $this->ano)
+            ->exists();
+
+        if ($vinculoEscola) {
+            return true;
+        }
+
+        $this->mensagem = 'Não é possível cadastrar o vínculo pois o servidor não está alocado na escola selecionada.';
+        return false;
     }
 
     private function validaFuncaoExercida()
