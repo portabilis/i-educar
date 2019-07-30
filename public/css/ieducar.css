@@ -30,6 +30,12 @@ input.form-input {
   font-size: 16px;
 }
 
+.table-default a{
+  color: #47728f;
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px;
+}
+
 .table-default thead tr {
   font-weight: bold;
   background-color: #ccdce6;
@@ -104,7 +110,8 @@ input.form-input {
 }
 
 .btn,
-.btn-green {
+.btn-green,
+.select-default {
   background-color: #FFF;
   font-size: 14px;
   color: #47728f;
@@ -114,7 +121,16 @@ input.form-input {
   margin: 15px 0;
   font-family: "Open Sans", sans-serif;
   cursor: pointer;
-  border-color: #cddce6 !important;
+  border: 1px solid #cddce6;
+}
+
+.btn:active {
+  border-style: solid;
+}
+
+.select-default {
+  margin: 0;
+  cursor: default;
 }
 
 a.btn {
@@ -123,4 +139,60 @@ a.btn {
 
 a.btn:hover {
   text-decoration: none;
+}
+
+.radiogroup {
+  float: left;
+  border: solid 1px #cddce6;
+  border-radius: 3px;
+}
+.radiogroup .radiogroup-icon {
+  display: inline-block;
+  width: 16px;
+}
+.radiogroup input[type=checkbox] {
+  display: none;
+}
+.radiogroup button[type=button],
+.radiogroup label {
+  float: right;
+  background-color: #ffffff;
+  padding: 3px 8px;
+  font-size: 14px;
+  color: #47728f;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.radiogroup button[type=button] {
+  font-family: "Open Sans", sans-serif;
+  background: none;
+  border: none;
+}
+.radiogroup label,
+.radiogroup button[type=button] {
+  border-left: solid 1px #cddce6;
+}
+.radiogroup label:last-child,
+.radiogroup button[type=button]:last-child {
+  border-left: none;
+}
+.radiogroup label:first-child {
+  border-radius: 0 3px 3px 0;
+}
+.radiogroup > input:checked ~ label,
+.radiogroup:not(:checked) > label:hover,
+.radiogroup:not(:checked) > label:hover ~ label,
+.radiogroup button[type=button]:hover {
+  background: #d9e8f2;
+}
+.radiogroup > input:checked + label:hover,
+.radiogroup > input:checked ~ label:hover,
+.radiogroup > label:hover ~ input:checked ~ label,
+.radiogroup > input:checked ~ label:hover ~ label,
+.radiogroup button[type=button]:active {
+  background-color: #cddce6;
+}
+.radiogroup button[type=button]:active,
+.radiogroup button[type=button]:focus {
+  outline:none !important;
 }

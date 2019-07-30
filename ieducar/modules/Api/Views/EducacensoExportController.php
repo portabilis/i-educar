@@ -144,16 +144,14 @@ class EducacensoExportController extends ApiCoreController
         $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
         $continuaExportacao = true;
         $export = $this->exportaDadosRegistro00($escolaId, $ano, $continuaExportacao);
-        if (!$continuaExportacao) {
-            return $export;
+        if ($continuaExportacao) {
+            $export .= $this->exportaDadosRegistro10($escolaId, $ano);
+            $export .= $this->exportaDadosRegistro20($escolaId, $ano);
+            $export .= $this->exportaDadosRegistro30($escolaId, $ano);
+            $export .= $this->exportaDadosRegistro40($escolaId);
+            $export .= $this->exportaDadosRegistro50($escolaId, $ano);
+            $export .= $this->exportaDadosRegistro60($escolaId, $ano);
         }
-
-        $export .= $this->exportaDadosRegistro10($escolaId, $ano);
-        $export .= $this->exportaDadosRegistro20($escolaId, $ano);
-        $export .= $this->exportaDadosRegistro30($escolaId, $ano);
-        $export .= $this->exportaDadosRegistro40($escolaId);
-        $export .= $this->exportaDadosRegistro50($escolaId, $ano);
-        $export .= $this->exportaDadosRegistro60($escolaId, $ano);
 
         $export .= $this->exportaDadosRegistro99();
         return $export;
@@ -413,7 +411,7 @@ class EducacensoExportController extends ApiCoreController
                 $pessoa->deficienciaSurdoCegueira,
                 $pessoa->deficienciaFisica,
                 $pessoa->deficienciaIntelectual,
-                $pessoa->deficienciaMultipla,
+                $pessoa->deficienciaMultipla(),
                 $pessoa->deficienciaAutismo,
                 $pessoa->deficienciaAltasHabilidades,
                 $pessoa->recursoLedor,
@@ -630,7 +628,7 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosRegistro99()
     {
-        return "99|\n";
+        return "99|";
     }
 
     protected function exportaDadosRegistro89($escolaId)

@@ -97,13 +97,6 @@ class indice extends clsCadastro
                 $this->fexcluir = true;
                 $retorno = "Editar";
             }
-
-            $obj_menu_funcionario = new clsPortalMenuFuncionario($this->ref_pessoa, null, null, 0);
-            $det_menu_funcionario = $obj_menu_funcionario->detalhe();
-            if( $det_menu_funcionario )
-            {
-                $this->super = true;
-            }
         }
         $this->url_cancelar = ($retorno == "Editar") ? "funcionario_det.php?ref_pessoa={$this->ref_pessoa}" : "funcionario_lst.php";
         $this->nome_url_cancelar = "Cancelar";
@@ -147,19 +140,6 @@ class indice extends clsCadastro
             $this->ref_cod_setor_new = $detFunc["ref_cod_setor_new"];
         }
 
-        if( $this->ref_cod_setor_new )
-        {
-            $objSetor = new clsSetor();
-            $parentes = $objSetor->getNiveis( $this->ref_cod_setor_new );
-            for( $i = 0; $i < 5; $i++ )
-            {
-                if( isset( $parentes[$i] ) && $parentes[$i] )
-                {
-                    $nmvar = "setor_{$i}";
-                    $this->$nmvar = $parentes[$i];
-                }
-            }
-        }
          //--------------------------------------------------------------------
         if( $_GET["ref_pessoa"] )
         {
@@ -193,87 +173,6 @@ class indice extends clsCadastro
 
         $this->campoTexto('matricula_interna', 'Matr&iacute;cula interna', $this->matricula_interna, 30, 30, false, false, false , 'Utilizado somente para registro, caso a institui&ccedil;&atilde;o deseje que a matr&iacute;cula interna deste funcion&aacute;rio seja registrada no sistema.');
 
-        $obj_setor = new clsSetor();
-        $lst_setor = $obj_setor->lista(null, null, null, null, null, null, null, null, null, 1, 0);
-
-        $opcoes = array("" => "Selecione");
-
-        if( is_array($lst_setor) && count($lst_setor) )
-        {
-            foreach ($lst_setor as $setor) {
-                $opcoes[$setor["cod_setor"]] = $setor["sgl_setor"];
-            }
-        }
-        $this->campoLista("setor_0", "Setor", $opcoes, $this->setor_0, "oproDocumentoNextLvl( this.value, '1' )", NULL, NULL, NULL, NULL, FALSE);
-
-        $lst_setor = $obj_setor->lista($this->setor_0);
-
-        $opcoes = array("" => "Selecione");
-
-        if( is_array($lst_setor) && count($lst_setor) )
-        {
-            foreach($lst_setor as $setor)
-            {
-                $opcoes[$setor["cod_setor"]] = $setor["sgl_setor"];
-            }
-        }
-        else
-        {
-            $opcoes[""] = "---------";
-        }
-        $this->campoLista("setor_1", "Subsetor 1", $opcoes, $this->setor_1, "oproDocumentoNextLvl(this.value, '2')", false, "", "", $this->setor_0 == "" ? true : false, false);
-
-        $opcoes = array("" => "Selecione");
-
-        $lst_setor = $obj_setor->lista($this->setor_1);
-
-        if( is_array($lst_setor) && count($lst_setor) )
-        {
-            foreach ($lst_setor as $setor)
-            {
-                $opcoes[$setor["cod_setor"]] = $setor["sgl_setor"];
-            }
-        }
-        else
-        {
-            $opcoes[""] = "---------";
-        }
-        $this->campoLista("setor_2", "Subsetor 2", $opcoes, $this->setor_2, "oproDocumentoNextLvl(this.value, '3')", false, "", "", $this->setor_1 == "" ? true : false, false);
-
-        $opcoes = array("" => "Selecione");
-
-        $lst_setor = $obj_setor->lista($this->setor_2);
-
-        if( is_array($lst_setor) && count($lst_setor) )
-        {
-            foreach ($lst_setor as $setor)
-            {
-                $opcoes[$setor["cod_setor"]] = $setor["sgl_setor"];
-            }
-        }
-        else
-        {
-            $opcoes[""] = "---------";
-        }
-        $this->campoLista("setor_3", "Subsetor 3", $opcoes, $this->setor_3, "oproDocumentoNextLvl(this.value, '4')", false, "", "", $this->setor_2 == "" ? true : false, false);
-
-        $opcoes = array("" => "Selecione");
-
-        $lst_setor = $obj_setor->lista($this->setor_3);
-
-        if( is_array($lst_setor) && count($lst_setor) )
-        {
-            foreach ($lst_setor as $setor)
-            {
-                $opcoes[$setor["cod_setor"]] = $setor["sgl_setor"];
-            }
-        }
-        else
-        {
-            $opcoes[""] = "---------";
-        }
-        $this->campoLista("setor_4", "Subsetor 4", $opcoes, $this->setor_4, "oproDocumentoNextLvl(this.value, '5')", false, "", "", $this->setor_3 == "" ? true : false, false);
-
         $opcoes = array(0 => "Inativo", 1 => "Ativo");
         $this->campoLista("ativo", "Status", $opcoes, $this->ativo);
 
@@ -306,7 +205,7 @@ class indice extends clsCadastro
 
         $this->campoLista("tempo_expira_conta", "Dias p/ expirar a conta", $opcoes, $this->tempo_expira_conta);
 
-        $tempoExpiraSenha = $GLOBALS['coreExt']['Config']->app->user_accounts->default_password_expiration_period;
+        $tempoExpiraSenha = config('legacy.app.user_accounts.default_password_expiration_period');
 
         if (is_numeric($tempoExpiraSenha))
             $this->campoOculto("tempo_expira_senha", $tempoExpiraSenha);
@@ -329,122 +228,7 @@ class indice extends clsCadastro
         //-----------------------------------------------------------------------------------------------
 
         $this->campoRotulo("rotulo_permissoes", "<b><i>Permiss&otilde;es</i></b>", "");
-
-        $obj_menu = new clsPortalMenuMenu();
-        $obj_menu->setOrderby("nm_menu ASC");
-        $lst_menu = $obj_menu->lista();
-
-        //busca todos os submenus liberado para o funcionario
-        if(is_numeric($this->ref_pessoa))
-        {
-            $obj_menu_funcionario = new clsPortalMenuFuncionario($this->ref_pessoa);
-            $lst_menu_funcionario = $obj_menu_funcionario->lista(null, null, $this->ref_pessoa);
-            if(is_array($lst_menu_funcionario) && count($lst_menu_funcionario))
-            {
-                foreach ($lst_menu_funcionario as $id_submenu)
-                {
-                    $array_submenu[] = $id_submenu["ref_cod_menu_submenu"];
-                }
-            }
-        }
-        if( is_array($lst_menu) && count($lst_menu) )
-        {
-            foreach ($lst_menu as $key => $menu)
-            {
-                $array_valores = array();
-                if($menu["cod_menu_menu"] != 1)
-                {
-/*                  if( $menu['nm_menu'] == "i-Frotas")
-                    {
-                        echo $menu["cod_menu_menu"];
-                    }*/
-
-                    $obj_submenu = new clsPortalMenuSubmenu();
-                    $obj_submenu->setOrderby("nm_submenu ASC");
-                    $lst_submenu = $obj_submenu->lista($menu["cod_menu_menu"], 2);
-                    $opcoes = array("" => "Selecione");
-
-                    if( is_array($lst_submenu) && count($lst_submenu) )
-                    {
-                        foreach ($lst_submenu as $submenu)
-                        {
-                            $opcoes[$submenu["cod_menu_submenu"]] = $submenu["nm_submenu"];
-                        }
-                    }
-
-                    if( is_numeric($this->ref_pessoa) )
-                    {
-                        if(is_array($array_submenu) && count($array_submenu))
-                        {
-                            //faz a interseccao dos submenus do funcionario e os submenus do menu atual (do foreach)
-                            $array_menu_submenu = array_intersect(array_flip($opcoes), $array_submenu);
-                        }
-                        $contador = 0;
-                        if( is_array($array_menu_submenu) && count($array_menu_submenu) )
-                        {
-                            //monta a matriz que conterao os valores da tabela (do BD)
-                            foreach ($array_menu_submenu as $id_submenu)
-                            {
-                                $obj_menu_funcionario = new clsPortalMenuFuncionario($this->ref_pessoa, null, null, $id_submenu);
-                                $det_menu_funcionario = $obj_menu_funcionario->detalhe();
-                                $array_valores[$contador][] = $det_menu_funcionario["ref_cod_menu_submenu"];
-                                $array_valores[$contador][] = $det_menu_funcionario["cadastra"];
-                                $array_valores[$contador++][] = $det_menu_funcionario["exclui"];
-                            }
-                        }
-                    }
-                    $this->campoTabelaInicio(str_replace(" ", "_", limpa_acentos(strtolower($menu["nm_menu"]))), $menu["nm_menu"], array("Submenu", "Cadastrar", "Excluir"), $array_valores, "500");
-                        $this->campoLista(str_replace(" ", "_", limpa_acentos(strtolower($menu["nm_menu"])))."_", "", $opcoes, "", "", false, "", "", false, false);
-                        $this->campoCheck("cad_".str_replace(" ", "_", limpa_acentos(strtolower($menu["nm_menu"]))), "", "");
-                        $this->campoCheck("exc_".str_replace(" ", "_", limpa_acentos(strtolower($menu["nm_menu"]))), "", "");
-                    $this->campoTabelaFim();
-                }
-            }
-        }
-
     }
-
-    function cadastrarTabelas()
-    {
-        $obj_menu = new clsPortalMenuMenu();
-        $obj_menu->setOrderby("nm_menu ASC");
-        $lst_menu = $obj_menu->lista();
-
-        if(!empty($this->super))
-        {
-
-            $obj_menu_funcionario = new clsPortalMenuFuncionario($this->ref_pessoa, 0, 0, 0);
-            $obj_menu_funcionario->cadastra();
-        }
-        if( is_array($lst_menu) && count($lst_menu) )
-        {
-            foreach ($lst_menu as $key => $menu)
-            {
-                if(is_array($_POST[str_replace(" ", "_",limpa_acentos(strtolower($menu["nm_menu"]))."_")]) && count($_POST[str_replace(" ", "_",limpa_acentos(strtolower($menu["nm_menu"]))."_")]))
-                {
-                    $array_cad = $_POST["cad_".str_replace(" ", "_", limpa_acentos(strtolower($menu["nm_menu"])))];
-                    $array_exc = $_POST["exc_".str_replace(" ", "_", limpa_acentos(strtolower($menu["nm_menu"])))];
-                    foreach ($_POST[str_replace(" ", "_",limpa_acentos(strtolower($menu["nm_menu"])."_"))] as $ind => $id_submenu)
-                    {
-                        if($id_submenu)
-                        {
-                            $cadastrar = empty($array_cad[$ind]) ? 0 : 1;
-                            $excluir   = empty($array_exc[$ind]) ? 0 : 1;
-                            $obj_menu_funcionario = new clsPortalMenuFuncionario($this->ref_pessoa, $cadastrar, $excluir, $id_submenu);
-                            if(!$obj_menu_funcionario->cadastra())
-                            {
-                                $this->mensagem = "Cadastro de menu n&atilde;o realizado.<br>";
-                                echo "<!--\nErro ao cadastrar clsPortalMenuFuncionario-->";
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
 
     function Novo()
     {
@@ -468,19 +252,15 @@ class indice extends clsCadastro
       return false;
 
         $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, md5($this->_senha), $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->tempo_expira_conta, "NOW()", "NOW()", $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente)? 0 : 1, 1, $this->email, $this->matricula_interna);
+
         if( $obj_funcionario->cadastra() )
         {
-            if($this->cadastrarTabelas())
-            {
-                $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-                $this->simpleRedirect('funcionario_lst.php');
-            }
-            $this->mensagem = "Cadastro de menus n&atilde;o realizado.<br>";
-            echo "<!--\nErro ao cadastrar clsPortalMenuFuncionario-->";
-            return false;
+          $this->mensagem = "Cadastro efetuado com sucesso.<br>";
+          $this->simpleRedirect('funcionario_lst.php');
         }
+
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar -->";
+
         return false;
     }
 
@@ -512,19 +292,15 @@ class indice extends clsCadastro
         }
 
         $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $this->_senha, $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->tempo_expira_conta, "NOW()", "NOW()", $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente) ? 0 : 1, null, $this->email, $this->matricula_interna);
+
         if( $obj_funcionario->edita() )
         {
-            $obj_menu_funcionario = new clsPortalMenuFuncionario($this->ref_pessoa);
-            $obj_menu_funcionario->excluir();
-            if( $this->cadastrarTabelas() )
-            {
-                $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-                $this->simpleRedirect('funcionario_lst.php');
-            }
+            $this->mensagem = "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
+            $this->simpleRedirect('funcionario_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPortalFuncionario-->";
+
         return false;
     }
 

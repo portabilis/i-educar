@@ -64,13 +64,6 @@ class indice extends clsDetalhe
         //** Verificacao de permissao para cadastro
         $obj_permissao = new clsPermissoes();
 
-        if($obj_permissao->permissao_cadastra(567, $this->pessoa_logada,7))
-        {
-            $this->url_novo = "educar_tipo_usuario_cad.php";
-            $this->url_editar = "educar_tipo_usuario_cad.php?cod_tipo_usuario={$registro["cod_tipo_usuario"]}";
-        }
-        //**
-
         $this->titulo = "Infra Predio - Detalhe";
 
 

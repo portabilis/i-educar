@@ -57,7 +57,7 @@ class clsPmieducarAluno
   var $tipo_responsavel;
   var $recursos_prova_inep;
   var $recebe_escolarizacao_em_outro_espaco;
-  var $justificativa_falta_documentacao;
+  var $justificativa_falta_documentacao = false;
   var $url_laudo_medico;
   var $url_documento;
   var $codigo_sistema;
@@ -590,6 +590,9 @@ class clsPmieducarAluno
       if (is_numeric($this->justificativa_falta_documentacao)) {
         $set .= "{$gruda}justificativa_falta_documentacao = '{$this->justificativa_falta_documentacao}'";
         $gruda = ', ';
+      } elseif ($this->justificativa_falta_documentacao !== false) {
+        $set .= "{$gruda}justificativa_falta_documentacao = null";
+        $gruda = ', ';
       }
 
       if (is_string($this->url_documento) && $this->url_documento != '') {
@@ -985,7 +988,7 @@ class clsPmieducarAluno
     $filtros = '';
     $this->resetCamposLista();
 
-    $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social, COALESCE(nome_social, nome) AS ordem_aluno';
+    $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social, COALESCE(nome_social, pessoa.nome) AS ordem_aluno';
 
     if($filtra_baseado_matricula)
       $sql = "SELECT distinct {$this->_campos_lista} FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";

@@ -90,6 +90,7 @@ ajudar a alcançar nossos objetivos.
 - [Instalação em servidor](#instalação-em-servidor)
 - [Instalação do pacote de relatórios](#instalação-do-pacote-de-relatórios)
 - [Upgrade da versão 2.0 para a 2.1](#upgrade-para-21)
+- [Criando um build de distribuição](#criando-um-build-de-distribuição)
 
 ### Depêndencias
 
@@ -192,9 +193,12 @@ Para executar o i-Educar em um servidor você precisa dos seguintes programas:
 Você precisa das seguintes extensões para PHP:
 
 - bcmath
+- ctype
 - curl
 - dom
 - fileinfo
+- gd
+- iconv
 - json
 - libxml
 - mbstring
@@ -205,8 +209,10 @@ Você precisa das seguintes extensões para PHP:
 - SimpleXML
 - tokenizer
 - xml
+- xmlreader
 - xmlwriter
 - zip
+- zlib
 - pcre
 
 O instalador do i-Educar te avisa caso alguma extensão esteja faltando então não
@@ -298,6 +304,24 @@ docker-compose exec php composer update-install
 
 Sua instalação estará atualizada e você poderá realizar seu
 [primeiro acesso](#primeiro-acesso) na nova versão do i-Educar.
+
+### Criando um build de distribuição
+
+Para criar um build de distribuição de uma nova versão do i-Educar basta
+executar o script `build` da pasta `scripts`:
+
+```bash
+scripts/build
+```
+
+Se você estiver utilizando o docker, a imagem do PHP já contém todas as
+dependências necessárias para gerar este arquivo. Basta acessar o `bash` da
+seguinte forma:
+
+```bash
+docker-compose exec php bash
+scripts/build
+```
 
 ## Perguntas frequentes (FAQ)
 

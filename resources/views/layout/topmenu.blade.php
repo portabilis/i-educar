@@ -1,4 +1,4 @@
-@if(isset($mainmenu))
+@if(isset($mainmenu) && isset($menu))
     @php
     $topmenu = $menu->where('id', $mainmenu)->first();
     @endphp

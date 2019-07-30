@@ -153,10 +153,6 @@ class indice extends clsDetalhe
 
         $dba = new clsBanco();
 
-        if ($cod_pessoa) {
-            $dba->Consulta( "SELECT ref_cod_menu_submenu FROM menu_funcionario WHERE ref_ref_cod_pessoa_fj={$cod_pessoa} " );
-        }
-
         $cod_menu = array();
 
         while ($dba->ProximoRegistro())

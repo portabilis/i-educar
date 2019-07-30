@@ -1,6 +1,5 @@
 <?php
 
-require_once 'includes/bootstrap.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/Geral.inc.php';
 require_once 'include/pmieducar/clsPermissoes.inc.php';
@@ -50,7 +49,6 @@ require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 require_once 'include/pmieducar/clsPmieducarMatriculaExcessao.inc.php';
 require_once 'include/pmieducar/clsPmieducarMatriculaOcorrenciaDisciplinar.inc.php';
 require_once 'include/pmieducar/clsPmieducarMatriculaTurma.inc.php';
-require_once 'include/pmieducar/clsPmieducarMenuTipoUsuario.inc.php';
 require_once 'include/pmieducar/clsPmieducarMotivoAfastamento.inc.php';
 require_once 'include/pmieducar/clsPmieducarNivelEnsino.inc.php';
 require_once 'include/pmieducar/clsPmieducarNotaAluno.inc.php';
@@ -142,4 +140,3 @@ require_once 'include/pmieducar/clsPmieducarBackup.inc.php';
 require_once 'include/pmieducar/clsPmieducarAlunoCmf.inc.php';
 require_once 'include/pessoa/clsCadastroRaca.inc.php';
 require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
-require_once 'include/pmieducar/alteraAtestadoParaDeclaracao.php';

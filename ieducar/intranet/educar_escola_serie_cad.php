@@ -305,8 +305,6 @@ class indice extends clsCadastro
             }
         }
 
-        $opcoes = array('' => 'Selecione');
-
         // Editar
         $disciplinas = 'Nenhum ano letivo selecionado';
 
@@ -509,8 +507,6 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
         /*
          * Atribui valor para atributos usados em Gerar(), senão o formulário volta
          * a liberar os campos Instituição, Escola e Curso que devem ser read-only
@@ -561,7 +557,9 @@ class indice extends clsCadastro
         try {
             $this->validaAlteracoes($analise);
         } catch (Exception $e) {
-            $this->mensagem = $e->getMessage();
+            $msgs = explode("\n", $e->getMessage());
+
+            $this->mensagem = $msgs;
 
             return false;
         }
@@ -899,7 +897,7 @@ class indice extends clsCadastro
         }
 
         if ($erros) {
-            $msg = join('<br>', $erros);
+            $msg = join("\n", $erros);
 
             throw new \Exception($msg);
         }

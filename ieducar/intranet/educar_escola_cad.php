@@ -560,7 +560,7 @@ class indice extends clsCadastro
             $parametros->setPessoaCampo('sem_cnpj');
             $parametros->setPessoaNovo("S");
             $parametros->setPessoaCPF("N");
-            $parametros->setPessoaTela('window');
+            $parametros->setPessoaTela('frame');
             $this->campoOculto("sem_cnpj", "");
             $parametros->setCodSistema(13);
             $parametros->adicionaCampoTexto("cnpj", "cnpj");
@@ -670,7 +670,7 @@ class indice extends clsCadastro
                 $this->campoTexto("p_telefone_1", "Telefone 1", $this->p_telefone_1, "10", "15", false);
                 $this->campoTexto("p_ddd_telefone_fax", "DDD Fax", $this->p_ddd_telefone_fax, "2", "2", false);
                 $this->campoTexto("p_telefone_fax", "Fax", $this->p_telefone_fax, "10", "15", false);
-                $this->campoTexto("p_email", "E-mail", $this->p_email, "50", "255", false);
+                $this->campoTexto("p_email", "E-mail", $this->p_email, "50", "100", false);
             }
 
             if ($this->com_cnpj) {
@@ -868,7 +868,7 @@ class indice extends clsCadastro
                 $this->inputTelefone('2', 'Telefone 2');
                 $this->inputTelefone('mov', 'Celular');
                 $this->inputTelefone('fax', 'Fax');
-                $this->campoTexto("p_email", "E-mail", $this->p_email, "50", "255", false);
+                $this->campoTexto("p_email", "E-mail", $this->p_email, "50", "100", false);
                 $this->campoTexto("p_http", "Site/Blog/Rede social", $this->p_http, "50", "255", false);
                 $this->passou = true;
                 $this->campoOculto("passou", $this->passou);
@@ -2646,7 +2646,7 @@ class indice extends clsCadastro
     {
         /** @var SchoolManagerService $schoolService */
         $schoolService = app(SchoolManagerService::class);
-        $managers = $schoolService->getSchoolManagers($this->cod_escola);
+        $managers = $schoolService->getSchoolManagers($this->cod_escola ?: 0);
 
         if (old('servidor_id')) {
             foreach (old('servidor_id') as $key => $value) {

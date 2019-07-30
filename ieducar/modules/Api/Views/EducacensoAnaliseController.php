@@ -9,6 +9,7 @@ use App\Models\Educacenso\Registro50;
 use App\Models\Individual;
 use App\Models\Educacenso\Registro60;
 use App\Models\LegacyInstitution;
+use App\Models\LegacySchool;
 use App\Models\School;
 use App\Repositories\EducacensoRepository;
 use App\Services\SchoolClass\AvailableTimeService;
@@ -35,6 +36,7 @@ use iEducar\Modules\Educacenso\Model\SchoolManagerRole;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
+use iEducar\Modules\Educacenso\Validator\InepNumberValidator;
 use iEducar\Modules\Educacenso\Validator\SchoolManagers;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
@@ -463,7 +465,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if ($escola->possuiDependencias == 1 && !$escola->existeDependencia()) {
+        if ($escola->possuiDependencias == 1 && $escola->naoPossuiDependencias()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a escola possui dependências, portanto é necessário informar pelo menos uma dependência.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dependências > Campos: Salas gerais, Sala funcionais, Banheiros, Laboratórios, Salas de atividades, Dormitórios e Áreas externas)',
@@ -933,7 +935,17 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            $componentes = $turma->componentes();
+            try {
+                $componentes = $turma->componentes();
+            } catch (Throwable $exception) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verifique se alguma disciplina da turma {$nomeTurma} foi informada",
+                    'path' => '(Escola > Cadastros > Turmas > Editar > Aba: Dados gerais > Seção: Componentes curriculares definidos em séries da escola)',
+                    'linkPath' => "/intranet/educar_turma_cad.php?cod_turma={$turma->codTurma}",
+                    'fail' => true
+                ];
+                continue;
+            }
 
             if (empty($componentes)) {
                 $mensagem[] = [
@@ -1201,6 +1213,16 @@ class EducacensoAnaliseController extends ApiCoreController
                     'fail' => true
                 ];
             }
+
+
+            if (!(new InepNumberValidator($gestor->inepGestor))->isValid()) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola}  possui valor inválido. Verifique se o código INEP do gestor {$nomeGestor} possui 12 dígitos.",
+                    'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Tabela Gestores escolares > Campo: INEP)',
+                    'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
+                    'fail' => true
+                ];
+            }
         }
 
         return [
@@ -1272,6 +1294,15 @@ class EducacensoAnaliseController extends ApiCoreController
                     'fail' => true
                 ];
             }
+
+            if (!(new InepNumberValidator($docente->inepDocente))->isValid()) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 50 da escola {$docente->nomeEscola} possui valor inválido. Verifique se o código INEP do docente {$docente->nomeDocente}, vinculado à turma {$docente->nomeTurma}, possui 12 dígitos.",
+                    'path' => '(Servidores > Cadastros > Servidores > Editar > Aba: Dados gerais > Campo: Código INEP)',
+                    'linkPath' => "/intranet/educar_servidor_cad.php?cod_servidor={$docente->idServidor}&ref_cod_instituicao={$docente->idInstituicao}",
+                    'fail' => true
+                ];
+            }
         }
 
         return [
@@ -1301,6 +1332,14 @@ class EducacensoAnaliseController extends ApiCoreController
         $countAtividadesComplementar = [];
         $notAvaliableTime = [];
 
+        /** @var LegacySchool $school */
+        $school = LegacySchool::query()->findOrFail($escola);
+        $educacensoDate = new DateTime($school->institution->data_educacenso);
+
+        $avaliableTimeService = new AvailableTimeService();
+
+        $avaliableTimeService->onlyUntilEnrollmentDate($educacensoDate)->onlySchoolClassesInformedOnCensus();
+
         foreach ($alunos as $aluno) {
             $nomeEscola = strtoupper($aluno->nomeEscola);
             $nomeAluno = strtoupper($aluno->nomeAluno);
@@ -1308,8 +1347,6 @@ class EducacensoAnaliseController extends ApiCoreController
             $codigoAluno = $aluno->codigoAluno;
             $codigoTurma = $aluno->codigoTurma;
             $codigoMatricula = $aluno->codigoMatricula;
-
-            $avaliableTimeService = new AvailableTimeService();
 
             if (!$avaliableTimeService->isAvailable($codigoAluno, $codigoTurma)) {
                 $notAvaliableTime[$codigoAluno] = [
@@ -1359,6 +1396,15 @@ class EducacensoAnaliseController extends ApiCoreController
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verifique se o tipo de veículo do transporte escolar público utilizado pelo(a) aluno(a) {$nomeAluno} foi informado.",
                     'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados Pessoais > Campo: Veículo utilizado)',
+                    'linkPath' => "/module/Cadastro/aluno?id={$codigoAluno}",
+                    'fail' => true
+                ];
+            }
+
+            if (!(new InepNumberValidator($aluno->inepAluno))->isValid()) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verifique se o código INEP do aluno {$nomeAluno}, matriculado na turma {$nomeTurma}, possui 12 dígitos.",
+                    'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados gerais > Campo: Código INEP)',
                     'linkPath' => "/module/Cadastro/aluno?id={$codigoAluno}",
                     'fail' => true
                 ];

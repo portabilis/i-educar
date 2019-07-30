@@ -855,9 +855,9 @@ class Registro10 implements RegistroEducacenso
     /**
      * @return bool
      */
-    public function existeDependencia()
+    public function naoPossuiDependencias()
     {
-        return !empty(array_filter(
+        return empty(array_filter(
             [
                 array_filter($this->salasGerais),
                 array_filter($this->salasFuncionais),

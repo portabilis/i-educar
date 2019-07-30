@@ -12,6 +12,5 @@ $factory->define(LegacyIndividual::class, function (Faker $faker) {
         'origem_gravacao' => 'U',
         'data_cad' => $faker->dateTime,
         'operacao' => 'I',
-        'idsis_cad' => '17',
     ];
 });

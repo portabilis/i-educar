@@ -372,7 +372,7 @@ class indice extends clsCadastro
     $tipo_ocorrencia = $det_tmp["nm_tipo"];
 
     $params   = [
-      'token'        => $GLOBALS['coreExt']['Config']->apis->access_key,
+      'token'        => config('legacy.apis.access_key'),
       'api_code'     => $cod_ocorrencia_disciplinar,
       'student_code' => $cod_aluno,
       'description'  => $this->observacao,
@@ -386,8 +386,8 @@ class indice extends clsCadastro
       'recurso'        => 'ocorrencias-disciplinares',
       'tipoRequisicao' => ApiExternaController::REQUISICAO_POST,
       'params'         => $params,
-      'token_header' => $GLOBALS['coreExt']['Config']->apis->educacao_token_header,
-      'token_key'    => $GLOBALS['coreExt']['Config']->apis->educacao_token_key,
+      'token_header' => config('legacy.apis.educacao_token_header'),
+      'token_key'    => config('legacy.apis.educacao_token_key'),
     ]
     );
 
