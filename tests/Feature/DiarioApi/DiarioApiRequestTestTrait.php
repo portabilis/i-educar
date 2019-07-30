@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\DiarioApi;
 
+use App\Models\LegacyDiscipline;
 use App\Models\LegacyEnrollment;
 use App\User;
 use Illuminate\Foundation\Testing\TestResponse;
@@ -153,5 +154,41 @@ trait DiarioApiRequestTestTrait
     {
         $_GET = null;
         $_POST = null;
+    }
+
+    /**
+     * Recebe um array com as etapas e quantidade de faltas e retorna o response da ultima chamada
+     *
+     * @param array $absences
+     * @param LegacyDiscipline $discipline
+     * @return array|null
+     */
+    private function postAbsenceForStages(array $absences, $discipline)
+    {
+        $response = null;
+
+        foreach ($absences as $stage => $absence) {
+            $response = $this->postAbsence($this->enrollment, $discipline->id, $stage, $absence);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Recebe um array com as etapas e quantidade de notas e retorna o response da ultima chamada
+     *
+     * @param array $scores
+     * @param LegacyDiscipline $discipline
+     * @return array|null
+     */
+    private function postScoreForStages(array $scores, $discipline)
+    {
+        $response = null;
+
+        foreach ($scores as $stage => $score) {
+            $response = $this->postScore($this->enrollment, $discipline->id, $stage, $score);
+        }
+
+        return $response;
     }
 }
