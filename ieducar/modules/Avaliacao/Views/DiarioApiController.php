@@ -369,13 +369,15 @@ class DiarioApiController extends ApiCoreController
         return $this->canDelete() &&
         $this->validatesPresenceOf('componente_curricular_id') &&
         $this->validatesInexistenceOfNotaExame() &&
-        $this->validatesInexistenceNotasInNextEtapas();
+        $this->validatesInexistenceNotasInNextEtapas() &&
+        $this->validatesPeriodoLancamentoFaltasNotas();
     }
 
     protected function canDeleteFalta()
     {
         return $this->canDelete() &&
-        $this->validatesInexistenceFaltasInNextEtapas();
+        $this->validatesInexistenceFaltasInNextEtapas() &&
+        $this->validatesPeriodoLancamentoFaltasNotas();
     }
 
     protected function canDeleteParecer()
