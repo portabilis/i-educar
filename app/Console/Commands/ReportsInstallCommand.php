@@ -3,8 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Database\Connection;
-use Illuminate\Filesystem\Filesystem;
 
 class ReportsInstallCommand extends Command
 {
@@ -13,7 +11,7 @@ class ReportsInstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'reports:install {--no-compile}';
+    protected $signature = 'reports:install {--no-compile} {--no-migrate}';
 
     /**
      * The console command description.
@@ -23,49 +21,26 @@ class ReportsInstallCommand extends Command
     protected $description = 'Install reports package';
 
     /**
-     * Return initial reports database file
-     *
-     * @return string
-     */
-    protected function getInitialReportsDatabaseFile()
-    {
-        return base_path('ieducar/modules/Reports/database/sqls/initial-reports-database.sql');
-    }
-
-    /**
      * Execute the console command.
      *
-     * @param Filesystem $filesystem
-     * @param Connection $connection
-     *
-     * @return mixed
-     *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @return void
      */
-    public function handle(Filesystem $filesystem, Connection $connection)
+    public function handle()
     {
-        $file = $this->getInitialReportsDatabaseFile();
         $compile = $this->option('no-compile') === false;
+        $migrate = $this->option('no-migrate') === false;
 
-        if (!$filesystem->exists($file)) {
-            $this->error('Initial reports database file not found.');
-
-            return;
-        }
-
-        $this->info('Seeding database with reports data..');
-
-        $connection->unprepared(
-            $filesystem->get($file)
-        );
+        passthru('chmod +x vendor/cossou/jasperphp/src/JasperStarter/bin/jasperstarter');
+        passthru('chmod 777 ieducar/modules/Reports/ReportSources');
 
         if ($compile) {
             $this->call('reports:compile');
         }
 
-        $this->call('migrate', [
-            '--force' => true,
-            '--path' => 'ieducar/modules/Reports/database/migrations',
-        ]);
+        if ($migrate) {
+            $this->call('migrate', [
+                '--force' => true,
+            ]);
+        }
     }
 }
