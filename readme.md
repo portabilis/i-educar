@@ -89,7 +89,7 @@ ajudar a alcançar nossos objetivos.
 - [Personalizando a instalação](#personalizando-a-instalação)
 - [Instalação em servidor](#instalação-em-servidor)
 - [Instalação do pacote de relatórios](#instalação-do-pacote-de-relatórios)
-- [Upgrade da versão 2.0 para a 2.1](#upgrade-para-21)
+- [Upgrade](#upgrade)
 - [Criando um build de distribuição](#criando-um-build-de-distribuição)
 
 ### Depêndencias
@@ -101,13 +101,13 @@ facilitar o desenvolvimento.
 - [Docker Compose](https://docs.docker.com/compose/install/)
 - [Git](https://git-scm.com/downloads)
 
-### Nova instalação
+### Instalação utilizando Docker
 
 > ATENÇÃO: Essa forma de instação tem o objetivo de facilitar demonstrações e
 desenvolvimento. Não é recomendado para ambientes de produção!
 
 Para instalar o projeto execute **todos os passos** abaixo, caso você deseje
-atualizar sua instalação do i-Educar, siga os passos do [upgrade](#upgrade-para-21).
+atualizar sua instalação do i-Educar, siga os passos do [upgrade](#upgrade).
 
 Clone o repositório:
 
@@ -128,7 +128,7 @@ Execute o comando para fazer uma nova instalação:
 docker-compose exec php composer new-install
 ```
 
-### Primeiro acesso
+#### Primeiro acesso
 
 Após finalizada a instalação, descubra em qual endereço o i-Educar está
 rodando, basta executar o comando:
@@ -144,7 +144,7 @@ O usuário padrão é: `admin` / A senha padrão é: `123456789`
 Assim que realizar seu primeiro acesso **não se esqueça de alterar a senha
 padrão**.
 
-### Personalizando a instalação
+#### Personalizando a instalação
 
 Você pode criar um arquivo `docker-compose.override.yml` para personalizar sua
 instalação do i-Educar, mudando as portas dos serviços ou o mapeamento dos
@@ -268,26 +268,18 @@ Para instalar o pacote de relatórios visite o repositório do projeto
 [https://github.com/portabilis/i-educar-reports-package](https://github.com/portabilis/i-educar-reports-package)
 e siga as instruções de instalação.
 
-### Upgrade
+#### Upgrade
 
 - [Upgrade para 2.2 da 2.1](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.2-da-2.1).
 - [Upgrade para 2.1 da 2.0](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.1-da-2.0).
  
-### Criando um build de distribuição
+#### Criando um build de distribuição
 
 Para criar um build de distribuição de uma nova versão do i-Educar basta
 executar o script `build` da pasta `scripts`:
 
 ```bash
-scripts/build
-```
-
-Se você estiver utilizando o docker, a imagem do PHP já contém todas as
-dependências necessárias para gerar este arquivo. Basta acessar o `bash` da
-seguinte forma:
-
-```bash
-docker-compose exec php bash
+# (Docker) docker-compose exec php scripts/build
 scripts/build
 ```
 
