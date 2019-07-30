@@ -7,7 +7,6 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use App\Models\LegacyRoundingTable;
 use App\Models\LegacyValueRoundingTable;
-use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
 
@@ -19,6 +18,7 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
     
     public function setUp()
     {
+        parent::setUp();
         $roundingTable = factory(LegacyRoundingTable::class, 'numeric')->create();
         factory(LegacyValueRoundingTable::class, 10)->create([
             'tabela_arredondamento_id' => $roundingTable->id,
