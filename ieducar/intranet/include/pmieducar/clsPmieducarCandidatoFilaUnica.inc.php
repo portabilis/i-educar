@@ -433,9 +433,9 @@ class clsPmieducarCandidatoFilaUnica
             INNER JOIN pmieducar.aluno a ON (a.cod_aluno = cfu.ref_cod_aluno)
             INNER JOIN cadastro.pessoa p ON (p.idpes = a.ref_idpes)
             INNER JOIN cadastro.fisica f ON (f.idpes = a.ref_idpes)
-            INNER JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
             INNER JOIN pmieducar.serie s ON (s.cod_serie = cfu.ref_cod_serie)
-             LEFT JOIN cadastro.documento d ON (d.idpes = a.ref_idpes)";
+             LEFT JOIN cadastro.documento d ON (d.idpes = a.ref_idpes)
+             LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)";
 
         $filtros = '';
 
