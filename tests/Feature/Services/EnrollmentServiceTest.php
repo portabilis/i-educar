@@ -345,4 +345,45 @@ class EnrollmentServiceTest extends TestCase
 
         $this->assertNull($enrollment->remanejado);
     }
+
+    public function testReorder()
+    {
+        $schoolClass = $this->schoolClass->getKey();
+
+        $enrollment = factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $schoolClass,
+        ]);
+
+        $registration = $enrollment->registration->getKey();
+
+        factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $schoolClass,
+            'ref_cod_matricula' => $registration,
+            'sequencial' => 3
+        ]);
+
+        factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $schoolClass,
+            'ref_cod_matricula' => $registration,
+            'sequencial' => 5
+        ]);
+
+        $this->service->reorder($enrollment->registration);
+
+        $this->assertDatabaseHas('pmieducar.matricula_turma', [
+            'ref_cod_turma' => $schoolClass,
+            'ref_cod_matricula' => $registration,
+            'sequencial' => 2
+        ]);
+        $this->assertDatabaseHas('pmieducar.matricula_turma', [
+            'ref_cod_turma' => $schoolClass,
+            'ref_cod_matricula' => $registration,
+            'sequencial' => 3
+        ]);
+        $this->assertDatabaseMissing('pmieducar.matricula_turma', [
+            'ref_cod_turma' => $schoolClass,
+            'ref_cod_matricula' => $registration,
+            'sequencial' => 5
+        ]);
+    }
 }
