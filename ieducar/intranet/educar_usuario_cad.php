@@ -329,7 +329,7 @@ class indice extends clsCadastro
             $this->_senha = md5($this->_senha);
         }
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $this->_senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::pgSQLToBr($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, $this->ref_cod_setor_new, null, 0, null, $this->email, $this->matricula_interna);
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $this->_senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, $this->ref_cod_setor_new, null, 0, null, $this->email, $this->matricula_interna);
         $detalheAntigo = $obj_funcionario->detalhe();
 
         if ($obj_funcionario->edita()) {

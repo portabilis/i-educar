@@ -19,7 +19,7 @@ class clsPortalFuncionario
     public $ref_cod_setor;
     public $ref_cod_funcionario_vinculo;
     public $tempo_expira_senha;
-    public $data_expiracao;
+    public $data_expiracao = false;
     public $data_troca_senha;
     public $data_reativa_conta;
     public $ref_ref_cod_pessoa_fj;
@@ -46,7 +46,7 @@ class clsPortalFuncionario
 
     public $_campo_order_by;
 
-    public function __construct($ref_cod_pessoa_fj = null, $matricula = null, $senha = null, $ativo = null, $ref_sec = null, $s = null, $sequencial = null, $opcao_menu = null, $ref_cod_administracao_secretaria = null, $ref_ref_cod_administracao_secretaria = null, $ref_cod_departamento = null, $ref_ref_ref_cod_administracao_secretaria = null, $ref_ref_cod_departamento = null, $ref_cod_setor = null, $ref_cod_funcionario_vinculo = null, $tempo_expira_senha = null, $data_expiracao = null, $data_troca_senha = null, $data_reativa_conta = null, $ref_ref_cod_pessoa_fj = null, $proibido = null, $ref_cod_setor_new = null, $matricula_new = null, $matricula_permanente = null, $tipo_menu = null, $email = null, $matricula_interna = null)
+    public function __construct($ref_cod_pessoa_fj = null, $matricula = null, $senha = null, $ativo = null, $ref_sec = null, $s = null, $sequencial = null, $opcao_menu = null, $ref_cod_administracao_secretaria = null, $ref_ref_cod_administracao_secretaria = null, $ref_cod_departamento = null, $ref_ref_ref_cod_administracao_secretaria = null, $ref_ref_cod_departamento = null, $ref_cod_setor = null, $ref_cod_funcionario_vinculo = null, $tempo_expira_senha = null, $data_expiracao = false, $data_troca_senha = null, $data_reativa_conta = null, $ref_ref_cod_pessoa_fj = null, $proibido = null, $ref_cod_setor_new = null, $matricula_new = null, $matricula_permanente = null, $tipo_menu = null, $email = null, $matricula_interna = null)
     {
         $db = new clsBanco();
         $this->_schema = 'portal.';
@@ -108,7 +108,11 @@ class clsPortalFuncionario
             $this->tempo_expira_senha = $tempo_expira_senha;
         }
 
-        $this->data_expiracao = $data_expiracao;
+        if ($data_expiracao) {
+            $this->data_expiracao = $data_expiracao;
+        } elseif ($data_expiracao !== false) {
+            $this->data_expiracao = null;
+        }
 
         if (is_string($data_troca_senha)) {
             $this->data_troca_senha = $data_troca_senha;
@@ -219,11 +223,11 @@ class clsPortalFuncionario
                 $valores .= "{$gruda}'{$this->tempo_expira_senha}'";
                 $gruda = ', ';
             }
-
-            $campos .= "{$gruda}data_expiracao";
-            $valores .= "{$gruda}'{$this->data_expiracao}'";
-            $gruda = ', ';
-
+            if ($this->data_expiracao) {
+                $campos .= "{$gruda}data_expiracao";
+                $valores .= "{$gruda}'{$this->data_expiracao}'";
+                $gruda = ', ';
+            }
             if (is_string($this->data_troca_senha)) {
                 $campos .= "{$gruda}data_troca_senha";
                 $valores .= "{$gruda}{$this->data_troca_senha}";
@@ -336,8 +340,13 @@ class clsPortalFuncionario
                 $gruda = ', ';
             }
 
-            $set .= "{$gruda}data_expiracao = '{$this->data_expiracao}'";
-            $gruda = ', ';
+            if ($this->data_expiracao) {
+                $set .= "{$gruda}data_expiracao = '{$this->data_expiracao}'";
+                $gruda = ', ';
+            } elseif (is_null($this->data_expiracao)) {
+                $set .= "{$gruda}data_expiracao = NULL";
+                $gruda = ', ';
+            }
 
             if (is_string($this->data_troca_senha)) {
                 $set .= "{$gruda}data_troca_senha = '{$this->data_troca_senha}'";
