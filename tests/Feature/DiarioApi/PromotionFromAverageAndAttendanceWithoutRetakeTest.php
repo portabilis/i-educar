@@ -6,7 +6,7 @@ use App\Models\LegacyEnrollment;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
+class PromotionFromAverageAndAttendanceWithoutRetake extends TestCase
 {
     use DiarioApiFakeDataTestTrait, DiarioApiRequestTestTrait, DatabaseTransactions;
 
@@ -18,10 +18,10 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->enrollment = $this->getNaoContinuadaMediaPresencaSemRecuperacaoData();
+        $this->enrollment = $this->getPromotionFromAverageAndAttendanceWithoutRetake();
     }
 
-    public function testAprovacaoAposTodasFaltasENotasLancadas()
+    public function testAproveAfterAllScoreAndAbsencePosted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -56,7 +56,7 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
         $this->assertEquals(1, $registration->refresh()->aprovado);
     }
 
-    public function testReprovacaoPorMediaAposTodasFaltasENotasLancadas()
+    public function testFailureAfterAllScoreAndAbsencePosted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -91,7 +91,7 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
         $this->assertEquals(2, $registration->refresh()->aprovado);
     }
 
-    public function testReprovacaoPorFaltaAposTodasFaltasENotasLancadas()
+    public function testFailureForNonAttendanceAfterAllScoreAndAbsencePosted()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -126,7 +126,7 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
         $this->assertEquals(14, $registration->refresh()->aprovado);
     }
 
-    public function testCursandoAposRemocaoDeNotaEmEtapaConcluinte()
+    public function testReturnsToStudyingAfterRemoveScoreInLastStage()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -168,7 +168,7 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
         $this->assertEquals(3, $registration->refresh()->aprovado);
     }
 
-    public function testRemocaoDeNotaEmEtapaNaoConcluinte()
+    public function testRemoveScoreWhenNotLastStage()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -210,7 +210,7 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
         $this->assertEquals(1, $registration->refresh()->aprovado);
     }
 
-    public function testCursandoAposRemocaoDeFaltaEmEtapaConcluinte()
+    public function testReturnsToStudyingAfterRemoveAbsenceInLastStage()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
@@ -252,7 +252,7 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
         $this->assertEquals(3, $registration->refresh()->aprovado);
     }
 
-    public function testRemocaoDeFaltaEmEtapaNaoConcluinte()
+    public function testRemoveAbsenceWhenNotIsLastStage()
     {
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;

@@ -99,7 +99,7 @@ trait DiarioApiFakeDataTestTrait
      *
      * @return LegacyEnrollment
      */
-    public function getNaoContinuadaMediaPresencaSemRecuperacaoData()
+    public function getPromotionFromAverageAndAttendanceWithoutRetake()
     {
         $roundingTable = factory(LegacyRoundingTable::class, 'numeric')->create();
         factory(LegacyValueRoundingTable::class, 10)->create([
