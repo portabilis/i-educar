@@ -3,13 +3,8 @@
 namespace Tests\Feature\DiarioApi;
 
 use App\Models\LegacyEnrollment;
-use App\Models\LegacyEvaluationRule;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
-use App\Models\LegacyRoundingTable;
-use App\Models\LegacyValueRoundingTable;
-use App\Models\LegacyDiscipline;
-use App\Models\LegacyDisciplineAcademicYear;
 
 class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
 {
@@ -66,30 +61,32 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
 
-        $this->addAcademicYearStage($schoolClass, 2);
-        $this->addAcademicYearStage($schoolClass, 3);
-        $this->addAcademicYearStage($schoolClass, 4);
-
-        $discipline = factory(LegacyDiscipline::class)->create();
-        $schoolClass->disciplines()->attach($discipline->id, [
-            'ano_escolar_id' => $schoolClass->grade_id,
-            'escola_id' => $school->id
-        ]);
-
-        factory(LegacyDisciplineAcademicYear::class)->create([
-            'componente_curricular_id' => $discipline->id,
-            'ano_escolar_id' => $schoolClass->grade_id,
-        ]);
+        $this->createStages($school, 4);
+        $this->createDisciplines($schoolClass, 2);
 
         $disciplines = $schoolClass->disciplines;
 
+        $score = [
+            1 => 4.3,
+            2 => 5.4,
+            3 => 6.7,
+            4 => 3,
+        ];
+
+        $absence = [
+            1 => 4,
+            2 => 5,
+            3 => 1,
+            4 => 0,
+        ];
+
         foreach ($disciplines as $discipline) {
-            for ($stage = 1; $stage <= 4; $stage++) {
-                $this->postAbsence($this->enrollment, $discipline->id, $stage, '3');
-                $response = $this->postScore($this->enrollment, $discipline->id, $stage, '5');
-            }
+            $this->postAbsenceForStages($absence, $discipline);
+            $response = $this->postScoreForStages($score, $discipline);
+
             $this->assertEquals('Retido', $response->situacao);
         }
+
         $registration = $this->enrollment->registration;
         $this->assertEquals(2, $registration->refresh()->aprovado);
     }
@@ -99,30 +96,32 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
 
-        $this->addAcademicYearStage($schoolClass, 2);
-        $this->addAcademicYearStage($schoolClass, 3);
-        $this->addAcademicYearStage($schoolClass, 4);
-
-        $discipline = factory(LegacyDiscipline::class)->create();
-        $schoolClass->disciplines()->attach($discipline->id, [
-            'ano_escolar_id' => $schoolClass->grade_id,
-            'escola_id' => $school->id
-        ]);
-
-        factory(LegacyDisciplineAcademicYear::class)->create([
-            'componente_curricular_id' => $discipline->id,
-            'ano_escolar_id' => $schoolClass->grade_id,
-        ]);
+        $this->createStages($school, 4);
+        $this->createDisciplines($schoolClass, 2);
 
         $disciplines = $schoolClass->disciplines;
 
+        $score = [
+            1 => 9.1,
+            2 => 7.8,
+            3 => 6.7,
+            4 => 6.9,
+        ];
+
+        $absence = [
+            1 => 27,
+            2 => 58,
+            3 => 32,
+            4 => 29,
+        ];
+
         foreach ($disciplines as $discipline) {
-            for ($stage = 1; $stage <= 4; $stage++) {
-                $this->postAbsence($this->enrollment, $discipline->id, $stage, '50');
-                $response = $this->postScore($this->enrollment, $discipline->id, $stage, '9');
-            }
+            $this->postAbsenceForStages($absence, $discipline);
+            $response = $this->postScoreForStages($score, $discipline);
+
             $this->assertEquals('Retido', $response->situacao);
         }
+
         $registration = $this->enrollment->registration;
         $this->assertEquals(14, $registration->refresh()->aprovado);
     }
@@ -132,33 +131,40 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
 
-        $this->addAcademicYearStage($schoolClass, 2);
-        $this->addAcademicYearStage($schoolClass, 3);
-        $this->addAcademicYearStage($schoolClass, 4);
-
-        $discipline = factory(LegacyDiscipline::class)->create();
-        $schoolClass->disciplines()->attach($discipline->id, [
-            'ano_escolar_id' => $schoolClass->grade_id,
-            'escola_id' => $school->id
-        ]);
-
-        factory(LegacyDisciplineAcademicYear::class)->create([
-            'componente_curricular_id' => $discipline->id,
-            'ano_escolar_id' => $schoolClass->grade_id,
-        ]);
+        $this->createStages($school, 4);
+        $this->createDisciplines($schoolClass, 2);
 
         $disciplines = $schoolClass->disciplines;
 
+        $score = [
+            1 => 9.7,
+            2 => 10,
+            3 => 7,
+            4 => 9,
+        ];
+
+        $absence = [
+            1 => 7,
+            2 => 3,
+            3 => 1,
+            4 => 0,
+        ];
+
         foreach ($disciplines as $discipline) {
-            for ($stage = 1; $stage <= 4; $stage++) {
-                $this->postAbsence($this->enrollment, $discipline->id, $stage, '3');
-                $response = $this->postScore($this->enrollment, $discipline->id, $stage, '7');
-            }
+            $this->postAbsenceForStages($absence, $discipline);
+            $response = $this->postScoreForStages($score, $discipline);
+
             $this->assertEquals('Aprovado', $response->situacao);
-            $response = $this->deleteScore($this->enrollment, $discipline->id, 4);
-            $this->assertEquals('Cursando', $response->situacao);
         }
+
         $registration = $this->enrollment->registration;
+
+        $this->assertEquals(1, $registration->refresh()->aprovado);
+
+        $randomDiscipline = $schoolClass->disciplines->random()->id;
+        $response = $this->deleteScore($this->enrollment, $randomDiscipline, 4);
+        $this->assertEquals('Cursando', $response->situacao);
+    
         $this->assertEquals(3, $registration->refresh()->aprovado);
     }
 
@@ -167,33 +173,40 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
 
-        $this->addAcademicYearStage($schoolClass, 2);
-        $this->addAcademicYearStage($schoolClass, 3);
-        $this->addAcademicYearStage($schoolClass, 4);
-
-        $discipline = factory(LegacyDiscipline::class)->create();
-        $schoolClass->disciplines()->attach($discipline->id, [
-            'ano_escolar_id' => $schoolClass->grade_id,
-            'escola_id' => $school->id
-        ]);
-
-        factory(LegacyDisciplineAcademicYear::class)->create([
-            'componente_curricular_id' => $discipline->id,
-            'ano_escolar_id' => $schoolClass->grade_id,
-        ]);
+        $this->createStages($school, 4);
+        $this->createDisciplines($schoolClass, 2);
 
         $disciplines = $schoolClass->disciplines;
 
+        $score = [
+            1 => 9.7,
+            2 => 10,
+            3 => 7,
+            4 => 9,
+        ];
+
+        $absence = [
+            1 => 7,
+            2 => 3,
+            3 => 1,
+            4 => 0,
+        ];
+
         foreach ($disciplines as $discipline) {
-            for ($stage = 1; $stage <= 4; $stage++) {
-                $this->postAbsence($this->enrollment, $discipline->id, $stage, '3');
-                $response = $this->postScore($this->enrollment, $discipline->id, $stage, '7');
-            }
+            $this->postAbsenceForStages($absence, $discipline);
+            $response = $this->postScoreForStages($score, $discipline);
+
             $this->assertEquals('Aprovado', $response->situacao);
-            $response = $this->deleteScore($this->enrollment, $discipline->id, 2);
-            $this->assertTrue($response->any_error_msg);
         }
+
         $registration = $this->enrollment->registration;
+
+        $this->assertEquals(1, $registration->refresh()->aprovado);
+
+        $randomDiscipline = $schoolClass->disciplines->random()->id;
+        $response = $this->deleteScore($this->enrollment, $randomDiscipline, 2);
+        $this->assertTrue($response->any_error_msg);
+    
         $this->assertEquals(1, $registration->refresh()->aprovado);
     }
 
@@ -202,33 +215,40 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
 
-        $this->addAcademicYearStage($schoolClass, 2);
-        $this->addAcademicYearStage($schoolClass, 3);
-        $this->addAcademicYearStage($schoolClass, 4);
-
-        $discipline = factory(LegacyDiscipline::class)->create();
-        $schoolClass->disciplines()->attach($discipline->id, [
-            'ano_escolar_id' => $schoolClass->grade_id,
-            'escola_id' => $school->id
-        ]);
-
-        factory(LegacyDisciplineAcademicYear::class)->create([
-            'componente_curricular_id' => $discipline->id,
-            'ano_escolar_id' => $schoolClass->grade_id,
-        ]);
+        $this->createStages($school, 4);
+        $this->createDisciplines($schoolClass, 2);
 
         $disciplines = $schoolClass->disciplines;
 
+        $score = [
+            1 => 9.7,
+            2 => 10,
+            3 => 7,
+            4 => 9,
+        ];
+
+        $absence = [
+            1 => 7,
+            2 => 3,
+            3 => 1,
+            4 => 0,
+        ];
+
         foreach ($disciplines as $discipline) {
-            for ($stage = 1; $stage <= 4; $stage++) {
-                $this->postAbsence($this->enrollment, $discipline->id, $stage, '3');
-                $response = $this->postScore($this->enrollment, $discipline->id, $stage, '7');
-            }
+            $this->postAbsenceForStages($absence, $discipline);
+            $response = $this->postScoreForStages($score, $discipline);
+
             $this->assertEquals('Aprovado', $response->situacao);
-            $response = $this->deleteAbsence($this->enrollment, $discipline->id, 4);
-            $this->assertEquals('Cursando', $response->situacao);
         }
+
         $registration = $this->enrollment->registration;
+
+        $this->assertEquals(1, $registration->refresh()->aprovado);
+
+        $randomDiscipline = $schoolClass->disciplines->random()->id;
+        $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 4);
+        $this->assertEquals('Cursando', $response->situacao);
+    
         $this->assertEquals(3, $registration->refresh()->aprovado);
     }
 
@@ -237,33 +257,40 @@ class NaoContinuadaMediaPresencaSemRecuperacao extends TestCase
         $schoolClass = $this->enrollment->schoolClass;
         $school = $schoolClass->school;
 
-        $this->addAcademicYearStage($schoolClass, 2);
-        $this->addAcademicYearStage($schoolClass, 3);
-        $this->addAcademicYearStage($schoolClass, 4);
-
-        $discipline = factory(LegacyDiscipline::class)->create();
-        $schoolClass->disciplines()->attach($discipline->id, [
-            'ano_escolar_id' => $schoolClass->grade_id,
-            'escola_id' => $school->id
-        ]);
-
-        factory(LegacyDisciplineAcademicYear::class)->create([
-            'componente_curricular_id' => $discipline->id,
-            'ano_escolar_id' => $schoolClass->grade_id,
-        ]);
+        $this->createStages($school, 4);
+        $this->createDisciplines($schoolClass, 2);
 
         $disciplines = $schoolClass->disciplines;
 
+        $score = [
+            1 => 9.7,
+            2 => 10,
+            3 => 7,
+            4 => 9,
+        ];
+
+        $absence = [
+            1 => 7,
+            2 => 3,
+            3 => 1,
+            4 => 0,
+        ];
+
         foreach ($disciplines as $discipline) {
-            for ($stage = 1; $stage <= 4; $stage++) {
-                $this->postAbsence($this->enrollment, $discipline->id, $stage, '3');
-                $response = $this->postScore($this->enrollment, $discipline->id, $stage, '8');
-            }
+            $this->postAbsenceForStages($absence, $discipline);
+            $response = $this->postScoreForStages($score, $discipline);
+
             $this->assertEquals('Aprovado', $response->situacao);
-            $response = $this->deleteAbsence($this->enrollment, $discipline->id, 2);
-            $this->assertTrue($response->any_error_msg);
         }
+
         $registration = $this->enrollment->registration;
+
+        $this->assertEquals(1, $registration->refresh()->aprovado);
+
+        $randomDiscipline = $schoolClass->disciplines->random()->id;
+        $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 2);
+        $this->assertTrue($response->any_error_msg);
+    
         $this->assertEquals(1, $registration->refresh()->aprovado);
     }
 }
