@@ -32,6 +32,7 @@ class indice extends clsCadastro
     public $ativo;
     public $ref_cod_funcionario_vinculo;
     public $matricula_interna;
+    public $data_expiracao;
     public $escola;
 
     //senha carregada do banco (controle de criptografia)
@@ -67,6 +68,10 @@ class indice extends clsCadastro
                 $this->confere_senha = $this->_senha;
                 $this->fexcluir = true;
                 $retorno = 'Editar';
+            }
+
+            if ($this->data_expiracao) {
+                $this->data_expiracao = Portabilis_Date_Utils::pgSQLToBr($this->data_expiracao);
             }
 
             $this->status = $this->ativo;
@@ -152,6 +157,7 @@ class indice extends clsCadastro
         $this->campoSenha('_senha', 'Senha', $this->_senha, true);
         $this->campoEmail('email', 'E-mail usuário', $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
         $this->campoTexto('matricula_interna', 'Matrícula interna', $this->matricula_interna, 30, 30, false, false, false, 'Utilizado somente para registro, caso a instituição deseje que a matrícula interna deste funcionário seja registrada no sistema.');
+        $this->campoData('data_expiracao', 'Data Expiração', $this->data_expiracao);
 
         $opcoes = [0 => 'Inativo', 1 => 'Ativo'];
 
@@ -252,7 +258,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, md5($this->_senha), $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, null, 'NOW()', 'NOW()', $this->pessoa_logada, 0, $this->ref_cod_setor_new, null, 0, 1, $this->email, $this->matricula_interna);
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, md5($this->_senha), $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, $this->ref_cod_setor_new, null, 0, 1, $this->email, $this->matricula_interna);
 
         if ($obj_funcionario->cadastra()) {
             $funcionario = $obj_funcionario->detalhe();
@@ -323,7 +329,7 @@ class indice extends clsCadastro
             $this->_senha = md5($this->_senha);
         }
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $this->_senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, null, 'NOW()', 'NOW()', $this->pessoa_logada, 0, $this->ref_cod_setor_new, null, 0, null, $this->email, $this->matricula_interna);
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $this->_senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::pgSQLToBr($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, $this->ref_cod_setor_new, null, 0, null, $this->email, $this->matricula_interna);
         $detalheAntigo = $obj_funcionario->detalhe();
 
         if ($obj_funcionario->edita()) {
