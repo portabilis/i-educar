@@ -33,91 +33,22 @@ class clsPortalFuncionario
     public $receber_novidades;
     public $atualizou_cadastro;
 
-    /**
-     * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
-     *
-     * @var int
-     */
     public $_total;
 
-    /**
-     * Nome do schema
-     *
-     * @var string
-     */
     public $_schema;
 
-    /**
-     * Nome da tabela
-     *
-     * @var string
-     */
     public $_tabela;
 
-    /**
-     * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
-     *
-     * @var string
-     */
     public $_campos_lista;
 
-    /**
-     * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
-     *
-     * @var string
-     */
     public $_todos_campos;
 
-    /**
-     * Valor que define a quantidade de registros a ser retornada pelo metodo lista
-     *
-     * @var int
-     */
     public $_limite_quantidade;
 
-    /**
-     * Define o valor de offset no retorno dos registros no metodo lista
-     *
-     * @var int
-     */
     public $_limite_offset;
 
-    /**
-     * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
-     *
-     * @var string
-     */
     public $_campo_order_by;
 
-    /**
-     * Construtor (PHP 4)
-     *
-     * @param integer ref_cod_pessoa_fj
-     * @param string matricula
-     * @param string senha
-     * @param integer ativo
-     * @param integer ref_sec
-     * @param string ramal
-     * @param string sequencial
-     * @param string opcao_menu
-     * @param integer ref_cod_administracao_secretaria
-     * @param integer ref_ref_cod_administracao_secretaria
-     * @param integer ref_cod_departamento
-     * @param integer ref_ref_ref_cod_administracao_secretaria
-     * @param integer ref_ref_cod_departamento
-     * @param integer ref_cod_setor
-     * @param integer ref_cod_funcionario_vinculo
-     * @param integer tempo_expira_senha
-     * @param integer tempo_expira_conta
-     * @param string data_troca_senha
-     * @param string data_reativa_conta
-     * @param integer ref_ref_cod_pessoa_fj
-     * @param integer proibido
-     * @param integer ref_cod_setor_new
-     * @param integer matricula_new
-     * @param integer matricula_permanente
-     * @param integer tipo_menu
-     */
     public function __construct($ref_cod_pessoa_fj = null, $matricula = null, $senha = null, $ativo = null, $ref_sec = null, $ramal = null, $sequencial = null, $opcao_menu = null, $ref_cod_administracao_secretaria = null, $ref_ref_cod_administracao_secretaria = null, $ref_cod_departamento = null, $ref_ref_ref_cod_administracao_secretaria = null, $ref_ref_cod_departamento = null, $ref_cod_setor = null, $ref_cod_funcionario_vinculo = null, $tempo_expira_senha = null, $tempo_expira_conta = null, $data_troca_senha = null, $data_reativa_conta = null, $ref_ref_cod_pessoa_fj = null, $proibido = null, $ref_cod_setor_new = null, $matricula_new = null, $matricula_permanente = null, $tipo_menu = null, $email = null, $matricula_interna = null)
     {
         $db = new clsBanco();
@@ -213,11 +144,6 @@ class clsPortalFuncionario
         }
     }
 
-    /**
-     * Cria um novo registro
-     *
-     * @return bool
-     */
     public function cadastra()
     {
         if (is_numeric($this->ref_cod_pessoa_fj)) {
@@ -370,11 +296,6 @@ class clsPortalFuncionario
         return false;
     }
 
-    /**
-     * Edita os dados de um registro
-     *
-     * @return bool
-     */
     public function edita()
     {
         if (is_numeric($this->ref_cod_pessoa_fj)) {
@@ -507,38 +428,6 @@ class clsPortalFuncionario
         return false;
     }
 
-    /**
-     * Retorna uma lista filtrados de acordo com os parametros
-     *
-     * @param string str_matricula
-     * @param string str_senha
-     * @param integer int_ativo
-     * @param integer int_ref_sec
-     * @param string str_ramal
-     * @param string str_sequencial
-     * @param string str_opcao_menu
-     * @param integer int_ref_cod_administracao_secretaria
-     * @param integer int_ref_ref_cod_administracao_secretaria
-     * @param integer int_ref_cod_departamento
-     * @param integer int_ref_ref_ref_cod_administracao_secretaria
-     * @param integer int_ref_ref_cod_departamento
-     * @param integer int_ref_cod_setor
-     * @param integer int_ref_cod_funcionario_vinculo
-     * @param integer int_tempo_expira_senha
-     * @param integer int_tempo_expira_conta
-     * @param string date_data_troca_senha_ini
-     * @param string date_data_troca_senha_fim
-     * @param string date_data_reativa_conta_ini
-     * @param string date_data_reativa_conta_fim
-     * @param integer int_ref_ref_cod_pessoa_fj
-     * @param integer int_proibido
-     * @param integer int_ref_cod_setor_new
-     * @param integer int_matricula_new
-     * @param integer int_matricula_permanente
-     * @param integer int_tipo_menu
-     *
-     * @return array
-     */
     public function lista($str_matricula = null, $str_senha = null, $int_ativo = null, $int_ref_sec = null, $str_ramal = null, $str_sequencial = null, $str_opcao_menu = null, $int_ref_cod_administracao_secretaria = null, $int_ref_ref_cod_administracao_secretaria = null, $int_ref_cod_departamento = null, $int_ref_ref_ref_cod_administracao_secretaria = null, $int_ref_ref_cod_departamento = null, $int_ref_cod_setor = null, $int_ref_cod_funcionario_vinculo = null, $int_tempo_expira_senha = null, $int_tempo_expira_conta = null, $date_data_troca_senha_ini = null, $date_data_troca_senha_fim = null, $date_data_reativa_conta_ini = null, $date_data_reativa_conta_fim = null, $int_ref_ref_cod_pessoa_fj = null, $int_proibido = null, $int_ref_cod_setor_new = null, $int_matricula_new = null, $int_matricula_permanente = null, $int_tipo_menu = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
@@ -688,11 +577,6 @@ class clsPortalFuncionario
         return false;
     }
 
-    /**
-     * Retorna um array com os dados de um registro
-     *
-     * @return array
-     */
     public function detalhe()
     {
         if (is_numeric($this->ref_cod_pessoa_fj)) {
@@ -706,11 +590,6 @@ class clsPortalFuncionario
         return false;
     }
 
-    /**
-     * Retorna true se o registro existir. Caso contrário retorna false.
-     *
-     * @return bool
-     */
     public function existe()
     {
         if (is_numeric($this->ref_cod_pessoa_fj)) {
@@ -725,11 +604,6 @@ class clsPortalFuncionario
         return false;
     }
 
-    /**
-     * Exclui um registro
-     *
-     * @return bool
-     */
     public function excluir()
     {
         if (is_numeric($this->ref_cod_pessoa_fj)) {
@@ -741,42 +615,22 @@ class clsPortalFuncionario
         return false;
     }
 
-    /**
-     * Define quais campos da tabela serao selecionados na invocacao do metodo lista
-     *
-     * @return null
-     */
     public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
 
-    /**
-     * Define que o metodo Lista devera retornoar todos os campos da tabela
-     *
-     * @return null
-     */
     public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
 
-    /**
-     * Define limites de retorno para o metodo lista
-     *
-     * @return null
-     */
     public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
     }
 
-    /**
-     * Retorna a string com o trecho da query resposavel pelo Limite de registros
-     *
-     * @return string
-     */
     public function getLimite()
     {
         if (is_numeric($this->_limite_quantidade)) {
@@ -792,11 +646,6 @@ class clsPortalFuncionario
         return '';
     }
 
-    /**
-     * Define campo para ser utilizado como ordenacao no metolo lista
-     *
-     * @return null
-     */
     public function setOrderby($strNomeCampo)
     {
         if (is_string($strNomeCampo) && $strNomeCampo) {
@@ -804,11 +653,6 @@ class clsPortalFuncionario
         }
     }
 
-    /**
-     * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
-     *
-     * @return string
-     */
     public function getOrderby()
     {
         if (is_string($this->_campo_order_by)) {
@@ -818,11 +662,6 @@ class clsPortalFuncionario
         return '';
     }
 
-    /**
-     * Retorna a string com o nome do vinculo cujo código foi passado por parâmetro
-     *
-     * @return string
-     */
     public function getNomeVinculo($cod_funcionario_vinculo)
     {
         if (is_numeric($cod_funcionario_vinculo)) {
