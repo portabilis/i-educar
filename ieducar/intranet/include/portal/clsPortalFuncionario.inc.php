@@ -127,102 +127,31 @@ class clsPortalFuncionario
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, ramal, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, proibido, ref_cod_setor_new, matricula_new, matricula_permanente, tipo_menu, email, receber_novidades, atualizou_cadastro';
 
         if (is_numeric($ref_ref_cod_pessoa_fj)) {
-            if (class_exists('clsFuncionario')) {
-                $tmp_obj = new clsFuncionario($ref_ref_cod_pessoa_fj);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_ref_cod_pessoa_fj = $ref_ref_cod_pessoa_fj;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_ref_cod_pessoa_fj = $ref_ref_cod_pessoa_fj;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_ref_cod_pessoa_fj}'")) {
-                    $this->ref_ref_cod_pessoa_fj = $ref_ref_cod_pessoa_fj;
-                }
+            if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_ref_cod_pessoa_fj}'")) {
+                $this->ref_ref_cod_pessoa_fj = $ref_ref_cod_pessoa_fj;
             }
         }
         if (is_numeric($ref_ref_cod_departamento) && is_numeric($ref_ref_ref_cod_administracao_secretaria) && is_numeric($ref_cod_setor)) {
-            if (class_exists('clsAdministracaoSetor')) {
-                $tmp_obj = new clsAdministracaoSetor($ref_ref_cod_departamento, $ref_ref_ref_cod_administracao_secretaria, $ref_cod_setor);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_ref_cod_departamento = $ref_ref_cod_departamento;
-                        $this->ref_ref_ref_cod_administracao_secretaria = $ref_ref_ref_cod_administracao_secretaria;
-                        $this->ref_cod_setor = $ref_cod_setor;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_ref_cod_departamento = $ref_ref_cod_departamento;
-                        $this->ref_ref_ref_cod_administracao_secretaria = $ref_ref_ref_cod_administracao_secretaria;
-                        $this->ref_cod_setor = $ref_cod_setor;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM administracao_setor WHERE ref_cod_departamento = '{$ref_ref_cod_departamento}' AND ref_ref_cod_administracao_secretaria = '{$ref_ref_ref_cod_administracao_secretaria}' AND cod_setor = '{$ref_cod_setor}'")) {
-                    $this->ref_ref_cod_departamento = $ref_ref_cod_departamento;
-                    $this->ref_ref_ref_cod_administracao_secretaria = $ref_ref_ref_cod_administracao_secretaria;
-                    $this->ref_cod_setor = $ref_cod_setor;
-                }
+            if ($db->CampoUnico("SELECT 1 FROM administracao_setor WHERE ref_cod_departamento = '{$ref_ref_cod_departamento}' AND ref_ref_cod_administracao_secretaria = '{$ref_ref_ref_cod_administracao_secretaria}' AND cod_setor = '{$ref_cod_setor}'")) {
+                $this->ref_ref_cod_departamento = $ref_ref_cod_departamento;
+                $this->ref_ref_ref_cod_administracao_secretaria = $ref_ref_ref_cod_administracao_secretaria;
+                $this->ref_cod_setor = $ref_cod_setor;
             }
         }
         if (is_numeric($ref_ref_cod_administracao_secretaria) && is_numeric($ref_cod_departamento)) {
-            if (class_exists('clsAdministracaoDepartamento')) {
-                $tmp_obj = new clsAdministracaoDepartamento($ref_ref_cod_administracao_secretaria, $ref_cod_departamento);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_ref_cod_administracao_secretaria = $ref_ref_cod_administracao_secretaria;
-                        $this->ref_cod_departamento = $ref_cod_departamento;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_ref_cod_administracao_secretaria = $ref_ref_cod_administracao_secretaria;
-                        $this->ref_cod_departamento = $ref_cod_departamento;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM administracao_departamento WHERE ref_cod_administracao_secretaria = '{$ref_ref_cod_administracao_secretaria}' AND cod_departamento = '{$ref_cod_departamento}'")) {
-                    $this->ref_ref_cod_administracao_secretaria = $ref_ref_cod_administracao_secretaria;
-                    $this->ref_cod_departamento = $ref_cod_departamento;
-                }
+            if ($db->CampoUnico("SELECT 1 FROM administracao_departamento WHERE ref_cod_administracao_secretaria = '{$ref_ref_cod_administracao_secretaria}' AND cod_departamento = '{$ref_cod_departamento}'")) {
+                $this->ref_ref_cod_administracao_secretaria = $ref_ref_cod_administracao_secretaria;
+                $this->ref_cod_departamento = $ref_cod_departamento;
             }
         }
         if (is_numeric($ref_cod_administracao_secretaria)) {
-            if (class_exists('clsAdministracaoSecretaria')) {
-                $tmp_obj = new clsAdministracaoSecretaria($ref_cod_administracao_secretaria);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_administracao_secretaria = $ref_cod_administracao_secretaria;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_administracao_secretaria = $ref_cod_administracao_secretaria;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM administracao_secretaria WHERE cod_administracao_secretaria = '{$ref_cod_administracao_secretaria}'")) {
-                    $this->ref_cod_administracao_secretaria = $ref_cod_administracao_secretaria;
-                }
+            if ($db->CampoUnico("SELECT 1 FROM administracao_secretaria WHERE cod_administracao_secretaria = '{$ref_cod_administracao_secretaria}'")) {
+                $this->ref_cod_administracao_secretaria = $ref_cod_administracao_secretaria;
             }
         }
         if (is_numeric($ref_cod_pessoa_fj)) {
-            if (class_exists('clsCadastroFisica')) {
-                $tmp_obj = new clsCadastroFisica($ref_cod_pessoa_fj);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_pessoa_fj = $ref_cod_pessoa_fj;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_pessoa_fj = $ref_cod_pessoa_fj;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM cadastro.fisica WHERE idpes = '{$ref_cod_pessoa_fj}'")) {
-                    $this->ref_cod_pessoa_fj = $ref_cod_pessoa_fj;
-                }
+            if ($db->CampoUnico("SELECT 1 FROM cadastro.fisica WHERE idpes = '{$ref_cod_pessoa_fj}'")) {
+                $this->ref_cod_pessoa_fj = $ref_cod_pessoa_fj;
             }
         }
 
