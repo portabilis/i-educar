@@ -111,7 +111,6 @@ class indice extends clsDetalhe
         $obj_funcionario = new clsFuncionario($cod_pessoa);
         $det_funcionario = $obj_funcionario->detalhe();
 
-        $this->addDetalhe(['Ramal', $det_funcionario['ramal']]);
         $this->addDetalhe(['E-mail usuário', $det_funcionario['email']]);
 
         if (!empty($det_funcionario['matricula_interna'])) {

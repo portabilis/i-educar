@@ -9,7 +9,6 @@ class clsPortalFuncionario
     public $senha;
     public $ativo;
     public $ref_sec;
-    public $ramal;
     public $sequencial;
     public $opcao_menu;
     public $ref_cod_administracao_secretaria;
@@ -54,7 +53,7 @@ class clsPortalFuncionario
         $this->_schema = 'portal.';
         $this->_tabela = "{$this->_schema}funcionario";
 
-        $this->_campos_lista = $this->_todos_campos = 'ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, ramal, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, matricula_new, matricula_permanente, tipo_menu, email, receber_novidades, atualizou_cadastro';
+        $this->_campos_lista = $this->_todos_campos = 'ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, matricula_new, matricula_permanente, tipo_menu, email, receber_novidades, atualizou_cadastro';
 
         if (is_numeric($ref_ref_cod_pessoa_fj)) {
             if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_ref_cod_pessoa_fj}'")) {
@@ -96,9 +95,6 @@ class clsPortalFuncionario
         }
         if (is_numeric($ref_sec)) {
             $this->ref_sec = $ref_sec;
-        }
-        if (is_string($ramal)) {
-            $this->ramal = $ramal;
         }
         if (is_string($sequencial)) {
             $this->sequencial = $sequencial;
@@ -175,11 +171,6 @@ class clsPortalFuncionario
             if (is_numeric($this->ref_sec)) {
                 $campos .= "{$gruda}ref_sec";
                 $valores .= "{$gruda}'{$this->ref_sec}'";
-                $gruda = ', ';
-            }
-            if (is_string($this->ramal)) {
-                $campos .= "{$gruda}ramal";
-                $valores .= "{$gruda}'{$this->ramal}'";
                 $gruda = ', ';
             }
             if (is_string($this->sequencial)) {
@@ -313,10 +304,6 @@ class clsPortalFuncionario
                 $set .= "{$gruda}ref_sec = '{$this->ref_sec}'";
                 $gruda = ', ';
             }
-            if (is_string($this->ramal)) {
-                $set .= "{$gruda}ramal = '{$this->ramal}'";
-                $gruda = ', ';
-            }
             if (is_string($this->sequencial)) {
                 $set .= "{$gruda}sequencial = '{$this->sequencial}'";
                 $gruda = ', ';
@@ -443,10 +430,6 @@ class clsPortalFuncionario
         }
         if (is_numeric($int_ref_sec)) {
             $filtros .= "{$whereAnd} ref_sec = '{$int_ref_sec}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($str_ramal)) {
-            $filtros .= "{$whereAnd} ramal LIKE '%{$str_ramal}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_sequencial)) {

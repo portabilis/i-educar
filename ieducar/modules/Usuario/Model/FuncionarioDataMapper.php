@@ -17,7 +17,6 @@ class Usuario_Model_FuncionarioDataMapper extends CoreExt_DataMapper
         'senha' => 'senha',
         'ativo' => 'ativo',
         'ref_sec' => 'ref_sec',
-        'ramal' => 'ramal',
         'sequencial' => 'sequencial',
         'opcao_menu' => 'opcao_menu',
         'ref_cod_setor' => 'ref_cod_setor',

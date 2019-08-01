@@ -10,7 +10,6 @@ class clsFuncionario extends clsPessoaFisica
     public $senha;
     public $ativo;
     public $ref_sec;
-    public $ramal;
     public $sequencial;
     public $opcao_menu;
     public $ref_cod_setor;
@@ -53,7 +52,6 @@ class clsFuncionario extends clsPessoaFisica
         $this->tempo_expira_senha = $tempo_expira_senha;
         $this->data_expiracao = $data_expiracao;
         $this->ref_cod_funcionario_vinculo = $ref_cod_funcionario_vinculo;
-        $this->ramal = $ramal;
         $this->matricula_permanente = $matricula_permanente;
         $this->email = $email;
         $this->_campos_lista = ' 
@@ -62,7 +60,6 @@ class clsFuncionario extends clsPessoaFisica
             f.matricula_interna,
             f.senha,
             f.ativo,
-            f.ramal,
             f.sequencial,
             f.opcao_menu,
             f.ref_cod_setor,
@@ -143,11 +140,6 @@ class clsFuncionario extends clsPessoaFisica
 
         if (is_numeric($int_vinculo)) {
             $filtros .= "{$whereAnd} f.ref_cod_funcionario_vinculo = '{$int_vinculo}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_string($str_ramal)) {
-            $filtros .= "{$whereAnd} f.str_ramal ILIKE '%{$str_ramal}%'f";
             $whereAnd = ' AND ';
         }
 
@@ -322,14 +314,11 @@ class clsFuncionario extends clsPessoaFisica
         if ($idpesOk) {
             $tupla = parent::detalhe();
             $db = new clsBanco();
-            $db->Consulta("SELECT ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, ramal, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, data_expiracao, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, matricula_permanente, email FROM funcionario WHERE ref_cod_pessoa_fj = '{$this->idpes}'");
+            $db->Consulta("SELECT ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, data_expiracao, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, matricula_permanente, email FROM funcionario WHERE ref_cod_pessoa_fj = '{$this->idpes}'");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                // FIXME remover no futuro
-                $proibido = null;
-
-                list($this->idpes, $this->matricula, $this->senha, $this->ativo, $this->ref_sec, $this->ramal, $this->sequencial, $this->opcao_menu, $this->ref_cod_setor, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->data_expiracao, $this->data_troca_senha, $this->data_reativa_conta, $this->ref_ref_cod_pessoa_fj, $proibido, $this->ref_cod_setor_new, $this->matricula_permanente) = $tupla;
+                list($this->idpes, $this->matricula, $this->senha, $this->ativo, $this->ref_sec, $this->sequencial, $this->opcao_menu, $this->ref_cod_setor, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->data_expiracao, $this->data_troca_senha, $this->data_reativa_conta, $this->ref_ref_cod_pessoa_fj, $this->ref_cod_setor_new, $this->matricula_permanente) = $tupla;
 
                 $tupla['idpes'] = new clsPessoaFisica($tupla['ref_cod_pessoa_fj']);
                 $tupla[] = $tupla['idpes'];
