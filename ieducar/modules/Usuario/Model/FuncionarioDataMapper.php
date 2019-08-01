@@ -28,7 +28,6 @@ class Usuario_Model_FuncionarioDataMapper extends CoreExt_DataMapper
         'ref_ref_cod_pessoa_fj' => 'ref_ref_cod_pessoa_fj',
         'ref_cod_setor_new' => 'ref_cod_setor_new',
         'matricula_new' => 'matricula_new',
-        'matricula_permanente' => 'matricula_permanente',
         'tipo_menu' => 'tipo_menu',
         'ip_logado' => 'ip_logado',
         'data_login' => 'data_login',

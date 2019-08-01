@@ -25,7 +25,6 @@ class clsPortalFuncionario
     public $ref_ref_cod_pessoa_fj;
     public $ref_cod_setor_new;
     public $matricula_new;
-    public $matricula_permanente;
     public $matricula_interna;
     public $tipo_menu;
     public $receber_novidades;
@@ -47,13 +46,13 @@ class clsPortalFuncionario
 
     public $_campo_order_by;
 
-    public function __construct($ref_cod_pessoa_fj = null, $matricula = null, $senha = null, $ativo = null, $ref_sec = null, $ramal = null, $sequencial = null, $opcao_menu = null, $ref_cod_administracao_secretaria = null, $ref_ref_cod_administracao_secretaria = null, $ref_cod_departamento = null, $ref_ref_ref_cod_administracao_secretaria = null, $ref_ref_cod_departamento = null, $ref_cod_setor = null, $ref_cod_funcionario_vinculo = null, $tempo_expira_senha = null, $tempo_expira_conta = null, $data_troca_senha = null, $data_reativa_conta = null, $ref_ref_cod_pessoa_fj = null, $proibido = null, $ref_cod_setor_new = null, $matricula_new = null, $matricula_permanente = null, $tipo_menu = null, $email = null, $matricula_interna = null)
+    public function __construct($ref_cod_pessoa_fj = null, $matricula = null, $senha = null, $ativo = null, $ref_sec = null, $s = null, $sequencial = null, $opcao_menu = null, $ref_cod_administracao_secretaria = null, $ref_ref_cod_administracao_secretaria = null, $ref_cod_departamento = null, $ref_ref_ref_cod_administracao_secretaria = null, $ref_ref_cod_departamento = null, $ref_cod_setor = null, $ref_cod_funcionario_vinculo = null, $tempo_expira_senha = null, $tempo_expira_conta = null, $data_troca_senha = null, $data_reativa_conta = null, $ref_ref_cod_pessoa_fj = null, $proibido = null, $ref_cod_setor_new = null, $matricula_new = null, $matricula_permanente = null, $tipo_menu = null, $email = null, $matricula_interna = null)
     {
         $db = new clsBanco();
         $this->_schema = 'portal.';
         $this->_tabela = "{$this->_schema}funcionario";
 
-        $this->_campos_lista = $this->_todos_campos = 'ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, matricula_new, matricula_permanente, tipo_menu, email, receber_novidades, atualizou_cadastro';
+        $this->_campos_lista = $this->_todos_campos = 'ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, matricula_new, tipo_menu, email, receber_novidades, atualizou_cadastro';
 
         if (is_numeric($ref_ref_cod_pessoa_fj)) {
             if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_ref_cod_pessoa_fj}'")) {
@@ -119,9 +118,6 @@ class clsPortalFuncionario
         }
         if (is_numeric($matricula_new)) {
             $this->matricula_new = $matricula_new;
-        }
-        if (is_numeric($matricula_permanente)) {
-            $this->matricula_permanente = $matricula_permanente;
         }
         if (is_numeric($tipo_menu)) {
             $this->tipo_menu = $tipo_menu;
@@ -253,11 +249,6 @@ class clsPortalFuncionario
                 $valores .= "{$gruda}'{$this->matricula_new}'";
                 $gruda = ', ';
             }
-            if (is_numeric($this->matricula_permanente)) {
-                $campos .= "{$gruda}matricula_permanente";
-                $valores .= "{$gruda}'{$this->matricula_permanente}'";
-                $gruda = ', ';
-            }
             if (is_numeric($this->tipo_menu)) {
                 $campos .= "{$gruda}tipo_menu";
                 $valores .= "{$gruda}'{$this->tipo_menu}'";
@@ -366,10 +357,6 @@ class clsPortalFuncionario
             }
             if (is_numeric($this->matricula_new)) {
                 $set .= "{$gruda}matricula_new = '{$this->matricula_new}'";
-                $gruda = ', ';
-            }
-            if (is_numeric($this->matricula_permanente)) {
-                $set .= "{$gruda}matricula_permanente = '{$this->matricula_permanente}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->tipo_menu)) {
@@ -502,10 +489,6 @@ class clsPortalFuncionario
         }
         if (is_numeric($int_matricula_new)) {
             $filtros .= "{$whereAnd} matricula_new = '{$int_matricula_new}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_matricula_permanente)) {
-            $filtros .= "{$whereAnd} matricula_permanente = '{$int_matricula_permanente}'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_tipo_menu)) {

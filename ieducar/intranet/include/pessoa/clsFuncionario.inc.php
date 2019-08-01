@@ -20,7 +20,6 @@ class clsFuncionario extends clsPessoaFisica
     public $data_reativa_conta;
     public $ref_ref_cod_pessoa_fj;
     public $cpf;
-    public $matricula_permanente;
     public $ref_cod_setor_new;
     public $schema_cadastro = 'cadastro';
     public $schema_portal = 'portal';
@@ -52,7 +51,6 @@ class clsFuncionario extends clsPessoaFisica
         $this->tempo_expira_senha = $tempo_expira_senha;
         $this->data_expiracao = $data_expiracao;
         $this->ref_cod_funcionario_vinculo = $ref_cod_funcionario_vinculo;
-        $this->matricula_permanente = $matricula_permanente;
         $this->email = $email;
         $this->_campos_lista = ' 
             f.ref_cod_pessoa_fj,
@@ -314,11 +312,11 @@ class clsFuncionario extends clsPessoaFisica
         if ($idpesOk) {
             $tupla = parent::detalhe();
             $db = new clsBanco();
-            $db->Consulta("SELECT ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, data_expiracao, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, matricula_permanente, email FROM funcionario WHERE ref_cod_pessoa_fj = '{$this->idpes}'");
+            $db->Consulta("SELECT ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, data_expiracao, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, email FROM funcionario WHERE ref_cod_pessoa_fj = '{$this->idpes}'");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                list($this->idpes, $this->matricula, $this->senha, $this->ativo, $this->ref_sec, $this->sequencial, $this->opcao_menu, $this->ref_cod_setor, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->data_expiracao, $this->data_troca_senha, $this->data_reativa_conta, $this->ref_ref_cod_pessoa_fj, $this->ref_cod_setor_new, $this->matricula_permanente) = $tupla;
+                list($this->idpes, $this->matricula, $this->senha, $this->ativo, $this->ref_sec, $this->sequencial, $this->opcao_menu, $this->ref_cod_setor, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->data_expiracao, $this->data_troca_senha, $this->data_reativa_conta, $this->ref_ref_cod_pessoa_fj, $this->ref_cod_setor_new) = $tupla;
 
                 $tupla['idpes'] = new clsPessoaFisica($tupla['ref_cod_pessoa_fj']);
                 $tupla[] = $tupla['idpes'];
