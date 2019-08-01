@@ -19,7 +19,7 @@ class clsPortalFuncionario
     public $ref_cod_setor;
     public $ref_cod_funcionario_vinculo;
     public $tempo_expira_senha;
-    public $tempo_expira_conta;
+    public $data_expiracao;
     public $data_troca_senha;
     public $data_reativa_conta;
     public $ref_ref_cod_pessoa_fj;
@@ -46,13 +46,13 @@ class clsPortalFuncionario
 
     public $_campo_order_by;
 
-    public function __construct($ref_cod_pessoa_fj = null, $matricula = null, $senha = null, $ativo = null, $ref_sec = null, $s = null, $sequencial = null, $opcao_menu = null, $ref_cod_administracao_secretaria = null, $ref_ref_cod_administracao_secretaria = null, $ref_cod_departamento = null, $ref_ref_ref_cod_administracao_secretaria = null, $ref_ref_cod_departamento = null, $ref_cod_setor = null, $ref_cod_funcionario_vinculo = null, $tempo_expira_senha = null, $tempo_expira_conta = null, $data_troca_senha = null, $data_reativa_conta = null, $ref_ref_cod_pessoa_fj = null, $proibido = null, $ref_cod_setor_new = null, $matricula_new = null, $matricula_permanente = null, $tipo_menu = null, $email = null, $matricula_interna = null)
+    public function __construct($ref_cod_pessoa_fj = null, $matricula = null, $senha = null, $ativo = null, $ref_sec = null, $s = null, $sequencial = null, $opcao_menu = null, $ref_cod_administracao_secretaria = null, $ref_ref_cod_administracao_secretaria = null, $ref_cod_departamento = null, $ref_ref_ref_cod_administracao_secretaria = null, $ref_ref_cod_departamento = null, $ref_cod_setor = null, $ref_cod_funcionario_vinculo = null, $tempo_expira_senha = null, $data_expiracao = null, $data_troca_senha = null, $data_reativa_conta = null, $ref_ref_cod_pessoa_fj = null, $proibido = null, $ref_cod_setor_new = null, $matricula_new = null, $matricula_permanente = null, $tipo_menu = null, $email = null, $matricula_interna = null)
     {
         $db = new clsBanco();
         $this->_schema = 'portal.';
         $this->_tabela = "{$this->_schema}funcionario";
 
-        $this->_campos_lista = $this->_todos_campos = 'ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, matricula_new, tipo_menu, email, receber_novidades, atualizou_cadastro';
+        $this->_campos_lista = $this->_todos_campos = 'ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, data_expiracao, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, matricula_new, tipo_menu, email, receber_novidades, atualizou_cadastro';
 
         if (is_numeric($ref_ref_cod_pessoa_fj)) {
             if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_ref_cod_pessoa_fj}'")) {
@@ -107,9 +107,9 @@ class clsPortalFuncionario
         if (is_numeric($tempo_expira_senha)) {
             $this->tempo_expira_senha = $tempo_expira_senha;
         }
-        if (is_numeric($tempo_expira_conta)) {
-            $this->tempo_expira_conta = $tempo_expira_conta;
-        }
+
+        $this->data_expiracao = $data_expiracao;
+
         if (is_string($data_troca_senha)) {
             $this->data_troca_senha = $data_troca_senha;
         }
@@ -219,11 +219,11 @@ class clsPortalFuncionario
                 $valores .= "{$gruda}'{$this->tempo_expira_senha}'";
                 $gruda = ', ';
             }
-            if (is_numeric($this->tempo_expira_conta)) {
-                $campos .= "{$gruda}tempo_expira_conta";
-                $valores .= "{$gruda}'{$this->tempo_expira_conta}'";
-                $gruda = ', ';
-            }
+
+            $campos .= "{$gruda}data_expiracao";
+            $valores .= "{$gruda}'{$this->data_expiracao}'";
+            $gruda = ', ';
+
             if (is_string($this->data_troca_senha)) {
                 $campos .= "{$gruda}data_troca_senha";
                 $valores .= "{$gruda}{$this->data_troca_senha}";
@@ -335,10 +335,10 @@ class clsPortalFuncionario
                 $set .= "{$gruda}tempo_expira_senha = '{$this->tempo_expira_senha}'";
                 $gruda = ', ';
             }
-            if (is_numeric($this->tempo_expira_conta)) {
-                $set .= "{$gruda}tempo_expira_conta = '{$this->tempo_expira_conta}'";
-                $gruda = ', ';
-            }
+
+            $set .= "{$gruda}data_expiracao = '{$this->data_expiracao}'";
+            $gruda = ', ';
+
             if (is_string($this->data_troca_senha)) {
                 $set .= "{$gruda}data_troca_senha = '{$this->data_troca_senha}'";
                 $gruda = ', ';
@@ -389,7 +389,7 @@ class clsPortalFuncionario
         return false;
     }
 
-    public function lista($str_matricula = null, $str_senha = null, $int_ativo = null, $int_ref_sec = null, $str_ramal = null, $str_sequencial = null, $str_opcao_menu = null, $int_ref_cod_administracao_secretaria = null, $int_ref_ref_cod_administracao_secretaria = null, $int_ref_cod_departamento = null, $int_ref_ref_ref_cod_administracao_secretaria = null, $int_ref_ref_cod_departamento = null, $int_ref_cod_setor = null, $int_ref_cod_funcionario_vinculo = null, $int_tempo_expira_senha = null, $int_tempo_expira_conta = null, $date_data_troca_senha_ini = null, $date_data_troca_senha_fim = null, $date_data_reativa_conta_ini = null, $date_data_reativa_conta_fim = null, $int_ref_ref_cod_pessoa_fj = null, $int_proibido = null, $int_ref_cod_setor_new = null, $int_matricula_new = null, $int_matricula_permanente = null, $int_tipo_menu = null)
+    public function lista($str_matricula = null, $str_senha = null, $int_ativo = null, $int_ref_sec = null, $str_ramal = null, $str_sequencial = null, $str_opcao_menu = null, $int_ref_cod_administracao_secretaria = null, $int_ref_ref_cod_administracao_secretaria = null, $int_ref_cod_departamento = null, $int_ref_ref_ref_cod_administracao_secretaria = null, $int_ref_ref_cod_departamento = null, $int_ref_cod_setor = null, $int_ref_cod_funcionario_vinculo = null, $int_tempo_expira_senha = null, $data_expiracao = null, $date_data_troca_senha_ini = null, $date_data_troca_senha_fim = null, $date_data_reativa_conta_ini = null, $date_data_reativa_conta_fim = null, $int_ref_ref_cod_pessoa_fj = null, $int_proibido = null, $int_ref_cod_setor_new = null, $int_matricula_new = null, $int_matricula_permanente = null, $int_tipo_menu = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
@@ -459,8 +459,8 @@ class clsPortalFuncionario
             $filtros .= "{$whereAnd} tempo_expira_senha = '{$int_tempo_expira_senha}'";
             $whereAnd = ' AND ';
         }
-        if (is_numeric($int_tempo_expira_conta)) {
-            $filtros .= "{$whereAnd} tempo_expira_conta = '{$int_tempo_expira_conta}'";
+        if ($data_expiracao) {
+            $filtros .= "{$whereAnd} data_expiracao = '{$data_expiracao}'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_troca_senha_ini)) {

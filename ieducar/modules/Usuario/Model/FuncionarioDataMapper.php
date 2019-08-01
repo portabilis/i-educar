@@ -22,7 +22,7 @@ class Usuario_Model_FuncionarioDataMapper extends CoreExt_DataMapper
         'ref_cod_setor' => 'ref_cod_setor',
         'ref_cod_funcionario_vinculo' => 'ref_cod_funcionario_vinculo',
         'tempo_expira_senha' => 'tempo_expira_senha',
-        'tempo_expira_conta' => 'tempo_expira_conta',
+        'data_expiracao' => 'data_expiracao',
         'data_troca_senha' => 'data_troca_senha',
         'data_reativa_conta' => 'data_reativa_conta',
         'ref_ref_cod_pessoa_fj' => 'ref_ref_cod_pessoa_fj',

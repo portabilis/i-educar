@@ -55,7 +55,7 @@ class Portabilis_Utils_User
                 email, 
                 status_token,
                 ativo, 
-                tempo_expira_conta, 
+                data_expiracao, 
                 data_reativa_conta, 
                 tempo_expira_senha, 
                 data_troca_senha,
@@ -73,9 +73,9 @@ class Portabilis_Utils_User
         // obs: ao salvar drh > cadastro funcionario, seta data_reativa_conta = now
 
         $user['expired_account'] = !$user['super']
-            && !empty($user['tempo_expira_conta'])
+            && !empty($user['data_expiracao'])
             && !empty($user['data_reativa_conta'])
-            && time() - strtotime($user['data_reativa_conta']) > $user['tempo_expira_conta'] * 60 * 60 * 24;
+            && time() - strtotime($user['data_reativa_conta']) > $user['data_expiracao'] * 60 * 60 * 24;
 
         // considera o periodo para expiração de senha definido nas configs, caso o tenha sido feito.
 
