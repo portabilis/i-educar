@@ -165,6 +165,18 @@ class User extends Authenticatable
     }
 
     /**
+     * @return bool
+     */
+    public function isExpired()
+    {
+        if (empty($date = $this->employee->data_expiracao)) {
+            return false;
+        }
+
+        return now()->isAfter($date);
+    }
+
+    /**
      * @return BelongsTo
      */
     public function employee()
