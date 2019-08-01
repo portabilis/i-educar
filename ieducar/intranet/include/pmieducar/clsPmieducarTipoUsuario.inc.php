@@ -126,47 +126,11 @@ class clsPmieducarTipoUsuario
         $this->_campos_lista = $this->_todos_campos = "cod_tipo_usuario, ref_funcionario_cad, ref_funcionario_exc, nm_tipo, descricao, nivel, data_cadastro, data_exclusao, ativo";
 
         if (is_numeric($ref_funcionario_exc)) {
-            if (class_exists("clsFuncionario")) {
-                $tmp_obj = new clsFuncionario($ref_funcionario_exc);
-                if (method_exists($tmp_obj, "existe")) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_funcionario_exc = $ref_funcionario_exc;
-                    }
-                } else {
-                    if (method_exists($tmp_obj, "detalhe")) {
-                        if ($tmp_obj->detalhe()) {
-                            $this->ref_funcionario_exc = $ref_funcionario_exc;
-                        }
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_exc}'")) {
-                    $this->ref_funcionario_exc = $ref_funcionario_exc;
-                }
-            }
+            $this->ref_funcionario_exc = $ref_funcionario_exc;
         }
         if (is_numeric($ref_funcionario_cad)) {
-            if (class_exists("clsFuncionario")) {
-                $tmp_obj = new clsFuncionario($ref_funcionario_cad);
-                if (method_exists($tmp_obj, "existe")) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_funcionario_cad = $ref_funcionario_cad;
-                    }
-                } else {
-                    if (method_exists($tmp_obj, "detalhe")) {
-                        if ($tmp_obj->detalhe()) {
-                            $this->ref_funcionario_cad = $ref_funcionario_cad;
-                        }
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_cad}'")) {
-                    $this->ref_funcionario_cad = $ref_funcionario_cad;
-                }
-            }
+            $this->ref_funcionario_cad = $ref_funcionario_cad;
         }
-
-
         if (is_numeric($cod_tipo_usuario)) {
             $this->cod_tipo_usuario = $cod_tipo_usuario;
         }

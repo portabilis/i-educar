@@ -273,25 +273,19 @@ class indice extends clsListagem
     // monta a lista
     if (is_array($lista) && count($lista)) {
       foreach ($lista as $registro) {
-        if (class_exists('clsFuncionario')) {
-          $obj_cod_servidor      = new clsFuncionario( $registro['cod_servidor'] );
-          $det_cod_servidor      = $obj_cod_servidor->detalhe();
-          $registro['matricula'] = $det_cod_servidor['matricula'];
-          // Se servidor for professor, verifica se possui as mesmas
-          // disciplinas do servidor a ser substituido (este passo somente Ã©
-          // executado ao buscar um servidor substituto)
-          if ($this->professor == 'true') {
-            $disciplinasSubstituto = clsPmieducarServidor::getServidorDisciplinas(
-              $registro['cod_servidor'], $this->ref_cod_instituicao);
-            // Se os arrays diferirem, passa para o prÃ³ximo resultado
-            if ($disciplinasSubstituto != $disciplinas) {
-              continue;
-            }
+        $obj_cod_servidor      = new clsFuncionario( $registro['cod_servidor'] );
+        $det_cod_servidor      = $obj_cod_servidor->detalhe();
+        $registro['matricula'] = $det_cod_servidor['matricula'];
+        // Se servidor for professor, verifica se possui as mesmas
+        // disciplinas do servidor a ser substituido (este passo somente Ã©
+        // executado ao buscar um servidor substituto)
+        if ($this->professor == 'true') {
+          $disciplinasSubstituto = clsPmieducarServidor::getServidorDisciplinas(
+            $registro['cod_servidor'], $this->ref_cod_instituicao);
+          // Se os arrays diferirem, passa para o prÃ³ximo resultado
+          if ($disciplinasSubstituto != $disciplinas) {
+            continue;
           }
-        }
-        else {
-          $registro["cod_servidor"] = "Erro na geracao";
-          echo "<!--\nErro\nClasse nao existente: clsFuncionario\n-->";
         }
         $campo1 = Session::get('campo1');
         $campo2 = Session::get('campo2');
@@ -352,7 +346,7 @@ function addVal1(campo,opcao, valor)
       valor                   = obj.options[novoIndice];
       valor.value             = opcao.toString();
       valor.selected          = true;
-      obj.onchange();      
+      obj.onchange();
     }
     else if (window.parent.document.getElementById(campo)) {
       obj       =  window.parent.document.getElementById(campo);
