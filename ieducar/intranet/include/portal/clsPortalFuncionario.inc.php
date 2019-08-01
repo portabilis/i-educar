@@ -24,7 +24,6 @@ class clsPortalFuncionario
     public $data_troca_senha;
     public $data_reativa_conta;
     public $ref_ref_cod_pessoa_fj;
-    public $proibido;
     public $ref_cod_setor_new;
     public $matricula_new;
     public $matricula_permanente;
@@ -55,7 +54,7 @@ class clsPortalFuncionario
         $this->_schema = 'portal.';
         $this->_tabela = "{$this->_schema}funcionario";
 
-        $this->_campos_lista = $this->_todos_campos = 'ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, ramal, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, proibido, ref_cod_setor_new, matricula_new, matricula_permanente, tipo_menu, email, receber_novidades, atualizou_cadastro';
+        $this->_campos_lista = $this->_todos_campos = 'ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, ramal, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, matricula_new, matricula_permanente, tipo_menu, email, receber_novidades, atualizou_cadastro';
 
         if (is_numeric($ref_ref_cod_pessoa_fj)) {
             if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_ref_cod_pessoa_fj}'")) {
@@ -121,9 +120,6 @@ class clsPortalFuncionario
         }
         if (is_string($data_reativa_conta)) {
             $this->data_reativa_conta = $data_reativa_conta;
-        }
-        if (is_numeric($proibido)) {
-            $this->proibido = $proibido;
         }
         if (is_numeric($matricula_new)) {
             $this->matricula_new = $matricula_new;
@@ -256,11 +252,6 @@ class clsPortalFuncionario
                 $valores .= "{$gruda}'{$this->ref_ref_cod_pessoa_fj}'";
                 $gruda = ', ';
             }
-            if (is_numeric($this->proibido)) {
-                $campos .= "{$gruda}proibido";
-                $valores .= "{$gruda}'{$this->proibido}'";
-                $gruda = ', ';
-            }
             if (is_numeric($this->ref_cod_setor_new)) {
                 $campos .= "{$gruda}ref_cod_setor_new";
                 $valores .= "{$gruda}'{$this->ref_cod_setor_new}'";
@@ -380,10 +371,6 @@ class clsPortalFuncionario
             }
             if (is_numeric($this->ref_ref_cod_pessoa_fj)) {
                 $set .= "{$gruda}ref_ref_cod_pessoa_fj = '{$this->ref_ref_cod_pessoa_fj}'";
-                $gruda = ', ';
-            }
-            if (is_numeric($this->proibido)) {
-                $set .= "{$gruda}proibido = '{$this->proibido}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->ref_cod_setor_new)) {
@@ -524,10 +511,6 @@ class clsPortalFuncionario
         }
         if (is_numeric($int_ref_ref_cod_pessoa_fj)) {
             $filtros .= "{$whereAnd} ref_ref_cod_pessoa_fj = '{$int_ref_ref_cod_pessoa_fj}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_proibido)) {
-            $filtros .= "{$whereAnd} proibido = '{$int_proibido}'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_cod_setor_new)) {

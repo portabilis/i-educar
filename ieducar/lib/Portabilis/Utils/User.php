@@ -55,7 +55,6 @@ class Portabilis_Utils_User
                 email, 
                 status_token,
                 ativo, 
-                proibido, 
                 tempo_expira_conta, 
                 data_reativa_conta, 
                 tempo_expira_senha, 

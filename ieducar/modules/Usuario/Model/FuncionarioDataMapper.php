@@ -27,7 +27,6 @@ class Usuario_Model_FuncionarioDataMapper extends CoreExt_DataMapper
         'data_troca_senha' => 'data_troca_senha',
         'data_reativa_conta' => 'data_reativa_conta',
         'ref_ref_cod_pessoa_fj' => 'ref_ref_cod_pessoa_fj',
-        'proibido' => 'proibido',
         'ref_cod_setor_new' => 'ref_cod_setor_new',
         'matricula_new' => 'matricula_new',
         'matricula_permanente' => 'matricula_permanente',
