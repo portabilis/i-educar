@@ -18,13 +18,6 @@ class clsIndexBase extends clsBase
 
 class indice extends clsDetalhe
 {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
-    public $titulo;
-
     public $cod_usuario;
     public $ref_cod_escola;
     public $ref_cod_instituicao;
@@ -61,7 +54,6 @@ class indice extends clsDetalhe
 
             $this->addDetalhe(['Bairro', $det_bairro['nome']]);
 
-            //echo "det: {$det_bairro["idmun"]}";
             $obj_municipio = $det_bairro['idmun'];
             $det_municipio = $obj_municipio->detalhe();
 
@@ -120,9 +112,6 @@ class indice extends clsDetalhe
         $det_funcionario = $obj_funcionario->detalhe();
 
         $this->addDetalhe(['Ramal', $det_funcionario['ramal']]);
-
-        $this->addDetalhe(['Site', $det_pessoa['url']]);
-        //$this->addDetalhe( array("E-mail", $det_pessoa["email"]) );
         $this->addDetalhe(['E-mail usuário', $det_funcionario['email']]);
 
         if (!empty($det_funcionario['matricula_interna'])) {
@@ -143,39 +132,24 @@ class indice extends clsDetalhe
         $tmp_obj = new clsPmieducarUsuario($this->cod_usuario);
         $registro = $tmp_obj->detalhe();
 
-        if (class_exists('clsPmieducarTipoUsuario')) {
-            $obj_ref_cod_tipo_usuario = new clsPmieducarTipoUsuario($registro['ref_cod_tipo_usuario']);
-            $det_ref_cod_tipo_usuario = $obj_ref_cod_tipo_usuario->detalhe();
-            $registro['ref_cod_tipo_usuario'] = $det_ref_cod_tipo_usuario['nm_tipo'];
-        } else {
-            $registro['ref_cod_tipo_usuario'] = 'Erro na gera&ccedil;&atilde;o';
-            echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarTipoUsuario\n-->";
-        }
+        $obj_ref_cod_tipo_usuario = new clsPmieducarTipoUsuario($registro['ref_cod_tipo_usuario']);
+        $det_ref_cod_tipo_usuario = $obj_ref_cod_tipo_usuario->detalhe();
+        $registro['ref_cod_tipo_usuario'] = $det_ref_cod_tipo_usuario['nm_tipo'];
 
-        if (class_exists('clsPmieducarInstituicao')) {
-            $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
-            $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-            $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
-        } else {
-            $registro['ref_cod_instituicao'] = 'Erro na gera&ccedil;&atilde;o';
-            echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
-        }
+        $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
+        $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
+        $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
-        if (class_exists('clsPmieducarEscolaUsuario')) {
-            $escolasUsuario = new clsPmieducarEscolaUsuario();
-            $escolasUsuario = $escolasUsuario->lista($cod_pessoa);
+        $escolasUsuario = new clsPmieducarEscolaUsuario();
+        $escolasUsuario = $escolasUsuario->lista($cod_pessoa);
 
-            foreach ($escolasUsuario as $escola) {
-                $escolaDetalhe = new clsPmieducarEscola($escola['ref_cod_escola']);
-                $escolaDetalhe = $escolaDetalhe->detalhe();
-                $nomesEscola[] = $escolaDetalhe['nome'];
-            }
-            $nomesEscola = implode('<br>', $nomesEscola);
-            $registro['ref_cod_escola'] = $nomesEscola;
-        } else {
-            $registro['ref_cod_escola'] = 'Erro na gera&ccedil;&atilde;o';
-            echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
+        foreach ($escolasUsuario as $escola) {
+            $escolaDetalhe = new clsPmieducarEscola($escola['ref_cod_escola']);
+            $escolaDetalhe = $escolaDetalhe->detalhe();
+            $nomesEscola[] = $escolaDetalhe['nome'];
         }
+        $nomesEscola = implode('<br>', $nomesEscola);
+        $registro['ref_cod_escola'] = $nomesEscola;
 
         if ($registro['ref_cod_tipo_usuario']) {
             $this->addDetalhe([ 'Tipo Usu&aacute;rio', "{$registro['ref_cod_tipo_usuario']}"]);
