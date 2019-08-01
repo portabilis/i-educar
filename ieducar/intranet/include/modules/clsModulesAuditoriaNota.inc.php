@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+
 require_once 'include/pmieducar/geral.inc.php';
 
 class clsModulesAuditoriaNota
@@ -23,7 +25,7 @@ class clsModulesAuditoriaNota
         //Foi necessário enviar turma pois não á possí­vel saber a turma atual somente através da matrí­cula
         $this->turma = $turmaId;
 
-        $this->usuario = $this->getUsuarioAtual();
+        $this->usuario = Auth::id();
         $this->rotina = 'notas';
 
         $this->notaAntiga = $notaAntiga;
@@ -241,15 +243,5 @@ class clsModulesAuditoriaNota
         $nomeTurma = $detTurma['nm_turma'];
 
         return $nomeTurma;
-    }
-
-    private function getUsuarioAtual()
-    {
-        $pessoaId = $this->pessoa_logada;
-        $objFuncionario = new clsFuncionario($pessoaId);
-        $detFuncionario = $objFuncionario->detalhe();
-        $matricula = $detFuncionario['matricula'];
-
-        return $pessoaId . ' - ' . $matricula;
     }
 }
