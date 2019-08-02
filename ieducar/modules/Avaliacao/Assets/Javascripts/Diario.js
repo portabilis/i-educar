@@ -24,6 +24,8 @@ var onClickDeleteEvent    = false;
 var sentidoTab;
 var showBotaoReplicarNotas;
 
+var locked = false;
+
 $(function() {
     navegacaoTab(dataResponse.navegacao_tab);
 });
@@ -185,6 +187,11 @@ var lockedAverage = function ($element, callback) {
 };
 
 var changeNota = function(event) {
+  if (locked) {
+    handleLockedMessage();
+    return;
+  }
+
   var $element = $j(this);
   setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
   lockedAverage($element, function () {
@@ -194,6 +201,11 @@ var changeNota = function(event) {
 
 
 var changeNotaExame = function(event) {
+  if (locked) {
+    handleLockedMessage();
+    return;
+  }
+
   var $element = $j(this);
   setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
   lockedAverage($element, function () {
@@ -202,6 +214,11 @@ var changeNotaExame = function(event) {
 };
 
 var changeNotaRecuperacaoParalela = function(event){
+  if (locked) {
+    handleLockedMessage();
+    return;
+  }
+
   var $element = $j(this);
   setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
   lockedAverage($element, function () {
@@ -210,6 +227,11 @@ var changeNotaRecuperacaoParalela = function(event){
 }
 
 var changeNotaRecuperacaoEspecifica = function(event){
+  if (locked) {
+    handleLockedMessage();
+    return;
+  }
+
   var $element = $j(this);
   setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
   lockedAverage($element, function () {
@@ -218,6 +240,11 @@ var changeNotaRecuperacaoEspecifica = function(event){
 }
 
 var changeFalta = function(event) {
+  if (locked) {
+    handleLockedMessage();
+    return;
+  }
+
   $element = $j(this);
   var regra = $element.closest('tr').data('regra');
   changeResource($element, postFalta, deleteFalta);
@@ -235,6 +262,11 @@ var changeFalta = function(event) {
 
 
 var changeParecer = function(event) {
+  if (locked) {
+    handleLockedMessage();
+    return;
+  }
+
   var $element = $j(this);
   var regra = $j(this).closest('tr').data('regra');
   setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
@@ -255,6 +287,11 @@ var changeParecer = function(event) {
 };
 
 var changeNotaGeralEtapa = function(event) {
+  if (locked) {
+    handleLockedMessage();
+    return;
+  }
+
   var $element = $j(this);
 
   lockedAverage($element, function () {
@@ -268,6 +305,11 @@ var changeNotaGeralEtapa = function(event) {
 };
 
 var changeMedia = function(event) {
+  if (locked) {
+    handleLockedMessage();
+    return;
+  }
+
   var $element = $j(this);
   var matriculaId = $element.data('matricula_id');
   var ccId = $element.data('componente_curricular_id');
@@ -1048,6 +1090,9 @@ function handleSearch($resultTable, dataResponse) {
     $j('#form_resultado select').removeAttr('disabled');
     $j('#form_resultado textarea').removeAttr('disabled');
   }
+
+  locked = dataResponse.locked;
+
   if ((componenteCurricularSelected) && (showBotaoReplicarNotas))
     criaBotaoReplicarNotas();
 
@@ -1893,4 +1938,10 @@ function criaBotaoReplicarNotas(){
           }
       }
   };
+
+
 })(jQuery);
+
+function handleLockedMessage() {
+  handleMessages([{type : 'error', msg : 'Não é permitido realizar esta alteração fora do período de lançamento de notas/faltas.'}]);
+}

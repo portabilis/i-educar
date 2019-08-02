@@ -27,6 +27,24 @@ class LoadSettings
     }
 
     /**
+     * Return database configuration.
+     *
+     * @return array
+     */
+    private function getDatabaseConfig()
+    {
+        $config = DB::connection()->getConfig();
+
+        return [
+            'legacy.app.database.hostname' => $config['host'],
+            'legacy.app.database.port' => $config['port'],
+            'legacy.app.database.dbname' => $config['database'],
+            'legacy.app.database.username' => $config['username'],
+            'legacy.app.database.password' => $config['password'],
+        ];
+    }
+
+    /**
      * Handle an incoming request.
      *
      * @param Request $request
@@ -40,6 +58,7 @@ class LoadSettings
 
         Config::set($settings);
         Config::set($this->getConfig());
+        Config::set($this->getDatabaseConfig());
 
         return $next($request);
     }

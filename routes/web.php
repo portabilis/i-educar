@@ -27,7 +27,6 @@ Route::any('intranet/suspenso.php', 'LegacyController@intranet')
     ->defaults('uri', 'suspenso.php');
 
 Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth']], function () {
-
     Route::get('/intranet/educar_matricula_turma_lst.php', 'LegacyController@intranet')
         ->defaults('uri', 'educar_matricula_turma_lst.php')
         ->name('enrollments.index');
@@ -84,10 +83,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::any('modules/{uri}', 'LegacyController@modules')->where('uri', '.*');
     Route::any('intranet/{uri}', 'LegacyController@intranet')->where('uri', '.*');
 
-    Route::group(['namespace' => 'Educacenso', 'prefix' => 'educacenso'], function() {
+    Route::group(['namespace' => 'Educacenso', 'prefix' => 'educacenso'], function () {
         Route::get('validar/{validator}', 'ValidatorController@validation');
     });
-
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
