@@ -23,7 +23,7 @@ Observações em geral sobre o problema apontado.
 
 **AMBIENTE:**
 
-- Plataforma utilizada (p.ex. Docker, instalação direta):
-- Sistema operacional e versão (p.ex. Ubuntu 16.04, Windows 7):
-- Navegador e versão (p.ex. Chrome 35.9.9.9):
-- Outros detalhes importantes:
+- Plataforma utilizada (Docker, instalação direta)
+- Sistema operacional e versão (Ubuntu 16.04, Windows 7)
+- Navegador e versão (Chrome 75)
+- Outros detalhes importantes
