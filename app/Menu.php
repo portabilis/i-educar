@@ -224,35 +224,30 @@ class Menu extends Model
                     $query->whereNull('process');
                     $query->orWhereIn('id', $ids);
                     $query->orderBy('order');
-                    $query->orderBy('title');
                     $query->with([
                         'children' => function ($query) use ($ids) {
                             /** @var Builder $query */
                             $query->whereNull('process');
                             $query->orWhereIn('id', $ids);
                             $query->orderBy('order');
-                            $query->orderBy('title');
                             $query->with([
                                 'children' => function ($query) use ($ids) {
                                     /** @var Builder $query */
                                     $query->whereNull('process');
                                     $query->orWhereIn('id', $ids);
                                     $query->orderBy('order');
-                                    $query->orderBy('title');
                                     $query->with([
                                         'children' => function ($query) use ($ids) {
                                             /** @var Builder $query */
                                             $query->whereNull('process');
                                             $query->orWhereIn('id', $ids);
                                             $query->orderBy('order');
-                                            $query->orderBy('title');
                                             $query->with([
                                                 'children' => function ($query) use ($ids) {
                                                     /** @var Builder $query */
                                                     $query->whereNull('process');
                                                     $query->orWhereIn('id', $ids);
                                                     $query->orderBy('order');
-                                                    $query->orderBy('title');
                                                 }
                                             ]);
                                         }
@@ -265,7 +260,6 @@ class Menu extends Model
             ])
             ->whereNull('parent_id')
             ->orderBy('order')
-            ->orderBy('title')
             ->get();
     }
 
