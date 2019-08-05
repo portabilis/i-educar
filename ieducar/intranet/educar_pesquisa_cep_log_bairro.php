@@ -70,8 +70,6 @@ class miolo1 extends clsListagem
 
   function Gerar()
   {
-    global $coreExt;
-
     Session::put([
         'campo1' => $_GET['campo1'] ?? Session::get('campo1'),
         'campo2' => $_GET['campo2'] ?? Session::get('campo2'),
@@ -115,7 +113,7 @@ class miolo1 extends clsListagem
 
     // uf
 
-    $defaultProvince = isset($_GET['ref_sigla_uf']) ? $_GET['ref_sigla_uf'] : $coreExt['Config']->app->locale->province;
+    $defaultProvince = isset($_GET['ref_sigla_uf']) ? $_GET['ref_sigla_uf'] : config('legacy.app.locale.province');
 
     $options = array(
       'required' => false,

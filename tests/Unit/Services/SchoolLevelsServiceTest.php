@@ -17,7 +17,7 @@ class SchoolLevelsServiceTest extends TestCase
      */
     private $service;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->service = app(SchoolLevelsService::class);
@@ -26,7 +26,7 @@ class SchoolLevelsServiceTest extends TestCase
         LegacyEvaluationRule::query()->truncate();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->enableForeignKeys();
         parent::tearDown();

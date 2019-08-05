@@ -127,7 +127,7 @@ abstract class Portabilis_Report_ReportCore
      */
     public function reportFactory()
     {
-        $factoryClassName = $GLOBALS['coreExt']['Config']->report->default_factory;
+        $factoryClassName = config('legacy.report.default_factory');
         $factoryClassPath = str_replace('_', '/', $factoryClassName) . '.php';
 
         if (!$factoryClassName) {

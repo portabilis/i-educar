@@ -87,7 +87,7 @@ class clsPDF
   {
     $caminho = 'tmp/';
     $lim_dir = opendir('tmp/');
-    $fonte   = APP_ROOT . DS . 'arquivos/fontes/FreeMonoBold.ttf';
+    $fonte   = base_path('ieducar/intranet/arquivos/fontes/FreeMonoBold.ttf');
 
     while ($lim_file = readdir($lim_dir)) {
       if ($lim_file != '.' && $lim_file != '..') {
@@ -102,7 +102,7 @@ class clsPDF
     $caminho .= substr(md5($usec . $sec), 0, 8);
     $caminho .= '.pdf';
 
-    $this->caminho     = APP_ROOT . DS . $caminho;
+    $this->caminho     = base_path('ieducar/intranet/' . $caminho);
     $this->LinkArquivo = $caminho;
 
     $this->pdf = PDF_new();

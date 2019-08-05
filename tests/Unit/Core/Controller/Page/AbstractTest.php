@@ -10,7 +10,7 @@ class Core_Controller_Page_AbstractTest extends TestCase
 {
   protected $_pageController = NULL;
 
-  protected function setUp()
+  protected function setUp(): void
   {
       parent::setUp();
 

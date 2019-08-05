@@ -89,8 +89,8 @@ class indice
         $temp .= "<center><h3>Acesso negado para este usu&aacute;rio.</h3><br>Caso persista nas tentativas sua conta na intranet poder&aacute; ser bloqueada por tempo indeterminado.</center>";
       }
 
-      $pendencia_administrativa = dbBool($GLOBALS['coreExt']['Config']->app->administrative_pending->exist);
-      $texto_pendencia = $GLOBALS['coreExt']['Config']->app->administrative_pending->msg;
+      $pendencia_administrativa = dbBool(config('legacy.app.administrative_pending.exist'));
+      $texto_pendencia = config('legacy.app.administrative_pending.msg');
 
       if ($pendencia_administrativa)
         echo '

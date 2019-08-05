@@ -68,7 +68,7 @@ class LegacyMakeTestsCommand extends Command
      */
     private function getRoutesFromDatabase()
     {
-        $result = DB::select("SELECT arquivo FROM portal.menu_submenu WHERE arquivo <> ''");
+        $result = DB::select("SELECT link FROM menus WHERE link <> ''");
 
         return array_map(function ($value) {
             return $value->arquivo;

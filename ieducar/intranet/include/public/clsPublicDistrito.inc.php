@@ -52,8 +52,6 @@ class clsPublicDistrito
   var $idpes_cad;
   var $data_cad;
   var $operacao;
-  var $idsis_rev;
-  var $idsis_cad;
   var $cod_ibge;
 
   /**
@@ -117,55 +115,7 @@ class clsPublicDistrito
 
     $this->_campos_lista = $this->_todos_campos = 'd.idmun, d.geom, d.iddis, ' .
       'd.nome, d.idpes_rev, d.data_rev, d.origem_gravacao, d.idpes_cad, ' .
-      'd.data_cad, d.operacao, d.idsis_rev, d.idsis_cad, d.cod_ibge ';
-
-    if (is_numeric($idsis_rev)) {
-      if (class_exists('clsAcessoSistema')) {
-        $tmp_obj = new clsAcessoSistema($idsis_rev);
-
-        if (method_exists($tmp_obj, 'existe')) {
-          if ($tmp_obj->existe()) {
-            $this->idsis_rev = $idsis_rev;
-          }
-        }
-        elseif (method_exists($tmp_obj, 'detalhe')) {
-          if ($tmp_obj->detalhe()) {
-            $this->idsis_rev = $idsis_rev;
-          }
-        }
-      }
-      else {
-        if ($db->CampoUnico(sprintf(
-          'SELECT 1 FROM acesso.sistema WHERE idsis = \'%d\'', $idsis_rev
-        ))) {
-          $this->idsis_rev = $idsis_rev;
-        }
-      }
-    }
-
-    if (is_numeric($idsis_cad)) {
-      if (class_exists('clsAcessoSistema')) {
-        $tmp_obj = new clsAcessoSistema($idsis_cad);
-
-        if (method_exists($tmp_obj, 'existe')) {
-          if ($tmp_obj->existe()) {
-            $this->idsis_cad = $idsis_cad;
-          }
-        }
-        elseif (method_exists($tmp_obj, 'detalhe')) {
-          if ($tmp_obj->detalhe()) {
-            $this->idsis_cad = $idsis_cad;
-          }
-        }
-      }
-      else {
-        if ($db->CampoUnico(sprintf(
-          'SELECT 1 FROM acesso.sistema WHERE idsis = \'%d\'', $idsis_cad
-        ))) {
-          $this->idsis_cad = $idsis_cad;
-        }
-      }
-    }
+      'd.data_cad, d.operacao, d.cod_ibge ';
 
     if (is_numeric($idpes_rev)) {
       if (class_exists('clsCadastroPessoa')) {
@@ -279,8 +229,7 @@ class clsPublicDistrito
   function cadastra()
   {
     if (is_numeric($this->idmun) && is_string($this->nome) &&
-      is_string($this->origem_gravacao) && is_string($this->operacao) &&
-      is_numeric($this->idsis_cad)
+      is_string($this->origem_gravacao) && is_string($this->operacao)
     ) {
       $db = new clsBanco();
 
@@ -337,18 +286,6 @@ class clsPublicDistrito
       if (is_string($this->operacao)) {
         $campos  .= "{$gruda}operacao";
         $valores .= "{$gruda}'{$this->operacao}'";
-        $gruda    = ', ';
-      }
-
-      if (is_numeric($this->idsis_rev)) {
-        $campos  .= "{$gruda}idsis_rev";
-        $valores .= "{$gruda}'{$this->idsis_rev}'";
-        $gruda    = ', ';
-      }
-
-      if (is_numeric($this->idsis_cad)) {
-        $campos  .= "{$gruda}idsis_cad";
-        $valores .= "{$gruda}'{$this->idsis_cad}'";
         $gruda    = ', ';
       }
 
@@ -421,16 +358,6 @@ class clsPublicDistrito
 
       if (is_string($this->operacao)) {
         $set  .= "{$gruda}operacao = '{$this->operacao}'";
-        $gruda = ', ';
-      }
-
-      if (is_numeric($this->idsis_rev)) {
-        $set  .= "{$gruda}idsis_rev = '{$this->idsis_rev}'";
-        $gruda = ', ';
-      }
-
-      if (is_numeric($this->idsis_cad)) {
-        $set  .= "{$gruda}idsis_cad = '{$this->idsis_cad}'";
         $gruda = ', ';
       }
 
@@ -527,16 +454,6 @@ class clsPublicDistrito
 
     if (is_string($str_operacao)) {
       $filtros .= "{$whereAnd} d.operacao LIKE '%{$str_operacao}%'";
-      $whereAnd = ' AND ';
-    }
-
-    if (is_numeric($int_idsis_rev)) {
-      $filtros .= "{$whereAnd} d.idsis_rev = '{$int_idsis_rev}'";
-      $whereAnd = ' AND ';
-    }
-
-    if (is_numeric($int_idsis_cad)) {
-      $filtros .= "{$whereAnd} d.idsis_cad = '{$int_idsis_cad}'";
       $whereAnd = ' AND ';
     }
 

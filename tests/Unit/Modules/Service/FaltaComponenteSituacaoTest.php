@@ -44,7 +44,7 @@ require_once __DIR__.'/FaltaSituacaoCommon.php';
  */
 class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_FaltaSituacaoCommon
 {
-  protected function setUp()
+  protected function setUp(): void
   {
     $this->_setRegraOption('tipoPresenca', RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE);
     parent::setUp();
@@ -449,7 +449,7 @@ class Avaliacao_Service_FaltaComponenteSituacaoTest extends Avaliacao_Service_Fa
     $this->assertEquals($expected, $actual);
   }
 
-  public function tearDown()
+  public function tearDown(): void
   {
     Portabilis_Utils_Database::$_db = null;
   }

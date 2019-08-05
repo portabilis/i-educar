@@ -28,7 +28,7 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
      * @var array
      */
     protected $fillable = [
-        'idpes', 'data_cad', 'operacao', 'origem_gravacao', 'idsis_cad',
+        'idpes', 'data_cad', 'operacao', 'origem_gravacao',
     ];
 
     /**
