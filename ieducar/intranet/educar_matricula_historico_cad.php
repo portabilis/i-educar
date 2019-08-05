@@ -109,9 +109,15 @@ class indice extends clsCadastro
                 break;
         }
 
+        $required = false;
+
+        if (!$enturmacao['ativo']) {
+            $required = true;
+        }
+
         $this->campoRotulo('situacao', 'Situação', $situacao);
         $this->inputsHelper()->date('data_enturmacao', ['label' => 'Data enturmação', 'value' => dataToBrasil($enturmacao['data_enturmacao']), 'placeholder' => '']);
-        $this->inputsHelper()->date('data_exclusao', ['label' => 'Data de saí­da', 'value' => dataToBrasil($enturmacao['data_exclusao']), 'placeholder' => '', 'required' => false]);
+        $this->inputsHelper()->date('data_exclusao', ['label' => 'Data de saí­da', 'value' => dataToBrasil($enturmacao['data_exclusao']), 'placeholder' => '', 'required' => $required]);
     }
 
     public function Editar()
@@ -125,6 +131,7 @@ class indice extends clsCadastro
         $enturmacao->data_exclusao = dataToBanco($this->data_exclusao);
 
         $dataSaidaEnturmacaoAnterior = $enturmacao->getDataSaidaEnturmacaoAnterior($this->ref_cod_matricula, $this->sequencial);
+        $dataEntradaEnturmacaoSeguinte = $enturmacao->getDataEntradaEnturmacaoSeguinte($this->ref_cod_matricula, $this->sequencial);
 
         $matricula = new clsPmieducarMatricula($this->ref_cod_matricula);
         $matricula = $matricula->detalhe();
@@ -137,13 +144,19 @@ class indice extends clsCadastro
         $seqUltimaEnturmacao = $enturmacao->getUltimaEnturmacao($this->ref_cod_matricula);
 
         if ($enturmacao->data_exclusao && ($enturmacao->data_exclusao < $enturmacao->data_enturmacao)) {
-            $this->mensagem = 'Edição não realizada.<br> A data de saída não pode ser anterior a data de enturmação.';
+            $this->mensagem = 'Edição não realizada. A data de saída não pode ser anterior a data de enturmação.';
+
+            return false;
+        }
+
+        if ($enturmacao->data_exclusao && $dataEntradaEnturmacaoSeguinte && ($enturmacao->data_exclusao > $dataEntradaEnturmacaoSeguinte)) {
+            $this->mensagem = 'Edição não realizada. A data de saída não pode ser posterior a data de entrada da enturmação seguinte.';
 
             return false;
         }
 
         if ($dataSaidaEnturmacaoAnterior && ($enturmacao->data_enturmacao < $dataSaidaEnturmacaoAnterior)) {
-            $this->mensagem = 'Edição não realizada.<br> A data de enturmação não pode ser anterior a data de saída da enturmação antecessora.';
+            $this->mensagem = 'Edição não realizada. A data de enturmação não pode ser anterior a data de saída da enturmação antecessora.';
 
             return false;
         }
@@ -157,7 +170,7 @@ class indice extends clsCadastro
                 || App_Model_MatriculaSituacao::RECLASSIFICADO == $matricula['aprovado']
             ) && ($this->sequencial == $seqUltimaEnturmacao)
         ) {
-            $this->mensagem = 'Edição não realizada.<br> A data de saída não pode ser posterior a data de saída da matricula.';
+            $this->mensagem = 'Edição não realizada. A data de saída não pode ser posterior a data de saída da matricula.';
 
             return false;
         }
@@ -212,6 +225,7 @@ class indice extends clsCadastro
         $enturmacao->ref_cod_turma = $this->ref_cod_turma;
         $enturmacao->sequencial = $this->sequencial;
         $enturmacao->ref_usuario_exc = $this->pessoa_logada;
+        $enturmacao->data_exclusao = dataToBanco($this->data_exclusao);
         $excluiu = $enturmacao->excluir();
 
         if ($excluiu) {

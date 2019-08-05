@@ -21,7 +21,7 @@ class ChangeAppName
             'app.nickname' => url('/'),
             'app.slug' => DB::getDefaultConnection(),
             'app.url' => $request->getBasePath(),
-            'honeybadger.environment_name' => $request->getHost(),
+            'honeybadger.environment_name' => config('app.env'),
         ]);
 
         return $next($request);

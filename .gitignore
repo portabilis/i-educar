@@ -10,8 +10,6 @@ ieducar-*.tar.gz
 .env.testing
 .php_cs.cache
 docker-compose.override.yml
-phinx.php
-phinx.yml
 
 /node_modules
 /public/hot
@@ -45,7 +43,6 @@ yarn-error.log
 /deploy
 Vagrantfile
 deploy/.ruby-version
-ieducar/configuration/ieducar.ini
 ieducar/modules/Reports
 ieducar/intranet/filaunica
 ieducar/intranet/reservavaga

@@ -39,8 +39,6 @@ SELECT
     idpes_cad AS created_by,
     data_cad::timestamp(0) AS created_at,
     -- operacao,
-    -- idsis_rev,
-    -- idsis_cad,
     -- ref_cod_sistema,
     cpf,
     ref_cod_religiao AS religion_id,

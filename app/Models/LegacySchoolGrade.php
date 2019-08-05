@@ -25,6 +25,7 @@ class LegacySchoolGrade extends Model
         'ref_cod_serie',
         'ref_usuario_cad',
         'data_cadastro',
+        'anos_letivos',
     ];
 
     /**

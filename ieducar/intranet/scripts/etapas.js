@@ -390,7 +390,11 @@ $j(function () {
             $select.focus(function () {
                 that.setCurrentModule();
             }).change(function () {
-                that.setupModule();
+                if ($j('#tipoacao').val() === 'Novo') {
+                    that.initModule();
+                } else {
+                    that.setupModule();
+                }
             })
         },
         countRows: function () {

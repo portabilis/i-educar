@@ -51,7 +51,7 @@ class CoreExt_Controller_RequestTest extends PHPUnit\Framework\TestCase
    */
   private $requestUri;
 
-    protected function setUp()
+  protected function setUp(): void
   {
     $this->_request = new CoreExt_Controller_Request();
     $this->requestUri = $_SERVER['REQUEST_URI'];

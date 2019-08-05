@@ -50,6 +50,8 @@ return [
 
     'migrations' => [
         database_path('migrations/extras'),
+        database_path('migrations/legacy'),
+        base_path('ieducar/modules/Reports/database/migrations'),
     ],
 
     'env' => env('LEGACY_ENV', 'local'),
@@ -189,17 +191,19 @@ return [
         'mostrar_relatorios' => '',
         'logo_file_name' => 'brasil.png',
         'show_error_details' => 'true',
-        'default_factory' => 'Portabilis_Report_ReportFactoryPHPJasper',
-        'source_path' => '/var/www/ieducar/ieducar/modules/Reports/ReportSources/',
+        'default_factory' => env('REPORTS_FACTORY', 'Portabilis_Report_ReportFactoryPHPJasper'),
+        'source_path' => env('REPORTS_SOURCE_PATH', '/var/www/ieducar/ieducar/modules/Reports/ReportSources/'),
         'diario_classe' => [
             'dias_temporarios' => '30',
         ],
         'remote_factory' => [
-            'url' => '',
+            'url' => env('REPORTS_URL'),
+            'token' => env('REPORTS_TOKEN'),
             'this_app_name' => '',
             'username' => '',
             'password' => '',
             'logo_name' => '',
         ],
     ],
+
 ];

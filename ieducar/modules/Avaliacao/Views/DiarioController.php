@@ -74,7 +74,7 @@ class DiarioController extends Portabilis_Controller_Page_ListController
 
     $this->inputsHelper()->select('navegacao_tab', $options);
 
-    $this->inputsHelper()->hidden('mostrar_botao_replicar_todos', array('value' => $teste = $GLOBALS['coreExt']['Config']->app->faltas_notas->mostrar_botao_replicar));
+    $this->inputsHelper()->hidden('mostrar_botao_replicar_todos', array('value' => $teste = config('legacy.app.faltas_notas.mostrar_botao_replicar')));
 
     $this->loadResourceAssets($this->getDispatcher());
   }

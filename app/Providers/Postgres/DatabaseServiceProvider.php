@@ -2,7 +2,9 @@
 
 namespace App\Providers\Postgres;
 
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use PDO;
 
 class DatabaseServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,10 @@ class DatabaseServiceProvider extends ServiceProvider
             );
 
             return $new_connection;
+        });
+
+        Event::listen('Illuminate\Database\Events\QueryExecuted', function ($query) {
+            $query->connection->setFetchMode(PDO::FETCH_OBJ);
         });
     }
 }

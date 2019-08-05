@@ -44,7 +44,7 @@ require_once __DIR__.'/TestCommon.php';
  */
 class Avaliacao_Service_ParecerDescritivoAlunoTest extends Avaliacao_Service_TestCommon
 {
-  protected function setUp()
+  protected function setUp(): void
   {
     $this->_setRegraOption('parecerDescritivo', RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE);
     parent::setUp();
@@ -79,7 +79,7 @@ class Avaliacao_Service_ParecerDescritivoAlunoTest extends Avaliacao_Service_Tes
     $service = $this->_getServiceInstance();
   }
 
-  public function tearDown()
+  public function tearDown(): void
   {
     Portabilis_Utils_Database::$_db = null;
   }

@@ -84,7 +84,12 @@ class ReportController extends ApiCoreController
             $boletimReport->addArg('serie', (int)$dadosMatricula['serie_id']);
             $boletimReport->addArg('turma', (int)$dadosMatricula['turma_id']);
             $boletimReport->addArg('situacao_matricula', 10);
-            $boletimReport->addArg('SUBREPORT_DIR', $GLOBALS['coreExt']['Config']->report->source_path);
+            $boletimReport->addArg('situacao', (int)$dadosMatricula['situacao'] ?? 0);
+            $boletimReport->addArg('SUBREPORT_DIR', config('legacy.report.source_path'));
+
+            if ($this->getRequest()->etapa) {
+                $boletimReport->addArg('etapa', (int)$this->getRequest()->etapa);
+            }
 
             $encoding = 'base64';
             $dumpsOptions = ['options' => ['encoding' => $encoding]];
@@ -121,7 +126,7 @@ class ReportController extends ApiCoreController
 
             $boletimProfessorReport->addArg('modelo', $modelo);
             $boletimProfessorReport->addArg('linha', 0);
-            $boletimProfessorReport->addArg('SUBREPORT_DIR', $GLOBALS['coreExt']['Config']->report->source_path);
+            $boletimProfessorReport->addArg('SUBREPORT_DIR', config('legacy.report.source_path'));
 
             $encoding = 'base64';
 

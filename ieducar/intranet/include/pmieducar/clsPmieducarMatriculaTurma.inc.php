@@ -1472,14 +1472,30 @@ class clsPmieducarMatriculaTurma
   function getDataSaidaEnturmacaoAnterior($ref_matricula, $sequencial){
     if (is_numeric($ref_matricula) && is_numeric($sequencial)){
       $db = new clsBanco();
-      return $db->CampoUnico("SELECT to_char(data_exclusao, 'YYYY-MM-DD')
-                                FROM $this->_tabela
-                               WHERE ref_cod_matricula = $ref_matricula
-                                 AND sequencial < $sequencial
-                               GROUP BY data_exclusao");
+      return $db->CampoUnico("SELECT to_char(mtbefore.data_exclusao, 'YYYY-MM-DD')
+                                      FROM {$this->_tabela} mt
+                                      LEFT JOIN {$this->_tabela}  mtbefore
+                                      ON mtbefore.ref_cod_matricula = mt.ref_cod_matricula
+                                      AND mtbefore.sequencial = (SELECT max(sequencial) FROM {$this->_tabela} WHERE ref_cod_matricula = mt.ref_cod_matricula AND sequencial < mt.sequencial)
+                                      WHERE mt.ref_cod_matricula = {$ref_matricula}
+                                      AND mt.sequencial = {$sequencial}");
     }
     return false;
   }
+
+    function getDataEntradaEnturmacaoSeguinte($ref_matricula, $sequencial){
+        if (is_numeric($ref_matricula) && is_numeric($sequencial)){
+            $db = new clsBanco();
+            return $db->CampoUnico("SELECT to_char(mtnext.data_enturmacao, 'YYYY-MM-DD')
+                                            FROM {$this->_tabela} mt
+                                            LEFT JOIN {$this->_tabela} mtnext
+                                            ON mtnext.ref_cod_matricula = mt.ref_cod_matricula
+                                            AND mtnext.sequencial = (SELECT min(sequencial) FROM {$this->_tabela} WHERE ref_cod_matricula = mt.ref_cod_matricula AND sequencial > mt.sequencial)
+                                            WHERE mt.ref_cod_matricula = {$ref_matricula}
+                                              AND mt.sequencial = {$sequencial}");
+        }
+        return false;
+    }
 
   public function getDataExclusaoUltimaEnturmacao(int $codMatricula)
   {
@@ -1740,7 +1756,7 @@ class clsPmieducarMatriculaTurma
 
   function enturmacoesSemDependencia($turmaId){
       $sql = "SELECT COUNT(1) FROM {$this->_tabela} mt
-              INNER JOIN matricula m ON (m.cod_matricula = mt.ref_cod_matricula)
+              INNER JOIN pmieducar.matricula m ON (m.cod_matricula = mt.ref_cod_matricula)
               WHERE m.dependencia = 'f'
                 AND mt.ativo = 1
                 AND mt.ref_cod_turma = $turmaId";

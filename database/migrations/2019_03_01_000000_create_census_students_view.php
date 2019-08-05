@@ -14,6 +14,7 @@ class CreateCensusStudentsView extends Migration
      */
     public function up()
     {
+        $this->dropView('census_students');
         $this->createView('census_students');
     }
 

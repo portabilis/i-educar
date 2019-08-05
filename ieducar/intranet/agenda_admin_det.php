@@ -32,7 +32,7 @@ require_once( "include/pmieducar/geral.inc.php" );
 
 class clsIndex extends clsBase
 {
-    
+
     function Formular()
     {
         $this->SetTitulo( "{$this->_instituicao} Agenda" );
@@ -48,7 +48,7 @@ class indice extends clsDetalhe
         $this->titulo = "Agendas";
 
         $cod_agenda = $_GET['cod_agenda'] ?? null;
-        
+
         $db = new clsBanco();
         $db2 = new clsBanco();
 
@@ -61,7 +61,7 @@ class indice extends clsDetalhe
 
             $objPessoa = new clsPessoaFisica();
             list( $nome ) = $objPessoa->queryRapida( $pessoa_cad, "nome" );
-            
+
             $objPessoa_ = new clsPessoaFisica();
             list( $nm_pessoa_own) = $objPessoa_->queryRapida( $pessoa_own, "nome" );
 
@@ -72,21 +72,21 @@ class indice extends clsDetalhe
             $this->addDetalhe( array("Quem Cadastrou", $nome) );
             $this->addDetalhe( array("Data do Cadastro", date("d/m/Y H:m:s", strtotime(substr($data_cad,0,19))) ) );
             $this->addDetalhe( array("Dono da Agenda", $nm_pessoa_own) );
-            
+
             $editores = "";
             if( $nm_pessoa_own )
             {
                 $editores .= "<b>$nm_pessoa_own</b><br>";
             }
-            
+
             $edit_array = array();
-            $db2->Consulta( "SELECT ref_ref_cod_pessoa_fj FROM agenda_responsavel WHERE ref_cod_agenda = '{$cod_agenda}'" );
+            $db2->Consulta( "SELECT ref_ref_cod_pessoa_fj FROM portal.agenda_responsavel WHERE ref_cod_agenda = '{$cod_agenda}'" );
             while ( $db2->ProximoRegistro() )
             {
                 list( $nome ) = $objPessoa->queryRapida( $db2->Campo( "ref_ref_cod_pessoa_fj" ), "nome" );
                 $edit_array[] = $nome;
             }
-            
+
             if( ! count( $edit_array ) )
             {
                 if( ! $nm_pessoa_own )
@@ -94,7 +94,7 @@ class indice extends clsDetalhe
                     $editores .= "Nenhum editor cadastrado";
                 }
             }
-            else 
+            else
             {
                 asort( $edit_array );
                 reset( $edit_array );
@@ -112,7 +112,7 @@ class indice extends clsDetalhe
           $this->url_editar = "agenda_admin_cad.php?cod_agenda={$cod_agenda}";
           $this->url_novo = "agenda_admin_cad.php";
         }
-        
+
         $this->url_cancelar = "agenda_admin_lst.php";
 
         $this->largura = "100%";
@@ -122,7 +122,7 @@ class indice extends clsDetalhe
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          ""                                  => "Detalhe da agenda"
     ));
-    $this->enviaLocalizacao($localizacao->montar());        
+    $this->enviaLocalizacao($localizacao->montar());
     }
 }
 

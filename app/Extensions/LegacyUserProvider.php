@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Hashing\Hasher;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class LegacyUserProvider implements UserProvider
@@ -73,8 +74,15 @@ class LegacyUserProvider implements UserProvider
      */
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
+        if ($user->isInactive()) {
+            throw ValidationException::withMessages([
+                $user->login => __('auth.inactive')
+            ]);
+        }
+
         $pass = $this->hasher->check(
-            $credentials['password'], $user->getAuthPassword()
+            $credentials['password'],
+            $user->getAuthPassword()
         );
 
         if (empty($pass)) {

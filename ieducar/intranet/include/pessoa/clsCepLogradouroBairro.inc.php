@@ -76,7 +76,7 @@ class clsCepLogradouroBairro
         // verificacoes de campos obrigatorios para insercao
         if( is_numeric($this->idlog) &&  is_numeric($this->cep)   && is_numeric($this->idbai))
         {
-            $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (cep,idlog,idbai, origem_gravacao, data_cad, operacao, idsis_cad ) VALUES ('{$this->cep}', '{$this->idlog}', '{$this->idbai}', 'U', NOW(), 'I', '9' )" );
+            $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (cep,idlog,idbai, origem_gravacao, data_cad, operacao) VALUES ('{$this->cep}', '{$this->idlog}', '{$this->idbai}', 'U', NOW(), 'I')" );
 
         }
         return false;

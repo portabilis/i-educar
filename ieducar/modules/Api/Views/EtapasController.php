@@ -55,7 +55,7 @@ class EtapasController extends ApiCoreController
                     AND NOT EXISTS(
                         SELECT 1
                         FROM 
-                            componente_curricular_turma AS cct,
+                            modules.componente_curricular_turma AS cct,
                             pmieducar.instituicao AS i
                         WHERE TRUE 
                         AND cct.turma_id = t.cod_turma
@@ -87,7 +87,7 @@ class EtapasController extends ApiCoreController
                     AND NOT EXISTS(
                         SELECT 1
                         FROM 
-                            componente_curricular_turma AS cct,
+                            modules.componente_curricular_turma AS cct,
                             pmieducar.instituicao AS i
                         WHERE TRUE 
                         AND cct.turma_id = t.cod_turma

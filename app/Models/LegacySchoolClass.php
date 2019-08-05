@@ -53,6 +53,7 @@ class LegacySchoolClass extends Model
         'ref_ref_cod_escola',
         'ref_ref_cod_serie',
         'ref_cod_curso',
+        'visivel',
     ];
 
     /**
