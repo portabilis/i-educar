@@ -27,6 +27,10 @@ class EditController extends Core_Controller_Page_EditController
             'label' => 'Tipo de nota',
             'help' => ''
         ],
+        'arredondarNota' => [
+            'label' => 'Arredondar nota da etapa',
+            'help' => ''
+        ],
         'valor_nome' => [
             'label' => 'Rótulo da nota:',
             'help' => 'Exemplos: A, B, C (conceituais)<br /><b>6,5<b>, <b>7,5<b> (numéricas)'
@@ -179,7 +183,7 @@ class EditController extends Core_Controller_Page_EditController
 
         if ($this->getEntity()->id!='') {
             $this->campoTexto(
-                'tipNota',
+                'tipoNota',
                 $this->_getLabel('tipoNota'),
                 $notaTipos[$this->getEntity()->get('tipoNota')],
                 40,
@@ -203,6 +207,13 @@ class EditController extends Core_Controller_Page_EditController
                 $this->_getHelp('tipoNota')
             );
         }
+
+        $this->campoLista(
+            'arredondarNota',
+            $this->_getLabel('arredondarNota'),
+            [0 => 'Não', 1 => 'Sim'],
+            $this->getEntity()->get('arredondarNota')
+        );
 
         // Parte condicional
         if (!$this->getEntity()->isNew()) {
@@ -471,6 +482,8 @@ class EditController extends Core_Controller_Page_EditController
             $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
             $entity = $this->getEntity();
         }
+
+        $entity->arredondarNota = $this->getRequest()->arredondarNota;
 
         // A contagem usa um dos índices do formulário, senão ia contar sempre 4.
         $loop = count($this->valor_id);

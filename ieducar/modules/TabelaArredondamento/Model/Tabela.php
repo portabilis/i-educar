@@ -11,7 +11,8 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
     protected $_data = [
         'instituicao' => null,
         'nome' => null,
-        'tipoNota' => null
+        'tipoNota' => null,
+        'arredondarNota' => null,
     ];
 
     protected $_references = [
