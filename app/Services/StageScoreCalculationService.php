@@ -17,7 +17,9 @@ class StageScoreCalculationService
     public function calculateAverageBetweenScoreAndRemedial($score, $remedial = null)
     {
         if (is_numeric($remedial)) {
-            return (floatval($score) + floatval($remedial)) / 2;
+            $remedial = (floatval($score) + floatval($remedial)) / 2;
+
+            return $this->calculateRemedial($score, $remedial);
         }
 
         return $score;

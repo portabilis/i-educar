@@ -28,6 +28,7 @@ class StageScoreCalculationServiceTest extends TestCase
     public function testCalculateAverageBetweenScoreAndRemedial()
     {
         // (5 + 9) / 2 = 7
+        // 7 > 5 = 7
         $score1 = 5;
         $remedial1 = 9;
         $expected1 = 7;
@@ -36,6 +37,7 @@ class StageScoreCalculationServiceTest extends TestCase
         // substituirá a mesma no cálculo.
 
         // (6 + 6) / 2 = 6
+        // 6 > 6 = 6
         $score2 = 6;
         $remedial2 = null;
         $expected2 = 6;
@@ -44,9 +46,10 @@ class StageScoreCalculationServiceTest extends TestCase
         // `0` significa que o a nota na recuperação foi zero.
 
         // (6 + 0) / 2 = 3
+        // 6 > 3 = 6
         $score3 = 6;
         $remedial3 = 0;
-        $expected3 = 3;
+        $expected3 = 6;
 
         $result1 = $this->service->calculateAverageBetweenScoreAndRemedial(
             $score1, $remedial1
