@@ -143,7 +143,7 @@ trait WhenDeleted
     {
         $function = $this->getFunctionName($table);
 
-        return "DROP FUNCTION {$function}();";
+        return "DROP FUNCTION IF EXISTS {$function}();";
     }
 
     /**
@@ -176,6 +176,6 @@ trait WhenDeleted
     {
         $trigger = $this->getTriggerName($table);
 
-        return "DROP TRIGGER {$trigger} on {$table};";
+        return "DROP TRIGGER IF EXISTS {$trigger} on {$table};";
     }
 }
