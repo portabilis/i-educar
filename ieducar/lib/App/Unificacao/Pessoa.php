@@ -276,9 +276,20 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'tabela' => 'portal.agenda_responsavel',
             'coluna' => 'ref_ref_cod_pessoa_fj'
         ],
+        [
+            'tabela' => 'pmieducar.aluno_excluidos',
+            'coluna' => 'ref_idpes'
+        ],
     ];
 
     protected $chavesDeletarDuplicados = [];
+
+    protected $triggersNecessarias = [
+        [
+            'tabela' => 'pmieducar.aluno',
+            'trigger' => 'trigger_when_deleted_pmieducar_aluno'
+        ]
+    ];
 
     public function __construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, clsBanco $db, bool $transacao = true)
     {
