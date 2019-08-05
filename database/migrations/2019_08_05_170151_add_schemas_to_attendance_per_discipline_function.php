@@ -45,7 +45,7 @@ class AddSchemasToAttendancePerDisciplineFunction extends Migration
                     END IF;
 
                     v_total_faltas := (SELECT SUM(quantidade)
-                                        FROM falta_componente_curricular
+                                        FROM modules.falta_componente_curricular
                                         WHERE falta_aluno_id = cod_falta_aluno_id
                                         AND componente_curricular_id = cod_disciplina_id);
 
