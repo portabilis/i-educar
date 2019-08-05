@@ -59,7 +59,7 @@ class AddSchemasToAttendanceFunction extends Migration
                                                 WHERE m.cod_matricula = p_matricula_id);
 
                         v_total_faltas := (SELECT SUM(quantidade)
-                                            FROM falta_componente_curricular
+                                            FROM modules.falta_componente_curricular
                                             WHERE falta_aluno_id = v_falta_aluno_id);
                         v_hora_falta := (SELECT hora_falta
                                         FROM pmieducar.curso c
