@@ -68,7 +68,7 @@ class clsPessoaTelefone
                 // nao tem, cadastra 1 novo
                 if( $this->ddd && $this->fone )
                 {
-                    $db->Consulta("INSERT INTO {$this->schema_cadastro}.{$this->tabela_telefone} (idpes, tipo, ddd, fone,origem_gravacao, idsis_cad, data_cad, operacao, idpes_cad) VALUES ('$this->idpes', '$this->tipo', '$this->ddd', '$this->fone','M', 17, NOW(), 'I', '$this->idpes_cad')");
+                    $db->Consulta("INSERT INTO {$this->schema_cadastro}.{$this->tabela_telefone} (idpes, tipo, ddd, fone,origem_gravacao, data_cad, operacao, idpes_cad) VALUES ('$this->idpes', '$this->tipo', '$this->ddd', '$this->fone','M', NOW(), 'I', '$this->idpes_cad')");
                     return true;
                 }
             }

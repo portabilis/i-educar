@@ -46,9 +46,6 @@ class clsUf
      */
     function __construct( $str_sigla_uf=false, $str_nome=false, $str_geom=false, $int_idpais=false )
     {
-        global $coreExt;
-        $this->config = $coreExt['Config'];
-
         $this->sigla_uf = $str_sigla_uf;
         $this->nome = $str_nome;
         $this->geom = $str_geom;
@@ -178,7 +175,7 @@ class clsUf
       $whereAnd = ' AND ';
     }
     else {
-      $idpais = $this->config->app->locale->country;
+      $idpais = config('legacy.app.locale.country');
       $where .= "{$whereAnd}idpais = '$idpais'";
       $whereAnd = ' AND ';
     }

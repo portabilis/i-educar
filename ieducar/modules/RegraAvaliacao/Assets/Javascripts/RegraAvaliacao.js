@@ -38,9 +38,11 @@ $j(function(){
 	function tipoRecuperacaoParalelaChange(){
 		if($j(this).val() == 1 ) {
       $j('#mediaRecuperacaoParalela').closest('tr').show();
+      $j('#tipoCalculoRecuperacaoParalela').closest('tr').show();
 		}else{
       $j('#mediaRecuperacaoParalela').val("");
       $j('#mediaRecuperacaoParalela').closest('tr').hide();
+      $j('#tipoCalculoRecuperacaoParalela').closest('tr').hide();
 		}
 
     if($j(this).val() == 2){

@@ -5,7 +5,6 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/Geral.inc.php';
-require_once 'includes/bootstrap.php';
 require_once 'Portabilis/Date/Utils.php';
 require_once 'Portabilis/Currency/Utils.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
@@ -70,6 +69,7 @@ class indice extends clsCadastro
     public $orgao_regional;
     public $exigir_lancamentos_anteriores;
     public $exibir_apenas_professores_alocados;
+    public $bloquear_vinculo_professor_sem_alocacao_escola;
 
     public function Inicializar()
     {
@@ -118,6 +118,7 @@ class indice extends clsCadastro
         $this->obrigar_documento_pessoa = dbBool($this->obrigar_documento_pessoa);
         $this->exigir_lancamentos_anteriores = dbBool($this->exigir_lancamentos_anteriores);
         $this->exibir_apenas_professores_alocados = dbBool($this->exibir_apenas_professores_alocados);
+        $this->bloquear_vinculo_professor_sem_alocacao_escola = dbBool($this->bloquear_vinculo_professor_sem_alocacao_escola);
 
         return $retorno;
     }
@@ -308,6 +309,17 @@ class indice extends clsCadastro
             $this->exigir_lancamentos_anteriores
         );
 
+        $this->campoCheck(
+            'bloquear_vinculo_professor_sem_alocacao_escola',
+            'Bloquear vínculos de professores em turmas pertencentes às escolas em que eles não estão alocados',
+            $this->bloquear_vinculo_professor_sem_alocacao_escola,
+            null,
+            false,
+            false,
+            false,
+            'Caso marcado, os vínculos de professores em turmas pertencentes às escolas em que eles não estão alocados será bloqueado.'
+        );
+
         $scripts = ['/modules/Cadastro/Assets/Javascripts/Instituicao.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
         $styles = array ('/modules/Cadastro/Assets/Stylesheets/Instituicao.css');
@@ -351,6 +363,7 @@ class indice extends clsCadastro
         $obj->orgao_regional = $this->orgao_regional;
         $obj->exigir_lancamentos_anteriores = !is_null($this->exigir_lancamentos_anteriores);
         $obj->exibir_apenas_professores_alocados = !is_null($this->exibir_apenas_professores_alocados);
+        $obj->bloquear_vinculo_professor_sem_alocacao_escola = !is_null($this->bloquear_vinculo_professor_sem_alocacao_escola);
 
         $detalheAntigo = $obj->detalhe();
 

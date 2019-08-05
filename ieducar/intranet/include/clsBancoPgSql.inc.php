@@ -3,9 +3,6 @@
 use iEducar\Modules\ErrorTracking\TrackerFactory;
 use Illuminate\Database\Connection;
 
-require_once 'clsConfigItajai.inc.php';
-require_once 'include/clsCronometro.inc.php';
-
 abstract class clsBancoSQL_
 {
   /**

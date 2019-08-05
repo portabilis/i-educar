@@ -102,7 +102,7 @@ class clsJuridica
                 $valores .= ", '{$this->capital_social}' ";
             }
 
-            $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (idpes, cnpj, origem_gravacao, idsis_cad, data_cad, operacao, idpes_cad $campos) VALUES ($this->idpes, '$this->cnpj', 'M', 17, NOW(), 'I', '$this->idpes_cad' $valores)" );
+            $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (idpes, cnpj, origem_gravacao, data_cad, operacao, idpes_cad $campos) VALUES ($this->idpes, '$this->cnpj', 'M', NOW(), 'I', '$this->idpes_cad' $valores)" );
 
             if($this->idpes){
         $detalhe = $this->detalhe();

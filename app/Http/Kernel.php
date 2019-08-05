@@ -39,7 +39,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\ChangeAppName::class,
             \App\Http\Middleware\ConnectTenantDatabase::class,
             \App\Http\Middleware\SetLayoutVariables::class,
-            \App\Http\Middleware\LoadLegacyConfig::class,
+            \App\Http\Middleware\LoadSettings::class,
         ],
 
         'api' => [
@@ -81,7 +81,7 @@ class Kernel extends HttpKernel
      */
     protected $middlewarePriority = [
         \App\Http\Middleware\ConnectTenantDatabase::class,
-        \App\Http\Middleware\LoadLegacyConfig::class,
+        \App\Http\Middleware\LoadSettings::class,
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
         \App\Http\Middleware\Authenticate::class,

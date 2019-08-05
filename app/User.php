@@ -149,6 +149,22 @@ class User extends Authenticatable
     }
 
     /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return boolval($this->employee->ativo && $this->ativo);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInactive()
+    {
+        return ! $this->isActive();
+    }
+
+    /**
      * @return BelongsTo
      */
     public function employee()

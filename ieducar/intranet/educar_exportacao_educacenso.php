@@ -114,7 +114,7 @@ class indice extends clsCadastro
       $this->campoOculto("fase2", "true");
     }
 
-    $this->campoOculto("enable_export", (int)$GLOBALS['coreExt']['Config']->educacenso->enable_export);
+    $this->campoOculto("enable_export", (int) config('legacy.educacenso.enable_export'));
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
     $this->inputsHelper()->hidden('escola_em_andamento', [ 'value' => $this->escola_em_andamento ]);
 
