@@ -9,7 +9,6 @@ class ViewController extends Core_Controller_Page_ViewController
     protected $_dataMapper = 'TabelaArredondamento_Model_TabelaDataMapper';
     protected $_titulo = 'Detalhes da tabela de arredondamento';
     protected $_processoAp = 949;
-
     protected $_tableMap = [
         'Nome' => 'nome',
         'Tipo nota' => 'tipoNota'
@@ -19,19 +18,8 @@ class ViewController extends Core_Controller_Page_ViewController
     {
         parent::_preRender();
 
-        Portabilis_View_Helper_Application::loadStylesheet(
-            $this,
-            'intranet/styles/localizacaoSistema.css'
-        );
-
-        $localizacao = new LocalizacaoSistema();
-
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => 'Detalhe da tabela de arredondamento'
+        $this->breadcrumb('Detalhe da tabela de arredondamento', [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
     }
 }

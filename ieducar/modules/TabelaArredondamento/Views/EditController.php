@@ -135,21 +135,11 @@ class EditController extends Core_Controller_Page_EditController
             '/modules/RegraAvaliacao/Assets/Javascripts/TabelaArredondamento.js'
         );
 
-        Portabilis_View_Helper_Application::loadStylesheet(
-            $this,
-            'intranet/styles/localizacaoSistema.css'
-        );
-
         $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
-        $localizacao = new LocalizacaoSistema();
 
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => "$nomeMenu tabela de arredondamento"
+        $this->breadcrumb("$nomeMenu tabela de arredondamento", [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
     }
 
     /**
