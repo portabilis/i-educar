@@ -122,9 +122,8 @@ class indice extends clsDetalhe
 
         $sexo = ($det_fisica['sexo'] == 'M') ? 'Masculino' : 'Feminino';
         $this->addDetalhe(['Sexo', $sexo]);
-
         $this->addDetalhe(['Matrícula', $det_funcionario['matricula']]);
-        $this->addDetalhe(['Sequencial', $det_funcionario['sequencial']]);
+
         $ativo_f = ($det_funcionario['ativo'] == '1') ? 'Ativo' : 'Inativo';
         $this->addDetalhe(['Status', $ativo_f]);
 

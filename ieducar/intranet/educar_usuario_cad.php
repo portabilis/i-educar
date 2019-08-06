@@ -157,7 +157,7 @@ class indice extends clsCadastro
         $this->campoSenha('_senha', 'Senha', $this->_senha, true);
         $this->campoEmail('email', 'E-mail usuário', $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
         $this->campoTexto('matricula_interna', 'Matrícula interna', $this->matricula_interna, 30, 30, false, false, false, 'Utilizado somente para registro, caso a instituição deseje que a matrícula interna deste funcionário seja registrada no sistema.');
-        $this->campoData('data_expiracao', 'Data Expiração', $this->data_expiracao);
+        $this->campoData('data_expiracao', 'Data de Expiração', $this->data_expiracao);
 
         $opcoes = [0 => 'Inativo', 1 => 'Ativo'];
 
