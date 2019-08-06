@@ -137,10 +137,10 @@ class indice extends clsCadastro
         }
 
         $this->campoTexto('matricula', 'Matrícula', $this->matricula, 12, 12, true);
-        $this->campoSenha('_senha', 'Senha', null, $cadastrando);
+        $this->campoSenha('_senha', 'Senha', null, $cadastrando, empty($cadastrando) ? 'Preencha apenas se desejar alterar a senha' : '');
         $this->campoEmail('email', 'E-mail usuário', $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
         $this->campoTexto('matricula_interna', 'Matrícula interna', $this->matricula_interna, 30, 30, false, false, false, 'Utilizado somente para registro, caso a instituição deseje que a matrícula interna deste funcionário seja registrada no sistema.');
-        $this->campoData('data_expiracao', 'Data de Expiração', $this->data_expiracao);
+        $this->campoData('data_expiracao', 'Data de expiração', $this->data_expiracao);
 
         $opcoes = [0 => 'Inativo', 1 => 'Ativo'];
 
@@ -195,7 +195,7 @@ class indice extends clsCadastro
 
         echo '</script>';
 
-        $this->campoLista('ref_cod_tipo_usuario', 'Tipo Usuário', $opcoes, $this->ref_cod_tipo_usuario, '', null, null, null, null, true);
+        $this->campoLista('ref_cod_tipo_usuario', 'Tipo de usuário', $opcoes, $this->ref_cod_tipo_usuario, '', null, null, null, null, true);
 
         $nivel = $obj_permissao->nivel_acesso($this->ref_pessoa);
 
