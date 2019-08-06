@@ -1,135 +1,86 @@
 <?php
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   Module
- * @since     11/2013
- * @version   $Id$
- */
 
-require_once( "include/pmieducar/geral.inc.php" );
-
-/**
- * clsModulesNotaExame class.
- * 
- * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   Module
- * @since     11/2013
- * @version   @@package_version@@
- */
+require_once 'include/pmieducar/geral.inc.php';
 
 class clsModulesNotaExame
 {
-    var $ref_cod_matricula;
-    var $ref_cod_componente_curricular;
-    var $nota_exame;
-
-    // propriedades padrao
+    public $ref_cod_matricula;
+    public $ref_cod_componente_curricular;
+    public $nota_exame;
 
     /**
      * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
      *
      * @var int
      */
-    var $_total;
+    public $_total;
 
     /**
      * Nome do schema
      *
      * @var string
      */
-    var $_schema;
+    public $_schema;
 
     /**
      * Nome da tabela
      *
      * @var string
      */
-    var $_tabela;
+    public $_tabela;
 
     /**
      * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
      *
      * @var string
      */
-    var $_campos_lista;
+    public $_campos_lista;
 
     /**
      * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
      *
      * @var string
      */
-    var $_todos_campos;
+    public $_todos_campos;
 
     /**
      * Valor que define a quantidade de registros a ser retornada pelo metodo lista
      *
      * @var int
      */
-    var $_limite_quantidade;
+    public $_limite_quantidade;
 
     /**
      * Define o valor de offset no retorno dos registros no metodo lista
      *
      * @var int
      */
-    var $_limite_offset;
+    public $_limite_offset;
 
     /**
      * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
      *
      * @var string
      */
-    var $_campo_order_by;
+    public $_campo_order_by;
 
-
-    /**
-     * Construtor (PHP 4)
-     *
-     * @return object
-     */
-    function __construct($ref_cod_matricula = NULL , $ref_cod_componente_curricular = NULL, $nota_exame = NULL)
+    public function __construct($ref_cod_matricula = null, $ref_cod_componente_curricular = null, $nota_exame = null)
     {
         $db = new clsBanco();
-        $this->_schema = "modules.";
+        $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}nota_exame";
 
-        $this->_campos_lista = $this->_todos_campos = "ref_cod_matricula, ref_cod_componente_curricular, nota_exame";
+        $this->_campos_lista = $this->_todos_campos = 'ref_cod_matricula, ref_cod_componente_curricular, nota_exame';
 
-        if( is_numeric( $ref_cod_matricula ) )
-        {
+        if (is_numeric($ref_cod_matricula)) {
             $this->ref_cod_matricula = $ref_cod_matricula;
         }
-        if( is_numeric( $ref_cod_componente_curricular ) )
-        {
+        if (is_numeric($ref_cod_componente_curricular)) {
             $this->ref_cod_componente_curricular = $ref_cod_componente_curricular;
         }
-        if( is_numeric( $nota_exame ) )
-        {
+        if (is_numeric($nota_exame)) {
             $this->nota_exame = $nota_exame;
-        }       
+        }
     }
 
     /**
@@ -137,38 +88,36 @@ class clsModulesNotaExame
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_componente_curricular ) && is_numeric( $this->nota_exame ) )
-        {
+        if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_componente_curricular) && is_numeric($this->nota_exame)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-            if( is_numeric( $this->ref_cod_matricula ) )
-            {
+            if (is_numeric($this->ref_cod_matricula)) {
                 $campos .= "{$gruda}ref_cod_matricula";
                 $valores .= "{$gruda}'{$this->ref_cod_matricula}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_componente_curricular ) )
-            {
+            if (is_numeric($this->ref_cod_componente_curricular)) {
                 $campos .= "{$gruda}ref_cod_componente_curricular";
                 $valores .= "{$gruda}'{$this->ref_cod_componente_curricular}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->nota_exame ) )
-            {
+            if (is_numeric($this->nota_exame)) {
                 $campos .= "{$gruda}nota_exame";
                 $valores .= "{$gruda}'{$this->nota_exame}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
+
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
+
             return $this->ref_cod_matricula;
         }
+
         return false;
     }
 
@@ -177,26 +126,24 @@ class clsModulesNotaExame
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_componente_curricular ) && is_numeric( $this->nota_exame ) )
-        {
-
+        if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_componente_curricular) && is_numeric($this->nota_exame)) {
             $db = new clsBanco();
-            $set = "";
+            $set = '';
 
-            if( is_numeric( $this->nota_exame ) )
-            {
+            if (is_numeric($this->nota_exame)) {
                 $set .= "{$gruda}nota_exame = '{$this->nota_exame}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'" );
+            if ($set) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'");
+
                 return true;
             }
         }
+
         return false;
     }
 
@@ -205,16 +152,16 @@ class clsModulesNotaExame
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_componente_curricular ) )
-        {
-
+        if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_componente_curricular)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'" );
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
+
         return false;
     }
 
@@ -223,16 +170,16 @@ class clsModulesNotaExame
      *
      * @return array
      */
-    function existe()
+    public function existe()
     {
-        if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_componente_curricular ) )
-        {
-
+        if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_componente_curricular)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'" );
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
+
         return false;
     }
 
@@ -241,15 +188,15 @@ class clsModulesNotaExame
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_componente_curricular ) )
-        {
-
+        if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_componente_curricular)) {
             $db = new clsBanco();
-            $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'" );
+            $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'");
+
             return true;
         }
+
         return false;
     }
 
@@ -258,7 +205,7 @@ class clsModulesNotaExame
      *
      * @return null
      */
-    function setCamposLista( $str_campos )
+    public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
@@ -268,7 +215,7 @@ class clsModulesNotaExame
      *
      * @return null
      */
-    function resetCamposLista()
+    public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
@@ -278,7 +225,7 @@ class clsModulesNotaExame
      *
      * @return null
      */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
@@ -289,18 +236,18 @@ class clsModulesNotaExame
      *
      * @return string
      */
-    function getLimite()
+    public function getLimite()
     {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
+        if (is_numeric($this->_limite_quantidade)) {
             $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
+            if (is_numeric($this->_limite_offset)) {
                 $retorno .= " OFFSET {$this->_limite_offset} ";
             }
+
             return $retorno;
         }
-        return "";
+
+        return '';
     }
 
     /**
@@ -308,13 +255,9 @@ class clsModulesNotaExame
      *
      * @return null
      */
-    function setOrderby( $strNomeCampo )
+    public function setOrderby($strNomeCampo)
     {
-        // limpa a string de possiveis erros (delete, insert, etc)
-        //$strNomeCampo = eregi_replace();
-
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
+        if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
@@ -324,14 +267,12 @@ class clsModulesNotaExame
      *
      * @return string
      */
-    function getOrderby()
+    public function getOrderby()
     {
-        if( is_string( $this->_campo_order_by ) )
-        {
+        if (is_string($this->_campo_order_by)) {
             return " ORDER BY {$this->_campo_order_by} ";
         }
-        return "";
-    }
 
+        return '';
+    }
 }
-?>
