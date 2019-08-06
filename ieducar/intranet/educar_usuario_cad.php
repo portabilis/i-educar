@@ -36,9 +36,6 @@ class indice extends clsCadastro
     public $data_expiracao;
     public $escola;
 
-    //senha carregada do banco (controle de criptografia)
-    public $confere_senha;
-
     //setor e subsetores
     public $setor_0;
     public $setor_1;
@@ -66,7 +63,6 @@ class indice extends clsCadastro
                 }
 
                 $this->_senha = $this->senha;
-                $this->confere_senha = $this->_senha;
                 $this->fexcluir = true;
                 $retorno = 'Editar';
             }
@@ -116,7 +112,6 @@ class indice extends clsCadastro
         $cadastrando = true;
 
         if (is_numeric($this->ref_pessoa)) {
-            $this->campoOculto('confere_senha', $this->confere_senha);
             $cadastrando = false;
         }
 
