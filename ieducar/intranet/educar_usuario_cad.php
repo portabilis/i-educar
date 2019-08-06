@@ -24,7 +24,6 @@ class clsIndexBase extends clsBase
 class indice extends clsCadastro
 {
     public $ref_pessoa;
-    public $ref_cod_setor_new;
 
     //dados do funcionario
     public $nome;
@@ -35,13 +34,6 @@ class indice extends clsCadastro
     public $matricula_interna;
     public $data_expiracao;
     public $escola;
-
-    //setor e subsetores
-    public $setor_0;
-    public $setor_1;
-    public $setor_2;
-    public $setor_3;
-    public $setor_4;
 
     public function Inicializar()
     {
@@ -119,14 +111,6 @@ class indice extends clsCadastro
             foreach ($_POST as $campo => $val) {
                 $this->$campo = ($this->$campo) ? $this->$campo : $val;
             }
-        }
-
-        $this->ref_cod_setor_new = 0;
-
-        if (!$this->ref_cod_setor_new && is_numeric($this->ref_pessoa)) {
-            $objFuncionario = new clsPortalFuncionario($this->ref_pessoa);
-            $detFunc = $objFuncionario->detalhe();
-            $this->ref_cod_setor_new = $detFunc['ref_cod_setor_new'];
         }
 
         if ($_GET['ref_pessoa']) {
@@ -238,17 +222,6 @@ class indice extends clsCadastro
             return false;
         }
 
-        //setor recebe o id do ultimo subsetor selecionado
-        $this->ref_cod_setor_new = 0;
-
-        for ($i = 0; $i < 5; $i++) {
-            $nmvar = "setor_{$i}";
-
-            if (is_numeric($this->$nmvar) && $this->$nmvar) {
-                $this->ref_cod_setor_new = $this->$nmvar;
-            }
-        }
-
         if (!$this->validatesUniquenessOfMatricula($this->ref_pessoa, $this->matricula)) {
             return false;
         }
@@ -259,7 +232,7 @@ class indice extends clsCadastro
 
         $senha = Hash::make($this->_senha);
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, $this->ref_cod_setor_new, null, 0, 1, $this->email, $this->matricula_interna);
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, 0, null, 0, 1, $this->email, $this->matricula_interna);
 
         if ($obj_funcionario->cadastra()) {
             $funcionario = $obj_funcionario->detalhe();
@@ -307,16 +280,6 @@ class indice extends clsCadastro
             return false;
         }
 
-        $this->ref_cod_setor_new = 0;
-
-        for ($i = 0; $i < 5; $i++) {
-            $nmvar = "setor_{$i}";
-
-            if (is_numeric($this->$nmvar) && $this->$nmvar) {
-                $this->ref_cod_setor_new = $this->$nmvar;
-            }
-        }
-
         if (!$this->validatesUniquenessOfMatricula($this->ref_pessoa, $this->matricula)) {
             return false;
         }
@@ -334,7 +297,7 @@ class indice extends clsCadastro
             $senha = Hash::make($this->_senha);
         }
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, $this->ref_cod_setor_new, null, 0, null, $this->email, $this->matricula_interna);
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, 0, null, 0, null, $this->email, $this->matricula_interna);
         $detalheAntigo = $obj_funcionario->detalhe();
 
         if ($obj_funcionario->edita()) {
