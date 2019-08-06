@@ -1,262 +1,196 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*                                                                        *
-*   @author Prefeitura Municipal de Itajaí                               *
-*   @updated 29/03/2007                                                  *
-*   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-*                                                                        *
-*   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-*                       ctima@itajai.sc.gov.br                           *
-*                                                                        *
-*   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-*   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-*   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-*   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-*                                                                        *
-*   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-*   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-*   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-*   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-*                                                                        *
-*   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-*   junto  com  este  programa. Se não, escreva para a Free Software     *
-*   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-*   02111-1307, USA.                                                     *
-*                                                                        *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBanco.inc.php");
-require_once ("include/Geral.inc.php");
+
+require_once 'include/clsBanco.inc.php';
+require_once 'include/Geral.inc.php';
 
 class clsPessoaFisicaAlterado extends clsPessoaFj
 {
-    var $idpes;
-    var $data_nasc;
-    var $sexo;
-    var $idpes_mae;
-    var $idpes_pai;
-    var $idpes_responsavel;
-    var $idesco;
-    var $ideciv;
-    var $idpes_con;
-    var $data_uniao;
-    var $data_obito;
-    var $nacionalidade;
-    var $idpais_estrangeiro;
-    var $data_chagada_brasil;
-    var $idmun_nascimento;
-    var $ultima_empresa;
-    var $idocup;
-    var $nome_mae;
-    var $nome_pai;
-    var $nome_conjuge;
-    var $nome_responsavel;
-    var $justificativa_provisorio;
-    var $cpf;
-    var $ref_cod_religiao;
-    var $tipo_endereco;
+    public $idpes;
+    public $data_nasc;
+    public $sexo;
+    public $idpes_mae;
+    public $idpes_pai;
+    public $idpes_responsavel;
+    public $idesco;
+    public $ideciv;
+    public $idpes_con;
+    public $data_uniao;
+    public $data_obito;
+    public $nacionalidade;
+    public $idpais_estrangeiro;
+    public $data_chagada_brasil;
+    public $idmun_nascimento;
+    public $ultima_empresa;
+    public $idocup;
+    public $nome_mae;
+    public $nome_pai;
+    public $nome_conjuge;
+    public $nome_responsavel;
+    public $justificativa_provisorio;
+    public $cpf;
+    public $ref_cod_religiao;
+    public $tipo_endereco;
+    public $banco = 'pmi';
+    public $schema_cadastro = 'cadastro';
 
-    var $banco = 'pmi';
-    var $schema_cadastro = "cadastro";
-
-    function __construct($int_idpes = false, $numeric_cpf = false, $date_data_nasc = false, $str_sexo = false, $int_idpes_mae =false, $int_idpes_pai = false)
+    public function __construct($int_idpes = false, $numeric_cpf = false, $date_data_nasc = false, $str_sexo = false, $int_idpes_mae = false, $int_idpes_pai = false)
     {
         $this->idpes = $int_idpes;
         $this->cpf = $numeric_cpf;
     }
 
-
-    function lista_simples($str_nome =false, $numeric_cpf =false, $inicio_limite=false, $qtd_registros = false, $str_orderBy = false, $int_ref_cod_sistema = false)
+    public function lista_simples($str_nome = false, $numeric_cpf = false, $inicio_limite = false, $qtd_registros = false, $str_orderBy = false, $int_ref_cod_sistema = false)
     {
-        $whereAnd = "";
-        $where = "";
-        if( is_string( $str_nome ) && $str_nome != '' )
-        {
-            $str_nome = str_replace(" ", "%", $str_nome);
+        $whereAnd = '';
+        $where = '';
+        if (is_string($str_nome) && $str_nome != '') {
+            $str_nome = str_replace(' ', '%', $str_nome);
             $where .= "{$whereAnd} nome ILIKE '%{$str_nome}%' ";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        if( is_string( $numeric_cpf ) )
-        {
+        if (is_string($numeric_cpf)) {
             $where .= "{$whereAnd} cpf ILIKE '%{$numeric_cpf}%' ";
         }
 
-        if( is_numeric( $int_ref_cod_sistema ) )
-        {
-                $where .= "{$whereAnd} (ref_cod_sistema = '{$int_ref_cod_sistema}' OR cpf is not null  )";
+        if (is_numeric($int_ref_cod_sistema)) {
+            $where .= "{$whereAnd} (ref_cod_sistema = '{$int_ref_cod_sistema}' OR cpf is not null  )";
         }
 
-
-        if( $inicio_limite !== false && $qtd_registros )
-        {
+        if ($inicio_limite !== false && $qtd_registros) {
             $limite = "LIMIT $qtd_registros OFFSET $inicio_limite ";
         }
 
-
-        $orderBy = " ORDER BY ";
-        if( $str_orderBy )
-        {
+        $orderBy = ' ORDER BY ';
+        if ($str_orderBy) {
             $orderBy .= "$str_orderBy ";
+        } else {
+            $orderBy .= 'nome ';
         }
-        else
-        {
-            $orderBy .= "nome ";
-        }
-        if($where)
-        {
-            $where = "WHERE ".$where;
+        if ($where) {
+            $where = 'WHERE ' . $where;
         }
         $db = new clsBanco($this->banco);
-        
-        $total = $db->UnicoCampo("Select count(0) FROM cadastro.fisica $where"); 
-        
+
+        $total = $db->UnicoCampo("Select count(0) FROM cadastro.fisica $where");
+
         $db->Consulta("Select idpes, nome, cpf FROM cadastro.v_pessoa_fisica $where $orderBy $limite");
-        $resultado = array();
-        while ($db->ProximoRegistro())
-        {
+        $resultado = [];
+        while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
             $tupla['nome'] = transforma_minusculo($tupla['nome']);
-            $tupla['total']= $total;
+            $tupla['total'] = $total;
             $resultado[] = $tupla;
         }
-        if(count($resultado) > 0)
-        {
+        if (count($resultado) > 0) {
             return $resultado;
         }
+
         return false;
     }
 
+    public function lista($str_nome = false, $numeric_cpf = false, $inicio_limite = false, $qtd_registros = false, $str_orderBy = false, $int_ref_cod_sistema = false, $int_idpes = false)
+    {
+        $whereAnd = '';
+        $where = '';
+        if (is_string($str_nome) && $str_nome != '') {
+            $str_nome = str_replace(' ', '%', $str_nome);
+            $where .= "{$whereAnd} nome ILIKE '%{$str_nome}%' ";
+            $whereAnd = ' AND ';
+        }
 
-    function lista($str_nome =false, $numeric_cpf =false, $inicio_limite=false, $qtd_registros = false, $str_orderBy = false, $int_ref_cod_sistema = false, $int_idpes = false)
-        {
-            $whereAnd = "";
-            $where = "";
-            if( is_string( $str_nome ) && $str_nome != '' )
-            {
-                $str_nome = str_replace(" ", "%", $str_nome);
-                $where .= "{$whereAnd} nome ILIKE '%{$str_nome}%' ";
-                $whereAnd = " AND ";
+        if (is_string($numeric_cpf)) {
+            $where .= "{$whereAnd} cpf ILIKE '%{$numeric_cpf}%' ";
+            $whereAnd = ' AND ';
+        }
+        if (is_numeric($int_ref_cod_sistema)) {
+            $where .= "{$whereAnd} (ref_cod_sistema = '{$int_ref_cod_sistema}' OR cpf is not null  )";
+            $whereAnd = ' AND ';
+        }
+        if (is_numeric($int_idpes)) {
+            $where .= "{$whereAnd} idpes = '$int_idpes'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($this->tipo_endereco)) {
+            if ($this->tipo_endereco == 1) {
+                //interno
+                $where .= "{$whereAnd} idpes IN (SELECT idpes FROM cadastro.endereco_pessoa)";
+                $whereAnd = ' AND ';
+            } elseif ($this->tipo_endereco == 2) {
+                //externo
+                $where .= "{$whereAnd} idpes IN (SELECT idpes FROM cadastro.endereco_externo)";
+                $whereAnd = ' AND ';
+            }
+        }
+
+        if ($inicio_limite !== false && $qtd_registros) {
+            $limite = "LIMIT $qtd_registros OFFSET $inicio_limite ";
+        }
+
+        $orderBy = ' ORDER BY ';
+        if ($str_orderBy) {
+            $orderBy .= "$str_orderBy ";
+        } else {
+            $orderBy .= 'nome ';
+        }
+
+        $db = new clsBanco();
+        $dba = new clsBanco();
+
+        if ($where) {
+            $where = 'AND ' . $where;
+        }
+        if (!$where) {
+            $total = $db->CampoUnico("Select count(0) FROM cadastro.fisica WHERE (alterado != 'TRUE' OR alterado IS NULL) $where");
+        } else {
+            $total = $db->CampoUnico("Select count(0) FROM cadastro.v_pessoa_fisica WHERE idpes IN (SELECT idpes FROM cadastro.fisica WHERE (alterado != 'TRUE' OR alterado IS NULL)) $where");
+        }
+
+        $db->Consulta("Select idpes, nome, url,'F' as tipo, email, cpf FROM cadastro.v_pessoa_fisica WHERE idpes IN (SELECT idpes FROM cadastro.fisica WHERE (alterado != 'TRUE' OR alterado IS NULL)) $where $orderBy $limite");
+
+        $resultado = [];
+        while ($db->ProximoRegistro()) {
+            $tupla = $db->Tupla();
+            $tupla['nome'] = transforma_minusculo($tupla['nome']);
+            $tupla['total'] = $total;
+
+            $tupla['alterado'] = $tupla['alterado'];
+
+            $dba->Consulta("Select ddd_1, fone_1, ddd_2, fone_2, ddd_mov, fone_mov, ddd_fax, fone_fax from cadastro.v_fone_pessoa where idpes ={$tupla['idpes']}");
+            if ($dba->ProximoRegistro()) {
+                $tupla_fone = $dba->Tupla();
+            } else {
+                $tupla_fone = '';
             }
 
-            if( is_string( $numeric_cpf ) )
-            {
-                $where .= "{$whereAnd} cpf ILIKE '%{$numeric_cpf}%' ";
-                $whereAnd = " AND ";
-            }
-            if( is_numeric( $int_ref_cod_sistema ) )
-            {
-                $where .= "{$whereAnd} (ref_cod_sistema = '{$int_ref_cod_sistema}' OR cpf is not null  )";
-                $whereAnd = " AND ";
-            }
-            if( is_numeric( $int_idpes ) )
-            {
-                $where .= "{$whereAnd} idpes = '$int_idpes'";
-                $whereAnd = " AND ";
-            }
-            
-            if(is_numeric($this->tipo_endereco))
-            {
-                if($this->tipo_endereco == 1)
-                {
-                    //interno
-                    $where .= "{$whereAnd} idpes IN (SELECT idpes FROM cadastro.endereco_pessoa)";
-                    $whereAnd = " AND ";
-                }
-                elseif ($this->tipo_endereco == 2)
-                {
-                    //externo
-                    $where .= "{$whereAnd} idpes IN (SELECT idpes FROM cadastro.endereco_externo)";
-                    $whereAnd = " AND ";
-                }
-            }
+            $tupla['ddd_1'] = $tupla_fone['ddd_1'];
+            $tupla['fone_1'] = $tupla_fone['fone_1'];
+            $tupla['ddd_2'] = $tupla_fone['ddd_2'];
+            $tupla['fone_2'] = $tupla_fone['fone_2'];
+            $tupla['ddd_mov'] = $tupla_fone['ddd_mov'];
+            $tupla['fone_mov'] = $tupla_fone['fone_mov'];
+            $tupla['ddd_fax'] = $tupla_fone['ddd_fax'];
+            $tupla['fone_fax'] = $tupla_fone['fone_fax'];
 
+            $resultado[] = $tupla;
+        }
+        if (count($resultado) > 0) {
+            return $resultado;
+        }
 
-            if( $inicio_limite !== false && $qtd_registros )
-            {
-                $limite = "LIMIT $qtd_registros OFFSET $inicio_limite ";
-            }
-
-
-            $orderBy = " ORDER BY ";
-            if( $str_orderBy )
-            {
-                $orderBy .= "$str_orderBy ";
-            }
-            else
-            {
-                $orderBy .= "nome ";
-            }
-            
-
-            $db = new clsBanco();
-            $dba = new clsBanco();
-            
-            
-            if($where)
-            {
-                $where = "AND ".$where;
-            }
-            if(!$where)
-            {
-                $total = $db->CampoUnico("Select count(0) FROM cadastro.fisica WHERE (alterado != 'TRUE' OR alterado IS NULL) $where");
-            }else 
-            {
-                $total = $db->CampoUnico("Select count(0) FROM cadastro.v_pessoa_fisica WHERE idpes IN (SELECT idpes FROM cadastro.fisica WHERE (alterado != 'TRUE' OR alterado IS NULL)) $where");
-            }
-            
-            
-//          $db->Consulta("Select idpes, nome, url,'F' as tipo, email, cpf FROM cadastro.v_pessoa_fisica $where $orderBy $limite");
-            //$where = " AND ".$where; 
-            $db->Consulta("Select idpes, nome, url,'F' as tipo, email, cpf FROM cadastro.v_pessoa_fisica WHERE idpes IN (SELECT idpes FROM cadastro.fisica WHERE (alterado != 'TRUE' OR alterado IS NULL)) $where $orderBy $limite");
-            
-            $resultado = array();
-            while ($db->ProximoRegistro())
-            {
-                $tupla = $db->Tupla();
-                $tupla['nome'] = transforma_minusculo($tupla['nome']);
-                $tupla['total']= $total;
-
-                $tupla['alterado'] = $tupla['alterado'];
-                
-                $dba->Consulta("Select ddd_1, fone_1, ddd_2, fone_2, ddd_mov, fone_mov, ddd_fax, fone_fax from cadastro.v_fone_pessoa where idpes ={$tupla['idpes']}");
-                if($dba->ProximoRegistro())
-                {
-                    $tupla_fone = $dba->Tupla();
-                }else 
-                {
-                    $tupla_fone = "";
-                }
-                
-                $tupla['ddd_1'] = $tupla_fone['ddd_1'];
-                $tupla['fone_1'] = $tupla_fone['fone_1'];
-                $tupla['ddd_2'] = $tupla_fone['ddd_2'];
-                $tupla['fone_2'] = $tupla_fone['fone_2'];
-                $tupla['ddd_mov'] = $tupla_fone['ddd_mov'];
-                $tupla['fone_mov'] = $tupla_fone['fone_mov'];
-                $tupla['ddd_fax'] = $tupla_fone['ddd_fax'];
-                $tupla['fone_fax'] = $tupla_fone['fone_fax'];
-                
-                $resultado[] = $tupla;
-
-            }
-            if(count($resultado) > 0)
-            {
-                return $resultado;
-            }
-            return false;
+        return false;
     }
 
-    function detalhe()
+    public function detalhe()
     {
-        if($this->idpes)
-        {
+        if ($this->idpes) {
             $tupla = parent::detalhe();
 
             $objFisica = new clsFisica($this->idpes);
             $detalhe_fisica = $objFisica->detalhe();
-            if($detalhe_fisica)
-            {
-                $this->data_nasc  = $detalhe_fisica['data_nasc'];
+            if ($detalhe_fisica) {
+                $this->data_nasc = $detalhe_fisica['data_nasc'];
                 $this->sexo = $detalhe_fisica['sexo'];
                 $this->idpes_mae = $detalhe_fisica['idpes_mae'];
                 $this->idpes_pai = $detalhe_fisica['idpes_pai'];
@@ -279,12 +213,12 @@ class clsPessoaFisicaAlterado extends clsPessoaFj
                 $this->justificativa_provisorio = $detalhe_fisica['justificativa_provisorio'];
                 $this->cpf = $detalhe_fisica['cpf'];
                 $this->ref_cod_religiao = $detalhe_fisica['ref_cod_religiao'];
-                
-                $tupla['idpes' ]= $this->idpes;
-                $tupla[] = &$tupla['idpes' ];
-                $tupla['cpf' ]= $this->cpf;
+
+                $tupla['idpes'] = $this->idpes;
+                $tupla[] = &$tupla['idpes'];
+                $tupla['cpf'] = $this->cpf;
                 $tupla[] = &$tupla['cpf'];
-                $tupla['ref_cod_religiao' ]= $this->ref_cod_religiao;
+                $tupla['ref_cod_religiao'] = $this->ref_cod_religiao;
                 $tupla[] = &$tupla['ref_cod_religiao'];
                 $tupla['data_nasc'] = $this->data_nasc;
                 $tupla[] = &$tupla['data_nasc'];
@@ -331,24 +265,18 @@ class clsPessoaFisicaAlterado extends clsPessoaFj
 
                 return $tupla;
             }
-        }
-        elseif ( $this->cpf )
-        {
+        } elseif ($this->cpf) {
+            $tupla = parent::detalhe();
 
+            $objFisica = new clsFisica();
+            $lista = $objFisica->lista(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, $this->cpf);
+            $this->idpes = $lista[0]['idpes'];
 
-                $tupla = parent::detalhe();
-                
-                $objFisica = new clsFisica();
-                $lista = $objFisica->lista(false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,$this->cpf);
-                $this->idpes = $lista[0]['idpes'];
-            
-            if( $this->idpes)
-            {
+            if ($this->idpes) {
                 $objFisica = new clsFisica($this->idpes);
                 $detalhe_fisica = $objFisica->detalhe();
-                if($detalhe_fisica)
-                {
-                    $this->data_nasc  = $detalhe_fisica['data_nasc'];
+                if ($detalhe_fisica) {
+                    $this->data_nasc = $detalhe_fisica['data_nasc'];
                     $this->sexo = $detalhe_fisica['sexo'];
                     $this->idpes_mae = $detalhe_fisica['idpes_mae'];
                     $this->idpes_pai = $detalhe_fisica['idpes_pai'];
@@ -370,11 +298,11 @@ class clsPessoaFisicaAlterado extends clsPessoaFj
                     $this->nome_responsavel = $detalhe_fisica['nome_responsavel'];
                     $this->justificativa_provisorio = $detalhe_fisica['justificativa_provisorio'];
                     $this->cpf = $detalhe_fisica['cpf'];
-                    
-                    $tupla['idpes' ]= $this->idpes;
-                    $tupla[] = &$tupla['idpes' ];
-                    $tupla['cpf' ]= $this->cpf;
-                    $tupla[] = &$tupla['cpf' ];
+
+                    $tupla['idpes'] = $this->idpes;
+                    $tupla[] = &$tupla['idpes'];
+                    $tupla['cpf'] = $this->cpf;
+                    $tupla[] = &$tupla['cpf'];
                     $tupla['data_nasc'] = $this->data_nasc;
                     $tupla[] = &$tupla['data_nasc'];
                     $tupla['sexo'] = $this->sexo;
@@ -422,59 +350,55 @@ class clsPessoaFisicaAlterado extends clsPessoaFj
                 }
             }
         }
+
         return false;
     }
 
-
-    function queryRapida($int_idpes)
+    public function queryRapida($int_idpes)
     {
         $this->idpes = $int_idpes;
         $this->detalhe();
-        $resultado = array();
+        $resultado = [];
         $pos = 0;
-        for ($i = 1; $i< func_num_args(); $i++ ) {
+        for ($i = 1; $i < func_num_args(); $i++) {
             $campo = func_get_arg($i);
-            $resultado[$pos] = ($this->$campo) ? $this->$campo : "";
+            $resultado[$pos] = ($this->$campo) ? $this->$campo : '';
             $resultado[$campo] = &$resultado[$pos];
             $pos++;
-
         }
-        if(count($resultado) > 0)
-        {
+        if (count($resultado) > 0) {
             return $resultado;
         }
+
         return false;
     }
 
-    function queryRapidaCPF( $int_cpf )
+    public function queryRapidaCPF($int_cpf)
     {
         $this->cpf = $int_cpf + 0;
         $this->detalhe();
-        $resultado = array();
+        $resultado = [];
         $pos = 0;
-        for ($i = 1; $i< func_num_args(); $i++ ) {
+        for ($i = 1; $i < func_num_args(); $i++) {
             $campo = func_get_arg($i);
-            $resultado[$pos] = ($this->$campo) ? $this->$campo : "";
+            $resultado[$pos] = ($this->$campo) ? $this->$campo : '';
             $resultado[$campo] = &$resultado[$pos];
             $pos++;
-
         }
-        if(count($resultado) > 0)
-        {
+        if (count($resultado) > 0) {
             return $resultado;
         }
+
         return false;
     }
 
-    function excluir()
+    public function excluir()
     {
-        if($this->idpes)
-        {
+        if ($this->idpes) {
             $db = new clsBanco();
 
             $obj = new clsFuncionario($this->idpes);
-            if(!$obj->detalhe())
-            {
+            if (!$obj->detalhe()) {
                 $db->Consulta("Delete FROM cadastro.fone_pessoa WHERE idpes = $this->idpes");
                 $db->Consulta("Delete FROM cadastro.fisica WHERE idpes = $this->idpes");
                 $db->Consulta("Delete FROM cadastro.documento WHERE idpes = $this->idpes");
@@ -484,16 +408,13 @@ class clsPessoaFisicaAlterado extends clsPessoaFj
                 $db->Consulta("Delete FROM cadastro.documento WHERE idpes = $this->idpes");
                 $db->Consulta("Delete FROM cadastro.pessoa WHERE idpes = $this->idpes");
             }
-
         }
     }
-    function setTipoEndereco($endereco)
+
+    public function setTipoEndereco($endereco)
     {
-        if(is_numeric($endereco))
-        {
+        if (is_numeric($endereco)) {
             $this->tipo_endereco = $endereco;
         }
     }
-
 }
-?>
