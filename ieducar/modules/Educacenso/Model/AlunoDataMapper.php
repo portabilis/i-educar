@@ -18,6 +18,7 @@ class Educacenso_Model_AlunoDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'Educacenso_Model_Aluno';
     protected $_tableName   = 'educacenso_cod_aluno';
+    protected $_tableSchema = 'modules';
 
     protected $_attributeMap = array(
         'aluno'      => 'cod_aluno',

@@ -2,7 +2,7 @@
 
 // $deleteButton = $j('<input value=" Excluir " type="button" style="display: inline; margin-left: 6px;">').html('')
                               // .addClass('botaolistagem').insertAfter('#btn_enviar');
-                              
+
 var $idField        = $j('#id');
 var $nomeField      = $j('#pessoa_nome');
 
@@ -46,8 +46,8 @@ resourceOptions.handleGet = function(dataResponse) {
   $idField.val(dataResponse.id);
   $j('#observacao').val(dataResponse.observacao);
 
-  $j('#pessoaj_pessoaj').val(dataResponse.pessoaj+' - '+dataResponse.pessoajnome);  
-  $j('#pessoaj_id').val(dataResponse.pessoaj);  
+  $j('#pessoaj_pessoaj').val(dataResponse.pessoaj+' - '+dataResponse.pessoajnome);
+  $j('#pessoaj_id').val(dataResponse.pessoaj);
 
 };
 
@@ -61,7 +61,7 @@ var handleGetPersonDetails = function(dataResponse) {
                                       .show().css('display', 'inline');
 
     $submitButton.removeAttr('disabled').show();
-  
+
 
   $j('#pessoa_id').val(dataResponse.id);
   $nomeField.val(dataResponse.id + ' - ' + dataResponse.nome);
@@ -112,8 +112,9 @@ function afterChangePessoa(targetWindow, pessoaId) {
   window.setTimeout(function() {
     messageUtils.success('Pessoa alterada com sucesso', $nomeField);
 
-    $j('#pessoa_id').val(pessoaId);
+    pessoaId = $j('#pessoa_id').val();
     getPersonDetails(pessoaId);
+
 
     if ($nomeField.is(':active'))
       $nomeField.focus();

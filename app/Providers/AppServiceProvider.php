@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\SchoolManager;
 use App\Observers\SchoolManagerObserver;
 use App\Providers\Postgres\DatabaseServiceProvider;
+use Exception;
 use App\Services\CacheManager;
 use App\Models\LegacyInstitution;
 use App\Services\StudentUnificationService;

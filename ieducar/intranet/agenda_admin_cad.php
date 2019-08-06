@@ -74,12 +74,12 @@ class indice extends clsCadastro
             }
             if( isset( $_GET["edit_rem"] ) && is_numeric( $_GET["edit_rem"] ) )
             {
-                $db->Consulta( "DELETE FROM agenda_responsavel WHERE ref_ref_cod_pessoa_fj = '{$_GET["edit_rem"]}' AND ref_cod_agenda = '{$this->cod_agenda}'" );
+                $db->Consulta( "DELETE FROM portal.agenda_responsavel WHERE ref_ref_cod_pessoa_fj = '{$_GET["edit_rem"]}' AND ref_cod_agenda = '{$this->cod_agenda}'" );
                 $this->mensagem = "Editor removido";
             }
             if( isset( $_POST["novo_editor"] ) && is_numeric( $_POST["novo_editor"] ) )
             {
-                $db->Consulta( "SELECT 1 FROM agenda_responsavel WHERE ref_ref_cod_pessoa_fj = '{$_POST["novo_editor"]}' AND ref_cod_agenda = '{$this->cod_agenda}'" );
+                $db->Consulta( "SELECT 1 FROM portal.agenda_responsavel WHERE ref_ref_cod_pessoa_fj = '{$_POST["novo_editor"]}' AND ref_cod_agenda = '{$this->cod_agenda}'" );
                 if( ! $db->ProximoRegistro() )
                 {
                     $db->Consulta( "SELECT 1 FROM agenda WHERE ref_ref_cod_pessoa_own = '{$_POST["novo_editor"]}' AND cod_agenda = '{$this->cod_agenda}'" );
@@ -115,7 +115,7 @@ class indice extends clsCadastro
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          ""                                  => "$nomeMenu agenda"
     ));
-    $this->enviaLocalizacao($localizacao->montar());            
+    $this->enviaLocalizacao($localizacao->montar());
 
         return $retorno;
     }
@@ -145,7 +145,7 @@ class indice extends clsCadastro
 
         if ($this->cod_agenda)
         {
-            $db->Consulta( "SELECT ref_ref_cod_pessoa_fj FROM agenda_responsavel WHERE ref_cod_agenda = '{$this->cod_agenda}'" );
+            $db->Consulta( "SELECT ref_ref_cod_pessoa_fj FROM portal.agenda_responsavel WHERE ref_cod_agenda = '{$this->cod_agenda}'" );
             while ( $db->ProximoRegistro() )
             {
                 $i++;

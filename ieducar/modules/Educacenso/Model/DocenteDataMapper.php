@@ -18,6 +18,7 @@ class Educacenso_Model_DocenteDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'Educacenso_Model_Docente';
     protected $_tableName   = 'educacenso_cod_docente';
+    protected $_tableSchema = 'modules';
 
     protected $_primaryKey = array(
         'docente'       => 'cod_servidor',

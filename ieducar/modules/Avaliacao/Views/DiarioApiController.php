@@ -277,7 +277,7 @@ class DiarioApiController extends ApiCoreController
         return true;
     }
 
-    protected function validatesPeriodoLancamentoFaltasNotas()
+    protected function validatesPeriodoLancamentoFaltasNotas($showMessage = true)
     {
 
         $bloqueioLancamentoFaltasNotas = new clsPmieducarBloqueioLancamentoFaltasNotas(null,
@@ -297,7 +297,10 @@ class DiarioApiController extends ApiCoreController
             return true;
         }
 
-        $this->messenger->append('Não é permitido realizar esta alteração fora do período de lançamento de notas/faltas', 'error');
+        if ($showMessage) {
+            $this->messenger->append('Não é permitido realizar esta alteração fora do período de lançamento de notas/faltas.', 'error');
+        }
+
         return false;
     }
 
@@ -367,13 +370,15 @@ class DiarioApiController extends ApiCoreController
         return $this->canDelete() &&
         $this->validatesPresenceOf('componente_curricular_id') &&
         $this->validatesInexistenceOfNotaExame() &&
-        $this->validatesInexistenceNotasInNextEtapas();
+        $this->validatesInexistenceNotasInNextEtapas() &&
+        $this->validatesPeriodoLancamentoFaltasNotas();
     }
 
     protected function canDeleteFalta()
     {
         return $this->canDelete() &&
-        $this->validatesInexistenceFaltasInNextEtapas();
+        $this->validatesInexistenceFaltasInNextEtapas() &&
+        $this->validatesPeriodoLancamentoFaltasNotas();
     }
 
     protected function canDeleteParecer()
@@ -1750,6 +1755,7 @@ class DiarioApiController extends ApiCoreController
             $this->appendResponse('matriculas', $this->getMatriculas());
             $this->appendResponse('navegacao_tab', $this->getNavegacaoTab());
             $this->appendResponse('can_change', $this->canChange());
+            $this->appendResponse('locked', !$this->validatesPeriodoLancamentoFaltasNotas(false));
         } elseif ($this->isRequestFor('post', 'nota') || $this->isRequestFor('post', 'nota_exame')) {
             $this->postNota();
         } elseif ($this->isRequestFor('post', 'nota_recuperacao_paralela')) {

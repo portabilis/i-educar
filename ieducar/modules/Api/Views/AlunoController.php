@@ -783,7 +783,7 @@ class AlunoController extends ApiCoreController
         }
 
         $sql = "
-            select 
+            select
                 tod.nm_tipo as tipo,
                 od.data_cadastro as data_hora,
                 od.observacao as descricao,
@@ -792,20 +792,20 @@ class AlunoController extends ApiCoreController
                 m.ref_ref_cod_escola as escola_id,
                 od.updated_at as updated_at,
                 (
-                    CASE WHEN od.ativo = 1 THEN 
-                        null 
+                    CASE WHEN od.ativo = 1 THEN
+                        null
                     ELSE
                         od.data_exclusao::timestamp(0)
                     END
                 ) as deleted_at
-            from pmieducar.matricula_ocorrencia_disciplinar od 
-            inner join pmieducar.matricula m 
+            from pmieducar.matricula_ocorrencia_disciplinar od
+            inner join pmieducar.matricula m
             on m.cod_matricula = od.ref_cod_matricula
-            inner join pmieducar.tipo_ocorrencia_disciplinar tod 
+            inner join pmieducar.tipo_ocorrencia_disciplinar tod
             on tod.cod_tipo_ocorrencia_disciplinar = od.ref_cod_tipo_ocorrencia_disciplinar
-            where true 
+            where true
                 and od.visivel_pais = 1
-                and m.ref_ref_cod_escola IN ({$escola})     
+                and m.ref_ref_cod_escola IN ({$escola})
                 {$where}
         ";
 
@@ -1235,10 +1235,12 @@ class AlunoController extends ApiCoreController
             $params = [];
 
             $where = '';
+            $whereDeleteds = '';
 
             if ($modified) {
                 $params[] = $modified;
                 $where = 'AND greatest(p.data_rev::timestamp(0), f.data_rev::timestamp(0), a.updated_at, ff.updated_at) >= $1';
+                $whereDeleteds = 'AND a.deleted_at >= $1';
             }
 
             $sql = "
@@ -1251,9 +1253,9 @@ class AlunoController extends ApiCoreController
                 (
                     CASE WHEN a.ativo = 0 THEN
                         p.data_rev::timestamp(0)
-                    ELSE 
+                    ELSE
                         null
-                    END 
+                    END
                 ) as deleted_at
                 FROM pmieducar.aluno a
                 INNER JOIN cadastro.pessoa p ON p.idpes = a.ref_idpes
@@ -1264,7 +1266,27 @@ class AlunoController extends ApiCoreController
                     select * from pmieducar.matricula where ref_ref_cod_escola in ({$escola}) and ref_cod_aluno = a.cod_aluno
                 )
                 {$where}
-                ORDER BY updated_at, p.nome ASC
+
+                UNION ALL
+
+                SELECT aluno_excluidos.cod_aluno AS aluno_id,
+                COALESCE(p.nome, '-') as nome_aluno,
+                f.nome_social,
+                COALESCE(f.data_nasc, CURRENT_DATE) as data_nascimento,
+                ff.caminho as foto_aluno,
+                greatest(p.data_rev::timestamp(0), f.data_rev::timestamp(0), aluno_excluidos.updated_at, ff.updated_at) as updated_at,
+                aluno_excluidos.deleted_at as deleted_at
+                FROM pmieducar.aluno_excluidos
+                LEFT JOIN cadastro.pessoa p ON p.idpes = aluno_excluidos.ref_idpes
+                LEFT JOIN cadastro.fisica f ON f.idpes = p.idpes
+                LEFT JOIN cadastro.fisica_foto ff ON p.idpes = ff.idpes
+                WHERE TRUE
+                and exists (
+                    select * from pmieducar.matricula where ref_ref_cod_escola in ({$escola}) and ref_cod_aluno = aluno_excluidos.cod_aluno
+                )
+                {$whereDeleteds}
+
+                ORDER BY updated_at, nome_aluno ASC
             ";
 
             $alunos = $this->fetchPreparedQuery($sql, $params);

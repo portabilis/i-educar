@@ -46,7 +46,6 @@ class CoreExt_Controller_RequestTest extends PHPUnit\Framework\TestCase
 {
   protected $_request = NULL;
 
-
   /**
    * @var string
    */

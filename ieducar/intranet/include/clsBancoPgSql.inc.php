@@ -408,7 +408,7 @@ abstract class clsBancoSQL_
    */
   function numLinhas()
   {
-    return pg_num_rows($this->bConsulta_ID);
+    return $this->bConsulta_ID->rowCount();
   }
 
   /**
@@ -425,7 +425,7 @@ abstract class clsBancoSQL_
    */
   function numCampos()
   {
-    return pg_num_fields($this->bConsulta_ID);
+    return $this->bConsulta_ID->columnCount();
   }
 
   /**
