@@ -21,7 +21,7 @@ matrix:
 
       before_script:
         - composer new-install
-        - php artisan dusk:chrome-driver 74
+        - php artisan dusk:chrome-driver
         - php artisan serve > /dev/null 2>&1 &
 
       script:
@@ -59,7 +59,7 @@ matrix:
 
       before_script:
         - composer new-install
-        - php artisan dusk:chrome-driver 74
+        - php artisan dusk:chrome-driver
         - php artisan serve > /dev/null 2>&1 &
 
       script:
@@ -97,7 +97,7 @@ matrix:
 
       before_script:
         - composer new-install
-        - php artisan dusk:chrome-driver 74
+        - php artisan dusk:chrome-driver
         - php artisan serve > /dev/null 2>&1 &
 
       script:
