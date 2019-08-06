@@ -1,4 +1,5 @@
 <?php
+
 class clsCadastroDeficiencia
 {
     public $cod_deficiencia;
