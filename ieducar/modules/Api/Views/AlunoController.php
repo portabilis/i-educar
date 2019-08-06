@@ -1240,7 +1240,7 @@ class AlunoController extends ApiCoreController
             if ($modified) {
                 $params[] = $modified;
                 $where = 'AND greatest(p.data_rev::timestamp(0), f.data_rev::timestamp(0), a.updated_at, ff.updated_at) >= $1';
-                $whereDeleteds = 'AND a.deleted_at >= $1';
+                $whereDeleteds = 'AND aluno_excluidos.deleted_at >= $1';
             }
 
             $sql = "
