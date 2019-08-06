@@ -2,6 +2,7 @@
 
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -112,8 +113,11 @@ class indice extends clsCadastro
 
         $this->campoOculto('ref_pessoa', $this->ref_pessoa);
 
+        $cadastrando = true;
+
         if (is_numeric($this->ref_pessoa)) {
             $this->campoOculto('confere_senha', $this->confere_senha);
+            $cadastrando = false;
         }
 
         if ($_POST) {
@@ -154,7 +158,7 @@ class indice extends clsCadastro
         }
 
         $this->campoTexto('matricula', 'Matrícula', $this->matricula, 12, 12, true);
-        $this->campoSenha('_senha', 'Senha', $this->_senha, true);
+        $this->campoSenha('_senha', 'Senha', null, $cadastrando);
         $this->campoEmail('email', 'E-mail usuário', $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
         $this->campoTexto('matricula_interna', 'Matrícula interna', $this->matricula_interna, 30, 30, false, false, false, 'Utilizado somente para registro, caso a instituição deseje que a matrícula interna deste funcionário seja registrada no sistema.');
         $this->campoData('data_expiracao', 'Data de Expiração', $this->data_expiracao);
@@ -258,7 +262,9 @@ class indice extends clsCadastro
             return false;
         }
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, md5($this->_senha), $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, $this->ref_cod_setor_new, null, 0, 1, $this->email, $this->matricula_interna);
+        $senha = Hash::make($this->_senha);
+
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, $this->ref_cod_setor_new, null, 0, 1, $this->email, $this->matricula_interna);
 
         if ($obj_funcionario->cadastra()) {
             $funcionario = $obj_funcionario->detalhe();
@@ -320,16 +326,20 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->validatesPassword($this->matricula, $this->_senha)) {
-            return false;
+        // Ao editar não é necessário trocar a senha, então apenas quando algo
+        // for informado é que a mesma será alterada.
+
+        $senha = null;
+
+        if ($this->_senha) {
+            if (!$this->validatesPassword($this->matricula, $this->_senha)) {
+                return false;
+            }
+
+            $senha = Hash::make($this->_senha);
         }
 
-        //verifica se a senha ja esta criptografada
-        if ($this->_senha != $this->confere_senha) {
-            $this->_senha = md5($this->_senha);
-        }
-
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $this->_senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, $this->ref_cod_setor_new, null, 0, null, $this->email, $this->matricula_interna);
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, $this->ref_cod_setor_new, null, 0, null, $this->email, $this->matricula_interna);
         $detalheAntigo = $obj_funcionario->detalhe();
 
         if ($obj_funcionario->edita()) {
