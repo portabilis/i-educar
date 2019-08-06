@@ -144,6 +144,65 @@ class Menu extends Model
     }
 
     /**
+     * Altera o título dos menus de "Declaração" para "Atestado".
+     *
+     * @return void
+     */
+    public static function changeMenusToAttestation()
+    {
+        $exception = [999229, 999812];
+
+        static::query()
+            ->where('title', 'ilike', '%Declarações%')
+            ->get()
+            ->each(function (Menu $menu) {
+                $menu->title = str_replace('Declarações', 'Atestados', $menu->title);
+                $menu->description = str_replace('Declarações', 'Atestados', $menu->description);
+                $menu->save();
+            });
+
+        static::query()
+            ->where('title', 'ilike', '%Declaração%')
+            ->whereNotIn('old', $exception)
+            ->get()
+            ->each(function (Menu $menu) {
+                $menu->title = str_replace('Declaração', 'Atestado', $menu->title);
+                $menu->description = str_replace('Declaração', 'Atestado', $menu->description);
+                $menu->save();
+            });
+    }
+
+    /**
+     * Altera o título dos menus de "Atestado" para "Declaração".
+     *
+     * @return void
+     */
+    public static function changeMenusToDeclaration()
+    {
+        $exception = [999229, 999812];
+
+        static::query()
+            ->where('title', 'ilike', '%Atestados%')
+            ->whereNotIn('old', $exception)
+            ->get()
+            ->each(function (Menu $menu) {
+                $menu->title = str_replace('Atestados', 'Declarações', $menu->title);
+                $menu->description = str_replace('Atestados', 'Declarações', $menu->description);
+                $menu->save();
+            });
+
+        static::query()
+            ->where('title', 'ilike', '%Atestado%')
+            ->whereNotIn('old', $exception)
+            ->get()
+            ->each(function (Menu $menu) {
+                $menu->title = str_replace('Atestado', 'Declaração', $menu->title);
+                $menu->description = str_replace('Atestado', 'Declaração', $menu->description);
+                $menu->save();
+            });
+    }
+
+    /**
      * Retorna os menus disponíveis para um determinado usuário.
      *
      * @param User $user
