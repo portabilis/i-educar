@@ -1,5 +1,7 @@
 <?php
 
+use App\Menu;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -205,7 +207,7 @@ class indice extends clsCadastro
 
         $this->campoRotulo('gerais','<b>Gerais</b>');
         $this->campoCheck('obrigar_documento_pessoa', 'Exigir documento (RG, CPF ou Certidão de nascimento / casamento) no cadastro pessoa / aluno', $this->obrigar_documento_pessoa);
-        
+
         $this->campoRotulo('datas','<b>Datas</b>');
         $this->campoData('data_base_transferencia', 'Data máxima para deslocamento', Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia), null, null, false);
         $this->campoData('data_base_remanejamento', 'Data máxima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
@@ -265,7 +267,7 @@ class indice extends clsCadastro
 
         $this->campoCheck('matricula_apenas_bairro_escola', 'Permitir matrícula de alunos apenas do bairro da escola?', $this->matricula_apenas_bairro_escola);
 
-        
+
 
         $this->campoCheck('controlar_espaco_utilizacao_aluno', 'Controlar espaço utilizado pelo aluno?', $this->controlar_espaco_utilizacao_aluno);
         $this->campoMonetario(
@@ -372,6 +374,13 @@ class indice extends clsCadastro
             $detalheAtual = $obj->detalhe();
             $auditoria = new clsModulesAuditoriaGeral('instituicao', $this->pessoa_logada, $this->cod_instituicao);
             $auditoria->alteracao($detalheAntigo, $detalheAtual);
+
+            if (is_null($this->altera_atestado_para_declaracao)) {
+                Menu::changeMenusToAttestation();
+            } else {
+                Menu::changeMenusToDeclaration();
+            }
+
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_instituicao_lst.php');
         }
