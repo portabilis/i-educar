@@ -8,8 +8,6 @@ class clsModulesComponenteCurricularAnoEscolar
     public $tipo_nota;
     public $componentes;
     public $updateInfo;
-
-    // propriedades padrao
     public $_total; // Armazena o total de resultados obtidos na ultima chamada ao metodo lista
     public $_schema; // Nome do schema
     public $_tabela; // Nome da tabela
@@ -320,7 +318,7 @@ SQL;
                 $gruda = ', ';
             }
 
-            if (is_numeric($this->tipo_nota) && (int)$tipo_nota !== 0) {
+            if (is_numeric($this->tipo_nota) && (int) $tipo_nota !== 0) {
                 $campos .= "{$gruda}tipo_nota";
                 $valores .= "{$gruda}'{$this->tipo_nota}'";
                 $gruda = ', ';
@@ -354,7 +352,6 @@ SQL;
         return false;
     }
 
-    // Retorna uma lista filtrados de acordo com os parametros
     public function lista(
         $componente_curricular_id = null,
         $ano_escolar_id = null,
@@ -412,26 +409,22 @@ SQL;
         return false;
     }
 
-    // Define quais campos da tabela serao selecionados na invocacao do metodo lista
     public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
 
-    // Define que o metodo Lista devera retornoar todos os campos da tabela
     public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
 
-    // Define limites de retorno para o metodo lista
     public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
     }
 
-    // Retorna a string com o trecho da query resposavel pelo Limite de registros
     public function getLimite()
     {
         if (is_numeric($this->_limite_quantidade)) {
@@ -447,18 +440,13 @@ SQL;
         return '';
     }
 
-    // Define campo para ser utilizado como ordenacao no metolo lista
     public function setOrderby($strNomeCampo)
     {
-        // limpa a string de possiveis erros (delete, insert, etc)
-        // $strNomeCampo = eregi_replace();
-
         if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
     }
 
-    // Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
     public function getOrderby()
     {
         if (is_string($this->_campo_order_by)) {
