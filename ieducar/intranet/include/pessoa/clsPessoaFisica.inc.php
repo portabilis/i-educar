@@ -599,28 +599,6 @@ class clsPessoaFisica extends clsPessoaFj
         return false;
     }
 
-    public function queryRapidaCPF($int_cpf)
-    {
-        $this->cpf = $int_cpf + 0;
-        $this->detalhe();
-
-        $resultado = [];
-        $pos = 0;
-
-        for ($i = 1; $i < func_num_args(); $i++) {
-            $campo = func_get_arg($i);
-            $resultado[$pos] = $this->$campo ? $this->$campo : '';
-            $resultado[$campo] = &$resultado[$pos];
-            $pos++;
-        }
-
-        if (count($resultado) > 0) {
-            return $resultado;
-        }
-
-        return false;
-    }
-
     public function excluir()
     {
         if ($this->idpes) {
@@ -636,13 +614,6 @@ class clsPessoaFisica extends clsPessoaFj
                 $auditoria = new clsModulesAuditoriaGeral('fisica', $this->pessoa_logada, $this->idpes);
                 $auditoria->exclusao($detalheAntigo, $this->detalheSimples());
             }
-        }
-    }
-
-    public function setTipoEndereco($endereco)
-    {
-        if (is_numeric($endereco)) {
-            $this->tipo_endereco = $endereco;
         }
     }
 
