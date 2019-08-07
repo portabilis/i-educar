@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+
 require_once 'include/pmieducar/geral.inc.php';
 
 class clsModulesAuditoriaNota
@@ -20,10 +22,10 @@ class clsModulesAuditoriaNota
 
     public function __construct($notaAntiga, $notaNova, $turmaId)
     {
-        //Foi necessário enviar turma pois não á possível saber a turma atual somente através da matrícula
+        //Foi necessário enviar turma pois não á possí­vel saber a turma atual somente através da matrí­cula
         $this->turma = $turmaId;
 
-        $this->usuario = $this->getUsuarioAtual();
+        $this->usuario = Auth::id();
         $this->rotina = 'notas';
 
         $this->notaAntiga = $notaAntiga;
@@ -169,8 +171,7 @@ class clsModulesAuditoriaNota
         $nomeAluno = $this->getNomeAluno($alunoId);
         $nomeTurma = $this->getNomeTurma($turmaId);
 
-        return [
-            'instituicao' => $nomeInstitucao,
+        return ['instituicao' => $nomeInstitucao,
             'instituicao_id' => $instituicaoId,
             'escola' => $nomeEscola,
             'escola_id' => $escolaId,
@@ -181,8 +182,7 @@ class clsModulesAuditoriaNota
             'turma' => $nomeTurma,
             'turma_id' => $turmaId,
             'aluno' => $nomeAluno,
-            'aluno_id' => $alunoId
-        ];
+            'aluno_id' => $alunoId];
     }
 
     private function getNomeInstituicao($instituicaoId)
@@ -243,15 +243,5 @@ class clsModulesAuditoriaNota
         $nomeTurma = $detTurma['nm_turma'];
 
         return $nomeTurma;
-    }
-
-    private function getUsuarioAtual()
-    {
-        $pessoaId = $this->pessoa_logada;
-        $objFuncionario = new clsFuncionario($pessoaId);
-        $detFuncionario = $objFuncionario->detalhe();
-        $matricula = $detFuncionario['matricula'];
-
-        return $pessoaId . ' - ' . $matricula;
     }
 }

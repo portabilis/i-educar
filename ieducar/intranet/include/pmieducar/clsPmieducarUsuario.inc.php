@@ -25,114 +25,23 @@ class clsPmieducarUsuario extends Model
         $this->_campos_lista = $this->_todos_campos = 'u.cod_usuario, u.ref_cod_instituicao, u.ref_funcionario_cad, u.ref_funcionario_exc, u.ref_cod_tipo_usuario, u.data_cadastro, u.data_exclusao, u.ativo';
 
         if (is_numeric($ref_funcionario_exc)) {
-            if (class_exists('clsFuncionario')) {
-                $tmp_obj = new clsFuncionario($ref_funcionario_exc);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_funcionario_exc = $ref_funcionario_exc;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_funcionario_exc = $ref_funcionario_exc;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_exc}'")) {
-                    $this->ref_funcionario_exc = $ref_funcionario_exc;
-                }
-            }
+            $this->ref_funcionario_exc = $ref_funcionario_exc;
         }
         if (is_numeric($ref_funcionario_cad)) {
-            if (class_exists('clsFuncionario')) {
-                $tmp_obj = new clsFuncionario($ref_funcionario_cad);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_funcionario_cad = $ref_funcionario_cad;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_funcionario_cad = $ref_funcionario_cad;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_funcionario_cad}'")) {
-                    $this->ref_funcionario_cad = $ref_funcionario_cad;
-                }
-            }
+            $this->ref_funcionario_cad = $ref_funcionario_cad;
         }
         if (is_numeric($ref_cod_tipo_usuario)) {
-            if (class_exists('clsPmieducarTipoUsuario')) {
-                $tmp_obj = new clsPmieducarTipoUsuario($ref_cod_tipo_usuario);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_tipo_usuario = $ref_cod_tipo_usuario;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_tipo_usuario = $ref_cod_tipo_usuario;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.tipo_usuario WHERE cod_tipo_usuario = '{$ref_cod_tipo_usuario}'")) {
-                    $this->ref_cod_tipo_usuario = $ref_cod_tipo_usuario;
-                }
-            }
+            $this->ref_cod_tipo_usuario = $ref_cod_tipo_usuario;
         }
         if (is_numeric($ref_cod_instituicao)) {
-            if (class_exists('clsPmieducarInstituicao')) {
-                $tmp_obj = new clsPmieducarInstituicao($ref_cod_instituicao);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_instituicao = $ref_cod_instituicao;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_instituicao = $ref_cod_instituicao;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.instituicao WHERE cod_instituicao = '{$ref_cod_instituicao}'")) {
-                    $this->ref_cod_instituicao = $ref_cod_instituicao;
-                }
-            }
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
         if (is_numeric($ref_cod_escola)) {
-            if (class_exists('clsPmieducarEscola')) {
-                $tmp_obj = new clsPmieducarEscola($ref_cod_escola);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_escola = $ref_cod_escola;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_escola = $ref_cod_escola;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.escola WHERE cod_escola = '{$ref_cod_escola}'")) {
-                    $this->ref_cod_escola = $ref_cod_escola;
-                }
-            }
+            $this->ref_cod_escola = $ref_cod_escola;
         }
         if (is_numeric($cod_usuario)) {
-            if (class_exists('clsFuncionario')) {
-                $tmp_obj = new clsFuncionario($cod_usuario);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->cod_usuario = $cod_usuario;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->cod_usuario = $cod_usuario;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$cod_usuario}'")) {
-                    $this->cod_usuario = $cod_usuario;
-                }
-            }
+            $this->cod_usuario = $cod_usuario;
         }
-
         if (is_string($data_cadastro)) {
             $this->data_cadastro = $data_cadastro;
         }
@@ -191,6 +100,7 @@ class clsPmieducarUsuario extends Model
             $gruda = ', ';
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
+            //return $db->InsertId( "{$this->_tabela}_cod_usuario_seq");
             return $db->CampoUnico("SELECT 1 FROM {$this->_tabela} WHERE cod_usuario={$this->cod_usuario}");
         }
 
@@ -457,6 +367,14 @@ class clsPmieducarUsuario extends Model
     public function excluir()
     {
         if (is_numeric($this->cod_usuario) && is_numeric($this->ref_funcionario_exc)) {
+
+            /*
+                delete
+            $db = new clsBanco();
+            $db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_usuario = '{$this->cod_usuario}'" );
+            return true;
+            */
+
             $this->ativo = 0;
 
             return $this->edita();

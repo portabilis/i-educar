@@ -54,38 +54,27 @@ class clsPmieducarServidor extends Model
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'servidor';
         $this->_campos_lista = $this->_todos_campos = 'cod_servidor, ref_idesco, carga_horaria, data_cadastro, data_exclusao, ativo, ref_cod_instituicao,ref_cod_subnivel,
-            situacao_curso_superior_1, formacao_complementacao_pedagogica_1, codigo_curso_superior_1, ano_inicio_curso_superior_1, ano_conclusao_curso_superior_1, instituicao_curso_superior_1,
-            situacao_curso_superior_2, formacao_complementacao_pedagogica_2, codigo_curso_superior_2, ano_inicio_curso_superior_2, ano_conclusao_curso_superior_2, instituicao_curso_superior_2,
-            situacao_curso_superior_3, formacao_complementacao_pedagogica_3, codigo_curso_superior_3, ano_inicio_curso_superior_3, ano_conclusao_curso_superior_3, instituicao_curso_superior_3,
-            pos_graduacao, curso_formacao_continuada, multi_seriado, tipo_ensino_medio_cursado
-            ';
+    situacao_curso_superior_1, formacao_complementacao_pedagogica_1, codigo_curso_superior_1, ano_inicio_curso_superior_1, ano_conclusao_curso_superior_1, instituicao_curso_superior_1,
+    situacao_curso_superior_2, formacao_complementacao_pedagogica_2, codigo_curso_superior_2, ano_inicio_curso_superior_2, ano_conclusao_curso_superior_2, instituicao_curso_superior_2,
+    situacao_curso_superior_3, formacao_complementacao_pedagogica_3, codigo_curso_superior_3, ano_inicio_curso_superior_3, ano_conclusao_curso_superior_3, instituicao_curso_superior_3,
+    pos_graduacao, curso_formacao_continuada, multi_seriado, tipo_ensino_medio_cursado
+    ';
         $this->_campos_lista2 = $this->_todos_campos2 = 's.cod_servidor, s.ref_idesco, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.ref_cod_instituicao,s.ref_cod_subnivel,
-            s.situacao_curso_superior_1, s.formacao_complementacao_pedagogica_1, s.codigo_curso_superior_1, s.ano_inicio_curso_superior_1, s.ano_conclusao_curso_superior_1, s.instituicao_curso_superior_1,
-            s.situacao_curso_superior_2, s.formacao_complementacao_pedagogica_2, s.codigo_curso_superior_2, s.ano_inicio_curso_superior_2, s.ano_conclusao_curso_superior_2, s.instituicao_curso_superior_2,
-            s.situacao_curso_superior_3, s.formacao_complementacao_pedagogica_3, s.codigo_curso_superior_3, s.ano_inicio_curso_superior_3, s.ano_conclusao_curso_superior_3, s.instituicao_curso_superior_3,
-            s.pos_graduacao, s.curso_formacao_continuada, s.multi_seriado, s.tipo_ensino_medio_cursado,
-            (SELECT replace(textcat_all(matricula),\' <br>\',\',\')
-                  FROM pmieducar.servidor_funcao sf
-                 WHERE s.cod_servidor = sf.ref_cod_servidor) as matricula_servidor
-            ';
+    s.situacao_curso_superior_1, s.formacao_complementacao_pedagogica_1, s.codigo_curso_superior_1, s.ano_inicio_curso_superior_1, s.ano_conclusao_curso_superior_1, s.instituicao_curso_superior_1,
+    s.situacao_curso_superior_2, s.formacao_complementacao_pedagogica_2, s.codigo_curso_superior_2, s.ano_inicio_curso_superior_2, s.ano_conclusao_curso_superior_2, s.instituicao_curso_superior_2,
+    s.situacao_curso_superior_3, s.formacao_complementacao_pedagogica_3, s.codigo_curso_superior_3, s.ano_inicio_curso_superior_3, s.ano_conclusao_curso_superior_3, s.instituicao_curso_superior_3,
+    s.pos_graduacao, s.curso_formacao_continuada, s.multi_seriado, s.tipo_ensino_medio_cursado,
+    (SELECT replace(textcat_all(matricula),\' <br>\',\',\')
+          FROM pmieducar.servidor_funcao sf
+         WHERE s.cod_servidor = sf.ref_cod_servidor) as matricula_servidor
+    ';
         $this->ref_idesco = $ref_idesco;
 
         /**
          * Filtrar cod_servidor
          */
         if (is_numeric($cod_servidor)) {
-            if (class_exists('clsFuncionario')) {
-                $tmp_obj = new clsFuncionario($cod_servidor);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->cod_servidor = $cod_servidor;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    $this->cod_servidor = $cod_servidor;
-                }
-            } elseif ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$cod_servidor}'")) {
-                $this->cod_servidor = $cod_servidor;
-            }
+            $this->cod_servidor = $cod_servidor;
         }
         if (is_numeric($carga_horaria)) {
             $this->carga_horaria = $carga_horaria;
@@ -100,38 +89,10 @@ class clsPmieducarServidor extends Model
             $this->ativo = $ativo;
         }
         if (is_numeric($ref_cod_instituicao)) {
-            if (class_exists('clsPmieducarInstituicao')) {
-                $tmp_obj = new clsPmieducarInstituicao($ref_cod_instituicao);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_instituicao = $ref_cod_instituicao;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_instituicao = $ref_cod_instituicao;
-                    }
-                }
-            } elseif ($db->CampoUnico("SELECT 1 FROM pmieducar.instituicao WHERE cod_instituicao = '{$ref_cod_instituicao}'")) {
-                $this->ref_cod_instituicao = $ref_cod_instituicao;
-            }
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
         if (is_numeric($ref_cod_subnivel)) {
-            if (class_exists('clsPmieducarSubnivel')) {
-                $tmp_obj = new clsPmieducarSubnivel($ref_cod_subnivel);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_subnivel = $ref_cod_subnivel;
-                    }
-                } else {
-                    if (method_exists($tmp_obj, 'detalhe')) {
-                        if ($tmp_obj->detalhe()) {
-                            $this->ref_cod_subnivel = $ref_cod_subnivel;
-                        }
-                    }
-                }
-            } elseif ($db->CampoUnico("SELECT 1 FROM pmieducar.subnivel WHERE cod_subnivel = '{$ref_cod_subnivel}'")) {
-                $this->ref_cod_subnivel = $ref_cod_subnivel;
-            }
+            $this->ref_cod_subnivel = $ref_cod_subnivel;
         }
     }
 
