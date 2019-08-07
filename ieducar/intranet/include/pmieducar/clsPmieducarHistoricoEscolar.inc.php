@@ -1,11 +1,12 @@
 <?php
 
+use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
-class clsPmieducarHistoricoEscolar
+class clsPmieducarHistoricoEscolar extends Model
 {
     public $ref_cod_aluno;
     public $sequencial;
@@ -33,62 +34,6 @@ class clsPmieducarHistoricoEscolar
     public $extra_curricular;
     public $ref_cod_matricula;
     public $pessoa_logada;
-
-    /**
-     * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
-     *
-     * @var int
-     */
-    public $_total;
-
-    /**
-     * Nome do schema
-     *
-     * @var string
-     */
-    public $_schema;
-
-    /**
-     * Nome da tabela
-     *
-     * @var string
-     */
-    public $_tabela;
-
-    /**
-     * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
-     *
-     * @var string
-     */
-    public $_campos_lista;
-
-    /**
-     * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
-     *
-     * @var string
-     */
-    public $_todos_campos;
-
-    /**
-     * Valor que define a quantidade de registros a ser retornada pelo metodo lista
-     *
-     * @var int
-     */
-    public $_limite_quantidade;
-
-    /**
-     * Define o valor de offset no retorno dos registros no metodo lista
-     *
-     * @var int
-     */
-    public $_limite_offset;
-
-    /**
-     * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
-     *
-     * @var string
-     */
-    public $_campo_order_by;
 
     public function __construct($ref_cod_aluno = null, $sequencial = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_serie = null, $ano = null, $carga_horaria = null, $dias_letivos = null, $escola = null, $escola_cidade = null, $escola_uf = null, $observacao = null, $aprovado = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $faltas_globalizadas = null, $ref_cod_instituicao = null, $origem = null, $extra_curricular = null, $ref_cod_matricula = null, $frequencia = null, $registro = null, $livro = null, $folha = null, $nm_curso = null, $historico_grade_curso_id = null, $aceleracao = null, $ref_cod_escola = null, $dependencia = false, $posicao = null)
     {
@@ -862,82 +807,6 @@ class clsPmieducarHistoricoEscolar
         }
 
         return false;
-    }
-
-    /**
-     * Define quais campos da tabela serao selecionados na invocacao do metodo lista
-     *
-     * @return null
-     */
-    public function setCamposLista($str_campos)
-    {
-        $this->_campos_lista = $str_campos;
-    }
-
-    /**
-     * Define que o metodo Lista devera retornoar todos os campos da tabela
-     *
-     * @return null
-     */
-    public function resetCamposLista()
-    {
-        $this->_campos_lista = $this->_todos_campos;
-    }
-
-    /**
-     * Define limites de retorno para o metodo lista
-     *
-     * @return null
-     */
-    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
-    {
-        $this->_limite_quantidade = $intLimiteQtd;
-        $this->_limite_offset = $intLimiteOffset;
-    }
-
-    /**
-     * Retorna a string com o trecho da query resposavel pelo Limite de registros
-     *
-     * @return string
-     */
-    public function getLimite()
-    {
-        if (is_numeric($this->_limite_quantidade)) {
-            $retorno = " LIMIT {$this->_limite_quantidade}";
-            if (is_numeric($this->_limite_offset)) {
-                $retorno .= " OFFSET {$this->_limite_offset} ";
-            }
-
-            return $retorno;
-        }
-
-        return '';
-    }
-
-    /**
-     * Define campo para ser utilizado como ordenacao no metolo lista
-     *
-     * @return null
-     */
-    public function setOrderby($strNomeCampo)
-    {
-        if (is_string($strNomeCampo) && $strNomeCampo) {
-            $this->_campo_order_by = $strNomeCampo;
-        }
-    }
-
-    /**
-     * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
-     *
-     * @return string
-     */
-    public function getOrderby()
-    {
-        if (is_string($this->_campo_order_by)) {
-            return " ORDER BY {$this->_campo_order_by} ";
-        }
-
-        return '';
     }
 
     public function getMaxSequencial($ref_cod_aluno)
