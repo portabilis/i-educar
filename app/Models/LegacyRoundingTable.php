@@ -12,11 +12,6 @@ class LegacyRoundingTable extends Model
     protected $table = 'modules.tabela_arredondamento';
 
     /**
-     * @var string
-     */
-    protected $primaryKey = 'id';
-
-    /**
      * @var array
      */
     protected $fillable = [
