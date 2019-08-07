@@ -27,19 +27,7 @@ class clsFuncionario extends clsPessoaFisica
     public $tabela_funcionario = 'funcionario';
     public $tabela_fisica_cpf = 'fisica';
 
-    public $_total;
-
-    public $_campos_lista;
-
-    public $_todos_campos;
-
-    public $_limite_quantidade;
-
-    public $_limite_offset;
-
-    public $_campo_order_by;
-
-    public function __construct($int_idpes = false, $str_matricula = false, $int_cpf = false, $int_ref_cod_setor = false, $str_senha = false, $data_troca_senha = false, $tempo_expira_senha = false, $data_reativa_conta = false, $data_expiracao = false, $ref_cod_funcionario_vinculo = false, $ramal = false, $matricula_permanente = false, $banido = false, $email = null)
+    public function __construct($int_idpes = false, $str_matricula = false, $int_cpf = false, $int_ref_cod_setor = false, $str_senha = false, $data_troca_senha = false, $tempo_expira_senha = false, $data_reativa_conta = false, $tempo_expira_conta = false, $ref_cod_funcionario_vinculo = false, $ramal = false, $matricula_permanente = false, $banido = false, $email = null)
     {
         $this->idpes = $int_idpes;
         $this->matricula = $str_matricula;
@@ -383,54 +371,5 @@ class clsFuncionario extends clsPessoaFisica
         }
 
         return false;
-    }
-
-    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
-    {
-        $this->_limite_quantidade = $intLimiteQtd;
-        $this->_limite_offset = $intLimiteOffset;
-    }
-
-    public function getLimite()
-    {
-        if (is_numeric($this->_limite_quantidade)) {
-            $retorno = " LIMIT {$this->_limite_quantidade}";
-            if (is_numeric($this->_limite_offset)) {
-                $retorno .= " OFFSET {$this->_limite_offset} ";
-            }
-
-            return $retorno;
-        }
-
-        return '';
-    }
-
-    public function setOrderby($strNomeCampo)
-    {
-        // limpa a string de possiveis erros (delete, insert, etc)
-        //$strNomeCampo = eregi_replace();
-
-        if (is_string($strNomeCampo) && $strNomeCampo) {
-            $this->_campo_order_by = $strNomeCampo;
-        }
-    }
-
-    public function getOrderby()
-    {
-        if (is_string($this->_campo_order_by)) {
-            return " ORDER BY {$this->_campo_order_by} ";
-        }
-
-        return '';
-    }
-
-    public function setCamposLista($str_campos)
-    {
-        $this->_campos_lista = $str_campos;
-    }
-
-    public function resetCamposLista()
-    {
-        $this->_campos_lista = $this->_todos_campos;
     }
 }
