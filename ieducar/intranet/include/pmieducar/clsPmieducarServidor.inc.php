@@ -95,9 +95,6 @@ class clsPmieducarServidor
      */
     public $_campo_order_by;
 
-    /**
-     * Construtor.
-     */
     public function __construct(
         $cod_servidor = null,
         $ref_cod_deficiencia = null,
@@ -113,20 +110,20 @@ class clsPmieducarServidor
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'servidor';
         $this->_campos_lista = $this->_todos_campos = 'cod_servidor, ref_idesco, carga_horaria, data_cadastro, data_exclusao, ativo, ref_cod_instituicao,ref_cod_subnivel,
-    situacao_curso_superior_1, formacao_complementacao_pedagogica_1, codigo_curso_superior_1, ano_inicio_curso_superior_1, ano_conclusao_curso_superior_1, instituicao_curso_superior_1,
-    situacao_curso_superior_2, formacao_complementacao_pedagogica_2, codigo_curso_superior_2, ano_inicio_curso_superior_2, ano_conclusao_curso_superior_2, instituicao_curso_superior_2,
-    situacao_curso_superior_3, formacao_complementacao_pedagogica_3, codigo_curso_superior_3, ano_inicio_curso_superior_3, ano_conclusao_curso_superior_3, instituicao_curso_superior_3,
-    pos_graduacao, curso_formacao_continuada, multi_seriado, tipo_ensino_medio_cursado
-    ';
+            situacao_curso_superior_1, formacao_complementacao_pedagogica_1, codigo_curso_superior_1, ano_inicio_curso_superior_1, ano_conclusao_curso_superior_1, instituicao_curso_superior_1,
+            situacao_curso_superior_2, formacao_complementacao_pedagogica_2, codigo_curso_superior_2, ano_inicio_curso_superior_2, ano_conclusao_curso_superior_2, instituicao_curso_superior_2,
+            situacao_curso_superior_3, formacao_complementacao_pedagogica_3, codigo_curso_superior_3, ano_inicio_curso_superior_3, ano_conclusao_curso_superior_3, instituicao_curso_superior_3,
+            pos_graduacao, curso_formacao_continuada, multi_seriado, tipo_ensino_medio_cursado
+            ';
         $this->_campos_lista2 = $this->_todos_campos2 = 's.cod_servidor, s.ref_idesco, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.ref_cod_instituicao,s.ref_cod_subnivel,
-    s.situacao_curso_superior_1, s.formacao_complementacao_pedagogica_1, s.codigo_curso_superior_1, s.ano_inicio_curso_superior_1, s.ano_conclusao_curso_superior_1, s.instituicao_curso_superior_1,
-    s.situacao_curso_superior_2, s.formacao_complementacao_pedagogica_2, s.codigo_curso_superior_2, s.ano_inicio_curso_superior_2, s.ano_conclusao_curso_superior_2, s.instituicao_curso_superior_2,
-    s.situacao_curso_superior_3, s.formacao_complementacao_pedagogica_3, s.codigo_curso_superior_3, s.ano_inicio_curso_superior_3, s.ano_conclusao_curso_superior_3, s.instituicao_curso_superior_3,
-    s.pos_graduacao, s.curso_formacao_continuada, s.multi_seriado, s.tipo_ensino_medio_cursado,
-    (SELECT replace(textcat_all(matricula),\' <br>\',\',\')
-          FROM pmieducar.servidor_funcao sf
-         WHERE s.cod_servidor = sf.ref_cod_servidor) as matricula_servidor
-    ';
+            s.situacao_curso_superior_1, s.formacao_complementacao_pedagogica_1, s.codigo_curso_superior_1, s.ano_inicio_curso_superior_1, s.ano_conclusao_curso_superior_1, s.instituicao_curso_superior_1,
+            s.situacao_curso_superior_2, s.formacao_complementacao_pedagogica_2, s.codigo_curso_superior_2, s.ano_inicio_curso_superior_2, s.ano_conclusao_curso_superior_2, s.instituicao_curso_superior_2,
+            s.situacao_curso_superior_3, s.formacao_complementacao_pedagogica_3, s.codigo_curso_superior_3, s.ano_inicio_curso_superior_3, s.ano_conclusao_curso_superior_3, s.instituicao_curso_superior_3,
+            s.pos_graduacao, s.curso_formacao_continuada, s.multi_seriado, s.tipo_ensino_medio_cursado,
+            (SELECT replace(textcat_all(matricula),\' <br>\',\',\')
+                  FROM pmieducar.servidor_funcao sf
+                 WHERE s.cod_servidor = sf.ref_cod_servidor) as matricula_servidor
+            ';
         $this->ref_idesco = $ref_idesco;
 
         /**
@@ -140,9 +137,7 @@ class clsPmieducarServidor
                         $this->cod_servidor = $cod_servidor;
                     }
                 } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    // if ($tmp_obj->detalhe()) {
                     $this->cod_servidor = $cod_servidor;
-                    // }
                 }
             } elseif ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$cod_servidor}'")) {
                 $this->cod_servidor = $cod_servidor;
@@ -849,8 +844,8 @@ class clsPmieducarServidor
                 $cond = 'AND';
                 $hora_ini = explode(':', $array_horario[1]);
                 $hora_fim = explode(':', $array_horario[2]);
-                $horas = sprintf('%02d', (int)abs($hora_fim[0]) - abs($hora_ini[0]));
-                $minutos = sprintf('%02d', (int)abs($hora_fim[1]) - abs($hora_ini[1]));
+                $horas = sprintf('%02d', (int) abs($hora_fim[0]) - abs($hora_ini[0]));
+                $minutos = sprintf('%02d', (int) abs($hora_fim[1]) - abs($hora_ini[1]));
                 // Remove qualquer AND que esteja no início da cláusula SQL
                 $wherePieces = explode(' ', trim($where));
                 if ('AND' == $wherePieces[0]) {
@@ -1181,11 +1176,11 @@ class clsPmieducarServidor
      * );
      * <code>
      *
-     * @since   Método disponível desde a versão 1.0.2
-     *
      * @return array Array associativo com a primeira chave sendo o código da
      *               função. O array interno contém o nome da função e se a função desempenha
      *               um papel de professor
+     * @since   Método disponível desde a versão 1.0.2
+     *
      */
     public function getServidorFuncoes()
     {
@@ -1212,8 +1207,6 @@ class clsPmieducarServidor
      * Retorna um array com as disciplinas alocadas ao servidor no quadro de
      * horários
      *
-     * @since   Método disponível desde a versão 1.0.2
-     *
      * @param int $codServidor    Código do servidor, caso não seja informado,
      *                            usa o código disponível no objeto atual
      * @param int $codInstituicao Código da instituição, caso não seja
@@ -1221,6 +1214,8 @@ class clsPmieducarServidor
      *
      * @return array|bool Array com códigos das disciplinas ordenados ou FALSE
      *                    caso o servidor não tenha disciplinas
+     * @since   Método disponível desde a versão 1.0.2
+     *
      */
     public function getServidorDisciplinasQuadroHorarioHorarios(
         $codServidor = null,
@@ -1251,14 +1246,14 @@ class clsPmieducarServidor
      * Retorna um array com os códigos de servidor e instituição, usando os
      * valores dos parâmetros ou das propriedades da instância atual.
      *
-     * @since   Método disponível desde a versão 1.2.0
-     *
      * @param int $codServidor    Código do servidor, caso não seja informado,
      *                            usa o código disponível no objeto atual
      * @param int $codInstituicao Código da instituição, caso não seja
      *                            informado, usa o código disponível no objeto atual
      *
      * @return array|bool (codServidor => (int), codInstituicao => (int))
+     * @since   Método disponível desde a versão 1.2.0
+     *
      */
     public function _getCodServidorInstituicao($codServidor = null, $codInstituicao = null)
     {
@@ -1279,8 +1274,6 @@ class clsPmieducarServidor
     /**
      * Retorna um array com os códigos das disciplinas do servidor
      *
-     * @since   Método disponível desde a versão 1.0.2
-     *
      * @param int $codServidor    Código do servidor, caso não seja informado,
      *                            usa o código disponível no objeto atual
      * @param int $codInstituicao Código da instituição, caso não seja
@@ -1288,6 +1281,8 @@ class clsPmieducarServidor
      *
      * @return array|bool Array com códigos das disciplinas ordenados ou FALSE
      *                    caso o servidor não tenha disciplinas
+     * @since   Método disponível desde a versão 1.0.2
+     *
      */
     public function getServidorDisciplinas(
         $codServidor = null,
@@ -1324,8 +1319,6 @@ class clsPmieducarServidor
     /**
      * Retorna os horários de aula do servidor na instituição.
      *
-     * @since   Método disponível desde a versão 1.0.2
-     *
      * @param int $codServidor    Código do servidor, caso não seja informado,
      *                            usa o código disponível no objeto atual
      * @param int $codInstituicao Código da instituição, caso não seja
@@ -1334,6 +1327,8 @@ class clsPmieducarServidor
      * @return array|bool Array associativo com os índices nm_escola, nm_curso,
      *                    nm_serie, nm_turma, nome (componente curricular), dia_semana,
      *                    qhh.hora_inicial e hora_final.
+     * @since   Método disponível desde a versão 1.0.2
+     *
      */
     public function getHorariosServidor($codServidor = null, $codInstituicao = null)
     {
@@ -1395,9 +1390,9 @@ class clsPmieducarServidor
      * Primeiro, recuperamos todas as funções do servidor e procuramos
      * por um dos itens que tenha o índice professor igual a 1.
      *
+     * @return bool TRUE caso o servidor desempenhe a função de professor
      * @since   Método disponível desde a versão 1.0.2
      *
-     * @return bool TRUE caso o servidor desempenhe a função de professor
      */
     public function isProfessor()
     {
