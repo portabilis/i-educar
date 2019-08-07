@@ -90,10 +90,6 @@ class indice extends clsListagem
           }
       }
 
-      if ($_GET) {
-          $this->simpleRedirect('educar_calendario_ano_letivo_lst.php');
-      }
-
       if (!$this->mes) {
           $this->mes = date('n');
       }
