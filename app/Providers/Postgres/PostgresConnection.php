@@ -13,8 +13,6 @@ class PostgresConnection extends ParentPostgresConnection
                 return [];
             }
 
-            $this->getPdoForSelect($useReadPdo)->exec('SET search_path = "$user", public, portal, cadastro, pmieducar, urbano, modules;');
-
             $statement = $this->prepared($this->getPdoForSelect($useReadPdo)
                 ->prepare($query));
             $this->bindValues($statement, $this->prepareBindings($bindings));
