@@ -108,9 +108,6 @@ class clsPmieducarMatricula
      */
     protected $db;
 
-    /**
-     * Construtor.
-     */
     public function __construct(
         $cod_matricula = null,
         $ref_cod_reserva_vaga = null,
@@ -845,7 +842,7 @@ class clsPmieducarMatricula
         }
 
         if (is_array($arr_int_cod_matricula) && count($arr_int_cod_matricula)) {
-            $filtros .= "{$whereAnd} cod_matricula IN (". implode(',', $arr_int_cod_matricula) . ')';
+            $filtros .= "{$whereAnd} cod_matricula IN (" . implode(',', $arr_int_cod_matricula) . ')';
             $whereAnd = ' AND ';
         }
 
@@ -1106,7 +1103,7 @@ class clsPmieducarMatricula
         }
 
         if (is_array($arr_int_cod_matricula) && count($arr_int_cod_matricula)) {
-            $filtros .= "{$whereAnd} cod_matricula IN (". implode(',', $arr_int_cod_matricula) . ')';
+            $filtros .= "{$whereAnd} cod_matricula IN (" . implode(',', $arr_int_cod_matricula) . ')';
             $whereAnd = ' AND ';
         }
 
@@ -1274,7 +1271,7 @@ class clsPmieducarMatricula
                                                AND matricula.ativo = 1");
 
         $sql = $ultimaMatricula == null ? null :
-           "SELECT *
+            "SELECT *
               FROM pmieducar.matricula
              WHERE matricula.ref_cod_aluno = $codAluno
                AND matricula.ativo = 1
@@ -1393,7 +1390,7 @@ class clsPmieducarMatricula
                     break;
                 }
 
-                $sequencia_= $obj->lista(
+                $sequencia_ = $obj->lista(
                     $lista['ref_serie_destino'],
                     null,
                     null,
@@ -1503,16 +1500,16 @@ class clsPmieducarMatricula
     }
 
     /**
-    * Seta a matricula para abandono e seta a observação passada por parâmetro
-    *
-    * @author lucassch
-    *
-    * @return boolean
-    */
+     * Seta a matricula para abandono e seta a observação passada por parâmetro
+     *
+     * @return boolean
+     * @author lucassch
+     *
+     */
     public function cadastraObs($obs, $tipoAbandono)
     {
         if (is_numeric($this->cod_matricula)) {
-            if (trim($obs)=='') {
+            if (trim($obs) == '') {
                 $obs = 'Não informado';
             }
 
@@ -1591,7 +1588,7 @@ class clsPmieducarMatricula
                 $observacao = 'Não informado';
             }
 
-            $db  = new clsBanco();
+            $db = new clsBanco();
             $sql = "UPDATE {$this->_tabela}
                        SET saida_escola = true,
                            observacao = '$observacao',
@@ -1778,7 +1775,7 @@ class clsPmieducarMatricula
                      ORDER BY EXTRACT ( YEAR FROM ( age(now(),data_nasc) ) ),
                               f.sexo";
 
-            $db= new clsBanco();
+            $db = new clsBanco();
             $db->Consulta($select);
             $total_registros = $db->Num_Linhas();
 

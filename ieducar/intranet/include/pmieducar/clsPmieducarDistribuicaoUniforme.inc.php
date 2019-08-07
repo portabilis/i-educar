@@ -110,9 +110,6 @@ class clsPmieducarDistribuicaoUniforme
      */
     public $_campo_order_by;
 
-    /**
-     * Construtor.
-     */
     public function __construct(
         $cod_distribuicao_uniforme = null,
         $ref_cod_aluno = null,

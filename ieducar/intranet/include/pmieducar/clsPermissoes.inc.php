@@ -16,12 +16,12 @@ class clsPermissoes
      *
      * @deprecated
      *
-     * @param int $int_processo_ap Identificador de processo
-     * @param int $int_idpes_usuario Identificador do usuário
-     * @param int $int_soma_nivel_acesso
-     * @param string $str_pagina_redirecionar Caminho para o qual a requisição será encaminhada caso o usuário não tenha privilégios suficientes para a operação de cadastro
-     * @param bool $super_usuario TRUE para verificar se o usuário é super usuário
-     * @param bool $int_verifica_usuario_biblioteca TRUE para verificar se o usuário possui cadastro em alguma biblioteca
+     * @param int    $int_processo_ap                 Identificador de processo
+     * @param int    $int_idpes_usuario               Identificador do usuário
+     * @param int    $int_soma_nivel_acesso
+     * @param string $str_pagina_redirecionar         Caminho para o qual a requisição será encaminhada caso o usuário não tenha privilégios suficientes para a operação de cadastro
+     * @param bool   $super_usuario                   TRUE para verificar se o usuário é super usuário
+     * @param bool   $int_verifica_usuario_biblioteca TRUE para verificar se o usuário possui cadastro em alguma biblioteca
      *
      * @return bool|void
      */
@@ -52,16 +52,16 @@ class clsPermissoes
      * Verifica se um usuário tem permissão para cadastrar baseado em um
      * identificador de processo.
      *
-     * @deprecated
-     *
-     * @param int $int_processo_ap Identificador de processo
-     * @param int $int_idpes_usuario Identificador do usuário
-     * @param int $int_soma_nivel_acesso
-     * @param string $str_pagina_redirecionar Caminho para o qual a requisição será encaminhada caso o usuário não tenha privilégios suficientes para a operação de cadastro
-     * @param bool $super_usuario TRUE para verificar se o usuário é super usuário
-     * @param bool $int_verifica_usuario_biblioteca TRUE para verificar se o usuário possui cadastro em alguma biblioteca
+     * @param int    $int_processo_ap                 Identificador de processo
+     * @param int    $int_idpes_usuario               Identificador do usuário
+     * @param int    $int_soma_nivel_acesso
+     * @param string $str_pagina_redirecionar         Caminho para o qual a requisição será encaminhada caso o usuário não tenha privilégios suficientes para a operação de cadastro
+     * @param bool   $super_usuario                   TRUE para verificar se o usuário é super usuário
+     * @param bool   $int_verifica_usuario_biblioteca TRUE para verificar se o usuário possui cadastro em alguma biblioteca
      *
      * @return bool|void
+     * @deprecated
+     *
      */
     public function permissao_excluir(
         $int_processo_ap,

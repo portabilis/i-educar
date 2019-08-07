@@ -25,8 +25,6 @@ class clsPmieducarCandidatoFilaUnica
     public $sexo;
     public $ideciv;
 
-    // propriedades padrao
-
     // Armazena o total de resultados obtidos na ultima chamada ao metodo lista
     public $_total;
 
@@ -832,7 +830,7 @@ class clsPmieducarCandidatoFilaUnica
 
     public function indefereCandidatura($motivo = null)
     {
-        $motivo = $motivo == null ? 'null' : '\''. $motivo .'\'';
+        $motivo = $motivo == null ? 'null' : '\'' . $motivo . '\'';
 
         if (is_numeric($this->cod_candidato_fila_unica)) {
             $historico = $this->montaHistorico();

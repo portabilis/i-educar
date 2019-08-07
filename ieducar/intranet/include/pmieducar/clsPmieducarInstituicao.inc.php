@@ -107,9 +107,6 @@ class clsPmieducarInstituicao
      */
     public $_campo_order_by;
 
-    /**
-     * Construtor.
-     */
     public function __construct(
         $cod_instituicao = null,
         $ref_usuario_exc = null,
@@ -1231,7 +1228,7 @@ class clsPmieducarInstituicao
             null,
             null,
             null,
-                    null,
+            null,
             null,
             null,
             null,

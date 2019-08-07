@@ -28,8 +28,6 @@ class clsPmieducarModulo
 
     public $num_etapas;
 
-    // propriedades padrao
-
     /**
      * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
      *
@@ -86,11 +84,6 @@ class clsPmieducarModulo
      */
     public $_campo_order_by;
 
-    /**
-     * Construtor
-     *
-     * @return object
-     */
     public function __construct(
         $cod_modulo = null,
         $ref_usuario_exc = null,
@@ -225,42 +218,42 @@ class clsPmieducarModulo
             $valores = [];
 
             if (is_numeric($this->ref_usuario_cad)) {
-                $campos[] = "ref_usuario_cad";
+                $campos[] = 'ref_usuario_cad';
                 $valores[] = "'{$this->ref_usuario_cad}'";
             }
 
             if (is_string($this->nm_tipo)) {
-                $campos[] = "nm_tipo";
+                $campos[] = 'nm_tipo';
                 $valores[] = "'{$this->nm_tipo}'";
             }
 
             if (is_string($this->descricao)) {
-                $campos[] = "descricao";
+                $campos[] = 'descricao';
                 $valores[] = "'{$this->descricao}'";
             }
             if (is_numeric($this->num_meses)) {
-                $campos[] = "num_meses";
+                $campos[] = 'num_meses';
                 $valores[] = "'{$this->num_meses}'";
             }
 
             if (is_numeric($this->num_semanas)) {
-                $campos[] = "num_semanas";
+                $campos[] = 'num_semanas';
                 $valores[] = "'{$this->num_semanas}'";
             }
 
             if (is_numeric($this->num_etapas)) {
-                $campos[] = "num_etapas";
+                $campos[] = 'num_etapas';
                 $valores[] = "'{$this->num_etapas}'";
             }
 
-            $campos[] = "data_cadastro";
-            $valores[] = "NOW()";
+            $campos[] = 'data_cadastro';
+            $valores[] = 'NOW()';
 
-            $campos[] = "ativo";
-            $valores[] = "'1'";
+            $campos[] = 'ativo';
+            $valores[] = '\'1\'';
 
             if (is_numeric($this->ref_cod_instituicao)) {
-                $campos[] = "ref_cod_instituicao";
+                $campos[] = 'ref_cod_instituicao';
                 $valores[] = "'{$this->ref_cod_instituicao}'";
             }
 
@@ -305,13 +298,13 @@ class clsPmieducarModulo
             if (is_numeric($this->num_meses)) {
                 $set[] = "num_meses = '{$this->num_meses}'";
             } else {
-                $set[] = "num_meses = NULL";
+                $set[] = 'num_meses = NULL';
             }
 
             if (is_numeric($this->num_semanas)) {
                 $set[] = "num_semanas = '{$this->num_semanas}'";
             } else {
-                $set[] = "num_semanas = NULL";
+                $set[] = 'num_semanas = NULL';
             }
 
             if (is_string($this->data_cadastro)) {
@@ -321,8 +314,8 @@ class clsPmieducarModulo
             if (is_numeric($this->ativo)) {
                 $set[] = "ativo = '{$this->ativo}'";
 
-                if ((bool)$this->ativo === false) {
-                    $set[] = "data_exclusao = NOW()";
+                if ((bool) $this->ativo === false) {
+                    $set[] = 'data_exclusao = NOW()';
                 }
             }
 
@@ -415,9 +408,9 @@ class clsPmieducarModulo
         }
 
         if (is_null($int_ativo) || $int_ativo) {
-            $filtros[] = "ativo = '1'";
+            $filtros[] = 'ativo = \'1\'';
         } else {
-            $filtros[] = "ativo = '0'";
+            $filtros[] = 'ativo = \'0\'';
         }
 
         if (is_numeric($int_ref_cod_instituicao)) {

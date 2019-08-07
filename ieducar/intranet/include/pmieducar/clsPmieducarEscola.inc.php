@@ -1,25 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
-
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'App/Model/NivelTipoUsuario.php';
 
-/**
- * clsPmieducarEscola class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- *
- * @category  i-Educar
- *
- * @license   @@license@@
- *
- * @package   iEd_Pmieducar
- *
- * @since     Classe disponível desde a versão 1.0.0
- *
- * @version   @@package_version@@
- */
 class clsPmieducarEscola
 {
     public $cod_escola;
@@ -241,9 +224,6 @@ class clsPmieducarEscola
      */
     public $_campo_order_by;
 
-    /**
-     * Construtor.
-     */
     public function __construct(
         $cod_escola = null,
         $ref_usuario_cad = null,
@@ -258,8 +238,7 @@ class clsPmieducarEscola
         $ativo = null,
         $bloquear_lancamento_diario_anos_letivos_encerrados = null,
         $utiliza_regra_diferenciada = false
-    )
-    {
+    ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'escola';
@@ -2345,106 +2324,106 @@ class clsPmieducarEscola
             }
 
             if (is_numeric($this->qtd_secretario_escolar) && $this->qtd_secretario_escolar > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_secretario_escolar = '{$this->qtd_secretario_escolar}'";
             } elseif (is_null($this->qtd_secretario_escolar) || $this->qtd_secretario_escolar == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_secretario_escolar = NULL ";
             }
 
             if (is_numeric($this->qtd_auxiliar_administrativo) && $this->qtd_auxiliar_administrativo > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_auxiliar_administrativo = '{$this->qtd_auxiliar_administrativo}'";
             } elseif (is_null($this->qtd_auxiliar_administrativo) || $this->qtd_auxiliar_administrativo == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_auxiliar_administrativo = NULL ";
             }
 
             if (is_numeric($this->qtd_apoio_pedagogico) && $this->qtd_apoio_pedagogico > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_apoio_pedagogico = '{$this->qtd_apoio_pedagogico}'";
             } elseif (is_null($this->qtd_apoio_pedagogico) || $this->qtd_apoio_pedagogico == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_apoio_pedagogico = NULL ";
             }
 
             if (is_numeric($this->qtd_coordenador_turno) && $this->qtd_coordenador_turno > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_coordenador_turno = '{$this->qtd_coordenador_turno}'";
             } elseif (is_null($this->qtd_coordenador_turno) || $this->qtd_coordenador_turno == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_coordenador_turno = NULL ";
             }
 
             if (is_numeric($this->qtd_tecnicos) && $this->qtd_tecnicos > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_tecnicos = '{$this->qtd_tecnicos}'";
             } elseif (is_null($this->qtd_tecnicos) || $this->qtd_tecnicos == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_tecnicos = NULL ";
             }
 
             if (is_numeric($this->qtd_bibliotecarios) && $this->qtd_bibliotecarios > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_bibliotecarios = '{$this->qtd_bibliotecarios}'";
             } elseif (is_null($this->qtd_bibliotecarios) || $this->qtd_bibliotecarios == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_bibliotecarios = NULL ";
             }
 
             if (is_numeric($this->qtd_segurancas) && $this->qtd_segurancas > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_segurancas = '{$this->qtd_segurancas}'";
             } elseif (is_null($this->qtd_segurancas) || $this->qtd_segurancas == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_segurancas = NULL ";
             }
 
             if (is_numeric($this->qtd_auxiliar_servicos_gerais) && $this->qtd_auxiliar_servicos_gerais > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_auxiliar_servicos_gerais = '{$this->qtd_auxiliar_servicos_gerais}'";
             } elseif (is_null($this->qtd_auxiliar_servicos_gerais) || $this->qtd_auxiliar_servicos_gerais == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_auxiliar_servicos_gerais = NULL ";
             }
 
             if (is_numeric($this->qtd_nutricionistas) && $this->qtd_nutricionistas > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_nutricionistas = '{$this->qtd_nutricionistas}'";
             } elseif (is_null($this->qtd_nutricionistas) || $this->qtd_nutricionistas == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_nutricionistas = NULL ";
             }
 
             if (is_numeric($this->qtd_profissionais_preparacao) && $this->qtd_profissionais_preparacao > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_profissionais_preparacao = '{$this->qtd_profissionais_preparacao}'";
             } elseif (is_null($this->qtd_profissionais_preparacao) || $this->qtd_profissionais_preparacao == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_profissionais_preparacao = NULL ";
             }
 
             if (is_numeric($this->qtd_bombeiro) && $this->qtd_bombeiro > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_bombeiro = '{$this->qtd_bombeiro}'";
             } elseif (is_null($this->qtd_bombeiro) || $this->qtd_bombeiro == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_bombeiro = NULL ";
             }
 
             if (is_numeric($this->qtd_psicologo) && $this->qtd_psicologo > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_psicologo = '{$this->qtd_psicologo}'";
             } elseif (is_null($this->qtd_psicologo) || $this->qtd_psicologo == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_psicologo = NULL ";
             }
 
             if (is_numeric($this->qtd_fonoaudiologo) && $this->qtd_fonoaudiologo > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_fonoaudiologo = '{$this->qtd_fonoaudiologo}'";
             } elseif (is_null($this->qtd_fonoaudiologo) || $this->qtd_fonoaudiologo == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_fonoaudiologo = NULL ";
             }
 
@@ -2478,19 +2457,18 @@ class clsPmieducarEscola
         $str_nome = null,
         $escola_sem_avaliacao = null,
         $cod_usuario = null
-    )
-    {
+    ) {
         $sql = "
-      SELECT * FROM
-      (
-        SELECT j.fantasia AS nome, {$this->_campos_lista}, 1 AS tipo_cadastro
-          FROM {$this->_tabela} e, cadastro.juridica j
-          WHERE e.ref_idpes = j.idpes
-        UNION
-        SELECT c.nm_escola AS nome, {$this->_campos_lista}, 2 AS tipo_cadastro
-          FROM {$this->_tabela} e, pmieducar.escola_complemento c
-          WHERE e.cod_escola = c.ref_cod_escola
-      ) AS sub";
+          SELECT * FROM
+          (
+            SELECT j.fantasia AS nome, {$this->_campos_lista}, 1 AS tipo_cadastro
+              FROM {$this->_tabela} e, cadastro.juridica j
+              WHERE e.ref_idpes = j.idpes
+            UNION
+            SELECT c.nm_escola AS nome, {$this->_campos_lista}, 2 AS tipo_cadastro
+              FROM {$this->_tabela} e, pmieducar.escola_complemento c
+              WHERE e.cod_escola = c.ref_cod_escola
+          ) AS sub";
         $filtros = '';
 
         $whereAnd = ' WHERE ';
