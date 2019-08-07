@@ -1,8 +1,10 @@
 <?php
 
+use iEducar\Legacy\Model;
+
 require_once 'include/clsBanco.inc.php';
 
-class clsPessoaFj
+class clsPessoaFj extends Model
 {
     public $idpes;
     public $nome;
@@ -43,7 +45,6 @@ class clsPessoaFj
     public $fone_mov;
     public $rg;
     public $cpf;
-    public $_total;
     public $banco = 'gestao_homolog';
     public $schema_cadastro = 'cadastro';
     public $tabela_pessoa = 'pessoa';
