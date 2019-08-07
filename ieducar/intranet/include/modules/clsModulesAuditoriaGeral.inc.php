@@ -1,22 +1,20 @@
 <?php
 
+use iEducar\Legacy\Model;
+
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Utils/SafeJson.php';
 
-class clsModulesAuditoriaGeral
+class clsModulesAuditoriaGeral extends Model
 {
     const OPERACAO_INCLUSAO = 1;
     const OPERACAO_ALTERACAO = 2;
     const OPERACAO_EXCLUSAO = 3;
 
-    public $_total;
-    public $_campos_lista;
-    public $_tabela;
     public $id;
     public $usuario_id;
     public $codigo;
     public $rotina;
-    public $_campo_order_by;
 
     public function __construct($rotina, $usuario_id, $codigo = 'null', $id = null)
     {
@@ -256,41 +254,5 @@ class clsModulesAuditoriaGeral
         }
 
         return false;
-    }
-
-    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
-    {
-        $this->_limite_quantidade = $intLimiteQtd;
-        $this->_limite_offset = $intLimiteOffset;
-    }
-
-    public function getLimite()
-    {
-        if (is_numeric($this->_limite_quantidade)) {
-            $retorno = " LIMIT {$this->_limite_quantidade}";
-            if (is_numeric($this->_limite_offset)) {
-                $retorno .= " OFFSET {$this->_limite_offset} ";
-            }
-
-            return $retorno;
-        }
-
-        return '';
-    }
-
-    public function setOrderby($strNomeCampo)
-    {
-        if (is_string($strNomeCampo) && $strNomeCampo) {
-            $this->_campo_order_by = $strNomeCampo;
-        }
-    }
-
-    public function getOrderby()
-    {
-        if (is_string($this->_campo_order_by)) {
-            return " ORDER BY {$this->_campo_order_by} ";
-        }
-
-        return '';
     }
 }

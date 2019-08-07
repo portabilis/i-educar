@@ -1,21 +1,15 @@
 <?php
 
+use iEducar\Legacy\Model;
+
 require_once 'include/pmieducar/geral.inc.php';
 
-class clsPmieducarEscolaUsuario
+class clsPmieducarEscolaUsuario extends Model
 {
     public $id;
     public $ref_cod_usuario;
     public $ref_cod_escola;
     public $escola_atual;
-    public $_total;
-    public $_schema;
-    public $_tabela;
-    public $_campos_lista;
-    public $_todos_campos;
-    public $_limite_quantidade;
-    public $_limite_offset;
-    public $_campo_order_by;
 
     public function __construct($id = 0, $ref_cod_usuario = null, $ref_cod_escola = null, $escola_atual = 0)
     {
@@ -162,52 +156,6 @@ class clsPmieducarEscolaUsuario
 
             return true;
         }
-    }
-
-    public function setCamposLista($str_campos)
-    {
-        $this->_campos_lista = $str_campos;
-    }
-
-    public function resetCamposLista()
-    {
-        $this->_campos_lista = $this->_todos_campos;
-    }
-
-    public function setOrderby($strNomeCampo)
-    {
-        if (is_string($strNomeCampo) && $strNomeCampo) {
-            $this->_campo_order_by = $strNomeCampo;
-        }
-    }
-
-    public function getOrderby()
-    {
-        if (is_string($this->_campo_order_by)) {
-            return " ORDER BY {$this->_campo_order_by} ";
-        }
-
-        return '';
-    }
-
-    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
-    {
-        $this->_limite_quantidade = $intLimiteQtd;
-        $this->_limite_offset = $intLimiteOffset;
-    }
-
-    public function getLimite()
-    {
-        if (is_numeric($this->_limite_quantidade)) {
-            $retorno = " LIMIT {$this->_limite_quantidade}";
-            if (is_numeric($this->_limite_offset)) {
-                $retorno .= " OFFSET {$this->_limite_offset} ";
-            }
-
-            return $retorno;
-        }
-
-        return '';
     }
 
     public function excluirTodos($codUsuario)

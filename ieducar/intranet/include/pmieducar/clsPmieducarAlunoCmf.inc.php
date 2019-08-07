@@ -1,30 +1,11 @@
 <?php
 
+use iEducar\Legacy\Model;
+
 require_once 'include/pmieducar/geral.inc.php';
 
-class clsPmieducarAlunoCMF
+class clsPmieducarAlunoCMF extends Model
 {
-    /**
-     * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
-     *
-     * @var int
-     */
-    public $_total;
-
-    /**
-     * Valor que define a quantidade de registros a ser retornada pelo metodo lista
-     *
-     * @var int
-     */
-    public $_limite_quantidade;
-
-    /**
-     * Define o valor de offset no retorno dos registros no metodo lista
-     *
-     * @var int
-     */
-    public $_limite_offset;
-
     public function __construct()
     {
     }
@@ -117,35 +98,5 @@ class clsPmieducarAlunoCMF
         }
 
         return false;
-    }
-
-    /**
-     * Define limites de retorno para o metodo lista
-     *
-     * @return null
-     */
-    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
-    {
-        $this->_limite_quantidade = $intLimiteQtd;
-        $this->_limite_offset = $intLimiteOffset;
-    }
-
-    /**
-     * Retorna a string com o trecho da query resposavel pelo Limite de registros
-     *
-     * @return string
-     */
-    public function getLimite()
-    {
-        if (is_numeric($this->_limite_quantidade)) {
-            $retorno = " LIMIT {$this->_limite_quantidade}";
-            if (is_numeric($this->_limite_offset)) {
-                $retorno .= " OFFSET {$this->_limite_offset} ";
-            }
-
-            return $retorno;
-        }
-
-        return '';
     }
 }

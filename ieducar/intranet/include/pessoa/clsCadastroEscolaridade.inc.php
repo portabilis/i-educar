@@ -1,66 +1,12 @@
 <?php
 
-class clsCadastroEscolaridade
+use iEducar\Legacy\Model;
+
+class clsCadastroEscolaridade extends Model
 {
     public $idesco;
     public $descricao;
     public $escolaridade;
-
-    /**
-     * Armazena o total de resultados obtidos na última chamada ao método lista.
-     *
-     * @var int
-     */
-    public $_total;
-
-    /**
-     * Nome do schema.
-     *
-     * @var string
-     */
-    public $_schema;
-
-    /**
-     * Nome da tabela.
-     *
-     * @var string
-     */
-    public $_tabela;
-
-    /**
-     * Lista separada por virgula, com os campos que devem ser selecionados na próxima chamado ao método lista.
-     *
-     * @var string
-     */
-    public $_campos_lista;
-
-    /**
-     * Lista com todos os campos da tabela separados por vírgula, padrão para seleção no método lista.
-     *
-     * @var string
-     */
-    public $_todos_campos;
-
-    /**
-     * Valor que define a quantidade de registros a ser retornada pelo método lista.
-     *
-     * @var int
-     */
-    public $_limite_quantidade;
-
-    /**
-     * Define o valor de offset no retorno dos registros no método lista.
-     *
-     * @var int
-     */
-    public $_limite_offset;
-
-    /**
-     * Define o campo padrão para ser usado como padrão de ordenação no método lista.
-     *
-     * @var string
-     */
-    public $_campo_order_by;
 
     /**
      * Construtor (PHP 4).
@@ -248,82 +194,5 @@ class clsCadastroEscolaridade
         }
 
         return false;
-    }
-
-    /**
-     * Define quais campos da tabela serão selecionados na invocação do método lista.
-     *
-     * @return null
-     */
-    public function setCamposLista($str_campos)
-    {
-        $this->_campos_lista = $str_campos;
-    }
-
-    /**
-     * Define que o método Lista deverá retornoar todos os campos da tabela.
-     *
-     * @return null
-     */
-    public function resetCamposLista()
-    {
-        $this->_campos_lista = $this->_todos_campos;
-    }
-
-    /**
-     * Define limites de retorno para o método lista.
-     *
-     * @return null
-     */
-    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
-    {
-        $this->_limite_quantidade = $intLimiteQtd;
-        $this->_limite_offset = $intLimiteOffset;
-    }
-
-    /**
-     * Retorna a string com o trecho da query resposável pelo limite de registros.
-     *
-     * @return string
-     */
-    public function getLimite()
-    {
-        if (is_numeric($this->_limite_quantidade)) {
-            $retorno = " LIMIT {$this->_limite_quantidade}";
-
-            if (is_numeric($this->_limite_offset)) {
-                $retorno .= " OFFSET {$this->_limite_offset} ";
-            }
-
-            return $retorno;
-        }
-
-        return '';
-    }
-
-    /**
-     * Define campo para ser utilizado como ordenação no método lista.
-     *
-     * @return null
-     */
-    public function setOrderby($strNomeCampo)
-    {
-        if (is_string($strNomeCampo) && $strNomeCampo) {
-            $this->_campo_order_by = $strNomeCampo;
-        }
-    }
-
-    /**
-     * Retorna a string com o trecho da query resposável pela ordenação dos registros.
-     *
-     * @return string
-     */
-    public function getOrderby()
-    {
-        if (is_string($this->_campo_order_by)) {
-            return " ORDER BY {$this->_campo_order_by} ";
-        }
-
-        return '';
     }
 }
