@@ -97,14 +97,12 @@ class iDiarioService
     {
         try {
             $response = $this->get('/api/v2/teacher_classrooms/has_activities', ['teacher_id' => $teacherId, 'classroom_id' => $classroomId]);
-            dd($response->getBody());
             $body = trim((string)$response->getBody());
 
             if ($body === 'true') {
                 return true;
             }
         } catch (Exception $e) {
-            dd($e);
             return false;
         }
 
