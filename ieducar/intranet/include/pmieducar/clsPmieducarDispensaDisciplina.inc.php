@@ -75,9 +75,6 @@ class clsPmieducarDispensaDisciplina
      */
     public $_campo_order_by;
 
-    /**
-     * Construtor.
-     */
     public function __construct(
         $ref_cod_matricula = null,
         $ref_cod_serie = null,
@@ -188,58 +185,58 @@ class clsPmieducarDispensaDisciplina
         ) {
             $db = new clsBanco();
 
-            $campos  = '';
+            $campos = '';
             $valores = '';
-            $gruda   = '';
+            $gruda = '';
 
             if (is_numeric($this->ref_cod_matricula)) {
-                $campos  .= "{$gruda}ref_cod_matricula";
+                $campos .= "{$gruda}ref_cod_matricula";
                 $valores .= "{$gruda}'{$this->ref_cod_matricula}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if (is_numeric($this->ref_cod_serie)) {
-                $campos  .= "{$gruda}ref_cod_serie";
+                $campos .= "{$gruda}ref_cod_serie";
                 $valores .= "{$gruda}'{$this->ref_cod_serie}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if (is_numeric($this->ref_cod_escola)) {
-                $campos  .= "{$gruda}ref_cod_escola";
+                $campos .= "{$gruda}ref_cod_escola";
                 $valores .= "{$gruda}'{$this->ref_cod_escola}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if (is_numeric($this->ref_cod_disciplina)) {
-                $campos  .= "{$gruda}ref_cod_disciplina";
+                $campos .= "{$gruda}ref_cod_disciplina";
                 $valores .= "{$gruda}'{$this->ref_cod_disciplina}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if (is_numeric($this->ref_usuario_cad)) {
-                $campos  .= "{$gruda}ref_usuario_cad";
+                $campos .= "{$gruda}ref_usuario_cad";
                 $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if (is_numeric($this->ref_cod_tipo_dispensa)) {
-                $campos  .= "{$gruda}ref_cod_tipo_dispensa";
+                $campos .= "{$gruda}ref_cod_tipo_dispensa";
                 $valores .= "{$gruda}'{$this->ref_cod_tipo_dispensa}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
-            $campos  .= "{$gruda}data_cadastro";
+            $campos .= "{$gruda}data_cadastro";
             $valores .= "{$gruda}NOW()";
-            $gruda    = ', ';
+            $gruda = ', ';
 
-            $campos  .= "{$gruda}ativo";
+            $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
-            $gruda    = ', ';
+            $gruda = ', ';
 
             if (is_string($this->observacao)) {
-                $campos  .= "{$gruda}observacao";
+                $campos .= "{$gruda}observacao";
                 $valores .= "{$gruda}'{$this->observacao}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             $sql = "INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)";
@@ -265,39 +262,39 @@ class clsPmieducarDispensaDisciplina
         if (is_numeric($this->ref_cod_matricula) && is_numeric($this->ref_cod_serie) &&
             is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_disciplina) &&
             is_numeric($this->ref_usuario_exc)) {
-            $db  = new clsBanco();
+            $db = new clsBanco();
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
-                $set  .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
+                $set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
                 $gruda = ', ';
             }
 
             if (is_numeric($this->ref_usuario_cad)) {
-                $set  .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
+                $set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
                 $gruda = ', ';
             }
 
             if (is_numeric($this->ref_cod_tipo_dispensa)) {
-                $set  .= "{$gruda}ref_cod_tipo_dispensa = '{$this->ref_cod_tipo_dispensa}'";
+                $set .= "{$gruda}ref_cod_tipo_dispensa = '{$this->ref_cod_tipo_dispensa}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->data_cadastro)) {
-                $set  .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
+                $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
                 $gruda = ', ';
             }
 
-            $set  .= "{$gruda}data_exclusao = NOW()";
+            $set .= "{$gruda}data_exclusao = NOW()";
             $gruda = ', ';
 
             if (is_numeric($this->ativo)) {
-                $set  .= "{$gruda}ativo = '{$this->ativo}'";
+                $set .= "{$gruda}ativo = '{$this->ativo}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->observacao)) {
-                $set  .= "{$gruda}observacao = '{$this->observacao}'";
+                $set .= "{$gruda}observacao = '{$this->observacao}'";
                 $gruda = ', ';
             }
 
@@ -335,7 +332,7 @@ class clsPmieducarDispensaDisciplina
         $int_ativo = null,
         $str_observacao = null
     ) {
-        $sql     = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
+        $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
         $whereAnd = ' WHERE ';
@@ -410,7 +407,7 @@ class clsPmieducarDispensaDisciplina
 
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
-        $resultado   = [];
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
@@ -512,7 +509,7 @@ class clsPmieducarDispensaDisciplina
 
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
-        $resultado   = [];
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
@@ -542,6 +539,7 @@ class clsPmieducarDispensaDisciplina
 
         return false;
     }
+
     /**
      * Retorna um array com os dados de um registro.
      *

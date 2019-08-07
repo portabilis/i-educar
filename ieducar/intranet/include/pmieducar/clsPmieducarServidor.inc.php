@@ -808,8 +808,8 @@ class clsPmieducarServidor
                 $cond = 'AND';
                 $hora_ini = explode(':', $array_horario[1]);
                 $hora_fim = explode(':', $array_horario[2]);
-                $horas = sprintf('%02d', (int)abs($hora_fim[0]) - abs($hora_ini[0]));
-                $minutos = sprintf('%02d', (int)abs($hora_fim[1]) - abs($hora_ini[1]));
+                $horas = sprintf('%02d', (int) abs($hora_fim[0]) - abs($hora_ini[0]));
+                $minutos = sprintf('%02d', (int) abs($hora_fim[1]) - abs($hora_ini[1]));
                 // Remove qualquer AND que esteja no início da cláusula SQL
                 $wherePieces = explode(' ', trim($where));
                 if ('AND' == $wherePieces[0]) {
@@ -1140,11 +1140,11 @@ class clsPmieducarServidor
      * );
      * <code>
      *
-     * @since   Método disponível desde a versão 1.0.2
-     *
      * @return array Array associativo com a primeira chave sendo o código da
      *               função. O array interno contém o nome da função e se a função desempenha
      *               um papel de professor
+     * @since   Método disponível desde a versão 1.0.2
+     *
      */
     public function getServidorFuncoes()
     {
@@ -1171,8 +1171,6 @@ class clsPmieducarServidor
      * Retorna um array com as disciplinas alocadas ao servidor no quadro de
      * horários
      *
-     * @since   Método disponível desde a versão 1.0.2
-     *
      * @param int $codServidor    Código do servidor, caso não seja informado,
      *                            usa o código disponível no objeto atual
      * @param int $codInstituicao Código da instituição, caso não seja
@@ -1180,6 +1178,8 @@ class clsPmieducarServidor
      *
      * @return array|bool Array com códigos das disciplinas ordenados ou FALSE
      *                    caso o servidor não tenha disciplinas
+     * @since   Método disponível desde a versão 1.0.2
+     *
      */
     public function getServidorDisciplinasQuadroHorarioHorarios(
         $codServidor = null,
@@ -1210,14 +1210,14 @@ class clsPmieducarServidor
      * Retorna um array com os códigos de servidor e instituição, usando os
      * valores dos parâmetros ou das propriedades da instância atual.
      *
-     * @since   Método disponível desde a versão 1.2.0
-     *
      * @param int $codServidor    Código do servidor, caso não seja informado,
      *                            usa o código disponível no objeto atual
      * @param int $codInstituicao Código da instituição, caso não seja
      *                            informado, usa o código disponível no objeto atual
      *
      * @return array|bool (codServidor => (int), codInstituicao => (int))
+     * @since   Método disponível desde a versão 1.2.0
+     *
      */
     public function _getCodServidorInstituicao($codServidor = null, $codInstituicao = null)
     {
@@ -1238,8 +1238,6 @@ class clsPmieducarServidor
     /**
      * Retorna um array com os códigos das disciplinas do servidor
      *
-     * @since   Método disponível desde a versão 1.0.2
-     *
      * @param int $codServidor    Código do servidor, caso não seja informado,
      *                            usa o código disponível no objeto atual
      * @param int $codInstituicao Código da instituição, caso não seja
@@ -1247,6 +1245,8 @@ class clsPmieducarServidor
      *
      * @return array|bool Array com códigos das disciplinas ordenados ou FALSE
      *                    caso o servidor não tenha disciplinas
+     * @since   Método disponível desde a versão 1.0.2
+     *
      */
     public function getServidorDisciplinas(
         $codServidor = null,
@@ -1283,8 +1283,6 @@ class clsPmieducarServidor
     /**
      * Retorna os horários de aula do servidor na instituição.
      *
-     * @since   Método disponível desde a versão 1.0.2
-     *
      * @param int $codServidor    Código do servidor, caso não seja informado,
      *                            usa o código disponível no objeto atual
      * @param int $codInstituicao Código da instituição, caso não seja
@@ -1293,6 +1291,8 @@ class clsPmieducarServidor
      * @return array|bool Array associativo com os índices nm_escola, nm_curso,
      *                    nm_serie, nm_turma, nome (componente curricular), dia_semana,
      *                    qhh.hora_inicial e hora_final.
+     * @since   Método disponível desde a versão 1.0.2
+     *
      */
     public function getHorariosServidor($codServidor = null, $codInstituicao = null)
     {
@@ -1354,9 +1354,9 @@ class clsPmieducarServidor
      * Primeiro, recuperamos todas as funções do servidor e procuramos
      * por um dos itens que tenha o índice professor igual a 1.
      *
+     * @return bool TRUE caso o servidor desempenhe a função de professor
      * @since   Método disponível desde a versão 1.0.2
      *
-     * @return bool TRUE caso o servidor desempenhe a função de professor
      */
     public function isProfessor()
     {

@@ -1,6 +1,6 @@
 <?php
 
-require_once('include/pmieducar/geral.inc.php');
+require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarHistoricoDisciplinas
 {
@@ -80,11 +80,6 @@ class clsPmieducarHistoricoDisciplinas
      */
     public $_campo_order_by;
 
-    /**
-     * Construtor (PHP 4)
-     *
-     * @return object
-     */
     public function __construct(
         $sequencial = null,
         $ref_ref_cod_aluno = null,

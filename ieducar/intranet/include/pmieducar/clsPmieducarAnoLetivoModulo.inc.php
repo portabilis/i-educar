@@ -6,7 +6,6 @@ require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarAnoLetivoModulo
 {
-
     public $ref_ano;
     public $ref_ref_cod_escola;
     public $sequencial;
@@ -172,37 +171,37 @@ class clsPmieducarAnoLetivoModulo
             $valores = [];
 
             if (is_numeric($this->ref_ano)) {
-                $campos[] = "ref_ano";
+                $campos[] = 'ref_ano';
                 $valores[] = "'{$this->ref_ano}'";
             }
 
             if (is_numeric($this->ref_ref_cod_escola)) {
-                $campos[] = "ref_ref_cod_escola";
+                $campos[] = 'ref_ref_cod_escola';
                 $valores[] = "'{$this->ref_ref_cod_escola}'";
             }
 
             if (is_numeric($this->sequencial)) {
-                $campos[] = "sequencial";
+                $campos[] = 'sequencial';
                 $valores[] = "'{$this->sequencial}'";
             }
 
             if (is_numeric($this->ref_cod_modulo)) {
-                $campos[] = "ref_cod_modulo";
+                $campos[] = 'ref_cod_modulo';
                 $valores[] = "'{$this->ref_cod_modulo}'";
             }
 
             if (is_string($this->data_inicio)) {
-                $campos[] = "data_inicio";
+                $campos[] = 'data_inicio';
                 $valores[] = "'{$this->data_inicio}'";
             }
 
             if (is_string($this->data_fim)) {
-                $campos[] = "data_fim";
+                $campos[] = 'data_fim';
                 $valores[] = "'{$this->data_fim}'";
             }
 
             if (is_numeric($this->dias_letivos)) {
-                $campos[] = "dias_letivos";
+                $campos[] = 'dias_letivos';
                 $valores[] = "'{$this->dias_letivos}'";
             }
 

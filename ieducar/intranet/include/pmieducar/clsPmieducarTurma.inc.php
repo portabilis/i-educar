@@ -1,6 +1,6 @@
 <?php
 
-require_once('include/pmieducar/geral.inc.php');
+require_once 'include/pmieducar/geral.inc.php';
 require_once 'Portabilis/Utils/Database.php';
 
 class clsPmieducarTurma
@@ -29,18 +29,14 @@ class clsPmieducarTurma
     public $hora_inicio_intervalo = false;
     public $hora_fim_intervalo = false;
     public $ano;
-
     public $ref_cod_regente;
     public $ref_cod_instituicao_regente;
-
     public $ref_cod_instituicao;
     public $ref_cod_curso;
-
     public $ref_ref_cod_serie_mult;
     public $ref_ref_cod_escola_mult;
     public $visivel;
     public $data_fechamento;
-
     public $tipo_atendimento = false;
     public $turma_mais_educacao;
     public $atividade_complementar_1;
@@ -73,11 +69,9 @@ class clsPmieducarTurma
     public $atividades_complementares;
     public $atividades_aee;
     public $local_funcionamento_diferenciado;
-
     public $listarNaoInformarEducacenso = true;
     public $codUsuario;
     public $tipo_boletim_diferenciado = false;
-    // propriedades padrao
 
     /**
      * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
@@ -135,11 +129,6 @@ class clsPmieducarTurma
      */
     public $_campo_order_by;
 
-    /**
-     * Construtor (PHP 4)
-     *
-     * @return object
-     */
     public function __construct($cod_turma = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_ref_cod_serie = null, $ref_ref_cod_escola = null, $ref_cod_infra_predio_comodo = null, $nm_turma = null, $sgl_turma = null, $max_aluno = null, $multiseriada = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_turma_tipo = null, $hora_inicial = null, $hora_final = null, $hora_inicio_intervalo = null, $hora_fim_intervalo = null, $ref_cod_regente = null, $ref_cod_instituicao_regente = null, $ref_cod_instituicao = null, $ref_cod_curso = null, $ref_ref_cod_serie_mult = null, $ref_ref_cod_escola_mult = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $data_fechamento = null, $ref_cod_disciplina_dispensada = null)
     {
         $db = new clsBanco();
@@ -345,7 +334,7 @@ class clsPmieducarTurma
             if (is_null($ref_ref_cod_serie_mult)) {
                 $this->ref_ref_cod_escola_mult = '';
                 $this->ref_ref_cod_serie_mult = '';
-            } else if (class_exists('clsPmieducarEscolaSerie')) {
+            } elseif (class_exists('clsPmieducarEscolaSerie')) {
                 $tmp_obj = new clsPmieducarEscolaSerie($ref_ref_cod_escola_mult, $ref_ref_cod_serie_mult);
                 if (method_exists($tmp_obj, 'existe')) {
                     if ($tmp_obj->existe()) {
@@ -386,7 +375,7 @@ class clsPmieducarTurma
      */
     public function cadastra()
     {
-        if (is_numeric($this->ref_usuario_cad) /*&& is_numeric( $this->ref_ref_cod_serie ) && is_numeric( $this->ref_ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo )*/ && is_string($this->nm_turma) && is_numeric($this->max_aluno) && is_numeric($this->multiseriada) && is_numeric($this->ref_cod_turma_tipo)) {
+        if (is_numeric($this->ref_usuario_cad) && is_string($this->nm_turma) && is_numeric($this->max_aluno) && is_numeric($this->multiseriada) && is_numeric($this->ref_cod_turma_tipo)) {
             $db = new clsBanco();
 
             $campos = '';
@@ -496,7 +485,7 @@ class clsPmieducarTurma
             }
 
             if (is_bool($this->visivel)) {
-                $this->visivel =  $this->visivel ? 'true' : 'false';
+                $this->visivel = $this->visivel ? 'true' : 'false';
                 $campos .= "{$gruda}visivel";
                 $valores .= "{$gruda}'{$this->visivel}'";
                 $gruda = ', ';
@@ -831,22 +820,22 @@ class clsPmieducarTurma
 
             if (is_numeric($this->ref_ref_cod_escola_mult)) {
                 $set .= "{$gruda}ref_ref_cod_escola_mult = '{$this->ref_ref_cod_escola_mult}'";
-                $gruda = ", ";
+                $gruda = ', ';
             } elseif (empty($this->ref_ref_cod_escola_mult)) {
                 $set .= "{$gruda}ref_ref_cod_escola_mult = NULL";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_numeric($this->ref_ref_cod_serie_mult)) {
                 $set .= "{$gruda}ref_ref_cod_serie_mult = '{$this->ref_ref_cod_serie_mult}'";
-                $gruda = ", ";
+                $gruda = ', ';
             } elseif (empty($this->ref_ref_cod_serie_mult)) {
                 $set .= "{$gruda}ref_ref_cod_serie_mult = NULL";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
             if (is_bool($this->visivel)) {
-                $this->visivel =  $this->visivel ? 'true' : 'false';
+                $this->visivel = $this->visivel ? 'true' : 'false';
                 $set .= "{$gruda}visivel = {$this->visivel}";
                 $gruda = ', ';
             }
@@ -1209,7 +1198,7 @@ class clsPmieducarTurma
                 $qtd_alunos = $db->CampoUnico("SELECT COUNT(0) FROM pmieducar.v_matricula_matricula_turma WHERE ref_cod_turma = '{$this->cod_turma}' AND ref_cod_serie = '{$cod_serie}' AND aprovado = 3 AND ativo = 1");
                 if ($multiseriada) {
                     $qtd_alunos_mult = $db->CampoUnico("SELECT COUNT(0) FROM pmieducar.v_matricula_matricula_turma WHERE ref_cod_turma = '{$this->cod_turma}' AND ref_cod_serie = '{$cod_serie_mult}' AND aprovado = 3 AND ativo = 1");
-//                  encontra as disciplinas que ainda precisam receber nota
+                    // encontra as disciplinas que ainda precisam receber nota
                     $sql = "
                     (
                         SELECT ref_cod_disciplina, serie FROM
@@ -1423,11 +1412,6 @@ class clsPmieducarTurma
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_ref_cod_escola)) {
-            /*if($bool_verifica_serie_multiseriada === true)
-            {
-                $mult = " OR  t.ref_ref_cod_escola_mult = '{$int_ref_ref_cod_escola}' ";
-            }*/
-
             $filtros .= "{$whereAnd} ( t.ref_ref_cod_escola = '{$int_ref_ref_cod_escola}' )";
             $whereAnd = ' AND ';
         }
@@ -1510,16 +1494,6 @@ class clsPmieducarTurma
             $filtros .= "{$whereAnd} t.hora_fim_intervalo <= '{$time_hora_fim_intervalo_fim}'";
             $whereAnd = ' AND ';
         }
-        /*  if( is_numeric( $int_ref_cod_curso ) )
-            {
-                $filtros .= "{$whereAnd} s.ref_cod_curso = '{$int_ref_cod_curso}'";
-                $whereAnd = " AND ";
-            }
-            if( is_numeric( $int_ref_cod_instituicao ) )
-            {
-                $filtros .= "{$whereAnd} e.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
-                $whereAnd = " AND ";
-            }*/
         if (is_numeric($int_ref_cod_regente)) {
             $filtros .= "{$whereAnd} t.ref_cod_regente = '{$int_ref_cod_regente}'";
             $whereAnd = ' AND ';
@@ -1600,7 +1574,6 @@ class clsPmieducarTurma
         $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-//      $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} t, {$this->_schema}escola_serie es, {$this->_schema}serie s, {$this->_schema}escola e {$filtros}" );
         $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} t {$filtros}");
 
         $db->Consulta($sql);
@@ -1742,16 +1715,6 @@ class clsPmieducarTurma
             $filtros .= "{$whereAnd} t.hora_fim_intervalo <= '{$time_hora_fim_intervalo_fim}'";
             $whereAnd = ' AND ';
         }
-        /*  if( is_numeric( $int_ref_cod_curso ) )
-            {
-                $filtros .= "{$whereAnd} s.ref_cod_curso = '{$int_ref_cod_curso}'";
-                $whereAnd = " AND ";
-            }
-            if( is_numeric( $int_ref_cod_instituicao ) )
-            {
-                $filtros .= "{$whereAnd} e.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
-                $whereAnd = " AND ";
-            }*/
         if (is_numeric($int_ref_cod_regente)) {
             $filtros .= "{$whereAnd} t.ref_cod_regente = '{$int_ref_cod_regente}'";
             $whereAnd = ' AND ';
@@ -1815,9 +1778,7 @@ class clsPmieducarTurma
         $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-//      echo "<!--{$sql}-->";
 
-//      $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} t, {$this->_schema}escola_serie es, {$this->_schema}serie s, {$this->_schema}escola e {$filtros}" );
         $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}");
 
         $db->Consulta($sql);
@@ -1960,16 +1921,6 @@ class clsPmieducarTurma
             $filtros .= "{$whereAnd} t.hora_fim_intervalo <= '{$time_hora_fim_intervalo_fim}'";
             $whereAnd = ' AND ';
         }
-        /*  if( is_numeric( $int_ref_cod_curso ) )
-            {
-                $filtros .= "{$whereAnd} s.ref_cod_curso = '{$int_ref_cod_curso}'";
-                $whereAnd = " AND ";
-            }
-            if( is_numeric( $int_ref_cod_instituicao ) )
-            {
-                $filtros .= "{$whereAnd} e.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
-                $whereAnd = " AND ";
-            }*/
         if (is_numeric($int_ref_cod_regente)) {
             $filtros .= "{$whereAnd} t.ref_cod_regente = '{$int_ref_cod_regente}'";
             $whereAnd = ' AND ';
@@ -2028,17 +1979,12 @@ class clsPmieducarTurma
             $filtros .= "{$whereAnd} t.ano = '{$ano}'";
         }
 
-        // Retirar OR quando todas turmas tiverem a coluna ANO definido.
-        //$filtros .= "{$whereAnd} t.ano = ( SELECT ano FROM pmieducar.escola_ano_letivo enl WHERE enl.ref_cod_escola = t.ref_ref_cod_escola AND andamento = 1 and ativo = 1)";
-
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-//      echo "<!--{$sql}-->";
 
-//      $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} t, {$this->_schema}escola_serie es, {$this->_schema}serie s, {$this->_schema}escola e {$filtros}" );
         $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}");
 
         $db->Consulta($sql);
@@ -2107,8 +2053,8 @@ class clsPmieducarTurma
     public function excluir()
     {
         if (is_numeric($this->cod_turma) && is_numeric($this->ref_usuario_exc)) {
-
             $this->ativo = 0;
+
             return $this->edita();
         }
 
@@ -2172,9 +2118,6 @@ class clsPmieducarTurma
      */
     public function setOrderby($strNomeCampo)
     {
-        // limpa a string de possiveis erros (delete, insert, etc)
-        //$strNomeCampo = eregi_replace();
-
         if (is_string($strNomeCampo) && $strNomeCampo) {
             $this->_campo_order_by = $strNomeCampo;
         }
