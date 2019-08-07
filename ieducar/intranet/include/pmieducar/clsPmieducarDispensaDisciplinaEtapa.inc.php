@@ -1,46 +1,13 @@
 <?php
 
+use iEducar\Legacy\Model;
+
 require_once 'include/pmieducar/geral.inc.php';
 
-class clsPmieducarDispensaDisciplinaEtapa
+class clsPmieducarDispensaDisciplinaEtapa extends Model
 {
     public $ref_cod_dispensa;
     public $etapa;
-
-    /**
-     * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
-     *
-     * @var int
-     */
-    public $_total;
-
-    /**
-     * Nome do schema
-     *
-     * @var string
-     */
-    public $_schema;
-
-    /**
-     * Nome da tabela
-     *
-     * @var string
-     */
-    public $_tabela;
-
-    /**
-     * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
-     *
-     * @var string
-     */
-    public $_campos_lista;
-
-    /**
-     * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
-     *
-     * @var string
-     */
-    public $_todos_campos;
 
     public function __construct(
         $ref_cod_dispensa = null,
