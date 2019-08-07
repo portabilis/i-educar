@@ -133,20 +133,7 @@ class clsPmieducarServidor
          * Filtrar cod_servidor
          */
         if (is_numeric($cod_servidor)) {
-            if (class_exists('clsFuncionario')) {
-                $tmp_obj = new clsFuncionario($cod_servidor);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->cod_servidor = $cod_servidor;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    // if ($tmp_obj->detalhe()) {
-                    $this->cod_servidor = $cod_servidor;
-                    // }
-                }
-            } elseif ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$cod_servidor}'")) {
-                $this->cod_servidor = $cod_servidor;
-            }
+            $this->cod_servidor = $cod_servidor;
         }
         if (is_numeric($carga_horaria)) {
             $this->carga_horaria = $carga_horaria;
@@ -161,38 +148,10 @@ class clsPmieducarServidor
             $this->ativo = $ativo;
         }
         if (is_numeric($ref_cod_instituicao)) {
-            if (class_exists('clsPmieducarInstituicao')) {
-                $tmp_obj = new clsPmieducarInstituicao($ref_cod_instituicao);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_instituicao = $ref_cod_instituicao;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_instituicao = $ref_cod_instituicao;
-                    }
-                }
-            } elseif ($db->CampoUnico("SELECT 1 FROM pmieducar.instituicao WHERE cod_instituicao = '{$ref_cod_instituicao}'")) {
-                $this->ref_cod_instituicao = $ref_cod_instituicao;
-            }
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
         if (is_numeric($ref_cod_subnivel)) {
-            if (class_exists('clsPmieducarSubnivel')) {
-                $tmp_obj = new clsPmieducarSubnivel($ref_cod_subnivel);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_subnivel = $ref_cod_subnivel;
-                    }
-                } else {
-                    if (method_exists($tmp_obj, 'detalhe')) {
-                        if ($tmp_obj->detalhe()) {
-                            $this->ref_cod_subnivel = $ref_cod_subnivel;
-                        }
-                    }
-                }
-            } elseif ($db->CampoUnico("SELECT 1 FROM pmieducar.subnivel WHERE cod_subnivel = '{$ref_cod_subnivel}'")) {
-                $this->ref_cod_subnivel = $ref_cod_subnivel;
-            }
+            $this->ref_cod_subnivel = $ref_cod_subnivel;
         }
     }
 

@@ -111,7 +111,6 @@ class indice extends clsDetalhe
         $obj_funcionario = new clsFuncionario($cod_pessoa);
         $det_funcionario = $obj_funcionario->detalhe();
 
-        $this->addDetalhe(['Ramal', $det_funcionario['ramal']]);
         $this->addDetalhe(['E-mail usuário', $det_funcionario['email']]);
 
         if (!empty($det_funcionario['matricula_interna'])) {
@@ -123,9 +122,8 @@ class indice extends clsDetalhe
 
         $sexo = ($det_fisica['sexo'] == 'M') ? 'Masculino' : 'Feminino';
         $this->addDetalhe(['Sexo', $sexo]);
-
         $this->addDetalhe(['Matrícula', $det_funcionario['matricula']]);
-        $this->addDetalhe(['Sequencial', $det_funcionario['sequencial']]);
+
         $ativo_f = ($det_funcionario['ativo'] == '1') ? 'Ativo' : 'Inativo';
         $this->addDetalhe(['Status', $ativo_f]);
 

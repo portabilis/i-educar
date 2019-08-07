@@ -10,7 +10,6 @@ class clsFuncionario extends clsPessoaFisica
     public $senha;
     public $ativo;
     public $ref_sec;
-    public $ramal;
     public $sequencial;
     public $opcao_menu;
     public $ref_cod_setor;
@@ -20,9 +19,7 @@ class clsFuncionario extends clsPessoaFisica
     public $data_troca_senha;
     public $data_reativa_conta;
     public $ref_ref_cod_pessoa_fj;
-    public $proibido;
     public $cpf;
-    public $matricula_permanente;
     public $ref_cod_setor_new;
     public $schema_cadastro = 'cadastro';
     public $schema_portal = 'portal';
@@ -30,46 +27,16 @@ class clsFuncionario extends clsPessoaFisica
     public $tabela_funcionario = 'funcionario';
     public $tabela_fisica_cpf = 'fisica';
 
-    /**
-     * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
-     *
-     * @var int
-     */
     public $_total;
 
-    /**
-     * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
-     *
-     * @var string
-     */
     public $_campos_lista;
 
-    /**
-     * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
-     *
-     * @var string
-     */
     public $_todos_campos;
 
-    /**
-     * Valor que define a quantidade de registros a ser retornada pelo metodo lista
-     *
-     * @var int
-     */
     public $_limite_quantidade;
 
-    /**
-     * Define o valor de offset no retorno dos registros no metodo lista
-     *
-     * @var int
-     */
     public $_limite_offset;
 
-    /**
-     * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
-     *
-     * @var string
-     */
     public $_campo_order_by;
 
     public function __construct($int_idpes = false, $str_matricula = false, $int_cpf = false, $int_ref_cod_setor = false, $str_senha = false, $data_troca_senha = false, $tempo_expira_senha = false, $data_reativa_conta = false, $data_expiracao = false, $ref_cod_funcionario_vinculo = false, $ramal = false, $matricula_permanente = false, $banido = false, $email = null)
@@ -84,9 +51,6 @@ class clsFuncionario extends clsPessoaFisica
         $this->tempo_expira_senha = $tempo_expira_senha;
         $this->data_expiracao = $data_expiracao;
         $this->ref_cod_funcionario_vinculo = $ref_cod_funcionario_vinculo;
-        $this->ramal = $ramal;
-        $this->matricula_permanente = $matricula_permanente;
-        $this->proibido = $banido;
         $this->email = $email;
         $this->_campos_lista = ' 
             f.ref_cod_pessoa_fj,
@@ -94,7 +58,6 @@ class clsFuncionario extends clsPessoaFisica
             f.matricula_interna,
             f.senha,
             f.ativo,
-            f.ramal,
             f.sequencial,
             f.opcao_menu,
             f.ref_cod_setor,
@@ -104,7 +67,6 @@ class clsFuncionario extends clsPessoaFisica
             f.data_troca_senha,
             f.data_reativa_conta,
             f.ref_ref_cod_pessoa_fj,
-            f.proibido,
             f.nome,
             f.ref_cod_setor_new,
             f.email
@@ -176,11 +138,6 @@ class clsFuncionario extends clsPessoaFisica
 
         if (is_numeric($int_vinculo)) {
             $filtros .= "{$whereAnd} f.ref_cod_funcionario_vinculo = '{$int_vinculo}'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_string($str_ramal)) {
-            $filtros .= "{$whereAnd} f.str_ramal ILIKE '%{$str_ramal}%'f";
             $whereAnd = ' AND ';
         }
 
@@ -355,10 +312,11 @@ class clsFuncionario extends clsPessoaFisica
         if ($idpesOk) {
             $tupla = parent::detalhe();
             $db = new clsBanco();
-            $db->Consulta("SELECT ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, ramal, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, data_expiracao, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, proibido, ref_cod_setor_new, matricula_permanente, email FROM funcionario WHERE ref_cod_pessoa_fj = '{$this->idpes}'");
+            $db->Consulta("SELECT ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, data_expiracao, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, email FROM funcionario WHERE ref_cod_pessoa_fj = '{$this->idpes}'");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
-                list($this->idpes, $this->matricula, $this->senha, $this->ativo, $this->ref_sec, $this->ramal, $this->sequencial, $this->opcao_menu, $this->ref_cod_setor, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->data_expiracao, $this->data_troca_senha, $this->data_reativa_conta, $this->ref_ref_cod_pessoa_fj, $this->proibido, $this->ref_cod_setor_new, $this->matricula_permanente) = $tupla;
+
+                list($this->idpes, $this->matricula, $this->senha, $this->ativo, $this->ref_sec, $this->sequencial, $this->opcao_menu, $this->ref_cod_setor, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->data_expiracao, $this->data_troca_senha, $this->data_reativa_conta, $this->ref_ref_cod_pessoa_fj, $this->ref_cod_setor_new) = $tupla;
 
                 $tupla['idpes'] = new clsPessoaFisica($tupla['ref_cod_pessoa_fj']);
                 $tupla[] = $tupla['idpes'];
@@ -427,22 +385,12 @@ class clsFuncionario extends clsPessoaFisica
         return false;
     }
 
-    /**
-     * Define limites de retorno para o metodo lista
-     *
-     * @return null
-     */
     public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
     }
 
-    /**
-     * Retorna a string com o trecho da query resposavel pelo Limite de registros
-     *
-     * @return string
-     */
     public function getLimite()
     {
         if (is_numeric($this->_limite_quantidade)) {
@@ -457,11 +405,6 @@ class clsFuncionario extends clsPessoaFisica
         return '';
     }
 
-    /**
-     * Define campo para ser utilizado como ordenacao no metolo lista
-     *
-     * @return null
-     */
     public function setOrderby($strNomeCampo)
     {
         // limpa a string de possiveis erros (delete, insert, etc)
@@ -472,11 +415,6 @@ class clsFuncionario extends clsPessoaFisica
         }
     }
 
-    /**
-     * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
-     *
-     * @return string
-     */
     public function getOrderby()
     {
         if (is_string($this->_campo_order_by)) {
@@ -486,21 +424,11 @@ class clsFuncionario extends clsPessoaFisica
         return '';
     }
 
-    /**
-     * Define quais campos da tabela serao selecionados na invocacao do metodo lista
-     *
-     * @return null
-     */
     public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
 
-    /**
-     * Define que o metodo Lista devera retornoar todos os campos da tabela
-     *
-     * @return null
-     */
     public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;

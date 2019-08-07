@@ -360,9 +360,6 @@ educar_usuario_lst.php
 empresas_cad.php
 empresas_det.php
 empresas_lst.php
-funcionario_cad.php
-funcionario_det.php
-funcionario_lst.php
 funcionario_vinculo_cad.php
 funcionario_vinculo_det.php
 funcionario_vinculo_lst.php

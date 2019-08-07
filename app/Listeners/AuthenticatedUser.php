@@ -24,5 +24,13 @@ class AuthenticatedUser
                 $event->user->login => __('auth.inactive')
             ]);
         }
+
+        if ($event->user->isExpired()) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                $event->user->login => __('auth.inactive')
+            ]);
+        }
     }
 }

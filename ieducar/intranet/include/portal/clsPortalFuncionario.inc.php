@@ -9,7 +9,6 @@ class clsPortalFuncionario
     public $senha;
     public $ativo;
     public $ref_sec;
-    public $ramal;
     public $sequencial;
     public $opcao_menu;
     public $ref_cod_administracao_secretaria;
@@ -20,209 +19,67 @@ class clsPortalFuncionario
     public $ref_cod_setor;
     public $ref_cod_funcionario_vinculo;
     public $tempo_expira_senha;
-    public $tempo_expira_conta;
+    public $data_expiracao = false;
     public $data_troca_senha;
     public $data_reativa_conta;
     public $ref_ref_cod_pessoa_fj;
-    public $proibido;
     public $ref_cod_setor_new;
     public $matricula_new;
-    public $matricula_permanente;
     public $matricula_interna;
     public $tipo_menu;
     public $receber_novidades;
     public $atualizou_cadastro;
 
-    /**
-     * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
-     *
-     * @var int
-     */
     public $_total;
 
-    /**
-     * Nome do schema
-     *
-     * @var string
-     */
     public $_schema;
 
-    /**
-     * Nome da tabela
-     *
-     * @var string
-     */
     public $_tabela;
 
-    /**
-     * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
-     *
-     * @var string
-     */
     public $_campos_lista;
 
-    /**
-     * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
-     *
-     * @var string
-     */
     public $_todos_campos;
 
-    /**
-     * Valor que define a quantidade de registros a ser retornada pelo metodo lista
-     *
-     * @var int
-     */
     public $_limite_quantidade;
 
-    /**
-     * Define o valor de offset no retorno dos registros no metodo lista
-     *
-     * @var int
-     */
     public $_limite_offset;
 
-    /**
-     * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
-     *
-     * @var string
-     */
     public $_campo_order_by;
 
-    /**
-     * Construtor (PHP 4)
-     *
-     * @param integer ref_cod_pessoa_fj
-     * @param string matricula
-     * @param string senha
-     * @param integer ativo
-     * @param integer ref_sec
-     * @param string ramal
-     * @param string sequencial
-     * @param string opcao_menu
-     * @param integer ref_cod_administracao_secretaria
-     * @param integer ref_ref_cod_administracao_secretaria
-     * @param integer ref_cod_departamento
-     * @param integer ref_ref_ref_cod_administracao_secretaria
-     * @param integer ref_ref_cod_departamento
-     * @param integer ref_cod_setor
-     * @param integer ref_cod_funcionario_vinculo
-     * @param integer tempo_expira_senha
-     * @param integer tempo_expira_conta
-     * @param string data_troca_senha
-     * @param string data_reativa_conta
-     * @param integer ref_ref_cod_pessoa_fj
-     * @param integer proibido
-     * @param integer ref_cod_setor_new
-     * @param integer matricula_new
-     * @param integer matricula_permanente
-     * @param integer tipo_menu
-     */
-    public function __construct($ref_cod_pessoa_fj = null, $matricula = null, $senha = null, $ativo = null, $ref_sec = null, $ramal = null, $sequencial = null, $opcao_menu = null, $ref_cod_administracao_secretaria = null, $ref_ref_cod_administracao_secretaria = null, $ref_cod_departamento = null, $ref_ref_ref_cod_administracao_secretaria = null, $ref_ref_cod_departamento = null, $ref_cod_setor = null, $ref_cod_funcionario_vinculo = null, $tempo_expira_senha = null, $tempo_expira_conta = null, $data_troca_senha = null, $data_reativa_conta = null, $ref_ref_cod_pessoa_fj = null, $proibido = null, $ref_cod_setor_new = null, $matricula_new = null, $matricula_permanente = null, $tipo_menu = null, $email = null, $matricula_interna = null)
+    public function __construct($ref_cod_pessoa_fj = null, $matricula = null, $senha = null, $ativo = null, $ref_sec = null, $s = null, $sequencial = null, $opcao_menu = null, $ref_cod_administracao_secretaria = null, $ref_ref_cod_administracao_secretaria = null, $ref_cod_departamento = null, $ref_ref_ref_cod_administracao_secretaria = null, $ref_ref_cod_departamento = null, $ref_cod_setor = null, $ref_cod_funcionario_vinculo = null, $tempo_expira_senha = null, $data_expiracao = false, $data_troca_senha = null, $data_reativa_conta = null, $ref_ref_cod_pessoa_fj = null, $proibido = null, $ref_cod_setor_new = null, $matricula_new = null, $matricula_permanente = null, $tipo_menu = null, $email = null, $matricula_interna = null)
     {
         $db = new clsBanco();
         $this->_schema = 'portal.';
         $this->_tabela = "{$this->_schema}funcionario";
 
-        $this->_campos_lista = $this->_todos_campos = 'ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, ramal, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, proibido, ref_cod_setor_new, matricula_new, matricula_permanente, tipo_menu, email, receber_novidades, atualizou_cadastro';
+        $this->_campos_lista = $this->_todos_campos = 'ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, data_expiracao, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, matricula_new, tipo_menu, email, receber_novidades, atualizou_cadastro';
 
         if (is_numeric($ref_ref_cod_pessoa_fj)) {
-            if (class_exists('clsFuncionario')) {
-                $tmp_obj = new clsFuncionario($ref_ref_cod_pessoa_fj);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_ref_cod_pessoa_fj = $ref_ref_cod_pessoa_fj;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_ref_cod_pessoa_fj = $ref_ref_cod_pessoa_fj;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_ref_cod_pessoa_fj}'")) {
-                    $this->ref_ref_cod_pessoa_fj = $ref_ref_cod_pessoa_fj;
-                }
+            if ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$ref_ref_cod_pessoa_fj}'")) {
+                $this->ref_ref_cod_pessoa_fj = $ref_ref_cod_pessoa_fj;
             }
         }
         if (is_numeric($ref_ref_cod_departamento) && is_numeric($ref_ref_ref_cod_administracao_secretaria) && is_numeric($ref_cod_setor)) {
-            if (class_exists('clsAdministracaoSetor')) {
-                $tmp_obj = new clsAdministracaoSetor($ref_ref_cod_departamento, $ref_ref_ref_cod_administracao_secretaria, $ref_cod_setor);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_ref_cod_departamento = $ref_ref_cod_departamento;
-                        $this->ref_ref_ref_cod_administracao_secretaria = $ref_ref_ref_cod_administracao_secretaria;
-                        $this->ref_cod_setor = $ref_cod_setor;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_ref_cod_departamento = $ref_ref_cod_departamento;
-                        $this->ref_ref_ref_cod_administracao_secretaria = $ref_ref_ref_cod_administracao_secretaria;
-                        $this->ref_cod_setor = $ref_cod_setor;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM administracao_setor WHERE ref_cod_departamento = '{$ref_ref_cod_departamento}' AND ref_ref_cod_administracao_secretaria = '{$ref_ref_ref_cod_administracao_secretaria}' AND cod_setor = '{$ref_cod_setor}'")) {
-                    $this->ref_ref_cod_departamento = $ref_ref_cod_departamento;
-                    $this->ref_ref_ref_cod_administracao_secretaria = $ref_ref_ref_cod_administracao_secretaria;
-                    $this->ref_cod_setor = $ref_cod_setor;
-                }
+            if ($db->CampoUnico("SELECT 1 FROM administracao_setor WHERE ref_cod_departamento = '{$ref_ref_cod_departamento}' AND ref_ref_cod_administracao_secretaria = '{$ref_ref_ref_cod_administracao_secretaria}' AND cod_setor = '{$ref_cod_setor}'")) {
+                $this->ref_ref_cod_departamento = $ref_ref_cod_departamento;
+                $this->ref_ref_ref_cod_administracao_secretaria = $ref_ref_ref_cod_administracao_secretaria;
+                $this->ref_cod_setor = $ref_cod_setor;
             }
         }
         if (is_numeric($ref_ref_cod_administracao_secretaria) && is_numeric($ref_cod_departamento)) {
-            if (class_exists('clsAdministracaoDepartamento')) {
-                $tmp_obj = new clsAdministracaoDepartamento($ref_ref_cod_administracao_secretaria, $ref_cod_departamento);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_ref_cod_administracao_secretaria = $ref_ref_cod_administracao_secretaria;
-                        $this->ref_cod_departamento = $ref_cod_departamento;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_ref_cod_administracao_secretaria = $ref_ref_cod_administracao_secretaria;
-                        $this->ref_cod_departamento = $ref_cod_departamento;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM administracao_departamento WHERE ref_cod_administracao_secretaria = '{$ref_ref_cod_administracao_secretaria}' AND cod_departamento = '{$ref_cod_departamento}'")) {
-                    $this->ref_ref_cod_administracao_secretaria = $ref_ref_cod_administracao_secretaria;
-                    $this->ref_cod_departamento = $ref_cod_departamento;
-                }
+            if ($db->CampoUnico("SELECT 1 FROM administracao_departamento WHERE ref_cod_administracao_secretaria = '{$ref_ref_cod_administracao_secretaria}' AND cod_departamento = '{$ref_cod_departamento}'")) {
+                $this->ref_ref_cod_administracao_secretaria = $ref_ref_cod_administracao_secretaria;
+                $this->ref_cod_departamento = $ref_cod_departamento;
             }
         }
         if (is_numeric($ref_cod_administracao_secretaria)) {
-            if (class_exists('clsAdministracaoSecretaria')) {
-                $tmp_obj = new clsAdministracaoSecretaria($ref_cod_administracao_secretaria);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_administracao_secretaria = $ref_cod_administracao_secretaria;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_administracao_secretaria = $ref_cod_administracao_secretaria;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM administracao_secretaria WHERE cod_administracao_secretaria = '{$ref_cod_administracao_secretaria}'")) {
-                    $this->ref_cod_administracao_secretaria = $ref_cod_administracao_secretaria;
-                }
+            if ($db->CampoUnico("SELECT 1 FROM administracao_secretaria WHERE cod_administracao_secretaria = '{$ref_cod_administracao_secretaria}'")) {
+                $this->ref_cod_administracao_secretaria = $ref_cod_administracao_secretaria;
             }
         }
         if (is_numeric($ref_cod_pessoa_fj)) {
-            if (class_exists('clsCadastroFisica')) {
-                $tmp_obj = new clsCadastroFisica($ref_cod_pessoa_fj);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_pessoa_fj = $ref_cod_pessoa_fj;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_pessoa_fj = $ref_cod_pessoa_fj;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM cadastro.fisica WHERE idpes = '{$ref_cod_pessoa_fj}'")) {
-                    $this->ref_cod_pessoa_fj = $ref_cod_pessoa_fj;
-                }
+            if ($db->CampoUnico("SELECT 1 FROM cadastro.fisica WHERE idpes = '{$ref_cod_pessoa_fj}'")) {
+                $this->ref_cod_pessoa_fj = $ref_cod_pessoa_fj;
             }
         }
 
@@ -238,9 +95,6 @@ class clsPortalFuncionario
         if (is_numeric($ref_sec)) {
             $this->ref_sec = $ref_sec;
         }
-        if (is_string($ramal)) {
-            $this->ramal = $ramal;
-        }
         if (is_string($sequencial)) {
             $this->sequencial = $sequencial;
         }
@@ -253,23 +107,21 @@ class clsPortalFuncionario
         if (is_numeric($tempo_expira_senha)) {
             $this->tempo_expira_senha = $tempo_expira_senha;
         }
-        if (is_numeric($tempo_expira_conta)) {
-            $this->tempo_expira_conta = $tempo_expira_conta;
+
+        if ($data_expiracao) {
+            $this->data_expiracao = $data_expiracao;
+        } elseif ($data_expiracao !== false) {
+            $this->data_expiracao = null;
         }
+
         if (is_string($data_troca_senha)) {
             $this->data_troca_senha = $data_troca_senha;
         }
         if (is_string($data_reativa_conta)) {
             $this->data_reativa_conta = $data_reativa_conta;
         }
-        if (is_numeric($proibido)) {
-            $this->proibido = $proibido;
-        }
         if (is_numeric($matricula_new)) {
             $this->matricula_new = $matricula_new;
-        }
-        if (is_numeric($matricula_permanente)) {
-            $this->matricula_permanente = $matricula_permanente;
         }
         if (is_numeric($tipo_menu)) {
             $this->tipo_menu = $tipo_menu;
@@ -284,11 +136,6 @@ class clsPortalFuncionario
         }
     }
 
-    /**
-     * Cria um novo registro
-     *
-     * @return bool
-     */
     public function cadastra()
     {
         if (is_numeric($this->ref_cod_pessoa_fj)) {
@@ -324,11 +171,6 @@ class clsPortalFuncionario
             if (is_numeric($this->ref_sec)) {
                 $campos .= "{$gruda}ref_sec";
                 $valores .= "{$gruda}'{$this->ref_sec}'";
-                $gruda = ', ';
-            }
-            if (is_string($this->ramal)) {
-                $campos .= "{$gruda}ramal";
-                $valores .= "{$gruda}'{$this->ramal}'";
                 $gruda = ', ';
             }
             if (is_string($this->sequencial)) {
@@ -381,9 +223,9 @@ class clsPortalFuncionario
                 $valores .= "{$gruda}'{$this->tempo_expira_senha}'";
                 $gruda = ', ';
             }
-            if (is_numeric($this->tempo_expira_conta)) {
-                $campos .= "{$gruda}tempo_expira_conta";
-                $valores .= "{$gruda}'{$this->tempo_expira_conta}'";
+            if ($this->data_expiracao) {
+                $campos .= "{$gruda}data_expiracao";
+                $valores .= "{$gruda}'{$this->data_expiracao}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_troca_senha)) {
@@ -401,11 +243,6 @@ class clsPortalFuncionario
                 $valores .= "{$gruda}'{$this->ref_ref_cod_pessoa_fj}'";
                 $gruda = ', ';
             }
-            if (is_numeric($this->proibido)) {
-                $campos .= "{$gruda}proibido";
-                $valores .= "{$gruda}'{$this->proibido}'";
-                $gruda = ', ';
-            }
             if (is_numeric($this->ref_cod_setor_new)) {
                 $campos .= "{$gruda}ref_cod_setor_new";
                 $valores .= "{$gruda}'{$this->ref_cod_setor_new}'";
@@ -414,11 +251,6 @@ class clsPortalFuncionario
             if (is_numeric($this->matricula_new)) {
                 $campos .= "{$gruda}matricula_new";
                 $valores .= "{$gruda}'{$this->matricula_new}'";
-                $gruda = ', ';
-            }
-            if (is_numeric($this->matricula_permanente)) {
-                $campos .= "{$gruda}matricula_permanente";
-                $valores .= "{$gruda}'{$this->matricula_permanente}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->tipo_menu)) {
@@ -441,11 +273,6 @@ class clsPortalFuncionario
         return false;
     }
 
-    /**
-     * Edita os dados de um registro
-     *
-     * @return bool
-     */
     public function edita()
     {
         if (is_numeric($this->ref_cod_pessoa_fj)) {
@@ -470,10 +297,6 @@ class clsPortalFuncionario
             }
             if (is_numeric($this->ref_sec)) {
                 $set .= "{$gruda}ref_sec = '{$this->ref_sec}'";
-                $gruda = ', ';
-            }
-            if (is_string($this->ramal)) {
-                $set .= "{$gruda}ramal = '{$this->ramal}'";
                 $gruda = ', ';
             }
             if (is_string($this->sequencial)) {
@@ -516,10 +339,15 @@ class clsPortalFuncionario
                 $set .= "{$gruda}tempo_expira_senha = '{$this->tempo_expira_senha}'";
                 $gruda = ', ';
             }
-            if (is_numeric($this->tempo_expira_conta)) {
-                $set .= "{$gruda}tempo_expira_conta = '{$this->tempo_expira_conta}'";
+
+            if ($this->data_expiracao) {
+                $set .= "{$gruda}data_expiracao = '{$this->data_expiracao}'";
+                $gruda = ', ';
+            } elseif (is_null($this->data_expiracao)) {
+                $set .= "{$gruda}data_expiracao = NULL";
                 $gruda = ', ';
             }
+
             if (is_string($this->data_troca_senha)) {
                 $set .= "{$gruda}data_troca_senha = '{$this->data_troca_senha}'";
                 $gruda = ', ';
@@ -532,20 +360,12 @@ class clsPortalFuncionario
                 $set .= "{$gruda}ref_ref_cod_pessoa_fj = '{$this->ref_ref_cod_pessoa_fj}'";
                 $gruda = ', ';
             }
-            if (is_numeric($this->proibido)) {
-                $set .= "{$gruda}proibido = '{$this->proibido}'";
-                $gruda = ', ';
-            }
             if (is_numeric($this->ref_cod_setor_new)) {
                 $set .= "{$gruda}ref_cod_setor_new = '{$this->ref_cod_setor_new}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->matricula_new)) {
                 $set .= "{$gruda}matricula_new = '{$this->matricula_new}'";
-                $gruda = ', ';
-            }
-            if (is_numeric($this->matricula_permanente)) {
-                $set .= "{$gruda}matricula_permanente = '{$this->matricula_permanente}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->tipo_menu)) {
@@ -578,39 +398,7 @@ class clsPortalFuncionario
         return false;
     }
 
-    /**
-     * Retorna uma lista filtrados de acordo com os parametros
-     *
-     * @param string str_matricula
-     * @param string str_senha
-     * @param integer int_ativo
-     * @param integer int_ref_sec
-     * @param string str_ramal
-     * @param string str_sequencial
-     * @param string str_opcao_menu
-     * @param integer int_ref_cod_administracao_secretaria
-     * @param integer int_ref_ref_cod_administracao_secretaria
-     * @param integer int_ref_cod_departamento
-     * @param integer int_ref_ref_ref_cod_administracao_secretaria
-     * @param integer int_ref_ref_cod_departamento
-     * @param integer int_ref_cod_setor
-     * @param integer int_ref_cod_funcionario_vinculo
-     * @param integer int_tempo_expira_senha
-     * @param integer int_tempo_expira_conta
-     * @param string date_data_troca_senha_ini
-     * @param string date_data_troca_senha_fim
-     * @param string date_data_reativa_conta_ini
-     * @param string date_data_reativa_conta_fim
-     * @param integer int_ref_ref_cod_pessoa_fj
-     * @param integer int_proibido
-     * @param integer int_ref_cod_setor_new
-     * @param integer int_matricula_new
-     * @param integer int_matricula_permanente
-     * @param integer int_tipo_menu
-     *
-     * @return array
-     */
-    public function lista($str_matricula = null, $str_senha = null, $int_ativo = null, $int_ref_sec = null, $str_ramal = null, $str_sequencial = null, $str_opcao_menu = null, $int_ref_cod_administracao_secretaria = null, $int_ref_ref_cod_administracao_secretaria = null, $int_ref_cod_departamento = null, $int_ref_ref_ref_cod_administracao_secretaria = null, $int_ref_ref_cod_departamento = null, $int_ref_cod_setor = null, $int_ref_cod_funcionario_vinculo = null, $int_tempo_expira_senha = null, $int_tempo_expira_conta = null, $date_data_troca_senha_ini = null, $date_data_troca_senha_fim = null, $date_data_reativa_conta_ini = null, $date_data_reativa_conta_fim = null, $int_ref_ref_cod_pessoa_fj = null, $int_proibido = null, $int_ref_cod_setor_new = null, $int_matricula_new = null, $int_matricula_permanente = null, $int_tipo_menu = null)
+    public function lista($str_matricula = null, $str_senha = null, $int_ativo = null, $int_ref_sec = null, $str_ramal = null, $str_sequencial = null, $str_opcao_menu = null, $int_ref_cod_administracao_secretaria = null, $int_ref_ref_cod_administracao_secretaria = null, $int_ref_cod_departamento = null, $int_ref_ref_ref_cod_administracao_secretaria = null, $int_ref_ref_cod_departamento = null, $int_ref_cod_setor = null, $int_ref_cod_funcionario_vinculo = null, $int_tempo_expira_senha = null, $data_expiracao = null, $date_data_troca_senha_ini = null, $date_data_troca_senha_fim = null, $date_data_reativa_conta_ini = null, $date_data_reativa_conta_fim = null, $int_ref_ref_cod_pessoa_fj = null, $int_proibido = null, $int_ref_cod_setor_new = null, $int_matricula_new = null, $int_matricula_permanente = null, $int_tipo_menu = null)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
@@ -638,10 +426,6 @@ class clsPortalFuncionario
         }
         if (is_numeric($int_ref_sec)) {
             $filtros .= "{$whereAnd} ref_sec = '{$int_ref_sec}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($str_ramal)) {
-            $filtros .= "{$whereAnd} ramal LIKE '%{$str_ramal}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_sequencial)) {
@@ -684,8 +468,8 @@ class clsPortalFuncionario
             $filtros .= "{$whereAnd} tempo_expira_senha = '{$int_tempo_expira_senha}'";
             $whereAnd = ' AND ';
         }
-        if (is_numeric($int_tempo_expira_conta)) {
-            $filtros .= "{$whereAnd} tempo_expira_conta = '{$int_tempo_expira_conta}'";
+        if ($data_expiracao) {
+            $filtros .= "{$whereAnd} data_expiracao = '{$data_expiracao}'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_troca_senha_ini)) {
@@ -708,20 +492,12 @@ class clsPortalFuncionario
             $filtros .= "{$whereAnd} ref_ref_cod_pessoa_fj = '{$int_ref_ref_cod_pessoa_fj}'";
             $whereAnd = ' AND ';
         }
-        if (is_numeric($int_proibido)) {
-            $filtros .= "{$whereAnd} proibido = '{$int_proibido}'";
-            $whereAnd = ' AND ';
-        }
         if (is_numeric($int_ref_cod_setor_new)) {
             $filtros .= "{$whereAnd} ref_cod_setor_new = '{$int_ref_cod_setor_new}'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_matricula_new)) {
             $filtros .= "{$whereAnd} matricula_new = '{$int_matricula_new}'";
-            $whereAnd = ' AND ';
-        }
-        if (is_numeric($int_matricula_permanente)) {
-            $filtros .= "{$whereAnd} matricula_permanente = '{$int_matricula_permanente}'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_tipo_menu)) {
@@ -759,11 +535,6 @@ class clsPortalFuncionario
         return false;
     }
 
-    /**
-     * Retorna um array com os dados de um registro
-     *
-     * @return array
-     */
     public function detalhe()
     {
         if (is_numeric($this->ref_cod_pessoa_fj)) {
@@ -777,11 +548,6 @@ class clsPortalFuncionario
         return false;
     }
 
-    /**
-     * Retorna true se o registro existir. Caso contrário retorna false.
-     *
-     * @return bool
-     */
     public function existe()
     {
         if (is_numeric($this->ref_cod_pessoa_fj)) {
@@ -796,11 +562,6 @@ class clsPortalFuncionario
         return false;
     }
 
-    /**
-     * Exclui um registro
-     *
-     * @return bool
-     */
     public function excluir()
     {
         if (is_numeric($this->ref_cod_pessoa_fj)) {
@@ -812,42 +573,22 @@ class clsPortalFuncionario
         return false;
     }
 
-    /**
-     * Define quais campos da tabela serao selecionados na invocacao do metodo lista
-     *
-     * @return null
-     */
     public function setCamposLista($str_campos)
     {
         $this->_campos_lista = $str_campos;
     }
 
-    /**
-     * Define que o metodo Lista devera retornoar todos os campos da tabela
-     *
-     * @return null
-     */
     public function resetCamposLista()
     {
         $this->_campos_lista = $this->_todos_campos;
     }
 
-    /**
-     * Define limites de retorno para o metodo lista
-     *
-     * @return null
-     */
     public function setLimite($intLimiteQtd, $intLimiteOffset = null)
     {
         $this->_limite_quantidade = $intLimiteQtd;
         $this->_limite_offset = $intLimiteOffset;
     }
 
-    /**
-     * Retorna a string com o trecho da query resposavel pelo Limite de registros
-     *
-     * @return string
-     */
     public function getLimite()
     {
         if (is_numeric($this->_limite_quantidade)) {
@@ -863,11 +604,6 @@ class clsPortalFuncionario
         return '';
     }
 
-    /**
-     * Define campo para ser utilizado como ordenacao no metolo lista
-     *
-     * @return null
-     */
     public function setOrderby($strNomeCampo)
     {
         if (is_string($strNomeCampo) && $strNomeCampo) {
@@ -875,11 +611,6 @@ class clsPortalFuncionario
         }
     }
 
-    /**
-     * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
-     *
-     * @return string
-     */
     public function getOrderby()
     {
         if (is_string($this->_campo_order_by)) {
@@ -889,11 +620,6 @@ class clsPortalFuncionario
         return '';
     }
 
-    /**
-     * Retorna a string com o nome do vinculo cujo código foi passado por parâmetro
-     *
-     * @return string
-     */
     public function getNomeVinculo($cod_funcionario_vinculo)
     {
         if (is_numeric($cod_funcionario_vinculo)) {

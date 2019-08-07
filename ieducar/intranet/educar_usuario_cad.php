@@ -2,6 +2,7 @@
 
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -23,7 +24,6 @@ class clsIndexBase extends clsBase
 class indice extends clsCadastro
 {
     public $ref_pessoa;
-    public $ref_cod_setor_new;
 
     //dados do funcionario
     public $nome;
@@ -31,23 +31,9 @@ class indice extends clsCadastro
     public $_senha;
     public $ativo;
     public $ref_cod_funcionario_vinculo;
-    public $tempo_expira_conta;
-    public $ramal;
-    public $super;
-    public $proibido;
-    public $matricula_permanente;
     public $matricula_interna;
+    public $data_expiracao;
     public $escola;
-
-    //senha carregada do banco (controle de criptografia)
-    public $confere_senha;
-
-    //setor e subsetores
-    public $setor_0;
-    public $setor_1;
-    public $setor_2;
-    public $setor_3;
-    public $setor_4;
 
     public function Inicializar()
     {
@@ -69,9 +55,12 @@ class indice extends clsCadastro
                 }
 
                 $this->_senha = $this->senha;
-                $this->confere_senha = $this->_senha;
                 $this->fexcluir = true;
                 $retorno = 'Editar';
+            }
+
+            if ($this->data_expiracao) {
+                $this->data_expiracao = Portabilis_Date_Utils::pgSQLToBr($this->data_expiracao);
             }
 
             $this->status = $this->ativo;
@@ -112,22 +101,16 @@ class indice extends clsCadastro
 
         $this->campoOculto('ref_pessoa', $this->ref_pessoa);
 
+        $cadastrando = true;
+
         if (is_numeric($this->ref_pessoa)) {
-            $this->campoOculto('confere_senha', $this->confere_senha);
+            $cadastrando = false;
         }
 
         if ($_POST) {
             foreach ($_POST as $campo => $val) {
                 $this->$campo = ($this->$campo) ? $this->$campo : $val;
             }
-        }
-
-        $this->ref_cod_setor_new = 0;
-
-        if (!$this->ref_cod_setor_new && is_numeric($this->ref_pessoa)) {
-            $objFuncionario = new clsPortalFuncionario($this->ref_pessoa);
-            $detFunc = $objFuncionario->detalhe();
-            $this->ref_cod_setor_new = $detFunc['ref_cod_setor_new'];
         }
 
         if ($_GET['ref_pessoa']) {
@@ -154,9 +137,10 @@ class indice extends clsCadastro
         }
 
         $this->campoTexto('matricula', 'Matrícula', $this->matricula, 12, 12, true);
-        $this->campoSenha('_senha', 'Senha', $this->_senha, true);
+        $this->campoSenha('_senha', 'Senha', null, $cadastrando, empty($cadastrando) ? 'Preencha apenas se desejar alterar a senha' : '');
         $this->campoEmail('email', 'E-mail usuário', $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
         $this->campoTexto('matricula_interna', 'Matrícula interna', $this->matricula_interna, 30, 30, false, false, false, 'Utilizado somente para registro, caso a instituição deseje que a matrícula interna deste funcionário seja registrada no sistema.');
+        $this->campoData('data_expiracao', 'Data de expiração', $this->data_expiracao);
 
         $opcoes = [0 => 'Inativo', 1 => 'Ativo'];
 
@@ -170,32 +154,6 @@ class indice extends clsCadastro
         $opcoes = ['' => 'Selecione'] + $objFuncionarioVinculo->lista();
         $this->campoLista('ref_cod_funcionario_vinculo', 'Vínculo', $opcoes, $this->ref_cod_funcionario_vinculo);
 
-        $opcoes = [
-            '' => 'Selecione',
-            5 => '5',
-            6 => '6',
-            7 => '7',
-            10 => '10',
-            14 => '14',
-            20 => '20',
-            21 => '21',
-            28 => '28',
-            30 => '30',
-            35 => '35',
-            60 => '60',
-            90 => '90',
-            120 => '120',
-            150 => '150',
-            180 => '180',
-            210 => '210',
-            240 => '240',
-            270 => '270',
-            300 => '300',
-            365 => '365'
-        ];
-
-        $this->campoLista('tempo_expira_conta', 'Dias p/ expirar a conta', $opcoes, $this->tempo_expira_conta);
-
         $tempoExpiraSenha = config('legacy.app.user_accounts.default_password_expiration_period');
 
         if (is_numeric($tempoExpiraSenha)) {
@@ -204,17 +162,6 @@ class indice extends clsCadastro
             $opcoes = ['' => 'Selecione', 5 => '5', 30 => '30', 60 => '60', 90 => '90', 120 => '120', 180 => '180'];
             $this->campoLista('tempo_expira_senha', 'Dias p/ expirar a senha', $opcoes, $this->tempo_expira_senha);
         }
-
-        $this->campoTexto('ramal', 'Ramal', $this->ramal, 11, 30);
-
-        $opcoes = [null => 'Não', 'S' => 'Sim'];
-        $this->campoLista('super', 'Super usuário', $opcoes, $this->super, '', false, '', '', false, false);
-
-        $opcoes = [null => 'Não', 1 => 'Sim'];
-        $this->campoLista('proibido', 'Banido', $opcoes, $this->proibido, '', false, '', '', false, false);
-
-        $opcoes = [null => 'Não', 1 => 'Sim'];
-        $this->campoLista('matricula_permanente', 'Matrícula permanente', $opcoes, $this->matricula_permanente, '', false, '', '', false, false);
 
         $opcoes = ['' => 'Selecione'];
 
@@ -248,7 +195,7 @@ class indice extends clsCadastro
 
         echo '</script>';
 
-        $this->campoLista('ref_cod_tipo_usuario', 'Tipo Usuário', $opcoes, $this->ref_cod_tipo_usuario, '', null, null, null, null, true);
+        $this->campoLista('ref_cod_tipo_usuario', 'Tipo de usuário', $opcoes, $this->ref_cod_tipo_usuario, '', null, null, null, null, true);
 
         $nivel = $obj_permissao->nivel_acesso($this->ref_pessoa);
 
@@ -275,17 +222,6 @@ class indice extends clsCadastro
             return false;
         }
 
-        //setor recebe o id do ultimo subsetor selecionado
-        $this->ref_cod_setor_new = 0;
-
-        for ($i = 0; $i < 5; $i++) {
-            $nmvar = "setor_{$i}";
-
-            if (is_numeric($this->$nmvar) && $this->$nmvar) {
-                $this->ref_cod_setor_new = $this->$nmvar;
-            }
-        }
-
         if (!$this->validatesUniquenessOfMatricula($this->ref_pessoa, $this->matricula)) {
             return false;
         }
@@ -294,7 +230,9 @@ class indice extends clsCadastro
             return false;
         }
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, md5($this->_senha), $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->tempo_expira_conta, 'NOW()', 'NOW()', $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente) ? 0 : 1, 1, $this->email, $this->matricula_interna);
+        $senha = Hash::make($this->_senha);
+
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, 0, null, 0, 1, $this->email, $this->matricula_interna);
 
         if ($obj_funcionario->cadastra()) {
             $funcionario = $obj_funcionario->detalhe();
@@ -342,30 +280,24 @@ class indice extends clsCadastro
             return false;
         }
 
-        $this->ref_cod_setor_new = 0;
-
-        for ($i = 0; $i < 5; $i++) {
-            $nmvar = "setor_{$i}";
-
-            if (is_numeric($this->$nmvar) && $this->$nmvar) {
-                $this->ref_cod_setor_new = $this->$nmvar;
-            }
-        }
-
         if (!$this->validatesUniquenessOfMatricula($this->ref_pessoa, $this->matricula)) {
             return false;
         }
 
-        if (!$this->validatesPassword($this->matricula, $this->_senha)) {
-            return false;
+        // Ao editar não é necessário trocar a senha, então apenas quando algo
+        // for informado é que a mesma será alterada.
+
+        $senha = null;
+
+        if ($this->_senha) {
+            if (!$this->validatesPassword($this->matricula, $this->_senha)) {
+                return false;
+            }
+
+            $senha = Hash::make($this->_senha);
         }
 
-        //verifica se a senha ja esta criptografada
-        if ($this->_senha != $this->confere_senha) {
-            $this->_senha = md5($this->_senha);
-        }
-
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $this->_senha, $this->ativo, null, $this->ramal, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->tempo_expira_conta, 'NOW()', 'NOW()', $this->pessoa_logada, empty($this->proibido) ? 0 : 1, $this->ref_cod_setor_new, null, empty($this->matricula_permanente) ? 0 : 1, null, $this->email, $this->matricula_interna);
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, 0, null, 0, null, $this->email, $this->matricula_interna);
         $detalheAntigo = $obj_funcionario->detalhe();
 
         if ($obj_funcionario->edita()) {
