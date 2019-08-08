@@ -1504,16 +1504,15 @@ class App_Model_IedFinder extends CoreExt_Entity
         $stages = [];
 
         $sql = '
-            SELECT distinct etapa
+            SELECT distinct etapa, ref_cod_disciplina
             FROM pmieducar.dispensa_disciplina
             JOIN pmieducar.dispensa_etapa
             ON dispensa_disciplina.cod_dispensa = dispensa_etapa.ref_cod_dispensa
             WHERE ref_cod_matricula = $1
-            AND ref_cod_disciplina = $2
             order by etapa
         ';
 
-        $query = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$enrollmentId, $disciplineId]]);
+        $query = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$enrollmentId]]);
 
         foreach ($query as $stage) {
             $stages[] = $stage;

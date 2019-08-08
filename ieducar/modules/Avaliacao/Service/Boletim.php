@@ -64,11 +64,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     private function getExemptedStages($enrollmentId, $disciplineId)
     {
-        if (!isset($this->exemptedStages[$disciplineId])) {
-            $this->exemptedStages[$disciplineId] = App_Model_IedFinder::getExemptedStages($enrollmentId, $disciplineId);
+        if (!isset($this->exemptedStages[$enrollmentId])) {
+            $this->exemptedStages[$enrollmentId] = App_Model_IedFinder::getExemptedStages($enrollmentId, $disciplineId);
         }
 
-        return $this->exemptedStages[$disciplineId];
+        return $this->exemptedStages[$enrollmentId][$disciplineId] ?? [];
     }
 
   /**
