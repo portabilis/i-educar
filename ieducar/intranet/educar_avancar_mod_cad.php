@@ -189,7 +189,7 @@ class indice extends clsCadastro
         //Verifica o parametro na série pra exigir inep
         $objSerie = new clsPmieducarSerie($serieId);
         $serieDet = $objSerie->detalhe();
-        $exigeInep = $serieDet['exigir_inep'] == 't';
+        $exigeInep = $serieDet['exigir_inep'];
         //Retorna alunos sem inep
         $alunosSemInep = [];
         $objAluno = new clsPmieducarAluno();

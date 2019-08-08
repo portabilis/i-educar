@@ -231,8 +231,8 @@ class SerieController extends ApiCoreController
 
             $permiteFaixaEtaria = $objSerie->verificaPeriodoCorteEtarioDataNascimento($dataNascimento, $ano);
 
-            $alertaFaixaEtaria = $detSerie['alerta_faixa_etaria'] == 't';
-            $bloquearMatriculaFaixaEtaria = $detSerie['bloquear_matricula_faixa_etaria'] == 't';
+            $alertaFaixaEtaria = $detSerie['alerta_faixa_etaria'];
+            $bloquearMatriculaFaixaEtaria = $detSerie['bloquear_matricula_faixa_etaria'];
 
             $retorno = ['bloqueado' => false, 'mensagem_bloqueio' => ''];
 
