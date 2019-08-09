@@ -11,7 +11,8 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
     protected $_data = [
         'instituicao' => null,
         'nome' => null,
-        'tipoNota' => null
+        'tipoNota' => null,
+        'arredondarNota' => null,
     ];
 
     protected $_references = [
@@ -89,10 +90,15 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
             return $return;
         }
 
-        // Se o tipo de nota não for uma média final e o tipo de nota for numérica retorna o valor (não arredonda)
-        // isso porque o arredondamento se dará apenas para médias numericas e notas e médias conceituais
-        if ($this->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA
+        // Se o tipo de nota não for uma média final e o tipo de nota for
+        // numérica retorna o valor (não arredonda).  Porém caso o campo
+        // "Arredondar nota da etapa" seja "Sim", irá arredondar notas da etapa
+        // também.
+
+        if (
+            $this->get('tipoNota') == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA
             && $tipoNota == 1
+            && empty($this->get('arredondarNota'))
         ) {
             return $return;
         }

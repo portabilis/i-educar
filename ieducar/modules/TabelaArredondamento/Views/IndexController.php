@@ -17,19 +17,8 @@ class IndexController extends Core_Controller_Page_ListController
     {
         parent::_preRender();
 
-        Portabilis_View_Helper_Application::loadStylesheet(
-            $this,
-            'intranet/styles/localizacaoSistema.css'
-        );
-
-        $localizacao = new LocalizacaoSistema();
-
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => 'Listagem de tabelas de arredondamento'
+        $this->breadcrumb('Listagem de tabelas de arredondamento', [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
     }
 }
