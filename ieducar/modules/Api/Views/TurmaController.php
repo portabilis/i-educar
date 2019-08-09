@@ -85,7 +85,7 @@ class TurmaController extends ApiCoreController
                 sequencial_fechamento,
                 relatorio.get_texto_sem_caracter_especial(pessoa.nome) AS aluno,
                 data_enturmacao,
-                CASE WHEN dependencia THEN 1 ELSE 0 END as ord_dependencia,
+                CASE WHEN dependencia THEN to_char(data_enturmacao,'mmdd')::int ELSE 0 END as ord_dependencia,
                 CASE WHEN to_char(instituicao.data_base_remanejamento,'mmdd') is not null and to_char(data_enturmacao,'mmdd') > to_char(instituicao.data_base_remanejamento,'mmdd') THEN to_char(data_enturmacao,'mmdd')::int ELSE 0 END as data_aluno_order
             FROM pmieducar.matricula_turma
             INNER JOIN pmieducar.instituicao On (instituicao.ativo = 1)
