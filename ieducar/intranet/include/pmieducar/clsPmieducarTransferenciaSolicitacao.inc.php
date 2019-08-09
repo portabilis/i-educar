@@ -1,303 +1,154 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*                                                                        *
-*   @author Prefeitura Municipal de Itajaí                               *
-*   @updated 29/03/2007                                                  *
-*   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-*                                                                        *
-*   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-*                       ctima@itajai.sc.gov.br                           *
-*                                                                        *
-*   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-*   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-*   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-*   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-*                                                                        *
-*   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-*   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-*   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-*   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-*                                                                        *
-*   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-*   junto  com  este  programa. Se não, escreva para a Free Software     *
-*   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-*   02111-1307, USA.                                                     *
-*                                                                        *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/**
-* @author Prefeitura Municipal de Itajaí
-*
-* Criado em 08/08/2006 17:35 pelo gerador automatico de classes
-*/
 
-require_once( "include/pmieducar/geral.inc.php" );
+use iEducar\Legacy\Model;
 
-class clsPmieducarTransferenciaSolicitacao
+require_once 'include/pmieducar/geral.inc.php';
+
+class clsPmieducarTransferenciaSolicitacao extends Model
 {
-    var $cod_transferencia_solicitacao;
-    var $ref_cod_transferencia_tipo;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $ref_cod_matricula_entrada;
-    var $ref_cod_matricula_saida;
-    var $observacao;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $data_transferencia;
-    var $ref_cod_escola_destino;
-    var $escola_destino_externa;
-    var $estado_escola_destino_externa;
-    var $municipio_escola_destino_externa;
+    public $cod_transferencia_solicitacao;
+    public $ref_cod_transferencia_tipo;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $ref_cod_matricula_entrada;
+    public $ref_cod_matricula_saida;
+    public $observacao;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $data_transferencia;
+    public $ref_cod_escola_destino;
+    public $escola_destino_externa;
+    public $estado_escola_destino_externa;
+    public $municipio_escola_destino_externa;
 
-    // propriedades padrao
-
-    /**
-     * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
-     *
-     * @var int
-     */
-    var $_total;
-
-    /**
-     * Nome do schema
-     *
-     * @var string
-     */
-    var $_schema;
-
-    /**
-     * Nome da tabela
-     *
-     * @var string
-     */
-    var $_tabela;
-
-    /**
-     * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
-     *
-     * @var string
-     */
-    var $_campos_lista;
-
-    /**
-     * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
-     *
-     * @var string
-     */
-    var $_todos_campos;
-
-    /**
-     * Valor que define a quantidade de registros a ser retornada pelo metodo lista
-     *
-     * @var int
-     */
-    var $_limite_quantidade;
-
-    /**
-     * Define o valor de offset no retorno dos registros no metodo lista
-     *
-     * @var int
-     */
-    var $_limite_offset;
-
-    /**
-     * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
-     *
-     * @var string
-     */
-    var $_campo_order_by;
-
-
-    /**
-     * Construtor (PHP 4)
-     *
-     * @return object
-     */
-    function __construct( $cod_transferencia_solicitacao = null, $ref_cod_transferencia_tipo = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_matricula_entrada = null, $ref_cod_matricula_saida = null, $observacao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $data_transferencia = null, $escola_destino_externa = null, $ref_cod_escola_destino = null, $estado_escola_destino_externa = null, $municipio_escola_destino_externa = null)
+    public function __construct($cod_transferencia_solicitacao = null, $ref_cod_transferencia_tipo = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_matricula_entrada = null, $ref_cod_matricula_saida = null, $observacao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $data_transferencia = null, $escola_destino_externa = null, $ref_cod_escola_destino = null, $estado_escola_destino_externa = null, $municipio_escola_destino_externa = null)
     {
         $db = new clsBanco();
-        $this->_schema = "pmieducar.";
+        $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}transferencia_solicitacao";
 
-        $this->_campos_lista = $this->_todos_campos = "ts.cod_transferencia_solicitacao, ts.ref_cod_transferencia_tipo, ts.ref_usuario_exc, ts.ref_usuario_cad, ts.ref_cod_matricula_entrada, ts.ref_cod_matricula_saida, ts.observacao, ts.data_cadastro, ts.data_exclusao, ts.ativo, ts.data_transferencia, ts.escola_destino_externa, ts.ref_cod_escola_destino, ts.estado_escola_destino_externa, ts.municipio_escola_destino_externa";
+        $this->_campos_lista = $this->_todos_campos = 'ts.cod_transferencia_solicitacao, ts.ref_cod_transferencia_tipo, ts.ref_usuario_exc, ts.ref_usuario_cad, ts.ref_cod_matricula_entrada, ts.ref_cod_matricula_saida, ts.observacao, ts.data_cadastro, ts.data_exclusao, ts.ativo, ts.data_transferencia, ts.escola_destino_externa, ts.ref_cod_escola_destino, ts.estado_escola_destino_externa, ts.municipio_escola_destino_externa';
 
-        if( is_numeric( $ref_cod_transferencia_tipo ) )
-        {
-            if( class_exists( "clsPmieducarTransferenciaTipo" ) )
-            {
-                $tmp_obj = new clsPmieducarTransferenciaTipo( $ref_cod_transferencia_tipo );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_transferencia_tipo)) {
+            if (class_exists('clsPmieducarTransferenciaTipo')) {
+                $tmp_obj = new clsPmieducarTransferenciaTipo($ref_cod_transferencia_tipo);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_transferencia_tipo = $ref_cod_transferencia_tipo;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_transferencia_tipo = $ref_cod_transferencia_tipo;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_transferencia_tipo = $ref_cod_transferencia_tipo;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.transferencia_tipo WHERE cod_transferencia_tipo = '{$ref_cod_transferencia_tipo}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.transferencia_tipo WHERE cod_transferencia_tipo = '{$ref_cod_transferencia_tipo}'")) {
                     $this->ref_cod_transferencia_tipo = $ref_cod_transferencia_tipo;
                 }
             }
         }
-        if( is_numeric( $ref_usuario_exc ) )
-        {
-            if( class_exists( "clsPmieducarUsuario" ) )
-            {
-                $tmp_obj = new clsPmieducarUsuario( $ref_usuario_exc );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_usuario_exc)) {
+            if (class_exists('clsPmieducarUsuario')) {
+                $tmp_obj = new clsPmieducarUsuario($ref_usuario_exc);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_usuario_exc = $ref_usuario_exc;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_usuario_exc = $ref_usuario_exc;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'")) {
                     $this->ref_usuario_exc = $ref_usuario_exc;
                 }
             }
         }
-        if( is_numeric( $ref_usuario_cad ) )
-        {
-            if( class_exists( "clsPmieducarUsuario" ) )
-            {
-                $tmp_obj = new clsPmieducarUsuario( $ref_usuario_cad );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_usuario_cad)) {
+            if (class_exists('clsPmieducarUsuario')) {
+                $tmp_obj = new clsPmieducarUsuario($ref_usuario_cad);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_usuario_cad = $ref_usuario_cad;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_usuario_cad = $ref_usuario_cad;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'")) {
                     $this->ref_usuario_cad = $ref_usuario_cad;
                 }
             }
         }
-        if( is_numeric( $ref_cod_matricula_entrada ) )
-        {
-            if( class_exists( "clsPmieducarMatricula" ) )
-            {
-                $tmp_obj = new clsPmieducarMatricula( $ref_cod_matricula_entrada );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_matricula_entrada)) {
+            if (class_exists('clsPmieducarMatricula')) {
+                $tmp_obj = new clsPmieducarMatricula($ref_cod_matricula_entrada);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_matricula_entrada = $ref_cod_matricula_entrada;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_matricula_entrada = $ref_cod_matricula_entrada;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_matricula_entrada = $ref_cod_matricula_entrada;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.matricula WHERE cod_matricula = '{$ref_cod_matricula_entrada}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.matricula WHERE cod_matricula = '{$ref_cod_matricula_entrada}'")) {
                     $this->ref_cod_matricula_entrada = $ref_cod_matricula_entrada;
                 }
             }
         }
-        if( is_numeric( $ref_cod_matricula_saida ) )
-        {
-            if( class_exists( "clsPmieducarMatricula" ) )
-            {
-                $tmp_obj = new clsPmieducarMatricula( $ref_cod_matricula_saida );
-                if( method_exists( $tmp_obj, "existe") )
-                {
-                    if( $tmp_obj->existe() )
-                    {
+        if (is_numeric($ref_cod_matricula_saida)) {
+            if (class_exists('clsPmieducarMatricula')) {
+                $tmp_obj = new clsPmieducarMatricula($ref_cod_matricula_saida);
+                if (method_exists($tmp_obj, 'existe')) {
+                    if ($tmp_obj->existe()) {
+                        $this->ref_cod_matricula_saida = $ref_cod_matricula_saida;
+                    }
+                } elseif (method_exists($tmp_obj, 'detalhe')) {
+                    if ($tmp_obj->detalhe()) {
                         $this->ref_cod_matricula_saida = $ref_cod_matricula_saida;
                     }
                 }
-                else if( method_exists( $tmp_obj, "detalhe") )
-                {
-                    if( $tmp_obj->detalhe() )
-                    {
-                        $this->ref_cod_matricula_saida = $ref_cod_matricula_saida;
-                    }
-                }
-            }
-            else
-            {
-                if( $db->CampoUnico( "SELECT 1 FROM pmieducar.matricula WHERE cod_matricula = '{$ref_cod_matricula_saida}'" ) )
-                {
+            } else {
+                if ($db->CampoUnico("SELECT 1 FROM pmieducar.matricula WHERE cod_matricula = '{$ref_cod_matricula_saida}'")) {
                     $this->ref_cod_matricula_saida = $ref_cod_matricula_saida;
                 }
             }
         }
 
-
-        if( is_numeric( $cod_transferencia_solicitacao ) )
-        {
+        if (is_numeric($cod_transferencia_solicitacao)) {
             $this->cod_transferencia_solicitacao = $cod_transferencia_solicitacao;
         }
-        if( is_string( $observacao ) )
-        {
+        if (is_string($observacao)) {
             $this->observacao = $observacao;
         }
-        if( is_string( $data_cadastro ) )
-        {
+        if (is_string($data_cadastro)) {
             $this->data_cadastro = $data_cadastro;
         }
-        if( is_string( $data_exclusao ) )
-        {
+        if (is_string($data_exclusao)) {
             $this->data_exclusao = $data_exclusao;
         }
-        if( is_numeric( $ativo ) )
-        {
+        if (is_numeric($ativo)) {
             $this->ativo = $ativo;
         }
-        if( is_string( $data_transferencia ) )
-        {
+        if (is_string($data_transferencia)) {
             $this->data_transferencia = $data_transferencia;
         }
-        if( is_string( $escola_destino_externa ) ) {
+        if (is_string($escola_destino_externa)) {
             $this->escola_destino_externa = $escola_destino_externa;
         }
-        if( is_numeric( $ref_cod_escola_destino ) ){
+        if (is_numeric($ref_cod_escola_destino)) {
             $this->ref_cod_escola_destino = $ref_cod_escola_destino;
         }
-        if( is_string( $estado_escola_destino_externa ) ) {
+        if (is_string($estado_escola_destino_externa)) {
             $this->estado_escola_destino_externa = $estado_escola_destino_externa;
         }
-        if( is_string( $municipio_escola_destino_externa ) ) {
+        if (is_string($municipio_escola_destino_externa)) {
             $this->municipio_escola_destino_externa = $municipio_escola_destino_externa;
         }
     }
@@ -307,93 +158,80 @@ class clsPmieducarTransferenciaSolicitacao
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
-        if( is_numeric( $this->ref_cod_transferencia_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_matricula_saida ) )
-        {
+        if (is_numeric($this->ref_cod_transferencia_tipo) && is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_matricula_saida)) {
             $db = new clsBanco();
 
-            $campos = "";
-            $valores = "";
-            $gruda = "";
+            $campos = '';
+            $valores = '';
+            $gruda = '';
 
-            if( is_numeric( $this->ref_cod_transferencia_tipo ) )
-            {
+            if (is_numeric($this->ref_cod_transferencia_tipo)) {
                 $campos .= "{$gruda}ref_cod_transferencia_tipo";
                 $valores .= "{$gruda}'{$this->ref_cod_transferencia_tipo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_usuario_cad ) )
-            {
+            if (is_numeric($this->ref_usuario_cad)) {
                 $campos .= "{$gruda}ref_usuario_cad";
                 $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_matricula_entrada ) )
-            {
+            if (is_numeric($this->ref_cod_matricula_entrada)) {
                 $campos .= "{$gruda}ref_cod_matricula_entrada";
                 $valores .= "{$gruda}'{$this->ref_cod_matricula_entrada}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_matricula_saida ) )
-            {
+            if (is_numeric($this->ref_cod_matricula_saida)) {
                 $campos .= "{$gruda}ref_cod_matricula_saida";
                 $valores .= "{$gruda}'{$this->ref_cod_matricula_saida}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->observacao ) )
-            {
+            if (is_string($this->observacao)) {
                 $campos .= "{$gruda}observacao";
                 $valores .= "{$gruda}'{$this->observacao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
             $valores .= "{$gruda}NOW()";
-            $gruda = ", ";
-//          $campos .= "{$gruda}ativo";
-//          $valores .= "{$gruda}'1'";
-//          $gruda = ", ";
-            if( is_numeric( $this->ativo ) )
-            {
+            $gruda = ', ';
+
+            if (is_numeric($this->ativo)) {
                 $campos .= "{$gruda}ativo";
                 $valores .= "{$gruda}'{$this->ativo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data_transferencia ) )
-            {
+            if (is_string($this->data_transferencia)) {
                 $campos .= "{$gruda}data_transferencia";
                 $valores .= "{$gruda}'{$this->data_transferencia}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->escola_destino_externa ) )
-            {
+            if (is_string($this->escola_destino_externa)) {
                 $campos .= "{$gruda}escola_destino_externa";
                 $valores .= "{$gruda}'{$this->escola_destino_externa}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_escola_destino ) )
-            {
+            if (is_numeric($this->ref_cod_escola_destino)) {
                 $campos .= "{$gruda}ref_cod_escola_destino";
                 $valores .= "{$gruda}'{$this->ref_cod_escola_destino}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->estado_escola_destino_externa ) )
-            {
+            if (is_string($this->estado_escola_destino_externa)) {
                 $campos .= "{$gruda}estado_escola_destino_externa";
                 $valores .= "{$gruda}'{$this->estado_escola_destino_externa}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->municipio_escola_destino_externa ) )
-            {
+            if (is_string($this->municipio_escola_destino_externa)) {
                 $campos .= "{$gruda}municipio_escola_destino_externa";
                 $valores .= "{$gruda}'{$this->municipio_escola_destino_externa}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
+            $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-            return $db->InsertId( "{$this->_tabela}_cod_transferencia_solicitacao_seq");
+            return $db->InsertId("{$this->_tabela}_cod_transferencia_solicitacao_seq");
         }
+
         return false;
     }
 
@@ -402,104 +240,92 @@ class clsPmieducarTransferenciaSolicitacao
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        if( is_numeric( $this->cod_transferencia_solicitacao ) && is_numeric( $this->ref_usuario_exc ) )
-        {
-
+        if (is_numeric($this->cod_transferencia_solicitacao) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
-            $set = "";
+            $set = '';
 
-            if( is_numeric( $this->ref_cod_transferencia_tipo ) )
-            {
+            if (is_numeric($this->ref_cod_transferencia_tipo)) {
                 $set .= "{$gruda}ref_cod_transferencia_tipo = '{$this->ref_cod_transferencia_tipo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_usuario_exc ) )
-            {
+            if (is_numeric($this->ref_usuario_exc)) {
                 $set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_usuario_cad ) )
-            {
+            if (is_numeric($this->ref_usuario_cad)) {
                 $set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_matricula_entrada ) )
-            {
+            if (is_numeric($this->ref_cod_matricula_entrada)) {
                 $set .= "{$gruda}ref_cod_matricula_entrada = '{$this->ref_cod_matricula_entrada}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_numeric( $this->ref_cod_matricula_saida ) )
-            {
+            if (is_numeric($this->ref_cod_matricula_saida)) {
                 $set .= "{$gruda}ref_cod_matricula_saida = '{$this->ref_cod_matricula_saida}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->observacao ) )
-            {
+            if (is_string($this->observacao)) {
                 $set .= "{$gruda}observacao = '{$this->observacao}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data_cadastro ) )
-            {
+            if (is_string($this->data_cadastro)) {
                 $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
             $set .= "{$gruda}data_exclusao = NOW()";
-            $gruda = ", ";
-            if( is_numeric( $this->ativo ) )
-            {
+            $gruda = ', ';
+            if (is_numeric($this->ativo)) {
                 $set .= "{$gruda}ativo = '{$this->ativo}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->data_transferencia ) )
-            {
+            if (is_string($this->data_transferencia)) {
                 $set .= "{$gruda}data_transferencia = '{$this->data_transferencia}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->escola_destino_externa ) )
-            {
+            if (is_string($this->escola_destino_externa)) {
                 $set .= "{$gruda}escola_destino_externa = '{$this->escola_destino_externa}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->ref_cod_escola_destino ) )
-            {
+            if (is_string($this->ref_cod_escola_destino)) {
                 $set .= "{$gruda}ref_cod_escola_destino = '{$this->ref_cod_escola_destino}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->estado_escola_destino_externa ) )
-            {
+            if (is_string($this->estado_escola_destino_externa)) {
                 $set .= "{$gruda}estado_escola_destino_externa = '{$this->estado_escola_destino_externa}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
-            if( is_string( $this->municipio_escola_destino_externa ) )
-            {
+            if (is_string($this->municipio_escola_destino_externa)) {
                 $set .= "{$gruda}municipio_escola_destino_externa = '{$this->municipio_escola_destino_externa}'";
-                $gruda = ", ";
+                $gruda = ', ';
             }
 
-//          die("UPDATE {$this->_tabela} SET $set WHERE cod_transferencia_solicitacao = '{$this->cod_transferencia_solicitacao}'");
-            if( $set )
-            {
-                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_transferencia_solicitacao = '{$this->cod_transferencia_solicitacao}'" );
+            if ($set) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_transferencia_solicitacao = '{$this->cod_transferencia_solicitacao}'");
+
                 return true;
             }
         }
+
         return false;
     }
 
     /**
-    *
-    * Apaga os registros de uma matricula em uma escola que foi a aceitação da transferencia
-    *
-    * @return boolean
-    */
-    function desativaEntradaTransferencia(){
-        if (is_numeric($this->cod_transferencia_solicitacao)){
+     *
+     * Apaga os registros de uma matricula em uma escola que foi a aceitação da transferencia
+     *
+     * @return boolean
+     */
+    public function desativaEntradaTransferencia()
+    {
+        if (is_numeric($this->cod_transferencia_solicitacao)) {
             $db = new clsBanco();
-            $db->Consulta( "UPDATE {$this->_tabela} SET ref_cod_matricula_entrada = NULL, data_transferencia = NULL,ref_usuario_exc = NULL, data_exclusao = NULL WHERE cod_transferencia_solicitacao = '{$this->cod_transferencia_solicitacao}'" );
+            $db->Consulta("UPDATE {$this->_tabela} SET ref_cod_matricula_entrada = NULL, data_transferencia = NULL,ref_usuario_exc = NULL, data_exclusao = NULL WHERE cod_transferencia_solicitacao = '{$this->cod_transferencia_solicitacao}'");
+
             return true;
         }
+
         return false;
     }
 
@@ -508,176 +334,143 @@ class clsPmieducarTransferenciaSolicitacao
      *
      * @return array
      */
-    function lista( $int_cod_transferencia_solicitacao = null, $int_ref_cod_transferencia_tipo = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_cod_matricula_entrada = null, $int_ref_cod_matricula_saida = null, $str_observacao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $date_data_transferencia_ini = null, $date_data_transferencia_fim = null, $int_ref_cod_aluno = null, $entrada_aluno = false, $int_ref_cod_escola = null, $int_ref_cod_serie = null, $mes = null, $transferido = null, $bool_matricula_entrada = null, $parar=false )
+    public function lista($int_cod_transferencia_solicitacao = null, $int_ref_cod_transferencia_tipo = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_cod_matricula_entrada = null, $int_ref_cod_matricula_saida = null, $str_observacao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $date_data_transferencia_ini = null, $date_data_transferencia_fim = null, $int_ref_cod_aluno = null, $entrada_aluno = false, $int_ref_cod_escola = null, $int_ref_cod_serie = null, $mes = null, $transferido = null, $bool_matricula_entrada = null, $parar = false)
     {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} ts, {$this->_schema}matricula m";
-        $filtros = "";
+        $filtros = '';
 
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
-        if( !is_null($bool_matricula_entrada) )
-        {
-            if( $bool_matricula_entrada == true )
-            {
+        if (!is_null($bool_matricula_entrada)) {
+            if ($bool_matricula_entrada == true) {
                 $filtros .= "{$whereAnd}ts.ref_cod_matricula_entrada IS NOT NULL ";
-                $whereAnd = " AND ";
-            }
-            else
-            {
+                $whereAnd = ' AND ';
+            } else {
                 $filtros .= "{$whereAnd}ts.ref_cod_matricula_entrada IS NULL ";
-                $whereAnd = " AND ";
+                $whereAnd = ' AND ';
             }
         }
-        if ($entrada_aluno == true)
-        {
+        if ($entrada_aluno == true) {
             $filtros .= "{$whereAnd}ts.ref_cod_matricula_entrada = m.cod_matricula";
-            $whereAnd = " AND ";
-        }
-        else //if ($entrada_aluno == false)
-        {
+            $whereAnd = ' AND ';
+        } else { //if ($entrada_aluno == false)
             $filtros .= "{$whereAnd}ts.ref_cod_matricula_saida = m.cod_matricula";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        if( is_numeric( $int_cod_transferencia_solicitacao ) )
-        {
+        if (is_numeric($int_cod_transferencia_solicitacao)) {
             $filtros .= "{$whereAnd} ts.cod_transferencia_solicitacao = '{$int_cod_transferencia_solicitacao}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_transferencia_tipo ) )
-        {
+        if (is_numeric($int_ref_cod_transferencia_tipo)) {
             $filtros .= "{$whereAnd} ts.ref_cod_transferencia_tipo = '{$int_ref_cod_transferencia_tipo}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_usuario_exc ) )
-        {
+        if (is_numeric($int_ref_usuario_exc)) {
             $filtros .= "{$whereAnd} ts.ref_usuario_exc = '{$int_ref_usuario_exc}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_usuario_cad ) )
-        {
+        if (is_numeric($int_ref_usuario_cad)) {
             $filtros .= "{$whereAnd} ts.ref_usuario_cad = '{$int_ref_usuario_cad}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_matricula_entrada ) )
-        {
+        if (is_numeric($int_ref_cod_matricula_entrada)) {
             $filtros .= "{$whereAnd} ts.ref_cod_matricula_entrada = '{$int_ref_cod_matricula_entrada}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_matricula_saida ) )
-        {
+        if (is_numeric($int_ref_cod_matricula_saida)) {
             $filtros .= "{$whereAnd} ts.ref_cod_matricula_saida = '{$int_ref_cod_matricula_saida}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $str_observacao ) )
-        {
+        if (is_string($str_observacao)) {
             $filtros .= "{$whereAnd} ts.observacao LIKE '%{$str_observacao}%'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_cadastro_ini ) )
-        {
+        if (is_string($date_data_cadastro_ini)) {
             $filtros .= "{$whereAnd} ts.data_cadastro >= '{$date_data_cadastro_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_cadastro_fim ) )
-        {
+        if (is_string($date_data_cadastro_fim)) {
             $filtros .= "{$whereAnd} ts.data_cadastro <= '{$date_data_cadastro_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_exclusao_ini ) )
-        {
+        if (is_string($date_data_exclusao_ini)) {
             $filtros .= "{$whereAnd} ts.data_exclusao >= '{$date_data_exclusao_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_exclusao_fim ) )
-        {
+        if (is_string($date_data_exclusao_fim)) {
             $filtros .= "{$whereAnd} ts.data_exclusao <= '{$date_data_exclusao_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_transferencia_ini ) )
-        {
+        if (is_string($date_data_transferencia_ini)) {
             $filtros .= "{$whereAnd} ts.data_transferencia >= '{$date_data_transferencia_ini}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_string( $date_data_transferencia_fim ) )
-        {
+        if (is_string($date_data_transferencia_fim)) {
             $filtros .= "{$whereAnd} ts.data_transferencia <= '{$date_data_transferencia_fim}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_aluno ) )
-        {
+        if (is_numeric($int_ref_cod_aluno)) {
             $filtros .= "{$whereAnd} m.ref_cod_aluno = '{$int_ref_cod_aluno}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_escola ) )
-        {
+        if (is_numeric($int_ref_cod_escola)) {
             $filtros .= "{$whereAnd} m.ref_ref_cod_escola = '{$int_ref_cod_escola}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ref_cod_serie ) )
-        {
+        if (is_numeric($int_ref_cod_serie)) {
             $filtros .= "{$whereAnd} m.ref_ref_cod_serie = '{$int_ref_cod_serie}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if( is_numeric( $int_ativo ) )
-        {
+        if (is_numeric($int_ativo)) {
             $filtros .= "{$whereAnd} ts.ativo = '{$int_ativo}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if($mes)
-        {
+        if ($mes) {
             $mes = (int) $mes;
-                $filtros .= "{$whereAnd} ( to_char(m.data_cadastro,'MM')::int = '$mes'
+            $filtros .= "{$whereAnd} ( to_char(m.data_cadastro,'MM')::int = '$mes'
                                             OR to_char(m.data_exclusao,'MM')::int = '$mes' )";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if (is_bool($transferido))
-        {
-            if ($transferido == true)
-            {
+        if (is_bool($transferido)) {
+            if ($transferido == true) {
                 $filtros .= "{$whereAnd} ts.data_transferencia IS NOT NULL";
-                $whereAnd = " AND ";
-            }
-            else if ($transferido == false)
-            {
+                $whereAnd = ' AND ';
+            } elseif ($transferido == false) {
                 $filtros .= "{$whereAnd} ts.data_transferencia IS NULL";
-                $whereAnd = " AND ";
+                $whereAnd = ' AND ';
             }
         }
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-        if ($parar)
-die($sql);
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} ts, {$this->_schema}matricula m {$filtros}" );
+        if ($parar) {
+            die($sql);
+        }
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} ts, {$this->_schema}matricula m {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
                 $resultado[] = $tupla[$this->_campos_lista];
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -686,16 +479,16 @@ die($sql);
      *
      * @return array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if( is_numeric( $this->cod_transferencia_solicitacao ) )
-        {
+        if (is_numeric($this->cod_transferencia_solicitacao)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} ts WHERE ts.cod_transferencia_solicitacao = '{$this->cod_transferencia_solicitacao}'");
+            $db->ProximoRegistro();
 
-        $db = new clsBanco();
-        $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} ts WHERE ts.cod_transferencia_solicitacao = '{$this->cod_transferencia_solicitacao}'" );
-        $db->ProximoRegistro();
-        return $db->Tupla();
+            return $db->Tupla();
         }
+
         return false;
     }
 
@@ -704,16 +497,16 @@ die($sql);
      *
      * @return array
      */
-    function existe()
+    public function existe()
     {
-        if( is_numeric( $this->cod_transferencia_solicitacao ) )
-        {
+        if (is_numeric($this->cod_transferencia_solicitacao)) {
+            $db = new clsBanco();
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_transferencia_solicitacao = '{$this->cod_transferencia_solicitacao}'");
+            $db->ProximoRegistro();
 
-        $db = new clsBanco();
-        $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_transferencia_solicitacao = '{$this->cod_transferencia_solicitacao}'" );
-        $db->ProximoRegistro();
-        return $db->Tupla();
+            return $db->Tupla();
         }
+
         return false;
     }
 
@@ -722,120 +515,32 @@ die($sql);
      *
      * @return bool
      */
-    function excluir()
+    public function excluir()
     {
-        if( is_numeric( $this->cod_transferencia_solicitacao ) && is_numeric( $this->ref_usuario_exc ) )
-        {
+        if (is_numeric($this->cod_transferencia_solicitacao) && is_numeric($this->ref_usuario_exc)) {
+            $this->ativo = 0;
 
-        /*
-            delete
-        $db = new clsBanco();
-        $db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_transferencia_solicitacao = '{$this->cod_transferencia_solicitacao}'" );
-        return true;
-        */
-
-        $this->ativo = 0;
             return $this->edita();
         }
+
         return false;
-    }
-
-    /**
-     * Define quais campos da tabela serao selecionados na invocacao do metodo lista
-     *
-     * @return null
-     */
-    function setCamposLista( $str_campos )
-    {
-        $this->_campos_lista = $str_campos;
-    }
-
-    /**
-     * Define que o metodo Lista devera retornoar todos os campos da tabela
-     *
-     * @return null
-     */
-    function resetCamposLista()
-    {
-        $this->_campos_lista = $this->_todos_campos;
-    }
-
-    /**
-     * Define limites de retorno para o metodo lista
-     *
-     * @return null
-     */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
-    {
-        $this->_limite_quantidade = $intLimiteQtd;
-        $this->_limite_offset = $intLimiteOffset;
-    }
-
-    /**
-     * Retorna a string com o trecho da query resposavel pelo Limite de registros
-     *
-     * @return string
-     */
-    function getLimite()
-    {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
-            $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
-                $retorno .= " OFFSET {$this->_limite_offset} ";
-            }
-            return $retorno;
-        }
-        return "";
-    }
-
-    /**
-     * Define campo para ser utilizado como ordenacao no metolo lista
-     *
-     * @return null
-     */
-    function setOrderby( $strNomeCampo )
-    {
-        // limpa a string de possiveis erros (delete, insert, etc)
-        //$strNomeCampo = eregi_replace();
-
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
-            $this->_campo_order_by = $strNomeCampo;
-        }
-    }
-
-    /**
-     * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
-     *
-     * @return string
-     */
-    function getOrderby()
-    {
-        if( is_string( $this->_campo_order_by ) )
-        {
-            return " ORDER BY {$this->_campo_order_by} ";
-        }
-        return "";
     }
 
     /**
      * Retorna se existe solicitações para matrícula.
+     *
      * @return boolean
      */
-    function existSolicitacaoTransferenciaAtiva(){
-        if( is_numeric( $this->ref_cod_matricula_saida ) )
-        {
+    public function existSolicitacaoTransferenciaAtiva()
+    {
+        if (is_numeric($this->ref_cod_matricula_saida)) {
             $db = new clsBanco();
-            $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE ref_cod_matricula_saida = '{$this->ref_cod_matricula_saida}' AND ativo = '1'" );
+            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_cod_matricula_saida = '{$this->ref_cod_matricula_saida}' AND ativo = '1'");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
+
         return false;
-
     }
-
-
 }
-?>

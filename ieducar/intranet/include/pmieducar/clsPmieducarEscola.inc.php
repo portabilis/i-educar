@@ -1,26 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
+use iEducar\Legacy\Model;
 
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'App/Model/NivelTipoUsuario.php';
 
-/**
- * clsPmieducarEscola class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- *
- * @category  i-Educar
- *
- * @license   @@license@@
- *
- * @package   iEd_Pmieducar
- *
- * @since     Classe disponível desde a versão 1.0.0
- *
- * @version   @@package_version@@
- */
-class clsPmieducarEscola
+class clsPmieducarEscola extends Model
 {
     public $cod_escola;
     public $ref_usuario_cad;
@@ -183,67 +168,6 @@ class clsPmieducarEscola
     public $qtd_psicologo;
     public $qtd_fonoaudiologo;
 
-    /**
-     * Armazena o total de resultados obtidos na última chamada ao método lista().
-     *
-     * @var int
-     */
-    public $_total;
-
-    /**
-     * Nome do schema.
-     *
-     * @var string
-     */
-    public $_schema;
-
-    /**
-     * Nome da tabela.
-     *
-     * @var string
-     */
-    public $_tabela;
-
-    /**
-     * Lista separada por vírgula, com os campos que devem ser selecionados na
-     * próxima chamado ao método lista().
-     *
-     * @var string
-     */
-    public $_campos_lista;
-
-    /**
-     * Lista com todos os campos da tabela separados por vírgula, padrão para
-     * seleção no método lista.
-     *
-     * @var string
-     */
-    public $_todos_campos;
-
-    /**
-     * Valor que define a quantidade de registros a ser retornada pelo método lista().
-     *
-     * @var int
-     */
-    public $_limite_quantidade;
-
-    /**
-     * Define o valor de offset no retorno dos registros no método lista().
-     *
-     * @var int
-     */
-    public $_limite_offset;
-
-    /**
-     * Define o campo para ser usado como padrão de ordenação no método lista().
-     *
-     * @var string
-     */
-    public $_campo_order_by;
-
-    /**
-     * Construtor.
-     */
     public function __construct(
         $cod_escola = null,
         $ref_usuario_cad = null,
@@ -258,8 +182,7 @@ class clsPmieducarEscola
         $ativo = null,
         $bloquear_lancamento_diario_anos_letivos_encerrados = null,
         $utiliza_regra_diferenciada = false
-    )
-    {
+    ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'escola';
@@ -2345,106 +2268,106 @@ class clsPmieducarEscola
             }
 
             if (is_numeric($this->qtd_secretario_escolar) && $this->qtd_secretario_escolar > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_secretario_escolar = '{$this->qtd_secretario_escolar}'";
             } elseif (is_null($this->qtd_secretario_escolar) || $this->qtd_secretario_escolar == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_secretario_escolar = NULL ";
             }
 
             if (is_numeric($this->qtd_auxiliar_administrativo) && $this->qtd_auxiliar_administrativo > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_auxiliar_administrativo = '{$this->qtd_auxiliar_administrativo}'";
             } elseif (is_null($this->qtd_auxiliar_administrativo) || $this->qtd_auxiliar_administrativo == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_auxiliar_administrativo = NULL ";
             }
 
             if (is_numeric($this->qtd_apoio_pedagogico) && $this->qtd_apoio_pedagogico > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_apoio_pedagogico = '{$this->qtd_apoio_pedagogico}'";
             } elseif (is_null($this->qtd_apoio_pedagogico) || $this->qtd_apoio_pedagogico == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_apoio_pedagogico = NULL ";
             }
 
             if (is_numeric($this->qtd_coordenador_turno) && $this->qtd_coordenador_turno > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_coordenador_turno = '{$this->qtd_coordenador_turno}'";
             } elseif (is_null($this->qtd_coordenador_turno) || $this->qtd_coordenador_turno == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_coordenador_turno = NULL ";
             }
 
             if (is_numeric($this->qtd_tecnicos) && $this->qtd_tecnicos > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_tecnicos = '{$this->qtd_tecnicos}'";
             } elseif (is_null($this->qtd_tecnicos) || $this->qtd_tecnicos == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_tecnicos = NULL ";
             }
 
             if (is_numeric($this->qtd_bibliotecarios) && $this->qtd_bibliotecarios > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_bibliotecarios = '{$this->qtd_bibliotecarios}'";
             } elseif (is_null($this->qtd_bibliotecarios) || $this->qtd_bibliotecarios == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_bibliotecarios = NULL ";
             }
 
             if (is_numeric($this->qtd_segurancas) && $this->qtd_segurancas > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_segurancas = '{$this->qtd_segurancas}'";
             } elseif (is_null($this->qtd_segurancas) || $this->qtd_segurancas == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_segurancas = NULL ";
             }
 
             if (is_numeric($this->qtd_auxiliar_servicos_gerais) && $this->qtd_auxiliar_servicos_gerais > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_auxiliar_servicos_gerais = '{$this->qtd_auxiliar_servicos_gerais}'";
             } elseif (is_null($this->qtd_auxiliar_servicos_gerais) || $this->qtd_auxiliar_servicos_gerais == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_auxiliar_servicos_gerais = NULL ";
             }
 
             if (is_numeric($this->qtd_nutricionistas) && $this->qtd_nutricionistas > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_nutricionistas = '{$this->qtd_nutricionistas}'";
             } elseif (is_null($this->qtd_nutricionistas) || $this->qtd_nutricionistas == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_nutricionistas = NULL ";
             }
 
             if (is_numeric($this->qtd_profissionais_preparacao) && $this->qtd_profissionais_preparacao > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_profissionais_preparacao = '{$this->qtd_profissionais_preparacao}'";
             } elseif (is_null($this->qtd_profissionais_preparacao) || $this->qtd_profissionais_preparacao == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_profissionais_preparacao = NULL ";
             }
 
             if (is_numeric($this->qtd_bombeiro) && $this->qtd_bombeiro > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_bombeiro = '{$this->qtd_bombeiro}'";
             } elseif (is_null($this->qtd_bombeiro) || $this->qtd_bombeiro == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_bombeiro = NULL ";
             }
 
             if (is_numeric($this->qtd_psicologo) && $this->qtd_psicologo > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_psicologo = '{$this->qtd_psicologo}'";
             } elseif (is_null($this->qtd_psicologo) || $this->qtd_psicologo == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_psicologo = NULL ";
             }
 
             if (is_numeric($this->qtd_fonoaudiologo) && $this->qtd_fonoaudiologo > 0) {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_fonoaudiologo = '{$this->qtd_fonoaudiologo}'";
             } elseif (is_null($this->qtd_fonoaudiologo) || $this->qtd_fonoaudiologo == '') {
-                $gruda = ", ";
+                $gruda = ', ';
                 $set .= "{$gruda}qtd_fonoaudiologo = NULL ";
             }
 
@@ -2478,19 +2401,18 @@ class clsPmieducarEscola
         $str_nome = null,
         $escola_sem_avaliacao = null,
         $cod_usuario = null
-    )
-    {
+    ) {
         $sql = "
-      SELECT * FROM
-      (
-        SELECT j.fantasia AS nome, {$this->_campos_lista}, 1 AS tipo_cadastro
-          FROM {$this->_tabela} e, cadastro.juridica j
-          WHERE e.ref_idpes = j.idpes
-        UNION
-        SELECT c.nm_escola AS nome, {$this->_campos_lista}, 2 AS tipo_cadastro
-          FROM {$this->_tabela} e, pmieducar.escola_complemento c
-          WHERE e.cod_escola = c.ref_cod_escola
-      ) AS sub";
+          SELECT * FROM
+          (
+            SELECT j.fantasia AS nome, {$this->_campos_lista}, 1 AS tipo_cadastro
+              FROM {$this->_tabela} e, cadastro.juridica j
+              WHERE e.ref_idpes = j.idpes
+            UNION
+            SELECT c.nm_escola AS nome, {$this->_campos_lista}, 2 AS tipo_cadastro
+              FROM {$this->_tabela} e, pmieducar.escola_complemento c
+              WHERE e.cod_escola = c.ref_cod_escola
+          ) AS sub";
         $filtros = '';
 
         $whereAnd = ' WHERE ';
@@ -2753,75 +2675,5 @@ class clsPmieducarEscola
         }
 
         return false;
-    }
-
-    /**
-     * Define quais campos da tabela serão selecionados no método Lista().
-     */
-    public function setCamposLista($str_campos)
-    {
-        $this->_campos_lista = $str_campos;
-    }
-
-    /**
-     * Define que o método Lista() deverpa retornar todos os campos da tabela.
-     */
-    public function resetCamposLista()
-    {
-        $this->_campos_lista = $this->_todos_campos;
-    }
-
-    /**
-     * Define limites de retorno para o método Lista().
-     */
-    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
-    {
-        $this->_limite_quantidade = $intLimiteQtd;
-        $this->_limite_offset = $intLimiteOffset;
-    }
-
-    /**
-     * Retorna a string com o trecho da query responsável pelo limite de
-     * registros retornados/afetados.
-     *
-     * @return string
-     */
-    public function getLimite()
-    {
-        if (is_numeric($this->_limite_quantidade)) {
-            $retorno = " LIMIT {$this->_limite_quantidade}";
-            if (is_numeric($this->_limite_offset)) {
-                $retorno .= " OFFSET {$this->_limite_offset} ";
-            }
-
-            return $retorno;
-        }
-
-        return '';
-    }
-
-    /**
-     * Define o campo para ser utilizado como ordenação no método Lista().
-     */
-    public function setOrderby($strNomeCampo)
-    {
-        if (is_string($strNomeCampo) && $strNomeCampo) {
-            $this->_campo_order_by = $strNomeCampo;
-        }
-    }
-
-    /**
-     * Retorna a string com o trecho da query responsável pela Ordenação dos
-     * registros.
-     *
-     * @return string
-     */
-    public function getOrderby()
-    {
-        if (is_string($this->_campo_order_by)) {
-            return " ORDER BY {$this->_campo_order_by} ";
-        }
-
-        return '';
     }
 }

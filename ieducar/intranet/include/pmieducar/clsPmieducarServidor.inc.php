@@ -1,8 +1,10 @@
 <?php
 
+use iEducar\Legacy\Model;
+
 require_once 'include/pmieducar/geral.inc.php';
 
-class clsPmieducarServidor
+class clsPmieducarServidor extends Model
 {
     public $cod_servidor;
     public $ref_idesco = false;
@@ -34,70 +36,9 @@ class clsPmieducarServidor
     public $curso_formacao_continuada;
     public $multi_seriado;
     public $tipo_ensino_medio_cursado;
-
-    /**
-     * Armazena o total de resultados obtidos na última chamada ao método lista().
-     *
-     * @var int
-     */
-    public $_total;
-
-    /**
-     * Nome do schema.
-     *
-     * @var string
-     */
-    public $_schema;
-
-    /**
-     * Nome da tabela.
-     *
-     * @var string
-     */
-    public $_tabela;
-
-    /**
-     * Lista separada por vírgula, com os campos que devem ser selecionados na
-     * próxima chamado ao método lista().
-     *
-     * @var string
-     */
-    public $_campos_lista;
     public $_campos_lista2;
-
-    /**
-     * Lista com todos os campos da tabela separados por vírgula, padrão para
-     * seleção no método lista.
-     *
-     * @var string
-     */
-    public $_todos_campos;
     public $_todos_campos2;
 
-    /**
-     * Valor que define a quantidade de registros a ser retornada pelo método lista().
-     *
-     * @var int
-     */
-    public $_limite_quantidade;
-
-    /**
-     * Define o valor de offset no retorno dos registros no método lista().
-     *
-     * @var int
-     */
-    public $_limite_offset;
-
-    /**
-     * Define o campo para ser usado como padrão de ordenação no método lista().
-     *
-     * @var string
-     */
-    public $_campo_order_by;
-
-    /**
-     * Construtor.
-     */
     public function __construct(
         $cod_servidor = null,
         $ref_cod_deficiencia = null,
@@ -133,20 +74,7 @@ class clsPmieducarServidor
          * Filtrar cod_servidor
          */
         if (is_numeric($cod_servidor)) {
-            if (class_exists('clsFuncionario')) {
-                $tmp_obj = new clsFuncionario($cod_servidor);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->cod_servidor = $cod_servidor;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    // if ($tmp_obj->detalhe()) {
-                    $this->cod_servidor = $cod_servidor;
-                    // }
-                }
-            } elseif ($db->CampoUnico("SELECT 1 FROM funcionario WHERE ref_cod_pessoa_fj = '{$cod_servidor}'")) {
-                $this->cod_servidor = $cod_servidor;
-            }
+            $this->cod_servidor = $cod_servidor;
         }
         if (is_numeric($carga_horaria)) {
             $this->carga_horaria = $carga_horaria;
@@ -161,38 +89,10 @@ class clsPmieducarServidor
             $this->ativo = $ativo;
         }
         if (is_numeric($ref_cod_instituicao)) {
-            if (class_exists('clsPmieducarInstituicao')) {
-                $tmp_obj = new clsPmieducarInstituicao($ref_cod_instituicao);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_instituicao = $ref_cod_instituicao;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_instituicao = $ref_cod_instituicao;
-                    }
-                }
-            } elseif ($db->CampoUnico("SELECT 1 FROM pmieducar.instituicao WHERE cod_instituicao = '{$ref_cod_instituicao}'")) {
-                $this->ref_cod_instituicao = $ref_cod_instituicao;
-            }
+            $this->ref_cod_instituicao = $ref_cod_instituicao;
         }
         if (is_numeric($ref_cod_subnivel)) {
-            if (class_exists('clsPmieducarSubnivel')) {
-                $tmp_obj = new clsPmieducarSubnivel($ref_cod_subnivel);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_subnivel = $ref_cod_subnivel;
-                    }
-                } else {
-                    if (method_exists($tmp_obj, 'detalhe')) {
-                        if ($tmp_obj->detalhe()) {
-                            $this->ref_cod_subnivel = $ref_cod_subnivel;
-                        }
-                    }
-                }
-            } elseif ($db->CampoUnico("SELECT 1 FROM pmieducar.subnivel WHERE cod_subnivel = '{$ref_cod_subnivel}'")) {
-                $this->ref_cod_subnivel = $ref_cod_subnivel;
-            }
+            $this->ref_cod_subnivel = $ref_cod_subnivel;
         }
     }
 
@@ -849,8 +749,8 @@ class clsPmieducarServidor
                 $cond = 'AND';
                 $hora_ini = explode(':', $array_horario[1]);
                 $hora_fim = explode(':', $array_horario[2]);
-                $horas = sprintf('%02d', (int)abs($hora_fim[0]) - abs($hora_ini[0]));
-                $minutos = sprintf('%02d', (int)abs($hora_fim[1]) - abs($hora_ini[1]));
+                $horas = sprintf('%02d', (int) abs($hora_fim[0]) - abs($hora_ini[0]));
+                $minutos = sprintf('%02d', (int) abs($hora_fim[1]) - abs($hora_ini[1]));
                 // Remove qualquer AND que esteja no início da cláusula SQL
                 $wherePieces = explode(' ', trim($where));
                 if ('AND' == $wherePieces[0]) {
@@ -1181,11 +1081,11 @@ class clsPmieducarServidor
      * );
      * <code>
      *
-     * @since   Método disponível desde a versão 1.0.2
-     *
      * @return array Array associativo com a primeira chave sendo o código da
      *               função. O array interno contém o nome da função e se a função desempenha
      *               um papel de professor
+     * @since   Método disponível desde a versão 1.0.2
+     *
      */
     public function getServidorFuncoes()
     {
@@ -1212,8 +1112,6 @@ class clsPmieducarServidor
      * Retorna um array com as disciplinas alocadas ao servidor no quadro de
      * horários
      *
-     * @since   Método disponível desde a versão 1.0.2
-     *
      * @param int $codServidor    Código do servidor, caso não seja informado,
      *                            usa o código disponível no objeto atual
      * @param int $codInstituicao Código da instituição, caso não seja
@@ -1221,6 +1119,8 @@ class clsPmieducarServidor
      *
      * @return array|bool Array com códigos das disciplinas ordenados ou FALSE
      *                    caso o servidor não tenha disciplinas
+     * @since   Método disponível desde a versão 1.0.2
+     *
      */
     public function getServidorDisciplinasQuadroHorarioHorarios(
         $codServidor = null,
@@ -1251,14 +1151,14 @@ class clsPmieducarServidor
      * Retorna um array com os códigos de servidor e instituição, usando os
      * valores dos parâmetros ou das propriedades da instância atual.
      *
-     * @since   Método disponível desde a versão 1.2.0
-     *
      * @param int $codServidor    Código do servidor, caso não seja informado,
      *                            usa o código disponível no objeto atual
      * @param int $codInstituicao Código da instituição, caso não seja
      *                            informado, usa o código disponível no objeto atual
      *
      * @return array|bool (codServidor => (int), codInstituicao => (int))
+     * @since   Método disponível desde a versão 1.2.0
+     *
      */
     public function _getCodServidorInstituicao($codServidor = null, $codInstituicao = null)
     {
@@ -1279,8 +1179,6 @@ class clsPmieducarServidor
     /**
      * Retorna um array com os códigos das disciplinas do servidor
      *
-     * @since   Método disponível desde a versão 1.0.2
-     *
      * @param int $codServidor    Código do servidor, caso não seja informado,
      *                            usa o código disponível no objeto atual
      * @param int $codInstituicao Código da instituição, caso não seja
@@ -1288,6 +1186,8 @@ class clsPmieducarServidor
      *
      * @return array|bool Array com códigos das disciplinas ordenados ou FALSE
      *                    caso o servidor não tenha disciplinas
+     * @since   Método disponível desde a versão 1.0.2
+     *
      */
     public function getServidorDisciplinas(
         $codServidor = null,
@@ -1324,8 +1224,6 @@ class clsPmieducarServidor
     /**
      * Retorna os horários de aula do servidor na instituição.
      *
-     * @since   Método disponível desde a versão 1.0.2
-     *
      * @param int $codServidor    Código do servidor, caso não seja informado,
      *                            usa o código disponível no objeto atual
      * @param int $codInstituicao Código da instituição, caso não seja
@@ -1334,6 +1232,8 @@ class clsPmieducarServidor
      * @return array|bool Array associativo com os índices nm_escola, nm_curso,
      *                    nm_serie, nm_turma, nome (componente curricular), dia_semana,
      *                    qhh.hora_inicial e hora_final.
+     * @since   Método disponível desde a versão 1.0.2
+     *
      */
     public function getHorariosServidor($codServidor = null, $codInstituicao = null)
     {
@@ -1395,9 +1295,9 @@ class clsPmieducarServidor
      * Primeiro, recuperamos todas as funções do servidor e procuramos
      * por um dos itens que tenha o índice professor igual a 1.
      *
+     * @return bool TRUE caso o servidor desempenhe a função de professor
      * @since   Método disponível desde a versão 1.0.2
      *
-     * @return bool TRUE caso o servidor desempenhe a função de professor
      */
     public function isProfessor()
     {
@@ -1410,76 +1310,6 @@ class clsPmieducarServidor
         }
 
         return false;
-    }
-
-    /**
-     * Define quais campos da tabela serão selecionados no método Lista().
-     */
-    public function setCamposLista($str_campos)
-    {
-        $this->_campos_lista = $str_campos;
-    }
-
-    /**
-     * Define que o método Lista() deverpa retornar todos os campos da tabela.
-     */
-    public function resetCamposLista()
-    {
-        $this->_campos_lista = $this->_todos_campos;
-    }
-
-    /**
-     * Define limites de retorno para o método Lista().
-     */
-    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
-    {
-        $this->_limite_quantidade = $intLimiteQtd;
-        $this->_limite_offset = $intLimiteOffset;
-    }
-
-    /**
-     * Retorna a string com o trecho da query responsável pelo limite de
-     * registros retornados/afetados.
-     *
-     * @return string
-     */
-    public function getLimite()
-    {
-        if (is_numeric($this->_limite_quantidade)) {
-            $retorno = " LIMIT {$this->_limite_quantidade}";
-            if (is_numeric($this->_limite_offset)) {
-                $retorno .= " OFFSET {$this->_limite_offset} ";
-            }
-
-            return $retorno;
-        }
-
-        return '';
-    }
-
-    /**
-     * Define o campo para ser utilizado como ordenação no método Lista().
-     */
-    public function setOrderby($strNomeCampo)
-    {
-        if (is_string($strNomeCampo) && $strNomeCampo) {
-            $this->_campo_order_by = $strNomeCampo;
-        }
-    }
-
-    /**
-     * Retorna a string com o trecho da query responsável pela Ordenação dos
-     * registros.
-     *
-     * @return string
-     */
-    public function getOrderby()
-    {
-        if (is_string($this->_campo_order_by)) {
-            return " ORDER BY {$this->_campo_order_by} ";
-        }
-
-        return '';
     }
 
     /**

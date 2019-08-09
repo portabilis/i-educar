@@ -1,107 +1,33 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*                                                                        *
-*   @author Prefeitura Municipal de Itajaï¿½                                 *
-*   @updated 29/03/2007                                                  *
-*   Pacote: i-PLB Software Pï¿½blico Livre e Brasileiro                  *
-*                                                                        *
-*   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaï¿½           *
-*                       ctima@itajai.sc.gov.br                           *
-*                                                                        *
-*   Este  programa  ï¿½  software livre, vocï¿½ pode redistribuï¿½-lo e/ou   *
-*   modificï¿½-lo sob os termos da Licenï¿½a Pï¿½blica Geral GNU, conforme   *
-*   publicada pela Free  Software  Foundation,  tanto  a versï¿½o 2 da   *
-*   Licenï¿½a   como  (a  seu  critï¿½rio)  qualquer  versï¿½o  mais  nova.  *
-*                                                                        *
-*   Este programa  ï¿½ distribuï¿½do na expectativa de ser ï¿½til, mas SEM   *
-*   QUALQUER GARANTIA. Sem mesmo a garantia implï¿½cita de COMERCIALI-   *
-*   ZAï¿½ï¿½O  ou  de ADEQUAï¿½ï¿½O A QUALQUER PROPï¿½SITO EM PARTICULAR. Con-   *
-*   sulte  a  Licenï¿½a  Pï¿½blica  Geral  GNU para obter mais detalhes.     *
-*                                                                        *
-*   Vocï¿½  deve  ter  recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral GNU     *
-*   junto  com  este  programa. Se nï¿½o, escreva para a Free Software   *
-*   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-*   02111-1307, USA.                                                     *
-*                                                                        *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBanco.inc.php");
-require_once ("include/Geral.inc.php");
+
+require_once 'include/clsBanco.inc.php';
+require_once 'include/Geral.inc.php';
 
 class clsFuncionario extends clsPessoaFisica
 {
-    var $idpes;
-    var $matricula;
-    var $senha;
-    var $ativo;
-    var $ref_sec;
-    var $ramal;
-    var $sequencial;
-    var $opcao_menu;
-    var $ref_cod_setor;
-    var $ref_cod_funcionario_vinculo;
-    var $tempo_expira_senha;
-    var $tempo_expira_conta;
-    var $data_troca_senha;
-    var $data_reativa_conta;
-    var $ref_ref_cod_pessoa_fj;
-    var $proibido;
-    var $cpf;
-    var $matricula_permanente;
+    public $idpes;
+    public $matricula;
+    public $senha;
+    public $ativo;
+    public $ref_sec;
+    public $sequencial;
+    public $opcao_menu;
+    public $ref_cod_setor;
+    public $ref_cod_funcionario_vinculo;
+    public $tempo_expira_senha;
+    public $data_expiracao;
+    public $data_troca_senha;
+    public $data_reativa_conta;
+    public $ref_ref_cod_pessoa_fj;
+    public $cpf;
+    public $ref_cod_setor_new;
+    public $schema_cadastro = 'cadastro';
+    public $schema_portal = 'portal';
+    public $tabela_pessoa = 'pessoa';
+    public $tabela_funcionario = 'funcionario';
+    public $tabela_fisica_cpf = 'fisica';
 
-    var $ref_cod_setor_new;
-
-    var $schema_cadastro    = "cadastro";
-    var $schema_portal      = "portal";
-    var $tabela_pessoa      = "pessoa";
-    var $tabela_funcionario = "funcionario";
-    var $tabela_fisica_cpf  = "fisica";
-
-    // propriedades padrao
-
-    /**
-     * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
-     *
-     * @var int
-     */
-    var $_total;
-
-
-    /**
-     * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
-     *
-     * @var string
-     */
-    var $_campos_lista;
-
-    /**
-     * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
-     *
-     * @var string
-     */
-    var $_todos_campos;
-
-    /**
-     * Valor que define a quantidade de registros a ser retornada pelo metodo lista
-     *
-     * @var int
-     */
-    var $_limite_quantidade;
-
-    /**
-     * Define o valor de offset no retorno dos registros no metodo lista
-     *
-     * @var int
-     */
-    var $_limite_offset;
-
-    /**
-     * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
-     *
-     * @var string
-     */
-    var $_campo_order_by;
-
-    function __construct($int_idpes = false, $str_matricula = false, $int_cpf = false, $int_ref_cod_setor = false, $str_senha = false, $data_troca_senha = false, $tempo_expira_senha = false, $data_reativa_conta = false, $tempo_expira_conta = false, $ref_cod_funcionario_vinculo = false, $ramal = false, $matricula_permanente = false, $banido = false, $email = null)
+    public function __construct($int_idpes = false, $str_matricula = false, $int_cpf = false, $int_ref_cod_setor = false, $str_senha = false, $data_troca_senha = false, $tempo_expira_senha = false, $data_reativa_conta = false, $tempo_expira_conta = false, $ref_cod_funcionario_vinculo = false, $ramal = false, $matricula_permanente = false, $banido = false, $email = null)
     {
         $this->idpes = $int_idpes;
         $this->matricula = $str_matricula;
@@ -111,296 +37,277 @@ class clsFuncionario extends clsPessoaFisica
         $this->data_troca_senha = $data_troca_senha;
         $this->data_reativa_conta = $data_reativa_conta;
         $this->tempo_expira_senha = $tempo_expira_senha;
-        $this->tempo_expira_conta = $tempo_expira_conta;
+        $this->data_expiracao = $data_expiracao;
         $this->ref_cod_funcionario_vinculo = $ref_cod_funcionario_vinculo;
-        $this->ramal = $ramal;
-        $this->matricula_permanente = $matricula_permanente;
-        $this->proibido = $banido;
         $this->email = $email;
-        $this->_campos_lista = " f.ref_cod_pessoa_fj,
-                                 f.matricula,
-                                 f.matricula_interna,
-                                 f.senha,
-                                 f.ativo,
-                                 f.ramal,
-                                 f.sequencial,
-                                 f.opcao_menu,
-                                 f.ref_cod_setor,
-                                 f.ref_cod_funcionario_vinculo,
-                                 f.tempo_expira_senha,
-                                 f.tempo_expira_conta,
-                                 f.data_troca_senha,
-                                 f.data_reativa_conta,
-                                 f.ref_ref_cod_pessoa_fj,
-                                 f.proibido,
-                                 f.nome,
-                                 f.ref_cod_setor_new,
-                 f.email
-                                 ";
+        $this->_campos_lista = ' 
+            f.ref_cod_pessoa_fj,
+            f.matricula,
+            f.matricula_interna,
+            f.senha,
+            f.ativo,
+            f.sequencial,
+            f.opcao_menu,
+            f.ref_cod_setor,
+            f.ref_cod_funcionario_vinculo,
+            f.tempo_expira_senha,
+            f.data_expiracao,
+            f.data_troca_senha,
+            f.data_reativa_conta,
+            f.ref_ref_cod_pessoa_fj,
+            f.nome,
+            f.ref_cod_setor_new,
+            f.email
+        ';
     }
 
-
-    function edita()
+    public function edita()
     {
-        $set = "";
-        $setVirgula = "SET";
-        if($this->idpes)
-        {
+        $set = '';
+        $setVirgula = 'SET';
+
+        if ($this->idpes) {
             $db = new clsBanco();
-            if($this->ref_cod_setor)
-            {
+
+            if ($this->ref_cod_setor) {
                 $set = "{$setVirgula} ref_cod_setor_new = '$this->ref_cod_setor' ";
-                $setVirgula = ", ";
+                $setVirgula = ', ';
             }
 
-            if($set)
-            {
+            if ($set) {
                 $db->Consulta("UPDATE {$this->schema_portal}.funcionario $set WHERE ref_cod_pessoa_fj = '{$this->idpes}'");
             }
         }
     }
 
-  function lista(
-    $str_matricula = false,
-    $str_nome = false,
-    $int_ativo = false,
-    $int_secretaria = false,
-    $int_departamento = false,
-    $int_setor = false,
-    $int_vinculo = false,
-    $int_inicio_limit = false,
-    $int_qtd_registros = false,
-    $str_ramal = false,
-    $matricula_is_not_null = false,
-    $int_idpes = false,
-    $email = null,
-    $matricula_interna = NULL)
-    {
-    // Recuperar lista
+    public function lista(
+        $str_matricula = false,
+        $str_nome = false,
+        $int_ativo = false,
+        $int_secretaria = false,
+        $int_departamento = false,
+        $int_setor = false,
+        $int_vinculo = false,
+        $int_inicio_limit = false,
+        $int_qtd_registros = false,
+        $str_ramal = false,
+        $matricula_is_not_null = false,
+        $int_idpes = false,
+        $email = null,
+        $matricula_interna = null
+    ) {
+        // Recuperar lista
         $sql = " SELECT {$this->_campos_lista} FROM {$this->schema_portal}.v_funcionario f";
-        $filtros = "";
+        $filtros = '';
         $filtro_pessoa = false;
 
-
-        $whereAnd = " WHERE ";
+        $whereAnd = ' WHERE ';
 
         if (is_string($str_matricula) && $str_matricula != '') {
             $filtros .= "{$whereAnd} (f.matricula) LIKE ('%{$str_matricula}%')";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        if(is_string($matricula_interna) && $matricula_interna != '')   {
+        if (is_string($matricula_interna) && $matricula_interna != '') {
             $filtros .= "{$whereAnd} (f.matricula_interna) LIKE ('%{$matricula_interna}%')";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if (is_string($str_nome)) {
             $filtros .= "{$whereAnd} translate(upper(f.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
-            $whereAnd = " AND ";
-            $filtro_pessoa =true;
+            $whereAnd = ' AND ';
+            $filtro_pessoa = true;
         }
 
         if (is_numeric($int_ativo)) {
             $filtros .= "{$whereAnd} f.ativo = '{$int_ativo}'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if (is_numeric($int_vinculo)) {
             $filtros .= "{$whereAnd} f.ref_cod_funcionario_vinculo = '{$int_vinculo}'";
-            $whereAnd = " AND ";
-        }
-
-        if (is_string($str_ramal)) {
-            $filtros .= "{$whereAnd} f.str_ramal ILIKE '%{$str_ramal}%'f";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if ($matricula_is_not_null) {
             $filtros .= "{$whereAnd} f.matricula  IS NOT NULL";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if (is_numeric($int_idpes)) {
             $filtros .= "{$whereAnd} f.ref_cod_pessoa_fj = '{$int_idpes}'";
-            $whereAnd = " AND ";
-            $filtro_pessoa =true;
+            $whereAnd = ' AND ';
+            $filtro_pessoa = true;
         }
 
         if (is_string($str_email)) {
             $filtros .= "{$whereAnd} f.email ILIKE '%{$str_email}%'f";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
-        $limite = "";
-        if($int_inicio_limit !== false  && $int_qtd_registros !== false) {
+        $limite = '';
+        if ($int_inicio_limit !== false && $int_qtd_registros !== false) {
             $limite = "LIMIT $int_qtd_registros OFFSET $int_inicio_limit ";
         }
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
-        if($int_inicio_limit !== false  && $int_qtd_registros !== false) {
-            $sql .= "{$filtros}"." ORDER BY (f.nome) ASC ".$limite;
+        if ($int_inicio_limit !== false && $int_qtd_registros !== false) {
+            $sql .= "{$filtros}" . ' ORDER BY (f.nome) ASC ' . $limite;
         } else {
-            $sql .= "{$filtros}".$this->getOrderby().$this->getLimite();
+            $sql .= "{$filtros}" . $this->getOrderby() . $this->getLimite();
         }
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->schema_portal}.v_funcionario f {$filtros}" );
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->schema_portal}.v_funcionario f {$filtros}");
 
         $db->Consulta($sql);
 
-        if($countCampos > 1) {
+        if ($countCampos > 1) {
             while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
         } else {
-            while ( $db->ProximoRegistro() )
-            {
+            while ($db->ProximoRegistro()) {
                 $resultado = $db->Tupla();//$tupla;
             }
         }
 
-        if (count($resultado))
+        if (count($resultado)) {
             return $resultado;
+        }
+
         return false;
     }
 
-  function listaFuncionarioUsuario(
-    $str_matricula = false,
-    $str_nome = false,
-    $matricula_interna = NULL,
-    $int_ref_cod_escola = null,
-    $int_ref_cod_instituicao = null,
-    $int_ref_cod_tipo_usuario = null,
-    $int_nivel = null,
-    $int_ativo = null)
-    {
+    public function listaFuncionarioUsuario(
+        $str_matricula = false,
+        $str_nome = false,
+        $matricula_interna = null,
+        $int_ref_cod_escola = null,
+        $int_ref_cod_instituicao = null,
+        $int_ref_cod_tipo_usuario = null,
+        $int_nivel = null,
+        $int_ativo = null
+    ) {
         $sql = " SELECT DISTINCT f.ref_cod_pessoa_fj, f.nome, f.matricula, f.matricula_interna, f.ativo, tu.nm_tipo, tu.nivel
                             FROM {$this->schema_portal}.v_funcionario f
                             LEFT JOIN pmieducar.usuario u ON (u.cod_usuario = f.ref_cod_pessoa_fj)
                             LEFT JOIN pmieducar.tipo_usuario tu ON (u.ref_cod_tipo_usuario = tu.cod_tipo_usuario)
                             LEFT JOIN pmieducar.escola_usuario eu ON (eu.ref_cod_usuario = u.cod_usuario)  ";
-        $filtros = "";
+        $filtros = '';
         $filtro_pessoa = false;
 
-        $whereAnd = " WHERE u.ativo = 1 AND ";
+        $whereAnd = ' WHERE u.ativo = 1 AND ';
 
         if (is_string($str_matricula) && $str_matricula != '') {
             $filtros .= "{$whereAnd} (f.matricula) LIKE ('%{$str_matricula}%')";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if (is_string($matricula_interna) && $matricula_interna != '') {
             $filtros .= "{$whereAnd} (f.matricula_interna) LIKE ('%{$matricula_interna}%')";
-            $whereAnd = " AND ";
-    }
+            $whereAnd = ' AND ';
+        }
 
         if (is_string($str_nome)) {
             $filtros .= "{$whereAnd} translate(upper(f.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
-            $whereAnd = " AND ";
-            $filtro_pessoa =true;
+            $whereAnd = ' AND ';
+            $filtro_pessoa = true;
         }
 
         if (is_numeric($int_ref_cod_escola)) {
             $filtros .= "{$whereAnd} eu.ref_cod_escola = '{$int_ref_cod_escola}'";
-            $whereAnd = " AND ";
-    }
+            $whereAnd = ' AND ';
+        }
 
         if (is_numeric($int_ref_cod_instituicao)) {
             $filtros .= "{$whereAnd} u.ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
-            $whereAnd = " AND ";
-    }
+            $whereAnd = ' AND ';
+        }
 
         if (is_numeric($int_ref_cod_tipo_usuario)) {
             $filtros .= "{$whereAnd} u.ref_cod_tipo_usuario = '{$int_ref_cod_tipo_usuario}'";
-            $whereAnd = " AND ";
-    }
+            $whereAnd = ' AND ';
+        }
 
         if (is_numeric($int_nivel)) {
             $filtros .= "{$whereAnd} tu.nivel = '$int_nivel'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         if (is_numeric($int_ativo)) {
             $filtros .= "{$whereAnd} f.ativo = '$int_ativo'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
 
         $db = new clsBanco();
-        $countCampos = count( explode( ",", $this->_campos_lista ) );
-        $resultado = array();
+        $countCampos = count(explode(',', $this->_campos_lista));
+        $resultado = [];
 
-        $sql .= "{$filtros}".$this->getOrderby().$this->getLimite();
+        $sql .= "{$filtros}" . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->schema_portal}.v_funcionario f
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->schema_portal}.v_funcionario f
                                                                                 LEFT JOIN pmieducar.usuario u ON (u.cod_usuario = f.ref_cod_pessoa_fj)
                                                                                 LEFT JOIN pmieducar.tipo_usuario tu ON (u.ref_cod_tipo_usuario = tu.cod_tipo_usuario)
-                                                                                LEFT JOIN pmieducar.escola_usuario eu ON (eu.ref_cod_usuario = u.cod_usuario) {$filtros}" );
+                                                                                LEFT JOIN pmieducar.escola_usuario eu ON (eu.ref_cod_usuario = u.cod_usuario) {$filtros}");
 
-        $db->Consulta( $sql );
+        $db->Consulta($sql);
 
-        if( $countCampos > 1 )
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        if ($countCampos > 1) {
+            while ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["_total"] = $this->_total;
+                $tupla['_total'] = $this->_total;
                 $resultado[] = $tupla;
             }
-        }
-        else
-        {
-            while ( $db->ProximoRegistro() )
-            {
+        } else {
+            while ($db->ProximoRegistro()) {
                 $resultado = $db->Tupla();
             }
         }
-        if( count( $resultado ) )
-        {
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
-
-    function detalhe()
+    public function detalhe()
     {
         $idpesOk = false;
-        if( is_numeric($this->idpes) ){
+        if (is_numeric($this->idpes)) {
             $idpesOk = true;
-        }else if($this->matricula){
+        } elseif ($this->matricula) {
             $db = new clsBanco();
             $db->Consulta("SELECT ref_cod_pessoa_fj FROM funcionario WHERE matricula = '{$this->matricula}'");
-            if( $db->ProximoRegistro() )
-            {
-                list( $this->idpes ) = $db->Tupla();
+            if ($db->ProximoRegistro()) {
+                list($this->idpes) = $db->Tupla();
                 $idpesOk = true;
             }
-        }else if(is_numeric($this->cpf)){
+        } elseif (is_numeric($this->cpf)) {
             $db = new clsBanco();
             $db->Consulta("SELECT idpes FROM {$this->schema_cadastro}.fisica WHERE cpf = '{$this->cpf}'");
-            if( $db->ProximoRegistro() )
-            {
-                list( $this->idpes ) = $db->Tupla();
+            if ($db->ProximoRegistro()) {
+                list($this->idpes) = $db->Tupla();
                 $idpesOk = true;
             }
         }
-        if( $idpesOk  ){
+        if ($idpesOk) {
             $tupla = parent::detalhe();
             $db = new clsBanco();
-            $db->Consulta("SELECT ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, ramal, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, tempo_expira_conta, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, proibido, ref_cod_setor_new, matricula_permanente, email FROM funcionario WHERE ref_cod_pessoa_fj = '{$this->idpes}'");
-            if($db->ProximoRegistro())
-            {
+            $db->Consulta("SELECT ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, data_expiracao, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, email FROM funcionario WHERE ref_cod_pessoa_fj = '{$this->idpes}'");
+            if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
-                list( $this->idpes, $this->matricula, $this->senha, $this->ativo, $this->ref_sec, $this->ramal, $this->sequencial, $this->opcao_menu, $this->ref_cod_setor, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->tempo_expira_conta, $this->data_troca_senha, $this->data_reativa_conta, $this->ref_ref_cod_pessoa_fj, $this->proibido ,$this->ref_cod_setor_new, $this->matricula_permanente) = $tupla;
 
-                $tupla["idpes"] = new clsPessoaFisica( $tupla["ref_cod_pessoa_fj"] );
-                $tupla[] = $tupla["idpes"];
+                list($this->idpes, $this->matricula, $this->senha, $this->ativo, $this->ref_sec, $this->sequencial, $this->opcao_menu, $this->ref_cod_setor, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, $this->data_expiracao, $this->data_troca_senha, $this->data_reativa_conta, $this->ref_ref_cod_pessoa_fj, $this->ref_cod_setor_new) = $tupla;
+
+                $tupla['idpes'] = new clsPessoaFisica($tupla['ref_cod_pessoa_fj']);
+                $tupla[] = $tupla['idpes'];
 
                 return $tupla;
             }
@@ -409,141 +316,60 @@ class clsFuncionario extends clsPessoaFisica
         return false;
     }
 
-    function queryRapida($int_idpes)
+    public function queryRapida($int_idpes)
     {
         $this->idpes = $int_idpes;
         $this->detalhe();
-        $resultado = array();
+        $resultado = [];
         $pos = 0;
-        for ($i = 1; $i< func_num_args(); $i++ ) {
+        for ($i = 1; $i < func_num_args(); $i++) {
             $campo = func_get_arg($i);
-            $resultado[$pos] = ($this->$campo) ? $this->$campo : "";
+            $resultado[$pos] = ($this->$campo) ? $this->$campo : '';
             $resultado[$campo] = &$resultado[$pos];
             $pos++;
-
         }
-        if(count($resultado) > 0)
-        {
+        if (count($resultado) > 0) {
             return $resultado;
         }
 
         return false;
     }
 
-    function queryRapidaCPF( $int_cpf )
+    public function queryRapidaCPF($int_cpf)
     {
         $this->cpf = $int_cpf + 0;
         $this->detalhe();
-        $resultado = array();
+        $resultado = [];
         $pos = 0;
-        for ($i = 1; $i< func_num_args(); $i++ ) {
+        for ($i = 1; $i < func_num_args(); $i++) {
             $campo = func_get_arg($i);
-            $resultado[$pos] = ($this->$campo) ? $this->$campo : "";
+            $resultado[$pos] = ($this->$campo) ? $this->$campo : '';
             $resultado[$campo] = &$resultado[$pos];
             $pos++;
-
         }
-        if(count($resultado) > 0)
+        if (count($resultado) > 0) {
             return $resultado;
+        }
+
         return false;
     }
 
-    function queryRapidaMatricula( $str_matricula )
+    public function queryRapidaMatricula($str_matricula)
     {
         $this->matricula = $str_matricula;
         $this->detalhe();
-        $resultado = array();
+        $resultado = [];
         $pos = 0;
-        for ($i = 1; $i< func_num_args(); $i++ ) {
+        for ($i = 1; $i < func_num_args(); $i++) {
             $campo = func_get_arg($i);
-            $resultado[$pos] = ($this->$campo) ? $this->$campo : "";
+            $resultado[$pos] = ($this->$campo) ? $this->$campo : '';
             $resultado[$campo] = &$resultado[$pos];
             $pos++;
-
         }
-        if(count($resultado) > 0)
+        if (count($resultado) > 0) {
             return $resultado;
+        }
+
         return false;
     }
-
-    /**
-     * Define limites de retorno para o metodo lista
-     *
-     * @return null
-     */
-    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
-    {
-        $this->_limite_quantidade = $intLimiteQtd;
-        $this->_limite_offset = $intLimiteOffset;
-    }
-
-    /**
-     * Retorna a string com o trecho da query resposavel pelo Limite de registros
-     *
-     * @return string
-     */
-    function getLimite()
-    {
-        if( is_numeric( $this->_limite_quantidade ) )
-        {
-            $retorno = " LIMIT {$this->_limite_quantidade}";
-            if( is_numeric( $this->_limite_offset ) )
-            {
-                $retorno .= " OFFSET {$this->_limite_offset} ";
-            }
-            return $retorno;
-        }
-        return "";
-    }
-
-    /**
-     * Define campo para ser utilizado como ordenacao no metolo lista
-     *
-     * @return null
-     */
-    function setOrderby( $strNomeCampo )
-    {
-        // limpa a string de possiveis erros (delete, insert, etc)
-        //$strNomeCampo = eregi_replace();
-
-        if( is_string( $strNomeCampo ) && $strNomeCampo )
-        {
-            $this->_campo_order_by = $strNomeCampo;
-        }
-    }
-
-    /**
-     * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
-     *
-     * @return string
-     */
-    function getOrderby()
-    {
-        if( is_string( $this->_campo_order_by ) )
-        {
-            return " ORDER BY {$this->_campo_order_by} ";
-        }
-        return "";
-    }
-
-    /**
-     * Define quais campos da tabela serao selecionados na invocacao do metodo lista
-     *
-     * @return null
-     */
-    function setCamposLista( $str_campos )
-    {
-        $this->_campos_lista = $str_campos;
-    }
-
-    /**
-     * Define que o metodo Lista devera retornoar todos os campos da tabela
-     *
-     * @return null
-     */
-    function resetCamposLista()
-    {
-        $this->_campos_lista = $this->_todos_campos;
-    }
 }
-?>

@@ -11,11 +11,6 @@ class Portabilis_Utils_DeprecatedXmlApi
         }
     }
 
-    public static function returnEmptyQueryForDisabledApi($xmlns = 'sugestoes', $rootNodeName = 'query')
-    {
-        Portabilis_Utils_DeprecatedXmlApi::returnEmptyQuery($xmlns, $rootNodeName, 'Disabled API');
-    }
-
     public static function returnEmptyQuery($xmlns = 'sugestoes', $rootNodeName = 'query', $comment = '')
     {
         $emptyQuery = '<?xml version=\'1.0\' encoding=\'5\'?>'

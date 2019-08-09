@@ -1,8 +1,10 @@
 <?php
 
+use iEducar\Legacy\Model;
+
 require_once 'include/pmieducar/geral.inc.php';
 
-class clsPmieducarModulo
+class clsPmieducarModulo extends Model
 {
     public $cod_modulo;
 
@@ -28,69 +30,6 @@ class clsPmieducarModulo
 
     public $num_etapas;
 
-    // propriedades padrao
-
-    /**
-     * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
-     *
-     * @var int
-     */
-    public $_total;
-
-    /**
-     * Nome do schema
-     *
-     * @var string
-     */
-    public $_schema;
-
-    /**
-     * Nome da tabela
-     *
-     * @var string
-     */
-    public $_tabela;
-
-    /**
-     * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
-     *
-     * @var string
-     */
-    public $_campos_lista;
-
-    /**
-     * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
-     *
-     * @var string
-     */
-    public $_todos_campos;
-
-    /**
-     * Valor que define a quantidade de registros a ser retornada pelo metodo lista
-     *
-     * @var int
-     */
-    public $_limite_quantidade;
-
-    /**
-     * Define o valor de offset no retorno dos registros no metodo lista
-     *
-     * @var int
-     */
-    public $_limite_offset;
-
-    /**
-     * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
-     *
-     * @var string
-     */
-    public $_campo_order_by;
-
-    /**
-     * Construtor
-     *
-     * @return object
-     */
     public function __construct(
         $cod_modulo = null,
         $ref_usuario_exc = null,
@@ -225,42 +164,42 @@ class clsPmieducarModulo
             $valores = [];
 
             if (is_numeric($this->ref_usuario_cad)) {
-                $campos[] = "ref_usuario_cad";
+                $campos[] = 'ref_usuario_cad';
                 $valores[] = "'{$this->ref_usuario_cad}'";
             }
 
             if (is_string($this->nm_tipo)) {
-                $campos[] = "nm_tipo";
+                $campos[] = 'nm_tipo';
                 $valores[] = "'{$this->nm_tipo}'";
             }
 
             if (is_string($this->descricao)) {
-                $campos[] = "descricao";
+                $campos[] = 'descricao';
                 $valores[] = "'{$this->descricao}'";
             }
             if (is_numeric($this->num_meses)) {
-                $campos[] = "num_meses";
+                $campos[] = 'num_meses';
                 $valores[] = "'{$this->num_meses}'";
             }
 
             if (is_numeric($this->num_semanas)) {
-                $campos[] = "num_semanas";
+                $campos[] = 'num_semanas';
                 $valores[] = "'{$this->num_semanas}'";
             }
 
             if (is_numeric($this->num_etapas)) {
-                $campos[] = "num_etapas";
+                $campos[] = 'num_etapas';
                 $valores[] = "'{$this->num_etapas}'";
             }
 
-            $campos[] = "data_cadastro";
-            $valores[] = "NOW()";
+            $campos[] = 'data_cadastro';
+            $valores[] = 'NOW()';
 
-            $campos[] = "ativo";
-            $valores[] = "'1'";
+            $campos[] = 'ativo';
+            $valores[] = '\'1\'';
 
             if (is_numeric($this->ref_cod_instituicao)) {
-                $campos[] = "ref_cod_instituicao";
+                $campos[] = 'ref_cod_instituicao';
                 $valores[] = "'{$this->ref_cod_instituicao}'";
             }
 
@@ -305,13 +244,13 @@ class clsPmieducarModulo
             if (is_numeric($this->num_meses)) {
                 $set[] = "num_meses = '{$this->num_meses}'";
             } else {
-                $set[] = "num_meses = NULL";
+                $set[] = 'num_meses = NULL';
             }
 
             if (is_numeric($this->num_semanas)) {
                 $set[] = "num_semanas = '{$this->num_semanas}'";
             } else {
-                $set[] = "num_semanas = NULL";
+                $set[] = 'num_semanas = NULL';
             }
 
             if (is_string($this->data_cadastro)) {
@@ -321,8 +260,8 @@ class clsPmieducarModulo
             if (is_numeric($this->ativo)) {
                 $set[] = "ativo = '{$this->ativo}'";
 
-                if ((bool)$this->ativo === false) {
-                    $set[] = "data_exclusao = NOW()";
+                if ((bool) $this->ativo === false) {
+                    $set[] = 'data_exclusao = NOW()';
                 }
             }
 
@@ -415,9 +354,9 @@ class clsPmieducarModulo
         }
 
         if (is_null($int_ativo) || $int_ativo) {
-            $filtros[] = "ativo = '1'";
+            $filtros[] = 'ativo = \'1\'';
         } else {
-            $filtros[] = "ativo = '0'";
+            $filtros[] = 'ativo = \'0\'';
         }
 
         if (is_numeric($int_ref_cod_instituicao)) {
@@ -510,82 +449,5 @@ class clsPmieducarModulo
         }
 
         return false;
-    }
-
-    /**
-     * Define quais campos da tabela serao selecionados na invocacao do metodo lista
-     *
-     * @return null
-     */
-    public function setCamposLista($str_campos)
-    {
-        $this->_campos_lista = $str_campos;
-    }
-
-    /**
-     * Define que o metodo Lista devera retornoar todos os campos da tabela
-     *
-     * @return null
-     */
-    public function resetCamposLista()
-    {
-        $this->_campos_lista = $this->_todos_campos;
-    }
-
-    /**
-     * Define limites de retorno para o metodo lista
-     *
-     * @return null
-     */
-    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
-    {
-        $this->_limite_quantidade = $intLimiteQtd;
-        $this->_limite_offset = $intLimiteOffset;
-    }
-
-    /**
-     * Retorna a string com o trecho da query resposavel pelo Limite de registros
-     *
-     * @return string
-     */
-    public function getLimite()
-    {
-        if (is_numeric($this->_limite_quantidade)) {
-            $retorno = " LIMIT {$this->_limite_quantidade}";
-
-            if (is_numeric($this->_limite_offset)) {
-                $retorno .= " OFFSET {$this->_limite_offset} ";
-            }
-
-            return $retorno;
-        }
-
-        return '';
-    }
-
-    /**
-     * Define campo para ser utilizado como ordenacao no metolo lista
-     *
-     * @return null
-     */
-    public function setOrderby($strNomeCampo)
-    {
-        if (is_string($strNomeCampo) && $strNomeCampo) {
-            $this->_campo_order_by = $strNomeCampo;
-        }
-    }
-
-    /**
-     * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
-     *
-     * @return string
-     */
-    public function getOrderby()
-    {
-        if (is_string($this->_campo_order_by)) {
-            return " ORDER BY {$this->_campo_order_by} ";
-        }
-
-        return '';
     }
 }
