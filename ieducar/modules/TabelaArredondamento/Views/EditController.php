@@ -483,8 +483,6 @@ class EditController extends Core_Controller_Page_EditController
             $entity = $this->getEntity();
         }
 
-        $entity->arredondarNota = $this->getRequest()->arredondarNota;
-
         // A contagem usa um dos índices do formulário, senão ia contar sempre 4.
         $loop = count($this->valor_id);
 
@@ -505,6 +503,8 @@ class EditController extends Core_Controller_Page_EditController
         if (!isset($entity)) {
             return parent::_save();
         }
+
+        $entity->arredondarNota = $this->getRequest()->arredondarNota;
 
         $this->getDataMapper()->save($entity);
 
