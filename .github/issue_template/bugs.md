@@ -7,7 +7,8 @@ assignees: ''
 
 ---
 
-Olá e obrigado por nos ajudar a tornar o i-Educar um projeto mais estável. Para reportar seu bug use o template abaixo:
+Olá e obrigado por nos ajudar a tornar o i-Educar um projeto mais estável. Não esqueça de revisar o nosso
+[guia de contribuição](https://github.com/portabilis/i-educar/blob/master/contributing.md) para saber melhor como colaborar com a nossa comunidade. Para reportar seu bug use o template abaixo:
 
 **MENU:**
 

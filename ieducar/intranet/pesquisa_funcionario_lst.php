@@ -109,22 +109,14 @@ class indice extends clsListagem
 
             if (!$lst_funcionario)
             {
-        // Obter lista de funcionário
-        // Mudar: Pegar por pessoa para cadastrar em vez do usuário
                 $lst_funcionario = $obj_funcionario->lista($chave_busca, false, false, false, false, false, false, $iniciolimit, $limite, false, $com_matricula);
             }
 
-            // if ( !$lst_funcionario )
-            // {
-            //  $obj_funcionario = new clsFuncionario(null, null, $chave_busca);
-      //  $det_funcionario = $obj_funcionario->detalhe();
-            //  $lst_funcionario = $obj_funcionario->lista( $det_funcionario['matricula'], false, false, false, false, false, false, $iniciolimit, $limite, false, $com_matricula );
-            // }
         } else {
             $obj_funcionario = new clsFuncionario();
             $lst_funcionario = $obj_funcionario->lista(false, false, false, false, false, false, false, $iniciolimit, $limite, false, $com_matricula);
         }
-    
+
         if ( $lst_funcionario ) {
             foreach ($lst_funcionario as $funcionario) {
         $obj_cod_servidor = new clsFuncionario($funcionario['ref_cod_pessoa_fj']);
@@ -172,8 +164,8 @@ class indice extends clsListagem
                 else
                     $funcao .= " )";
                 $this->addLinhas( array("
-                    <a href='javascript:void(0);' onclick=\"javascript:{$funcao}\">{$funcionario["matricula"]}</a>", 
-                    "<a href='javascript:void(0);' onclick=\"javascript:{$funcao}\">{$det_cod_servidor['cpf']}</a>", 
+                    <a href='javascript:void(0);' onclick=\"javascript:{$funcao}\">{$funcionario["matricula"]}</a>",
+                    "<a href='javascript:void(0);' onclick=\"javascript:{$funcao}\">{$det_cod_servidor['cpf']}</a>",
                     "<a href='javascript:void(0);' onclick=\"javascript:{$funcao}\">{$funcionario["nome"]}</a>" ) );
                 $total = $funcionario['_total'];
 

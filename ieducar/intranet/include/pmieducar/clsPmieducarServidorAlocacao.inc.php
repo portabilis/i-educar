@@ -1,8 +1,10 @@
 <?php
 
+use iEducar\Legacy\Model;
+
 require_once 'include/pmieducar/geral.inc.php';
 
-class clsPmieducarServidorAlocacao
+class clsPmieducarServidorAlocacao extends Model
 {
     public $cod_servidor_alocacao;
     public $ref_ref_cod_instituicao;
@@ -34,64 +36,6 @@ class clsPmieducarServidorAlocacao
     public static $cargaHorariaMax = 36.0;
 
     /**
-     * Armazena o total de resultados obtidos na última chamada ao método lista().
-     *
-     * @var int
-     */
-    public $_total;
-
-    /**
-     * Nome do schema.
-     *
-     * @var string
-     */
-    public $_schema;
-
-    /**
-     * Nome da tabela.
-     *
-     * @var string
-     */
-    public $_tabela;
-
-    /**
-     * Lista separada por vírgula, com os campos que devem ser selecionados na
-     * próxima chamado ao método lista().
-     *
-     * @var string
-     */
-    public $_campos_lista;
-
-    /**
-     * Lista com todos os campos da tabela separados por vírgula, padrão para
-     * seleção no método lista.
-     *
-     * @var string
-     */
-    public $_todos_campos;
-
-    /**
-     * Valor que define a quantidade de registros a ser retornada pelo método lista().
-     *
-     * @var int
-     */
-    public $_limite_quantidade;
-
-    /**
-     * Define o valor de offset no retorno dos registros no método lista().
-     *
-     * @var int
-     */
-    public $_limite_offset;
-
-    /**
-     * Define o campo para ser usado como padrão de ordenação no método lista().
-     *
-     * @var string
-     */
-    public $_campo_order_by;
-
-    /**
      * Define o campo para ser usado como padrão de agrupamento no método lista().
      *
      * @var string
@@ -99,8 +43,6 @@ class clsPmieducarServidorAlocacao
     public $_campo_group_by;
 
     /**
-     * clsPmieducarServidorAlocacao constructor.
-     *
      * @param null $cod_servidor_alocacao
      * @param null $ref_ref_cod_instituicao
      * @param null $ref_usuario_exc
@@ -215,7 +157,7 @@ class clsPmieducarServidorAlocacao
         // Valida a carga horária
         if (is_string($carga_horaria)) {
             $datetime = explode(':', $carga_horaria);
-            $minutos  = (((int) $datetime[0]) * 60) + (int) $datetime[1];
+            $minutos = (((int) $datetime[0]) * 60) + (int) $datetime[1];
 
             if (self::$cargaHorariaMax * 60 >= $minutos) {
                 $this->carga_horaria = $carga_horaria;
@@ -273,105 +215,105 @@ class clsPmieducarServidorAlocacao
         ) {
             $db = new clsBanco();
 
-            $campos  = '';
+            $campos = '';
             $valores = '';
-            $gruda   = '';
+            $gruda = '';
 
             if (is_numeric($this->ref_ref_cod_instituicao)) {
-                $campos  .= "{$gruda}ref_ref_cod_instituicao";
+                $campos .= "{$gruda}ref_ref_cod_instituicao";
                 $valores .= "{$gruda}'{$this->ref_ref_cod_instituicao}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if (is_numeric($this->ref_usuario_cad)) {
-                $campos  .= "{$gruda}ref_usuario_cad";
+                $campos .= "{$gruda}ref_usuario_cad";
                 $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if (is_numeric($this->ref_cod_escola)) {
-                $campos  .= "{$gruda}ref_cod_escola";
+                $campos .= "{$gruda}ref_cod_escola";
                 $valores .= "{$gruda}'{$this->ref_cod_escola}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if (is_numeric($this->ref_cod_servidor)) {
-                $campos  .= "{$gruda}ref_cod_servidor";
+                $campos .= "{$gruda}ref_cod_servidor";
                 $valores .= "{$gruda}'{$this->ref_cod_servidor}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if (is_numeric($this->ref_cod_servidor_funcao)) {
-                $campos  .= "{$gruda}ref_cod_servidor_funcao";
+                $campos .= "{$gruda}ref_cod_servidor_funcao";
                 $valores .= "{$gruda}'{$this->ref_cod_servidor_funcao}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if (is_numeric($this->ref_cod_funcionario_vinculo)) {
-                $campos  .= "{$gruda}ref_cod_funcionario_vinculo";
+                $campos .= "{$gruda}ref_cod_funcionario_vinculo";
                 $valores .= "{$gruda}'{$this->ref_cod_funcionario_vinculo}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if (is_string($this->carga_horaria)) {
-                $campos  .= "{$gruda}carga_horaria";
+                $campos .= "{$gruda}carga_horaria";
                 $valores .= "{$gruda}'{$this->carga_horaria}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if ($this->hora_inicial) {
-                $campos  .= "{$gruda}hora_inicial";
+                $campos .= "{$gruda}hora_inicial";
                 $valores .= "{$gruda}'{$this->hora_inicial}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if ($this->hora_final) {
-                $campos  .= "{$gruda}hora_final";
+                $campos .= "{$gruda}hora_final";
                 $valores .= "{$gruda}'{$this->hora_final}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if ($this->hora_atividade) {
-                $campos  .= "{$gruda}hora_atividade";
+                $campos .= "{$gruda}hora_atividade";
                 $valores .= "{$gruda}'{$this->hora_atividade}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if ($this->horas_excedentes) {
-                $campos  .= "{$gruda}horas_excedentes";
+                $campos .= "{$gruda}horas_excedentes";
                 $valores .= "{$gruda}'{$this->horas_excedentes}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if (($this->periodo)) {
-                $campos  .= "{$gruda}periodo";
+                $campos .= "{$gruda}periodo";
                 $valores .= "{$gruda}'{$this->periodo}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if (is_numeric($this->ano)) {
-                $campos  .= "{$gruda}ano";
+                $campos .= "{$gruda}ano";
                 $valores .= "{$gruda}'{$this->ano}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if (is_string($this->dataAdmissao) && !empty($this->dataAdmissao)) {
-                $campos  .= "{$gruda}data_admissao";
+                $campos .= "{$gruda}data_admissao";
                 $valores .= "{$gruda}'{$this->dataAdmissao}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
             if (is_string($this->dataSaida) && !empty($this->dataSaida)) {
-                $campos  .= "{$gruda}data_saida";
+                $campos .= "{$gruda}data_saida";
                 $valores .= "{$gruda}'{$this->dataSaida}'";
-                $gruda    = ', ';
+                $gruda = ', ';
             }
 
-            $campos  .= "{$gruda}data_cadastro";
+            $campos .= "{$gruda}data_cadastro";
             $valores .= "{$gruda}NOW()";
-            $gruda    = ', ';
+            $gruda = ', ';
 
-            $campos  .= "{$gruda}ativo";
+            $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
 
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
@@ -391,7 +333,7 @@ class clsPmieducarServidorAlocacao
      */
     public function edita()
     {
-        if (! is_numeric($this->cod_servidor_alocacao) || ! is_numeric($this->ref_usuario_exc)) {
+        if (!is_numeric($this->cod_servidor_alocacao) || !is_numeric($this->ref_usuario_exc)) {
             return false;
         }
 
@@ -405,71 +347,71 @@ class clsPmieducarServidorAlocacao
         }
 
         if (is_numeric($this->ref_usuario_exc)) {
-            $set  .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
+            $set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
             $gruda = ', ';
         }
 
         if (is_numeric($this->ref_usuario_cad)) {
-            $set  .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
+            $set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
             $gruda = ', ';
         }
 
         if (is_numeric($this->ref_cod_escola)) {
-            $set  .= "{$gruda}ref_cod_escola = '{$this->ref_cod_escola}'";
+            $set .= "{$gruda}ref_cod_escola = '{$this->ref_cod_escola}'";
             $gruda = ', ';
         }
 
         if (is_numeric($this->ref_cod_servidor)) {
-            $set  .= "{$gruda}ref_cod_servidor = '{$this->ref_cod_servidor}'";
+            $set .= "{$gruda}ref_cod_servidor = '{$this->ref_cod_servidor}'";
             $gruda = ', ';
         }
 
         if (is_numeric($this->carga_horaria)) {
-            $set  .= "{$gruda}carga_horaria = '{$this->carga_horaria}'";
+            $set .= "{$gruda}carga_horaria = '{$this->carga_horaria}'";
             $gruda = ', ';
         }
 
         if ($this->hora_inicial) {
-            $set  .= "{$gruda}hora_inicial = '{$this->hora_inicial}'";
+            $set .= "{$gruda}hora_inicial = '{$this->hora_inicial}'";
             $gruda = ', ';
         }
 
         if ($this->hora_final) {
-            $set  .= "{$gruda}hora_final = '{$this->hora_final}'";
+            $set .= "{$gruda}hora_final = '{$this->hora_final}'";
             $gruda = ', ';
         }
 
         if ($this->hora_atividade) {
-            $set  .= "{$gruda}hora_atividade = '{$this->hora_atividade}'";
+            $set .= "{$gruda}hora_atividade = '{$this->hora_atividade}'";
             $gruda = ', ';
         }
 
         if ($this->horas_excedentes) {
-            $set  .= "{$gruda}horas_excedentes = '{$this->horas_excedentes}'";
+            $set .= "{$gruda}horas_excedentes = '{$this->horas_excedentes}'";
             $gruda = ', ';
         }
 
         if (is_numeric($this->ref_cod_servidor_funcao)) {
-            $set  .= "{$gruda}ref_cod_servidor_funcao = '{$this->ref_cod_servidor_funcao}'";
+            $set .= "{$gruda}ref_cod_servidor_funcao = '{$this->ref_cod_servidor_funcao}'";
             $gruda = ', ';
         }
 
         if (is_numeric($this->ref_cod_funcionario_vinculo)) {
-            $set  .= "{$gruda}ref_cod_funcionario_vinculo = '{$this->ref_cod_funcionario_vinculo}'";
+            $set .= "{$gruda}ref_cod_funcionario_vinculo = '{$this->ref_cod_funcionario_vinculo}'";
             $gruda = ', ';
         }
 
         if (($this->periodo)) {
-            $set  .= "{$gruda}periodo = '{$this->periodo}'";
+            $set .= "{$gruda}periodo = '{$this->periodo}'";
             $gruda = ', ';
         }
 
         if (is_string($this->data_cadastro)) {
-            $set  .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
+            $set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
             $gruda = ', ';
         }
 
-        $set  .= "{$gruda}data_exclusao = NOW()";
+        $set .= "{$gruda}data_exclusao = NOW()";
         $gruda = ', ';
 
         if (is_numeric($this->ativo)) {
@@ -519,12 +461,12 @@ class clsPmieducarServidorAlocacao
         $boo_professor = null,
         $ano = null
     ) {
-        $filtros  = '';
+        $filtros = '';
         $whereAnd = ' WHERE ';
 
         if (is_bool($bool_busca_nome) && $bool_busca_nome == true) {
-            $join     = ', cadastro.pessoa p ';
-            $filtros .= $whereAnd.' sa.ref_cod_servidor = p.idpes';
+            $join = ', cadastro.pessoa p ';
+            $filtros .= $whereAnd . ' sa.ref_cod_servidor = p.idpes';
             $whereAnd = ' AND ';
             $this->_campos_lista .= ',p.nome';
         }
@@ -611,13 +553,13 @@ class clsPmieducarServidorAlocacao
         }
 
         if (is_bool($boo_professor)) {
-            $not = $boo_professor? '=' : '!=';
+            $not = $boo_professor ? '=' : '!=';
             $filtros .= "{$whereAnd} EXISTS(SELECT 1 FROM pmieducar.servidor_funcao,pmieducar.funcao WHERE ref_cod_servidor_funcao = cod_funcao AND ref_cod_servidor = sa.ref_cod_servidor AND sa.ref_ref_cod_instituicao = ref_ref_cod_instituicao AND professor $not 1)";
         }
 
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
-        $resultado   = [];
+        $resultado = [];
 
         $sql .= $filtros . $this->getGroupBy() . $this->getOrderby() . $this->getLimite();
 
@@ -630,7 +572,7 @@ class clsPmieducarServidorAlocacao
 
             if ($countCampos > 1) {
                 $tupla['_total'] = $this->_total;
-                $resultado[]     = $tupla;
+                $resultado[] = $tupla;
 
                 continue;
             }
@@ -647,7 +589,7 @@ class clsPmieducarServidorAlocacao
 
     public function listaEscolas($int_ref_ref_cod_instituicao = null)
     {
-        if (! is_numeric($int_ref_ref_cod_instituicao)) {
+        if (!is_numeric($int_ref_ref_cod_instituicao)) {
             return false;
         }
 
@@ -802,7 +744,7 @@ class clsPmieducarServidorAlocacao
             && is_numeric($this->periodo)
             && is_string($this->carga_horaria)
         ) {
-            $sql  = 'UPDATE %s SET ref_cod_servidor=\'%d\' WHERE ref_cod_servidor = \'%d\' ';
+            $sql = 'UPDATE %s SET ref_cod_servidor=\'%d\' WHERE ref_cod_servidor = \'%d\' ';
             $sql .= 'AND ref_ref_cod_instituicao = \'%d\' AND ref_cod_escola = \'%d\' AND ';
             $sql .= 'carga_horaria = \'%s\' AND periodo = \'%d\'';
 
@@ -824,77 +766,6 @@ class clsPmieducarServidorAlocacao
         }
 
         return false;
-    }
-
-    /**
-     * Define quais campos da tabela serão selecionados no método Lista().
-     */
-    public function setCamposLista($str_campos)
-    {
-        $this->_campos_lista = $str_campos;
-    }
-
-    /**
-     * Define que o método Lista() deverpa retornar todos os campos da tabela.
-     */
-    public function resetCamposLista()
-    {
-        $this->_campos_lista = $this->_todos_campos;
-    }
-
-    /**
-     * Define limites de retorno para o método Lista().
-     */
-    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
-    {
-        $this->_limite_quantidade = $intLimiteQtd;
-        $this->_limite_offset = $intLimiteOffset;
-    }
-
-    /**
-     * Retorna a string com o trecho da query responsável pelo limite de
-     * registros retornados/afetados.
-     *
-     * @return string
-     */
-    public function getLimite()
-    {
-        if (is_numeric($this->_limite_quantidade)) {
-            $retorno = " LIMIT {$this->_limite_quantidade}";
-
-            if (is_numeric($this->_limite_offset)) {
-                $retorno .= " OFFSET {$this->_limite_offset} ";
-            }
-
-            return $retorno;
-        }
-
-        return '';
-    }
-
-    /**
-     * Define o campo para ser utilizado como ordenação no método Lista().
-     */
-    public function setOrderby($strNomeCampo)
-    {
-        if (is_string($strNomeCampo) && $strNomeCampo) {
-            $this->_campo_order_by = $strNomeCampo;
-        }
-    }
-
-    /**
-     * Retorna a string com o trecho da query responsável pela Ordenação dos
-     * registros.
-     *
-     * @return string
-     */
-    public function getOrderby()
-    {
-        if (is_string($this->_campo_order_by)) {
-            return " ORDER BY {$this->_campo_order_by} ";
-        }
-
-        return '';
     }
 
     /**
