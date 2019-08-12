@@ -75,6 +75,70 @@ class TurmaController extends ApiCoreController
         return $turma;
     }
 
+    protected function ordenaMatriculasPorDataBase()
+    {
+        $codTurma = $this->getRequest()->id;
+        $parametros = [$codTurma];
+        $sql = "
+            SELECT
+                cod_matricula,
+                sequencial_fechamento,
+                relatorio.get_texto_sem_caracter_especial(pessoa.nome) AS aluno,
+                data_enturmacao,
+                CASE WHEN dependencia THEN to_char(data_enturmacao,'mmdd')::int ELSE 0 END as ord_dependencia,
+                CASE WHEN to_char(instituicao.data_base_remanejamento,'mmdd') is not null and to_char(data_enturmacao,'mmdd') > to_char(instituicao.data_base_remanejamento,'mmdd') THEN to_char(data_enturmacao,'mmdd')::int ELSE 0 END as data_aluno_order
+            FROM pmieducar.matricula_turma
+            INNER JOIN pmieducar.instituicao On (instituicao.ativo = 1)
+            INNER JOIN pmieducar.matricula ON (matricula.cod_matricula = matricula_turma.ref_cod_matricula)
+            INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
+            INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+            WHERE ref_cod_turma = $1
+            AND matricula.ativo = 1
+            AND (
+                    CASE
+                        WHEN matricula_turma.ativo = 1 THEN TRUE
+                        WHEN matricula_turma.transferido THEN TRUE
+                        WHEN matricula_turma.remanejado THEN TRUE
+                        WHEN matricula.dependencia THEN TRUE
+                        WHEN matricula_turma.abandono THEN TRUE
+                        WHEN matricula_turma.reclassificado THEN TRUE
+                        ELSE FALSE
+                    END
+                )
+            ORDER BY ord_dependencia, data_aluno_order, aluno;
+        ";
+
+        $alunos = $this->fetchPreparedQuery($sql, $parametros);
+        $attrs = [
+            'cod_matricula',
+            'sequencial_fechamento',
+            'aluno',
+            'data_enturmacao',
+            'ord_dependencia',
+            'data_fechamaneto'
+        ];
+        $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
+
+        foreach ($alunos as $key => $aluno) {
+            $parametros = [
+                $codTurma,
+                $aluno['cod_matricula'],
+                $aluno['sequencial_fechamento'],
+                $key + 1
+            ];
+
+            $sql = "
+                UPDATE pmieducar.matricula_turma
+                SET sequencial_fechamento = $4
+                WHERE matricula_turma.ref_cod_turma = $1
+                AND matricula_turma.ref_cod_matricula = $2
+                AND sequencial_fechamento = $3
+            ";
+
+            $this->fetchPreparedQuery($sql, $parametros);
+        }
+    }
+
     protected function ordenaAlunosDaTurmaAlfabetica()
     {
         $codTurma = $this->getRequest()->id;
@@ -317,6 +381,8 @@ class TurmaController extends ApiCoreController
             $this->appendResponse($this->get());
         } elseif ($this->isRequestFor('get', 'tipo-boletim')) {
             $this->appendResponse($this->getTipoBoletim());
+        } elseif ($this->isRequestFor('get', 'ordena-matriculas-data-base')) {
+            $this->appendResponse($this->ordenaMatriculasPorDataBase());
         } elseif ($this->isRequestFor('get', 'ordena-turma-alfabetica')) {
             $this->appendResponse($this->ordenaSequencialAlunosTurma());
         } elseif ($this->isRequestFor('get', 'turmas-por-escola')) {

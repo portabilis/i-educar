@@ -8,7 +8,6 @@ require_once 'include/funcoes.inc.php';
 
 class FilaUnicaController extends ApiCoreController
 {
-
     protected function getDadosAluno()
     {
         $tipoCertidao = $this->getRequest()->tipo_certidao;
@@ -268,8 +267,7 @@ class FilaUnicaController extends ApiCoreController
     protected function getMontaSelectEscolasCandidato()
     {
         $cod_candidato_fila_unica = $this->getRequest()->cod_candidato_fila_unica;
-        $user = $this->currentUser();
-        $userId = $user['id'];
+        $userId = $this->pessoa_logada;
         $nivelAcesso = $this->getNivelAcesso();
         $acessoEscolar = $nivelAcesso == 4;
 

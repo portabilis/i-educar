@@ -168,6 +168,7 @@ class EnrollmentService
      * @throws NoVacancyException
      * @throws ExistsActiveEnrollmentException
      * @throws PreviousEnrollDateException
+     * @throws Throwable
      */
     public function enroll(
         LegacyRegistration $registration,
@@ -264,5 +265,22 @@ class EnrollmentService
         if (!$relocationDate || $relocationDate < $dateDeparted) {
            return $previousEnrollment;
         }
+    }
+
+    /**
+     * Reordena os sequenciais das enturmações de uma matrícula.
+     *
+     * @param LegacyRegistration $registration
+     *
+     * @return bool
+     */
+    public function reorder(LegacyRegistration $registration)
+    {
+        $registration->enrollments()->orderBy('sequencial')->get()->values()->each(function (LegacyEnrollment $enrollment, $index) {
+            $enrollment->sequencial = $index + 1;
+            $enrollment->save();
+        });
+
+        return true;
     }
 }

@@ -27,6 +27,11 @@ class RegraController extends ApiCoreController
         $this->validatesPresenceOf('ano_letivo');
     }
 
+    protected function canGetRegraSerieAno()
+    {
+        return $this->validatesPresenceOf('ano');
+    }
+
     protected function getTabelasDeArredondamento()
     {
         if ($this->canGetTabelasDeArredondamento()) {
@@ -246,6 +251,69 @@ class RegraController extends ApiCoreController
         }
     }
 
+    public function getRegraSerieAno()
+    {
+        if (empty($this->canGetRegraSerieAno())) {
+            return;
+        }
+
+        $ano = $this->getRequest()->ano;
+        $modified = $this->getRequest()->modified;
+
+        $params = [$ano];
+
+        if ($modified) {
+            $params[] = $modified;
+            $modified = " AND updated_at >= $2";
+        }
+
+        $sql = "
+            (
+                SELECT 
+                    serie_id,
+                    regra_avaliacao_id,
+                    regra_avaliacao_diferenciada_id,
+                    ano_letivo,
+                    updated_at,
+                    null as deleted_at
+                FROM modules.regra_avaliacao_serie_ano
+                WHERE ano_letivo = $1
+                {$modified}
+            )
+            UNION 
+            (
+                SELECT 
+                    serie_id,
+                    regra_avaliacao_id,
+                    regra_avaliacao_diferenciada_id,
+                    ano_letivo,
+                    updated_at,
+                    deleted_at
+                FROM modules.regra_avaliacao_serie_ano_excluidos
+                WHERE ano_letivo = $1
+                {$modified}
+            )
+            ORDER BY updated_at
+        ";
+
+        $regras = $this->fetchPreparedQuery($sql, $params);
+
+        $attrs = [
+            'serie_id',
+            'regra_avaliacao_id',
+            'regra_avaliacao_diferenciada_id',
+            'ano_letivo',
+            'updated_at',
+            'deleted_at',
+        ];
+
+        $regras = Portabilis_Array_Utils::filterSet($regras, $attrs);
+
+        return [
+            'regras' => $regras
+        ];
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'tabelas-de-arredondamento')) {
@@ -256,6 +324,8 @@ class RegraController extends ApiCoreController
             $this->appendResponse($this->getRegrasRecuperacao());
         } elseif ($this->isRequestFor('get', 'regra-serie')) {
             $this->appendResponse($this->getRegraSerie());
+        } elseif ($this->isRequestFor('get', 'regra-serie-ano')) {
+            $this->appendResponse($this->getRegraSerieAno());
         } else {
             $this->notImplementedOperationError();
         }
