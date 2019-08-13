@@ -55,20 +55,20 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function __construct(array $options = array())
   {
-    $this->setOptions($options)
-         ->_setMatriculaInfo()
-         ->_loadNotas()
-         ->_loadFalta()
-         ->_loadParecerDescritivo();
+    $this->setOptions($options);
+    $this->_setMatriculaInfo();
+    $this->_loadNotas();
+    $this->_loadFalta();
+    $this->_loadParecerDescritivo();
   }
 
     private function getExemptedStages($enrollmentId, $disciplineId)
     {
-        if (!isset($this->exemptedStages[$disciplineId])) {
-            $this->exemptedStages[$disciplineId] = App_Model_IedFinder::getExemptedStages($enrollmentId, $disciplineId);
+        if (!isset($this->exemptedStages[$enrollmentId])) {
+            $this->exemptedStages[$enrollmentId] = App_Model_IedFinder::getExemptedStages($enrollmentId, $disciplineId);
         }
 
-        return $this->exemptedStages[$disciplineId];
+        return $this->exemptedStages[$enrollmentId][$disciplineId] ?? [];
     }
 
   /**
@@ -2089,10 +2089,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   public function save()
   {
     try {
-      $this->saveNotas()
-           ->saveFaltas()
-           ->savePareceres()
-           ->promover();
+      $this->saveNotas();
+      $this->saveFaltas();
+      $this->savePareceres();
+      $this->promover();
     }
     catch (CoreExt_Service_Exception $e) {
       throw $e;
