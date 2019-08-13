@@ -63,9 +63,9 @@ class indice extends clsCadastro
     {
         $retorno = 'Novo';
 
-        $this->cod_servidor = $_GET['cod_servidor'];
-        $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
-        $this->ref_cod_instituicao_original = $_GET['ref_cod_instituicao'];
+        $this->cod_servidor = $this->getQueryString('cod_servidor');
+        $this->ref_cod_instituicao = $this->getQueryString('ref_cod_instituicao');
+        $this->ref_cod_instituicao_original = $this->getQueryString('ref_cod_instituicao');
 
         if ($_POST['ref_cod_instituicao_original']) {
             $this->ref_cod_instituicao_original = $_POST['ref_cod_instituicao_original'];
