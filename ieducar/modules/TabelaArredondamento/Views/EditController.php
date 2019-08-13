@@ -27,6 +27,10 @@ class EditController extends Core_Controller_Page_EditController
             'label' => 'Tipo de nota',
             'help' => ''
         ],
+        'arredondarNota' => [
+            'label' => 'Arredondar nota da etapa',
+            'help' => ''
+        ],
         'valor_nome' => [
             'label' => 'Rótulo da nota:',
             'help' => 'Exemplos: A, B, C (conceituais)<br /><b>6,5<b>, <b>7,5<b> (numéricas)'
@@ -135,21 +139,11 @@ class EditController extends Core_Controller_Page_EditController
             '/modules/RegraAvaliacao/Assets/Javascripts/TabelaArredondamento.js'
         );
 
-        Portabilis_View_Helper_Application::loadStylesheet(
-            $this,
-            'intranet/styles/localizacaoSistema.css'
-        );
-
         $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
-        $localizacao = new LocalizacaoSistema();
 
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => "$nomeMenu tabela de arredondamento"
+        $this->breadcrumb("$nomeMenu tabela de arredondamento", [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
     }
 
     /**
@@ -189,7 +183,7 @@ class EditController extends Core_Controller_Page_EditController
 
         if ($this->getEntity()->id!='') {
             $this->campoTexto(
-                'tipNota',
+                'tipoNota',
                 $this->_getLabel('tipoNota'),
                 $notaTipos[$this->getEntity()->get('tipoNota')],
                 40,
@@ -213,6 +207,13 @@ class EditController extends Core_Controller_Page_EditController
                 $this->_getHelp('tipoNota')
             );
         }
+
+        $this->campoLista(
+            'arredondarNota',
+            $this->_getLabel('arredondarNota'),
+            [0 => 'Não', 1 => 'Sim'],
+            $this->getEntity()->get('arredondarNota')
+        );
 
         // Parte condicional
         if (!$this->getEntity()->isNew()) {
@@ -502,6 +503,8 @@ class EditController extends Core_Controller_Page_EditController
         if (!isset($entity)) {
             return parent::_save();
         }
+
+        $entity->arredondarNota = $this->getRequest()->arredondarNota;
 
         $this->getDataMapper()->save($entity);
 

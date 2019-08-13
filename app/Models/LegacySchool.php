@@ -78,4 +78,12 @@ class LegacySchool extends Model
             'ref_cod_curso'
         )->withPivot('ativo', 'anos_letivos');
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function organization()
+    {
+        return $this->belongsTo(LegacyOrganization::class, 'ref_idpes');
+    }
 }

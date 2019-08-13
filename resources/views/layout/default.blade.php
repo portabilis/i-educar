@@ -12,7 +12,13 @@
             'slug': '{{$config['app']['database']['dbname']}}',
             'user_id': '{{$loggedUser->personId}}',
             'user_name': '{{$loggedUser->name}}',
-            'user_email': '{{$loggedUser->email}}'
+            'user_email': '{{$loggedUser->email}}',
+            'institution': '{{ $loggedUser->institution }}',
+            'city': '{{ $loggedUser->city }}',
+            'state': '{{ $loggedUser->state }}',
+            'students_count': '{{ $loggedUser->students_count }}',
+            'teachers_count': '{{ $loggedUser->teachers_count }}',
+            'classes_count': '{{ $loggedUser->classes_count }}',
         }];
     </script>
 

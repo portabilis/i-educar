@@ -45,11 +45,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
         $this->response = [];
     }
 
-    protected function currentUser()
-    {
-        return Portabilis_Utils_User::load($this->getSession()->id_pessoa);
-    }
-
     protected function getNivelAcesso()
     {
         return Portabilis_Utils_User::getNivelAcesso();
@@ -91,19 +86,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
         }
 
         return $canAccess;
-    }
-
-    protected function validatesUserIsAdmin()
-    {
-        $user = $this->currentUser();
-
-        if (!$user['super']) {
-            $this->messenger->append('O usuário logado deve ser o admin');
-
-            return false;
-        }
-
-        return true;
     }
 
     protected function validatesId($resourceName, $options = [])

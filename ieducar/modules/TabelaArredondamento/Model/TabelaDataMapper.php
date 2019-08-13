@@ -15,7 +15,8 @@ class TabelaArredondamento_Model_TabelaDataMapper extends CoreExt_DataMapper
         'id' => 'id',
         'instituicao' => 'instituicao_id',
         'nome' => 'nome',
-        'tipoNota' => 'tipo_nota'
+        'tipoNota' => 'tipo_nota',
+        'arredondarNota' => 'arredondar_nota',
     ];
 
     protected $_primaryKey = [

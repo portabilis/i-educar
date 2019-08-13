@@ -15,10 +15,9 @@ país por meio da educação. Junte-se a nós!**
 
 1. [Sobre o i-Educar](#sobre-o-i-educar)
 2. [Comunicação](#comunicação)
-3. [Roadmap de tecnologia](#roadmap-de-tecnologia)
-4. [Como contribuir](#como-contribuir)
-5. [Instalação](#instalação)
-6. [FAQ](#perguntas-frequentes-faq)
+3. [Como contribuir](#como-contribuir)
+4. [Instalação](#instalação)
+5. [FAQ](#perguntas-frequentes-faq)
 
 ## Sobre i-Educar
 
@@ -55,26 +54,6 @@ colaboradores do projeto.
 Qualquer outro grupo de discussão não é reconhecido oficialmente pela
 comunidade i-Educar e não terá suporte da Portabilis - mantenedora do projeto.
 
-## Roadmap de tecnologia
-
-O i-Educar por ser um sistema antigo e por não ter seguido um padrão específico,
-precisa passar por um processo de melhoria para diminuir a quantidade de bugs,
-melhorar a manutenibilidade e enfim permitir a evolução através de features.
-
-### Passos iniciais
-
-- Adoção do [PSR1](https://www.php-fig.org/psr/psr-1/)
-- Adoção do [PSR2](https://www.php-fig.org/psr/psr-2/)
-- Adoção do [PSR4](https://www.php-fig.org/psr/psr-4/)
-- Iniciar a cobertura de testes para possibilitar refatorações
-
-### Planejamento Técnico
-
-Em nossa wiki você encontra um planejamento mais técnico de como devemos
-prosseguir com as melhorias e evoluções do nosso projeto.
-[Clique aqui](https://github.com/portabilis/i-educar/wiki/Planejamento-T%C3%A9cnico)
-para ler mais a respeito.
-
 ## Como contribuir
 
 Contribuições são **super bem vindas**! Se você tem vontade de construir o
@@ -90,16 +69,48 @@ ajudar a alcançar nossos objetivos.
 - [Instalação em servidor](#instalação-em-servidor)
 - [Instalação do pacote de relatórios](#instalação-do-pacote-de-relatórios)
 - [Upgrade](#upgrade)
-- [Criando um build de distribuição](#criando-um-build-de-distribuição)
 
 ### Depêndencias
 
 Para executar o projeto é necessário a utilização de alguns softwares para
 facilitar o desenvolvimento.
 
+#### Docker
+
 - [Docker](https://docs.docker.com/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 - [Git](https://git-scm.com/downloads)
+
+#### Servidor
+
+- [PHP](http://php.net/) versão 7.2 ou maior
+- [Postgres](https://www.postgresql.org/) versão 9.5 ou superior
+- [Nginx](https://www.nginx.com/)
+
+As seguintes extensões do PHP são necessárias:
+
+- bcmath
+- ctype
+- curl
+- dom
+- fileinfo
+- gd
+- iconv
+- json
+- libxml
+- mbstring
+- openssl
+- pcre
+- PDO
+- pgsql
+- Phar
+- SimpleXML
+- tokenizer
+- xml
+- xmlreader
+- xmlwriter
+- zip
+- zlib
 
 ### Instalação utilizando Docker
 
@@ -182,42 +193,6 @@ Antes de tudo faça [download](https://github.com/portabilis/i-educar/releases)
 da versão mais recente do i-Educar e extraia o conteúdo do release em uma pasta
 no seu servidor. O instalador está disponível desde a versão `2.1.0`.
 
-#### Requerimentos
-
-Para executar o i-Educar em um servidor você precisa dos seguintes programas:
-
-- [PHP](http://php.net/) versão 7.1.3 ou maior
-- [Postgres](https://www.postgresql.org/) versão 9.5 ou superior
-- [Nginx](https://www.nginx.com/)
-
-Você precisa das seguintes extensões para PHP:
-
-- bcmath
-- ctype
-- curl
-- dom
-- fileinfo
-- gd
-- iconv
-- json
-- libxml
-- mbstring
-- openssl
-- PDO
-- pgsql
-- Phar
-- SimpleXML
-- tokenizer
-- xml
-- xmlreader
-- xmlwriter
-- zip
-- zlib
-- pcre
-
-O instalador do i-Educar te avisa caso alguma extensão esteja faltando então não
-se preocupe em instalar tudo agora.
-
 #### Configurando o servidor
 
 O **Nginx** precisa estar devidamente configurado para rodar o i-Educar e
@@ -272,16 +247,6 @@ e siga as instruções de instalação.
 
 - [Upgrade para 2.2 da 2.1](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.2-da-2.1).
 - [Upgrade para 2.1 da 2.0](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.1-da-2.0).
- 
-#### Criando um build de distribuição
-
-Para criar um build de distribuição de uma nova versão do i-Educar basta
-executar o script `build` da pasta `scripts`:
-
-```bash
-# (Docker) docker-compose exec php scripts/build
-scripts/build
-```
 
 ## Perguntas frequentes (FAQ)
 

@@ -125,11 +125,11 @@ class indice extends clsListagem
                 $dataEnturmacao = dataToBrasil($registro['data_enturmacao']);
                 $dataSaida = dataToBrasil($registro['data_exclusao']);
                 $dataSaidaMatricula = dataToBrasil($detalhe_matricula['data_cancel']);
-                $transferido = $registro['transferido'] == 't' ? 'Sim' : 'Não';
-                $remanejado = $registro['remanejado'] == 't' ? 'Sim' : 'Não';
-                $abandono = $registro['abandono'] == 't' ? 'Sim' : 'Não';
-                $reclassificado = $registro['reclassificado'] == 't' ? 'Sim' : 'Não';
-                $falecido = $registro['falecido'] == 't' ? 'Sim' : 'Não';
+                $transferido = $registro['transferido'] ? 'Sim' : 'Não';
+                $remanejado = $registro['remanejado'] ? 'Sim' : 'Não';
+                $abandono = $registro['abandono'] ? 'Sim' : 'Não';
+                $reclassificado = $registro['reclassificado'] ? 'Sim' : 'Não';
+                $falecido = $registro['falecido'] ? 'Sim' : 'Não';
 
                 $usuarioCriou = new clsPessoa_($registro['ref_usuario_cad']);
                 $usuarioCriou = $usuarioCriou->detalhe();
