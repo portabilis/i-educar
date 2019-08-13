@@ -39,6 +39,7 @@ class clsPmieducarUsuario extends Model
         if (is_numeric($ref_cod_escola)) {
             $this->ref_cod_escola = $ref_cod_escola;
         }
+
         if (is_numeric($cod_usuario)) {
             $this->cod_usuario = $cod_usuario;
         }

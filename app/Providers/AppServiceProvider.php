@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\SchoolManager;
+use App\Observers\SchoolManagerObserver;
+use App\Providers\Postgres\DatabaseServiceProvider;
 use Exception;
 use App\Services\CacheManager;
 use App\Models\LegacyInstitution;
@@ -129,5 +132,6 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Cache::swap(new CacheManager(app()));
+        $this->app->register(DatabaseServiceProvider::class);
     }
 }

@@ -46,6 +46,11 @@ class CoreExt_Controller_DispatcherTest extends PHPUnit\Framework\TestCase
 {
   protected $_dispatcher = NULL;
 
+  /**
+  * @var string
+  */
+  private $requestUri;
+
   protected $_uris = array(
     0 => array('uri' => 'http://www.example.com/'),
     1 => array('uri' => 'http://www.example.com/index.php'),
@@ -71,6 +76,7 @@ class CoreExt_Controller_DispatcherTest extends PHPUnit\Framework\TestCase
    */
   protected function setUp(): void
   {
+    $this->requestUri = $_SERVER['REQUEST_URI'];
     $_SERVER['REQUEST_URI'] = $this->_uris[0]['uri'];
     $_SERVER['SCRIPT_FILENAME'] = '/var/www/ieducar/index.php';
     $this->_dispatcher = new CoreExt_Controller_Dispatcher_AbstractStub();
@@ -153,5 +159,11 @@ class CoreExt_Controller_DispatcherTest extends PHPUnit\Framework\TestCase
     $this->assertEquals('action', $this->_dispatcher->getActionName(), $this->_getRequestUri(5));
     $this->_setRequestUri(6);
     $this->assertEquals('index', $this->_dispatcher->getActionName(), $this->_getRequestUri(6));
+  }
+
+  public function tearDown()
+  {
+    $_SERVER['REQUEST_URI']= $this->requestUri;
+    $_GET = [];
   }
 }

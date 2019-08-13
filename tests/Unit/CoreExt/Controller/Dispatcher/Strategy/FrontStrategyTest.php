@@ -50,10 +50,16 @@ class CoreExt_Controller_Dispatcher_Strategy_FrontStrategyTest extends PHPUnit\F
   protected $_frontController = NULL;
   protected $_pageStrategy = NULL;
 
+  /**
+   * @var string
+   */
+  private $requestUri;
+
   public function __construct($name = null, array $data = [], $dataName = '')
   {
       parent::__construct($name, $data, $dataName);
-    $this->_path = realpath(dirname(__FILE__) . '/../../_stub');
+      $this->_path = realpath(dirname(__FILE__) . '/../../_stub');
+      $this->requestUri = $_SERVER['REQUEST_URI'];
   }
 
   protected function setUp(): void
@@ -75,5 +81,10 @@ class CoreExt_Controller_Dispatcher_Strategy_FrontStrategyTest extends PHPUnit\F
   public function testControllerConfiguradoCorretamente()
   {
     $this->assertSame($this->_frontController, $this->_pageStrategy->getController());
+  }
+
+  public function tearDown()
+  {
+    $_SERVER['REQUEST_URI']= $this->requestUri;
   }
 }

@@ -73,7 +73,7 @@ class clsAgenda
 
         if( ! $this->agenda && $this->cod_pessoa_dono )
         {
-            $db->Consulta( "SELECT cod_agenda, publica, envia_alerta, nm_agenda FROM agenda WHERE ref_ref_cod_pessoa_own = '{$this->cod_pessoa_dono}'" );
+            $db->Consulta( "SELECT cod_agenda, publica, envia_alerta, nm_agenda FROM portal.agenda WHERE ref_ref_cod_pessoa_own = '{$this->cod_pessoa_dono}'" );
             if( $db->ProximoRegistro() )
             {
                 list( $this->agenda, $this->publica, $this->envia_alerta, $this->nome_agenda ) = $db->Tupla();
@@ -88,7 +88,7 @@ class clsAgenda
         {
             if( ! $this->cod_pessoa_dono && $this->agenda )
             {
-                $db->Consulta( "SELECT ref_ref_cod_pessoa_own, publica, envia_alerta, nm_agenda FROM agenda WHERE cod_agenda = '{$this->agenda}'" );
+                $db->Consulta( "SELECT ref_ref_cod_pessoa_own, publica, envia_alerta, nm_agenda FROM portal.agenda WHERE cod_agenda = '{$this->agenda}'" );
                 if( $db->ProximoRegistro() )
                 {
                     list( $this->cod_pessoa_dono, $this->publica, $this->envia_alerta, $this->nome_agenda ) = $db->Tupla();
@@ -113,7 +113,7 @@ class clsAgenda
             $nome .= " " . $nomeArr[ count( $nomeArr ) - 1 ];
         }
 
-        $db->Consulta( "INSERT INTO agenda( ref_ref_cod_pessoa_cad, ref_ref_cod_pessoa_own, nm_agenda, data_cad ) VALUES ( $this->cod_pessoa_dono, $this->cod_pessoa_dono, '{$nome}', NOW() )" );
+        $db->Consulta( "INSERT INTO portal.agenda ( ref_ref_cod_pessoa_cad, ref_ref_cod_pessoa_own, nm_agenda, data_cad ) VALUES ( $this->cod_pessoa_dono, $this->cod_pessoa_dono, '{$nome}', NOW() )" );
         $this->agenda = $db->InsertId( "agenda_cod_agenda_seq" );
 
         $this->publica = 0;
@@ -125,7 +125,7 @@ class clsAgenda
     {
 
         $db = new clsBanco();
-        $db->Consulta( "SELECT data_inicio, cod_agenda_compromisso, versao, data_fim, ref_cod_agenda, titulo, descricao, importante, publico FROM agenda_compromisso WHERE ref_cod_agenda = '{$cod_agenda}' AND cod_agenda_compromisso = '$cod_compromisso' AND ativo = 1 AND data_fim IS NOT NULL" );
+        $db->Consulta( "SELECT data_inicio, cod_agenda_compromisso, versao, data_fim, ref_cod_agenda, titulo, descricao, importante, publico FROM portal.agenda_compromisso WHERE ref_cod_agenda = '{$cod_agenda}' AND cod_agenda_compromisso = '$cod_compromisso' AND ativo = 1 AND data_fim IS NOT NULL" );
         if($db->ProximoRegistro())
         {
             return $db->Tupla();
@@ -139,7 +139,7 @@ class clsAgenda
         $db = new clsBanco();
         $this->compromissos = array();
         //echo "SELECT data_inicio, cod_agenda_compromisso, versao, data_fim, titulo, descricao, importante, publico FROM agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND ativo = 1 AND data_fim IS NOT NULL AND data_inicio >= '{$data_inicio}' AND data_inicio <= '{$data_fim}' ORDER BY data_inicio ASC<br>";
-        $db->Consulta( "SELECT data_inicio, cod_agenda_compromisso, versao, data_fim, titulo, descricao, importante, publico FROM agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND ativo = 1 AND data_fim IS NOT NULL AND data_inicio >= '{$data_inicio}' AND data_inicio <= '{$data_fim}' ORDER BY data_inicio ASC" );
+        $db->Consulta( "SELECT data_inicio, cod_agenda_compromisso, versao, data_fim, titulo, descricao, importante, publico FROM portal.agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND ativo = 1 AND data_fim IS NOT NULL AND data_inicio >= '{$data_inicio}' AND data_inicio <= '{$data_fim}' ORDER BY data_inicio ASC" );
         while ( $db->ProximoRegistro() )
         {
             $temp_arr_compromisso = array();
@@ -202,7 +202,7 @@ class clsAgenda
         {
             $this->versoes = array();
             // seleciona as versoes desse compromisso
-            $db->Consulta( "SELECT versao, ref_ref_cod_pessoa_cad, ativo, data_inicio, titulo, descricao, importante, publico, data_cadastro, data_fim FROM agenda_compromisso WHERE cod_agenda_compromisso = '{$_GET["versoes"]}' ORDER BY versao DESC" );
+            $db->Consulta( "SELECT versao, ref_ref_cod_pessoa_cad, ativo, data_inicio, titulo, descricao, importante, publico, data_cadastro, data_fim FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$_GET["versoes"]}' ORDER BY versao DESC" );
             while ( $db->ProximoRegistro() )
             {
                 unset( $versao, $ref_ref_cod_pessoa_cad, $ativo, $data_inicio, $titulo, $descricao, $importante, $publico, $data_cadastro, $data_fim );
@@ -256,9 +256,9 @@ class clsAgenda
                                     $valorDataFim .= ", '{$data_cad} {$hora_fim}'";
                                 }
                             }
-                            $maxCod = $db->CampoUnico( "SELECT MAX( cod_agenda_compromisso ) FROM agenda_compromisso" );
+                            $maxCod = $db->CampoUnico( "SELECT MAX( cod_agenda_compromisso ) FROM portal.agenda_compromisso" );
                             $maxCod++;
-                            $db->Consulta( "INSERT INTO agenda_compromisso( cod_agenda_compromisso, versao, ref_cod_agenda, ref_ref_cod_pessoa_cad,data_inicio, titulo, descricao, data_cadastro {$campos} {$campoDataFim}) VALUES (  '{$maxCod}', '1', '{$this->agenda}', '{$this->editor}', '{$data_cad} {$hora_inicio}', $edit_titulo, $edit_descricao, NOW() {$valores} {$valorDataFim} )" );
+                            $db->Consulta( "INSERT INTO portal.agenda_compromisso( cod_agenda_compromisso, versao, ref_cod_agenda, ref_ref_cod_pessoa_cad,data_inicio, titulo, descricao, data_cadastro {$campos} {$campoDataFim}) VALUES (  '{$maxCod}', '1', '{$this->agenda}', '{$this->editor}', '{$data_cad} {$hora_inicio}', $edit_titulo, $edit_descricao, NOW() {$valores} {$valorDataFim} )" );
                             $timeNovo += 86400 * $repetir_dias;
                         }
                     }
@@ -281,11 +281,11 @@ class clsAgenda
                         }
                         else
                         {
-                            $maxCod = $db->CampoUnico( "SELECT MAX( cod_agenda_compromisso ) FROM agenda_compromisso" );
+                            $maxCod = $db->CampoUnico( "SELECT MAX( cod_agenda_compromisso ) FROM portal.agenda_compromisso" );
                             $maxCod++;
                             $versao = 1;
                         }
-                        $db->Consulta( "INSERT INTO agenda_compromisso( cod_agenda_compromisso, versao, ref_cod_agenda, ref_ref_cod_pessoa_cad,data_inicio, titulo, descricao, data_cadastro {$campos}) VALUES (  '{$maxCod}', '{$versao}', '{$this->agenda}', '{$this->editor}', '{$data_cad} {$hora_inicio}', $edit_titulo, $edit_descricao, NOW() {$valores} )" );
+                        $db->Consulta( "INSERT INTO portal.agenda_compromisso( cod_agenda_compromisso, versao, ref_cod_agenda, ref_ref_cod_pessoa_cad,data_inicio, titulo, descricao, data_cadastro {$campos}) VALUES (  '{$maxCod}', '{$versao}', '{$this->agenda}', '{$this->editor}', '{$data_cad} {$hora_inicio}', $edit_titulo, $edit_descricao, NOW() {$valores} )" );
                     }
                     if( $tipo_compromisso )
                     {
@@ -316,7 +316,7 @@ class clsAgenda
         {
             $verifica = true;
 
-            $versaoAtual = $db->CampoUnico( "SELECT MAX( versao ) FROM agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}'" );
+            $versaoAtual = $db->CampoUnico( "SELECT MAX( versao ) FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}'" );
             $versaoNova = $versaoAtual + 1;
             $campos = "";
             $valores = "";
@@ -368,7 +368,7 @@ class clsAgenda
 
             if( $verifica )
             {
-                $db->Consulta( "UPDATE agenda_compromisso SET ativo = 0 WHERE cod_agenda_compromisso = '{$cod_compromisso}'" );
+                $db->Consulta( "UPDATE portal.agenda_compromisso SET ativo = 0 WHERE cod_agenda_compromisso = '{$cod_compromisso}'" );
                 $this->cadastraCompromisso( $cod_compromisso, $titulo, $conteudo, $data, $hora_inicio, $hora_fim, $publico, $importante );
             }
         }
@@ -382,11 +382,11 @@ class clsAgenda
             if( preg_match( "/[0-9]{2}:[0-9]{2}/", $hora_fim ) )
             {
                 // pega a versao da nota
-                $versaoAtual = $db->CampoUnico( "SELECT MAX( versao ) FROM agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}'" );
+                $versaoAtual = $db->CampoUnico( "SELECT MAX( versao ) FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}'" );
                 $versaoNova = $versaoAtual + 1;
 
                 // pega os dados da nota
-                $db->Consulta( "SELECT data_inicio, titulo, descricao, importante, publico FROM agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}' AND versao = '{$versaoAtual}'" );
+                $db->Consulta( "SELECT data_inicio, titulo, descricao, importante, publico FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}' AND versao = '{$versaoAtual}'" );
                 $db->ProximoRegistro();
                 list( $data, $titulo, $descricao, $importante, $publico ) = $db->Tupla();
 
@@ -407,8 +407,8 @@ class clsAgenda
         $db = new clsBanco();
         if( $this->compromissoPertenceAgenda( $cod_compromisso ) )
         {
-            $db->Consulta( "UPDATE agenda_compromisso SET ativo = 0 WHERE cod_agenda_compromisso = '{$cod_compromisso}'" );
-            $db->Consulta( "UPDATE agenda_compromisso SET ativo = 1 WHERE cod_agenda_compromisso = '{$cod_compromisso}' AND versao = '{$versao}'" );
+            $db->Consulta( "UPDATE portal.agenda_compromisso SET ativo = 0 WHERE cod_agenda_compromisso = '{$cod_compromisso}'" );
+            $db->Consulta( "UPDATE portal.agenda_compromisso SET ativo = 1 WHERE cod_agenda_compromisso = '{$cod_compromisso}' AND versao = '{$versao}'" );
             $this->erro_msg .= "Vers&atilde;o {$versao} restaurada com sucesso.<br>";
         }
     }
@@ -418,7 +418,7 @@ class clsAgenda
         $db = new clsBanco();
         if( $this->compromissoPertenceAgenda( $cod_compromisso ) )
         {
-            $db->Consulta( "UPDATE agenda_compromisso SET ativo = 0 WHERE cod_agenda_compromisso = '{$cod_compromisso}'" );
+            $db->Consulta( "UPDATE portal.agenda_compromisso SET ativo = 0 WHERE cod_agenda_compromisso = '{$cod_compromisso}'" );
         }
     }
 
@@ -431,13 +431,13 @@ class clsAgenda
             {
                 return true;
             }
-            $db->Consulta( "SELECT 1 FROM agenda WHERE ref_ref_cod_pessoa_own = '{$this->editor}' AND cod_agenda = '{$this->agenda}'" );
+            $db->Consulta( "SELECT 1 FROM portal.agenda WHERE ref_ref_cod_pessoa_own = '{$this->editor}' AND cod_agenda = '{$this->agenda}'" );
             if( $db->ProximoRegistro() )
             {
                 return true;
             }
 
-            $db->Consulta( "SELECT 1 FROM agenda_responsavel WHERE ref_ref_cod_pessoa_fj = '{$this->editor}' AND ref_cod_agenda = '{$this->agenda}'" );
+            $db->Consulta( "SELECT 1 FROM portal.agenda_responsavel WHERE ref_ref_cod_pessoa_fj = '{$this->editor}' AND ref_cod_agenda = '{$this->agenda}'" );
             if( $db->ProximoRegistro() )
             {
                 return true;
@@ -476,7 +476,7 @@ class clsAgenda
         $db = new clsBanco();
         if( $this->compromissoPertenceAgenda( $cod_compromisso ) )
         {
-            $maxVersao = $db->CampoUnico( "SELECT MAX( versao ) FROM agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}'" );
+            $maxVersao = $db->CampoUnico( "SELECT MAX( versao ) FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}'" );
             return $maxVersao;
         }
         return 0;
@@ -487,7 +487,7 @@ class clsAgenda
         $db = new clsBanco();
         if($cod_compromisso)
         {
-            $db->Consulta( "SELECT 1 FROM agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}' AND ref_cod_agenda = '{$this->agenda}'" );
+            $db->Consulta( "SELECT 1 FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}' AND ref_cod_agenda = '{$this->agenda}'" );
             if( $db->Num_Linhas() )
             {
                 return true;
@@ -582,7 +582,7 @@ class clsAgenda
                     $data_aviso = date("d/m/Y",strtotime($aviso['data_aviso']) - $detalhe['avisa_intranet']*86400);
                     if(date("d/m/Y",$this->time_atual) >= $data_aviso && date("d/m/Y",$this->time_atual) < date("d/m/Y",strtotime($aviso['data_aviso'])))
                     {
-                        $db->Consulta( "SELECT data_inicio, data_fim, descricao FROM agenda_compromisso WHERE cod_agenda_compromisso = '{$aviso['ref_cod_agenda_compromisso']}' AND ativo = 1 ORDER BY data_inicio ASC" );
+                        $db->Consulta( "SELECT data_inicio, data_fim, descricao FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$aviso['ref_cod_agenda_compromisso']}' AND ativo = 1 ORDER BY data_inicio ASC" );
                         if($db->ProximoRegistro())
                         {
                             $tupla = $db->Tupla();

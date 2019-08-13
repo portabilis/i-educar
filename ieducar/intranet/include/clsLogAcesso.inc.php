@@ -50,7 +50,7 @@ class clsLogAcesso
         $this->cod_pessoa = $cod_pessoa;
         $this->obs = $obs;
         $this->sucesso = $sucesso;
-        $this->tabela = "acesso";
+        $this->tabela = "portal.acesso";
     }
 
     /**

@@ -15,13 +15,13 @@ function chamaGetPonto(){
     campoPonto.options[0].text = 'Selecione uma rota acima';
 
   }else{
-    
+
     campoPonto.length = 1;
     campoPonto.disabled = true;
     campoPonto.options[0].text = 'Carregando pontos...';
-    
+
     var xml_ponto = new ajax( getPonto );
-    xml_ponto.envia( "ponto_xml.php?rota="+campoRota ); 
+    xml_ponto.envia( "ponto_xml.php?rota="+campoRota );
   }
 }
 
@@ -45,7 +45,7 @@ function getPonto( xml_ponto )
   else
     campoPonto.options[0].text = 'Rota sem pontos';
 
-  
+
 }
 
 // before page is ready
@@ -89,27 +89,27 @@ resourceOptions.handleGet = function(dataResponse) {
   $resourceNotice.hide();
 
   $deleteButton.removeAttr('disabled').show();
-  
+
   $('<input>');
   if (dataResponse.pessoa)
     getPersonDetails(dataResponse.pessoa);
 
   $idField.val(dataResponse.id);
-    
+
   $j('#rota').val(dataResponse.rota);
   chamaGetPonto();
 
   $j('#observacao').val(dataResponse.observacao);
-  $j('#turno').val(dataResponse.turno);  
+  $j('#turno').val(dataResponse.turno);
 
-  $j('#nome').val(dataResponse.pessoa+' - '+dataResponse.pessoa_nome);  
-  $j('#pessoa_id').val(dataResponse.pessoa);  
+  $j('#nome').val(dataResponse.pessoa+' - '+dataResponse.pessoa_nome);
+  $j('#pessoa_id').val(dataResponse.pessoa);
 
   if (dataResponse.pessoaj){
-    $j('#pessoaj_destino').val(dataResponse.pessoaj+' - '+dataResponse.pessoaj_nome);  
-    $j('#pessoaj_id').val(dataResponse.pessoaj);    
+    $j('#pessoaj_destino').val(dataResponse.pessoaj+' - '+dataResponse.pessoaj_nome);
+    $j('#pessoaj_id').val(dataResponse.pessoaj);
   }
-  
+
 
 };
 
@@ -123,7 +123,7 @@ var handleGetPersonDetails = function(dataResponse) {
                                       .show().css('display', 'inline');
 
     $submitButton.removeAttr('disabled').show();
-  
+
 
   $j('#pessoa_id').val(dataResponse.id);
   $nomeField.val(dataResponse.id + ' - ' + dataResponse.nome);
@@ -174,7 +174,7 @@ function afterChangePessoa(targetWindow, pessoaId) {
   window.setTimeout(function() {
     messageUtils.success('Pessoa alterada com sucesso', $nomeField);
 
-    $j('#pessoa_id').val(pessoaId);
+    pessoaId = $j('#pessoa_id').val();
     getPersonDetails(pessoaId);
 
     if ($nomeField.is(':active'))

@@ -78,4 +78,9 @@ class Avaliacao_Service_ParecerDescritivoAlunoTest extends Avaliacao_Service_Tes
 
     $service = $this->_getServiceInstance();
   }
+
+  public function tearDown(): void
+  {
+    Portabilis_Utils_Database::$_db = null;
+  }
 }

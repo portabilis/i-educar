@@ -44,14 +44,14 @@ class MunicipioController extends ApiCoreController
                 FROM
                     public.municipio
                 WHERE TRUE
-                    AND LOWER(UNACCENT(nome)) LIKE '%' || LOWER(UNACCENT($1)) || '%'
+                    AND LOWER(UNACCENT(nome)) LIKE '%' || LOWER(UNACCENT(:nome)) || '%'
                 ORDER BY
                     size,
                     nome
                 LIMIT 15
 SQL;
 
-            $tmpResults = $this->fetchPreparedQuery($sql, ['params' => trim($this->getRequest()->query)], false);
+            $tmpResults = $this->fetchPreparedQuery($sql, ['nome' => trim($this->getRequest()->query)], false);
             $results = [];
 
             foreach ($tmpResults as $result) {

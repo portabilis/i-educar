@@ -123,7 +123,7 @@ var handleGetMatriculas = function(dataResponse) {
       }
 
       if($j('#can_show_dependencia').val() == 1){
-        var dependencia = matricula.dependencia == 't' ? 'Sim' : stringUtils.toUtf8('Não');
+        var dependencia = matricula.dependencia ? 'Sim' : stringUtils.toUtf8('Não');
         $j('<td>').html(dependencia).appendTo($tr);
       }
 
