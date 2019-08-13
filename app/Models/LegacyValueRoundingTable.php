@@ -12,11 +12,6 @@ class LegacyValueRoundingTable extends Model
     protected $table = 'modules.tabela_arredondamento_valor';
 
     /**
-     * @var string
-     */
-    protected $primaryKey = 'id';
-
-    /**
      * @var array
      */
     protected $fillable = [
