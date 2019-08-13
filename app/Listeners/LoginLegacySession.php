@@ -24,10 +24,10 @@ class LoginLegacySession
      */
     private function getTeachersCount()
     {
-        return DB::table('pmieducar.servidor s')
-            ->join('pmieducar.servidor_funcao sf', 'sf.ref_cod_servidor', '=', 's.cod_servidor')
-            ->join('pmieducar.funcao f', 'f.cod_funcao', '=', 'sf.ref_cod_funcao')
-            ->where('f.professor', 1)
+        return DB::table('pmieducar.servidor')
+            ->join('pmieducar.servidor_funcao', 'servidor_funcao.ref_cod_servidor', '=', 'servidor.cod_servidor')
+            ->join('pmieducar.funcao', 'funcao.cod_funcao', '=', 'servidor_funcao.ref_cod_funcao')
+            ->where('funcao.professor', 1)
             ->count();
     }
 
