@@ -67,7 +67,7 @@ $host = $_SERVER['HTTP_HOST'] ?? '';
 $dbCheck = false;
 
 if ($envExists) {
-    (new Dotenv\Dotenv($rootDir))->load();
+    Dotenv\Dotenv::create($rootDir)->load();
     $dbCheck = $installer->checkDatabaseConnection();
     $isInstalled = $installer->isInstalled();
 }

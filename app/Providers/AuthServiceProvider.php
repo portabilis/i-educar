@@ -61,6 +61,10 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
         $this->registerGates();
         $this->registerUserProviders();
+
+        if ($this->app->runningInConsole()) {
+            Auth::loginUsingId(1);
+        }
     }
 
     /**

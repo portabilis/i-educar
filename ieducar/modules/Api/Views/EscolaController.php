@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchool;
+
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'Portabilis/Array/Utils.php';
 require_once 'include/clsBase.inc.php';
@@ -636,6 +638,34 @@ class EscolaController extends ApiCoreController
         return ['options' => $escolas];
     }
 
+    /**
+     * Retorna os parâmetros das escolas.
+     *
+     *  - cod_escola
+     *  - utiliza_regra_diferenciada
+     *  - updated_at
+     *
+     * A query string "modified" pode ser informada para limitar os registros
+     * por data.
+     *
+     * @return array
+     */
+    protected function getParametrosEscolas()
+    {
+        $modified = request('modified');
+
+        $schools = LegacySchool::query()
+            ->select(['cod_escola', 'utiliza_regra_diferenciada', 'updated_at'])
+            ->when($modified, function ($query) use ($modified) {
+                return $query->where('updated_at', '>=', $modified);
+            })
+            ->get();
+
+        return [
+            'escolas' => $schools,
+        ];
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'escola')) {
@@ -662,6 +692,8 @@ class EscolaController extends ApiCoreController
             $this->appendResponse($this->getEscolasUsuarios());
         } elseif ($this->isRequestFor('get', 'escolas-para-selecao')) {
             $this->appendResponse($this->getEscolasSelecao());
+        } elseif ($this->isRequestFor('get', 'parametros-escolas')) {
+            $this->appendResponse($this->getParametrosEscolas());
         } else {
             $this->notImplementedOperationError();
         }

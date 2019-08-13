@@ -40,6 +40,14 @@ class SequencialEnturmacao
             $this->subtraiSequencialPosterior($sequencialFechamento);
         }
 
+        if ($this->matriculaDependencia()) {
+            $novoSequencial = $this->sequencialAlunoDependencia();
+
+            $this->somaSequencialPosterior($novoSequencial);
+
+            return $novoSequencial;
+        }
+
         if ($this->enturmarPorUltimo()) {
             $novoSequencial = $this->sequencialAlunoAposData();
 
@@ -138,6 +146,117 @@ class SequencialEnturmacao
         $novoSequencial = $novoSequencial ? $novoSequencial : 1;
 
         return $novoSequencial;
+    }
+
+    private function sequencialAlunoDependencia()
+    {
+        $sequencialPorNome = $this->sequencialAlunoDependenciaOrdemAlfabetica();
+
+        if ($sequencialPorNome) {
+            return $sequencialPorNome;
+        }
+
+        $sequencialPorData = $this->sequencialAlunoDependenciaPorData();
+
+        if ($sequencialPorData) {
+            return $sequencialPorData;
+        }
+
+        return $this->sequencialAlunoDependenciaAposRegular();
+    }
+
+    private function sequencialAlunoDependenciaAposRegular()
+    {
+        $sql = "SELECT MAX(sequencial_fechamento)+1 as sequencial
+            FROM pmieducar.matricula_turma
+            INNER JOIN pmieducar.matricula ON (matricula.cod_matricula = matricula_turma.ref_cod_matricula)
+            INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
+            INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+            WHERE matricula.ativo = 1
+            AND ref_cod_turma = {$this->refCodTurma}
+            AND (CASE
+                WHEN matricula_turma.ativo = 1 THEN TRUE
+                WHEN matricula_turma.transferido THEN TRUE
+                WHEN matricula_turma.remanejado THEN TRUE
+                WHEN matricula.dependencia THEN TRUE
+                WHEN matricula_turma.abandono THEN TRUE
+                WHEN matricula_turma.reclassificado THEN TRUE
+                ELSE FALSE
+            END)
+            AND matricula.dependencia = false";
+
+        return DB::selectOne($sql)->sequencial ?: 1;
+    }
+
+    private function sequencialAlunoDependenciaOrdemAlfabetica()
+    {
+        $sql = "SELECT MAX(sequencial_fechamento)+1 as sequencial
+            FROM pmieducar.matricula_turma
+            INNER JOIN pmieducar.matricula ON (matricula.cod_matricula = matricula_turma.ref_cod_matricula)
+            INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
+            INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+            WHERE matricula.ativo = 1
+            AND ref_cod_turma = {$this->refCodTurma}
+            AND (CASE
+                WHEN matricula_turma.ativo = 1 THEN TRUE
+                WHEN matricula_turma.transferido THEN TRUE
+                WHEN matricula_turma.remanejado THEN TRUE
+                WHEN matricula.dependencia THEN TRUE
+                WHEN matricula_turma.abandono THEN TRUE
+                WHEN matricula_turma.reclassificado THEN TRUE
+                ELSE FALSE
+            END)
+            AND matricula.dependencia = true
+            AND matricula_turma.data_enturmacao <= '{$this->dataEnturmacao}'
+            AND (CASE
+                    WHEN matricula_turma.data_enturmacao = '{$this->dataEnturmacao}'
+                        THEN pessoa.nome <= (
+                            SELECT pessoa.nome
+                            FROM pmieducar.matricula
+                            INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
+                            INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+                            WHERE matricula.cod_matricula = {$this->refCodMatricula}
+                        )
+                     ELSE TRUE
+                 END)";
+
+        return DB::selectOne($sql)->sequencial;;
+    }
+
+
+    private function sequencialAlunoDependenciaPorData()
+    {
+        $sql = "SELECT MAX(sequencial_fechamento)+1 as sequencial
+            FROM pmieducar.matricula_turma
+            INNER JOIN pmieducar.matricula ON (matricula.cod_matricula = matricula_turma.ref_cod_matricula)
+            INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
+            INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+            WHERE matricula.ativo = 1
+            AND ref_cod_turma = {$this->refCodTurma}
+            AND (CASE
+                WHEN matricula_turma.ativo = 1 THEN TRUE
+                WHEN matricula_turma.transferido THEN TRUE
+                WHEN matricula_turma.remanejado THEN TRUE
+                WHEN matricula.dependencia THEN TRUE
+                WHEN matricula_turma.abandono THEN TRUE
+                WHEN matricula_turma.reclassificado THEN TRUE
+                ELSE FALSE
+            END)
+            AND matricula.dependencia = true
+            AND matricula_turma.data_enturmacao <= '{$this->dataEnturmacao}'
+            AND (CASE
+                    WHEN matricula_turma.data_enturmacao = '{$this->dataEnturmacao}'
+                        THEN pessoa.nome <= (
+                            SELECT pessoa.nome
+                            FROM pmieducar.matricula
+                            INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
+                            INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+                            WHERE matricula.cod_matricula = {$this->refCodMatricula}
+                        )
+                     ELSE TRUE
+                 END)";
+
+        return DB::selectOne($sql)->sequencial;;
     }
 
     private function sequencialAlunoOrdemAlfabetica()

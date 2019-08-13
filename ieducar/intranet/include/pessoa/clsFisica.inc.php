@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Session;
 require_once 'include/clsBanco.inc.php';
 require_once 'include/Geral.inc.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
+
 class clsFisica
 {
     public $idpes;
@@ -19,8 +20,13 @@ class clsFisica
     public $data_uniao;
     public $data_obito;
     public $nome_social;
+
     /**
-     * Nacionalidade 1 - Brasileiro 2 - Naturalizado Brasileiro 3 - Estrangeiro
+     * Nacionalidade:
+     *
+     *  1 - Brasileiro
+     *  2 - Naturalizado Brasileiro
+     *  3 - Estrangeiro
      *
      * @var $nacionalidade
      */
@@ -59,15 +65,9 @@ class clsFisica
     public $horario_final_trabalho;
     public $pais_residencia;
     public $localizacao_diferenciada;
-
     public $tabela;
     public $schema;
 
-    /**
-     * Construtor
-     *
-     * @return Object:clsFisica
-     */
     public function __construct(
         $idpes=false,
         $data_nasc=false,
@@ -216,7 +216,7 @@ class clsFisica
     public function cadastra()
     {
         $db = new clsBanco();
-        // verificacoes de campos obrigatorios para insercao
+
         if (is_numeric($this->idpes) && is_numeric($this->idpes_cad)) {
             $campos = '';
             $valores = '';
@@ -745,9 +745,8 @@ class clsFisica
      */
     public function lista($int_idpes=false, $data_data_nasc=false, $str_sexo=false, $int_idpes_mae=false, $int_idpes_pai=false, $int_idpes_responsavel=false, $int_idesco=false, $int_ideciv=false, $int_idpes_con=false, $data_data_uniao=false, $data_data_obito=false, $int_nacionalidade=false, $int_idpais_estrangeiro=false, $data_data_chagada_brasil=false, $int_idmun_nascimento=false, $str_ultima_empresa=false, $int_idocup=false, $str_nome_mae=false, $str_nome_pai=false, $str_nome_conjuge=false, $str_nome_responsavel=false, $str_justificativa_provisorio=false, $str_ordenacao=false, $int_limite_ini=0, $int_limite_qtd=20, $arrayint_idisin = false, $arrayint_idnotin = false, $str_data_nasc_ini = false, $str_data_nasc_fim = false, $int_mes_aniversario = false, $int_ref_cod_sistema = false, $int_cpf = false)
     {
-        // verificacoes de filtros a serem usados
-
         $whereAnd = 'WHERE ';
+
         if (is_numeric($int_idpes)) {
             $where .= "{$whereAnd}idpes = '$int_idpes'";
             $whereAnd = ' AND ';

@@ -26,6 +26,8 @@ class DatabaseServiceProvider extends ServiceProvider
                 $config
             );
 
+            $new_connection->getPdo()->exec('SET search_path = "$user", public, portal, cadastro, pmieducar, urbano, modules;');
+
             return $new_connection;
         });
 

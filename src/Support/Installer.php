@@ -35,7 +35,6 @@ class Installer
 
     protected $commandsMap = [
         'key' => 'key:generate',
-        'database' => 'legacy:database',
         'link' => 'legacy:link',
         'migrate' => 'migrate --force',
         'password' => 'admin:password',

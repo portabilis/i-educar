@@ -22,15 +22,15 @@ function ajax( funcaoRetorno )
 			xml = new XMLHttpRequest();
 			xml.args = args;
 			xml.personalCallback = funcaoRetorno;
-			xml.onreadystatechange = function(){ 
-				if( xml.readyState > 3 ) { 
-					if ( xml.status == 200 ) { 
-						xml.personalCallback( xml.responseXML, xml.args ) 
+			xml.onreadystatechange = function(){
+				if( xml.readyState > 3 ) {
+					if ( xml.status == 200 ) {
+						xml.personalCallback( xml.responseXML, xml.args )
 					} else if (xml.status == 500){
 						alert('N\u00e3o existem Componentes curriculares vinculados para a S\u00e9rie/Ano desta escola. Verifique em Cadastros > S\u00e9rie > Escola-s\u00e9rie se os Componentes curriculares foram selecionados/marcados para esta S\u00e9rie/Ano.');
-					}else { 
-						alert('Erro: '+xml.status); 
-					} 
+					}else {
+						alert('Erro: '+xml.status);
+					}
 				} };
 			xml.envia = function(){xml.open("GET",addRandToURL(arguments[0]),true);xml.send(null)};
 			return xml;
@@ -244,7 +244,7 @@ function showExpansivel( largura, altura, conteudo )
 	{
 		titulo = ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ';
 	}
-	var cliqueFecha = '<a href="javascript:void(0);" id="linkFechar" onclick="fechaExpansivel( \'div_dinamico_'+exp_id+'\');" ><img src="/intranet/imagens/moldura/close.png" border="0" width="17" height="17"></a>';
+	var cliqueFecha = '<a href="javascript:void(0);" id="linkFechar" onclick="fechaExpansivel( \'div_dinamico_'+exp_id+'\');" ><img src="/intranet/imagens/close.png" border="0" width="17" height="17"></a>';
 	if (typeof arguments[3] == "number")
 	{
 		cliqueFecha = '';
@@ -854,9 +854,9 @@ function ce_atualiza_disponivel( objXML )
 	var campo_modificar = arguments[1][0];
 	var campo_atual = arguments[1][1];
 	var valor_soma  = arguments[1][2];
-	
+
 	var itens = objXML.getElementsByTagName( "item" );
-	
+
 	var valores = [];
 	for( i = 0; i < itens.length; i++ )
 	{
@@ -877,7 +877,7 @@ function ce_atualiza_disponivel( objXML )
 		document.getElementById(campo_modificar).value = valores[i] - reducao + parseInt(valor_soma);
 		document.getElementById(campo_modificar.replace('[','_[')).value = valores[i] - reducao + parseInt(valor_soma);*/
 		document.getElementById(campo_modificar).value = parseInt(valores[i]) + parseInt(valor_soma);
-		
+
 		if( document.getElementById(campo_modificar+'_') )
 		{
 			document.getElementById(campo_modificar+'_').value = parseInt(valores[i]) + parseInt(valor_soma);
@@ -1303,7 +1303,7 @@ function getPDFouvidoriaAtendimento()
 	nm_pessoa_at = document.getElementById('nm_pessoa_at').value;
 	cpf_at = document.getElementById('cpf_at').value;
 	nm_pessoa_fin = document.getElementById('nm_pessoa_fin').value;
-	tipo_atividade = document.getElementById('tipo_atividade').value; 
+	tipo_atividade = document.getElementById('tipo_atividade').value;
 	ref_cod_setor = document.getElementById('ref_cod_setor').value;
 	aberto = document.getElementById('aberto').value;
 	descricao_atend = document.getElementById('descricao_atend').value;
@@ -1375,16 +1375,16 @@ function getPDFouvidoriaAtendimentoSetor()
 	logradouro = document.getElementById('logradouro').value;
 	bairro = document.getElementById('bairro').value;
 	ref_cod_setor = document.getElementById('ref_cod_setor').value;
-	
+
 	DOM_execute_when_xmlhttpChange = function() { getPDFouvidoriaAtendimentoSetorDone(); };
-	
+
 	strURL = "xml_ouvidoria_rel_atendimento_setor.php?cod_tipo_servico="+cod_tipo_servico+"&aberto="+aberto+"&cod_atendimento="+cod_atendimento+"&logradouro="+logradouro+"&bairro="+bairro+"&ref_cod_setor="+ref_cod_setor;
-	
+
 	DOM_loadXMLDoc( strURL );
 	Obj = document.getElementById('imprimir');
 	Obj.value = 'Gerando Arquivo...';
 	Obj.onclick = function() { alert('O sistema est?gerando o arquivo. Aguarde!')};
-	
+
 }
 
 function getPDFouvidoriaAtendimentoSetorDone()

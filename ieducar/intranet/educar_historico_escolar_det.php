@@ -320,7 +320,7 @@ class indice extends clsDetalhe
                                                           WHERE cod_instituicao = (SELECT ref_cod_instituicao
                                                                                      FROM pmieducar.usuario
                                                                                     WHERE cod_usuario = $this->pessoa_logada)");
-        if($restringir_historico_escolar == 't'){
+        if($restringir_historico_escolar){
             $ref_cod_escola = $db->CampoUnico("SELECT ref_cod_escola
                                              FROM pmieducar.historico_escolar
                                             WHERE ref_cod_aluno = $this->ref_cod_aluno

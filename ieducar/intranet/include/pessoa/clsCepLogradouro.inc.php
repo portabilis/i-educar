@@ -1,61 +1,31 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*                                                                        *
-*   @author Prefeitura Municipal de Itajaí                               *
-*   @updated 29/03/2007                                                  *
-*   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-*                                                                        *
-*   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-*                       ctima@itajai.sc.gov.br                           *
-*                                                                        *
-*   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-*   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-*   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-*   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-*                                                                        *
-*   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-*   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-*   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-*   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-*                                                                        *
-*   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-*   junto  com  este  programa. Se não, escreva para a Free Software     *
-*   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-*   02111-1307, USA.                                                     *
-*                                                                        *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBanco.inc.php");
-require_once ("include/Geral.inc.php");
+
+require_once 'include/clsBanco.inc.php';
+require_once 'include/Geral.inc.php';
 
 class clsCepLogradouro
 {
-    var $cep;
-    var $idlog;
-    var $nroini;
-    var $nrofin;
+    public $cep;
+    public $idlog;
+    public $nroini;
+    public $nrofin;
+    public $tabela;
+    public $schema;
 
-    var $tabela;
-    var $schema;
-
-    /**
-     * Construtor
-     *
-     * @return Object:clsCepLogradouro
-     */
-    function __construct( $cep=false, $idlog=false, $nroini=false, $nrofin=false)
+    public function __construct($cep = false, $idlog = false, $nroini = false, $nrofin = false)
     {
         $objLogradouro = new clsLogradouro($idlog);
-        if ($objLogradouro->detalhe())
-        {
-            $this->idlog  = $idlog;
+
+        if ($objLogradouro->detalhe()) {
+            $this->idlog = $idlog;
         }
 
-        $this->cep    = $cep;
+        $this->cep = $cep;
         $this->nroini = $nroini;
         $this->nrofin = $nrofin;
 
-        $this->tabela = "cep_logradouro";
-        $this->schema = "urbano";
+        $this->tabela = 'cep_logradouro';
+        $this->schema = 'urbano';
     }
 
     /**
@@ -63,28 +33,25 @@ class clsCepLogradouro
      *
      * @return bool
      */
-    function cadastra()
+    public function cadastra()
     {
         $db = new clsBanco();
-        // verificacoes de campos obrigatorios para insercao
-        if( is_numeric($this->cep) &&    is_numeric($this->idlog) )
-        {
-            $campos = "";
-            $values = "";
-            if(is_numeric($this->nroini))
-            {
-                $campos .= ", nroini";
+
+        if (is_numeric($this->cep) && is_numeric($this->idlog)) {
+            $campos = '';
+            $values = '';
+            if (is_numeric($this->nroini)) {
+                $campos .= ', nroini';
                 $values .= ", '{$this->nroini}'";
             }
-            if(is_numeric($this->nrofin))
-            {
-                $campos .= ", nrofin";
+            if (is_numeric($this->nrofin)) {
+                $campos .= ', nrofin';
                 $valores .= ", '$this->nrofin' ";
             }
 
-            $db->Consulta( "INSERT INTO {$this->schema}.{$this->tabela} (cep,  idlog, origem_gravacao, data_cad, operacao $campos) VALUES ( '{$this->cep}', '{$this->idlog}','U', NOW(), 'I' $values )" );
-
+            $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} (cep,  idlog, origem_gravacao, data_cad, operacao $campos) VALUES ( '{$this->cep}', '{$this->idlog}','U', NOW(), 'I' $values )");
         }
+
         return false;
     }
 
@@ -93,74 +60,69 @@ class clsCepLogradouro
      *
      * @return bool
      */
-    function edita()
+    public function edita()
     {
-        // verifica campos obrigatorios para edicao
-        if(is_numeric($this->cep) &&  is_numeric($this->idlog))
-        {
-            $gruda = "";
-            if($this->nroini)
-            {
-               $set .= " nroini = '{$this->nroini}'";
-               $gruda = ", ";
-            }
-            else
-            {
-                $set .= " nroini = NULL";
-                $gruda = ", ";
+        if (is_numeric($this->cep) && is_numeric($this->idlog)) {
+            $gruda = '';
+            if ($this->nroini) {
+                $set .= " nroini = '{$this->nroini}'";
+                $gruda = ', ';
+            } else {
+                $set .= ' nroini = NULL';
+                $gruda = ', ';
             }
 
-            if($this->nrofin)
-            {
-               $set .= "$gruda nrofin = '{$this->nrofin}'";
-            }
-            else
-            {
-                $set .= " nrofin = NULL";
-                $gruda = ", ";
+            if ($this->nrofin) {
+                $set .= "$gruda nrofin = '{$this->nrofin}'";
+            } else {
+                $set .= ' nrofin = NULL';
+                $gruda = ', ';
             }
 
-            if ($set)
-            {
+            if ($set) {
                 $set = "SET {$set}";
                 $db = new clsBanco();
-                $db->Consulta( "UPDATE {$this->schema}.{$this->tabela} $set WHERE cep = '$this->cep' AND idlog = '$this->idlog" );
+                $db->Consulta("UPDATE {$this->schema}.{$this->tabela} $set WHERE cep = '$this->cep' AND idlog = '$this->idlog");
+
                 return true;
             }
         }
+
         return false;
     }
 
     /**
-    * Retorna um array com os dados de um registro.
-    * @return array
-    */
-    function existe()
+     * Retorna um array com os dados de um registro.
+     *
+     * @return array
+     */
+    public function existe()
     {
         if (is_numeric($this->cep) && is_numeric($this->idlog)) {
             $db = new clsBanco();
             $db->Consulta("SELECT 1 FROM {$this->schema}.{$this->tabela} WHERE cep = '{$this->cep}' AND idlog = '{$this->idlog}' ");
             $db->ProximoRegistro();
+
             return $db->Tupla();
         }
 
-        return FALSE;
+        return false;
     }
-
 
     /**
      * Remove o registro atual
      *
      * @return bool
      */
-    function exclui( )
+    public function exclui()
     {
-        if( is_numeric($this->cep) && is_numeric($this->idlog))
-        {
+        if (is_numeric($this->cep) && is_numeric($this->idlog)) {
             $db = new clsBanco();
             $db->Consulta("DELETE FROM {$this->schema}.{$this->tabela} WHERE cep = {$this->cep} AND idlog = {$this->idlog}");
+
             return true;
         }
+
         return false;
     }
 
@@ -169,58 +131,53 @@ class clsCepLogradouro
      *
      * @return Array
      */
-    function lista( $int_cep=false, $int_idlog=false, $int_nroini=false, $int_nrofin=false, $str_ordenacao="cep", $int_limite_ini=0, $int_limite_qtd=20 )
+    public function lista($int_cep = false, $int_idlog = false, $int_nroini = false, $int_nrofin = false, $str_ordenacao = 'cep', $int_limite_ini = 0, $int_limite_qtd = 20)
     {
-        // verificacoes de filtros a serem usados
-        $whereAnd = "WHERE ";
-        if(is_numeric($int_cep))
-        {
+        $whereAnd = 'WHERE ';
+        if (is_numeric($int_cep)) {
             $where .= "{$whereAnd}cep = '$int_cep'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if(is_numeric($int_idlog))
-        {
+        if (is_numeric($int_idlog)) {
             $where .= "{$whereAnd}idlog = '$int_idlog'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if(is_numeric( $int_nroini))
-        {
+        if (is_numeric($int_nroini)) {
             $where .= "{$whereAnd}nroini = '$int_nroini'";
-            $whereAnd = " AND ";
+            $whereAnd = ' AND ';
         }
-        if(is_numeric($int_nrofin))
-        {
+        if (is_numeric($int_nrofin)) {
             $where .= "{$whereAnd}nrofin =  '$int_nrofin'";
         }
 
-        $orderBy = "";
-        if(is_string($str_ordenacao))
-        {
+        $orderBy = '';
+        if (is_string($str_ordenacao)) {
             $orderBy = "ORDER BY $str_ordenacao";
         }
-        $limit = "";
-        if(is_numeric($int_limite_ini) &&                       is_numeric($int_limite_qtd))
-        {
+        $limit = '';
+        if (is_numeric($int_limite_ini) && is_numeric($int_limite_qtd)) {
             $limit = " LIMIT $int_limite_qtd OFFSET $int_limite_ini";
         }
 
         $db = new clsBanco();
-        $db->Consulta( "SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where" );
+        $db->Consulta("SELECT COUNT(0) AS total FROM {$this->schema}.{$this->tabela} $where");
         $db->ProximoRegistro();
-        $total = $db->Campo( "total" );
-        $db->Consulta( "SELECT cep, idlog, nroini, nrofin FROM {$this->schema}.{$this->tabela} $where $orderBy $limit" );
-        $resultado = array();
-        while ( $db->ProximoRegistro() )
-        {
+        $total = $db->Campo('total');
+        $db->Consulta("SELECT cep, idlog, nroini, nrofin FROM {$this->schema}.{$this->tabela} $where $orderBy $limit");
+
+        $resultado = [];
+
+        while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
-            $tupla["idlog"] = new clsLogradouro( $tupla["idlog"]);
-            $tupla["total"] = $total;
+            $tupla['idlog'] = new clsLogradouro($tupla['idlog']);
+            $tupla['total'] = $total;
             $resultado[] = $tupla;
         }
-        if( count( $resultado ) )
-        {
+
+        if (count($resultado)) {
             return $resultado;
         }
+
         return false;
     }
 
@@ -229,22 +186,20 @@ class clsCepLogradouro
      *
      * @return Array
      */
-    function detalhe()
+    public function detalhe()
     {
-        if($this->cep && $this->idlog)
-        {
+        if ($this->cep && $this->idlog) {
             $db = new clsBanco();
             $db->Consulta("SELECT cep, idlog, nroini, nrofin FROM {$this->schema}.{$this->tabela} WHERE cep = {$this->cep} AND idlog = {$this->idlog}");
-            if( $db->ProximoRegistro() )
-            {
+            if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 
-                $tupla["idlog"] = new clsLogradouro( $tupla["idlog"] );
+                $tupla['idlog'] = new clsLogradouro($tupla['idlog']);
 
                 return $tupla;
             }
         }
+
         return false;
     }
 }
-?>
