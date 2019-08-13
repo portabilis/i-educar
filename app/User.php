@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\LegacyEmployee;
+use App\Models\LegacyPerson;
 use App\Models\LegacyUserType;
 use App\Models\School;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,6 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
  * @property int            $id
+ * @property string         $name
  * @property string         $login
  * @property string         $password
  * @property LegacyUserType $type
@@ -51,6 +53,14 @@ class User extends Authenticatable
     public function getIdAttribute()
     {
         return $this->cod_usuario;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameAttribute()
+    {
+        return $this->person->name;
     }
 
     /**
@@ -116,6 +126,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return BelongsTo
+     */
+    public function person()
+    {
+        return $this->belongsTo(LegacyPerson::class, 'cod_usuario');
+    }
+
+    /**
      * @return bool
      */
     public function isAdmin()
@@ -139,7 +157,6 @@ class User extends Authenticatable
         return $this->type->level === LegacyUserType::LEVEL_INSTITUTIONAL;
     }
 
-
     /**
      * @return bool
      */
@@ -161,7 +178,7 @@ class User extends Authenticatable
      */
     public function isInactive()
     {
-        return ! $this->isActive();
+        return !$this->isActive();
     }
 
     /**
