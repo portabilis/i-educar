@@ -743,7 +743,7 @@ class App_Model_IedFinder extends CoreExt_Entity
                     'codigo_educacenso' => $discipline->codigo_educacenso,
                     'ordenamento' => $discipline->ordenamento,
                 ]);
-            })->all();
+            })->keyBy('id')->all();
 
         return $disciplines;
     }
