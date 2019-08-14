@@ -738,7 +738,7 @@ class App_Model_IedFinder extends CoreExt_Entity
                     'nome' => $discipline->nome,
                     'abreviatura' => $discipline->abreviatura,
                     'tipo_base' => $discipline->tipo_base,
-                    'area_conhecimento' => $discipline->area_conhecimento,
+                    'area_conhecimento' => $discipline->area_conhecimento_id,
                     'cargaHoraria' => $discipline->cargaHoraria ?? $disciplinesAcademicYear->get($discipline->id),
                     'codigo_educacenso' => $discipline->codigo_educacenso,
                     'ordenamento' => $discipline->ordenamento,
