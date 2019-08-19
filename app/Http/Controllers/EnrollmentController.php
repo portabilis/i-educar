@@ -76,7 +76,7 @@ class EnrollmentController extends Controller
             return redirect('/intranet/educar_matricula_det.php?cod_matricula=' . $registration->id)->with('success', 'Enturmação feita com sucesso.');
         }
 
-        $previousEnrollment = $enrollmentService->getPreviousEnrollment($registration);
+        $previousEnrollment = $enrollmentService->getPreviousEnrollmentAccordingToRelocationDate($registration);
 
         if ($request->input('is_relocation') && $previousEnrollment) {
             $enrollmentService->markAsRelocated($previousEnrollment);

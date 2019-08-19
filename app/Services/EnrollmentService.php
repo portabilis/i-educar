@@ -244,7 +244,7 @@ class EnrollmentService
      * @param LegacyRegistration $registration
      * @return LegacyEnrollment|void
      */
-    public function getPreviousEnrollment(LegacyRegistration $registration)
+    public function getPreviousEnrollmentAccordingToRelocationDate(LegacyRegistration $registration)
     {
         $previousEnrollment = $registration->lastEnrollment;
 
