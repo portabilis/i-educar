@@ -47,7 +47,6 @@ class App_Model_MatriculaTest extends UnitBaseTest
 {
   public function testAtualizaMatricula()
   {
-    $this->markTestSkipped();
     $matricula = $this->getCleanMock('clsPmieducarMatricula');
     $matricula->expects($this->once())
               ->method('edita')

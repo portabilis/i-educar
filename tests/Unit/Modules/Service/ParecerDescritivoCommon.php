@@ -269,9 +269,4 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
     $service->addPareceres($pareceres);
     $service->savePareceres();
   }
-
-  public function tearDown()
-  {
-    Portabilis_Utils_Database::$_db = null;
-  }
 }

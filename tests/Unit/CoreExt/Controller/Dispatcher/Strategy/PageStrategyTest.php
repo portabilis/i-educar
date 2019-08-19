@@ -50,11 +50,6 @@ class CoreExt_Controller_Dispatcher_Strategy_PageStrategyTest extends PHPUnit\Fr
   protected $_frontController = NULL;
   protected $_pageStrategy = NULL;
 
-  /**
-  * @var string
-  */
-  private $requestUri;
-
   public function __construct($name = null, array $data = [], $dataName = '')
   {
       parent::__construct($name, $data, $dataName);
@@ -80,10 +75,5 @@ class CoreExt_Controller_Dispatcher_Strategy_PageStrategyTest extends PHPUnit\Fr
   public function testControllerConfiguradoCorretamente()
   {
     $this->assertSame($this->_frontController, $this->_pageStrategy->getController());
-  }
-
-  public function tearDown()
-  {
-    $_SERVER['REQUEST_URI']= $this->requestUri;
   }
 }
