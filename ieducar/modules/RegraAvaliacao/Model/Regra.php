@@ -273,6 +273,23 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     }
 
     /**
+     * Pega a nota máxima permitida para a recuperação
+     *
+     * @param $etapa
+     * @return float
+     */
+    public function getNotaMaximaRecuperacao($etapa)
+    {
+        $tipoRecuperacaoParalela = $this->get('tipoRecuperacaoParalela');
+
+        if ($tipoRecuperacaoParalela != RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS) {
+            return $this->notaMaximaGeral;
+        }
+
+        return $this->getRegraRecuperacaoByEtapa($etapa)->notaMaxima;
+    }
+
+    /**
      * @see CoreExt_Entity::__toString()
      */
     public function __toString()
