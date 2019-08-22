@@ -12,7 +12,7 @@ class DiarioController extends Portabilis_Controller_Page_ListController
     public function Gerar()
     {
         $userId = Portabilis_Utils_User::currentUserId();
-        $componenteRequired = $isProfessor = Portabilis_Business_Professor::isProfessor(false, $userId);
+        $componenteRequired = Portabilis_Business_Professor::isOnlyProfessor(false, $userId);
 
         $this->inputsHelper()->input('ano', 'ano');
         $this->inputsHelper()->dynamic(['instituicao', 'escola', 'curso', 'serie', 'turma', 'etapa']);
