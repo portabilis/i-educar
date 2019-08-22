@@ -328,10 +328,15 @@ class DiarioController extends ApiCoreController
                             $nomeCampoRecuperacao = $this->defineCampoTipoRecuperacao($matriculaId);
 
                             $valorNota = $serviceBoletim->calculateStageScore($etapa, $notaOriginal, $notaRecuperacao);
+                            $notaMaximaPermitida = $regra->getNotaMaximaRecuperacao($etapa);
 
-                            if ($notaRecuperacao > $regra->notaMaximaGeral) {
-                                $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaGeral}.", 'error');
+                            if (empty($notaMaximaPermitida)) {
+                                $this->messenger->append("A nota máxima para recuperação não foi definida", 'error');
+                                return false;
+                            }
 
+                            if ($notaRecuperacao > $notaMaximaPermitida) {
+                                $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$notaMaximaPermitida}.", 'error');
                                 return false;
                             }
 
