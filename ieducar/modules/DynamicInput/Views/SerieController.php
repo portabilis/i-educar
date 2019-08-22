@@ -22,10 +22,10 @@ class SerieController extends ApiCoreController
             $cursoId = $this->getRequest()->curso_id;
             $ano = $this->getRequest()->ano;
 
-            $isProfessor = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
+            $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicaoId, $userId);
             $canLoadSeriesAlocado = Portabilis_Business_Professor::canLoadSeriesAlocado($instituicaoId);
 
-            if ($isProfessor && $canLoadSeriesAlocado) {
+            if ($isOnlyProfessor && $canLoadSeriesAlocado) {
                 $resources = Portabilis_Business_Professor::seriesAlocado($instituicaoId, $escolaId, $cursoId, $userId);
                 $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
             } elseif ($escolaId && $cursoId && empty($resources)) {
