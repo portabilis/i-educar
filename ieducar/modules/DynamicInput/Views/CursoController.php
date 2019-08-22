@@ -17,9 +17,9 @@ class CursoController extends ApiCoreController
             $escolaId = $this->getRequest()->escola_id;
             $ano = $this->getRequest()->ano;
 
-            $isProfessor = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
+            $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicaoId, $userId);
 
-            if ($isProfessor) {
+            if ($isOnlyProfessor) {
                 $cursos = Portabilis_Business_Professor::cursosAlocado($instituicaoId, $escolaId, $userId);
             } else {
                 $params = [ $escolaId ];
