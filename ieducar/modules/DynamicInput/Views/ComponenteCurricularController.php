@@ -42,9 +42,9 @@ class ComponenteCurricularController extends ApiCoreController
                 $etapa = '0';
             }
 
-            $isProfessor = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
+            $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicaoId, $userId);
 
-            if ($isProfessor) {
+            if ($isOnlyProfessor) {
                 $componentesCurriculares = Portabilis_Business_Professor::componentesCurricularesAlocado($instituicaoId, $turmaId, $ano, $userId);
             } else {
                 $sql = 'select cc.id,
@@ -109,9 +109,9 @@ class ComponenteCurricularController extends ApiCoreController
             $turmaId = $this->getRequest()->turma_id;
             $ano = $this->getRequest()->ano;
 
-            $isProfessor = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
+            $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicaoId, $userId);
 
-            if ($isProfessor) {
+            if ($isOnlyProfessor) {
                 $componentesCurriculares = Portabilis_Business_Professor::componentesCurricularesAlocado($instituicaoId, $turmaId, $ano, $userId);
             } else {
                 $sql = 'select cc.id,
