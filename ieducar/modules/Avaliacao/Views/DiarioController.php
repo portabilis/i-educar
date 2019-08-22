@@ -6,7 +6,7 @@ require_once 'Portabilis/Business/Professor.php';
 
 class DiarioController extends Portabilis_Controller_Page_ListController
 {
-    protected $_titulo = 'Lan&ccedil;amento por turma';
+    protected $_titulo = 'Lançamento por turma';
     protected $_processoAp = 642;
 
     public function Gerar()
@@ -20,12 +20,12 @@ class DiarioController extends Portabilis_Controller_Page_ListController
         $this->inputsHelper()->dynamic(['matricula'], ['required' => false ]);
 
         $navegacaoTab = [
-            '1' => 'Horizontal(padr&atilde;o)',
+            '1' => 'Horizontal(padrão)',
             '2' => 'Vertical',
         ];
 
         $options = [
-            'label' =>'Navega&ccedil;&atilde;o do cursor(tab)',
+            'label' =>'Navegação do cursor(tab)',
             'resources' => $navegacaoTab,
             'required' => false,
             'inline' => true,
@@ -43,16 +43,7 @@ class DiarioController extends Portabilis_Controller_Page_ListController
     {
         parent::_preRender();
 
-        Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
-
-        $localizacao = new LocalizacaoSistema();
-
-        $localizacao->entradaCaminhos([
-         $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-         'educar_index.php'                  => 'Escola',
-         ''                                  => 'Lan&ccedil;amento de notas'
-    ]);
-        $this->enviaLocalizacao($localizacao->montar(), true);
+        $this->breadcrumb('Lançamento de faltas e notas', ['/intranet/educar_index.php' => 'Escola']);
     }
 }
 ?>
