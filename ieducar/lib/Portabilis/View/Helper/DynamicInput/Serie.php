@@ -20,7 +20,7 @@ class Portabilis_View_Helper_DynamicInput_Serie extends Portabilis_View_Helper_D
         $isProfessor = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
 
         if ($isProfessor && Portabilis_Business_Professor::canLoadSeriesAlocado($instituicaoId)) {
-            $series = Portabilis_Business_Professor::seriesAlocado($instituicaoId, $escolaId, $serieId, $userId);
+            $resources = Portabilis_Business_Professor::seriesAlocado($instituicaoId, $escolaId, $cursoId, $userId);
         } elseif ($escolaId && $cursoId && empty($resources)) {
             $resources = App_Model_IedFinder::getSeries($instituicaoId = null, $escolaId, $cursoId);
         }
