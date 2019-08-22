@@ -33,9 +33,9 @@ class TurmaController extends ApiCoreController
             $ano = $this->getRequest()->ano;
             $anoEmAndamento = $this->getRequest()->ano_em_andamento;
 
-            $isProfessor = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
+            $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicaoId, $userId);
 
-            if ($isProfessor) {
+            if ($isOnlyProfessor) {
                 $turmas = Portabilis_Business_Professor::turmasAlocado($instituicaoId, $escolaId, $serieId, $userId);
             } else {
                 if (is_numeric($ano)) {
