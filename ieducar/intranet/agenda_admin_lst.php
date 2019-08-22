@@ -31,7 +31,7 @@ require_once ("include/clsBanco.inc.php");
 
 class clsIndex extends clsBase
 {
-    
+
     function Formular()
     {
         $this->SetTitulo( "{$this->_instituicao} Agenda" );
@@ -48,14 +48,14 @@ class indice extends clsListagem
     function Gerar()
     {
         $this->titulo = "Agendas Admin";
-        
-    
+
+
         $this->addCabecalhos( array( "Agenda" ) );
-        
+
         $this->campoTexto('pesquisa', 'Agenda', '', 50, 255);
-                
+
         $where = "";
-        
+
         if (!empty($_GET['pesquisa']))
         {
             $pesquisa = str_replace(' ', '%', $_GET['pesquisa']);
@@ -65,13 +65,13 @@ class indice extends clsListagem
 
         $db = new clsBanco();
         $total = $db->UnicoCampo( "SELECT COUNT(0) FROM portal.agenda {$where}" );
-        
+
         // Paginador
         $limite = 15;
         $iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
-        
-        $sql = "SELECT cod_agenda, nm_agenda, ref_ref_cod_pessoa_own FROM agenda {$where} ORDER BY nm_agenda ASC LIMIT $limite OFFSET $iniciolimit";
-        
+
+        $sql = "SELECT cod_agenda, nm_agenda, ref_ref_cod_pessoa_own FROM portal.agenda {$where} ORDER BY nm_agenda ASC LIMIT $limite OFFSET $iniciolimit";
+
         $db2 = new clsBanco();
         $db2->Consulta( $sql );
         while ( $db2->ProximoRegistro() )
@@ -79,10 +79,10 @@ class indice extends clsListagem
             list ( $cod_agenda, $nm_agenda, $cod_pessoa_own ) = $db2->Tupla();
             $this->addLinhas( array( "<a href='agenda_admin_det.php?cod_agenda={$cod_agenda}'><img src='imagens/noticia.jpg' border=0>$nm_agenda</a>"));
         }
-        
+
         // Paginador
         $this->addPaginador2( "agenda_admin_lst.php", $total, $_GET, $this->nome, $limite );
-        
+
         $this->acao = "go(\"agenda_admin_cad.php\")";
         $this->nome_acao = "Novo";
 
@@ -93,7 +93,7 @@ class indice extends clsListagem
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          ""                                  => "Listagem de agendas"
     ));
-    $this->enviaLocalizacao($localizacao->montar());        
+    $this->enviaLocalizacao($localizacao->montar());
     }
 }
 

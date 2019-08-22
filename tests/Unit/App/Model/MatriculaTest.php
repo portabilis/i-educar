@@ -53,8 +53,8 @@ class App_Model_MatriculaTest extends UnitBaseTest
               ->will($this->returnValue(TRUE));
 
     // Guarda no repositório estático de classes
-    CoreExt_Entity::addClassToStorage('clsPmieducarMatricula', $matricula,
-      NULL, TRUE);
+      CoreExt_Entity::addClassToStorage('clsPmieducarMatricula', $matricula,
+          NULL, TRUE);
 
     App_Model_Matricula::atualizaMatricula(1, 1, TRUE);
   }

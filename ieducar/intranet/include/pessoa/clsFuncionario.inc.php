@@ -284,7 +284,8 @@ class clsFuncionario extends clsPessoaFisica
             $idpesOk = true;
         } elseif ($this->matricula) {
             $db = new clsBanco();
-            $db->Consulta("SELECT ref_cod_pessoa_fj FROM funcionario WHERE matricula = '{$this->matricula}'");
+
+            $db->Consulta("SELECT ref_cod_pessoa_fj FROM portal.funcionario WHERE matricula = '{$this->matricula}'");
             if ($db->ProximoRegistro()) {
                 list($this->idpes) = $db->Tupla();
                 $idpesOk = true;
@@ -300,7 +301,8 @@ class clsFuncionario extends clsPessoaFisica
         if ($idpesOk) {
             $tupla = parent::detalhe();
             $db = new clsBanco();
-            $db->Consulta("SELECT ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, data_expiracao, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, email FROM funcionario WHERE ref_cod_pessoa_fj = '{$this->idpes}'");
+
+            $db->Consulta("SELECT ref_cod_pessoa_fj, matricula, matricula_interna, senha, ativo, ref_sec, sequencial, opcao_menu, ref_cod_setor, ref_cod_funcionario_vinculo, tempo_expira_senha, data_expiracao, data_troca_senha, data_reativa_conta, ref_ref_cod_pessoa_fj, ref_cod_setor_new, email FROM portal.funcionario WHERE ref_cod_pessoa_fj = '{$this->idpes}'");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
 

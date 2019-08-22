@@ -1662,7 +1662,7 @@ class clsPmieducarMatriculaTurma extends Model
     public function enturmacoesSemDependencia($turmaId)
     {
         $sql = "SELECT COUNT(1) FROM {$this->_tabela} mt
-              INNER JOIN matricula m ON (m.cod_matricula = mt.ref_cod_matricula)
+              INNER JOIN pmieducar.matricula m ON (m.cod_matricula = mt.ref_cod_matricula)
               WHERE m.dependencia = 'f'
                 AND mt.ativo = 1
                 AND mt.ref_cod_turma = $turmaId";
@@ -1676,7 +1676,7 @@ class clsPmieducarMatriculaTurma extends Model
     public function verficaEnturmacaoDeDependencia($matriculaId, $turmaId)
     {
         $sql = "SELECT 1 FROM {$this->_tabela} mt
-              INNER JOIN matricula m ON (m.cod_matricula = mt.ref_cod_matricula)
+              INNER JOIN pmieducar.matricula m ON (m.cod_matricula = mt.ref_cod_matricula)
               WHERE mt.ref_cod_matricula = $matriculaId
                 AND m.dependencia = 't'
                 AND mt.ativo = 1

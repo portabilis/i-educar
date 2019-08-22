@@ -361,7 +361,7 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
               ->will($this->returnValue(TRUE));
 
     CoreExt_Entity::addClassToStorage('clsPmieducarMatricula', $matricula,
-      'include/pmieducar/clsPmieducarMatricula.inc.php', TRUE);
+          'include/pmieducar/clsPmieducarMatricula.inc.php', TRUE);
 
     $this->assertTrue($service->promover());
   }

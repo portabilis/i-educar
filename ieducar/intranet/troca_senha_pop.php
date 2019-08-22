@@ -68,7 +68,7 @@ class indice extends clsCadastro
     $objPessoa = new clsPessoaFj();
 
     $db = new clsBanco();
-    $db->Consulta("SELECT f.senha FROM funcionario f WHERE f.ref_cod_pessoa_fj={$this->p_cod_pessoa_fj}");
+    $db->Consulta("SELECT f.senha FROM portal.funcionario f WHERE f.ref_cod_pessoa_fj={$this->p_cod_pessoa_fj}");
 
     if ($db->ProximoRegistro()) {
       list($this->f_senha) = $db->Tupla();
@@ -105,7 +105,7 @@ class indice extends clsCadastro
 
   public function Novo()
   {
-    $sql = "SELECT ref_cod_pessoa_fj FROM funcionario WHERE md5('{$this->f_senha}') = senha AND ref_cod_pessoa_fj = {$this->p_cod_pessoa_fj}";
+    $sql = "SELECT ref_cod_pessoa_fj FROM portal.funcionario WHERE md5('{$this->f_senha}') = senha AND ref_cod_pessoa_fj = {$this->p_cod_pessoa_fj}";
     $db = new clsBanco();
     $senha_igual = $db->CampoUnico($sql);
 

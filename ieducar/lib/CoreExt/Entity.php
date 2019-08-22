@@ -211,7 +211,7 @@ abstract class CoreExt_Entity implements CoreExt_Entity_Validatable
         }
 
         // Se for string vazia, o valor é NULL
-        if ('' == trim($val)) {
+        if ('' == trim($val) && $val !== false) {
             $this->_data[$key] = null;
         } // Chama _getValue(), para fazer conversões que forem necessárias
         else {
