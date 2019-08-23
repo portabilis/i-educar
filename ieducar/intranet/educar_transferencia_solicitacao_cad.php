@@ -179,7 +179,7 @@ class indice extends clsCadastro
 
         $opcoes = ['' => 'Selecione'];
         $objTemp = new clsPmieducarEscola();
-
+        $objTemp->_campo_order_by = 'nome';
         $lista = $objTemp->lista(null, null, null, $det_matricula['ref_cod_instituicao']);
 
         foreach ($lista as $escola) {
