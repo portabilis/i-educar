@@ -124,7 +124,7 @@ class clsPmieducarServidorFuncao extends Model
         if (empty($this->matricula)) {
             $set[] = 'matricula = NULL';
         } elseif (is_string($this->matricula)) {
-            $set[] = 'matricula = ' . $this->matricula;
+            $set[] = "matricula = '". $this->matricula ."'";
         }
 
         if (is_numeric($this->ref_cod_funcao)) {
