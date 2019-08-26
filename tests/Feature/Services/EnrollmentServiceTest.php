@@ -282,68 +282,59 @@ class EnrollmentServiceTest extends TestCase
     }
 
     /**
-     * Matrícula com enturmaçao inativa, a ultima terá que ficar como remanejada
-     *
-     * @return void
-     *
-     * @throws Throwable
+     * Instituição sem data base, a ultima enturmação deverá ser retornada
      */
-    public function testRelocatePreviousEnrollment()
+    public function testGetPreviousEnrollmentWithouRelocationDate()
     {
         /** @var LegacyEnrollment $enrollment */
         $enrollment = factory(LegacyEnrollment::class)->create([
             'ref_cod_turma' => $this->schoolClass,
-            'ativo' => false,
         ]);
 
-        $registration = $enrollment->registration;
+        $enrollment->schoolClass->school->institution->data_base_remanejamento = null;
+        $enrollment->schoolClass->school->institution->save();
 
-        $schoolClass = factory(LegacySchoolClass::class)->create();
+        $lastEnrollment = $this->service->getPreviousEnrollmentAccordingToRelocationDate($enrollment->registration);
 
-        factory(LegacySchoolClassStage::class)->create([
-            'ref_cod_turma' => $schoolClass,
-        ]);
-
-        $this->service->enroll($registration, $schoolClass, now());
-
-        $enrollment->refresh();
-
-        $this->assertTrue($enrollment->remanejado);
+        $this->assertEquals($enrollment->id, $lastEnrollment->id);
     }
 
     /**
-     * Matrícula com enturmaçao inativa com saída antes da data base,
-     * a ultima enturmação não pode ficar como remanejada
-     *
-     * @return void
-     *
-     * @throws Throwable
+     * Instituição sem data base, a ultima enturmação deverá ser retornada
      */
-    public function testRelocatePreviousEnrollmentBeforeRelocateData()
+    public function testGetPreviousEnrollmentWithRelocationDateBeforeDepartedDate()
     {
         /** @var LegacyEnrollment $enrollment */
         $enrollment = factory(LegacyEnrollment::class)->create([
             'ref_cod_turma' => $this->schoolClass,
-            'ativo' => false,
+            'data_exclusao' => now(),
+        ]);
+
+        $enrollment->schoolClass->school->institution->data_base_remanejamento = Carbon::yesterday();
+        $enrollment->schoolClass->school->institution->save();
+
+        $lastEnrollment = $this->service->getPreviousEnrollmentAccordingToRelocationDate($enrollment->registration);
+
+        $this->assertEquals($enrollment->id, $lastEnrollment->id);
+    }
+
+    /**
+     * Instituição sem data base, a ultima enturmação deverá ser retornada
+     */
+    public function testGetPreviousEnrollmentWithRelocationDateAfterDepartedDate()
+    {
+        /** @var LegacyEnrollment $enrollment */
+        $enrollment = factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $this->schoolClass,
             'data_exclusao' => Carbon::yesterday(),
         ]);
 
         $enrollment->schoolClass->school->institution->data_base_remanejamento = now();
         $enrollment->schoolClass->school->institution->save();
 
-        $registration = $enrollment->registration;
+        $lastEnrollment = $this->service->getPreviousEnrollmentAccordingToRelocationDate($enrollment->registration);
 
-        $schoolClass = factory(LegacySchoolClass::class)->create();
-
-        factory(LegacySchoolClassStage::class)->create([
-            'ref_cod_turma' => $schoolClass,
-        ]);
-
-        $this->service->enroll($registration, $schoolClass, now());
-
-        $enrollment->refresh();
-
-        $this->assertNull($enrollment->remanejado);
+        $this->assertNull($lastEnrollment);
     }
 
     public function testReorder()
