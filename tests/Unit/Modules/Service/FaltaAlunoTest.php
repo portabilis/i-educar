@@ -74,7 +74,7 @@ class Avaliacao_Service_FaltaAlunoTest extends Avaliacao_Service_TestCommon
     $service = $this->_getServiceInstance();
   }
 
-  public function tearDown()
+  public function tearDown(): void
   {
         $_GET = [];
 
