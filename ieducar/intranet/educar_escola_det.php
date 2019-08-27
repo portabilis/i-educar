@@ -13,19 +13,11 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo("{$this->_instituicao} i-Educar - Escola");
         $this->processoAp = '561';
-        $this->addEstilo('localizacaoSistema');
     }
 }
 
 class indice extends clsDetalhe
 {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
-    public $titulo;
-
     public $cod_escola;
     public $ref_usuario_cad;
     public $ref_usuario_exc;
@@ -46,7 +38,7 @@ class indice extends clsDetalhe
         // Verificação de permissão para cadastro.
         $this->obj_permissao = new clsPermissoes();
 
-        $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
+        $this->nivel_usuario = $this->user()->getLevel();
 
         $this->titulo = 'Escola - Detalhe';
 
@@ -59,14 +51,9 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_aluno_lst.php');
         }
 
-        if (class_exists('clsPmieducarInstituicao')) {
-            $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
-            $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-            $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
-        } else {
-            $registro['ref_cod_instituicao'] = 'Erro na geracao';
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarInstituicao\n-->";
-        }
+        $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
+        $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
+        $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
         if ($registro['ref_idpes']) {
             $obj_escola = new clsPessoa_($registro['ref_idpes']);
@@ -79,103 +66,92 @@ class indice extends clsDetalhe
 
             $obj_endereco = new clsPessoaEndereco($registro['ref_idpes']);
 
-            if (class_exists('clsPessoaEndereco')) {
-                $tipo = 1;
-                $endereco_lst = $obj_endereco->lista($registro['ref_idpes']);
+            $tipo = 1;
+            $endereco_lst = $obj_endereco->lista($registro['ref_idpes']);
+
+            if ($endereco_lst) {
+                foreach ($endereco_lst as $endereco) {
+                    $cep = $endereco['cep']->cep;
+                    $idlog = $endereco['idlog']->idlog;
+                    $obj = new clsLogradouro($idlog);
+                    $obj_det = $obj->detalhe();
+                    $logradouro = $obj_det['nome'];
+                    $idtlog = $obj_det['idtlog']->detalhe();
+                    $tipo_logradouro = $idtlog['descricao'];
+                    $idbai = $endereco['idbai']->detalhe();
+                    $idbai = $idbai['nome'];
+                    $numero = $endereco['numero'];
+                    $complemento = $endereco['complemento'];
+                    $andar = $endereco['andar'];
+                }
+            }
+
+            if (empty($endereco_lst)) {
+                $tipo = 2;
+                $obj_endereco = new clsEnderecoExterno();
+                $endereco_lst = $obj_endereco->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $registro['ref_idpes']);
+
                 if ($endereco_lst) {
                     foreach ($endereco_lst as $endereco) {
-                        $cep = $endereco['cep']->cep;
-                        $idlog = $endereco['idlog']->idlog;
-                        $obj = new clsLogradouro($idlog);
-                        $obj_det = $obj->detalhe();
-                        $logradouro = $obj_det['nome'];
-                        $idtlog = $obj_det['idtlog']->detalhe();
+                        $cep = $endereco['cep'];
+                        $sigla_uf = $endereco['sigla_uf']->detalhe();
+                        $sigla_uf = $sigla_uf['nome'];
+                        $cidade = $endereco['cidade'];
+                        $idtlog = $endereco['idtlog']->detalhe();
                         $tipo_logradouro = $idtlog['descricao'];
-                        $idbai = $endereco['idbai']->detalhe();
-                        $idbai = $idbai['nome'];
+                        $logradouro = $endereco['logradouro'];
+                        $bairro = $endereco['bairro'];
                         $numero = $endereco['numero'];
                         $complemento = $endereco['complemento'];
                         $andar = $endereco['andar'];
                     }
-                } elseif (class_exists('clsEnderecoExterno')) {
-                    $tipo = 2;
-                    $obj_endereco = new clsEnderecoExterno();
-                    $endereco_lst = $obj_endereco->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $registro['ref_idpes']);
-                    if ($endereco_lst) {
-                        foreach ($endereco_lst as $endereco) {
-                            $cep = $endereco['cep'];
-                            $sigla_uf = $endereco['sigla_uf']->detalhe();
-                            $sigla_uf = $sigla_uf['nome'];
-                            $cidade = $endereco['cidade'];
-                            $idtlog = $endereco['idtlog']->detalhe();
-                            $tipo_logradouro = $idtlog['descricao'];
-                            $logradouro = $endereco['logradouro'];
-                            $bairro = $endereco['bairro'];
-                            $numero = $endereco['numero'];
-                            $complemento = $endereco['complemento'];
-                            $andar = $endereco['andar'];
-                        }
+                }
+            }
+
+            $obj_telefone = new clsPessoaTelefone();
+            $telefone_lst = $obj_telefone->lista($registro['ref_idpes'], 'tipo');
+            if ($telefone_lst) {
+                foreach ($telefone_lst as $telefone) {
+                    if ($telefone['tipo'] == 1) {
+                        $telefone_1 = '(' . $telefone['ddd'] . ') ' . $telefone['fone'];
+                    } elseif ($telefone['tipo'] == 2) {
+                        $telefone_2 = '(' . $telefone['ddd'] . ') ' . $telefone['fone'];
+                    } elseif ($telefone['tipo'] == 3) {
+                        $telefone_mov = '(' . $telefone['ddd'] . ') ' . $telefone['fone'];
+                    } elseif ($telefone['tipo'] == 4) {
+                        $telefone_fax = '(' . $telefone['ddd'] . ') ' . $telefone['fone'];
                     }
                 }
             }
 
-            if (class_exists('clsPessoaTelefone')) {
-                $obj_telefone = new clsPessoaTelefone();
-                $telefone_lst = $obj_telefone->lista($registro['ref_idpes'], 'tipo');
-                if ($telefone_lst) {
-                    foreach ($telefone_lst as $telefone) {
-                        if ($telefone['tipo'] == 1) {
-                            $telefone_1 = '(' . $telefone['ddd'] . ') ' . $telefone['fone'];
-                        } elseif ($telefone['tipo'] == 2) {
-                            $telefone_2 = '(' . $telefone['ddd'] . ') ' . $telefone['fone'];
-                        } elseif ($telefone['tipo'] == 3) {
-                            $telefone_mov = '(' . $telefone['ddd'] . ') ' . $telefone['fone'];
-                        } elseif ($telefone['tipo'] == 4) {
-                            $telefone_fax = '(' . $telefone['ddd'] . ') ' . $telefone['fone'];
-                        }
-                    }
-                }
-            }
         } else {
-            if (class_exists('clsPmieducarEscolaComplemento')) {
-                $tipo = 3;
-                $obj_escola = new clsPmieducarEscolaComplemento($this->cod_escola);
-                $obj_escola_det = $obj_escola->detalhe();
-                $nm_escola = $obj_escola_det['nm_escola'];
-                $cep = $obj_escola_det['cep'];
-                $numero = $obj_escola_det['numero'];
-                $complemento = $obj_escola_det['complemento'];
-                $email = $obj_escola_det['email'];
-                $cidade = $obj_escola_det['municipio'];
-                $bairro = $obj_escola_det['bairro'];
-                $logradouro = $obj_escola_det['logradouro'];
-                $ddd_telefone = $obj_escola_det['ddd_telefone'];
-                $telefone = $obj_escola_det['telefone'];
-                $ddd_telefone_fax = $obj_escola_det['ddd_fax'];
-                $telefone_fax = $obj_escola_det['fax'];
-            }
+            $tipo = 3;
+            $obj_escola = new clsPmieducarEscolaComplemento($this->cod_escola);
+            $obj_escola_det = $obj_escola->detalhe();
+            $nm_escola = $obj_escola_det['nm_escola'];
+            $cep = $obj_escola_det['cep'];
+            $numero = $obj_escola_det['numero'];
+            $complemento = $obj_escola_det['complemento'];
+            $email = $obj_escola_det['email'];
+            $cidade = $obj_escola_det['municipio'];
+            $bairro = $obj_escola_det['bairro'];
+            $logradouro = $obj_escola_det['logradouro'];
+            $ddd_telefone = $obj_escola_det['ddd_telefone'];
+            $telefone = $obj_escola_det['telefone'];
+            $ddd_telefone_fax = $obj_escola_det['ddd_fax'];
+            $telefone_fax = $obj_escola_det['fax'];
         }
 
-        if (class_exists('clsPmieducarEscolaRedeEnsino')) {
-            $obj_ref_cod_escola_rede_ensino = new clsPmieducarEscolaRedeEnsino($registro['ref_cod_escola_rede_ensino']);
-            $det_ref_cod_escola_rede_ensino = $obj_ref_cod_escola_rede_ensino->detalhe();
-            $registro['ref_cod_escola_rede_ensino'] = $det_ref_cod_escola_rede_ensino['nm_rede'];
-        } else {
-            $registro['ref_cod_escola_rede_ensino'] = 'Erro na geracao';
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarEscolaRedeEnsino\n-->";
-        }
+        $obj_ref_cod_escola_rede_ensino = new clsPmieducarEscolaRedeEnsino($registro['ref_cod_escola_rede_ensino']);
+        $det_ref_cod_escola_rede_ensino = $obj_ref_cod_escola_rede_ensino->detalhe();
+        $registro['ref_cod_escola_rede_ensino'] = $det_ref_cod_escola_rede_ensino['nm_rede'];
 
-        if (class_exists('clsPessoaJuridica')) {
-            $obj_ref_idpes = new clsPessoaJuridica($registro['ref_idpes']);
-            $det_ref_idpes = $obj_ref_idpes->detalhe();
-            $registro['ref_idpes'] = $det_ref_idpes['nome'];
-        } else {
-            $registro['ref_idpes'] = 'Erro na geracao';
-            echo "<!--\nErro\nClasse nao existente: clsCadastroJuridica\n-->";
-        }
+        $obj_ref_idpes = new clsPessoaJuridica($registro['ref_idpes']);
+        $det_ref_idpes = $obj_ref_idpes->detalhe();
+        $registro['ref_idpes'] = $det_ref_idpes['nome'];
 
         if ($registro['ref_cod_instituicao']) {
-            $this->addDetalhe(['Institui&ccedil;&atilde;o', "{$registro['ref_cod_instituicao']}"]);
+            $this->addDetalhe(['Instituição', "{$registro['ref_cod_instituicao']}"]);
         }
 
         if ($nm_escola) {
@@ -319,7 +295,7 @@ class indice extends clsDetalhe
             }
         }
 
-        $obj = new clspmieducarescolacurso();
+        $obj = new clsPmieducarEscolaCurso();
         $lst = $obj->lista($this->cod_escola);
 
         if ($lst) {
@@ -399,6 +375,7 @@ class indice extends clsDetalhe
 
         $obj_permissoes = new clsPermissoes();
         $canEdit = $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7);
+        $cor = null;
 
         if ($lista_ano_letivo) {
             $existe = true;
@@ -452,7 +429,7 @@ class indice extends clsDetalhe
             if (!$canEdit) {
                 $tabela .= '<tr>
                             <td>
-                                <span class=\'formlttd\'><b>**Somente usu&aacute;rios com permiss&atilde;o de edi&ccedil;&atilde;o de escola podem alterar anos letivos.</b></span>
+                                <span class=\'formlttd\'><b>**Somente usu&aacute;rios com permiss&atilde;o de edição de escola podem alterar anos letivos.</b></span>
                             </td>
                         </tr>';
             }

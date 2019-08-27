@@ -18,20 +18,6 @@ class clsIndexBase extends clsBase
 class indice extends clsListagem
 {
     /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
-
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
-    public $titulo;
-
-    /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
@@ -68,10 +54,10 @@ class indice extends clsListagem
         }
 
         $cabecalhos = ['Escola'];
-        $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+        $nivel = $this->user()->getLevel();
 
         if ($nivel == 1) {
-            $cabecalhos[] = 'Institui&ccedil;&atilde;o';
+            $cabecalhos[] = 'Instituição';
             $objInstituicao = new clsPmieducarInstituicao();
             $opcoes = ['' => 'Selecione'];
             $objInstituicao->setOrderby('nm_instituicao ASC');
@@ -81,7 +67,7 @@ class indice extends clsListagem
                     $opcoes[$linha['cod_instituicao']] = $linha['nm_instituicao'];
                 }
             }
-            $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, $this->ref_cod_instituicao, false, false, false, false, false, false);
+            $this->campoLista('ref_cod_instituicao', 'Instituição', $opcoes, $this->ref_cod_instituicao, false, false, false, false, false, false);
         } else {
             $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
             if ($this->ref_cod_instituicao) {
