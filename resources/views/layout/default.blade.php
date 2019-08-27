@@ -13,7 +13,7 @@
             'user_id': '{{$loggedUser->personId}}',
             'user_name': '{{$loggedUser->name}}',
             'user_email': '{{$loggedUser->email}}',
-            'user_created_at': '{{$loggedUser->created_at}}',
+            'user_created_at': parseInt('{{$loggedUser->created_at}}'),
             'institution': '{{ $loggedUser->institution }}',
             'city': '{{ $loggedUser->city }}',
             'state': '{{ $loggedUser->state }}',
