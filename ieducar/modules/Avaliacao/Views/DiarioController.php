@@ -29,7 +29,7 @@ class DiarioController extends Portabilis_Controller_Page_ListController
             'resources' => $navegacaoTab,
             'required' => false,
             'inline' => true,
-            'value' => $navegacaoTab[1]
+            'value' => $navegacaoTab[1],
         ];
 
         $this->inputsHelper()->select('navegacao_tab', $options);

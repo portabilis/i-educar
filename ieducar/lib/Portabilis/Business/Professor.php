@@ -46,7 +46,6 @@ class Portabilis_Business_Professor
         }
         
         $funcoes = self::fetchPreparedQuery($sql);
-
         return count($funcoes) == 1 && $funcoes[0]['professor'];
     }
 
