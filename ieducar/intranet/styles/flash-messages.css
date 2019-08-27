@@ -95,3 +95,8 @@
   font-weight: bold;
   margin-bottom: 4px;
 }
+
+.msg-diario.flashMessages {
+  width: 400px;
+  left: auto;
+}

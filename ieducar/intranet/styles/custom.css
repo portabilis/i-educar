@@ -32,6 +32,11 @@ input:read-only {
   background-color: #e9f0f8 !important;
 }
 
+.input-success {
+  background-color: #F0F9EE;
+}
+
+
 .select2-container{
   font-size: 14px;
   line-height: 15px;

@@ -858,9 +858,23 @@ function handleChange(dataResponse) {
 
   var targetId = dataResponse.resource + '-matricula-' + dataResponse.matricula_id +
                  '-cc-' + componenteCurricularId;
-  handleMessages(dataResponse.msgs, targetId);
+
+  handleMessagesDiario(dataResponse.msgs, targetId);
   updateResourceRow(dataResponse);
 }
+
+var handleMessagesDiario = function(arrayMessage, targetId) {
+  arrayMessage = $j.map(arrayMessage, function (item, index) {
+    if (item.type == 'success') {
+      $j('#' + targetId).addClass('input-success');
+      return null;
+    }
+
+    return item;
+  });
+
+  messageUtils.handleMessages(arrayMessage, targetId);
+};
 
 var regraDiferenciadaId = undefined;
 
@@ -1096,6 +1110,7 @@ function handleSearch($resultTable, dataResponse) {
   if ((componenteCurricularSelected) && (showBotaoReplicarNotas))
     criaBotaoReplicarNotas();
 
+  $j('.flashMessages').addClass('msg-diario');
 }
 
 function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaConhecimentoId, maxLength, tipoNota, regra) {
@@ -1938,8 +1953,6 @@ function criaBotaoReplicarNotas(){
           }
       }
   };
-
-
 })(jQuery);
 
 function handleLockedMessage() {
