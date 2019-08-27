@@ -16,6 +16,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string         $name
  * @property string         $login
  * @property string         $password
+ * @property string         $created_at
  * @property LegacyUserType $type
  * @property LegacyEmployee $employee
  */
@@ -115,6 +116,14 @@ class User extends Authenticatable
     {
         $this->employee->remember_token = $token;
         $this->employee->save();
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreatedAtAttribute()
+    {
+        return $this->data_cadastro;
     }
 
     /**
