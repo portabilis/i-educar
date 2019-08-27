@@ -137,7 +137,7 @@ return [
         ],
         'alunos' => [
             'laudo_medico_obrigatorio' => '1',
-            'nao_apresentar_campo_alfabetizado' => '1',
+            'nao_apresentar_campo_alfabetizado' => '0',
             'codigo_sistema' => 'Código sistema',
             'mostrar_codigo_sistema' => '1',
         ],
