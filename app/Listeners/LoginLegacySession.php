@@ -6,6 +6,7 @@ use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacyStudent;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -47,11 +48,13 @@ class LoginLegacySession
     private function getLoggedUserInfo($user)
     {
         $institution = app(LegacyInstitution::class);
+        $createdAt = Carbon::create($user->created_at)->getTimestamp();
 
         return (object) [
             'personId' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
+            'created_at' => $createdAt,
             'institution' => $institution->name,
             'city' => $institution->city,
             'state' => $institution->state,
