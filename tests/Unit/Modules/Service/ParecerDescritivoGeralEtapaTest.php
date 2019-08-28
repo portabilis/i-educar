@@ -165,9 +165,4 @@ class Avaliacao_Service_ParecerDescritivoGeralEtapaTest extends Avaliacao_Servic
     $this->assertEquals($this->_getEtapasPossiveisParecer(), $validators['etapa']->getOption('choices'));
     $this->assertFalse(isset($validators['componenteCurricular']));
   }
-
-  public function tearDown(): void
-  {
-    Portabilis_Utils_Database::$_db = null;
-  }
 }

@@ -130,9 +130,4 @@ class Avaliacao_Service_ParecerDescritivoGeralAnualTest extends Avaliacao_Servic
   {
       $this->markTestSkipped();
   }
-
-  public function tearDown(): void
-  {
-    Portabilis_Utils_Database::$_db = null;
-  }
 }
