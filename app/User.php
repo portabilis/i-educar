@@ -14,6 +14,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 /**
  * @property int            $id
  * @property string         $name
+ * @property string         $email
+ * @property string         $role
  * @property string         $login
  * @property string         $password
  * @property string         $created_at
@@ -116,6 +118,14 @@ class User extends Authenticatable
     {
         $this->employee->remember_token = $token;
         $this->employee->save();
+    }
+
+    /**
+     * @return string
+     */
+    public function getRoleAttribute()
+    {
+        return $this->type->name;
     }
 
     /**
