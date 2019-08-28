@@ -54,6 +54,7 @@ class LoginLegacySession
             'personId' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
+            'role' => $user->role,
             'created_at' => $createdAt,
             'institution' => $institution->name,
             'city' => $institution->city,
