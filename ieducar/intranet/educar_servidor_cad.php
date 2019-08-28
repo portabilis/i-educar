@@ -836,7 +836,13 @@ JS;
                 } else {
                     $this->cadastraFuncao($funcao, $this->matricula[$k]);
                 }
-                array_push($listFuncoesCadastradas, $funcao);
+
+                if (empty($cod_servidor_funcao)) {
+                    $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao);
+                    $cod_servidor_funcao = $obj_servidor_funcao->detalhe()['cod_servidor_funcao'];
+                }
+
+                array_push($listFuncoesCadastradas, $cod_servidor_funcao);
             }
         }
         $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
