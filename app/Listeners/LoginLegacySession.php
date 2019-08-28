@@ -9,6 +9,7 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Throwable;
 
 class LoginLegacySession
 {
@@ -48,7 +49,12 @@ class LoginLegacySession
     private function getLoggedUserInfo($user)
     {
         $institution = app(LegacyInstitution::class);
-        $createdAt = Carbon::create($user->created_at)->getTimestamp();
+
+        try {
+            $createdAt = Carbon::create($user->created_at)->getTimestamp();
+        } catch (Throwable $throwable) {
+            $createdAt = Carbon::now()->subYear()->getTimestamp();
+        }
 
         return (object) [
             'personId' => $user->id,
