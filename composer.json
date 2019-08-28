@@ -3,7 +3,7 @@
     "description": "Software livre de gestão escolar",
     "type": "project",
     "license": "GPL-2.0-or-later",
-    "version": "2.2.1",
+    "version": "2.2.2",
     "keywords": [
         "Portabilis",
         "i-Educar"
@@ -40,7 +40,7 @@
         "friendsofphp/php-cs-fixer": "^2.13",
         "fzaninotto/faker": "^1.4",
         "laravel/dusk": "^5.1",
-        "laravel/telescope": "^3.0",
+        "laravel/telescope": "^2.0",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
         "phpunit/phpunit": "^7.5"

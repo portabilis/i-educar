@@ -82,9 +82,4 @@ class CoreExt_Controller_Dispatcher_Strategy_FrontStrategyTest extends PHPUnit\F
   {
     $this->assertSame($this->_frontController, $this->_pageStrategy->getController());
   }
-
-  public function tearDown()
-  {
-    $_SERVER['REQUEST_URI']= $this->requestUri;
-  }
 }

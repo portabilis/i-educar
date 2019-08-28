@@ -153,9 +153,4 @@ class Avaliacao_Service_FaltaGeralSituacaoTest extends Avaliacao_Service_FaltaSi
 
     $this->assertEquals($expected, $service->getSituacaoFaltas());
   }
-
-  public function tearDown(): void
-  {
-    Portabilis_Utils_Database::$_db = null;
-  }
 }
