@@ -565,7 +565,7 @@ JS;
 
                 include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
-                $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+                $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
                 $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
             }
         }
@@ -614,7 +614,7 @@ JS;
 
                 include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
-                $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+                $this->mensagem = 'Edição efetuada com sucesso.<br>';
                 $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
             }
         } else {
@@ -709,7 +709,7 @@ JS;
 
                             include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
-                            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+                            $this->mensagem = 'Edição efetuada com sucesso.<br>';
                             $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
                         }
                     }
@@ -793,7 +793,7 @@ JS;
                     $auditoria->exclusao($servidor);
 
                     $this->excluiFuncoes();
-                    $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
+                    $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
                     $this->simpleRedirect('educar_servidor_lst.php');
                 }
             }
