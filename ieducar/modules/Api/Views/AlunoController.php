@@ -1965,12 +1965,12 @@ class AlunoController extends ApiCoreController
             return;
         }
 
-        $escolaId = $this->getRequest()->escola_id;
+        $arrayEscola = explode(',', $this->getRequest()->escola);
 
         $unificationsQuery = LogUnification::query();
-        $unificationsQuery->whereHas('studentMain', function ($studentQuery) use ($escolaId) {
-            $studentQuery->whereHas('registrations', function ($registrationsQuery) use ($escolaId){
-                $registrationsQuery->where('school_id', $escolaId);
+        $unificationsQuery->whereHas('studentMain', function ($studentQuery) use ($arrayEscola) {
+            $studentQuery->whereHas('registrations', function ($registrationsQuery) use ($arrayEscola){
+                $registrationsQuery->whereIn('school_id', $arrayEscola);
             });
         });
 
@@ -1979,7 +1979,7 @@ class AlunoController extends ApiCoreController
 
     protected function canGetUnificacoes()
     {
-        return $this->validatesPresenceOf('escola_id');
+        return $this->validatesPresenceOf('escola');
     }
 
     public function Gerar()
