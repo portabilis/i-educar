@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\LegacyRegistration;
-use App\Services\PromocaoService;
+use App\Services\PromotionService;
 use App\Services\SchoolClass\AvailableTimeService;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
@@ -967,7 +967,7 @@ class indice extends clsCadastro
 
                 $registration = LegacyRegistration::find($this->cod_matricula);
 
-                $promocao = new PromocaoService($registration->enrollments()->first());
+                $promocao = new PromotionService($registration->enrollments()->first());
                 $promocao->fakeRequest();
 
                 $this->mensagem = 'Cadastro efetuado com sucesso.<br />';

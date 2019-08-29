@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\LegacyRegistration;
-use App\Services\PromocaoService;
+use App\Services\PromotionService;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -93,10 +93,9 @@ class indice extends clsCadastro
             }
 
             /** @var LegacyRegistration $registration */
-
             $registration = LegacyRegistration::find($this->ref_cod_matricula);
 
-            $promocao = new PromocaoService($registration->enrollments()->first());
+            $promocao = new PromotionService($registration->lastEnrollment()->first());
             $promocao->fakeRequest();
 
             $this->Excluir();

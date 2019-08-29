@@ -7,7 +7,7 @@ use CoreExt_Controller_Request;
 use CoreExt_Exception;
 use PromocaoApiController;
 
-class PromocaoService
+class PromotionService
 {
     /**
      * @var LegacyEnrollment
