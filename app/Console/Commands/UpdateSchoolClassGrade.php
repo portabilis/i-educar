@@ -39,16 +39,6 @@ class UpdateSchoolClassGrade extends Command
     private $schoolClass;
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return mixed
@@ -78,6 +68,11 @@ class UpdateSchoolClassGrade extends Command
         DB::commit();
     }
 
+    /**
+     * Valida se existe registro em escola_serie
+     *
+     * @throws MissingSchoolGradeException
+     */
     private function validateSchoolGrade()
     {
         $existsSchoolGrade = LegacySchoolGrade::where('ref_cod_escola', $this->schoolClass->school_id)
@@ -91,6 +86,11 @@ class UpdateSchoolClassGrade extends Command
         throw new MissingSchoolGradeException($this->schoolClass->school, $this->grade);
     }
 
+    /**
+     * Valida se existe registro em escola_curso
+     *
+     * @throws MissingSchoolCourseException
+     */
     private function validateSchoolCourse()
     {
         $existsSchoolCourse = LegacySchoolCourse::where('ref_cod_escola', $this->schoolClass->school_id)
