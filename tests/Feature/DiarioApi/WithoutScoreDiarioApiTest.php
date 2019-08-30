@@ -3,6 +3,7 @@
 namespace Tests\Feature\DiarioApi;
 
 use App\Models\LegacyEvaluationRule;
+use App_Model_MatriculaSituacao;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -19,7 +20,7 @@ class WithoutScoreDiarioApiTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->evaluationRule = factory(LegacyEvaluationRule::class, 'without-score')->create();
@@ -37,7 +38,7 @@ class WithoutScoreDiarioApiTest extends TestCase
         $response = $this->postAbsence($enrollment, $discipline->id, 1, 10);
 
         $this->assertEquals('Aprovado', $response->situacao);
-        $this->assertEquals(1, $registration->refresh()->aprovado);
+        $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
     }
 
     /**
@@ -56,6 +57,6 @@ class WithoutScoreDiarioApiTest extends TestCase
         $response = $this->postAbsence($enrollment, $discipline->id, 1, 10);
 
         $this->assertEquals('Cursando', $response->situacao);
-        $this->assertEquals(3, $registration->refresh()->aprovado);
+        $this->assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
     }
 }

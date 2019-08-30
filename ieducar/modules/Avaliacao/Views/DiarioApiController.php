@@ -594,7 +594,7 @@ class DiarioApiController extends ApiCoreController
     }
 
     // TODO mover validacao para canPostFalta
-    public function postFalta()
+    protected function postFalta()
     {
 
         $canPost = $this->canPostFalta();
