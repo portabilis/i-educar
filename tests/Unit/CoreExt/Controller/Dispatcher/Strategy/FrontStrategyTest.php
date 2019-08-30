@@ -59,7 +59,7 @@ class CoreExt_Controller_Dispatcher_Strategy_FrontStrategyTest extends PHPUnit\F
   {
       parent::__construct($name, $data, $dataName);
       $this->_path = realpath(dirname(__FILE__) . '/../../_stub');
-      $this->requestUri = $_SERVER['REQUEST_URI'];
+      $this->requestUri = $_SERVER['REQUEST_URI'] ?? null;
   }
 
   protected function setUp(): void
@@ -81,10 +81,5 @@ class CoreExt_Controller_Dispatcher_Strategy_FrontStrategyTest extends PHPUnit\F
   public function testControllerConfiguradoCorretamente()
   {
     $this->assertSame($this->_frontController, $this->_pageStrategy->getController());
-  }
-
-  public function tearDown()
-  {
-    $_SERVER['REQUEST_URI']= $this->requestUri;
   }
 }

@@ -86,7 +86,7 @@ class AvailableTimeServiceTest extends TestCase
     {
         $schoolClass = factory(LegacySchoolClass::class, 'morning')->create(['tipo_mediacao_didatico_pedagogico' => 1]);
         $otherSchoolClass = factory(LegacySchoolClass::class, 'morning')->create(['tipo_mediacao_didatico_pedagogico' => 1]);
-        $registration = factory(LegacyRegistration::class)->create(['ano' => $schoolClass->ano]);
+        $registration = factory(LegacyRegistration::class)->create(['ano' => $schoolClass->ano, 'aprovado' => 3]);
 
         factory(LegacySchoolClassStage::class)->create([
             'ref_cod_turma' => $schoolClass,

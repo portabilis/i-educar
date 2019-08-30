@@ -30,16 +30,7 @@
                         resource : 'menu-search'
                     }
                 }).then((res) => {
-                    let arr = [];
-
-                    for (let menu in res.data.result) {
-                        arr.push({
-                            link: menu,
-                            label: res.data.result[menu]
-                        });
-                    }
-
-                    this.options = arr;
+                    this.options = res.data.menus;
                 });
             },
             dispatchAction (element) {

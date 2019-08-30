@@ -120,6 +120,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return int
+     */
+    public function getLevel()
+    {
+        return $this->type->level;
+    }
+
+    /**
      * @return BelongsTo
      */
     public function type()

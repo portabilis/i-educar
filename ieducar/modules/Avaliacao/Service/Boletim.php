@@ -469,7 +469,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         null,
         null,
         $enrollment,
-        false,
+        true,
         $ignorarDispensasParciais
     ));
 

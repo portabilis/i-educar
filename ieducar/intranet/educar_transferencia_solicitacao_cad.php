@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyRegistration;
+use App\Services\PromotionService;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -89,33 +92,11 @@ class indice extends clsCadastro
                 $this->reabrirMatricula($this->ref_cod_matricula);
             }
 
-            $instituicaoId = (new clsBanco)->unicoCampo('select cod_instituicao from pmieducar.instituicao where ativo = 1 order by cod_instituicao asc limit 1;');
+            /** @var LegacyRegistration $registration */
+            $registration = LegacyRegistration::find($this->ref_cod_matricula);
 
-            $fakeRequest = new CoreExt_Controller_Request(
-               ['data' => [
-                    'oper' => 'post',
-                    'resource' => 'promocao',
-                    'matricula_id' => $this->ref_cod_matricula,
-                    'instituicao_id' => $instituicaoId,
-                    'ano' => $ano,
-                    'escola' => $escolaId,
-                    'curso' => $cursoId,
-                    'serie' => $serieId,
-                    'turma' => $turmaId
-                ]
-            ]);
-
-            $promocaoApi = new PromocaoApiController();
-            $promocaoApi->setRequest($fakeRequest);
-
-            try {
-                $promocaoApi->Gerar();
-            } catch (CoreExt_Exception $exception) {
-                // Quando o aluno não possuir enturmação na escola que está
-                // cancelando a matrícula, uma Exception era lançada ao
-                // instanciar o ServiceBoletim, este catch garante que não irá
-                // quebrar o processo.
-            }
+            $promocao = new PromotionService($registration->lastEnrollment()->first());
+            $promocao->fakeRequest();
 
             $this->Excluir();
         }
@@ -179,7 +160,7 @@ class indice extends clsCadastro
 
         $opcoes = ['' => 'Selecione'];
         $objTemp = new clsPmieducarEscola();
-
+        $objTemp->_campo_order_by = 'nome';
         $lista = $objTemp->lista(null, null, null, $det_matricula['ref_cod_instituicao']);
 
         foreach ($lista as $escola) {

@@ -561,6 +561,13 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             ->method('detalhe')
             ->will($this->returnValue($this->_getConfigOptions('matricula')));
 
+        CoreExt_Entity::addClassToStorage(
+            'clsPmieducarMatricula',
+            $mock,
+            null,
+            true
+        );
+
         $this->mockDbPreparedQuery([[
             'serie_regra_avaliacao_id' => 1,
             'ref_ref_cod_escola' => 1,
