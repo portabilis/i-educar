@@ -29,7 +29,7 @@ class Phone extends Model
     ];
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getFormattedNumberAttribute()
     {
