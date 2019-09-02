@@ -8,7 +8,7 @@ require_once 'App/Model/NivelTipoUsuario.php';
 
 class Portabilis_View_Helper_DynamicInput_EscolaObrigatorioParaNivelEscolar extends Portabilis_View_Helper_DynamicInput_Escola
 {
-    public function escolaRequired($options = [])
+    public function EscolaObrigatorioParaNivelEscolar($options = [])
     {
         $nivelUsuario = Session::get('nivel');
 
