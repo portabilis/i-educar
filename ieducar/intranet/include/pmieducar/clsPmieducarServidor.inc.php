@@ -125,6 +125,11 @@ class clsPmieducarServidor extends Model
                 $valores .= "{$gruda}'{$this->ref_cod_subnivel}'";
                 $gruda = ', ';
             }
+            if (is_numeric($this->ref_idesco)) {
+                $campos .= "{$gruda}ref_idesco";
+                $valores .= "{$gruda}'{$this->ref_idesco}'";
+                $gruda = ', ';
+            }
             $campos .= "{$gruda}data_cadastro";
             $valores .= "{$gruda}NOW()";
             $gruda = ', ';
