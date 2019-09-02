@@ -26,6 +26,7 @@ matrix:
 
       script:
         - vendor/bin/phpunit
+        - vendor/bin/phpunit --testsuite Diario
         - php artisan dusk
 
       env:
