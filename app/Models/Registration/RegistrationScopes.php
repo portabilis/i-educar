@@ -61,7 +61,7 @@ trait RegistrationScopes
      */
     public function active()
     {
-        return $this->where('ativo', 1);
+        return $this->where('active', 1);
     }
 
     /**
