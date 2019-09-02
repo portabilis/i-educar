@@ -59,14 +59,6 @@ trait RegistrationScopes
     /**
      * @return $this
      */
-    public function active()
-    {
-        return $this->where('active', 1);
-    }
-
-    /**
-     * @return $this
-     */
     public function inProgress()
     {
         return $this->status(3);

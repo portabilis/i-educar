@@ -6,6 +6,7 @@ use App\Models\Registration\RegistrationBuilder;
 use App\Models\Registration\RegistrationScopes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 
 /**
@@ -15,7 +16,7 @@ use Illuminate\Database\Query\Builder;
  */
 class Registration extends Model
 {
-    use RegistrationScopes;
+    use RegistrationScopes, SoftDeletes;
 
     /**
      * @param Builder $query
