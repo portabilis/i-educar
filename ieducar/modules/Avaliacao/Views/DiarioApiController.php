@@ -391,7 +391,10 @@ class DiarioApiController extends ApiCoreController
     // responders
 
     // post
-    public function postNota()
+    /**
+     * @throws CoreExt_Exception
+     */
+    protected function postNota()
     {
         if ($this->canPostNota()) {
             $nota = urldecode($this->getRequest()->att_value);

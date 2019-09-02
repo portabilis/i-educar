@@ -32,8 +32,14 @@ class WithoutScoreDiarioApiTest extends TestCase
     public function testPostAbsenceShouldReturnsApproved()
     {
         $enrollment = $this->getCommonFakeData($this->evaluationRule);
-        $discipline = $enrollment->schoolClass->disciplines()->first();
+        $schoolClass = $enrollment->schoolClass;
+        $school = $schoolClass->school;
         $registration = $enrollment->registration;
+
+        $this->createStages($school, 1);
+        $this->createDisciplines($schoolClass, 1);
+
+        $discipline = $schoolClass->refresh()->disciplines()->first();
 
         $response = $this->postAbsence($enrollment, $discipline->id, 1, 10);
 
@@ -47,12 +53,14 @@ class WithoutScoreDiarioApiTest extends TestCase
     public function testPostAPartOfAbsenceShouldReturnsStudying()
     {
         $enrollment = $this->getCommonFakeData($this->evaluationRule);
-        $discipline = $enrollment->schoolClass->disciplines()->first();
+        $schoolClass = $enrollment->schoolClass;
+        $school = $schoolClass->school;
         $registration = $enrollment->registration;
 
-        $schoolClass = $enrollment->schoolClass;
+        $this->createStages($school, 2);
+        $this->createDisciplines($schoolClass, 1);
 
-        $this->addAcademicYearStage($schoolClass, 2);
+        $discipline = $schoolClass->refresh()->disciplines()->first();
 
         $response = $this->postAbsence($enrollment, $discipline->id, 1, 10);
 
