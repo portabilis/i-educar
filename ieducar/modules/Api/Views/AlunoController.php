@@ -2,6 +2,7 @@
 
 use App\Models\LegacyDeficiency;
 use App\Models\Individual;
+use App\Models\LogUnification;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
@@ -1958,6 +1959,29 @@ class AlunoController extends ApiCoreController
         return $bairro;
     }
 
+    protected function getUnificacoes()
+    {
+        if (!$this->canGetUnificacoes()) {
+            return;
+        }
+
+        $arrayEscola = explode(',', $this->getRequest()->escola);
+
+        $unificationsQuery = LogUnification::query();
+        $unificationsQuery->whereHas('studentMain', function ($studentQuery) use ($arrayEscola) {
+            $studentQuery->whereHas('registrations', function ($registrationsQuery) use ($arrayEscola){
+                $registrationsQuery->whereIn('school_id', $arrayEscola);
+            });
+        });
+
+        return  ['unificacoes' => $unificationsQuery->get(['main_id', 'duplicates_id', 'created_at', 'active'])->all()];
+    }
+
+    protected function canGetUnificacoes()
+    {
+        return $this->validatesPresenceOf('escola');
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'aluno')) {
@@ -1986,6 +2010,8 @@ class AlunoController extends ApiCoreController
             $this->appendResponse($this->delete());
         } elseif ($this->isRequestFor('get', 'get-nome-bairro')) {
             $this->appendResponse($this->getNomeBairro());
+        } elseif ($this->isRequestFor('get', 'unificacao-alunos')) {
+            $this->appendResponse($this->getUnificacoes());
         } else {
             $this->notImplementedOperationError();
         }

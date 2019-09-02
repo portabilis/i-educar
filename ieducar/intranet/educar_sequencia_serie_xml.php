@@ -39,7 +39,8 @@
         $consulta = "SELECT cod_serie, nm_serie
                        FROM pmieducar.serie
                       WHERE ref_cod_curso = ". $_GET["cur"] .
-                      " AND cod_serie <>" .
+                      " AND ativo = 1
+                      AND cod_serie <>" .
                       $_GET['ser_dif'] .
                       " ORDER BY nm_serie" ;
         $db->Consulta( $consulta );

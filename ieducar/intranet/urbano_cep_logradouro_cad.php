@@ -76,10 +76,11 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $this->retorno = 'Novo';
-    
+
     $this->idlog = $_GET['idlog'];
     if (is_numeric($this->idlog)) {
       $obj_cep_logradouro = new clsUrbanoCepLogradouro();
+      $obj_cep_logradouro->_campo_order_by = 'cep';
       $lst_cep_logradouro = $obj_cep_logradouro->lista(NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->idlog);
       if ($lst_cep_logradouro) {

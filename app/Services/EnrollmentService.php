@@ -210,12 +210,6 @@ class EnrollmentService
             throw new ExistsActiveEnrollmentSameTimeException($registration);
         }
 
-        $previousEnrollment = $this->getPreviousEnrollment($registration);
-
-        if ($previousEnrollment) {
-            $this->markAsRelocated($previousEnrollment);
-        }
-
         $sequenceInSchoolClass = $this->getSequenceSchoolClass($registration, $schoolClass, $date);
 
         /** @var LegacyEnrollment $enrollment */
@@ -237,7 +231,7 @@ class EnrollmentService
      * @param LegacyEnrollment $enrollment
      * @throws Throwable
      */
-    private function markAsRelocated(LegacyEnrollment $enrollment)
+    public function markAsRelocated(LegacyEnrollment $enrollment)
     {
         $enrollment->remanejado = true;
         $enrollment->saveOrFail();
@@ -250,7 +244,7 @@ class EnrollmentService
      * @param LegacyRegistration $registration
      * @return LegacyEnrollment|void
      */
-    private function getPreviousEnrollment(LegacyRegistration $registration)
+    public function getPreviousEnrollmentAccordingToRelocationDate(LegacyRegistration $registration)
     {
         $previousEnrollment = $registration->lastEnrollment;
 

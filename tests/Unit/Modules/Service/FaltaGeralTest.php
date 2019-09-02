@@ -266,9 +266,4 @@ class Avaliacao_Service_FaltaGeralTest extends Avaliacao_Service_FaltaCommon
     $falta = array_shift($faltas);
     $this->assertEquals(3, $falta->etapa);
   }
-
-  public function tearDown(): void
-  {
-    Portabilis_Utils_Database::$_db = null;
-  }
 }
