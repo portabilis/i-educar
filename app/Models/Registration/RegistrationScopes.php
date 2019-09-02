@@ -55,4 +55,20 @@ trait RegistrationScopes
     {
         return $this->where('status', $status);
     }
+
+    /**
+     * @return $this
+     */
+    public function active()
+    {
+        return $this->where('ativo', 1);
+    }
+
+    /**
+     * @return $this
+     */
+    public function inProgress()
+    {
+        return $this->status(3);
+    }
 }
