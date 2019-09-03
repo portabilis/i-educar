@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * LegacySchool
@@ -63,6 +64,19 @@ class LegacySchool extends Model
     public function person()
     {
         return $this->belongsTo(LegacyPerson::class, 'ref_idpes');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function courses()
+    {
+        return $this->belongsToMany(
+            LegacyCourse::class,
+            'pmieducar.escola_curso',
+            'ref_cod_escola',
+            'ref_cod_curso'
+        )->withPivot('ativo', 'anos_letivos');
     }
 
     /**

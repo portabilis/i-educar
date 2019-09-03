@@ -236,7 +236,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
     }
 
-    $etapaAtual = $_GET['etapa'] == 'Rc' ? $maiorEtapaUtilizada : $_GET['etapa'];
+    $etapaAtual = ($_GET['etapa'] ?? null) == 'Rc' ? $maiorEtapaUtilizada : ($_GET['etapa'] ?? null);
 
     $this->_setRegra(App_Model_IedFinder::getRegraAvaliacaoPorMatricula(
         $codMatricula, $this->getRegraDataMapper(), $matricula
@@ -469,7 +469,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         null,
         null,
         $enrollment,
-        false,
+        true,
         $ignorarDispensasParciais
     ));
 
@@ -2764,11 +2764,11 @@ public function alterarSituacao($novaSituacao, $matriculaId){
         $tipoPresenca = $this->getRegraAvaliacaoTipoPresenca();
 
         if ($tipoPresenca == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
-            $faltas = $this->getFalta($etapa, $componenteCurricularId)->quantidade;
+            $faltas = $this->getFalta($etapa, $componenteCurricularId)->quantidade ?? null;
         }
 
         if ($tipoPresenca == RegraAvaliacao_Model_TipoPresenca::GERAL) {
-            $faltas = $this->getFalta($etapa)->quantidade;
+            $faltas = $this->getFalta($etapa)->quantidade ?? null;
         }
 
         return $faltas;

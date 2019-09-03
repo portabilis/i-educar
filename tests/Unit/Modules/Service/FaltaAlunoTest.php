@@ -77,7 +77,6 @@ class Avaliacao_Service_FaltaAlunoTest extends Avaliacao_Service_TestCommon
   public function tearDown(): void
   {
         $_GET = [];
-
         Portabilis_Utils_Database::$_db = null;
   }
 }

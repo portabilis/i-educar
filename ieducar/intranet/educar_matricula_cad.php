@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyRegistration;
+use App\Services\PromotionService;
 use App\Services\SchoolClass\AvailableTimeService;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
@@ -354,6 +356,7 @@ class indice extends clsCadastro
 
     public function Novo()
     {
+
         $dependencia = $this->dependencia == 'on';
 
         if ($dependencia && !$this->verificaQtdeDependenciasPermitida()) {
@@ -959,6 +962,13 @@ class indice extends clsCadastro
 
                 $this->enturmacaoMatricula($this->cod_matricula, $this->ref_cod_turma);
                 $this->verificaSolicitacaoTransferencia();
+
+                /** @var LegacyRegistration $registration */
+
+                $registration = LegacyRegistration::find($this->cod_matricula);
+
+                $promocao = new PromotionService($registration->enrollments()->first());
+                $promocao->fakeRequest();
 
                 $this->mensagem = 'Cadastro efetuado com sucesso.<br />';
 

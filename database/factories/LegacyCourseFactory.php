@@ -21,3 +21,11 @@ $factory->define(LegacyCourse::class, function (Faker $faker) {
         'ref_cod_instituicao' => factory(LegacyInstitution::class)->states('unique')->make(),
     ];
 });
+
+$factory->defineAs(LegacyCourse::class, 'padrao-ano-escolar', function (Faker $faker) use ($factory) {
+    $course = $factory->raw(LegacyCourse::class);
+
+    return array_merge($course, [
+        'padrao_ano_escolar' => 1,
+    ]);
+});

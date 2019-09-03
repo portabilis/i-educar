@@ -26,6 +26,7 @@ class DiarioApiController extends ApiCoreController
 {
     protected $_dataMapper = 'Avaliacao_Model_NotaComponenteDataMapper';
     protected $_processoAp = 642;
+    protected $_currentMatriculaId;
 
     protected function validatesValueOfAttValueIsInOpcoesNotas()
     {
@@ -330,7 +331,6 @@ class DiarioApiController extends ApiCoreController
     protected function canPostNota()
     {
         return $this->canPost() &&
-        $this->validatesIsNumeric('att_value') &&
         $this->validatesValueOfAttValueIsInOpcoesNotas(false) &&
         $this->validatesPresenceOf('componente_curricular_id') &&
         $this->validatesRegraAvaliacaoHasNota() &&
@@ -341,14 +341,12 @@ class DiarioApiController extends ApiCoreController
 
     protected function canPostNotaGeral()
     {
-        return $this->canPost() &&
-        $this->validatesIsNumeric('att_value');
+        return $this->canPost();
     }
 
     protected function canPostFalta()
     {
         return $this->canPost() &&
-        $this->validatesIsNumeric('att_value') &&
         $this->validatesPreviousFaltasHasBeenSet();
     }
 
@@ -393,7 +391,6 @@ class DiarioApiController extends ApiCoreController
     // responders
 
     // post
-
     /**
      * @throws CoreExt_Exception
      */
