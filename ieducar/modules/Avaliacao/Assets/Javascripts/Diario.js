@@ -892,10 +892,12 @@ console.log(targetId);
 
   if (hasSuccess) {
     $j('#' + targetId).addClass('success');
+    $j('#' + targetId).removeClass('error');
   }
 
   if (hasError) {
     $j('#' + targetId).addClass('error');
+    $j('#' + targetId).removeClass('success');
   }
 
   messageUtils.handleMessages(arrayMessage, targetId);
