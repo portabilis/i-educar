@@ -376,6 +376,8 @@ function postNota($notaFieldElement) {
 
     $notaFieldElement.data('old_value', $notaFieldElement.val());
     postResource(options, handleErrorOnPostResource);
+  } else {
+    $j('#' + $notaFieldElement.attr('id')).addClass('error');
   }
 }
 
@@ -436,6 +438,8 @@ function postNotaExame($notaExameFieldElement) {
 
     $notaExameFieldElement.data('old_value', $notaExameFieldElement.val());
     postResource(options, handleErrorOnPostResource);
+  } else {
+    $j('#' + $notaExameFieldElement.attr('id')).addClass('error');
   }
 }
 
@@ -469,6 +473,8 @@ function postNotaRecuperacaoParalela($notaRecuperacaoParalelaElement) {
 
     $notaRecuperacaoParalelaElement.data('old_value', $notaRecuperacaoParalelaElement.val());
     postResource(options, handleErrorOnPostResource);
+  } else {
+    $j('#' + $notaRecuperacaoParalelaElement.attr('id')).addClass('error');
   }
 }
 
@@ -500,6 +506,8 @@ function postNotaRecuperacaoEspecifica($notaRecuperacaoEspecificaElement) {
 
     $notaRecuperacaoEspecificaElement.data('old_value', $notaRecuperacaoEspecificaElement.val());
     postResource(options, handleErrorOnPostResource);
+  } else {
+    $j('#' + $notaRecuperacaoEspecificaElement.attr('id')).addClass('error');
   }
 }
 
@@ -532,6 +540,8 @@ function postFalta($faltaFieldElement) {
 
     $faltaFieldElement.data('old_value', $faltaFieldElement.val());
     postResource(options, handleErrorOnPostResource);
+  } else {
+    $j('#' + $faltaFieldElement.attr('id')).addClass('error');
   }
 }
 
@@ -804,7 +814,7 @@ function deleteFalta($faltaFieldElement) {
 
     $faltaFieldElement.val($faltaFieldElement.data('old_value'));
 
-    handleMessages([{type : 'error', msg : safeUtf8Decode('Falta não pode ser removida após ter lançado notas ou parecer descritivo, tente definir como 0 (zero).')}], $faltaFieldElement.attr('id'));
+    handleMessagesDiario([{type : 'error', msg : safeUtf8Decode('Falta não pode ser removida após ter lançado notas ou parecer descritivo, tente definir como 0 (zero).')}], $faltaFieldElement.attr('id'));
   }
 }
 
@@ -864,14 +874,29 @@ function handleChange(dataResponse) {
 }
 
 var handleMessagesDiario = function(arrayMessage, targetId) {
+  var hasError = false;
+  var hasSuccess = false;
+console.log(targetId);
   arrayMessage = $j.map(arrayMessage, function (item, index) {
     if (item.type == 'success') {
-      $j('#' + targetId).addClass('input-success');
+      hasSuccess = true;
       return null;
+    }
+
+    if (item.type == 'error') {
+      hasError = true;
     }
 
     return item;
   });
+
+  if (hasSuccess) {
+    $j('#' + targetId).addClass('success');
+  }
+
+  if (hasError) {
+    $j('#' + targetId).addClass('error');
+  }
 
   messageUtils.handleMessages(arrayMessage, targetId);
 };
@@ -1285,7 +1310,7 @@ function notaRecuperacaoParalelaField(matriculaId, componenteCurricularId, value
   return _notaField(matriculaId,
                     componenteCurricularId,
                     'nota-recuperacao-paralela-cc',
-                    'nota-recuperacao-paralela-' + matriculaId + '-cc-' + componenteCurricularId,
+                    'nota_recuperacao_paralela-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
                     value,
                     'area-id-' + areaConhecimentoId,
                     maxLength,
