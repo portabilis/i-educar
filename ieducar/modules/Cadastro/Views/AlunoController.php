@@ -920,7 +920,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->hidden('url_laudo_medico');
 
-        if (config('legacy.app.alunos.laudo_medico_obrigatorio') == 1) {
+        $laudo = config('legacy.app.alunos.laudo_medico_obrigatorio');
+
+        if ($laudo == 1) {
             $this->inputsHelper()->hidden('url_laudo_medico_obrigatorio');
         }
 

@@ -197,7 +197,15 @@ var newSubmitForm = function (event) {
     }
 
     if ($j('#deficiencias').val().length > 1) {
-        if ($j('#url_laudo_medico_obrigatorio').length > 0 && $j('#url_laudo_medico').val().length < 1) {
+
+        let laudos = $j('#url_laudo_medico').val();
+        let temLaudos = false;
+
+        if (laudos.length > 0) {
+          temLaudos = JSON.parse(laudos).length > 0;
+        }
+
+        if ($j('#url_laudo_medico_obrigatorio').length > 0 && !temLaudos) {
             return laudoMedicoObrigatorio();
         }
     }
