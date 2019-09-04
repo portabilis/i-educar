@@ -18,6 +18,7 @@ $factory->define(LegacySchoolGrade::class, function (Faker $faker) {
         ]),
         'ref_usuario_cad' => factory(LegacyUser::class)->state('unique')->make(),
         'data_cadastro' => now(),
+        'ativo' => 1,
         'anos_letivos' => $schoolCourse->anos_letivos,
     ];
 });

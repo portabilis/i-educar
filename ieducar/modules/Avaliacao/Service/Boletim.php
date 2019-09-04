@@ -2764,11 +2764,11 @@ public function alterarSituacao($novaSituacao, $matriculaId){
         $tipoPresenca = $this->getRegraAvaliacaoTipoPresenca();
 
         if ($tipoPresenca == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
-            $faltas = $this->getFalta($etapa, $componenteCurricularId)->quantidade;
+            $faltas = $this->getFalta($etapa, $componenteCurricularId)->quantidade ?? null;
         }
 
         if ($tipoPresenca == RegraAvaliacao_Model_TipoPresenca::GERAL) {
-            $faltas = $this->getFalta($etapa)->quantidade;
+            $faltas = $this->getFalta($etapa)->quantidade ?? null;
         }
 
         return $faltas;
