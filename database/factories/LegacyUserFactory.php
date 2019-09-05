@@ -4,6 +4,9 @@ use App\Models\LegacyEmployee;
 use App\Models\LegacyUser;
 use App\Models\LegacyUserType;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
+
+/** @var Factory $factory */
 
 $factory->define(LegacyUser::class, function (Faker $faker) {
     return [

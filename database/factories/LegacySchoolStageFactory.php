@@ -4,6 +4,9 @@ use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolStage;
 use App\Models\LegacyStageType;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
+
+/** @var Factory $factory */
 
 $factory->define(LegacySchoolStage::class, function (Faker $faker) {
 
