@@ -349,18 +349,23 @@ class ComponentesSerieController extends ApiCoreController
         foreach ($disciplinasRemovidas as $disciplinaRemovida) {
             $discipline = $disciplinaRemovida->discipline;
             $dispensas[$discipline->id] = [
-                'componente' => $discipline->nome,
+                'idComponente' => $discipline->id,
+                'nomeComponente' => $discipline->nome,
             ];
 
             $dispensas[$discipline->id]['dispensas'] = LegacyDisciplineExemption::where('ref_cod_escola', $escola)
+                ->with('registration.student.person')
                 ->where('ref_cod_serie', $serie)
                 ->where('ref_cod_disciplina', $discipline->id)
-                ->limit(15)
                 ->active()
                 ->get()
                 ->map(function ($item){
                     /** @var LegacyDisciplineExemption $item */
-                    return [$item->registration->getKey() => $item->registration->student->person->nome];
+                    return [
+                        'idMatricula' => $item->registration->getKey(),
+                        'anoMatricula' => $item->registration->ano,
+                        'nomeAluno' => $item->registration->student->person->nome,
+                    ];
                 });
         }
 
