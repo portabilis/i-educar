@@ -221,69 +221,6 @@ class clsPessoa_
         return false;
     }
 
-    public function listaCod($str_nome = false, $inicio_limite = false, $qtd_registros = false, $str_orderBy = false, $arrayint_idisin = false, $arrayint_idnotin = false, $str_tipo_pessoa = false)
-    {
-        $whereAnd = 'WHERE ';
-        $where = '';
-        if (is_string($str_nome)) {
-            $where .= "{$whereAnd} fcn_upper_nrm(nome) ILIKE fcn_upper_nrm('%{$str_nome}%') ";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($str_tipo_pessoa)) {
-            $where .= "{$whereAnd}tipo = '$str_tipo_pessoa' ";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_array($arrayint_idisin)) {
-            $ok = true;
-            foreach ($arrayint_idisin as $val) {
-                if (!is_numeric($val)) {
-                    $ok = false;
-                }
-            }
-            if ($ok) {
-                $where .= "{$whereAnd}idpes IN ( " . implode(',', $arrayint_idisin) . ' )';
-                $whereAnd = ' AND ';
-            }
-        }
-
-        if (is_array($arrayint_idnotin)) {
-            $ok = true;
-            foreach ($arrayint_idnotin as $val) {
-                if (!is_numeric($val)) {
-                    $ok = false;
-                }
-            }
-            if ($ok) {
-                $where .= "{$whereAnd}idpes NOT IN ( " . implode(',', $arrayint_idnotin) . ' )';
-                $whereAnd = ' AND ';
-            }
-        }
-        if ($inicio_limite !== false && $qtd_registros) {
-            $limite = "LIMIT $qtd_registros OFFSET $inicio_limite ";
-        }
-
-        $orderBy = ' ORDER BY ';
-        if ($str_orderBy) {
-            $orderBy .= "$str_orderBy ";
-        } else {
-            $orderBy .= 'nome ';
-        }
-
-        $db = new clsBanco($this->banco);
-        $db->Consulta("SELECT idpes FROM cadastro.pessoa $where $orderBy $limite");
-        $resultado = [];
-        while ($db->ProximoRegistro()) {
-            $tupla = $db->Tupla();
-            $resultado[] = $tupla['idpes'];
-        }
-        if (count($resultado) > 0) {
-            return $resultado;
-        }
-
-        return false;
-    }
-
     public function detalhe()
     {
         if (is_numeric($this->idpes)) {

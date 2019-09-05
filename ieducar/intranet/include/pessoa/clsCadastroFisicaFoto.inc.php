@@ -32,31 +32,6 @@ class clsCadastroFisicaFoto extends Model
     }
 
     /**
-     * Construtor (PHP 4)
-     *
-     * @return object
-     */
-    public function clsCadastroFisicaFoto($idpes = null, $caminho = null)
-    {
-        $db = new clsBanco();
-        $this->_schema = 'cadastro.';
-        $this->_tabela = "{$this->_schema}fisica_foto";
-
-        $this->_campos_lista = $this->_todos_campos = 'idpes, caminho';
-
-        if (is_numeric($idpes)) {
-            $tmp_obj = new clsPessoa_($idpes);
-            if ($tmp_obj->detalhe()) {
-                $this->idpes = $idpes;
-            }
-        }
-
-        if (is_string($caminho)) {
-            $this->caminho = $caminho;
-        }
-    }
-
-    /**
      * Cria um novo registro
      *
      * @return bool
