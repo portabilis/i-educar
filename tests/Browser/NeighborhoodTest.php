@@ -21,9 +21,8 @@ class NeighborhoodTest extends DuskTestCase
     public function testNeighborhoodListing()
     {
         $this->browse(function (Browser $browser) {
-            $browser->login();
-
-            $browser->visit(new ListingPage());
+            $browser->login()
+                ->visit(new ListingPage());
         });
     }
 }
