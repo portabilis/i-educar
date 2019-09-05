@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacySchoolGradeDiscipline extends Model
 {
@@ -23,4 +24,12 @@ class LegacySchoolGradeDiscipline extends Model
     ];
 
     public $timestamps = false;
+
+    /**
+     * @return BelongsTo
+     */
+    public function discipline()
+    {
+        return $this->belongsTo(LegacyDiscipline::class, 'ref_cod_disciplina');
+    }
 }

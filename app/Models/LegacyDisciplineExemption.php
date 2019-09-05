@@ -2,9 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Class LegacyDisciplineExemption
+ * @property LegacyRegistration $registration
+ */
 class LegacyDisciplineExemption extends Model
 {
     /**
@@ -46,5 +51,15 @@ class LegacyDisciplineExemption extends Model
     public function registration()
     {
         return $this->belongsTo(LegacyRegistration::class, 'ref_cod_matricula');
+    }
+
+    /**
+     * @param Builder $query
+     *
+     * @return Builder
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('ativo', 1);
     }
 }

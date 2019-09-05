@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyDisciplineExemption;
+use App\Models\LegacySchoolGradeDiscipline;
+
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
@@ -332,9 +335,39 @@ class ComponentesSerieController extends ApiCoreController
         $escola = $this->getRequest()->escola_id;
         $disciplinas = $this->getRequest()->disciplinas;
         $disciplinas = explode(',', $disciplinas);
-        $obj = new clsPmieducarEscolaSerieDisciplina($serie, $escola, null, 1);
+        /** @var LegacySchoolGradeDiscipline[] $disciplinasRemovidas */
+        $disciplinasRemovidas = LegacySchoolGradeDiscipline::where('ref_ref_cod_serie', $serie)
+            ->where('ref_ref_cod_escola', $escola)
+            ->whereNotIn('ref_cod_disciplina', $disciplinas)
+            ->get()->all();
 
-        return ['existe_dispensa' => $obj->existeDispensa($disciplinas)];
+        if (empty($disciplinasRemovidas)) {
+            return ['existe_dispensa' => false];
+        }
+
+        $dispensas = [];
+        foreach ($disciplinasRemovidas as $disciplinaRemovida) {
+            $discipline = $disciplinaRemovida->discipline;
+            $dispensas[$discipline->id] = [
+                'componente' => $discipline->nome,
+            ];
+
+            $dispensas[$discipline->id]['dispensas'] = LegacyDisciplineExemption::where('ref_cod_escola', $escola)
+                ->where('ref_cod_serie', $serie)
+                ->where('ref_cod_disciplina', $discipline->id)
+                ->limit(15)
+                ->active()
+                ->get()
+                ->map(function ($item){
+                    /** @var LegacyDisciplineExemption $item */
+                    return [$item->registration->getKey() => $item->registration->student->person->nome];
+                });
+        }
+
+        return [
+            'existe_dispensa' => !empty($dispensas),
+            'dispensas' => $dispensas,
+        ];
     }
 
     private function getEscolasBySerie($serieId)
