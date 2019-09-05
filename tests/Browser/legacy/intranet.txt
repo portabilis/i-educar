@@ -200,13 +200,6 @@ educar_iniciar_ano_letivo.php
 educar_instituicao_cad.php
 educar_instituicao_det.php
 educar_instituicao_lst.php
-educar_material_didatico_cad.php
-educar_material_didatico_det.php
-educar_material_didatico_lst.php
-educar_material_tipo_cad.php
-educar_material_tipo_cad_pop.php
-educar_material_tipo_det.php
-educar_material_tipo_lst.php
 educar_matricula_abandono_cad.php
 educar_matricula_cad.php
 educar_matricula_det.php
