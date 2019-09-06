@@ -16,9 +16,9 @@ class Portabilis_View_Helper_DynamicInput_Curso extends Portabilis_View_Helper_D
         $instituicaoId = $this->getInstituicaoId($options['instituicaoId'] ?? null);
         $escolaId = $this->getEscolaId($options['escolaId'] ?? null);
         $userId = $this->getCurrentUserId();
-        $isProfessor = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
+        $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicaoId, $userId);
 
-        if ($instituicaoId && $escolaId && empty($resources) && $isProfessor) {
+        if ($instituicaoId && $escolaId && empty($resources) && $isOnlyProfessor) {
             $cursos = Portabilis_Business_Professor::cursosAlocado($instituicaoId, $escolaId, $userId);
             $resources = Portabilis_Array_Utils::setAsIdValue($cursos, 'id', 'nome');
         } elseif ($escolaId && empty($resources)) {

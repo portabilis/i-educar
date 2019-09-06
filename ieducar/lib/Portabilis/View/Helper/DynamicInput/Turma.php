@@ -19,9 +19,9 @@ class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_D
         $naoFiltrarAno = $this->viewInstance->nao_filtrar_ano ?? null;
 
         $userId = $this->getCurrentUserId();
-        $isProfessor = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
+        $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicaoId, $userId);
 
-        if ($escolaId and $serieId and empty($resources) and $isProfessor) {
+        if ($escolaId and $serieId and empty($resources) and $isOnlyProfessor) {
             $resources = Portabilis_Business_Professor::turmasAlocado($instituicaoId, $escolaId, $serieId, $userId);
         } elseif ($escolaId && $serieId && empty($resources)) {
             $resources = App_Model_IedFinder::getTurmas($escolaId, $serieId);

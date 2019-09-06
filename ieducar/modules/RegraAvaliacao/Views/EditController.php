@@ -303,11 +303,6 @@ class EditController extends Core_Controller_Page_EditController
 
         $this->prependOutput($js);
 
-        Portabilis_View_Helper_Application::loadStylesheet(
-            $this,
-            'intranet/styles/localizacaoSistema.css'
-        );
-
         Portabilis_View_Helper_Application::loadJavascript(
             $this,
             '/modules/RegraAvaliacao/Assets/Javascripts/RegraAvaliacao.js'

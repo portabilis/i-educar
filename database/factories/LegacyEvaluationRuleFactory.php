@@ -4,6 +4,9 @@ use App\Models\LegacyAverageFormula;
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyInstitution;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
+
+/** @var Factory $factory */
 
 require_once __DIR__ . '/../../ieducar/modules/RegraAvaliacao/Model/Nota/TipoValor.php';
 require_once __DIR__ . '/../../ieducar/modules/RegraAvaliacao/Model/TipoProgressao.php';

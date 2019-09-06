@@ -3,6 +3,9 @@
 use App\Models\LegacyAverageFormula;
 use App\Models\LegacyInstitution;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
+
+/** @var Factory $factory */
 
 $factory->define(LegacyAverageFormula::class, function (Faker $faker) {
     return [

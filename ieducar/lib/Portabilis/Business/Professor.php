@@ -32,6 +32,23 @@ class Portabilis_Business_Professor
         return self::fetchPreparedQuery($sql, $options) == '1';
     }
 
+    public static function isOnlyProfessor($instituicaoId, $userId)
+    {
+        $sql = "
+            SELECT DISTINCT funcao.professor
+            FROM pmieducar.servidor_funcao, pmieducar.funcao
+            WHERE funcao.cod_funcao = servidor_funcao.ref_cod_funcao
+            AND servidor_funcao.ref_cod_servidor = {$userId}
+        ";
+
+        if (is_numeric($instituicaoId)) {
+            $sql .= " AND servidor_funcao.ref_ref_cod_instituicao =  {$instituicaoId}";
+        }
+        
+        $funcoes = self::fetchPreparedQuery($sql);
+        return count($funcoes) == 1 && $funcoes[0]['professor'];
+    }
+
     public static function escolasAlocado($instituicaoId, $userId)
     {
         if (self::necessarioVinculoTurma($instituicaoId)) {

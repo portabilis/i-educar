@@ -1,9 +1,13 @@
 <?php
 
 use App\City;
+use App\District;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
 
-$factory->define(App\District::class, function (Faker $faker) {
+/** @var Factory $factory */
+
+$factory->define(District::class, function (Faker $faker) {
     return [
         'city_id' => function () {
 
