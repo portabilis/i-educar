@@ -59,8 +59,6 @@ class EditController extends Core_Controller_Page_EditController
     {
         parent::_preRender();
 
-        Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
-
         $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
 
         $localizacao = new LocalizacaoSistema();
