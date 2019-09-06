@@ -129,6 +129,10 @@ class App_Model_IedFinder extends CoreExt_Entity
         $escola_curso->setOrderby('ref_cod_escola ASC, cod_curso ASC');
         $escola_curso = $escola_curso->lista($escolaId);
 
+        if (!$escola_curso) {
+            return [];
+        }
+
         $cursos = [];
 
         foreach ($escola_curso as $key => $val) {
