@@ -140,11 +140,11 @@ ModalDispensas = {
 
       if (botaoVerMais) {
         let requestData = {
-          instituicao: $j('#ref_cod_instituicao').val(),
-          escola:  $j('#ref_cod_escola_').val(),
-          curso:  $j('#ref_cod_curso_').val(),
-          serie:  $j('#ref_cod_serie_').val(),
-          componente: dispensas.idComponente
+          ref_cod_instituicao: $j('#ref_cod_instituicao').val(),
+          ref_cod_escola:  $j('#ref_cod_escola_').val(),
+          ref_cod_curso:  $j('#ref_cod_curso_').val(),
+          ref_cod_serie:  $j('#ref_cod_serie_').val(),
+          ref_cod_componente_curricular: dispensas.idComponente
         };
 
         let linkVerMais = $j('<a>').attr({
