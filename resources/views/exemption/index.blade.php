@@ -9,17 +9,26 @@
         <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
             <tbody>
             <tr>
-                <td class="formdktd" colspan="2" height="24"><b>Unificação de alunos</b></td>
+                <td class="formdktd" colspan="2" height="24"><b>Consulta de dispensas</b></td>
+            </tr>
+            <tr id="tr_nm_ano">
+                <td class="formmdtd" valign="top">
+                    <span class="form">Ano:</span><br>
+                    <sub style="vertical-align:top;">somente números</sub>
+                </td>
+                <td class="formmdtd" valign="top">
+                    @include('form.select-year')
+                </td>
             </tr>
             <tr id="tr_nm_instituicao">
-                <td class="formmdtd" valign="top"><span class="form">Instituição:</span></td>
-                <td class="formmdtd" valign="top">
+                <td class="formlttd" valign="top"><span class="form">Instituição:</span></td>
+                <td class="formlttd" valign="top">
                     @include('form.select-institution')
                 </td>
             </tr>
             <tr id="tr_nm_escola">
-                <td class="formlttd" valign="top"><span class="form">Escola:</span></td>
-                <td class="formlttd" valign="top">
+                <td class="formmdtd" valign="top"><span class="form">Escola:</span></td>
+                <td class="formmdtd" valign="top">
                     @include('form.select-school')
                 </td>
             </tr>
@@ -30,15 +39,15 @@
                 </td>
             </tr>
             <tr id="tr_nm_serie">
-                <td class="formlttd" valign="top"><span class="form">Serie:</span></td>
-                <td class="formlttd" valign="top">
+                <td class="formmdtd" valign="top"><span class="form">Serie:</span></td>
+                <td class="formmdtd" valign="top">
                     @include('form.select-grade')
                 </td>
             </tr>
             <tr id="tr_nm_serie">
                 <td class="formlttd" valign="top"><span class="form">Componente curricular:</span></td>
                 <td class="formlttd" valign="top">
-                    @include('form.select-discipline')
+                    @include('form.select-discipline-school-grade')
                 </td>
             </tr>
             </tbody>
@@ -84,7 +93,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="4">Não foi encontrado nenhum log de unificação</td>
+                <td colspan="4">Não foi encontrada nenhuma dispensa</td>
             </tr>
         @endforelse
 
@@ -112,5 +121,5 @@
     <script type="text/javascript"
             src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Serie.js") }}"></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/ComponenteCurricular.js") }}"></script>
+            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/ComponenteCurricularEscolaSerie.js") }}"></script>
 @endprepend
