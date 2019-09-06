@@ -54,6 +54,12 @@ class ComponenteCurricularController extends ApiCoreController
            $this->validatesPresenceOf('ano');
   }
 
+  protected function canGetComponentesCurricularesEscolaSerie()
+  {
+      return $this->validatesPresenceOf('escola') &&
+          $this->validatesPresenceOf('serie');
+  }
+
   private function agrupaComponentesCurriculares($componentesCurriculares){
     $options = array();
 
@@ -208,11 +214,28 @@ class ComponenteCurricularController extends ApiCoreController
     }
   }
 
+  protected function getComponentesCurricularesEscolaSerie()
+  {
+      if (!$this->canGetComponentesCurricularesEscolaSerie()) {
+          return;
+      }
+
+      $escola = $this->getRequest()->escola;
+      $serie = $this->getRequest()->serie;
+
+      $componentesCurriculares = (new \App\Services\SchoolGradeDisciplineService)->getDisciplines($escola, $serie);
+
+      $options = $this->agrupaComponentesCurriculares($componentesCurriculares->toArray());
+      return ['options' => $options];
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'componentesCurriculares'))
       $this->appendResponse($this->getComponentesCurriculares());
     elseif($this->isRequestFor('get', 'componentesCurricularesForDiario'))
        $this->appendResponse($this->getComponentesCurricularesForDiario());
+    elseif($this->isRequestFor('get', 'componentesCurricularesEscolaSerie'))
+        $this->appendResponse($this->getComponentesCurricularesEscolaSerie());
     else
       $this->notImplementedOperationError();
   }
