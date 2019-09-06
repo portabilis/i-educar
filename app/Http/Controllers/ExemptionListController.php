@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LegacyDisciplineExemption;
+use App\Process;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -18,7 +19,7 @@ class ExemptionListController extends Controller
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
-        $this->menu(999847);
+        $this->menu(Process::EXEMPTION_LIST);
 
         $query = LegacyDisciplineExemption::active()->with('registration.student.person');
 
