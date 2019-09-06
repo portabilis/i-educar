@@ -20,7 +20,14 @@ class ExemptionListController extends Controller
 
         $this->menu(999847);
 
-        $query = LegacyDisciplineExemption::active();
+        $query = LegacyDisciplineExemption::active()->with('registration.student.person');
+
+        if ($request->get('ano')) {
+            $ano = $request->get('ano');
+            $query->whereHas('registration', function ($registrationQuery) use ($ano) {
+                $registrationQuery->where('ano', $ano);
+            });
+        }
 
         if ($request->get('ref_cod_escola')) {
             $query->where('ref_cod_escola', $request->get('ref_cod_escola'));
