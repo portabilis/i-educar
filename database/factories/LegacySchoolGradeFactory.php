@@ -6,6 +6,9 @@ use App\Models\LegacySchoolCourse;
 use App\Models\LegacySchoolGrade;
 use App\Models\LegacyUser;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
+
+/** @var Factory $factory */
 
 $factory->define(LegacySchoolGrade::class, function (Faker $faker) {
 
@@ -18,6 +21,7 @@ $factory->define(LegacySchoolGrade::class, function (Faker $faker) {
         ]),
         'ref_usuario_cad' => factory(LegacyUser::class)->state('unique')->make(),
         'data_cadastro' => now(),
+        'ativo' => 1,
         'anos_letivos' => $schoolCourse->anos_letivos,
     ];
 });

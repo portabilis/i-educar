@@ -1095,6 +1095,10 @@ class App_Model_IedFinder extends CoreExt_Entity
 
         $etapaDispensada = [];
 
+        if (!$dispensas) {
+            return [];
+        }
+
         foreach ($dispensas as $dispensa) {
             if ($dispensa['ref_cod_disciplina'] == $disciplina) {
                 $etapaDispensada[] = $dispensa['etapa'];

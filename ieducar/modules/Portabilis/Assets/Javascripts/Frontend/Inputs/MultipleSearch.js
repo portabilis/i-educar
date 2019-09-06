@@ -73,12 +73,15 @@ var multipleSearchHelper = {
 var updateChozen = function(input, values){
   var orderedList = [];
 
-  for (let prop in values) {
-    orderedList.push({
-      label:values[prop],
-      value: prop
-    });
+  if (!Array.isArray(values)) {
+    for (let prop in values) {
+      orderedList.push({
+        label:values[prop],
+        value: prop
+      });
+    }
   }
+
   orderedList = orderedList.sort(function (a,b) {
     return a.label > b.label ? 1 : -1
   });

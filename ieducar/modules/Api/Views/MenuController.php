@@ -1,9 +1,6 @@
 <?php
 
 use App\Menu;
-use App\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
@@ -11,69 +8,30 @@ require_once 'lib/Portabilis/String/Utils.php';
 
 class MenuController extends ApiCoreController
 {
-
-    private function getCurrentUser()
+    protected function search()
     {
-        $this->pessoa_logada = Session::get('id_pessoa');
+        if ($this->canSearch()) {
+            $query = $this->getRequest()->query;
 
-        return $this->pessoa_logada;
-    }
+            $resources = Menu::findByUser($this->user(), $query)
+                ->map(function (Menu $menu) {
+                    return [
+                        'link' => $menu->link,
+                        'label' => $menu->title,
+                    ];
+                });
+        }
 
-    protected function sqlsForNumericSearch()
-    {
-        $usuario = $this->getCurrentUser();
-        $sqls[] = "
-            select 
-                m.link as id, 
-                coalesce(m.title, m.description) as name
-            from public.menus m 
-            inner join pmieducar.menu_tipo_usuario mst
-            on mst.menu_id = m.id
-            inner join pmieducar.usuario u 
-            on u.ref_cod_tipo_usuario = mst.ref_cod_tipo_usuario
-            where true 
-            and u.cod_usuario = '{$usuario}'
-            and mst.visualiza = 1
-            and m.link is not null
-            and m.process = $1
-            order by m.title
-            limit 15;
-        ";
+        if (empty($resources)) {
+            $resources = [
+                [
+                    'link' => '',
+                    'label' => 'Sem resultados.',
+                ]
+            ];
+        }
 
-        return $sqls;
-    }
-
-    protected function sqlsForStringSearch()
-    {
-        $usuario = $this->getCurrentUser();
-
-        $sqls[] = "
-            select 
-                m.link as id, 
-                coalesce(m.title, m.description) as name
-            from public.menus m 
-            inner join pmieducar.menu_tipo_usuario mst
-            on mst.menu_id = m.id
-            inner join pmieducar.usuario u 
-            on u.ref_cod_tipo_usuario = mst.ref_cod_tipo_usuario
-            where true 
-            and u.cod_usuario = '{$usuario}'
-            and mst.visualiza = 1
-            and m.link is not null
-            and (
-                m.title ilike '%'|| $1 ||'%'
-                or m.description ilike '%'|| $1 ||'%'
-            )
-            order by m.title
-            limit 15;
-        ";
-
-        return $sqls;
-    }
-
-    protected function formatResourceValue($resource)
-    {
-        return $this->toUtf8($resource['name']);
+        return ['menus' => $resources];
     }
 
     public function Gerar()

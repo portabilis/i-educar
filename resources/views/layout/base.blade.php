@@ -25,7 +25,7 @@
                     <a href="{{ url('intranet/agenda.php') }}">Agenda</a>
                     <a href="{{ url('intranet/index.php') }}">Calendário</a>
                     <a href="{{ url('intranet/meusdados.php') }}">Meus dados</a>
-                    <a href="{{ url('intranet/logof.php') }}">Sair</a>
+                    <a href="{{ url('intranet/logof.php') }}" id="logout">Sair</a>
                 </div>
             </div>
             <a href="{{ url('intranet/meusdados.php') }}" class="avatar" title="Meus dados">

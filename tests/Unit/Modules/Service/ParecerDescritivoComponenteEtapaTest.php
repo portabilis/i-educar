@@ -191,9 +191,4 @@ class Avaliacao_Service_ParecerDescritivoComponenteEtapaTest extends Avaliacao_S
   {
       $this->markTestSkipped();
   }
-
-  public function tearDown(): void
-  {
-    Portabilis_Utils_Database::$_db = null;
-  }
 }

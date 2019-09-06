@@ -46,15 +46,9 @@ class CoreExt_Controller_RequestTest extends PHPUnit\Framework\TestCase
 {
   protected $_request = NULL;
 
-  /**
-   * @var string
-   */
-  private $requestUri;
-
   protected function setUp(): void
   {
     $this->_request = new CoreExt_Controller_Request();
-    $this->requestUri = $_SERVER['REQUEST_URI'];
   }
 
   /**
@@ -104,11 +98,5 @@ class CoreExt_Controller_RequestTest extends PHPUnit\Framework\TestCase
   public function testConfiguraBaseurlComSchemeEHostPorPadrao() {
     $_SERVER['REQUEST_URI'] = 'http://www.example.com/controller';
     $this->assertEquals('http://www.example.com', $this->_request->getBaseurl());
-  }
-
-  public function tearDown()
-  {
-    $_SERVER['REQUEST_URI']= $this->requestUri;
-    $_GET = [];
   }
 }

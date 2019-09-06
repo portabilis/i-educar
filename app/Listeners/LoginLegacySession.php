@@ -6,8 +6,10 @@ use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacyStudent;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Throwable;
 
 class LoginLegacySession
 {
@@ -48,10 +50,18 @@ class LoginLegacySession
     {
         $institution = app(LegacyInstitution::class);
 
+        try {
+            $createdAt = Carbon::create($user->created_at)->getTimestamp();
+        } catch (Throwable $throwable) {
+            $createdAt = Carbon::now()->subYear()->getTimestamp();
+        }
+
         return (object) [
             'personId' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
+            'role' => $user->role,
+            'created_at' => $createdAt,
             'institution' => $institution->name,
             'city' => $institution->city,
             'state' => $institution->state,

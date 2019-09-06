@@ -276,4 +276,27 @@ class Menu extends Model
                 ->orderBy('order')
                 ->get();
     }
+
+    /**
+     * Retorna os menus disponíveis para o usuário baseado em seu nível de
+     * permissão.
+     *
+     * @param User   $user
+     * @param string $search
+     *
+     * @return LaravelCollection
+     */
+    public static function findByUser(User $user, $search)
+    {
+        $query = $user->isAdmin() ? static::query() : $user->menu();
+
+        return $query->whereNotNull('link')
+            ->where(function ($query) use ($search) {
+                $query->orWhere('title', 'ilike', "%{$search}%");
+                $query->orWhere('description', 'ilike', "%{$search}%");
+            })
+            ->orderBy('title')
+            ->limit(15)
+            ->get();
+    }
 }

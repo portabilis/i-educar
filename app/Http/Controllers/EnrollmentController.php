@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Throwable;
+use Illuminate\Support\Facades\DB;
 
 class EnrollmentController extends Controller
 {
@@ -59,6 +60,7 @@ class EnrollmentController extends Controller
         LegacyRegistration $registration,
         LegacySchoolClass $schoolClass
     ) {
+        DB::beginTransaction();
         $date = Carbon::createFromFormat('d/m/Y', $request->input('enrollment_date'));
 
         if ($request->input('is_relocation') || $request->input('is_cancellation')) {
@@ -68,19 +70,30 @@ class EnrollmentController extends Controller
             try {
                 $enrollmentService->cancelEnrollment($enrollment, $date);
             } catch (Throwable $throwable) {
+                DB::rollback();
                 return redirect()->back()->with('error', $throwable->getMessage());
             }
         }
 
         if ($request->input('is_cancellation')) {
+            DB::commit();
             return redirect('/intranet/educar_matricula_det.php?cod_matricula=' . $registration->id)->with('success', 'Enturmação feita com sucesso.');
+        }
+
+        $previousEnrollment = $enrollmentService->getPreviousEnrollmentAccordingToRelocationDate($registration);
+
+        if ($request->input('is_relocation') && $previousEnrollment) {
+            $enrollmentService->markAsRelocated($previousEnrollment);
         }
 
         try {
             $enrollmentService->enroll($registration, $schoolClass, $date);
         } catch (Throwable $throwable) {
+            DB::rollback();
             return redirect()->back()->with('error', $throwable->getMessage());
         }
+
+        DB::commit();
 
         return redirect('/intranet/educar_matricula_det.php?cod_matricula=' . $registration->id)->with('success', 'Enturmação feita com sucesso.');
     }
