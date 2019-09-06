@@ -38,6 +38,12 @@ class LegacyDisciplineExemption extends Model
         'updated_at',
     ];
 
+    protected $dates = [
+        'data_cadastro',
+        'data_exclusao',
+        'updated_at'
+    ];
+
     /**
      * @var bool
      */
@@ -54,6 +60,22 @@ class LegacyDisciplineExemption extends Model
     }
 
     /**
+     * @return BelongsTo
+     */
+    public function discipline()
+    {
+        return $this->belongsTo(LegacyDiscipline::class, 'ref_cod_disciplina');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function type()
+    {
+        return $this->belongsTo(LegacyExemptionType::class, 'ref_cod_tipo_dispensa');
+    }
+
+    /**
      * @param Builder $query
      *
      * @return Builder
@@ -61,5 +83,10 @@ class LegacyDisciplineExemption extends Model
     public function scopeActive($query)
     {
         return $query->where('ativo', 1);
+    }
+
+    public function getDateFormat()
+    {
+        return 'Y-m-d H:i:s.u';
     }
 }
