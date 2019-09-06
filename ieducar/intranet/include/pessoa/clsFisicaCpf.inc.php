@@ -173,17 +173,4 @@ class clsFisicaCpf
 
         return false;
     }
-
-    public function detalheCPF()
-    {
-        $db = new clsBanco();
-        $db->Consulta("SELECT idpes, cpf FROM {$this->schema}.{$this->tabela} WHERE cpf = {$this->cpf}");
-        if ($db->ProximoRegistro()) {
-            $tupla = $db->Tupla();
-
-            return $tupla;
-        }
-
-        return false;
-    }
 }

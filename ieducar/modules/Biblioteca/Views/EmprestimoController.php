@@ -49,8 +49,6 @@ class EmprestimoController extends Portabilis_Controller_Page_ListController
 
     parent::_preRender();
 
-    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
-
     $localizacao = new LocalizacaoSistema();
 
     $localizacao->entradaCaminhos( array(

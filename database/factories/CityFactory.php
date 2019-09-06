@@ -1,9 +1,13 @@
 <?php
 
+use App\City;
 use App\State;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
 
-$factory->define(App\City::class, function (Faker $faker) {
+/** @var Factory $factory */
+
+$factory->define(City::class, function (Faker $faker) {
     return [
         'state_id' => function () {
 

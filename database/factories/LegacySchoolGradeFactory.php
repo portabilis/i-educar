@@ -6,6 +6,9 @@ use App\Models\LegacySchoolCourse;
 use App\Models\LegacySchoolGrade;
 use App\Models\LegacyUser;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
+
+/** @var Factory $factory */
 
 $factory->define(LegacySchoolGrade::class, function (Faker $faker) {
 
