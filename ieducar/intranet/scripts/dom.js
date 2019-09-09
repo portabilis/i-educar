@@ -641,251 +641,106 @@ function DOM_ObjectPosition_getPageOffsetTopLeft( el,type )
 	}
 }
 
-
-
-
-/*
-
-function DOM_showLinks(e)
+function oproDocumentoNextLvl( setorPai, proxNivel)
 {
-	loadXMLDoc( "teste_xml.php?s=" + atual.searchString );
-}
-
-function DOM_closeLinks()
-{
-	document.getElementById( "expansivel" ).style.display = 'none';
-}
-
-function DOM_focusInLink()
-{
-	DOM_acao = 2;
-	if( DOM_itensArray.length  )
+	if( typeof arguments[2] == 'string' )
 	{
-		objExpansivel = document.getElementById( "expansivel" );
-		objExpansivel.style.display = 'block';
-		obj = document.getElementById( atual.objectId );
-		posX = ObjectPosition_getPageOffsetLeft( obj );
-		posY = ObjectPosition_getPageOffsetTop( obj );
-		objExpansivel.style.left = posX - 1;
-		objExpansivel.style.top = posY + 12;
+		nome = arguments[2];
 	}
-}
-
-function preencheLink( itensArray )
-{
-	if( itensArray.length )
+	else
 	{
-		txt = "<table border=\"0\" cellpading=\"0\" cellspacing=\"0\" style=\"width:100%\">";
-		for( i = 0; i < itensArray.length; i++ )
+		nome = 'setor_';
+	}
+	nivel = proxNivel * 1;
+	for( ; nivel < 5; nivel++ )
+	{
+		// desabilita todos os objetos de nivel maior
+		obj = document.getElementById( nome + nivel );
+		obj.disabled = true;
+		obj.length=0;
+		obj.options[0] = new Option( '-----------', '0', false, false );
+	}
+
+	if( setorPai )
+	{
+		obj = document.getElementById( nome + proxNivel );
+		if( typeof obj == 'object' )
 		{
-			classe = ( i != opcao )? "DOM_listaNormal": "DOM_listaSelecionado";
-			obj = itensArray[i].firstChild;
-			txt += "<tr><td id=\"linha_" + i + "\" class=\"" + classe + "\" onmouseover=\"DOM_trocaClasse( DOM_opcao, '" + i + "');DOM_opcao=" + i + ";\"><a href=\"\" title=\"" + obj.data + "\" class=\"DOM_multilink\">" + obj.data + "</a></td></tr>\n";
+			DOM_execute_when_xmlhttpChange = function() { oproDocumentoNextLvlDone( proxNivel, nome ); };
+			strURL = "xml_oprot_setor.php?setor_pai=" + setorPai;
+			if( typeof arguments[3] == 'string' )
+			{
+				strURL = "xml_oprot_setor_not_in.php?setor_pai=" + setorPai;
+			}
+			DOM_loadXMLDoc( strURL );
 		}
-		total = i;
-		txt += "</table>";
-
-		objDom = document.getElementById( "expansivel" );
-		objDom.innerHTML = txt;
-		//objDom.style.display = "block";
-		DOM_focusInLink();
-	}
-}
-*/
-
-/*
-	FUNCOES PARA TRATAR O OUTPUT DE UM HTTPREQUEST
-	(personalizado para cada pagina)
-*/
-
-function odes_renda( )
-{
-	// define qual a funcao que devera ser executada quando o xml for carregado
-	DOM_execute_when_xmlhttpChange = function() { odes_recarrega_pagina(); };
-	numero = document.getElementById('numero').value;
-	idbai = document.getElementById('idbai').value;
-	idlog = document.getElementById('idlog').value;
-	cep = document.getElementById('cep').value;
-	idpes = document.getElementById('cod_pessoa_fj').value;
-	if(numero && idbai && idlog && cep)
-	{
-		strURL = "xml_odes_renda.php?idbai="+idbai+"&idlog="+idlog+"&cep="+cep+"&numero="+numero+"&idpes_atual="+idpes;
-		DOM_loadXMLDoc( strURL );
 	}
 }
 
-
-function atualiza_renda( )
+function oproDocumentoNextLvlNomeComleto( setorPai, proxNivel)
 {
-	/// define qual a funcao que devera ser executada quando o xml for carregado
-	DOM_execute_when_xmlhttpChange = function() { atualiza(); };
-	if(document.getElementById('cod_pessoa_fj'))
+	if( typeof arguments[2] == 'string' )
 	{
-		var idpes = document.getElementById('cod_pessoa_fj').value;
-		strURL = "xml_odes_renda.php?idpes="+idpes;
-		DOM_loadXMLDoc( strURL );
+		nome = arguments[2];
+	}
+	else
+	{
+		nome = 'setor_';
+	}
+	nivel = proxNivel * 1;
+	for( ; nivel < 5; nivel++ )
+	{
+		// desabilita todos os objetos de nivel maior
+		obj = document.getElementById( nome + nivel );
+		obj.disabled = true;
+		obj.length=0;
+		obj.options[0] = new Option( '-----------', '0', false, false );
 	}
 
+	if( setorPai )
+	{
+		obj = document.getElementById( nome + proxNivel );
+		if( typeof obj == 'object' )
+		{
+			DOM_execute_when_xmlhttpChange = function() { oproDocumentoNextLvlDone( proxNivel, nome ); };
+			strURL = "xml_oprot_setor.php?nm_completo=1&setor_pai=" + setorPai;
+			if( typeof arguments[3] == 'string' )
+			{
+				strURL = "xml_oprot_setor_not_in.php?setor_pai=" + setorPai;
+			}
+			DOM_loadXMLDoc( strURL );
+		}
+	}
 }
 
-function atualiza()
+function oproDocumentoNextLvlDone( proxNivel, nome )
 {
-	var valores = [];
-	for( i = 0; i < DOM_itensArray.length; i++ )
-	{
-		objXML = DOM_itensArray[i].firstChild;
-		valores[i] = objXML.data;
-	}
-	var renda_total_outros = parseFloat(valores[0]);
-	var percapta = parseFloat(valores[0])/(parseInt(valores[1])+1);
-	var pessoas = parseInt(valores[1]);
-	var renda_total = 0;
-
-	if(document.getElementById("outras").value != "")
-	{
-		renda_total = parseFloat((document.getElementById("outras").value).replace(".","").replace(",","."));
-	}
-	if(document.getElementById("aposentadoria").value != "")
-	{
-		renda_total += parseFloat((document.getElementById("aposentadoria").value.replace(".","")).replace(",","."));
-	}
-	if(document.getElementById("total_remuneracao").value != "")
-	{
-		renda_total += parseFloat((document.getElementById("total_remuneracao").value).replace(".","").replace(",","."));
-	}
-	if(document.getElementById("seguro_desemprego").value != "")
-	{
-		renda_total += parseFloat((document.getElementById("seguro_desemprego").value).replace(".","").replace(",","."));
-	}
-	if(document.getElementById("pensao").value != "")
-	{
-		renda_total += parseFloat((document.getElementById("pensao").value).replace(".","").replace(",","."));
-	}
-
-	document.getElementById("renda_total_ind").innerHTML = renda_total.toFixed(2);
-	renda_total += renda_total_outros;
-	document.getElementById("renda_total").innerHTML = renda_total.toFixed(2);
-	document.getElementById("renda_percapta").innerHTML = (renda_total/(pessoas+1)).toFixed(2);
-}
-
-
-function atualiza2()
-{
-
-	var pessoas = 0;
-	var renda_total = 0;
-	if(document.getElementById("outras").value != "")
-	{
-		renda_total += Number((document.getElementById("outras").value).replace(".","").replace(",","."));
-	}
-	if(document.getElementById("aposentadoria").value != "")
-	{
-		renda_total += Number((document.getElementById("aposentadoria").value).replace(".","").replace(",","."));
-	}
-	if(document.getElementById("total_remuneracao").value != "")
-	{
-		renda_total += Number((document.getElementById("total_remuneracao").value).replace(".","").replace(",","."));
-	}
-	if(document.getElementById("seguro_desemprego").value != "")
-	{
-		renda_total += Number((document.getElementById("seguro_desemprego").value).replace(".","").replace(",","."));
-	}
-	if(document.getElementById("pensao").value != "")
-	{
-		renda_total += Number((document.getElementById("pensao").value).replace(".","").replace(",","."));
-	}
-
-	document.getElementById("renda_total_ind").innerHTML = renda_total.toFixed(2);
-	document.getElementById("renda_total").innerHTML = renda_total.toFixed(2);
-	document.getElementById("renda_percapta").innerHTML = (renda_total/(pessoas+1)).toFixed(2);
-
-}
-
-// Fun��o para alterar a lista de fila dispon�vel por Institui��o no sistema opencall
-// no menu cadasotro de usu�rio
-
-function callCarregaFila( campo_modificar, campo_atual )
-{
-	// define qual a funcao que devera ser executada quando o xml for carregado
-	DOM_execute_when_xmlhttpChange = function() { callFilaAtendimento( campo_modificar ); };
-	strURL = "xml_call_fila.php?&cod_instituicao=" + document.getElementById(campo_atual).value;
-	DOM_loadXMLDoc( strURL );
-}
-
-
-function callFilaAtendimento(campo_modificar, campo_atual)
-{
-	var valores = [];
+	// habilita o proximo nivel
+	obj = document.getElementById( nome + proxNivel );
+	obj.disabled = false;
+	valores = new Array();
 	for( i = 0; i < DOM_itensArray.length; i++ )
 	{
 		objXML = DOM_itensArray[i].firstChild;
 		valores[i] = objXML.data;
 	}
 
-	document.getElementById(campo_modificar).options.length=1;
-	var length = 1;
-	for(i = 0; i< valores.length; i+=2)
+	if( valores.length )
 	{
-		document.getElementById(campo_modificar).options[length]= new Option(valores[i+1], valores[i],false,false);
-		length++;
+		obj.length=0;
+		obj.options[0] = new Option( 'Selecione', '0', false, false );
+
+		var length = 1;
+		for(i = 0; i< valores.length; i+=2)
+		{
+			obj.options[length] = new Option( valores[i], valores[i+1], false, false );
+			length++;
+		}
 	}
-
-}
-
-// Fun��o para alterar a quantidade de produtos disponivel
-
-function ce_disponivel( campo_modificar, campo_atual, estoque, valor_soma )
-{
-
-	// define qual a funcao que devera ser executada quando o xml for carregado
-	//DOM_execute_when_xmlhttpChange = function() { ce_atualiza_disponivel( campo_modificar, campo_atual, valor_soma ); };
-
-	var xml1 = new ajax(ce_atualiza_disponivel,campo_modificar,campo_atual,valor_soma);
-	strURL = "xml_ce_disponivel.php?cod_produto=" + document.getElementById(campo_atual).value+"&cod_estoque="+estoque+"&rand="+Math.random()*100000000;
-	xml1.envia(strURL);
-
-	//strURL = "xml_ce_disponivel.php?cod_produto=" + document.getElementById(campo_atual).value+"&cod_estoque="+estoque+"&rand="+Math.random()*100000000;
-	//DOM_loadXMLDoc( strURL );
-}
-
-
-function ce_atualiza_disponivel( objXML )
-{
-	var campo_modificar = arguments[1][0];
-	var campo_atual = arguments[1][1];
-	var valor_soma  = arguments[1][2];
-
-	var itens = objXML.getElementsByTagName( "item" );
-
-	var valores = [];
-	for( i = 0; i < itens.length; i++ )
+	else
 	{
-		objXML = itens[i].firstChild;
-		valores[i] = objXML.data;
-	}
-//	for(i = 0; i< valores.length; i+=2)
-	for(i = 0; i< valores.length; i++)
-	{
-		//alert(valores[i]);
-		/*var reducao = 0;
-		var cod = document.getElementById(campo_atual).value;
-		if( document.getElementById("quantidade_"+cod) )
-		{
-			reducao =  document.getElementById("quantidade_"+cod).value * 1;
-		}
-
-		document.getElementById(campo_modificar).value = valores[i] - reducao + parseInt(valor_soma);
-		document.getElementById(campo_modificar.replace('[','_[')).value = valores[i] - reducao + parseInt(valor_soma);*/
-		document.getElementById(campo_modificar).value = parseInt(valores[i]) + parseInt(valor_soma);
-
-		if( document.getElementById(campo_modificar+'_') )
-		{
-			document.getElementById(campo_modificar+'_').value = parseInt(valores[i]) + parseInt(valor_soma);
-		}
-		else
-		{
-			document.getElementById(campo_modificar.replace('[','_[')).value = parseInt(valores[i]) + parseInt(valor_soma);
-		}
+		obj.length=0;
+		obj.options[0] = new Option( '-----------', '0', false, false );
 	}
 }
 

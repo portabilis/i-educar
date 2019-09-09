@@ -64,7 +64,6 @@ class OrdenacaoAlunosApiController extends ApiCoreController
                 'tombo_exemplar'
             ])
 
-            && $this->validatesIsNumeric('tombo_exemplar')
             && $this->validatesExistenceOfExemplar()
             && $this->validatesExistenceOfCliente();
     }

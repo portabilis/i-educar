@@ -2,6 +2,9 @@
 
 use App\Models\LegacyPerson;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
+
+/** @var Factory $factory */
 
 $factory->define(LegacyPerson::class, function (Faker $faker) {
     return [

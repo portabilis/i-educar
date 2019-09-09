@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -293,5 +294,18 @@ class LegacySchoolClass extends Model
         $endTime = Carbon::createFromTimeString($this->hora_final);
 
         return $startTime->diff($endTime)->h;
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function disciplines()
+    {
+        return $this->belongsToMany(
+            LegacyDiscipline::class,
+            'modules.componente_curricular_turma',
+            'turma_id',
+            'componente_curricular_id'
+        )->withPivot('ano_escolar_id', 'escola_id');
     }
 }

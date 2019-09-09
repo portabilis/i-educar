@@ -3,6 +3,7 @@
 use App\Models\Employee;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolClass;
+use App\Services\iDiarioService;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
@@ -169,7 +170,7 @@ class indice extends clsCadastro
             'label_hint' => 'Preencha apenas se o servidor atuar em algum turno específico'
         ];
 
-        if ($this->tipoacao === 'Editar') {
+        if ($this->tipoacao === 'Editar' && $this->existeLancamentoIDiario($this->servidor_id, $this->ref_cod_turma)) {
             $options['disabled'] = true;
         }
 
@@ -368,6 +369,29 @@ class indice extends clsCadastro
         }
 
         return true;
+    }
+
+    /**
+     * Verifica se existe lançamento no iDiario
+     *
+     * @param integer $professorId
+     * @param integer $turmaId
+     * @return bool
+     */
+    private function existeLancamentoIDiario($professorId, $turmaId)
+    {
+        try {
+            /** @var iDiarioService $iDiarioService */
+            $iDiarioService = app(iDiarioService::class);
+        } catch (RuntimeException $e) {
+            return false;
+        }
+
+        if ($iDiarioService->getTeacherClassroomsActivity($professorId, $turmaId)) {
+            return true;
+        }
+
+        return false;
     }
 }
 

@@ -2,6 +2,9 @@
 
 use App\Models\LegacyInstitution;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
+
+/** @var Factory $factory */
 
 $factory->define(LegacyInstitution::class, function (Faker $faker) {
     return [

@@ -306,24 +306,4 @@ class clsMunicipio
 
         return false;
     }
-
-    /**
-     * Retorna a proxima chave do a inserir no Banco
-     *
-     * @return integer
-     */
-    public function proximaChave()
-    {
-        $db = new clsBanco();
-        $db->Consulta("SELECT MAX(idmun) FROM {$this->schema}.{$this->tabela}");
-        if ($db->ProximoRegistro()) {
-            list($chave) = $db->Tupla();
-            $chave++;
-            $this->idmun = $chave;
-
-            return $this->idmun;
-        }
-
-        return false;
-    }
 }
