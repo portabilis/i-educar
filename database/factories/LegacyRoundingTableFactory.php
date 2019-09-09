@@ -5,7 +5,6 @@ use Faker\Generator as Faker;
 use App\Models\LegacyInstitution;
 
 $factory->define(LegacyRoundingTable::class, function (Faker $faker) {
-
     return [
         'instituicao_id' => factory(LegacyInstitution::class)->state('unique')->make(),
         'nome' => $faker->words(3, true),

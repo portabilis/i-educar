@@ -5,7 +5,6 @@ namespace Tests\Feature\DiarioApi;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyRoundingTable;
-
 use App\Models\LegacyValueRoundingTable;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -82,10 +81,8 @@ class continuingProgressionWithConceptualScoreTest extends TestCase
         ]);
 
         $enrollment = $this->getCommonFakeData($evaluationRule);
-
         $schoolClass = $enrollment->schoolClass;
         $school = $schoolClass->school;
-
         $this->createStages($school, 4);
         $this->createDisciplines($schoolClass, 2);
 
@@ -95,7 +92,6 @@ class continuingProgressionWithConceptualScoreTest extends TestCase
     public function testContinuingProgressionAfterAllScoreAndAbsencePosted()
     {
         $schoolClass = $this->enrollment->schoolClass;
-
         $disciplines = $schoolClass->disciplines;
 
         $score = [
@@ -126,7 +122,6 @@ class continuingProgressionWithConceptualScoreTest extends TestCase
     public function testContinuingProgressionAfterAllInsufficientScoreAndAbsencePosted()
     {
         $schoolClass = $this->enrollment->schoolClass;
-
         $disciplines = $schoolClass->disciplines;
 
         $score = [
@@ -157,7 +152,6 @@ class continuingProgressionWithConceptualScoreTest extends TestCase
     public function testContinuingProgressionMoreThanAbsenceLimitAfterAllScoreAndAbsencePosted()
     {
         $schoolClass = $this->enrollment->schoolClass;
-
         $disciplines = $schoolClass->disciplines;
 
         $score = [
@@ -188,7 +182,6 @@ class continuingProgressionWithConceptualScoreTest extends TestCase
     public function testContinuingProgressionAfterScoreAndAbsenceStagesPosted()
     {
         $schoolClass = $this->enrollment->schoolClass;
-
         $disciplines = $schoolClass->disciplines;
 
         $score = [
@@ -215,7 +208,6 @@ class continuingProgressionWithConceptualScoreTest extends TestCase
     public function testContinuingProgressionAfterAbsenceRemoveInLastStagesReturnsToStudying()
     {
         $schoolClass = $this->enrollment->schoolClass;
-
         $disciplines = $schoolClass->disciplines;
 
         $score = [
@@ -240,7 +232,6 @@ class continuingProgressionWithConceptualScoreTest extends TestCase
         }
 
         $registration = $this->enrollment->registration;
-
         $this->assertEquals(1, $registration->refresh()->aprovado);
 
         $randomDiscipline = $schoolClass->disciplines->random()->id;
@@ -253,7 +244,6 @@ class continuingProgressionWithConceptualScoreTest extends TestCase
     public function testContinuingProgressionAfterRemoveAbsenceWhenNotIsLastStagesReturnsToStudying()
     {
         $schoolClass = $this->enrollment->schoolClass;
-
         $disciplines = $schoolClass->disciplines;
 
         $score = [
@@ -278,7 +268,6 @@ class continuingProgressionWithConceptualScoreTest extends TestCase
         }
 
         $registration = $this->enrollment->registration;
-
         $this->assertEquals(1, $registration->refresh()->aprovado);
 
         $randomDiscipline = $schoolClass->disciplines->random()->id;
@@ -287,5 +276,4 @@ class continuingProgressionWithConceptualScoreTest extends TestCase
 
         $this->assertEquals(1, $registration->refresh()->aprovado);
     }
-
 }
