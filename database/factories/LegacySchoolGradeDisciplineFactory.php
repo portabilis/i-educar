@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Factory;
 $factory->define(LegacySchoolGradeDiscipline::class, function () {
 
     return [
-      //  'ref_ref_cod_escola' => factory(LegacySchool::class)->create(),
-//        'ref_ref_cod_serie' => factory(LegacyLevel::class)->create(),
-  //      'ref_cod_disciplina' => factory(LegacyDiscipline::class)->create(),
+        'ref_ref_cod_escola' => factory(LegacySchool::class)->create(),
+        'ref_ref_cod_serie' => factory(LegacyLevel::class)->create(),
+        'ref_cod_disciplina' => factory(LegacyDiscipline::class)->create(),
         'ativo' => 1,
         'anos_letivos' => '{'.now()->year.'}',
     ];
