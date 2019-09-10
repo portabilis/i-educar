@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -47,7 +23,7 @@ class indice extends clsDetalhe
      * @var int
      */
     var $titulo;
-    
+
     var $idmun;
     var $nome;
     var $sigla_uf;
@@ -64,27 +40,27 @@ class indice extends clsDetalhe
     var $data_cad;
     var $origem_gravacao;
     var $operacao;
-    
+
     function Gerar()
     {
         $this->titulo = "Munic&iacute;pio - Detalhe";
-        
+
 
         $this->idmun=$_GET["idmun"];
 
         $tmp_obj = new clsPublicMunicipio( $this->idmun );
         $registro = $tmp_obj->detalhe();
-        
+
         if( ! $registro )
         {
             $this->simpleRedirect('public_municipio_lst.php');
         }
-        
+
         if( class_exists( "clsPais" ) )
         {
             $obj_uf = new clsUf( $registro["sigla_uf"] );
             $det_uf = $obj_uf->detalhe();
-            
+
             $obj_pais = new clsPais( $det_uf['idpais']->idpais );
             $det_pais = $obj_pais->detalhe();
             $registro["idpais"] = $det_pais["nome"];
@@ -119,7 +95,7 @@ class indice extends clsDetalhe
             echo "<!--\nErro\nClasse nao existente: clsMunicipio\n-->";
         }
 
-        
+
         if( $registro["nome"] )
         {
             $this->addDetalhe( array( "Nome", "{$registro["nome"]}") );
@@ -143,7 +119,7 @@ class indice extends clsDetalhe
         if( $registro["idmun_pai"] )
         {
             $this->addDetalhe( array( "Idmun Pai", "{$registro["idmun_pai"]}") );
-        }       
+        }
         if( $registro["origem_gravacao"] )
         {
             $this->addDetalhe( array( "Origem Grava&ccedil;&atilde;o", "{$registro["origem_gravacao"]}") );
@@ -174,7 +150,7 @@ class indice extends clsDetalhe
              "educar_enderecamento_index.php"    => "Endereçamento",
              ""                                  => "Detalhe do munic&iacute;pio"
         ));
-        $this->enviaLocalizacao($localizacao->montar());        
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 
