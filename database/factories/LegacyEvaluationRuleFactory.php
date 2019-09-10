@@ -47,3 +47,17 @@ $factory->defineAs(LegacyEvaluationRule::class, 'media-presenca-sem-recuperacao'
 
     ]);
 });
+
+$factory->defineAs(LegacyEvaluationRule::class, 'progressao-continuada-nota-conceitual', function () use ($factory) {
+    $evaluationRule = $factory->raw(LegacyEvaluationRule::class);
+
+    return array_merge($evaluationRule, [
+        'tipo_nota' => RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL,
+        'tipo_progressao' => RegraAvaliacao_Model_TipoProgressao::CONTINUADA,
+        'tipo_presenca' => RegraAvaliacao_Model_TipoPresenca::GERAL,
+        'porcentagem_presenca' => 75,
+        'nota_maxima_geral' => 10,
+        'nota_minima_geral' => 0,
+
+    ]);
+});
