@@ -46,7 +46,7 @@ class indice extends clsCadastro
      * @var int
      */
     var $pessoa_logada;
-    
+
     var $cod_disciplina_topico;
     var $ref_usuario_exc;
     var $ref_usuario_cad;
@@ -55,17 +55,17 @@ class indice extends clsCadastro
     var $data_cadastro;
     var $data_exclusao;
     var $ativo;
-         
+
     function Inicializar()
     {
         $retorno = "Novo";
-        
-        
+
+
         $this->cod_disciplina_topico=$_GET["cod_disciplina_topico"];
 
         if( is_numeric( $this->cod_disciplina_topico ) )
         {
-            
+
             $obj = new clsPmieducarDisciplinaTopico( $this->cod_disciplina_topico );
             $registro  = $obj->detalhe();
             if( $registro )
@@ -85,7 +85,7 @@ class indice extends clsCadastro
     function Gerar()
     {
         $obj_permissao = new clsPermissoes();
-        $obj_permissao->permissao_cadastra(565,$this->pessoa_logada,7,"educar_disciplina_topico_lst.php");      
+        $obj_permissao->permissao_cadastra(565,$this->pessoa_logada,7,"educar_disciplina_topico_lst.php");
         // primary keys
         $this->campoOculto( "cod_disciplina_topico", $this->cod_disciplina_topico );
 
@@ -101,8 +101,8 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
-        
+
+
         $obj = new clsPmieducarDisciplinaTopico( null, null, $this->pessoa_logada, $this->nm_topico, $this->desc_topico);
         $cadastrou = $obj->cadastra();
         if( $cadastrou )
@@ -110,16 +110,16 @@ class indice extends clsCadastro
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
             $this->simpleRedirect('educar_disciplina_topico_lst.php');
         }
-        
+
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarDisciplinaTopico\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_string( $this->nm_topico )\n-->";
+
         return false;
     }
 
-    function Editar() 
+    function Editar()
     {
-        
-        
+
+
         $obj = new clsPmieducarDisciplinaTopico($this->cod_disciplina_topico, $this->pessoa_logada, null, $this->nm_topico, $this->desc_topico, null,null,1);
         $editou = $obj->edita();
         if( $editou )
@@ -127,16 +127,16 @@ class indice extends clsCadastro
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_disciplina_topico_lst.php');
         }
-        
+
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarDisciplinaTopico\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_disciplina_topico ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
     function Excluir()
     {
-        
-        
+
+
         $obj = new clsPmieducarDisciplinaTopico($this->cod_disciplina_topico, $this->pessoa_logada, null, null, null, null, null, 0);
         $excluiu = $obj->excluir();
         if( $excluiu )
@@ -144,9 +144,9 @@ class indice extends clsCadastro
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_disciplina_topico_lst.php');
         }
-        
+
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarDisciplinaTopico\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_disciplina_topico ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }

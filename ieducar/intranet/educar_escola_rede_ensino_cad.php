@@ -134,7 +134,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarEscolaRedeEnsino\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_string( $this->nm_rede )\n-->";
+
         return false;
     }
 
@@ -162,7 +162,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarEscolaRedeEnsino\nvalores obrigatorios\nif( is_numeric( $this->cod_escola_rede_ensino ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
@@ -187,7 +187,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarEscolaRedeEnsino\nvalores obrigatorios\nif( is_numeric( $this->cod_escola_rede_ensino ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }

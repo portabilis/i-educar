@@ -490,7 +490,7 @@ class indice extends clsCadastro
 
                     if (!$cadastrou1) {
                         $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-                        echo "<!--\nErro ao cadastrar clsPmieducarEscolaSerieDisciplina\nvalores obrigat&oacute;rios\nis_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( {$campo[$i]} ) \n-->";
+
                         return false;
                     }
                 }
@@ -501,7 +501,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = 'Cadastro n&atilde;o rrealizado.<br>';
-        echo "<!--\nErro ao cadastrar clsPmieducarEscolaSerie\nvalores obrigatorios\nis_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->pessoa_logada ) && ( $this->hora_inicial ) && ( $this->hora_final ) && ( $this->hora_inicio_intervalo ) && ( $this->hora_fim_intervalo )\n-->";
+
         return false;
     }
 
@@ -596,7 +596,7 @@ class indice extends clsCadastro
 
                         if (!$editou1) {
                             $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-                            echo "<!--\nErro ao editar clsPmieducarEscolaSerieDisciplina\nvalores obrigat&oacute;rios\nis_numeric( $this->ref_cod_serie_ ) && is_numeric( $this->ref_cod_escola ) && is_numeric( {$campo[$i]} ) \n-->";
+
                             return false;
                         }
                     } else {
@@ -604,7 +604,7 @@ class indice extends clsCadastro
 
                         if (!$cadastrou) {
                             $this->mensagem = 'Cadastro n&atilde;o realizada.<br>';
-                            echo "<!--\nErro ao editar clsPmieducarEscolaSerieDisciplina\nvalores obrigat&oacute;rios\nis_numeric( $this->ref_cod_serie_ ) && is_numeric( $this->ref_cod_escola ) && is_numeric( {$campo[$i]} ) \n-->";
+
                             return false;
                         }
                     }
@@ -651,7 +651,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarEscolaSerie\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_escola_ ) && is_numeric( $this->ref_cod_serie_ ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 

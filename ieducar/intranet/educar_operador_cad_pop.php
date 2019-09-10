@@ -136,54 +136,16 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarOperador\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_string( $this->nome ) && is_string( $this->valor ) && is_numeric( $this->fim_sentenca )\n-->";
+
         return false;
     }
 
     function Editar()
     {
-        /*
-
-        $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 589, $this->pessoa_logada, 0,  "educar_operador_lst.php", true );
-
-
-        $obj = new clsPmieducarOperador($this->cod_operador, $this->pessoa_logada, $this->pessoa_logada, $this->nome, $this->valor, $this->fim_sentenca, $this->data_cadastro, $this->data_exclusao, $this->ativo);
-        $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_operador_lst.php" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarOperador\nvalores obrigatorios\nif( is_numeric( $this->cod_operador ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-        return false;*/
     }
 
     function Excluir()
     {
-        /*
-
-        $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir( 589, $this->pessoa_logada, 0,  "educar_operador_lst.php", true );
-
-
-        $obj = new clsPmieducarOperador($this->cod_operador, $this->pessoa_logada, $this->pessoa_logada, $this->nome, $this->valor, $this->fim_sentenca, $this->data_cadastro, $this->data_exclusao, 0);
-        $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_operador_lst.php" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarOperador\nvalores obrigatorios\nif( is_numeric( $this->cod_operador ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-        return false;*/
     }
 }
 

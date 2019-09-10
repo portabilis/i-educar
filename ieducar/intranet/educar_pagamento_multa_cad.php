@@ -161,7 +161,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarPagamentoMulta\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_cliente ) && is_numeric( $this->valor_pago )\n-->";
+
         return false;
     }
 
@@ -182,7 +182,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarPagamentoMulta\nvalores obrigatorios\nif( is_numeric( $this->cod_pagamento_multa ) )\n-->";
+
         return false;
     }
 
@@ -203,7 +203,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarPagamentoMulta\nvalores obrigatorios\nif( is_numeric( $this->cod_pagamento_multa ) )\n-->";
+
         return false;
     }
 }

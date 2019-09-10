@@ -128,7 +128,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarProjeto\nvalores obrigatorios\n is_string( $this->nome )\n-->";
+
         return false;
     }
 
@@ -152,7 +152,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarProjeto\nvalores obrigatorios\nif( is_numeric( $this->cod_projeto ) && is_string($this->nome ) )\n-->";
+
         return false;
     }
 
@@ -173,7 +173,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarProjeto\nvalores obrigatorios\nif( is_numeric( $this->cod_projeto ))\n-->";
+
         return false;
     }
 }

@@ -74,7 +74,7 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    
+
 
     $this->idlog = $_GET['idlog'];
 
@@ -109,9 +109,9 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_enderecamento_index.php"    => "Endereçamento",
-         ""        => "{$nomeMenu} logradouro"             
+         ""        => "{$nomeMenu} logradouro"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
 
     return $retorno;
   }
@@ -237,7 +237,7 @@ class indice extends clsCadastro
     }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-    echo "<!--\nErro ao editar clsPublicLogradouro\nvalores obrigatorios\nif( is_numeric( $this->idlog ) )\n-->";
+
 
     return FALSE;
   }

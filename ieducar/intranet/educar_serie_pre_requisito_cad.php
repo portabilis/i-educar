@@ -200,7 +200,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarSeriePreRequisito\nvalores obrigatorios\nis_numeric( $this->ref_cod_pre_requisito ) && is_numeric( $this->ref_cod_operador ) && is_numeric( $this->ref_cod_serie )\n-->";
+
         return false;
     }
 
@@ -221,7 +221,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarSeriePreRequisito\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_pre_requisito ) && is_numeric( $this->ref_cod_operador ) && is_numeric( $this->ref_cod_serie ) )\n-->";
+
         return false;
     }
 
@@ -242,7 +242,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarSeriePreRequisito\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_pre_requisito ) && is_numeric( $this->ref_cod_operador ) && is_numeric( $this->ref_cod_serie ) )\n-->";
+
         return false;
     }
 }

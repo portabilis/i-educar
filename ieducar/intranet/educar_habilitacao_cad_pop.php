@@ -64,7 +64,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_habilitacao=$_GET["cod_habilitacao"];
 
@@ -104,7 +104,7 @@ class indice extends clsCadastro
             $obrigatorio = true;
             include("include/pmieducar/educar_campo_lista.php");
         }
-        else 
+        else
         {
             $this->campoOculto("ref_cod_instituicao", $this->ref_cod_instituicao);
         }
@@ -115,7 +115,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj = new clsPmieducarHabilitacao( null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao,null,null,1,$this->ref_cod_instituicao );
         $cadastrou = $obj->cadastra();
@@ -134,46 +134,16 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarHabilitacao\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_string( $this->nm_tipo )\n-->";
+
         return false;
     }
 
     function Editar()
     {
-        /*
-
-        $obj = new clsPmieducarHabilitacao($this->cod_habilitacao, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, null, null, 1,$this->ref_cod_instituicao);
-        $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_habilitacao_lst.php" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarHabilitacao\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_habilitacao ) && is_numeric( $this->pessoa_logada ) )\n-->";
-        return false;*/
     }
 
     function Excluir()
     {
-        /*
-
-        $obj = new clsPmieducarHabilitacao($this->cod_habilitacao, $this->pessoa_logada, null, null, null, null, null, 0,$this->ref_cod_instituicao);
-        $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_habilitacao_lst.php" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarHabilitacao\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_habilitacao ) && is_numeric( $this->pessoa_logada ) )\n-->";
-        return false;*/
     }
 }
 
@@ -190,16 +160,16 @@ $pagina->MakeAll();
 <script>
 
 <?php
-if (!$_GET['ref_cod_instituicao']) 
+if (!$_GET['ref_cod_instituicao'])
 {
 ?>
     Event.observe(window, 'load', Init, false);
-    
+
     function Init()
     {
         $('ref_cod_instituicao').value = parent.document.getElementById('ref_cod_instituicao').value;
     }
-    
+
 <?php
 }
 ?>

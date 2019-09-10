@@ -133,7 +133,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarAlunoBeneficio\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_beneficio )\n-->";
+
 
         return false;
     }
@@ -158,7 +158,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarAlunoBeneficio\nvalores obrigatorios\nif( is_numeric( $this->cod_aluno_beneficio ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 
@@ -181,7 +181,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarAlunoBeneficio\nvalores obrigatorios\nif( is_numeric( $this->cod_aluno_beneficio ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 }

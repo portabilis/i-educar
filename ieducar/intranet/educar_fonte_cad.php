@@ -134,7 +134,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarFonte\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_fonte )\n-->";
+
         return false;
     }
 
@@ -159,7 +159,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarFonte\nvalores obrigatorios\nif( is_numeric( $this->cod_fonte ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 
@@ -184,7 +184,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarFonte\nvalores obrigatorios\nif( is_numeric( $this->cod_fonte ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 }

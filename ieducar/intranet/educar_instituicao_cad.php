@@ -386,7 +386,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
-        echo "<!--\nErro ao editar clsPmieducarInstituicao\nvalores obrigatorios\nif( is_numeric( $this->cod_instituicao ) )\n-->";
+
 
         return false;
     }

@@ -63,7 +63,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
 
 
@@ -108,7 +108,7 @@ class indice extends clsCadastro
             $obrigatorio = true;
             include("include/pmieducar/educar_campo_lista.php");
         }// text
-        else 
+        else
         {
             $this->campoOculto("ref_cod_instituicao", $this->ref_cod_instituicao);
         }
@@ -120,7 +120,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj = new clsPmieducarTipoRegime( $this->cod_tipo_regime, $this->pessoa_logada, $this->pessoa_logada, $this->nm_tipo, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->ref_cod_instituicao );
         $cadastrou = $obj->cadastra();
@@ -138,46 +138,16 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarTipoRegime\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_tipo )\n-->";
+
         return false;
     }
 
     function Editar()
     {
-        /*
-
-        $obj = new clsPmieducarTipoRegime($this->cod_tipo_regime, $this->pessoa_logada, $this->pessoa_logada, $this->nm_tipo, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->ref_cod_instituicao);
-        $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_tipo_regime_lst.php" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarTipoRegime\nvalores obrigatorios\nif( is_numeric( $this->cod_tipo_regime ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-        return false;*/
     }
 
     function Excluir()
     {
-        /*
-
-        $obj = new clsPmieducarTipoRegime($this->cod_tipo_regime, $this->pessoa_logada, $this->pessoa_logada, $this->nm_tipo, $this->data_cadastro, $this->data_exclusao, 0, $this->ref_cod_instituicao);
-        $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_tipo_regime_lst.php" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarTipoRegime\nvalores obrigatorios\nif( is_numeric( $this->cod_tipo_regime ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-        return false;*/
     }
 }
 
@@ -200,11 +170,11 @@ if (!$_GET['precisa_lista'])
 ?>
     Event.observe(window, 'load', Init, false);
 
-    function Init() 
+    function Init()
     {
         $('ref_cod_instituicao').value = parent.document.getElementById('ref_cod_instituicao').value;
     }
-    
+
 <?php
 }
 ?>

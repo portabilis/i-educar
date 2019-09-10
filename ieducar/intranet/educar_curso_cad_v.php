@@ -244,7 +244,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarCurso\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_nivel_ensino ) && is_numeric( $this->ref_cod_tipo_ensino ) && is_string( $this->nm_curso ) && is_string( $this->sgl_curso ) && is_numeric( $this->qtd_etapas ) && is_numeric( $this->frequencia_minima ) && is_numeric( $this->media ) && is_numeric( $this->falta_ch_globalizada ) && is_numeric( $this->carga_horaria ) && is_numeric( $this->edicao_final ) && is_numeric( $this->ref_cod_instituicao ) && is_numeric( $this->padrao_ano_escolar ) && is_numeric( $this->hora_falta )\n-->";
+
         return false;
     }
 
@@ -268,18 +268,12 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarCurso\nvalores obrigatorios\nif( is_numeric( $this->cod_curso ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 
     function Excluir()
     {
-
-
-        /*$obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir( 0, $this->pessoa_logada, 0,  "educar_curso_lst.php" );
-*/
-
         $obj = new clsPmieducarCurso($this->cod_curso, $this->pessoa_logada, $this->ref_cod_tipo_regime, $this->ref_cod_nivel_ensino, $this->ref_cod_tipo_ensino, $this->ref_cod_tipo_avaliacao, $this->nm_curso, $this->sgl_curso, $this->qtd_etapas, $this->frequencia_minima, $this->media, $this->media_exame, $this->falta_ch_globalizada, $this->carga_horaria, $this->ato_poder_publico, $this->edicao_final, $this->objetivo_curso, $this->publico_alvo, $this->data_cadastro, $this->data_exclusao, 0, $this->pessoa_logada, $this->ref_cod_instituicao, $this->padrao_ano_escolar, $this->hora_falta);
         $excluiu = $obj->excluir();
         if( $excluiu )
@@ -292,7 +286,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarCurso\nvalores obrigatorios\nif( is_numeric( $this->cod_curso ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 }

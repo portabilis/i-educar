@@ -58,7 +58,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_acesso=$_GET["cod_acesso"];
 
@@ -111,7 +111,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
 
 
@@ -124,13 +124,13 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPortalAcesso\nvalores obrigatorios\nis_string( $this->data_hora ) && is_string( $this->ip_externo ) && is_string( $this->ip_interno ) && is_numeric( $this->cod_pessoa ) && ! is_null( $this->sucesso )\n-->";
+
         return false;
     }
 
     function Editar()
     {
-        
+
 
 
 
@@ -143,13 +143,13 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPortalAcesso\nvalores obrigatorios\nif( is_numeric( $this->cod_acesso ) )\n-->";
+
         return false;
     }
 
     function Excluir()
     {
-        
+
 
 
 
@@ -162,7 +162,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPortalAcesso\nvalores obrigatorios\nif( is_numeric( $this->cod_acesso ) )\n-->";
+
         return false;
     }
 }

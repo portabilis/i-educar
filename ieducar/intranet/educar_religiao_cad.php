@@ -133,7 +133,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarReligiao\nvalores obrigatorios\nis_numeric( $this->ref_usuario_exc ) && is_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_religiao )\n-->";
+
         return false;
     }
 
@@ -158,7 +158,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarReligiao\nvalores obrigatorios\nif( is_numeric( $this->cod_religiao ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 
@@ -179,7 +179,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarReligiao\nvalores obrigatorios\nif( is_numeric( $this->cod_religiao ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 }

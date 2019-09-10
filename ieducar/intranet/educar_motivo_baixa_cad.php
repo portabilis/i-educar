@@ -133,7 +133,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarMotivoBaixa\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_string( $this->nm_motivo_baixa )\n-->";
+
         return false;
     }
 
@@ -158,7 +158,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarMotivoBaixa\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_motivo_baixa ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
@@ -182,7 +182,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarMotivoBaixa\nvalores obrigatorios\nif( is_numeric( $this->cod_motivo_baixa ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }

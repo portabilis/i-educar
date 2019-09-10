@@ -203,7 +203,7 @@ class indice extends clsCadastro
 
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarNivel\nvalores obrigatorios\nis_numeric( $this->ref_cod_categoria_nivel ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_nivel_anterior ) && is_string( $this->nm_nivel )\n-->";
+
         return false;
     }
 
@@ -239,7 +239,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarNivel\nvalores obrigatorios\nif( is_numeric( $this->cod_nivel ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 

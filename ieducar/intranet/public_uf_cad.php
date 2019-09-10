@@ -164,7 +164,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPublicUf\nvalores obrigatorios\nis_string( $this->sigla_uf ) && is_string( $this->nome )\n-->";
+
         return false;
     }
     }
@@ -200,7 +200,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPublicUf\nvalores obrigatorios\nif( is_string( $this->sigla_uf ) )\n-->";
+
         return false;
     }
 }
@@ -227,7 +227,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPublicUf\nvalores obrigatorios\nif( is_string( $this->sigla_uf ) )\n-->";
+
         return false;
     }
 }

@@ -247,7 +247,7 @@ class indice extends clsCadastro
         }
         
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarFaltaAluno\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_numeric( $this->disc_ref_ref_cod_serie ) && is_numeric( $this->disc_ref_ref_cod_escola ) && is_numeric( $this->disc_ref_ref_cod_disciplina ) && is_numeric( $this->disc_ref_ref_cod_turma ) && is_numeric( $this->ref_ref_cod_turma ) && is_numeric( $this->ref_ref_cod_matricula ) && ( $this->data_falta )\n-->";
+
         return false;
     }
 
@@ -268,7 +268,7 @@ class indice extends clsCadastro
         }
         
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarFaltaAluno\nvalores obrigatorios\nif( is_numeric( $this->cod_falta_aluno ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 
@@ -289,7 +289,7 @@ class indice extends clsCadastro
         }
         
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarFaltaAluno\nvalores obrigatorios\nif( is_numeric( $this->cod_falta_aluno ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 }

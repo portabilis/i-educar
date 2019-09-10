@@ -96,11 +96,11 @@ class indice extends clsCadastro
     function Gerar()
     {
         // primary keys
-        $this->campoOculto( "idesco", $this->idesco );  
+        $this->campoOculto( "idesco", $this->idesco );
 
         // text
         $this->campoTexto( "descricao", "Descri&ccedil;&atilde;o", $this->descricao, 30, 255, true );
-        
+
         $resources = array(1 => 'Fundamental incompleto',
                            2 => 'Fundamental completo',
                            3 => 'Ensino médio - Normal/Magistério',
@@ -132,7 +132,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsCadastroEscolaridade\nvalores obrigatorios\nis_numeric( $this->idesco ) && is_string( $this->descricao )\n-->";
+
         return false;
     }
 
@@ -141,7 +141,7 @@ class indice extends clsCadastro
     }
 
     function Excluir()
-    {       
+    {
     }
 }
 

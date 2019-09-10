@@ -64,7 +64,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
 
         $this->cod_infra_comodo_funcao=$_GET["cod_infra_comodo_funcao"];
@@ -127,7 +127,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj = new clsPmieducarInfraComodoFuncao( null, null, $this->pessoa_logada, $this->nm_funcao, $this->desc_funcao, null, null, 1, $this->ref_cod_escola );
         $cadastrou = $obj->cadastra();
@@ -145,46 +145,16 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarInfraComodoFuncao\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_escola ) && is_string( $this->nm_funcao )\n-->";
+
         return false;
     }
 
     function Editar()
     {
-        /*
-
-        $obj = new clsPmieducarInfraComodoFuncao($this->cod_infra_comodo_funcao, $this->pessoa_logada, null, $this->nm_funcao, $this->desc_funcao, null, null, 1, $this->ref_cod_escola );
-        $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_infra_comodo_funcao_lst.php" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarInfraComodoFuncao\nvalores obrigatorios\nif( is_numeric( $this->cod_infra_comodo_funcao ) && is_numeric( $this->pessoa_logada ) )\n-->";
-        return false;*/
     }
 
     function Excluir()
     {
-        /*
-
-        $obj = new clsPmieducarInfraComodoFuncao($this->cod_infra_comodo_funcao, $this->pessoa_logada, null,null,null,null,null, 0);
-        $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_infra_comodo_funcao_lst.php" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarInfraComodoFuncao\nvalores obrigatorios\nif( is_numeric( $this->cod_infra_comodo_funcao ) && is_numeric( $this->pessoa_logada ) )\n-->";
-        return false;*/
     }
 }
 

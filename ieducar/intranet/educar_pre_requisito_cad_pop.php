@@ -144,7 +144,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarPreRequisito\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_string( $this->schema_ ) && is_string( $this->tabela ) && is_string( $this->nome ) && is_string( $this->sql )\n-->";
+
         return false;
     }
 
