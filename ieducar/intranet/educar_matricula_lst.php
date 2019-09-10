@@ -146,41 +146,21 @@ class indice extends clsListagem
         // monta a lista
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
-                if (class_exists('clsPmieducarCurso')) {
-                    $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
-                    $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-                    $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
-                } else {
-                    $registro['ref_cod_curso'] = 'Erro na geracao';
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarCurso\n-->";
-                }
+                $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
+                $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
+                $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
 
-                if (class_exists('clsPmieducarSerie')) {
-                    $obj_serie = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
-                    $det_serie = $obj_serie->detalhe();
-                    $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
-                } else {
-                    $registro['ref_ref_cod_serie'] = 'Erro na geracao';
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarSerie\n-->";
-                }
+                $obj_serie = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
+                $det_serie = $obj_serie->detalhe();
+                $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
 
-                if (class_exists('clsPmieducarInstituicao')) {
-                    $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
-                    $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
-                    $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
-                } else {
-                    $registro['ref_cod_instituicao'] = 'Erro na gera&ccedil;&atilde;o';
-                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
-                }
+                $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
+                $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
+                $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
 
-                if (class_exists('clsPmieducarEscola')) {
-                    $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
-                    $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-                    $registro['ref_ref_cod_escola'] = $det_ref_cod_escola['nome'];
-                } else {
-                    $registro['ref_ref_cod_escola'] = 'Erro na gera&ccedil;&atilde;o';
-                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
-                }
+                $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
+                $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+                $registro['ref_ref_cod_escola'] = $det_ref_cod_escola['nome'];
 
                 $enturmacoes = new clsPmieducarMatriculaTurma();
                 $enturmacoes = $enturmacoes->lista(

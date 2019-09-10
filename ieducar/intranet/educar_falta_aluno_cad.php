@@ -22,7 +22,7 @@ class indice extends clsCadastro
      * @var int
      */
     var $pessoa_logada;
-    
+
     var $cod_falta_aluno;
     var $ref_usuario_exc;
     var $ref_usuario_cad;
@@ -36,12 +36,12 @@ class indice extends clsCadastro
     var $data_cadastro;
     var $data_exclusao;
     var $ativo;
-         
+
     function Inicializar()
     {
         $retorno = "Novo";
-        
-        
+
+
         $this->cod_falta_aluno=$_GET["cod_falta_aluno"];
 
         $obj_permissoes = new clsPermissoes();
@@ -49,7 +49,7 @@ class indice extends clsCadastro
 
         if( is_numeric( $this->cod_falta_aluno ) )
         {
-            
+
             $obj = new clsPmieducarFaltaAluno( $this->cod_falta_aluno );
             $registro  = $obj->detalhe();
             if( $registro )
@@ -80,140 +80,98 @@ class indice extends clsCadastro
 
         // foreign keys
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarMatriculaTurma" ) )
+
+        $objTemp = new clsPmieducarMatriculaTurma();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarMatriculaTurma();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) ) 
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro ) 
-                {
-                    $opcoes["{$registro['ref_cod_matricula']}"] = "{$registro['data_cadastro']}";
-                }
+                $opcoes["{$registro['ref_cod_matricula']}"] = "{$registro['data_cadastro']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarMatriculaTurma nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_ref_cod_matricula", "Matricula", $opcoes, $this->ref_ref_cod_matricula );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarMatriculaTurma" ) )
+
+        $objTemp = new clsPmieducarMatriculaTurma();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarMatriculaTurma();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) ) 
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro ) 
-                {
-                    $opcoes["{$registro['ref_cod_matricula']}"] = "{$registro['data_cadastro']}";
-                }
+                $opcoes["{$registro['ref_cod_matricula']}"] = "{$registro['data_cadastro']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarMatriculaTurma nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_ref_cod_turma", "Turma", $opcoes, $this->ref_ref_cod_turma );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarTurmaDisciplina" ) )
+
+        $objTemp = new clsPmieducarTurmaDisciplina();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarTurmaDisciplina();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) ) 
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro ) 
-                {
-                    $opcoes["{$registro['ref_cod_turma']}"] = "{$registro['']}";
-                }
+                $opcoes["{$registro['ref_cod_turma']}"] = "{$registro['']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarTurmaDisciplina nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "disc_ref_ref_cod_turma", "Disc Cod Turma", $opcoes, $this->disc_ref_ref_cod_turma );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarTurmaDisciplina" ) )
+
+        $objTemp = new clsPmieducarTurmaDisciplina();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarTurmaDisciplina();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) ) 
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro ) 
-                {
-                    $opcoes["{$registro['ref_cod_turma']}"] = "{$registro['']}";
-                }
+                $opcoes["{$registro['ref_cod_turma']}"] = "{$registro['']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarTurmaDisciplina nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "disc_ref_ref_cod_disciplina", "Disc Cod Disciplina", $opcoes, $this->disc_ref_ref_cod_disciplina );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarTurmaDisciplina" ) )
+
+        $objTemp = new clsPmieducarTurmaDisciplina();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarTurmaDisciplina();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) ) 
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro ) 
-                {
-                    $opcoes["{$registro['ref_cod_turma']}"] = "{$registro['']}";
-                }
+                $opcoes["{$registro['ref_cod_turma']}"] = "{$registro['']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarTurmaDisciplina nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "disc_ref_ref_cod_escola", "Disc Cod Escola", $opcoes, $this->disc_ref_ref_cod_escola );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarTurmaDisciplina" ) )
+
+        $objTemp = new clsPmieducarTurmaDisciplina();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarTurmaDisciplina();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) ) 
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro ) 
-                {
-                    $opcoes["{$registro['ref_cod_turma']}"] = "{$registro['']}";
-                }
+                $opcoes["{$registro['ref_cod_turma']}"] = "{$registro['']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarTurmaDisciplina nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "disc_ref_ref_cod_serie", "Disc Cod Serie", $opcoes, $this->disc_ref_ref_cod_serie );
-
-
-        // text
-
-        // data
-
     }
 
     function Novo()
     {
-        
-        
+
+
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 0, $this->pessoa_logada, 0,  "educar_falta_aluno_lst.php" );
 
-        
+
         $obj = new clsPmieducarFaltaAluno( $this->cod_falta_aluno, $this->pessoa_logada, $this->pessoa_logada, $this->disc_ref_ref_cod_serie, $this->disc_ref_ref_cod_escola, $this->disc_ref_ref_cod_disciplina, $this->disc_ref_ref_cod_turma, $this->ref_ref_cod_turma, $this->ref_ref_cod_matricula, $this->data_falta, $this->data_cadastro, $this->data_exclusao, $this->ativo );
         $cadastrou = $obj->cadastra();
         if( $cadastrou )
@@ -221,20 +179,20 @@ class indice extends clsCadastro
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
             $this->simpleRedirect('educar_falta_aluno_lst.php');
         }
-        
+
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
 
         return false;
     }
 
-    function Editar() 
+    function Editar()
     {
-        
-        
+
+
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 0, $this->pessoa_logada, 0,  "educar_falta_aluno_lst.php" );
 
-        
+
         $obj = new clsPmieducarFaltaAluno($this->cod_falta_aluno, $this->pessoa_logada, $this->pessoa_logada, $this->disc_ref_ref_cod_serie, $this->disc_ref_ref_cod_escola, $this->disc_ref_ref_cod_disciplina, $this->disc_ref_ref_cod_turma, $this->ref_ref_cod_turma, $this->ref_ref_cod_matricula, $this->data_falta, $this->data_cadastro, $this->data_exclusao, $this->ativo);
         $editou = $obj->edita();
         if( $editou )
@@ -242,7 +200,7 @@ class indice extends clsCadastro
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_falta_aluno_lst.php');
         }
-        
+
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
 
         return false;
@@ -250,12 +208,12 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
-        
+
+
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 0, $this->pessoa_logada, 0,  "educar_falta_aluno_lst.php" );
 
-        
+
         $obj = new clsPmieducarFaltaAluno($this->cod_falta_aluno, $this->pessoa_logada, $this->pessoa_logada, $this->disc_ref_ref_cod_serie, $this->disc_ref_ref_cod_escola, $this->disc_ref_ref_cod_disciplina, $this->disc_ref_ref_cod_turma, $this->ref_ref_cod_turma, $this->ref_ref_cod_matricula, $this->data_falta, $this->data_cadastro, $this->data_exclusao, 0);
         $excluiu = $obj->excluir();
         if( $excluiu )
@@ -263,7 +221,7 @@ class indice extends clsCadastro
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_falta_aluno_lst.php');
         }
-        
+
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
 
         return false;

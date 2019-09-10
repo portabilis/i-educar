@@ -48,64 +48,27 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_sequencia_serie_lst.php');
         }
 
-        if( class_exists( "clsPmieducarSerie" ) )
-        {
             $obj_ref_serie_origem = new clsPmieducarSerie( $registro["ref_serie_origem"] );
             $det_ref_serie_origem = $obj_ref_serie_origem->detalhe();
             $nm_serie_origem = $det_ref_serie_origem["nm_serie"];
             $registro["ref_curso_origem"] = $det_ref_serie_origem["ref_cod_curso"];
-            if( class_exists( "clsPmieducarCurso" ) )
-            {
                 $obj_ref_curso_origem = new clsPmieducarCurso( $registro["ref_curso_origem"] );
                 $det_ref_curso_origem = $obj_ref_curso_origem->detalhe();
                 $nm_curso_origem = $det_ref_curso_origem["nm_curso"];
                 $registro["ref_cod_instituicao"] = $det_ref_curso_origem["ref_cod_instituicao"];
-                if( class_exists( "clsPmieducarInstituicao" ) )
-                {
+
                     $obj_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
                     $det_instituicao = $obj_instituicao->detalhe();
                     $registro["ref_cod_instituicao"] = $det_instituicao["nm_instituicao"];
-                }
-                else
-                {
-                    $registro["ref_cod_instituicao"] = "Erro na gera&ccedil;&atilde;o";
-                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
-                }
-            }
-            else
-            {
-                $registro["ref_cod_origem"] = "Erro na gera&ccedil;&atilde;o";
-                echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarCurso\n-->";
-            }
-        }
-        else
-        {
-            $registro["ref_serie_origem"] = "Erro na gera&ccedil;&atilde;o";
-            echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarSerie\n-->";
-        }
-        if( class_exists( "clsPmieducarSerie" ) )
-        {
+
             $obj_ref_serie_destino = new clsPmieducarSerie( $registro["ref_serie_destino"] );
             $det_ref_serie_destino = $obj_ref_serie_destino->detalhe();
             $nm_serie_destino = $det_ref_serie_destino["nm_serie"];
             $registro["ref_curso_destino"] = $det_ref_serie_destino["ref_cod_curso"];
-            if( class_exists( "clsPmieducarCurso" ) )
-            {
+
                 $obj_ref_curso_destino = new clsPmieducarCurso( $registro["ref_curso_destino"] );
                 $det_ref_curso_destino = $obj_ref_curso_destino->detalhe();
                 $nm_curso_destino = $det_ref_curso_destino["nm_curso"];
-            }
-            else
-            {
-                $registro["ref_cod_destino"] = "Erro na gera&ccedil;&atilde;o";
-                echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarCurso\n-->";
-            }
-        }
-        else
-        {
-            $registro["ref_serie_destino"] = "Erro na gera&ccedil;&atilde;o";
-            echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarSerie\n-->";
-        }
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);

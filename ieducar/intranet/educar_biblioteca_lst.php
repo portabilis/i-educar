@@ -117,41 +117,24 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
-                // pega detalhes de foreign_keys
-                if( class_exists( "clsPmieducarInstituicao" ) )
-                {
-                    $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-                    $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-                    $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
-                }
-                else
-                {
-                    $registro["ref_cod_instituicao"] = "Erro na gera&ccedil;&atilde;o";
-                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
-                }
+                $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
+                $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
+                $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
 
-                if( class_exists( "clsPmieducarEscola" ) )
+                $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
+                $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+                $idpes = $det_ref_cod_escola["ref_idpes"];
+                if ($idpes)
                 {
-                    $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
-                    $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-                    $idpes = $det_ref_cod_escola["ref_idpes"];
-                    if ($idpes)
-                    {
-                        $obj_escola = new clsPessoaJuridica( $idpes );
-                        $obj_escola_det = $obj_escola->detalhe();
-                        $registro["ref_cod_escola"] = $obj_escola_det["fantasia"];
-                    }
-                    else
-                    {
-                        $obj_escola = new clsPmieducarEscolaComplemento( $registro["ref_cod_escola"] );
-                        $obj_escola_det = $obj_escola->detalhe();
-                        $registro["ref_cod_escola"] = $obj_escola_det["nm_escola"];
-                    }
+                    $obj_escola = new clsPessoaJuridica( $idpes );
+                    $obj_escola_det = $obj_escola->detalhe();
+                    $registro["ref_cod_escola"] = $obj_escola_det["fantasia"];
                 }
                 else
                 {
-                    $registro["ref_cod_escola"] = "Erro na gera&ccedil;&atilde;o";
-                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
+                    $obj_escola = new clsPmieducarEscolaComplemento( $registro["ref_cod_escola"] );
+                    $obj_escola_det = $obj_escola->detalhe();
+                    $registro["ref_cod_escola"] = $obj_escola_det["nm_escola"];
                 }
 
                 $lista_busca = array(

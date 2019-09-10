@@ -53,28 +53,13 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_avaliacao_desempenho_lst.php');
         }
 
-        if( class_exists( "clsPmieducarInstituicao" ) )
-        {
-            $obj_instituicao = new clsPmieducarInstituicao( $registro["ref_ref_cod_instituicao"] );
-            $det_instituicao = $obj_instituicao->detalhe();
-            $nm_instituicao = $det_instituicao["nm_instituicao"];
-        }
-        else
-        {
-            $nm_instituicao = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarInstituicao\n-->";
-        }
-        if( class_exists( "clsPessoa_" ) )
-        {
-            $obj_cod_servidor = new clsPessoa_( $this->ref_cod_servidor );
-            $det_cod_servidor = $obj_cod_servidor->detalhe();
-            $nm_servidor = $det_cod_servidor["nome"];
-        }
-        else
-        {
-            $nm_servidor = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPessoa_\n-->";
-        }
+        $obj_instituicao = new clsPmieducarInstituicao( $registro["ref_ref_cod_instituicao"] );
+        $det_instituicao = $obj_instituicao->detalhe();
+        $nm_instituicao = $det_instituicao["nm_instituicao"];
+
+        $obj_cod_servidor = new clsPessoa_( $this->ref_cod_servidor );
+        $det_cod_servidor = $obj_cod_servidor->detalhe();
+        $nm_servidor = $det_cod_servidor["nome"];
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);

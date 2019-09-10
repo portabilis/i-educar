@@ -123,37 +123,17 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
+                $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
+                $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+                $registro["ref_cod_instituicao"] = $det_ref_cod_escola["ref_cod_instituicao"];
 
-                if( class_exists( "clsPmieducarInstituicao" )  && class_exists( "clsPmieducarEscola" ) )
-                {
-                    $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
-                    $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-                    $registro["ref_cod_instituicao"] = $det_ref_cod_escola["ref_cod_instituicao"];
+                $obj_ref_cod_intituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
+                $det_ref_cod_intituicao = $obj_ref_cod_intituicao->detalhe();
+                $registro["ref_cod_instituicao"] = $det_ref_cod_intituicao["nm_instituicao"];
 
-                    $obj_ref_cod_intituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-                    $det_ref_cod_intituicao = $obj_ref_cod_intituicao->detalhe();
-                    $registro["ref_cod_instituicao"] = $det_ref_cod_intituicao["nm_instituicao"];
-                }
-                else
-                {
-                    $registro["ref_cod_instituicao"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarIntituicao\n-->";
-                }
-
-                // pega detalhes de foreign_keys
-                if( class_exists( "clsPmieducarEscola" ) )
-                {
-                    $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
-                    $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-                    $registro["ref_cod_escola"] = $det_ref_cod_escola["nome"];
-                }
-                else
-                {
-                    $registro["ref_cod_escola"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarEscola\n-->";
-                }
-
-
+                $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
+                $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+                $registro["ref_cod_escola"] = $det_ref_cod_escola["nome"];
 
                 $this->addLinhas( array(
                     "<a href=\"educar_infra_predio_det.php?cod_infra_predio={$registro["cod_infra_predio"]}\">{$registro["ref_cod_instituicao"]}</a>",

@@ -43,8 +43,6 @@
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso( $this->pessoa_logada );
 
-        if ( class_exists( "clsPmieducarInstituicao" ) )
-        {
             $opcoes = array( "" => "Selecione" );
             $obj_instituicao = new clsPmieducarInstituicao();
             $obj_instituicao->setCamposLista( "cod_instituicao, nm_instituicao" );
@@ -57,12 +55,6 @@
                     $opcoes["{$registro['cod_instituicao']}"] = "{$registro['nm_instituicao']}";
                 }
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarInstituicao n&atilde;o encontrada\n-->";
-            $opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
-        }
         if ( $get_escola && $get_curso )
         {
             $retorno .= '<tr id="tr_status" class="input_quadro_horario">
@@ -120,26 +112,9 @@
 
         if ( $get_escola )
         {
-            if ( class_exists( "clsPmieducarEscola" ) )
-            {
                 $opcoes_escola = array( "" => "Selecione" );
-                //$todas_escolas = "escola = new Array();\n";
                 $obj_escola = new clsPmieducarEscola();
                 $lista = $obj_escola->lista( null, null, null, null, null, null, null, null, null, null, 1 );
-                /*if ( is_array( $lista ) && count( $lista ) )
-                {
-                    foreach ( $lista as $registro )
-                    {
-                        $todas_escolas .= "escola[escola.length] = new Array( {$registro["cod_escola"]}, '{$registro['nome']}', {$registro["ref_cod_instituicao"]} );\n";
-                    }
-                }
-                echo "<script>{$todas_escolas}</script>";*/
-            }
-            else
-            {
-                echo "<!--\nErro\nClasse clsPmieducarEscola n&atilde;o encontrada\n-->";
-                $opcoes_escola = array( "" => "Erro na gera&ccedil;&atilde;o" );
-            }
             if ($nivel_usuario == 4 || $nivel_usuario == 8) {
               $opcoes_escola = array('' => 'Selecione');
               $obj_escola = new clsPmieducarEscolaUsuario();
@@ -156,8 +131,6 @@
                 }
               }
             } else if ($this->ref_cod_instituicao) {
-                if ( class_exists( "clsPmieducarEscola" ) )
-                {
                     $opcoes_escola = array( "" => "Selecione" );
                     $obj_escola = new clsPmieducarEscola();
                     $lista = $obj_escola->lista( null, null, null, $this->ref_cod_instituicao, null, null, null, null, null, null, 1 );
@@ -168,12 +141,6 @@
                             $opcoes_escola["{$registro["cod_escola"]}"] = "{$registro['nome']}";
                         }
                     }
-                }
-                else
-                {
-                    echo "<!--\nErro\nClasse clsPmieducarEscola n&atilde;o encontrada\n-->";
-                    $opcoes_escola = array( "" => "Erro na gera&ccedil;&atilde;o" );
-                }
             }
             if ( $get_escola )
             {
@@ -208,8 +175,6 @@
         }
         if ( $get_ano )
         {
-            if( class_exists( "clsPmieducarEscolaAnoLetivo" ) )
-            {
                 $opcoes_ano = array( "" => "Selecione" );
 
                 // EDITAR
@@ -225,12 +190,6 @@
                         }
                     }
                 }
-            }
-            else
-            {
-                echo "<!--\nErro\nClasse clsPmieducarEscolaAnoLetivo n&atilde;o encontrada\n-->";
-                $opcoes_ano = array( "" => "Erro na gera&ccedil;&atilde;o" );
-            }
             $retorno .= '<tr id="tr_ano" class="input_quadro_horario">
                          <td valign="top" class="formlttd">
                          <span class="form">Ano</span>
@@ -262,8 +221,6 @@
         }
         if ( $get_curso )
         {
-            if( class_exists( "clsPmieducarCurso" ) )
-            {
                 $opcoes_curso = array( "" => "Selecione" );
 
                 // EDITAR
@@ -279,12 +236,6 @@
                         }
                     }
                 }
-            }
-            else
-            {
-                echo "<!--\nErro\nClasse clsPmieducarCurso n&atilde;o encontrada\n-->";
-                $opcoes_curso = array( "" => "Erro na gera&ccedil;&atilde;o" );
-            }
             $retorno .= '<tr id="tr_curso" class="input_quadro_horario">
                          <td valign="top" class="formlttd">
                          <span class="form">Curso</span>
@@ -317,8 +268,6 @@
         if ( $get_serie )
         {
             $opcoes_serie = array( "" => "Selecione" );
-            if( class_exists( "clsPmieducarSerie" ) )
-            {
                 // EDITAR
                 if ( $this->ref_cod_curso && $this->ref_cod_escola)
                 {
@@ -333,12 +282,6 @@
                         }
                     }
                 }
-            }
-            else
-            {
-                echo "<!--\nErro\nClasse clsPmieducarSerie n&atilde;o encontrada\n-->";
-                $todas_series = array( "" => "Erro na gera&ccedil;&atilde;o" );
-            }
             $retorno .= '<tr id="tr_curso" class="input_quadro_horario">
                          <td valign="top" class="formmdtd">
                          <span class="form">S&eacute;rie</span>
@@ -371,8 +314,6 @@
         if ( $get_turma )
         {
             $opcoes_turma = array( "" => "Selecione" );
-            if( class_exists( "clsPmieducarTurma" ) )
-            {
                 // EDITAR
                 if ( $this->ref_cod_serie /*|| $this->ref_cod_curso*/)
                 {
@@ -387,12 +328,6 @@
                         }
                     }
                 }
-            }
-            else
-            {
-                echo "<!--\nErro\nClasse clsPmieducarTurma n&atilde;o encontrada\n-->";
-                $todas_turmas = array( "" => "Erro na gera&ccedil;&atilde;o" );
-            }
             $retorno .= '<tr id="tr_turma" class="input_quadro_horario">
                          <td valign="top" class="formlttd">
                          <span class="form">Turma</span>

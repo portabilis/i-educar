@@ -70,46 +70,34 @@ class indice extends clsCadastro
         $this->campoCep( "cep", "CEP", $this->cep, false );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsUf" ) )
+
+        $objTemp = new clsUf();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsUf();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['sigla_uf']}"] = "{$registro['nome']}";
-                }
+                $opcoes["{$registro['sigla_uf']}"] = "{$registro['nome']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsUf nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_sigla_uf", "Estado", $opcoes, $this->ref_sigla_uf, '', false, '', '', false, false );
 
         $this->campoTexto( "cidade", "Cidade", $this->cidade, 30, 60, false );
         $this->campoTexto( "bairro", "Bairro", $this->bairro, 30, 60, false );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsTipoLogradouro" ) )
+
+        $objTemp = new clsTipoLogradouro();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsTipoLogradouro();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['idtlog']}"] = "{$registro['descricao']}";
-                }
+                $opcoes["{$registro['idtlog']}"] = "{$registro['descricao']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsUrbanoTipoLogradouro nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_idtlog", "Tipo Logradouro", $opcoes, $this->ref_idtlog, '', false, '', '', false, false );
 
         $this->campoTexto( "logradouro", "Logradouro", $this->logradouro, 30, 255, false );

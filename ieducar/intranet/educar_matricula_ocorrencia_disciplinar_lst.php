@@ -81,47 +81,28 @@ class indice extends clsListagem
             "Turma"
         ) );
 
-        /**
-         * Busca nome do aluno
-         */
-            if( class_exists( "clsPmieducarMatricula" ) )
-            {
-                $obj_ref_cod_matricula = new clsPmieducarMatricula();
-                $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
-                $obj_escola = new clsPmieducarEscola( $detalhe_aluno['ref_ref_cod_escola'] );
-                $det_escola = $obj_escola->detalhe();
-            }
-            else
-            {
-                $registro["ref_cod_matricula"] = "Erro na geracao";
-                echo "<!--\nErro\nClasse nao existente: clsPmieducarMatricula\n-->";
-            }
+            $obj_ref_cod_matricula = new clsPmieducarMatricula();
+            $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
+            $obj_escola = new clsPmieducarEscola( $detalhe_aluno['ref_ref_cod_escola'] );
+            $det_escola = $obj_escola->detalhe();
 
             $obj_aluno = new clsPmieducarAluno();
             $det_aluno = array_shift($det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'],null,null,null,null,null,null,null,null,null,1));
 
             $this->campoRotulo("nm_pessoa","Nome do Aluno",$det_aluno['nome_aluno']);
-        /**
-         *
-         */
+
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarTipoOcorrenciaDisciplinar" ) )
+
+        $objTemp = new clsPmieducarTipoOcorrenciaDisciplinar();
+        $lista = $objTemp->lista(null,null,null,null,null,null,null,null,null,null,1,$det_escola['ref_cod_instituicao']);
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarTipoOcorrenciaDisciplinar();
-            $lista = $objTemp->lista(null,null,null,null,null,null,null,null,null,null,1,$det_escola['ref_cod_instituicao']);
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_tipo_ocorrencia_disciplinar']}"] = "{$registro['nm_tipo']}";
-                }
+                $opcoes["{$registro['cod_tipo_ocorrencia_disciplinar']}"] = "{$registro['nm_tipo']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarTipoOcorrenciaDisciplinar nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_cod_tipo_ocorrencia_disciplinar", "Tipo Ocorr&ecirc;ncia Disciplinar", $opcoes, $this->ref_cod_tipo_ocorrencia_disciplinar );
 
         if ( $this->ref_cod_escola )
@@ -158,41 +139,17 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
+                $obj_ref_cod_matricula = new clsPmieducarMatricula( $registro["ref_cod_matricula"] );
+                $det_ref_cod_matricula = $obj_ref_cod_matricula->detalhe();
+                //$registro["ref_cod_matricula"] = $det_ref_cod_matricula["ref_cod_matricula"];
 
-                if( class_exists( "clsPmieducarMatricula" ) )
-                {
-                    $obj_ref_cod_matricula = new clsPmieducarMatricula( $registro["ref_cod_matricula"] );
-                    $det_ref_cod_matricula = $obj_ref_cod_matricula->detalhe();
-                    //$registro["ref_cod_matricula"] = $det_ref_cod_matricula["ref_cod_matricula"];
-                }
-                else
-                {
-                    $registro["ref_cod_matricula"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarMatricula\n-->";
-                }
+                $obj_serie = new clsPmieducarSerie( $det_ref_cod_matricula["ref_ref_cod_serie"] );
+                $det_serie = $obj_serie->detalhe();
+                $registro["ref_ref_cod_serie"] = $det_serie["nm_serie"];
 
-                if( class_exists( "clsPmieducarSerie" ) )
-                {
-                    $obj_serie = new clsPmieducarSerie( $det_ref_cod_matricula["ref_ref_cod_serie"] );
-                    $det_serie = $obj_serie->detalhe();
-                    $registro["ref_ref_cod_serie"] = $det_serie["nm_serie"];
-                }
-                else
-                {
-                    $registro["ref_ref_cod_serie"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarSerie\n-->";
-                }
-                if( class_exists( "clsPmieducarTipoOcorrenciaDisciplinar" ) )
-                {
-                    $obj_ref_cod_tipo_ocorrencia_disciplinar = new clsPmieducarTipoOcorrenciaDisciplinar( $registro["ref_cod_tipo_ocorrencia_disciplinar"] );
-                    $det_ref_cod_tipo_ocorrencia_disciplinar = $obj_ref_cod_tipo_ocorrencia_disciplinar->detalhe();
-                    $registro["nm_tipo"] = $det_ref_cod_tipo_ocorrencia_disciplinar["nm_tipo"];
-                }
-                else
-                {
-                    $registro["ref_cod_tipo_ocorrencia_disciplinar"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarTipoOcorrenciaDisciplinar\n-->";
-                }
+                $obj_ref_cod_tipo_ocorrencia_disciplinar = new clsPmieducarTipoOcorrenciaDisciplinar( $registro["ref_cod_tipo_ocorrencia_disciplinar"] );
+                $det_ref_cod_tipo_ocorrencia_disciplinar = $obj_ref_cod_tipo_ocorrencia_disciplinar->detalhe();
+                $registro["nm_tipo"] = $det_ref_cod_tipo_ocorrencia_disciplinar["nm_tipo"];
 
                 $obj_mat_turma = new clsPmieducarMatriculaTurma();
 

@@ -174,64 +174,45 @@ class indice extends clsCadastro
 
     // Coleção
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarAcervoColecao" ) )
+
+        $objTemp = new clsPmieducarAcervoColecao();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarAcervoColecao();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_acervo_colecao']}"] = "{$registro['nm_colecao']}";
-                }
+                $opcoes["{$registro['cod_acervo_colecao']}"] = "{$registro['nm_colecao']}";
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarAcervoColecao nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
         }
         $this->campoLista( "ref_cod_acervo_colecao", "Cole&ccedil;&atilde;o", $opcoes, $this->ref_cod_acervo_colecao,"",false,"","<img id='img_colecao' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 200,'educar_acervo_colecao_cad_pop.php',[], 'Coleção')\" />",false,false );
 
     // Idioma
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarAcervoIdioma" ) )
+
+        $objTemp = new clsPmieducarAcervoIdioma();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarAcervoIdioma();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_acervo_idioma']}"] = "{$registro['nm_idioma']}";
-                }
+                $opcoes["{$registro['cod_acervo_idioma']}"] = "{$registro['nm_idioma']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarAcervoIdioma nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_cod_acervo_idioma", "Idioma", $opcoes, $this->ref_cod_acervo_idioma, "", false, "", "<img id='img_idioma' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(400, 150,'educar_acervo_idioma_cad_pop.php',[], 'Idioma')\" />" );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarAcervoEditora" ) )
+
+        $objTemp = new clsPmieducarAcervoEditora();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarAcervoEditora();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_acervo_editora']}"] = "{$registro['nm_editora']}";
-                }
+                $opcoes["{$registro['cod_acervo_editora']}"] = "{$registro['nm_editora']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarAcervoEditora nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_cod_acervo_editora", "Editora", $opcoes, $this->ref_cod_acervo_editora, "", false, "", "<img id='img_editora' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(400, 320,'educar_acervo_editora_cad_pop.php',[], 'Editora')\" />" );
 
 

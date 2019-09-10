@@ -145,45 +145,21 @@ class indice extends clsListagem
     // monta a lista
     if (is_array($lista) && count($lista)) {
       foreach ($lista as $registro) {
-        if (class_exists('clsPmieducarSerie')) {
           $obj_ref_cod_serie = new clsPmieducarSerie($registro['ref_cod_serie']);
           $det_ref_cod_serie = $obj_ref_cod_serie->detalhe();
           $nm_serie = $det_ref_cod_serie['nm_serie'];
-        }
-        else {
-          $registro['ref_cod_serie'] = "Erro na gera&ccedil;&atilde;o";
-          echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarSerie\n-->";
-        }
 
-        if (class_exists('clsPmieducarCurso')) {
           $obj_curso = new clsPmieducarCurso( $registro["ref_cod_curso"] );
           $det_curso = $obj_curso->detalhe();
           $registro["ref_cod_curso"] = $det_curso["nm_curso"];
-        }
-        else {
-          $registro["ref_cod_serie"] = "Erro na gera&ccedil;&atilde;o";
-          echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarSerie\n-->";
-        }
 
-        if (class_exists('clsPmieducarEscola')) {
           $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
           $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
           $nm_escola = $det_ref_cod_escola["nome"];
-        }
-        else {
-          $registro["ref_cod_escola"] = "Erro na gera&ccedil;&atilde;o";
-          echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
-        }
 
-        if (class_exists('clsPmieducarInstituicao')) {
           $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
           $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
           $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
-        }
-        else {
-          $registro["ref_cod_escola"] = "Erro na gera&ccedil;&atilde;o";
-          echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
-        }
 
         $lista_busca = array(
           "<a href=\"educar_reserva_vaga_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$nm_serie}</a>",

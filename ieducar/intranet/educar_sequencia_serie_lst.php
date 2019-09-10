@@ -104,20 +104,6 @@ class indice extends clsListagem
 
         $opcoes = array( "" => "Selecione" );
         $opcoes_ = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarCurso" ) )
-        {
-            /*$todos_cursos = "curso = new Array();\n";
-            $objTemp = new clsPmieducarCurso();
-            $objTemp->setOrderby("nm_curso");
-            $lista = $objTemp->lista( null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1 );
-            if ( is_array( $lista ) && count( $lista ) )
-            {
-                foreach ( $lista as $registro )
-                {
-                    $todos_cursos .= "curso[curso.length] = new Array({$registro["cod_curso"]},'{$registro["nm_curso"]}', {$registro["ref_cod_instituicao"]});\n";
-                }
-            }
-            echo "<script>{$todos_cursos}</script>";*/
 
             // EDITAR
             if ($this->ref_cod_instituicao)
@@ -134,12 +120,7 @@ class indice extends clsListagem
                     }
                 }
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarCurso n&atilde;o encontrada\n-->";
-            $opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
-        }
+
         $this->campoLista( "ref_curso_origem", "Curso Origem", $opcoes, $this->ref_curso_origem,"",true,"","",false,false);
         $this->campoLista( "ref_curso_destino", " Curso Destino", $opcoes_, $this->ref_curso_destino,"",false,"","",false,false);
 
@@ -147,19 +128,6 @@ class indice extends clsListagem
 
         $opcoes = array( "" => "Selecione" );
         $opcoes_ = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarSerie" ) )
-        {
-            /*$todas_series = "serie = new Array();\n";
-            $objTemp = new clsPmieducarSerie();
-            $lista = $objTemp->lista( null,null,null,null,null,null,null,null,null,null,null,null,1 );
-            if ( is_array( $lista ) && count( $lista ) )
-            {
-                foreach ( $lista as $registro )
-                {
-                    $todas_series .= "serie[serie.length] = new Array({$registro["cod_serie"]},'{$registro["nm_serie"]}', {$registro["ref_cod_curso"]});\n";
-                }
-            }
-            echo "<script>{$todas_series}</script>";*/
 
             if ($this->ref_curso_origem)
             {
@@ -185,13 +153,7 @@ class indice extends clsListagem
                     }
                 }
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarSerie n&atilde;o encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-            $opcoes_ = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_serie_origem", "S&eacute;rie Origem", $opcoes, $this->ref_serie_origem,null,true,"","",false,false);
         $this->campoLista( "ref_serie_destino", " S&eacute;rie Destino", $opcoes_, $this->ref_serie_destino,"",false,"","",false,false);
 
@@ -226,65 +188,28 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
-                // pega detalhes de foreign_keys
-                if( class_exists( "clsPmieducarSerie" ) )
-                {
                     $obj_ref_serie_origem = new clsPmieducarSerie( $registro["ref_serie_origem"] );
                     $det_ref_serie_origem = $obj_ref_serie_origem->detalhe();
                     $serie_origem = $det_ref_serie_origem["nm_serie"];
                     $registro["ref_curso_origem"] = $det_ref_serie_origem["ref_cod_curso"];
-                    if( class_exists( "clsPmieducarCurso" ) )
-                    {
+
                         $obj_ref_curso_origem = new clsPmieducarCurso( $registro["ref_curso_origem"] );
                         $det_ref_curso_origem = $obj_ref_curso_origem->detalhe();
                         $registro["ref_curso_origem"] = $det_ref_curso_origem["nm_curso"];
                         $registro["ref_cod_instituicao"] = $det_ref_curso_origem["ref_cod_instituicao"];
-                        if( class_exists( "clsPmieducarInstituicao" ) )
-                        {
+
                             $obj_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
                             $det_instituicao = $obj_instituicao->detalhe();
                             $registro["ref_cod_instituicao"] = $det_instituicao["nm_instituicao"];
-                        }
-                        else
-                        {
-                            $registro["ref_cod_instituicao"] = "Erro na gera&ccedil;&atilde;o";
-                            echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
-                        }
-                    }
-                    else
-                    {
-                        $registro["ref_cod_origem"] = "Erro na gera&ccedil;&atilde;o";
-                        echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarCurso\n-->";
-                    }
-                }
-                else
-                {
-                    $registro["ref_serie_origem"] = "Erro na gera&ccedil;&atilde;o";
-                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarSerie\n-->";
-                }
-                if( class_exists( "clsPmieducarSerie" ) )
-                {
+
                     $obj_ref_serie_destino = new clsPmieducarSerie( $registro["ref_serie_destino"] );
                     $det_ref_serie_destino = $obj_ref_serie_destino->detalhe();
                     $serie_destino = $det_ref_serie_destino["nm_serie"];
                     $registro["ref_curso_destino"] = $det_ref_serie_destino["ref_cod_curso"];
-                    if( class_exists( "clsPmieducarCurso" ) )
-                    {
+
                         $obj_ref_curso_destino = new clsPmieducarCurso( $registro["ref_curso_destino"] );
                         $det_ref_curso_destino = $obj_ref_curso_destino->detalhe();
                         $registro["ref_curso_destino"] = $det_ref_curso_destino["nm_curso"];
-                    }
-                    else
-                    {
-                        $registro["ref_cod_destino"] = "Erro na gera&ccedil;&atilde;o";
-                        echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarCurso\n-->";
-                    }
-                }
-                else
-                {
-                    $registro["ref_serie_destino"] = "Erro na gera&ccedil;&atilde;o";
-                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarSerie\n-->";
-                }
 
                 $lista_busca = array(
                     "<a href=\"educar_sequencia_serie_det.php?ref_serie_origem={$registro["ref_serie_origem"]}&ref_serie_destino={$registro["ref_serie_destino"]}\">{$registro["ref_curso_origem"]}</a>",

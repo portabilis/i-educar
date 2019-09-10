@@ -149,9 +149,9 @@ class indice extends clsListagem
         $this->__limite = 20;
         $this->__offset = ($_GET['pagina_' . $this->nome]) ? ($_GET['pagina_' . $this->nome] * $this->__limite - $this->__limite) : 0;
 
-        $obj_distrito = new clsPublicDistrito();
-        $obj_distrito->setOrderby('nome ASC');
-        $obj_distrito->setLimite($this->__limite, $this->__offset);
+    $obj_distrito = new clsPublicDistrito();
+    $obj_distrito->setOrderby('nome ASC');
+    $obj_distrito->setLimite($this->__limite, $this->__offset);
 
         $lista = $obj_distrito->lista(
             $this->idmun,
@@ -189,9 +189,9 @@ class indice extends clsListagem
             }
         }
 
-        $this->addPaginador2('public_distrito_lst.php', $total, $_GET, $this->nome, $this->__limite);
+    $this->addPaginador2('public_distrito_lst.php', $total, $_GET, $this->nome, $this->__limite);
 
-        $obj_permissao = new clsPermissoes();
+    $obj_permissao = new clsPermissoes();
 
         if ($obj_permissao->permissao_cadastra(759, $this->pessoa_logada, 7, null, true)) {
             $this->acao = 'go("public_distrito_cad.php")';

@@ -48,17 +48,9 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_escola_rede_ensino_lst.php');
         }
 
-        if( class_exists( "clsPmieducarInstituicao" ) )
-        {
-            $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-            $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-            $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
-        }
-        else
-        {
-            $registro["ref_cod_instituicao"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarInstituicao\n-->";
-        }
+        $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
+        $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
+        $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);

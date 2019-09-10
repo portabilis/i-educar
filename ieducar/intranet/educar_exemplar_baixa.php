@@ -115,23 +115,17 @@ class indice extends clsCadastro
 
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarMotivoBaixa" ) )
+
+        $objTemp = new clsPmieducarMotivoBaixa();
+        $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_biblioteca);
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarMotivoBaixa();
-            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_biblioteca);
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_motivo_baixa']}"] = "{$registro['nm_motivo_baixa']}";
-                }
+                $opcoes["{$registro['cod_motivo_baixa']}"] = "{$registro['nm_motivo_baixa']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarMotivoBaixa nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_cod_motivo_baixa", "Motivo Baixa", $opcoes, $this->ref_cod_motivo_baixa );
         $this->campoData('data_baixa_exemplar', 'Data', $this->data_baixa_exemplar, TRUE);
 

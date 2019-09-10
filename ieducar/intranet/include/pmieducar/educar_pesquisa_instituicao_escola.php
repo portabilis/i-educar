@@ -99,12 +99,8 @@
         }
 
         if($nivel_usuario == 1 || $nivel_usuario == 2) {
-            //$nivel_usuario = $nivel_usuario == 1 ? null : $nivel_usuario;
-
             $selecione = $nivel_usuario == 2 ? "Selecione uma escola" : "Selecione uma escola";
             $opcoes = array( "" => $selecione );
-            if( class_exists( "clsPmieducarEscola" ) )
-            {
                 $objTemp = new clsPmieducarEscola();
                 if((!empty($this->ref_cod_instituicao) && $nivel_usuario == 1) || $nivel_usuario == 2)
                 {
@@ -117,44 +113,11 @@
                     {
                         foreach ( $lista_escola23 as $registro )
                         {
-                    /*      if($escola['ref_idpes'])
-                            {
-                                $obj_juridica = new clsJuridica($escola['ref_idpes']);
-                                $det_juridica = $obj_juridica->detalhe();
-                                $escola['nm_escola'] = $det_juridica['fantasia'];
-
-                            }else
-                            {
-                                $obj_escola_complemento = new clsPmieducarEscolaComplemento($escolas['cod_escola']);
-                                $obj_escola_complemento->setCamposLista("nm_escola");
-                                $det_escola_complemento = $obj_escola_complemento->detalhe();
-                                $escola['nm_escola'] = $det_escola_complemento['nm_escola'];
-                            }
-                            */
                             $opcoes["{$registro['cod_escola']}"] = "{$registro['nome']}";
                         }
                     }
                 }
-            }
-            else
-            {
-                echo "<!--\nErro\nClasse clsPmieducarEscola nao encontrada\n-->";
-                $opcoes = array( "" => "Erro na geracao" );
-            }
 
-    /*      if(isset($_GET["ref_cod_escola"]) &&  !empty($_GET["ref_cod_escola"]) && is_array($opcoes) && array_key_exists($_GET["ref_cod_escola"],$opcoes) )
-            {
-                $this->ref_cod_escola = $_GET["ref_cod_escola"];
-                $escola_in = null;
-            }
-            else
-            {
-                $this->ref_cod_escola = null;
-                if(is_array($key_escola))
-                    $escola_in = implode("," , $key_escola);
-            }       */
-
-//--- Modificado por Adriano Erik Weiguert Nagasava ---
             $aux = $obrigatorio;
             if ( isset( $escola_obrigatorio ) ) {
                 if ( $escola_obrigatorio )

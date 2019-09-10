@@ -171,54 +171,19 @@ class indice extends clsCadastro
         $this->campoData("data_cadastro","Data Atual",$this->data_cadastro,true);
         $this->campoHora("hora_cadastro","Horas",$this->hora_cadastro,true);
 
-        // foreign keys
-    /*  $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarMatricula" ) )
-        {
-            $objTemp = new clsPmieducarMatricula();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
-            {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_matricula']}"] = "{$registro['ref_ref_cod_escola']}";
-                }
-            }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarMatricula nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
-        $this->campoLista( "ref_cod_matricula", "Matricula", $opcoes, $this->ref_cod_matricula );
-        */
-
-        //$opcoes = array('' => 'Selecione um aluno clicando na lupa');
-        //$this->campoListaPesq("nm_aluno", "Aluno", $opcoes,$this->ref_cod_matricula,"educar_pesquisa_matricula_lst.php","",false,"","",null,"","",true);
-        //$this->campoOculto("ref_cod_aluno", $this->ref_cod_aluno);
-
-
-
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarTipoOcorrenciaDisciplinar" ) )
+
+        $objTemp = new clsPmieducarTipoOcorrenciaDisciplinar();
+        $lista = $objTemp->lista(null,null,null,null,null,null,null,null,null,null,1,$this->ref_cod_instituicao);
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarTipoOcorrenciaDisciplinar();
-            $lista = $objTemp->lista(null,null,null,null,null,null,null,null,null,null,1,$this->ref_cod_instituicao);
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_tipo_ocorrencia_disciplinar']}"] = "{$registro['nm_tipo']}";
-                }
+                $opcoes["{$registro['cod_tipo_ocorrencia_disciplinar']}"] = "{$registro['nm_tipo']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarTipoOcorrenciaDisciplinar nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
-        $this->campoLista( "ref_cod_tipo_ocorrencia_disciplinar", "Tipo Ocorr&ecirc;ncia Disciplinar", $opcoes, $this->ref_cod_tipo_ocorrencia_disciplinar );
 
+        $this->campoLista( "ref_cod_tipo_ocorrencia_disciplinar", "Tipo Ocorr&ecirc;ncia Disciplinar", $opcoes, $this->ref_cod_tipo_ocorrencia_disciplinar );
 
         // text
         $this->campoMemo( "observacao", "Observac&atilde;o", $this->observacao, 60, 10, true );

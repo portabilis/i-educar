@@ -53,53 +53,21 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_exemplar_lst.php');
         }
 
-        if( class_exists( "clsPmieducarFonte" ) )
-        {
-            $obj_ref_cod_fonte = new clsPmieducarFonte( $registro["ref_cod_fonte"] );
-            $det_ref_cod_fonte = $obj_ref_cod_fonte->detalhe();
-            $registro["ref_cod_fonte"] = $det_ref_cod_fonte["nm_fonte"];
-        }
-        else
-        {
-            $registro["ref_cod_fonte"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarFonte\n-->";
-        }
+        $obj_ref_cod_fonte = new clsPmieducarFonte( $registro["ref_cod_fonte"] );
+        $det_ref_cod_fonte = $obj_ref_cod_fonte->detalhe();
+        $registro["ref_cod_fonte"] = $det_ref_cod_fonte["nm_fonte"];
 
-        if( class_exists( "clsPmieducarMotivoBaixa" ) )
-        {
-            $obj_ref_cod_motivo_baixa = new clsPmieducarMotivoBaixa( $registro["ref_cod_motivo_baixa"] );
-            $det_ref_cod_motivo_baixa = $obj_ref_cod_motivo_baixa->detalhe();
-            $registro["ref_cod_motivo_baixa"] = $det_ref_cod_motivo_baixa["nm_motivo_baixa"];
-        }
-        else
-        {
-            $registro["ref_cod_motivo_baixa"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarMotivoBaixa\n-->";
-        }
+        $obj_ref_cod_motivo_baixa = new clsPmieducarMotivoBaixa( $registro["ref_cod_motivo_baixa"] );
+        $det_ref_cod_motivo_baixa = $obj_ref_cod_motivo_baixa->detalhe();
+        $registro["ref_cod_motivo_baixa"] = $det_ref_cod_motivo_baixa["nm_motivo_baixa"];
 
-        if( class_exists( "clsPmieducarAcervo" ) )
-        {
-            $obj_ref_cod_acervo = new clsPmieducarAcervo( $registro["ref_cod_acervo"] );
-            $det_ref_cod_acervo = $obj_ref_cod_acervo->detalhe();
-            $registro["ref_cod_acervo"] = $det_ref_cod_acervo["titulo"];
-        }
-        else
-        {
-            $registro["ref_cod_acervo"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarAcervo\n-->";
-        }
+        $obj_ref_cod_acervo = new clsPmieducarAcervo( $registro["ref_cod_acervo"] );
+        $det_ref_cod_acervo = $obj_ref_cod_acervo->detalhe();
+        $registro["ref_cod_acervo"] = $det_ref_cod_acervo["titulo"];
 
-        if( class_exists( "clsPmieducarSituacao" ) )
-        {
-            $obj_ref_cod_situacao = new clsPmieducarSituacao( $registro["ref_cod_situacao"] );
-            $det_ref_cod_situacao = $obj_ref_cod_situacao->detalhe();
-            $registro["ref_cod_situacao"] = $det_ref_cod_situacao["nm_situacao"];
-        }
-        else
-        {
-            $registro["ref_cod_situacao"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarSituacao\n-->";
-        }
+        $obj_ref_cod_situacao = new clsPmieducarSituacao( $registro["ref_cod_situacao"] );
+        $det_ref_cod_situacao = $obj_ref_cod_situacao->detalhe();
+        $registro["ref_cod_situacao"] = $det_ref_cod_situacao["nm_situacao"];
 
         $this->addDetalhe(array("Código", "{$registro["cod_exemplar"]}"));
         $this->addDetalhe(array("Tombo",  "{$registro["tombo"]}"));

@@ -78,51 +78,8 @@ class indice extends clsCadastro
 
     function Gerar()
     {
-
         // primary keys
         $this->campoOculto( "cod_infra_predio", $this->cod_infra_predio );
-
-
-        //** 2 - Escola 1 - institucional 0 - poli-institucional
-//      $obj_permissao = new clsPermissoes();
-//      $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-//
-//      //busca instituicao e escola do usuario
-//      $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
-//      $obj_usuario->setCamposLista("ref_cod_instituicao,ref_cod_escola");
-//      $det_obj_usuario = $obj_usuario->detalhe();
-//
-//
-//      $instituicao_usuario = $det_obj_usuario["ref_cod_instituicao"];
-//      $escola_usuario = $det_obj_usuario["ref_cod_escola"];
-//
-//      if( class_exists( "clsPmieducarEscola" ) )
-//      {
-//          $objTemp = new clsPmieducarEscola($escola_usuario);
-//          $objTemp->setCamposLista("nm_escola");
-//          $det_objTemp = $objTemp->detalhe();
-//          $nome_escola = $det_objTemp["nm_escola"];
-//
-//      }
-//      else
-//      {
-//          echo "<!--\nErro\nClasse clsPmieducarEscola nao encontrada\n-->";
-//          $nome_escola =  "Erro na geracao";
-//      }
-//
-//      // listagem escola - instituicao
-//      if(!$this->ref_cod_escola)
-//      {
-//          $obrigatorio = true;
-//          include("include/pmieducar/educar_pesquisa_instituicao_escola.php");
-//          if($nivel_usuario == 2)
-//              $this->campoRotulo("ref_cod_escola_","Escola",ucfirst($nome_escola));
-//      }else{
-//
-//              $this->campoRotulo("ref_cod_escola_","Escola",ucfirst($nome_escola));
-//              $this->campoOculto("ref_cod_escola",$escola_usuario);
-//              //$this->campoOculto("ref_cod_instituicao",$escola_usuario);
-//      }
 
         if ($_GET['precisa_lista'])
         {

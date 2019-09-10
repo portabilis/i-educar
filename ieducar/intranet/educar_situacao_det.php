@@ -55,8 +55,6 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_situacao_lst.php');
         }
 
-        if( class_exists( "clsPmieducarBiblioteca" ) )
-        {
             $obj_ref_cod_biblioteca = new clsPmieducarBiblioteca( $registro["ref_cod_biblioteca"] );
             $det_ref_cod_biblioteca = $obj_ref_cod_biblioteca->detalhe();
             $registro["ref_cod_biblioteca"] = $det_ref_cod_biblioteca["nm_biblioteca"];
@@ -74,12 +72,6 @@ class indice extends clsDetalhe
                 $det_ref_cod_escola = array_shift($obj_ref_cod_escola->lista($registro["ref_cod_escola"]));
                 $registro["ref_cod_escola"] = $det_ref_cod_escola["nome"];
             }
-        }
-        else
-        {
-            $registro["ref_cod_biblioteca"] = "Erro na gera&ccedil;&atilde;o";
-            echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarBiblioteca\n-->";
-        }
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);

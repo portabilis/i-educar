@@ -91,43 +91,31 @@ class indice extends clsListagem
         $this->campoTexto( "nm_curso", "Curso", $this->nm_curso, 30, 255, false );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarNivelEnsino" ) )
+
+        $objTemp = new clsPmieducarNivelEnsino();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarNivelEnsino();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_nivel_ensino']}"] = "{$registro['nm_nivel']}";
-                }
+                $opcoes["{$registro['cod_nivel_ensino']}"] = "{$registro['nm_nivel']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarNivelEnsino nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_cod_nivel_ensino", "Nivel Ensino", $opcoes, $this->ref_cod_nivel_ensino );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarTipoEnsino" ) )
+
+        $objTemp = new clsPmieducarTipoEnsino();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarTipoEnsino();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_tipo_ensino']}"] = "{$registro['nm_ensino']}";
-                }
+                $opcoes["{$registro['cod_tipo_ensino']}"] = "{$registro['nm_ensino']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarTipoAvaliacao nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_cod_tipo_ensino", "Tipo Ensino", $opcoes, $this->ref_cod_tipo_ensino );
 
 
@@ -180,44 +168,17 @@ class indice extends clsListagem
                 $registro["data_exclusao_time"] = strtotime( substr( $registro["data_exclusao"], 0, 16 ) );
                 $registro["data_exclusao_br"] = date( "d/m/Y H:i", $registro["data_exclusao_time"] );
 
+                $obj_ref_cod_nivel_ensino = new clsPmieducarNivelEnsino( $registro["ref_cod_nivel_ensino"] );
+                $det_ref_cod_nivel_ensino = $obj_ref_cod_nivel_ensino->detalhe();
+                $registro["ref_cod_nivel_ensino"] = $det_ref_cod_nivel_ensino["nm_nivel"];
 
+                $obj_ref_cod_tipo_ensino = new clsPmieducarTipoEnsino( $registro["ref_cod_tipo_ensino"] );
+                $det_ref_cod_tipo_ensino = $obj_ref_cod_tipo_ensino->detalhe();
+                $registro["ref_cod_tipo_ensino"] = $det_ref_cod_tipo_ensino["nm_tipo"];
 
-                if( class_exists( "clsPmieducarNivelEnsino" ) )
-                {
-                    $obj_ref_cod_nivel_ensino = new clsPmieducarNivelEnsino( $registro["ref_cod_nivel_ensino"] );
-                    $det_ref_cod_nivel_ensino = $obj_ref_cod_nivel_ensino->detalhe();
-                    $registro["ref_cod_nivel_ensino"] = $det_ref_cod_nivel_ensino["nm_nivel"];
-                }
-                else
-                {
-                    $registro["ref_cod_nivel_ensino"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarNivelEnsino\n-->";
-                }
-
-                if( class_exists( "clsPmieducarTipoEnsino" ) )
-                {
-                    $obj_ref_cod_tipo_ensino = new clsPmieducarTipoEnsino( $registro["ref_cod_tipo_ensino"] );
-                    $det_ref_cod_tipo_ensino = $obj_ref_cod_tipo_ensino->detalhe();
-                    $registro["ref_cod_tipo_ensino"] = $det_ref_cod_tipo_ensino["nm_tipo"];
-                }
-                else
-                {
-                    $registro["ref_cod_tipo_ensino"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarTipoEnsino\n-->";
-                }
-
-                if( class_exists( "clsPmieducarInstituicao" ) )
-                {
-                    $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-                    $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-                    $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
-                }
-                else
-                {
-                    $registro["ref_cod_instituicao"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarInstuicao\n-->";
-                }
-
+                $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
+                $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
+                $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
 
                 $this->addLinhas( array(
                     "<a href=\"educar_curso_det.php?cod_curso={$registro["cod_curso"]}\">{$registro["nm_curso"]}</a>",

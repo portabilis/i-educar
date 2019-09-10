@@ -90,15 +90,9 @@ class indice extends clsDetalhe
         );
     }
 
-    if (class_exists('clsPmieducarSerie')) {
       $obj_serie = new clsPmieducarSerie($registro['ref_cod_serie']);
       $det_serie = $obj_serie->detalhe();
       $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
-    }
-    else {
-      $registro['ref_ref_cod_serie'] = 'Erro na geracao';
-      echo "<!--\nErro\nClasse nao existente: clsPmieducarSerie\n-->";
-    }
 
     // Dados do curso
     $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);

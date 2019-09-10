@@ -48,43 +48,6 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_raca_lst.php');
         }
 
-        /*if( class_exists( "clsCadastroFisica" ) )
-        {
-            $obj_idpes_exc = new clsCadastroFisica( $registro["idpes_exc"] );
-            $det_idpes_exc = $obj_idpes_exc->detalhe();
-            $registro["idpes_exc"] = $det_idpes_exc[""];
-        }
-        else
-        {
-            $registro["idpes_exc"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsCadastroFisica\n-->";
-        }
-*/
-        /*if( class_exists( "clsCadastroFisica" ) )
-        {
-            $obj_idpes_cad = new clsCadastroFisica( $registro["idpes_cad"] );
-            $det_idpes_cad = $obj_idpes_cad->detalhe();
-            $registro["idpes_cad"] = $det_idpes_cad[""];
-        }
-        else
-        {
-            $registro["idpes_cad"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsCadastroFisica\n-->";
-        }*/
-
-
-        /*if( $registro["cod_raca"] )
-        {
-            $this->addDetalhe( array( "Raca", "{$registro["cod_raca"]}") );
-        }
-        if( $registro["idpes_exc"] )
-        {
-            $this->addDetalhe( array( "Idpes Exc", "{$registro["idpes_exc"]}") );
-        }
-        if( $registro["idpes_cad"] )
-        {
-            $this->addDetalhe( array( "Idpes Cad", "{$registro["idpes_cad"]}") );
-        }*/
         if( $registro["nm_raca"] )
         {
             $this->addDetalhe( array( "Ra&ccedil;a", "{$registro["nm_raca"]}") );
