@@ -151,6 +151,7 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
 
     public function testContinuingProgressionMoreThanAbsenceLimitAfterAllScoreAndAbsencePosted()
     {
+        $this->markTestIncomplete();
         $schoolClass = $this->enrollment->schoolClass;
         $disciplines = $schoolClass->disciplines;
 
