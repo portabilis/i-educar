@@ -881,7 +881,7 @@ function handleChange(dataResponse) {
 var handleMessagesDiario = function(arrayMessage, targetId) {
   var hasError = false;
   var hasSuccess = false;
-console.log(targetId);
+
   arrayMessage = $j.map(arrayMessage, function (item, index) {
     if (item.type == 'success') {
       hasSuccess = true;
@@ -898,11 +898,23 @@ console.log(targetId);
   if (hasSuccess) {
     $j('#' + targetId).addClass('success');
     $j('#' + targetId).removeClass('error');
+
+    if (targetId.includes('falta-matricula')) {
+      $j('#' + targetId).closest('table').find('.falta-matricula-' + $element
+        .data('matricula_id') + '-cc')
+        .not($element).addClass('success').removeClass('error');
+    }
   }
 
   if (hasError) {
     $j('#' + targetId).addClass('error');
     $j('#' + targetId).removeClass('success');
+
+    if (targetId.includes('falta-matricula')) {
+      $j('#' + targetId).closest('table').find('.falta-matricula-' + $element
+        .data('matricula_id') + '-cc')
+        .not($element).addClass('error').removeClass(success);
+    }
   }
 
   messageUtils.handleMessages(arrayMessage, targetId);
