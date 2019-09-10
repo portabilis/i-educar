@@ -790,7 +790,7 @@ function deleteFalta($faltaFieldElement) {
   var ccId = $faltaFieldElement.data('componente_curricular_id');
 
   var $notaField = $j('#nota-matricula-'+ matriculaId + '-cc-' + ccId);
-  var $notaExameField = $j('#nota-exame-matricula-'+ matriculaId + '-cc-' + ccId);
+  var $notaExameField = $j('#nota_exame-matricula-'+ matriculaId + '-cc-' + ccId);
   var $parecerField = $j('#parecer-matricula-'+ matriculaId + '-cc-' + ccId);
 
   if(($notaField.length < 1 || $notaField.val() == '') &&
@@ -1118,7 +1118,7 @@ function handleSearch($resultTable, dataResponse) {
 
   //set onchange events
   var $notaFields = $resultTable.find('.nota-matricula-cc');
-  var $notaExameFields = $resultTable.find('.nota-exame-matricula-cc');
+  var $notaExameFields = $resultTable.find('.nota_exame-matricula-cc');
   var $faltaFields = $resultTable.find('.falta-matricula-cc');
   var $parecerFields = $resultTable.find('.parecer-matricula-cc');
   var $notaRecuperacaoParalelaFields = $resultTable.find('.nota-recuperacao-paralela-cc');
@@ -1259,8 +1259,8 @@ function notaField(matriculaId, componenteCurricularId, value, areaConhecimentoI
 function notaExameField(matriculaId, componenteCurricularId, value, maxLength, tipoNota, regra) {
   return _notaField(matriculaId,
                     componenteCurricularId,
-                    'nota-exame-matricula-cc',
-                    'nota-exame-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
+                    'nota_exame-matricula-cc',
+                    'nota_exame-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
                     value,
                     null,
                     maxLength,
@@ -1631,7 +1631,7 @@ function updateResourceRow(dataResponse) {
   var ccId            = dataResponse.componente_curricular_id;
 
   var $situacaoField  = $j('#situacao-matricula-' + matriculaId + '-cc-' + ccId);
-  var $fieldNotaExame = $j('#nota-exame-matricula-' + matriculaId + '-cc-' + ccId);
+  var $fieldNotaExame = $j('#nota_exame-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNotaEspecifica = $j('#nota-recuperacao-especifica-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNN = $j('#nn-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldMedia = $j('#media-matricula-' + matriculaId + '-cc-' + ccId);
@@ -1815,7 +1815,7 @@ function navegacaoTab(sentido){
         $j(this).attr('tabindex', i);
         i++;
       });
-      $j(document).find('.nota-exame-matricula-cc').each(function(){
+      $j(document).find('.nota_exame-matricula-cc').each(function(){
         $j(this).attr('tabindex', i);
         i++;
       });
