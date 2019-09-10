@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -46,7 +22,7 @@ class indice extends clsDetalhe
      * @var int
      */
     var $titulo;
-    
+
     var $cep;
     var $idlog;
     var $nroini;
@@ -57,26 +33,26 @@ class indice extends clsDetalhe
     var $idpes_cad;
     var $data_cad;
     var $operacao;
-    
+
     function Gerar()
     {
         $this->titulo = "Cep Logradouro - Detalhe";
-        
+
         $this->idlog=$_GET["idlog"];
-        
+
         $obj_cep_logradouro = new clsUrbanoCepLogradouro();
         $lst_cep_logradouro = $obj_cep_logradouro->lista( null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $this->idlog);
-        
+
         if( ! $lst_cep_logradouro )
         {
             $this->simpleRedirect('urbano_cep_logradouro_lst.php');
         }
-        else 
+        else
         {
             $registro = $lst_cep_logradouro[0];
         }
-        
-        
+
+
         if( $registro["nm_pais"] )
         {
             $this->addDetalhe( array( "Pais", "{$registro["nm_pais"]}") );
@@ -93,7 +69,7 @@ class indice extends clsDetalhe
         {
             $this->addDetalhe( array( "Logradouro", "{$registro["nm_logradouro"]}") );
         }
-        
+
         $obj_cep_log_bairro = new clsUrbanoCepLogradouroBairro();
         $lst_cep_log_bairro = $obj_cep_log_bairro->lista( null, null, null, null, null, null, null, null, null, null, null, null, null, $this->idlog );
         if( $lst_cep_log_bairro )
@@ -114,12 +90,12 @@ class indice extends clsDetalhe
                 {
                     $color = " bgcolor=#FFFFFF ";
                 }
-                
+
                 $obj_bairro = new clsPublicBairro( null, null, $endereco['idbai'] );
                 $det_bairro = $obj_bairro->detalhe();
-                
+
                 $endereco['cep'] = int2CEP($endereco['cep']);
-                
+
                 $tab_endereco .= "<TR>
                                     <TD {$color} align=center>{$endereco['cep']}</TD>
                                     <TD {$color} align=center>{$det_bairro['nome']}</TD>
@@ -132,12 +108,12 @@ class indice extends clsDetalhe
         {
             $this->addDetalhe( array( "Tabela de CEP-Bairro", "{$tab_endereco}") );
         }
-        $obj_permissao = new clsPermissoes();       
+        $obj_permissao = new clsPermissoes();
         if($obj_permissao->permissao_cadastra(758, $this->pessoa_logada,7,null,true))
         {
             $this->url_novo = "urbano_cep_logradouro_cad.php";
             $this->url_editar = "urbano_cep_logradouro_cad.php?idlog={$registro["idlog"]}";
-        }       
+        }
         $this->url_cancelar = "urbano_cep_logradouro_lst.php";
         $this->largura = "100%";
     $localizacao = new LocalizacaoSistema();
@@ -146,7 +122,7 @@ class indice extends clsDetalhe
          "educar_enderecamento_index.php"    => "Endereçamento",
          ""                                  => "Detalhe do CEP"
     ));
-    $this->enviaLocalizacao($localizacao->montar());        
+    $this->enviaLocalizacao($localizacao->montar());
     }
 }
 // cria uma extensao da classe base

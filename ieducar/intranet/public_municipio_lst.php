@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -94,7 +70,7 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $this->addCabecalhos( array(
             "Nome",
@@ -107,9 +83,9 @@ class indice extends clsListagem
         {
             $objTemp = new clsPais();
             $lista = $objTemp->lista( false, false, false, false, false, "nome ASC" );
-            if ( is_array( $lista ) && count( $lista ) ) 
+            if ( is_array( $lista ) && count( $lista ) )
             {
-                foreach ( $lista as $registro ) 
+                foreach ( $lista as $registro )
                 {
                     $opcoes["{$registro['idpais']}"] = "{$registro['nome']}";
                 }
@@ -125,13 +101,13 @@ class indice extends clsListagem
         $opcoes = array( "" => "Selecione" );
         if( class_exists( "clsUf" ) )
         {
-            if( $this->idpais ) 
+            if( $this->idpais )
             {
                 $objTemp = new clsUf();
                 $lista = $objTemp->lista( false, false, $this->idpais, false, false, "nome ASC" );
-                if ( is_array( $lista ) && count( $lista ) ) 
+                if ( is_array( $lista ) && count( $lista ) )
                 {
-                    foreach ( $lista as $registro ) 
+                    foreach ( $lista as $registro )
                     {
                         $opcoes["{$registro['sigla_uf']}"] = "{$registro['nome']}";
                     }
@@ -206,7 +182,7 @@ class indice extends clsListagem
              "educar_enderecamento_index.php"    => "Endereçamento",
              ""                                  => "Listagem de munic&iacute;pios"
         ));
-        $this->enviaLocalizacao($localizacao->montar());        
+        $this->enviaLocalizacao($localizacao->montar());
     }
 }
 // cria uma extensao da classe base
