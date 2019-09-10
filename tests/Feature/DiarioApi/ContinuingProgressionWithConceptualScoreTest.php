@@ -9,7 +9,7 @@ use App\Models\LegacyValueRoundingTable;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class continuingProgressionWithConceptualScoreTest extends TestCase
+class ContinuingProgressionWithConceptualScoreTest extends TestCase
 {
     use DiarioApiFakeDataTestTrait, DiarioApiRequestTestTrait, DatabaseTransactions;
 
