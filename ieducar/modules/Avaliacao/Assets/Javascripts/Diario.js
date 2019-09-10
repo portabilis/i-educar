@@ -604,18 +604,23 @@ function postMedia($mediaElementField) {
     etapa                    : $j('#etapa').val()
   };
 
-  var options = {
-    url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'media', additionalVars),
-    dataType : 'json',
-    data : {att_value : $mediaElementField.val()},
-    success : function(dataResponse) {
-      afterChangeResource($mediaElementField);
-      handleChange(dataResponse);
-    }
-  };
 
-  $mediaElementField.data('old_value', $mediaElementField.val());
-  postResource(options, handleErrorOnPostResource);
+  if (validatesIfValueIsNumeric($mediaElementField.val(), $mediaElementField.attr('id'))) {
+    var options = {
+      url: postResourceUrlBuilder.buildUrl(API_URL_BASE, 'media', additionalVars),
+      dataType: 'json',
+      data: {att_value: $mediaElementField.val()},
+      success: function (dataResponse) {
+        afterChangeResource($mediaElementField);
+        handleChange(dataResponse);
+      }
+    };
+
+    $mediaElementField.data('old_value', $mediaElementField.val());
+    postResource(options, handleErrorOnPostResource);
+  } else {
+    $j('#' + $mediaElementField.attr('id')).addClass('error');
+  }
 }
 
 function deleteMedia($mediaFieldElement){
