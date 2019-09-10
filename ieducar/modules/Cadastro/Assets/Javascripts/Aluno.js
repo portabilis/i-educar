@@ -220,8 +220,8 @@ var newSubmitForm = function (event) {
     }
 
     // Valida se o tamanho do campo aluno_estado_id é igual à 13
-    if ($j('#aluno_estado_id').val() !== '' && $j('#aluno_estado_id').val().length !== 13) {
-        messageUtils.error('O campo Código rede estadual (RA) deve conter exatos 13 dígitos.');
+    if ($j('#aluno_estado_id').val() !== '' && ! (($j('#aluno_estado_id').val().length === 13) || ($j('#aluno_estado_id').val().length === 11))) {
+        messageUtils.error('O campo Código rede estadual (RA) deve conter exatos 13 ou 11 dígitos.');
         return false;
     }
 
