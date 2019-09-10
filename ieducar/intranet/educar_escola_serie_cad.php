@@ -537,19 +537,6 @@ class indice extends clsCadastro
             $this->anos_letivos ?: []
         );
 
-        $detalheAntigo = $obj->detalhe();
-        $editou = $obj->edita();
-
-        $auditoria = new clsModulesAuditoriaGeral("escola_serie", $this->pessoa_logada);
-        $auditoria->alteracao($detalheAntigo, $obj->detalhe());
-
-        $obj = new clsPmieducarEscolaSerieDisciplina(
-            $this->ref_cod_serie,
-            $this->ref_cod_escola,
-            $campo,
-            1
-        );
-
         $sombra = json_decode(urldecode($this->componentes_sombra), true);
         $disciplinas = $this->montaDisciplinas();
         $analise = $this->analisaAlteracoes($sombra, $disciplinas);
@@ -563,6 +550,19 @@ class indice extends clsCadastro
 
             return false;
         }
+
+        $detalheAntigo = $obj->detalhe();
+        $editou = $obj->edita();
+
+        $auditoria = new clsModulesAuditoriaGeral("escola_serie", $this->pessoa_logada);
+        $auditoria->alteracao($detalheAntigo, $obj->detalhe());
+
+        $obj = new clsPmieducarEscolaSerieDisciplina(
+            $this->ref_cod_serie,
+            $this->ref_cod_escola,
+            $campo,
+            1
+        );
 
         $obj->excluirNaoSelecionados($this->disciplinas);
 
