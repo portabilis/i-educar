@@ -257,7 +257,7 @@ class indice extends clsCadastro
                         if ( !$cadastrou2 )
                         {
                             $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-                            echo "<!--\nErro ao cadastrar clsPmieducarBibliotecaUsuario\nvalores obrigat&oacute;rios\nis_numeric( $cadastrou ) && is_numeric( {$campo[$i]} ) \n-->";
+
                             return false;
                         }
                     }
@@ -271,7 +271,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarBiblioteca\nvalores obrigatorios\nis_numeric( $this->ref_cod_instituicao ) && is_numeric( $this->ref_cod_escola ) && is_string( $this->nm_biblioteca )\n-->";
+
         return false;
     }
 
@@ -307,7 +307,7 @@ class indice extends clsCadastro
                             if ( !$cadastrou3 )
                             {
                                 $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-                                echo "<!--\nErro ao editar clsPmieducarBibliotecaUsuario\nvalores obrigat&oacute;rios\nis_numeric( $this->cod_biblioteca ) && is_numeric( {$campo[$i]} ) \n-->";
+
                                 return false;
                             }
                         }
@@ -321,7 +321,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarBiblioteca\nvalores obrigatorios\nif( is_numeric( $this->cod_biblioteca ) )\n-->";
+
         return false;
     }
 
@@ -345,7 +345,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarBiblioteca\nvalores obrigatorios\nif( is_numeric( $this->cod_biblioteca ) )\n-->";
+
         return false;
     }
 }

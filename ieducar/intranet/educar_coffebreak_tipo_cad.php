@@ -102,7 +102,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarCoffebreakTipo\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_string( $this->nm_tipo ) && is_numeric( $this->custo_unitario )\n-->";
+
         return false;
     }
 
@@ -122,7 +122,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarCoffebreakTipo\nvalores obrigatorios\nif( is_numeric( $this->cod_coffebreak_tipo ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 
@@ -139,7 +139,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarCoffebreakTipo\nvalores obrigatorios\nif( is_numeric( $this->cod_coffebreak_tipo ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 }

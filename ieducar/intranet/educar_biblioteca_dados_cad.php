@@ -295,7 +295,7 @@ class indice extends clsCadastro
                   if ( !$cadastrou1 )
                             {
                                 $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-                                echo "<!--\nErro ao editar clsPmieducarBibliotecaDia\nvalores obrigat&oacute;rios\nis_numeric( $this->cod_biblioteca ) && is_numeric( {$campo[$i]} ) \n-->";
+
                                 return false;
                             }
                 }
@@ -322,7 +322,7 @@ class indice extends clsCadastro
                         if ( !$cadastrou2 )
                         {
                             $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-                            echo "<!--\nErro ao cadastrar clsPmieducarBibliotecaFeriados\nvalores obrigat&oacute;rios\nis_numeric( $this->cod_biblioteca ) && is_string( {$feriado["nm_feriado_"]} ) && is_string( {$feriado["data_feriado_"]} )\n-->";
+
                             return false;
                         }
                     }
@@ -334,7 +334,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarBiblioteca\nvalores obrigatorios\nif( is_numeric( $this->cod_biblioteca ) )\n-->";
+
         return false;
     }
 
@@ -365,7 +365,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarBiblioteca\nvalores obrigatorios\nif( is_numeric( $this->cod_biblioteca ) )\n-->";
+
         return false;
     }
 }

@@ -413,7 +413,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarReservas\nvalores obrigatorios\n is_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_cliente ) && is_numeric( $this->ref_cod_exemplar )\n-->";
+
         return false;
     }
 }

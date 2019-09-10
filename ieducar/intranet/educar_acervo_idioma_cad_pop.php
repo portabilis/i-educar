@@ -87,7 +87,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarAcervoIdioma\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_idioma )\n-->";
+
         return false;
     }
 

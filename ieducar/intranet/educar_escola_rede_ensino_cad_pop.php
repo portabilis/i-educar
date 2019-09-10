@@ -38,7 +38,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_escola_rede_ensino=$_GET["cod_escola_rede_ensino"];
 
@@ -83,7 +83,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 647, $this->pessoa_logada, 3,  "educar_escola_rede_ensino_lst.php" );
@@ -105,18 +105,18 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarEscolaRedeEnsino\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_string( $this->nm_rede )\n-->";
+
         return false;
     }
 
     function Editar()
     {
-        
+
     }
 
     function Excluir()
     {
-        
+
     }
 }
 
@@ -133,7 +133,7 @@ $pagina->MakeAll();
 <script>
 
     Event.observe(window, 'load', Init, false);
-    
+
     function Init()
     {
         $('ref_cod_instituicao').value = parent.document.getElementById('ref_cod_instituicao').value;

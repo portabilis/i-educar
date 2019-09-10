@@ -109,7 +109,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPublicPais\nvalores obrigatorios\nis_numeric( $this->idpais ) && is_string( $this->nome )\n-->";
+
         return false;
     }
 
@@ -134,7 +134,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPublicPais\nvalores obrigatorios\nif( is_numeric( $this->idpais ) )\n-->";
+
         return false;
     }
 
@@ -158,7 +158,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPublicPais\nvalores obrigatorios\nif( is_numeric( $this->idpais ) )\n-->";
+
         return false;
     }
 }

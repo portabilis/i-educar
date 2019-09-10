@@ -218,7 +218,7 @@ class indice extends clsCadastro
     }
 
     $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-    echo "<!--\nErro ao editar clsPublicMunicipio\nvalores obrigatorios\nif( is_numeric( $this->idmun ) )\n-->";
+
 
     return FALSE;
   }
@@ -244,7 +244,7 @@ class indice extends clsCadastro
     }
 
     $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-    echo "<!--\nErro ao excluir clsPublicMunicipio\nvalores obrigatorios\nif( is_numeric( $this->idmun ) )\n-->";
+
 
     return FALSE;
   }

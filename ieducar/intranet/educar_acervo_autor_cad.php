@@ -141,7 +141,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarAcervoAutor\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_string( $this->nm_autor )\n-->";
+
         return false;
     }
 
@@ -170,7 +170,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarAcervoAutor\nvalores obrigatorios\nif( is_numeric( $this->cod_acervo_autor ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
@@ -196,7 +196,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarAcervoAutor\nvalores obrigatorios\nif( is_numeric( $this->cod_acervo_autor ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }

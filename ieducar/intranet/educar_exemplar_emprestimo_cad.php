@@ -415,7 +415,7 @@ class indice extends clsCadastro
                         if (!$editou)
                         {
                             $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-                            echo "<!--\nErro ao cadastrar clsPmieducarSituacao\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( {$campo} ) && is_numeric( {$cod_situacao} )\n-->";
+
                             return false;
                         }
                     }
@@ -427,7 +427,7 @@ class indice extends clsCadastro
                 else
                 {
                     $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-                    echo "<!--\nErro ao cadastrar clsPmieducarExemplarEmprestimo\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_cliente )\n-->";
+
                     return false;
                 }
             }

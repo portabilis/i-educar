@@ -146,7 +146,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarMotivoAfastamento\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_motivo ) && is_numeric( $this->ref_cod_instituicao )\n-->";
+
         return false;
     }
 
@@ -206,7 +206,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarMotivoAfastamento\nvalores obrigatorios\nif( is_numeric( $this->cod_motivo_afastamento ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }

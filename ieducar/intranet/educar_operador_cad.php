@@ -103,7 +103,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarOperador\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_string( $this->nome ) && is_string( $this->valor ) && is_numeric( $this->fim_sentenca )\n-->";
+
         return false;
     }
 
@@ -124,7 +124,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarOperador\nvalores obrigatorios\nif( is_numeric( $this->cod_operador ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 
@@ -145,7 +145,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarOperador\nvalores obrigatorios\nif( is_numeric( $this->cod_operador ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 }

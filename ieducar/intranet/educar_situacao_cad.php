@@ -213,7 +213,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarSituacao\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_string( $this->nm_situacao ) && is_numeric( $this->permite_emprestimo ) && is_numeric( $this->situacao_padrao ) && is_numeric( $this->situacao_emprestada ) && is_numeric( $this->ref_cod_biblioteca )\n-->";
+
         return false;
     }
 
@@ -240,7 +240,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarSituacao\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_situacao ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
@@ -264,7 +264,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarSituacao\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_situacao ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }

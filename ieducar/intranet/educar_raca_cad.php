@@ -114,7 +114,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsCadastroRaca\nvalores obrigatorios\nis_numeric( $this->idpes_cad ) && is_string( $this->nm_raca )\n-->";
+
         return false;
     }
 
@@ -139,7 +139,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsCadastroRaca\nvalores obrigatorios\nif( is_numeric( $this->cod_raca ) )\n-->";
+
         return false;
     }
 
@@ -161,7 +161,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsCadastroRaca\nvalores obrigat&otilde;rios\nif( is_numeric( $this->cod_raca ) )\n-->";
+
         return false;
     }
 }

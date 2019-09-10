@@ -189,7 +189,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarInfraPredioComodo\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_infra_comodo_funcao ) && is_numeric( $this->ref_cod_infra_predio ) && is_string( $this->nm_comodo ) && is_numeric( $this->area )\n-->";
+
         return false;
     }
 
@@ -213,7 +213,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarInfraPredioComodo\nvalores obrigatorios\nif( is_numeric( $this->cod_infra_predio_comodo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
@@ -233,7 +233,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarInfraPredioComodo\nvalores obrigatorios\nif( is_numeric( $this->cod_infra_predio_comodo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }

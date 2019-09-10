@@ -39,7 +39,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         //** Verificacao de permissao para exclusao
         $obj_permissao = new clsPermissoes();
@@ -101,7 +101,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj = new clsPmieducarTipoEnsino( $this->cod_tipo_ensino, null, $this->pessoa_logada, $this->nm_tipo, null, null, 1, $this->ref_cod_instituicao );
         $cadastrou = $obj->cadastra();
@@ -119,46 +119,16 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarTipoEnsino\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_tipo ) && is_string( $this->data_cadastro ) && is_numeric( $this->ativo )\n-->";
+
         return false;
     }
 
     function Editar()
     {
-        /*
-
-        $obj = new clsPmieducarTipoEnsino($this->cod_tipo_ensino, $this->pessoa_logada, null, $this->nm_tipo, null, null, 1, $this->ref_cod_instituicao);
-        $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_tipo_ensino_lst.php" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarTipoEnsino\nvalores obrigatorios\nif( is_numeric( $this->cod_tipo_ensino ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-        return false;*/
     }
 
     function Excluir()
     {
-        /*
-
-        $obj = new clsPmieducarTipoEnsino($this->cod_tipo_ensino, $this->pessoa_logada, null, $this->nm_tipo, null, null, 0);
-        $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_tipo_ensino_lst.php" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarTipoEnsino\nvalores obrigatorios\nif( is_numeric( $this->cod_tipo_ensino ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-        return false;*/
     }
 }
 

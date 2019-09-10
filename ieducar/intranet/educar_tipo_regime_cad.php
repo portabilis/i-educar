@@ -113,7 +113,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarTipoRegime\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_tipo )\n-->";
+
         return false;
     }
 
@@ -137,7 +137,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarTipoRegime\nvalores obrigatorios\nif( is_numeric( $this->cod_tipo_regime ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 
@@ -158,7 +158,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarTipoRegime\nvalores obrigatorios\nif( is_numeric( $this->cod_tipo_regime ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 }

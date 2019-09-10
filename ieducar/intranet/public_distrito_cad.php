@@ -257,7 +257,7 @@ class indice extends clsCadastro
     }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-    echo "<!--\nErro ao editar clsPublicDistrito\nvalores obrigatorios\nif( is_numeric( $this->iddis ) )\n-->";
+
 
     return FALSE;
   }

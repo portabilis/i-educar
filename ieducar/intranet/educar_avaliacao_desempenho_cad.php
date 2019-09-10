@@ -130,7 +130,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarAvaliacaoDesempenho\nvalores obrigatorios\n is_numeric( $this->ref_cod_servidor ) && is_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->pessoa_logada ) && is_string( $this->descricao ) && is_string( $this->titulo_avaliacao )\n-->";
+
         return false;
     }
 
@@ -151,7 +151,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarAvaliacaoDesempenho\nvalores obrigatorios\nif( is_numeric( $this->sequencial ) && is_numeric( $this->ref_cod_servidor ) && is_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
@@ -172,7 +172,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarAvaliacaoDesempenho\nvalores obrigatorios\nif( is_numeric( $this->sequencial ) && is_numeric( $this->ref_cod_servidor ) && is_numeric( $this->ref_ref_cod_instituicao ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }

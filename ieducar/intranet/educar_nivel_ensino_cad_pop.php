@@ -39,7 +39,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_nivel_ensino=$_GET["cod_nivel_ensino"];
 
@@ -77,7 +77,7 @@ class indice extends clsCadastro
             $obrigatorio = true;
             include("include/pmieducar/educar_campo_lista.php");
         }
-        else 
+        else
         {
             $this->campoOculto("ref_cod_instituicao", $this->ref_cod_instituicao);
         }
@@ -88,7 +88,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj = new clsPmieducarNivelEnsino( null, null, $this->pessoa_logada, $this->nm_nivel, $this->descricao,null,null,1,$this->ref_cod_instituicao );
         $cadastrou = $obj->cadastra();
@@ -107,46 +107,16 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarNivelEnsino\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_instituicao ) && is_string( $this->nm_nivel )\n-->";
+
         return false;
     }
 
     function Editar()
     {
-        /*
-
-        $obj = new clsPmieducarNivelEnsino( $this->cod_nivel_ensino, $this->pessoa_logada, null, $this->nm_nivel, $this->descricao, null, null, 1, $this->ref_cod_instituicao );
-        $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_nivel_ensino_lst.php" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarNivelEnsino\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_nivel_ensino ) && is_numeric( $this->pessoa_logada ) )\n-->";
-        return false;*/
     }
 
     function Excluir()
     {
-        /*
-
-        $obj = new clsPmieducarNivelEnsino( $this->cod_nivel_ensino, $this->pessoa_logada, null, null, null, null, null, 0 );
-        $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_nivel_ensino_lst.php" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarNivelEnsino\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_nivel_ensino ) && is_numeric( $this->pessoa_logada ) )\n-->";
-        return false;*/
     }
 }
 
@@ -167,12 +137,12 @@ if (!$_GET['ref_cod_instituicao'])
 {
 ?>
     Event.observe(window, 'load', Init, false);
-    
-    function Init() 
+
+    function Init()
     {
         $('ref_cod_instituicao').value = parent.document.getElementById('ref_cod_instituicao').value;
     }
-    
+
 <?php
 }
 ?>

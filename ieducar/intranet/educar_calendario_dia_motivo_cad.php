@@ -133,7 +133,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarCalendarioDiaMotivo\nvalores obrigat&oacute;rios\nis_numeric( $this->ref_cod_escola ) && is_numeric( $this->pessoa_logada ) && is_string( $this->sigla ) && is_string( $this->tipo )\n-->";
+
         return false;
     }
 
@@ -159,7 +159,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarCalendarioDiaMotivo\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_calendario_dia_motivo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
@@ -182,7 +182,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarCalendarioDiaMotivo\nvalores obrigatorios\nif( is_numeric( $this->cod_calendario_dia_motivo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }

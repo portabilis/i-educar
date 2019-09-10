@@ -1841,7 +1841,7 @@ class indice extends clsCadastro
 
                                 if (!$cadastrou_) {
                                     $this->mensagem = "Cadastro não realizado.<br>";
-                                    echo "<!--\nErro ao cadastrar clsPmieducarEscolaCurso\nvalores obrigat&oacute;rios\nis_numeric($cadastrou) && is_numeric({$campo}) \n-->";
+
                                     return false;
                                 }
                             }
@@ -1977,7 +1977,7 @@ class indice extends clsCadastro
 
                             if (!$cadastrou_) {
                                 $this->mensagem = "Cadastro não realizado.<br>";
-                                echo "<!--\nErro ao cadastrar clsPmieducarEscolaCurso\nvalores obrigat&oacute;rios\nis_numeric($cadastrou) && is_numeric({$campo}) \n-->";
+
                                 return false;
                             }
                         }
@@ -1996,7 +1996,7 @@ class indice extends clsCadastro
                     );
                 } else {
                     $this->mensagem = "Cadastro não realizado.<br>";
-                    echo "<!--\nErro ao cadastrar clsPmieducarEscolaComplemento\nvalores obrigat&oacute;rios\nis_numeric($cadastrou) && is_numeric($this->pessoa_logada) && is_numeric($this->numero) && is_string($this->complemento) && is_string($this->p_email) && is_string($this->fantasia) && is_string($this->cidade) && is_string($this->bairro)\n-->";
+
                     return false;
                 }
             } else {
@@ -2323,7 +2323,7 @@ class indice extends clsCadastro
 
                                     if (!$cadastrou_) {
                                         $this->mensagem = "Edição não realizada.<br>";
-                                        echo "<!--\nErro ao editar clsPmieducarEscolaCurso\nvalores obrigat&oacute;rios\nis_numeric($this->cod_serie) && is_numeric({$campo}) && is_numeric($this->pessoa_logada)\n-->";
+
                                         return false;
                                     }
                                 }
@@ -2360,7 +2360,7 @@ class indice extends clsCadastro
                                 $cadastrou_ = $obj->cadastra();
                                 if (!$cadastrou_) {
                                     $this->mensagem = "Edição não realizada.<br>";
-                                    echo "<!--\nErro ao editar clsPmieducarEscolaCurso\nvalores obrigat&oacute;rios\nis_numeric($this->cod_serie) && is_numeric({$campo[$i]}) && is_numeric($this->pessoa_logada)\n-->";
+
                                     return false;
                                 }
                             }
@@ -2384,7 +2384,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edição não realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarEscola\nvalores obrigatorios\nif(is_numeric($this->cod_escola) && is_numeric($this->pessoa_logada))\n-->";
+
         return false;
     }
 
@@ -2407,7 +2407,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclusão não realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarEscola\nvalores obrigatorios\nif(is_numeric($this->cod_escola) && is_numeric($this->pessoa_logada))\n-->";
+
         return false;
     }
     protected function inputTelefone($type, $typeLabel = '')

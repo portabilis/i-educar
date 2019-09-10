@@ -230,7 +230,7 @@ class indice extends clsCadastro
         if (!$obj->existe()) {
           if (!$obj->cadastra()) {
             $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-            echo "<!--\nErro ao editar clsUrbanoCepLogradouro\nvalores obrigatorios\nif( is_numeric( $cep ) && is_numeric( $this->idlog ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
             return FALSE;
           }
         }
@@ -242,7 +242,7 @@ class indice extends clsCadastro
           if ($id >= count($tab_cep_aux)){
             if (!$obj_cep_log_bairro->cadastra()) {
               $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-              echo "<!--\nErro ao editar clsUrbanoCepLogradouroBairro\nvalores obrigatorios\nif( is_numeric( $cep ) && is_numeric( $this->idlog ) && is_numeric( {$this->idbai[$id]} ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
               return FALSE;
             }
           } else {
@@ -250,7 +250,7 @@ class indice extends clsCadastro
             $bairroOld = $tab_cep_aux[$id][1];
             if (!$obj_cep_log_bairro->editaCepBairro($cepOld, $bairroOld)) {
               $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-              echo "<!--\nErro ao editar clsUrbanoCepLogradouroBairro\nvalores obrigatorios\nif( is_numeric( $cep ) && is_numeric( $this->idlog ) && is_numeric( {$this->idbai[$id]} ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
               return FALSE;
             }
           }
@@ -274,7 +274,7 @@ class indice extends clsCadastro
       $this->simpleRedirect('urbano_cep_logradouro_lst.php');
     }
     $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-    echo "<!--\nErro ao excluir clsUrbanoCepLogradouro\nvalores obrigatorios\nif( is_numeric( $this->cep ) && is_numeric( $this->idlog ) )\n-->";
+
     return FALSE;
   }
   function getListCepBairro()
