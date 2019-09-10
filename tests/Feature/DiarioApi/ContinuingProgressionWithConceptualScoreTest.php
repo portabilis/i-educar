@@ -149,9 +149,12 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
         $this->assertEquals(1, $registration->refresh()->aprovado);
     }
 
+    /**
+     * @todo Remover Skip (line 157) depois que resolver bug deste teste, onde retorna retido na situação do componente curricular, quando é esperado aprovado (line 179).
+     */
     public function testContinuingProgressionMoreThanAbsenceLimitAfterAllScoreAndAbsencePosted()
     {
-        $this->markTestIncomplete();
+        $this->markTestSkipped();
         $schoolClass = $this->enrollment->schoolClass;
         $disciplines = $schoolClass->disciplines;
 
