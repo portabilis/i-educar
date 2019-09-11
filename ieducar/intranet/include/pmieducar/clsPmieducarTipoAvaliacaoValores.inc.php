@@ -23,22 +23,7 @@ class clsPmieducarTipoAvaliacaoValores extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_tipo_avaliacao, sequencial, nome, valor, valor_min, valor_max,ativo';
 
         if (is_numeric($ref_cod_tipo_avaliacao)) {
-            if (class_exists('clsPmieducarTipoAvaliacao')) {
-                $tmp_obj = new clsPmieducarTipoAvaliacao($ref_cod_tipo_avaliacao);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_tipo_avaliacao = $ref_cod_tipo_avaliacao;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_tipo_avaliacao = $ref_cod_tipo_avaliacao;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.tipo_avaliacao WHERE cod_tipo_avaliacao = '{$ref_cod_tipo_avaliacao}'")) {
                     $this->ref_cod_tipo_avaliacao = $ref_cod_tipo_avaliacao;
-                }
-            }
         }
 
         if (is_numeric($sequencial)) {

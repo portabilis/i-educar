@@ -116,15 +116,12 @@ class indice extends clsCadastro
             }
         }
 
-        if( class_exists( "clsPmieducarMatricula" ) && is_numeric($this->ref_cod_matricula))
-        {
             $obj_ref_cod_matricula = new clsPmieducarMatricula();
             $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
             $this->ref_cod_escola = $detalhe_aluno['ref_ref_cod_escola'];
             $obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
             $det_escola = $obj_escola->detalhe();
             $this->ref_cod_instituicao = $det_escola['ref_cod_instituicao'];
-        }
 
         if (is_numeric($this->ref_cod_matricula))
             $this->url_cancelar = ($retorno == "Editar") ? "educar_matricula_ocorrencia_disciplinar_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_tipo_ocorrencia_disciplinar={$registro["ref_cod_tipo_ocorrencia_disciplinar"]}&sequencial={$registro["sequencial"]}" : "educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}";
@@ -140,13 +137,6 @@ class indice extends clsCadastro
 
     function Gerar()
     {
-        /**
-         * Busca infos aluno
-         */
-
-
-        if( class_exists( "clsPmieducarMatricula" ) && is_numeric($this->ref_cod_matricula))
-        {
             $obj_ref_cod_matricula = new clsPmieducarMatricula();
             $detalhe_aluno = $obj_ref_cod_matricula->lista($this->ref_cod_matricula);
             if($detalhe_aluno)
@@ -155,12 +145,6 @@ class indice extends clsCadastro
             $det_aluno = array_shift($det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'],null,null,null,null,null,null,null,null,null,1));
 
             $this->campoRotulo("nm_pessoa","Nome do Aluno",$det_aluno['nome_aluno']);
-        }else{
-            $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
-            // FIXME #parameters
-            $this->inputsHelper()->simpleSearchMatricula(null);
-            $this->inputsHelper()->hidden('somente_andamento');
-        }
 
         // primary keys
         $this->campoOculto( "ref_cod_matricula", $this->ref_cod_matricula );

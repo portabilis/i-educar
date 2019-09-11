@@ -57,55 +57,15 @@ class clsPmieducarSerie extends Model
         $this->_campos_lista = $this->_todos_campos = 's.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos, s.regra_avaliacao_diferenciada_id, s.alerta_faixa_etaria, s.bloquear_matricula_faixa_etaria, s.idade_ideal, s.exigir_inep';
 
         if (is_numeric($ref_cod_curso)) {
-            if (class_exists('clsPmieducarCurso')) {
-                $tmp_obj = new clsPmieducarCurso($ref_cod_curso);
-                $curso = $tmp_obj->detalhe();
-                if (false != $curso) {
                     $this->ref_cod_curso = $ref_cod_curso;
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.curso WHERE cod_curso = '{$ref_cod_curso}'")) {
-                    $this->ref_cod_curso = $ref_cod_curso;
-                }
-            }
         }
 
         if (is_numeric($ref_usuario_exc)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_exc);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'")) {
                     $this->ref_usuario_exc = $ref_usuario_exc;
-                }
-            }
         }
 
         if (is_numeric($ref_usuario_cad)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_cad);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'")) {
                     $this->ref_usuario_cad = $ref_usuario_cad;
-                }
-            }
         }
 
         // Atribuibui a identificação de regra de avaliação

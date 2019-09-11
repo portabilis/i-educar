@@ -21,22 +21,7 @@ class clsPmieducarServidorCurso extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_servidor_curso, ref_cod_formacao, data_conclusao, data_registro, diplomas_registros';
 
         if (is_numeric($ref_cod_formacao)) {
-            if (class_exists('clsPmieducarServidorFormacao')) {
-                $tmp_obj = new clsPmieducarServidorFormacao($ref_cod_formacao);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_formacao = $ref_cod_formacao;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_formacao = $ref_cod_formacao;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.servidor_formacao WHERE cod_formacao = '{$ref_cod_formacao}'")) {
                     $this->ref_cod_formacao = $ref_cod_formacao;
-                }
-            }
         }
 
         if (is_numeric($cod_servidor_curso)) {

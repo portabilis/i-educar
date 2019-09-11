@@ -95,7 +95,7 @@ class indice extends clsListagem
       $this->$var = ($val === '') ? NULL : $val;
     }
 
-    
+
 
     $this->addCabecalhos(array(
       'Nome Formação',
@@ -154,25 +154,15 @@ class indice extends clsListagem
     if (is_array($lista) && count($lista)) {
       foreach ($lista as $registro) {
         // Pega detalhes de foreign_keys
-        if (class_exists('clsPmieducarUsuario')) {
           $obj_ref_usuario_exc = new clsPmieducarUsuario($registro['ref_usuario_exc']);
           $det_ref_usuario_exc = $obj_ref_usuario_exc->detalhe();
 
           $registro['ref_usuario_exc'] = $det_ref_usuario_exc['data_cadastro'];
-        }
-        else {
-          $registro['ref_usuario_exc'] = 'Erro na geracao';
-        }
 
-        if (class_exists('clsPmieducarServidor')) {
           $obj_ref_cod_servidor = new clsPmieducarServidor($registro['ref_cod_servidor']);
           $det_ref_cod_servidor = $obj_ref_cod_servidor->detalhe();
 
           $registro['ref_cod_servidor'] = $det_ref_cod_servidor['cod_servidor'];
-        }
-        else {
-          $registro['ref_cod_servidor'] = 'Erro na geracao';
-        }
 
         if ($registro['tipo'] == 'C') {
           $registro['tipo'] = 'Curso';

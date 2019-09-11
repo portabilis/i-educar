@@ -21,40 +21,10 @@ class clsPmieducarSeriePeriodoData extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_serie, sequencial, ref_cod_serie_tipo_periodo_ano, data_inicial, data_final';
 
         if (is_numeric($ref_cod_serie_tipo_periodo_ano)) {
-            if (class_exists('clsPmieducarSerieTipoPeriodoAno')) {
-                $tmp_obj = new clsPmieducarSerieTipoPeriodoAno($ref_cod_serie_tipo_periodo_ano);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_serie_tipo_periodo_ano = $ref_cod_serie_tipo_periodo_ano;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_serie_tipo_periodo_ano = $ref_cod_serie_tipo_periodo_ano;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.serie_tipo_periodo_ano WHERE cod_serie_tipo_periodo_ano = '{$ref_cod_serie_tipo_periodo_ano}'")) {
                     $this->ref_cod_serie_tipo_periodo_ano = $ref_cod_serie_tipo_periodo_ano;
-                }
-            }
         }
         if (is_numeric($ref_cod_serie)) {
-            if (class_exists('clsPmieducarSerie')) {
-                $tmp_obj = new clsPmieducarSerie($ref_cod_serie);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_serie = $ref_cod_serie;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_serie = $ref_cod_serie;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.serie WHERE cod_serie = '{$ref_cod_serie}'")) {
                     $this->ref_cod_serie = $ref_cod_serie;
-                }
-            }
         }
 
         if (is_numeric($sequencial)) {

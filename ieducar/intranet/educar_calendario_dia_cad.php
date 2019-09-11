@@ -169,7 +169,7 @@ class indice extends clsCadastro
   {
     $retorno = 'Novo';
 
-    
+
 
     $this->dia = $_GET['dia'];
     $this->mes = $_GET['mes'];
@@ -204,18 +204,9 @@ class indice extends clsCadastro
         $retorno = 'Editar';
       }
 
-      if (class_exists('clsPmieducarCalendarioAnoLetivo')) {
         $objTemp = new clsPmieducarCalendarioAnoLetivo($this->ref_cod_calendario_ano_letivo);
         $det = $objTemp->detalhe();
         $this->ano = $det['ano'];
-      }
-      else {
-        $url = sprintf(
-          'educar_calendario_dia_lst.php?ref_cod_calendario_ano_letivo=%d&mes=%d&dia=%d',
-          $registro['ref_cod_calendario_ano_letivo'], $registro['mes'], $registro['dia']
-        );
-        $this->simpleRedirect($url);
-      }
     }
 
     $this->url_cancelar = sprintf(
@@ -284,7 +275,7 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(620, $this->pessoa_logada, 7,
@@ -329,7 +320,7 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(620, $this->pessoa_logada, 7,
@@ -401,7 +392,7 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_excluir(620, $this->pessoa_logada, 7,

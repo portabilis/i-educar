@@ -1162,14 +1162,11 @@ class indice extends clsCadastro
                     }
                     else
                     {
-                        if ( class_exists( "clsPmieducarEscolaComplemento" ) )
-                        {
                             $obj_escola = new clsPmieducarEscolaComplemento( $this->ref_ref_cod_escola );
                             $det_escola = $obj_escola->detalhe();
 
                             $nm_escola = $det_escola["nm_escola"];
                             $cidade = $det_escola["municipio"];
-                        }
                     }
                     if ($this->padrao_ano_escolar)
                     {
@@ -2056,14 +2053,11 @@ class indice extends clsCadastro
                     }
                     else
                     {
-                        if ( class_exists( "clsPmieducarEscolaComplemento" ) )
-                        {
                             $obj_escola = new clsPmieducarEscolaComplemento( $this->ref_ref_cod_escola );
                             $det_escola = $obj_escola->detalhe();
 
                             $nm_escola = $det_escola["nm_escola"];
                             $cidade = $det_escola["municipio"];
-                        }
                     }
 
                     if ($this->padrao_ano_escolar)

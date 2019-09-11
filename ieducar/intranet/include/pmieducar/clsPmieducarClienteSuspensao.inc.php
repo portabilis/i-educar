@@ -24,76 +24,16 @@ class clsPmieducarClienteSuspensao extends Model
         $this->_campos_lista = $this->_todos_campos = 'sequencial, ref_cod_cliente, ref_cod_motivo_suspensao, ref_usuario_libera, ref_usuario_suspende, dias, data_suspensao, data_liberacao';
 
         if (is_numeric($ref_usuario_suspende)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_suspende);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_suspende = $ref_usuario_suspende;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_suspende = $ref_usuario_suspende;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_suspende}'")) {
                     $this->ref_usuario_suspende = $ref_usuario_suspende;
-                }
-            }
         }
         if (is_numeric($ref_usuario_libera)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_libera);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_libera = $ref_usuario_libera;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_libera = $ref_usuario_libera;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_libera}'")) {
                     $this->ref_usuario_libera = $ref_usuario_libera;
-                }
-            }
         }
         if (is_numeric($ref_cod_motivo_suspensao)) {
-            if (class_exists('clsPmieducarMotivoSuspensao')) {
-                $tmp_obj = new clsPmieducarMotivoSuspensao($ref_cod_motivo_suspensao);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_motivo_suspensao = $ref_cod_motivo_suspensao;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_motivo_suspensao = $ref_cod_motivo_suspensao;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.motivo_suspensao WHERE cod_motivo_suspensao = '{$ref_cod_motivo_suspensao}'")) {
                     $this->ref_cod_motivo_suspensao = $ref_cod_motivo_suspensao;
-                }
-            }
         }
         if (is_numeric($ref_cod_cliente)) {
-            if (class_exists('clsPmieducarCliente')) {
-                $tmp_obj = new clsPmieducarCliente($ref_cod_cliente);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_cliente = $ref_cod_cliente;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_cliente = $ref_cod_cliente;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.cliente WHERE cod_cliente = '{$ref_cod_cliente}'")) {
                     $this->ref_cod_cliente = $ref_cod_cliente;
-                }
-            }
         }
 
         if (is_numeric($sequencial)) {

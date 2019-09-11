@@ -24,79 +24,17 @@ class clsUrbanoCepLogradouroBairro extends Model
         $this->_campos_lista = $this->_todos_campos = 'clb.idlog, clb.cep, clb.idbai, clb.idpes_rev, clb.data_rev, clb.origem_gravacao, clb.idpes_cad, clb.data_cad, clb.operacao';
 
         if (is_numeric($idpes_rev)) {
-            if (class_exists('clsCadastroPessoa')) {
-                $tmp_obj = new clsCadastroPessoa($idpes_rev);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->idpes_rev = $idpes_rev;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->idpes_rev = $idpes_rev;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM cadastro.pessoa WHERE idpes = '{$idpes_rev}'")) {
                     $this->idpes_rev = $idpes_rev;
-                }
-            }
         }
         if (is_numeric($idpes_cad)) {
-            if (class_exists('clsCadastroPessoa')) {
-                $tmp_obj = new clsCadastroPessoa($idpes_cad);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->idpes_cad = $idpes_cad;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->idpes_cad = $idpes_cad;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM cadastro.pessoa WHERE idpes = '{$idpes_cad}'")) {
                     $this->idpes_cad = $idpes_cad;
-                }
-            }
         }
         if (is_numeric($cep) && is_numeric($idlog)) {
-            if (class_exists('clsUrbanoCepLogradouro')) {
-                $tmp_obj = new clsUrbanoCepLogradouro($cep, $idlog);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->cep = $cep;
-                        $this->idlog = $idlog;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->cep = $cep;
-                        $this->idlog = $idlog;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM urbano.cep_logradouro WHERE cep = '{$cep}' AND idlog = '{$idlog}'")) {
                     $this->cep = $cep;
                     $this->idlog = $idlog;
-                }
-            }
         }
         if (is_numeric($idbai)) {
-            if (class_exists('clsPublicBairro')) {
-                $tmp_obj = new clsPublicBairro(null, null, $idbai);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->idbai = $idbai;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->idbai = $idbai;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM public.bairro WHERE idbai = '{$idbai}'")) {
                     $this->idbai = $idbai;
-                }
-            }
         }
         if (is_string($data_rev)) {
             $this->data_rev = $data_rev;
