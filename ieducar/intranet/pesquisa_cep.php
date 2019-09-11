@@ -207,8 +207,6 @@ if ($tipo != 3) {
       opt_idtlog = 'idtlog_' + idtlog;
       window.opener.document.getElementById(opt_idtlog).selected = true;
       window.opener.document.getElementById('idtlog').disabled = true;
-
-
     } else {
       window.opener.document.getElementById('cep').value = '';
       window.opener.document.getElementById('idlog').value = '';
