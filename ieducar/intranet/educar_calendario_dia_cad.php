@@ -169,8 +169,6 @@ class indice extends clsCadastro
   {
     $retorno = 'Novo';
 
-
-
     $this->dia = $_GET['dia'];
     $this->mes = $_GET['mes'];
     $this->ref_cod_calendario_ano_letivo = $_GET['ref_cod_calendario_ano_letivo'];
@@ -275,8 +273,6 @@ class indice extends clsCadastro
 
   function Novo()
   {
-
-
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(620, $this->pessoa_logada, 7,
       'educar_calendario_dia_lst.php');
