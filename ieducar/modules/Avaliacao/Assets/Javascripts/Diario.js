@@ -384,7 +384,7 @@ function postNota($notaFieldElement) {
 function checkIfShowNotaRecuperacaoParalelaField(notaLancada, dataResponse){
   componente_curricular_id = dataResponse.componente_curricular_id;
   matricula_id = dataResponse.matricula_id;
-  $jnotaRecuperacaoParalelaField = $j('#nota-recuperacao-paralela-' + matricula_id + '-cc-' + componente_curricular_id);
+  $jnotaRecuperacaoParalelaField = $j('#nota_recuperacao_paralela-matricula-' + matricula_id + '-cc-' + componente_curricular_id);
 
   if(!$jnotaRecuperacaoParalelaField.length){
     return false;
