@@ -548,7 +548,7 @@ class indice extends clsCadastro
 
             $this->mensagem = $msgs;
 
-            return false;
+            return $this->simpleRedirect(\Request::getRequestUri());
         }
 
         $detalheAntigo = $obj->detalhe();
