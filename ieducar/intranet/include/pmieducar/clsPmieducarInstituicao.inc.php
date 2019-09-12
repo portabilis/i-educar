@@ -50,6 +50,7 @@ class clsPmieducarInstituicao extends Model
     public $exigir_lancamentos_anteriores;
     public $exibir_apenas_professores_alocados;
     public $bloquear_vinculo_professor_sem_alocacao_escola;
+    public $permitir_matricula_fora_periodo_letivo;
 
     public function __construct(
         $cod_instituicao = null,
@@ -79,7 +80,8 @@ class clsPmieducarInstituicao extends Model
         $obrigar_documento_pessoa = null,
         $exigir_lancamentos_anteriores = null,
         $exibir_apenas_professores_alocados = null,
-        $bloquear_vinculo_professor_sem_alocacao_escola = null
+        $bloquear_vinculo_professor_sem_alocacao_escola = null,
+        $permitir_matricula_fora_periodo_letivo = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
@@ -133,7 +135,8 @@ class clsPmieducarInstituicao extends Model
             orgao_regional,
             exigir_lancamentos_anteriores,
             exibir_apenas_professores_alocados,
-            bloquear_vinculo_professor_sem_alocacao_escola
+            bloquear_vinculo_professor_sem_alocacao_escola,
+            permitir_matricula_fora_periodo_letivo
         ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -286,6 +289,10 @@ class clsPmieducarInstituicao extends Model
 
         if (is_bool($bloquear_vinculo_professor_sem_alocacao_escola)) {
             $this->bloquear_vinculo_professor_sem_alocacao_escola = $bloquear_vinculo_professor_sem_alocacao_escola;
+        }
+
+        if (is_bool($permitir_matricula_fora_periodo_letivo)) {
+            $this->permitir_matricula_fora_periodo_letivo = $permitir_matricula_fora_periodo_letivo;
         }
     }
 
@@ -663,6 +670,16 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
+            if (dbBool($this->permitir_matricula_fora_periodo_letivo)) {
+                $campos .= "{$gruda}permitir_matricula_fora_periodo_letivo";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}permitir_matricula_fora_periodo_letivo";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
             if (is_string($this->orgao_regional) and !empty($this->orgao_regional)) {
                 $campos .= "{$gruda}orgao_regional";
                 $valores .= "{$gruda}'{$this->orgao_regional}'";
@@ -1011,6 +1028,14 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             } else {
                 $set .= "{$gruda}bloquear_vinculo_professor_sem_alocacao_escola = false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->permitir_matricula_fora_periodo_letivo)) {
+                $set .= "{$gruda}permitir_matricula_fora_periodo_letivo = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}permitir_matricula_fora_periodo_letivo = false ";
                 $gruda = ', ';
             }
 
