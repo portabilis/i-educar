@@ -223,6 +223,9 @@ class EnrollmentServiceTest extends TestCase
             'ref_cod_turma' => $this->schoolClass,
         ]);
 
+        $enrollment->schoolClass->school->institution->permitir_matricula_fora_periodo_letivo = false;
+        $enrollment->schoolClass->school->institution->save();
+
         $stage = $this->schoolClass->stages()->first();
 
         $stage->data_inicio = now()->addDay();
@@ -231,6 +234,35 @@ class EnrollmentServiceTest extends TestCase
         $this->service->enroll(
             $enrollment->registration, $enrollment->schoolClass, now()
         );
+    }
+
+    /**
+     * Permite matrícular antes do início do ano letivo se o parâmetro permitir_matricula_fora_periodo_letivo
+     * estiver habilitado na instituição
+     *
+     * @return void
+     *
+     * @throws Throwable
+     */
+    public function testEnrollDateBeforeAcademicYearAllowed()
+    {
+        $enrollment = factory(LegacyEnrollment::class)->make([
+            'ref_cod_turma' => $this->schoolClass,
+        ]);
+
+        $enrollment->schoolClass->school->institution->permitir_matricula_fora_periodo_letivo = true;
+        $enrollment->schoolClass->school->institution->save();
+
+        $stage = $this->schoolClass->stages()->first();
+
+        $stage->data_inicio = now()->addDay();
+        $stage->save();
+
+        $enrollment = $this->service->enroll(
+            $enrollment->registration, $enrollment->schoolClass, now()
+        );
+
+        $this->assertInstanceOf(LegacyEnrollment::class, $enrollment);
     }
 
     /**
