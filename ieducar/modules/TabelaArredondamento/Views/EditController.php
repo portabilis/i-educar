@@ -292,7 +292,7 @@ class EditController extends Core_Controller_Page_EditController
             'valor_descricao',
             $valorNota->descricao,
             15,
-            25,
+            50,
             true,
             false,
             false,
