@@ -180,7 +180,9 @@ class EnrollmentService
         }
 
         if ($date->format('Y-m-d') < $schoolClass->begin_academic_year->format('Y-m-d')) {
-            throw new EnrollDateBeforeAcademicYearException($schoolClass, $date);
+            if (!$schoolClass->school->institution->allowRegistrationOutAcademicYear) {
+                throw new EnrollDateBeforeAcademicYearException($schoolClass, $date);
+            }
         }
 
         if ($date->format('Y-m-d') > $schoolClass->end_academic_year->format('Y-m-d')) {
