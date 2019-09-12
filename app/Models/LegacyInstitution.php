@@ -111,4 +111,9 @@ class LegacyInstitution extends Model
     {
         return $this->cod_instituicao;
     }
+
+    public function getAllowRegistrationOutAcademicYearAttribute()
+    {
+        return boolval($this->permitir_matricula_fora_periodo_letivo);
+    }
 }
