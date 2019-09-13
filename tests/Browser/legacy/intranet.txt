@@ -340,8 +340,6 @@ educar_turma_tipo_cad_pop.php
 educar_turma_tipo_det.php
 educar_turma_tipo_lst.php
 educar_unifica_aluno.php
-educar_unifica_bairro.php
-educar_unifica_logradouro.php
 educar_unifica_pessoa.php
 educar_usuario_cad.php
 educar_usuario_det.php
