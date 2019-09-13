@@ -18,40 +18,10 @@ class clsPmieducarPessoaEducDeficiencia extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_pessoa_educ, ref_cod_deficiencia';
 
         if (is_numeric($ref_cod_deficiencia)) {
-            if (class_exists('clsCadastroDeficiencia')) {
-                $tmp_obj = new clsCadastroDeficiencia($ref_cod_deficiencia);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_deficiencia = $ref_cod_deficiencia;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_deficiencia = $ref_cod_deficiencia;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM cadastro.deficiencia WHERE cod_deficiencia = '{$ref_cod_deficiencia}'")) {
                     $this->ref_cod_deficiencia = $ref_cod_deficiencia;
-                }
-            }
         }
         if (is_numeric($ref_cod_pessoa_educ)) {
-            if (class_exists('clsPmieducarPessoaEduc')) {
-                $tmp_obj = new clsPmieducarPessoaEduc($ref_cod_pessoa_educ);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_pessoa_educ = $ref_cod_pessoa_educ;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_pessoa_educ = $ref_cod_pessoa_educ;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.pessoa_educ WHERE cod_pessoa_educ = '{$ref_cod_pessoa_educ}'")) {
                     $this->ref_cod_pessoa_educ = $ref_cod_pessoa_educ;
-                }
-            }
         }
     }
 

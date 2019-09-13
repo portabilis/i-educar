@@ -125,7 +125,6 @@ class indice extends clsCadastro
                 $this->campoRotulo( "nm_cliente", "Cliente", $detalhe["nome"] );
             }
             $this->campoNumero( "dias", "Dias", $this->dias, 9, 9, true );
-            if ( class_exists( "clsPmieducarMotivoSuspensao" ) ) {
                 echo "<script> descricao = new Array();\n </script>";
                 $opcoes[""] = "Selecione um motivo";
                 $todos_motivos = "";
@@ -173,7 +172,6 @@ class indice extends clsCadastro
                 {
                     $this->campoLista( "cod_motivo_suspensao", "Motivo da Suspensão", array("" => "Não há motivo cadastrado"), "", "", false, "", "", true, true );
                 }
-            }
         }
         elseif ( $this->acao_status == "liberar" ) {
             $db               = new clsBanco();

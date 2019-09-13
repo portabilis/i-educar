@@ -66,12 +66,9 @@ class indice extends clsCadastro
                 $obj_ref_serie_origem = new clsPmieducarSerie( $this->ref_serie_origem );
                 $det_ref_serie_origem = $obj_ref_serie_origem->detalhe();
                 $this->ref_curso_origem = $det_ref_serie_origem["ref_cod_curso"];
-                if( class_exists( "clsPmieducarCurso" ) )
-                {
                     $obj_ref_curso_origem = new clsPmieducarCurso( $this->ref_curso_origem );
                     $det_ref_curso_origem = $obj_ref_curso_origem->detalhe();
                     $this->ref_cod_instituicao = $det_ref_curso_origem["ref_cod_instituicao"];
-                }
                 $obj_ref_serie_destino = new clsPmieducarSerie( $this->ref_serie_destino );
                 $det_ref_serie_destino = $obj_ref_serie_destino->detalhe();
                 $this->ref_curso_destino = $det_ref_serie_destino["ref_cod_curso"];

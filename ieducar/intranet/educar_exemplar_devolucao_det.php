@@ -89,13 +89,10 @@ class indice extends clsDetalhe
             $obj_ref_cod_exemplar = new clsPmieducarExemplar( $registro["ref_cod_exemplar"] );
             $det_ref_cod_exemplar = $obj_ref_cod_exemplar->detalhe();
 
-            if ( class_exists( "clsPmieducarAcervo" ) )
-            {
                 $acervo = $det_ref_cod_exemplar["ref_cod_acervo"];
                 $obj_acervo = new clsPmieducarAcervo($acervo);
                 $det_acervo = $obj_acervo->detalhe();
                 $titulo_exemplar = $det_acervo["titulo"];
-            }
 
             $obj_cliente = new clsPmieducarCliente( $registro["ref_cod_cliente"] );
             $det_cliente = $obj_cliente->detalhe();

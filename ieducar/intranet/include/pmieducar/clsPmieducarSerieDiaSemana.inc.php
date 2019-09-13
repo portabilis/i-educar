@@ -19,25 +19,8 @@ class clsPmieducarSerieDiaSemana extends Model
         $this->_campos_lista = $this->_todos_campos = 'dia_semana, ref_ref_cod_serie, ref_ref_cod_escola';
 
         if (is_numeric($ref_ref_cod_escola) && is_numeric($ref_ref_cod_serie)) {
-            if (class_exists('clsPmieducarEscolaSerie')) {
-                $tmp_obj = new clsPmieducarEscolaSerie($ref_ref_cod_escola, $ref_ref_cod_serie);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_ref_cod_escola = $ref_ref_cod_escola;
-                        $this->ref_ref_cod_serie = $ref_ref_cod_serie;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_ref_cod_escola = $ref_ref_cod_escola;
-                        $this->ref_ref_cod_serie = $ref_ref_cod_serie;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.escola_serie WHERE ref_cod_escola = '{$ref_ref_cod_escola}' AND ref_cod_serie = '{$ref_ref_cod_serie}'")) {
                     $this->ref_ref_cod_escola = $ref_ref_cod_escola;
                     $this->ref_ref_cod_serie = $ref_ref_cod_serie;
-                }
-            }
         }
 
         if (is_numeric($dia_semana)) {

@@ -21,43 +21,11 @@ class clsPmieducarServidorFuncao extends Model
         $this->_campos_lista = $this->_todos_campos = ' cod_servidor_funcao, ref_ref_cod_instituicao, ref_cod_servidor, ref_cod_funcao, matricula';
 
         if (is_numeric($ref_cod_funcao)) {
-            if (class_exists('clsPmieducarFuncao')) {
-                $tmp_obj = new clsPmieducarFuncao($ref_cod_funcao, null, null, null, null, null, null, null, null, $ref_ref_cod_instituicao);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_funcao = $ref_cod_funcao;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_funcao = $ref_cod_funcao;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.funcao WHERE cod_funcao = '{$ref_cod_funcao}'")) {
                     $this->ref_cod_funcao = $ref_cod_funcao;
-                }
-            }
         }
         if (is_numeric($ref_cod_servidor) && is_numeric($ref_ref_cod_instituicao)) {
-            if (class_exists('clsPmieducarServidor')) {
-                $tmp_obj = new clsPmieducarServidor($ref_cod_servidor, null, null, null, null, null, null, $ref_ref_cod_instituicao);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_servidor = $ref_cod_servidor;
-                        $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_servidor = $ref_cod_servidor;
-                        $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.servidor WHERE cod_servidor = '{$ref_cod_servidor}' AND ref_cod_instituicao = '{$ref_ref_cod_instituicao}'")) {
                     $this->ref_cod_servidor = $ref_cod_servidor;
                     $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
-                }
-            }
 
             if (is_string($matricula)) {
                 $this->matricula = $matricula;

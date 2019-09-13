@@ -20,46 +20,12 @@ class clsPmieducarTurmaDisciplina extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_turma, ref_cod_disciplina, ref_cod_escola, ref_cod_serie';
 
         if (is_numeric($ref_cod_serie) && is_numeric($ref_cod_escola) && is_numeric($ref_cod_disciplina)) {
-            if (class_exists('clsPmieducarEscolaSerieDisciplina')) {
-                $tmp_obj = new clsPmieducarEscolaSerieDisciplina($ref_cod_serie, $ref_cod_escola, $ref_cod_disciplina);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_serie = $ref_cod_serie;
-                        $this->ref_cod_escola = $ref_cod_escola;
-                        $this->ref_cod_disciplina = $ref_cod_disciplina;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_serie = $ref_cod_serie;
-                        $this->ref_cod_escola = $ref_cod_escola;
-                        $this->ref_cod_disciplina = $ref_cod_disciplina;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.escola_serie_disciplina WHERE ref_ref_cod_serie = '{$ref_cod_serie}' AND ref_ref_cod_escola = '{$ref_cod_escola}' AND ref_cod_disciplina = '{$ref_cod_disciplina}'")) {
                     $this->ref_cod_serie = $ref_cod_serie;
                     $this->ref_cod_escola = $ref_cod_escola;
                     $this->ref_cod_disciplina = $ref_cod_disciplina;
-                }
-            }
         }
         if (is_numeric($ref_cod_turma)) {
-            if (class_exists('clsPmieducarTurma')) {
-                $tmp_obj = new clsPmieducarTurma($ref_cod_turma);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_turma = $ref_cod_turma;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_turma = $ref_cod_turma;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.turma WHERE cod_turma = '{$ref_cod_turma}'")) {
                     $this->ref_cod_turma = $ref_cod_turma;
-                }
-            }
         }
     }
 

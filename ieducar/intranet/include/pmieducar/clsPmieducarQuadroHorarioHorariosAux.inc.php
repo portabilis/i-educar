@@ -28,67 +28,16 @@ class clsPmieducarQuadroHorarioHorariosAux extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_quadro_horario, sequencial, ref_cod_disciplina, ref_cod_escola, ref_cod_serie, ref_cod_instituicao_servidor, ref_servidor, dia_semana, hora_inicial, hora_final, identificador, data_cadastro';
 
         if (is_numeric($ref_servidor) && is_numeric($ref_cod_instituicao_servidor)) {
-            if (class_exists('clsPmieducarServidor')) {
-                $tmp_obj = new clsPmieducarServidor($ref_servidor, null, null, null, null, null, null, null, $ref_cod_instituicao_servidor);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_servidor = $ref_servidor;
-                        $this->ref_cod_instituicao_servidor = $ref_cod_instituicao_servidor;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_servidor = $ref_servidor;
-                        $this->ref_cod_instituicao_servidor = $ref_cod_instituicao_servidor;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.servidor WHERE cod_servidor = '{$ref_servidor}' AND ref_cod_instituicao = '{$ref_cod_instituicao_servidor}'")) {
                     $this->ref_servidor = $ref_servidor;
                     $this->ref_cod_instituicao_servidor = $ref_cod_instituicao_servidor;
-                }
-            }
         }
         if (is_numeric($ref_cod_serie) && is_numeric($ref_cod_escola) && is_numeric($ref_cod_disciplina)) {
-            if (class_exists('clsPmieducarEscolaSerieDisciplina')) {
-                $tmp_obj = new clsPmieducarEscolaSerieDisciplina($ref_cod_serie, $ref_cod_escola, $ref_cod_disciplina);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_serie = $ref_cod_serie;
-                        $this->ref_cod_escola = $ref_cod_escola;
-                        $this->ref_cod_disciplina = $ref_cod_disciplina;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_serie = $ref_cod_serie;
-                        $this->ref_cod_escola = $ref_cod_escola;
-                        $this->ref_cod_disciplina = $ref_cod_disciplina;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.escola_serie_disciplina WHERE ref_ref_cod_serie = '{$ref_cod_serie}' AND ref_ref_cod_escola = '{$ref_cod_escola}' AND ref_cod_disciplina = '{$ref_cod_disciplina}'")) {
                     $this->ref_cod_serie = $ref_cod_serie;
                     $this->ref_cod_escola = $ref_cod_escola;
                     $this->ref_cod_disciplina = $ref_cod_disciplina;
-                }
-            }
         }
         if (is_numeric($ref_cod_quadro_horario)) {
-            if (class_exists('clsPmieducarQuadroHorario')) {
-                $tmp_obj = new clsPmieducarQuadroHorario($ref_cod_quadro_horario);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_quadro_horario = $ref_cod_quadro_horario;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_quadro_horario = $ref_cod_quadro_horario;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.quadro_horario WHERE cod_quadro_horario = '{$ref_cod_quadro_horario}'")) {
                     $this->ref_cod_quadro_horario = $ref_cod_quadro_horario;
-                }
-            }
         }
 
         if (is_numeric($sequencial)) {

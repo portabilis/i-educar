@@ -20,58 +20,13 @@ class clsPmieducarSeriePreRequisito extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_pre_requisito, ref_cod_operador, ref_cod_serie, valor';
 
         if (is_numeric($ref_cod_serie)) {
-            if (class_exists('clsPmieducarSerie')) {
-                $tmp_obj = new clsPmieducarSerie($ref_cod_serie);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_serie = $ref_cod_serie;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_serie = $ref_cod_serie;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.serie WHERE cod_serie = '{$ref_cod_serie}'")) {
                     $this->ref_cod_serie = $ref_cod_serie;
-                }
-            }
         }
         if (is_numeric($ref_cod_operador)) {
-            if (class_exists('clsPmieducarOperador')) {
-                $tmp_obj = new clsPmieducarOperador($ref_cod_operador);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_operador = $ref_cod_operador;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_operador = $ref_cod_operador;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.operador WHERE cod_operador = '{$ref_cod_operador}'")) {
                     $this->ref_cod_operador = $ref_cod_operador;
-                }
-            }
         }
         if (is_numeric($ref_cod_pre_requisito)) {
-            if (class_exists('clsPmieducarPreRequisito')) {
-                $tmp_obj = new clsPmieducarPreRequisito($ref_cod_pre_requisito);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_pre_requisito = $ref_cod_pre_requisito;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_pre_requisito = $ref_cod_pre_requisito;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.pre_requisito WHERE cod_pre_requisito = '{$ref_cod_pre_requisito}'")) {
                     $this->ref_cod_pre_requisito = $ref_cod_pre_requisito;
-                }
-            }
         }
 
         if (is_string($valor)) {

@@ -99,13 +99,11 @@ class indice extends clsDetalhe
                 $motivo    = $obj_banco->CampoUnico( $sql_unico );
                 if ( is_numeric( $motivo ) ) {
                     $this->addDetalhe( array( "Status", "Suspenso" ) );
-                    if ( class_exists( "clsPmieducarMotivoSuspensao" ) ) {
                         $obj_motivo_suspensao = new clsPmieducarMotivoSuspensao( $motivo );
                         $det_motivo_suspensao = $obj_motivo_suspensao->detalhe();
                         $this->suspenso = $motivo;
                         $this->addDetalhe( array( "Motivo da Suspensão", "{$det_motivo_suspensao["nm_motivo"]}" ) );
                         $this->addDetalhe( array( "Descrição", "{$det_motivo_suspensao["descricao"]}" ) );
-                    }
                 }
                 else
                     $this->addDetalhe( array( "Status", "Regular" ) );

@@ -58,58 +58,13 @@ class clsPublicLogradouro extends Model
         $this->_campos_lista = $this->_todos_campos = 'l.idlog, l.idtlog, l.nome, l.idmun, l.geom, l.ident_oficial, l.idpes_rev, l.data_rev, l.origem_gravacao, l.idpes_cad, l.data_cad, l.operacao';
 
         if (is_string($idtlog)) {
-            if (class_exists('clsUrbanoTipoLogradouro')) {
-                $tmp_obj = new clsUrbanoTipoLogradouro($idtlog);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->idtlog = $idtlog;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->idtlog = $idtlog;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM urbano.tipo_logradouro WHERE idtlog = '{$idtlog}'")) {
                     $this->idtlog = $idtlog;
-                }
-            }
         }
         if (is_numeric($idpes_rev)) {
-            if (class_exists('clsCadastroPessoa')) {
-                $tmp_obj = new clsCadastroPessoa($idpes_rev);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->idpes_rev = $idpes_rev;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->idpes_rev = $idpes_rev;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM cadastro.pessoa WHERE idpes = '{$idpes_rev}'")) {
                     $this->idpes_rev = $idpes_rev;
-                }
-            }
         }
         if (is_numeric($idpes_cad)) {
-            if (class_exists('clsCadastroPessoa')) {
-                $tmp_obj = new clsCadastroPessoa($idpes_cad);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->idpes_cad = $idpes_cad;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->idpes_cad = $idpes_cad;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM cadastro.pessoa WHERE idpes = '{$idpes_cad}'")) {
                     $this->idpes_cad = $idpes_cad;
-                }
-            }
         }
 
         if (is_numeric($idlog)) {

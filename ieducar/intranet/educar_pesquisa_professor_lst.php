@@ -132,11 +132,9 @@ class indice extends clsListagem
     }
 
     // pega detalhes de foreign_keys
-    if (class_exists('clsPmieducarInstituicao')) {
       $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $lista_professor[0]["ref_cod_instituicao"] );
       $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
       $nm_instituicao = $det_ref_cod_instituicao["nm_instituicao"];
-    }
 
     // monta a lista
     if (is_array($lista_professor) && count($lista_professor)) {
@@ -197,7 +195,7 @@ function addVal1(campo,opcao, valor)
       valor                   = obj.options[novoIndice];
       valor.value             = opcao.toString();
       valor.selected          = true;
-      obj.onchange();      
+      obj.onchange();
     }
     else if (window.parent.document.getElementById(campo)) {
       obj       =  window.parent.document.getElementById(campo);

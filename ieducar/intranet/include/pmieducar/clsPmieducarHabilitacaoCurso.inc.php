@@ -18,40 +18,10 @@ class clsPmieducarHabilitacaoCurso extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_habilitacao, ref_cod_curso';
 
         if (is_numeric($ref_cod_curso)) {
-            if (class_exists('clsPmieducarCurso')) {
-                $tmp_obj = new clsPmieducarCurso($ref_cod_curso);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_curso = $ref_cod_curso;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_curso = $ref_cod_curso;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.curso WHERE cod_curso = '{$ref_cod_curso}'")) {
                     $this->ref_cod_curso = $ref_cod_curso;
-                }
-            }
         }
         if (is_numeric($ref_cod_habilitacao)) {
-            if (class_exists('clsPmieducarHabilitacao')) {
-                $tmp_obj = new clsPmieducarHabilitacao($ref_cod_habilitacao);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_habilitacao = $ref_cod_habilitacao;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_habilitacao = $ref_cod_habilitacao;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.habilitacao WHERE cod_habilitacao = '{$ref_cod_habilitacao}'")) {
                     $this->ref_cod_habilitacao = $ref_cod_habilitacao;
-                }
-            }
         }
     }
 

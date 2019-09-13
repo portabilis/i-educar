@@ -69,7 +69,7 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $lista_busca = array(
             "Cliente",
@@ -134,14 +134,9 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
-
-                // pega detalhes de foreign_keys
-                if( class_exists( "clsPmieducarBiblioteca" ) )
-                {
                     $obj_ref_cod_biblioteca = new clsPmieducarBiblioteca( $registro["cod_biblioteca"] );
                     $det_ref_cod_biblioteca = $obj_ref_cod_biblioteca->detalhe();
                     $registro["cod_biblioteca"] = $det_ref_cod_biblioteca["nm_biblioteca"];
-                }
                 if( $registro["cod_instituicao"] )
                 {
                     $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["cod_instituicao"] );

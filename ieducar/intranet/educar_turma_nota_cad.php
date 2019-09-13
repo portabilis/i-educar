@@ -1386,14 +1386,11 @@ class indice extends clsCadastro
                     }
                     else
                     {
-                        if ( class_exists( "clsPmieducarEscolaComplemento" ) )
-                        {
                             $obj_escola = new clsPmieducarEscolaComplemento( $this->ref_ref_cod_escola );
                             $det_escola = $obj_escola->detalhe();
 
                             $nm_escola = $det_escola["nm_escola"];
                             $cidade = $det_escola["municipio"];
-                        }
                     }
                     $this->padrao_ano_escolar = $detalhe_curso["padrao_ano_escolar"];
                     if ($this->padrao_ano_escolar)
