@@ -1350,7 +1350,7 @@ function notaRecuperacaoEspecificaField(matriculaId, componenteCurricularId, val
   return _notaField(matriculaId,
                     componenteCurricularId,
                     'nota-recuperacao-especifica-matricula-cc',
-                    'nota-recuperacao-especifica-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
+                    'nota_recuperacao_especifica-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
                     value,
                     'area-id-' + areaConhecimentoId,
                     maxLength,
@@ -1641,7 +1641,7 @@ function updateResourceRow(dataResponse) {
 
   var $situacaoField  = $j('#situacao-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNotaExame = $j('#nota_exame-matricula-' + matriculaId + '-cc-' + ccId);
-  var $fieldNotaEspecifica = $j('#nota-recuperacao-especifica-matricula-' + matriculaId + '-cc-' + ccId);
+  var $fieldNotaEspecifica = $j('#nota_recuperacao_especifica-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNN = $j('#nn-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldMedia = $j('#media-matricula-' + matriculaId + '-cc-' + ccId);
 
