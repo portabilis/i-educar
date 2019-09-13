@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 /**
  * @author Adriano Erik Weiguert Nagasava
  */
@@ -184,11 +160,11 @@ class indice extends clsCadastro
                 }
             }
             $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-            echo "<!--\nErro ao cadastrar clsPmieducarCliente\nvalores obrigatorios\nis_numeric( $this->ref_cod_cliente_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_idpes ) && is_numeric( $this->login )\n-->";
+
             return false;
         }
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarCliente\nvalores obrigatorios\nis_numeric( $this->ref_cod_cliente_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_idpes ) && is_numeric( $this->login )\n-->";
+
         return false;
     }
 
@@ -211,22 +187,12 @@ class indice extends clsCadastro
                 }
         //  }
             $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-            echo "<!--\nErro ao editar clsPmieducarCliente\nvalores obrigatorios\nif( is_numeric( $this->cod_cliente ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
             return false;
         }
-    /*  $obj_cliente_tipo = new clsPmieducarClienteTipoCliente( $this->ref_cod_cliente_tipo, $this->cod_cliente, null, null, $this->pessoa_logada, null, 1 );
-        if ( $obj_cliente_tipo->cadastra() )
-        {
-            $obj_cliente_tipo = new clsPmieducarClienteTipoCliente( $this->ref_cod_cliente_tipo_original, $this->cod_cliente, null, null, null, $this->pessoa_logada, 0 );
-            if ( $obj_cliente_tipo->edita() ) {
-                $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-                header( "Location: educar_definir_cliente_tipo_lst.php" );
-                die();
-                return true;
-            }
-        }*/
+
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarCliente\nvalores obrigatorios\nif( is_numeric( $this->cod_cliente ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 
@@ -248,7 +214,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarCliente\nvalores obrigatorios\nif( is_numeric( $this->cod_cliente ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 }

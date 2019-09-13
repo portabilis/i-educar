@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -103,7 +79,7 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $this->addCabecalhos( array(
             "Curso",
@@ -113,15 +89,15 @@ class indice extends clsListagem
         ) );
 
         $this->campoTexto( "nm_curso", "Curso", $this->nm_curso, 30, 255, false );
-        
+
         $opcoes = array( "" => "Selecione" );
         if( class_exists( "clsPmieducarNivelEnsino" ) )
         {
             $objTemp = new clsPmieducarNivelEnsino();
             $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) ) 
+            if ( is_array( $lista ) && count( $lista ) )
             {
-                foreach ( $lista as $registro ) 
+                foreach ( $lista as $registro )
                 {
                     $opcoes["{$registro['cod_nivel_ensino']}"] = "{$registro['nm_nivel']}";
                 }
@@ -133,15 +109,15 @@ class indice extends clsListagem
             $opcoes = array( "" => "Erro na geracao" );
         }
         $this->campoLista( "ref_cod_nivel_ensino", "Nivel Ensino", $opcoes, $this->ref_cod_nivel_ensino );
-        
+
         $opcoes = array( "" => "Selecione" );
         if( class_exists( "clsPmieducarTipoEnsino" ) )
         {
             $objTemp = new clsPmieducarTipoEnsino();
             $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) ) 
+            if ( is_array( $lista ) && count( $lista ) )
             {
-                foreach ( $lista as $registro ) 
+                foreach ( $lista as $registro )
                 {
                     $opcoes["{$registro['cod_tipo_ensino']}"] = "{$registro['nm_ensino']}";
                 }
@@ -203,8 +179,8 @@ class indice extends clsListagem
 
                 $registro["data_exclusao_time"] = strtotime( substr( $registro["data_exclusao"], 0, 16 ) );
                 $registro["data_exclusao_br"] = date( "d/m/Y H:i", $registro["data_exclusao_time"] );
-                
-                
+
+
 
                 if( class_exists( "clsPmieducarNivelEnsino" ) )
                 {
@@ -217,7 +193,7 @@ class indice extends clsListagem
                     $registro["ref_cod_nivel_ensino"] = "Erro na geracao";
                     echo "<!--\nErro\nClasse nao existente: clsPmieducarNivelEnsino\n-->";
                 }
-                
+
                 if( class_exists( "clsPmieducarTipoEnsino" ) )
                 {
                     $obj_ref_cod_tipo_ensino = new clsPmieducarTipoEnsino( $registro["ref_cod_tipo_ensino"] );
@@ -229,7 +205,7 @@ class indice extends clsListagem
                     $registro["ref_cod_tipo_ensino"] = "Erro na geracao";
                     echo "<!--\nErro\nClasse nao existente: clsPmieducarTipoEnsino\n-->";
                 }
-                
+
                 if( class_exists( "clsPmieducarInstituicao" ) )
                 {
                     $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
@@ -241,7 +217,7 @@ class indice extends clsListagem
                     $registro["ref_cod_instituicao"] = "Erro na geracao";
                     echo "<!--\nErro\nClasse nao existente: clsPmieducarInstuicao\n-->";
                 }
-                
+
 
                 $this->addLinhas( array(
                     "<a href=\"educar_curso_det.php?cod_curso={$registro["cod_curso"]}\">{$registro["nm_curso"]}</a>",

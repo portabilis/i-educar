@@ -5,7 +5,6 @@ use Faker\Generator as Faker;
 use App\Models\LegacyInstitution;
 
 $factory->define(LegacyRoundingTable::class, function (Faker $faker) {
-    
     return [
         'instituicao_id' => factory(LegacyInstitution::class)->state('unique')->make(),
         'nome' => $faker->words(3, true),
@@ -18,5 +17,13 @@ $factory->defineAs(LegacyRoundingTable::class, 'numeric', function (Faker $faker
 
     return array_merge($roundingTable, [
         'tipo_nota' => RegraAvaliacao_Model_Nota_TipoValor::NUMERICA,
+    ]);
+});
+
+$factory->defineAs(LegacyRoundingTable::class, 'conceitual', function () use ($factory) {
+    $roundingTable = $factory->raw(LegacyRoundingTable::class);
+
+    return array_merge($roundingTable, [
+        'tipo_nota' => RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL,
     ]);
 });

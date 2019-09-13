@@ -17,10 +17,10 @@ class Portabilis_View_Helper_DynamicInput_Serie extends Portabilis_View_Helper_D
         $escolaId = $this->getEscolaId($options['escolaId'] ?? null);
         $cursoId = $this->getCursoId($options['cursoId'] ?? null);
         $userId = $this->getCurrentUserId();
-        $isProfessor = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
+        $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicaoId, $userId);
 
-        if ($isProfessor && Portabilis_Business_Professor::canLoadSeriesAlocado($instituicaoId)) {
-            $series = Portabilis_Business_Professor::seriesAlocado($instituicaoId, $escolaId, $serieId, $userId);
+        if ($isOnlyProfessor && Portabilis_Business_Professor::canLoadSeriesAlocado($instituicaoId)) {
+            $resources = Portabilis_Business_Professor::seriesAlocado($instituicaoId, $escolaId, $cursoId, $userId);
         } elseif ($escolaId && $cursoId && empty($resources)) {
             $resources = App_Model_IedFinder::getSeries($instituicaoId = null, $escolaId, $cursoId);
         }
