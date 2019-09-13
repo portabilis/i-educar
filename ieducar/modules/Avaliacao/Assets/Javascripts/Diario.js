@@ -542,6 +542,15 @@ function postFalta($faltaFieldElement) {
     postResource(options, handleErrorOnPostResource);
   } else {
     $j('#' + $faltaFieldElement.attr('id')).addClass('error');
+
+    var regra = $element.closest('tr').data('regra');
+
+    // se presenca geral, muda o valor em todas faltas da mesma matricula
+    if (regra.tipo_presenca == 'geral') {
+      $j('#' + $faltaFieldElement.attr('id')).closest('table').find('.falta-matricula-' + $element
+        .data('matricula_id') + '-cc')
+        .not($element).addClass('error').removeClass('success');
+    }
   }
 }
 
@@ -913,7 +922,7 @@ var handleMessagesDiario = function(arrayMessage, targetId) {
     if (targetId.includes('falta-matricula')) {
       $j('#' + targetId).closest('table').find('.falta-matricula-' + $element
         .data('matricula_id') + '-cc')
-        .not($element).addClass('error').removeClass(success);
+        .not($element).addClass('error').removeClass('success');
     }
   }
 
