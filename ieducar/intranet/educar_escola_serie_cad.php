@@ -537,6 +537,20 @@ class indice extends clsCadastro
             $this->anos_letivos ?: []
         );
 
+        $sombra = json_decode(urldecode($this->componentes_sombra), true);
+        $disciplinas = $this->montaDisciplinas();
+        $analise = $this->analisaAlteracoes($sombra, $disciplinas);
+
+        try {
+            $this->validaAlteracoes($analise);
+        } catch (Exception $e) {
+            $msgs = explode("\n", $e->getMessage());
+
+            $this->mensagem = $msgs;
+
+            return $this->simpleRedirect(\Request::getRequestUri());
+        }
+
         $detalheAntigo = $obj->detalhe();
         $editou = $obj->edita();
 
@@ -549,20 +563,6 @@ class indice extends clsCadastro
             $campo,
             1
         );
-
-        $sombra = json_decode(urldecode($this->componentes_sombra), true);
-        $disciplinas = $this->montaDisciplinas();
-        $analise = $this->analisaAlteracoes($sombra, $disciplinas);
-
-        try {
-            $this->validaAlteracoes($analise);
-        } catch (Exception $e) {
-            $msgs = explode("\n", $e->getMessage());
-
-            $this->mensagem = $msgs;
-
-            return false;
-        }
 
         $obj->excluirNaoSelecionados($this->disciplinas);
 
