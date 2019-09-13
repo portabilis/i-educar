@@ -99,13 +99,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_bloqueio_ano_letivo_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Detalhe do bloqueio do ano letivo"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Detalhe do bloqueio do ano letivo', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

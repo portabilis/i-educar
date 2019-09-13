@@ -176,13 +176,9 @@ class indice extends clsDetalhe
 
     $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Detalhe da falta/atraso do servidor"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Detalhe da falta/atraso do servidor', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
   }
 }
 

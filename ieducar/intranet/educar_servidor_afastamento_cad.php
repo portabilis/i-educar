@@ -138,13 +138,9 @@ class indice extends clsCadastro {
 
     $this->nome_url_cancelar = "Cancelar";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""        => "Afastar servidor"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->breadcrumb('Afastar servidor', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
 
     return $retorno;
   }

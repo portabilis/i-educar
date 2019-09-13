@@ -10,6 +10,8 @@ class clsIndexBase extends clsBase
     }
 }
 
+use Illuminate\Support\Facades\Session;
+
 class indice extends clsCadastro
 {
     public $pessoa_logada;
@@ -53,7 +55,7 @@ class indice extends clsCadastro
         $this->data_matricula = Portabilis_Date_Utils::brToPgSQL($this->data_matricula);
 
         if (count($anoLetivo) > 1) {
-            $this->mensagem = 'Nenhum aluno rematriculado. Certifique-se que somente um ano letivo encontra-se em aberto.';
+            Session::now('notice', 'Nenhum aluno rematriculado. Certifique-se que somente um ano letivo encontra-se em aberto.');
 
             return false;
         }
@@ -68,7 +70,7 @@ class indice extends clsCadastro
         $inicioAnoLetivo = $registros[0]['data_inicio'];
 
         if ($this->data_matricula < $inicioAnoLetivo) {
-            $this->mensagem = 'A data da matrícula deve ser posterior ao dia ' . Portabilis_Date_Utils::pgSQLToBr($inicioAnoLetivo) . '.';
+            Session::now('notice', 'A data da matrícula deve ser posterior ao dia ' . Portabilis_Date_Utils::pgSQLToBr($inicioAnoLetivo) . '.');
 
             return false;
         }
@@ -95,81 +97,84 @@ class indice extends clsCadastro
 
     protected function rematricularAlunos($escolaId, $cursoId, $serieId, $turmaId, $ano)
     {
-        $result = $this->selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $this->ano_letivo);
-        $alunosSemInep = $this->getAlunosSemInep($escolaId, $cursoId, $serieId, $turmaId, $ano);
-        $alunosComSaidaDaEscola = $this->getAlunosComSaidaDaEscola($escolaId, $cursoId, $serieId, $turmaId, $ano);
-        $count = 0;
-        $nomesAlunos = [];
+        try {
+            $result = $this->selectMatriculas($escolaId, $cursoId, $serieId, $turmaId, $this->ano_letivo);
+            $alunosSemInep = $this->getAlunosSemInep($escolaId, $cursoId, $serieId, $turmaId, $ano);
+            $alunosComSaidaDaEscola = $this->getAlunosComSaidaDaEscola($escolaId, $cursoId, $serieId, $turmaId, $ano);
+            $count = 0;
+            $nomesAlunos = [];
 
-        if (count($alunosSemInep) == 0) {
-            while ($result && $this->db->ProximoRegistro()) {
-                list($matriculaId, $alunoId, $situacao, $nomeAluno) = $this->db->Tupla();
+            if (count($alunosSemInep) === 0) {
+                while ($result && $this->db->ProximoRegistro()) {
+                    list($matriculaId, $alunoId, $situacao, $nomeAluno) = $this->db->Tupla();
 
-                $this->db2->Consulta(
-                    "
-                        UPDATE pmieducar.matricula
-                        SET ultima_matricula = '0'
-                        WHERE cod_matricula = $matriculaId
-                    "
-                );
+                    $this->db2->Consulta(
+                        "
+                            UPDATE pmieducar.matricula
+                            SET ultima_matricula = '0'
+                            WHERE cod_matricula = $matriculaId
+                        "
+                    );
 
-                $resultApDep = $this->db2->Consulta(
-                    "
-                        SELECT ref_ref_cod_serie
-                        FROM pmieducar.matricula
-                        WHERE aprovado = 12
-                        AND ref_cod_aluno = '{$alunoId}'
-                        AND ano < '{$ano}'
-                        AND ativo = 1
-                        AND dependencia = FALSE
-                    "
-                );
+                    if ($result && $situacao == 1 || $situacao == 12 || $situacao == 13) {
+                        $result = $this->rematricularAlunoAprovado($escolaId, $serieId, $this->ano_letivo, $alunoId);
+                    } elseif ($result && $situacao == 2 || $situacao == 14) {
+                        $result = $this->rematricularAlunoReprovado($escolaId, $cursoId, $serieId, $this->ano_letivo, $alunoId);
+                    }
 
-                if ($result && $situacao == 1 || $situacao == 12 || $situacao == 13) {
-                    $result = $this->rematricularAlunoAprovado($escolaId, $serieId, $this->ano_letivo, $alunoId);
-                } elseif ($result && $situacao == 2 || $situacao == 14) {
-                    $result = $this->rematricularAlunoReprovado($escolaId, $cursoId, $serieId, $this->ano_letivo, $alunoId);
-                }
+                    $nomesAlunos[] = $nomeAluno;
+                    $count += 1;
 
-                $nomesAlunos[] = $nomeAluno;
-                $count += 1;
-
-                if (!$result) {
-                    break;
+                    if (!$result) {
+                        break;
+                    }
                 }
             }
+        } catch (Exception $e) {
+            Session::now('error', $e->getMessage());
+
+            return false;
         }
 
-        if ($result && empty($this->mensagem)) {
+        if ($result) {
             if ($count > 0) {
                 $mensagem = '';
+
                 if ($count > 0) {
-                    $mensagem .= "<span class='success'>Rematriculado os seguinte(s) $count aluno(s) com sucesso em $this->ano_letivo: </br></br>";
+                    $mensagem .= "Rematriculado os seguinte(s) $count aluno(s) com sucesso em $this->ano_letivo: </br></br>";
+
                     foreach ($nomesAlunos as $nome) {
                         $mensagem .= "{$nome} </br>";
                     }
-                    $mensagem .= '</br> As enturmações podem ser realizadas em: Movimentação > Enturmação.</span>';
+
+                    $mensagem .= '</br> As enturmações podem ser realizadas em: Movimentação > Enturmação.';
+
                     if (count($alunosComSaidaDaEscola) > 0) {
-                        $mensagem .= '</br></br><span>O(s) seguinte(s) aluno(s) não foram rematriculados, pois possuem saída na escola: </br></br>';
+                        $mensagem .= '</br></br>O(s) seguinte(s) aluno(s) não foram rematriculados, pois possuem saída na escola: </br></br>';
                         foreach ($alunosComSaidaDaEscola as $nome) {
                             $mensagem .= "{$nome} </br>";
                         }
                     }
                 }
-                $this->mensagem = $mensagem;
+
+                Session::now('success', $mensagem);
             } elseif (count($alunosSemInep) > 0) {
-                $this->mensagem .= '<span>Não foi possível realizar a rematrícula, pois o(s) seguinte(s) aluno(s) não possuem o INEP cadastrado: </br></br>';
+                $mensagem = 'Não foi possível realizar a rematrícula, pois o(s) seguinte(s) aluno(s) não possuem o INEP cadastrado: </br></br>';
+
                 foreach ($alunosSemInep as $nome) {
-                    $this->mensagem .= "{$nome} </br>";
+                    $mensagem .= "{$nome} </br>";
                 }
-                $this->mensagem .= '</br>Por favor, cadastre o INEP do(s) aluno(s) em: Cadastros > Aluno > Alunos > Campo: Código INEP.';
+
+                $mensagem .= '</br>Por favor, cadastre o INEP do(s) aluno(s) em: Cadastros > Aluno > Alunos > Campo: Código INEP.';
+
+                Session::now('error', $mensagem);
             } elseif ($this->existeMatriculasAprovadasReprovadas($escolaId, $cursoId, $serieId, $turmaId, $this->ano_letivo)) {
-                $this->mensagem = '<span class=\'notice\'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados em ' . ($this->ano_letivo - 1) . '.</span>';
+                Session::now('error', 'Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados em ' . ($this->ano_letivo - 1) . '.');
             } else {
-                $this->mensagem = Portabilis_String_Utils::toLatin1('<span class=\'notice\'>Os alunos desta série já encontram-se rematriculados, sendo assim, favor verificar se as enturmações já foram efetuadas em Movimentação > Enturmação.</span>');
+                Session::now('notice', 'Os alunos desta série já encontram-se rematriculados, sendo assim, favor verificar se as enturmações já foram efetuadas em Movimentação > Enturmação.');
             }
-        } elseif (empty($this->mensagem)) {
-            $this->mensagem = 'Ocorreu algum erro inesperado durante as rematrículas, por favor, tente novamente.';
+        } else {
+            Session::now('error', 'Ocorreu algum erro inesperado durante as rematrículas, por favor, tente novamente.');
         }
 
         return $result;
@@ -180,12 +185,11 @@ class indice extends clsCadastro
         //Pega todas as matriculas
         $objMatricula = new clsPmieducarMatriculaTurma();
         $objMatricula->setOrderby('nome');
-        $anoAnterior = $this->ano_letivo - 1;
         $lstMatricula = $objMatricula->lista4($escolaId, $cursoId, $serieId, $turmaId, $ano);
         //Verifica o parametro na série pra exigir inep
         $objSerie = new clsPmieducarSerie($serieId);
         $serieDet = $objSerie->detalhe();
-        $exigeInep = $serieDet['exigir_inep'] == 't';
+        $exigeInep = $serieDet['exigir_inep'];
         //Retorna alunos sem inep
         $alunosSemInep = [];
         $objAluno = new clsPmieducarAluno();
@@ -204,7 +208,6 @@ class indice extends clsCadastro
     {
         $objMatricula = new clsPmieducarMatriculaTurma();
         $objMatricula->setOrderby('nome');
-        $anoAnterior = $this->ano_letivo - 1;
         $alunosComSaidaDaEscola = $objMatricula->lista4($escolaId, $cursoId, $serieId, $turmaId, $ano, true);
         $alunos = [];
 
@@ -220,7 +223,7 @@ class indice extends clsCadastro
         $anoAnterior = $this->ano_letivo - 1;
 
         $sql = "
-            SELECT 
+            SELECT
                 cod_matricula,
                 ref_cod_aluno,
                 aprovado,
@@ -271,10 +274,9 @@ class indice extends clsCadastro
         try {
             $this->db->Consulta($sql);
         } catch (Exception $e) {
-            $this->mensagem = "Erro ao selecionar matrículas ano anterior: $anoAnterior";
             error_log('Erro ao selecionar matrículas ano anterior, no processo rematrícula automática:' . $e->getMessage());
 
-            return false;
+            throw new Exception("Erro ao selecionar matrículas ano anterior: $anoAnterior");
         }
 
         return true;
@@ -317,10 +319,10 @@ class indice extends clsCadastro
             if ($this->escolaSerieConfigurada($escolaId, $nextSerieId)) {
                 return $this->matricularAluno($escolaId, $nextCursoId, $nextSerieId, $this->ano_letivo, $alunoId);
             } else {
-                $this->mensagem = 'A série de destino não está configurada na escola. Favor efetuar o cadastro em Cadastro > Série > Escola-Série';
+                throw new Exception('A série de destino não está configurada na escola. Favor efetuar o cadastro em Cadastro > Série > Escola-Série');
             }
         } else {
-            $this->mensagem = 'Não foi possível obter a próxima série da sequência de enturmação';
+            throw new Exception('Não foi possível obter a próxima série da sequência de enturmação');
         }
 
         return false;
@@ -334,7 +336,7 @@ class indice extends clsCadastro
     protected function matricularAluno($escolaId, $cursoId, $serieId, $ano, $alunoId)
     {
         $sql = "
-            INSERT INTO pmieducar.matricula (ref_ref_cod_escola, ref_ref_cod_serie, ref_usuario_cad, ref_cod_aluno, aprovado, data_cadastro, ano, ref_cod_curso, ultima_matricula, data_matricula) 
+            INSERT INTO pmieducar.matricula (ref_ref_cod_escola, ref_ref_cod_serie, ref_usuario_cad, ref_cod_aluno, aprovado, data_cadastro, ano, ref_cod_curso, ultima_matricula, data_matricula)
             VALUES ('%d', '%d', '%d', '%d', '3', 'NOW()', '%d', '%d', '1','{$this->data_matricula}')
         ";
 
@@ -349,10 +351,9 @@ class indice extends clsCadastro
                 $cursoId
             ));
         } catch (Exception $e) {
-            $this->mensagem = "Erro durante matrícula do aluno: $alunoId";
             error_log("Erro durante a matrícula do aluno $alunoId, no processo de rematrícula automática:" . $e->getMessage());
 
-            return false;
+            throw new Exception("Erro durante matrícula do aluno: $alunoId");
         }
 
         $this->auditarMatriculas($escolaId, $cursoId, $serieId, $ano, $alunoId);

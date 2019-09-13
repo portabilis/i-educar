@@ -62,7 +62,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_aluno_beneficio=$_GET["cod_aluno_beneficio"];
 
@@ -88,15 +88,12 @@ class indice extends clsCadastro
             }
         }
         $this->url_cancelar = ($retorno == "Editar") ? "educar_aluno_beneficio_det.php?cod_aluno_beneficio={$registro["cod_aluno_beneficio"]}" : "educar_aluno_beneficio_lst.php";
-        
+
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} benef&iacute;cios de alunos"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());        
+
+        $this->breadcrumb($nomeMenu . ' benefícios de alunos', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
         return $retorno;
@@ -119,7 +116,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj = new clsPmieducarAlunoBeneficio( $this->cod_aluno_beneficio, $this->pessoa_logada, $this->pessoa_logada, $this->nm_beneficio, $this->desc_beneficio, $this->data_cadastro, $this->data_exclusao, $this->ativo );
         $cadastrou = $obj->cadastra();
@@ -143,7 +140,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $beneficioDetalhe = new clsPmieducarAlunoBeneficio($this->cod_aluno_beneficio);
         $beneficioDetalheAntes = $beneficioDetalhe->detalhe();
@@ -167,7 +164,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj = new clsPmieducarAlunoBeneficio($this->cod_aluno_beneficio, $this->pessoa_logada, $this->pessoa_logada, $this->nm_beneficio, $this->desc_beneficio, $this->data_cadastro, $this->data_exclusao, 0);
 

@@ -139,13 +139,9 @@ class indice extends clsCadastro
       $this->ref_cod_servidor, $this->ref_ref_cod_instituicao);
     $this->nome_url_cancelar = 'Cancelar';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""        => "Substituir servidor"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Substituir servidor', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
 
     return $retorno;
   }

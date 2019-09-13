@@ -37,6 +37,8 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
         'aprovaMediaDisciplina' => null,
         'reprovacaoAutomatica' => null,
         'regraDiferenciada' => null,
+        'calculaMediaRecParalela' => null,
+        'tipoCalculoRecuperacaoParalela' => null,
     ];
 
     protected $_dataTypes = [
@@ -268,6 +270,23 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
         }
 
         return null;
+    }
+
+    /**
+     * Pega a nota máxima permitida para a recuperação
+     *
+     * @param $etapa
+     * @return float
+     */
+    public function getNotaMaximaRecuperacao($etapa)
+    {
+        $tipoRecuperacaoParalela = $this->get('tipoRecuperacaoParalela');
+
+        if ($tipoRecuperacaoParalela != RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS) {
+            return $this->notaMaximaGeral;
+        }
+
+        return $this->getRegraRecuperacaoByEtapa($etapa)->notaMaxima;
     }
 
     /**

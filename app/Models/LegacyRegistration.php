@@ -29,7 +29,13 @@ class LegacyRegistration extends Model
      * @var array
      */
     protected $fillable = [
-        'ref_cod_aluno', 'data_cadastro', 'ano', 'ref_usuario_cad',
+        'ref_cod_aluno',
+        'data_cadastro',
+        'ano',
+        'ref_usuario_cad',
+        'dependencia',
+        'ref_ref_cod_serie',
+        'ref_cod_curso',
     ];
 
     /**
@@ -84,6 +90,14 @@ class LegacyRegistration extends Model
     public function enrollments()
     {
         return $this->hasMany(LegacyEnrollment::class, 'ref_cod_matricula');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function activeEnrollments()
+    {
+        return $this->hasMany(LegacyEnrollment::class, 'ref_cod_matricula')->where('ativo', 1);
     }
 
     /**

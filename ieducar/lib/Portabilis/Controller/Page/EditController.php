@@ -12,7 +12,7 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
 {
     protected $_dataMapper = null;
 
-    protected $_nivelAcessoInsuficiente = '/module/Error/unauthorized';
+    protected $_nivelAcessoInsuficiente = '/intranet/index.php?negado=1';
 
     protected $_titulo = '';
 

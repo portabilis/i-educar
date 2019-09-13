@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\LegacyDiscipline;
+use App\Models\LegacyDisciplineAcademicYear;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
+use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
 
 require_once 'CoreExt/Entity.php';
@@ -586,11 +589,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $disciplinas = $escolaSerieDisciplina->lista($serieId, $escolaId, $disciplinaId, 1, false, $etapa, $ano);
 
         if (false === $disciplinas) {
-            throw new App_Model_Exception(sprintf(
-                'Nenhuma disciplina para a série (%d) e a escola (%d) informados',
-                $serieId,
-                $escolaId
-            ));
+            throw new DisciplineNotLinkedToRegistrationException($escolaId, $disciplinaId, $ano, $serieId);
         }
 
         $componentes = [];
@@ -720,27 +719,33 @@ class App_Model_IedFinder extends CoreExt_Entity
         $anoEscolar,
         ComponenteCurricular_Model_ComponenteDataMapper $mapper = null
     ) {
-        if (is_null($mapper)) {
-            require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-            $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-        }
+        $ids = array_map(function ($componente) {
+            return intval($componente->id);
+        }, $componentes);
 
-        $ret = [];
+        $disciplinesAcademicYear = LegacyDisciplineAcademicYear::query()
+            ->where('ano_escolar_id', $anoEscolar)
+            ->whereIn('componente_curricular_id', $ids)
+            ->pluck('carga_horaria', 'componente_curricular_id');
 
-        foreach ($componentes as $componentePlaceholder) {
-            $id = $componentePlaceholder->id;
-            $carga = $componentePlaceholder->cargaHoraria;
+        $disciplines = LegacyDiscipline::query()
+            ->whereIn('id', $ids)
+            ->get()
+            ->map(function (LegacyDiscipline $discipline) use ($disciplinesAcademicYear) {
+                return new ComponenteCurricular_Model_Componente([
+                    'id' => $discipline->id,
+                    'instituicao' => $discipline->instituicao_id,
+                    'nome' => $discipline->nome,
+                    'abreviatura' => $discipline->abreviatura,
+                    'tipo_base' => $discipline->tipo_base,
+                    'area_conhecimento' => $discipline->area_conhecimento_id,
+                    'cargaHoraria' => $discipline->cargaHoraria ?? $disciplinesAcademicYear->get($discipline->id),
+                    'codigo_educacenso' => $discipline->codigo_educacenso,
+                    'ordenamento' => $discipline->ordenamento,
+                ]);
+            })->keyBy('id')->all();
 
-            $componente = $mapper->findComponenteCurricularAnoEscolar($id, $anoEscolar);
-
-            if (!is_null($carga)) {
-                $componente->cargaHoraria = $carga;
-            }
-
-            $ret[$id] = $componente;
-        }
-
-        return $ret;
+        return $disciplines;
     }
 
     /**
@@ -783,7 +788,7 @@ class App_Model_IedFinder extends CoreExt_Entity
                 m.turno_pre_matricula,
                 m.dependencia,
                 data_saida_escola,
-                turno_id,
+                mt.turno_id,
                 p.nome,
                 (p.nome) AS nome_upper,
                 e.ref_cod_instituicao,
@@ -1085,6 +1090,10 @@ class App_Model_IedFinder extends CoreExt_Entity
         $dispensas = $dispensas->disciplinaDispensadaEtapa($codMatricula, $codSerie, $codEscola);
 
         $etapaDispensada = [];
+
+        if (!$dispensas) {
+            return [];
+        }
 
         foreach ($dispensas as $dispensa) {
             if ($dispensa['ref_cod_disciplina'] == $disciplina) {
@@ -1495,16 +1504,15 @@ class App_Model_IedFinder extends CoreExt_Entity
         $stages = [];
 
         $sql = '
-            SELECT distinct etapa
+            SELECT distinct etapa, ref_cod_disciplina
             FROM pmieducar.dispensa_disciplina
             JOIN pmieducar.dispensa_etapa
             ON dispensa_disciplina.cod_dispensa = dispensa_etapa.ref_cod_dispensa
             WHERE ref_cod_matricula = $1
-            AND ref_cod_disciplina = $2
             order by etapa
         ';
 
-        $query = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$enrollmentId, $disciplineId]]);
+        $query = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$enrollmentId]]);
 
         foreach ($query as $stage) {
             $stages[] = $stage;

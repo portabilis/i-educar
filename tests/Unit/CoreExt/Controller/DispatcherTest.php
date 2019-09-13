@@ -69,7 +69,7 @@ class CoreExt_Controller_DispatcherTest extends PHPUnit\Framework\TestCase
    * Configura SCRIPT_FILENAME como forma de assegurar que o nome do script
    * será desconsiderado na definição do controller e da action.
    */
-  protected function setUp()
+  protected function setUp(): void
   {
     $_SERVER['REQUEST_URI'] = $this->_uris[0]['uri'];
     $_SERVER['SCRIPT_FILENAME'] = '/var/www/ieducar/index.php';

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyOrganization;
 use App\Models\LegacyEducationNetwork;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchool;
@@ -13,5 +14,6 @@ $factory->define(LegacySchool::class, function (Faker $faker) {
         'ref_cod_escola_rede_ensino' => factory(LegacyEducationNetwork::class)->create(),
         'sigla' => $faker->asciify(),
         'data_cadastro' => now(),
+        'ref_idpes' => factory(LegacyOrganization::class)->create(),
     ];
 });

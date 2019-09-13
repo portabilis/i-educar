@@ -130,7 +130,7 @@ class indice extends clsListagem
     if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
       $obj_servidor_alocacao->codUsuario = $this->pessoa_logada;
     }
-    
+
     $obj_servidor_alocacao->setOrderby('ano ASC');
     $obj_servidor_alocacao->setLimite($this->limite, $this->offset);
 
@@ -217,13 +217,9 @@ class indice extends clsListagem
 
     $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Listagem de alocações"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Listagem de alocações', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
   }
 }
 

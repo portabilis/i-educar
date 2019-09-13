@@ -59,20 +59,16 @@ class indice extends clsCadastro
 
   function Inicializar()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(999869, $this->pessoa_logada, 7,
       'educar_index.php');
     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_configuracoes_index.php"                  => "Configurações",
-         ""                                  => "Exporta&ccedil;&atilde;o de usu&aacute;rios"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Exportação de usuários', [
+        url('intranet/educar_configuracoes_index.php') => 'Configurações',
+    ]);
 
     return 'Nova exporta&ccedil;&atilde;o';
   }
@@ -93,9 +89,6 @@ class indice extends clsCadastro
     {
       $objTemp = new clsPmieducarTipoUsuario();
       $objTemp->setOrderby('nm_tipo ASC');
-
-      $obj_libera_menu = new clsMenuFuncionario($this->pessoa_logada,false,false,0);
-      $obj_super_usuario = $obj_libera_menu->detalhe();
 
       $lista = $objTemp->lista(null,null,null,null,null,null,null,null,1);
 

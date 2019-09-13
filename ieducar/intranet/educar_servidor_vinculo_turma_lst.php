@@ -28,6 +28,8 @@
  * @version   $Id$
  */
 
+use iEducar\Support\View\SelectOptions;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -78,7 +80,7 @@ class indice extends clsListagem
   var $servidor_id;
   var $funcao_exercida;
   var $tipo_vinculo;
-  
+
   var $ref_cod_instituicao;
   var $ref_cod_escola;
   var $ref_cod_curso;
@@ -97,7 +99,7 @@ class indice extends clsListagem
       $this->$var = ($val === '') ? NULL : $val;
     }
 
-    
+
 
     $this->addCabecalhos(array(
       'Ano',
@@ -113,23 +115,11 @@ class indice extends clsListagem
 
     $this->inputsHelper()->dynamic(array('ano', 'instituicao','escola','curso','serie', 'turma'), array('required' => false));
 
-    $resources_funcao = array(  null => 'Selecione',
-                                1    => 'Docente',
-                                2    => 'Auxiliar/Assistente educacional',
-                                3    => 'Profissional/Monitor de atividade complementar',
-                                4    => 'Tradutor Intérprete de LIBRAS',
-                                5    => 'Docente titular - Coordenador de tutoria (de módulo ou disciplina) - EAD',
-                                6    => 'Docente tutor - Auxiliar (de módulo ou disciplina) - EAD');
-
+    $resources_funcao = SelectOptions::funcoesExercidaServidor();
     $options = array('label' => Portabilis_String_Utils::toLatin1('Função exercida'), 'resources' => $resources_funcao, 'value' => $this->funcao_exercida);
-    $this->inputsHelper()->select('funcao_exercida', $options);   
+    $this->inputsHelper()->select('funcao_exercida', $options);
 
-    $resources_tipo = array(  null => 'Nenhum',
-                              1    => Portabilis_String_Utils::toLatin1('Concursado/efetivo/estável'),
-                              2    => Portabilis_String_Utils::toLatin1('Contrato temporário'),
-                              3    => 'Contrato terceirizado',
-                              4    => 'Contrato CLT');
-
+    $resources_tipo = SelectOptions::tiposVinculoServidor();
     $options = array('label' => Portabilis_String_Utils::toLatin1('Tipo do vínculo'), 'resources' => $resources_tipo, 'value' => $this->tipo_vinculo);
     $this->inputsHelper()->select('tipo_vinculo', $options);
 
@@ -209,13 +199,9 @@ class indice extends clsListagem
 
     $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Vincular servidor à turmas"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());   
+    $this->breadcrumb('Vincular servidor à turmas', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
   }
 }
 

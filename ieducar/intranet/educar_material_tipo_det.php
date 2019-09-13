@@ -62,7 +62,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Tipo Material Did&aacute;tico - Detalhe";
-        
+
 
         $this->cod_material_tipo=$_GET["cod_material_tipo"];
 
@@ -148,13 +148,9 @@ class indice extends clsDetalhe
         //$this->url_cancelar = "educar_material_tipo_lst.php";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""                                  => "Detalhe do tipo de material"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhe do tipo de material', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

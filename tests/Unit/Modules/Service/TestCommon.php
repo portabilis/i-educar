@@ -156,7 +156,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     protected $_parecerDescritivoAbstractDataMapperMock = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -2,7 +2,14 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Event;
+use App\Listeners\AuthenticatedUser;
+use App\Models\SchoolManager;
+use App\Observers\SchoolManagerObserver;
+use App\Listeners\LoginLegacySession;
+use App\Listeners\NotificationWhenResetPassword;
+use Illuminate\Auth\Events\Authenticated;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -18,6 +25,15 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        Login::class => [
+            LoginLegacySession::class,
+        ],
+        PasswordReset::class => [
+            NotificationWhenResetPassword::class,
+        ],
+        Authenticated::class => [
+            AuthenticatedUser::class
+        ],
     ];
 
     /**
@@ -29,6 +45,6 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        //
+        SchoolManager::observe(SchoolManagerObserver::class);
     }
 }

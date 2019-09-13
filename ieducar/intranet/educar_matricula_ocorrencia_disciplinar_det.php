@@ -25,7 +25,7 @@
  * 02111-1307, USA.
  *
  */
- 
+
 require_once('include/clsBase.inc.php');
 require_once('include/clsDetalhe.inc.php');
 require_once('include/clsBanco.inc.php');
@@ -63,7 +63,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Matricula Ocorrencia Disciplinar - Detalhe";
-        
+
 
         $this->sequencial=$_GET["sequencial"];
         $this->ref_cod_matricula=$_GET["ref_cod_matricula"];
@@ -197,13 +197,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$registro["ref_cod_matricula"]}";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""                                  => "Ocorrências disciplinares da matrícula"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Ocorrências disciplinares da matrícula', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

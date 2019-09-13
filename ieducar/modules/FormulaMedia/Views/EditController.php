@@ -1,49 +1,12 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @category    i-Educar
- * @license     @@license@@
- * @package     FormulaMedia
- * @subpackage  Modules
- * @since       Arquivo disponível desde a versão 1.1.0
- * @version     $Id$
- */
-
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'FormulaMedia/Model/FormulaDataMapper.php';
 require_once 'FormulaMedia/Validate/Formula.php';
 
-/**
- * EditController class.
- *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @category    i-Educar
- * @license     @@license@@
- * @package     FormulaMedia
- * @subpackage  Modules
- * @since       Classe disponível desde a versão 1.1.0
- * @version     @@package_version@@
- */
+use App\Models\LegacyExamRule;
+use Illuminate\Http\Exceptions\HttpResponseException;
+
 class EditController extends Core_Controller_Page_EditController
 {
   protected $_dataMapper        = 'FormulaMedia_Model_FormulaDataMapper';
@@ -144,6 +107,15 @@ class EditController extends Core_Controller_Page_EditController
       $tipoFormula->getEnums(), $this->getEntity()->get('tipoFormula'));
   }
 
+    private function usedInExamRule()
+    {
+        $id = $this->getRequest()->id;
+
+        return LegacyExamRule::where('formula_media_id', $id)
+            ->orWhere('formula_recuperacao_id', $id)
+            ->exists();
+    }
+
     /**
      * Apaga um registro no banco de dados e redireciona para a página indicada
      * pela opção "delete_success".
@@ -152,8 +124,15 @@ class EditController extends Core_Controller_Page_EditController
      */
     public function Excluir()
     {
+        if ($this->usedInExamRule()) {
+            $this->mensagem = 'Não foi possível excluir a fórmula de cálculo de média, pois a mesma possui vínculo com regras de avaliação.';
+            return false;
+        }
+
         try {
             parent::Excluir();
+        } catch (HttpResponseException $exception) {
+            throw $exception;
         } catch (Throwable $throwable) {
             return false;
         }

@@ -39,13 +39,27 @@ let verificaEtapaEducacenso = ()=>{
   }
 }
 
+let verificaLocalFuncionamentoDiferenciado = () => {
+  $j('#local_funcionamento_diferenciado').makeUnrequired();
+  let habilitaCampo = [1, 2].includes(+($j('#tipo_mediacao_didatico_pedagogico').val()));
+  $j('#local_funcionamento_diferenciado').prop('disabled', !habilitaCampo);
+
+  if (habilitaCampo) {
+    if (obrigarCamposCenso) {
+      $j('#local_funcionamento_diferenciado').makeRequired();
+    }
+  } else {
+    $j('#local_funcionamento_diferenciado').val();
+  }
+}
+
 $j('#tipo_atendimento').change(function() {
   mostraAtividadesComplementares();
-  mostraAtividadesAee();
   verificaEtapaEducacenso();
   habilitaEtapaEducacenso();
 });
 verificaEtapaEducacenso();
+verificaLocalFuncionamentoDiferenciado();
 
 $j('#etapa_educacenso').change(function() {
   mostraCursoTecnico();;
@@ -55,27 +69,14 @@ function mostraAtividadesComplementares(){
   var mostraCampo = $j('#tipo_atendimento').val() == '4';
   $j('#atividades_complementares').makeUnrequired();
   if (mostraCampo) {
-    $j('#tr_atividades_complementares').show();
+    $j('#atividades_complementares').removeAttr('disabled');
+    $j('#atividades_complementares').trigger('chosen:updated');;
     if (obrigarCamposCenso) {
       $j('#atividades_complementares').makeRequired();
     }
   } else {
-    $j('#tr_atividades_complementares').hide();
+    $j('#atividades_complementares').attr('disabled', 'disabled');
     $j('#atividades_complementares').val([]).trigger('chosen:updated');
-  }
-}
-
-function mostraAtividadesAee() {
-  var mostraCampo = $j('#tipo_atendimento').val() == '5';
-  $j('#atividades_aee').makeUnrequired();
-  if (mostraCampo) {
-    $j('#tr_atividades_aee').show();
-    if (obrigarCamposCenso) {
-      $j('#atividades_aee').makeRequired();
-    }
-  } else {
-    $j('#tr_atividades_aee').hide();
-    $j('#atividades_aee').val([]).trigger('chosen:updated');
   }
 }
 
@@ -83,27 +84,39 @@ function mostraCursoTecnico() {
   var etapasEnsinoTecnico = ['30', '31', '32', '33', '34', '39', '40', '64', '74'];
   var mostraCampo = $j.inArray($j('#etapa_educacenso').val(),etapasEnsinoTecnico) != -1;
   if (mostraCampo) {
-    $j('#tr_cod_curso_profissional').show();
+    $j('#cod_curso_profissional').prop('disabled', false);
+    $j('#cod_curso_profissional').trigger('chosen:updated');
     $j('#cod_curso_profissional').makeUnrequired();
     if (obrigarCamposCenso) {
       $j('#cod_curso_profissional').makeRequired();
     }
   } else {
-    $j('#tr_cod_curso_profissional').hide();
+    $j('#cod_curso_profissional').val('');
+    $j('#cod_curso_profissional').prop('disabled', true);
+    $j('#cod_curso_profissional').trigger('chosen:updated');
   }
 }
 
 function validaHorarioInicialFinal() {
   var horarioInicial = $j('#hora_inicial').val().replace(':', '');
   var horarioFinal = $j('#hora_final').val().replace(':', '');
+  var horarioInicialIntervalo = $j('#hora_inicio_intervalo').val().replace(':', '');
+  var horarioFinalIntervalo = $j('#hora_fim_intervalo').val().replace(':', '');
+
   if (horarioInicial > horarioFinal){
     alert('O horário inicial não pode ser maior que o horário final.');
     return false;
   }
+
+  if (horarioInicialIntervalo > horarioFinalIntervalo){
+    alert('O horário inicial de intervalo não pode ser maior que o horário final de intervalo.');
+    return false;
+  }
+
   return true;
 }
 
-function validaMinutos() {
+function validaHoras() {
   var campos = [{'id' : 'hora_inicial', 'label' : 'Hora inicial'},
                 {'id' : 'hora_final', 'label' : 'Hora final'},
                 {'id' : 'hora_inicio_intervalo', 'label' : 'Hora início intervalo'},
@@ -115,10 +128,23 @@ function validaMinutos() {
     var hora = $j('#' + campo.id).val();
     var minutos = hora.substr(3, 2);
     var minutosValidos = $j.inArray(minutos,minutosPermitidos) != -1;
-    if (minutos != '' && !minutosValidos) {
+
+    if (obrigarCamposCenso && (minutos != '' && !minutosValidos)) {
       alert('O campo ' + campo.label + ' não permite minutos diferentes de 0 ou 5.');
       retorno = false;
       return false;
+    }
+
+    if (minutos != '' && (minutos < 0 || minutos > 60)) {
+      alert('O campo ' + campo.label + ' foi preenchido com um horário inválido.');
+      retorno = false;
+      return;
+    }
+
+    if (parseInt(hora) < 0 || parseInt(hora) > 24) {
+      alert('O campo ' + campo.label + ' foi preenchido com um horário inválido.');
+      retorno = false;
+      return;
     }
   });
   return retorno;
@@ -135,44 +161,7 @@ function validaAtividadesComplementares() {
   return true;
 }
 
-$j('#ref_cod_curso').on('change', habilitaTurmaMaisEducacao);
-$j('#tipo_atendimento').on('change', habilitaTurmaMaisEducacao);
-$j('#tipo_mediacao_didatico_pedagogico').on('change', habilitaTurmaMaisEducacao);
-$j('#etapa_educacenso').on('change', habilitaTurmaMaisEducacao);
-
-habilitaTurmaMaisEducacao();
-
-function habilitaTurmaMaisEducacao() {
-  if (modoCadastro) {
-    getDependenciaAdministrativaEscola();
-    getModalidadeCurso();
-  }
-
-  var didaticoPedagogicoPresencial = $j('#tipo_mediacao_didatico_pedagogico').val() == 1;
-  var dependenciaAdministrativaEstadualMunicipal = $j('#dependencia_administrativa').val() == 2 ||
-                                                   $j('#dependencia_administrativa').val() == 3;
-  var atendimentoClasseHospitalarAee = $j('#tipo_atendimento').val() == 1 ||
-                                       $j('#tipo_atendimento').val() == 5;
-  var atividadeComplementar = $j('#tipo_atendimento').val() == 4;
-  var modalidadeEja = $j('#modalidade_curso').val() == 3;
-  var etapaEducacenso = ($j('#etapa_educacenso').val() >= 4 &&
-                         $j('#etapa_educacenso').val() <= 38) ||
-                        ($j('#etapa_educacenso').val() == 41);
-  if (
-    didaticoPedagogicoPresencial &&
-    dependenciaAdministrativaEstadualMunicipal &&
-    !atendimentoClasseHospitalarAee &&
-    (!atividadeComplementar ? (!modalidadeEja && etapaEducacenso) : true)
-  ) {
-    $j("#turma_mais_educacao").attr('disabled', false);
-    $j("#turma_mais_educacao").makeUnrequired();
-    if (obrigarCamposCenso) {
-      $j("#turma_mais_educacao").makeRequired();
-    }
-  } else {
-    $j("#turma_mais_educacao").attr('disabled', true);
-  }
-}
+$j('#tipo_mediacao_didatico_pedagogico').on('change', verificaLocalFuncionamentoDiferenciado);
 
 function habilitaEtapaEducacenso() {
   var atividadeComplementar = $j("#tipo_atendimento").val() == 4;
@@ -210,40 +199,30 @@ $j('#tipo_mediacao_didatico_pedagogico').on('change', function(){
   }
 }).trigger('change');
 
-function getDependenciaAdministrativaEscola(){
+function buscaEtapasDaEscola() {  
+  var urlApi = getResourceUrlBuilder.buildUrl('/module/Api/Escola', 'etapas-da-escola-por-ano', {
+    escola_id : $j('#ref_cod_escola').val(),
+    ano : new Date().getFullYear()
+  });
+
   var options = {
+    url : urlApi,
     dataType : 'json',
-    url : getResourceUrlBuilder.buildUrl(
-      '/module/Api/Escola',
-      'escola-dependencia-administrativa',
-      {escola_id : $j('#ref_cod_escola').val()}
-    ),
-    async : false,
-    success : function(dataResponse) {
-      if (dataResponse.dependencia_administrativa) {
-        $j('#dependencia_administrativa').val(dataResponse.dependencia_administrativa);
-      }
+    success  : function(dataResponse){
+      $j('#ref_cod_modulo').val(dataResponse.modulo).trigger('change');
+      preencheEtapasNaTurma(dataResponse.etapas);
     }
-  }
-  getResource(options);
+  };
+
+  getResources(options);
 }
 
-function getModalidadeCurso(){
-  var options = {
-    dataType : 'json',
-    url : getResourceUrlBuilder.buildUrl(
-      '/module/Api/Curso',
-      'modalidade-curso',
-      {curso_id : $j('#ref_cod_curso').val()}
-    ),
-    async : false,
-    success : function(dataResponse) {
-      if (dataResponse.modalidade_curso) {
-        $j('#modalidade_curso').val(dataResponse.modalidade_curso);
-      }
-    }
-  }
-  getResource(options);
+function preencheEtapasNaTurma(etapas) {
+  $j.each( etapas, function( key, etapa ) {
+    $j('input[name^="data_inicio[' + key + '"]').val(formatDate(etapa.data_inicio));
+    $j('input[name^="data_fim[' + key + '"]').val(formatDate(etapa.data_fim));
+    $j('input[name^="dias_letivos[' + key + '"]').val(etapa.dias_letivos);
+  });
 }
 
 $j(document).ready(function() {
@@ -294,7 +273,6 @@ $j(document).ready(function() {
           return false;
       });
       mostraAtividadesComplementares();
-      mostraAtividadesAee();
       mostraCursoTecnico();
       habilitaEtapaEducacenso();
     });
@@ -312,11 +290,6 @@ $j(document).ready(function() {
       valida();
     }
   }
-
-  var $submitButton      = $j('#btn_enviar');
-  $submitButton.removeAttr('onclick');
-  $j(document.formcadastro).removeAttr('onsubmit');
-  $submitButton.click(submitForm);
 
   $j('#ref_cod_serie, #ano_letivo').on('change', function(){
     let escola_id = $j('#ref_cod_escola').val();

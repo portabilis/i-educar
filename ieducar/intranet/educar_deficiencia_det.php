@@ -59,7 +59,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Defici&ecirc;ncia - Detalhe";
-        
+
 
         $this->cod_deficiencia=$_GET["cod_deficiencia"];
 
@@ -84,13 +84,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_deficiencia_lst.php";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_pessoas_index.php"          => "Pessoas",
-             ""                                  => "Detalhe da defici&ecirc;ncia"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhe da deficiência', [
+            url('intranet/educar_pessoas_index.php') => 'Pessoas',
+        ]);
     }
 }
 

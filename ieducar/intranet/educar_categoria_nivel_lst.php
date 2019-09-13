@@ -42,7 +42,7 @@ class clsIndexBase extends clsBase
   public function Formular() {
     $this->SetTitulo($this->_instituicao . 'Categorias ou níveis do servidor');
     $this->processoAp = '829';
-    $this->addEstilo('localizacaoSistema');    
+    $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -167,13 +167,9 @@ class indice extends clsListagem {
 
     $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Categorias ou níveis do servidor"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Categorias ou níveis do servidor', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
   }
 }
 

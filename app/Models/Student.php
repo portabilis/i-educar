@@ -75,4 +75,12 @@ class Student extends Model
     {
         return (new TransportationVehicleType)->getDescriptiveValues()[(int) $this->transportation_vehicle_type];
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function unification()
+    {
+        return $this->morphOne(LogUnification::class, 'main', 'type', 'main_id');
+    }
 }

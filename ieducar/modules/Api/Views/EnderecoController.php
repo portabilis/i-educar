@@ -1,12 +1,12 @@
 <?php
 
+use Illuminate\Support\Facades\Gate;
+
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'intranet/include/clsBanco.inc.php';
 require_once 'intranet/include/funcoes.inc.php';
-require_once 'intranet/include/pmieducar/clsPmieducarUsuario.inc.php';
-require_once 'intranet/include/pmieducar/clsPmieducarMenuTipoUsuario.inc.php';
 
 class EnderecoController extends ApiCoreController
 {
@@ -33,7 +33,7 @@ class EnderecoController extends ApiCoreController
                 INNER JOIN public.bairro b ON b.idbai = c.idbai
                 INNER JOIN public.logradouro l ON l.idlog = c.idlog
                 INNER JOIN urbano.tipo_logradouro t ON t.idtlog = l.idtlog
-                INNER JOIN public.distrito d ON d.idmun = l.idmun
+                INNER JOIN public.distrito d ON d.iddis = b.iddis
                 INNER JOIN public.municipio m ON m.idmun = l.idmun
                                              AND m.idmun = d.idmun
                 INNER JOIN public.uf u ON u.sigla_uf = m.sigla_uf
@@ -56,15 +56,7 @@ class EnderecoController extends ApiCoreController
 
     protected function getPermissaoEditar()
     {
-        $usuario = new clsPmieducarUsuario($this->getSession()->id_pessoa);
-        $usuario = $usuario->detalhe();
-
-        $tipoUsuario = new clsPmieducarMenuTipoUsuario($usuario['ref_cod_tipo_usuario'], 999878);
-        $tipoUsuario = $tipoUsuario->detalhe();
-
-        $permissao = ($tipoUsuario['cadastra'] == 1 ? true : false);
-
-        return ['permite_editar' => $permissao];
+        return ['permite_editar' => Gate::allows('modify', 999878)];
     }
 
     protected function deleteEndereco()

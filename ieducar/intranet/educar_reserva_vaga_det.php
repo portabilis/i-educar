@@ -68,7 +68,7 @@ class indice extends clsDetalhe
   function Gerar()
   {
     $this->titulo = 'Reserva Vaga - Detalhe';
-    
+
 
     $this->ref_cod_serie  = $_GET['ref_cod_serie'];
     $this->ref_cod_escola = $_GET['ref_cod_escola'];
@@ -203,13 +203,9 @@ class indice extends clsDetalhe
     $this->url_cancelar = 'educar_reserva_vaga_lst.php';
     $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Detalhe da reserva de vaga"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->breadcrumb('Detalhe da reserva de vaga', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
 }
 

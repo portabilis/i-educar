@@ -627,7 +627,7 @@ abstract class CoreExt_DataMapper
         if ($instance->isNew()) {
             $returning = ' RETURNING ' . implode(',', array_values($this->_primaryKey));
             $return = $this->_getDbAdapter()->Consulta($this->_getSaveStatment($instance) . $returning);
-            $result = pg_fetch_row($return);
+            $result = $return->fetch(PDO::FETCH_BOTH);
             $id = $result[0];
 
             if ($id) {

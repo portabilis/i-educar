@@ -86,12 +86,12 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
 
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-        
+
         switch ($nivel_usuario) {
             case 1:
                 $this->addCabecalhos( array(
@@ -99,11 +99,11 @@ class indice extends clsListagem
                     "Institui&ccedil;&atilde;o"
                 ) );
                 break;
-        
+
             default:
                 $this->addCabecalhos( array(
                     "Nome Tipo"
-                ) );        
+                ) );
                 break;
         }
 
@@ -163,13 +163,13 @@ class indice extends clsListagem
                                 "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro["cod_tipo_regime"]}\">{$registro["ref_cod_instituicao"]}</a>"
                             ) );
                         break;
-                
+
                     default:
                             $this->addLinhas( array(
                                 "<a href=\"educar_tipo_regime_det.php?cod_tipo_regime={$registro["cod_tipo_regime"]}\">{$registro["nm_tipo"]}</a>"
                             ) );
                         break;
-                }       
+                }
 
             }
         }
@@ -188,13 +188,9 @@ class indice extends clsListagem
         //**
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "Listagem de tipos de regime"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());            
+        $this->breadcrumb('Listagem de tipos de regime', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 // cria uma extensao da classe base

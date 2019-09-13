@@ -62,7 +62,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         //** Verificacao de permissao para cadastro
         $obj_permissao = new clsPermissoes();
@@ -119,15 +119,12 @@ class indice extends clsCadastro
             }
         }
         $this->url_cancelar = ($retorno == "Editar") ? "educar_material_tipo_det.php?cod_material_tipo={$registro["cod_material_tipo"]}" : "educar_material_tipo_lst.php";
-        
+
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} tipo de material"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());        
+
+        $this->breadcrumb($nomeMenu . ' tipo de material', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
         return $retorno;
@@ -152,7 +149,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj = new clsPmieducarMaterialTipo( null,$this->pessoa_logada,null,$this->nm_tipo,$this->desc_tipo,null,null,1,$this->ref_cod_instituicao );
         $cadastrou = $obj->cadastra();
@@ -169,7 +166,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $obj = new clsPmieducarMaterialTipo( $this->cod_material_tipo,null,$this->pessoa_logada,$this->nm_tipo,$this->desc_tipo,null,null,1,$this->ref_cod_instituicao );
         $editou = $obj->edita();
@@ -186,7 +183,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj = new clsPmieducarMaterialTipo( $this->cod_material_tipo,null,$this->pessoa_logada,null,null,null,null,0 );
         $excluiu = $obj->excluir();

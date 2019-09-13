@@ -9,7 +9,7 @@ class CoreExt_Session_Storage_DefaultTest extends TestCase
 {
     protected $_storage;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

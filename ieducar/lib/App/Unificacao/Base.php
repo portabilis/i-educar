@@ -5,6 +5,7 @@ class App_Unificacao_Base
     protected $chavesManterPrimeiroVinculo = [];
     protected $chavesManterTodosVinculos = [];
     protected $chavesDeletarDuplicados = [];
+    protected $triggersNecessarias = [];
     protected $codigoUnificador;
     protected $codigosDuplicados;
     protected $codPessoaLogada;
@@ -25,9 +26,10 @@ class App_Unificacao_Base
         $this->validaParametros();
 
         $this->desabilitaTodasTriggers();
+        $this->habilitaTriggersNecessarias();
         $this->processaChavesDeletarDuplicados();
-        $this->processaChavesManterTodosVinculos();
         $this->processaChavesManterPrimeiroVinculo();
+        $this->processaChavesManterTodosVinculos();
         $this->habilitaTodasTriggers();
     }
 
@@ -86,7 +88,7 @@ class App_Unificacao_Base
                         from {$value['tabela']}
                         WHERE {$value['coluna']} in ({$chavesConsultarString})
                         ORDER BY {$value['coluna']} = {$this->codigoUnificador} DESC
-                        LIMIT 1 
+                        LIMIT 1
                     )
                     AND {$value['coluna']} in ({$chavesConsultarString})
                 "
@@ -112,6 +114,13 @@ class App_Unificacao_Base
         }
 
         return array_values($todasTabelas);
+    }
+
+    protected function habilitaTriggersNecessarias()
+    {
+        foreach ($this->triggersNecessarias as $triggerNecessaria) {
+            $this->db->Consulta("ALTER TABLE {$triggerNecessaria['tabela']} ENABLE TRIGGER {$triggerNecessaria['trigger']}");
+        }
     }
 
     protected function desabilitaTodasTriggers()

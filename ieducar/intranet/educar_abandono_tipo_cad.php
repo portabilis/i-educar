@@ -86,14 +86,11 @@ class indice extends clsCadastro
         $this->nome_url_cancelar = "Cancelar";
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                                          => "{$nomeMenu} tipo de abandono"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-            
+
+        $this->breadcrumb($nomeMenu . ' tipo de abandono', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
+
         return $retorno;
     }
 
@@ -106,7 +103,7 @@ class indice extends clsCadastro
         include("include/pmieducar/educar_campo_lista.php");
 
         // text
-        $this->campoTexto( "nome", "Motivo Abandono", $this->nome, 30, 255, true ); 
+        $this->campoTexto( "nome", "Motivo Abandono", $this->nome, 30, 255, true );
     }
 
     function Novo()

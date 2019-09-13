@@ -42,7 +42,7 @@ class clsIndexBase extends clsBase
   public function Formular() {
     $this->SetTitulo($this->_instituicao . 'Servidores - Cadastro Categoria N&iacute;vel');
     $this->processoAp = '829';
-        $this->addEstilo('localizacaoSistema');    
+        $this->addEstilo('localizacaoSistema');
   }
 }
 
@@ -67,7 +67,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_categoria_nivel=$_GET["cod_categoria_nivel"];
 
@@ -94,17 +94,15 @@ class indice extends clsCadastro
                 $retorno = "Editar";
             }
         }
+
         $this->url_cancelar = ($retorno == "Editar") ? "educar_categoria_nivel_det.php?cod_categoria_nivel={$registro["cod_categoria_nivel"]}" : "educar_categoria_nivel_lst.php";
         $this->nome_url_cancelar = "Cancelar";
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""        => "{$nomeMenu} categoria/n&iacute;vel"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+
+        $this->breadcrumb($nomeMenu . ' categoria/nível', [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
 
         return $retorno;
     }
@@ -124,7 +122,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 829, $this->pessoa_logada, 3,  "educar_categoria_nivel_lst.php", true );
@@ -152,7 +150,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 829, $this->pessoa_logada, 3,  "educar_categoria_nivel_lst.php", true );
@@ -180,14 +178,14 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 829, $this->pessoa_logada, 3,  "educar_categoria_nivel_lst.php", true );
 
 
         $obj = new clsPmieducarCategoriaNivel($this->cod_categoria_nivel, $this->pessoa_logada, $this->pessoa_logada, $this->nm_categoria_nivel, $this->data_cadastro, $this->data_exclusao, 0);
-        
+
         $categoriaNivel = $obj->detalhe();
 
         $excluiu = $obj->excluir();

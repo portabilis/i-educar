@@ -80,9 +80,6 @@ class indice extends clsListagem
 
     function Gerar()
     {
-        global $coreExt;
-        $config = $coreExt['Config']->app->locale;
-
         Session::put([
             'campo1' => $_GET["campo1"] ? $_GET["campo1"] : Session::get('campo1')
         ]);
@@ -111,7 +108,7 @@ class indice extends clsListagem
         }
         if(!isset($this->sigla_uf))
         {
-            $this->sigla_uf = $config->province ? $config->province : '';
+            $this->sigla_uf = config('legacy.app.locale.province', '');
         }
 
 

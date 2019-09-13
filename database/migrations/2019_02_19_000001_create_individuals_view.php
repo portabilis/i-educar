@@ -14,6 +14,7 @@ class CreateIndividualsView extends Migration
      */
     public function up()
     {
+        $this->dropView('individuals');
         $this->createView('individuals');
     }
 

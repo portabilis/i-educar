@@ -122,13 +122,9 @@ class indice extends clsCadastro
         $this->url_cancelar = "educar_categoria_nivel_det.php?cod_categoria_nivel={$this->cod_nivel}";
         $this->nome_url_cancelar = "Cancelar";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""        => "Adicionar n&iacute;veis &agrave; categoria"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Adicionar níveis à categoria', [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
 
         return $retorno;
     }

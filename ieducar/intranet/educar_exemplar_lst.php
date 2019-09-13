@@ -99,7 +99,7 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $lista_busca = array(
             "Tombo",
@@ -206,7 +206,7 @@ class indice extends clsListagem
         if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
             $obj_exemplar->codUsuario = $this->pessoa_logada;
         }
-        
+
         $obj_exemplar->setOrderby( "tombo ASC" );
         $obj_exemplar->setLimite( $this->limite, $this->offset );
 
@@ -365,13 +365,9 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "Listagem de exemplares"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Listagem de exemplares', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 // cria uma extensao da classe base

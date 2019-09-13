@@ -86,19 +86,19 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $this->addCabecalhos( array(
             "Motivo Suspens&atilde;o",
             "Biblioteca"
         ) );
 
-        
+
         $get_escola = true;
         $get_biblioteca = true;
         $get_cabecalho = "lista_busca";
         include("include/pmieducar/educar_campo_lista.php");
-        
+
         // outros Filtros
         $this->campoTexto( "nm_motivo", "Motivo Suspens&atilde;o", $this->nm_motivo, 30, 255, false );
 
@@ -112,7 +112,7 @@ class indice extends clsListagem
             $obj_bib_user = new clsPmieducarBibliotecaUsuario();
             $this->ref_cod_biblioteca = $obj_bib_user->listaBibliotecas($this->pessoa_logada);
         }
-        
+
         $obj_motivo_suspensao = new clsPmieducarMotivoSuspensao();
         $obj_motivo_suspensao->setOrderby( "nm_motivo ASC" );
         $obj_motivo_suspensao->setLimite( $this->limite, $this->offset );
@@ -138,7 +138,7 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
-                
+
                 $obj_biblioteca = new clsPmieducarBiblioteca($registro['ref_cod_biblioteca']);
                 $det_biblioteca = $obj_biblioteca->detalhe();
                 $registro['ref_cod_biblioteca'] = $det_biblioteca['nm_biblioteca'];
@@ -158,13 +158,9 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Listagem de motivos de suspens&atilde;o"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Listagem de motivos de de suspensão', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 // cria uma extensao da classe base

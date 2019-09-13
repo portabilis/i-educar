@@ -44,7 +44,7 @@ require_once __DIR__.'/ParecerDescritivoCommon.php';
  */
 class Avaliacao_Service_ParecerDescritivoComponenteEtapaTest extends Avaliacao_Service_ParecerDescritivoCommon
 {
-  protected function setUp()
+  protected function setUp(): void
   {
     $this->_setRegraOption('parecerDescritivo', RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE);
     parent::setUp();

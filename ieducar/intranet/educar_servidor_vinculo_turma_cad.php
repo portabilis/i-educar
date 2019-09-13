@@ -1,7 +1,12 @@
 <?php
 
+use App\Models\Employee;
+use App\Models\LegacyInstitution;
+use App\Models\LegacySchoolClass;
+use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
-use iEducar\Modules\Servidores\Model\TipoVinculo;
+use iEducar\Support\View\SelectOptions;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -135,9 +140,7 @@ class indice extends clsCadastro
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
         $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
 
-        $resources = FuncaoExercida::getDescriptiveValues();
-        $resources = array_replace([null => 'Selecione'], $resources);
-
+        $resources = SelectOptions::funcoesExercidaServidor();
         $options = [
             'label' => 'Função exercida',
             'resources' => $resources,
@@ -145,9 +148,7 @@ class indice extends clsCadastro
         ];
         $this->inputsHelper()->select('funcao_exercida', $options);
 
-        $resources = TipoVinculo::getDescriptiveValues();
-        $resources = array_replace([null => 'Nenhum'], $resources);
-
+        $resources = SelectOptions::tiposVinculoServidor();
         $options = [
             'label' => 'Tipo do vínculo',
             'resources' => $resources,
@@ -156,9 +157,23 @@ class indice extends clsCadastro
         ];
         $this->inputsHelper()->select('tipo_vinculo', $options);
 
-        $this->inputsHelper()->turmaTurno([
-            'required' => false
-        ]);
+        $options = [
+            'label' => 'Turno',
+            'resources' => [
+                null => 'Selecione',
+                clsPmieducarTurma::TURNO_MATUTINO => 'Matutino',
+                clsPmieducarTurma::TURNO_VESPERTINO => 'Vespertino',
+            ],
+            'value' => $this->turma_turno_id,
+            'required' => false,
+            'label_hint' => 'Preencha apenas se o servidor atuar em algum turno específico'
+        ];
+
+        if ($this->tipoacao === 'Editar') {
+            $options['disabled'] = true;
+        }
+
+        $this->inputsHelper()->select('turma_turno_id', $options);
 
         $options = [
             'label' => 'Professor de área específica?',
@@ -189,6 +204,14 @@ class indice extends clsCadastro
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $backUrl);
 
         if ($this->ref_cod_turma) {
+            if (!$this->validaCamposCenso()) {
+                return false;
+            }
+
+            if (!$this->validaVinculoEscola()) {
+                return false;
+            }
+
             $professorTurma = new clsModulesProfessorTurma(null, $this->ano, $this->ref_cod_instituicao, $this->servidor_id, $this->ref_cod_turma, $this->funcao_exercida, $this->tipo_vinculo, $this->permite_lancar_faltas_componente, $this->turma_turno_id);
             if ($professorTurma->existe2()) {
                 $this->mensagem .= 'Não é possível cadastrar pois já existe um vínculo com essa turma.<br>';
@@ -236,6 +259,14 @@ class indice extends clsCadastro
             $this->turma_turno_id
         );
 
+        if (!$this->validaCamposCenso()) {
+            return false;
+        }
+
+        if (!$this->validaVinculoEscola()) {
+            return false;
+        }
+
         if ($professorTurma->existe2()) {
             $this->mensagem .= 'Não é possível cadastrar pois já existe um vínculo com essa turma.<br>';
 
@@ -272,6 +303,71 @@ class indice extends clsCadastro
 
         $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
         $this->simpleRedirect($backUrl);
+    }
+
+    private function validaCamposCenso()
+    {
+        if (!$this->validarCamposObrigatoriosCenso()) {
+            return true;
+        }
+
+        return $this->validaFuncaoExercida();
+    }
+
+    public function validaVinculoEscola()
+    {
+        $instituicao = LegacyInstitution::find($this->ref_cod_instituicao);
+
+        if (!$instituicao->bloquear_vinculo_professor_sem_alocacao_escola) {
+            return true;
+        }
+
+        /** @var Employee $servidor */
+        $servidor = Employee::findOrFail($this->servidor_id);
+
+        $vinculoEscola = $servidor->schools()
+            ->where('ref_cod_escola', $this->ref_cod_escola)
+            ->withPivotValue('ano', $this->ano)
+            ->exists();
+
+        if ($vinculoEscola) {
+            return true;
+        }
+
+        $this->mensagem = 'Não é possível cadastrar o vínculo pois o servidor não está alocado na escola selecionada.';
+        return false;
+    }
+
+    private function validaFuncaoExercida()
+    {
+        $obj_turma = new clsPmieducarTurma($this->ref_cod_turma);
+        $turma = $obj_turma->detalhe();
+
+        if (empty($turma)) {
+            return true;
+        }
+
+        $funcoesEad = [
+            FuncaoExercida::DOCENTE_TITULAR_EAD,
+            FuncaoExercida::DOCENTE_TUTOR_EAD,
+        ];
+
+        if ($turma['tipo_mediacao_didatico_pedagogico'] == TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA && !in_array($this->funcao_exercida, $funcoesEad)) {
+            $this->mensagem = 'O campo: <b>Função exercida</b> deve ser <b>Docente titular</b> ou <b>Docente tutor</b>, quando o campo: <b>Tipo de mediação didático-pedagógica</b> da turma for: <b>Educação a Distância</b>.';
+            return false;
+        }
+
+        if ($turma['tipo_atendimento'] != TipoAtendimentoTurma::ESCOLARIZACAO && $this->funcao_exercida == FuncaoExercida::AUXILIAR_EDUCACIONAL) {
+            $this->mensagem = 'O campo: <b>Função exercida</b> não pode ser: <b>Auxiliar/Assistente Educacional</b> quando o tipo de atendimento da turma for: <b>' . TipoAtendimentoTurma::getDescriptiveValues()[$turma['tipo_atendimento']] . '</b>';
+            return false;
+        }
+
+        if ($turma['tipo_atendimento'] != TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR && $this->funcao_exercida == FuncaoExercida::MONITOR_ATIVIDADE_COMPLEMENTAR) {
+            $this->mensagem = 'O campo: <b>Função exercida</b> não pode ser: <b> Profissional/Monitor de Atividade Complementar </b> quando o tipo de atendimento da turma for: <b>' . TipoAtendimentoTurma::getDescriptiveValues()[$turma['tipo_atendimento']] . '</b>';
+            return false;
+        }
+
+        return true;
     }
 }
 

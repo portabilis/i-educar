@@ -109,14 +109,9 @@ class indice extends clsCadastro
 
     $this->url_cancelar = "educar_componentes_serie_lst.php";
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_index.php"                  => "Escola",
-         ""        => "Componentes da série"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Componentes da série', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
 
     $this->nome_url_cancelar = "Cancelar";
 

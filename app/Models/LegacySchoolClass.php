@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use DateTime;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -19,8 +20,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int                $course_id
  * @property int                $grade_id
  * @property int                $vacancies
- * @property DateTime           $begin_academic_year
- * @property DateTime           $end_academic_year
+ * @property Carbon             $begin_academic_year
+ * @property Carbon             $end_academic_year
  * @property LegacyCourse       $course
  * @property LegacyLevel        $grade
  * @property LegacySchool       $school
@@ -52,6 +53,7 @@ class LegacySchoolClass extends Model
         'ref_ref_cod_escola',
         'ref_ref_cod_serie',
         'ref_cod_curso',
+        'visivel',
     ];
 
     /**
@@ -112,27 +114,24 @@ class LegacySchoolClass extends Model
      */
     public function getVacanciesAttribute()
     {
-        $enrollments = $this->enrollments()
-            ->where('ativo', 1)
-            ->whereHas('registration', function ($query) {
-                $query->where('dependencia', false);
-            })->count();
-
-        $vacancies = $this->max_aluno - $enrollments;
+        $vacancies = $this->max_aluno - $this->getTotalEnrolled();
 
         return $vacancies > 0 ? $vacancies : 0;
     }
 
-    public function stages()
+    /**
+     * Retorna o total de alunos enturmados desconsiderando matrículas de
+     * dependência.
+     *
+     * @return int
+     */
+    public function getTotalEnrolled()
     {
-        if ($this->course->is_standard_calendar) {
-            return $this->hasMany(LegacyAcademicYearStage::class, 'ref_ref_cod_escola', 'ref_ref_cod_escola')
-                ->where('ref_ano', $this->year)
-                ->orderBy('sequencial');
-        }
-
-        return $this->hasMany(LegacySchoolClassStage::class, 'ref_cod_turma', 'cod_turma')
-            ->orderBy('sequencial');
+        return $this->enrollments()
+            ->where('ativo', 1)
+            ->whereHas('registration', function ($query) {
+                $query->where('dependencia', false);
+            })->count();
     }
 
     /**
@@ -140,7 +139,7 @@ class LegacySchoolClass extends Model
      */
     public function getBeginAcademicYearAttribute()
     {
-        return $this->stages()->first()->data_inicio;
+        return $this->stages()->orderBy('sequencial')->first()->data_inicio;
     }
 
     /**
@@ -185,6 +184,49 @@ class LegacySchoolClass extends Model
     public function enrollments()
     {
         return $this->hasMany(LegacyEnrollment::class, 'ref_cod_turma', 'cod_turma');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function stages()
+    {
+        if ($this->course->is_standard_calendar) {
+            return $this->hasMany(LegacyAcademicYearStage::class, 'ref_ref_cod_escola', 'ref_ref_cod_escola')
+                ->where('ref_ano', $this->year);
+        }
+
+        return $this->hasMany(LegacySchoolClassStage::class, 'ref_cod_turma', 'cod_turma');
+    }
+
+    /**
+     * Retorna os dias da semana em um array
+     *
+     * @param string $value
+     *
+     * @return array|null
+     */
+    public function getDiasSemanaAttribute($value)
+    {
+        if (is_string($value)) {
+            $value = explode(',', str_replace(['{', '}'], '', $value));
+        }
+        return $value;
+    }
+
+    /**
+     * Seta os dias da semana transformando um array em uma string
+     *
+     * @param array $values
+     *
+     * @return void
+     */
+    public function setDiasSemanaAttribute($values)
+    {
+        if (is_array($values)) {
+            $values = '{' . implode(',', $values) . '}';
+        }
+        $this->attributes['dias_semana'] = $values;
     }
 
     /**
@@ -235,5 +277,35 @@ class LegacySchoolClass extends Model
         }
 
         return (boolean) $schoolGrade->bloquear_enturmacao_sem_vagas;
+    }
+
+    /**
+     * Retorna o tempo de aula da turma em horas
+     *
+     * @return int
+     */
+    public function getClassTime()
+    {
+        if (!$this->hora_inicial || !$this->hora_final) {
+            return 0;
+        }
+
+        $startTime = Carbon::createFromTimeString($this->hora_inicial);
+        $endTime = Carbon::createFromTimeString($this->hora_final);
+
+        return $startTime->diff($endTime)->h;
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function disciplines()
+    {
+        return $this->belongsToMany(
+            LegacyDiscipline::class,
+            'modules.componente_curricular_turma',
+            'turma_id',
+            'componente_curricular_id'
+        )->withPivot('ano_escolar_id', 'escola_id');
     }
 }

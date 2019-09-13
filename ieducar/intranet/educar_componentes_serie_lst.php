@@ -155,14 +155,12 @@ class indice extends clsListagem
 
     $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "Componentes da série"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());  
+    $this->breadcrumb('Componentes da série', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
+
     $scripts = array('/modules/Cadastro/Assets/Javascripts/ComponentesSerieFiltros.js');
+
     Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
 }

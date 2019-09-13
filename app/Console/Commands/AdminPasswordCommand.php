@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AdminPasswordCommand extends Command
 {
@@ -28,8 +29,10 @@ class AdminPasswordCommand extends Command
      */
     public function handle()
     {
-        $password = md5($this->argument('password'));
+        $password = Hash::make($this->argument('password'));
+
         DB::connection('pgsql')->update('UPDATE portal.funcionario SET senha = ? WHERE matricula = ?', [$password, 'admin']);
+
         $this->info('Password updated.');
     }
 }

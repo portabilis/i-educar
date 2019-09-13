@@ -12,7 +12,7 @@ class CoreExt_DataMapperTest extends UnitBaseTest
      */
     protected $_db = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

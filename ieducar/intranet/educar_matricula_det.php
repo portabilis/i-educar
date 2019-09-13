@@ -1,5 +1,8 @@
 <?php
 
+use App\Process;
+use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -160,8 +163,8 @@ class indice extends clsDetalhe
 
         $existeTurma = false;
         $existeTurmaMulti = false;
-        $existeTurmaUnificada = false;
         $existeTurmaTurnoIntegral = false;
+        $existeAtendimentoEspecializado = false;
         $nomesTurmas = [];
         $datasEnturmacoes = [];
 
@@ -176,12 +179,12 @@ class indice extends clsDetalhe
                 $existeTurmaMulti = true;
             }
 
-            if (in_array($turma['etapa_educacenso'], App_Model_Educacenso::etapasEnsinoUnificadas())) {
-                $existeTurmaUnificada = true;
-            }
-
             if ($turma['turma_turno_id'] == clsPmieducarTurma::TURNO_INTEGRAL) {
                 $existeTurmaTurnoIntegral = true;
+            }
+
+            if ($turma['tipo_atendimento'] == TipoAtendimentoTurma::AEE) {
+                $existeAtendimentoEspecializado = true;
             }
         }
         $nomesTurmas = implode('<br />', $nomesTurmas);
@@ -299,7 +302,7 @@ class indice extends clsDetalhe
                     $this->array_botao_url_script[] = "go(\"educar_dispensa_disciplina_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
                 }
 
-                $dependencia = $registro['dependencia'] == 't';
+                $dependencia = $registro['dependencia'];
 
                 if ($registro['ref_ref_cod_serie'] && $existeTurma && $dependencia) {
                     $this->array_botao[] = 'Disciplinas de depend&ecirc;ncia';
@@ -326,14 +329,14 @@ class indice extends clsDetalhe
                 $this->array_botao_url_script[] = "go(\"educar_matricula_etapa_turma_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
             }
 
+            if ($existeAtendimentoEspecializado) {
+                $this->array_botao[] = 'Tipo do AEE do aluno';
+                $this->array_botao_url_script[] = "go(\"educar_matricula_turma_tipo_aee_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
+            }
+
             if ($existeTurmaTurnoIntegral) {
                 $this->array_botao[] = 'Turno';
                 $this->array_botao_url_script[] = "go(\"educar_matricula_turma_turno_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
-            }
-
-            if ($existeTurmaUnificada) {
-                $this->array_botao[] = 'Etapa da turma unificada';
-                $this->array_botao_url_script[] = "go(\"educar_matricula_turma_unificada_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
             }
 
             if ($registro['aprovado'] != 4 && $registro['aprovado'] != 6) {
@@ -398,11 +401,7 @@ class indice extends clsDetalhe
             }
         }
 
-        $obj_permissoes = new clsPermissoes();
-        $nivelUsuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-        $administrador = 1;
-
-        if ($nivelUsuario == $administrador) {
+        if ($this->user()->can('view', Process::ENROLLMENT_HISTORY)) {
             $this->array_botao[] = 'Histórico de enturmações';
             $this->array_botao_url_script[] = "go(\"educar_matricula_historico_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
         }
@@ -413,7 +412,7 @@ class indice extends clsDetalhe
         $this->breadcrumb('Matrícula', [
             'educar_index.php' => 'Escola',
         ]);
-        
+
         // js
         $scripts = [
             '/modules/Portabilis/Assets/Javascripts/Utils.js',

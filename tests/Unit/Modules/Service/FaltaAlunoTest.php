@@ -73,4 +73,10 @@ class Avaliacao_Service_FaltaAlunoTest extends Avaliacao_Service_TestCommon
     $_GET['etapa'] = 'Rc';
     $service = $this->_getServiceInstance();
   }
+
+  public function tearDown(): void
+  {
+        $_GET = [];
+        Portabilis_Utils_Database::$_db = null;
+  }
 }

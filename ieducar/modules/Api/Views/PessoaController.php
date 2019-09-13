@@ -1,5 +1,9 @@
 <?php
 
+use iEducar\Modules\Educacenso\Validator\NameValidator;
+use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
+use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
+
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
@@ -79,7 +83,7 @@ class PessoaController extends ApiCoreController
             throw new Exception('CPF deve conter caracteres numéricos');
         }
 
-        $sql = 'select pessoa.idpes as id, nome from cadastro.pessoa, fisica
+        $sql = 'select pessoa.idpes as id, nome from cadastro.pessoa, cadastro.fisica
             where fisica.idpes = pessoa.idpes and cpf = $1 limit 1';
 
         $pessoa = $this->fetchPreparedQuery($sql, $cpf, false, 'first-row');
@@ -165,6 +169,7 @@ class PessoaController extends ApiCoreController
              fisica.idpais_estrangeiro as pais_origem_id,
            fisica.nacionalidade as tipo_nacionalidade,
            fisica.zona_localizacao_censo,
+           fisica.localizacao_diferenciada,
            fisica.nome_social,
            (SELECT pais.nome
                    FROM public.pais
@@ -185,24 +190,23 @@ class PessoaController extends ApiCoreController
               (SELECT fone_pessoa.ddd FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 1) as ddd_fone_fixo,
               (SELECT fone_pessoa.ddd FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 2) as ddd_fone_mov,
 
-             (SELECT idlog FROM cadastro.endereco_pessoa WHERE idpes = $2) as idlog
+             (SELECT idlog FROM cadastro.endereco_pessoa WHERE idpes = $2) as idlog,
+             fisica.pais_residencia
             from cadastro.fisica
             where idpes = $2';
 
         $details = $this->fetchPreparedQuery($sql, [$alunoId, $pessoaId], false, 'first-row');
 
         $details['possui_documento'] = !(
-            is_null($details['rg']) &&
-            is_null($details['cpf']) &&
-            is_null($details['nis_pis_pasep']) &&
-            is_null($details['num_termo']) &&
-            is_null($details['certidao_nascimento']) &&
-            is_null($details['certidao_casamento'])
+            empty($details['cpf']) &&
+            empty($details['nis_pis_pasep']) &&
+            empty($details['certidao_nascimento'])
         );
 
         $attrs = [
             'cpf',
             'rg',
+            'nis_pis_pasep',
             'data_nascimento',
             'religiao_id',
             'pai_id',
@@ -244,6 +248,7 @@ class PessoaController extends ApiCoreController
             'pais_origem_id',
             'tipo_nacionalidade',
             'zona_localizacao_censo',
+            'localizacao_diferenciada',
             'pais_origem_nome',
             'cor_raca',
             'uf_emissao_rg',
@@ -256,6 +261,7 @@ class PessoaController extends ApiCoreController
             'id_cartorio',
             'nome_cartorio',
             'nome_social',
+            'pais_residencia',
         ];
 
         $details = Portabilis_Array_Utils::filter($details, $attrs);
@@ -504,13 +510,60 @@ class PessoaController extends ApiCoreController
         return $pessoa;
     }
 
+    private function validateName()
+    {
+        $validator = new NameValidator($this->getRequest()->nome);
+
+        if (!$validator->isValid()) {
+            $this->messenger->append($validator->getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validateBirthDate()
+    {
+        if (empty($this->getRequest()->datanasc)) {
+            return true;
+        }
+
+        $validator = new BirthDateValidator(Portabilis_Date_Utils::brToPgSQL($this->getRequest()->datanasc));
+
+        if (!$validator->isValid()) {
+            $this->messenger->append($validator->getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validateDifferentiatedLocation()
+    {
+        $validator = new DifferentiatedLocationValidator($this->getRequest()->localizacao_diferenciada, $this->getRequest()->zona_localizacao_censo);
+
+        if (!$validator->isValid()) {
+            $this->messenger->append($validator->getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function canPost()
+    {
+        return $this->validateName() && $this->validateBirthDate() && $this->validateDifferentiatedLocation();
+    }
+
     protected function post()
     {
-        $pessoaId = $this->getRequest()->pessoa_id;
-        $pessoaId = $this->createOrUpdatePessoa($pessoaId);
+        if ($this->canPost()) {
+            $pessoaId = $this->getRequest()->pessoa_id;
+            $pessoaId = $this->createOrUpdatePessoa($pessoaId);
 
-        $this->createOrUpdatePessoaFisica($pessoaId);
-        $this->appendResponse('pessoa_id', $pessoaId);
+            $this->createOrUpdatePessoaFisica($pessoaId);
+            $this->appendResponse('pessoa_id', $pessoaId);
+        }
     }
 
     protected function createOrUpdatePessoa($pessoaId = null)
@@ -553,7 +606,9 @@ class PessoaController extends ApiCoreController
         $fisica->idpais_estrangeiro = $this->getRequest()->pais_origem_id;
         $fisica->nacionalidade = $this->getRequest()->tipo_nacionalidade;
         $fisica->zona_localizacao_censo = $this->getRequest()->zona_localizacao_censo;
+        $fisica->localizacao_diferenciada = $this->getRequest()->localizacao_diferenciada;
         $fisica->nome_social = $this->getRequest()->nome_social;
+        $fisica->pais_residencia = $this->getRequest()->pais_residencia;
 
         $sql = 'select 1 from cadastro.fisica WHERE idpes = $1 limit 1';
 

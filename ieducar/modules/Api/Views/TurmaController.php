@@ -22,6 +22,7 @@ class TurmaController extends ApiCoreController
     protected function canGetTurmasPorEscola()
     {
         return (
+            $this->validatesPresenceOf('escola') &&
             $this->validatesPresenceOf('ano') &&
             $this->validatesPresenceOf('instituicao_id')
         );
@@ -54,6 +55,90 @@ class TurmaController extends ApiCoreController
     }
 
     // api
+    protected function get()
+    {
+        if (!$this->canGet()) {
+            return void;
+        }
+
+        $id = $this->getRequest()->id;
+        $turma = new clsPmieducarTurma();
+        $turma->cod_turma = $id;
+        $turma = $turma->detalhe();
+
+        foreach ($turma as $k => $v) {
+            if (is_numeric($k)) {
+                unset($turma[$k]);
+            }
+        }
+
+        return $turma;
+    }
+
+    protected function ordenaMatriculasPorDataBase()
+    {
+        $codTurma = $this->getRequest()->id;
+        $parametros = [$codTurma];
+        $sql = "
+            SELECT
+                cod_matricula,
+                sequencial_fechamento,
+                relatorio.get_texto_sem_caracter_especial(pessoa.nome) AS aluno,
+                data_enturmacao,
+                CASE WHEN dependencia THEN to_char(data_enturmacao,'mmdd')::int ELSE 0 END as ord_dependencia,
+                CASE WHEN to_char(instituicao.data_base_remanejamento,'mmdd') is not null and to_char(data_enturmacao,'mmdd') > to_char(instituicao.data_base_remanejamento,'mmdd') THEN to_char(data_enturmacao,'mmdd')::int ELSE 0 END as data_aluno_order
+            FROM pmieducar.matricula_turma
+            INNER JOIN pmieducar.instituicao On (instituicao.ativo = 1)
+            INNER JOIN pmieducar.matricula ON (matricula.cod_matricula = matricula_turma.ref_cod_matricula)
+            INNER JOIN pmieducar.aluno ON (aluno.cod_aluno = matricula.ref_cod_aluno)
+            INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
+            WHERE ref_cod_turma = $1
+            AND matricula.ativo = 1
+            AND (
+                    CASE
+                        WHEN matricula_turma.ativo = 1 THEN TRUE
+                        WHEN matricula_turma.transferido THEN TRUE
+                        WHEN matricula_turma.remanejado THEN TRUE
+                        WHEN matricula.dependencia THEN TRUE
+                        WHEN matricula_turma.abandono THEN TRUE
+                        WHEN matricula_turma.reclassificado THEN TRUE
+                        ELSE FALSE
+                    END
+                )
+            ORDER BY ord_dependencia, data_aluno_order, aluno;
+        ";
+
+        $alunos = $this->fetchPreparedQuery($sql, $parametros);
+        $attrs = [
+            'cod_matricula',
+            'sequencial_fechamento',
+            'aluno',
+            'data_enturmacao',
+            'ord_dependencia',
+            'data_fechamaneto'
+        ];
+        $alunos = Portabilis_Array_Utils::filterSet($alunos, $attrs);
+
+        foreach ($alunos as $key => $aluno) {
+            $parametros = [
+                $codTurma,
+                $aluno['cod_matricula'],
+                $aluno['sequencial_fechamento'],
+                $key + 1
+            ];
+
+            $sql = "
+                UPDATE pmieducar.matricula_turma
+                SET sequencial_fechamento = $4
+                WHERE matricula_turma.ref_cod_turma = $1
+                AND matricula_turma.ref_cod_matricula = $2
+                AND sequencial_fechamento = $3
+            ";
+
+            $this->fetchPreparedQuery($sql, $parametros);
+        }
+    }
+
     protected function ordenaAlunosDaTurmaAlfabetica()
     {
         $codTurma = $this->getRequest()->id;
@@ -107,36 +192,65 @@ class TurmaController extends ApiCoreController
     {
         if ($this->canGetTurmasPorEscola()) {
             $ano = $this->getRequest()->ano;
+            $escola = $this->getRequest()->escola;
             $instituicaoId = $this->getRequest()->instituicao_id;
             $turnoId = $this->getRequest()->turno_id;
+            $modified = $this->getRequest()->modified ?: null;
+
+            $params = [$instituicaoId, $ano];
 
             if ($turnoId) {
-                $sql = 'SELECT cod_turma as id, nm_turma as nome, ref_ref_cod_escola as escola_id, turma_turno_id as turno_id
-                  FROM pmieducar.turma
-                  WHERE ref_cod_instituicao = $1
-                  AND ano = $2
-                  AND ativo = 1
-                  AND turma_turno_id = $3
-                  ORDER BY ref_ref_cod_escola, nm_turma';
-
-                $turmas = $this->fetchPreparedQuery($sql, [$instituicaoId, $ano, $turnoId]);
-            } else {
-                $sql = 'SELECT cod_turma as id, nm_turma as nome, ref_ref_cod_escola as escola_id, turma_turno_id as turno_id
-                  FROM pmieducar.turma
-                  WHERE ref_cod_instituicao = $1
-                  AND ano = $2
-                  AND ativo = 1
-                  ORDER BY ref_ref_cod_escola, nm_turma';
-
-                $turmas = $this->fetchPreparedQuery($sql, [$instituicaoId, $ano]);
+                $turnoId = " AND t.turma_turno_id = {$turnoId} ";
             }
 
-            $attrs = ['id', 'nome', 'escola_id', 'turno_id'];
+            if (is_array($escola)) {
+                $escola = implode(',', $escola);
+            }
+
+            if ($modified) {
+                $params[] = $modified;
+                $modified = 'AND t.updated_at >= $3';
+            }
+
+            $sql = "
+                SELECT 
+                    t.cod_turma as id, 
+                    t.nm_turma as nome, 
+                    t.ano, 
+                    t.ref_ref_cod_escola as escola_id, 
+                    t.turma_turno_id as turno_id,
+                    t.ref_cod_curso as curso_id,
+                    t.ref_ref_cod_serie as serie_id,
+                   ra.id as regra_avaliacao_id,
+                   ra.regra_diferenciada_id as regra_avaliacao_diferenciada_id,
+                    t.updated_at,
+                    (
+                        CASE t.ativo WHEN 1 THEN 
+                            NULL 
+                        ELSE 
+                            t.data_exclusao::timestamp(0)
+                        END
+                    ) AS deleted_at
+                FROM pmieducar.turma t 
+                INNER JOIN pmieducar.escola e 
+                    ON e.cod_escola = t.ref_ref_cod_escola 
+                INNER JOIN modules.regra_avaliacao_serie_ano rasa ON true
+                    AND rasa.serie_id = t.ref_ref_cod_serie
+                    AND rasa.ano_letivo = $2
+                INNER JOIN modules.regra_avaliacao ra 
+                    ON ra.id = (case when e.utiliza_regra_diferenciada then rasa.regra_avaliacao_diferenciada_id else rasa.regra_avaliacao_id end)
+                WHERE t.ref_cod_instituicao = $1
+                    AND t.ano = $2
+                    AND t.ref_ref_cod_escola IN ({$escola})
+                    {$turnoId}
+                    {$modified}
+                ORDER BY t.updated_at, t.ref_ref_cod_escola, t.nm_turma
+            ";
+
+            $turmas = $this->fetchPreparedQuery($sql, $params);
+
+            $attrs = ['id', 'nome', 'ano', 'escola_id', 'turno_id', 'curso_id', 'serie_id', 'regra_avaliacao_id', 'regra_avaliacao_diferenciada_id', 'updated_at', 'deleted_at'];
             $turmas = Portabilis_Array_Utils::filterSet($turmas, $attrs);
-
-            foreach ($turmas as &$turma) {
-                $turma['nome'] = Portabilis_String_Utils::toUtf8($turma['nome']);
-            }
 
             return ['turmas' => $turmas];
         }
@@ -263,8 +377,12 @@ class TurmaController extends ApiCoreController
 
     public function Gerar()
     {
-        if ($this->isRequestFor('get', 'tipo-boletim')) {
+        if ($this->isRequestFor('get', 'turma')) {
+            $this->appendResponse($this->get());
+        } elseif ($this->isRequestFor('get', 'tipo-boletim')) {
             $this->appendResponse($this->getTipoBoletim());
+        } elseif ($this->isRequestFor('get', 'ordena-matriculas-data-base')) {
+            $this->appendResponse($this->ordenaMatriculasPorDataBase());
         } elseif ($this->isRequestFor('get', 'ordena-turma-alfabetica')) {
             $this->appendResponse($this->ordenaSequencialAlunosTurma());
         } elseif ($this->isRequestFor('get', 'turmas-por-escola')) {

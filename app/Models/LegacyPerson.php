@@ -6,9 +6,7 @@ use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class Pessoa.
- *
- * @package namespace App\Entities;
+ * @property string $name
  */
 class LegacyPerson extends EloquentBaseModel implements Transformable
 {
@@ -28,7 +26,7 @@ class LegacyPerson extends EloquentBaseModel implements Transformable
      * @var array
      */
     protected $fillable = [
-        'nome', 'data_cad', 'tipo', 'situacao', 'origem_gravacao', 'operacao', 'idsis_cad',
+        'nome', 'data_cad', 'tipo', 'situacao', 'origem_gravacao', 'operacao',
     ];
 
     /**
@@ -36,6 +34,9 @@ class LegacyPerson extends EloquentBaseModel implements Transformable
      */
     public $timestamps = false;
 
+    /**
+     * @return string
+     */
     public function getNameAttribute()
     {
         return $this->nome;

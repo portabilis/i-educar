@@ -1,6 +1,5 @@
 <?php
 
-require_once dirname(__FILE__) . '/../../../includes/bootstrap.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'Educacenso/Model/IesDataMapper.php';
 

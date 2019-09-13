@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 class DatabaseRestoreCommand extends Command
 {
@@ -89,10 +90,14 @@ class DatabaseRestoreCommand extends Command
      */
     private function removeTableDataFromDatabaseList(array $tables)
     {
+        $definition = 'sed -i \'/TABLE DATA %s/d\' %s';
+
+        if (Str::contains(PHP_OS, 'Darwin')) {
+            $definition = 'sed -i \'\' \'/TABLE DATA %s/d\' %s';
+        }
+
         foreach ($tables as $table) {
             $table = str_replace('.', ' ', $table);
-
-            $definition = 'sed -i \'/TABLE DATA %s/d\' %s';
 
             $command = sprintf(
                 $definition,
@@ -177,7 +182,7 @@ class DatabaseRestoreCommand extends Command
      */
     private function alterSearchPathInDatabase($database)
     {
-        $definition = 'echo "ALTER DATABASE %s SET search_path = \"\$user\", public, portal, cadastro, acesso, alimentos, consistenciacao, historico, pmiacoes, pmicontrolesis, pmidrh, pmieducar, pmiotopic, urbano, modules;" | psql -h %s -p %s -U %s';
+        $definition = 'echo "ALTER DATABASE %s SET search_path = \"\$user\", public, portal, cadastro, historico, pmieducar, urbano, modules;" | psql -h %s -p %s -U %s';
 
         $command = sprintf(
             $definition,

@@ -67,7 +67,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_emprestimo = $_GET["cod_emprestimo"];
 
@@ -88,13 +88,9 @@ class indice extends clsCadastro
         $this->url_cancelar = "educar_exemplar_devolucao_lst.php";
         $this->nome_url_cancelar = "Cancelar";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_biblioteca_index.php" => "Biblioteca",
-         "" => "Realizar renovação"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Realizar renovação', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
 
         return $retorno;
     }
@@ -244,7 +240,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 628, $this->pessoa_logada, 11,  "educar_exemplar_devolucao_lst.php" );

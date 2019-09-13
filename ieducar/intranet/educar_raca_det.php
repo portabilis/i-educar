@@ -124,13 +124,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_raca_lst.php";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_pessoas_index.php"          => "Pessoas",
-             ""                                  => "Detalhe da ra&ccedil;a"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Detalhe da raça', [
+            url('intranet/educar_pessoas_index.php') => 'Pessoas',
+        ]);
     }
 }
 

@@ -67,7 +67,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_emprestimo = $_GET["cod_emprestimo"];
 
@@ -88,13 +88,9 @@ class indice extends clsCadastro
         $this->url_cancelar = "educar_exemplar_devolucao_lst.php";
         $this->nome_url_cancelar = "Cancelar";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "Realizar devolu&ccedil;&atilde;o"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Realizar devolução', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
 
         return $retorno;
     }
@@ -194,7 +190,7 @@ class indice extends clsCadastro
         {
             $dias_atraso = (int)((time() - strtotime($data_entrega)) / 86400);
             $dias_atraso = $dias_atraso > 0 ? $dias_atraso : 0;
-            
+
             $valor_divida = $dias_atraso * $valor_multa_biblioteca;
             $valor_divida = number_format($valor_divida, 2,",",".");
             $data_entrega = dataFromPgToBr($data_entrega, "d/m/Y");
@@ -243,7 +239,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 628, $this->pessoa_logada, 11,  "educar_exemplar_devolucao_lst.php" );

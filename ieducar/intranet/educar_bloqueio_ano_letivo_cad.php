@@ -58,7 +58,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->ref_cod_instituicao=$_GET["ref_cod_instituicao"];
         $this->ref_ano=$_GET["ref_ano"];
@@ -88,15 +88,13 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_bloqueio_ano_letivo_det.php?ref_cod_instituicao={$registro["ref_cod_instituicao"]}&ref_ano={$registro["ref_ano"]}" : "educar_bloqueio_ano_letivo_lst.php";
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} bloqueio ano letivo"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' bloqueio ano letivo', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
+
         return $retorno;
     }
 
@@ -109,7 +107,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $this->ref_ano = $this->ano;
 
@@ -127,7 +125,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $this->ref_ano = $this->ano;
 
@@ -145,7 +143,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $this->ref_ano = $this->ano;
 

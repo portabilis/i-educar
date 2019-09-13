@@ -73,9 +73,6 @@ class indice extends clsCadastro
   var $data_cad;
   var $origem_gravacao;
   var $operacao;
-  var $idsis_rev;
-  var $idsis_cad;
-
   var $idpais;
 
   function Inicializar()
@@ -188,7 +185,7 @@ class indice extends clsCadastro
     }
 
     $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-    echo "<!--\nErro ao cadastrar clsPublicMunicipio\nvalores obrigatorios\nis_string( $this->nome ) && is_string( $this->sigla_uf ) && is_string( $this->tipo ) && is_string( $this->origem_gravacao ) && is_string( $this->operacao ) && is_numeric( $this->idsis_cad )\n-->";
+
     return FALSE;
   }
 

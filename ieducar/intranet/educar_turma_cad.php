@@ -1,8 +1,15 @@
 <?php
 
+use App\Services\iDiarioService;
 use App\Services\SchoolClassService;
+use App\Models\School;
+use App\Models\LegacyCourse;
+use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
+use iEducar\Support\View\SelectOptions;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
+use RuntimeException;
+use Throwable;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -17,6 +24,7 @@ require_once 'Portabilis/Utils/CustomLabel.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
+require_once 'lib/App/Model/Educacenso/LocalFuncionamentoDiferenciado.php';
 require_once 'lib/App/Model/Educacenso/TipoMediacaoDidaticoPedagogico.php';
 
 class clsIndexBase extends clsBase
@@ -64,9 +72,7 @@ class indice extends clsCadastro
     public $excluir_modulo;
     public $visivel;
     public $tipo_atendimento;
-    public $turma_mais_educacao;
     public $atividades_complementares;
-    public $atividades_aee;
     public $cod_curso_profissional;
     public $etapa_educacenso;
     public $ref_cod_disciplina_dispensada;
@@ -82,6 +88,7 @@ class indice extends clsCadastro
     public $dias_letivos;
     public $etapas_especificas;
     public $etapas_utilizadas;
+    public $local_funcionamento_diferenciado;
     public $definirComponentePorEtapa;
     public $modulos = [];
     public $retorno;
@@ -97,6 +104,8 @@ class indice extends clsCadastro
     ];
     public $nao_informar_educacenso;
     public $ano_letivo;
+    public $nome_url_cancelar = 'Cancelar';
+    public $url_cancelar = 'educar_turma_lst.php';
 
     public function Inicializar()
     {
@@ -171,10 +180,6 @@ class indice extends clsCadastro
             $this->atividades_complementares = explode(',', str_replace(['{', '}'], '', $this->atividades_complementares));
         }
 
-        if (is_string($this->atividades_aee)) {
-            $this->atividades_aee = explode(',', str_replace(['{', '}'], '', $this->atividades_aee));
-        }
-
         if (is_string($this->cod_curso_profissional)) {
             $this->cod_curso_profissional = explode(',', str_replace(['{', '}'], '', $this->cod_curso_profissional));
         }
@@ -183,15 +188,10 @@ class indice extends clsCadastro
             'educar_turma_det.php?cod_turma=' . $registro['cod_turma'] : 'educar_turma_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => "{$nomeMenu} turma"
-        ]);
-        $this->enviaLocalizacao($localizacao->montar());
 
-        $this->nome_url_cancelar = 'Cancelar';
+        $this->breadcrumb($nomeMenu . ' turma', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->retorno = $retorno;
 
@@ -204,6 +204,21 @@ class indice extends clsCadastro
             foreach ($_POST as $campo => $val) {
                 $this->$campo = $this->$campo ? $this->$campo : $val;
             }
+        }
+
+        if (is_numeric($this->cod_turma)) {
+            $obj_turma = new clsPmieducarTurma($this->cod_turma);
+            $registro = $obj_turma->detalhe();
+            $obj_esc = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
+            $det_esc = $obj_esc->detalhe();
+            $obj_ser = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
+            $det_ser = $obj_ser->detalhe();
+
+            $this->ref_cod_escola = $det_esc['cod_escola'];
+            $this->ref_cod_instituicao = $det_esc['ref_cod_instituicao'];
+            $this->ref_cod_curso = $det_ser['ref_cod_curso'];
+            $this->ref_cod_serie = $det_ser['cod_serie'];
+            $this->ano = $registro['ano'];
         }
 
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
@@ -436,23 +451,31 @@ class indice extends clsCadastro
 
         $this->campoOculto('ref_cod_serie_mult_', $this->ref_ref_cod_serie_mult);
 
+        $resources = SelectOptions::tiposMediacaoDidaticoPedagogico();
+        $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => $obrigarCamposCenso, 'size' => 70,];
+        $this->inputsHelper()->select('tipo_mediacao_didatico_pedagogico', $options);
+
         $this->campoQuebra2();
 
         // hora
-        if (!$this->obrigaCamposHorario()) {
+        if ($obrigarCamposCenso && !$this->obrigaCamposHorario()) {
             $this->hora_inicial = '';
             $this->hora_final = '';
             $this->hora_inicio_intervalo = '';
             $this->hora_fim_intervalo = '';
             $this->dias_semana = [];
         }
-        $this->campoHora('hora_inicial', 'Hora inicial', $this->hora_inicial, false, null, null, null);
 
-        $this->campoHora('hora_final', 'Hora final', $this->hora_final, false, null, null, null);
+        $this->campoRotulo(
+            'horario_funcionamento_turma',
+            '<b>Horário de funcionamento da turma</b>'
+        );
+
+        $this->campoHora('hora_inicial', 'Hora inicial', $this->hora_inicial, false, null, null, null);
 
         $this->campoHora(
             'hora_inicio_intervalo',
-            'Hora início intervalo',
+            'Hora inicial do intervalo',
             $this->hora_inicio_intervalo,
             false,
             null,
@@ -460,13 +483,16 @@ class indice extends clsCadastro
             null
         );
 
-        $this->campoHora('hora_fim_intervalo', 'Hora fim intervalo', $this->hora_fim_intervalo, false, null, null, null);
+        $this->campoHora('hora_fim_intervalo', 'Hora final do intervalo', $this->hora_fim_intervalo, false, null, null, null);
+
+        $this->campoHora('hora_final', 'Hora final', $this->hora_final, false, null, null, null);
+
 
         $helperOptions = ['objectName' => 'dias_semana'];
         $options = ['label' => 'Dias da semana',
             'size' => 50,
             'required' => false,
-            'disabled' => !$this->obrigaCamposHorario(),
+            'disabled' => $obrigarCamposCenso && !$this->obrigaCamposHorario(),
             'options' => ['values' => $this->dias_semana,
                 'all_values' => [1 => 'Domingo',
                     2 => 'Segunda',
@@ -592,10 +618,7 @@ class indice extends clsCadastro
             'value' => $this->codigo_inep_educacenso]);
 
         $resources = [null => 'Selecione',
-            0 => Portabilis_String_Utils::toLatin1('Não se aplica'),
-            1 => 'Classe hospitalar',
-            2 => Portabilis_String_Utils::toLatin1('Unidade de internação socioeducativa'),
-            3 => 'Unidade prisional',
+            0 => 'Escolarização',
             4 => 'Atividade complementar',
             5 => 'Atendimento educacional especializado (AEE)'];
 
@@ -611,24 +634,6 @@ class indice extends clsCadastro
                 'all_values' => $atividadesComplementares]];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-        $helperOptions = ['objectName' => 'atividades_aee'];
-        $options = ['label' => 'Atividades do Atendimento Educacional Especializado - AEE',
-            'size' => 50,
-            'required' => false,
-            'options' => ['values' => $this->atividades_aee,
-                'all_values' => [1 => 'Ensino do Sistema Braille',
-                    2 => 'Ensino de uso de recursos ópticos e não ópticos',
-                    3 => 'Estratégias para o desenvolvimento de processos mentais',
-                    4 => 'Técnica de orientações a mobilidade',
-                    5 => 'Ensino da Língua Brasileira de Sinais - LIBRAS',
-                    6 => 'Ensino de uso da Comunicação Alternativa e Aumentativa - CAA',
-                    7 => 'Estratégias para enriquecimento curricular',
-                    8 => 'Ensino do uso do Soroban',
-                    9 => 'Ensino da usabilidade e das funcionalidades de informática acessível',
-                    10 => 'Ensino da Língua Portuguesa na modalidade escrita',
-                    11 => 'Estratégias para autonomia no ambiente escolar']]];
-        $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
-
         $resources = Portabilis_Utils_Database::fetchPreparedQuery('SELECT id,nome FROM modules.etapas_educacenso');
         $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
         $resources = Portabilis_Array_Utils::merge($resources, ['null' => 'Selecione']);
@@ -642,31 +647,23 @@ class indice extends clsCadastro
         $cursos = loadJson('educacenso_json/cursos_da_educacao_profissional.json');
         $helperOptions = ['objectName' => 'cod_curso_profissional',
             'type' => 'single'];
-        $options = ['label' => 'Curso técnico',
+        $options = ['label' => 'Curso de educação profissional',
             'size' => 50,
             'required' => false,
             'options' => ['values' => $this->cod_curso_profissional,
                 'all_values' => $cursos]];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-        $resources = App_Model_TipoMediacaoDidaticoPedagogico::getInstance()->getEnums();
+        $resources = App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums();
+        $resources = array_replace([null => 'Selecione'], $resources);
 
-        $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => false, 'size' => 70,];
-        $this->inputsHelper()->select('tipo_mediacao_didatico_pedagogico', $options);
+        $options = ['label' => 'Local de funcionamento diferenciado', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => false, 'size' => 70,];
+        $this->inputsHelper()->select('local_funcionamento_diferenciado', $options);
 
         $options = ['label' => Portabilis_String_Utils::toLatin1('Não informar esta turma no Censo escolar'),
             'value' => $this->nao_informar_educacenso,
             'label_hint' => Portabilis_String_Utils::toLatin1('Caso este campo seja selecionado, esta turma e todas as matrículas vinculadas a mesma, não serão informadas no arquivo de exportação do Censo escolar')];
         $this->inputsHelper()->checkbox('nao_informar_educacenso', $options);
-
-        $options = [
-            'label' => 'Turma participante do programa Mais Educação/Ensino Médio Inovador',
-            'resources' => $resources,
-            'value' => $this->turma_mais_educacao,
-            'required' => false,
-            'prompt' => 'Selecione'
-        ];
-        $this->inputsHelper()->booleanSelect('turma_mais_educacao', $options);
 
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/Turma.js',
@@ -840,11 +837,33 @@ class indice extends clsCadastro
      */
     public function nomeEstaDisponivel($ano, $curso, $serie, $escola, $nome, $id = null)
     {
-        $this->mensagem = 'O nome da turma já está sendo utilizado nesta escola, para o curso, série e anos informados.';
-
         $service = new SchoolClassService();
 
         return $service->isAvailableName($nome, $curso, $serie, $escola, $ano, $id);
+    }
+
+    /**
+     * Valida o campo Boletim Diferenciado
+     *
+     * @param $levelId
+     * @param $academicYear
+     * @param $alternativeReportCard
+     * @return bool
+     */
+    public function temBoletimDiferenciado($levelId, $academicYear, $alternativeReportCard)
+    {
+
+        if ($alternativeReportCard) {
+            return true;
+        }
+
+        $service = new SchoolClassService();
+
+        if ($service->isRequiredAlternativeReportCard($levelId, $academicYear)) {
+            return false;
+        }
+
+        return true;
     }
 
     public function Novo()
@@ -862,6 +881,14 @@ class indice extends clsCadastro
         }
 
         if (!$this->nomeEstaDisponivel($this->ano_letivo, $this->ref_cod_curso, $this->ref_cod_serie, $this->ref_cod_escola, $this->nm_turma)) {
+            $this->mensagem = 'O nome da turma já está sendo utilizado nesta escola, para o curso, série e anos informados.';
+
+            return false;
+        }
+
+        if (!$this->temBoletimDiferenciado($this->ref_cod_serie, $this->ano_letivo, $this->tipo_boletim_diferenciado)) {
+            $this->mensagem = 'O campo \'<b>Boletim diferenciado</b>\' é obrigatório quando a regra de avaliação da série possui regra diferenciada definida.';
+
             return false;
         }
 
@@ -898,14 +925,22 @@ class indice extends clsCadastro
 
         $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
-        $this->atualizaModulos();
+        if (!$this->atualizaModulos()) {
+            return false;
+        }
 
-        $this->mensagem .= 'Cadastro efetuado com sucesso.';
+        $this->mensagem = 'Cadastro efetuado com sucesso.';
         $this->simpleRedirect('educar_turma_lst.php');
     }
 
     public function Editar()
     {
+        $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
+        $possuiAlunosVinculados = $turmaDetalhe->possuiAlunosVinculados();
+        $turmaDetalhe = $turmaDetalhe->detalhe();
+        $this->ref_cod_curso = $turmaDetalhe['ref_cod_curso'];
+        $this->ref_ref_cod_escola = $turmaDetalhe['ref_ref_cod_escola'];
+
         if (!$this->verificaModulos()) {
             return false;
         }
@@ -914,12 +949,35 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->nomeEstaDisponivel($this->ano_letivo, $this->ref_cod_curso, $this->ref_cod_serie, $this->ref_cod_escola, $this->nm_turma, $this->cod_turma)) {
+
+        $this->visivel = isset($this->visivel);
+
+        if (!$this->visivel && $possuiAlunosVinculados) {
+            $this->mensagem = 'Não foi possível inativar a turma, pois a mesma possui matrículas vinculadas.';
+
             return false;
         }
 
-        $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
-        $turmaDetalhe = $turmaDetalhe->detalhe();
+        $this->multiseriada = isset($this->multiseriada) ? 1 : 0;
+
+        $objTurma = $this->montaObjetoTurma($this->cod_turma, null, $this->pessoa_logada);
+        $dadosTurma = $objTurma->detalhe();
+
+        if (!$this->nomeEstaDisponivel($dadosTurma['ano'], $this->ref_cod_curso, $dadosTurma['ref_ref_cod_serie'], $dadosTurma['ref_ref_cod_escola'], $this->nm_turma, $this->cod_turma)) {
+            $this->mensagem = 'O nome da turma já está sendo utilizado nesta escola, para o curso, série e anos informados.';
+
+            return false;
+        }
+
+        if (!$this->temBoletimDiferenciado($dadosTurma['ref_ref_cod_serie'], $dadosTurma['ano'], $this->tipo_boletim_diferenciado)) {
+            $this->mensagem = 'O campo \'<b>Boletim diferenciado</b>\' é obrigatório quando a regra de avaliação da série possui regra diferenciada definida.';
+
+            return false;
+        }
+
+        if (!$this->verificaTurno()) {
+            return false;
+        }
 
         if (is_null($this->ref_cod_instituicao)) {
             $this->ref_cod_instituicao = $turmaDetalhe['ref_cod_instituicao'];
@@ -928,10 +986,6 @@ class indice extends clsCadastro
             $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
         }
 
-        $this->multiseriada = isset($this->multiseriada) ? 1 : 0;
-        $this->visivel = isset($this->visivel);
-
-        $objTurma = $this->montaObjetoTurma($this->cod_turma, null, $this->pessoa_logada);
         $editou = $objTurma->edita();
 
         if (!$editou) {
@@ -956,9 +1010,11 @@ class indice extends clsCadastro
 
         $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
-        $this->atualizaModulos();
+        if (!$this->atualizaModulos()) {
+            return false;
+        }
 
-        $this->message = 'Edição efetuada com sucesso.';
+        $this->mensagem = 'Edição efetuada com sucesso.';
 
         throw new HttpResponseException(
             new RedirectResponse('educar_turma_lst.php')
@@ -1010,10 +1066,48 @@ class indice extends clsCadastro
         return true;
     }
 
-    protected function validaCampoAEE()
+    protected function validaCampoTipoAtendimento()
     {
-        if ($this->tipo_atendimento == 5 && empty($this->atividades_aee)) {
-            $this->mensagem = 'Campo atividades do Atendimento Educacional Especializado - AEE é obrigatório';
+        if ($this->tipo_atendimento != 0 && in_array($this->tipo_mediacao_didatico_pedagogico, [
+            App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL,
+            App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA
+        ])) {
+            $this->mensagem = 'O campo: Tipo de atendimento deve ser: Escolarização quando o campo: Tipo de mediação didático-pedagógica for: Semipresencial ou Educação a Distância.';
+
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaCampoLocalFuncionamentoDiferenciado()
+    {
+        $school = School::find($this->ref_ref_cod_escola);
+        $localFuncionamentoEscola = $school->local_funcionamento;
+        if (is_string($localFuncionamentoEscola)) {
+            $localFuncionamentoEscola = explode(',', str_replace(array('{', "}"), '', $localFuncionamentoEscola));
+        }
+
+        $localFuncionamentoEscola = (array) $localFuncionamentoEscola;
+
+        if (!in_array(9, $localFuncionamentoEscola) && $this->local_funcionamento_diferenciado == App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO) {
+
+            $this->mensagem = 'Não é possível selecionar a opção: Unidade de atendimento socioeducativo quando o local de funcionamento da escola não for: Unidade de atendimento socioeducativo.';
+            return false;
+        }
+
+        if (!in_array(10, $localFuncionamentoEscola) && $this->local_funcionamento_diferenciado == App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL) {
+            $this->mensagem = 'Não é possível selecionar a opção: Unidade prisional quando o local de funcionamento da escola não for: Unidade prisional.';
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaTipoAtendimento()
+    {
+        if ($this->tipo_atendimento == 4 && empty($this->atividades_complementares)) {
+            $this->mensagem = 'Campo atividades complementares é obrigatório';
 
             return false;
         }
@@ -1035,6 +1129,55 @@ class indice extends clsCadastro
         return true;
     }
 
+    private function validaEtapaEducacenso()
+    {
+        $course = LegacyCourse::find($this->ref_cod_curso);
+
+        if ($this->tipo_atendimento != TipoAtendimentoTurma::ESCOLARIZACAO) {
+            return true;
+        }
+
+        if ($course->modalidade_curso == 1 && !in_array($this->etapa_educacenso, [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 41, 56])) {
+            $this->mensagem = 'Quando a modalidade do curso é: Ensino regular, o campo: Etapa de ensino deve ser uma das seguintes opções: 1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 41 ou 56.';
+            return false;
+        }
+
+        if ($course->modalidade_curso == 2 && !in_array($this->etapa_educacenso, [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 41, 56, 39, 40, 69, 70, 71, 72, 73, 74, 64, 67, 68])) {
+            $this->mensagem = 'Quando a modalidade do curso é: Educação Especial - Modalidade Substitutiva, o campo: Etapa de ensino deve ser uma das seguintes opções: 1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 41, 56, 39, 40, 69, 70, 71, 72, 73, 74, 64, 67 ou 68.';
+            return false;
+        }
+
+        if ($course->modalidade_curso == 3 && !in_array($this->etapa_educacenso, [69, 70, 71, 72])) {
+            $this->mensagem = 'Quando a modalidade do curso é: Educação de Jovens e Adultos (EJA), o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72.';
+            return false;
+        }
+
+        if ($course->modalidade_curso == 4 && !in_array($this->etapa_educacenso, [30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67, 68])) {
+            $this->mensagem = 'Quando a modalidade do curso é: Educação Profissional, o campo: Etapa de ensino deve ser uma das seguintes opções: 30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67 ou 68.';
+            return false;
+        }
+
+        if ($this->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL && !in_array($this->etapa_educacenso, [69, 70, 71, 72])) {
+            $this->mensagem = 'Quando o campo: Tipo de mediação didático-pedagógica é: Semipresencial, o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72';
+            return false;
+        }
+
+        if ($this->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA && !in_array($this->etapa_educacenso, [30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67, 68])) {
+            $this->mensagem = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67 ou 68';
+            return false;
+        }
+
+        if (in_array($this->local_funcionamento_diferenciado, [App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO, App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL]) &&
+            in_array($this->etapa_educacenso, [1, 2, 3, 56])
+        ) {
+            $nomeOpcao = (App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums())[$this->local_funcionamento_diferenciado];
+            $this->mensagem = "Quando o campo: Local de funcionamento diferenciado é: {$nomeOpcao}, o campo: Etapa de ensino não pode ser nenhuma das seguintes opções: 1, 2, 3 ou 56";
+            return false;
+        }
+
+        return true;
+    }
+
     protected function verificaCamposCenso()
     {
         if (!$this->validarCamposObrigatoriosCenso()) {
@@ -1043,13 +1186,60 @@ class indice extends clsCadastro
         if (!$this->validaCamposHorario()) {
             return false;
         }
+        if (!$this->validaEtapaEducacenso()) {
+            return false;
+        }
         if (!$this->validaCampoAtividadesComplementares()) {
             return false;
         }
-        if (!$this->validaCampoAEE()) {
+        if (!$this->validaCampoEtapaEnsino()) {
             return false;
         }
-        if (!$this->validaCampoEtapaEnsino()) {
+        if (!$this->validaCampoTipoAtendimento()) {
+            return false;
+        }
+        if (!$this->validaCampoLocalFuncionamentoDiferenciado()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function verificaTurno()
+    {
+        $turmaId = (int) $this->cod_turma;
+        $turnoId = (int) $this->turma_turno_id;
+        $count = 0;
+
+        if ($turnoId === clsPmieducarTurma::TURNO_INTEGRAL) { // Se integral não pode ter vínculos noturnos
+            $count += DB::table('pmieducar.matricula_turma as mt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'mt.ref_cod_turma')
+                ->where('mt.turno_id', clsPmieducarTurma::TURNO_NOTURNO)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+
+            $count += DB::table('modules.professor_turma as pt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'pt.turma_id')
+                ->where('pt.turno_id', clsPmieducarTurma::TURNO_NOTURNO)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+        } else { // Se ñ é integral não pode ter vínculos diferentes do novo turno
+            $count += DB::table('pmieducar.matricula_turma as mt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'mt.ref_cod_turma')
+                ->where('mt.turno_id', '<>', $turnoId)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+
+            $count += DB::table('modules.professor_turma as pt')
+                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'pt.turma_id')
+                ->where('pt.turno_id', '<>', $turnoId)
+                ->where('t.cod_turma', $turmaId)
+                ->count();
+        }
+
+        if ($count > 0) {
+            $this->mensagem = 'Existem enturmações ou professores atrelados a esta turma em turnos diferentes do especificado.';
+
             return false;
         }
 
@@ -1060,15 +1250,10 @@ class indice extends clsCadastro
     {
         $this->dias_semana = '{' . implode(',', $this->dias_semana) . '}';
         $this->atividades_complementares = '{' . implode(',', $this->atividades_complementares) . '}';
-        $this->atividades_aee = '{' . implode(',', $this->atividades_aee) . '}';
         $this->cod_curso_profissional = $this->cod_curso_profissional[0];
 
         if ($this->tipo_atendimento != 4) {
             $this->atividades_complementares = '{}';
-        }
-
-        if ($this->tipo_atendimento != 5) {
-            $this->atividades_aee = '{}';
         }
 
         $etapasCursoTecnico = [30, 31, 32, 33, 34, 39, 40, 64, 74];
@@ -1105,7 +1290,6 @@ class indice extends clsCadastro
         $objTurma->tipo_boletim_diferenciado = $this->tipo_boletim_diferenciado;
         $objTurma->ano = $this->ano_letivo;
         $objTurma->tipo_atendimento = $this->tipo_atendimento;
-        $objTurma->turma_mais_educacao = $this->turma_mais_educacao;
         $objTurma->cod_curso_profissional = $this->cod_curso_profissional;
         $objTurma->etapa_educacenso = $this->etapa_educacenso == '' ? null : $this->etapa_educacenso;
         $objTurma->ref_cod_disciplina_dispensada = $this->ref_cod_disciplina_dispensada == '' ? null : $this->ref_cod_disciplina_dispensada;
@@ -1113,13 +1297,90 @@ class indice extends clsCadastro
         $objTurma->tipo_mediacao_didatico_pedagogico = $this->tipo_mediacao_didatico_pedagogico;
         $objTurma->dias_semana = $this->dias_semana;
         $objTurma->atividades_complementares = $this->atividades_complementares;
-        $objTurma->atividades_aee = $this->atividades_aee;
+        $objTurma->local_funcionamento_diferenciado = $this->local_funcionamento_diferenciado;
 
         return $objTurma;
     }
 
+    protected function validaModulos()
+    {
+        $turmaId = $this->cod_turma;
+        $etapasCount = count($this->data_inicio);
+        $etapasCountAntigo = (int) Portabilis_Utils_Database::selectField(
+            'SELECT COUNT(*) AS count FROM pmieducar.turma_modulo WHERE ref_cod_turma = $1',
+            [$turmaId]
+        );
+
+        if ($etapasCount >= $etapasCountAntigo) {
+            return true;
+        }
+
+        $etapasTmp = $etapasCount;
+        $etapas = [];
+
+        while ($etapasTmp < $etapasCountAntigo) {
+            $etapasTmp += 1;
+            $etapas[] = $etapasTmp;
+        }
+
+        $counts = [];
+
+        $counts[] = DB::table('modules.falta_componente_curricular as fcc')
+            ->join('modules.falta_aluno as fa', 'fa.id',  '=', 'fcc.falta_aluno_id')
+            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'fa.matricula_id')
+            ->join('pmieducar.matricula_turma as mt', 'mt.ref_cod_matricula', '=', 'm.cod_matricula')
+            ->whereIn('fcc.etapa', $etapas)
+            ->where('mt.ref_cod_turma', $turmaId)
+            ->where('m.ativo', 1)
+            ->count();
+
+        $counts[] = DB::table('modules.falta_geral as fg')
+            ->join('modules.falta_aluno as fa', 'fa.id',  '=', 'fg.falta_aluno_id')
+            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'fa.matricula_id')
+            ->join('pmieducar.matricula_turma as mt', 'mt.ref_cod_matricula', '=', 'm.cod_matricula')
+            ->whereIn('fg.etapa', $etapas)
+            ->where('mt.ref_cod_turma', $turmaId)
+            ->where('m.ativo', 1)
+            ->count();
+
+        $counts[] = DB::table('modules.nota_componente_curricular as ncc')
+            ->join('modules.nota_aluno as na', 'na.id',  '=', 'ncc.nota_aluno_id')
+            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'na.matricula_id')
+            ->join('pmieducar.matricula_turma as mt', 'mt.ref_cod_matricula', '=', 'm.cod_matricula')
+            ->whereIn('ncc.etapa', $etapas)
+            ->where('mt.ref_cod_turma', $turmaId)
+            ->where('m.ativo', 1)
+            ->count();
+
+        $sum = array_sum($counts);
+
+        if ($sum > 0) {
+            throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.');
+        }
+
+        $iDiarioService = app(iDiarioService::class);
+
+        foreach ($etapas as $etapa) {
+            if ($iDiarioService->getStepActivityByClassroom($turmaId, $etapa)) {
+                throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas no diário online.');
+            }
+        }
+
+        return true;
+    }
+
     public function atualizaModulos()
     {
+        try {
+            $this->validaModulos();
+        } catch (Exception $e) {
+            $this->Inicializar();
+
+            $this->mensagem = $e->getMessage();
+
+            return false;
+        }
+
         $objModulo = new clsPmieducarTurmaModulo();
         $excluiu = $objModulo->excluirTodos($this->cod_turma);
         $modulos = $this->montaModulos();
@@ -1264,7 +1525,7 @@ class indice extends clsCadastro
                 $auditoria = new clsModulesAuditoriaGeral('turma', $this->pessoa_logada, $this->cod_turma);
                 $auditoria->exclusao($turma);
 
-                $this->mensagem .= 'Exclusão efetuada com sucesso.';
+                $this->mensagem = 'Exclusão efetuada com sucesso.';
 
                 throw new HttpResponseException(
                     new RedirectResponse('educar_turma_lst.php')
@@ -1657,6 +1918,7 @@ $pagina->MakeAll();
 
         if (document.getElementById('padrao_ano_escolar').value == 0) {
             setModuleAndPhasesVisibility(true);
+            buscaEtapasDaEscola();
         }
     }
 
@@ -1684,15 +1946,19 @@ $pagina->MakeAll();
         var DOM_escola_serie_hora = xml.getElementsByTagName('item');
 
         if (DOM_escola_serie_hora.length) {
-            campoHoraInicial.value = (DOM_escola_serie_hora[0].firstChild || {}).data;
-            campoHoraFinal.value = (DOM_escola_serie_hora[1].firstChild || {}).data;
-            campoHoraInicioIntervalo.value = (DOM_escola_serie_hora[2].firstChild || {}).data;
-            campoHoraFimIntervalo.value = (DOM_escola_serie_hora[3].firstChild || {}).data;
+            horaInicial = (DOM_escola_serie_hora[0].firstChild || {}).data;
+            horaFinal = (DOM_escola_serie_hora[1].firstChild || {}).data;
+            horaInicioIntervalo = (DOM_escola_serie_hora[2].firstChild || {}).data;
+            horaFimIntervalo = (DOM_escola_serie_hora[3].firstChild || {}).data;
+            campoHoraInicial.value = typeof(horaInicial) != 'undefined' ? horaInicial : null;
+            campoHoraFinal.value = typeof(horaFinal) != 'undefined' ? horaFinal : null;
+            campoHoraInicioIntervalo.value = typeof(horaInicioIntervalo) != 'undefined' ? horaInicioIntervalo : null;
+            campoHoraFimIntervalo.value = typeof(horaFimIntervalo) != 'undefined' ? horaFimIntervalo : null;
         }
     }
 
     function valida() {
-        if (validaHorarioInicialFinal() && validaMinutos() && validaAtividadesComplementares()) {
+        if (validaHorarioInicialFinal() && validaHoras() && validaAtividadesComplementares()) {
             if (document.getElementById('padrao_ano_escolar').value == 1) {
                 var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
                 var campoEscola = document.getElementById('ref_cod_escola').value;

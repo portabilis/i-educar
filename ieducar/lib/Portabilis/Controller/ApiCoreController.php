@@ -45,11 +45,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
         $this->response = [];
     }
 
-    protected function currentUser()
-    {
-        return Portabilis_Utils_User::load($this->getSession()->id_pessoa);
-    }
-
     protected function getNivelAcesso()
     {
         return Portabilis_Utils_User::getNivelAcesso();
@@ -60,7 +55,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
         $valid = false;
 
         if (!is_null($this->getRequest()->access_key)) {
-            $accessKey = $GLOBALS['coreExt']['Config']->apis->access_key;
+            $accessKey = config('legacy.apis.access_key');
             $valid = $accessKey == $this->getRequest()->access_key;
 
             if (!$valid) {
@@ -91,19 +86,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
         }
 
         return $canAccess;
-    }
-
-    protected function validatesUserIsAdmin()
-    {
-        $user = $this->currentUser();
-
-        if (!$user['super']) {
-            $this->messenger->append('O usuário logado deve ser o admin');
-
-            return false;
-        }
-
-        return true;
     }
 
     protected function validatesId($resourceName, $options = [])
@@ -242,10 +224,10 @@ class ApiCoreController extends Core_Controller_Page_EditController
             error_log("Erro inesperado no metodo prepareResponse da classe ApiCoreController: {$e->getMessage()}");
 
             $response = [
-                'msgs' => [
+                'msgs' => [[
                     'msg' => 'Erro inesperado no servidor. Por favor, tente novamente.',
                     'type' => 'error'
-                ]
+                ]]
             ];
 
             $response = SafeJson::encode($response);
@@ -368,23 +350,6 @@ class ApiCoreController extends Core_Controller_Page_EditController
             $raiseExceptionOnFail = false,
             $addMsgOnError = $options['add_msg_on_error']
         );
-    }
-
-    protected function validatesIsNumeric($expectedNumericParamNames)
-    {
-        if (!is_array($expectedNumericParamNames)) {
-            $expectedNumericParamNames = [$expectedNumericParamNames];
-        }
-
-        $valid = true;
-
-        foreach ($requiredParamNames as $param) {
-            if (!$this->validator->validatesValueIsNumeric($this->getRequest()->$param, $param) and $valid) {
-                $valid = false;
-            }
-        }
-
-        return $valid;
     }
 
     protected function fetchPreparedQuery($sql, $params = [], $hideExceptions = true, $returnOnly = '')

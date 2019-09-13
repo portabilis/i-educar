@@ -21,7 +21,7 @@ abstract class Portabilis_Report_ReportFactory
      */
     public function __construct()
     {
-        $this->config = $GLOBALS['coreExt']['Config'];
+        $this->config = json_decode(json_encode(config('legacy')));
         $this->settings = [];
 
         $this->setSettings($this->config);

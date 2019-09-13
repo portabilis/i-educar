@@ -29,6 +29,9 @@
  * @version   $Id$
  */
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 
@@ -58,10 +61,11 @@ class indice extends clsCadastro
   var $ref_cod_instituicao;
   var $escola_em_andamento;
   var $segunda_fase = false;
+  var $nome_url_sucesso = 'Analisar';
 
   function Inicializar()
   {
-    
+
 
     $this->segunda_fase = ($_REQUEST['fase2'] == 1);
 
@@ -74,22 +78,22 @@ class indice extends clsCadastro
 
     $nomeTela = $this->segunda_fase ? '2ª fase - Situação final' : '1ª fase - Matrícula inicial';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_educacenso_index.php"       => "Educacenso",
-         ""                                  => $nomeTela
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb($nomeTela, [
+        url('intranet/educar_educacenso_index.php') => 'Educacenso',
+    ]);
 
     $exportacao = $_POST["exportacao"];
 
     if ($exportacao) {
       $converted_to_iso88591 = utf8_decode($exportacao);
 
+      $inepEscola = DB::selectOne('SELECT cod_escola_inep FROM modules.educacenso_cod_escola WHERE cod_escola = ?', [$_POST["escola"]]);
+
+      $nomeArquivo = $inepEscola->cod_escola_inep . '_' . date('dm_Hi') . '.txt';
+
       header('Content-type: text/plain');
       header('Content-Length: ' . strlen($converted_to_iso88591));
-      header('Content-Disposition: attachment; filename=exportacao.txt');
+      header('Content-Disposition: attachment; filename=' . $nomeArquivo);
       echo $converted_to_iso88591;
       die();
     }
@@ -110,16 +114,11 @@ class indice extends clsCadastro
       $this->campoOculto("fase2", "true");
     }
 
+    $this->campoOculto("enable_export", (int) config('legacy.educacenso.enable_export'));
     $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
     $this->inputsHelper()->hidden('escola_em_andamento', [ 'value' => $this->escola_em_andamento ]);
 
-    $this->inputsHelper()->date('data_ini',array('label' => 'Data início',
-                                                 'value' => $this->data_ini,
-                                                 'dica' => $dicaCampoData));
-    $this->inputsHelper()->date('data_fim',array('label' => 'Data fim',
-                                                 'value' => $this->data_fim,
-                                                 'dica' => $dicaCampoData));
-    if (!empty($this->data_ini) && !empty($this->data_fim) && !empty($this->ref_cod_escola)) {
+    if (!empty($this->ref_cod_escola)) {
         Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Educacenso/Assets/Javascripts/Educacenso.js');
     }
 
@@ -192,7 +191,7 @@ function acaoExportar() {
     document.formcadastro.target='_blank';
     acao();
     document.getElementById( 'btn_enviar' ).disabled = false;
-    document.getElementById( 'btn_enviar' ).value = 'Exportar';
+    document.getElementById( 'btn_enviar' ).value = 'Analisar';
 }
 
 function marcarCheck(idValue) {

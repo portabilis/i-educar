@@ -9,6 +9,7 @@ class TabelaArredondamento_Model_TabelaValor extends CoreExt_Entity
         'tabelaArredondamento' => null,
         'nome' => null,
         'descricao' => null,
+        'observacao' => null,
         'valorMinimo' => null,
         'valorMaximo' => null,
         'acao' => null,

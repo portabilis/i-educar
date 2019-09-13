@@ -63,7 +63,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->ref_cod_servidor=$_GET["ref_cod_servidor"];
         $this->ref_ref_cod_instituicao=$_GET["ref_ref_cod_instituicao"];
@@ -93,15 +93,12 @@ class indice extends clsCadastro
         /*echo*/ $this->url_cancelar = ($retorno == "Editar") ? "educar_avaliacao_desempenho_det.php?sequencial={$this->sequencial}&ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}" : "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_ref_cod_instituicao}";
         $this->nome_url_cancelar = "Cancelar";
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""        => "{$nomeMenu} avalia&ccedil;&atilde;o de desempenho"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
-        
+        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+
+        $this->breadcrumb($nomeMenu . ' avaliação de desempenho', [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
+
         return $retorno;
     }
 
@@ -111,7 +108,7 @@ class indice extends clsCadastro
         $this->campoOculto( "sequencial", $this->sequencial );
         $this->campoOculto( "ref_cod_servidor", $this->ref_cod_servidor );
         $this->campoOculto( "ref_ref_cod_instituicao", $this->ref_ref_cod_instituicao );
-        
+
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
         if ($nivel_usuario == 1)
@@ -143,7 +140,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 635, $this->pessoa_logada, 7,  "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}" );
@@ -163,7 +160,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 635, $this->pessoa_logada, 7,  "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}" );
@@ -184,7 +181,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 635, $this->pessoa_logada, 7,  "educar_avaliacao_desempenho_lst.php?ref_cod_servidor={$this->ref_cod_servidor}&ref_ref_cod_instituicao={$this->ref_ref_cod_instituicao}" );

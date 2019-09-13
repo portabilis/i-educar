@@ -6,7 +6,7 @@ class CoreExt_Validate_NumericTest extends PHPUnit\Framework\TestCase
 {
     protected $_validator = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->_validator = new CoreExt_Validate_Numeric();
     }

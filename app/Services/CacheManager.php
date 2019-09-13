@@ -37,7 +37,7 @@ class CacheManager extends LaravelCacheManager
         }
 
         if (self::supportsPrefix($this->store()->getStore())) {
-            $this->store()->setPrefix(config('app.name'));
+            $this->store()->setPrefix(config('app.nickname'));
         }
 
         return $this->store()->$method(...$parameters);

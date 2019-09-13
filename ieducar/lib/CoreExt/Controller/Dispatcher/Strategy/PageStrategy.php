@@ -90,7 +90,7 @@ class CoreExt_Controller_Dispatcher_Strategy_PageStrategy extends CoreExt_Contro
         $controllerType = $this->getController()->getOption('controller_type');
 
         $controllerFile = [$basepath, $controller, $controllerDir, $pageController];
-        $controllerFile = sprintf('%s.php', implode(DS, $controllerFile));
+        $controllerFile = sprintf('%s.php', implode(DIRECTORY_SEPARATOR, $controllerFile));
 
         if (!file_exists($controllerFile)) {
             require_once 'CoreExt/Exception/FileNotFoundException.php';

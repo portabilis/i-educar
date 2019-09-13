@@ -79,7 +79,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_matricula=$_GET["ref_cod_matricula"];
         $this->ref_cod_aluno=$_GET["ref_cod_aluno"];
@@ -101,16 +101,12 @@ class indice extends clsCadastro
         //$this->url_cancelar = "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}";
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
-        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "Registro da reclassificação da matrícula"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Registro da reclassificação da matrícula', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
+
         return $retorno;
     }
 
@@ -165,7 +161,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
 

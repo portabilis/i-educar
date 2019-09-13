@@ -3,6 +3,7 @@
 namespace Tests\Browser;
 
 use App\Country;
+use Tests\Browser\Login\LoginAsAdmin;
 use Tests\Browser\Pages\Country\CreatePage;
 use Tests\Browser\Pages\Country\DetailPage;
 use Tests\Browser\Pages\Country\ListingPage;
@@ -12,6 +13,8 @@ use Laravel\Dusk\Browser;
 
 class CountryTest extends DuskTestCase
 {
+    use LoginAsAdmin;
+
     /**
      * Test country listing.
      *
@@ -22,7 +25,7 @@ class CountryTest extends DuskTestCase
     public function testCountryListing()
     {
         $this->browse(function (Browser $browser) {
-            $browser->loginLegacy()
+            $browser->login()
                 ->visit(new ListingPage());
         });
     }
@@ -39,7 +42,7 @@ class CountryTest extends DuskTestCase
         $country = factory(Country::class)->make();
 
         $this->browse(function (Browser $browser) use ($country) {
-            $browser->loginLegacy()
+            $browser->login()
                 ->visit(new CreatePage())
                 ->type('@input-name', $country->name)
                 ->type('@input-ibge', $country->ibge)
@@ -60,7 +63,7 @@ class CountryTest extends DuskTestCase
         $country = factory(Country::class)->make();
 
         $this->browse(function (Browser $browser) use ($country) {
-            $browser->loginLegacy()
+            $browser->login()
                 ->visit(new UpdatePage(1)) // FIXME ID should be dynamic in the future
                 ->type('@input-name', $country->name)
                 ->type('@input-ibge', $country->ibge)
@@ -82,7 +85,7 @@ class CountryTest extends DuskTestCase
             $country = factory(Country::class)->make();
             $countryAfterUpdate = factory(Country::class)->make();
 
-            $browser->loginLegacy();
+            $browser->login();
 
             $browser->visit(new ListingPage())
                 ->press(' Novo ');

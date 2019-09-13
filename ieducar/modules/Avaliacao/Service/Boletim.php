@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyEvaluationRule;
+use App\Services\StageScoreCalculationService;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
@@ -53,20 +55,20 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
    */
   public function __construct(array $options = array())
   {
-    $this->setOptions($options)
-         ->_setMatriculaInfo()
-         ->_loadNotas()
-         ->_loadFalta()
-         ->_loadParecerDescritivo();
+    $this->setOptions($options);
+    $this->_setMatriculaInfo();
+    $this->_loadNotas();
+    $this->_loadFalta();
+    $this->_loadParecerDescritivo();
   }
 
     private function getExemptedStages($enrollmentId, $disciplineId)
     {
-        if (!isset($this->exemptedStages[$disciplineId])) {
-            $this->exemptedStages[$disciplineId] = App_Model_IedFinder::getExemptedStages($enrollmentId, $disciplineId);
+        if (!isset($this->exemptedStages[$enrollmentId])) {
+            $this->exemptedStages[$enrollmentId] = App_Model_IedFinder::getExemptedStages($enrollmentId, $disciplineId);
         }
 
-        return $this->exemptedStages[$disciplineId];
+        return $this->exemptedStages[$enrollmentId][$disciplineId] ?? [];
     }
 
   /**
@@ -234,7 +236,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
     }
 
-    $etapaAtual = $_GET['etapa'] == 'Rc' ? $maiorEtapaUtilizada : $_GET['etapa'];
+    $etapaAtual = ($_GET['etapa'] ?? null) == 'Rc' ? $maiorEtapaUtilizada : ($_GET['etapa'] ?? null);
 
     $this->_setRegra(App_Model_IedFinder::getRegraAvaliacaoPorMatricula(
         $codMatricula, $this->getRegraDataMapper(), $matricula
@@ -335,7 +337,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     $this->setMediasComponentes($mediasComponentes);
-    $this->setMediasGerais($mediasGerais);
+    $this->setMediaGeral($mediasGerais);
 
     return $this;
   }
@@ -467,7 +469,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         null,
         null,
         $enrollment,
-        false,
+        true,
         $ignorarDispensasParciais
     ));
 
@@ -725,7 +727,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     if($this->getRegraAvaliacaoNotaGeralPorEtapa() == "1"){
 
-       $mediaGeral = $this->getMediasGerais();
+       $mediaGeral = $this->getMediaGeral();
 
       if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
         $media = $mediaGeral->mediaArredondada;
@@ -2087,10 +2089,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   public function save()
   {
     try {
-      $this->saveNotas()
-           ->saveFaltas()
-           ->savePareceres()
-           ->promover();
+      $this->saveNotas();
+      $this->saveFaltas();
+      $this->savePareceres();
+      $this->promover();
     }
     catch (CoreExt_Service_Exception $e) {
       throw $e;
@@ -2762,11 +2764,11 @@ public function alterarSituacao($novaSituacao, $matriculaId){
         $tipoPresenca = $this->getRegraAvaliacaoTipoPresenca();
 
         if ($tipoPresenca == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
-            $faltas = $this->getFalta($etapa, $componenteCurricularId)->quantidade;
+            $faltas = $this->getFalta($etapa, $componenteCurricularId)->quantidade ?? null;
         }
 
         if ($tipoPresenca == RegraAvaliacao_Model_TipoPresenca::GERAL) {
-            $faltas = $this->getFalta($etapa)->quantidade;
+            $faltas = $this->getFalta($etapa)->quantidade ?? null;
         }
 
         return $faltas;
@@ -2784,5 +2786,43 @@ public function alterarSituacao($novaSituacao, $matriculaId){
     public function getRegrasRecuperacao()
     {
         return $this->getRegraAvaliacao()->findRegraRecuperacao();
+    }
+
+    /**
+     * @return LegacyEvaluationRule
+     */
+    public function getEvaluationRule()
+    {
+        return LegacyEvaluationRule::findOrFail(
+            $this->getRegra()->get('id')
+        );
+    }
+
+    /**
+     * @param int|string $stage
+     * @param float      $score
+     * @param float      $remedial
+     *
+     * @return float
+     */
+    public function calculateStageScore($stage, $score, $remedial)
+    {
+        if ($stage === 'Rc') {
+            return $score;
+        }
+
+        $evaluationRule = $this->getEvaluationRule();
+
+        $service = new StageScoreCalculationService();
+
+        if ($evaluationRule->isAverageBetweenScoreAndRemedialCalculation()) {
+            return $service->calculateAverageBetweenScoreAndRemedial($score, $remedial);
+        }
+
+        if ($evaluationRule->isSumScoreCalculation()) {
+            return $service->calculateSumScore($score, $remedial);
+        }
+
+        return $service->calculateRemedial($score, $remedial);
     }
 }

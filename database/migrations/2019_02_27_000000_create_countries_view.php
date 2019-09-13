@@ -14,6 +14,7 @@ class CreateCountriesView extends Migration
      */
     public function up()
     {
+        $this->dropView('countries');
         $this->createView('countries');
     }
 

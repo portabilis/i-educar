@@ -46,7 +46,7 @@ class NotaComponenteMediaTest extends UnitBaseTest
 {
   protected $_entity = NULL;
 
-  protected function setUp()
+  protected function setUp(): void
   {
     $this->_entity = new Avaliacao_Model_NotaComponenteMedia();
   }

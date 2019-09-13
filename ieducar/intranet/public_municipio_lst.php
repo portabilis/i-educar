@@ -85,9 +85,6 @@ class indice extends clsListagem
     var $data_cad;
     var $origem_gravacao;
     var $operacao;
-    var $idsis_rev;
-    var $idsis_cad;
-    
     var $idpais;
 
     function Gerar()

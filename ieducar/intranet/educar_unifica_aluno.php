@@ -29,6 +29,9 @@
  */
 
 
+use App\Models\LogUnification;
+use iEducar\Modules\Unification\StudentLogUnification;
+use Illuminate\Support\Facades\DB;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -63,19 +66,16 @@ class indice extends clsCadastro
   {
     $retorno = 'Novo';
 
-
-
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(999847, $this->pessoa_logada, 7,
       'index.php');
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "Unifica&ccedil;&atilde;o de alunos"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Cadastrar unificação', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
+
+    $this->url_cancelar = route('student-log-unification.index');
+    $this->nome_url_cancelar = "Cancelar";
 
     return $retorno;
   }
@@ -123,10 +123,32 @@ class indice extends clsCadastro
         return false;
     }
 
-    App_Unificacao_Aluno::unifica($cod_aluno_principal, $cod_alunos, $this->pessoa_logada, new clsBanco());
+    DB::beginTransaction();
+    $unificationId = $this->createLog($cod_aluno_principal, $cod_alunos, $this->pessoa_logada);
+    App_Unificacao_Aluno::unifica($cod_aluno_principal, $cod_alunos, $this->pessoa_logada, new clsBanco(), $unificationId);
+
+    try {
+        DB::commit();
+    } catch (Throwable $throable) {
+        DB::rollBack();
+        $this->mensagem = 'Não foi possível realizar a unificação';
+        return false;
+    }
 
     $this->mensagem = "<span>Alunos unificados com sucesso.</span>";
-    return true;
+    $this->simpleRedirect(route('student-log-unification.index'));
+  }
+
+  private function createLog($mainId, $duplicatesId, $createdBy)
+  {
+    $log = new LogUnification();
+    $log->type = StudentLogUnification::getType();
+    $log->main_id = $mainId;
+    $log->duplicates_id = json_encode($duplicatesId);
+    $log->created_by = $createdBy;
+    $log->updated_by = $createdBy;
+    $log->save();
+    return $log->id;
   }
 }
 

@@ -1,12 +1,13 @@
 <?php
 
+use iEducar\Legacy\Model;
+
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 require_once 'Portabilis/Utils/Database.php';
 
-class clsPmieducarSerie
+class clsPmieducarSerie extends Model
 {
-
     public $cod_serie;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -20,76 +21,13 @@ class clsPmieducarSerie
     public $ativo;
     public $regra_avaliacao_id;
     public $regra_avaliacao_diferenciada_id;
-
     public $idade_inicial;
     public $idade_final;
     public $idade_ideal;
-
     public $alerta_faixa_etaria;
     public $bloquear_matricula_faixa_etaria;
     public $exigir_inep;
 
-    /**
-     * Armazena o total de resultados obtidos na última chamada ao método lista().
-     *
-     * @var int
-     */
-    public $_total;
-
-    /**
-     * Nome do schema.
-     *
-     * @var string
-     */
-    public $_schema;
-
-    /**
-     * Nome da tabela.
-     *
-     * @var string
-     */
-    public $_tabela;
-
-    /**
-     * Lista separada por vírgula, com os campos que devem ser selecionados na
-     * próxima chamado ao método lista().
-     *
-     * @var string
-     */
-    public $_campos_lista;
-
-    /**
-     * Lista com todos os campos da tabela separados por vírgula, padrão para
-     * seleção no método lista.
-     *
-     * @var string
-     */
-    public $_todos_campos;
-
-    /**
-     * Valor que define a quantidade de registros a ser retornada pelo método lista().
-     *
-     * @var int
-     */
-    public $_limite_quantidade;
-
-    /**
-     * Define o valor de offset no retorno dos registros no método lista().
-     *
-     * @var int
-     */
-    public $_limite_offset;
-
-    /**
-     * Define o campo para ser usado como padrão de ordenação no método lista().
-     *
-     * @var string
-     */
-    public $_campo_order_by;
-
-    /**
-     * Construtor.
-     */
     public function __construct(
         $cod_serie = null,
         $ref_usuario_exc = null,
@@ -294,101 +232,101 @@ class clsPmieducarSerie
             $valores = [];
 
             if (is_numeric($this->ref_usuario_cad)) {
-                $campos[] = "ref_usuario_cad";
+                $campos[] = 'ref_usuario_cad';
                 $valores[] = "'{$this->ref_usuario_cad}'";
             }
 
             if (is_numeric($this->ref_cod_curso)) {
-                $campos[] = "ref_cod_curso";
+                $campos[] = 'ref_cod_curso';
                 $valores[] = "'{$this->ref_cod_curso}'";
             }
 
             if (is_string($this->nm_serie)) {
-                $campos[] = "nm_serie";
+                $campos[] = 'nm_serie';
                 $valores[] = "'{$this->nm_serie}'";
             }
 
             if (is_numeric($this->etapa_curso)) {
-                $campos[] = "etapa_curso";
+                $campos[] = 'etapa_curso';
                 $valores[] = "'{$this->etapa_curso}'";
             }
 
             if (is_numeric($this->concluinte)) {
-                $campos[] = "concluinte";
+                $campos[] = 'concluinte';
                 $valores[] = "'{$this->concluinte}'";
             }
 
             if (is_numeric($this->carga_horaria)) {
-                $campos[] = "carga_horaria";
+                $campos[] = 'carga_horaria';
                 $valores[] = "'{$this->carga_horaria}'";
             }
 
             if (is_numeric($this->idade_inicial)) {
-                $campos[] = "idade_inicial";
+                $campos[] = 'idade_inicial';
                 $valores[] = "'{$this->idade_inicial}'";
             }
 
             if (is_numeric($this->idade_final)) {
-                $campos[] = "idade_final";
+                $campos[] = 'idade_final';
                 $valores[] = "'{$this->idade_final}'";
             }
 
             if (is_numeric($this->regra_avaliacao_id)) {
-                $campos[] = "regra_avaliacao_id";
+                $campos[] = 'regra_avaliacao_id';
                 $valores[] = "'{$this->regra_avaliacao_id}'";
             }
 
             if (is_numeric($this->regra_avaliacao_diferenciada_id)) {
-                $campos[] = "regra_avaliacao_diferenciada_id";
+                $campos[] = 'regra_avaliacao_diferenciada_id';
                 $valores[] = "'{$this->regra_avaliacao_diferenciada_id}'";
             }
 
-            $campos[] = "data_cadastro";
-            $valores[] = "NOW()";
+            $campos[] = 'data_cadastro';
+            $valores[] = 'NOW()';
 
-            $campos[] = "ativo";
-            $valores[] = "'1'";
+            $campos[] = 'ativo';
+            $valores[] = '\'1\'';
 
             if (is_string($this->observacao_historico)) {
-                $campos[] = "observacao_historico";
+                $campos[] = 'observacao_historico';
                 $valores[] = "'{$this->observacao_historico}'";
             }
 
             if (is_numeric($this->dias_letivos)) {
-                $campos[] = "dias_letivos";
+                $campos[] = 'dias_letivos';
                 $valores[] = "'{$this->dias_letivos}'";
             }
 
             if (is_numeric($this->idade_ideal)) {
-                $campos[] = "idade_ideal";
+                $campos[] = 'idade_ideal';
                 $valores[] = "'{$this->idade_ideal}'";
             }
 
             if (dbBool($this->alerta_faixa_etaria)) {
-                $campos[] = "alerta_faixa_etaria";
-                $valores[] = " true ";
+                $campos[] = 'alerta_faixa_etaria';
+                $valores[] = ' true ';
             } else {
-                $campos[] = "alerta_faixa_etaria";
-                $valores[] = " false ";
+                $campos[] = 'alerta_faixa_etaria';
+                $valores[] = ' false ';
             }
 
             if (dbBool($this->bloquear_matricula_faixa_etaria)) {
-                $campos[] = "bloquear_matricula_faixa_etaria";
-                $valores[] = " true ";
+                $campos[] = 'bloquear_matricula_faixa_etaria';
+                $valores[] = ' true ';
             } else {
-                $campos[] = "bloquear_matricula_faixa_etaria";
-                $valores[] = " false ";
+                $campos[] = 'bloquear_matricula_faixa_etaria';
+                $valores[] = ' false ';
             }
 
             if (dbBool($this->exigir_inep)) {
-                $campos[] = "exigir_inep";
-                $valores[] = " true ";
+                $campos[] = 'exigir_inep';
+                $valores[] = ' true ';
             } else {
-                $campos[] = "exigir_inep";
-                $valores[] = " false ";
+                $campos[] = 'exigir_inep';
+                $valores[] = ' false ';
             }
 
-            $campos = join (', ', $campos);
+            $campos = join(', ', $campos);
             $valores = join(', ', $valores);
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
@@ -442,7 +380,7 @@ class clsPmieducarSerie
                 $set[] = "data_cadastro = '{$this->data_cadastro}'";
             }
 
-            $set[] = "data_exclusao = NOW()";
+            $set[] = 'data_exclusao = NOW()';
 
             if (is_numeric($this->ativo)) {
                 $set[] = "ativo = '{$this->ativo}'";
@@ -451,13 +389,13 @@ class clsPmieducarSerie
             if (is_numeric($this->idade_inicial)) {
                 $set[] = "idade_inicial = '{$this->idade_inicial}'";
             } else {
-                $set[] = "idade_inicial = NULL";
+                $set[] = 'idade_inicial = NULL';
             }
 
             if (is_numeric($this->idade_final)) {
                 $set[] = "idade_final = '{$this->idade_final}'";
             } else {
-                $set[] = "idade_final = NULL";
+                $set[] = 'idade_final = NULL';
             }
 
             if (is_numeric($this->regra_avaliacao_id)) {
@@ -467,7 +405,7 @@ class clsPmieducarSerie
             if (is_numeric($this->regra_avaliacao_diferenciada_id)) {
                 $set[] = "regra_avaliacao_diferenciada_id = '{$this->regra_avaliacao_diferenciada_id}' ";
             } else {
-                $set[] = "regra_avaliacao_diferenciada_id = NULL ";
+                $set[] = 'regra_avaliacao_diferenciada_id = NULL ';
             }
 
             if (is_string($this->observacao_historico)) {
@@ -481,25 +419,25 @@ class clsPmieducarSerie
             if (is_numeric($this->idade_ideal)) {
                 $set[] = "idade_ideal = '{$this->idade_ideal}'";
             } else {
-                $set[] = "idade_ideal = NULL";
+                $set[] = 'idade_ideal = NULL';
             }
 
             if (dbBool($this->alerta_faixa_etaria)) {
-                $set[] = "alerta_faixa_etaria = true ";
+                $set[] = 'alerta_faixa_etaria = true ';
             } else {
-                $set[] = "alerta_faixa_etaria = false ";
+                $set[] = 'alerta_faixa_etaria = false ';
             }
 
             if (dbBool($this->bloquear_matricula_faixa_etaria)) {
-                $set[] = "bloquear_matricula_faixa_etaria = true ";
+                $set[] = 'bloquear_matricula_faixa_etaria = true ';
             } else {
-                $set[] = "bloquear_matricula_faixa_etaria = false ";
+                $set[] = 'bloquear_matricula_faixa_etaria = false ';
             }
 
             if (dbBool($this->exigir_inep)) {
-                $set[] = "exigir_inep = true ";
+                $set[] = 'exigir_inep = true ';
             } else {
-                $set[] = "exigir_inep = false ";
+                $set[] = 'exigir_inep = false ';
             }
 
             $set = join(', ', $set);
@@ -598,9 +536,9 @@ class clsPmieducarSerie
         }
 
         if (is_null($int_ativo) || $int_ativo) {
-            $filtros[] = "s.ativo = '1'";
+            $filtros[] = 's.ativo = \'1\'';
         } else {
-            $filtros[] = "s.ativo = '0'";
+            $filtros[] = 's.ativo = \'0\'';
         }
 
         if (is_numeric($int_ref_cod_instituicao)) {
@@ -635,7 +573,6 @@ class clsPmieducarSerie
             $condicao .= ' ) ';
 
             $filtros[] = $condicao;
-
         } elseif (is_numeric($ano)) {
             $filtros[] = "{$whereAnd} EXISTS (SELECT 1
                                          FROM pmieducar.escola_serie es
@@ -643,7 +580,6 @@ class clsPmieducarSerie
                                           AND es.ativo = 1
                                           AND {$ano} = ANY(es.anos_letivos) ";
         }
-
 
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
@@ -702,10 +638,10 @@ class clsPmieducarSerie
         }
 
         if (is_null($int_ativo) || $int_ativo) {
-            $filtros[] = "s.ativo = '1'";
+            $filtros[] = 's.ativo = \'1\'';
         }
 
-        $filtros[] = "s.cod_serie IN (SELECT DISTINCT ano_escolar_id FROM modules.componente_curricular_ano_escolar)";
+        $filtros[] = 's.cod_serie IN (SELECT DISTINCT ano_escolar_id FROM modules.componente_curricular_ano_escolar)';
 
         $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
@@ -798,76 +734,6 @@ class clsPmieducarSerie
     }
 
     /**
-     * Define quais campos da tabela serão selecionados no método Lista().
-     */
-    public function setCamposLista($str_campos)
-    {
-        $this->_campos_lista = $str_campos;
-    }
-
-    /**
-     * Define que o método Lista() deverpa retornar todos os campos da tabela.
-     */
-    public function resetCamposLista()
-    {
-        $this->_campos_lista = $this->_todos_campos;
-    }
-
-    /**
-     * Define limites de retorno para o método Lista().
-     */
-    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
-    {
-        $this->_limite_quantidade = $intLimiteQtd;
-        $this->_limite_offset = $intLimiteOffset;
-    }
-
-    /**
-     * Retorna a string com o trecho da query responsável pelo limite de
-     * registros retornados/afetados.
-     *
-     * @return string
-     */
-    public function getLimite()
-    {
-        if (is_numeric($this->_limite_quantidade)) {
-            $retorno = " LIMIT {$this->_limite_quantidade}";
-            if (is_numeric($this->_limite_offset)) {
-                $retorno .= " OFFSET {$this->_limite_offset} ";
-            }
-
-            return $retorno;
-        }
-
-        return '';
-    }
-
-    /**
-     * Define o campo para ser utilizado como ordenação no método Lista().
-     */
-    public function setOrderby($strNomeCampo)
-    {
-        if (is_string($strNomeCampo) && $strNomeCampo) {
-            $this->_campo_order_by = $strNomeCampo;
-        }
-    }
-
-    /**
-     * Retorna a string com o trecho da query responsável pela Ordenação dos
-     * registros.
-     *
-     * @return string
-     */
-    public function getOrderby()
-    {
-        if (is_string($this->_campo_order_by)) {
-            return " ORDER BY {$this->_campo_order_by} ";
-        }
-
-        return '';
-    }
-
-    /**
      * Seleciona as série que não estejam cadastradas na escola.
      *
      * @param int $ref_cod_curso
@@ -922,7 +788,7 @@ class clsPmieducarSerie
             return true;
         }
 
-        $dataBaseMatricula = explode("-", $dataBaseMatricula);
+        $dataBaseMatricula = explode('-', $dataBaseMatricula);
 
         $anoLimite = $ano;
         $mesLimite = $dataBaseMatricula[1];

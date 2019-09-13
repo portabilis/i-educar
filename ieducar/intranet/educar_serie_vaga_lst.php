@@ -200,14 +200,9 @@ class indice extends clsListagem
 
     $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Listagem de vagas por série/ano"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-
+    $this->breadcrumb('Listagem de vagas por série/ano', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
 }
 

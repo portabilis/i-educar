@@ -10,10 +10,14 @@ $j(document).ready(function() {
   $componentecurricular = $j('#componentecurricular');
   $selecionarTodosElement = $j('#selecionar_todos');
   $componentecurricular.trigger('chosen:updated');
+  $anoLetivoField = $j('#ano');
   $serieField = $j('#ref_cod_serie');
+  $turmaField = $j('#ref_cod_turma');
+  $turnoField = $j('#turma_turno_id');
   $professorAreaEspecificaField = $j('#permite_lancar_faltas_componente');
 
   getRegraAvaliacao();
+  getTurnoTurma();
 
   var handleGetComponenteCurricular = function(dataResponse) {
 
@@ -106,10 +110,6 @@ $j(document).ready(function() {
 
   $j('#funcao_exercida').on('change', verificaObrigatoriedadeTipoVinculo);
 
-  $serieField.on('change', function(){
-    getRegraAvaliacao();
-  });
-
   var toggleProfessorAreaEspecifica = function(tipoPresenca){
     //se o tipo de presença for falta global
     if(tipoPresenca == '1'){
@@ -120,10 +120,56 @@ $j(document).ready(function() {
     }
   };
 
+  $turmaField.on('change', function () {
+    getTurnoTurma();
+  });
+
+  function getTurnoTurma() {
+    $turmaId = $turmaField.val();
+
+    if ($turmaId == '') {
+      toggleTurno(0);
+      return;
+    }
+
+    let params = {id: $turmaId};
+    let options = {
+      url: getResourceUrlBuilder.buildUrl('/module/Api/Turma', 'turma', params),
+      dataType: 'json',
+      data: {},
+      success: handleGetTurnoTurma,
+    };
+
+    getResource(options);
+  };
+
+  function handleGetTurnoTurma(dataResponse) {
+    toggleTurno(dataResponse['turma_turno_id']);
+  }
+
+  function toggleTurno (turno_id) {
+    turno_id = parseInt(turno_id, 10);
+
+    if (turno_id === 4) { // 4 - Integral
+      $turnoField.closest('tr').show();
+    } else {
+      $turnoField.closest('tr').hide();
+      $turnoField.val('');
+    }
+  };
+
+  $serieField.on('change', function(){
+    getRegraAvaliacao();
+  });
+
   function getRegraAvaliacao(){
     $serieId = $serieField.val();
+    $anoLetivo = $anoLetivoField.val();
 
-    var params = { serie_id: $serieId };
+    var params = {
+      serie_id   : $serieId,
+      ano_letivo : $anoLetivo
+    };
 
     var options = {
       url      : getResourceUrlBuilder.buildUrl('/module/Api/Regra', 'regra-serie', params),

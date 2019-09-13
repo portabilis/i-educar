@@ -15,10 +15,9 @@ país por meio da educação. Junte-se a nós!**
 
 1. [Sobre o i-Educar](#sobre-o-i-educar)
 2. [Comunicação](#comunicação)
-3. [Roadmap de tecnologia](#roadmap-de-tecnologia)
-4. [Como contribuir](#como-contribuir)
-5. [Instalação](#instalação)
-6. [FAQ](#perguntas-frequentes-faq)
+3. [Como contribuir](#como-contribuir)
+4. [Instalação](#instalação)
+5. [FAQ](#perguntas-frequentes-faq)
 
 ## Sobre i-Educar
 
@@ -55,26 +54,6 @@ colaboradores do projeto.
 Qualquer outro grupo de discussão não é reconhecido oficialmente pela
 comunidade i-Educar e não terá suporte da Portabilis - mantenedora do projeto.
 
-## Roadmap de tecnologia
-
-O i-Educar por ser um sistema antigo e por não ter seguido um padrão específico,
-precisa passar por um processo de melhoria para diminuir a quantidade de bugs,
-melhorar a manutenibilidade e enfim permitir a evolução através de features.
-
-### Passos iniciais
-
-- Adoção do [PSR1](https://www.php-fig.org/psr/psr-1/)
-- Adoção do [PSR2](https://www.php-fig.org/psr/psr-2/)
-- Adoção do [PSR4](https://www.php-fig.org/psr/psr-4/)
-- Iniciar a cobertura de testes para possibilitar refatorações
-
-### Planejamento Técnico
-
-Em nossa wiki você encontra um planejamento mais técnico de como devemos
-prosseguir com as melhorias e evoluções do nosso projeto.
-[Clique aqui](https://github.com/portabilis/i-educar/wiki/Planejamento-T%C3%A9cnico)
-para ler mais a respeito.
-
 ## Como contribuir
 
 Contribuições são **super bem vindas**! Se você tem vontade de construir o
@@ -89,24 +68,57 @@ ajudar a alcançar nossos objetivos.
 - [Personalizando a instalação](#personalizando-a-instalação)
 - [Instalação em servidor](#instalação-em-servidor)
 - [Instalação do pacote de relatórios](#instalação-do-pacote-de-relatórios)
-- [Upgrade da versão 2.0 para a 2.1](#upgrade-para-21)
+- [Upgrade](#upgrade)
 
 ### Depêndencias
 
 Para executar o projeto é necessário a utilização de alguns softwares para
 facilitar o desenvolvimento.
 
+#### Docker
+
 - [Docker](https://docs.docker.com/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 - [Git](https://git-scm.com/downloads)
 
-### Nova instalação
+#### Servidor
+
+- [PHP](http://php.net/) versão 7.2 ou maior
+- [Postgres](https://www.postgresql.org/) versão 9.5 ou superior
+- [Nginx](https://www.nginx.com/)
+
+As seguintes extensões do PHP são necessárias:
+
+- bcmath
+- ctype
+- curl
+- dom
+- fileinfo
+- gd
+- iconv
+- json
+- libxml
+- mbstring
+- openssl
+- pcre
+- PDO
+- pgsql
+- Phar
+- SimpleXML
+- tokenizer
+- xml
+- xmlreader
+- xmlwriter
+- zip
+- zlib
+
+### Instalação utilizando Docker
 
 > ATENÇÃO: Essa forma de instação tem o objetivo de facilitar demonstrações e
 desenvolvimento. Não é recomendado para ambientes de produção!
 
 Para instalar o projeto execute **todos os passos** abaixo, caso você deseje
-atualizar sua instalação do i-Educar, siga os passos do [upgrade](#upgrade-para-21).
+atualizar sua instalação do i-Educar, siga os passos do [upgrade](#upgrade).
 
 Clone o repositório:
 
@@ -127,7 +139,7 @@ Execute o comando para fazer uma nova instalação:
 docker-compose exec php composer new-install
 ```
 
-### Primeiro acesso
+#### Primeiro acesso
 
 Após finalizada a instalação, descubra em qual endereço o i-Educar está
 rodando, basta executar o comando:
@@ -143,7 +155,7 @@ O usuário padrão é: `admin` / A senha padrão é: `123456789`
 Assim que realizar seu primeiro acesso **não se esqueça de alterar a senha
 padrão**.
 
-### Personalizando a instalação
+#### Personalizando a instalação
 
 Você pode criar um arquivo `docker-compose.override.yml` para personalizar sua
 instalação do i-Educar, mudando as portas dos serviços ou o mapeamento dos
@@ -180,37 +192,6 @@ em um servidor para produção.
 Antes de tudo faça [download](https://github.com/portabilis/i-educar/releases)
 da versão mais recente do i-Educar e extraia o conteúdo do release em uma pasta
 no seu servidor. O instalador está disponível desde a versão `2.1.0`.
-
-#### Requerimentos
-
-Para executar o i-Educar em um servidor você precisa dos seguintes programas:
-
-- [PHP](http://php.net/) versão 7.1.3 ou maior
-- [Postgres](https://www.postgresql.org/) versão 9.5 ou superior
-- [Nginx](https://www.nginx.com/)
-
-Você precisa das seguintes extensões para PHP:
-
-- bcmath
-- curl
-- dom
-- fileinfo
-- json
-- libxml
-- mbstring
-- openssl
-- PDO
-- pgsql
-- Phar
-- SimpleXML
-- tokenizer
-- xml
-- xmlwriter
-- zip
-- pcre
-
-O instalador do i-Educar te avisa caso alguma extensão esteja faltando então não
-se preocupe em instalar tudo agora.
 
 #### Configurando o servidor
 
@@ -262,42 +243,10 @@ Para instalar o pacote de relatórios visite o repositório do projeto
 [https://github.com/portabilis/i-educar-reports-package](https://github.com/portabilis/i-educar-reports-package)
 e siga as instruções de instalação.
 
-### Upgrade para 2.1
+#### Upgrade
 
-Para fazer o upgrade da versão 2.0 para a 2.1 do i-Educar, você precisará
-executar os seguintes passos:
-
-```bash
-git fetch
-git checkout 2.0.11
-
-git -C ieducar/modules/Reports fetch
-git checkout 2.0.0
-
-docker-compose exec ieducar_1604 ieducar/vendor/bin/phinx migrate
-```
-
-Após este passo, você precisará fazer o backup do seu banco de dados para
-restaurá-lo após a atualização do seu código fonte.
-
-```bash
-docker-compose down
-
-git checkout master
-git pull
-rm -rf ieducar/vendor
-git checkout ieducar/vendor
-
-git -C ieducar/modules/Reports checkout master
-git -C ieducar/modules/Reports pull
-
-docker-compose build
-docker-compose up -d
-docker-compose exec php composer update-install
-```
-
-Sua instalação estará atualizada e você poderá realizar seu
-[primeiro acesso](#primeiro-acesso) na nova versão do i-Educar.
+- [Upgrade para 2.2 da 2.1](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.2-da-2.1).
+- [Upgrade para 2.1 da 2.0](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.1-da-2.0).
 
 ## Perguntas frequentes (FAQ)
 

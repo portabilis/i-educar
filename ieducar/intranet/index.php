@@ -89,8 +89,8 @@ class indice
         $temp .= "<center><h3>Acesso negado para este usu&aacute;rio.</h3><br>Caso persista nas tentativas sua conta na intranet poder&aacute; ser bloqueada por tempo indeterminado.</center>";
       }
 
-      $pendencia_administrativa = dbBool($GLOBALS['coreExt']['Config']->app->administrative_pending->exist);
-      $texto_pendencia = $GLOBALS['coreExt']['Config']->app->administrative_pending->msg;
+      $pendencia_administrativa = dbBool(config('legacy.app.administrative_pending.exist'));
+      $texto_pendencia = config('legacy.app.administrative_pending.msg');
 
       if ($pendencia_administrativa)
         echo '
@@ -271,7 +271,7 @@ class indice
         $data_array = "{$data_array[2]}/{$data_array[1]}/{$data_array[0]}";
 
         $db = new clsBanco();
-        $db->Consulta( "SELECT ref_cod_agenda FROM agenda_responsavel WHERE ref_ref_cod_pessoa_fj = '{$id_pessoa}' AND principal = 1" );
+        $db->Consulta( "SELECT ref_cod_agenda FROM portal.agenda_responsavel WHERE ref_ref_cod_pessoa_fj = '{$id_pessoa}' AND principal = 1" );
 
         if ($db->ProximoRegistro()) {
           list($cod_agenda) = $db->Tupla();

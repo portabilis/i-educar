@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,19 +14,57 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Auth::routes(['register' => false]);
+
 Route::redirect('/', 'intranet/index.php');
 
-Route::group(['middleware' => ['ieducar.navigation', 'ieducar.menu', 'ieducar.footer', 'ieducar.xssbypass']], function () {
+Route::any('module/Api/{uri}', 'LegacyController@api')->where('uri', '.*');
+
+Route::any('intranet/filaunica/educar_consulta.php', 'LegacyController@intranet')
+    ->defaults('uri', 'filaunica/educar_consulta.php');
+
+Route::any('intranet/suspenso.php', 'LegacyController@intranet')
+    ->defaults('uri', 'suspenso.php');
+
+Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth']], function () {
+    Route::get('/intranet/educar_matricula_turma_lst.php', 'LegacyController@intranet')
+        ->defaults('uri', 'educar_matricula_turma_lst.php')
+        ->name('enrollments.index');
+    Route::get('/matricula/{registration}/enturmar/{schoolClass}', 'EnrollmentController@viewEnroll')
+        ->name('enrollments.enroll.create');
+    Route::post('/matricula/{registration}/enturmar/{schoolClass}', 'EnrollmentController@enroll')
+        ->name('enrollments.enroll');
 
     Route::get('/enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@indexEnroll')
         ->name('enrollments.batch.enroll.index');
     Route::post('/enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@enroll')
         ->name('enrollments.batch.enroll');
 
+    Route::get('/usuarios/tipos', 'LegacyController@intranet')
+        ->defaults('uri', 'educar_tipo_usuario_lst.php')
+        ->name('usertype.index');
+    Route::get('/usuarios/tipos/novo', 'AccessLevelController@new')
+        ->name('usertype.new');
+    Route::get('/usuarios/tipos/{userType}', 'AccessLevelController@show')
+        ->name('usertype.show');
+    Route::post('/usuarios/tipos', 'AccessLevelController@create')
+        ->name('usertype.create');
+    Route::put('/usuarios/tipos/{userType}', 'AccessLevelController@update')
+        ->name('usertype.update');
+    Route::delete('/usuarios/tipos/{userType}', 'AccessLevelController@delete')
+        ->name('usertype.delete');
+
     Route::get('/cancelar-enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@indexCancelEnrollments')
         ->name('enrollments.batch.cancel.index');
     Route::post('/cancelar-enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@cancelEnrollments')
         ->name('enrollments.batch.cancel');
+
+    Route::get('/escolaridade/{schoolingDegree}', 'SchoolingDegreeController@show')
+        ->name('schooling_degrees.show');
+
+    Route::get('/unificacao-aluno', 'StudentLogUnificationController@index')->name('student-log-unification.index');
+    Route::get('/unificacao-aluno/{unification}', 'StudentLogUnificationController@show')->name('student-log-unification.show');
+    Route::get('/unificacao-aluno/{unification}/undo', 'StudentLogUnificationController@undo')->name('student-log-unification.undo');
 
     Route::get('intranet/index.php', 'LegacyController@intranet')
         ->defaults('uri', 'index.php')
@@ -44,6 +83,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.menu', 'ieducar.fo
     Route::any('modules/{uri}', 'LegacyController@modules')->where('uri', '.*');
     Route::any('intranet/{uri}', 'LegacyController@intranet')->where('uri', '.*');
 
+    Route::group(['namespace' => 'Educacenso', 'prefix' => 'educacenso'], function () {
+        Route::get('validar/{validator}', 'ValidatorController@validation');
+    });
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {

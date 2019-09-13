@@ -32,7 +32,7 @@ class indice extends clsCadastro
 
     public function Inicializar()
     {
-        
+
 
         $this->cod_matricula = $_GET["ref_cod_matricula"];
         $this->ref_cod_aluno = $_GET["ref_cod_aluno"];
@@ -74,13 +74,13 @@ class indice extends clsCadastro
             );
             $etapasEducacenso = array(0 => 'Nenhuma') + $etapasEducacenso;
 
-            $this->campoLista("etapas_educacenso[{$enturmacao['ref_cod_turma']}-{$enturmacao['sequencial']}]", "Etapa do aluno na turma: {$enturmacao['nm_turma']}", $etapasEducacenso, $enturmacao['etapa_educacenso'], '', false, '', '', false, false);
+            $this->campoLista("etapas_educacenso[{$enturmacao['ref_cod_turma']}-{$enturmacao['sequencial']}]", "Etapa do aluno na turma {$enturmacao['nm_turma']}:", $etapasEducacenso, $enturmacao['etapa_educacenso'], '', false, '', '', false, false);
         }
     }
 
     public function Editar()
     {
-        
+
 
         $this->validaPermissao();
         $this->validaParametros();
@@ -97,18 +97,14 @@ class indice extends clsCadastro
         }
 
         $this->mensagem .= "Etapas atualizadas com sucesso.<br>";
-        return true;
+        $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->cod_matricula}");
     }
 
     private function montaLocalizacao()
     {
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(array(
-            $_SERVER['SERVER_NAME'] . "/intranet" => "Início",
-            "educar_index.php" => "Escola",
-            "" => "Etapa do aluno",
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Etapa do aluno', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     private function validaPermissao()

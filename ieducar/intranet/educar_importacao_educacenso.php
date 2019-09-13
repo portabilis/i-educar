@@ -2,7 +2,9 @@
 //error_reporting(E_ALL);
 //ini_set("display_errors", 1);
 
-ini_set("max_execution_time", 30000);
+use iEducar\Modules\Educacenso\RunMigrations;
+
+ini_set("max_execution_time", 0);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -65,20 +67,16 @@ class indice extends clsCadastro
 
   function Inicializar()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(9998849, $this->pessoa_logada, 7,
       'educar_index.php');
     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_educacenso_index.php" => "Educacenso",
-         "" => "Importação educacenso"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Importação educacenso', [
+        url('intranet/educar_educacenso_index.php') => 'Educacenso',
+    ]);
 
     $this->titulo = "Nova importação";
 
@@ -100,7 +98,7 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(9998849, $this->pessoa_logada, 7,
@@ -161,9 +159,18 @@ class indice extends clsCadastro
       }
       //echo 'Tempo para importar registro '.$numeroRegistro.': ' . (microtime(true) - $time_start) . '<br/>';
     }
+
+    $this->runMigrations();
+
     @header_remove('Set-Cookie');
     $this->mensagem = "Arquivo importado!";
     return true;
+  }
+
+  private function runMigrations()
+  {
+    $runMigrationsService = new RunMigrations();
+    $runMigrationsService->run();
   }
 
   function importaRegistro00($dadosRegistro) {
@@ -324,7 +331,9 @@ class indice extends clsCadastro
     }
 
     $camposEscola = array(
-      'local_funcionamento' => $localFuncionamento,
+      'possui_dependencias' => 0,
+      'local_funcionamento' => (string) $localFuncionamento,
+      'predio_compartilhado_outra_escola' => $dadosRegistro[13-1],
       'condicao' => $dadosRegistro[12-1],
       'codigo_inep_escola_compartilhada' => $dadosRegistro[14-1],
       'agua_consumida' => $dadosRegistro[20-1],
@@ -401,7 +410,7 @@ class indice extends clsCadastro
         $camposEscola['abastecimento_agua'][] = $i;
       }
     }
-    $camposEscola['abastecimento_agua'] = '{'.implode(',', $camposEscola['abastecimento_agua']).'}';
+    $camposEscola['abastecimento_agua'] = implode(',', $camposEscola['abastecimento_agua']);
 
     $camposEscola['abastecimento_energia'] = array();
     for ($i=1; $i <= 4; $i++) {
@@ -409,7 +418,7 @@ class indice extends clsCadastro
         $camposEscola['abastecimento_energia'][] = $i;
       }
     }
-    $camposEscola['abastecimento_energia'] = '{'.implode(',', $camposEscola['abastecimento_energia']).'}';
+    $camposEscola['abastecimento_energia'] = implode(',', $camposEscola['abastecimento_energia']);
 
     $camposEscola['esgoto_sanitario'] = array();
     for ($i=1; $i <= 3; $i++) {
@@ -417,7 +426,7 @@ class indice extends clsCadastro
         $camposEscola['esgoto_sanitario'][] = $i;
       }
     }
-    $camposEscola['esgoto_sanitario'] = '{'.implode(',', $camposEscola['esgoto_sanitario']).'}';
+    $camposEscola['esgoto_sanitario'] = implode(',', $camposEscola['esgoto_sanitario']);
 
     $camposEscola['destinacao_lixo'] = array();
     for ($i=1; $i <= 6; $i++) {
@@ -425,7 +434,7 @@ class indice extends clsCadastro
         $camposEscola['destinacao_lixo'][] = $i;
       }
     }
-    $camposEscola['destinacao_lixo'] = '{'.implode(',', $camposEscola['destinacao_lixo']).'}';
+    $camposEscola['destinacao_lixo'] = implode(',', $camposEscola['destinacao_lixo']);
 
     $codEscola = $this->existeEscola($inep);
     if($codEscola){
@@ -434,6 +443,9 @@ class indice extends clsCadastro
 
       foreach ($fields as $key => $value) {
         if(property_exists($objEscola, $key)){
+          if ($this->isPostgresArray($value)) {
+            $value = $this->cleanPostgresArray($value);
+          }
           $objEscola->{$key} = $value;
         }
       }
@@ -442,7 +454,20 @@ class indice extends clsCadastro
       }
       $objEscola->edita();
     }
+  }
 
+  private function isPostgresArray($value)
+  {
+    if (substr($value, 0, 1) == '{' && substr($value, -1) == '}') {
+      return true;
+    }
+
+    return false;
+  }
+
+  private function cleanPostgresArray($value)
+  {
+    return str_replace(['{','}'], '', $value);
   }
 
   function importaRegistro20($dadosRegistro){
@@ -501,7 +526,7 @@ class indice extends clsCadastro
     );
 
     $camposTurma['dias_semana'] = array();
-    for ($i=1; $i <= 7; $i++) { 
+    for ($i=1; $i <= 7; $i++) {
       if($dadosRegistro[10+$i-1]){
         $camposTurma['dias_semana'][] = $i;
       }
@@ -509,7 +534,7 @@ class indice extends clsCadastro
     $camposTurma['dias_semana'] = '{'.implode(',', $camposTurma['dias_semana']).'}';
 
     $camposTurma['atividades_complementares'] = array();
-    for ($i=1; $i <= 6; $i++) { 
+    for ($i=1; $i <= 6; $i++) {
       if($dadosRegistro[19+$i-1]){
         $camposTurma['atividades_complementares'][] = $dadosRegistro[19+$i-1];
       }
@@ -517,7 +542,7 @@ class indice extends clsCadastro
     $camposTurma['atividades_complementares'] = '{'.implode(',', $camposTurma['atividades_complementares']).'}';
 
     $camposTurma['atividades_aee'] = array();
-    for ($i=1; $i <= 11; $i++) { 
+    for ($i=1; $i <= 11; $i++) {
       if($dadosRegistro[25+$i-1]){
         $camposTurma['atividades_aee'][] = $i;
       }
@@ -553,7 +578,7 @@ class indice extends clsCadastro
         $turma->max_aluno = 99;
         $turma->ativo = 1;
         $turma->multiseriada = 0;
-        $turma->visivel = 1;
+        $turma->visivel = true;
         $turma->ref_cod_turma_tipo = $codTurmaTipo;
         $turma->hora_inicial = $horaInicial;
         $turma->hora_final = $horaFinal;
@@ -768,7 +793,7 @@ class indice extends clsCadastro
     if ($this->isAtendimentoEspecializado($tipoAtendimento)) {
       $dadosCurso = $this->etapasCenso['atendimento_educacional_especializado'];
     }
-    
+
     $codCurso = $this->getCurso($dadosCurso['curso']);
 
     if (!$codCurso) {
@@ -803,7 +828,7 @@ class indice extends clsCadastro
         $vinculo->cadastra();
       }
     }
- 
+
     return $codCurso;
   }
 
@@ -983,7 +1008,7 @@ class indice extends clsCadastro
     );
 
     $cursosServidor['pos_graduacao'] = array();
-    for ($i=1; $i <= 4; $i++) { 
+    for ($i=1; $i <= 4; $i++) {
       if($dadosRegistro[23+$i-1]){
         $cursosServidor['pos_graduacao'][] = $i;
       }
@@ -991,7 +1016,7 @@ class indice extends clsCadastro
     $cursosServidor['pos_graduacao'] = '{'.implode(',', $cursosServidor['pos_graduacao']).'}';
 
     $cursosServidor['curso_formacao_continuada'] = array();
-    for ($i=1; $i <= 16; $i++) { 
+    for ($i=1; $i <= 16; $i++) {
       if($dadosRegistro[27+$i-1]){
         $cursosServidor['curso_formacao_continuada'][] = $i;
       }
@@ -1140,7 +1165,7 @@ class indice extends clsCadastro
     }
 
     $recursosProva = array();
-    for ($i=1; $i <= 9; $i++) { 
+    for ($i=1; $i <= 9; $i++) {
       if($dadosRegistro[29+$i-1]){
         $recursosProva[] = $i;
       }
@@ -1282,10 +1307,22 @@ class indice extends clsCadastro
       return false;
     }
 
-    if($recebeEscolarizacaoOutroEspaco){
-      $obj = new clsPmieducarAluno($codAluno);
-      $obj->recebe_escolarizacao_em_outro_espaco = $recebeEscolarizacaoOutroEspaco;
-      $obj->edita();
+    if ($recebeEscolarizacaoOutroEspaco) {
+        $obj = new clsPmieducarAluno($codAluno);
+
+        switch ($recebeEscolarizacaoOutroEspaco) {
+            case 1:
+                $obj->recebe_escolarizacao_em_outro_espaco = 2;
+                break;
+            case 3:
+                $obj->recebe_escolarizacao_em_outro_espaco = 1;
+                break;
+            default:
+                $obj->recebe_escolarizacao_em_outro_espaco = 3;
+                break;
+        }
+
+        $obj->edita();
     }
 
     $this->createOrUpdateAlunoTransporte($codAluno, $utilizaTransporte, $poderPublicoTransporte);
@@ -1749,6 +1786,9 @@ class indice extends clsCadastro
 
     foreach ($fields as $key => $value){
       if(property_exists($escola, $key)){
+         if ($this->isPostgresArray($value)) {
+           $value = $this->cleanPostgresArray($value);
+         }
         $escola->{$key} = $value;
       }
     }

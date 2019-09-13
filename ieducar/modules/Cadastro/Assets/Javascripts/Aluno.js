@@ -197,7 +197,15 @@ var newSubmitForm = function (event) {
     }
 
     if ($j('#deficiencias').val().length > 1) {
-        if ($j('#url_laudo_medico_obrigatorio').length > 0 && $j('#url_laudo_medico').val().length < 1) {
+
+        let laudos = $j('#url_laudo_medico').val();
+        let temLaudos = false;
+
+        if (laudos.length > 0) {
+          temLaudos = JSON.parse(laudos).length > 0;
+        }
+
+        if ($j('#url_laudo_medico_obrigatorio').length > 0 && !temLaudos) {
             return laudoMedicoObrigatorio();
         }
     }
@@ -215,6 +223,16 @@ var newSubmitForm = function (event) {
     if ($j('#aluno_estado_id').val() !== '' && $j('#aluno_estado_id').val().length !== 13) {
         messageUtils.error('O campo Código rede estadual (RA) deve conter exatos 13 dígitos.');
         return false;
+    }
+
+    $tipoTransporte = $j('#tipo_transporte');
+
+    if ($tipoTransporte.val() == 'municipal' || $tipoTransporte.val() == 'estadual') {
+        veiculoTransporte = $j('#veiculo_transporte_escolar').val();
+        if (obrigarCamposCenso && (veiculoTransporte == '' || veiculoTransporte == null)) {
+            messageUtils.error('O campo Veículo utilizado deve ser preenchido');
+            return false;
+        }
     }
 
     submitFormExterno();
@@ -485,7 +503,6 @@ resourceOptions.handleGet = function (dataResponse) {
     tipo_resp = dataResponse.tipo_responsavel;
     $j('#religiao_id').val(dataResponse.religiao_id);
     $j('#tipo_transporte').val(dataResponse.tipo_transporte);
-    $j('#veiculo_transporte_escolar').val(dataResponse.veiculo_transporte_escolar).trigger('change');
     $j('#alfabetizado').attr('checked', dataResponse.alfabetizado);
     $j('#autorizado_um').val(dataResponse.autorizado_um);
     $j('#parentesco_um').val(dataResponse.parentesco_um);
@@ -497,7 +514,6 @@ resourceOptions.handleGet = function (dataResponse) {
     $j('#parentesco_quatro').val(dataResponse.parentesco_quatro);
     $j('#autorizado_cinco').val(dataResponse.autorizado_cinco);
     $j('#parentesco_cinco').val(dataResponse.parentesco_cinco);
-
 
     if ($j('#autorizado_um').val() == '') {
         $j('#autorizado_dois').closest('tr').hide();
@@ -836,7 +852,15 @@ resourceOptions.handleGet = function (dataResponse) {
             $j('#pessoaj_id').val(dataResponse.ref_idpes_destino);
         }
     }
+
     camposTransporte();
+
+    setTimeout(function() {
+        $veiculo_transporte_escolar = $j('#veiculo_transporte_escolar');
+        $veiculo_transporte_escolar.val(dataResponse.veiculo_transporte_escolar);
+        $veiculo_transporte_escolar.trigger('chosen:updated');
+    }, 550);
+
     verificaObrigatoriedadeRg();
 };
 
@@ -884,6 +908,43 @@ var simpleSearchResponsavelOptions = {
 $paiIdField.change(changeVisibilityOfLinksToPessoaPai);
 $maeIdField.change(changeVisibilityOfLinksToPessoaMae);
 $responsavelIdField.change(changeVisibilityOfLinksToPessoaResponsavel);
+
+var checkJustificativa = function () {
+    var certidaoNascimento = $j('#certidao_nascimento').val().trim();
+    var nisPisPasep = $j('#nis_pis_pasep').val().trim();
+    var cpf = $j('#id_federal').val().trim();
+
+    if (
+      certidaoNascimento ||
+      nisPisPasep ||
+      cpf
+    ) {
+        disableJustificativaFields();
+    } else {
+        enableJustificativaFields();
+    }
+};
+
+$j('#certidao_nascimento').on('change', checkJustificativa);
+$j('#nis_pis_pasep').on('change', checkJustificativa);
+$j('#id_federal').on('change', checkJustificativa);
+
+let verificaCampoZonaResidencia = () => {
+  let $field = $j('#zona_localizacao_censo');
+  let isBrasil = $j('#pais_residencia').val() == '76';
+  if (isBrasil) {
+    $field.removeAttr('disabled');
+
+    if (obrigarCamposCenso) {
+      $field.makeRequired();
+    }
+  } else {
+    $field.val('');
+    $field.makeUnrequired();
+    $field.attr('disabled', 'disabled');
+  }
+};
+$j('#pais_residencia').change(verificaCampoZonaResidencia);
 
 var handleGetPersonDetails = function (dataResponse) {
     handleMessages(dataResponse.msgs);
@@ -1020,6 +1081,8 @@ var handleGetPersonDetails = function (dataResponse) {
         $j('#tipo_responsavel').append('<option value="outra_pessoa" >Outra pessoa</option>');
     }
 
+    verificaCampoZonaResidencia();
+
     $j('#tipo_responsavel').val(tipo_resp).change();
 
     if (dataResponse.possui_documento) {
@@ -1027,25 +1090,6 @@ var handleGetPersonDetails = function (dataResponse) {
     } else {
         enableJustificativaFields();
     }
-
-    var validaRg = function () {
-        var rg = $j('#rg').val().replace(" ", "");
-        var dataEmissao = $j('#data_emissao_rg').val().replace(" ", "");
-
-        if (rg != '' && dataEmissao != '') {
-            disableJustificativaFields();
-        } else {
-            enableJustificativaFields();
-        }
-    };
-
-    $j('#rg').change(function () {
-        validaRg();
-    });
-
-    $j('#data_emissao_rg').change(function () {
-        validaRg();
-    });
 
     $j('#certidao_nascimento').val(dataResponse.certidao_nascimento);
     $j('#certidao_casamento').val(dataResponse.certidao_casamento);
@@ -1062,6 +1106,7 @@ var handleGetPersonDetails = function (dataResponse) {
     }
 
     var cpf = dataResponse.cpf;
+    $j('#nis_pis_pasep').val(dataResponse.nis_pis_pasep);
 
     var mascara = null;
 
@@ -1075,13 +1120,7 @@ var handleGetPersonDetails = function (dataResponse) {
     $j('#uf_emissao_certidao_civil').val(dataResponse.sigla_uf_cert_civil);
     $j('#data_emissao_certidao_civil').val(dataResponse.data_emissao_cert_civil);
     $j('#cartorio_emissao_certidao_civil').val(dataResponse.cartorio_cert_civil);
-
-    $inepCartorio = $j('#cartorio_cert_civil_inep');
-    if (dataResponse.id_cartorio != null && dataResponse.nome_cartorio != null) {
-        $inepCartorio.val(dataResponse.id_cartorio + ' - ' + dataResponse.nome_cartorio);
-    }
-    $j('#cartorio_cert_civil_inep_id').val(dataResponse.cartorio_cert_civil_inep);
-
+    checkJustificativa();
     // # TODO show aluno photo
     //$j('#aluno_foto').val(dataResponse.url_foto);
     canShowParentsFields();
@@ -1100,16 +1139,12 @@ var checkTipoCertidaoCivil = function () {
 
     $j('#uf_emissao_certidao_civil').makeUnrequired();
     $j('#data_emissao_certidao_civil').makeUnrequired();
-    $j('#cartorio_cert_civil_inep_id').makeUnrequired();
-    $j('#cartorio_cert_civil_inep').makeUnrequired();
 
     if ($j.inArray(tipoCertidaoCivil, ['91', '92']) > -1) {
         $certidaoCivilFields.show();
         if (obrigarCamposCenso) {
           $j('#uf_emissao_certidao_civil').makeRequired();
           $j('#data_emissao_certidao_civil').makeRequired();
-          $j('#cartorio_cert_civil_inep_id').makeRequired();
-          $j('#cartorio_cert_civil_inep').makeRequired();
           $certidaoCivilFields.makeRequired();
         }
         $j('#tr_tipo_certidao_civil td:first span').html('Tipo certidão civil');
@@ -1136,8 +1171,7 @@ var checkTipoCertidaoCivil = function () {
 
 function disableJustificativaFields() {
     $jField = $j('#justificativa_falta_documentacao');
-    $jField.removeClass('obrigatorio');
-    $jField.addClass('geral');
+    $jField.makeUnrequired();
     $jField.attr('disabled', 'disabled');
 }
 
@@ -1145,9 +1179,10 @@ function enableJustificativaFields() {
     $jField = $j('#justificativa_falta_documentacao');
     $jField.removeAttr('disabled');
 
-    if ($j('#justificativa_falta_documentacao_obrigatorio').length) {
-        $jField.removeClass('geral');
-        $jField.addClass('obrigatorio');
+    if ($j('#obrigar_campos_censo').val() == '1') {
+      $jField.makeRequired();
+    } else {
+      $jField.makeUnrequired();
     }
 }
 
@@ -1704,6 +1739,61 @@ function canShowParentsFields() {
 
         `);
 
+        $j('body').append(`
+          <div id="dialog-recursos-prova-inep" style="font-size: 85%; z-index: 9999;">
+          <ul style="padding-right: 30px;">
+            <li>Dentre as opções: Prova Ampliada (Fonte 18), Prova superampliada (Fonte 24) ou Material didático e Prova em Braille, apenas uma deve ser informada;</li>
+            <li><b>Auxílio ledor</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira, Baixa visão, Surdocegueira, Deficiência física, Deficiência intelectual e Transtorno do espectro autista. <b>Exceto</b> se possuir também Surdez;</li>
+            <li><b>Auxílio transcrição</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira, Baixa visão, Surdocegueira, Deficiência física, Deficiência intelectual e Transtorno do espectro autista. Obs.: Quando a deficiência for Cegueira ou Surdocegueira, obrigatoriamente este auxílio deve ser informado junto com um outro auxílio;</li>
+            <li><b>Guia-Intérprete</b>: pode ser informado quando o(a) aluno(a) possuir qualquer deficiência. <b>Exceto</b> se possuir Surdocegueira;</li>
+            <li><b>Tradutor-Intérprete de Libras</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
+            <li><b>Leitura Labial</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
+            <li><b>Prova Ampliada (Fonte 18)</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Baixa visão e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
+            <li><b>Prova superampliada (Fonte 24)</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Baixa visão e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
+            <li><b>CD com áudio para deficiente visual</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira, Baixa visão, Surdocegueira, Deficiência física, Deficiência intelectual e Transtorno do espectro autista. <b>Exceto</b> se possuir também Surdez;</li>
+            <li><b>Prova de Língua Portuguesa como segunda língua para surdos e deficientes auditivos</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
+            <li><b>Prova em Vídeo em Libras</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Surdez, Deficiência auditiva e Surdocegueira. <b>Exceto</b> se possuir também Cegueira;</li>
+            <li><b>Material didático e Prova em Braille</b>: pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira e Surdocegueira;</li>
+            <li><b>Nenhum</b>: não pode ser informado quando o(a) aluno(a) possuir a(s) deficiência(s): Cegueira e Surdocegueira;</li>
+           </ul>
+          </div>
+
+        `);
+
+        $j("#dialog-recursos-prova-inep").dialog({
+          autoOpen: false,
+          title: 'Regras para o preenchimento do campo:',
+          height: 'auto',
+          width: '80%',
+          modal: true,
+          resizable: false,
+          draggable: false,
+          hide: {
+            effect: "clip",
+            duration: 500
+          },
+          show: {
+            effect: "clip",
+            duration: 500
+          },
+          buttons: {
+            "Fechar": function () {
+              $j(this).dialog("close");
+            }
+          },
+          open: function (event, ui) {
+            $j('#dialog-recursos-prova-inep')
+              .parent('.ui-dialog').css('z-index', 99998);
+
+            $j('.ui-widget-overlay').css('z-index', 99997);
+          }
+        });
+        $j('body').on('click', '.open-dialog-recursos-prova-inep', () => {
+          $j("#dialog-recursos-prova-inep").dialog('open');
+        });
+
+        $j('.ui-dialog:has(#dialog-recursos-prova-inep) .ui-dialog-titlebar').show();
+
         var name = $j("#nome-pessoa-aluno"),
             nome_social = $j("#nome-social-pessoa-aluno"),
             sexo = $j("#sexo-pessoa-aluno"),
@@ -1739,16 +1829,21 @@ function canShowParentsFields() {
         $j('#logradouro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
         $j('<label>').html('Bairro').attr('for', 'bairro_bairro').insertBefore($j('#bairro_bairro'));
         $j('#bairro_bairro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+        $j('<label>').html('País de residência').attr('for', 'pais_residencia').insertBefore($j('#pais_residencia'));
+        $j('#pais_residencia').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
         $j('<label>').html('Zona de localiza&ccedil;&atilde;o').attr('for', 'zona_localizacao').insertBefore($j('#zona_localizacao'));
         $j('#zona_localizacao').toggleClass('geral text');
         $j('<label>').html('Bairro').attr('for', 'bairro').insertBefore($j('#bairro'));
         $j('#bairro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
 
-        let $label = $j('<label>').html('Zona localização').attr('for', 'zona_localizacao_censo').insertBefore($j('#zona_localizacao_censo'));
+        let $label = $j('<label>').html('Zona de residência').attr('for', 'zona_localizacao_censo').insertBefore($j('#zona_localizacao_censo'));
         if ($j('#zona_localizacao_censo').hasClass('obrigatorio')) {
           $label.append($j('<span/>').addClass('campo_obrigatorio').text('*'));
         }
         $j('#zona_localizacao_censo').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+
+        $j('<label>').html('Localização diferenciada').attr('for', 'localizacao_diferenciada').insertBefore($j('#localizacao_diferenciada'));
+        $j('#localizacao_diferenciada').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
 
         $label = $j('<label>').html('Raça').attr('for', 'cor_raca').attr('style', 'display:block;').insertBefore($j('#cor_raca'));
         if ($j('#cor_raca').hasClass('obrigatorio')) {
@@ -1767,8 +1862,14 @@ function canShowParentsFields() {
         let checkTipoNacionalidade = () => {
           if ($j.inArray($j('#tipo_nacionalidade').val(), ['2', '3']) > -1) {
             $j('#pais_origem_nome').show();
+            $j("#naturalidade_aluno_pessoa-aluno").makeUnrequired();
+            $j('label[for="naturalidade_pessoa-aluno"] .campo_obrigatorio').remove();
           } else {
             $j('#pais_origem_nome').hide();
+            $j("#naturalidade_aluno_pessoa-aluno").makeRequired();
+            if (!$j('label[for="naturalidade_pessoa-aluno"] .campo_obrigatorio').length) {
+              $j('label[for="naturalidade_pessoa-aluno"]').append($j('<span class="campo_obrigatorio">*</span>'));
+            }
           }
         }
         $j('#tipo_nacionalidade').change(checkTipoNacionalidade);
@@ -1814,7 +1915,10 @@ function canShowParentsFields() {
                     bValid = bValid && checkSelect(sexo, "sexo");
                     bValid = bValid && checkSelect(estadocivil, "estado civil");
                     bValid = bValid && checkRegexp(datanasc, /(^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$)/i, "O campo data de nascimento deve ser preenchido no formato dd/mm/yyyy.");
-                    bValid = bValid && checkSimpleSearch(municipio, municipio_id, "munic\u00edpio");
+                    if (municipio.hasClass('obrigatorio')) {
+                      bValid = bValid && checkSimpleSearch(municipio, municipio_id, "munic\u00edpio");
+                    }
+
                     bValid = bValid && ($j('#cep_').val() == '' ? true : validateEndereco());
 
                     if ($j('#zona_localizacao_censo').hasClass('obrigatorio')) {
@@ -1831,9 +1935,8 @@ function canShowParentsFields() {
                     }
 
                     if (bValid) {
-                        postPessoa($j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val(), (editar_pessoa ? $j('#pessoa_id').val() : null), null, ddd_telefone_1.val(), telefone_1.val(), ddd_telefone_mov.val(), telefone_mov.val(), undefined,
-                          $j('#tipo_nacionalidade').val(), $j('#pais_origem_id').val(), $j('#cor_raca').val(), $j('#zona_localizacao_censo').val(), nome_social.val());
-                        $j(this).dialog("close");
+                        postPessoa($j(this), $j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val() || 'NULL', (editar_pessoa ? $j('#pessoa_id').val() : null), null, ddd_telefone_1.val(), telefone_1.val(), ddd_telefone_mov.val(), telefone_mov.val(), undefined,
+                          $j('#tipo_nacionalidade').val(), $j('#pais_origem_id').val(), $j('#cor_raca').val(), $j('#zona_localizacao_censo').val(), $j('#localizacao_diferenciada').val(), nome_social.val(), $j('#pais_residencia').val());
                     }
                 },
                 "Cancelar": function () {
@@ -1878,7 +1981,6 @@ function canShowParentsFields() {
             modal: true,
             resizable: false,
             draggable: false,
-            title: "teste",
             buttons: {
                 "Gravar": function () {
                     var bValid = true;
@@ -1894,8 +1996,7 @@ function canShowParentsFields() {
 
 
                     if (bValid) {
-                        postPessoa(nameParent, nameParent.val(), sexoParent.val(), estadocivilParent.val(), datanascParent.val(), null, (editar_pessoa ? $j('#' + pessoaPaiOuMae + '_id').val() : null), pessoaPaiOuMae, null, null, null, null, falecidoParent.is(':checked'));
-                        $j(this).dialog("close");
+                        postPessoa($(this), nameParent, nameParent.val(), sexoParent.val(), estadocivilParent.val(), datanascParent.val(), null, (editar_pessoa ? $j('#' + pessoaPaiOuMae + '_id').val() : null), pessoaPaiOuMae, null, null, null, null, falecidoParent.is(':checked'));
                     }
                 },
                 "Cancelar": function () {
@@ -1965,6 +2066,7 @@ function canShowParentsFields() {
             }
 
             $j('#zona_localizacao_censo').val(person_details.zona_localizacao_censo);
+            $j('#localizacao_diferenciada').val(person_details.localizacao_diferenciada);
             $j('#cor_raca').val(person_details.cor_raca);
             $j('#tipo_nacionalidade').val(person_details.tipo_nacionalidade);
             if (person_details.pais_origem_id) {
@@ -1981,6 +2083,7 @@ function canShowParentsFields() {
             $j('#ddd_telefone_cel').val(person_details.ddd_fone_mov);
             $j('#telefone_cel').val(person_details.fone_mov);
             $j('#distrito_id').val(person_details.iddis);
+            $j('#pais_residencia').val(person_details.pais_residencia);
 
             if ($j('#cep_').val()) {
                 $j('#municipio_municipio').removeAttr('disabled');
@@ -2277,8 +2380,8 @@ function canShowParentsFields() {
     }); // ready
 
 
-    function postPessoa($pessoaField, nome, sexo, estadocivil, datanasc, naturalidade, pessoa_id, parentType, ddd_telefone_1, telefone_1, ddd_telefone_mov, telefone_mov, falecido,
-      tipo_nacionalidade, pais_origem_id, cor_raca, zona_localizacao_censo, nome_social) {
+    function postPessoa($container, $pessoaField, nome, sexo, estadocivil, datanasc, naturalidade, pessoa_id, parentType, ddd_telefone_1, telefone_1, ddd_telefone_mov, telefone_mov, falecido,
+      tipo_nacionalidade, pais_origem_id, cor_raca, zona_localizacao_censo, localizacao_diferenciada, nome_social, pais_residencia) {
         var data = {
             nome: nome,
             sexo: sexo,
@@ -2295,7 +2398,9 @@ function canShowParentsFields() {
             pais_origem_id: pais_origem_id,
             cor_raca: cor_raca,
             zona_localizacao_censo: zona_localizacao_censo,
-            nome_social: nome_social
+            localizacao_diferenciada: localizacao_diferenciada,
+            nome_social: nome_social,
+            pais_residencia: pais_residencia
         };
 
         var options = {
@@ -2303,6 +2408,12 @@ function canShowParentsFields() {
             dataType: 'json',
             data: data,
             success: function (dataResponse) {
+              if (dataResponse['any_error_msg']) {
+                dataResponse['msgs'].forEach(msgObject => {
+                  messageUtils.error(msgObject['msg']);
+                });
+              } else {
+                $container.dialog('close');
                 if (parentType == 'mae')
                     afterChangePessoaParent(dataResponse.pessoa_id, 'mae');
                 else if (parentType == 'pai')
@@ -2311,6 +2422,7 @@ function canShowParentsFields() {
                     afterChangePessoaParent(dataResponse.pessoa_id, 'responsavel');
                 else
                     postEnderecoPessoa(dataResponse.pessoa_id);
+              }
             }
         };
 
@@ -2466,6 +2578,8 @@ if ($j('#transporte_rota').length > 0) {
             $j('#pessoaj_transporte_destino').closest('tr').hide();
             $j('#transporte_observacao').closest('tr').hide();
         }
+
+        $j('#veiculo_transporte_escolar').trigger('chosen:updated');
     }
 
     $j('#tipo_transporte').on('change', function () {

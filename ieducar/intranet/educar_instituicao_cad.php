@@ -1,11 +1,12 @@
 <?php
 
+use App\Menu;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/Geral.inc.php';
-require_once 'includes/bootstrap.php';
 require_once 'Portabilis/Date/Utils.php';
 require_once 'Portabilis/Currency/Utils.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
@@ -70,6 +71,7 @@ class indice extends clsCadastro
     public $orgao_regional;
     public $exigir_lancamentos_anteriores;
     public $exibir_apenas_professores_alocados;
+    public $bloquear_vinculo_professor_sem_alocacao_escola;
 
     public function Inicializar()
     {
@@ -118,6 +120,7 @@ class indice extends clsCadastro
         $this->obrigar_documento_pessoa = dbBool($this->obrigar_documento_pessoa);
         $this->exigir_lancamentos_anteriores = dbBool($this->exigir_lancamentos_anteriores);
         $this->exibir_apenas_professores_alocados = dbBool($this->exibir_apenas_professores_alocados);
+        $this->bloquear_vinculo_professor_sem_alocacao_escola = dbBool($this->bloquear_vinculo_professor_sem_alocacao_escola);
 
         return $retorno;
     }
@@ -204,7 +207,7 @@ class indice extends clsCadastro
 
         $this->campoRotulo('gerais','<b>Gerais</b>');
         $this->campoCheck('obrigar_documento_pessoa', 'Exigir documento (RG, CPF ou Certidão de nascimento / casamento) no cadastro pessoa / aluno', $this->obrigar_documento_pessoa);
-        
+
         $this->campoRotulo('datas','<b>Datas</b>');
         $this->campoData('data_base_transferencia', 'Data máxima para deslocamento', Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia), null, null, false);
         $this->campoData('data_base_remanejamento', 'Data máxima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
@@ -264,7 +267,7 @@ class indice extends clsCadastro
 
         $this->campoCheck('matricula_apenas_bairro_escola', 'Permitir matrícula de alunos apenas do bairro da escola?', $this->matricula_apenas_bairro_escola);
 
-        
+
 
         $this->campoCheck('controlar_espaco_utilizacao_aluno', 'Controlar espaço utilizado pelo aluno?', $this->controlar_espaco_utilizacao_aluno);
         $this->campoMonetario(
@@ -306,6 +309,17 @@ class indice extends clsCadastro
             'exigir_lancamentos_anteriores',
             'Exigir o lançamento de notas em etapas que o aluno não estava enturmado',
             $this->exigir_lancamentos_anteriores
+        );
+
+        $this->campoCheck(
+            'bloquear_vinculo_professor_sem_alocacao_escola',
+            'Bloquear vínculos de professores em turmas pertencentes às escolas em que eles não estão alocados',
+            $this->bloquear_vinculo_professor_sem_alocacao_escola,
+            null,
+            false,
+            false,
+            false,
+            'Caso marcado, os vínculos de professores em turmas pertencentes às escolas em que eles não estão alocados será bloqueado.'
         );
 
         $scripts = ['/modules/Cadastro/Assets/Javascripts/Instituicao.js'];
@@ -351,6 +365,7 @@ class indice extends clsCadastro
         $obj->orgao_regional = $this->orgao_regional;
         $obj->exigir_lancamentos_anteriores = !is_null($this->exigir_lancamentos_anteriores);
         $obj->exibir_apenas_professores_alocados = !is_null($this->exibir_apenas_professores_alocados);
+        $obj->bloquear_vinculo_professor_sem_alocacao_escola = !is_null($this->bloquear_vinculo_professor_sem_alocacao_escola);
 
         $detalheAntigo = $obj->detalhe();
 
@@ -359,8 +374,13 @@ class indice extends clsCadastro
             $detalheAtual = $obj->detalhe();
             $auditoria = new clsModulesAuditoriaGeral('instituicao', $this->pessoa_logada, $this->cod_instituicao);
             $auditoria->alteracao($detalheAntigo, $detalheAtual);
-            $obj_altera = new alteraAtestadoParaDeclaracao(is_null($this->altera_atestado_para_declaracao) ? false : true);
-            $obj_altera->editaMenus();
+
+            if (is_null($this->altera_atestado_para_declaracao)) {
+                Menu::changeMenusToAttestation();
+            } else {
+                Menu::changeMenusToDeclaration();
+            }
+
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_instituicao_lst.php');
         }

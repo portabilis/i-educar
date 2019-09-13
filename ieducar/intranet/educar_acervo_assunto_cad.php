@@ -92,15 +92,11 @@ class indice extends clsCadastro
         }
         $this->url_cancelar = ($retorno == "Editar") ? "educar_acervo_assunto_det.php?cod_acervo_assunto={$registro["cod_acervo_assunto"]}" : "educar_acervo_assunto_lst.php";
         $this->nome_url_cancelar = "Cancelar";
+        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "{$nomeMenu} assunto"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb($nomeMenu . ' assunto', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
 
         return $retorno;
     }

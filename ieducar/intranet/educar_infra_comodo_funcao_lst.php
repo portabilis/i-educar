@@ -183,13 +183,9 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""                                  => "Listagem de tipos de ambiente"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Listagem de tipos de ambiente', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 // cria uma extensao da classe base

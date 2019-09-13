@@ -3,6 +3,7 @@
 namespace Tests\Browser;
 
 use Illuminate\Foundation\Testing\WithFaker;
+use Tests\Browser\Login\LoginAsAdmin;
 use Tests\Browser\Pages\City\CreatePage;
 use Tests\Browser\Pages\City\DetailPage;
 use Tests\Browser\Pages\City\ListingPage;
@@ -12,7 +13,7 @@ use Laravel\Dusk\Browser;
 
 class CityTest extends DuskTestCase
 {
-    use WithFaker;
+    use LoginAsAdmin, WithFaker;
 
     /**
      * Test city flow.
@@ -29,7 +30,7 @@ class CityTest extends DuskTestCase
             $cityName = $this->faker->city;
             $cityNameAfterUpdate = $this->faker->city;
 
-            $browser->loginLegacy();
+            $browser->login();
 
             $browser->visit(new ListingPage())
                 ->press(' Novo ');
@@ -79,7 +80,7 @@ class CityTest extends DuskTestCase
     public function testCityListing()
     {
         $this->browse(function (Browser $browser) {
-            $browser->loginLegacy();
+            $browser->login();
             $browser->visit(new ListingPage());
         });
     }

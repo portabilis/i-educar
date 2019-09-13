@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\DB;
 
 class ChangeAppName
 {
@@ -15,8 +16,13 @@ class ChangeAppName
      */
     public function handle($request, Closure $next)
     {
-        config(['app.name' => request()->getHost()]);
-        config(['honeybadger.environment_name' => request()->getHost()]);
+        config([
+            'app.name' => config('legacy.config.ieducar_entity_name'),
+            'app.nickname' => url('/'),
+            'app.slug' => DB::getDefaultConnection(),
+            'app.url' => $request->getBasePath(),
+            'honeybadger.environment_name' => config('app.env'),
+        ]);
 
         return $next($request);
     }

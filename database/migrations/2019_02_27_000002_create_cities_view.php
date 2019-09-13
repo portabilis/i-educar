@@ -14,6 +14,7 @@ class CreateCitiesView extends Migration
      */
     public function up()
     {
+        $this->dropView('cities');
         $this->createView('cities');
     }
 

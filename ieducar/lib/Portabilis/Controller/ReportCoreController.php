@@ -2,7 +2,6 @@
 
 use iEducar\Modules\ErrorTracking\TrackerFactory;
 
-require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'lib/Portabilis/View/Helper/Inputs.php';
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
@@ -72,9 +71,9 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
             $this->beforeValidation();
 
-            $this->report->addArg('database', ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' ? (is_null($GLOBALS['coreExt']['Config']->report->database_teste) ? '' : $GLOBALS['coreExt']['Config']->report->database_teste) : $GLOBALS['coreExt']['Config']->app->database->dbname));
-            $this->report->addArg('SUBREPORT_DIR', $GLOBALS['coreExt']['Config']->report->source_path);
-            $this->report->addArg('data_emissao', (int) $GLOBALS['coreExt']['Config']->report->header->show_data_emissao);
+            $this->report->addArg('database', (config('legacy.app.database.dbname') == 'test' ? (is_null(config('legacy.report.database_teste')) ? '' : config('legacy.report.database_teste')) : config('legacy.app.database.dbname')));
+            $this->report->addArg('SUBREPORT_DIR', config('legacy.report.source_path'));
+            $this->report->addArg('data_emissao', (int) config('legacy.report.header.show_data_emissao'));
 
             $this->validatesPresenseOfRequiredArgsInReport();
             $this->aftervalidation();
@@ -143,14 +142,14 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
             echo $result;
             die();
         } catch (Exception $e) {
-            if ($GLOBALS['coreExt']['Config']->modules->error->track) {
-                $tracker = TrackerFactory::getTracker($GLOBALS['coreExt']['Config']->modules->error->tracker_name);
+            if (config('legacy.modules.error.track')) {
+                $tracker = TrackerFactory::getTracker(config('legacy.modules.error.tracker_name'));
                 $tracker->notify($e);
             }
 
             $nivelUsuario = (new clsPermissoes)->nivel_acesso($this->getSession()->id_pessoa);
 
-            if ((bool) $GLOBALS['coreExt']['Config']->report->show_error_details === true || (int) $nivelUsuario === 1) {
+            if ((bool) config('legacy.report.show_error_details') === true || (int) $nivelUsuario === 1) {
                 $details = 'Detalhes: ' . $e->getMessage();
             } else {
                 $details = 'Visualização dos detalhes sobre o erro desativada.';
@@ -228,7 +227,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
     public function addValidationError($message)
     {
         $this->validationErrors[] = [
-            'message' => utf8_encode($message)
+            'message' => $message
         ];
     }
 

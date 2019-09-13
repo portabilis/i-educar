@@ -86,7 +86,7 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $this->addCabecalhos( array(
             "Assunto",
@@ -112,7 +112,7 @@ class indice extends clsListagem
             $obj_bib_user = new clsPmieducarBibliotecaUsuario();
             $this->ref_cod_biblioteca = $obj_bib_user->listaBibliotecas($this->pessoa_logada);
         }
-        
+
         $obj_acervo_assunto = new clsPmieducarAcervoAssunto();
         $obj_acervo_assunto->setOrderby( "nm_assunto ASC" );
         $obj_acervo_assunto->setLimite( $this->limite, $this->offset );
@@ -127,7 +127,7 @@ class indice extends clsListagem
             null,
             null,
             null,
-            1           
+            1
         );
 
         $total = $obj_acervo_assunto->_total;
@@ -153,13 +153,9 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "Listagem de assuntos"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Listagem de assuntos', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 // cria uma extensao da classe base

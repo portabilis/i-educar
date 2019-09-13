@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -39,16 +40,6 @@ class LegacyController extends Controller
     }
 
     /**
-     * Return i-Educar original bootstrap file.
-     *
-     * @return string
-     */
-    private function getLegacyBootstrapFile()
-    {
-        return $this->getLegacyPath() . '/includes/bootstrap.php';
-    }
-
-    /**
      * Define which errors and exceptions are shown.
      *
      * @return void
@@ -66,26 +57,6 @@ class LegacyController extends Controller
         restore_error_handler();
 
         restore_exception_handler();
-    }
-
-    /**
-     * Load bootstrap file, if not found, throw a HttpException with HTTP error
-     * code 500 Server Internal Error.
-     *
-     * @return void
-     *
-     * @throws HttpException
-     * @throws Exception
-     */
-    private function loadLegacyBootstrapFile()
-    {
-        $filename = $this->getLegacyBootstrapFile();
-
-        if (false === file_exists($filename)) {
-            throw new HttpException(500, 'Legacy bootstrap file not found.');
-        }
-
-        $this->loadFileOrAbort($filename);
     }
 
     /**
@@ -117,14 +88,12 @@ class LegacyController extends Controller
      *
      * @return void
      *
-     * @throws HttpResponseException
-     * @throws HttpException
      * @throws Exception
      */
     private function loadFileOrAbort($filename)
     {
         try {
-            require_once $filename;
+            require $filename;
             return;
         } catch (HttpResponseException $exception) {
 
@@ -134,6 +103,13 @@ class LegacyController extends Controller
 
             throw $exception;
 
+        } catch (ValidationException $exception) {
+
+            // Trata as exceções geradas pela validação do Laravel.
+            // Nesse caso a exception será lançada e o próprio framework fará o redirect
+            // e tratamento das mensagens de erro
+
+            throw $exception;
         } catch (Exception $exception) {
 
             // A maioria das vezes será pega a Exception neste catch, apenas
@@ -154,13 +130,7 @@ class LegacyController extends Controller
             );
         }
 
-        app(ExceptionHandler::class)->report($exception);
-
-        if (config('app.debug')) {
-            throw $exception;
-        }
-
-        throw new HttpException(500, 'Error in legacy code.', $exception);
+        throw $exception;
     }
 
     /**
@@ -196,6 +166,16 @@ class LegacyController extends Controller
     }
 
     /**
+     * Change directory.
+     *
+     * @return void
+     */
+    private function changeDirectory()
+    {
+        chdir(base_path('ieducar/intranet'));
+    }
+
+    /**
      * Start session, configure errors and exceptions and load necessary files
      * to run legacy code.
      *
@@ -212,7 +192,7 @@ class LegacyController extends Controller
 
         $this->overrideGlobals();
         $this->configureErrorsAndExceptions();
-        $this->loadLegacyBootstrapFile();
+        $this->changeDirectory();
         $this->loadLegacyFile($filename);
 
         $content = ob_get_contents();
@@ -280,5 +260,18 @@ class LegacyController extends Controller
     public function modules($uri)
     {
         return $this->requireFileFromLegacy('modules/' . $uri);
+    }
+
+    /**
+     * Load module route file and generate a response for API.
+     *
+     * @return Response
+     *
+     * @throws HttpResponseException
+     * @throws Exception
+     */
+    public function api()
+    {
+        return $this->requireFileFromLegacy('module/index.php');
     }
 }

@@ -62,7 +62,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_funcao=$_GET["cod_funcao"];
 
@@ -95,13 +95,10 @@ class indice extends clsCadastro
         $this->nome_url_cancelar = "Cancelar";
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"                  => "Servidores",
-         ""        => "{$nomeMenu} fun&ccedil;&atilde;o"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' função', [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
 
         return $retorno;
     }
@@ -127,7 +124,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 634, $this->pessoa_logada, 3,  "educar_funcao_lst.php" );
@@ -149,7 +146,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($funcao);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            $this->simpleRedirect('educar_fonte_lst.php');
+            $this->simpleRedirect('educar_funcao_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -159,7 +156,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $funcao = new clsPmieducarFuncao($this->cod_funcao);
         $funcaoAntes = $funcao->detalhe();
@@ -182,7 +179,7 @@ class indice extends clsCadastro
             $auditoria->alteracao($funcaoAntes, $funcaoDepois);
 
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            $this->simpleRedirect('educar_fonte_lst.php');
+            $this->simpleRedirect('educar_funcao_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
@@ -192,7 +189,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 634, $this->pessoa_logada, 3,  "educar_funcao_lst.php" );
@@ -208,7 +205,7 @@ class indice extends clsCadastro
             $auditoria->exclusao($funcao);
 
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            $this->simpleRedirect('educar_fonte_lst.php');
+            $this->simpleRedirect('educar_funcao_lst.php');
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";

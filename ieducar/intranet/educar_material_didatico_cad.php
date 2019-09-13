@@ -65,7 +65,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_material_didatico=$_GET["cod_material_didatico"];
 
@@ -87,17 +87,15 @@ class indice extends clsCadastro
             }
         }
         $this->url_cancelar = ($retorno == "Editar") ? "educar_material_didatico_det.php?cod_material_didatico={$registro["cod_material_didatico"]}" : "educar_material_didatico_lst.php";
-        
+
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} material did&aacute;tico"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' material didático', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
+
         return $retorno;
     }
 
@@ -147,7 +145,7 @@ class indice extends clsCadastro
             echo "<!--\nErro\nClasse clsPmieducarMaterialTipo n&atilde;o encontrada\n-->";
             $opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
         }
-        
+
         /*************************COLOCADO*********************************/
         $script = "javascript:showExpansivelIframe(520, 250, 'educar_material_tipo_cad_pop.php');";
         if ($this->ref_cod_instituicao)// && $this->ref_cod_escola   && $this->ref_cod_curso)
@@ -158,7 +156,7 @@ class indice extends clsCadastro
         else
         {
             $script = "<img id='img_tipo_material' style='display: none;' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-            
+
         }
         /*************************COLOCADO*********************************/
         $this->campoLista( "ref_cod_material_tipo", "Tipo de Material", $opcoes, $this->ref_cod_material_tipo, "", false, "", $script );
@@ -172,7 +170,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $this->custo_unitario = str_replace(".","",$this->custo_unitario);
         $this->custo_unitario = str_replace(",",".",$this->custo_unitario);
@@ -192,7 +190,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $this->custo_unitario = str_replace(".","",$this->custo_unitario);
         $this->custo_unitario = str_replace(",",".",$this->custo_unitario);
@@ -212,7 +210,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj = new clsPmieducarMaterialDidatico($this->cod_material_didatico, null, $this->pessoa_logada, null, null, null, null, null, null, null, 0);
         $excluiu = $obj->excluir();
@@ -285,7 +283,7 @@ document.getElementById('ref_cod_instituicao').onchange = function()
 
     var xml_material_tipo = new ajax( getMaterialTipo );
     xml_material_tipo.envia( "educar_material_tipo_xml.php?ins="+campoInstituicao );
-    if (this.value == '') 
+    if (this.value == '')
     {
         $('img_tipo_material').style.display = 'none;';
     }

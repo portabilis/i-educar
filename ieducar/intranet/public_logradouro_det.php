@@ -61,9 +61,6 @@ class indice extends clsDetalhe
     var $idpes_cad;
     var $data_cad;
     var $operacao;
-    var $idsis_rev;
-    var $idsis_cad;
-    
     var $idpais;
     var $sigla_uf;
     

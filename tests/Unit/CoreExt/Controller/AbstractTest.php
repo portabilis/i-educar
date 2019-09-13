@@ -46,7 +46,7 @@ class CoreExt_Controller_AbstractTest extends PHPUnit\Framework\TestCase
 {
   protected $_controller = NULL;
 
-  protected function setUp()
+  protected function setUp(): void
   {
     $this->_controller = new CoreExt_Controller_AbstractStub();
   }

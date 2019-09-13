@@ -71,11 +71,30 @@ var multipleSearchHelper = {
 };
 
 var updateChozen = function(input, values){
-  $j.each(values, function(index, value){
-    input.append('<option value="' + index + '"> ' + value + '</option>');
+  var orderedList = [];
+
+  if (!Array.isArray(values)) {
+    for (let prop in values) {
+      orderedList.push({
+        label:values[prop],
+        value: prop
+      });
+    }
+  }
+
+  orderedList = orderedList.sort(function (a,b) {
+    return a.label > b.label ? 1 : -1
   });
+
+  for (let option in orderedList) {
+    if (orderedList[option ].value !== undefined) {
+      input.append('<option value="' + orderedList[option].value + '"> ' + orderedList[option].label + '</option>');
+    }
+  }
+
   input.trigger("chosen:updated");
 };
+
 var clearValues = function(input){
   input.empty();
   input.trigger("chosen:updated");

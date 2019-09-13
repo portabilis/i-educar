@@ -86,7 +86,7 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $this->addCabecalhos( array(
             "Cole&ccedil;&atilde;o",
@@ -97,7 +97,7 @@ class indice extends clsListagem
         $get_escola = true;
         $get_biblioteca = true;
         $get_cabecalho = "lista_busca";
-        
+
         include("include/pmieducar/educar_campo_lista.php");
         // outros Filtros
         $this->campoTexto( "nm_colecao", "Cole&ccedil;&atilde;o", $this->nm_colecao, 30, 255, false );
@@ -111,7 +111,7 @@ class indice extends clsListagem
             $obj_bib_user = new clsPmieducarBibliotecaUsuario();
             $this->ref_cod_biblioteca = $obj_bib_user->listaBibliotecas($this->pessoa_logada);
         }
-        
+
         $obj_acervo_colecao = new clsPmieducarAcervoColecao();
         $obj_acervo_colecao->setOrderby( "nm_colecao ASC" );
         $obj_acervo_colecao->setLimite( $this->limite, $this->offset );
@@ -125,7 +125,7 @@ class indice extends clsListagem
             null,
             null,
             null,
-            null, 
+            null,
             1,
             $this->ref_cod_biblioteca
         );
@@ -156,13 +156,9 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Listagem de cole&ccedil;&otilde;es"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Listagem de coleções', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 // cria uma extensao da classe base

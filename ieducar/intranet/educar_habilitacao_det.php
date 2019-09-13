@@ -62,7 +62,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Habilitacao - Detalhe";
-        
+
 
         $this->cod_habilitacao=$_GET["cod_habilitacao"];
 
@@ -104,13 +104,10 @@ class indice extends clsDetalhe
         }
         $this->url_cancelar = "educar_habilitacao_lst.php";
         $this->largura = "100%";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "Detalhe da habilita&ccedil;&acirc;o"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());            
+
+        $this->breadcrumb('Detalhe da habilitação', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

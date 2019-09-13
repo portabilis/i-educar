@@ -3,11 +3,16 @@
 namespace App\Models;
 
 use DateTime;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * LegacyInstitution
  *
+ * @property string   $name            Nome da instituição
+ * @property string   $city            Noda da cidade da instituição
+ * @property string   $state           Sigla do estado da instituição
  * @property DateTime $relocation_date Data base para remanejamento
  */
 class LegacyInstitution extends Model
@@ -42,9 +47,46 @@ class LegacyInstitution extends Model
      */
     public $timestamps = false;
 
+    /**
+     * @param Builder $query
+     *
+     * @return Builder
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('ativo', 1);
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function generalConfiguration(): HasOne
+    {
+        return $this->hasOne(LegacyGeneralConfiguration::class, 'ref_cod_instituicao', 'cod_instituicao');
+    }
+
+    /**
+     * @return string
+     */
     public function getNameAttribute()
     {
         return $this->nm_instituicao;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCityAttribute()
+    {
+        return $this->cidade;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStateAttribute()
+    {
+        return $this->ref_sigla_uf;
     }
 
     /**
@@ -53,5 +95,20 @@ class LegacyInstitution extends Model
     public function getRelocationDateAttribute()
     {
         return $this->data_base_remanejamento;
+    }
+
+    /**
+     * Indica se os campos do Censo são obrigatórios.
+     *
+     * @return bool
+     */
+    public function isMandatoryCensoFields()
+    {
+        return boolval($this->obrigar_campos_censo);
+    }
+
+    public function getIdAttribute()
+    {
+        return $this->cod_instituicao;
     }
 }

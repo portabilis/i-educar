@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Session;
 require_once 'include/clsBanco.inc.php';
 require_once 'include/Geral.inc.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
+
 class clsFisica
 {
     public $idpes;
@@ -19,8 +20,13 @@ class clsFisica
     public $data_uniao;
     public $data_obito;
     public $nome_social;
+
     /**
-     * Nacionalidade 1 - Brasileiro 2 - Naturalizado Brasileiro 3 - Estrangeiro
+     * Nacionalidade:
+     *
+     *  1 - Brasileiro
+     *  2 - Naturalizado Brasileiro
+     *  3 - Estrangeiro
      *
      * @var $nacionalidade
      */
@@ -57,15 +63,11 @@ class clsFisica
     public $local_trabalho;
     public $horario_inicial_trabalho;
     public $horario_final_trabalho;
-
+    public $pais_residencia;
+    public $localizacao_diferenciada;
     public $tabela;
     public $schema;
 
-    /**
-     * Construtor
-     *
-     * @return Object:clsFisica
-     */
     public function __construct(
         $idpes=false,
         $data_nasc=false,
@@ -214,7 +216,7 @@ class clsFisica
     public function cadastra()
     {
         $db = new clsBanco();
-        // verificacoes de campos obrigatorios para insercao
+
         if (is_numeric($this->idpes) && is_numeric($this->idpes_cad)) {
             $campos = '';
             $valores = '';
@@ -377,6 +379,16 @@ class clsFisica
                 $valores .= ", '$this->data_admissao'";
             }
 
+            if (is_string($this->pais_residencia)) {
+                $campos .=  ', pais_residencia';
+                $valores .= ", '$this->pais_residencia'";
+            }
+
+            if (is_numeric($this->localizacao_diferenciada)) {
+                $campos .=  ', localizacao_diferenciada';
+                $valores .= ", '$this->localizacao_diferenciada'";
+            }
+
             if ($this->falecido) {
                 $campos .=  ', falecido';
                 $valores .= ', \'t\'';
@@ -424,7 +436,7 @@ class clsFisica
                 $valores .= ', NULL';
             }
 
-            $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} (idpes, origem_gravacao, idsis_cad, data_cad, operacao, idpes_cad $campos) VALUES ( '{$this->idpes}', 'M', 17, NOW(), 'I', '$this->idpes_cad' $valores )");
+            $db->Consulta("INSERT INTO {$this->schema}.{$this->tabela} (idpes, origem_gravacao, data_cad, operacao, idpes_cad $campos) VALUES ( '{$this->idpes}', 'M', NOW(), 'I', '$this->idpes_cad' $valores )");
 
             if ($this->idpes) {
                 $detalhe = $this->detalheSimples();
@@ -623,6 +635,16 @@ class clsFisica
                 $gruda = ', ';
             }
 
+            if ($this->pais_residencia) {
+                $set  .= "$gruda pais_residencia = '{$this->pais_residencia}'";
+                $gruda = ', ';
+            }
+
+            if ($this->localizacao_diferenciada) {
+                $set  .= "$gruda localizacao_diferenciada = {$this->localizacao_diferenciada} ";
+                $gruda = ', ';
+            }
+
             if ($this->falecido) {
                 $set  .= "$gruda falecido = 't'";
                 $gruda = ', ';
@@ -723,9 +745,8 @@ class clsFisica
      */
     public function lista($int_idpes=false, $data_data_nasc=false, $str_sexo=false, $int_idpes_mae=false, $int_idpes_pai=false, $int_idpes_responsavel=false, $int_idesco=false, $int_ideciv=false, $int_idpes_con=false, $data_data_uniao=false, $data_data_obito=false, $int_nacionalidade=false, $int_idpais_estrangeiro=false, $data_data_chagada_brasil=false, $int_idmun_nascimento=false, $str_ultima_empresa=false, $int_idocup=false, $str_nome_mae=false, $str_nome_pai=false, $str_nome_conjuge=false, $str_nome_responsavel=false, $str_justificativa_provisorio=false, $str_ordenacao=false, $int_limite_ini=0, $int_limite_qtd=20, $arrayint_idisin = false, $arrayint_idnotin = false, $str_data_nasc_ini = false, $str_data_nasc_fim = false, $int_mes_aniversario = false, $int_ref_cod_sistema = false, $int_cpf = false)
     {
-        // verificacoes de filtros a serem usados
-
         $whereAnd = 'WHERE ';
+
         if (is_numeric($int_idpes)) {
             $where .= "{$whereAnd}idpes = '$int_idpes'";
             $whereAnd = ' AND ';
@@ -944,7 +965,7 @@ class clsFisica
     {
         if ($this->idpes) {
             $db = new clsBanco();
-            $db->Consulta("SELECT fisica.idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido, ativo, data_exclusao, zona_localizacao_censo, nome, nome_social FROM {$this->schema}.{$this->tabela}
+            $db->Consulta("SELECT fisica.idpes, data_nasc, sexo, idpes_mae, idpes_pai, idpes_responsavel, idesco, ideciv, idpes_con, data_uniao, data_obito, nacionalidade, idpais_estrangeiro, data_chegada_brasil, idmun_nascimento, ultima_empresa, idocup, nome_mae, nome_pai, nome_conjuge, nome_responsavel, justificativa_provisorio, cpf , ref_cod_religiao, sus, nis_pis_pasep, ocupacao, empresa, ddd_telefone_empresa, telefone_empresa, pessoa_contato, data_admissao, renda_mensal, falecido, ativo, data_exclusao, zona_localizacao_censo, nome, nome_social, pais_residencia, localizacao_diferenciada FROM {$this->schema}.{$this->tabela}
             INNER JOIN cadastro.pessoa ON (pessoa.idpes = fisica.idpes) WHERE fisica.idpes = {$this->idpes}");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();

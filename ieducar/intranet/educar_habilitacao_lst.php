@@ -87,14 +87,14 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $get_escola = false;
         include("include/pmieducar/educar_campo_lista.php");
-        
+
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-        
+
         switch ($nivel_usuario) {
             case 1:
                 $this->addCabecalhos( array(
@@ -102,11 +102,11 @@ class indice extends clsListagem
                     "Habilitac&atilde;o"
                 ) );
                 break;
-        
+
             default:
                 $this->addCabecalhos( array(
                     "Habilitac&atilde;o"
-                ) );                
+                ) );
                 break;
         }
 
@@ -162,13 +162,13 @@ class indice extends clsListagem
                             "<a href=\"educar_habilitacao_det.php?cod_habilitacao={$registro["cod_habilitacao"]}\">{$registro["ref_cod_instituicao"]}</a>"
                         ) );
                         break;
-                
+
                     default:
                         $this->addLinhas( array(
                             "<a href=\"educar_habilitacao_det.php?cod_habilitacao={$registro["cod_habilitacao"]}\">{$registro["nm_tipo"]}</a>"
-                        ) );            
+                        ) );
                         break;
-                }               
+                }
 
             }
         }
@@ -180,13 +180,10 @@ class indice extends clsListagem
             $this->nome_acao = "Novo";
         }
         $this->largura = "100%";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "Lista de habilita&ccedil;&otilde;es"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());            
+
+        $this->breadcrumb('Lista de habilitações', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 // cria uma extensao da classe base

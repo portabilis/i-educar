@@ -56,7 +56,7 @@ class CoreExt_Controller_Dispatcher_Strategy_PageStrategyTest extends PHPUnit\Fr
     $this->_path = realpath(dirname(__FILE__) . '/../../_stub');
   }
 
-  protected function setUp()
+  protected function setUp(): void
   {
     $this->_frontController = CoreExt_Controller_Front::getInstance();
     $this->_frontController->setOptions(array('basepath' => $this->_path));

@@ -68,7 +68,7 @@ class indice extends clsCadastro
     $objPessoa = new clsPessoaFj();
 
     $db = new clsBanco();
-    $db->Consulta("SELECT f.senha FROM funcionario f WHERE f.ref_cod_pessoa_fj={$this->p_cod_pessoa_fj}");
+    $db->Consulta("SELECT f.senha FROM portal.funcionario f WHERE f.ref_cod_pessoa_fj={$this->p_cod_pessoa_fj}");
 
     if ($db->ProximoRegistro()) {
       list($this->f_senha) = $db->Tupla();
@@ -97,17 +97,15 @@ class indice extends clsCadastro
     $this->campoOculto("p_cod_pessoa_fj", $this->p_cod_pessoa_fj);
     $this->cod_pessoa_fj = $this->p_cod_pessoa_fj;
 
-    if (empty(Session::get('convidado'))) {
-      $this->campoRotulo("", "<strong>Informações</strong>", "<strong>Sua senha expirará em alguns dias, por favor cadastre uma nova senha com no mínimo 8 caracteres e diferente da senha anterior</strong>");
-      $this->campoSenha("f_senha", "Senha", "", TRUE, "A sua nova senha deverá conter pelo menos oito caracteres");
-      $this->campoSenha("f_senha2", "Redigite a Senha", $this->f_senha2, TRUE);
-    }
+    $this->campoRotulo("", "<strong>Informações</strong>", "<strong>Sua senha expirará em alguns dias, por favor cadastre uma nova senha com no mínimo 8 caracteres e diferente da senha anterior</strong>");
+    $this->campoSenha("f_senha", "Senha", "", TRUE, "A sua nova senha deverá conter pelo menos oito caracteres");
+    $this->campoSenha("f_senha2", "Redigite a Senha", $this->f_senha2, TRUE);
   }
 
 
   public function Novo()
   {
-    $sql = "SELECT ref_cod_pessoa_fj FROM funcionario WHERE md5('{$this->f_senha}') = senha AND ref_cod_pessoa_fj = {$this->p_cod_pessoa_fj}";
+    $sql = "SELECT ref_cod_pessoa_fj FROM portal.funcionario WHERE md5('{$this->f_senha}') = senha AND ref_cod_pessoa_fj = {$this->p_cod_pessoa_fj}";
     $db = new clsBanco();
     $senha_igual = $db->CampoUnico($sql);
 

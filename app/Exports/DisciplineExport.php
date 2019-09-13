@@ -13,43 +13,42 @@ class DisciplineExport implements FromCollection, WithHeadingRow, WithHeadings, 
 {
     use Exportable;
 
+    /**
+     * @var Collection
+     */
     private $collection;
 
+    /**
+     * @param Collection $collection
+     */
     public function __construct(Collection $collection)
     {
         $this->collection = $collection;
     }
 
+    /**
+     * @return Collection
+     */
     public function collection()
     {
         return $this->collection;
     }
 
+    /**
+     * @param array $row
+     *
+     * @return array
+     */
     public function map($row): array
     {
-        return [
-            $row->id,
-            $row->institution_id,
-            $row->knowledge_area_id,
-            $row->name,
-            $row->abbreviation,
-            $row->foundation_type,
-            $row->order,
-            $row->educacenso_code,
-        ];
+        return $row;
     }
 
+    /**
+     * @return array
+     */
     public function headings(): array
     {
-        return [
-            'id',
-            'institution_id',
-            'knowledge_area_id',
-            'name',
-            'abbreviation',
-            'foundation_type',
-            'order',
-            'educacenso_code',
-        ];
+        return array_keys($this->collection->first());
     }
 }

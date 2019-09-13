@@ -2,12 +2,15 @@
 
 namespace Tests\Browser;
 
+use Tests\Browser\Login\LoginAsAdmin;
 use Tests\Browser\Pages\Neighborhood\ListingPage;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 
 class NeighborhoodTest extends DuskTestCase
 {
+    use LoginAsAdmin;
+
     /**
      * Test neighborhood listing.
      *
@@ -18,7 +21,7 @@ class NeighborhoodTest extends DuskTestCase
     public function testNeighborhoodListing()
     {
         $this->browse(function (Browser $browser) {
-            $browser->loginLegacy();
+            $browser->login();
 
             $browser->visit(new ListingPage());
         });

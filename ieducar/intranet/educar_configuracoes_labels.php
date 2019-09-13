@@ -23,27 +23,22 @@ class indice extends clsCadastro
 
   function Inicializar()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(9998869, $this->pessoa_logada, 7, 'educar_index.php');
     $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_configuracoes_index.php" => "Configurações",
-         "" => "Customiza&ccedil;&atilde;o de labels"
-    ));
-
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Customização de labels', [
+        url('intranet/educar_configuracoes_index.php') => 'Configurações',
+    ]);
 
     return 'Editar';
   }
 
   function Gerar()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
@@ -69,7 +64,7 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);

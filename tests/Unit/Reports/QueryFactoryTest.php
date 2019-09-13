@@ -9,7 +9,7 @@ class QueryFactoryTest extends TestCase
 {
     private static $pdo;
 
-    protected function setUp() :void
+    protected function setUp(): void
     {
         parent::setUp();
 

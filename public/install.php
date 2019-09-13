@@ -58,17 +58,16 @@ $isOld = Comparator::greaterThan(
     $latestIeducarVersion['version'],
     $currIeducarVersion
 );
-$minPhpVersion = $installer->composerData->require->php;
+$minPhpVersion = str_replace(['~', '^'], '', $installer->composerData->require->php);
 $phpVersionCheck = version_compare(PHP_VERSION, $minPhpVersion) >= 0;
 $extensionsCheck = $installer->checkExtensions();
 $extensionsReport = $installer->getExtensionsReport();
 $envExists = file_exists($rootDir . '/.env');
 $host = $_SERVER['HTTP_HOST'] ?? '';
-$iniCheck = $installer->checkIniConfig($host);
 $dbCheck = false;
 
 if ($envExists) {
-    (new Dotenv\Dotenv($rootDir))->load();
+    Dotenv\Dotenv::create($rootDir)->load();
     $dbCheck = $installer->checkDatabaseConnection();
     $isInstalled = $installer->isInstalled();
 }
@@ -85,8 +84,7 @@ $proceed = $phpVersionCheck
     && $extensionsCheck
     && $envExists
     && $dbCheck
-    && $writablePathsCheck
-    && $iniCheck;
+    && $writablePathsCheck;
 
 $user = posix_getpwuid(posix_getuid())['name'];
 $group = posix_getgrgid(posix_getgid())['name'];
@@ -214,41 +212,6 @@ cd <?= $rootDir . "\n" ?>
 cp .env.example .env
 vim .env # use seu editor de texto favorito
            # para configurar a aplicação
-</pre>
-                    <?php endif; ?>
-                </div>
-
-                <div class="module ini">
-                    <h2>
-                        <?= boolIcon($iniCheck) ?>
-                        Arquivo de configuração (ieducar.ini)
-                    </h2>
-
-                    <?php if ($iniCheck): ?>
-                        <p>O arquivo <code>ieducar.ini</code> está presente e
-                            devidamente configurado.</p>
-                    <?php else: ?>
-                        <p>O arquivo <code>ieducar.ini</code> não está presente
-                            ou não está devidamente configurado. Antes de tudo
-                            verifique se o arquivo <code>ieducar.ini</code> está
-                            presente na pasta
-                            <code>ieducar/configuration</code>. Se não estiver
-                            lá faça uma cópia com o seguinte comando:</p>
-
-                            <pre>
-cd <?= $rootDir ?>/ieducar/configuration
-cp ieducar.ini.example ieducar.ini
-</pre>
-
-                        <p>Com o arquivo criado, abra-o no seu editor de texto
-                            favorito e acrescente seu host às configurações
-                            conforme exemplo abaixo:</p>
-
-                        <pre>
-# no final do arquivo coloque:
-
-[<?= $host ?> : production]
-
 </pre>
                     <?php endif; ?>
                 </div>

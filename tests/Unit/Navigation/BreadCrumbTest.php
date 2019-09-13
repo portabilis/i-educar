@@ -12,7 +12,7 @@ class BreadCrumbTest extends TestCase
      */
     private $breadCrumbObject;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->breadCrumbObject = new Breadcrumb();

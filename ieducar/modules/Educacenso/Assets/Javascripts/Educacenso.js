@@ -6,10 +6,7 @@ $j(document).ready(function(){
     '30',
     '40',
     '50',
-    '51',
-    '60',
-    '70',
-    '80'
+    '60'
   ];
 
   const recordsFirstStepNotActive = [
@@ -45,15 +42,20 @@ $j(document).ready(function(){
             ' <p style=" margin-top: 20px;font-family: verdana, arial; font-size: 18px;">Exporta&ccedil;&atilde;o realizada com sucesso.</p>' +
             ' <a id="download_file" href="#" style="margin-top: 10px;font-family: verdana, arial;font-size: 14px;">Clique aqui para realizar o download</a>' +
             '</div>'+
-             '<div id="modal_mensagem_desabilitado" style="width:400px;display:none;">'+
-             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px;">A exportação foi desabilitada temporariamente</p>' +
-             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">Mas não se preocupe, os dados da escola foram validados e até o momento está tudo correto</p>' +
+             '<div id="modal_mensagem_desabilitado" style="width:400px;display:none; text-align:left">'+
+             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px; font-weight: bold;">Parabéns! Até o momento todos os dados da sua escola, foram validados com sucesso!</p>' +
+             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 14px;">Isso não significa que o trabalho acabou, ainda podem surgir novos ajustes… Fique atento e repita o processo de exportação periodicamente até o dia <b>04/06</b>. Isso evitará surpresas e transtornos! 😉</p>' +
+             ' <p style="margin-left: 20px; margin-top: 30px;font-family: verdana, arial; font-size: 18px; font-weight: bold;">Próximos passos</p>' +
+             ' <ul>' +
+             ' <li><p style="margin-top: 30px;font-family: verdana, arial; font-size: 14px;">A partir do dia 04/06, clique no botão: [Exportar] novamente para gerar o arquivo com os dados para o Educacenso;</p></li>' +
+             ' <li><p style="font-family: verdana, arial; font-size: 14px;">Após salvar o arquivo em seu computador, acesse o link: <a href="http://treinamento.censobasico.inep.gov.br/censobasico" target="_new"> http://treinamento.censobasico.inep.gov.br/censobasico</a> e utilize suas credenciais para acessar a página de importação. Para saber mais sobre esses passos, <a href="https://www.youtube.com/watch?v=AzU8ltLF8Ig&feature=youtu.be&t=5080" target="_new">clique aqui.</a></p></li>' +
+             ' </ul>' +
              '</div>'+
             '</div>';
 
 
     var headerPaginaResposta = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+'Análise exportação'+'</title>'+
-            '<link rel="stylesheet" href="../modules/Educacenso/Assets/Stylesheets/educacensoPdf.css?v=2"></head><body>'+
+            '<link rel="stylesheet" href="../modules/Educacenso/Assets/Stylesheets/educacensoPdf.css?v=5"></head><body>'+
             '<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">'+
             `<p class="date-info">Data da geração: ${currentDateString()}</p>`+
 						'<div id="content">'+
@@ -71,17 +73,12 @@ $j(document).ready(function(){
     var iniciaAnalise = function() {
 
     	var escola = $j("#ref_cod_escola").val();
-    	var dataIni = $j("#data_ini").val();
-    	var dataFim = $j("#data_fim").val();
       fase2 = ($j("#fase2").val() == "true");
 
-    	if (!escola || !dataIni || !dataFim){
+    	if (!escola){
     		alert("Preencha os dados obrigat\u00f3rios antes de continuar.");
     		return;
-    	} else if (!isValidDate(dataIni) || !isValidDate(dataFim)) {
-        alert("A data informada \u00e9 inv\u00e1lida.");
-        return;
-      }
+    	}
 
       resetParameters();
 
@@ -99,7 +96,19 @@ $j(document).ready(function(){
           showClose: false
         });
 
-        analyseRecords($j('#escola_em_andamento').val() == '1' ? recordsFirstStep : recordsFirstStepNotActive);
+        $j.getJSON(
+          getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', `valida-instituicao`, {
+            instituicao: $j("#ref_cod_instituicao").val()
+          })
+        ).done((data) => {
+          if (data['valid']) {
+            analyseRecords($j('#escola_em_andamento').val() == '1' ? recordsFirstStep : recordsFirstStepNotActive);
+          } else {
+            makeInvalidInstitutionWarning();
+            falhaAnalise = true;
+            finishAnalysis();
+          }
+        });
       }
     }
 
@@ -108,9 +117,7 @@ $j(document).ready(function(){
       $j("#registro_load").text(`Analisando registro ${record}`);
       let urlForGetAnaliseRegistro = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoAnalise', `registro-${record}`, {
         escola: $j("#ref_cod_escola").val(),
-        ano: $j("#ano").val(),
-        data_ini: $j("#data_ini").val(),
-        data_fim: $j("#data_fim").val()
+        ano: $j("#ano").val()
       });
 
       let options = {
@@ -194,12 +201,22 @@ $j(document).ready(function(){
       paginaResposta += htmlAnalise;
     };
 
+    let makeInvalidInstitutionWarning = () => {
+      const instituicaoId = $j('#ref_cod_instituicao').val();
+      paginaResposta += `<div class="educacenso-institution-warning-container">
+                            <p> Para exportar todos os registros corretamente é necessário preencher o campo <b>Data de referência do Educacenso</b>, apresentado no cadastro da Instituição na aba Parâmetros. A data de referência normalmente é correspondente à última quarta-feira do mês de maio do ano atual.</p>
+                            <a class="educacenso-link-path"
+                               href="/intranet/educar_instituicao_cad.php?cod_instituicao=${instituicaoId}"
+                               target="_new">
+                               (Escola > Cadastros > Instituição > Editar > Aba: Parâmetros > Campo: Data de referência do Educacenso)
+                            </a>
+                          </div>`;
+    };
+
     var educacensoExport = function(){
         var urlForEducacensoExport = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoExport', 'educacenso-export', {
           escola   : $j("#ref_cod_escola").val(),
-          ano      : $j("#ano").val(),
-          data_ini : $j("#data_ini").val(),
-          data_fim : $j("#data_fim").val()
+          ano      : $j("#ano").val()
         });
 
         var options = {
@@ -213,9 +230,7 @@ $j(document).ready(function(){
     var educacensoExportFase2 = function(){
         var urlForEducacensoExport = getResourceUrlBuilder.buildUrl('/module/Api/EducacensoExport', 'educacenso-export-fase2', {
           escola   : $j("#ref_cod_escola").val(),
-          ano      : $j("#ano").val(),
-          data_ini : $j("#data_ini").val(),
-          data_fim : $j("#data_fim").val()
+          ano      : $j("#ano").val()
         });
 
         var options = {
@@ -236,9 +251,16 @@ $j(document).ready(function(){
 
       //Realiza alterações na modal para mostrar resultado de sucesso
       $j("#modal_gif_load").css("display", "none");
-      $j("#modal_mensagem_exportacao").css("display", "none");
-      $j("#modal_mensagem_sucesso").css("display", "none");
-      $j("#modal_mensagem_desabilitado").css("display", "block");
+
+      if($j('#enable_export').val() == '1') {
+        $j("#modal_mensagem_exportacao").css("display", "none");
+        $j("#modal_mensagem_sucesso").css("display", "block");
+        $j("#modal_mensagem_desabilitado").css("display", "none");
+      } else {
+        $j("#modal_mensagem_exportacao").css("display", "none");
+        $j("#modal_mensagem_sucesso").css("display", "none");
+        $j("#modal_mensagem_desabilitado").css("display", "block");
+      }
 
       //Cria evento para download do arquivo de exportação
       var create = document.getElementById('download_file'), conteudo = response.conteudo;
@@ -259,8 +281,13 @@ $j(document).ready(function(){
       hiddenField.setAttribute("type", "hidden");
       hiddenField.setAttribute("name", "exportacao");
       hiddenField.setAttribute("value", conteudo);
-
       form.appendChild(hiddenField);
+
+      var escola = document.createElement("input");
+      escola.setAttribute("type", "hidden");
+      escola.setAttribute("name", "escola");
+      escola.setAttribute("value",  $j("#ref_cod_escola").val());
+      form.appendChild(escola);
 
       document.body.appendChild(form);
       form.submit();

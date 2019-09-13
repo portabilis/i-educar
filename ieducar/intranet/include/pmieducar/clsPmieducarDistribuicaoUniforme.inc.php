@@ -1,8 +1,10 @@
 <?php
 
+use iEducar\Legacy\Model;
+
 require_once 'include/pmieducar/geral.inc.php';
 
-class clsPmieducarDistribuicaoUniforme
+class clsPmieducarDistribuicaoUniforme extends Model
 {
     public $cod_distribuicao_uniforme;
 
@@ -48,67 +50,10 @@ class clsPmieducarDistribuicaoUniforme
 
     public $camiseta_infantil_tm;
 
-    /**
-     * Armazena o total de resultados obtidos na última chamada ao método lista().
-     *
-     * @var int
-     */
-    public $_total;
+    public $calca_jeans_qtd;
 
-    /**
-     * Nome do schema.
-     *
-     * @var string
-     */
-    public $_schema;
+    public $calca_jeans_tm;
 
-    /**
-     * Nome da tabela.
-     *
-     * @var string
-     */
-    public $_tabela;
-
-    /**
-     * Lista separada por vírgula, com os campos que devem ser selecionados na
-     * próxima chamado ao método lista().
-     *
-     * @var string
-     */
-    public $_campos_lista;
-
-    /**
-     * Lista com todos os campos da tabela separados por vírgula, padrão para
-     * seleção no método lista.
-     *
-     * @var string
-     */
-    public $_todos_campos;
-
-    /**
-     * Valor que define a quantidade de registros a ser retornada pelo método lista().
-     *
-     * @var int
-     */
-    public $_limite_quantidade;
-
-    /**
-     * Define o valor de offset no retorno dos registros no método lista().
-     *
-     * @var int
-     */
-    public $_limite_offset;
-
-    /**
-     * Define o campo para ser usado como padrão de ordenação no método lista().
-     *
-     * @var string
-     */
-    public $_campo_order_by;
-
-    /**
-     * Construtor.
-     */
     public function __construct(
         $cod_distribuicao_uniforme = null,
         $ref_cod_aluno = null,
@@ -131,7 +76,9 @@ class clsPmieducarDistribuicaoUniforme
         $tenis_tm = null,
         $ref_cod_escola = null,
         $camiseta_infantil_qtd = null,
-        $camiseta_infantil_tm = null
+        $camiseta_infantil_tm = null,
+        $calca_jeans_qtd = null,
+        $calca_jeans_tm = null
     ) {
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}distribuicao_uniforme";
@@ -142,7 +89,8 @@ class clsPmieducarDistribuicaoUniforme
             bermudas_tectels_qtd, bermudas_coton_qtd, tenis_qtd, data, 
             agasalho_tm, camiseta_curta_tm, camiseta_longa_tm, meias_tm, 
             bermudas_tectels_tm, bermudas_coton_tm, tenis_tm, ref_cod_escola,
-            camiseta_infantil_qtd, camiseta_infantil_tm
+            camiseta_infantil_qtd, camiseta_infantil_tm, calca_jeans_qtd, 
+            calca_jeans_tm
         ';
 
         if (is_numeric($cod_distribuicao_uniforme)) {
@@ -199,6 +147,10 @@ class clsPmieducarDistribuicaoUniforme
             $this->camiseta_infantil_tm = $camiseta_infantil_tm;
         }
 
+        if (is_numeric($calca_jeans_qtd)) {
+            $this->calca_jeans_qtd = $calca_jeans_qtd;
+        }
+
         $this->agasalho_tm = $agasalho_tm;
         $this->camiseta_curta_tm = $camiseta_curta_tm;
         $this->camiseta_longa_tm = $camiseta_longa_tm;
@@ -207,6 +159,7 @@ class clsPmieducarDistribuicaoUniforme
         $this->bermudas_coton_tm = $bermudas_coton_tm;
         $this->tenis_tm = $tenis_tm;
         $this->ref_cod_escola = $ref_cod_escola;
+        $this->calca_jeans_tm = $calca_jeans_tm;
     }
 
     /**
@@ -348,6 +301,18 @@ class clsPmieducarDistribuicaoUniforme
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->calca_jeans_qtd)) {
+                $campos .= "{$gruda}calca_jeans_qtd";
+                $valores .= "{$gruda}{$this->calca_jeans_qtd}";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->calca_jeans_tm)) {
+                $campos .= "{$gruda}calca_jeans_tm";
+                $valores .= "{$gruda}'{$this->calca_jeans_tm}'";
+                $gruda = ', ';
+            }
+
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
             return $db->insertId("{$this->_tabela}_seq");
@@ -484,6 +449,18 @@ class clsPmieducarDistribuicaoUniforme
                 $set .= ',camiseta_infantil_tm = NULL';
             }
 
+            if ($this->calca_jeans_qtd) {
+                $set .= ",calca_jeans_qtd = '{$this->calca_jeans_qtd}'";
+            } else {
+                $set .= ',calca_jeans_qtd = NULL';
+            }
+
+            if ($this->calca_jeans_tm) {
+                $set .= ",calca_jeans_tm = '{$this->calca_jeans_tm}'";
+            } else {
+                $set .= ',calca_jeans_tm = NULL';
+            }
+
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_distribuicao_uniforme = '{$this->cod_distribuicao_uniforme}'");
 
@@ -612,76 +589,5 @@ class clsPmieducarDistribuicaoUniforme
         }
 
         return false;
-    }
-
-    /**
-     * Define quais campos da tabela serão selecionados no método Lista().
-     */
-    public function setCamposLista($str_campos)
-    {
-        $this->_campos_lista = $str_campos;
-    }
-
-    /**
-     * Define que o método Lista() deverpa retornar todos os campos da tabela.
-     */
-    public function resetCamposLista()
-    {
-        $this->_campos_lista = $this->_todos_campos;
-    }
-
-    /**
-     * Define limites de retorno para o método Lista().
-     */
-    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
-    {
-        $this->_limite_quantidade = $intLimiteQtd;
-        $this->_limite_offset = $intLimiteOffset;
-    }
-
-    /**
-     * Retorna a string com o trecho da query responsável pelo limite de
-     * registros retornados/afetados.
-     *
-     * @return string
-     */
-    public function getLimite()
-    {
-        if (is_numeric($this->_limite_quantidade)) {
-            $retorno = " LIMIT {$this->_limite_quantidade}";
-
-            if (is_numeric($this->_limite_offset)) {
-                $retorno .= " OFFSET {$this->_limite_offset} ";
-            }
-
-            return $retorno;
-        }
-
-        return '';
-    }
-
-    /**
-     * Define o campo para ser utilizado como ordenação no método Lista().
-     */
-    public function setOrderby($strNomeCampo)
-    {
-        if (is_string($strNomeCampo) && $strNomeCampo) {
-            $this->_campo_order_by = $strNomeCampo;
-        }
-    }
-
-    /**
-     * Retorna a string com o trecho da query responsável pela Ordenação dos
-     * registros.
-     *
-     * @return string
-     */
-    public function getOrderby()
-    {
-        if (is_string($this->_campo_order_by)) {
-            return " ORDER BY {$this->_campo_order_by} ";
-        }
-
-        return '';
     }
 }

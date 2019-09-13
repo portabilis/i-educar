@@ -759,7 +759,7 @@ table.calendario td a{
 .ui-dialog select{
 
   border-radius: 3px;
-  background-color: #ffffff !important;
+  background-color: #ffffff;
   border: solid 1px #cddce6;
   font-size: 14px !important;
   font-weight: normal;
@@ -1113,7 +1113,8 @@ table.tabela-adicao .formlttd{
 }
 
 table.tabela-adicao td .geral,
-table.tabela-adicao .obrigatorio{
+table.tabela-adicao .obrigatorio,
+table.tabela-adicao td .btn-detalhes{
   width: 100% !important;
 }
 
@@ -1295,8 +1296,16 @@ input.btn_small {
   }
 }
 
-
 /****WIDGET SUPORTE****/
 .freshwidget-button{
   left: 30px !important;
+}
+
+a.btn-detalhes {
+  background: #CCDCE6 !important;
+  padding: 8px 17px;
+  border-radius: 3px;
+  color: #47728F;
+  cursor: pointer;
+  white-space: nowrap;
 }

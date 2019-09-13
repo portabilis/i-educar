@@ -15,7 +15,7 @@ class Core_ViewTest extends TestCase
       parent::__construct($name, $data, $dataName);
   }
 
-  protected function setUp()
+  protected function setUp(): void
   {
       parent::setUp();
 
@@ -26,8 +26,7 @@ class Core_ViewTest extends TestCase
 
   public function testTituloConfiguradoComValorDeConfiguracaoGlobal()
   {
-    global $coreExt;
-    $instituicao = $coreExt['Config']->app->template->vars->instituicao;
+    $instituicao = config('legacy.app.template.vars.instituicao');
 
     $this->_view->MakeAll();
     $this->assertEquals($instituicao . ' | foo', $this->_view->getTitulo());

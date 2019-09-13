@@ -1,0 +1,97 @@
+.flashMessages {
+  font-size: 14px;
+  left: 0;
+  margin: 0 auto;
+  max-height: 100vh;
+  overflow-y: auto;
+  pointer-events: none;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 90000;
+}
+
+.flashMessages * {
+  pointer-events: auto;
+}
+
+.flashMessages__controls {
+  margin: 0;
+  padding: 0 12px 0 0;
+  pointer-events: none;
+  text-align: right;
+}
+
+.flashMessages__controls li {
+  display: inline-block;
+  margin: 12px 12px 12px 0;
+}
+
+.flashMessages__controls li a {
+  background-color: rgba(0, 0, 0, .75);
+  border-radius: 13px;
+  color: white;
+  display: inline-block;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 6px 12px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.flashMessages__message {
+  background-color: lightgray;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+  color: rgba(0, 0, 0, .75);
+  margin: 24px 24px;
+  padding: 15px;
+  position: relative;
+}
+
+.flashMessages__message:last-child {
+  margin-bottom: 12px;
+}
+
+.flashMessages__message.-success {
+  color: #157100;
+  background-color: #F0F9EE;
+}
+
+.flashMessages__message.-error {
+  color: #FF4E4E;
+  background-color: #FFEEEE;
+}
+
+.flashMessages__message.-info {
+  color: #3A87AD;
+  background-color: #BCE8F1;
+}
+
+.flashMessages__message.-legacy {
+  color: #3A87AD;
+  background-color: #BCE8F1;
+}
+
+.flashMessages__message.-notice {
+  color: #B0AF84;
+  background-color: #FEFFCE;
+}
+
+.flashMessages__message .close-msg {
+  color: #999;
+  display: block;
+  font-size: 16px;
+  font-weight: bold;
+  position: absolute;
+  right: 15px;
+  text-decoration: none;
+  top: 10px;
+}
+
+.flashMessages__message time {
+  display: block;
+  font-size: 10px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}

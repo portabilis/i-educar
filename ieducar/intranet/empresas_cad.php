@@ -34,7 +34,7 @@ class clsIndex extends clsBase
     function Formular()
     {
         $this->SetTitulo("{$this->_instituicao} Empresas!");
-        $this->processoAp = array("41", "649");
+        $this->processoAp = 41;
         $this->addEstilo('localizacaoSistema');
     }
 }

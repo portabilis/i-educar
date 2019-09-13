@@ -60,7 +60,7 @@ class indice extends clsCadastro
 
     function Inicializar()
     {
-        
+
 
         $this->cod_turma=$_GET["cod_turma"];
 
@@ -73,16 +73,11 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 586, $this->pessoa_logada, 7,  "educar_turma_lst.php" );
 
-
         $this->url_cancelar = "educar_turma_det.php?cod_turma={$this->cod_turma}";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Pareceres da turma"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Pareceres da turma', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
 
@@ -146,7 +141,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 586, $this->pessoa_logada, 7,  "educar_turma_lst.php" );

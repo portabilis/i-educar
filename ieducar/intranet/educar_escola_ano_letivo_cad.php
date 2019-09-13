@@ -80,7 +80,7 @@ class indice extends clsCadastro
   {
     $retorno = 'Novo';
 
-    
+
 
     $this->ano            = $_GET['ano'];
     $this->ref_cod_escola = $_GET['cod_escola'];
@@ -92,14 +92,9 @@ class indice extends clsCadastro
     $this->nome_url_sucesso  = 'Continuar';
     $this->url_cancelar      = 'educar_escola_det.php?cod_escola=' . $this->ref_cod_escola;
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Definição do ano letivo"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Definição do ano letivo', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
 
     $this->nome_url_cancelar = 'Cancelar';
 
@@ -124,11 +119,11 @@ class indice extends clsCadastro
       }
     }
 
-    $ano_atual = date('Y');
+    $ano_atual = date('Y') - 5;
 
     // Foreign keys
     $opcoes = array('' => 'Selecione');
-    $lim = 5;
+    $lim = 10;
 
     for ($i = 0; $i < $lim; $i++) {
       $ano = $ano_atual + $i;
@@ -146,7 +141,7 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7,

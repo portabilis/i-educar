@@ -186,7 +186,7 @@ function agenda_retrair( compId )
 	document.getElementById( "aberto_" + compId ).value = 0;
 }
 
-function excluir( compId )
+function excluir_compromisso( compId )
 {
 	if( confirm( 'Deseja realmente excluir este compromisso?\nEsta e uma operacao irreversivel!' ) )
 	{
@@ -274,7 +274,7 @@ function novoForm(array_compromissos)
 	conteudo += '<td colspan="4">Repetir este compromisso a cada: <input type="text" name="novo_repetir_dias" id="novo_repetir_dias" class="small" value="0" maxlength="2"> dias. ';
 	conteudo += 'Repetir <input type="text" name="novo_repetir_qtd" id="novo_repetir_qtd" class="small" value="0" maxlength="2"> vezes</td></tr>';
 	conteudo += '<tr><td width="25%">&nbsp;</td><td width="25%">&nbsp;</td><td width="25%">&nbsp;</td><td width="25%">&nbsp;</td></tr>';
-	conteudo += '<tr><td colspan="4" align="center"><input type="button" name="agenda_sim" class="agenda_rap_botao" id="agenda_salvar" value="Salvar" onclick="checaEnvio();"> <input type="button" name="agenda_nao" class="agenda_rap_botao" id="agenda_salvar" value="Cancelar" onclick="document.getElementById(\'linkFechar\').onclick();"></td></tr>';
+	conteudo += '<tr><td colspan="4" align="center"><input type="button" name="agenda_sim" class="agenda_rap_botao" id="agenda_salvar" value="Salvar" onclick="checaEnvio();"> <input type="button" name="agenda_nao" class="agenda_rap_botao" id="agenda_salvar" value="Cancelar" onclick="document.getElementById(\'modal-close\').onclick();"></td></tr>';
 	conteudo += '</table>';
 
 	conteudo += '</form>';
@@ -293,7 +293,7 @@ function salvaNota( compId )
 	conteudo += '</tr>';
 	conteudo += '<tr><td colspan="2" style="height:1px;background-color: #9cbdd7;"></td></tr>';
 	conteudo += '<tr>';
-	conteudo += '<tr><td colspan="2" align="center"><input type="button" name="agenda_sim" class="agenda_rap_botao" id="agenda_salvar" value="Gravar" onclick="checaGravacao();" style="width:100px;"> <input type="button" name="agenda_nao" class="agenda_rap_botao" id="agenda_salvar" value="Cancelar" onclick="document.getElementById(\'linkFechar\').onclick()" style="width:100px;"></td></tr>';
+	conteudo += '<tr><td colspan="2" align="center"><input type="button" name="agenda_sim" class="agenda_rap_botao" id="agenda_salvar" value="Gravar" onclick="checaGravacao();" style="width:100px;"> <input type="button" name="agenda_nao" class="agenda_rap_botao" id="agenda_salvar" value="Cancelar" onclick="document.getElementById(\'modal-close\').onclick()" style="width:100px;"></td></tr>';
 	conteudo += '</table>';
 
 	conteudo += '</form>';

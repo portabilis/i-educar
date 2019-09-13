@@ -28,7 +28,7 @@ trait Avaliacao_Service_Boletim_Avaliacao
      *
      * @var array
      */
-    protected $_mediasGerais = [];
+    protected $_mediaGeral = [];
 
     /**
      * Notas adicionadas no boletim para inclusão ou edição.
@@ -146,25 +146,25 @@ trait Avaliacao_Service_Boletim_Avaliacao
     }
 
     /**
-     * Retorna as instâncias de Avaliacao_Model_MediaGeral do aluno.
+     * Retorna a instância de Avaliacao_Model_MediaGeral do aluno.
      *
      * @return array
      */
-    public function getMediasGerais()
+    public function getMediaGeral()
     {
-        return $this->_mediasGerais;
+        return $this->_mediaGeral;
     }
 
     /**
-     * Retorna as instâncias de Avaliacao_Model_MediaGeral do aluno.
+     * Retorna a instância de Avaliacao_Model_MediaGeral do aluno.
      *
-     * @param array $mediasGerais
+     * @param array $mediaGeral
      *
      * @return $this
      */
-    public function setMediasGerais(array $mediasGerais)
+    public function setMediaGeral($mediaGeral)
     {
-        $this->_mediasGerais = $mediasGerais;
+        $this->_mediaGeral = $mediaGeral;
 
         return $this;
     }

@@ -58,7 +58,7 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = "Novo";
-    
+
 
     $this->ref_cod_matricula=$_GET["ref_cod_matricula"];
     $this->ref_cod_aluno=$_GET["ref_cod_aluno"];
@@ -75,13 +75,9 @@ class indice extends clsCadastro
 
     $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Registro de saída da escola"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Registro de saída da escola', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
 
     $this->nome_url_cancelar = "Cancelar";
 
@@ -113,7 +109,7 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    
+
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
@@ -131,13 +127,13 @@ class indice extends clsCadastro
     if($obj_matricula->edita())
     {
       if( $obj_matricula->setSaidaEscola($this->observacao, Portabilis_Date_Utils::brToPgSQL($this->data_saida_escola)) )
-      {      
+      {
         $this->mensagem .= "Saída da escola realizada com sucesso.<br>";
         $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
       }
 
       $this->mensagem = "Observação não pode ser salva.<br>";
-      
+
       return false;
     }
     $this->mensagem = "Saída da escola não pode ser realizada.<br>";
@@ -147,8 +143,8 @@ class indice extends clsCadastro
 
    function Excluir()
    {
-     
- 
+
+
      $obj_permissoes = new clsPermissoes();
      $obj_permissoes->permissao_excluir( 578, $this->pessoa_logada, 7,  "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
    }

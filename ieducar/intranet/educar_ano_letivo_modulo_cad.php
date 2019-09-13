@@ -1,5 +1,8 @@
 <?php
 
+use App\Services\iDiarioService;
+use RuntimeException;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -25,6 +28,8 @@ class indice extends clsCadastro
 
     public $pessoa_logada;
 
+    public $ref_cod_instituicao;
+
     public $ref_ano;
 
     public $ref_ref_cod_escola;
@@ -47,7 +52,7 @@ class indice extends clsCadastro
     {
         $retorno = 'Novo';
 
-        
+
 
         $this->ref_cod_modulo = $_GET['ref_cod_modulo'];
         $this->ref_ref_cod_escola = $_GET['ref_cod_escola'];
@@ -84,14 +89,10 @@ class indice extends clsCadastro
             ? $_GET['referrer'] . '?cod_escola=' . $this->ref_ref_cod_escola
             : 'educar_escola_lst.php';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => 'Etapas do ano letivo'
+        $this->breadcrumb('Etapas do ano letivo', [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
 
-        $this->enviaLocalizacao($localizacao->montar());
         $this->nome_url_cancelar = 'Cancelar';
 
         return $retorno;
@@ -112,6 +113,7 @@ class indice extends clsCadastro
         $obj_escola = new clsPmieducarEscola($this->ref_ref_cod_escola);
         $det_escola = $obj_escola->detalhe();
         $ref_cod_instituicao = $det_escola['ref_cod_instituicao'];
+        $this->ref_cod_instituicao = $ref_cod_instituicao;
 
         $obj = new clsPmieducarAnoLetivoModulo();
         $obj->setOrderBy('sequencial ASC');
@@ -119,6 +121,7 @@ class indice extends clsCadastro
         $cont = 0;
 
         if ($registros) {
+            $cor = '';
             $tabela = '<table border=0 style=\'\' cellpadding=2 width=\'100%\'>';
             $tabela .= "<tr bgcolor=$cor><td colspan='2'>Etapas do ano anterior (".($this->ref_ano - 1).')</td></tr><tr><td>';
             $tabela .= '<table cellpadding="2" cellspacing="2" border="0" align="left" width=\'300px\'>';
@@ -260,7 +263,7 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
 
@@ -334,8 +337,6 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
             561,
@@ -345,6 +346,18 @@ class indice extends clsCadastro
         );
 
         if ($this->ref_cod_modulo && $this->data_inicio && $this->data_fim) {
+            try {
+                $this->validaModulos();
+            } catch (Exception $e) {
+                $_POST = [];
+
+                $this->Inicializar();
+
+                $this->mensagem = $e->getMessage();
+
+                return false;
+            }
+
             $obj = new clsPmieducarAnoLetivoModulo($this->ref_ano, $this->ref_ref_cod_escola);
             $excluiu = $obj->excluirTodos();
 
@@ -389,7 +402,7 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        
+
 
         $obj_permissoes = new clsPermissoes();
 
@@ -527,6 +540,7 @@ class indice extends clsCadastro
                 'visivel',
                 'turma_turno_id',
                 'tipo_boletim',
+                'tipo_boletim_diferenciado',
                 'ano',
                 'dias_semana',
                 'atividades_complementares',
@@ -549,6 +563,7 @@ class indice extends clsCadastro
             $turmaDestino->ano = $anoDestino;
             $turmaDestino->ref_usuario_cad = $this->pessoa_logada;
             $turmaDestino->ref_usuario_exc = $this->pessoa_logada;
+            $turmaDestino->visivel = dbBool($turmaOrigem['visivel']);
             $turmaDestinoId = $turmaDestino->cadastra();
 
             $this->copiarComponenteCurricularTurma($turmaOrigem['cod_turma'], $turmaDestinoId);
@@ -625,6 +640,74 @@ class indice extends clsCadastro
         }
 
         return json_encode($retorno);
+    }
+
+    protected function validaModulos()
+    {
+        $ano = $this->ref_ano;
+        $escolaId = $this->ref_ref_cod_escola;
+        $etapasCount = count($this->data_inicio);
+        $etapasCountAntigo = (int) Portabilis_Utils_Database::selectField(
+            'SELECT COUNT(*) AS count FROM pmieducar.ano_letivo_modulo WHERE ref_ano = $1 AND ref_ref_cod_escola = $2',
+            [$ano, $escolaId]
+        );
+
+        if ($etapasCount >= $etapasCountAntigo) {
+            return true;
+        }
+
+        $etapasTmp = $etapasCount;
+        $etapas = [];
+
+        while ($etapasTmp < $etapasCountAntigo) {
+            $etapasTmp += 1;
+            $etapas[] = $etapasTmp;
+        }
+
+        $counts = [];
+
+        $counts[] = DB::table('modules.falta_componente_curricular as fcc')
+            ->join('modules.falta_aluno as fa', 'fa.id',  '=', 'fcc.falta_aluno_id')
+            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'fa.matricula_id')
+            ->whereIn('fcc.etapa', $etapas)
+            ->where('m.ref_ref_cod_escola', $escolaId)
+            ->where('m.ano', $ano)
+            ->where('m.ativo', 1)
+            ->count();
+
+        $counts[] = DB::table('modules.falta_geral as fg')
+            ->join('modules.falta_aluno as fa', 'fa.id',  '=', 'fg.falta_aluno_id')
+            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'fa.matricula_id')
+            ->whereIn('fg.etapa', $etapas)
+            ->where('m.ref_ref_cod_escola', $escolaId)
+            ->where('m.ano', $ano)
+            ->where('m.ativo', 1)
+            ->count();
+
+        $counts[] = DB::table('modules.nota_componente_curricular as ncc')
+            ->join('modules.nota_aluno as na', 'na.id',  '=', 'ncc.nota_aluno_id')
+            ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'na.matricula_id')
+            ->whereIn('ncc.etapa', $etapas)
+            ->where('m.ref_ref_cod_escola', $escolaId)
+            ->where('m.ano', $ano)
+            ->where('m.ativo', 1)
+            ->count();
+
+        $sum = array_sum($counts);
+
+        if ($sum > 0) {
+            throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.');
+        }
+
+        $iDiarioService = app(iDiarioService::class);
+
+        foreach ($etapas as $etapa) {
+            if ($iDiarioService->getStepActivityByUnit($escolaId, $etapa)) {
+                throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas no diário online.');
+            }
+        }
+
+        return true;
     }
 }
 

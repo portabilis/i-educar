@@ -61,7 +61,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Tipo Exemplar - Detalhe";
-        
+
 
         $this->cod_exemplar_tipo = $_GET["cod_exemplar_tipo"];
 
@@ -170,13 +170,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_exemplar_tipo_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Detalhe do tipo de exemplares"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhe do tipo de exemplares', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 

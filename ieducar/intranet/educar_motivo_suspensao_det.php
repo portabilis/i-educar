@@ -60,7 +60,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Motivo Suspens&atilde;o - Detalhe";
-        
+
 
         $this->cod_motivo_suspensao=$_GET["cod_motivo_suspensao"];
 
@@ -91,13 +91,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_motivo_suspensao_lst.php";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Detalhe do motivo de suspens&atilde;o"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhe do motivo de suspensão', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 

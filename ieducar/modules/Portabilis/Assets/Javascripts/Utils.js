@@ -239,9 +239,23 @@ function safeSort(values) {
   }
 }
 
+function dateBrToDb(value) {
+  let splittedValue = value.split('/');
+
+  return `${splittedValue[2]}-${splittedValue[1]}-${splittedValue[0]}`;
+}
 
 function safeUtf8Decode(s) {
   return stringUtils.toUtf8(s);
+}
+
+function formatDate(data) {
+  data = new Date(data + ' 00:00');
+  var dia = data.getDate().toString().padStart(2, "0");
+  var mes = (data.getMonth()+1).toString().padStart(2, "0");
+  var ano = data.getFullYear();
+
+  return dia + '/' + mes + '/' + ano;
 }
 
 // feedback messages
@@ -250,60 +264,27 @@ function safeUtf8Decode(s) {
 
 var messageUtils = {
   error : function(msg, targetId) {
-    handleMessages([{type : 'error', msg : safeUtf8Decode(msg)}], targetId);
+    flashMessages.error(msg);
   },
 
   success : function(msg, targetId) {
-    handleMessages([{type : 'success', msg : safeUtf8Decode(msg)}], targetId);
+    flashMessages.success(msg);
   },
 
   notice : function(msg, targetId) {
-    handleMessages([{type : 'notice', msg : safeUtf8Decode(msg)}], targetId);
+    flashMessages.notice(msg);
   },
 
-  removeStyle : function(targetElementOrId, delay) {
-    // 30 seconds, by default
-    if (delay == undefined)
-      delay = 30000;
-
-    var $targetElement = $j(buildId(targetElementOrId));
-
-    window.setTimeout(function() {
-      $targetElement.removeClass('success').removeClass('error').removeClass('notice');
-    }, delay);
-
+  info : function (msg) {
+    flashMessages.info(msg);
   },
 
   handleMessages : function(messages, targetElementOrId) {
-
-    var $feedbackMessages = $j('#feedback-messages');
-    var $targetElement    = $j(buildId(targetElementOrId));
-    var messagesType      = [];
-
     for (var i = 0; i < messages.length; i++) {
-      var delay = messages[i].type == 'success' ? 5000 : 10000;
+      var type = messages[i].type || 'info';
+      var msg = messages[i].msg;
 
-      $j('<p />').hide()
-                 .data('target_id', $targetElement.attr('id'))
-                 .addClass(messages[i].type)
-                 .html(stringUtils.toUtf8(messages[i].msg))
-                 .appendTo($feedbackMessages)
-                 .fadeIn().delay(delay).fadeOut(function() {
-                    $j(this).remove()
-                  });
-
-      if (messagesType.indexOf(messages[i].type < 0))
-        messagesType.push(messages[i].type);
-    }
-
-    if ($targetElement) {
-      $targetElement.removeClass('error').removeClass('success').removeClass('notice');
-
-      $targetElement.addClass(messagesType.join(' '));
-      messageUtils.removeStyle($targetElement);
-
-      if (messagesType.indexOf('error') > -1)
-        $targetElement.first().focus();
+      flashMessages.add(type, msg);
     }
   }
 };
@@ -311,15 +292,10 @@ var messageUtils = {
 // backward compatibility
 var handleMessages = messageUtils.handleMessages;
 
-
 // when page is ready
 
 (function($) {
   $(document).ready(function() {
-
-    // add div for feedback messages
-    $j('<div />').attr('id', 'feedback-messages').appendTo($j('#corpo'));
-
     // Search on press enter
     $j('.tablelistagem input:text').keypress(function(e) {
         if(e.which == 13) {

@@ -683,7 +683,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     $nota = $this->DISCIPLINA_DISPENSADA;
                 } elseif ($this->getRequest()->notas == 'buscar-boletim') {
                     if ($tpNota == $cnsNota::CONCEITUAL) {
-                        if ($GLOBALS['coreExt']['Config']->app->processar_historicos_conceituais == '1') {
+                        if (config('legacy.app.processar_historicos_conceituais') == '1') {
                             $nota = (string)$mediasCc[$ccId][0]->mediaArredondada;
                             $notaConceitualNumerica = (string)$mediasCc[$ccId][0]->media;
                         }

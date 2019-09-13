@@ -135,6 +135,11 @@ class Portabilis_View_Helper_Inputs
         $this->simpleSearchResourceInput('simpleSearchPais', $attrName, $inputOptions, $helperOptions);
     }
 
+    public function simpleSearchPaisSemBrasil($attrName, $inputOptions = [], $helperOptions = [])
+    {
+        $this->simpleSearchResourceInput('simpleSearchPaisSemBrasil', $attrName, $inputOptions, $helperOptions);
+    }
+
     public function simpleSearchMunicipio($attrName, $inputOptions = [], $helperOptions = [])
     {
         $this->simpleSearchResourceInput('simpleSearchMunicipio', $attrName, $inputOptions, $helperOptions);
@@ -208,11 +213,6 @@ class Portabilis_View_Helper_Inputs
     public function simpleSearchCursoSuperior($attrName, $inputOptions = [], $helperOptions = [])
     {
         $this->simpleSearchResourceInput('simpleSearchCursoSuperior', $attrName, $inputOptions, $helperOptions);
-    }
-
-    public function simpleSearchCartorioInep($attrName, $inputOptions = [], $helperOptions = [])
-    {
-        $this->simpleSearchResourceInput('simpleSearchCartorioInep', $attrName, $inputOptions, $helperOptions);
     }
 
     public function simpleSearchServidor($attrName, $inputOptions = [], $helperOptions = [])

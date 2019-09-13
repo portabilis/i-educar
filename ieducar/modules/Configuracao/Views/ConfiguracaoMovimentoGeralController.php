@@ -9,7 +9,7 @@ class clsIndexBase extends clsBase
 
     function Formular() {
         $this->SetTitulo($this->_instituicao . ' i-Educar - Configuração movimento geral');
-        $this->processoAp = 9998866;
+        $this->processoAp = 9998867;
         $this->addEstilo('localizacaoSistema');
     }
 }
@@ -80,12 +80,12 @@ class ConfiguracaoMovimentoGeralController extends clsCadastro
     );
 
     public $_titulo = 'Configuração movimento geral';
-    public $_processoAp = 9998866;
+    public $_processoAp = 9998867;
 
     function Inicializar()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(9998866, $this->pessoa_logada, 1, 'educar_index.php');
+        $obj_permissoes->permissao_cadastra(9998867, $this->pessoa_logada, 1, 'educar_index.php');
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos( array(
             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",

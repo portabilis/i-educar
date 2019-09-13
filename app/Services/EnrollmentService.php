@@ -7,12 +7,14 @@ use App\Exceptions\Enrollment\CancellationDateBeforeAcademicYearException;
 use App\Exceptions\Enrollment\EnrollDateAfterAcademicYearException;
 use App\Exceptions\Enrollment\EnrollDateBeforeAcademicYearException;
 use App\Exceptions\Enrollment\ExistsActiveEnrollmentException;
+use App\Exceptions\Enrollment\ExistsActiveEnrollmentSameTimeException;
 use App\Exceptions\Enrollment\NoVacancyException;
 use App\Exceptions\Enrollment\PreviousEnrollDateException;
 use App\Exceptions\Enrollment\PreviousCancellationDateException;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacyEnrollment;
+use App\Services\SchoolClass\AvailableTimeService;
 use App\User;
 use Carbon\Carbon;
 use DateTime;
@@ -38,8 +40,8 @@ class EnrollmentService
 
     /**
      * @param LegacyRegistration $registration
-     * @param LegacySchoolClass $schoolClass
-     * @param DateTime $date
+     * @param LegacySchoolClass  $schoolClass
+     * @param DateTime           $date
      *
      * @return null
      */
@@ -51,6 +53,14 @@ class EnrollmentService
         $enrollmentSequence = new SequencialEnturmacao($registration->id, $schoolClass->id, $date->format('Y-m-d'));
 
         return $enrollmentSequence->ordenaSequencialNovaMatricula();
+    }
+
+    /**
+     * @return AvailableTimeService
+     */
+    private function getAvailableTimeService()
+    {
+        return new AvailableTimeService();
     }
 
     /**
@@ -68,6 +78,39 @@ class EnrollmentService
         $enrollment = LegacyEnrollment::findOrFail($enrollment);
 
         return $enrollment;
+    }
+
+    /**
+     * Retorna se matrícula está enturmada na turma.
+     *
+     * @param LegacySchoolClass  $schoolClass
+     * @param LegacyRegistration $registration
+     *
+     * @return bool
+     */
+    public function isEnrolled($schoolClass, $registration)
+    {
+        return LegacyEnrollment::where('ref_cod_matricula', $registration->id)
+            ->where('ref_cod_turma', $schoolClass->id)
+            ->active()
+            ->exists();
+    }
+
+    /**
+     * Retorna as enturmações da matrícula em outras turmas.
+     *
+     * @param LegacySchoolClass  $schoolClass
+     * @param LegacyRegistration $registration
+     *
+     * @return Collection
+     */
+    public function anotherClassroomEnrollments($schoolClass, $registration)
+    {
+        return LegacyEnrollment::where('ref_cod_matricula', $registration->id)
+            ->where('ref_cod_turma', '<>', $schoolClass->id)
+            ->active()
+            ->with('schoolClass')
+            ->get();
     }
 
     /**
@@ -125,6 +168,7 @@ class EnrollmentService
      * @throws NoVacancyException
      * @throws ExistsActiveEnrollmentException
      * @throws PreviousEnrollDateException
+     * @throws Throwable
      */
     public function enroll(
         LegacyRegistration $registration,
@@ -152,8 +196,18 @@ class EnrollmentService
             throw new ExistsActiveEnrollmentException($registration);
         }
 
-        if ($registration->lastEnrollment && $registration->lastEnrollment->date_departed->format('Y-m-d') > $date->format('Y-m-d')) {
+        if (
+            $registration->lastEnrollment
+            && $registration->lastEnrollment->date_departed
+            && $registration->lastEnrollment->date_departed->format('Y-m-d') > $date->format('Y-m-d')
+        ) {
             throw new PreviousEnrollDateException($date, $registration->lastEnrollment);
+        }
+
+        $isMandatoryCensoFields = $schoolClass->school->institution->isMandatoryCensoFields();
+
+        if ($isMandatoryCensoFields && !$this->getAvailableTimeService()->isAvailable($registration->ref_cod_aluno, $schoolClass->id)) {
+            throw new ExistsActiveEnrollmentSameTimeException($registration);
         }
 
         $sequenceInSchoolClass = $this->getSequenceSchoolClass($registration, $schoolClass, $date);
@@ -169,5 +223,58 @@ class EnrollmentService
         ]);
 
         return $enrollment;
+    }
+
+    /**
+     * Atualiza o campo remanejado na enturmação para TRUE
+     *
+     * @param LegacyEnrollment $enrollment
+     * @throws Throwable
+     */
+    public function markAsRelocated(LegacyEnrollment $enrollment)
+    {
+        $enrollment->remanejado = true;
+        $enrollment->saveOrFail();
+    }
+
+    /**
+     * Verifica se a matrícula tem enturmação anterior, com data de saída posterior a data base,
+     * ou data base vazia
+     *
+     * @param LegacyRegistration $registration
+     * @return LegacyEnrollment|void
+     */
+    public function getPreviousEnrollmentAccordingToRelocationDate(LegacyRegistration $registration)
+    {
+        $previousEnrollment = $registration->lastEnrollment;
+
+        if (!$previousEnrollment) {
+            return;
+        }
+
+        $dateDeparted = $previousEnrollment->date_departed;
+
+        $relocationDate = $previousEnrollment->schoolClass->school->institution->relocation_date;
+
+        if (!$relocationDate || $relocationDate < $dateDeparted) {
+           return $previousEnrollment;
+        }
+    }
+
+    /**
+     * Reordena os sequenciais das enturmações de uma matrícula.
+     *
+     * @param LegacyRegistration $registration
+     *
+     * @return bool
+     */
+    public function reorder(LegacyRegistration $registration)
+    {
+        $registration->enrollments()->orderBy('sequencial')->get()->values()->each(function (LegacyEnrollment $enrollment, $index) {
+            $enrollment->sequencial = $index + 1;
+            $enrollment->save();
+        });
+
+        return true;
     }
 }

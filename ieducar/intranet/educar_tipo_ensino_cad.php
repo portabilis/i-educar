@@ -63,7 +63,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         //** Verificacao de permissao para exclusao
         $obj_permissao = new clsPermissoes();
@@ -75,7 +75,7 @@ class indice extends clsCadastro
 
         if( is_numeric( $this->cod_tipo_ensino ) )
         {
-            
+
             $obj = new clsPmieducarTipoEnsino($this->cod_tipo_ensino,null,null,null,null,null,1);
             if(!$registro = $obj->detalhe()){
                 $this->simpleRedirect('educar_tipo_ensino_lst.php');
@@ -100,15 +100,13 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_tipo_ensino_det.php?cod_tipo_ensino={$registro["cod_tipo_ensino"]}" : "educar_tipo_ensino_lst.php";
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} tipo de ensino"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' tipo de ensino', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
+
         return $retorno;
     }
 
@@ -132,7 +130,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $this->atividade_complementar = is_null($this->atividade_complementar) ? FALSE : TRUE;
 
@@ -162,7 +160,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $this->atividade_complementar = is_null($this->atividade_complementar) ? FALSE : TRUE;
 
@@ -195,7 +193,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj = new clsPmieducarTipoEnsino($this->cod_tipo_ensino, $this->pessoa_logada, null, $this->nm_tipo, null, null, 0);
         $tipoEnsino = $obj->detalhe();

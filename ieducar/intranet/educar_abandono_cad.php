@@ -78,25 +78,16 @@ class indice extends clsCadastro
 
         $this->ref_cod_matricula=$_GET["ref_cod_matricula"];
         $this->ref_cod_aluno=$_GET["ref_cod_aluno"];
-        $cancela=$_GET["cancela"];
 
         $obj_permissoes = new clsPermissoes();
+
         $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
-
-        $obj_matricula = new clsPmieducarMatricula( $this->cod_matricula,null,null,null,$this->pessoa_logada,null,null,6 );
-
-        $det_matricula = $obj_matricula->detalhe();
 
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
 
-        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "Registro do abandono de matrícula"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Registro do abandono de matrícula', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
 

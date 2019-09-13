@@ -228,13 +228,9 @@ class indice extends clsDetalhe
     $this->url_cancelar = 'educar_curso_lst.php';
     $this->largura = '100%';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "Detalhe do curso"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Detalhe do curso', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
 }
 

@@ -434,6 +434,9 @@ class indice extends clsDetalhe
             $this->array_botao[] = 'Reclassificar alunos alfabeticamente';
             $this->array_botao_url_script[] = "if(confirm(\"Deseja realmente reclassificar os alunos alfabeticamente?\\nAo utilizar esta opção para esta turma, a ordenação dos alunos no diário e em relatórios que é controlada por ordem de chegada após a data de fechamento da turma (campo Data de fechamento), passará a ter o controle novamente alfabético, desconsiderando a data de fechamento.\"))reclassifica_matriculas({$registro['cod_turma']})";
 
+            $this->array_botao[] = 'Reclassificar alunos por data base';
+            $this->array_botao_url_script[] = "if(confirm(\"Deseja realmente reclassificar os alunos por data base?\\nAo utilizar esta opção para esta turma, a ordenação dos alunos no diário e em relatórios será reordenada para verificar a existência de data base, assim como validação das matrículas de dependência, respeitando a data de enturmação das matrículas e não somente ordenação alfabética.\"))ordena_matriculas_por_data_base({$registro['cod_turma']})";
+
             $this->array_botao[] = 'Editar sequência de alunos na turma';
             $this->array_botao_url_script[] = sprintf('go("educar_ordenar_alunos_turma.php?cod_turma=%d");', $registro['cod_turma']);
 
@@ -444,15 +447,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = 'educar_turma_lst.php';
         $this->largura = '100%';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(
-            [
-                $_SERVER['SERVER_NAME'] . "/intranet" => "Início",
-                "educar_index.php" => "Escola",
-                "" => "Detalhe da turma"
-            ]
-        );
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Detalhe da turma', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $scripts = [
             '/modules/Portabilis/Assets/Javascripts/Utils.js',

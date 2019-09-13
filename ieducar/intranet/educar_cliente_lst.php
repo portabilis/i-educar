@@ -90,7 +90,7 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $this->addCabecalhos( array(
             "Código",
@@ -114,9 +114,9 @@ class indice extends clsListagem
         $get_cliente_tipo         = true;
 
         include( "include/pmieducar/educar_campo_lista.php" );
-        
-        
-        
+
+
+
         // Paginador
         $this->limite = 20;
         $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
@@ -127,37 +127,37 @@ class indice extends clsListagem
 
         if ( $this->status != 'S' )
             $this->status = null;
-        
+
         $cod_biblioteca = $this->ref_cod_biblioteca;
         if(!is_numeric($this->ref_cod_biblioteca))
-        {   
+        {
             $db = new clsBanco();
             $db->Consulta("SELECT ref_cod_biblioteca FROM pmieducar.biblioteca_usuario WHERE ref_cod_usuario = '$this->pessoa_logada' ");
             if($db->numLinhas())
             {
                 $cod_biblioteca = array();
-                while ($db->ProximoRegistro()) 
+                while ($db->ProximoRegistro())
                 {
                     list($ref_cod) = $db->Tupla();
                     $cod_biblioteca[] = $ref_cod;
                 }
             }
-        }   
+        }
             $lista = $obj_cliente->listaCompleta( $this->codigo_cliente,
                                                   null,
-                                                  null, 
                                                   null,
-                                                  null, 
-                                                  null,     
                                                   null,
-                                                  null, 
+                                                  null,
+                                                  null,
+                                                  null,
+                                                  null,
                                                   null,
                                                   null,
                                                   1,
                                                   $this->nome_cliente,
                                                   $this->status,
                                                   $this->ref_cod_cliente_tipo,
-                                                  null, 
+                                                  null,
                                                   $cod_biblioteca
                                                 );
         $total = $obj_cliente->_total;
@@ -203,13 +203,9 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Listagem de clientes"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Listagem de clientes', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 // cria uma extensao da classe base

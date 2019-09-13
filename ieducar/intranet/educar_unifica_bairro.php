@@ -64,13 +64,9 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(761, $this->pessoa_logada, 7,
       'index.php');
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_enderecamento_index.php"    => "Endereçamento",
-         ""        => "Unifica&ccedil;&atilde;o de bairros"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Unificação de bairros', [
+        url('intranet/educar_enderecamento_index.php') => 'Endereçamento',
+    ]);
 
     return $retorno;
   }

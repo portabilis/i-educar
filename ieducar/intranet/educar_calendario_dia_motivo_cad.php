@@ -70,7 +70,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_calendario_dia_motivo=$_GET["cod_calendario_dia_motivo"];
 
@@ -95,15 +95,13 @@ class indice extends clsCadastro
         $this->url_cancelar = ($retorno == "Editar") ? "educar_calendario_dia_motivo_det.php?cod_calendario_dia_motivo={$registro["cod_calendario_dia_motivo"]}" : "educar_calendario_dia_motivo_lst.php";
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "{$nomeMenu} motivo de dias do calend&aacute;rio"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb($nomeMenu . ' motivo de dias do calendário', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
+
         return $retorno;
     }
 
@@ -140,7 +138,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $obj = new clsPmieducarCalendarioDiaMotivo( null, $this->ref_cod_escola, null, $this->pessoa_logada, $this->sigla, $this->descricao, $this->tipo, null, null, 1, $this->nm_motivo );
         $cadastrou = $obj->cadastra();
@@ -165,7 +163,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        
+
 
         $calendarioDiaMotivoDetalhe = new clsPmieducarCalendarioDiaMotivo($this->cod_calendario_dia_motivo);
         $calendarioDiaMotivoDetalheAntes = $calendarioDiaMotivoDetalhe->detalhe();
@@ -191,7 +189,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        
+
 
         $obj = new clsPmieducarCalendarioDiaMotivo($this->cod_calendario_dia_motivo, null, $this->pessoa_logada, null, null, null, null, null, null, 0);
         $calendarioDiaMotivo = $obj->detalhe();

@@ -88,10 +88,6 @@ class relatorios
 
   public function novaPagina($altura_titulo = 12, $tamanho_titulo = 14)
   {
-    // Recupera objeto no escopo global
-    global $coreExt;
-    $config = $coreExt['Config']->app->template;
-
     $this->altura_titulo = $altura_titulo;
     $this->tamanho_titulo = $tamanho_titulo;
     $this->numeroPagina++;
@@ -121,7 +117,7 @@ class relatorios
     $this->pdf->Write( $this->numeroPagina, $this->pdf->largura - $this->margem_direita - 25, 125, 15, 80, $this->fonte_titulo, 10, "#000000", "center" );
 
     // Insere o brasao da prefeitura
-    $image = $config->get($config->pdf->logo, 'imagens/brasao.gif');
+    $image = config('legacy.app.template.pdf.logo', 'imagens/brasao.gif');
     $this->pdf->insertImageScaled("gif", $image, $this->margem_esquerda + 4,
       74, 45);
 

@@ -55,7 +55,7 @@ class CoreExt_Controller_FrontTest extends PHPUnit\Framework\TestCase
     $this->_path = realpath(dirname(__FILE__) . '/_stub');
   }
 
-  protected function setUp()
+  protected function setUp(): void
   {
     $this->_frontController = CoreExt_Controller_Front::getInstance();
     $this->_frontController->resetOptions();

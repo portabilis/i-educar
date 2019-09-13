@@ -65,27 +65,11 @@ class indice extends clsListagem
           return $retorno;
       }
 
+      $this->breadcrumb('Calendários', [
+        url('intranet/educar_index.php') => 'Escola',
+      ]);
+
       $retorno = '<table width="100%" cellspacing="1" cellpadding="2" border="0" class="tablelistagem"> <tbody>';
-
-      $localizacao = new LocalizacaoSistema();
-      $localizacao->entradaCaminhos(
-          [
-              $_SERVER['SERVER_NAME'] . "/intranet" => "Início",
-              "educar_index.php" => "Escola",
-              "" => "Calendários"
-          ]
-      );
-
-      $this->locale = $localizacao->montar();
-
-      if ($this->locale) {
-          $retorno .= "
-                <tr height='10px'>
-                    <td class='fundoLocalizacao' colspan='5'>
-                        {$this->locale}
-                    </td>
-                </tr>";
-      }
 
       if ($_POST) {
           $this->ref_cod_escola = $_POST['ref_cod_escola'] ? $_POST['ref_cod_escola'] : Session::get('calendario.ref_cod_escola');
@@ -104,10 +88,6 @@ class indice extends clsListagem
           foreach (Session::get('calendario') as $var => $val) {
               $this->$var = ($val === '') ? null : $val;
           }
-      }
-
-      if ($_GET) {
-          $this->simpleRedirect('educar_calendario_ano_letivo_lst.php');
       }
 
       if (!$this->mes) {

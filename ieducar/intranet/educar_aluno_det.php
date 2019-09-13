@@ -1024,7 +1024,7 @@ class indice extends clsDetalhe
         $this->largura = '100%';
         $this->addDetalhe("<input type='hidden' id='escola_id' name='aluno_id' value='{$registro['ref_cod_escola']}' />");
         $this->addDetalhe("<input type='hidden' id='aluno_id' name='aluno_id' value='{$registro['cod_aluno']}' />");
-        $mostraDependencia = $GLOBALS['coreExt']['Config']->app->matricula->dependencia;
+        $mostraDependencia = config('legacy.app.matricula.dependencia');
         $this->addDetalhe("<input type='hidden' id='can_show_dependencia' name='can_show_dependencia' value='{$mostraDependencia}' />");
         
         $this->breadcrumb('Aluno', ['/intranet/educar_index.php' => 'Escola']);

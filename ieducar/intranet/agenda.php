@@ -41,14 +41,14 @@ class clsIndex extends clsBase
     function Formular()
     {
         $this->SetTitulo( "{$this->_instituicao} Agenda Particular" );
-        $this->processoAp = "345";
+        $this->processoAp = '0';
         $this->addEstilo( "agenda" );
         $this->addScript( "agenda" );
         $this->addEstilo('localizacaoSistema');
     }
 }
 
-class indice
+class indice extends clsCadastro
 {
     var $agenda;
     var $editor;
@@ -70,6 +70,9 @@ class indice
         $db2 = new clsBanco();
         // inicializacao de variaveis
         $this->editor = Session::get('id_pessoa');
+
+        Portabilis_View_Helper_Application::loadJavascript($this, "/intranet/scripts/agenda.js");
+        Portabilis_View_Helper_Application::loadStylesheet($this, "/intranet/styles/agenda.css");
 
         if( $_REQUEST["cod_agenda"] )
         {
@@ -400,7 +403,7 @@ class indice
                                     <div>
                                         <i class=\"fa fa-pencil\" aria-hidden=\"true\"></i> Editar
                                     </div></a>
-                                <a class=\"small\" href=\"javascript: excluir( {$cod_agenda_compromisso} );\">
+                                <a class=\"small\" href=\"javascript: excluir_compromisso( {$cod_agenda_compromisso} );\">
                                 <div>
                                         <i class=\"fa fa-close\" aria-hidden=\"true\"></i> Excluir
                                 </div></a>";
@@ -436,11 +439,11 @@ class indice
             $this->versoes = $objAgenda->listaVersoes( $_GET["versoes"] );
 
             // verifica se o compromisso eh mesmo dessa agenda
-            $db->Consulta( "SELECT 1 FROM agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND cod_agenda_compromisso = '{$_GET["versoes"]}'" );
+            $db->Consulta( "SELECT 1 FROM portal.agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND cod_agenda_compromisso = '{$_GET["versoes"]}'" );
             if( $db->Num_Linhas() )
             {
                 // seleciona as versoes desse compromisso
-                $db->Consulta( "SELECT versao, ref_ref_cod_pessoa_cad, ativo, data_inicio, titulo, descricao, importante, publico, data_cadastro, data_fim FROM agenda_compromisso WHERE cod_agenda_compromisso = '{$_GET["versoes"]}' ORDER BY versao DESC" );
+                $db->Consulta( "SELECT versao, ref_ref_cod_pessoa_cad, ativo, data_inicio, titulo, descricao, importante, publico, data_cadastro, data_fim FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$_GET["versoes"]}' ORDER BY versao DESC" );
                 while ( $db->ProximoRegistro() )
                 {
                     unset( $versao, $ref_ref_cod_pessoa_cad, $ativo, $data_inicio, $titulo, $descricao, $importante, $publico, $data_cadastro, $data_fim );
@@ -496,7 +499,7 @@ class indice
             <tr>
                 <td class=\"escuro\" valign=\"top\">";
 
-        $db->Consulta( "SELECT data_inicio, titulo, descricao FROM agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND ativo = 1 AND importante = 1 AND data_inicio > NOW() ORDER BY data_inicio ASC LIMIT 5 OFFSET 0" );
+        $db->Consulta( "SELECT data_inicio, titulo, descricao FROM portal.agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND ativo = 1 AND importante = 1 AND data_inicio > NOW() ORDER BY data_inicio ASC LIMIT 5 OFFSET 0" );
         while ( $db->ProximoRegistro() )
         {
             list( $aviso_inicio, $aviso_titulo, $aviso_descricao ) = $db->Tupla();
@@ -529,7 +532,7 @@ class indice
         ";
         unset( $cod_agenda_compromisso, $versao, $data_inicio, $data_fim, $titulo, $descricao, $importante, $publico );
         $i = 0;
-        $db->Consulta( "SELECT cod_agenda_compromisso, versao, data_inicio, data_fim, titulo, descricao, importante, publico FROM agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND ativo = 1 AND data_fim IS NULL AND data_inicio >= '{$this->data_atual_db}' AND data_inicio <= '{$this->data_atual_db} 23:59:59' ORDER BY data_inicio ASC" );
+        $db->Consulta( "SELECT cod_agenda_compromisso, versao, data_inicio, data_fim, titulo, descricao, importante, publico FROM portal.agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND ativo = 1 AND data_fim IS NULL AND data_inicio >= '{$this->data_atual_db}' AND data_inicio <= '{$this->data_atual_db} 23:59:59' ORDER BY data_inicio ASC" );
         while ( $db->ProximoRegistro() )
         {
             list( $cod_agenda_compromisso, $versao, $data_inicio, $data_fim, $titulo, $descricao, $importante, $publico) = $db->Tupla();

@@ -62,7 +62,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Tipo Ocorr&ecirc;ncia Disciplinar - Detalhe";
-        
+
 
         $this->cod_tipo_ocorrencia_disciplinar=$_GET["cod_tipo_ocorrencia_disciplinar"];
 
@@ -117,13 +117,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_tipo_ocorrencia_disciplinar_lst.php";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""                                  => "Detalhe do tipo de ocorr&ecirc;ncia disciplinar"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());                
+        $this->breadcrumb('Detalhe do tipo de ocorrência disciplinar', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

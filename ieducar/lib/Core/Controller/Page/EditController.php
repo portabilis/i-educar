@@ -195,6 +195,13 @@ abstract class Core_Controller_Page_EditController extends clsCadastro implement
         }
     }
 
+    public function Formular()
+    {
+        if ($this->tipoacao == 'Excluir') {
+            return $this->Inicializar();
+        }
+    }
+
     /**
      * Verifica se o usuário possui privilégios de cadastro para o processo.
      *

@@ -1,0 +1,384 @@
+body {
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  font-family: "Open Sans", Arial, sans-serif;
+}
+
+a,
+a:hover {
+  text-decoration: none;
+}
+
+.ieducar-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+}
+
+.ieducar-content {
+  display: flex;
+  flex: 1 1 auto !important;
+}
+
+.ieducar-sidebar {
+  width: 232px;
+  background: #e9f0f8;
+  padding-bottom: 15px;
+}
+
+.ieducar-main {
+  flex: 1 1 auto !important;
+}
+
+.ieducar-main-content {
+  padding: 0 20px;
+}
+
+.ieducar-footer {
+  width: 100%;
+  vertical-align: middle;
+  height: 34px;
+  background-color: #47728f;
+  color: #FFF;
+  font-size: 10px;
+  text-align: center;
+  line-height: 34px;
+}
+
+.ieducar-footer p {
+  margin: 0;
+}
+
+.ieducar-footer a {
+  color: #FFF;
+  text-decoration: underline;
+}
+
+.ieducar-header {
+  display: flex;
+  background: #47728f;
+  height: 50px;
+}
+
+.ieducar-header * {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.ieducar-header-logo {
+  padding-left: 23px;
+}
+
+.ieducar-header-logo h1 a {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  line-height: 50px;
+}
+
+.ieducar-header-logo h1 a:hover {
+  text-decoration: none;
+}
+
+.ieducar-header-links {
+  flex: 1 1 auto;
+}
+
+.ieducar-header-links .dropbtn {
+  color: white;
+  padding: 6px 20px 6px 6px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  background-image: url('../intranet/imagens/arrow-down.png');
+  background-repeat: no-repeat;
+  background-position: center right;
+  background-size: 12px;
+}
+
+.ieducar-header-links .dropbtn:hover,
+.dropdown:hover .dropbtn {
+  background-image: url('../intranet/imagens/arrow-up.png');
+  background-repeat: no-repeat;
+  background-position: center right;
+}
+
+.ieducar-header-links .dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.ieducar-header-links .dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 150px;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  right: 0;
+}
+
+.ieducar-header-links .dropdown-content a {
+  color: #646b71;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+  font-size: 14px;
+}
+
+.ieducar-header-links .dropdown-content a:hover {
+  color: #188ad1
+}
+
+.ieducar-header-links .dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.ieducar-header-links .dropdown {
+  float: right;
+  margin: 7px 23px 0 0;
+}
+
+.notifications {
+  float: right;
+  margin: 7px 0 0;
+}
+
+.notifications img {
+  position: relative;
+  top: 7px;
+  margin-right: 15px;
+  width: 20px;
+}
+
+.avatar {
+  float: right;
+  margin: 7px 10px 0 0;
+}
+
+.ieducar-quick-search {
+  padding: 0 23px;
+}
+
+.ieducar-quick-search label {
+  display: block;
+  width: 100%;
+}
+
+.ieducar-quick-search-input {
+  border: solid 1px #cddce6;
+  color: #47728f;
+  border-radius: 3px;
+  background-color: white;
+  font-size: 12px;
+  padding: 11px;
+  margin: 0 0 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ieducar-quick-search-title {
+  color: #47728f;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.ieducar-sidebar-menu {
+  width: 232px;
+  padding: 0;
+  margin: 0;
+}
+
+.ieducar-sidebar-menu li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.ieducar-sidebar-menu li a {
+  display: block;
+  color: #47728f;
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  padding: 17px 15px;
+  margin: 0 10px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+.ieducar-sidebar-menu li a:hover {
+  background: #cddce6;
+  text-decoration: none;
+}
+
+.ieducar-sidebar-menu li a i {
+  color: #98b0c3;
+  font-size: 20px;
+  padding-right: 10px;
+}
+
+.ui-menu-item {
+  font-size: 11px;
+}
+
+.ieducar-menu,
+.ieducar-sub-menu {
+  margin: 0;
+  padding: 0;
+}
+
+.clearfix:after {
+  content: '.';
+  display: block;
+  clear: both;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  visibility: hidden;
+  overflow: hidden;
+}
+
+.ieducar-menu,
+.ieducar-sub-menu {
+  list-style: none;
+  background: #e9eff7;
+}
+
+.ieducar-sub-menu {
+  background: #FFF;
+  border: 1px solid #f3f3f3;
+}
+
+.ieducar-menu a {
+  text-decoration: none;
+  display: block;
+  padding: 10px;
+  color: #47728f;
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+}
+
+.ieducar-menu a:hover {
+  text-decoration: none;
+}
+
+.ieducar-menu li {
+  position: relative;
+}
+
+.ieducar-menu > li {
+  float: left;
+}
+
+.ieducar-menu > li:hover {
+  background: #cddce6;
+}
+
+.ieducar-menu li:hover > .ieducar-sub-menu {
+  display: block;
+}
+
+.ieducar-sub-menu a {
+  font-size: 14px;
+}
+
+.ieducar-sub-menu {
+  display: none;
+  position: absolute;
+  min-width: 220px;
+  z-index: 1100;
+}
+
+.ieducar-sub-menu li a {
+  color: #646b71;
+  padding: 5px 10px;
+}
+
+.ieducar-sub-menu li + li {
+  border-top: 1px solid #f3f3f3;
+}
+
+.ieducar-sub-menu li:hover {
+  background: #cddce6;
+}
+
+.ieducar-sub-menu .ieducar-sub-menu {
+  top: -1px;
+  left: 100%;
+}
+
+/** Legacy **/
+#corpo a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb {
+  margin: 15px 0 0;
+}
+
+.breadcrumb a,
+.breadcrumb span {
+  font-weight: bold !important;
+  color: #47728f;
+  font-size: 14px !important;
+}
+
+.breadcrumb .breadcrumb-current,
+.breadcrumb .breadcrumb-current:hover,
+.breadcrumb .breadcrumb-separator,
+.breadcrumb .breadcrumb-separator:hover {
+  color: #999 !important;
+}
+
+.quick-search {
+  margin-bottom: 10px;
+}
+
+.quick-search .multiselect,
+.quick-search .multiselect__input,
+.quick-search .multiselect__single {
+  font-size: 12px;
+}
+
+.quick-search input[type="text"].multiselect__input {
+  padding: 0 5px !important;
+  border: none !important;
+}
+
+.quick-search .multiselect__tags {
+  padding: 10px 8px 0 8px;
+  border: 1px solid #cddce6;
+  border-radius: 3px;
+  color: #777;
+}
+
+.quick-search .multiselect__content-wrapper {
+  border: 1px solid #cddce6;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  min-width: 100%;
+  width: auto;
+  margin-top: -1px;
+}
+
+.quick-search .multiselect__option--highlight {
+  background: #cddce6;
+}
+
+.quick-search a {
+  color: #47728f;
+}
+
+.quick-search a:hover {
+  text-decoration: none;
+}
+
+.vue-template {
+  display: none;
+}

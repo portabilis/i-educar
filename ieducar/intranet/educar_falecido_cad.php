@@ -65,17 +65,11 @@ class indice extends clsCadastro
 
         $obj_matricula = new clsPmieducarMatricula( $this->cod_matricula,null,null,null,$this->pessoa_logada,null,null,6 );
 
-        $det_matricula = $obj_matricula->detalhe();
-
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""                                  => "Registro do falecimento do aluno"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Registro do falecimento do aluno', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = "Cancelar";
 
@@ -150,11 +144,13 @@ class indice extends clsCadastro
 
                 }
 
-                $notaAlunoId = (new Avaliacao_Model_NotaAlunoDataMapper())
-                    ->findAll(['id'], ['matricula_id' => $obj_matricula->cod_matricula])[0]->get('id');
+                $notaAluno = (new Avaliacao_Model_NotaAlunoDataMapper())
+                                    ->findAll(['id'], ['matricula_id' => $obj_matricula->cod_matricula])[0] ?? null;
 
-                (new Avaliacao_Model_NotaComponenteMediaDataMapper())
-                    ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::FALECIDO);
+                if (!empty($notaAluno)) {
+                    (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                        ->updateSituation($notaAluno->get('id'), App_Model_MatriculaSituacao::FALECIDO);
+                }
 
                 $this->mensagem .= "Alteração realizado com sucesso.<br>";
                 $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");

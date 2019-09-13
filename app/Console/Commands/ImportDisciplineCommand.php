@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Exports\DisciplineExport;
 use App\Imports\DisciplineImport;
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
 
 class ImportDisciplineCommand extends Command
 {
@@ -13,7 +14,7 @@ class ImportDisciplineCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'import:discipline {filename} {output}';
+    protected $signature = 'import:discipline {filename}';
 
     /**
      * The console command description.
@@ -25,16 +26,34 @@ class ImportDisciplineCommand extends Command
     /**
      * Execute the console command.
      *
+     * @param Filesystem $filesystem
+     *
      * @return mixed
      */
-    public function handle()
+    public function handle(Filesystem $filesystem)
     {
+        $filename = $this->argument('filename');
+
         $importer = new DisciplineImport();
 
-        $importer->withOutput($this->output)->import($this->argument('filename'));
+        $importer->withOutput($this->output)->import($filename);
 
-        $exporter = new DisciplineExport($importer->getCollection());
+        $filesystem->delete($filename);
 
-        $exporter->store($this->argument('output'));
+        // Importa as disciplinas para o banco de dados e após, faz a
+        // exportação dos IDs gerados para as disciplinas.
+
+        $export = $importer->getCollection()->map(function ($item) {
+            $row = $item->get('row');
+            $discipline = $item->get('discipline');
+
+            $row['discipline_id'] = $discipline->getKey();
+
+            return $row;
+        });
+
+        $exporter = new DisciplineExport($export);
+
+        $exporter->store($filename, 'local');
     }
 }

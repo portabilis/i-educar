@@ -16,6 +16,7 @@ use App\Models\LegacySchoolClassStage;
 use App\Models\LegacyUser;
 use App\Services\EnrollmentService;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Throwable;
@@ -37,7 +38,7 @@ class EnrollmentServiceTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -278,5 +279,102 @@ class EnrollmentServiceTest extends TestCase
         $this->service->enroll(
             $enrollment->registration, $enrollment->schoolClass, now()->subDay(1)
         );
+    }
+
+    /**
+     * Instituição sem data base, a ultima enturmação deverá ser retornada
+     */
+    public function testGetPreviousEnrollmentWithouRelocationDate()
+    {
+        /** @var LegacyEnrollment $enrollment */
+        $enrollment = factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $this->schoolClass,
+        ]);
+
+        $enrollment->schoolClass->school->institution->data_base_remanejamento = null;
+        $enrollment->schoolClass->school->institution->save();
+
+        $lastEnrollment = $this->service->getPreviousEnrollmentAccordingToRelocationDate($enrollment->registration);
+
+        $this->assertEquals($enrollment->id, $lastEnrollment->id);
+    }
+
+    /**
+     * Instituição sem data base, a ultima enturmação deverá ser retornada
+     */
+    public function testGetPreviousEnrollmentWithRelocationDateBeforeDepartedDate()
+    {
+        /** @var LegacyEnrollment $enrollment */
+        $enrollment = factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $this->schoolClass,
+            'data_exclusao' => now(),
+        ]);
+
+        $enrollment->schoolClass->school->institution->data_base_remanejamento = Carbon::yesterday();
+        $enrollment->schoolClass->school->institution->save();
+
+        $lastEnrollment = $this->service->getPreviousEnrollmentAccordingToRelocationDate($enrollment->registration);
+
+        $this->assertEquals($enrollment->id, $lastEnrollment->id);
+    }
+
+    /**
+     * Instituição sem data base, a ultima enturmação deverá ser retornada
+     */
+    public function testGetPreviousEnrollmentWithRelocationDateAfterDepartedDate()
+    {
+        /** @var LegacyEnrollment $enrollment */
+        $enrollment = factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $this->schoolClass,
+            'data_exclusao' => Carbon::yesterday(),
+        ]);
+
+        $enrollment->schoolClass->school->institution->data_base_remanejamento = now();
+        $enrollment->schoolClass->school->institution->save();
+
+        $lastEnrollment = $this->service->getPreviousEnrollmentAccordingToRelocationDate($enrollment->registration);
+
+        $this->assertNull($lastEnrollment);
+    }
+
+    public function testReorder()
+    {
+        $schoolClass = $this->schoolClass->getKey();
+
+        $enrollment = factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $schoolClass,
+        ]);
+
+        $registration = $enrollment->registration->getKey();
+
+        factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $schoolClass,
+            'ref_cod_matricula' => $registration,
+            'sequencial' => 3
+        ]);
+
+        factory(LegacyEnrollment::class)->create([
+            'ref_cod_turma' => $schoolClass,
+            'ref_cod_matricula' => $registration,
+            'sequencial' => 5
+        ]);
+
+        $this->service->reorder($enrollment->registration);
+
+        $this->assertDatabaseHas('pmieducar.matricula_turma', [
+            'ref_cod_turma' => $schoolClass,
+            'ref_cod_matricula' => $registration,
+            'sequencial' => 2
+        ]);
+        $this->assertDatabaseHas('pmieducar.matricula_turma', [
+            'ref_cod_turma' => $schoolClass,
+            'ref_cod_matricula' => $registration,
+            'sequencial' => 3
+        ]);
+        $this->assertDatabaseMissing('pmieducar.matricula_turma', [
+            'ref_cod_turma' => $schoolClass,
+            'ref_cod_matricula' => $registration,
+            'sequencial' => 5
+        ]);
     }
 }

@@ -144,18 +144,12 @@ class indice extends clsCadastro
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(
-            array(
-                $_SERVER['SERVER_NAME'] . "/intranet" => "In&iacute;cio",
-                "educar_index.php" => "Escola",
-                "" => "{$nomeMenu} v&iacute;nculo entre escola e s&eacute;rie"
-            )
-        );
-
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb($nomeMenu . ' vínculo entre escola e série', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
 
         $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
@@ -310,8 +304,6 @@ class indice extends clsCadastro
                 }
             }
         }
-
-        $opcoes = array('' => 'Selecione');
 
         // Editar
         $disciplinas = 'Nenhum ano letivo selecionado';
@@ -515,8 +507,6 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
         /*
          * Atribui valor para atributos usados em Gerar(), senão o formulário volta
          * a liberar os campos Instituição, Escola e Curso que devem ser read-only
@@ -567,7 +557,9 @@ class indice extends clsCadastro
         try {
             $this->validaAlteracoes($analise);
         } catch (Exception $e) {
-            $this->mensagem = $e->getMessage();
+            $msgs = explode("\n", $e->getMessage());
+
+            $this->mensagem = $msgs;
 
             return false;
         }
@@ -905,7 +897,7 @@ class indice extends clsCadastro
         }
 
         if ($erros) {
-            $msg = join('<br>', $erros);
+            $msg = join("\n", $erros);
 
             throw new \Exception($msg);
         }

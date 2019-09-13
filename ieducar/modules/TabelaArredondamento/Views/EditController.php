@@ -27,6 +27,10 @@ class EditController extends Core_Controller_Page_EditController
             'label' => 'Tipo de nota',
             'help' => ''
         ],
+        'arredondarNota' => [
+            'label' => 'Arredondar nota da etapa',
+            'help' => ''
+        ],
         'valor_nome' => [
             'label' => 'Rótulo da nota:',
             'help' => 'Exemplos: A, B, C (conceituais)<br /><b>6,5<b>, <b>7,5<b> (numéricas)'
@@ -34,6 +38,10 @@ class EditController extends Core_Controller_Page_EditController
         'valor_descricao' => [
             'label' => '<span style="padding-left: 10px"></span>Descrição:',
             'help' => 'Exemplos: Bom, Regular, Em Processo.'
+        ],
+        'valor_observacao' => [
+            'label' => '<span style="padding-left: 10px"></span>Observação:',
+            'help' => 'Exemplos: Quando o(a) aluno(a) desenvolve as atividades sem dificuldades.'
         ],
         'valor_valor_minimo' => [
             'label' => '<span style="padding-left: 10px"></span>Valor mínimo:',
@@ -131,21 +139,11 @@ class EditController extends Core_Controller_Page_EditController
             '/modules/RegraAvaliacao/Assets/Javascripts/TabelaArredondamento.js'
         );
 
-        Portabilis_View_Helper_Application::loadStylesheet(
-            $this,
-            'intranet/styles/localizacaoSistema.css'
-        );
-
         $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
-        $localizacao = new LocalizacaoSistema();
 
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => "$nomeMenu tabela de arredondamento"
+        $this->breadcrumb("$nomeMenu tabela de arredondamento", [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
     }
 
     /**
@@ -185,7 +183,7 @@ class EditController extends Core_Controller_Page_EditController
 
         if ($this->getEntity()->id!='') {
             $this->campoTexto(
-                'tipNota',
+                'tipoNota',
                 $this->_getLabel('tipoNota'),
                 $notaTipos[$this->getEntity()->get('tipoNota')],
                 40,
@@ -209,6 +207,13 @@ class EditController extends Core_Controller_Page_EditController
                 $this->_getHelp('tipoNota')
             );
         }
+
+        $this->campoLista(
+            'arredondarNota',
+            $this->_getLabel('arredondarNota'),
+            [0 => 'Não', 1 => 'Sim'],
+            $this->getEntity()->get('arredondarNota')
+        );
 
         // Parte condicional
         if (!$this->getEntity()->isNew()) {
@@ -236,6 +241,7 @@ class EditController extends Core_Controller_Page_EditController
             $this->tabela_arredondamento_valor[$i][] = $valorNota->id;
             $this->tabela_arredondamento_valor[$i][] = $valorNota->nome;
             $this->tabela_arredondamento_valor[$i][] = $valorNota->descricao;
+            $this->tabela_arredondamento_valor[$i][] = $valorNota->observacao;
             $this->tabela_arredondamento_valor[$i][] = $valorNota->valorMinimo;
             $this->tabela_arredondamento_valor[$i][] = $valorNota->valorMaximo;
         }
@@ -248,6 +254,7 @@ class EditController extends Core_Controller_Page_EditController
                 'ID',
                 'Rótulo da nota',
                 'Descrição',
+                'Observação',
                 'Valor mínimo',
                 'Valor máximo'
             ],
@@ -290,6 +297,19 @@ class EditController extends Core_Controller_Page_EditController
             false,
             false,
             $this->_getHelp('valor_descricao')
+        );
+
+        // Observação
+        $this->campoTexto(
+            'valor_observacao',
+            'valor_observacao',
+            $valorNota->observacao,
+            null,
+            125,
+            false,
+            false,
+            false,
+            $this->_getHelp('valor_observacao')
         );
 
         // Valor mínimo
@@ -484,6 +504,10 @@ class EditController extends Core_Controller_Page_EditController
             return parent::_save();
         }
 
+        $entity->arredondarNota = $this->getRequest()->arredondarNota;
+
+        $this->getDataMapper()->save($entity);
+
         //Exclui todos os valores para inserir corretamente
         $entity->deleteAllValues();
 
@@ -494,6 +518,7 @@ class EditController extends Core_Controller_Page_EditController
                 'id' => $this->valor_id[$i],
                 'nome' => $this->valor_nome[$i],
                 'descricao' => $this->valor_descricao[$i],
+                'observacao' => $this->valor_observacao[$i],
                 'valor_minimo' => $this->valor_minimo[$i],
                 'valor_maximo' => $this->valor_maximo[$i],
                 'valor_acao' => $this->valor_acao[$i],
@@ -514,6 +539,7 @@ class EditController extends Core_Controller_Page_EditController
                 //'id' => $id,
                 'nome' => $valores[$i]['nome'],
                 'descricao' => $valores[$i]['descricao'],
+                'observacao' => $valores[$i]['observacao'],
                 'valorMinimo' => str_replace(',', '.', $valores[$i]['valor_minimo']),
                 'valorMaximo' => str_replace(',', '.', $valores[$i]['valor_maximo']),
                 'acao' => $valores[$i]['valor_acao'],

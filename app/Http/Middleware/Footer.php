@@ -3,8 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use iEducar\Support\Repositories\ConfigurationRepository;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\View;
 
 class Footer
@@ -12,31 +12,15 @@ class Footer
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
-     * @return mixed
+     * @param Request $request
+     * @param Closure $next
+     *
+     * @return Response
      */
     public function handle($request, Closure $next)
     {
-        View::share('footer', $this->getCachedFooter());
+        View::share('footer', config('legacy.config.ieducar_internal_footer'));
 
         return $next($request);
-    }
-
-    private function getCachedFooter()
-    {
-        $cache = Cache::tags(['configurations', config('app.name')]);
-
-        $cacheKey = 'configurations_' . md5(session('id_pessoa'));
-        if ($cache->has($cacheKey)) {
-            return $cache->get($cacheKey)->ieducar_internal_footer;
-        }
-
-        $configurationRepository = app(ConfigurationRepository::class);
-        $configurations = $configurationRepository->getConfiguration();
-
-        $cache->add($cacheKey, $configurations, 60);
-
-        return $configurations->ieducar_internal_footer;
     }
 }

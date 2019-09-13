@@ -1,6 +1,6 @@
 FROM nginx
 
-MAINTAINER Eder Soares
+LABEL maintainer="Portabilis <contato@portabilis.com.br>"
 
 RUN apt-get update -y
 

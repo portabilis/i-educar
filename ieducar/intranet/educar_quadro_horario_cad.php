@@ -124,13 +124,10 @@ class indice extends clsCadastro
     $this->nome_url_cancelar = 'Cancelar';
 
     $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""        => "{$nomeMenu} quadro de hor&aacute;rios"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+
+    $this->breadcrumb($nomeMenu . ' quadro de horários', [
+        url('intranet/educar_servidores_index.php') => 'Servidores',
+    ]);
 
     return $retorno;
   }
@@ -205,7 +202,7 @@ class indice extends clsCadastro
           $this->pessoa_logada);
 
         $quadroHorario = $obj_quadro->detalhe();
-        
+
         if ($obj_quadro->excluir()) {
           $auditoria = new clsModulesAuditoriaGeral("quadro_horario", $this->pessoa_logada, $this->cod_quadro_horario);
           $auditoria->exclusao($quadroHorario);

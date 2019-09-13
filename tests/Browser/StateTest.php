@@ -3,6 +3,7 @@
 namespace Tests\Browser;
 
 use App\State;
+use Tests\Browser\Login\LoginAsAdmin;
 use Tests\Browser\Pages\State\CreatePage;
 use Tests\Browser\Pages\State\DetailPage;
 use Tests\Browser\Pages\State\ListingPage;
@@ -12,6 +13,8 @@ use Laravel\Dusk\Browser;
 
 class StateTest extends DuskTestCase
 {
+    use LoginAsAdmin;
+
     /**
      * Test state listing.
      *
@@ -29,7 +32,7 @@ class StateTest extends DuskTestCase
                 'country_id' => 1, // FIXME makes dynamic in the future, now is Tonga (1)
             ]);
 
-            $browser->loginLegacy();
+            $browser->login();
 
             $browser->visit(new ListingPage())
                 ->press(' Novo ');

@@ -259,13 +259,9 @@ class indice extends clsListagem
         $this->addPaginador2( "educar_exemplar_devolucao_lst.php", $total, $_GET, $this->nome, $this->limite );
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Listagem de exemplares para devolu&ccedil;&atilde;o"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Listagem de exemplares para devolução', [
+            url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+        ]);
     }
 }
 // cria uma extensao da classe base

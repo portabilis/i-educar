@@ -246,16 +246,12 @@ class indice extends clsListagem
         }
 
 
-        $this->addPaginador2( "educar_infra_predio_comodo_lst.php", $total, $_GET, $this->nome, $this->limite );        
+        $this->addPaginador2( "educar_infra_predio_comodo_lst.php", $total, $_GET, $this->nome, $this->limite );
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "Infraestrutura da escola"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Infraestrutura da escola', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 // cria uma extensao da classe base

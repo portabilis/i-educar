@@ -68,7 +68,7 @@ class clsIndexBase extends clsBase
 class indice extends clsCadastro{
   var $pessoa_logada;
   var $cod_turma;
-  
+
 
   function Inicializar(){
     $retorno = 'Novo';
@@ -92,13 +92,9 @@ class indice extends clsCadastro{
 
     $this->url_cancelar = "educar_turma_det.php?cod_turma={$this->cod_turma}";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Sequência manual dos alunos na turma"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Sequência manual dos alunos na turma', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
 
     $this->nome_url_cancelar = "Cancelar";
 
@@ -116,10 +112,10 @@ class indice extends clsCadastro{
   function Editar(){
     $cod_turma = $_GET['cod_turma'];
     foreach($this->sequencia as $matricula => $sequencial){
-      $retorno = Portabilis_Utils_Database::fetchPreparedQuery('UPDATE pmieducar.matricula_turma 
-                                                                   SET sequencial_fechamento = $1 
-                                                                 WHERE ref_cod_matricula = $2 
-                                                                   AND ref_cod_turma = $3', 
+      $retorno = Portabilis_Utils_Database::fetchPreparedQuery('UPDATE pmieducar.matricula_turma
+                                                                   SET sequencial_fechamento = $1
+                                                                 WHERE ref_cod_matricula = $2
+                                                                   AND ref_cod_turma = $3',
                                                                  array('params' => array($sequencial, $matricula, $cod_turma)));
     }
     $this->simpleRedirect("educar_turma_det.php?cod_turma={$cod_turma}");

@@ -1,8 +1,10 @@
 <?php
 
+use iEducar\Legacy\Model;
+
 require_once 'include/pmieducar/geral.inc.php';
 
-class clsPmieducarInstituicao
+class clsPmieducarInstituicao extends Model
 {
     public $cod_instituicao;
     public $ref_usuario_exc;
@@ -47,68 +49,8 @@ class clsPmieducarInstituicao
     public $orgao_regional;
     public $exigir_lancamentos_anteriores;
     public $exibir_apenas_professores_alocados;
+    public $bloquear_vinculo_professor_sem_alocacao_escola;
 
-    /**
-     * Armazena o total de resultados obtidos na última chamada ao método lista().
-     *
-     * @var int
-     */
-    public $_total;
-
-    /**
-     * Nome do schema.
-     *
-     * @var string
-     */
-    public $_schema;
-
-    /**
-     * Nome da tabela.
-     *
-     * @var string
-     */
-    public $_tabela;
-
-    /**
-     * Lista separada por vírgula, com os campos que devem ser selecionados na
-     * próxima chamado ao método lista().
-     *
-     * @var string
-     */
-    public $_campos_lista;
-
-    /**
-     * Lista com todos os campos da tabela separados por vírgula, padrão para
-     * seleção no método lista.
-     *
-     * @var string
-     */
-    public $_todos_campos;
-
-    /**
-     * Valor que define a quantidade de registros a ser retornada pelo método lista().
-     *
-     * @var int
-     */
-    public $_limite_quantidade;
-
-    /**
-     * Define o valor de offset no retorno dos registros no método lista().
-     *
-     * @var int
-     */
-    public $_limite_offset;
-
-    /**
-     * Define o campo para ser usado como padrão de ordenação no método lista().
-     *
-     * @var string
-     */
-    public $_campo_order_by;
-
-    /**
-     * Construtor.
-     */
     public function __construct(
         $cod_instituicao = null,
         $ref_usuario_exc = null,
@@ -136,7 +78,8 @@ class clsPmieducarInstituicao
         $obrigar_campos_censo = null,
         $obrigar_documento_pessoa = null,
         $exigir_lancamentos_anteriores = null,
-        $exibir_apenas_professores_alocados = null
+        $exibir_apenas_professores_alocados = null,
+        $bloquear_vinculo_professor_sem_alocacao_escola = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
@@ -189,7 +132,8 @@ class clsPmieducarInstituicao
             obrigar_documento_pessoa,
             orgao_regional,
             exigir_lancamentos_anteriores,
-            exibir_apenas_professores_alocados 
+            exibir_apenas_professores_alocados,
+            bloquear_vinculo_professor_sem_alocacao_escola
         ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -338,6 +282,10 @@ class clsPmieducarInstituicao
 
         if (is_bool($exibir_apenas_professores_alocados)) {
             $this->exibir_apenas_professores_alocados = $exibir_apenas_professores_alocados;
+        }
+
+        if (is_bool($bloquear_vinculo_professor_sem_alocacao_escola)) {
+            $this->bloquear_vinculo_professor_sem_alocacao_escola = $bloquear_vinculo_professor_sem_alocacao_escola;
         }
     }
 
@@ -705,6 +653,16 @@ class clsPmieducarInstituicao
                 $gruda = ', ';
             }
 
+            if (dbBool($this->bloquear_vinculo_professor_sem_alocacao_escola)) {
+                $campos .= "{$gruda}bloquear_vinculo_professor_sem_alocacao_escola";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}bloquear_vinculo_professor_sem_alocacao_escola";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
             if (is_string($this->orgao_regional) and !empty($this->orgao_regional)) {
                 $campos .= "{$gruda}orgao_regional";
                 $valores .= "{$gruda}'{$this->orgao_regional}'";
@@ -1048,6 +1006,14 @@ class clsPmieducarInstituicao
                 $gruda = ', ';
             }
 
+            if (dbBool($this->bloquear_vinculo_professor_sem_alocacao_escola)) {
+                $set .= "{$gruda}bloquear_vinculo_professor_sem_alocacao_escola = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}bloquear_vinculo_professor_sem_alocacao_escola = false ";
+                $gruda = ', ';
+            }
+
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_instituicao = '{$this->cod_instituicao}'");
 
@@ -1206,7 +1172,7 @@ class clsPmieducarInstituicao
             null,
             null,
             null,
-                    null,
+            null,
             null,
             null,
             null,
@@ -1268,75 +1234,5 @@ class clsPmieducarInstituicao
         }
 
         return false;
-    }
-
-    /**
-     * Define quais campos da tabela serão selecionados no método Lista().
-     */
-    public function setCamposLista($str_campos)
-    {
-        $this->_campos_lista = $str_campos;
-    }
-
-    /**
-     * Define que o método Lista() deverpa retornar todos os campos da tabela.
-     */
-    public function resetCamposLista()
-    {
-        $this->_campos_lista = $this->_todos_campos;
-    }
-
-    /**
-     * Define limites de retorno para o método Lista().
-     */
-    public function setLimite($intLimiteQtd, $intLimiteOffset = null)
-    {
-        $this->_limite_quantidade = $intLimiteQtd;
-        $this->_limite_offset = $intLimiteOffset;
-    }
-
-    /**
-     * Retorna a string com o trecho da query responsável pelo limite de
-     * registros retornados/afetados.
-     *
-     * @return string
-     */
-    public function getLimite()
-    {
-        if (is_numeric($this->_limite_quantidade)) {
-            $retorno = " LIMIT {$this->_limite_quantidade}";
-            if (is_numeric($this->_limite_offset)) {
-                $retorno .= " OFFSET {$this->_limite_offset} ";
-            }
-
-            return $retorno;
-        }
-
-        return '';
-    }
-
-    /**
-     * Define o campo para ser utilizado como ordenação no método Lista().
-     */
-    public function setOrderby($strNomeCampo)
-    {
-        if (is_string($strNomeCampo) && $strNomeCampo) {
-            $this->_campo_order_by = $strNomeCampo;
-        }
-    }
-
-    /**
-     * Retorna a string com o trecho da query responsável pela Ordenação dos
-     * registros.
-     *
-     * @return string
-     */
-    public function getOrderby()
-    {
-        if (is_string($this->_campo_order_by)) {
-            return " ORDER BY {$this->_campo_order_by} ";
-        }
-
-        return '';
     }
 }

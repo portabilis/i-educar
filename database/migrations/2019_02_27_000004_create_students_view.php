@@ -14,6 +14,7 @@ class CreateStudentsView extends Migration
      */
     public function up()
     {
+        $this->dropView('students');
         $this->createView('students');
     }
 

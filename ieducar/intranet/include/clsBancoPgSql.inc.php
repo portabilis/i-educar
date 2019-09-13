@@ -2,10 +2,7 @@
 
 use iEducar\Modules\ErrorTracking\TrackerFactory;
 use Illuminate\Database\Connection;
-
-require_once 'clsConfigItajai.inc.php';
-require_once 'include/clsCronometro.inc.php';
-require_once 'Portabilis/Mailer.php';
+use Illuminate\Support\Facades\DB;
 
 abstract class clsBancoSQL_
 {
@@ -280,23 +277,6 @@ abstract class clsBancoSQL_
   }
 
   /**
-   * Conecta com o banco de dados
-   *
-   * Verifica se o link está inativo e conecta. Se a conexão não obtiver
-   * sucesso, interrompe o script
-   */
-  public function Conecta() {
-    // Verifica se o link de conexão está inativo e conecta
-    if (0 == $this->bLink_ID) {
-      $this->FraseConexao();
-      $this->bLink_ID = pg_connect($this->strFraseConexao);
-
-      if (! $this->bLink_ID)
-        $this->Interrompe("N&atilde;o foi possivel conectar ao banco de dados");
-    }
-  }
-
-  /**
    * Executa uma consulta SQL.
    *
    * @param  string  $consulta    Consulta SQL.
@@ -304,6 +284,8 @@ abstract class clsBancoSQL_
    *   sintaxe MySQL em PostgreSQL.
    * @return bool|resource FALSE em caso de erro ou o identificador da consulta
    *   em caso de sucesso.
+   *
+   * @throws Exception
    */
   public function Consulta($consulta, $reescrever = true)
   {
@@ -313,8 +295,6 @@ abstract class clsBancoSQL_
     else {
       $this->strStringSQL = $consulta;
     }
-
-    $this->Conecta();
 
     // Alterações de padrão MySQL para PostgreSQL
     if ($reescrever) {
@@ -338,35 +318,20 @@ abstract class clsBancoSQL_
       if (! ($i % 2)) {
         // Fora das aspas, verifica se há algo errado no SQL
         if (preg_match("/(--|#|\/\*)/", $temp[$i])) {
-          $erroMsg = 'Proteção contra injection: ' . date( "Y-m-d H:i:s" );
-          echo "<!-- {$this->strStringSQL} -->";
-          $this->Interrompe($erroMsg);
+          throw new Exception('Erro na query executada no banco de dados');
         }
       }
     }
 
     $start = microtime(true);
 
-    $this->bConsulta_ID = pg_query($this->bLink_ID, $this->strStringSQL);
-    $this->strErro = pg_result_error($this->bConsulta_ID);
-    $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
+    $this->run($this->strStringSQL);
 
     $this->logQuery($this->strStringSQL, [], $this->getElapsedTime($start));
 
     if (!$this->bConsulta_ID) {
-      if ($this->getThrowException()) {
-        $message  = $this->bErro_no ? "($this->bErro_no) " . $this->strErro :
-                                      pg_last_error($this->bLink_ID);
-
-        $message .= PHP_EOL . $this->strStringSQL;
-
-        throw new Exception($message);
-      }
-      else
-      {
         $erroMsg = "SQL invalido: {$this->strStringSQL}<br>\n";
         throw new Exception("Erro ao executar uma ação no banco de dados: $erroMsg");
-      }
     }
 
     return $this->bConsulta_ID;
@@ -413,17 +378,7 @@ abstract class clsBancoSQL_
           return false;
       }
 
-    // Fetch do resultado
-    if ($this->getFetchMode() == self::FETCH_ARRAY) {
-      $this->arrayStrRegistro = @pg_fetch_array($this->bConsulta_ID);
-    }
-    elseif ($this->getFetchMode() == self::FETCH_ASSOC) {
-      $this->arrayStrRegistro = @pg_fetch_assoc($this->bConsulta_ID);
-    }
-
-    // Verifica se houve erros
-    $this->strErro = @pg_result_error($this->bConsulta_ID);
-    $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
+      $this->arrayStrRegistro = $this->bConsulta_ID->fetch();
 
     // Testa se está vazio e verifica se Auto_Limpa é TRUE
     $stat = is_array($this->arrayStrRegistro);
@@ -440,16 +395,6 @@ abstract class clsBancoSQL_
   }
 
   /**
-   * Libera os resultados da memória.
-   */
-  function Libera()
-  {
-    pg_free_result($this->bConsulta_ID);
-    $this->bConsulta_ID = 0;
-    $this->strStringSQL = '';
-  }
-
-  /**
    * @see clsBancoSQL_#numLinhas()
    */
   function Num_Linhas()
@@ -463,7 +408,7 @@ abstract class clsBancoSQL_
    */
   function numLinhas()
   {
-    return pg_num_rows($this->bConsulta_ID);
+    return $this->bConsulta_ID->rowCount();
   }
 
   /**
@@ -480,7 +425,7 @@ abstract class clsBancoSQL_
    */
   function numCampos()
   {
-    return pg_num_fields($this->bConsulta_ID);
+    return $this->bConsulta_ID->columnCount();
   }
 
   /**
@@ -511,8 +456,9 @@ abstract class clsBancoSQL_
   {
     $this->Consulta($consulta);
     if ($this->ProximoRegistro()) {
-      list ($campo) = $this->Tupla();
-      $this->Libera();
+        $campo = $this->Tupla();
+        $campo = array_shift($campo);
+
       return $campo;
     }
     return FALSE;
@@ -525,34 +471,6 @@ abstract class clsBancoSQL_
   {
     return $this->UnicoCampo($consulta);
   }
-
-  /**
-   * Mostra a mensagem de erro e interrompe a execução do script.
-   * @param  string $msg
-   * @param  bool   $getError
-   */
-  function Interrompe($appErrorMsg, $getError = FALSE)
-  {
-    $lastError = error_get_last();
-
-    if ($GLOBALS['coreExt']['Config']->modules->error->track) {
-        $tracker = TrackerFactory::getTracker($GLOBALS['coreExt']['Config']->modules->error->tracker_name);
-
-        $pgErrorMsg = $getError ? pg_result_error($this->bConsulta_ID) : '';
-
-        $data = [
-            'databaseError' => $pgErrorMsg,
-            'appError' => $appErrorMsg,
-            'sql' => $this->strStringSQL,
-            'request' => $_REQUEST,
-        ];
-
-        $tracker->notify(new Exception($lastError['message']), $data);
-    }
-
-    die("<script>document.location.href = '/module/Error/unexpected';</script>");
-  }
-
 
   /**
    * Executa uma consulta SQL preparada ver: http://php.net/manual/en/function.pg-prepare.php
@@ -568,17 +486,13 @@ abstract class clsBancoSQL_
   public function execPreparedQuery($query, $params = array()) {
     try {
       $errorMsgs = '';
-      $this->Conecta();
-      $dbConn = $this->bLink_ID;
 
       if (! is_array($params))
         $params = array($params);
 
       $start = microtime(true);
 
-      $this->bConsulta_ID = @pg_query_params($dbConn, $query, $params);
-      $resultError = @pg_result_error($this->bConsulta_ID);
-      $errorMsgs .= trim($resultError) != '' ? $resultError : @pg_last_error($dbConn);
+        $this->run($query, $params);
 
       $this->logQuery($query, $params, $this->getElapsedTime($start));
 
@@ -628,5 +542,29 @@ abstract class clsBancoSQL_
     protected function getElapsedTime($start)
     {
         return round((microtime(true) - $start) * 1000, 2);
+    }
+
+    /**
+     * Método mockavel para execução de query
+     *
+     * @param string $query
+     * @param array $params
+     */
+    private function run(string $query, $params = [])
+    {
+        if (is_numeric(key($params))) {
+            $params = array_combine(range('a', chr(96 + count($params))), $params);
+            $query = preg_replace_callback('/(\$\d{1,})/', function ($matches) {
+                return ':' . chr(substr($matches[0], 1) + 96);
+            }, $query);
+        }
+
+        if ($this->getFetchMode() == self::FETCH_ARRAY) {
+            DB::setFetchMode(PDO::FETCH_BOTH);
+        } else {
+            DB::setFetchMode($this->getFetchMode());
+        }
+
+        $this->bConsulta_ID = DB::publicRun($query, $params);
     }
 }

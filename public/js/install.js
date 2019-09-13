@@ -89,15 +89,12 @@ if (installButton) {
               command: 'link',
               description: 'Gerando symlinks'
             }, {
-                command: 'database',
-                description: 'Inicializando banco de dados'
-            },{
+              command: 'migrate',
+              description: 'Executando migrações'
+            }, {
               command: 'password',
               description: 'Definindo senha do admin',
               extra: password
-            }, {
-                command: 'migrate',
-                description: 'Executando migrações'
             }, {
                 command: 'reports',
                 description: 'Instalando relatórios'

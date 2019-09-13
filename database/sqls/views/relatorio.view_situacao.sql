@@ -7,67 +7,67 @@ SELECT
     (
         CASE
             WHEN matricula_turma.remanejado THEN
-                ''Remanejado''::character varying
+                'Remanejado'::character varying
             WHEN matricula_turma.transferido THEN
-                ''Transferido''::character varying
+                'Transferido'::character varying
             WHEN matricula_turma.reclassificado THEN
-                ''Reclassificado''::character varying
+                'Reclassificado'::character varying
             WHEN matricula_turma.abandono THEN
-                ''Abandono''::character varying
+                'Abandono'::character varying
             WHEN matricula.aprovado = 1 THEN
-                ''Aprovado''::character varying
+                'Aprovado'::character varying
             WHEN matricula.aprovado = 12 THEN
-                ''Ap. Depen.''::character varying
+                'Ap. Depen.'::character varying
             WHEN matricula.aprovado = 13 THEN
-                ''Ap. Cons.''::character varying
+                'Ap. Cons.'::character varying
             WHEN matricula.aprovado = 2 THEN
-                ''Reprovado''::character varying
+                'Reprovado'::character varying
             WHEN matricula.aprovado = 3 THEN
-                ''Cursando''::character varying
+                'Cursando'::character varying
             WHEN matricula.aprovado = 4 THEN
-                ''Transferido''::character varying
+                'Transferido'::character varying
             WHEN matricula.aprovado = 5 THEN
-                ''Reclassificado''::character varying
+                'Reclassificado'::character varying
             WHEN matricula.aprovado = 6 THEN
-                ''Abandono''::character varying
+                'Abandono'::character varying
             WHEN matricula.aprovado = 14 THEN
-                ''Rp. Faltas''::character varying
+                'Rp. Faltas'::character varying
             WHEN matricula.aprovado = 15 THEN
-                ''Falecido''::character varying
-            ELSE ''Recl''::character varying
+                'Falecido'::character varying
+            ELSE 'Recl'::character varying
         END
     ) AS texto_situacao,
     (
         CASE
             WHEN matricula_turma.remanejado THEN
-                ''Rem''::character varying
+                'Rem'::character varying
             WHEN matricula_turma.transferido THEN
-                ''Trs''::character varying
+                'Trs'::character varying
             WHEN matricula_turma.reclassificado THEN
-                ''Recl''::character varying
+                'Recl'::character varying
             WHEN matricula_turma.abandono THEN
-                ''Aba''::character varying
+                'Aba'::character varying
             WHEN matricula.aprovado = 1 THEN
-                ''Apr''::character varying
+                'Apr'::character varying
             WHEN matricula.aprovado = 12 THEN
-                ''ApDp''::character varying
+                'ApDp'::character varying
             WHEN matricula.aprovado = 13 THEN
-                ''ApCo''::character varying
+                'ApCo'::character varying
             WHEN matricula.aprovado = 2 THEN
-                ''Rep''::character varying
+                'Rep'::character varying
             WHEN matricula.aprovado = 3 THEN
-                ''Cur''::character varying
+                'Cur'::character varying
             WHEN matricula.aprovado = 4 THEN
-                ''Trs''::character varying
+                'Trs'::character varying
             WHEN matricula.aprovado = 5 THEN
-                ''Recl''::character varying
+                'Recl'::character varying
             WHEN matricula.aprovado = 6 THEN
-                ''Aba''::character varying
+                'Aba'::character varying
             WHEN matricula.aprovado = 14 THEN
-                ''RpFt''::character varying
+                'RpFt'::character varying
             WHEN matricula.aprovado = 15 THEN
-                ''Fal''::character varying
-            ELSE ''Recl''::character varying
+                'Fal'::character varying
+            ELSE 'Recl'::character varying
         END
     ) AS texto_situacao_simplificado
 FROM

@@ -47,7 +47,7 @@ class indice extends clsDetalhe
      * @var int
      */
     var $titulo;
-    
+
     var $cod_infra_predio;
     var $ref_usuario_exc;
     var $ref_usuario_cad;
@@ -58,32 +58,25 @@ class indice extends clsDetalhe
     var $data_cadastro;
     var $data_descricao;
     var $ativo;
-    
+
     function Gerar()
     {
         //** Verificacao de permissao para cadastro
         $obj_permissao = new clsPermissoes();
-        
-        if($obj_permissao->permissao_cadastra(567, $this->pessoa_logada,7))
-        {   
-            $this->url_novo = "educar_tipo_usuario_cad.php";
-            $this->url_editar = "educar_tipo_usuario_cad.php?cod_tipo_usuario={$registro["cod_tipo_usuario"]}";
-        }
-        //**
-                
+
         $this->titulo = "Infra Predio - Detalhe";
-        
+
 
         $this->cod_infra_predio=$_GET["cod_infra_predio"];
 
         $tmp_obj = new clsPmieducarInfraPredio( $this->cod_infra_predio );
         $registro = $tmp_obj->detalhe();
-        
+
         if( ! $registro )
         {
             $this->simpleRedirect('educar_infra_predio_lst.php');
         }
-        
+
         if( class_exists( "clsPmieducarEscola" ) )
         {
             $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
@@ -119,24 +112,20 @@ class indice extends clsDetalhe
 
         //** Verificacao de permissao para cadastro
         $obj_permissao = new clsPermissoes();
-        
+
         if($obj_permissao->permissao_cadastra(567, $this->pessoa_logada,7))
-        {   
+        {
             $this->url_novo = "educar_infra_predio_cad.php";
             $this->url_editar = "educar_infra_predio_cad.php?cod_infra_predio={$registro["cod_infra_predio"]}";
         }
-        //**        
+        //**
 
         $this->url_cancelar = "educar_infra_predio_lst.php";
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "Detalhe do pr&eacute;dio"             
-        ));
-        $this->enviaLocalizacao($localizacao->montar());            
+        $this->breadcrumb('Detalhe do prédio', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 

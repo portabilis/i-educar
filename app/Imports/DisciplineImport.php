@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\LegacyDiscipline;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -29,7 +30,7 @@ class DisciplineImport implements ToModel, WithHeadingRow, WithProgressBar
     /**
     * @param array $row
     *
-    * @return \Illuminate\Database\Eloquent\Model|null
+    * @return Model
     */
     public function model(array $row)
     {
@@ -44,7 +45,12 @@ class DisciplineImport implements ToModel, WithHeadingRow, WithProgressBar
             'ordenamento' => $row['order'],
         ]);
 
-        $this->collection->push($discipline);
+        $collection = new Collection([
+            'row' => $row,
+            'discipline' => $discipline,
+        ]);
+        
+        $this->collection->push($collection);
 
         return $discipline;
     }

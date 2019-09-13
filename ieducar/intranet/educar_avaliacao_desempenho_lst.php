@@ -35,7 +35,7 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo( "{$this->_instituicao} Servidores - Avaliação Desempenho" );
         $this->processoAp = "635";
-    $this->addEstilo("localizacaoSistema");     
+    $this->addEstilo("localizacaoSistema");
     }
 }
 
@@ -87,10 +87,10 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
         $this->ref_ref_cod_instituicao=($_GET['ref_cod_instituicao'] == "") ? $_GET['ref_ref_cod_instituicao'] : $_GET['ref_cod_instituicao'];
-        
-        
+
+
 
         $lista_busca = array(
             "Avalia&ccedil;&atilde;o",
@@ -187,13 +187,9 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""                                  => "Detalhe da avalia&ccedil;&atilde;o de desempenho"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
+        $this->breadcrumb('Detalhe da avaliação de desempenho', [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
     }
 }
 // cria uma extensao da classe base

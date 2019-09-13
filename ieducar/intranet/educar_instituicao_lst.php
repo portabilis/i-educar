@@ -140,17 +140,11 @@ class indice extends clsListagem
         }
         $this->addPaginador2( "educar_instituicao_lst.php", $total, $_GET, $this->nome, $this->limite );
 
-        $obj_permissoes = new clsPermissoes();
-
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""                                  => "Listagem de institui&ccedil;&otilde;es"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Listagem de instituições', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 // cria uma extensao da classe base

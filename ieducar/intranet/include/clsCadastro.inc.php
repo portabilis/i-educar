@@ -1,18 +1,13 @@
 <?php
 
 use iEducar\Support\Navigation\Breadcrumb;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 require_once 'include/clsCampos.inc.php';
-
-if (class_exists('clsPmiajudaPagina')) {
-    require_once 'include/pmiajuda/clsPmiajudaPagina.inc.php';
-}
-
 require_once 'Portabilis/View/Helper/Application.php';
 require_once 'Portabilis/View/Helper/Inputs.php';
 require_once 'Portabilis/Utils/User.php';
-
 require_once 'include/localizacaoSistema.php';
 
 class clsCadastro extends clsCampos
@@ -24,15 +19,12 @@ class clsCadastro extends clsCampos
      */
     public $pessoa_logada;
     public $__nome = 'formcadastro';
-    public $banner;
-    public $bannerLateral;
-    public $titulo_barra;
     public $target = '_self';
     public $largura;
     public $tipoacao;
     public $campos = [];
     public $erros;
-    public $mensagem;
+    private $_mensagem;
     public $nome_pai;
     public $chave;
     public $item_campo_pai;
@@ -66,23 +58,16 @@ class clsCadastro extends clsCampos
     public $onSubmit = 'acao()';
     public $form_enctype;
 
+    /**
+     * @deprecated
+     */
     public function addBanner(
         $strBannerUrl = '',
         $strBannerLateralUrl = '',
         $strBannerTitulo = '',
         $boolFechaBanner = true
-    )
-    {
-        if ($strBannerUrl != '') {
-            $this->banner = $strBannerUrl;
-        }
-        if ($strBannerLateralUrl != '') {
-            $this->bannerLateral = $strBannerLateralUrl;
-        }
-        if ($strBannerTitulo != '') {
-            $this->titulo_barra = $strBannerTitulo;
-        }
-        $this->bannerClose = $boolFechaBanner;
+    ) {
+        // Método deixado para compatibilidade
     }
 
     public function __construct()
@@ -136,30 +121,33 @@ class clsCadastro extends clsCampos
             </script>";
                 }
 
-                if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
-                    $this->mensagem = 'N&atilde;o foi poss&iacute;vel inserir a informa&ccedil;&atilde;o. [CAD01]';
+                if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
+                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel inserir a informa&ccedil;&atilde;o. [CAD01]';
                 }
             } elseif ($this->tipoacao == 'Editar') {
                 $this->sucesso = $this->Editar();
-                if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
-                    $this->mensagem = 'N&atilde;o foi poss&iacute;vel editar a informa&ccedil;&atilde;o. [CAD02]';
+                if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
+                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel editar a informa&ccedil;&atilde;o. [CAD02]';
                 }
             } elseif ($this->tipoacao == 'Excluir') {
                 $this->sucesso = $this->Excluir();
-                if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
-                    $this->mensagem = 'N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD03]';
+                if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
+                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD03]';
                 }
             } elseif ($this->tipoacao == 'ExcluirImg') {
                 $this->sucesso = $this->ExcluirImg();
-                if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
-                    $this->mensagem = 'N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD04]';
+                if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
+                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD04]';
                 }
             } elseif ($this->tipoacao == 'Enturmar') {
                 $this->sucesso = $this->Enturmar();
-                if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
-                    $this->mensagem = 'N&atilde;o foi poss&iacute;vel copiar as entruma&ccedil;&otilde;es. [CAD05]';
+                if (!$this->sucesso && empty($this->erros) && empty($this->_mensagem)) {
+                    $this->_mensagem = 'N&atilde;o foi poss&iacute;vel copiar as entruma&ccedil;&otilde;es. [CAD05]';
                 }
             }
+
+            $this->setFlashMessage();
+
             if (empty($script) && $this->sucesso && !empty($this->url_sucesso)) {
                 redirecionar($this->url_sucesso);
             } else {
@@ -168,71 +156,82 @@ class clsCadastro extends clsCampos
         }
     }
 
-    public function Inicializar()
+
+    function Inicializar()
     {
     }
 
-    public function Formular()
+    function Formular()
     {
     }
 
-    public function Novo()
+    function Novo()
     {
-        return false;
+        return FALSE;
     }
 
-    public function Editar()
+    function Editar()
     {
-        return false;
+        return FALSE;
     }
 
-    public function Excluir()
+    function Excluir()
     {
-        return false;
+        return FALSE;
     }
 
-    public function ExcluirImg()
+    function ExcluirImg()
     {
-        return false;
+        return FALSE;
     }
 
-    public function Gerar()
+    function Gerar()
     {
-        return false;
+        return FALSE;
     }
 
-    protected function flashMessage()
+    protected function setFlashMessage()
     {
-        if (empty($this->mensagem) && isset($_GET['mensagem']) && $_GET['mensagem'] == 'sucesso') {
-            $this->mensagem = 'Registro incluido com sucesso!';
+        Session::remove('legacy');
+
+        $hasMessage = false;
+        $flashKeys = ['success', 'error', 'notice', 'info', 'legacy'];
+
+        foreach ($flashKeys as $k) {
+            if (Session::has($k)) {
+                $hasMessage = true;
+                break;
+            }
         }
 
-        if ($this->sucesso) {
-            return "<p class='success'>$this->mensagem</p>";
+        if ($hasMessage) {
+            return;
         }
 
-        return empty($this->mensagem) ? '' : "<p class='form_erro error'>$this->mensagem</p>";
+        if (empty($this->_mensagem)) {
+            if ($_GET['mensagem'] ?? '' === 'sucesso') {
+                Session::now('success', 'Registro incluido com sucesso!');
+            }
+        } else {
+            if ($this->sucesso) {
+                Session::now('success', $this->_mensagem);
+            } else {
+                Session::now('error', $this->_mensagem);
+            }
+        }
     }
 
     public function RenderHTML()
     {
+        ob_start();
+
         $this->_preRender();
-
-        $this->bannerLateral = 'imagens/nvp_vert_intranet.jpg';
-        $this->titulo_barra = 'Intranet';
         $this->Processar();
-
-        $retorno = '';
-
-        if ($this->banner) {
-            $retorno .= '<table width=\'100%\' style="height:100%" border=\'0\' cellpadding=\'0\' cellspacing=\'0\'><tr>';
-            $retorno .= '<td valign=\'top\'>';
-        }
-
         $this->Gerar();
 
-        $script = explode('/', $_SERVER['PHP_SELF']);
-        $script = $script[count($script) - 1];
+        $retorno = ob_get_contents();
+
+        ob_end_clean();
 
         $this->nome_excluirImg = empty($this->nome_excluirImg) ? 'Excluir Imagem' : $this->nome_excluirImg;
         $this->nome_url_cancelar = empty($this->nome_url_cancelar) ? 'Cancelar' : $this->nome_url_cancelar;
@@ -264,46 +263,10 @@ class clsCadastro extends clsCampos
         $titulo = isset($this->titulo) ? $this->titulo : "<b>{$this->tipoacao} {$applicationTitle}</b>";
 
         View::share('title', $this->getPageTitle());
-        /**
-         * Adiciona os botoes de help para a pagina atual
-         */
-        $url = parse_url($_SERVER['REQUEST_URI']);
-        $url = preg_replace('/^\//', '', $url['path']);
-        if (strpos($url, '_det.php') !== false) {
-            $tipo = 'det';
-        } elseif (strpos($url, '_lst.php') !== false) {
-            $tipo = 'lst';
-        } elseif (strpos($url, '_pdf.php') !== false) {
-            $tipo = 'pdf';
-        } else {
-            $tipo = 'cad';
-        }
+
         $barra = $titulo;
 
-        // @todo Remover cï¿½digo, funcionalidade nï¿½o existente.
-        if (class_exists('clsPmiajudaPagina')) {
-            $ajudaPagina = new clsPmiajudaPagina();
-            $lista = $ajudaPagina->lista(null, null, $url);
-            if ($lista) {
-                $barra = "
-        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
-          <tr>
-          <script type=\"text/javascript\">document.help_page_index = 0;</script>
-          <td width=\"20\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]['ref_cod_topico']}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Botï¿½o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta pï¿½gina\"></a></td>
-          <td>{$titulo}</td>
-          <td align=\"right\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]['ref_cod_topico']}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Botï¿½o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta pï¿½gina\"></a></td>
-          </tr>
-        </table>";
-            }
-        }
-
         $retorno .= "<tr><td class='formdktd' colspan='2' height='24'>{$barra}</td></tr>";
-
-        $flashMessage = $this->flashMessage();
-
-        if (!empty($flashMessage)) {
-            $retorno .= "<tr><td class='formmdtd' colspan='2' height='24'><div id='flash-container'>{$flashMessage}</div></td></tr>";
-        }
 
         if (empty($this->campos)) {
             $retorno .= '<tr><td class=\'linhaSim\' colspan=\'2\'><span class=\'form\'>N&atilde;o existe informa&ccedil;&atilde;o dispon&iacute;vel</span></td></tr>';
@@ -648,10 +611,6 @@ class clsCadastro extends clsCampos
         $retorno .= "</table>\n</center>\n<!-- cadastro end -->\n";
         $retorno .= "</form>\n";
 
-        if (!empty($this->bannerClose)) {
-            $retorno .= '</td></tr></table>';
-        }
-
         if (!empty($this->executa_script)) {
             $retorno .= "<script type=\"text/javascript\">{$this->executa_script}</script>";
         }
@@ -774,5 +733,16 @@ class clsCadastro extends clsCampos
         }
 
         return '';
+    }
+
+    public function __set($name, $value)
+    {
+        if ($name === 'mensagem') {
+            $this->_mensagem = $value;
+
+            Session::flash('legacy', $value);
+        } else {
+            $this->{$name} = $value;
+        }
     }
 }

@@ -38,8 +38,8 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\ChangeAppName::class,
             \App\Http\Middleware\ConnectTenantDatabase::class,
-            \App\Http\Middleware\LoadLegacyConfig::class,
             \App\Http\Middleware\SetLayoutVariables::class,
+            \App\Http\Middleware\LoadSettings::class,
         ],
 
         'api' => [
@@ -66,9 +66,9 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'ieducar.navigation' => \App\Http\Middleware\Navigation::class,
         'ieducar.setlayoutvariables' => \App\Http\Middleware\SetLayoutVariables::class,
-        'ieducar.menu' => \App\Http\Middleware\Menu::class,
         'ieducar.footer' => \App\Http\Middleware\Footer::class,
         'ieducar.xssbypass' => \App\Http\Middleware\XssByPass::class,
+        'ieducar.suspended' => \App\Http\Middleware\Suspended::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
 
@@ -80,8 +80,8 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middlewarePriority = [
-        \App\Http\Middleware\LoadLegacyConfig::class,
         \App\Http\Middleware\ConnectTenantDatabase::class,
+        \App\Http\Middleware\LoadSettings::class,
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
         \App\Http\Middleware\Authenticate::class,
@@ -89,5 +89,6 @@ class Kernel extends HttpKernel
         \Illuminate\Routing\Middleware\SubstituteBindings::class,
         \Illuminate\Auth\Middleware\Authorize::class,
         \App\Http\Middleware\ChangeAppName::class,
+        \App\Http\Middleware\Suspended::class,
     ];
 }

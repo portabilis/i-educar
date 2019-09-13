@@ -262,7 +262,7 @@ class indice extends clsDetalhe
         $lst = $obj->lista( null,$this->ref_cod_aluno,$this->sequencial );
         $qtd_disciplinas = count($lst);
         if ($lst)
-        { 
+        {
             $tabela = "<table>
                            <tr align='center'>
                                <td bgcolor=#ccdce6><b>Nome</b></td>
@@ -320,7 +320,7 @@ class indice extends clsDetalhe
                                                           WHERE cod_instituicao = (SELECT ref_cod_instituicao
                                                                                      FROM pmieducar.usuario
                                                                                     WHERE cod_usuario = $this->pessoa_logada)");
-        if($restringir_historico_escolar == 't'){
+        if($restringir_historico_escolar){
             $ref_cod_escola = $db->CampoUnico("SELECT ref_cod_escola
                                              FROM pmieducar.historico_escolar
                                             WHERE ref_cod_aluno = $this->ref_cod_aluno
@@ -383,13 +383,9 @@ class indice extends clsDetalhe
         $this->url_cancelar = "educar_historico_escolar_lst.php?ref_cod_aluno={$registro["ref_cod_aluno"]}";
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Atualização de históricos escolares"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Atualização de históricos escolares', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 }
 
