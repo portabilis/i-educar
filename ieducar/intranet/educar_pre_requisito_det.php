@@ -37,7 +37,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Pre Requisito - Detalhe";
-        
+
 
         $this->cod_pre_requisito=$_GET["cod_pre_requisito"];
 
@@ -49,30 +49,13 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_pre_requisito_lst.php');
         }
 
-        if( class_exists( "clsPmieducarUsuario" ) )
-        {
             $obj_ref_usuario_exc = new clsPmieducarUsuario( $registro["ref_usuario_exc"] );
             $det_ref_usuario_exc = $obj_ref_usuario_exc->detalhe();
             $registro["ref_usuario_exc"] = $det_ref_usuario_exc["data_cadastro"];
-        }
-        else
-        {
-            $registro["ref_usuario_exc"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarUsuario\n-->";
-        }
 
-        if( class_exists( "clsPmieducarUsuario" ) )
-        {
             $obj_ref_usuario_cad = new clsPmieducarUsuario( $registro["ref_usuario_cad"] );
             $det_ref_usuario_cad = $obj_ref_usuario_cad->detalhe();
             $registro["ref_usuario_cad"] = $det_ref_usuario_cad["data_cadastro"];
-        }
-        else
-        {
-            $registro["ref_usuario_cad"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarUsuario\n-->";
-        }
-
 
         if( $registro["cod_pre_requisito"] )
         {

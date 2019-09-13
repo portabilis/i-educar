@@ -145,37 +145,7 @@ class indice extends clsListagem
                 $registro["data_exclusao_time"] = strtotime( substr( $registro["data_exclusao"], 0, 16 ) );
                 $registro["data_exclusao_br"] = date( "d/m/Y H:i", $registro["data_exclusao_time"] );
 
-
-                // pega detalhes de foreign_keys
-                /*if( class_exists( "clsCadastroFisica" ) )
-                {
-                    $obj_idpes_exc = new clsCadastroFisica( $registro["idpes_exc"] );
-                    $det_idpes_exc = $obj_idpes_exc->detalhe();
-                    $registro["idpes_exc"] = $det_idpes_exc[""];
-                }
-                else
-                {
-                    $registro["idpes_exc"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsCadastroFisica\n-->";
-                }*/
-
-                /*if( class_exists( "clsCadastroFisica" ) )
-                {
-                    $obj_idpes_cad = new clsCadastroFisica( $registro["idpes_cad"] );
-                    $det_idpes_cad = $obj_idpes_cad->detalhe();
-                    $registro["idpes_cad"] = $det_idpes_cad[""];
-                }
-                else
-                {
-                    $registro["idpes_cad"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsCadastroFisica\n-->";
-                }*/
-
-
                 $this->addLinhas( array(
-                    //"<a href=\"cadastro_raca_det.php?cod_raca={$registro["cod_raca"]}\">{$registro["cod_raca"]}</a>",
-                    /*"<a href=\"cadastro_raca_det.php?cod_raca={$registro["cod_raca"]}\">{$registro["idpes_exc"]}</a>",
-                    "<a href=\"cadastro_raca_det.php?cod_raca={$registro["cod_raca"]}\">{$registro["idpes_cad"]}</a>",*/
                     "<a href=\"educar_raca_det.php?cod_raca={$registro["cod_raca"]}\">{$registro["nm_raca"]}</a>"
                 ) );
 

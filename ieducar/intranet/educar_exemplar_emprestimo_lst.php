@@ -156,43 +156,24 @@ class indice extends clsListagem
                 $registro["data_retirada_time"] = strtotime( substr( $registro["data_retirada"], 0, 16 ) );
                 $registro["data_retirada_br"] = date( "d/m/Y", $registro["data_retirada_time"] );
 
-                // pega detalhes de foreign_keys
-                if( class_exists( "clsPmieducarExemplar" ) )
-                {
-                    $obj_exemplar = new clsPmieducarExemplar($registro["ref_cod_exemplar"]);
-                    $det_exemplar = $obj_exemplar->detalhe();
-                    $acervo = $det_exemplar["ref_cod_acervo"];
-                    $obj_acervo = new clsPmieducarAcervo($acervo);
-                    $det_acervo = $obj_acervo->detalhe();
-                    $registro["titulo"] = $det_acervo["titulo"];
-                }
-                else
-                {
-                    $registro["ref_cod_exemplar"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarExemplar\n-->";
-                }
+                $obj_exemplar = new clsPmieducarExemplar($registro["ref_cod_exemplar"]);
+                $det_exemplar = $obj_exemplar->detalhe();
+                $acervo = $det_exemplar["ref_cod_acervo"];
+                $obj_acervo = new clsPmieducarAcervo($acervo);
+                $det_acervo = $obj_acervo->detalhe();
+                $registro["titulo"] = $det_acervo["titulo"];
 
-                if( class_exists( "clsPmieducarCliente" ) )
-                {
-                    $obj_cliente = new clsPmieducarCliente($registro["ref_cod_cliente"]);
-                    $det_cliente = $obj_cliente->detalhe();
-                    $ref_idpes = $det_cliente["ref_idpes"];
-                    $obj_pessoa = new clsPessoa_($ref_idpes);
-                    $det_pessoa = $obj_pessoa->detalhe();
-                    $registro["ref_cod_cliente"] = $det_pessoa["nome"];
-                }
-                else
-                {
-                    $registro["ref_cod_cliente"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarCliente\n-->";
-                }
+                $obj_cliente = new clsPmieducarCliente($registro["ref_cod_cliente"]);
+                $det_cliente = $obj_cliente->detalhe();
+                $ref_idpes = $det_cliente["ref_idpes"];
+                $obj_pessoa = new clsPessoa_($ref_idpes);
+                $det_pessoa = $obj_pessoa->detalhe();
+                $registro["ref_cod_cliente"] = $det_pessoa["nome"];
 
-                if( class_exists( "clsPmieducarBiblioteca" ) )
-                {
-                    $obj_ref_cod_biblioteca = new clsPmieducarBiblioteca( $registro["ref_cod_biblioteca"] );
-                    $det_ref_cod_biblioteca = $obj_ref_cod_biblioteca->detalhe();
-                    $registro["ref_cod_biblioteca"] = $det_ref_cod_biblioteca["nm_biblioteca"];
-                }
+                $obj_ref_cod_biblioteca = new clsPmieducarBiblioteca( $registro["ref_cod_biblioteca"] );
+                $det_ref_cod_biblioteca = $obj_ref_cod_biblioteca->detalhe();
+                $registro["ref_cod_biblioteca"] = $det_ref_cod_biblioteca["nm_biblioteca"];
+
                 if( $registro["ref_cod_instituicao"] )
                 {
                     $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );

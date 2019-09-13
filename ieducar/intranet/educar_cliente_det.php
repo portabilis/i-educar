@@ -90,36 +90,28 @@ class indice extends clsDetalhe
                 {
                     $this->addDetalhe( array( "Login", "{$cliente["login"]}") );
                 }
-                if ( class_exists( "clsBanco" ) ) {
-                    $obj_banco = new clsBanco();
-                    $sql_unico = "SELECT ref_cod_motivo_suspensao
-                                    FROM pmieducar.cliente_suspensao
-                                   WHERE ref_cod_cliente = {$cliente["cod_cliente"]}
-                                     AND data_liberacao IS NULL
-                                     AND EXTRACT ( DAY FROM ( NOW() - data_suspensao ) ) < dias";
-                    $motivo    = $obj_banco->CampoUnico( $sql_unico );
-                    if ( is_numeric( $motivo ) ) {
-                        $this->addDetalhe( array( "Status", "Suspenso" ) );
-                        if ( class_exists( "clsPmieducarMotivoSuspensao" ) ) {
-                            $obj_motivo_suspensao = new clsPmieducarMotivoSuspensao( $motivo );
-                            $det_motivo_suspensao = $obj_motivo_suspensao->detalhe();
-                            $this->suspenso = $motivo;
-                            $this->addDetalhe( array( "Motivo da Suspensão", "{$det_motivo_suspensao["nm_motivo"]}" ) );
-                            $this->addDetalhe( array( "Descrição", "{$det_motivo_suspensao["descricao"]}" ) );
-                        }
-                    }
-                    else
-                        $this->addDetalhe( array( "Status", "Regular" ) );
-
-                    $tipo_cliente = $obj_banco->CampoUnico("SELECT nm_tipo FROM pmieducar.cliente_tipo WHERE ref_cod_biblioteca IN (SELECT ref_cod_biblioteca FROM pmieducar.biblioteca_usuario WHERE ref_cod_usuario = '$this->pessoa_logada') AND cod_cliente_tipo = (SELECT ref_cod_cliente_tipo FROM pmieducar.cliente_tipo_cliente WHERE ref_cod_cliente = '$this->cod_cliente'  AND ref_cod_biblioteca = '$this->ref_cod_biblioteca')");
-                    if(is_string($tipo_cliente))
-                    {
-                        $this->addDetalhe(array("Tipo", $tipo_cliente));
-                    }
+                $obj_banco = new clsBanco();
+                $sql_unico = "SELECT ref_cod_motivo_suspensao
+                                FROM pmieducar.cliente_suspensao
+                               WHERE ref_cod_cliente = {$cliente["cod_cliente"]}
+                                 AND data_liberacao IS NULL
+                                 AND EXTRACT ( DAY FROM ( NOW() - data_suspensao ) ) < dias";
+                $motivo    = $obj_banco->CampoUnico( $sql_unico );
+                if ( is_numeric( $motivo ) ) {
+                    $this->addDetalhe( array( "Status", "Suspenso" ) );
+                        $obj_motivo_suspensao = new clsPmieducarMotivoSuspensao( $motivo );
+                        $det_motivo_suspensao = $obj_motivo_suspensao->detalhe();
+                        $this->suspenso = $motivo;
+                        $this->addDetalhe( array( "Motivo da Suspensão", "{$det_motivo_suspensao["nm_motivo"]}" ) );
+                        $this->addDetalhe( array( "Descrição", "{$det_motivo_suspensao["descricao"]}" ) );
                 }
-                else {
-                    $registro["ref_idpes"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsBanco\n-->";
+                else
+                    $this->addDetalhe( array( "Status", "Regular" ) );
+
+                $tipo_cliente = $obj_banco->CampoUnico("SELECT nm_tipo FROM pmieducar.cliente_tipo WHERE ref_cod_biblioteca IN (SELECT ref_cod_biblioteca FROM pmieducar.biblioteca_usuario WHERE ref_cod_usuario = '$this->pessoa_logada') AND cod_cliente_tipo = (SELECT ref_cod_cliente_tipo FROM pmieducar.cliente_tipo_cliente WHERE ref_cod_cliente = '$this->cod_cliente'  AND ref_cod_biblioteca = '$this->ref_cod_biblioteca')");
+                if(is_string($tipo_cliente))
+                {
+                    $this->addDetalhe(array("Tipo", $tipo_cliente));
                 }
             }
         }

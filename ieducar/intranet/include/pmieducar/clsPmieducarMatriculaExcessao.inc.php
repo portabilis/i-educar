@@ -26,52 +26,14 @@ class clsPmieducarMatriculaExcessao extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_aluno_excessao, ref_cod_matricula, ref_cod_turma, ref_sequencial, ref_cod_serie, ref_cod_escola, ref_cod_disciplina, reprovado_faltas, precisa_exame, permite_exame';
 
         if (is_numeric($ref_cod_serie) && is_numeric($ref_cod_escola) && is_numeric($ref_cod_disciplina)) {
-            if (class_exists('clsPmieducarEscolaSerieDisciplina')) {
-                $tmp_obj = new clsPmieducarEscolaSerieDisciplina($ref_cod_serie, $ref_cod_escola, $ref_cod_disciplina);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_serie = $ref_cod_serie;
-                        $this->ref_cod_escola = $ref_cod_escola;
-                        $this->ref_cod_disciplina = $ref_cod_disciplina;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_serie = $ref_cod_serie;
-                        $this->ref_cod_escola = $ref_cod_escola;
-                        $this->ref_cod_disciplina = $ref_cod_disciplina;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.escola_serie_disciplina WHERE ref_ref_cod_serie = '{$ref_cod_serie}' AND ref_ref_cod_escola = '{$ref_cod_escola}' AND ref_cod_disciplina = '{$ref_cod_disciplina}'")) {
                     $this->ref_cod_serie = $ref_cod_serie;
                     $this->ref_cod_escola = $ref_cod_escola;
                     $this->ref_cod_disciplina = $ref_cod_disciplina;
-                }
-            }
         }
         if (is_numeric($ref_cod_matricula) && is_numeric($ref_cod_turma) && is_numeric($ref_sequencial)) {
-            if (class_exists('clsPmieducarMatriculaTurma')) {
-                $tmp_obj = new clsPmieducarMatriculaTurma($ref_cod_matricula, $ref_cod_turma, $ref_sequencial);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_matricula = $ref_cod_matricula;
-                        $this->ref_cod_turma = $ref_cod_turma;
-                        $this->ref_sequencial = $ref_sequencial;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_matricula = $ref_cod_matricula;
-                        $this->ref_cod_turma = $ref_cod_turma;
-                        $this->ref_sequencial = $ref_sequencial;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.matricula_turma WHERE ref_cod_matricula = '{$ref_cod_matricula}' AND ref_cod_turma = '{$ref_cod_turma}' AND sequencial = '{$ref_sequencial}'")) {
                     $this->ref_cod_matricula = $ref_cod_matricula;
                     $this->ref_cod_turma = $ref_cod_turma;
                     $this->ref_sequencial = $ref_sequencial;
-                }
-            }
         }
 
         if (is_numeric($cod_aluno_excessao)) {

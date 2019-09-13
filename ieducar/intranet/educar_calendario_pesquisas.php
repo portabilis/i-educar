@@ -36,7 +36,6 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
   $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
   if ($nivel_usuario == 1) {
-    if (class_exists('clsPmieducarInstituicao')) {
       $opcoes = array('' => 'Selecione');
 
       $obj_instituicao = new clsPmieducarInstituicao();
@@ -51,9 +50,6 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
           $opcoes[$registro['cod_instituicao']] = $registro['nm_instituicao'];
         }
       }
-    } else {
-      $opcoes = array('' => 'Erro na geração');
-    }
 
     if ($get_escola) {
       $retorno .= '
@@ -103,7 +99,6 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
   }
 
   if ($get_escola) {
-    if (class_exists('clsPmieducarEscola')) {
       $opcoes_escola = array('' => 'Selecione');
 
       $todas_escolas = 'escola = new Array();' . "\n";
@@ -122,9 +117,6 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
       }
 
       echo sprintf('<script>%s</script>', $todas_escolas);
-    } else {
-      $opcoes_escola = array('' => 'Erro na geração');
-    }
 
     if ($nivel_usuario == 4 || $nivel_usuario == 8) {
       $opcoes_escola = array('' => 'Selecione');
@@ -142,7 +134,6 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
         }
       }
     } else if ($this->ref_cod_instituicao) {
-      if (class_exists('clsPmieducarEscola')) {
         $opcoes_escola = array('' => 'Selecione');
         $obj_escola = new clsPmieducarEscola();
         $lista = $obj_escola->lista(NULL, NULL, NULL, $this->ref_cod_instituicao,
@@ -153,9 +144,6 @@ if ($nivel_usuario <= 4 && !empty($nivel_usuario)) {
             $opcoes_escola[$registro['cod_escola']] = $registro['nome'];
           }
         }
-      } else {
-        $opcoes_escola = array('' => 'Erro na geração');
-      }
     }
 
     if ($get_escola) {

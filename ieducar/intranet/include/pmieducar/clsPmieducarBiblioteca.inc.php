@@ -63,40 +63,10 @@ class clsPmieducarBiblioteca extends Model
                                                                                                      bloqueia_emprestimo_em_atraso';
 
         if (is_numeric($ref_cod_instituicao)) {
-            if (class_exists('clsPmieducarInstituicao')) {
-                $tmp_obj = new clsPmieducarInstituicao($ref_cod_instituicao);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_instituicao = $ref_cod_instituicao;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_instituicao = $ref_cod_instituicao;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.instituicao WHERE cod_instituicao = '{$ref_cod_instituicao}'")) {
                     $this->ref_cod_instituicao = $ref_cod_instituicao;
-                }
-            }
         }
         if (is_numeric($ref_cod_escola)) {
-            if (class_exists('clsPmieducarEscola')) {
-                $tmp_obj = new clsPmieducarEscola($ref_cod_escola);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_escola = $ref_cod_escola;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_escola = $ref_cod_escola;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.escola WHERE cod_escola = '{$ref_cod_escola}'")) {
                     $this->ref_cod_escola = $ref_cod_escola;
-                }
-            }
         }
 
         if (is_numeric($cod_biblioteca)) {

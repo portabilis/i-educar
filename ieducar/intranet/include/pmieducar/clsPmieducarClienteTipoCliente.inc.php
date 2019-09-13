@@ -32,41 +32,11 @@ class clsPmieducarClienteTipoCliente extends Model
         $this->_campos_lista = $this->_todos_campos = 'ctc.ref_cod_cliente_tipo, ctc.ref_cod_cliente, ctc.data_cadastro, ctc.data_exclusao, ctc.ref_usuario_cad, ctc.ref_usuario_exc, ctc.ativo';
 
         if (is_numeric($ref_cod_cliente_tipo)) {
-            if (class_exists('clsPmieducarClienteTipo')) {
-                $tmp_obj = new clsPmieducarClienteTipo($ref_cod_cliente_tipo);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_cliente_tipo = $ref_cod_cliente_tipo;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_cliente_tipo = $ref_cod_cliente_tipo;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.cliente_tipo WHERE cod_cliente_tipo = '{$ref_cod_cliente_tipo}'")) {
                     $this->ref_cod_cliente_tipo = $ref_cod_cliente_tipo;
-                }
-            }
         }
 
         if (is_numeric($ref_cod_cliente)) {
-            if (class_exists('clsPmieducarCliente')) {
-                $tmp_obj = new clsPmieducarCliente($ref_cod_cliente);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_cliente = $ref_cod_cliente;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_cliente = $ref_cod_cliente;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.cliente WHERE cod_cliente = '{$ref_cod_cliente}'")) {
                     $this->ref_cod_cliente = $ref_cod_cliente;
-                }
-            }
         }
 
         if (is_string($data_cadastro)) {

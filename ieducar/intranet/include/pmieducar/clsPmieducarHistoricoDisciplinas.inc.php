@@ -56,25 +56,8 @@ class clsPmieducarHistoricoDisciplinas extends Model
         ]);
 
         if (is_numeric($ref_ref_cod_aluno) && is_numeric($ref_sequencial)) {
-            if (class_exists('clsPmieducarHistoricoEscolar')) {
-                $tmp_obj = new clsPmieducarHistoricoEscolar($ref_ref_cod_aluno, $ref_sequencial);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_ref_cod_aluno = $ref_ref_cod_aluno;
-                        $this->ref_sequencial = $ref_sequencial;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_ref_cod_aluno = $ref_ref_cod_aluno;
-                        $this->ref_sequencial = $ref_sequencial;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.historico_escolar WHERE ref_cod_aluno = '{$ref_ref_cod_aluno}' AND sequencial = '{$ref_sequencial}'")) {
                     $this->ref_ref_cod_aluno = $ref_ref_cod_aluno;
                     $this->ref_sequencial = $ref_sequencial;
-                }
-            }
         }
 
         if (is_numeric($sequencial)) {

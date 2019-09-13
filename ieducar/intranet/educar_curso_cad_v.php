@@ -96,85 +96,60 @@ class indice extends clsCadastro
 
         // foreign keys
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarInstituicao" ) )
+
+        $objTemp = new clsPmieducarInstituicao();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarInstituicao();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_instituicao']}"] = "{$registro['nm_instituicao']}";
-                }
+                $opcoes["{$registro['cod_instituicao']}"] = "{$registro['nm_instituicao']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarInstituicao nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_cod_instituicao", "Instituic&atilde;o", $opcoes, $this->ref_cod_instituicao );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarTipoEnsino" ) )
+
+        $objTemp = new clsPmieducarTipoEnsino();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarTipoEnsino();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_tipo_ensino']}"] = "{$registro['nm_tipo']}";
-                }
+                $opcoes["{$registro['cod_tipo_ensino']}"] = "{$registro['nm_tipo']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarTipoEnsino nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_cod_tipo_ensino", "Tipo Ensino", $opcoes, $this->ref_cod_tipo_ensino );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarTipoAvaliacao" ) )
+
+        $objTemp = new clsPmieducarTipoAvaliacao();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarTipoAvaliacao();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_tipo_avaliacao']}"] = "{$registro['nm_tipo']}";
-                }
+                $opcoes["{$registro['cod_tipo_avaliacao']}"] = "{$registro['nm_tipo']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarTipoAvaliacao nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_cod_tipo_avaliacao", "Tipo Avaliac&atilde;o", $opcoes, $this->ref_cod_tipo_avaliacao );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarNivelEnsino" ) )
+
+        $objTemp = new clsPmieducarNivelEnsino();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarNivelEnsino();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_nivel_ensino']}"] = "{$registro['nm_nivel']}";
-                }
+                $opcoes["{$registro['cod_nivel_ensino']}"] = "{$registro['nm_nivel']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarNivelEnsino nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
-        $this->campoLista( "ref_cod_nivel_ensino", "Nivel Ensino", $opcoes, $this->ref_cod_nivel_ensino );
 
+        $this->campoLista( "ref_cod_nivel_ensino", "Nivel Ensino", $opcoes, $this->ref_cod_nivel_ensino );
 
         // text
         $this->campoTexto( "nm_curso", "Nome Curso", $this->nm_curso, 30, 255, true );

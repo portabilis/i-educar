@@ -66,12 +66,9 @@ class indice extends clsCadastro
                 $obj_ref_serie_origem = new clsPmieducarSerie( $this->ref_serie_origem );
                 $det_ref_serie_origem = $obj_ref_serie_origem->detalhe();
                 $this->ref_curso_origem = $det_ref_serie_origem["ref_cod_curso"];
-                if( class_exists( "clsPmieducarCurso" ) )
-                {
                     $obj_ref_curso_origem = new clsPmieducarCurso( $this->ref_curso_origem );
                     $det_ref_curso_origem = $obj_ref_curso_origem->detalhe();
                     $this->ref_cod_instituicao = $det_ref_curso_origem["ref_cod_instituicao"];
-                }
                 $obj_ref_serie_destino = new clsPmieducarSerie( $this->ref_serie_destino );
                 $det_ref_serie_destino = $obj_ref_serie_destino->detalhe();
                 $this->ref_curso_destino = $det_ref_serie_destino["ref_cod_curso"];
@@ -134,20 +131,6 @@ class indice extends clsCadastro
 
         $opcoes = array( "" => "Selecione" );
         $opcoes_ = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarCurso" ) )
-        {
-            /*$todos_cursos = "curso = new Array();\n";
-            $objTemp = new clsPmieducarCurso();
-            $objTemp->setOrderby("nm_curso");
-            $lista = $objTemp->lista( null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1 );
-            if ( is_array( $lista ) && count( $lista ) )
-            {
-                foreach ( $lista as $registro )
-                {
-                    $todos_cursos .= "curso[curso.length] = new Array({$registro["cod_curso"]},'{$registro["nm_curso"]}', {$registro["ref_cod_instituicao"]});\n";
-                }
-            }
-            echo "<script>{$todos_cursos}</script>";*/
 
             // EDITAR
             if ($this->ref_cod_instituicao)
@@ -164,12 +147,7 @@ class indice extends clsCadastro
                     }
                 }
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarCurso n&atilde;o encontrada\n-->";
-            $opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
-        }
+
         $this->campoLista( "ref_curso_origem", "Curso Origem", $opcoes, $this->ref_curso_origem,"",true );
         $this->campoLista( "ref_curso_destino", " Curso Destino", $opcoes_, $this->ref_curso_destino );
 
@@ -177,20 +155,6 @@ class indice extends clsCadastro
 
         $opcoes = array( "" => "Selecione" );
         $opcoes_ = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarSerie" ) )
-        {
-            /*$todas_series = "serie = new Array();\n";
-            $objTemp = new clsPmieducarSerie();
-            $objTemp->setOrderby( "nm_serie ASC" );
-            $lista = $objTemp->lista( null,null,null,null,null,null,null,null,null,null,null,null,1 );
-            if ( is_array( $lista ) && count( $lista ) )
-            {
-                foreach ( $lista as $registro )
-                {
-                    $todas_series .= "serie[serie.length] = new Array({$registro["cod_serie"]},'{$registro["nm_serie"]}', {$registro["ref_cod_curso"]});\n";
-                }
-            }
-            echo "<script>{$todas_series}</script>";*/
 
             if ($this->ref_curso_origem)
             {
@@ -218,13 +182,7 @@ class indice extends clsCadastro
                     }
                 }
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarSerie n&atilde;o encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-            $opcoes_ = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_serie_origem", "S&eacute;rie Origem", $opcoes, $this->ref_serie_origem,null,true);
         $this->campoLista( "ref_serie_destino", " S&eacute;rie Destino", $opcoes_, $this->ref_serie_destino);
 

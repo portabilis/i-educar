@@ -114,19 +114,9 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
-
-
-                if( class_exists( "clsUf" ) )
-                {
                     $obj_sigla_uf = new clsUf($registro["sigla_uf"]->sigla_uf);
                     $det_sigla_uf = $obj_sigla_uf->detalhe();
                     $registro["sigla_uf"] = $det_sigla_uf["nome"];
-                }
-                else
-                {
-                    $registro["sigla_uf"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsUf\n-->";
-                }
 
                 $campo1 = Session::get('campo1');
                 $script = " onclick=\"addSel1('{$campo1}','{$registro['idmun']}','{$registro['nome']}'); fecha();\"";

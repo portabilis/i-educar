@@ -114,31 +114,14 @@ class indice extends clsListagem
                 $registro["data_exclusao_time"] = strtotime( substr( $registro["data_exclusao"], 0, 16 ) );
                 $registro["data_exclusao_br"] = date( "d/m/Y H:i", $registro["data_exclusao_time"] );
 
-
-                // pega detalhes de foreign_keys
-                if( class_exists( "clsPmieducarUsuario" ) )
-                {
                     $obj_ref_usuario_exc = new clsPmieducarUsuario( $registro["ref_usuario_exc"] );
                     $det_ref_usuario_exc = $obj_ref_usuario_exc->detalhe();
                     $registro["ref_usuario_exc"] = $det_ref_usuario_exc["data_cadastro"];
-                }
-                else
-                {
-                    $registro["ref_usuario_exc"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarUsuario\n-->";
-                }
 
-                if( class_exists( "clsPmieducarUsuario" ) )
-                {
                     $obj_ref_usuario_cad = new clsPmieducarUsuario( $registro["ref_usuario_cad"] );
                     $det_ref_usuario_cad = $obj_ref_usuario_cad->detalhe();
                     $registro["ref_usuario_cad"] = $det_ref_usuario_cad["data_cadastro"];
-                }
-                else
-                {
-                    $registro["ref_usuario_cad"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarUsuario\n-->";
-                }
+
                 $this->addLinhas( array(
                     "<a href=\"educar_pre_requisito_det.php?cod_pre_requisito={$registro["cod_pre_requisito"]}\">{$registro["nome"]}</a>",
                     "<a href=\"educar_pre_requisito_det.php?cod_pre_requisito={$registro["cod_pre_requisito"]}\">{$registro["schema_"]}</a>",

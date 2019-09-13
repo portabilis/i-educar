@@ -26,76 +26,16 @@ class clsPmieducarSubnivel extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_subnivel, ref_usuario_exc, ref_usuario_cad, ref_cod_subnivel_anterior, ref_cod_nivel, nm_subnivel, data_cadastro, data_exclusao, ativo, salario';
 
         if (is_numeric($ref_usuario_exc)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_exc);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'")) {
                     $this->ref_usuario_exc = $ref_usuario_exc;
-                }
-            }
         }
         if (is_numeric($ref_usuario_cad)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_cad);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'")) {
                     $this->ref_usuario_cad = $ref_usuario_cad;
-                }
-            }
         }
         if (is_numeric($ref_cod_subnivel_anterior)) {
-            if (class_exists('clsPmieducarSubnivel')) {
-                $tmp_obj = new clsPmieducarSubnivel($ref_cod_subnivel_anterior);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_subnivel_anterior = $ref_cod_subnivel_anterior;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_subnivel_anterior = $ref_cod_subnivel_anterior;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.subnivel WHERE cod_subnivel = '{$ref_cod_subnivel_anterior}'")) {
                     $this->ref_cod_subnivel_anterior = $ref_cod_subnivel_anterior;
-                }
-            }
         }
         if (is_numeric($ref_cod_nivel)) {
-            if (class_exists('clsPmieducarNivel')) {
-                $tmp_obj = new clsPmieducarNivel($ref_cod_nivel);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_nivel = $ref_cod_nivel;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_nivel = $ref_cod_nivel;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.nivel WHERE cod_nivel = '{$ref_cod_nivel}'")) {
                     $this->ref_cod_nivel = $ref_cod_nivel;
-                }
-            }
         }
 
         if (is_numeric($cod_subnivel)) {
