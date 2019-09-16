@@ -149,10 +149,19 @@ ModalDispensas = {
           ref_cod_componente_curricular: dispensas.idComponente
         };
 
-        let linkVerMais = $j('<a>').attr({
-          href: '/consulta-dispensas?' + $j.param(requestData),
-          target: '_blank'
-        });
+        let linkVerMais = null;
+        if ($j('#permissao_consulta_dispensas').val() == 1){
+          linkVerMais = $j('<a>').attr({
+            href: '/consulta-dispensas?' + $j.param(requestData),
+            target: '_blank'
+          });
+        } else {
+          linkVerMais = $j('<a>').attr({
+            href: '#',
+            onclick: 'handleMessages([{type : \'error\', msg : \'Você não tem permissão para acessar esse recurso.\'}]);'
+          });
+        }
+
         linkVerMais.append('Ver mais');
 
         let tr = $j('<tr>');
