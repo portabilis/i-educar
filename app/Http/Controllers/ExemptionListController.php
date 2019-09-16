@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\LegacyDisciplineExemption;
 use App\Process;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 use Illuminate\View\View;
 
 class ExemptionListController extends Controller
@@ -30,8 +31,14 @@ class ExemptionListController extends Controller
             });
         }
 
-        if ($request->get('ref_cod_escola')) {
-            $query->where('ref_cod_escola', $request->get('ref_cod_escola'));
+        $schools[] = $request->get('ref_cod_escola');
+
+        if ($request->user()->isSchooling()) {
+            $schools = $request->user()->schools->pluck('cod_escola')->all();
+        }
+
+        if (array_filter($schools)) {
+            $query->whereIn('ref_cod_escola', $schools);
         }
 
         if ($request->get('ref_cod_serie')) {
@@ -49,7 +56,7 @@ class ExemptionListController extends Controller
             $query->where('ref_cod_disciplina', $request->get('ref_cod_componente_curricular'));
         }
 
-        $exemptions = $query->paginate(20);
+        $exemptions = $query->paginate(20)->appends(Input::except('page'));
 
         return view('exemption.index', compact('exemptions'));
     }

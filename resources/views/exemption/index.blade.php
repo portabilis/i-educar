@@ -62,33 +62,33 @@
     </form>
 
     <table class="table-default">
-        <thead>
-        <tr>
-            <th>Ano</th>
-            <th>Aluno</th>
-            <th>Disciplina</th>
-            <th>Tipo de Dispensa</th>
-            <th>Data da dispensa</th>
+        <tr class="titulo-tabela-listagem">
+            <th colspan="5">Dispensas - Listagem</th>
         </tr>
-        </thead>
-        <tbody>
+        <tr>
+            <td style="font-weight:bold;">Ano</td>
+            <td style="font-weight:bold;">Aluno</td>
+            <td style="font-weight:bold;">Disciplina</td>
+            <td style="font-weight:bold;">Tipo de Dispensa</td>
+            <td style="font-weight:bold;">Data da dispensa</td>
+        </tr>
         @forelse($exemptions as $exemption)
             @php $exemptionUrl = url('intranet/educar_dispensa_disciplina_det.php?ref_cod_matricula=' . $exemption->ref_cod_matricula . '&ref_cod_serie=' . $exemption->ref_cod_serie . '&ref_cod_escola=' . $exemption->ref_cod_escola . '&ref_cod_disciplina=' . $exemption->ref_cod_disciplina) @endphp
             <tr>
                 <td>
-                    <a href="{{ $exemptionUrl }}">{{ $exemption->registration->ano }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->registration->ano }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}">{{ $exemption->registration->student->person->nome }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->registration->student->person->nome }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}">{{ $exemption->discipline->nome }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->discipline->nome }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}">{{ $exemption->type }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->type }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}">{{ $exemption->data_cadastro->format('d/m/Y') }}</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->data_cadastro->format('d/m/Y') }}</a>
                 </td>
             </tr>
         @empty
@@ -96,8 +96,6 @@
                 <td colspan="4">Não foi encontrada nenhuma dispensa</td>
             </tr>
         @endforelse
-
-        </tbody>
     </table>
 
     <div class="separator"></div>
