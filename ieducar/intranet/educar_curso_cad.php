@@ -512,7 +512,7 @@ class indice extends clsCadastro
 
                         if (!$cadastrou2) {
                             $this->mensagem = 'Cadastro não realizado.<br>';
-                            echo "<!--\nErro ao cadastrar clsPmieducarHabilitacaoCurso\nvalores obrigatórios\nis_numeric( $cadastrou ) && is_numeric( {$campo['ref_cod_habilitacao_']} ) )\n-->";
+
 
                             return false;
                         }
@@ -524,7 +524,7 @@ class indice extends clsCadastro
             }
 
             $this->mensagem = 'Cadastro não realizado.<br>';
-            echo "<!--\nErro ao cadastrar clsPmieducarCurso\nvalores obrigatórios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_tipo_regime ) && is_numeric( $this->ref_cod_nivel_ensino ) && is_numeric( $this->ref_cod_tipo_ensino ) && is_string( $this->nm_curso ) && is_string( $this->sgl_curso ) && is_numeric( $this->qtd_etapas ) && is_numeric( $this->frequencia_minima ) && is_numeric( $this->media ) && is_numeric( $this->falta_ch_globalizada ) && is_numeric( $this->edicao_final ) && is_string( $this->data_inicio ) && is_string( $this->data_fim )\n-->";
+
 
             return false;
         }
@@ -599,7 +599,7 @@ class indice extends clsCadastro
 
                             if (!$cadastrou2) {
                                 $this->mensagem = 'Edição não realizada.<br>';
-                                echo "<!--\nErro ao editar clsPmieducarHabilitacaoCurso\nvalores obrigatórios\nis_numeric( $this->cod_curso ) && is_numeric( {$campo['ref_cod_habilitacao_']} ) )\n-->";
+
 
                                 return false;
                             }
@@ -617,7 +617,7 @@ class indice extends clsCadastro
             }
 
             $this->mensagem = 'Edição não realizada.<br>';
-            echo "<!--\nErro ao editar clsPmieducarCurso\nvalores obrigatórios\nif( is_numeric( $this->cod_curso ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
 
             return false;
         }
@@ -662,7 +662,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
-        echo "<!--\nErro ao excluir clsPmieducarCurso\nvalores obrigatórios\nif( is_numeric( $this->cod_curso ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
 
         return false;
     }

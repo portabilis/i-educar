@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -46,7 +22,7 @@ class indice extends clsCadastro
      * @var int
      */
     var $pessoa_logada;
-    
+
     var $cod_disciplina_topico;
     var $ref_usuario_exc;
     var $ref_usuario_cad;
@@ -55,17 +31,17 @@ class indice extends clsCadastro
     var $data_cadastro;
     var $data_exclusao;
     var $ativo;
-         
+
     function Inicializar()
     {
         $retorno = "Novo";
-        
-        
+
+
         $this->cod_disciplina_topico=$_GET["cod_disciplina_topico"];
 
         if( is_numeric( $this->cod_disciplina_topico ) )
         {
-            
+
             $obj = new clsPmieducarDisciplinaTopico( $this->cod_disciplina_topico );
             $registro  = $obj->detalhe();
             if( $registro )
@@ -85,7 +61,7 @@ class indice extends clsCadastro
     function Gerar()
     {
         $obj_permissao = new clsPermissoes();
-        $obj_permissao->permissao_cadastra(565,$this->pessoa_logada,7,"educar_disciplina_topico_lst.php");      
+        $obj_permissao->permissao_cadastra(565,$this->pessoa_logada,7,"educar_disciplina_topico_lst.php");
         // primary keys
         $this->campoOculto( "cod_disciplina_topico", $this->cod_disciplina_topico );
 
@@ -101,8 +77,8 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
-        
+
+
         $obj = new clsPmieducarDisciplinaTopico( null, null, $this->pessoa_logada, $this->nm_topico, $this->desc_topico);
         $cadastrou = $obj->cadastra();
         if( $cadastrou )
@@ -110,16 +86,16 @@ class indice extends clsCadastro
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
             $this->simpleRedirect('educar_disciplina_topico_lst.php');
         }
-        
+
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarDisciplinaTopico\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_string( $this->nm_topico )\n-->";
+
         return false;
     }
 
-    function Editar() 
+    function Editar()
     {
-        
-        
+
+
         $obj = new clsPmieducarDisciplinaTopico($this->cod_disciplina_topico, $this->pessoa_logada, null, $this->nm_topico, $this->desc_topico, null,null,1);
         $editou = $obj->edita();
         if( $editou )
@@ -127,16 +103,16 @@ class indice extends clsCadastro
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_disciplina_topico_lst.php');
         }
-        
+
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarDisciplinaTopico\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_disciplina_topico ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
     function Excluir()
     {
-        
-        
+
+
         $obj = new clsPmieducarDisciplinaTopico($this->cod_disciplina_topico, $this->pessoa_logada, null, null, null, null, null, 0);
         $excluiu = $obj->excluir();
         if( $excluiu )
@@ -144,9 +120,9 @@ class indice extends clsCadastro
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_disciplina_topico_lst.php');
         }
-        
+
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarDisciplinaTopico\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_disciplina_topico ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }

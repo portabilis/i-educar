@@ -2,7 +2,6 @@ S3.php
 agenda_calendario.php
 clsCalendario.inc.php
 cron.agenda.php
-download.php
 educar_calendario_pesquisas.php
 educar_limpa_sessao_curso_disciplina_servidor.php
 educar_matricula_cad_curso_segue_padrao.php

@@ -132,7 +132,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmiEducarAbandonoTipo\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_instituicao ) && is_string( $this->nome )\n-->";
+
         return false;
     }
 
@@ -157,7 +157,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmiEducarAbandonoTipo\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_abandono_tipo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
@@ -179,7 +179,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmiEducarAbandonoTipo\nvalores obrigat&oacuterios\nif( is_numeric( $this->cod_abandono_tipo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }

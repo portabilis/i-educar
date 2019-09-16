@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*                                                                        *
-*   @author Prefeitura Municipal de Itajaí                               *
-*   @updated 29/03/2007                                                  *
-*   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-*                                                                        *
-*   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-*                       ctima@itajai.sc.gov.br                           *
-*                                                                        *
-*   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-*   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-*   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-*   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-*                                                                        *
-*   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-*   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-*   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-*   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-*                                                                        *
-*   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-*   junto  com  este  programa. Se não, escreva para a Free Software     *
-*   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-*   02111-1307, USA.                                                     *
-*                                                                        *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsPDF.inc.php");
 
 class relatoriosPref
@@ -48,7 +24,7 @@ class relatoriosPref
     var $largura;
     var $alturaUltimaLinha = 13;
     var $qtd_pagina = 0;
-    
+
     function __construct( $nome, $espacoEntreLinhas=80, $capa=false, $rodape=false, $tipoFolha="A4", $cabecalho="")
     {
         $this->pdf = new clsPDF( $nome, "Cartas Folhas de Rosto", $tipoFolha, "", false, false );
@@ -66,7 +42,7 @@ class relatoriosPref
             $y = 150;
             $xMod = 7;
             $yMod = 9;
-            
+
             $total = count( $cores );
             for( $i = 0; $i < 7; $i++ )
             {
@@ -74,16 +50,16 @@ class relatoriosPref
             }
             $this->pdf->Write( $capa[0], 190, 290, 300, 100, "arial", 20, $cores[0], "center" );
             $this->pdf->Write( $capa[1], 190, 400, 300, 100, "arial", 15, $cores[2], "center" );
-            
+
             $this->pdf->Shape( 'ret', 50, 0, 25, 850, $linha, $cores[13], $cores[13] );
             $this->pdf->Shape( 'ret', 0, 750, 600, 25, $linha, $cores[13], $cores[13] );
-            
+
             $this->pdf->Shape( 'ret', 52, 0, 25, 850, $linha, $cores[14], $cores[14] );
             $this->pdf->Shape( 'ret', 0, 752, 600, 25, $linha, $cores[14], $cores[14] );
             $this->pdf->ClosePage();
         }
     }
-    
+
     function setMargem( $esquerda=50, $direita=50, $topo=50, $fundo=50 )
     {
         $this->margem_direita = $direita;
@@ -91,7 +67,7 @@ class relatoriosPref
         $this->margem_topo = $topo;
         $this->margem_fundo = $fundo;
     }
-    
+
     function novaPagina()
     {
         $this->numeroPagina++;
@@ -123,16 +99,16 @@ class relatoriosPref
         $this->pdf->Write( "Lembretes:", 52, 822, 500, 80, 'Arial', 10, "#000000", "left" );
         $this->pdf->Line(295,92,295,26,0.01);
 
-    
-        $this->altura = 60; 
+
+        $this->altura = 60;
     }
-    
+
     function fechaPagina()
     {
         $this->pdf->ClosePage();
         $this->altura = 0;
     }
-    
+
     // funcao para ser chamada a cada nova linha
     function novalinha( $texto,$deslocamento=0,$altura=13, $titulo=false, $fonte="arial", $divisoes=false, $lembretes=false, $extra_hor_spaco_antes = 0, $extra_hor_spaco_depois = 0 )
     {
@@ -152,9 +128,9 @@ class relatoriosPref
             $cor = "#000000";
             $this->qtd_pagina++;
         }
-        
-    
-        
+
+
+
         //Verifica se é o fim da página
         if($this->altura +$altura > ( $this->pdf->altura * 0.80 ) || $this->qtd_pagina >2 && $lembretes == false)
         {
@@ -164,28 +140,28 @@ class relatoriosPref
                 $this->novaPagina();
                 // altera a altura atual (de acordo com a altura passa)
                 $this->altura += $altura + $extra_hor_spaco_antes;
-                $this->alturaUltimaLinha = $altura; 
+                $this->alturaUltimaLinha = $altura;
                 if($titulo)
                 {
                     $this->qtd_pagina = 1;
-                }else 
+                }else
                 {
                     $this->qtd_pagina = 0;
 
                 }
-        //  }       
+        //  }
         }elseif ($lembretes == false)
         {
                 // altera a altura atual (de acordo com a altura passa)
                 $this->altura += $altura + $extra_hor_spaco_antes;
-                $this->alturaUltimaLinha = $altura; 
+                $this->alturaUltimaLinha = $altura;
         }
         if($lembretes)
         {
             $this->lembretes[] = array("texto"=>$texto, "altura"=>$this->altura, "fonte"=>$fonte, "desloc"=>$deslocamento, "alturaLinha"=>$altura, "fundo"=>$fundo, "cor"=>$cor, "titulo"=>$titulo, "divisoes"=>$divisoes, "alturaultimalinha"=>$this->alturaUltimaLinha );
-        
+
         }
-        else 
+        else
         {
             $this->texto[] = array("texto"=>$texto, "altura"=>$this->altura, "fonte"=>$fonte, "desloc"=>$deslocamento, "alturaLinha"=>$altura, "fundo"=>$fundo, "cor"=>$cor, "titulo"=>$titulo, "divisoes"=>$divisoes, "alturaultimalinha"=>$this->alturaUltimaLinha );
         }
@@ -193,13 +169,13 @@ class relatoriosPref
         $this->altura += $extra_hor_spaco_depois;
 
     }
-    
+
     function fillText()
     {
     //  $this->pdf->Shape('ret', $this->margem_esquerda - 1, $this->pdf->altura -1 - $this->altura, $this->largura - $this->margem_direita - $this->margem_esquerda + 2, $this->altura-48, 1);
         // passa todas as linhas
         if($this->texto)
-        foreach ( $this->texto as $linha ) 
+        foreach ( $this->texto as $linha )
         {
             if( !$linha['titulo'])
                 $this->num_linhas++;
@@ -216,7 +192,7 @@ class relatoriosPref
             $i = 0;
             $col = 0;
             // passa as colunas escrevendo elas
-            foreach( $linha['texto'] as $texto ) 
+            foreach( $linha['texto'] as $texto )
             {
                 $posx = $this->margem_esquerda + $this->txt_padding_left + $i + $linha['desloc'];
                 $this->pdf->Write( $texto, $posx, $linha['altura']+$mod, $this->largura - $this->margem_direita - $posx, $linha['alturaLinha'], $linha['fonte'], '10', $linha['cor'], 'left' );
@@ -226,19 +202,19 @@ class relatoriosPref
             }
             $this->lastMod = $mod ;
         }
-        
+
         for ($i = 0; $i<2;$i++)
         {
             $lembrete = $this->lembretes[$i];
             if(is_array($lembrete))
             {
-                $lembrete = $lembrete['texto'][0];  
+                $lembrete = $lembrete['texto'][0];
             }
             if($i==1)
             $this->pdf->Write( "$lembrete", 52, 842, 250, 80, 'Arial', 8, "#000000", "left" );
-            else 
+            else
             $this->pdf->Write( "$lembrete", 300, 842, 250, 80, 'Arial', 8, "#000000", "left" );
-            
+
             //print_r($lembrete);
         }
         $this->texto ="";
@@ -246,7 +222,7 @@ class relatoriosPref
         $this->altura = 0;
         $this->fechaPagina();
     }
-    
+
     function fechaPdf()
     {
         if( $this->texto || $this->lembretes)

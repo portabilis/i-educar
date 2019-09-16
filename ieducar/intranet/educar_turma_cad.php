@@ -903,7 +903,7 @@ class indice extends clsCadastro
 
         if (!$cadastrou) {
             $this->mensagem = 'Cadastro não realizado.';
-            echo "<!--\nErro ao cadastrar clsPmieducarTurma\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo ) && is_string( $this->nm_turma ) && is_numeric( $this->max_aluno ) && is_numeric( $this->multiseriada ) && is_numeric( $this->ref_cod_turma_tipo )\n-->";
+
 
             return false;
         }
@@ -990,7 +990,7 @@ class indice extends clsCadastro
 
         if (!$editou) {
             $this->mensagem = 'Edição não realizada.';
-            echo "<!--\nErro ao editar clsPmieducarTurma\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_infra_predio_comodo ) && is_string( $this->nm_turma ) && is_numeric( $this->max_aluno ) && is_numeric( $this->multiseriada ) && is_numeric( $this->ref_cod_turma_tipo )\n-->";
+
 
             return false;
         }
@@ -1428,7 +1428,7 @@ class indice extends clsCadastro
         $cadastrou = $objModulo->cadastra();
 
         if (!$cadastrou) {
-            echo "<!--\nErro ao editar clsPmieducarTurmaModulo\nvalores obrigatorios\nis_numeric( $this->cod_turma ) && is_numeric( {$modulo['ref_cod_modulo_']} ) \n-->";
+
         }
 
         return true;
@@ -1532,14 +1532,14 @@ class indice extends clsCadastro
                 );
             } else {
                 $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.';
-                echo "<!--\nErro ao excluir clsPmieducarTurma\nvalores obrigatorios\nif( is_numeric( $this->cod_turma ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
 
                 return false;
             }
         }
 
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.';
-        echo "<!--\nErro ao excluir clsPmieducarTurma\nvalores obrigatorios\nif( is_numeric( $this->cod_turma ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
 
         return false;
     }

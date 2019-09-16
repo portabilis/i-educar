@@ -132,7 +132,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro não realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarModulo\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_string( $this->nm_tipo ) && is_numeric( $this->num_meses ) && is_numeric( $this->num_semanas ) && is_numeric( $this->ref_cod_instituicao )\n-->";
+
         return false;
     }
 
@@ -159,7 +159,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edição não realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarModulo\nvalores obrigatorios\nif ( is_numeric( $this->cod_modulo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
@@ -191,7 +191,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclusão não realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarModulo\nvalores obrigatorios\nif ( is_numeric( $this->cod_modulo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
