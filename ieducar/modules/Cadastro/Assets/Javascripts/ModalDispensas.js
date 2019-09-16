@@ -46,11 +46,13 @@ ModalDispensas = {
     msgContainer.append(this.getDispensasTable(data));
     msgContainer.append(this.getActionButtons());
 
-    this.dialog.dialog('option', 'position', {my: 'center top', of: window});
+    this.dialog.dialog('option', 'position', {my: 'center', at: 'top', of: window});
 
     if (!this.dialogContainer.dialog('isOpen')) {
       this.dialogContainer.dialog('open');
     }
+
+    $j('#dialog-container-dispensas').parent().css({position: 'fixed'}).css({top: '25px'})
   },
   getContainerMessage: function () {
     let msg = '<h4>Não foi possível remover o componente pois existem registros de dispensa vinculadas a ele</h4>';
