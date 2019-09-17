@@ -468,14 +468,15 @@ class DiarioApiController extends ApiCoreController
 
             $this->serviceBoletim()->updateMediaComponente($mediaLancada, $componenteCurricular, $etapa, true);
             $this->messenger->append('Média da matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
-            $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
             $this->appendResponse('situacao', $this->getSituacaoComponente($this->getRequest()->componente_curricular_id));
-            $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
             $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
             $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
         } else {
             $this->messenger->append('Usuário não possui permissão para alterar a média do aluno.', 'error');
         }
+
+        $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+        $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     }
 
     protected function postMediaDesbloqueia() {
@@ -686,13 +687,14 @@ class DiarioApiController extends ApiCoreController
             $this->trySaveServiceBoletim();
             $this->messenger->append('Nota de recuperação da matrícula ' . $this->getRequest()->matricula_id . ' excluída com sucesso.', 'success');
 
-            $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
-            $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
             $this->appendResponse('situacao', $this->getSituacaoComponente());
             $this->appendResponse('nota_original', $notaOriginal);
             $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
             $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
         }
+
+        $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+        $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     }
 
     protected function deleteNotaRecuperacaoEspecifica()
@@ -711,13 +713,14 @@ class DiarioApiController extends ApiCoreController
             $this->trySaveServiceBoletim();
             $this->messenger->append('Nota de recuperação da matrícula ' . $this->getRequest()->matricula_id . ' excluída com sucesso.', 'success');
 
-            $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
-            $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
             $this->appendResponse('situacao', $this->getSituacaoComponente());
             $this->appendResponse('nota_original', $notaOriginal);
             $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
             $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
         }
+
+        $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
+        $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     }
 
     protected function deleteFalta()
