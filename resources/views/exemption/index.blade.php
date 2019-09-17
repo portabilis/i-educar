@@ -21,31 +21,31 @@
                 </td>
             </tr>
             <tr id="tr_nm_instituicao">
-                <td class="formlttd" valign="top"><span class="form">Instituição:</span></td>
+                <td class="formlttd" valign="top"><span class="form">Instituição</span></td>
                 <td class="formlttd" valign="top">
                     @include('form.select-institution')
                 </td>
             </tr>
             <tr id="tr_nm_escola">
-                <td class="formmdtd" valign="top"><span class="form">Escola:</span></td>
+                <td class="formmdtd" valign="top"><span class="form">Escola</span></td>
                 <td class="formmdtd" valign="top">
                     @include('form.select-school')
                 </td>
             </tr>
             <tr id="tr_nm_curso">
-                <td class="formlttd" valign="top"><span class="form">Curso:</span></td>
+                <td class="formlttd" valign="top"><span class="form">Curso</span></td>
                 <td class="formlttd" valign="top">
                     @include('form.select-course')
                 </td>
             </tr>
             <tr id="tr_nm_serie">
-                <td class="formmdtd" valign="top"><span class="form">Serie:</span></td>
+                <td class="formmdtd" valign="top"><span class="form">Serie</span></td>
                 <td class="formmdtd" valign="top">
                     @include('form.select-grade')
                 </td>
             </tr>
             <tr id="tr_nm_serie">
-                <td class="formlttd" valign="top"><span class="form">Componente curricular:</span></td>
+                <td class="formlttd" valign="top"><span class="form">Componente curricular</span></td>
                 <td class="formlttd" valign="top">
                     @include('form.select-discipline-school-grade')
                 </td>
@@ -68,8 +68,8 @@
         <tr>
             <td style="font-weight:bold;">Ano</td>
             <td style="font-weight:bold;">Aluno</td>
-            <td style="font-weight:bold;">Disciplina</td>
-            <td style="font-weight:bold;">Tipo de Dispensa</td>
+            <td style="font-weight:bold;">Componente curricular</td>
+            <td style="font-weight:bold;">Tipo de dispensa</td>
             <td style="font-weight:bold;">Data da dispensa</td>
         </tr>
         @forelse($exemptions as $exemption)
