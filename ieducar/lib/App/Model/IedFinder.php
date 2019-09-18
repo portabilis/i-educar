@@ -2,9 +2,11 @@
 
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
+use App\Models\LegacySchool;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
+use Illuminate\Support\Facades\Auth;
 
 require_once 'CoreExt/Entity.php';
 require_once 'App/Model/Exception.php';
@@ -86,6 +88,26 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $escolas;
+    }
+
+    /**
+     * Retorna todas as escolas. Se o usuário logado for do nível escolar, pega somente as escolas
+     * vinculadas a ele
+     *
+     * @param int $instituicaoId
+     *
+     * @return array
+     */
+    public static function getEscolasByUser($instituicaoId)
+    {
+        $query = LegacySchool::where('ref_cod_instituicao', $instituicaoId);
+
+        if (Auth::user()->isSchooling()) {
+            $schools = Auth::user()->schools->pluck('cod_escola')->all();
+            $query->whereId('id', $schools);
+        }
+
+        return $query->get()->getKeyValueArray('name');
     }
 
     /**
