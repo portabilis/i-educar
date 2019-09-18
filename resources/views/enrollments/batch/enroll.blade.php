@@ -44,7 +44,7 @@
                     <td class="formlttd" valign="top"><span class="form">{{ $schoolClass->vacancies }}</span></td>
                 </tr>
                 <tr id="tr_ano">
-                    <td class="formmdtd" valign="top"><span class="form">Período de enturmação:</span></td>
+                    <td class="formmdtd" valign="top"><span class="form">Calendário letivo:</span></td>
                     <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->begin_academic_year->format('d/m/Y') }} à {{ $schoolClass->end_academic_year->format('d/m/Y') }}</span></td>
                 </tr>
             </tbody>

@@ -100,6 +100,9 @@ class EnrollmentServiceTest extends TestCase
             'ref_cod_turma' => $this->schoolClass,
         ]);
 
+        $enrollment->schoolClass->school->institution->permitir_matricula_fora_periodo_letivo = false;
+        $enrollment->schoolClass->school->institution->save();
+
         $this->service->cancelEnrollment($enrollment, now());
     }
 
