@@ -56,6 +56,8 @@ class ExemptionListController extends Controller
             $query->where('ref_cod_disciplina', $request->get('ref_cod_componente_curricular'));
         }
 
+        $query->orderBy('data_cadastro', 'desc');
+
         $exemptions = $query->paginate(20)->appends(Input::except('page'));
 
         return view('exemption.index', compact('exemptions'));

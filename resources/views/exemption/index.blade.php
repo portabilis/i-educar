@@ -13,7 +13,7 @@
             </tr>
             <tr id="tr_nm_ano">
                 <td class="formmdtd" valign="top">
-                    <span class="form">Ano:</span><br>
+                    <span class="form">Ano</span><br>
                     <sub style="vertical-align:top;">somente números</sub>
                 </td>
                 <td class="formmdtd" valign="top">
@@ -93,7 +93,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="4">Não foi encontrada nenhuma dispensa</td>
+                <td colspan="5" align=center>Não há informação para ser apresentada</td>
             </tr>
         @endforelse
     </table>

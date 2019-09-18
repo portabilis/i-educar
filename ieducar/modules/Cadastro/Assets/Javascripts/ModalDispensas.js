@@ -88,7 +88,7 @@ ModalDispensas = {
       'align': 'center'
     });
 
-    buttonsTd.append('<input type="button" class="botao" value="Ok" onclick="ModalDispensas.close()">');
+    buttonsTd.append('<input type="button" class="botao" value="Voltar" onclick="ModalDispensas.close()">');
 
     buttonsTr.append(buttonsTd);
     buttonsTable.append(buttonsTr);
