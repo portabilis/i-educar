@@ -5,7 +5,6 @@ require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Educacenso/Model/AlunoDataMapper.php';
-require_once 'include/public/clsPublicSetorBai.inc.php';
 require_once 'Portabilis/Utils/CustomLabel.php';
 
 class clsIndexBase extends clsBase
