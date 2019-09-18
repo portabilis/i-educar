@@ -46,20 +46,8 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
  */
 class SetorController extends ApiCoreController
 {
-
-
   protected function getSetor() {
-      $sql = "SELECT idsetorbai AS id_setor,
-                     nome AS nome
-              FROM public.setor_bai";
-
-      $setores = $this->fetchPreparedQuery($sql);
-      $options = array();
-
-      foreach ($setores as $setor)
-        $options['__' . $setor['id_setor']] = $this->toUtf8($setor['nome']);
-
-      return array('options' => $options);
+      return array('options' => []);
     }
 
   public function Gerar() {
