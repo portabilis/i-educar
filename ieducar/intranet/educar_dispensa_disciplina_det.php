@@ -169,7 +169,7 @@ class indice extends clsDetalhe
 
     $obj_permissoes = new clsPermissoes();
 
-    if ($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7)) {
+    if ($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7) && $detalhe_aluno['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
       $this->url_novo   = sprintf('educar_dispensa_disciplina_cad.php?ref_cod_matricula=%d',
         $this->ref_cod_matricula);
       $this->url_editar = sprintf('educar_dispensa_disciplina_cad.php?ref_cod_matricula=%d&ref_cod_disciplina=%d',
