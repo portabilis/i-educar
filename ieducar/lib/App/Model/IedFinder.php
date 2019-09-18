@@ -104,7 +104,7 @@ class App_Model_IedFinder extends CoreExt_Entity
 
         if (Auth::user()->isSchooling()) {
             $schools = Auth::user()->schools->pluck('cod_escola')->all();
-            $query->whereId('id', $schools);
+            $query->whereIn('cod_escola', $schools);
         }
 
         return $query->get()->getKeyValueArray('name');
