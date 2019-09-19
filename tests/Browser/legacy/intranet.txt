@@ -335,7 +335,6 @@ educar_transporte_escolar_index.php
 educar_turma_cad.php
 educar_turma_det.php
 educar_turma_lst.php
-educar_turma_nota_cad.php
 educar_turma_tipo_cad.php
 educar_turma_tipo_cad_pop.php
 educar_turma_tipo_det.php
