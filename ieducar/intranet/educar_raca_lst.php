@@ -65,48 +65,8 @@ class indice extends clsListagem
 
 
         $this->addCabecalhos( array(
-            "Ra&ccedil;a" /*,
-            "Idpes Exc",
-            "Idpes Cad",
-            "Nome Raca"*/
+            "Ra&ccedil;a"
         ) );
-
-        // Filtros de Foreign Keys
-        /*$opcoes = array( "" => "Pesquise a pessoa clicando na lupa ao lado" );
-        if( $this->idpes_exc )
-        {
-            $objTemp = new clsPessoaFisica( $this->idpes_exc );
-            $detalhe = $objTemp->detalhe();
-            $opcoes["{$detalhe["idpes"]}"] = $detalhe["nome"];
-        }
-        $parametros = new clsParametrosPesquisas();
-        $parametros->setSubmit( 0 );
-        $parametros->adicionaCampoSelect( "idpes_exc", "idpes", "nome" );
-        $parametros->setPessoa( "F" );
-        $parametros->setPessoaNovo( 'S' );
-        $parametros->setPessoaEditar( 'N' );
-        $parametros->setPessoaTela( "frame" );
-        $parametros->setPessoaCPF('N');
-//      $parametros->setCodSistema(0);
-        $this->campoListaPesq( "idpes_exc", "Idpes Exc", $opcoes, $this->idpes_exc, "pesquisa_pessoa_lst.php", "", false, "", "", null, null, "", false, $parametros->serializaCampos() );
-        $opcoes = array( "" => "Pesquise a pessoa clicando na lupa ao lado" );
-        if( $this->idpes_cad )
-        {
-            $objTemp = new clsPessoaFisica( $this->idpes_cad );
-            $detalhe = $objTemp->detalhe();
-            $opcoes["{$detalhe["idpes"]}"] = $detalhe["nome"];
-        }
-        $parametros = new clsParametrosPesquisas();
-        $parametros->setSubmit( 0 );
-        $parametros->adicionaCampoSelect( "idpes_cad", "idpes", "nome" );
-        $parametros->setPessoa( "F" );
-        $parametros->setPessoaNovo( 'S' );
-        $parametros->setPessoaEditar( 'N' );
-        $parametros->setPessoaTela( "frame" );
-        $parametros->setPessoaCPF('N');
-//      $parametros->setCodSistema(0);
-        $this->campoListaPesq( "idpes_cad", "Idpes Cad", $opcoes, $this->idpes_cad, "pesquisa_pessoa_lst.php", "", false, "", "", null, null, "", false, $parametros->serializaCampos() );
-    */
 
         // outros Filtros
         $this->campoTexto( "nm_raca", "Ra&ccedil;a", $this->nm_raca, 30, 255, false );

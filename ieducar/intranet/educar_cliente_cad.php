@@ -141,7 +141,6 @@ class indice extends clsCadastro
       $parametros->setPessoaNovo('S');
       $parametros->setPessoaTela('frame');
 
-      // $this->campoListaPesq('ref_idpes', 'Cliente', $opcoes, $this->ref_idpes, 'pesquisa_pessoa_lst.php', '', FALSE, '', '', NULL, NULL, '', FALSE, $parametros->serializaCampos());
       $dados = array(
         'nome' => 'Cliente',
         'campo' => '',

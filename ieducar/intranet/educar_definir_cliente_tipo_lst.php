@@ -97,8 +97,6 @@ class indice extends clsListagem
         $parametros->setPessoaNovo( 'N' );
         $this->campoListaPesq( "ref_idpes", "Cliente", $opcoes, $this->ref_idpes, "pesquisa_pessoa_lst.php", "", false, "", "", null, null, "", false, $parametros->serializaCampos() );
 
-        //$this->campoLista( "status", "Status", array( '' => "Selecione", 'R' => "Regular", 'S' => "Suspenso" ), $this->status, "", false, "", "", false, false );
-
         // Paginador
         $this->limite = 20;
         $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
