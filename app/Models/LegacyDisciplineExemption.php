@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class LegacyDisciplineExemption
@@ -73,6 +74,14 @@ class LegacyDisciplineExemption extends Model
     public function type()
     {
         return $this->belongsTo(LegacyExemptionType::class, 'ref_cod_tipo_dispensa');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function stages()
+    {
+        return $this->hasMany(LegacyExemptionStage::class, 'ref_cod_dispensa', 'cod_dispensa');
     }
 
     /**

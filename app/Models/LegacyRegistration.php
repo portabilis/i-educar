@@ -111,4 +111,12 @@ class LegacyRegistration extends Model
 
         return $hasOne;
     }
+
+    /**
+     * @return HasMany
+     */
+    public function exemptions()
+    {
+        return $this->hasMany(LegacyDisciplineExemption::class, 'ref_cod_matricula', 'cod_matricula');
+    }
 }
