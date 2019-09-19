@@ -339,7 +339,6 @@ class indice extends clsListagem
             // Filtros de Busca
             $this->campoTexto( "campo_busca", "Pessoa", $this->campo_busca, 50, 255, false, false, false, "Código/Nome" );
             $this->campoNumero( "matricula", "Matricula", $this->matricula, 15, 255 );
-//          $this->campoCpf( "cpf", "CPF", int2CPF($this->cpf) );
 
             $chave_busca = @$_GET['campo_busca'];
             $cpf         = @$_GET['cpf'];
@@ -368,23 +367,17 @@ class indice extends clsListagem
                 {
                     $obj_funcionario = new clsFuncionario();
                     $lst_pessoa = $obj_funcionario->lista($this->matricula,false,$show,false,false,false,false,$iniciolimit,$limite,false,false,$this->campo_busca);
-//                  $obj_pessoa = new clsPessoaFisica();
-//                  $lst_pessoa = $obj_pessoa->lista( null, ( ( $cpf ) ? idFederal2int( $cpf ) : null ), $iniciolimit, $limite, false, $parametros->getCodSistema(), $chave_busca );
                 }
                 else
                 {
                     $obj_funcionario = new clsFuncionario();
                     $lst_pessoa = $obj_funcionario->lista($this->matricula,$this->campo_busca,$show,false,false,false,false,$iniciolimit,$limite);
-//                  $obj_pessoa = new clsPessoaFisica();
-//                  $lst_pessoa = $obj_pessoa->lista( $chave_busca, ( ( $cpf ) ? idFederal2int( $cpf ) : null ), $iniciolimit, $limite, false, $parametros->getCodSistema() );
                 }
             }
             else
             {
                 $obj_funcionario = new clsFuncionario();
                 $lst_pessoa = $obj_funcionario->lista(false,false,$show,false,false,false,false,$iniciolimit,$limite);
-//              $obj_pessoa = new clsPessoaFisica();
-//              $lst_pessoa = $obj_pessoa->lista( null, null, $iniciolimit, $limite, false, $parametros->getCodSistema() );
             }
             if ( $lst_pessoa )
             {
@@ -435,7 +428,7 @@ class indice extends clsListagem
                 $this->addLinhas( array( "Não existe nenhum resultado a ser apresentado." ) );
             }
         }
-        
+
         // Paginador
         $this->addPaginador2( "pesquisa_pessoa_lst.php", $total, $_GET, $this->nome, $limite );
 
