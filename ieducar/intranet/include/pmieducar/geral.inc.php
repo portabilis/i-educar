@@ -24,7 +24,6 @@ require_once 'include/pmieducar/clsPmieducarDocumentos.inc.php';
 require_once 'include/pmieducar/clsPmieducarEndereco.inc.php';
 require_once 'include/pmieducar/clsPmieducarEnderecoExterno.inc.php';
 require_once 'include/pmieducar/clsPmieducarEscola.inc.php';
-require_once 'include/pmieducar/clsPmieducarEscolaComplemento.inc.php';
 require_once 'include/pmieducar/clsPmieducarEscolaCurso.inc.php';
 require_once 'include/pmieducar/clsPmieducarEscolaDiasLetivos.inc.php';
 require_once 'include/pmieducar/clsPmieducarEscolaLocalizacao.inc.php';
