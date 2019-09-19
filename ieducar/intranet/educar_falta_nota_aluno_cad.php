@@ -1149,24 +1149,13 @@ class indice extends clsCadastro
                     $det_escola = $obj_escola->detalhe();
                     $ref_idpes = $det_escola["ref_idpes"];
                     // busca informacoes da escola
-                    if ($ref_idpes)
+                    $obj_escola = new clsPessoaJuridica($ref_idpes);
+                    $det_escola = $obj_escola->detalhe();
+                    $nm_escola = $det_escola["fantasia"];
+                    if($det_escola)
                     {
-                        $obj_escola = new clsPessoaJuridica($ref_idpes);
-                        $det_escola = $obj_escola->detalhe();
-                        $nm_escola = $det_escola["fantasia"];
-                        if($det_escola)
-                        {
-                            $cidade = $det_escola["cidade"];
-                            $uf = $det_escola["sigla_uf"];
-                        }
-                    }
-                    else
-                    {
-                            $obj_escola = new clsPmieducarEscolaComplemento( $this->ref_ref_cod_escola );
-                            $det_escola = $obj_escola->detalhe();
-
-                            $nm_escola = $det_escola["nm_escola"];
-                            $cidade = $det_escola["municipio"];
+                        $cidade = $det_escola["cidade"];
+                        $uf = $det_escola["sigla_uf"];
                     }
                     if ($this->padrao_ano_escolar)
                     {
@@ -2040,24 +2029,13 @@ class indice extends clsCadastro
                     $det_escola = $obj_escola->detalhe();
                     $ref_idpes = $det_escola["ref_idpes"];
                     // busca informacoes da escola
-                    if ($ref_idpes)
+                    $obj_escola = new clsPessoaJuridica($ref_idpes);
+                    $det_escola = $obj_escola->detalhe();
+                    $nm_escola = $det_escola["fantasia"];
+                    if($det_escola)
                     {
-                        $obj_escola = new clsPessoaJuridica($ref_idpes);
-                        $det_escola = $obj_escola->detalhe();
-                        $nm_escola = $det_escola["fantasia"];
-                        if($det_escola)
-                        {
-                            $cidade = $det_escola["cidade"];
-                            $uf = $det_escola["sigla_uf"];
-                        }
-                    }
-                    else
-                    {
-                            $obj_escola = new clsPmieducarEscolaComplemento( $this->ref_ref_cod_escola );
-                            $det_escola = $obj_escola->detalhe();
-
-                            $nm_escola = $det_escola["nm_escola"];
-                            $cidade = $det_escola["municipio"];
+                        $cidade = $det_escola["cidade"];
+                        $uf = $det_escola["sigla_uf"];
                     }
 
                     if ($this->padrao_ano_escolar)
