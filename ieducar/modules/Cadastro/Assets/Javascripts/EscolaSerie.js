@@ -185,8 +185,8 @@ function existeDispensa(componentes){
         async    : false,
         success  : function (dataResponse) {
             if(dataResponse.existe_dispensa){
-                messageUtils.error('Não foi possível remover o componente. Existe registros de dispensa neste componente.');
                 retorno = true;
+                ModalDispensas.init('dispensas', dataResponse.dispensas);
             }
         }
     };
@@ -238,7 +238,7 @@ submitButton.click(function(){
         }
     });
 
-    if (existeDependencia(arrayComponentes) || existeDispensa(arrayComponentes)) {
+    if (existeDispensa(arrayComponentes) || existeDependencia(arrayComponentes)) {
         return false;
     }
 

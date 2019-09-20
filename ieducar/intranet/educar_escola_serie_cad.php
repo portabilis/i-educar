@@ -665,7 +665,8 @@ class indice extends clsCadastro
     {
         $scripts = array(
             '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Cadastro/Assets/Javascripts/EscolaSerie.js'
+            '/modules/Cadastro/Assets/Javascripts/EscolaSerie.js',
+            '/modules/Cadastro/Assets/Javascripts/ModalDispensas.js'
         );
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
