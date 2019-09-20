@@ -156,35 +156,9 @@ class indice extends clsCadastro
         $opcoes = array( "" => "Selecione" );
         if ($this->ref_cod_instituicao)
         {
-            if( class_exists( "clsPmieducarUsuario" ) )
-            {
-                $objTemp = new clsPmieducarUsuario();
-                $objTemp->setOrderby("nivel ASC");
-                $lista = $objTemp->lista(null,null,$this->ref_cod_instituicao,null,null,null,null,null,null,null,1);
-                if ( is_array( $lista ) && count( $lista ) )
-                {
-                    foreach ( $lista as $registro )
-                    {
-                        $obj_cod_usuario = new clsPessoa_($registro["cod_usuario"] );
-                        $obj_usuario_det = $obj_cod_usuario->detalhe();
-                        $nome_usuario = $obj_usuario_det['nome'];
-                        $opcoes["{$registro['cod_usuario']}"] = "{$nome_usuario}";
-                    }
-                }
-            }
-            else
-            {
-                echo "<!--\nErro\nClasse clsPmieducarUsuario n&atilde;o encontrada\n-->";
-                $opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
-            }
-        }
-        /*if( class_exists( "clsPmieducarUsuario" ) )
-        {
-            // cria array com todos os usuarios escola (nivel 4)
-            $usuarios_escola = "user_escola = new Array();\n";
             $objTemp = new clsPmieducarUsuario();
             $objTemp->setOrderby("nivel ASC");
-            $lista = $objTemp->lista(null,null,null,null,null,null,null,null,null,null,1,4);
+            $lista = $objTemp->lista(null,null,$this->ref_cod_instituicao,null,null,null,null,null,null,null,1);
             if ( is_array( $lista ) && count( $lista ) )
             {
                 foreach ( $lista as $registro )
@@ -192,37 +166,14 @@ class indice extends clsCadastro
                     $obj_cod_usuario = new clsPessoa_($registro["cod_usuario"] );
                     $obj_usuario_det = $obj_cod_usuario->detalhe();
                     $nome_usuario = $obj_usuario_det['nome'];
-                    $usuarios_escola .= "user_escola[user_escola.length] = new Array({$registro["cod_usuario"]},'{$nome_usuario}', {$registro["ref_cod_instituicao"]}, '{$registro["ref_cod_escola"]}');\n";
+                    $opcoes["{$registro['cod_usuario']}"] = "{$nome_usuario}";
                 }
             }
-            echo "<script>{$usuarios_escola}</script>";
+        }
 
-            // cria array com todos os usuarios biblioteca (nivel 8)
-            $usuarios_biblioteca = "user_biblioteca = new Array();\n";
-            $objTemp = new clsPmieducarUsuario();
-            $objTemp->setOrderby("nivel ASC");
-            $lista = $objTemp->lista(null,null,null,null,null,null,null,null,null,null,1,8);
-            if ( is_array( $lista ) && count( $lista ) )
-            {
-                foreach ( $lista as $registro )
-                {
-                    $obj_cod_usuario = new clsPessoa_($registro["cod_usuario"] );
-                    $obj_usuario_det = $obj_cod_usuario->detalhe();
-                    $nome_usuario = $obj_usuario_det['nome'];
-                    $usuarios_biblioteca .= "user_biblioteca[user_biblioteca.length] = new Array({$registro["cod_usuario"]},'{$nome_usuario}', {$registro["ref_cod_instituicao"]}, '{$registro["ref_cod_escola"]}');\n";
-                }
-            }
-            echo "<script>{$usuarios_biblioteca}</script>";
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarUsuario n&atilde;o encontrada\n-->";
-            $opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
-        }*/
         $this->campoLista( "ref_cod_usuario", "Usu&aacute;rio", $opcoes, $this->ref_cod_usuario,"",false,"","<a href='#' onclick=\"getElementById('incluir_usuario').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>",false,false);
 
         $this->campoOculto( "incluir_usuario", "" );
-//      $this->campoRotulo( "bt_incluir_usuario", "Usu&aacute;rio", "<a href='#' onclick=\"getElementById('incluir_usuario').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_incluir2.gif' title='Incluir' border=0></a>" );
 
         $this->campoQuebra();
     }
@@ -257,7 +208,7 @@ class indice extends clsCadastro
                         if ( !$cadastrou2 )
                         {
                             $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-                            echo "<!--\nErro ao cadastrar clsPmieducarBibliotecaUsuario\nvalores obrigat&oacute;rios\nis_numeric( $cadastrou ) && is_numeric( {$campo[$i]} ) \n-->";
+
                             return false;
                         }
                     }
@@ -271,7 +222,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarBiblioteca\nvalores obrigatorios\nis_numeric( $this->ref_cod_instituicao ) && is_numeric( $this->ref_cod_escola ) && is_string( $this->nm_biblioteca )\n-->";
+
         return false;
     }
 
@@ -307,7 +258,7 @@ class indice extends clsCadastro
                             if ( !$cadastrou3 )
                             {
                                 $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-                                echo "<!--\nErro ao editar clsPmieducarBibliotecaUsuario\nvalores obrigat&oacute;rios\nis_numeric( $this->cod_biblioteca ) && is_numeric( {$campo[$i]} ) \n-->";
+
                                 return false;
                             }
                         }
@@ -321,7 +272,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarBiblioteca\nvalores obrigatorios\nif( is_numeric( $this->cod_biblioteca ) )\n-->";
+
         return false;
     }
 
@@ -345,7 +296,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarBiblioteca\nvalores obrigatorios\nif( is_numeric( $this->cod_biblioteca ) )\n-->";
+
         return false;
     }
 }

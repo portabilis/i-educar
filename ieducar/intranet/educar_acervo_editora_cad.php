@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
@@ -128,46 +104,34 @@ class indice extends clsCadastro
         $this->campoCep( "cep", "CEP", $this->cep, false );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsUf" ) )
+
+        $objTemp = new clsUf();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsUf();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['sigla_uf']}"] = "{$registro['nome']}";
-                }
+                $opcoes["{$registro['sigla_uf']}"] = "{$registro['nome']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsUf nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_sigla_uf", "Estado", $opcoes, $this->ref_sigla_uf, '', false, '', '', false, false );
 
         $this->campoTexto( "cidade", "Cidade", $this->cidade, 30, 60, false );
         $this->campoTexto( "bairro", "Bairro", $this->bairro, 30, 60, false );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsTipoLogradouro" ) )
+
+        $objTemp = new clsTipoLogradouro();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsTipoLogradouro();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['idtlog']}"] = "{$registro['descricao']}";
-                }
+                $opcoes["{$registro['idtlog']}"] = "{$registro['descricao']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsUrbanoTipoLogradouro nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_idtlog", "Tipo Logradouro", $opcoes, $this->ref_idtlog, '', false, '', '', false, false );
 
         $this->campoTexto( "logradouro", "Logradouro", $this->logradouro, 30, 255, false );
@@ -204,7 +168,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarAcervoEditora\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_string( $this->ref_idtlog ) && is_string( $this->ref_sigla_uf ) && is_string( $this->nm_editora ) && is_numeric( $this->cep ) && is_string( $this->cidade ) && is_string( $this->bairro ) && is_string( $this->logradouro ) && is_numeric( $this->numero )\n-->";
+
         return false;
     }
 
@@ -230,7 +194,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarAcervoEditora\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_acervo_editora ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
@@ -255,7 +219,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarAcervoEditora\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_acervo_editora ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }

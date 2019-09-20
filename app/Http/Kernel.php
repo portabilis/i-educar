@@ -20,6 +20,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
         \App\Http\Middleware\ChangeAppName::class,
+        \App\Http\Middleware\ConnectTenantDatabase::class,
     ];
 
     /**
@@ -36,8 +37,6 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             // \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\Http\Middleware\ChangeAppName::class,
-            \App\Http\Middleware\ConnectTenantDatabase::class,
             \App\Http\Middleware\SetLayoutVariables::class,
             \App\Http\Middleware\LoadSettings::class,
         ],

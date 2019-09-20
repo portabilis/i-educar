@@ -63,72 +63,15 @@ class clsPublicBairro extends Model
             'b.data_cad, b.operacao, b.zona_localizacao, b.iddis, b.idsetorbai ';
 
         if (is_numeric($idpes_rev)) {
-            if (class_exists('clsCadastroPessoa')) {
-                $tmp_obj = new clsCadastroPessoa($idpes_rev);
-
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->idpes_rev = $idpes_rev;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->idpes_rev = $idpes_rev;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico(sprintf(
-                    'SELECT 1 FROM cadastro.pessoa WHERE idpes = \'%d\'',
-                    $idpes_rev
-                ))) {
                     $this->idpes_rev = $idpes_rev;
-                }
-            }
         }
 
         if (is_numeric($idpes_cad)) {
-            if (class_exists('clsCadastroPessoa')) {
-                $tmp_obj = new clsCadastroPessoa($idpes_cad);
-
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->idpes_cad = $idpes_cad;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->idpes_cad = $idpes_cad;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico(sprintf(
-                    'SELECT 1 FROM cadastro.pessoa WHERE idpes = \'%d\'',
-                    $idpes_cad
-                ))) {
                     $this->idpes_cad = $idpes_cad;
-                }
-            }
         }
 
         if (is_numeric($idmun)) {
-            if (class_exists('clsMunicipio')) {
-                $tmp_obj = new clsMunicipio($idmun);
-
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->idmun = $idmun;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->idmun = $idmun;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico(sprintf(
-                    'SELECT 1 FROM municipio WHERE idmun = \'%d\'',
-                    $idmun
-                ))) {
                     $this->idmun = $idmun;
-                }
-            }
         }
 
         if (is_string($geom)) {

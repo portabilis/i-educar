@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -86,7 +62,7 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $this->addCabecalhos( array(
             "Nome",
@@ -138,31 +114,14 @@ class indice extends clsListagem
                 $registro["data_exclusao_time"] = strtotime( substr( $registro["data_exclusao"], 0, 16 ) );
                 $registro["data_exclusao_br"] = date( "d/m/Y H:i", $registro["data_exclusao_time"] );
 
-
-                // pega detalhes de foreign_keys
-                if( class_exists( "clsPmieducarUsuario" ) )
-                {
                     $obj_ref_usuario_exc = new clsPmieducarUsuario( $registro["ref_usuario_exc"] );
                     $det_ref_usuario_exc = $obj_ref_usuario_exc->detalhe();
                     $registro["ref_usuario_exc"] = $det_ref_usuario_exc["data_cadastro"];
-                }
-                else
-                {
-                    $registro["ref_usuario_exc"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarUsuario\n-->";
-                }
 
-                if( class_exists( "clsPmieducarUsuario" ) )
-                {
                     $obj_ref_usuario_cad = new clsPmieducarUsuario( $registro["ref_usuario_cad"] );
                     $det_ref_usuario_cad = $obj_ref_usuario_cad->detalhe();
                     $registro["ref_usuario_cad"] = $det_ref_usuario_cad["data_cadastro"];
-                }
-                else
-                {
-                    $registro["ref_usuario_cad"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarUsuario\n-->";
-                }
+
                 $this->addLinhas( array(
                     "<a href=\"educar_pre_requisito_det.php?cod_pre_requisito={$registro["cod_pre_requisito"]}\">{$registro["nome"]}</a>",
                     "<a href=\"educar_pre_requisito_det.php?cod_pre_requisito={$registro["cod_pre_requisito"]}\">{$registro["schema_"]}</a>",

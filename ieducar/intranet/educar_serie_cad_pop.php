@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -77,7 +53,7 @@ class indice extends clsCadastro
     function Inicializar()
     {
         $retorno = "Novo";
-        
+
 
         $this->cod_serie=$_GET["cod_serie"];
 //die();
@@ -216,7 +192,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        
+
 
         $this->carga_horaria = str_replace(".","",$this->carga_horaria);
         $this->carga_horaria = str_replace(",",".",$this->carga_horaria);
@@ -238,7 +214,7 @@ class indice extends clsCadastro
                     if ( !$cadastrou1 )
                     {
                         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-                        echo "<!--\nErro ao cadastrar clsPmieducarDisciplinaSerie\nvalores obrigat&oacute;rios\nis_numeric( $cadastrou ) && is_numeric( {$disciplina} ) \n-->";
+
                         return false;
                     }
                 }
@@ -254,7 +230,7 @@ class indice extends clsCadastro
             //-----------------------FIM CADASTRA DISCIPLINA------------------------//
             }
             $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-            echo "<!--\nErro ao cadastrar clsPmieducarSerie\nvalores obrigat&oacute;rios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_curso ) && is_string( $this->nm_serie ) && is_numeric( $this->etapa_curso ) && is_numeric( $this->concluinte ) && is_numeric( $this->carga_horaria )\n-->";
+
             return false;
         }
         echo "<script> alert('É necessário adicionar pelo menos 1 Disciplina!') </script>";
@@ -264,88 +240,10 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        /*
-
-        $this->media_especial = $this->media_especial ? "true" : "false";
-
-        $this->carga_horaria = str_replace(".","",$this->carga_horaria);
-        $this->carga_horaria = str_replace(",",".",$this->carga_horaria);
-
-//      $this->disciplina_serie = unserialize( urldecode( $this->disciplina_serie ) );
-        if ($this->disciplinas)
-        {
-            $obj = new clsPmieducarSerie($this->cod_serie, $this->pessoa_logada, null, $this->ref_cod_curso, $this->nm_serie, $this->etapa_curso, $this->concluinte, $this->carga_horaria, null,null, 1, $this->intervalo, $this->idade_inicial, $this->idade_final, $this->media_especial);
-            $editou = $obj->edita();
-            if( $editou )
-            {
-            //-----------------------EDITA DISCIPLINA------------------------//
-                $obj  = new clsPmieducarDisciplinaSerie( null, $this->cod_serie );
-                $excluiu = $obj->desativarDisciplinasSerie(0);
-                if ( $excluiu )
-                {
-                    foreach ( $this->disciplinas AS $disciplina )
-                    {
-                        $obj = new clsPmieducarDisciplinaSerie( $disciplina, $this->cod_serie,1);
-                        $existe  = $obj->existe();
-                        if ($existe)
-                        {
-                            $editou1 = $obj->edita();
-                            if (!$editou1)
-                            {
-                                $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-                                echo "<!--\nErro ao editar clsPmieducarDisciplinaSerie\nvalores obrigat&oacute;rios\nis_numeric( $this->cod_serie ) && is_numeric( {$disciplina} ) \n-->";
-                                return false;
-                            }
-                        }
-                        else
-                        {
-                            $cadastrou1  = $obj->cadastra();
-                            if ( !$cadastrou1 )
-                            {
-                                $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-                                echo "<!--\nErro ao editar clsPmieducarDisciplinaSerie\nvalores obrigat&oacute;rios\nis_numeric( $this->cod_serie ) && is_numeric( {$disciplina} ) \n-->";
-                                return false;
-                            }
-                        }
-                    }
-                }
-                $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-                header( "Location: educar_serie_lst.php" );
-                die();
-                return true;
-            //-----------------------FIM EDITA DISCIPLINA------------------------//
-            }
-            $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-            echo "<!--\nErro ao editar clsPmieducarSerie\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_serie ) && is_numeric( $this->pessoa_logada ) )\n-->";
-            return false;
-        }
-        echo "<script> alert('É necessário adicionar pelo menos 1 Disciplina!') </script>";
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        return false;*/
     }
 
     function Excluir()
     {
-        /*
-
-        $obj = new clsPmieducarSerie($this->cod_serie, $this->pessoa_logada,null,null,null,null,null,null,null,null, 0);
-        $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $obj  = new clsPmieducarDisciplinaSerie( null, $this->cod_serie );
-            $excluiu = $obj->excluirTodos();
-            if ( $excluiu )
-            {
-                $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-                header( "Location: educar_serie_lst.php" );
-                die();
-                return true;
-            }
-        }
-
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarSerie\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_serie ) && is_numeric( $this->pessoa_logada ) )\n-->";
-        return false;*/
     }
 }
 

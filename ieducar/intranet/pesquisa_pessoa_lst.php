@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 
 /**
  * Os parâmetros passados para esta página de listagem devem estar dentro da classe clsParametrosPesquisas.inc.php
@@ -363,7 +339,6 @@ class indice extends clsListagem
             // Filtros de Busca
             $this->campoTexto( "campo_busca", "Pessoa", $this->campo_busca, 50, 255, false, false, false, "Código/Nome" );
             $this->campoNumero( "matricula", "Matricula", $this->matricula, 15, 255 );
-//          $this->campoCpf( "cpf", "CPF", int2CPF($this->cpf) );
 
             $chave_busca = @$_GET['campo_busca'];
             $cpf         = @$_GET['cpf'];
@@ -392,23 +367,17 @@ class indice extends clsListagem
                 {
                     $obj_funcionario = new clsFuncionario();
                     $lst_pessoa = $obj_funcionario->lista($this->matricula,false,$show,false,false,false,false,$iniciolimit,$limite,false,false,$this->campo_busca);
-//                  $obj_pessoa = new clsPessoaFisica();
-//                  $lst_pessoa = $obj_pessoa->lista( null, ( ( $cpf ) ? idFederal2int( $cpf ) : null ), $iniciolimit, $limite, false, $parametros->getCodSistema(), $chave_busca );
                 }
                 else
                 {
                     $obj_funcionario = new clsFuncionario();
                     $lst_pessoa = $obj_funcionario->lista($this->matricula,$this->campo_busca,$show,false,false,false,false,$iniciolimit,$limite);
-//                  $obj_pessoa = new clsPessoaFisica();
-//                  $lst_pessoa = $obj_pessoa->lista( $chave_busca, ( ( $cpf ) ? idFederal2int( $cpf ) : null ), $iniciolimit, $limite, false, $parametros->getCodSistema() );
                 }
             }
             else
             {
                 $obj_funcionario = new clsFuncionario();
                 $lst_pessoa = $obj_funcionario->lista(false,false,$show,false,false,false,false,$iniciolimit,$limite);
-//              $obj_pessoa = new clsPessoaFisica();
-//              $lst_pessoa = $obj_pessoa->lista( null, null, $iniciolimit, $limite, false, $parametros->getCodSistema() );
             }
             if ( $lst_pessoa )
             {
@@ -459,7 +428,7 @@ class indice extends clsListagem
                 $this->addLinhas( array( "Não existe nenhum resultado a ser apresentado." ) );
             }
         }
-        
+
         // Paginador
         $this->addPaginador2( "pesquisa_pessoa_lst.php", $total, $_GET, $this->nome, $limite );
 

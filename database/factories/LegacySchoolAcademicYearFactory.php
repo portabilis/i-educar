@@ -3,6 +3,9 @@
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacyUser;
+use Illuminate\Database\Eloquent\Factory;
+
+/** @var Factory $factory */
 
 $factory->define(LegacySchoolAcademicYear::class, function () {
     return [

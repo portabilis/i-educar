@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -75,30 +51,14 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_calendario_dia_motivo_lst.php');
         }
 
-        if( class_exists( "clsPmieducarEscola" ) )
-        {
-            $obj_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
-            $obj_cod_escola_det = $obj_cod_escola->detalhe();
-            $registro["ref_cod_escola"] = $obj_cod_escola_det["nome"];
+        $obj_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
+        $obj_cod_escola_det = $obj_cod_escola->detalhe();
+        $registro["ref_cod_escola"] = $obj_cod_escola_det["nome"];
 
-            if (class_exists("clsPmieducarInstituicao"))
-            {
-                $cod_instituicao = $obj_cod_escola_det['ref_cod_instituicao'];
-                $obj_instituicao = new clsPmieducarInstituicao($cod_instituicao);
-                $obj_instituicao_det = $obj_instituicao->detalhe();
-                $nm_instituicao = $obj_instituicao_det['nm_instituicao'];
-            }
-            else
-            {
-                $cod_instituicao = "Erro na gera&ccedil;&atilde;o";
-                echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
-            }
-        }
-        else
-        {
-            $registro["ref_cod_escola"] = "Erro na gera&ccedil;&atilde;o";
-            echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
-        }
+        $cod_instituicao = $obj_cod_escola_det['ref_cod_instituicao'];
+        $obj_instituicao = new clsPmieducarInstituicao($cod_instituicao);
+        $obj_instituicao_det = $obj_instituicao->detalhe();
+        $nm_instituicao = $obj_instituicao_det['nm_instituicao'];
 
         if ($nm_instituicao)
         {

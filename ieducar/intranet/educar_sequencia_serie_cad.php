@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
@@ -90,12 +66,9 @@ class indice extends clsCadastro
                 $obj_ref_serie_origem = new clsPmieducarSerie( $this->ref_serie_origem );
                 $det_ref_serie_origem = $obj_ref_serie_origem->detalhe();
                 $this->ref_curso_origem = $det_ref_serie_origem["ref_cod_curso"];
-                if( class_exists( "clsPmieducarCurso" ) )
-                {
                     $obj_ref_curso_origem = new clsPmieducarCurso( $this->ref_curso_origem );
                     $det_ref_curso_origem = $obj_ref_curso_origem->detalhe();
                     $this->ref_cod_instituicao = $det_ref_curso_origem["ref_cod_instituicao"];
-                }
                 $obj_ref_serie_destino = new clsPmieducarSerie( $this->ref_serie_destino );
                 $det_ref_serie_destino = $obj_ref_serie_destino->detalhe();
                 $this->ref_curso_destino = $det_ref_serie_destino["ref_cod_curso"];
@@ -158,20 +131,6 @@ class indice extends clsCadastro
 
         $opcoes = array( "" => "Selecione" );
         $opcoes_ = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarCurso" ) )
-        {
-            /*$todos_cursos = "curso = new Array();\n";
-            $objTemp = new clsPmieducarCurso();
-            $objTemp->setOrderby("nm_curso");
-            $lista = $objTemp->lista( null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1 );
-            if ( is_array( $lista ) && count( $lista ) )
-            {
-                foreach ( $lista as $registro )
-                {
-                    $todos_cursos .= "curso[curso.length] = new Array({$registro["cod_curso"]},'{$registro["nm_curso"]}', {$registro["ref_cod_instituicao"]});\n";
-                }
-            }
-            echo "<script>{$todos_cursos}</script>";*/
 
             // EDITAR
             if ($this->ref_cod_instituicao)
@@ -188,12 +147,7 @@ class indice extends clsCadastro
                     }
                 }
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarCurso n&atilde;o encontrada\n-->";
-            $opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
-        }
+
         $this->campoLista( "ref_curso_origem", "Curso Origem", $opcoes, $this->ref_curso_origem,"",true );
         $this->campoLista( "ref_curso_destino", " Curso Destino", $opcoes_, $this->ref_curso_destino );
 
@@ -201,20 +155,6 @@ class indice extends clsCadastro
 
         $opcoes = array( "" => "Selecione" );
         $opcoes_ = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarSerie" ) )
-        {
-            /*$todas_series = "serie = new Array();\n";
-            $objTemp = new clsPmieducarSerie();
-            $objTemp->setOrderby( "nm_serie ASC" );
-            $lista = $objTemp->lista( null,null,null,null,null,null,null,null,null,null,null,null,1 );
-            if ( is_array( $lista ) && count( $lista ) )
-            {
-                foreach ( $lista as $registro )
-                {
-                    $todas_series .= "serie[serie.length] = new Array({$registro["cod_serie"]},'{$registro["nm_serie"]}', {$registro["ref_cod_curso"]});\n";
-                }
-            }
-            echo "<script>{$todas_series}</script>";*/
 
             if ($this->ref_curso_origem)
             {
@@ -242,13 +182,7 @@ class indice extends clsCadastro
                     }
                 }
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarSerie n&atilde;o encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-            $opcoes_ = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_serie_origem", "S&eacute;rie Origem", $opcoes, $this->ref_serie_origem,null,true);
         $this->campoLista( "ref_serie_destino", " S&eacute;rie Destino", $opcoes_, $this->ref_serie_destino);
 
@@ -294,7 +228,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarSequenciaSerie\nvalores obrigat&oacute;rios\nis_numeric( $this->ref_serie_origem ) && is_numeric( $this->ref_serie_destino ) && is_numeric( $this->pessoa_logada )\n-->";
+
         return false;
     }
 
@@ -320,7 +254,7 @@ class indice extends clsCadastro
                 );
             }
             $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-            echo "<!--\nErro ao editar clsPmieducarSequenciaSerie\nvalores obrigat&oacute;rios\nif( is_numeric( $this->ref_serie_origem ) && is_numeric( $this->ref_serie_destino ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
             return false;
         }
         echo "<script> alert('Edição não realizada! \\n Já existe essa sequência.') </script>";
@@ -348,7 +282,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarSequenciaSerie\nvalores obrigatorios\nif( is_numeric( $this->ref_serie_origem ) && is_numeric( $this->ref_serie_destino ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }

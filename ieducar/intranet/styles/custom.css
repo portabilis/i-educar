@@ -32,6 +32,10 @@ input:read-only {
   background-color: #e9f0f8 !important;
 }
 
+.input-success {
+  background-color: #a7f9a8;
+}
+
 .select2-container{
   font-size: 14px;
   line-height: 15px;
@@ -1121,6 +1125,7 @@ table.tabela-adicao td .btn-detalhes{
 table.paginacao{
   border-collapse: collapse;
   margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 table.paginacao td {

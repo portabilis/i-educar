@@ -32,7 +32,6 @@ class ViewController extends Core_Controller_Page_ViewController
 
     protected function _preRender()
     {
-        Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
 
         $localizacao = new LocalizacaoSistema();
 

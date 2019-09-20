@@ -118,65 +118,41 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_turma_lst.php');
         }
 
-        if (class_exists('clsPmieducarTurmaTipo')) {
             $obj_ref_cod_turma_tipo = new clsPmieducarTurmaTipo(
                 $registro['ref_cod_turma_tipo']
             );
 
             $det_ref_cod_turma_tipo = $obj_ref_cod_turma_tipo->detalhe();
             $registro['ref_cod_turma_tipo'] = $det_ref_cod_turma_tipo['nm_tipo'];
-        } else {
-            $registro['ref_cod_turma_tipo'] = 'Erro na geração';
-        }
 
-        if (class_exists('clsPmieducarInfraPredioComodo')) {
             $obj_ref_cod_infra_predio_comodo = new clsPmieducarInfraPredioComodo(
                 $registro['ref_cod_infra_predio_comodo']
             );
 
             $det_ref_cod_infra_predio_comodo = $obj_ref_cod_infra_predio_comodo->detalhe();
             $registro['ref_cod_infra_predio_comodo'] = $det_ref_cod_infra_predio_comodo['nm_comodo'];
-        } else {
-            $registro['ref_cod_infra_predio_comodo'] = 'Erro na geração';
-        }
 
-        if (class_exists('clsPmieducarInstituicao')) {
             $obj_cod_instituicao = new clsPmieducarInstituicao(
                 $registro['ref_cod_instituicao']
             );
 
             $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
             $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
-        } else {
-            $registro['ref_cod_instituicao'] = 'Erro na geração';
-        }
 
-        if (class_exists('clsPmieducarEscola')) {
             $this->ref_ref_cod_escola = $registro['ref_ref_cod_escola'];
             $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
             $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
             $registro['ref_ref_cod_escola'] = $det_ref_cod_escola['nome'];
-        } else {
-            $registro['ref_cod_escola'] = 'Erro na geração';
-        }
 
-        if (class_exists('clsPmieducarCurso')) {
             $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
             $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
             $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
             $padrao_ano_escolar = $det_ref_cod_curso['padrao_ano_escolar'];
-        } else {
-            $registro['ref_cod_curso'] = 'Erro na geração';
-        }
 
-        if (class_exists('clsPmieducarSerie')) {
             $this->ref_ref_cod_serie = $registro['ref_ref_cod_serie'];
             $obj_ser = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
             $det_ser = $obj_ser->detalhe();
             $registro['ref_ref_cod_serie'] = $det_ser['nm_serie'];
-        } else {
-            $registro['ref_ref_cod_serie'] = 'Erro na geração';
-        }
 
         $obj_permissoes = new clsPermissoes();
 

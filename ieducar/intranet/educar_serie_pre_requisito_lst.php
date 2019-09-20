@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -80,7 +56,7 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $this->addCabecalhos( array(
             "Pre Requisito",
@@ -91,8 +67,7 @@ class indice extends clsListagem
 
         // Filtros de Foreign Keys
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarSerie" ) )
-        {
+
             $objTemp = new clsPmieducarSerie();
             $lista = $objTemp->lista();
             if ( is_array( $lista ) && count( $lista ) )
@@ -102,17 +77,10 @@ class indice extends clsListagem
                     $opcoes["{$registro['cod_serie']}"] = "{$registro['nm_serie']}";
                 }
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarSerie nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_cod_serie", "Serie", $opcoes, $this->ref_cod_serie );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarOperador" ) )
-        {
             $objTemp = new clsPmieducarOperador();
             $lista = $objTemp->lista();
             if ( is_array( $lista ) && count( $lista ) )
@@ -122,17 +90,11 @@ class indice extends clsListagem
                     $opcoes["{$registro['cod_operador']}"] = "{$registro['nome']}";
                 }
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarOperador nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_cod_operador", "Operador", $opcoes, $this->ref_cod_operador );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarPreRequisito" ) )
-        {
+
             $objTemp = new clsPmieducarPreRequisito();
             $lista = $objTemp->lista();
             if ( is_array( $lista ) && count( $lista ) )
@@ -142,12 +104,7 @@ class indice extends clsListagem
                     $opcoes["{$registro['cod_pre_requisito']}"] = "{$registro['nome']}";
                 }
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarPreRequisito nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_cod_pre_requisito", "Pre Requisito", $opcoes, $this->ref_cod_pre_requisito );
 
 
@@ -178,47 +135,20 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
-                // muda os campos data
-
-                // pega detalhes de foreign_keys
-                if( class_exists( "clsPmieducarSerie" ) )
-                {
                     $obj_ref_cod_serie = new clsPmieducarSerie( $registro["ref_cod_serie"] );
                     $det_ref_cod_serie = $obj_ref_cod_serie->detalhe();
                     $registro["ref_cod_serie"] = $det_ref_cod_serie["cod_serie"];
                     $registro["nm_serie"]      = $det_ref_cod_serie["nm_serie"];
-                }
-                else
-                {
-                    $registro["ref_cod_serie"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarSerie\n-->";
-                }
 
-                if( class_exists( "clsPmieducarOperador" ) )
-                {
                     $obj_ref_cod_operador = new clsPmieducarOperador( $registro["ref_cod_operador"] );
                     $det_ref_cod_operador = $obj_ref_cod_operador->detalhe();
                     $registro["ref_cod_operador"] = $det_ref_cod_operador["cod_operador"];
                     $registro["nm_operador"]      = $det_ref_cod_operador["nome"];
-                }
-                else
-                {
-                    $registro["ref_cod_operador"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarOperador\n-->";
-                }
 
-                if( class_exists( "clsPmieducarPreRequisito" ) )
-                {
                     $obj_ref_cod_pre_requisito = new clsPmieducarPreRequisito( $registro["ref_cod_pre_requisito"] );
                     $det_ref_cod_pre_requisito = $obj_ref_cod_pre_requisito->detalhe();
                     $registro["ref_cod_pre_requisito"] = $det_ref_cod_pre_requisito["cod_pre_requisito"];
                     $registro["nm_pre_requisito"]      = $det_ref_cod_pre_requisito["nome"];
-                }
-                else
-                {
-                    $registro["ref_cod_pre_requisito"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarPreRequisito\n-->";
-                }
 
                 $this->addLinhas( array(
                     "<a href=\"educar_serie_pre_requisito_det.php?ref_cod_pre_requisito={$registro["ref_cod_pre_requisito"]}&ref_cod_operador={$registro["ref_cod_operador"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$registro["nm_pre_requisito"]}</a>",

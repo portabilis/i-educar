@@ -57,7 +57,6 @@ class EditController extends Core_Controller_Page_EditController
   );
 
   function _preRender(){
-    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
     Portabilis_View_Helper_Application::loadJavascript($this, '/modules/FormulaMedia/Assets/Javascripts/FormulaMedia.js');
 
     $nomeMenu = $this->getRequest()->id == null ? "Cadastrar" : "Editar";

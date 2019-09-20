@@ -336,42 +336,4 @@ class clsFuncionario extends clsPessoaFisica
 
         return false;
     }
-
-    public function queryRapidaCPF($int_cpf)
-    {
-        $this->cpf = $int_cpf + 0;
-        $this->detalhe();
-        $resultado = [];
-        $pos = 0;
-        for ($i = 1; $i < func_num_args(); $i++) {
-            $campo = func_get_arg($i);
-            $resultado[$pos] = ($this->$campo) ? $this->$campo : '';
-            $resultado[$campo] = &$resultado[$pos];
-            $pos++;
-        }
-        if (count($resultado) > 0) {
-            return $resultado;
-        }
-
-        return false;
-    }
-
-    public function queryRapidaMatricula($str_matricula)
-    {
-        $this->matricula = $str_matricula;
-        $this->detalhe();
-        $resultado = [];
-        $pos = 0;
-        for ($i = 1; $i < func_num_args(); $i++) {
-            $campo = func_get_arg($i);
-            $resultado[$pos] = ($this->$campo) ? $this->$campo : '';
-            $resultado[$campo] = &$resultado[$pos];
-            $pos++;
-        }
-        if (count($resultado) > 0) {
-            return $resultado;
-        }
-
-        return false;
-    }
 }

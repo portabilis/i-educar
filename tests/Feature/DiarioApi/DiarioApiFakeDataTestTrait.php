@@ -15,6 +15,7 @@ use App\Models\LegacySchool;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolGrade;
+use App\Models\LegacySchoolGradeDiscipline;
 use App\Models\LegacyValueRoundingTable;
 use App\User;
 
@@ -141,6 +142,12 @@ trait DiarioApiFakeDataTestTrait
             factory(LegacyDisciplineAcademicYear::class)->create([
                 'componente_curricular_id' => $discipline->id,
                 'ano_escolar_id' => $schoolClass->grade_id,
+            ]);
+
+            factory(LegacySchoolGradeDiscipline::class)->create([
+                'ref_ref_cod_escola' => $school->id,
+                'ref_ref_cod_serie' => $grade->cod_serie,
+                'ref_cod_disciplina' => $discipline->id
             ]);
         }
     }

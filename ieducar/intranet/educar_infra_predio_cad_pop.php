@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -102,51 +78,8 @@ class indice extends clsCadastro
 
     function Gerar()
     {
-
         // primary keys
         $this->campoOculto( "cod_infra_predio", $this->cod_infra_predio );
-
-
-        //** 2 - Escola 1 - institucional 0 - poli-institucional
-//      $obj_permissao = new clsPermissoes();
-//      $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-//
-//      //busca instituicao e escola do usuario
-//      $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
-//      $obj_usuario->setCamposLista("ref_cod_instituicao,ref_cod_escola");
-//      $det_obj_usuario = $obj_usuario->detalhe();
-//
-//
-//      $instituicao_usuario = $det_obj_usuario["ref_cod_instituicao"];
-//      $escola_usuario = $det_obj_usuario["ref_cod_escola"];
-//
-//      if( class_exists( "clsPmieducarEscola" ) )
-//      {
-//          $objTemp = new clsPmieducarEscola($escola_usuario);
-//          $objTemp->setCamposLista("nm_escola");
-//          $det_objTemp = $objTemp->detalhe();
-//          $nome_escola = $det_objTemp["nm_escola"];
-//
-//      }
-//      else
-//      {
-//          echo "<!--\nErro\nClasse clsPmieducarEscola nao encontrada\n-->";
-//          $nome_escola =  "Erro na geracao";
-//      }
-//
-//      // listagem escola - instituicao
-//      if(!$this->ref_cod_escola)
-//      {
-//          $obrigatorio = true;
-//          include("include/pmieducar/educar_pesquisa_instituicao_escola.php");
-//          if($nivel_usuario == 2)
-//              $this->campoRotulo("ref_cod_escola_","Escola",ucfirst($nome_escola));
-//      }else{
-//
-//              $this->campoRotulo("ref_cod_escola_","Escola",ucfirst($nome_escola));
-//              $this->campoOculto("ref_cod_escola",$escola_usuario);
-//              //$this->campoOculto("ref_cod_instituicao",$escola_usuario);
-//      }
 
         if ($_GET['precisa_lista'])
         {
@@ -190,46 +123,16 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarInfraPredio\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_escola ) && is_string( $this->nm_predio ) && is_string( $this->endereco )\n-->";
+
         return false;
     }
 
     function Editar()
     {
-        /*
-
-        $obj = new clsPmieducarInfraPredio($this->cod_infra_predio, $this->pessoa_logada, $this->pessoa_logada, $this->ref_cod_escola, $this->nm_predio, $this->desc_predio, $this->endereco, null,null, 1);
-        $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_infra_predio_lst.php" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarInfraPredio\nvalores obrigatorios\nif( is_numeric( $this->cod_infra_predio ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-        return false;*/
     }
 
     function Excluir()
     {
-        /*
-
-        $obj = new clsPmieducarInfraPredio($this->cod_infra_predio, $this->pessoa_logada, $this->pessoa_logada, $this->ref_cod_escola, $this->nm_predio, $this->desc_predio, $this->endereco, $this->data_cadastro, $this->data_exclusao, 0);
-        $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_infra_predio_lst.php" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarInfraPredio\nvalores obrigatorios\nif( is_numeric( $this->cod_infra_predio ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-        return false;*/
     }
 }
 

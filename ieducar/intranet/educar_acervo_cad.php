@@ -1,31 +1,7 @@
 <?php
 #error_reporting(E_ALL);
 #ini_set("display_errors", 1);
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once "include/clsBase.inc.php";
 require_once "include/clsCadastro.inc.php";
 require_once "include/clsBanco.inc.php";
@@ -198,64 +174,45 @@ class indice extends clsCadastro
 
     // Coleção
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarAcervoColecao" ) )
+
+        $objTemp = new clsPmieducarAcervoColecao();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarAcervoColecao();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_acervo_colecao']}"] = "{$registro['nm_colecao']}";
-                }
+                $opcoes["{$registro['cod_acervo_colecao']}"] = "{$registro['nm_colecao']}";
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarAcervoColecao nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
         }
         $this->campoLista( "ref_cod_acervo_colecao", "Cole&ccedil;&atilde;o", $opcoes, $this->ref_cod_acervo_colecao,"",false,"","<img id='img_colecao' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 200,'educar_acervo_colecao_cad_pop.php',[], 'Coleção')\" />",false,false );
 
     // Idioma
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarAcervoIdioma" ) )
+
+        $objTemp = new clsPmieducarAcervoIdioma();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarAcervoIdioma();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_acervo_idioma']}"] = "{$registro['nm_idioma']}";
-                }
+                $opcoes["{$registro['cod_acervo_idioma']}"] = "{$registro['nm_idioma']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarAcervoIdioma nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_cod_acervo_idioma", "Idioma", $opcoes, $this->ref_cod_acervo_idioma, "", false, "", "<img id='img_idioma' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(400, 150,'educar_acervo_idioma_cad_pop.php',[], 'Idioma')\" />" );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarAcervoEditora" ) )
+
+        $objTemp = new clsPmieducarAcervoEditora();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarAcervoEditora();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_acervo_editora']}"] = "{$registro['nm_editora']}";
-                }
+                $opcoes["{$registro['cod_acervo_editora']}"] = "{$registro['nm_editora']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarAcervoEditora nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_cod_acervo_editora", "Editora", $opcoes, $this->ref_cod_acervo_editora, "", false, "", "<img id='img_editora' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(400, 320,'educar_acervo_editora_cad_pop.php',[], 'Editora')\" />" );
 
 
@@ -323,7 +280,7 @@ class indice extends clsCadastro
             $this->simpleRedirect('educar_acervo_lst.php');
         }
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarAcervo\nvalores obrigatorios\nis_numeric( $this->ref_cod_exemplar_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_acervo_colecao ) && is_numeric( $this->ref_cod_acervo_idioma ) && is_numeric( $this->ref_cod_acervo_editora ) && is_string( $this->titulo ) && is_string( $this->isbn )\n-->";
+
         return false;
     }
 
@@ -355,7 +312,7 @@ class indice extends clsCadastro
             $this->simpleRedirect('educar_acervo_lst.php');
         }
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarAcervo\nvalores obrigatorios\nif( is_numeric( $this->cod_acervo ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 
@@ -384,7 +341,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarAcervo\nvalores obrigatorios\nif( is_numeric( $this->cod_acervo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 

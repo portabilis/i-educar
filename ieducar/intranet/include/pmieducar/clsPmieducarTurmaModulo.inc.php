@@ -26,40 +26,10 @@ class clsPmieducarTurmaModulo extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_turma, ref_cod_modulo, sequencial, data_inicio, data_fim, dias_letivos';
 
         if (is_numeric($ref_cod_modulo)) {
-            if (class_exists('clsPmieducarModulo')) {
-                $tmp_obj = new clsPmieducarModulo($ref_cod_modulo);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_modulo = $ref_cod_modulo;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_modulo = $ref_cod_modulo;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.modulo WHERE cod_modulo = '{$ref_cod_modulo}'")) {
                     $this->ref_cod_modulo = $ref_cod_modulo;
-                }
-            }
         }
         if (is_numeric($ref_cod_turma)) {
-            if (class_exists('clsPmieducarTurma')) {
-                $tmp_obj = new clsPmieducarTurma($ref_cod_turma);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_turma = $ref_cod_turma;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_turma = $ref_cod_turma;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.turma WHERE cod_turma = '{$ref_cod_turma}'")) {
                     $this->ref_cod_turma = $ref_cod_turma;
-                }
-            }
         }
 
         if (is_numeric($sequencial)) {

@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\LegacyDisciplineAcademicYear;
+use Illuminate\Database\Eloquent\Model;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -15,7 +16,7 @@ class DisciplineAcademicImport implements ToModel, WithProgressBar, WithHeadingR
     /**
     * @param array $row
     *
-    * @return \Illuminate\Database\Eloquent\Model|null
+    * @return Model
     */
     public function model(array $row)
     {

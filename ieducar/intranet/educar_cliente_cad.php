@@ -141,7 +141,6 @@ class indice extends clsCadastro
       $parametros->setPessoaNovo('S');
       $parametros->setPessoaTela('frame');
 
-      // $this->campoListaPesq('ref_idpes', 'Cliente', $opcoes, $this->ref_idpes, 'pesquisa_pessoa_lst.php', '', FALSE, '', '', NULL, NULL, '', FALSE, $parametros->serializaCampos());
       $dados = array(
         'nome' => 'Cliente',
         'campo' => '',
@@ -370,7 +369,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarCliente\nvalores obrigatorios\nif( is_numeric( $this->cod_cliente ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 }

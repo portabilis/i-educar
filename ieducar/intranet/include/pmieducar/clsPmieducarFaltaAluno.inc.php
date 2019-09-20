@@ -29,100 +29,21 @@ class clsPmieducarFaltaAluno extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_falta_aluno, ref_usuario_exc, ref_usuario_cad, ref_cod_serie, ref_cod_escola, ref_cod_disciplina, ref_cod_matricula, faltas, data_cadastro, data_exclusao, ativo, modulo, ref_cod_curso_disciplina';
 
         if (is_numeric($ref_usuario_exc)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_exc);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'")) {
                     $this->ref_usuario_exc = $ref_usuario_exc;
-                }
-            }
         }
         if (is_numeric($ref_usuario_cad)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_cad);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'")) {
                     $this->ref_usuario_cad = $ref_usuario_cad;
-                }
-            }
         }
         if (is_numeric($ref_cod_matricula)) {
-            if (class_exists('clsPmieducarMatricula')) {
-                $tmp_obj = new clsPmieducarMatricula($ref_cod_matricula);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_matricula = $ref_cod_matricula;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_matricula = $ref_cod_matricula;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.matricula WHERE ref_cod_matricula = '{$ref_cod_matricula}'")) {
                     $this->ref_cod_matricula = $ref_cod_matricula;
-                }
-            }
         }
         if (is_numeric($ref_cod_disciplina) && is_numeric($ref_cod_escola) && is_numeric($ref_cod_serie)) {
-            if (class_exists('clsPmieducarEscolaSerieDisciplina')) {
-                $tmp_obj = new clsPmieducarEscolaSerieDisciplina($ref_cod_serie, $ref_cod_escola, $ref_cod_disciplina);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_disciplina = $ref_cod_disciplina;
-                        $this->ref_cod_escola = $ref_cod_escola;
-                        $this->ref_cod_serie = $ref_cod_serie;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_disciplina = $ref_cod_disciplina;
-                        $this->ref_cod_escola = $ref_cod_escola;
-                        $this->ref_cod_serie = $ref_cod_serie;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.escola_serie_disciplina WHERE ref_cod_disciplina = '{$ref_cod_disciplina}' AND ref_cod_escola = '{$ref_cod_escola}' AND ref_cod_serie = '{$ref_cod_serie}'")) {
                     $this->ref_cod_disciplina = $ref_cod_disciplina;
                     $this->ref_cod_escola = $ref_cod_escola;
                     $this->ref_cod_serie = $ref_cod_serie;
-                }
-            }
         }
         if (is_numeric($ref_cod_curso_disciplina)) {
-            if (class_exists('clsPmieducarDisciplina')) {
-                $tmp_obj = new clsPmieducarDisciplina($ref_cod_curso_disciplina);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_curso_disciplina = $ref_cod_curso_disciplina;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_curso_disciplina = $ref_cod_curso_disciplina;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.disciplina WHERE cod_disciplina = '{$ref_cod_curso_disciplina}'")) {
                     $this->ref_cod_curso_disciplina = $ref_cod_curso_disciplina;
-                }
-            }
         }
 
         if (is_numeric($cod_falta_aluno)) {

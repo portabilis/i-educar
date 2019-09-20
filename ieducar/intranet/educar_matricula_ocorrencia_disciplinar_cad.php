@@ -116,15 +116,12 @@ class indice extends clsCadastro
             }
         }
 
-        if( class_exists( "clsPmieducarMatricula" ) && is_numeric($this->ref_cod_matricula))
-        {
             $obj_ref_cod_matricula = new clsPmieducarMatricula();
             $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
             $this->ref_cod_escola = $detalhe_aluno['ref_ref_cod_escola'];
             $obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
             $det_escola = $obj_escola->detalhe();
             $this->ref_cod_instituicao = $det_escola['ref_cod_instituicao'];
-        }
 
         if (is_numeric($this->ref_cod_matricula))
             $this->url_cancelar = ($retorno == "Editar") ? "educar_matricula_ocorrencia_disciplinar_det.php?ref_cod_matricula={$registro["ref_cod_matricula"]}&ref_cod_tipo_ocorrencia_disciplinar={$registro["ref_cod_tipo_ocorrencia_disciplinar"]}&sequencial={$registro["sequencial"]}" : "educar_matricula_ocorrencia_disciplinar_lst.php?ref_cod_matricula={$this->ref_cod_matricula}";
@@ -140,13 +137,6 @@ class indice extends clsCadastro
 
     function Gerar()
     {
-        /**
-         * Busca infos aluno
-         */
-
-
-        if( class_exists( "clsPmieducarMatricula" ) && is_numeric($this->ref_cod_matricula))
-        {
             $obj_ref_cod_matricula = new clsPmieducarMatricula();
             $detalhe_aluno = $obj_ref_cod_matricula->lista($this->ref_cod_matricula);
             if($detalhe_aluno)
@@ -155,12 +145,6 @@ class indice extends clsCadastro
             $det_aluno = array_shift($det_aluno = $obj_aluno->lista($detalhe_aluno['ref_cod_aluno'],null,null,null,null,null,null,null,null,null,1));
 
             $this->campoRotulo("nm_pessoa","Nome do Aluno",$det_aluno['nome_aluno']);
-        }else{
-            $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
-            // FIXME #parameters
-            $this->inputsHelper()->simpleSearchMatricula(null);
-            $this->inputsHelper()->hidden('somente_andamento');
-        }
 
         // primary keys
         $this->campoOculto( "ref_cod_matricula", $this->ref_cod_matricula );
@@ -171,54 +155,19 @@ class indice extends clsCadastro
         $this->campoData("data_cadastro","Data Atual",$this->data_cadastro,true);
         $this->campoHora("hora_cadastro","Horas",$this->hora_cadastro,true);
 
-        // foreign keys
-    /*  $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarMatricula" ) )
-        {
-            $objTemp = new clsPmieducarMatricula();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
-            {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_matricula']}"] = "{$registro['ref_ref_cod_escola']}";
-                }
-            }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarMatricula nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
-        $this->campoLista( "ref_cod_matricula", "Matricula", $opcoes, $this->ref_cod_matricula );
-        */
-
-        //$opcoes = array('' => 'Selecione um aluno clicando na lupa');
-        //$this->campoListaPesq("nm_aluno", "Aluno", $opcoes,$this->ref_cod_matricula,"educar_pesquisa_matricula_lst.php","",false,"","",null,"","",true);
-        //$this->campoOculto("ref_cod_aluno", $this->ref_cod_aluno);
-
-
-
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarTipoOcorrenciaDisciplinar" ) )
+
+        $objTemp = new clsPmieducarTipoOcorrenciaDisciplinar();
+        $lista = $objTemp->lista(null,null,null,null,null,null,null,null,null,null,1,$this->ref_cod_instituicao);
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarTipoOcorrenciaDisciplinar();
-            $lista = $objTemp->lista(null,null,null,null,null,null,null,null,null,null,1,$this->ref_cod_instituicao);
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_tipo_ocorrencia_disciplinar']}"] = "{$registro['nm_tipo']}";
-                }
+                $opcoes["{$registro['cod_tipo_ocorrencia_disciplinar']}"] = "{$registro['nm_tipo']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarTipoOcorrenciaDisciplinar nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
-        $this->campoLista( "ref_cod_tipo_ocorrencia_disciplinar", "Tipo Ocorr&ecirc;ncia Disciplinar", $opcoes, $this->ref_cod_tipo_ocorrencia_disciplinar );
 
+        $this->campoLista( "ref_cod_tipo_ocorrencia_disciplinar", "Tipo Ocorr&ecirc;ncia Disciplinar", $opcoes, $this->ref_cod_tipo_ocorrencia_disciplinar );
 
         // text
         $this->campoMemo( "observacao", "Observac&atilde;o", $this->observacao, 60, 10, true );
@@ -281,7 +230,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarMatriculaOcorrenciaDisciplinar\nvalores obrigatorios\nis_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_tipo_ocorrencia_disciplinar ) && is_numeric( $this->sequencial ) && is_numeric( $this->ref_usuario_cad ) && is_string( $this->observacao )\n-->";
+
         return false;
     }
 
@@ -320,7 +269,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarMatriculaOcorrenciaDisciplinar\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_tipo_ocorrencia_disciplinar ) && is_numeric( $this->sequencial ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 
@@ -348,7 +297,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarMatriculaOcorrenciaDisciplinar\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_tipo_ocorrencia_disciplinar ) && is_numeric( $this->sequencial ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 

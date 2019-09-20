@@ -428,7 +428,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $valor,
             13,
             13,
-            'nnn.nnn.nnn-n',
+            'nnn.nnn.nnn-n ou nnn.nnn.nnn',
             $descricao,
             $disabled
         ];

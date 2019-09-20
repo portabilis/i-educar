@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -112,22 +88,15 @@ class indice extends clsListagem
 
         // Filtros de Foreign Keys
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsUf" ) )
+
+        $objTemp = new clsUf();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsUf();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['sigla_uf']}"] = "{$registro['nome']}";
-                }
+                $opcoes["{$registro['sigla_uf']}"] = "{$registro['nome']}";
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsUf n&atilde;o encontrada\n-->";
-            $opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
         }
 
         $this->campoLista( "ref_sigla_uf", "Estado", $opcoes, $this->ref_sigla_uf, null,null,null,null,null,false );
@@ -178,17 +147,10 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
-                if( class_exists( "clsUf" ) )
-                {
-                    $obj_ref_sigla_uf = new clsUf( $registro["ref_sigla_uf"] );
-                    $det_ref_sigla_uf = $obj_ref_sigla_uf->detalhe();
-                    $registro["ref_sigla_uf"] = $det_ref_sigla_uf["nome"];
-                }
-                else
-                {
-                    $registro["ref_sigla_uf"] = "Erro na gera&ccedil;&atilde;o";
-                    echo "<!--\nErro\nClasse n&atilde;o existente: clsUf\n-->";
-                }
+                $obj_ref_sigla_uf = new clsUf( $registro["ref_sigla_uf"] );
+                $det_ref_sigla_uf = $obj_ref_sigla_uf->detalhe();
+                $registro["ref_sigla_uf"] = $det_ref_sigla_uf["nome"];
+
                 $obj_biblioteca = new clsPmieducarBiblioteca($registro['ref_cod_biblioteca']);
                 $det_biblioteca = $obj_biblioteca->detalhe();
                 $registro['ref_cod_biblioteca'] = $det_biblioteca['nm_biblioteca'];

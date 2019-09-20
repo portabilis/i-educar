@@ -117,7 +117,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarCategoriaObra\nvalores obrigat&oacute;rios\nis_string( $this->descricao )\n-->";
+
         return false;
     }
 
@@ -139,7 +139,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarCategoriaObra\nvalores obrigat&oacute;rios\nif( is_numeric( $this->id ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
@@ -161,7 +161,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "N&atilde;o &eacute; poss&iacute;vel excluir esta categoria. Verifique se a mesma possui v&iacute;nculo com obras.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarCategoriaObra\nvalores obrigat&oacute;rios\nif( is_numeric( $this->id ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         $this->array_botao[] = 'Voltar';
         $this->array_botao_url_script[] = "go('educar_categoria_obra_det.php?id=". $this->id ."')";
         return false;

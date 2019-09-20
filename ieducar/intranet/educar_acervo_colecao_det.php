@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
@@ -62,51 +38,34 @@ class indice extends clsDetalhe
     {
         $this->titulo = "Cole&ccedil&atilde;o - Detalhe";
 
-
         $this->cod_acervo_colecao=$_GET["cod_acervo_colecao"];
 
         $tmp_obj = new clsPmieducarAcervoColecao( $this->cod_acervo_colecao );
         $registro = $tmp_obj->detalhe();
 
+        $obj_ref_cod_biblioteca = new clsPmieducarBiblioteca( $registro["ref_cod_biblioteca"] );
+        $det_ref_cod_biblioteca = $obj_ref_cod_biblioteca->detalhe();
+        $registro["ref_cod_biblioteca"] = $det_ref_cod_biblioteca["nm_biblioteca"];
 
-               if( class_exists( "clsPmieducarBiblioteca" ) )
-    {
-      $obj_ref_cod_biblioteca = new clsPmieducarBiblioteca( $registro["ref_cod_biblioteca"] );
-      $det_ref_cod_biblioteca = $obj_ref_cod_biblioteca->detalhe();
-      $registro["ref_cod_biblioteca"] = $det_ref_cod_biblioteca["nm_biblioteca"];
-      if( class_exists( "clsPmieducarInstituicao" ) )
-      {
         $registro["ref_cod_instituicao"] = $det_ref_cod_biblioteca["ref_cod_instituicao"];
         $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
         $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
         $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
-      }
-      else
-      {
-        $registro["ref_cod_instituicao"] = "Erro na geracao";
-        echo "<!--\nErro\nClasse nao existente: clsPmieducarInstituicao\n-->";
-      }
-                }
 
-               if( class_exists( "clsPmieducarEscola" ) )
-         {
         $registro["ref_cod_escola"] = $det_ref_cod_biblioteca["ref_cod_escola"];
         $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
         $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
         $idpes = $det_ref_cod_escola["ref_idpes"];
-      if ($idpes)
-      {
-          $obj_escola = new clsPessoaJuridica( $idpes );
-          $obj_escola_det = $obj_escola->detalhe();
-          $registro["ref_cod_escola"] = $obj_escola_det["fantasia"];
-      }
-      else
-      {
-          $obj_escola = new clsPmieducarEscolaComplemento( $registro["ref_cod_escola"] );
-          $obj_escola_det = $obj_escola->detalhe();
-          $registro["ref_cod_escola"] = $obj_escola_det["nm_escola"];
-      }
-    }
+
+        if ($idpes) {
+            $obj_escola = new clsPessoaJuridica($idpes);
+            $obj_escola_det = $obj_escola->detalhe();
+            $registro["ref_cod_escola"] = $obj_escola_det["fantasia"];
+        } else {
+            $obj_escola = new clsPmieducarEscolaComplemento($registro["ref_cod_escola"]);
+            $obj_escola_det = $obj_escola->detalhe();
+            $registro["ref_cod_escola"] = $obj_escola_det["nm_escola"];
+        }
 
     $obj_permissoes = new clsPermissoes();
     $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);

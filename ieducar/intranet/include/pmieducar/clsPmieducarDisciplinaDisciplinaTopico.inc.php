@@ -20,46 +20,12 @@ class clsPmieducarDisciplinaDisciplinaTopico extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_ref_cod_disciplina, ref_ref_ref_cod_escola, ref_ref_ref_cod_serie, ref_cod_disciplina_topico';
 
         if (is_numeric($ref_cod_disciplina_topico)) {
-            if (class_exists('clsPmieducarDisciplinaTopico')) {
-                $tmp_obj = new clsPmieducarDisciplinaTopico($ref_cod_disciplina_topico);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_disciplina_topico = $ref_cod_disciplina_topico;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_disciplina_topico = $ref_cod_disciplina_topico;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.disciplina_topico WHERE cod_disciplina_topico = '{$ref_cod_disciplina_topico}'")) {
                     $this->ref_cod_disciplina_topico = $ref_cod_disciplina_topico;
-                }
-            }
         }
         if (is_numeric($ref_ref_ref_cod_serie) && is_numeric($ref_ref_ref_cod_escola) && is_numeric($ref_ref_cod_disciplina)) {
-            if (class_exists('clsPmieducarEscolaSerieDisciplina')) {
-                $tmp_obj = new clsPmieducarEscolaSerieDisciplina($ref_ref_ref_cod_serie, $ref_ref_ref_cod_escola, $ref_ref_cod_disciplina);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_ref_ref_cod_serie = $ref_ref_ref_cod_serie;
-                        $this->ref_ref_ref_cod_escola = $ref_ref_ref_cod_escola;
-                        $this->ref_ref_cod_disciplina = $ref_ref_cod_disciplina;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_ref_ref_cod_serie = $ref_ref_ref_cod_serie;
-                        $this->ref_ref_ref_cod_escola = $ref_ref_ref_cod_escola;
-                        $this->ref_ref_cod_disciplina = $ref_ref_cod_disciplina;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.escola_serie_disciplina WHERE ref_ref_cod_serie = '{$ref_ref_ref_cod_serie}' AND ref_ref_cod_escola = '{$ref_ref_ref_cod_escola}' AND ref_cod_disciplina = '{$ref_ref_cod_disciplina}'")) {
                     $this->ref_ref_ref_cod_serie = $ref_ref_ref_cod_serie;
                     $this->ref_ref_ref_cod_escola = $ref_ref_ref_cod_escola;
                     $this->ref_ref_cod_disciplina = $ref_ref_cod_disciplina;
-                }
-            }
         }
     }
 

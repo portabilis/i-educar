@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -46,7 +22,7 @@ class indice extends clsDetalhe
      * @var int
      */
     var $titulo;
-    
+
     var $cod_curso;
     var $ref_usuario_cad;
     var $ref_cod_tipo_regime;
@@ -72,106 +48,49 @@ class indice extends clsDetalhe
     var $ref_cod_instituicao;
     var $padrao_ano_escolar;
     var $hora_falta;
-    
+
     function Gerar()
     {
         $this->titulo = "Curso - Detalhe";
-        
+
 
         $this->cod_curso=$_GET["cod_curso"];
 
         $tmp_obj = new clsPmieducarCurso( $this->cod_curso );
         $registro = $tmp_obj->detalhe();
-        
+
         if( ! $registro )
         {
             $this->simpleRedirect('educar_curso_lst.php');
         }
-        
-        if( class_exists( "clsPmieducarInstituicao" ) )
-        {
-            $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-            $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-            $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
-        }
-        else
-        {
-            $registro["ref_cod_instituicao"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarInstituicao\n-->";
-        }
 
-        if( class_exists( "clsPmieducarTipoRegime" ) )
-        {
-            $obj_ref_cod_tipo_regime = new clsPmieducarTipoRegime( $registro["ref_cod_tipo_regime"] );
-            $det_ref_cod_tipo_regime = $obj_ref_cod_tipo_regime->detalhe();
-            $registro["ref_cod_tipo_regime"] = $det_ref_cod_tipo_regime["nm_tipo"];
-        }
-        else
-        {
-            $registro["ref_cod_tipo_regime"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarTipoRegime\n-->";
-        }
+        $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
+        $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
+        $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
 
-        if( class_exists( "clsPmieducarTipoEnsino" ) )
-        {
-            $obj_ref_cod_tipo_ensino = new clsPmieducarTipoEnsino( $registro["ref_cod_tipo_ensino"] );
-            $det_ref_cod_tipo_ensino = $obj_ref_cod_tipo_ensino->detalhe();
-            $registro["ref_cod_tipo_ensino"] = $det_ref_cod_tipo_ensino["nm_tipo"];
-        }
-        else
-        {
-            $registro["ref_cod_tipo_ensino"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarTipoEnsino\n-->";
-        }
+        $obj_ref_cod_tipo_regime = new clsPmieducarTipoRegime( $registro["ref_cod_tipo_regime"] );
+        $det_ref_cod_tipo_regime = $obj_ref_cod_tipo_regime->detalhe();
+        $registro["ref_cod_tipo_regime"] = $det_ref_cod_tipo_regime["nm_tipo"];
 
-        if( class_exists( "clsPmieducarTipoAvaliacao" ) )
-        {
-            $obj_ref_cod_tipo_avaliacao = new clsPmieducarTipoAvaliacao( $registro["ref_cod_tipo_avaliacao"] );
-            $det_ref_cod_tipo_avaliacao = $obj_ref_cod_tipo_avaliacao->detalhe();
-            $registro["ref_cod_tipo_avaliacao"] = $det_ref_cod_tipo_avaliacao["nm_tipo"];
-        }
-        else
-        {
-            $registro["ref_cod_tipo_avaliacao"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarTipoAvaliacao\n-->";
-        }
+        $obj_ref_cod_tipo_ensino = new clsPmieducarTipoEnsino( $registro["ref_cod_tipo_ensino"] );
+        $det_ref_cod_tipo_ensino = $obj_ref_cod_tipo_ensino->detalhe();
+        $registro["ref_cod_tipo_ensino"] = $det_ref_cod_tipo_ensino["nm_tipo"];
 
-        if( class_exists( "clsPmieducarNivelEnsino" ) )
-        {
-            $obj_ref_cod_nivel_ensino = new clsPmieducarNivelEnsino( $registro["ref_cod_nivel_ensino"] );
-            $det_ref_cod_nivel_ensino = $obj_ref_cod_nivel_ensino->detalhe();
-            $registro["ref_cod_nivel_ensino"] = $det_ref_cod_nivel_ensino["nm_nivel"];
-        }
-        else
-        {
-            $registro["ref_cod_nivel_ensino"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarNivelEnsino\n-->";
-        }
+        $obj_ref_cod_tipo_avaliacao = new clsPmieducarTipoAvaliacao( $registro["ref_cod_tipo_avaliacao"] );
+        $det_ref_cod_tipo_avaliacao = $obj_ref_cod_tipo_avaliacao->detalhe();
+        $registro["ref_cod_tipo_avaliacao"] = $det_ref_cod_tipo_avaliacao["nm_tipo"];
 
-        if( class_exists( "clsPmieducarUsuario" ) )
-        {
-            $obj_ref_usuario_cad = new clsPmieducarUsuario( $registro["ref_usuario_cad"] );
-            $det_ref_usuario_cad = $obj_ref_usuario_cad->detalhe();
-            $registro["ref_usuario_cad"] = $det_ref_usuario_cad["data_cadastro"];
-        }
-        else
-        {
-            $registro["ref_usuario_cad"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarUsuario\n-->";
-        }
+        $obj_ref_cod_nivel_ensino = new clsPmieducarNivelEnsino( $registro["ref_cod_nivel_ensino"] );
+        $det_ref_cod_nivel_ensino = $obj_ref_cod_nivel_ensino->detalhe();
+        $registro["ref_cod_nivel_ensino"] = $det_ref_cod_nivel_ensino["nm_nivel"];
 
-        if( class_exists( "clsPmieducarUsuario" ) )
-        {
-            $obj_ref_usuario_exc = new clsPmieducarUsuario( $registro["ref_usuario_exc"] );
-            $det_ref_usuario_exc = $obj_ref_usuario_exc->detalhe();
-            $registro["ref_usuario_exc"] = $det_ref_usuario_exc["data_cadastro"];
-        }
-        else
-        {
-            $registro["ref_usuario_exc"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarUsuario\n-->";
-        }
+        $obj_ref_usuario_cad = new clsPmieducarUsuario( $registro["ref_usuario_cad"] );
+        $det_ref_usuario_cad = $obj_ref_usuario_cad->detalhe();
+        $registro["ref_usuario_cad"] = $det_ref_usuario_cad["data_cadastro"];
 
+        $obj_ref_usuario_exc = new clsPmieducarUsuario( $registro["ref_usuario_exc"] );
+        $det_ref_usuario_exc = $obj_ref_usuario_exc->detalhe();
+        $registro["ref_usuario_exc"] = $det_ref_usuario_exc["data_cadastro"];
 
         if( $registro["ref_cod_nivel_ensino"] )
         {
@@ -229,7 +148,7 @@ class indice extends clsDetalhe
         {
             $this->addDetalhe( array( "Publico Alvo", "{$registro["publico_alvo"]}") );
         }
-        
+
         $obj_permissoes = new clsPermissoes();
         if( $obj_permissoes->permissao_cadastra( 0, $this->pessoa_logada, 0 ) )
         {

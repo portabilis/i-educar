@@ -85,27 +85,21 @@ class indice extends clsCadastro
     $this->inputsHelper()->select('status', $optionsStatus);
 
     $opcoes = array( "" => "Selecione" );
-    if( class_exists( "clsPmieducarTipoUsuario" ) )
+
+    $objTemp = new clsPmieducarTipoUsuario();
+    $objTemp->setOrderby('nm_tipo ASC');
+
+    $lista = $objTemp->lista(null,null,null,null,null,null,null,null,1);
+
+    if ( is_array( $lista ) && count( $lista ) )
     {
-      $objTemp = new clsPmieducarTipoUsuario();
-      $objTemp->setOrderby('nm_tipo ASC');
-
-      $lista = $objTemp->lista(null,null,null,null,null,null,null,null,1);
-
-      if ( is_array( $lista ) && count( $lista ) )
+      foreach ( $lista as $registro )
       {
-        foreach ( $lista as $registro )
-        {
-          $opcoes["{$registro['cod_tipo_usuario']}"] = "{$registro['nm_tipo']}";
-          $opcoes_["{$registro['cod_tipo_usuario']}"] = "{$registro['nivel']}";
-        }
+        $opcoes["{$registro['cod_tipo_usuario']}"] = "{$registro['nm_tipo']}";
+        $opcoes_["{$registro['cod_tipo_usuario']}"] = "{$registro['nivel']}";
       }
     }
-    else
-    {
-      echo "<!--\nErro\nClasse clsPmieducarTipoUsuario n&atilde;o encontrada\n-->";
-      $opcoes = array( "" => "Erro na geração" );
-    }
+
     $tamanho = sizeof($opcoes_);
     echo "<script>\nvar cod_tipo_usuario = new Array({$tamanho});\n";
     foreach ($opcoes_ as $key => $valor)

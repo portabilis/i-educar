@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -119,27 +95,21 @@ class indice extends clsCadastro
         $this->inputsHelper()->dynamic(array('instituicao','escola'));
 
         $opcoes_predio = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarInfraPredio" ) )
+
+        // EDITAR
+        if ($this->ref_cod_escola)
         {
-            // EDITAR
-            if ($this->ref_cod_escola)
+            $objTemp = new clsPmieducarInfraPredio();
+            $lista = $objTemp->lista( null,null,null,$this->ref_cod_escola,null,null,null,null,null,null,null,1 );
+            if ( is_array( $lista ) && count( $lista ) )
             {
-                $objTemp = new clsPmieducarInfraPredio();
-                $lista = $objTemp->lista( null,null,null,$this->ref_cod_escola,null,null,null,null,null,null,null,1 );
-                if ( is_array( $lista ) && count( $lista ) )
+                foreach ( $lista as $registro )
                 {
-                    foreach ( $lista as $registro )
-                    {
-                        $opcoes_predio["{$registro['cod_infra_predio']}"] = "{$registro['nm_predio']}";
-                    }
+                    $opcoes_predio["{$registro['cod_infra_predio']}"] = "{$registro['nm_predio']}";
                 }
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarInfraPredio nao encontrada\n-->";
-            $opcoes_predio = array( "" => "Erro na geracao" );
-        }
+
         $script = "javascript:showExpansivelIframe(520, 400, 'educar_infra_predio_cad_pop.php');";
         if ($this->ref_cod_escola && $this->ref_cod_instituicao)
         {
@@ -154,26 +124,19 @@ class indice extends clsCadastro
 
 
         $opcoes_funcao = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarInfraComodoFuncao" ) )
+
+        // EDITAR
+        if ($this->ref_cod_escola)
         {
-            // EDITAR
-            if ($this->ref_cod_escola)
+            $objTemp = new clsPmieducarInfraComodoFuncao();
+            $lista = $objTemp->lista( null,null,null,null,null,null,null,null,null,1,$this->ref_cod_escola );
+            if ( is_array( $lista ) && count( $lista ) )
             {
-                $objTemp = new clsPmieducarInfraComodoFuncao();
-                $lista = $objTemp->lista( null,null,null,null,null,null,null,null,null,1,$this->ref_cod_escola );
-                if ( is_array( $lista ) && count( $lista ) )
+                foreach ( $lista as $registro )
                 {
-                    foreach ( $lista as $registro )
-                    {
-                        $opcoes_funcao["{$registro['cod_infra_comodo_funcao']}"] = "{$registro['nm_funcao']}";
-                    }
+                    $opcoes_funcao["{$registro['cod_infra_comodo_funcao']}"] = "{$registro['nm_funcao']}";
                 }
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarInfraComodoFuncao nao encontrada\n-->";
-            $opcoes_funcao = array( "" => "Erro na geracao" );
         }
 
         $script = "javascript:showExpansivelIframe(520, 250, 'educar_infra_comodo_funcao_cad_pop.php');";
@@ -213,7 +176,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarInfraPredioComodo\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_infra_comodo_funcao ) && is_numeric( $this->ref_cod_infra_predio ) && is_string( $this->nm_comodo ) && is_numeric( $this->area )\n-->";
+
         return false;
     }
 
@@ -237,7 +200,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarInfraPredioComodo\nvalores obrigatorios\nif( is_numeric( $this->cod_infra_predio_comodo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 
@@ -257,7 +220,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarInfraPredioComodo\nvalores obrigatorios\nif( is_numeric( $this->cod_infra_predio_comodo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }

@@ -90,7 +90,6 @@ class indice extends clsListagem
         $this->campoTexto('nome_responsavel', 'Nome do Responsável', $this->nome_responsavel, 50, 255);
 
         $opcoes = ['' => 'Selecione'];
-        if (class_exists('clsPublicSetorBai')) {
             $objTemp = new clsPublicSetorBai();
             $objTemp->setOrderBy(' nome asc ');
             $lista = $objTemp->lista();
@@ -100,10 +99,6 @@ class indice extends clsListagem
                     $opcoes[$registro['idsetorbai']] = $registro['nome'];
                 }
             }
-        } else {
-            echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
-            $opcoes = ['' => 'Erro na geracao'];
-        }
 
         $this->campoLista('idsetorbai', 'Setor', $opcoes, $this->idsetorbai, null, null, null, null, null, false);
 

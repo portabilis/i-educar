@@ -50,17 +50,6 @@ class clsModulesAuditoriaGeral extends Model
         return $dados;
     }
 
-    public function removeRegistrosNulos($dados)
-    {
-        foreach ($dados as $key => $value) {
-            if (is_null($value)) {
-                unset($dados[$key]);
-            }
-        }
-
-        return $dados;
-    }
-
     public function removeKeysDesnecessarias($dados)
     {
         $keysDesnecessarias = ['ref_usuario_exc',
@@ -84,39 +73,6 @@ class clsModulesAuditoriaGeral extends Model
         $dados = str_replace('\'', '\'\'', $dados);
 
         return $dados;
-    }
-
-    public function removeKeysDiferentes($dados, $keysEmComum)
-    {
-        foreach ($dados as $key => $value) {
-            if (!array_key_exists($key, $keysEmComum)) {
-                unset($dados[$key]);
-            }
-        }
-
-        return $dados;
-    }
-
-    public function removeKeysIguais($dados, $keysEmComum)
-    {
-        foreach ($dados as $key => $value) {
-            if (array_key_exists($key, $keysEmComum)) {
-                unset($dados[$key]);
-            }
-        }
-
-        return $dados;
-    }
-
-    public function keysComValuesIguais($array1, $array2)
-    {
-        foreach ($array1 as $key => $value) {
-            if ($array1[$key] != $array2[$key]) {
-                unset($array1[$key]);
-            }
-        }
-
-        return $array1;
     }
 
     public function insereAuditoria($operacao, $valorAntigo, $valorNovo)

@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 
 use Illuminate\Support\Facades\Session;
 
@@ -191,43 +167,24 @@ class indice extends clsListagem
                 $registro["data_reserva_br"] = date( "d/m/Y", $registro["data_reserva_time"] );
                 $registro["data_retirada_br"] = ($registro["data_retirada"] == null ? '-' :  Portabilis_Date_Utils::PgSqltoBr(substr($registro["data_retirada"],0,10) ));
 
-                // pega detalhes de foreign_keys
-                if( class_exists( "clsPmieducarExemplar" ) )
-                {
                     $obj_exemplar = new clsPmieducarExemplar($registro["ref_cod_exemplar"]);
                     $det_exemplar = $obj_exemplar->detalhe();
                     $acervo = $det_exemplar["ref_cod_acervo"];
                     $obj_acervo = new clsPmieducarAcervo($acervo);
                     $det_acervo = $obj_acervo->detalhe();
                     $registro["ref_cod_exemplar"] = $det_acervo["titulo"];
-                }
-                else
-                {
-                    $registro["ref_cod_exemplar"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarExemplar\n-->";
-                }
 
-                if( class_exists( "clsPmieducarCliente" ) )
-                {
                     $obj_cliente = new clsPmieducarCliente($registro["ref_cod_cliente"]);
                     $det_cliente = $obj_cliente->detalhe();
                     $ref_idpes = $det_cliente["ref_idpes"];
                     $obj_pessoa = new clsPessoa_($ref_idpes);
                     $det_pessoa = $obj_pessoa->detalhe();
                     $registro["ref_cod_cliente"] = $det_pessoa["nome"];
-                }
-                else
-                {
-                    $registro["ref_cod_cliente"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarCliente\n-->";
-                }
 
-                if( class_exists( "clsPmieducarBiblioteca" ) )
-                {
                     $obj_ref_cod_biblioteca = new clsPmieducarBiblioteca( $registro["ref_cod_biblioteca"] );
                     $det_ref_cod_biblioteca = $obj_ref_cod_biblioteca->detalhe();
                     $registro["ref_cod_biblioteca"] = $det_ref_cod_biblioteca["nm_biblioteca"];
-                }
+
                 if( $registro["ref_cod_instituicao"] )
                 {
                     $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );

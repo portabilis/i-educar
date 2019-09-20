@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -80,50 +56,21 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_infra_predio_comodo_lst.php');
         }
 
-        if( class_exists( "clsPmieducarInfraComodoFuncao" ) )
-        {
-            $obj_ref_cod_infra_comodo_funcao = new clsPmieducarInfraComodoFuncao( $registro["ref_cod_infra_comodo_funcao"] );
-            $det_ref_cod_infra_comodo_funcao = $obj_ref_cod_infra_comodo_funcao->detalhe();
-            $registro["ref_cod_infra_comodo_funcao"] = $det_ref_cod_infra_comodo_funcao["nm_funcao"];
-        }
-        else
-        {
-            $registro["ref_cod_infra_comodo_funcao"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarInfraComodoFuncao\n-->";
-        }
-        if( class_exists( "clsPmieducarInfraPredio" ) )
-        {
-            $obj_ref_cod_infra_predio = new clsPmieducarInfraPredio( $registro["ref_cod_infra_predio"] );
-            $det_ref_cod_infra_predio = $obj_ref_cod_infra_predio->detalhe();
-            $registro["ref_cod_infra_predio"] = $det_ref_cod_infra_predio["nm_predio"];
-        }
-        else
-        {
-            $registro["ref_cod_infra_predio"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarInfraPredio\n-->";
-        }
-        if( class_exists( "clsPmieducarInstituicao" ) )
-        {
-            $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-            $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-            $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
-        }
-        else
-        {
-            $registro["ref_cod_escola"] = "Erro na gera&ccedil;&atilde;o";
-            echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
-        }
-        if( class_exists( "clsPmieducarEscola" ) )
-        {
-            $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
-            $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-            $nm_escola = $det_ref_cod_escola["nome"];
-        }
-        else
-        {
-            $registro["ref_cod_escola"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarEscola\n-->";
-        }
+        $obj_ref_cod_infra_comodo_funcao = new clsPmieducarInfraComodoFuncao( $registro["ref_cod_infra_comodo_funcao"] );
+        $det_ref_cod_infra_comodo_funcao = $obj_ref_cod_infra_comodo_funcao->detalhe();
+        $registro["ref_cod_infra_comodo_funcao"] = $det_ref_cod_infra_comodo_funcao["nm_funcao"];
+
+        $obj_ref_cod_infra_predio = new clsPmieducarInfraPredio( $registro["ref_cod_infra_predio"] );
+        $det_ref_cod_infra_predio = $obj_ref_cod_infra_predio->detalhe();
+        $registro["ref_cod_infra_predio"] = $det_ref_cod_infra_predio["nm_predio"];
+
+        $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
+        $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
+        $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
+
+        $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
+        $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+        $nm_escola = $det_ref_cod_escola["nome"];
 
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);

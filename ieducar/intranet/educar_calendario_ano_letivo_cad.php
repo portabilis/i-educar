@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
@@ -223,12 +199,12 @@ class indice extends clsCadastro
                 }
 
                 $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-                echo "<!--\nErro ao editar clsPmieducarCalendarioAnoLetivo\nvalores obrigatorios\nif( is_numeric( {$det_calend_ano_letivo['cod_calendario_ano_letivo']} ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
                 return false;
             }
             else
             {
-                $obj_calend_ano_letivo = new clsPmieducarCalendarioAnoLetivo( null, $this->ref_cod_escola, null, $this->pessoa_logada, $this->ano, null, null, 1/*, $data_inicio,$data_fim*/ );
+                $obj_calend_ano_letivo = new clsPmieducarCalendarioAnoLetivo( null, $this->ref_cod_escola, null, $this->pessoa_logada, $this->ano, null, null, 1);
                 if( $cod_calendario_ano_letivo = $obj_calend_ano_letivo->cadastra() )
                 {
 
@@ -244,7 +220,7 @@ class indice extends clsCadastro
                 }
 
                 $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-                echo "<!--\nErro ao cadastrar clsPmieducarCalendarioAnoLetivo\nvalores obrigatorios\nis_numeric( $this->ref_cod_escola ) && is_numeric( $this->pessoa_logada ) && is_numeric( $this->ano ) && is_string( $data_inicio ) && is_string( $data_fim )\n-->";
+
                 return false;
             }
 
@@ -252,47 +228,10 @@ class indice extends clsCadastro
 
         echo "<script> alert( 'Não foi possível definir as datas de início e fim do ano letivo.' ) </script>";
         return false;
-
-        /*
-        $obj = new clsPmieducarCalendarioAnoLetivo();
-        $lista = $obj->lista( null,$this->ref_cod_escola,null,null,$this->ano );
-        if($lista)
-        {
-            echo "<script>alert('Calend&aacute;rio j&aacute; cadastrado para essa escola');</script>";
-            return false;
-        }
-        else
-        {
-            $inicio  = explode("/", $this->inicio_ano_letivo);
-            $termino = explode("/", $this->termino_ano_letivo);
-            if(($inicio[2] != $this->ano) && ($termino[2] != $this->ano)){
-                echo "<script>alert('Verifique o inicio e o termino do ano letivo!\\n Possivel causa: Ano das datas diferem do ano');</script>";
-                return false;
-            }elseif(($inicio[1] > $termino[1]) || ($inicio[1] == $termino[1] && ($inicio[0] < $termino[0]))){
-                echo "<script>alert('Verifique o inicio e o termino do ano letivo!\\n Possivel causa: Data final anterior a data inicial');</script>";
-                return false;
-            }
-        }
-        $obj = new clsPmieducarCalendarioAnoLetivo( $this->cod_calendario_ano_letivo, $this->ref_cod_escola, $this->pessoa_logada, $this->pessoa_logada, $this->ano, $this->data_cadastra, $this->data_exclusao, $this->ativo, $this->inicio_ano_letivo, $this->termino_ano_letivo );
-        $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
-            $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_calendario_ano_letivo_lst.php?ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarCalendarioAnoLetivo\nvalores obrigatorios\nis_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ano ) && is_string( $this->inicio_ano_letivo ) && is_string( $this->termino_ano_letivo )\n-->";
-        return false;
-        */
     }
 
     function Editar()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 620, $this->pessoa_logada, 7,  "educar_calendario_ano_letivo_lst.php" );
 
@@ -312,34 +251,16 @@ class indice extends clsCadastro
             }
 
             $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-            echo "<!--\nErro ao editar clsPmieducarCalendarioAnoLetivo\nvalores obrigatorios\nif( is_numeric( $this->cod_calendario_ano_letivo ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
             return false;
         }
 
         echo "<script> alert( 'Não foi possível definir as datas de início e fim do ano letivo.' ) </script>";
         return false;
-
-        /*
-        $obj = new clsPmieducarCalendarioAnoLetivo($this->cod_calendario_ano_letivo, $this->ref_cod_escola, $this->pessoa_logada, $this->pessoa_logada, $this->ano, $this->data_cadastra, $this->data_exclusao, $this->ativo, $this->inicio_ano_letivo, $this->termino_ano_letivo);
-        $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_calendario_ano_letivo_lst.php" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarCalendarioAnoLetivo\nvalores obrigatorios\nif( is_numeric( $this->cod_calendario_ano_letivo ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-        return false;
-        */
     }
 
     function Excluir()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 620, $this->pessoa_logada, 7,  "educar_calendario_ano_letivo_lst.php" );
 
@@ -355,7 +276,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarCalendarioAnoLetivo\nvalores obrigatorios\nif( is_numeric( $this->cod_calendario_ano_letivo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }

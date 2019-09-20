@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 /**
  * @author Adriano Erik Weiguert Nagasava
  */
@@ -70,8 +46,6 @@ class indice extends clsDetalhe
         if(!$this->ref_cod_cliente || !$this->ref_cod_cliente_tipo)
             $this->simpleRedirect('educar_pagamento_multa_lst.php');
 
-        if( class_exists( "clsPmieducarCliente" ) )
-        {
             $obj_tipo = new clsPmieducarClienteTipo( $this->ref_cod_cliente_tipo );
             $det_tipo = $obj_tipo->detalhe();
             $obj_ref_cod_cliente = new clsPmieducarCliente();
@@ -159,12 +133,6 @@ class indice extends clsDetalhe
                     $this->ref_cod_cliente = $registro["cod_cliente"];
                 }
             }
-        }
-        else
-        {
-            $registro["ref_cod_cliente"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarCliente\n-->";
-        }
 
         $obj_permissoes = new clsPermissoes();
         if( $obj_permissoes->permissao_cadastra( 622, $this->pessoa_logada, 11 ) )

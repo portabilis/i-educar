@@ -13,6 +13,8 @@
             'user_id': '{{$loggedUser->personId}}',
             'user_name': '{{$loggedUser->name}}',
             'user_email': '{{$loggedUser->email}}',
+            'user_role': '{{$loggedUser->role}}',
+            'user_created_at': parseInt('{{$loggedUser->created_at}}', 10),
             'institution': '{{ $loggedUser->institution }}',
             'city': '{{ $loggedUser->city }}',
             'state': '{{ $loggedUser->state }}',
@@ -167,7 +169,7 @@
                             <a href="{{ url('intranet/agenda.php') }}">Agenda</a>
                             <a href="{{ url('intranet/index.php') }}">Calendário</a>
                             <a href="{{ url('intranet/meusdados.php') }}">Meus dados</a>
-                            <a href="{{ url('intranet/logof.php') }}">Sair</a>
+                            <a href="{{ url('intranet/logof.php') }}" id="logout">Sair</a>
                         </div>
                     </div>
                     <a href="{{ url('intranet/meusdados.php') }}" class="avatar" title="Meus dados">

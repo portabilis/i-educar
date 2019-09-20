@@ -113,7 +113,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
-        echo "<!--\nErro ao cadastrar clsCadastroDeficiencia\nvalores obrigatorios\nis_string( $this->nm_deficiencia )\n-->";
+
 
         return false;
     }
@@ -142,7 +142,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = 'Edição não realizada.<br>';
-        echo "<!--\nErro ao editar clsCadastroDeficiencia\nvalores obrigatorios\nif( is_numeric( $this->cod_deficiencia ) )\n-->";
+
 
         return false;
     }
@@ -163,7 +163,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = 'Exclusão não realizada.<br>';
-        echo "<!--\nErro ao excluir clsCadastroDeficiencia\nvalores obrigatorios\nif( is_numeric( $this->cod_deficiencia ) )\n-->";
+
 
         return false;
     }

@@ -54,94 +54,19 @@ class clsPublicMunicipio extends Model
         $this->_campos_lista = $this->_todos_campos = 'idmun, nome, sigla_uf, area_km2, idmreg, idasmun, cod_ibge, geom, tipo, idmun_pai, idpes_rev, idpes_cad, data_rev, data_cad, origem_gravacao, operacao';
 
         if (is_string($sigla_uf)) {
-            if (class_exists('clsUf')) {
-                $tmp_obj = new clsUf($sigla_uf);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->sigla_uf = $sigla_uf;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->sigla_uf = $sigla_uf;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM uf WHERE sigla_uf = '{$sigla_uf}'")) {
                     $this->sigla_uf = $sigla_uf;
-                }
-            }
         }
         if (is_numeric($idpes_rev)) {
-            if (class_exists('clsCadastroPessoa')) {
-                $tmp_obj = new clsCadastroPessoa($idpes_rev);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->idpes_rev = $idpes_rev;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->idpes_rev = $idpes_rev;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM cadastro.pessoa WHERE idpes = '{$idpes_rev}'")) {
                     $this->idpes_rev = $idpes_rev;
-                }
-            }
         }
         if (is_numeric($idpes_cad)) {
-            if (class_exists('clsCadastroPessoa')) {
-                $tmp_obj = new clsCadastroPessoa($idpes_cad);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->idpes_cad = $idpes_cad;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->idpes_cad = $idpes_cad;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM cadastro.pessoa WHERE idpes = '{$idpes_cad}'")) {
                     $this->idpes_cad = $idpes_cad;
-                }
-            }
         }
         if (is_numeric($idmun_pai)) {
-            if (class_exists('clsMunicipio')) {
-                $tmp_obj = new clsMunicipio($idmun_pai);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->idmun_pai = $idmun_pai;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->idmun_pai = $idmun_pai;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM municipio WHERE idmun = '{$idmun_pai}'")) {
                     $this->idmun_pai = $idmun_pai;
-                }
-            }
         }
         if (is_numeric($idmun)) {
-            if (class_exists('clsMunicipio')) {
-                $tmp_obj = new clsMunicipio($idmun);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->idmun = $idmun;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->idmun = $idmun;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM municipio WHERE idmun = '{$idmun}'")) {
                     $this->idmun = $idmun;
-                }
-            }
         }
 
         if (is_string($nome)) {

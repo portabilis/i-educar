@@ -44,96 +44,20 @@ class clsPmieducarFaltaAtraso extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_falta_atraso, ref_cod_escola, ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_cod_servidor, tipo, data_falta_atraso, qtd_horas, qtd_min, justificada, data_cadastro, data_exclusao, ativo';
 
         if (is_numeric($ref_cod_escola)) {
-            if (class_exists('clsPmieducarEscola')) {
-                $tmp_obj = new clsPmieducarEscola($ref_cod_escola);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_escola = $ref_cod_escola;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_escola = $ref_cod_escola;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.escola WHERE cod_escola = '{$ref_cod_escola}'")) {
                     $this->ref_cod_escola = $ref_cod_escola;
-                }
-            }
         }
 
         if (is_numeric($ref_usuario_cad)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_cad);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'")) {
                     $this->ref_usuario_cad = $ref_usuario_cad;
-                }
-            }
         }
 
         if (is_numeric($ref_usuario_exc)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_exc);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'")) {
                     $this->ref_usuario_exc = $ref_usuario_exc;
-                }
-            }
         }
 
         if (is_numeric($ref_cod_servidor) && is_numeric($ref_ref_cod_instituicao)) {
-            if (class_exists('clsPmieducarServidor')) {
-                $tmp_obj = new clsPmieducarServidor(
-                    $ref_cod_servidor,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    $ref_ref_cod_instituicao
-                );
-
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_servidor = $ref_cod_servidor;
-                        $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_servidor = $ref_cod_servidor;
-                        $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
-                    }
-                }
-
-                $this->ref_cod_servidor = $ref_cod_servidor;
-                $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.servidor WHERE cod_servidor = '{$ref_cod_servidor}' AND ref_cod_instituicao = '{$ref_ref_cod_instituicao}'")) {
                     $this->ref_cod_servidor = $ref_cod_servidor;
                     $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
-                }
-            }
         }
 
         if (is_numeric($cod_falta_atraso)) {

@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -135,59 +111,30 @@ class indice extends clsCadastro
 
         //-----------------------INICIO CLIENTE TIPO------------------------//
 
-        if( class_exists( "clsPmieducarClienteTipo" ) )
+        $opcoes = array( "" => "Selecione" );
+        $todos_tipos_clientes .= "var editar_ = 0;\n";
+        if($_GET['cod_exemplar_tipo'])
         {
-            $opcoes = array( "" => "Selecione" );
-//          $todos_tipos_clientes = "tipo_cliente = new Array();\n";
-            $todos_tipos_clientes .= "var editar_ = 0;\n";
-            if($_GET['cod_exemplar_tipo'])
-            {
-                $todos_tipos_clientes .= "editar_ = {$_GET['cod_exemplar_tipo']};\n";
-            }
-            /*$objTemp = new clsPmieducarClienteTipo();
+            $todos_tipos_clientes .= "editar_ = {$_GET['cod_exemplar_tipo']};\n";
+        }
+
+        echo "<script>{$todos_tipos_clientes}{$script}</script>";
+
+        // se o caso é EDITAR
+        if ($this->ref_cod_biblioteca)
+        {
+            $objTemp = new clsPmieducarClienteTipo();
             $objTemp->setOrderby("nm_tipo ASC");
-            $lista = $objTemp->lista(null,null,null,null,null,null,null,null,null,null,1);
+            $lista = $objTemp->lista(null,$this->ref_cod_biblioteca,null,null,null,null,null,null,null,null,1);
             if ( is_array( $lista ) && count( $lista ) )
             {
                 foreach ( $lista as $registro )
                 {
-                    if ($this->cod_exemplar_tipo && $registro["cod_cliente_tipo"])
-                    {
-                        $obj_clt_tp_exp_tp = new clsPmieducarClienteTipoExemplarTipo( $registro["cod_cliente_tipo"], $this->cod_exemplar_tipo );
-                        $det_clt_tp_exp_tp = $obj_clt_tp_exp_tp->detalhe();
-                        $dias_emprestimo = $det_clt_tp_exp_tp["dias_emprestimo"];
-                        if($dias_emprestimo)
-                        {
-                            $todos_tipos_clientes .= "tipo_cliente[tipo_cliente.length] = new Array({$registro["cod_cliente_tipo"]},'{$registro["nm_tipo"]}', {$registro["ref_cod_biblioteca"]}, {$dias_emprestimo});\n";
-                        }
-                    }
-                    else
-                        $todos_tipos_clientes .= "tipo_cliente[tipo_cliente.length] = new Array({$registro["cod_cliente_tipo"]},'{$registro["nm_tipo"]}', {$registro["ref_cod_biblioteca"]});\n";
-                }
-
-            }*/
-            echo "<script>{$todos_tipos_clientes}{$script}</script>";
-
-            // se o caso é EDITAR
-            if ($this->ref_cod_biblioteca)
-            {
-                $objTemp = new clsPmieducarClienteTipo();
-                $objTemp->setOrderby("nm_tipo ASC");
-                $lista = $objTemp->lista(null,$this->ref_cod_biblioteca,null,null,null,null,null,null,null,null,1);
-                if ( is_array( $lista ) && count( $lista ) )
-                {
-                    foreach ( $lista as $registro )
-                    {
-                        $opcoes["{$registro['cod_cliente_tipo']}"] = "{$registro['nm_tipo']}";
-                    }
+                    $opcoes["{$registro['cod_cliente_tipo']}"] = "{$registro['nm_tipo']}";
                 }
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarClienteTipo n&atilde;o encontrada\n-->";
-            $opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
-        }
+
         $this->campoRotulo( "div_clientes", "Tipo Cliente", "<div id='clientes'></div>" );
         $this->acao_enviar = "Valida();";
         //-----------------------FIM CLIENTE TIPO------------------------
@@ -228,7 +175,7 @@ class indice extends clsCadastro
                     if ( !$cadastrou2 )
                     {
                         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-                        echo "<!--\nErro ao cadastrar clsPmieducarClienteTipoExemplarTipo\nvalores obrigat&oacute;rios\nis_numeric( $cadastrou ) && is_numeric( {$cliente_tipo} ) && is_numeric( {$dias_emprestimo} )\n-->";
+
                         return false;
                     }
                 }
@@ -240,7 +187,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarExemplarTipo\nvalores obrigat&oacute;rios\nis_numeric( $this->ref_cod_biblioteca ) && is_numeric( $this->pessoa_logada ) && is_string( $this->nm_tipo )\n-->";
+
         return false;
     }
 
@@ -279,7 +226,7 @@ class indice extends clsCadastro
                     if ( !$editou2 )
                     {
                         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-                        echo "<!--\nErro ao editar clsPmieducarClienteTipoExemplarTipo\nvalores obrigat&oacute;rios\nis_numeric( $this->cod_exemplar_tipo ) && is_numeric( {$this->pessoa_logada} )\n-->";
+
                         return false;
                     }
                 }
@@ -291,7 +238,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarExemplarTipo\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_exemplar_tipo ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 
@@ -315,7 +262,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarExemplarTipo\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_exemplar_tipo ) && is_numeric( $this->pessoa_logada ) )\n-->";
+
         return false;
     }
 }

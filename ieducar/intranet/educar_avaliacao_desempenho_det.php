@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
@@ -77,28 +53,13 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_avaliacao_desempenho_lst.php');
         }
 
-        if( class_exists( "clsPmieducarInstituicao" ) )
-        {
-            $obj_instituicao = new clsPmieducarInstituicao( $registro["ref_ref_cod_instituicao"] );
-            $det_instituicao = $obj_instituicao->detalhe();
-            $nm_instituicao = $det_instituicao["nm_instituicao"];
-        }
-        else
-        {
-            $nm_instituicao = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarInstituicao\n-->";
-        }
-        if( class_exists( "clsPessoa_" ) )
-        {
-            $obj_cod_servidor = new clsPessoa_( $this->ref_cod_servidor );
-            $det_cod_servidor = $obj_cod_servidor->detalhe();
-            $nm_servidor = $det_cod_servidor["nome"];
-        }
-        else
-        {
-            $nm_servidor = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPessoa_\n-->";
-        }
+        $obj_instituicao = new clsPmieducarInstituicao( $registro["ref_ref_cod_instituicao"] );
+        $det_instituicao = $obj_instituicao->detalhe();
+        $nm_instituicao = $det_instituicao["nm_instituicao"];
+
+        $obj_cod_servidor = new clsPessoa_( $this->ref_cod_servidor );
+        $det_cod_servidor = $obj_cod_servidor->detalhe();
+        $nm_servidor = $det_cod_servidor["nome"];
 
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);

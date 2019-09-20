@@ -1,29 +1,5 @@
 <?php
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
@@ -120,85 +96,60 @@ class indice extends clsCadastro
 
         // foreign keys
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarInstituicao" ) )
+
+        $objTemp = new clsPmieducarInstituicao();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarInstituicao();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) ) 
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro ) 
-                {
-                    $opcoes["{$registro['cod_instituicao']}"] = "{$registro['nm_instituicao']}";
-                }
+                $opcoes["{$registro['cod_instituicao']}"] = "{$registro['nm_instituicao']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarInstituicao nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_cod_instituicao", "Instituic&atilde;o", $opcoes, $this->ref_cod_instituicao );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarTipoEnsino" ) )
+
+        $objTemp = new clsPmieducarTipoEnsino();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarTipoEnsino();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) ) 
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro ) 
-                {
-                    $opcoes["{$registro['cod_tipo_ensino']}"] = "{$registro['nm_tipo']}";
-                }
+                $opcoes["{$registro['cod_tipo_ensino']}"] = "{$registro['nm_tipo']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarTipoEnsino nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_cod_tipo_ensino", "Tipo Ensino", $opcoes, $this->ref_cod_tipo_ensino );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarTipoAvaliacao" ) )
+
+        $objTemp = new clsPmieducarTipoAvaliacao();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarTipoAvaliacao();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) ) 
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro ) 
-                {
-                    $opcoes["{$registro['cod_tipo_avaliacao']}"] = "{$registro['nm_tipo']}";
-                }
+                $opcoes["{$registro['cod_tipo_avaliacao']}"] = "{$registro['nm_tipo']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarTipoAvaliacao nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $this->campoLista( "ref_cod_tipo_avaliacao", "Tipo Avaliac&atilde;o", $opcoes, $this->ref_cod_tipo_avaliacao );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarNivelEnsino" ) )
+
+        $objTemp = new clsPmieducarNivelEnsino();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsPmieducarNivelEnsino();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) ) 
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro ) 
-                {
-                    $opcoes["{$registro['cod_nivel_ensino']}"] = "{$registro['nm_nivel']}";
-                }
+                $opcoes["{$registro['cod_nivel_ensino']}"] = "{$registro['nm_nivel']}";
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarNivelEnsino nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
-        $this->campoLista( "ref_cod_nivel_ensino", "Nivel Ensino", $opcoes, $this->ref_cod_nivel_ensino );
 
+        $this->campoLista( "ref_cod_nivel_ensino", "Nivel Ensino", $opcoes, $this->ref_cod_nivel_ensino );
 
         // text
         $this->campoTexto( "nm_curso", "Nome Curso", $this->nm_curso, 30, 255, true );
@@ -244,7 +195,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarCurso\nvalores obrigatorios\nis_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_nivel_ensino ) && is_numeric( $this->ref_cod_tipo_ensino ) && is_string( $this->nm_curso ) && is_string( $this->sgl_curso ) && is_numeric( $this->qtd_etapas ) && is_numeric( $this->frequencia_minima ) && is_numeric( $this->media ) && is_numeric( $this->falta_ch_globalizada ) && is_numeric( $this->carga_horaria ) && is_numeric( $this->edicao_final ) && is_numeric( $this->ref_cod_instituicao ) && is_numeric( $this->padrao_ano_escolar ) && is_numeric( $this->hora_falta )\n-->";
+
         return false;
     }
 
@@ -268,18 +219,12 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarCurso\nvalores obrigatorios\nif( is_numeric( $this->cod_curso ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 
     function Excluir()
     {
-
-
-        /*$obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir( 0, $this->pessoa_logada, 0,  "educar_curso_lst.php" );
-*/
-
         $obj = new clsPmieducarCurso($this->cod_curso, $this->pessoa_logada, $this->ref_cod_tipo_regime, $this->ref_cod_nivel_ensino, $this->ref_cod_tipo_ensino, $this->ref_cod_tipo_avaliacao, $this->nm_curso, $this->sgl_curso, $this->qtd_etapas, $this->frequencia_minima, $this->media, $this->media_exame, $this->falta_ch_globalizada, $this->carga_horaria, $this->ato_poder_publico, $this->edicao_final, $this->objetivo_curso, $this->publico_alvo, $this->data_cadastro, $this->data_exclusao, 0, $this->pessoa_logada, $this->ref_cod_instituicao, $this->padrao_ano_escolar, $this->hora_falta);
         $excluiu = $obj->excluir();
         if( $excluiu )
@@ -292,7 +237,7 @@ class indice extends clsCadastro
         }
 
         $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarCurso\nvalores obrigatorios\nif( is_numeric( $this->cod_curso ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
         return false;
     }
 }
