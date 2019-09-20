@@ -28,6 +28,7 @@
  * @version   $Id$
  */
 
+use App\Process;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
 
@@ -419,6 +420,10 @@ class indice extends clsCadastro
 
         $this->campoRotulo("disciplinas_", "Componentes curriculares", "<div id='disciplinas'>$disciplinas</div>");
         $this->campoQuebra();
+
+        $obj_permissoes = new clsPermissoes();
+        $permissaoConsultaDispensas = $obj_permissoes->permissao_cadastra(Process::EXEMPTION_LIST, $this->pessoa_logada, null);
+        $this->campoOculto('permissao_consulta_dispensas', intval($permissaoConsultaDispensas));
     }
 
     function Novo()

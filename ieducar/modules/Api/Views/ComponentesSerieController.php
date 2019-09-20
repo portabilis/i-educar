@@ -354,6 +354,7 @@ class ComponentesSerieController extends ApiCoreController
                 ->where('ref_cod_serie', $serie)
                 ->where('ref_cod_disciplina', $discipline->id)
                 ->active()
+                ->orderBy('data_cadastro', 'desc')
                 ->get()
                 ->map(function ($item){
                     /** @var LegacyDisciplineExemption $item */

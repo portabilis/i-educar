@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\DB;
 
 /**
  * LegacySchool
@@ -85,5 +86,10 @@ class LegacySchool extends Model
     public function organization()
     {
         return $this->belongsTo(LegacyOrganization::class, 'ref_idpes');
+    }
+
+    public function getNameAttribute()
+    {
+        return DB::selectOne('SELECT relatorio.get_nome_escola(:escola) AS nome', ['escola' => $this->id])->nome;
     }
 }

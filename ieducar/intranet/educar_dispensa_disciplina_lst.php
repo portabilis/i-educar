@@ -242,7 +242,7 @@ class indice extends clsListagem
 
     $obj_permissoes = new clsPermissoes();
 
-    if ($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7)) {
+    if ($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7) && $det_matricula['aprovado'] == App_Model_MatriculaSituacao::EM_ANDAMENTO) {
       $this->array_botao_url[] = 'educar_dispensa_disciplina_cad.php?ref_cod_matricula=' . $this->ref_cod_matricula;
       $this->array_botao[]     = 'Novo';
     }
