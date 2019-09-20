@@ -354,21 +354,6 @@ class indice extends clsCadastro
                         "complemento",
                         "numero",
                         "andar");
-                } else {
-                    $objEscolaComplemento = new clsPmieducarEscolaComplemento($this->cod_escola);
-                    $detComplemento = $objEscolaComplemento->detalhe();
-
-                    foreach ($detComplemento as $campo => $val) {
-                        $this->$campo = $val;
-                    }
-
-                    $this->cep_ = $this->cep;
-                    $this->p_email = $this->email;
-                    $this->cidade = $this->municipio;
-                    $this->p_ddd_telefone_1 = $this->ddd_telefone;
-                    $this->p_telefone_1 = $this->telefone;
-                    $this->p_ddd_telefone_fax = $this->ddd_fax;
-                    $this->p_telefone_fax = $this->fax;
                 }
             }
         } elseif ($_POST['cnpj'] && !$_POST["passou"]) {
@@ -1957,10 +1942,7 @@ class indice extends clsCadastro
                 $escola = $escola->detalhe();
                 $auditoria = new clsModulesAuditoriaGeral("escola", $this->pessoa_logada, $cod_escola);
                 $auditoria->inclusao($escola);
-                $obj2 = new clsPmieducarEscolaComplemento($cadastrou, null, $this->pessoa_logada, idFederal2int($this->cep), $this->numero, $this->complemento, $this->p_email, $this->fantasia, $this->cidade, $this->bairro, $this->logradouro, $this->p_ddd_telefone_1, $this->p_telefone_1, $this->p_ddd_telefone_fax, $this->p_telefone_fax, null, null, 1);
-                $cadastrou2 = $obj2->cadastra();
 
-                if ($cadastrou2) {
                     //-----------------------CADASTRA CURSO------------------------//
                     $this->escola_curso = unserialize(urldecode($this->escola_curso));
                     $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao));
@@ -1990,11 +1972,6 @@ class indice extends clsCadastro
                     throw new HttpResponseException(
                         new RedirectResponse('educar_escola_lst.php')
                     );
-                } else {
-                    $this->mensagem = "Cadastro não realizado.<br>";
-
-                    return false;
-                }
             } else {
                 $this->mensagem = "Cadastro não realizado (clsPmieducarEscola).<br>";
                 return false;
@@ -2342,10 +2319,6 @@ class indice extends clsCadastro
                     }
                 }
             } elseif ($this->sem_cnpj) {
-                $objComplemento = new clsPmieducarEscolaComplemento($this->cod_escola, $this->pessoa_logada, null, idFederal2int($this->cep_), $this->numero, $this->complemento, $this->p_email, $this->fantasia, $this->cidade, $this->bairro, $this->logradouro, $this->p_ddd_telefone_1, $this->p_telefone_1, $this->p_ddd_telefone_fax, $this->p_telefone_fax);
-                $editou1 = $objComplemento->edita();
-
-                if ($editou1) {
                     //-----------------------EDITA CURSO------------------------//
                     $this->escola_curso = unserialize(urldecode($this->escola_curso));
                     $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao));
@@ -2376,10 +2349,6 @@ class indice extends clsCadastro
                     throw new HttpResponseException(
                         new RedirectResponse('educar_escola_lst.php')
                     );
-                } else {
-                    $this->mensagem = "Edição não realizada (clsPmieducarEscolaComplemento).<br>";
-                    return false;
-                }
             }
         }
 
