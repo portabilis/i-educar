@@ -42,7 +42,6 @@ class clsIndexBase extends clsBase
   public function Formular() {
     $this->SetTitulo($this->_instituicao . 'Servidores - Cadastro Categoria N&iacute;vel');
     $this->processoAp = '829';
-        $this->addEstilo('localizacaoSistema');
   }
 }
 

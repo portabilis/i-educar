@@ -36,7 +36,6 @@ class clsIndexBase extends clsBase {
   public function Formular() {
     $this->SetTitulo($this->_instituicao . ' Servidores - Servidor Afastamento');
     $this->processoAp = '635';
-    $this->addEstilo('localizacaoSistema');
   }
 
 }

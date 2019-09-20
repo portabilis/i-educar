@@ -55,7 +55,6 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Quadro de Horário');
     $this->processoAp = "641";
-    $this->addEstilo('localizacaoSistema');
   }
 }
 

@@ -53,7 +53,6 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' Servidores - Cadastro de Horários');
     $this->processoAp = '641';
-    $this->addEstilo('localizacaoSistema');
   }
 }
 
