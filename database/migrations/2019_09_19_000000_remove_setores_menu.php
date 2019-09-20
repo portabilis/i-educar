@@ -2,6 +2,7 @@
 
 use App\Menu;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class RemoveSetoresMenu extends Migration
 {
@@ -12,6 +13,14 @@ class RemoveSetoresMenu extends Migration
      */
     public function up()
     {
+        DB::unprepared(
+            '
+                DELETE FROM pmieducar.menu_tipo_usuario WHERE menu_id in (
+                    select id from menus where old in (760)
+                );
+            '
+        );
+
         Menu::query()->where('process', 760)->delete();
     }
 
