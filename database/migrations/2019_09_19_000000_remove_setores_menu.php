@@ -32,7 +32,7 @@ class RemoveSetoresMenu extends Migration
     public function down()
     {
         Menu::query()->create([
-            'parent_id' => Menu::query()->where('old', 999930),
+            'parent_id' => Menu::query()->where('old', 999930)->firstOrFail()->getKey(),
             'title' => 'Setores',
             'description' => 'Setores',
             'link' => '/intranet/public_setor_lst.php',
