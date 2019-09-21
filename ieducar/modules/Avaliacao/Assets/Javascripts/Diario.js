@@ -376,13 +376,15 @@ function postNota($notaFieldElement) {
 
     $notaFieldElement.data('old_value', $notaFieldElement.val());
     postResource(options, handleErrorOnPostResource);
+  } else {
+    $j('#' + $notaFieldElement.attr('id')).addClass('error');
   }
 }
 
 function checkIfShowNotaRecuperacaoParalelaField(notaLancada, dataResponse){
   componente_curricular_id = dataResponse.componente_curricular_id;
   matricula_id = dataResponse.matricula_id;
-  $jnotaRecuperacaoParalelaField = $j('#nota-recuperacao-paralela-' + matricula_id + '-cc-' + componente_curricular_id);
+  $jnotaRecuperacaoParalelaField = $j('#nota_recuperacao_paralela-matricula-' + matricula_id + '-cc-' + componente_curricular_id);
 
   if(!$jnotaRecuperacaoParalelaField.length){
     return false;
@@ -436,6 +438,8 @@ function postNotaExame($notaExameFieldElement) {
 
     $notaExameFieldElement.data('old_value', $notaExameFieldElement.val());
     postResource(options, handleErrorOnPostResource);
+  } else {
+    $j('#' + $notaExameFieldElement.attr('id')).addClass('error');
   }
 }
 
@@ -469,6 +473,8 @@ function postNotaRecuperacaoParalela($notaRecuperacaoParalelaElement) {
 
     $notaRecuperacaoParalelaElement.data('old_value', $notaRecuperacaoParalelaElement.val());
     postResource(options, handleErrorOnPostResource);
+  } else {
+    $j('#' + $notaRecuperacaoParalelaElement.attr('id')).addClass('error');
   }
 }
 
@@ -500,6 +506,8 @@ function postNotaRecuperacaoEspecifica($notaRecuperacaoEspecificaElement) {
 
     $notaRecuperacaoEspecificaElement.data('old_value', $notaRecuperacaoEspecificaElement.val());
     postResource(options, handleErrorOnPostResource);
+  } else {
+    $j('#' + $notaRecuperacaoEspecificaElement.attr('id')).addClass('error');
   }
 }
 
@@ -532,6 +540,17 @@ function postFalta($faltaFieldElement) {
 
     $faltaFieldElement.data('old_value', $faltaFieldElement.val());
     postResource(options, handleErrorOnPostResource);
+  } else {
+    $j('#' + $faltaFieldElement.attr('id')).addClass('error');
+
+    var regra = $element.closest('tr').data('regra');
+
+    // se presenca geral, muda o valor em todas faltas da mesma matricula
+    if (regra.tipo_presenca == 'geral') {
+      $j('#' + $faltaFieldElement.attr('id')).closest('table').find('.falta-matricula-' + $element
+        .data('matricula_id') + '-cc')
+        .not($element).addClass('error').removeClass('success');
+    }
   }
 }
 
@@ -594,18 +613,23 @@ function postMedia($mediaElementField) {
     etapa                    : $j('#etapa').val()
   };
 
-  var options = {
-    url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'media', additionalVars),
-    dataType : 'json',
-    data : {att_value : $mediaElementField.val()},
-    success : function(dataResponse) {
-      afterChangeResource($mediaElementField);
-      handleChange(dataResponse);
-    }
-  };
 
-  $mediaElementField.data('old_value', $mediaElementField.val());
-  postResource(options, handleErrorOnPostResource);
+  if (validatesIfValueIsNumeric($mediaElementField.val(), $mediaElementField.attr('id'))) {
+    var options = {
+      url: postResourceUrlBuilder.buildUrl(API_URL_BASE, 'media', additionalVars),
+      dataType: 'json',
+      data: {att_value: $mediaElementField.val()},
+      success: function (dataResponse) {
+        afterChangeResource($mediaElementField);
+        handleChange(dataResponse);
+      }
+    };
+
+    $mediaElementField.data('old_value', $mediaElementField.val());
+    postResource(options, handleErrorOnPostResource);
+  } else {
+    $j('#' + $mediaElementField.attr('id')).addClass('error');
+  }
 }
 
 function deleteMedia($mediaFieldElement){
@@ -775,7 +799,7 @@ function deleteFalta($faltaFieldElement) {
   var ccId = $faltaFieldElement.data('componente_curricular_id');
 
   var $notaField = $j('#nota-matricula-'+ matriculaId + '-cc-' + ccId);
-  var $notaExameField = $j('#nota-exame-matricula-'+ matriculaId + '-cc-' + ccId);
+  var $notaExameField = $j('#nota_exame-matricula-'+ matriculaId + '-cc-' + ccId);
   var $parecerField = $j('#parecer-matricula-'+ matriculaId + '-cc-' + ccId);
 
   if(($notaField.length < 1 || $notaField.val() == '') &&
@@ -804,7 +828,7 @@ function deleteFalta($faltaFieldElement) {
 
     $faltaFieldElement.val($faltaFieldElement.data('old_value'));
 
-    handleMessages([{type : 'error', msg : safeUtf8Decode('Falta não pode ser removida após ter lançado notas ou parecer descritivo, tente definir como 0 (zero).')}], $faltaFieldElement.attr('id'));
+    handleMessagesDiario([{type : 'error', msg : safeUtf8Decode('Falta não pode ser removida após ter lançado notas ou parecer descritivo, tente definir como 0 (zero).')}], $faltaFieldElement.attr('id'));
   }
 }
 
@@ -858,9 +882,52 @@ function handleChange(dataResponse) {
 
   var targetId = dataResponse.resource + '-matricula-' + dataResponse.matricula_id +
                  '-cc-' + componenteCurricularId;
-  handleMessages(dataResponse.msgs, targetId);
+
+  handleMessagesDiario(dataResponse.msgs, targetId);
   updateResourceRow(dataResponse);
 }
+
+var handleMessagesDiario = function(arrayMessage, targetId) {
+  var hasError = false;
+  var hasSuccess = false;
+
+  arrayMessage = $j.map(arrayMessage, function (item, index) {
+    if (item.type == 'success') {
+      hasSuccess = true;
+      return null;
+    }
+
+    if (item.type == 'error') {
+      hasError = true;
+    }
+
+    return item;
+  });
+
+  if (hasSuccess) {
+    $j('#' + targetId).addClass('success');
+    $j('#' + targetId).removeClass('error');
+
+    if (targetId.includes('falta-matricula')) {
+      $j('#' + targetId).closest('table').find('.falta-matricula-' + $element
+        .data('matricula_id') + '-cc')
+        .not($element).addClass('success').removeClass('error');
+    }
+  }
+
+  if (hasError) {
+    $j('#' + targetId).addClass('error');
+    $j('#' + targetId).removeClass('success');
+
+    if (targetId.includes('falta-matricula')) {
+      $j('#' + targetId).closest('table').find('.falta-matricula-' + $element
+        .data('matricula_id') + '-cc')
+        .not($element).addClass('error').removeClass('success');
+    }
+  }
+
+  messageUtils.handleMessages(arrayMessage, targetId);
+};
 
 var regraDiferenciadaId = undefined;
 
@@ -1060,7 +1127,7 @@ function handleSearch($resultTable, dataResponse) {
 
   //set onchange events
   var $notaFields = $resultTable.find('.nota-matricula-cc');
-  var $notaExameFields = $resultTable.find('.nota-exame-matricula-cc');
+  var $notaExameFields = $resultTable.find('.nota_exame-matricula-cc');
   var $faltaFields = $resultTable.find('.falta-matricula-cc');
   var $parecerFields = $resultTable.find('.parecer-matricula-cc');
   var $notaRecuperacaoParalelaFields = $resultTable.find('.nota-recuperacao-paralela-cc');
@@ -1096,6 +1163,7 @@ function handleSearch($resultTable, dataResponse) {
   if ((componenteCurricularSelected) && (showBotaoReplicarNotas))
     criaBotaoReplicarNotas();
 
+  $j('.flashMessages').addClass('msg-diario');
 }
 
 function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaConhecimentoId, maxLength, tipoNota, regra) {
@@ -1200,8 +1268,8 @@ function notaField(matriculaId, componenteCurricularId, value, areaConhecimentoI
 function notaExameField(matriculaId, componenteCurricularId, value, maxLength, tipoNota, regra) {
   return _notaField(matriculaId,
                     componenteCurricularId,
-                    'nota-exame-matricula-cc',
-                    'nota-exame-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
+                    'nota_exame-matricula-cc',
+                    'nota_exame-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
                     value,
                     null,
                     maxLength,
@@ -1270,7 +1338,7 @@ function notaRecuperacaoParalelaField(matriculaId, componenteCurricularId, value
   return _notaField(matriculaId,
                     componenteCurricularId,
                     'nota-recuperacao-paralela-cc',
-                    'nota-recuperacao-paralela-' + matriculaId + '-cc-' + componenteCurricularId,
+                    'nota_recuperacao_paralela-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
                     value,
                     'area-id-' + areaConhecimentoId,
                     maxLength,
@@ -1282,7 +1350,7 @@ function notaRecuperacaoEspecificaField(matriculaId, componenteCurricularId, val
   return _notaField(matriculaId,
                     componenteCurricularId,
                     'nota-recuperacao-especifica-matricula-cc',
-                    'nota-recuperacao-especifica-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
+                    'nota_recuperacao_especifica-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
                     value,
                     'area-id-' + areaConhecimentoId,
                     maxLength,
@@ -1572,8 +1640,8 @@ function updateResourceRow(dataResponse) {
   var ccId            = dataResponse.componente_curricular_id;
 
   var $situacaoField  = $j('#situacao-matricula-' + matriculaId + '-cc-' + ccId);
-  var $fieldNotaExame = $j('#nota-exame-matricula-' + matriculaId + '-cc-' + ccId);
-  var $fieldNotaEspecifica = $j('#nota-recuperacao-especifica-matricula-' + matriculaId + '-cc-' + ccId);
+  var $fieldNotaExame = $j('#nota_exame-matricula-' + matriculaId + '-cc-' + ccId);
+  var $fieldNotaEspecifica = $j('#nota_recuperacao_especifica-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNN = $j('#nn-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldMedia = $j('#media-matricula-' + matriculaId + '-cc-' + ccId);
 
@@ -1756,7 +1824,7 @@ function navegacaoTab(sentido){
         $j(this).attr('tabindex', i);
         i++;
       });
-      $j(document).find('.nota-exame-matricula-cc').each(function(){
+      $j(document).find('.nota_exame-matricula-cc').each(function(){
         $j(this).attr('tabindex', i);
         i++;
       });
@@ -1938,8 +2006,6 @@ function criaBotaoReplicarNotas(){
           }
       }
   };
-
-
 })(jQuery);
 
 function handleLockedMessage() {

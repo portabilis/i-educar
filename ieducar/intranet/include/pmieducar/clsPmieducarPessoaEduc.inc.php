@@ -31,94 +31,19 @@ class clsPmieducarPessoaEduc extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_pessoa_educ, ref_idpes_responsavel, ref_idpais_origem, ref_idmun_natural, ref_usuario_exc, ref_usuario_cad, nome, url, email, data_nascimento, sexo, nacionalidade, data_cadastro, data_exclusao, ativo';
 
         if (is_numeric($ref_idpes_responsavel)) {
-            if (class_exists('clsCadastroFisica')) {
-                $tmp_obj = new clsCadastroFisica($ref_idpes_responsavel);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_idpes_responsavel = $ref_idpes_responsavel;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_idpes_responsavel = $ref_idpes_responsavel;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM cadastro.fisica WHERE idpes = '{$ref_idpes_responsavel}'")) {
                     $this->ref_idpes_responsavel = $ref_idpes_responsavel;
-                }
-            }
         }
         if (is_numeric($ref_idpais_origem)) {
-            if (class_exists('clsPais')) {
-                $tmp_obj = new clsPais($ref_idpais_origem);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_idpais_origem = $ref_idpais_origem;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_idpais_origem = $ref_idpais_origem;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pais WHERE idpais = '{$ref_idpais_origem}'")) {
                     $this->ref_idpais_origem = $ref_idpais_origem;
-                }
-            }
         }
         if (is_numeric($ref_idmun_natural)) {
-            if (class_exists('clsMunicipio')) {
-                $tmp_obj = new clsMunicipio($ref_idmun_natural);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_idmun_natural = $ref_idmun_natural;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_idmun_natural = $ref_idmun_natural;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM municipio WHERE idmun = '{$ref_idmun_natural}'")) {
                     $this->ref_idmun_natural = $ref_idmun_natural;
-                }
-            }
         }
         if (is_numeric($ref_usuario_exc)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_exc);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'")) {
                     $this->ref_usuario_exc = $ref_usuario_exc;
-                }
-            }
         }
         if (is_numeric($ref_usuario_cad)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_cad);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'")) {
                     $this->ref_usuario_cad = $ref_usuario_cad;
-                }
-            }
         }
 
         if (is_numeric($cod_pessoa_educ)) {

@@ -26,78 +26,18 @@ class clsPmieducarCalendarioDia extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_calendario_ano_letivo, mes, dia, ref_usuario_exc, ref_usuario_cad, ref_cod_calendario_dia_motivo, descricao, data_cadastro, data_exclusao, ativo';
 
         if (is_numeric($ref_cod_calendario_dia_motivo)) {
-            if (class_exists('clsPmieducarCalendarioDiaMotivo')) {
-                $tmp_obj = new clsPmieducarCalendarioDiaMotivo($ref_cod_calendario_dia_motivo);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_calendario_dia_motivo = $ref_cod_calendario_dia_motivo;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_calendario_dia_motivo = $ref_cod_calendario_dia_motivo;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.calendario_dia_motivo WHERE cod_calendario_dia_motivo = '{$ref_cod_calendario_dia_motivo}'")) {
                     $this->ref_cod_calendario_dia_motivo = $ref_cod_calendario_dia_motivo;
-                }
-            }
         } elseif ($ref_cod_calendario_dia_motivo = 'NULL') {
             $this->ref_cod_calendario_dia_motivo = $ref_cod_calendario_dia_motivo;
         }
         if (is_numeric($ref_usuario_exc)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_exc);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'")) {
                     $this->ref_usuario_exc = $ref_usuario_exc;
-                }
-            }
         }
         if (is_numeric($ref_usuario_cad)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_cad);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'")) {
                     $this->ref_usuario_cad = $ref_usuario_cad;
-                }
-            }
         }
         if (is_numeric($ref_cod_calendario_ano_letivo)) {
-            if (class_exists('clsPmieducarCalendarioAnoLetivo')) {
-                $tmp_obj = new clsPmieducarCalendarioAnoLetivo($ref_cod_calendario_ano_letivo);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_calendario_ano_letivo = $ref_cod_calendario_ano_letivo;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_calendario_ano_letivo = $ref_cod_calendario_ano_letivo;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.calendario_ano_letivo WHERE cod_calendario_ano_letivo = '{$ref_cod_calendario_ano_letivo}'")) {
                     $this->ref_cod_calendario_ano_letivo = $ref_cod_calendario_ano_letivo;
-                }
-            }
         }
 
         if (is_numeric($mes)) {

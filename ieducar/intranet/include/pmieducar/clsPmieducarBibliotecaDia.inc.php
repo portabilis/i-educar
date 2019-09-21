@@ -18,22 +18,7 @@ class clsPmieducarBibliotecaDia extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_biblioteca, dia';
 
         if (is_numeric($ref_cod_biblioteca)) {
-            if (class_exists('clsPmieducarBiblioteca')) {
-                $tmp_obj = new clsPmieducarBiblioteca($ref_cod_biblioteca);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_biblioteca = $ref_cod_biblioteca;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_biblioteca = $ref_cod_biblioteca;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.biblioteca WHERE cod_biblioteca = '{$ref_cod_biblioteca}'")) {
                     $this->ref_cod_biblioteca = $ref_cod_biblioteca;
-                }
-            }
         }
 
         if (is_numeric($dia)) {

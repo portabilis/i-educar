@@ -133,151 +133,31 @@ class clsPmieducarAcervo extends Model
                                   a.tipo_autor';
 
         if (is_numeric($ref_cod_biblioteca)) {
-            if (class_exists('clsPmieducarBiblioteca')) {
-                $tmp_obj = new clsPmieducarBiblioteca($ref_cod_biblioteca);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_biblioteca = $ref_cod_biblioteca;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_biblioteca = $ref_cod_biblioteca;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.biblioteca WHERE cod_biblioteca = '{$ref_cod_biblioteca}'")) {
                     $this->ref_cod_biblioteca = $ref_cod_biblioteca;
-                }
-            }
         }
         if (is_numeric($ref_cod_exemplar_tipo)) {
-            if (class_exists('clsPmieducarExemplarTipo')) {
-                $tmp_obj = new clsPmieducarExemplarTipo($ref_cod_exemplar_tipo);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_exemplar_tipo = $ref_cod_exemplar_tipo;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_exemplar_tipo = $ref_cod_exemplar_tipo;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.exemplar_tipo WHERE cod_exemplar_tipo = '{$ref_cod_exemplar_tipo}'")) {
                     $this->ref_cod_exemplar_tipo = $ref_cod_exemplar_tipo;
-                }
-            }
         }
         if (is_numeric($ref_cod_acervo)) {
-            if (class_exists('clsPmieducarAcervo')) {
-                $tmp_obj = new clsPmieducarAcervo($ref_cod_acervo);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_acervo = $ref_cod_acervo;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_acervo = $ref_cod_acervo;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.acervo WHERE cod_acervo = '{$ref_cod_acervo}'")) {
                     $this->ref_cod_acervo = $ref_cod_acervo;
-                }
-            }
         } elseif ($ref_cod_acervo == 'NULL') {
             $this->ref_cod_acervo = 'NULL';
         }
 
         if (is_numeric($ref_usuario_cad)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_cad);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'")) {
                     $this->ref_usuario_cad = $ref_usuario_cad;
-                }
-            }
         }
         if (is_numeric($ref_usuario_exc)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_exc);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'")) {
                     $this->ref_usuario_exc = $ref_usuario_exc;
-                }
-            }
         }
         if (is_numeric($ref_cod_acervo_colecao)) {
-            if (class_exists('clsPmieducarAcervoColecao')) {
-                $tmp_obj = new clsPmieducarAcervoColecao($ref_cod_acervo_colecao);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_acervo_colecao = $ref_cod_acervo_colecao;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_acervo_colecao = $ref_cod_acervo_colecao;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.acervo_colecao WHERE cod_acervo_colecao = '{$ref_cod_acervo_colecao}'")) {
                     $this->ref_cod_acervo_colecao = $ref_cod_acervo_colecao;
-                }
-            }
         }
         if (is_numeric($ref_cod_acervo_idioma)) {
-            if (class_exists('clsPmieducarAcervoIdioma')) {
-                $tmp_obj = new clsPmieducarAcervoIdioma($ref_cod_acervo_idioma);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_acervo_idioma = $ref_cod_acervo_idioma;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_acervo_idioma = $ref_cod_acervo_idioma;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.acervo_idioma WHERE cod_acervo_idioma = '{$ref_cod_acervo_idioma}'")) {
                     $this->ref_cod_acervo_idioma = $ref_cod_acervo_idioma;
-                }
-            }
         }
         if (is_numeric($ref_cod_acervo_editora)) {
-            if (class_exists('clsPmieducarAcervoEditora')) {
-                $tmp_obj = new clsPmieducarAcervoEditora($ref_cod_acervo_editora);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_acervo_editora = $ref_cod_acervo_editora;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_acervo_editora = $ref_cod_acervo_editora;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.acervo_editora WHERE cod_acervo_editora = '{$ref_cod_acervo_editora}'")) {
                     $this->ref_cod_acervo_editora = $ref_cod_acervo_editora;
-                }
-            }
         }
 
         if (is_numeric($cod_acervo)) {

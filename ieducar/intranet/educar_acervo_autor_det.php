@@ -50,30 +50,23 @@ class indice extends clsDetalhe
         }
         $obj_permissoes = new clsPermissoes();
         $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-        if( class_exists( "clsPmieducarBiblioteca" ) )
+
+        $obj_ref_cod_biblioteca = new clsPmieducarBiblioteca( $registro["ref_cod_biblioteca"] );
+        $det_ref_cod_biblioteca = $obj_ref_cod_biblioteca->detalhe();
+        $registro["ref_cod_biblioteca"] = $det_ref_cod_biblioteca["nm_biblioteca"];
+        $registro["ref_cod_instituicao"] = $det_ref_cod_biblioteca["ref_cod_instituicao"];
+        $registro["ref_cod_escola"] = $det_ref_cod_biblioteca["ref_cod_escola"];
+        if( $registro["ref_cod_instituicao"] )
         {
-            $obj_ref_cod_biblioteca = new clsPmieducarBiblioteca( $registro["ref_cod_biblioteca"] );
-            $det_ref_cod_biblioteca = $obj_ref_cod_biblioteca->detalhe();
-            $registro["ref_cod_biblioteca"] = $det_ref_cod_biblioteca["nm_biblioteca"];
-            $registro["ref_cod_instituicao"] = $det_ref_cod_biblioteca["ref_cod_instituicao"];
-            $registro["ref_cod_escola"] = $det_ref_cod_biblioteca["ref_cod_escola"];
-            if( $registro["ref_cod_instituicao"] )
-            {
-                $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-                $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-                $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
-            }
-            if( $registro["ref_cod_escola"] )
-            {
-                $obj_ref_cod_escola = new clsPmieducarEscola();
-                $det_ref_cod_escola = array_shift($obj_ref_cod_escola->lista($registro["ref_cod_escola"]));
-                $registro["ref_cod_escola"] = $det_ref_cod_escola["nome"];
-            }
+            $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
+            $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
+            $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
         }
-        else
+        if( $registro["ref_cod_escola"] )
         {
-            $registro["ref_cod_biblioteca"] = "Erro na gera&ccedil;&atilde;o";
-            echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarBiblioteca\n-->";
+            $obj_ref_cod_escola = new clsPmieducarEscola();
+            $det_ref_cod_escola = array_shift($obj_ref_cod_escola->lista($registro["ref_cod_escola"]));
+            $registro["ref_cod_escola"] = $det_ref_cod_escola["nome"];
         }
 
         if( $registro["ref_cod_instituicao"] && $nivel_usuario == 1)

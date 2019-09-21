@@ -69,7 +69,7 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $lista_busca = array(
             "Cliente",
@@ -96,8 +96,6 @@ class indice extends clsListagem
         $parametros->setPessoaEditar( 'N' );
         $parametros->setPessoaNovo( 'N' );
         $this->campoListaPesq( "ref_idpes", "Cliente", $opcoes, $this->ref_idpes, "pesquisa_pessoa_lst.php", "", false, "", "", null, null, "", false, $parametros->serializaCampos() );
-
-        //$this->campoLista( "status", "Status", array( '' => "Selecione", 'R' => "Regular", 'S' => "Suspenso" ), $this->status, "", false, "", "", false, false );
 
         // Paginador
         $this->limite = 20;
@@ -134,14 +132,9 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
-
-                // pega detalhes de foreign_keys
-                if( class_exists( "clsPmieducarBiblioteca" ) )
-                {
                     $obj_ref_cod_biblioteca = new clsPmieducarBiblioteca( $registro["cod_biblioteca"] );
                     $det_ref_cod_biblioteca = $obj_ref_cod_biblioteca->detalhe();
                     $registro["cod_biblioteca"] = $det_ref_cod_biblioteca["nm_biblioteca"];
-                }
                 if( $registro["cod_instituicao"] )
                 {
                     $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["cod_instituicao"] );

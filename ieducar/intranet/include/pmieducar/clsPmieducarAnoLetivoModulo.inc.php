@@ -37,44 +37,12 @@ class clsPmieducarAnoLetivoModulo extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_ano, ref_ref_cod_escola, sequencial, ref_cod_modulo, data_inicio, data_fim, dias_letivos';
 
         if (is_numeric($ref_cod_modulo)) {
-            if (class_exists('clsPmieducarModulo')) {
-                $tmp_obj = new clsPmieducarModulo($ref_cod_modulo);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_modulo = $ref_cod_modulo;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_modulo = $ref_cod_modulo;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.modulo WHERE cod_modulo = '{$ref_cod_modulo}'")) {
                     $this->ref_cod_modulo = $ref_cod_modulo;
-                }
-            }
         }
 
         if (is_numeric($ref_ref_cod_escola) && is_numeric($ref_ano)) {
-            if (class_exists('clsPmieducarEscolaAnoLetivo')) {
-                $tmp_obj = new clsPmieducarEscolaAnoLetivo($ref_ref_cod_escola, $ref_ano);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_ref_cod_escola = $ref_ref_cod_escola;
-                        $this->ref_ano = $ref_ano;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_ref_cod_escola = $ref_ref_cod_escola;
-                        $this->ref_ano = $ref_ano;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.escola_ano_letivo WHERE ref_cod_escola = '{$ref_ref_cod_escola}' AND ano = '{$ref_ano}'")) {
                     $this->ref_ref_cod_escola = $ref_ref_cod_escola;
                     $this->ref_ano = $ref_ano;
-                }
-            }
         }
 
         if (is_numeric($sequencial)) {

@@ -123,30 +123,13 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
+                $obj_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
+                $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
+                $registro["ref_cod_instituicao"] = $obj_cod_instituicao_det["nm_instituicao"];
 
-                // pega detalhes de foreign_keys
-                if( class_exists( "clsPmieducarInstituicao" ) )
-                {
-                    $obj_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-                    $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
-                    $registro["ref_cod_instituicao"] = $obj_cod_instituicao_det["nm_instituicao"];
-                }
-                else
-                {
-                    $registro["ref_cod_instituicao"] = "Erro na gera&ccedil;&atilde;o";
-                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
-                }
-                if( class_exists( "clsPmieducarEscola" ) )
-                {
-                    $obj_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
-                    $obj_cod_escola_det = $obj_cod_escola->detalhe();
-                    $registro["ref_cod_escola"] = $obj_cod_escola_det["nome"];
-                }
-                else
-                {
-                    $registro["ref_cod_escola"] = "Erro na gera&ccedil;&atilde;o";
-                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
-                }
+                $obj_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
+                $obj_cod_escola_det = $obj_cod_escola->detalhe();
+                $registro["ref_cod_escola"] = $obj_cod_escola_det["nome"];
 
                 if ($registro["tipo"] == 'e')
                 {

@@ -56,50 +56,21 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_infra_predio_comodo_lst.php');
         }
 
-        if( class_exists( "clsPmieducarInfraComodoFuncao" ) )
-        {
-            $obj_ref_cod_infra_comodo_funcao = new clsPmieducarInfraComodoFuncao( $registro["ref_cod_infra_comodo_funcao"] );
-            $det_ref_cod_infra_comodo_funcao = $obj_ref_cod_infra_comodo_funcao->detalhe();
-            $registro["ref_cod_infra_comodo_funcao"] = $det_ref_cod_infra_comodo_funcao["nm_funcao"];
-        }
-        else
-        {
-            $registro["ref_cod_infra_comodo_funcao"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarInfraComodoFuncao\n-->";
-        }
-        if( class_exists( "clsPmieducarInfraPredio" ) )
-        {
-            $obj_ref_cod_infra_predio = new clsPmieducarInfraPredio( $registro["ref_cod_infra_predio"] );
-            $det_ref_cod_infra_predio = $obj_ref_cod_infra_predio->detalhe();
-            $registro["ref_cod_infra_predio"] = $det_ref_cod_infra_predio["nm_predio"];
-        }
-        else
-        {
-            $registro["ref_cod_infra_predio"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarInfraPredio\n-->";
-        }
-        if( class_exists( "clsPmieducarInstituicao" ) )
-        {
-            $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-            $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-            $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
-        }
-        else
-        {
-            $registro["ref_cod_escola"] = "Erro na gera&ccedil;&atilde;o";
-            echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
-        }
-        if( class_exists( "clsPmieducarEscola" ) )
-        {
-            $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
-            $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-            $nm_escola = $det_ref_cod_escola["nome"];
-        }
-        else
-        {
-            $registro["ref_cod_escola"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarEscola\n-->";
-        }
+        $obj_ref_cod_infra_comodo_funcao = new clsPmieducarInfraComodoFuncao( $registro["ref_cod_infra_comodo_funcao"] );
+        $det_ref_cod_infra_comodo_funcao = $obj_ref_cod_infra_comodo_funcao->detalhe();
+        $registro["ref_cod_infra_comodo_funcao"] = $det_ref_cod_infra_comodo_funcao["nm_funcao"];
+
+        $obj_ref_cod_infra_predio = new clsPmieducarInfraPredio( $registro["ref_cod_infra_predio"] );
+        $det_ref_cod_infra_predio = $obj_ref_cod_infra_predio->detalhe();
+        $registro["ref_cod_infra_predio"] = $det_ref_cod_infra_predio["nm_predio"];
+
+        $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
+        $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
+        $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
+
+        $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
+        $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+        $nm_escola = $det_ref_cod_escola["nome"];
 
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);

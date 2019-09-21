@@ -28,76 +28,16 @@ class clsPmieducarInfraPredioComodo extends Model
         $this->_campos_lista = $this->_todos_campos = 'ipc.cod_infra_predio_comodo, ipc.ref_usuario_exc, ipc.ref_usuario_cad, ipc.ref_cod_infra_comodo_funcao, ipc.ref_cod_infra_predio, ipc.nm_comodo, ipc.desc_comodo, ipc.area, ipc.data_cadastro, ipc.data_exclusao, ipc.ativo';
 
         if (is_numeric($ref_cod_infra_comodo_funcao)) {
-            if (class_exists('clsPmieducarInfraComodoFuncao')) {
-                $tmp_obj = new clsPmieducarInfraComodoFuncao($ref_cod_infra_comodo_funcao);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_infra_comodo_funcao = $ref_cod_infra_comodo_funcao;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_infra_comodo_funcao = $ref_cod_infra_comodo_funcao;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.infra_comodo_funcao WHERE cod_infra_comodo_funcao = '{$ref_cod_infra_comodo_funcao}'")) {
                     $this->ref_cod_infra_comodo_funcao = $ref_cod_infra_comodo_funcao;
-                }
-            }
         }
         if (is_numeric($ref_usuario_exc)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_exc);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'")) {
                     $this->ref_usuario_exc = $ref_usuario_exc;
-                }
-            }
         }
         if (is_numeric($ref_usuario_cad)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_cad);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'")) {
                     $this->ref_usuario_cad = $ref_usuario_cad;
-                }
-            }
         }
         if (is_numeric($ref_cod_infra_predio)) {
-            if (class_exists('clsPmieducarInfraPredio')) {
-                $tmp_obj = new clsPmieducarInfraPredio($ref_cod_infra_predio);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_infra_predio = $ref_cod_infra_predio;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_infra_predio = $ref_cod_infra_predio;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.infra_predio WHERE cod_infra_predio = '{$ref_cod_infra_predio}'")) {
                     $this->ref_cod_infra_predio = $ref_cod_infra_predio;
-                }
-            }
         }
 
         if (is_numeric($cod_infra_predio_comodo)) {

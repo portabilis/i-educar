@@ -4,7 +4,6 @@
   margin: 0 auto;
   max-height: 100vh;
   overflow-y: auto;
-  pointer-events: none;
   position: fixed;
   right: 0;
   top: 0;
@@ -94,4 +93,9 @@
   font-size: 10px;
   font-weight: bold;
   margin-bottom: 4px;
+}
+
+.msg-diario.flashMessages {
+  width: 400px;
+  left: auto;
 }

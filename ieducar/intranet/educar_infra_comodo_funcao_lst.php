@@ -114,28 +114,13 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
-                if( class_exists( "clsPmieducarEscola" ) )
-                {
-                    $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
-                    $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-                    $nm_escola = $det_ref_cod_escola["nome"];
-                }
-                else
-                {
-                    $registro["ref_cod_escola"] = "Erro na gera&ccedil;&atilde;o";
-                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
-                }
-                if( class_exists( "clsPmieducarInstituicao" ) )
-                {
-                    $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-                    $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-                    $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
-                }
-                else
-                {
-                    $registro["ref_cod_escola"] = "Erro na gera&ccedil;&atilde;o";
-                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
-                }
+                $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
+                $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+                $nm_escola = $det_ref_cod_escola["nome"];
+
+                $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
+                $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
+                $registro["ref_cod_instituicao"] = $det_ref_cod_instituicao["nm_instituicao"];
 
                 $lista_busca = array(
                     "<a href=\"educar_infra_comodo_funcao_det.php?cod_infra_comodo_funcao={$registro["cod_infra_comodo_funcao"]}\">{$registro["nm_funcao"]}</a>"

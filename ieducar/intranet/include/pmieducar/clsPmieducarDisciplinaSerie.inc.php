@@ -19,40 +19,10 @@ class clsPmieducarDisciplinaSerie extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_disciplina, ref_cod_serie, ativo';
 
         if (is_numeric($ref_cod_serie)) {
-            if (class_exists('clsPmieducarSerie')) {
-                $tmp_obj = new clsPmieducarSerie($ref_cod_serie);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_serie = $ref_cod_serie;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_serie = $ref_cod_serie;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.serie WHERE cod_serie = '{$ref_cod_serie}'")) {
                     $this->ref_cod_serie = $ref_cod_serie;
-                }
-            }
         }
         if (is_numeric($ref_cod_disciplina)) {
-            if (class_exists('clsPmieducarDisciplina')) {
-                $tmp_obj = new clsPmieducarDisciplina($ref_cod_disciplina);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_disciplina = $ref_cod_disciplina;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_disciplina = $ref_cod_disciplina;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.disciplina WHERE cod_disciplina = '{$ref_cod_disciplina}'")) {
                     $this->ref_cod_disciplina = $ref_cod_disciplina;
-                }
-            }
         }
 
         if (is_numeric($ativo)) {

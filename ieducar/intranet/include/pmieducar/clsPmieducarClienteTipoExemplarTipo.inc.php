@@ -19,40 +19,10 @@ class clsPmieducarClienteTipoExemplarTipo extends Model
         $this->_campos_lista = $this->_todos_campos = 'ctet.ref_cod_cliente_tipo, ctet.ref_cod_exemplar_tipo, ctet.dias_emprestimo';
 
         if (is_numeric($ref_cod_exemplar_tipo)) {
-            if (class_exists('clsPmieducarExemplarTipo')) {
-                $tmp_obj = new clsPmieducarExemplarTipo($ref_cod_exemplar_tipo);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_exemplar_tipo = $ref_cod_exemplar_tipo;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_exemplar_tipo = $ref_cod_exemplar_tipo;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.exemplar_tipo WHERE cod_exemplar_tipo = '{$ref_cod_exemplar_tipo}'")) {
                     $this->ref_cod_exemplar_tipo = $ref_cod_exemplar_tipo;
-                }
-            }
         }
         if (is_numeric($ref_cod_cliente_tipo)) {
-            if (class_exists('clsPmieducarClienteTipo')) {
-                $tmp_obj = new clsPmieducarClienteTipo($ref_cod_cliente_tipo);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_cliente_tipo = $ref_cod_cliente_tipo;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_cliente_tipo = $ref_cod_cliente_tipo;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.cliente_tipo WHERE cod_cliente_tipo = '{$ref_cod_cliente_tipo}'")) {
                     $this->ref_cod_cliente_tipo = $ref_cod_cliente_tipo;
-                }
-            }
         }
 
         if (is_numeric($dias_emprestimo)) {

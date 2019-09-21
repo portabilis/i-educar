@@ -113,31 +113,13 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
-                // pega detalhes de foreign_keys
-                if( class_exists( "clsPessoa_" ) )
-                {
-                    $obj_cod_servidor = new clsPessoa_( $registro["ref_cod_servidor"] );
-                    $det_cod_servidor = $obj_cod_servidor->detalhe();
-                    $nm_servidor = $det_cod_servidor["nome"];
-                }
-                else
-                {
-                    $nm_servidor = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPessoa_\n-->";
-                }
+                $obj_cod_servidor = new clsPessoa_( $registro["ref_cod_servidor"] );
+                $det_cod_servidor = $obj_cod_servidor->detalhe();
+                $nm_servidor = $det_cod_servidor["nome"];
 
-                if( class_exists( "clsPmieducarInstituicao" ) )
-                {
-                    $obj_instituicao = new clsPmieducarInstituicao( $registro["ref_ref_cod_instituicao"] );
-                    $det_instituicao = $obj_instituicao->detalhe();
-                    $nm_instituicao = $det_instituicao["nm_instituicao"];
-                }
-                else
-                {
-                    $nm_instituicao = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarInstituicao\n-->";
-                }
-
+                $obj_instituicao = new clsPmieducarInstituicao( $registro["ref_ref_cod_instituicao"] );
+                $det_instituicao = $obj_instituicao->detalhe();
+                $nm_instituicao = $det_instituicao["nm_instituicao"];
 
                 $lista_busca = array(
                     "<a href=\"educar_avaliacao_desempenho_det.php?sequencial={$registro["sequencial"]}&ref_cod_servidor={$registro["ref_cod_servidor"]}&ref_ref_cod_instituicao={$registro["ref_ref_cod_instituicao"]}\">{$registro["titulo_avaliacao"]}</a>",

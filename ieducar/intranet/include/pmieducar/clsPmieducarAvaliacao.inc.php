@@ -29,67 +29,16 @@ class clsPmieducarAvaliacao extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_avaliacao, disc_ref_ref_cod_serie, disc_ref_ref_cod_escola, disc_ref_ref_cod_disciplina, disc_ref_ref_cod_turma, ref_usuario_exc, ref_usuario_cad, titulo, descricao, aplicada, data_cadastro, data_exclusao, ativo';
 
         if (is_numeric($ref_usuario_exc)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_exc);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'")) {
                     $this->ref_usuario_exc = $ref_usuario_exc;
-                }
-            }
         }
         if (is_numeric($ref_usuario_cad)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_cad);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'")) {
                     $this->ref_usuario_cad = $ref_usuario_cad;
-                }
-            }
         }
         if (is_numeric($disc_ref_ref_cod_turma) && is_numeric($disc_ref_ref_cod_disciplina) && is_numeric($disc_ref_ref_cod_escola) && is_numeric($disc_ref_ref_cod_serie)) {
-            if (class_exists('clsPmieducarTurmaDisciplina')) {
-                $tmp_obj = new clsPmieducarTurmaDisciplina($disc_ref_ref_cod_turma, $disc_ref_ref_cod_disciplina, $disc_ref_ref_cod_escola, $disc_ref_ref_cod_serie);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->disc_ref_ref_cod_turma = $disc_ref_ref_cod_turma;
-                        $this->disc_ref_ref_cod_disciplina = $disc_ref_ref_cod_disciplina;
-                        $this->disc_ref_ref_cod_escola = $disc_ref_ref_cod_escola;
-                        $this->disc_ref_ref_cod_serie = $disc_ref_ref_cod_serie;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->disc_ref_ref_cod_turma = $disc_ref_ref_cod_turma;
-                        $this->disc_ref_ref_cod_disciplina = $disc_ref_ref_cod_disciplina;
-                        $this->disc_ref_ref_cod_escola = $disc_ref_ref_cod_escola;
-                        $this->disc_ref_ref_cod_serie = $disc_ref_ref_cod_serie;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.turma_disciplina WHERE ref_cod_turma = '{$disc_ref_ref_cod_turma}' AND ref_cod_disciplina = '{$disc_ref_ref_cod_disciplina}' AND ref_cod_escola = '{$disc_ref_ref_cod_escola}' AND ref_cod_serie = '{$disc_ref_ref_cod_serie}'")) {
                     $this->disc_ref_ref_cod_turma = $disc_ref_ref_cod_turma;
                     $this->disc_ref_ref_cod_disciplina = $disc_ref_ref_cod_disciplina;
                     $this->disc_ref_ref_cod_escola = $disc_ref_ref_cod_escola;
                     $this->disc_ref_ref_cod_serie = $disc_ref_ref_cod_serie;
-                }
-            }
         }
 
         if (is_numeric($cod_avaliacao)) {

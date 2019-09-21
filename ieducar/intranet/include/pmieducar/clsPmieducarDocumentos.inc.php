@@ -30,76 +30,16 @@ class clsPmieducarDocumentos extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_pessoa_educ, ref_idorg_rg, sigla_uf_cert_civil, sigla_uf_exp_rg, rg, data_expedicao_rg, num_titulo_eleitor, zona_titulo_eleitor, secao_titulo_eleitor, tipo_certidao_civil, num_termo, num_folha, num_livro, data_emissao_certidao_civil';
 
         if (is_numeric($ref_idorg_rg)) {
-            if (class_exists('clsCadastroOrgaoEmissorRg')) {
-                $tmp_obj = new clsCadastroOrgaoEmissorRg($ref_idorg_rg);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_idorg_rg = $ref_idorg_rg;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_idorg_rg = $ref_idorg_rg;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM cadastro.orgao_emissor_rg WHERE idorg_rg = '{$ref_idorg_rg}'")) {
                     $this->ref_idorg_rg = $ref_idorg_rg;
-                }
-            }
         }
         if (is_string($sigla_uf_cert_civil)) {
-            if (class_exists('clsUf')) {
-                $tmp_obj = new clsUf($sigla_uf_cert_civil);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->sigla_uf_cert_civil = $sigla_uf_cert_civil;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->sigla_uf_cert_civil = $sigla_uf_cert_civil;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM uf WHERE sigla_uf = '{$sigla_uf_cert_civil}'")) {
                     $this->sigla_uf_cert_civil = $sigla_uf_cert_civil;
-                }
-            }
         }
         if (is_string($sigla_uf_exp_rg)) {
-            if (class_exists('clsUf')) {
-                $tmp_obj = new clsUf($sigla_uf_exp_rg);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->sigla_uf_exp_rg = $sigla_uf_exp_rg;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->sigla_uf_exp_rg = $sigla_uf_exp_rg;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM uf WHERE sigla_uf = '{$sigla_uf_exp_rg}'")) {
                     $this->sigla_uf_exp_rg = $sigla_uf_exp_rg;
-                }
-            }
         }
         if (is_numeric($ref_cod_pessoa_educ)) {
-            if (class_exists('clsPmieducarPessoaEduc')) {
-                $tmp_obj = new clsPmieducarPessoaEduc($ref_cod_pessoa_educ);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_pessoa_educ = $ref_cod_pessoa_educ;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_pessoa_educ = $ref_cod_pessoa_educ;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.pessoa_educ WHERE cod_pessoa_educ = '{$ref_cod_pessoa_educ}'")) {
                     $this->ref_cod_pessoa_educ = $ref_cod_pessoa_educ;
-                }
-            }
         }
 
         if (is_numeric($rg)) {

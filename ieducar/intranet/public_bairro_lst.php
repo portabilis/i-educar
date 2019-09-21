@@ -232,9 +232,9 @@ class indice extends clsListagem
         $obj_permissao = new clsPermissoes();
 
         if ($obj_permissao->permissao_cadastra(756, $this->pessoa_logada, 7, null, true)) {
-            $this->acao = 'go("public_bairro_cad.php")';
-            $this->nome_acao = 'Novo';
-        }
+      $this->acao      = 'go("public_bairro_cad.php")';
+      $this->nome_acao = 'Novo';
+    }
 
         $this->largura = '100%';
 

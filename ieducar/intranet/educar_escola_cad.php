@@ -619,27 +619,23 @@ class indice extends clsCadastro
                 }
 
                 $opcoes = array("" => "Selecione");
-                if (class_exists("clsPmieducarEscolaRedeEnsino")) {
-                    // EDITAR
-                    $script = "javascript:showExpansivelIframe(520, 120, 'educar_escola_rede_ensino_cad_pop.php');";
 
-                    if ($this->ref_cod_instituicao) {
-                        $objTemp = new clsPmieducarEscolaRedeEnsino();
-                        $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
+                // EDITAR
+                $script = "javascript:showExpansivelIframe(520, 120, 'educar_escola_rede_ensino_cad_pop.php');";
 
-                        if (is_array($lista) && count($lista)) {
-                            foreach ($lista as $registro) {
-                                $opcoes["{$registro['cod_escola_rede_ensino']}"] = "{$registro['nm_rede']}";
-                            }
+                if ($this->ref_cod_instituicao) {
+                    $objTemp = new clsPmieducarEscolaRedeEnsino();
+                    $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
+
+                    if (is_array($lista) && count($lista)) {
+                        foreach ($lista as $registro) {
+                            $opcoes["{$registro['cod_escola_rede_ensino']}"] = "{$registro['nm_rede']}";
                         }
-
-                        $script = "<img id='img_rede_ensino' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-                    } else {
-                        $script = "<img id='img_rede_ensino' style='display: none;'  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
                     }
+
+                    $script = "<img id='img_rede_ensino' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
                 } else {
-                    echo "<!--\nErro\nClasse clsPmieducarEscolaRedeEnsino nao encontrada\n-->";
-                    $opcoes = array("" => "Erro na geracao");
+                    $script = "<img id='img_rede_ensino' style='display: none;'  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
                 }
 
                 $this->campoLista("ref_cod_escola_rede_ensino", "Rede Ensino", $opcoes, $this->ref_cod_escola_rede_ensino, "", false, "", $script);
@@ -728,26 +724,22 @@ class indice extends clsCadastro
                 }
 
                 $opcoes = array("" => "Selecione");
-                if (class_exists("clsPmieducarEscolaRedeEnsino")) {
-                    // EDITAR
-                    $script = "javascript:showExpansivelIframe(520, 120, 'educar_escola_rede_ensino_cad_pop.php');";
-                    if ($this->ref_cod_instituicao) {
-                        $objTemp = new clsPmieducarEscolaRedeEnsino();
-                        $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
 
-                        if (is_array($lista) && count($lista)) {
-                            foreach ($lista as $registro) {
-                                $opcoes["{$registro['cod_escola_rede_ensino']}"] = "{$registro['nm_rede']}";
-                            }
+                // EDITAR
+                $script = "javascript:showExpansivelIframe(520, 120, 'educar_escola_rede_ensino_cad_pop.php');";
+                if ($this->ref_cod_instituicao) {
+                    $objTemp = new clsPmieducarEscolaRedeEnsino();
+                    $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
+
+                    if (is_array($lista) && count($lista)) {
+                        foreach ($lista as $registro) {
+                            $opcoes["{$registro['cod_escola_rede_ensino']}"] = "{$registro['nm_rede']}";
                         }
-
-                        $script = "<img id='img_rede_ensino' style='display:\'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-                    } else {
-                        $script = "<img id='img_rede_ensino' style='display: none;'  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
                     }
+
+                    $script = "<img id='img_rede_ensino' style='display:\'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
                 } else {
-                    echo "<!--\nErro\nClasse clsPmieducarEscolaRedeEnsino nao encontrada\n-->";
-                    $opcoes = array("" => "Erro na geracao");
+                    $script = "<img id='img_rede_ensino' style='display: none;'  src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
                 }
 
                 $this->campoLista("ref_cod_escola_rede_ensino", "Rede Ensino", $opcoes, $this->ref_cod_escola_rede_ensino, "", false, "", $script);
@@ -1059,22 +1051,17 @@ class indice extends clsCadastro
             $this->campoOculto("escola_curso_anos_letivos", serialize($this->escola_curso_anos_letivos));
             $opcoes = array("" => "Selecione");
 
-            if (class_exists("clsPmieducarCurso")) {
-                // EDITAR
-                if ($this->cod_escola || $this->ref_cod_instituicao) {
-                    $objTemp = new clsPmieducarCurso();
-                    $objTemp->setOrderby("nm_curso");
-                    $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_instituicao);
+            // EDITAR
+            if ($this->cod_escola || $this->ref_cod_instituicao) {
+                $objTemp = new clsPmieducarCurso();
+                $objTemp->setOrderby("nm_curso");
+                $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1, null, $this->ref_cod_instituicao);
 
-                    if (is_array($lista) && count($lista)) {
-                        foreach ($lista as $registro) {
-                            $opcoes["{$registro['cod_curso']}"] = "{$registro['nm_curso']}";
-                        }
+                if (is_array($lista) && count($lista)) {
+                    foreach ($lista as $registro) {
+                        $opcoes["{$registro['cod_curso']}"] = "{$registro['nm_curso']}";
                     }
                 }
-            } else {
-                echo "<!--\nErro\nClasse clsPmieducarCurso não encontrada\n-->";
-                $opcoes = array("" => "Erro na geração");
             }
 
             if ($aux) {

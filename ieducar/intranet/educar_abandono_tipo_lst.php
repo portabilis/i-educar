@@ -134,17 +134,9 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
-                if( class_exists( "clsPmieducarInstituicao" ) )
-                {
-                    $obj_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-                    $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
-                    $registro["ref_cod_instituicao"] = $obj_cod_instituicao_det["nm_instituicao"];
-                }
-                else
-                {
-                    $registro["ref_cod_instituicao"] = "Erro na gera&ccedil;&atilde;o";
-                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
-                }
+                $obj_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
+                $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
+                $registro["ref_cod_instituicao"] = $obj_cod_instituicao_det["nm_instituicao"];
 
                 $lista_busca = array(
                     "<a href=\"educar_abandono_tipo_det.php?cod_abandono_tipo={$registro["cod_abandono_tipo"]}\">{$registro["nome"]}</a>"

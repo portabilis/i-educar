@@ -88,22 +88,15 @@ class indice extends clsListagem
 
         // Filtros de Foreign Keys
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsUf" ) )
+
+        $objTemp = new clsUf();
+        $lista = $objTemp->lista();
+        if ( is_array( $lista ) && count( $lista ) )
         {
-            $objTemp = new clsUf();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
+            foreach ( $lista as $registro )
             {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['sigla_uf']}"] = "{$registro['nome']}";
-                }
+                $opcoes["{$registro['sigla_uf']}"] = "{$registro['nome']}";
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsUf n&atilde;o encontrada\n-->";
-            $opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
         }
 
         $this->campoLista( "ref_sigla_uf", "Estado", $opcoes, $this->ref_sigla_uf, null,null,null,null,null,false );
@@ -154,17 +147,10 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
-                if( class_exists( "clsUf" ) )
-                {
-                    $obj_ref_sigla_uf = new clsUf( $registro["ref_sigla_uf"] );
-                    $det_ref_sigla_uf = $obj_ref_sigla_uf->detalhe();
-                    $registro["ref_sigla_uf"] = $det_ref_sigla_uf["nome"];
-                }
-                else
-                {
-                    $registro["ref_sigla_uf"] = "Erro na gera&ccedil;&atilde;o";
-                    echo "<!--\nErro\nClasse n&atilde;o existente: clsUf\n-->";
-                }
+                $obj_ref_sigla_uf = new clsUf( $registro["ref_sigla_uf"] );
+                $det_ref_sigla_uf = $obj_ref_sigla_uf->detalhe();
+                $registro["ref_sigla_uf"] = $det_ref_sigla_uf["nome"];
+
                 $obj_biblioteca = new clsPmieducarBiblioteca($registro['ref_cod_biblioteca']);
                 $det_biblioteca = $obj_biblioteca->detalhe();
                 $registro['ref_cod_biblioteca'] = $det_biblioteca['nm_biblioteca'];

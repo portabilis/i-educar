@@ -139,35 +139,29 @@ class indice extends clsCadastro
 
         // foreign keys
         $opcoes = ['' => 'Selecione'];
-        if (class_exists('clsTipoLogradouro')) {
-            $objTemp = new clsTipoLogradouro();
-            $lista = $objTemp->lista();
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes["{$registro['idtlog']}"] = "{$registro['descricao']}";
-                }
+
+        $objTemp = new clsTipoLogradouro();
+        $lista = $objTemp->lista();
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $opcoes["{$registro['idtlog']}"] = "{$registro['descricao']}";
             }
-        } else {
-            echo "<!--\nErro\nClasse clsUrbanoTipoLogradouro nao encontrada\n-->";
-            $opcoes = ['' => 'Erro na geracao'];
         }
+
         $this->campoLista('ref_idtlog', 'Tipo do Logradouro', $opcoes, $this->ref_idtlog, '', false, '', '', false, true);
 
         // foreign keys
         $opcoes = ['' => 'Selecione'];
-        if (class_exists('clsUf')) {
-            $objTemp = new clsUf();
-            $lista = $objTemp->lista();
-            if (is_array($lista) && count($lista)) {
-                asort($lista);
-                foreach ($lista as $registro) {
-                    $opcoes["{$registro['sigla_uf']}"] = "{$registro['sigla_uf']}";
-                }
+
+        $objTemp = new clsUf();
+        $lista = $objTemp->lista();
+        if (is_array($lista) && count($lista)) {
+            asort($lista);
+            foreach ($lista as $registro) {
+                $opcoes["{$registro['sigla_uf']}"] = "{$registro['sigla_uf']}";
             }
-        } else {
-            echo "<!--\nErro\nClasse clsUf nao encontrada\n-->";
-            $opcoes = ['' => 'Erro na geracao'];
         }
+
         $this->campoLista('ref_sigla_uf', 'UF', $opcoes, $this->ref_sigla_uf, '', false, '', '', false, true);
 
         $this->campoNumero('numero', 'Número', $this->numero, 6, 6);

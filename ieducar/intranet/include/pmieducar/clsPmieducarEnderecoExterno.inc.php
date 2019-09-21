@@ -29,40 +29,10 @@ class clsPmieducarEnderecoExterno extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_pessoa_educ, ref_sigla_uf, ref_idtlog, logradouro, numero, complemento, letra, bairro, cep, cidade, andar, bloco, apartamento';
 
         if (is_string($ref_idtlog)) {
-            if (class_exists('clsUrbanoTipoLogradouro')) {
-                $tmp_obj = new clsUrbanoTipoLogradouro($ref_idtlog);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_idtlog = $ref_idtlog;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_idtlog = $ref_idtlog;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM urbano.tipo_logradouro WHERE idtlog = '{$ref_idtlog}'")) {
                     $this->ref_idtlog = $ref_idtlog;
-                }
-            }
         }
         if (is_numeric($ref_cod_pessoa_educ)) {
-            if (class_exists('clsPmieducarPessoaEduc')) {
-                $tmp_obj = new clsPmieducarPessoaEduc($ref_cod_pessoa_educ);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_pessoa_educ = $ref_cod_pessoa_educ;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_pessoa_educ = $ref_cod_pessoa_educ;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.pessoa_educ WHERE cod_pessoa_educ = '{$ref_cod_pessoa_educ}'")) {
                     $this->ref_cod_pessoa_educ = $ref_cod_pessoa_educ;
-                }
-            }
         }
 
         if (is_string($ref_sigla_uf)) {

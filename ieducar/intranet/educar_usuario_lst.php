@@ -37,18 +37,13 @@ class indice extends clsListagem
 
         $opcoes = ['' => 'Selecione'];
 
-        if (class_exists('clsPmieducarTipoUsuario')) {
-            $objTemp = new clsPmieducarTipoUsuario();
-            $objTemp->setOrderby('nm_tipo ASC');
-            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1);
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes["{$registro['cod_tipo_usuario']}"] = "{$registro['nm_tipo']}";
-                }
+        $objTemp = new clsPmieducarTipoUsuario();
+        $objTemp->setOrderby('nm_tipo ASC');
+        $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1);
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $opcoes["{$registro['cod_tipo_usuario']}"] = "{$registro['nm_tipo']}";
             }
-        } else {
-            echo "<!--\nErro\nClasse clsPmieducarTipoUsuario n&atilde;o encontrada\n-->";
-            $opcoes = ['' => 'Erro na gera&ccedil;&atilde;o'];
         }
 
         $this->campoLista('ref_cod_tipo_usuario', 'Tipo Usu&aacute;rio', $opcoes, $this->ref_cod_tipo_usuario, null, null, null, null, null, false);

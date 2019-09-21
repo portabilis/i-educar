@@ -134,17 +134,9 @@ class indice extends clsListagem
 
                 $registro["professor"] = $registro["professor"] == 1 ? "Sim" : "N&atilde;o";
 
-                if( class_exists( "clsPmieducarInstituicao" ) )
-                {
-                    $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-                    $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-                    $nm_instituicao = $det_ref_cod_instituicao["nm_instituicao"];
-                }
-                else
-                {
-                    $registro["ref_cod_instituicao"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarInstituicao\n-->";
-                }
+                $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
+                $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
+                $nm_instituicao = $det_ref_cod_instituicao["nm_instituicao"];
 
                 $lista_busca = array(
                     "<a href=\"educar_funcao_det.php?cod_funcao={$registro["cod_funcao"]}&ref_cod_instituicao={$registro["ref_cod_instituicao"]}\">{$registro["nm_funcao"]}</a>",
