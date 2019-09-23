@@ -123,9 +123,6 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
-                // pega detalhes de foreign_keys
-                if( class_exists( "clsPmieducarBiblioteca" ) )
-                {
                     $obj_ref_cod_biblioteca = new clsPmieducarBiblioteca( $registro["ref_cod_biblioteca"] );
                     $det_ref_cod_biblioteca = $obj_ref_cod_biblioteca->detalhe();
                     $registro["ref_cod_biblioteca"] = $det_ref_cod_biblioteca["nm_biblioteca"];
@@ -143,12 +140,6 @@ class indice extends clsListagem
                         $det_ref_cod_escola = array_shift($obj_ref_cod_escola->lista($registro["ref_cod_escola"]));
                         $registro["ref_cod_escola"] = $det_ref_cod_escola["nome"];
                     }
-                }
-                else
-                {
-                    $registro["ref_cod_biblioteca"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarBiblioteca\n-->";
-                }
 
                 if ($registro["permite_emprestimo"] == 1)
                     $registro["permite_emprestimo"] = "n&atilde;o";

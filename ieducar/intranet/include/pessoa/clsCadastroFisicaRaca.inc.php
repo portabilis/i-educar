@@ -24,40 +24,10 @@ class clsCadastroFisicaRaca extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_idpes, ref_cod_raca';
 
         if (is_numeric($ref_idpes)) {
-            if (class_exists('clsCadastroFisica')) {
-                $tmp_obj = new clsCadastroFisica($ref_idpes);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_idpes = $ref_idpes;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_idpes = $ref_idpes;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM cadastro.fisica WHERE idpes = '{$ref_idpes}'")) {
                     $this->ref_idpes = $ref_idpes;
-                }
-            }
         }
         if (is_numeric($ref_cod_raca)) {
-            if (class_exists('clsCadastroRaca')) {
-                $tmp_obj = new clsCadastroRaca($ref_cod_raca);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_raca = $ref_cod_raca;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_raca = $ref_cod_raca;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM cadastro.raca WHERE cod_raca = '{$ref_cod_raca}'")) {
                     $this->ref_cod_raca = $ref_cod_raca;
-                }
-            }
         }
     }
 

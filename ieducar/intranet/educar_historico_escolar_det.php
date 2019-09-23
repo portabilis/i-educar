@@ -64,31 +64,18 @@ class indice extends clsDetalhe
             $this->simpleRedirect("educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
-        if( class_exists( "clsPmieducarAluno" ) )
+        $obj_aluno = new clsPmieducarAluno();
+        $lst_aluno = $obj_aluno->lista( $registro["ref_cod_aluno"],null,null,null,null,null,null,null,null,null,1 );
+        if ( is_array($lst_aluno) )
         {
-            $obj_aluno = new clsPmieducarAluno();
-            $lst_aluno = $obj_aluno->lista( $registro["ref_cod_aluno"],null,null,null,null,null,null,null,null,null,1 );
-            if ( is_array($lst_aluno) )
-            {
-                $det_aluno = array_shift($lst_aluno);
-                $nm_aluno = $det_aluno["nome_aluno"];
-            }
+            $det_aluno = array_shift($lst_aluno);
+            $nm_aluno = $det_aluno["nome_aluno"];
         }
-        else
-        {
-            $nm_aluno = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarAluno\n-->";
-        }
-
 
         if( $nm_aluno )
         {
             $this->addDetalhe( array( "Aluno", "{$nm_aluno}") );
         }
-//      if( $registro["sequencial"] )
-//      {
-//          $this->addDetalhe( array( "Sequencial", "{$registro["sequencial"]}") );
-//      }
 
         if($registro["extra_curricular"])
         {

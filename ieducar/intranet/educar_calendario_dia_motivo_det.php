@@ -51,30 +51,14 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_calendario_dia_motivo_lst.php');
         }
 
-        if( class_exists( "clsPmieducarEscola" ) )
-        {
-            $obj_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
-            $obj_cod_escola_det = $obj_cod_escola->detalhe();
-            $registro["ref_cod_escola"] = $obj_cod_escola_det["nome"];
+        $obj_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
+        $obj_cod_escola_det = $obj_cod_escola->detalhe();
+        $registro["ref_cod_escola"] = $obj_cod_escola_det["nome"];
 
-            if (class_exists("clsPmieducarInstituicao"))
-            {
-                $cod_instituicao = $obj_cod_escola_det['ref_cod_instituicao'];
-                $obj_instituicao = new clsPmieducarInstituicao($cod_instituicao);
-                $obj_instituicao_det = $obj_instituicao->detalhe();
-                $nm_instituicao = $obj_instituicao_det['nm_instituicao'];
-            }
-            else
-            {
-                $cod_instituicao = "Erro na gera&ccedil;&atilde;o";
-                echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
-            }
-        }
-        else
-        {
-            $registro["ref_cod_escola"] = "Erro na gera&ccedil;&atilde;o";
-            echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
-        }
+        $cod_instituicao = $obj_cod_escola_det['ref_cod_instituicao'];
+        $obj_instituicao = new clsPmieducarInstituicao($cod_instituicao);
+        $obj_instituicao_det = $obj_instituicao->detalhe();
+        $nm_instituicao = $obj_instituicao_det['nm_instituicao'];
 
         if ($nm_instituicao)
         {

@@ -86,53 +86,9 @@ class indice extends clsListagem
             "Calendario Dia Motivo"
         ) );
 
-        // Filtros de Foreign Keys
-    /*  $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarCalendarioDiaMotivo" ) )
-        {
-            $objTemp = new clsPmieducarCalendarioDiaMotivo();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
-            {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_calendario_dia_motivo']}"] = "{$registro['nm_motivo']}";
-                }
-            }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarCalendarioDiaMotivo nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
-
-        $this->campoLista( "ref_cod_calendario_dia_motivo", "Calendario Dia Motivo", $opcoes, $this->ref_cod_calendario_dia_motivo );
-*/
         $get_escola     = 1;
         $obrigatorio    = true;
         include("include/pmieducar/educar_campo_lista.php");
-
-    /*  $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarCalendarioAnoLetivo" ) )
-        {
-            $objTemp = new clsPmieducarCalendarioAnoLetivo();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) )
-            {
-                foreach ( $lista as $registro )
-                {
-                    $opcoes["{$registro['cod_calendario_ano_letivo']}"] = "{$registro['ano']}";
-                }
-            }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarCalendarioAnoLetivo nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
-        $this->campoLista( "ref_cod_calendario_ano_letivo", "Calendario Ano Letivo", $opcoes, $this->ref_cod_calendario_ano_letivo );
-*/
-
 
         // Paginador
         $this->limite = 20;
@@ -165,31 +121,13 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
+                $obj_ref_cod_calendario_dia_motivo = new clsPmieducarCalendarioDiaMotivo( $registro["ref_cod_calendario_dia_motivo"] );
+                $det_ref_cod_calendario_dia_motivo = $obj_ref_cod_calendario_dia_motivo->detalhe();
+                $registro["ref_cod_calendario_dia_motivo"] = $det_ref_cod_calendario_dia_motivo["nm_motivo"];
 
-                // pega detalhes de foreign_keys
-                if( class_exists( "clsPmieducarCalendarioDiaMotivo" ) )
-                {
-                    $obj_ref_cod_calendario_dia_motivo = new clsPmieducarCalendarioDiaMotivo( $registro["ref_cod_calendario_dia_motivo"] );
-                    $det_ref_cod_calendario_dia_motivo = $obj_ref_cod_calendario_dia_motivo->detalhe();
-                    $registro["ref_cod_calendario_dia_motivo"] = $det_ref_cod_calendario_dia_motivo["nm_motivo"];
-                }
-                else
-                {
-                    $registro["ref_cod_calendario_dia_motivo"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarCalendarioDiaMotivo\n-->";
-                }
-
-                if( class_exists( "clsPmieducarCalendarioAnoLetivo" ) )
-                {
-                    $obj_ref_cod_calendario_ano_letivo = new clsPmieducarCalendarioAnoLetivo( $registro["ref_cod_calendario_ano_letivo"] );
-                    $det_ref_cod_calendario_ano_letivo = $obj_ref_cod_calendario_ano_letivo->detalhe();
-                    $registro["ano"] = $det_ref_cod_calendario_ano_letivo["ano"];
-                }
-                else
-                {
-                    $registro["ref_cod_calendario_ano_letivo"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarCalendarioAnoLetivo\n-->";
-                }
+                $obj_ref_cod_calendario_ano_letivo = new clsPmieducarCalendarioAnoLetivo( $registro["ref_cod_calendario_ano_letivo"] );
+                $det_ref_cod_calendario_ano_letivo = $obj_ref_cod_calendario_ano_letivo->detalhe();
+                $registro["ano"] = $det_ref_cod_calendario_ano_letivo["ano"];
 
                 $this->addLinhas( array(
                     "<a href=\"educar_calendario_dia_cad.php?ref_cod_calendario_ano_letivo={$registro["ref_cod_calendario_ano_letivo"]}&ano={$registro["ano"]}&mes={$registro["mes"]}&dia={$registro["dia"]}\">{$registro["ano"]}</a>",

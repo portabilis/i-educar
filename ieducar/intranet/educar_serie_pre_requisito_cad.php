@@ -73,8 +73,7 @@ class indice extends clsCadastro
 
         // foreign keys
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarSerie" ) )
-        {
+
             $objTemp = new clsPmieducarSerie();
             $lista = $objTemp->lista();
             if ( is_array( $lista ) && count( $lista ) )
@@ -84,20 +83,14 @@ class indice extends clsCadastro
                     $opcoes["{$registro['cod_serie']}"] = "{$registro['nm_serie']}";
                 }
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarSerie nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $script = "javascript:showExpansivelIframe(520, 550, 'educar_serie_cad_pop.php?precisa_lista=sim');";
         $script = "<img id='img_colecao' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
         $this->campoLista( "ref_cod_serie", "Serie", $opcoes, $this->ref_cod_serie, "", "", "", $script );
 
         $fim_sentenca = array();
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarOperador" ) )
-        {
+
             $objTemp = new clsPmieducarOperador();
             $lista = $objTemp->lista();
             if ( is_array( $lista ) && count( $lista ) )
@@ -111,12 +104,7 @@ class indice extends clsCadastro
                     }
                 }
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarOperador nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
+
         $javascript = "";
         if( count( $fim_sentenca ) )
         {
@@ -128,8 +116,7 @@ class indice extends clsCadastro
         $this->campoLista( "ref_cod_operador", "Operador", $opcoes, $this->ref_cod_operador, $javascript, "", "", $script );
 
         $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarPreRequisito" ) )
-        {
+
             $objTemp = new clsPmieducarPreRequisito();
             $lista = $objTemp->lista();
             if ( is_array( $lista ) && count( $lista ) )
@@ -139,12 +126,6 @@ class indice extends clsCadastro
                     $opcoes["{$registro['cod_pre_requisito']}"] = "{$registro['nome']}";
                 }
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarPreRequisito nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
 
         $script = "javascript:showExpansivelIframe(520, 400, 'educar_pre_requisito_cad_pop.php');";
         $script = "<img id='img_colecao' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";

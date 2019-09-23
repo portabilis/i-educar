@@ -281,7 +281,6 @@ class indice extends clsCadastro
 
         $opcoes = ['' => 'Selecione'];
 
-        if (class_exists('clsPmieducarFuncao')) {
             if (is_numeric($this->ref_cod_instituicao)) {
                 $objTemp = new clsPmieducarFuncao();
                 $objTemp->setOrderby('nm_funcao ASC');
@@ -293,10 +292,6 @@ class indice extends clsCadastro
                     }
                 }
             }
-        } else {
-            echo "<!--\nErro\nClasse clsPmieducarFuncao nao encontrada\n-->";
-            $opcoes = ['' => 'Erro na geracao'];
-        }
 
         $this->campoTabelaInicio(
             'funcao',
@@ -378,7 +373,7 @@ class indice extends clsCadastro
         }
 
         $opcoes = ['' => 'Selecione'];
-        if (class_exists('clsCadastroEscolaridade')) {
+
             $objTemp = new clsCadastroEscolaridade();
             $lista = $objTemp->lista();
 
@@ -387,10 +382,6 @@ class indice extends clsCadastro
                     $opcoes[$registro['idesco']] = $registro['descricao'];
                 }
             }
-        } else {
-            echo "<!--\nErro\nClasse clsCadastroEscolaridade nao encontrada\n-->";
-            $opcoes = ['' => 'Erro na geracao'];
-        }
 
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 4)) {

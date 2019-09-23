@@ -110,61 +110,30 @@ class indice extends clsCadastro
 
         //-----------------------INICIO EXEMPLAR TIPO------------------------//
 
-        if( class_exists( "clsPmieducarExemplarTipo" ) )
+        $opcoes = array( "" => "Selecione" );
+        $script .= "var editar_ = 0;\n";
+        if($_GET['cod_cliente_tipo'])
         {
-            $opcoes = array( "" => "Selecione" );
-            //$todos_tipos_exemplares = "tipo_exemplar = new Array();\n";
-            $script .= "var editar_ = 0;\n";
-            if($_GET['cod_cliente_tipo'])
-            {
-                $script .= "editar_ = {$_GET['cod_cliente_tipo']};\n";
-            }
-            /*$objTemp = new clsPmieducarExemplarTipo();
+            $script .= "editar_ = {$_GET['cod_cliente_tipo']};\n";
+        }
+
+        echo "<script>{$script}</script>";
+
+        // se o caso é EDITAR
+        if ($this->ref_cod_biblioteca)
+        {
+            $objTemp = new clsPmieducarExemplarTipo();
             $objTemp->setOrderby("nm_tipo ASC");
-            $lista = $objTemp->lista(null,null,null,null,null,null,null,null,null,null,1);
+            $lista = $objTemp->lista(null,$this->ref_cod_biblioteca,null,null,null,null,null,null,null,null,1);
             if ( is_array( $lista ) && count( $lista ) )
             {
                 foreach ( $lista as $registro )
                 {
-                    if ($this->cod_cliente_tipo && $registro["cod_exemplar_tipo"])
-                    {
-                        $obj_clt_tp_exp_tp = new clsPmieducarClienteTipoExemplarTipo( $this->cod_cliente_tipo, $registro["cod_exemplar_tipo"] );
-                        $det_clt_tp_exp_tp = $obj_clt_tp_exp_tp->detalhe();
-                        $dias_emprestimo = $det_clt_tp_exp_tp["dias_emprestimo"];
-                        if($dias_emprestimo)
-                        {
-                            $todos_tipos_exemplares .= "tipo_exemplar[tipo_exemplar.length] = new Array({$registro["cod_exemplar_tipo"]},'{$registro["nm_tipo"]}', {$registro["ref_cod_biblioteca"]}, {$dias_emprestimo});\n";
-                        }
-                    }
-                    else
-                        $todos_tipos_exemplares .= "tipo_exemplar[tipo_exemplar.length] = new Array({$registro["cod_exemplar_tipo"]},'{$registro["nm_tipo"]}', {$registro["ref_cod_biblioteca"]});\n";
-                }
-
-            }
-            */
-            echo "<script>{$script}</script>";
-
-
-            // se o caso é EDITAR
-            if ($this->ref_cod_biblioteca)
-            {
-                $objTemp = new clsPmieducarExemplarTipo();
-                $objTemp->setOrderby("nm_tipo ASC");
-                $lista = $objTemp->lista(null,$this->ref_cod_biblioteca,null,null,null,null,null,null,null,null,1);
-                if ( is_array( $lista ) && count( $lista ) )
-                {
-                    foreach ( $lista as $registro )
-                    {
-                        $opcoes["{$registro['cod_exemplar_tipo']}"] = "{$registro['nm_tipo']}";
-                    }
+                    $opcoes["{$registro['cod_exemplar_tipo']}"] = "{$registro['nm_tipo']}";
                 }
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarExemplarTipo n&atilde;o encontrada\n-->";
-            $opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
-        }
+
         $this->campoRotulo( "div_exemplares", "Tipo Exemplar", "<div id='exemplares'></div>" );
         $this->acao_enviar = "Valida();";
         //-----------------------FIM EXEMPLAR TIPO------------------------//

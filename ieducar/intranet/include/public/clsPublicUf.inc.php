@@ -31,22 +31,7 @@ class clsPublicUf extends Model
         $this->_campos_lista = $this->_todos_campos = 'uf.sigla_uf, uf.nome, uf.geom, uf.idpais, uf.cod_ibge ';
 
         if (is_numeric($idpais)) {
-            if (class_exists('clsPais')) {
-                $tmp_obj = new clsPais($idpais);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->idpais = $idpais;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->idpais = $idpais;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pais WHERE idpais = '{$idpais}'")) {
                     $this->idpais = $idpais;
-                }
-            }
         }
 
         if (is_string($sigla_uf)) {

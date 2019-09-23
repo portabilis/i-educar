@@ -53,17 +53,9 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_infra_predio_lst.php');
         }
 
-        if( class_exists( "clsPmieducarEscola" ) )
-        {
-            $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
-            $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-            $registro["ref_cod_escola"] = $det_ref_cod_escola["nm_escola"];
-        }
-        else
-        {
-            $registro["ref_cod_escola"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarEscola\n-->";
-        }
+        $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
+        $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+        $registro["ref_cod_escola"] = $det_ref_cod_escola["nm_escola"];
 
         if( $registro["cod_infra_predio"] )
         {

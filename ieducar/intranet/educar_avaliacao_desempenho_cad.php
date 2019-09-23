@@ -95,18 +95,10 @@ class indice extends clsCadastro
             $this->campoTexto( "nm_instituicao", "Institui&ccedil;&atilde;o", $nm_instituicao, 30, 255, false, false, false, "", "", "", "", true);
         }
 
-        // foreign keys
-        if( class_exists( "clsPessoa_" ) )
-        {
-            $obj_cod_servidor = new clsPessoa_( $this->ref_cod_servidor );
-            $det_cod_servidor = $obj_cod_servidor->detalhe();
-            $nm_servidor = $det_cod_servidor["nome"];
-        }
-        else
-        {
-            $nm_servidor = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPessoa_\n-->";
-        }
+        $obj_cod_servidor = new clsPessoa_( $this->ref_cod_servidor );
+        $det_cod_servidor = $obj_cod_servidor->detalhe();
+        $nm_servidor = $det_cod_servidor["nome"];
+
         $this->campoTexto( "nm_servidor", "Servidor", $nm_servidor, 30, 255, false, false, false, "", "", "", "", true);
 
         // text

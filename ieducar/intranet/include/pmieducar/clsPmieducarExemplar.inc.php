@@ -38,112 +38,22 @@ class clsPmieducarExemplar extends Model
         $this->_campos_lista = $this->_todos_campos = 'e.cod_exemplar, e.ref_cod_fonte, e.ref_cod_motivo_baixa, e.ref_cod_acervo, e.ref_cod_situacao, e.ref_usuario_exc, e.ref_usuario_cad, e.permite_emprestimo, e.preco, e.data_cadastro, e.data_exclusao, e.ativo, e.data_aquisicao, e.tombo, e.sequencial, e.data_baixa_exemplar';
 
         if (is_numeric($ref_cod_fonte)) {
-            if (class_exists('clsPmieducarFonte')) {
-                $tmp_obj = new clsPmieducarFonte($ref_cod_fonte);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_fonte = $ref_cod_fonte;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_fonte = $ref_cod_fonte;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.fonte WHERE cod_fonte = '{$ref_cod_fonte}'")) {
                     $this->ref_cod_fonte = $ref_cod_fonte;
-                }
-            }
         }
         if (is_numeric($ref_cod_motivo_baixa)) {
-            if (class_exists('clsPmieducarMotivoBaixa')) {
-                $tmp_obj = new clsPmieducarMotivoBaixa($ref_cod_motivo_baixa);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_motivo_baixa = $ref_cod_motivo_baixa;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_motivo_baixa = $ref_cod_motivo_baixa;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.motivo_baixa WHERE cod_motivo_baixa = '{$ref_cod_motivo_baixa}'")) {
                     $this->ref_cod_motivo_baixa = $ref_cod_motivo_baixa;
-                }
-            }
         }
         if (is_numeric($ref_cod_acervo)) {
-            if (class_exists('clsPmieducarAcervo')) {
-                $tmp_obj = new clsPmieducarAcervo($ref_cod_acervo);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_acervo = $ref_cod_acervo;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_acervo = $ref_cod_acervo;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.acervo WHERE cod_acervo = '{$ref_cod_acervo}'")) {
                     $this->ref_cod_acervo = $ref_cod_acervo;
-                }
-            }
         }
         if (is_numeric($ref_cod_situacao)) {
-            if (class_exists('clsPmieducarSituacao')) {
-                $tmp_obj = new clsPmieducarSituacao($ref_cod_situacao);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_cod_situacao = $ref_cod_situacao;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_cod_situacao = $ref_cod_situacao;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.situacao WHERE cod_situacao = '{$ref_cod_situacao}'")) {
                     $this->ref_cod_situacao = $ref_cod_situacao;
-                }
-            }
         }
         if (is_numeric($ref_usuario_exc)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_exc);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_exc = $ref_usuario_exc;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'")) {
                     $this->ref_usuario_exc = $ref_usuario_exc;
-                }
-            }
         }
         if (is_numeric($ref_usuario_cad)) {
-            if (class_exists('clsPmieducarUsuario')) {
-                $tmp_obj = new clsPmieducarUsuario($ref_usuario_cad);
-                if (method_exists($tmp_obj, 'existe')) {
-                    if ($tmp_obj->existe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                } elseif (method_exists($tmp_obj, 'detalhe')) {
-                    if ($tmp_obj->detalhe()) {
-                        $this->ref_usuario_cad = $ref_usuario_cad;
-                    }
-                }
-            } else {
-                if ($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'")) {
                     $this->ref_usuario_cad = $ref_usuario_cad;
-                }
-            }
         }
 
         if (is_numeric($cod_exemplar)) {

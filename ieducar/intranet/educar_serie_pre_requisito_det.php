@@ -45,42 +45,17 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_serie_pre_requisito_lst.php');
         }
 
-        if( class_exists( "clsPmieducarSerie" ) )
-        {
             $obj_ref_cod_serie = new clsPmieducarSerie( $registro["ref_cod_serie"] );
             $det_ref_cod_serie = $obj_ref_cod_serie->detalhe();
             $registro["ref_cod_serie"] = $det_ref_cod_serie["nm_serie"];
-        }
-        else
-        {
-            $registro["ref_cod_serie"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarSerie\n-->";
-        }
 
-        if( class_exists( "clsPmieducarOperador" ) )
-        {
             $obj_ref_cod_operador = new clsPmieducarOperador( $registro["ref_cod_operador"] );
             $det_ref_cod_operador = $obj_ref_cod_operador->detalhe();
             $registro["ref_cod_operador"] = $det_ref_cod_operador["nome"];
-        }
-        else
-        {
-            $registro["ref_cod_operador"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarOperador\n-->";
-        }
 
-        if( class_exists( "clsPmieducarPreRequisito" ) )
-        {
             $obj_ref_cod_pre_requisito = new clsPmieducarPreRequisito( $registro["ref_cod_pre_requisito"] );
             $det_ref_cod_pre_requisito = $obj_ref_cod_pre_requisito->detalhe();
             $registro["ref_cod_pre_requisito"] = $det_ref_cod_pre_requisito["nome"];
-        }
-        else
-        {
-            $registro["ref_cod_pre_requisito"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarPreRequisito\n-->";
-        }
-
 
         if( $registro["ref_cod_pre_requisito"] )
         {

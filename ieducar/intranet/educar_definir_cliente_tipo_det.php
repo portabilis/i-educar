@@ -81,30 +81,22 @@ class indice extends clsDetalhe
                 if ( $cliente["nm_tipo"] ) {
                     $this->addDetalhe( array( "Tipo do Cliente", "{$cliente["nm_tipo"]}") );
                 }
-                if ( class_exists( "clsBanco" ) ) {
-                    $obj_banco = new clsBanco();
-                    $sql_unico = "SELECT ref_cod_motivo_suspensao
-                                    FROM pmieducar.cliente_suspensao
-                                   WHERE ref_cod_cliente = {$cliente["cod_cliente"]}
-                                     AND data_liberacao IS NULL
-                                     AND EXTRACT ( DAY FROM ( NOW() - data_suspensao ) ) < dias";
-                    $motivo    = $obj_banco->CampoUnico( $sql_unico );
-                    if ( is_numeric( $motivo ) ) {
-                        $this->addDetalhe( array( "Status", "Suspenso" ) );
-                        if ( class_exists( "clsPmieducarMotivoSuspensao" ) ) {
-                            $obj_motivo_suspensao = new clsPmieducarMotivoSuspensao( $motivo );
-                            $det_motivo_suspensao = $obj_motivo_suspensao->detalhe();
-                            $this->addDetalhe( array( "Motivo da Suspensão", "{$det_motivo_suspensao["nm_motivo"]}" ) );
-                            $this->addDetalhe( array( "Descrição", "{$det_motivo_suspensao["descricao"]}" ) );
-                        }
-                    }
-                    else
-                        $this->addDetalhe( array( "Status", "Regular" ) );
+                $obj_banco = new clsBanco();
+                $sql_unico = "SELECT ref_cod_motivo_suspensao
+                                FROM pmieducar.cliente_suspensao
+                               WHERE ref_cod_cliente = {$cliente["cod_cliente"]}
+                                 AND data_liberacao IS NULL
+                                 AND EXTRACT ( DAY FROM ( NOW() - data_suspensao ) ) < dias";
+                $motivo    = $obj_banco->CampoUnico( $sql_unico );
+                if ( is_numeric( $motivo ) ) {
+                    $this->addDetalhe( array( "Status", "Suspenso" ) );
+                        $obj_motivo_suspensao = new clsPmieducarMotivoSuspensao( $motivo );
+                        $det_motivo_suspensao = $obj_motivo_suspensao->detalhe();
+                        $this->addDetalhe( array( "Motivo da Suspensão", "{$det_motivo_suspensao["nm_motivo"]}" ) );
+                        $this->addDetalhe( array( "Descrição", "{$det_motivo_suspensao["descricao"]}" ) );
                 }
-                else {
-                    $registro["ref_idpes"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsBanco\n-->";
-                }
+                else
+                    $this->addDetalhe( array( "Status", "Regular" ) );
             }
         }
         $obj_permissoes = new clsPermissoes();

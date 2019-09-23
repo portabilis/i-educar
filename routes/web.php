@@ -86,6 +86,8 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::group(['namespace' => 'Educacenso', 'prefix' => 'educacenso'], function () {
         Route::get('validar/{validator}', 'ValidatorController@validation');
     });
+
+    Route::get('/consulta-dispensas', 'ExemptionListController@index')->name('exemption-list.index');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {

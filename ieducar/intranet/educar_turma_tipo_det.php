@@ -50,17 +50,9 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_turma_tipo_lst.php');
         }
 
-        if (class_exists("clsPmieducarInstituicao"))
-        {
-            $obj_instituicao = new clsPmieducarInstituicao($registro["ref_cod_instituicao"]);
-            $obj_instituicao_det = $obj_instituicao->detalhe();
-            $registro["ref_cod_instituicao"] = $obj_instituicao_det['nm_instituicao'];
-        }
-        else
-        {
-            $cod_instituicao = "Erro na gera&ccedil;&atilde;o";
-            echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
-        }
+        $obj_instituicao = new clsPmieducarInstituicao($registro["ref_cod_instituicao"]);
+        $obj_instituicao_det = $obj_instituicao->detalhe();
+        $registro["ref_cod_instituicao"] = $obj_instituicao_det['nm_instituicao'];
 
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);

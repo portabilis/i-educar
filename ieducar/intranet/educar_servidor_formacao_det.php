@@ -80,7 +80,7 @@ class indice extends clsDetalhe
   function Gerar()
   {
     $this->titulo = 'Servidor Formacao - Detalhe';
-    
+
 
     $this->cod_formacao = $_GET['cod_formacao'];
 
@@ -91,17 +91,12 @@ class indice extends clsDetalhe
         $this->simpleRedirect('educar_servidor_formacao_lst.php');
     }
 
-    if (class_exists('clsPmieducarServidor')) {
       $obj_ref_cod_servidor = new clsPmieducarServidor($registro['ref_cod_servidor'],
         null, null, null, null, null, 1, $registro['ref_ref_cod_instituicao']
       );
 
       $det_ref_cod_servidor = $obj_ref_cod_servidor->detalhe();
       $registro['ref_cod_servidor'] = $det_ref_cod_servidor['cod_servidor'];
-    }
-    else {
-      $registro['ref_cod_servidor'] = 'Erro na geracao';
-    }
 
     if ($registro['nm_formacao']) {
       $this->addDetalhe(array('Nome Formação', $registro['nm_formacao']));

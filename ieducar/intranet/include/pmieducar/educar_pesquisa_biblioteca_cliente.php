@@ -29,7 +29,6 @@ if ( $privilegio == 4 ) {
     // foreign keys
     $opcoes  = array( "" => "Selecione" );
     $opcoes2 = array( "" => "Selecione" );
-    if ( class_exists( "clsPmieducarBiblioteca" ) ) {
         $objTemp = new clsPmieducarBiblioteca();
         $lista   = $objTemp->lista( null, $permissoes->getInstituicao( $this->pessoa_logada ), $permissoes->getEscola( $this->pessoa_logada ), null, null, null, null, null, null, null, null, null, 1 );
         if ( $lista ) {
@@ -43,7 +42,6 @@ if ( $privilegio == 4 ) {
                 }
                 $tipos .= " tipo['_{$registro["cod_biblioteca"]}'] = new Array();\n";
 
-                if ( class_exists( "clsPmieducarClienteTipo" ) ) {
                     $obj_tipo = new clsPmieducarClienteTipo();
                     $lst_tipo = $obj_tipo->lista( null, $registro["cod_biblioteca"], nul, null, null, null, null, null, null, null, 1 );
                     if ( $lst_tipo ) {
@@ -55,19 +53,9 @@ if ( $privilegio == 4 ) {
                                 $opcoes2[""] = "Selecione um tipo de cliente";
                         }
                     }
-                }
-                else {
-                    echo "<!--\nErro\nClasse clsPmieducarClienteTipo nao encontrada\n-->";
-                    $opcoes = array( "" => "Erro na geracao" );
-                }
             }
             echo $script = "<script> var tipo = new Array(); \n {$tipos} </script>\n";
         }
-    }
-    else {
-        echo "<!--\nErro\nClasse clsPmieducarBiblioteca nao encontrada\n-->";
-        $opcoes = array( "" => "Erro na geracao" );
-    }
     $this->campoLista( "ref_cod_biblioteca", "Biblioteca", $opcoes, $this->ref_cod_biblioteca, "BibliotecaTipo();", false, "", "", false, $obrigatorio );
     $this->campoLista( "ref_cod_cliente_tipo", "Tipo do Cliente", $opcoes2, $this->ref_cod_cliente_tipo, "", false, "", "", false, $obrigatorio );
 }
@@ -76,14 +64,12 @@ elseif ( $privilegio == 2 ) {
     include("include/pmieducar/educar_pesquisa_instituicao_escola.php");
     $opcoes = array( "" => "Selecione" );
     $opcoes2 = array( "" => "Selecione" );
-    if ( class_exists( "clsPmieducarEscola" ) ) {
         $obj_escola = new clsPmieducarEscola( null, null, null, $permissoes->getInstituicao( $this->pessoa_logada ), null, null, null, null, null, null, 1 );
         $lst_escola = $obj_escola->lista( null, null, null, $permissoes->getInstituicao( $this->pessoa_logada ), null, null, null, null, null, null, 1 );
         if ( $lst_escola ) {
             $tipos = '';
             $bibliotecas = '';
             foreach ( $lst_escola as $escola ) {
-                if ( class_exists( "clsPmieducarBiblioteca" ) ) {
                     $objTemp = new clsPmieducarBiblioteca();
                     $lista   = $objTemp->lista( null, $escola["ref_cod_escola_instituicao"], $escola["cod_escola"], null, null, null, null, null, null, null, null, null, 1 );
                     $bibliotecas .= " escola['_{$escola["cod_escola"]}'] = new Array();\n";
@@ -95,7 +81,6 @@ elseif ( $privilegio == 2 ) {
                                 $opcoes[""] = "Selecione uma biblioteca";
                             $bibliotecas .= " escola['_{$escola["cod_escola"]}'][escola['_{$escola["cod_escola"]}'].length] = new Array( {$registro["cod_biblioteca"]}, '{$registro["nm_biblioteca"]}' );\n";
                             $tipos .= " tipo['_{$registro["cod_biblioteca"]}'] = new Array();\n";
-                            if ( class_exists( "clsPmieducarClienteTipo" ) ) {
                                 $obj_tipo = new clsPmieducarClienteTipo();
                                 $lst_tipo = $obj_tipo->lista( null, $registro["cod_biblioteca"], nul, null, null, null, null, null, null, null, 1 );
                                 if ( $lst_tipo ) {
@@ -107,27 +92,12 @@ elseif ( $privilegio == 2 ) {
                                             $opcoes2[""] = "Selecione um tipo de cliente";
                                     }
                                 }
-                            }
-                            else {
-                                echo "<!--\nErro\nClasse clsPmieducarClienteTipo nao encontrada\n-->";
-                                $opcoes = array( "" => "Erro na geracao" );
-                            }
                         }
                     }
-                }
-                else {
-                    echo "<!--\nErro\nClasse clsPmieducarBiblioteca nao encontrada\n-->";
-                    $opcoes = array( "" => "Erro na geracao" );
-                }
             }
             echo $script = "<script> var tipo = new Array(); \n {$tipos} </script>\n";
             echo $script = "<script> var escola = new Array(); \n {$bibliotecas}</script>\n";
         }
-    }
-    else {
-        echo "<!--\nErro\nClasse clsPmieducarEscola nao encontrada\n-->";
-        $opcoes = array( "" => "Erro na geracao" );
-    }
     $this->campoLista( "ref_cod_biblioteca", "Biblioteca", $opcoes, $this->ref_cod_biblioteca, "BibliotecaTipo();", false, "", "", false, $obrigatorio );
     $this->campoLista( "ref_cod_cliente_tipo", "Tipo do Cliente", $opcoes2, $this->ref_cod_cliente_tipo, "", false, "", "", false, $obrigatorio );
 }
@@ -136,7 +106,7 @@ elseif ( $privilegio == 1 ) {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     include("include/pmieducar/educar_pesquisa_instituicao_escola.php");
-    if ( class_exists( "clsPmieducarInstituicao" ) ) {
+
         $obj_ins = new clsPmieducarInstituicao( $permissoes->getInstituicao( $this->pessoa_logada ), null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1 );
         $lst_ins = $obj_ins->lista( $permissoes->getInstituicao( $this->pessoa_logada ), null, null, null, null, null, null, null, null, null, null, null, null, 1 );
         if ( $lst_ins ) {
@@ -144,7 +114,6 @@ elseif ( $privilegio == 1 ) {
             $tipos_extra = '';
             foreach ( $lst_ins as $instituicao ) {
                 $instituicoes .= " biblioteca['_{$instituicao["cod_instituicao"]}'] = new Array();\n";
-                if ( class_exists( "clsPmieducarBiblioteca" ) ) {
                     $obj_bib = new clsPmieducarBiblioteca( null, $instituicao["cod_instituicao"], null, null, null, null, null, null, null, null, 1 );
                     $lst_bib = $obj_bib->lista( null, $instituicao["cod_instituicao"], null, null, null, null, null, null, null, null, null, null, 1 );
                     if ( $lst_bib ) {
@@ -152,7 +121,6 @@ elseif ( $privilegio == 1 ) {
                             if ( !$biblioteca["ref_cod_escola"] ) {
                                 $tipos_extra  .= " tipo['_{$biblioteca["cod_biblioteca"]}'] = new Array();\n";
                                 $instituicoes .= " biblioteca['_{$instituicao["cod_instituicao"]}'][biblioteca['_{$instituicao["cod_instituicao"]}'].length] = new Array( {$biblioteca["cod_biblioteca"]}, '{$biblioteca["nm_biblioteca"]}' );\n";
-                                if ( class_exists( "clsPmieducarClienteTipo" ) ) {
                                     $obj_tipo = new clsPmieducarClienteTipo( null, $biblioteca["cod_biblioteca"], null, null, null, null, null, null, 1 );
                                     $lst_tipo = $obj_tipo->lista( null, $biblioteca["cod_biblioteca"], null, null, null, null, null, null, null, null, 1 );
                                     if ( $lst_tipo ) {
@@ -160,27 +128,16 @@ elseif ( $privilegio == 1 ) {
                                             $tipos_extra .= " tipo['_{$biblioteca["cod_biblioteca"]}'][tipo['_{$biblioteca["cod_biblioteca"]}'].length] = new Array( {$tipo["cod_cliente_tipo"]}, '{$tipo["nm_tipo"]}' );\n";
                                         }
                                     }
-                                }
-                                else {
-                                    echo "<!--\nErro\nClasse clsPmieducarClienteTipo nao encontrada\n-->";
-                                }
                             }
                         }
                     }
-                }
-                else {
-                    echo "<!--\nErro\nClasse clsPmieducarBiblioteca nao encontrada\n-->";
-                }
             }
             echo $script = "<script> var biblioteca = new Array(); \n {$instituicoes}</script>\n";
         }
-    }
-    else {
-        echo "<!--\nErro\nClasse clsPmieducarInstituicao nao encontrada\n-->";
-    }
+
     $opcoes = array( "" => "Selecione" );
     $opcoes2 = array( "" => "Selecione" );
-    if ( class_exists( "clsPmieducarEscola" ) ) {
+
         $obj_escola = new clsPmieducarEscola( null, null, null, $permissoes->getInstituicao( $this->pessoa_logada ), null, null, null, null, null, null, 1 );
         $lst_escola = $obj_escola->lista( null, null, null, $permissoes->getInstituicao( $this->pessoa_logada ), null, null, null, null, null, null, 1 );
         if ( $lst_escola ) {
@@ -188,7 +145,7 @@ elseif ( $privilegio == 1 ) {
             $bibliotecas = '';
             foreach ( $lst_escola as $escola ) {
                 $bibliotecas .= " escola['_{$escola["cod_escola"]}'] = new Array();\n";
-                if ( class_exists( "clsPmieducarBiblioteca" ) ) {
+
                     $objTemp = new clsPmieducarBiblioteca();
                     $lista   = $objTemp->lista( null, $escola["ref_cod_escola_instituicao"], $escola["cod_escola"], null, null, null, null, null, null, null, null, null, 1 );
                     if ( $lista ) {
@@ -199,7 +156,7 @@ elseif ( $privilegio == 1 ) {
                             else
                                 $opcoes[""] = "Selecione uma biblioteca";
                             $bibliotecas .= " escola['_{$escola["cod_escola"]}'][escola['_{$escola["cod_escola"]}'].length] = new Array( {$registro["cod_biblioteca"]}, '{$registro["nm_biblioteca"]}' );\n";
-                            if ( class_exists( "clsPmieducarClienteTipo" ) ) {
+
                                 $obj_tipo = new clsPmieducarClienteTipo();
                                 $lst_tipo = $obj_tipo->lista( null, $registro["cod_biblioteca"], nul, null, null, null, null, null, null, null, 1 );
                                 if ( $lst_tipo ) {
@@ -211,89 +168,15 @@ elseif ( $privilegio == 1 ) {
                                             $opcoes2[""] = "Selecione um tipo de cliente";
                                     }
                                 }
-                            }
-                            else {
-                                echo "<!--\nErro\nClasse clsPmieducarClienteTipo nao encontrada\n-->";
-                                $opcoes = array( "" => "Erro na geracao" );
-                            }
                         }
                     }
-                }
-                else {
-                    echo "<!--\nErro\nClasse clsPmieducarBiblioteca nao encontrada\n-->";
-                    $opcoes = array( "" => "Erro na geracao" );
-                }
             }
             echo $script = "<script> var tipo = new Array(); \n {$tipos}{$tipos_extra} </script>\n";
             echo $script = "<script> var escola = new Array(); \n {$bibliotecas}</script>\n";
         }
-    }
-    else {
-        echo "<!--\nErro\nClasse clsPmieducarEscola nao encontrada\n-->";
-        $opcoes = array( "" => "Erro na geracao" );
-    }
+
     $this->campoLista( "ref_cod_biblioteca", "Biblioteca", $opcoes, $this->ref_cod_biblioteca, "BibliotecaTipo();", false, "", "", false, $obrigatorio );
     $this->campoLista( "ref_cod_cliente_tipo", "Tipo do Cliente", $opcoes2, $this->ref_cod_cliente_tipo, "", false, "", "", false, $obrigatorio );
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    /*include("include/pmieducar/educar_pesquisa_instituicao_escola.php");
-    $opcoes = array( "" => "Selecione" );
-    $opcoes2 = array( "" => "Selecione" );
-    if ( class_exists( "clsPmieducarEscola" ) ) {
-        $obj_escola = new clsPmieducarEscola( null, null, null, $permissoes->getInstituicao( $this->pessoa_logada ), null, null, null, null, null, null, 1 );
-        $lst_escola = $obj_escola->lista( null, null, null, $permissoes->getInstituicao( $this->pessoa_logada ), null, null, null, null, null, null, 1 );
-        if ( $lst_escola ) {
-            $tipos = '';
-            $bibliotecas = '';
-            foreach ( $lst_escola as $escola ) {
-                if ( class_exists( "clsPmieducarBiblioteca" ) ) {
-                    $objTemp = new clsPmieducarBiblioteca();
-                    $lista   = $objTemp->lista( null, $escola["ref_cod_escola_instituicao"], $escola["cod_escola"], null, null, null, null, null, null, null, null, null, 1 );
-                    $bibliotecas .= " escola['_{$escola["cod_escola"]}'] = new Array();\n";
-                    if ( $lista ) {
-                        foreach ( $lista as $registro ) {
-                            if ( $editar )
-                                $opcoes["{$registro["cod_biblioteca"]}"] = "{$detalhe["nm_biblioteca"]}";
-                            else
-                                $opcoes[""] = "Selecione uma biblioteca";
-                            $bibliotecas .= " escola['_{$escola["cod_escola"]}'][escola['_{$escola["cod_escola"]}'].length] = new Array( {$registro["cod_biblioteca"]}, '{$registro["nm_biblioteca"]}' );\n";
-                            $tipos .= " tipo['_{$registro["cod_biblioteca"]}'] = new Array();\n";
-                            if ( class_exists( "clsPmieducarClienteTipo" ) ) {
-                                $obj_tipo = new clsPmieducarClienteTipo();
-                                $lst_tipo = $obj_tipo->lista( null, $registro["cod_biblioteca"], nul, null, null, null, null, null, null, null, 1 );
-                                if ( $lst_tipo ) {
-                                    foreach ( $lst_tipo as $tipo ) {
-                                        $tipos .= " tipo['_{$registro["cod_biblioteca"]}'][tipo['_{$registro["cod_biblioteca"]}'].length] = new Array( {$tipo["cod_cliente_tipo"]}, '{$tipo["nm_tipo"]}' );\n";
-                                        if ( $editar )
-                                            $opcoes2["{$tipo['cod_cliente_tipo']}"] = "{$tipo['nm_tipo']}";
-                                        else
-                                            $opcoes2[""] = "Selecione um tipo de cliente";
-                                    }
-                                }
-                            }
-                            else {
-                                echo "<!--\nErro\nClasse clsPmieducarClienteTipo nao encontrada\n-->";
-                                $opcoes = array( "" => "Erro na geracao" );
-                            }
-                        }
-                    }
-                }
-                else {
-                    echo "<!--\nErro\nClasse clsPmieducarBiblioteca nao encontrada\n-->";
-                    $opcoes = array( "" => "Erro na geracao" );
-                }
-            }
-            echo $script = "<script> var tipo = new Array(); \n {$tipos} </script>\n";
-            echo $script = "<script> var escola = new Array(); \n {$bibliotecas}</script>\n";
-        }
-    }
-    else {
-        echo "<!--\nErro\nClasse clsPmieducarEscola nao encontrada\n-->";
-        $opcoes = array( "" => "Erro na geracao" );
-    }
-    $this->campoLista( "ref_cod_biblioteca", "Biblioteca", $opcoes, $this->ref_cod_biblioteca, "BibliotecaTipo();", false, "", "", false, $obrigatorio );
-    $this->campoLista( "ref_cod_cliente_tipo", "Tipo do Cliente", $opcoes2, $this->ref_cod_cliente_tipo, "", false, "", "", false, $obrigatorio );*/
 }
 
 ?>

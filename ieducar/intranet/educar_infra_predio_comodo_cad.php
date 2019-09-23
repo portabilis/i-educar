@@ -95,27 +95,21 @@ class indice extends clsCadastro
         $this->inputsHelper()->dynamic(array('instituicao','escola'));
 
         $opcoes_predio = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarInfraPredio" ) )
+
+        // EDITAR
+        if ($this->ref_cod_escola)
         {
-            // EDITAR
-            if ($this->ref_cod_escola)
+            $objTemp = new clsPmieducarInfraPredio();
+            $lista = $objTemp->lista( null,null,null,$this->ref_cod_escola,null,null,null,null,null,null,null,1 );
+            if ( is_array( $lista ) && count( $lista ) )
             {
-                $objTemp = new clsPmieducarInfraPredio();
-                $lista = $objTemp->lista( null,null,null,$this->ref_cod_escola,null,null,null,null,null,null,null,1 );
-                if ( is_array( $lista ) && count( $lista ) )
+                foreach ( $lista as $registro )
                 {
-                    foreach ( $lista as $registro )
-                    {
-                        $opcoes_predio["{$registro['cod_infra_predio']}"] = "{$registro['nm_predio']}";
-                    }
+                    $opcoes_predio["{$registro['cod_infra_predio']}"] = "{$registro['nm_predio']}";
                 }
             }
         }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarInfraPredio nao encontrada\n-->";
-            $opcoes_predio = array( "" => "Erro na geracao" );
-        }
+
         $script = "javascript:showExpansivelIframe(520, 400, 'educar_infra_predio_cad_pop.php');";
         if ($this->ref_cod_escola && $this->ref_cod_instituicao)
         {
@@ -130,26 +124,19 @@ class indice extends clsCadastro
 
 
         $opcoes_funcao = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarInfraComodoFuncao" ) )
+
+        // EDITAR
+        if ($this->ref_cod_escola)
         {
-            // EDITAR
-            if ($this->ref_cod_escola)
+            $objTemp = new clsPmieducarInfraComodoFuncao();
+            $lista = $objTemp->lista( null,null,null,null,null,null,null,null,null,1,$this->ref_cod_escola );
+            if ( is_array( $lista ) && count( $lista ) )
             {
-                $objTemp = new clsPmieducarInfraComodoFuncao();
-                $lista = $objTemp->lista( null,null,null,null,null,null,null,null,null,1,$this->ref_cod_escola );
-                if ( is_array( $lista ) && count( $lista ) )
+                foreach ( $lista as $registro )
                 {
-                    foreach ( $lista as $registro )
-                    {
-                        $opcoes_funcao["{$registro['cod_infra_comodo_funcao']}"] = "{$registro['nm_funcao']}";
-                    }
+                    $opcoes_funcao["{$registro['cod_infra_comodo_funcao']}"] = "{$registro['nm_funcao']}";
                 }
             }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarInfraComodoFuncao nao encontrada\n-->";
-            $opcoes_funcao = array( "" => "Erro na geracao" );
         }
 
         $script = "javascript:showExpansivelIframe(520, 250, 'educar_infra_comodo_funcao_cad_pop.php');";

@@ -58,28 +58,9 @@ class indice extends clsDetalhe
                 new RedirectResponse('educar_motivo_afastamento_lst.php')
             );
         }
-    /*  if( class_exists( "clsPmieducarEscola" ) )
-        {
-            $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
-            $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-            $nm_escola = $det_ref_cod_escola["nome"];
-            $ref_cod_instituicao = $det_ref_cod_escola["ref_cod_instituicao"];
-        }
-        else
-        {
-            $registro["ref_cod_escola"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarEscola\n-->";
-        }*/
-        if( class_exists( "clsPmieducarInstituicao" ) )
-        {
-            $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro['ref_cod_instituicao'] );
-            $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
-        }
-        else
-        {
-            $registro["ref_cod_escola"] = "Erro na gera&ccedil;&atilde;o";
-            echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
-        }
+
+        $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $registro['ref_cod_instituicao'] );
+        $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
 
         $obj_permissao = new clsPermissoes();
         $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
@@ -90,13 +71,6 @@ class indice extends clsDetalhe
                 $this->addDetalhe( array( "Institui&ccedil;&atilde;o", "{$det_ref_cod_instituicao["nm_instituicao"]}") );
             }
         }
-    /*  if ($nivel_usuario == 1 || $nivel_usuario == 2)
-        {
-            if( $nm_escola )
-            {
-                $this->addDetalhe( array( "Escola", "{$nm_escola}") );
-            }
-        }*/
         if( $registro["nm_motivo"] )
         {
             $this->addDetalhe( array( "Motivo de Afastamento", "{$registro["nm_motivo"]}") );

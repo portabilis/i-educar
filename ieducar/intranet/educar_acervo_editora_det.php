@@ -57,29 +57,13 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_acervo_editora_lst.php');
         }
 
-        if( class_exists( "clsTipoLogradouro" ) )
-        {
-            $obj_ref_idtlog = new clsTipoLogradouro( $registro["ref_idtlog"] );
-            $det_ref_idtlog = $obj_ref_idtlog->detalhe();
-            $registro["ref_idtlog"] = $det_ref_idtlog["descricao"];
-        }
-        else
-        {
-            $registro["ref_idtlog"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsUrbanoTipoLogradouro\n-->";
-        }
+        $obj_ref_idtlog = new clsTipoLogradouro( $registro["ref_idtlog"] );
+        $det_ref_idtlog = $obj_ref_idtlog->detalhe();
+        $registro["ref_idtlog"] = $det_ref_idtlog["descricao"];
 
-        if( class_exists( "clsUf" ) )
-        {
-            $obj_ref_sigla_uf = new clsUf( $registro["ref_sigla_uf"] );
-            $det_ref_sigla_uf = $obj_ref_sigla_uf->detalhe();
-            $registro["ref_sigla_uf"] = $det_ref_sigla_uf["nome"];
-        }
-        else
-        {
-            $registro["ref_sigla_uf"] = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsUf\n-->";
-        }
+        $obj_ref_sigla_uf = new clsUf( $registro["ref_sigla_uf"] );
+        $det_ref_sigla_uf = $obj_ref_sigla_uf->detalhe();
+        $registro["ref_sigla_uf"] = $det_ref_sigla_uf["nome"];
 
         if( $registro["nm_editora"] )
         {

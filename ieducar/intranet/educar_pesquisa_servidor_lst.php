@@ -264,11 +264,9 @@ class indice extends clsListagem
     }
     $total = $obj_servidor->_total;
     // pega detalhes de foreign_keys
-    if (class_exists('clsPmieducarInstituicao')) {
       $obj_ref_cod_instituicao = new clsPmieducarInstituicao( $lista[0]["ref_cod_instituicao"] );
       $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
       $nm_instituicao = $det_ref_cod_instituicao["nm_instituicao"];
-    }
 
     // monta a lista
     if (is_array($lista) && count($lista)) {
