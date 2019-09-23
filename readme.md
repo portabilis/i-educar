@@ -1,8 +1,5 @@
 [![Latest Release](https://img.shields.io/github/release/portabilis/i-educar.svg?label=latest%20release)](https://github.com/portabilis/i-educar/releases)
-![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/quality-score.png?b=master)
-![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/build.png?b=master)
-![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/code-intelligence.svg?b=master)
-[![Coverage Status](https://coveralls.io/repos/github/portabilis/i-educar/badge.svg?branch=master)](https://coveralls.io/github/portabilis/i-educar?branch=master)
+[![Build Status](https://travis-ci.com/portabilis/i-educar.svg?branch=2.2)](https://travis-ci.com/portabilis/i-educar)
 
 # i-Educar
 
