@@ -10,6 +10,7 @@ class clsIndexBase extends clsBase
     }
 }
 
+use App\Models\LegacyInstitution;
 use Illuminate\Support\Facades\Session;
 
 class indice extends clsCadastro
@@ -69,10 +70,15 @@ class indice extends clsCadastro
 
         $inicioAnoLetivo = $registros[0]['data_inicio'];
 
-        if ($this->data_matricula < $inicioAnoLetivo) {
-            Session::now('notice', 'A data da matrícula deve ser posterior ao dia ' . Portabilis_Date_Utils::pgSQLToBr($inicioAnoLetivo) . '.');
+        /** @var LegacyInstitution $instituicao */
+        $instituicao = app(LegacyInstitution::class);
 
-            return false;
+        if ($this->data_matricula < $inicioAnoLetivo) {
+            if (!$instituicao->allowRegistrationOutAcademicYear) {
+                Session::now('notice', 'A data da matrícula deve ser posterior ao dia ' . Portabilis_Date_Utils::pgSQLToBr($inicioAnoLetivo) . '.');
+
+                return false;
+            }
         }
 
         $this->db = new clsBanco();
