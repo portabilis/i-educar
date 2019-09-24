@@ -25,9 +25,6 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
         $this->enrollment = $this->getProgressionWithAverageCalculationWeightedRecoveryTest();
     }
 
-    /**
-     * @return LegacyEnrollment
-     */
     public function getProgressionWithAverageCalculationWeightedRecoveryTest()
     {
         $roundingTable = factory(LegacyRoundingTable::class, 'numeric')->create();
@@ -44,6 +41,9 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
         return $enrollment;
     }
 
+    /**
+     * O aluno deverá ser Aprovado depois dos lançamentos (notas e faltas) nas etapas
+     */
     public function testApprovedAfterAllScoreAndAbsencePosted()
     {
         $schoolClass = $this->enrollment->schoolClass;
@@ -79,6 +79,9 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
         $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
     }
 
+    /**
+     * O aluno deverá ser Reprovado por Falta depois do lançamento (notas e faltas) nas etapas
+     */
     public function testReprovedPerAbsenceAfterAllScoreAndAbsencePosted()
     {
         $schoolClass = $this->enrollment->schoolClass;
@@ -114,6 +117,9 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
         $this->assertEquals(App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS, $registration->refresh()->aprovado);
     }
 
+    /**
+     * O Aluno deverá continuar como Cursando depois dos lançamentos (notas e faltas) nas etapas, exceto para etapa de recuperação
+     */
     public function testStudyingAfterAllScoreAndAbsencePosted()
     {
         $schoolClass = $this->enrollment->schoolClass;
@@ -149,6 +155,10 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
         $this->assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
     }
 
+    /**
+     * Os lançamentos (notas e faltas) nas etapas deverá deixar o aluno com a situação Cursando e os componentes como Em Exame,
+     * depois o aluno deverá ser Aprovado após o lançamento da nota de Recuperação
+     */
     public function testApprovedAfterExamAllScoreAndAbsencePosted()
     {
         $schoolClass = $this->enrollment->schoolClass;
@@ -180,10 +190,12 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             $this->assertEquals('Em exame', $response->situacao);
         }
 
+        // Nota da etapa de recuperação
         $score = [
             'Rc' => 8
         ];
 
+        // Lança nota para a etapa de Recuperação
         foreach ($disciplines as $discipline) {
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
@@ -195,6 +207,10 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
         $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
     }
 
+    /**
+     * Os lançamentos (notas e faltas) nas etapas deverá deixar o aluno com a situação Cursando e os componentes como Em Exame,
+     * depois o aluno deverá ser Reprovado após o lançamento da nota de Recuperação
+     */
     public function testReprovedAfterExamAllScoreAndAbsencePosted()
     {
         $schoolClass = $this->enrollment->schoolClass;
@@ -226,10 +242,12 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             $this->assertEquals('Em exame', $response->situacao);
         }
 
+        // Nota da etapa de recuperação
         $score = [
             'Rc' => 5
         ];
 
+        // Lança nota para a etapa de Recuperação
         foreach ($disciplines as $discipline) {
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
@@ -241,6 +259,10 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
         $this->assertEquals(App_Model_MatriculaSituacao::REPROVADO, $registration->refresh()->aprovado);
     }
 
+    /**
+     * O aluno deverá continuar com a situação Cursando e os componentes como Em Exame, depois dos lançamentos (notas e faltas) nas etapas,
+     * exceto para etapa de recuperação. As faltas devem ser altas para que o aluno reprove por falta
+     */
     public function testInExamAfterAllScoreAndAbsencePostedWithAbsenceHigh()
     {
         $schoolClass = $this->enrollment->schoolClass;
@@ -276,6 +298,9 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
         $this->assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
     }
 
+    /**
+     * O aluno deverá ganhar a situação Reprovado Por Falta, depois dos lançamentos (notas e faltas) nas etapas
+     */
     public function testReprovedPerAbsenceAfterExamAllScoreAndAbsencePosted()
     {
         $schoolClass = $this->enrollment->schoolClass;
@@ -307,10 +332,12 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             $this->assertEquals('Em exame', $response->situacao);
         }
 
+        // Nota da etapa de recuperação
         $score = [
             'Rc' => 8
         ];
 
+        // Lança nota para a etapa de Recuperação
         foreach ($disciplines as $discipline) {
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
@@ -322,6 +349,9 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
         $this->assertEquals(App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS, $registration->refresh()->aprovado);
     }
 
+    /**
+     * O aluno deverá continuar com a situação Cursando, depois dos lançamentos (notas e faltas) em algumas etapas
+     */
     public function testStudyingAfterNotAllStageScoreAndAbsencePosted()
     {
         $schoolClass = $this->enrollment->schoolClass;
@@ -332,6 +362,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
 
         $disciplines = $schoolClass->disciplines;
 
+        // Lança notas e faltas das etapas 1 e 2
         $score = [
             1 => 6,
             2 => 5,
@@ -353,6 +384,9 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
         $this->assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
     }
 
+    /**
+     * O aluno deverá continuar com a situação Cursando, depois dos lançamentos (notas e faltas) nas etapas e ter a falta removida da última etapa
+     */
     public function testStudyingAfterRemoveStageScoreAndAbsencePosted()
     {
         $schoolClass = $this->enrollment->schoolClass;
@@ -387,6 +421,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
         $registration = $this->enrollment->registration;
         $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
 
+        // Remove falta da última etapa, de um dos componentes
         $randomDiscipline = $schoolClass->disciplines->random()->id;
         $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 4);
         $this->assertEquals('Cursando', $response->situacao);
@@ -395,6 +430,9 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
         $this->assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
     }
 
+    /**
+     * Deverá retornar erro ao tentar remover falta de uma etapa, quando não é a útima etapa
+     */
     public function testErrorAfterRemoveNotLastStageScoreAndAbsencePosted()
     {
         $schoolClass = $this->enrollment->schoolClass;
@@ -426,6 +464,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             $this->assertEquals('Aprovado', $response->situacao);
         }
 
+        // Remove falta de uma etapa
         $randomDiscipline = $schoolClass->disciplines->random()->id;
         $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 3);
         $this->assertTrue($response->any_error_msg);
