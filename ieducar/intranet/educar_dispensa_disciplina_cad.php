@@ -16,7 +16,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo($this->_instituicao . ' i-Educar - Dispensa Componente Curricular');
         $this->processoAp = 578;
-        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -273,7 +272,7 @@ class indice extends clsCadastro
     {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
-        
+
         $dadosDaDispensa = $this->obtemDadosDaDispensa();
         $objetoDispensa = $this->montaObjetoDispensa($dadosDaDispensa);
 

@@ -13,7 +13,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo($this->_instituicao . ' i-Educar - Configura&ccedil;&otilde;es gerais');
         $this->processoAp = 999873;
-        $this->addEstilo('localizacaoSistema');
     }
 }
 

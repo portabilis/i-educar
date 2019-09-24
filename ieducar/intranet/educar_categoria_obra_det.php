@@ -34,7 +34,6 @@ class clsIndexBase extends clsBase{
     function Formular(){
         $this->SetTitulo( "{$this->_instituicao} i-Educar - Categoria Obras");
         $this->processoAp = "598";
-        $this->addEstilo('localizacaoSistema');
     }
 }
 

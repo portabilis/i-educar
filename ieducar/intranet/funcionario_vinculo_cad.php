@@ -10,7 +10,6 @@ class clsIndex extends clsBase
     {
         $this->SetTitulo("{$this->_instituicao} Vínculo Funcionários!");
         $this->processoAp = '190';
-        $this->addEstilo('localizacaoSistema');
     }
 }
 
