@@ -11,9 +11,7 @@ class DependencyTest extends TestCase
 {
     use DiarioApiFakeDataTestTrait, DiarioApiRequestTestTrait, DatabaseTransactions;
 
-    /**
-     * @var LegacyEnrollment
-     */
+    /** @var LegacyEnrollment */
     private $enrollment;
 
     public function setUp(): void

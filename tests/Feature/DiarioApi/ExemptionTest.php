@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\DiarioApi;
 
+use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyExemptionStage;
@@ -11,11 +12,9 @@ use Tests\TestCase;
 
 class ExemptionTest extends TestCase
 {
-    use DiarioApiFakeDataTestTrait, DiarioApiRequestTestTrait;
+    use DiarioApiFakeDataTestTrait, DiarioApiRequestTestTrait, DatabaseTransactions;
 
-    /**
-     * @var LegacyEnrollment
-     */
+    /** @var LegacyEnrollment */
     private $enrollment;
 
     public function setUp(): void
@@ -25,7 +24,7 @@ class ExemptionTest extends TestCase
     }
 
     /**
-     * O alun deverá ser aprovado sem lançamentos nas etapas dispensadas
+     * O aluno deverá ser aprovado sem lançamentos nas etapas dispensadas
      */
     public function testApproveWithoutPostGradeInExemptionStages()
     {
@@ -52,7 +51,7 @@ class ExemptionTest extends TestCase
             'etapa' => 1,
         ]);
 
-        // Sem lançamentos para a etapa dispensada
+        // Sem lançamentos para a etapa dispensada na primeira disciplina
         $score = [
             2 => 5.4,
             3 => 6.7,
@@ -69,6 +68,7 @@ class ExemptionTest extends TestCase
         $response = $this->postScoreForStages($score, $disciplines[0]);
         $this->assertEquals('Aprovado', $response->situacao);
 
+        // Lança notas e faltas para todos as etapas da segunda disciplina
         $score = [
             1 => 9.1,
             2 => 5.4,
@@ -93,7 +93,7 @@ class ExemptionTest extends TestCase
 
 
     /**
-     * O alun deverá ser aprovado sem lançamentos em disciplinas dispensadas
+     * O aluno deverá ser aprovado sem lançamentos em disciplinas dispensadas
      * em todas as etapas
      */
     public function testApproveWithoutPostGradeInExemption()
@@ -105,8 +105,11 @@ class ExemptionTest extends TestCase
         $this->createDisciplines($schoolClass, 2);
 
         $registration = $this->enrollment->registration;
+
+        /** @var LegacyDiscipline[] $disciplines */
         $disciplines = $schoolClass->disciplines;
 
+        // Dispensa as duas etapas da primeira disciplina
         /** @var LegacyDisciplineExemption $dispensa */
         $dispensa = factory(LegacyDisciplineExemption::class)->create([
             'ref_cod_matricula' => $registration->id,
@@ -115,7 +118,6 @@ class ExemptionTest extends TestCase
             'ref_cod_serie' => $registration->ref_ref_cod_serie,
         ]);
 
-        // Dispensa a duas etapa da segunda disciplina
         factory(LegacyExemptionStage::class)->create([
             'ref_cod_dispensa' => $dispensa->cod_dispensa,
             'etapa' => 1,
