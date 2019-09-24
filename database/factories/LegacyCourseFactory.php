@@ -19,9 +19,10 @@ $factory->define(LegacyCourse::class, function (Faker $faker) {
         'nm_curso' => $faker->words(3, true),
         'sgl_curso' => $faker->word,
         'qtd_etapas' => $faker->randomElement([2, 3, 4]),
-        'carga_horaria' => $faker->randomElement([200, 400, 800]),
+        'carga_horaria' => 800,
         'data_cadastro' => now(),
         'ref_cod_instituicao' => factory(LegacyInstitution::class)->states('unique')->make(),
+        'hora_falta' => 0.75,
     ];
 });
 

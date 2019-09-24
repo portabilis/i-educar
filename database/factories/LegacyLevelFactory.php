@@ -13,7 +13,7 @@ $factory->define(LegacyLevel::class, function (Faker $faker) {
         'ref_usuario_cad' => 1,
         'ref_cod_curso' => factory(LegacyCourse::class)->create(),
         'etapa_curso' => $faker->randomElement([1, 2, 3, 4]),
-        'carga_horaria' => $faker->randomFloat(),
+        'carga_horaria' => 800,
         'data_cadastro' => $faker->dateTime(),
     ];
 });
