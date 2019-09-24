@@ -14,7 +14,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo("{$this->_instituicao} i-Educar - Distribui&ccedil;&atilde;o de uniforme");
         $this->processoAp = 578;
-        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -74,6 +73,10 @@ class indice extends clsCadastro
     public $calca_jeans_qtd;
 
     public $calca_jeans_tm;
+
+    public $saia_qtd;
+
+    public $saia_tm;
 
     public function Inicializar()
     {
@@ -277,6 +280,24 @@ class indice extends clsCadastro
             'size' => 10
         ]);
 
+        $this->inputsHelper()->integer('saia_qtd', [
+            'required' => false,
+            'label' => 'Quantidade de saias',
+            'value' => $this->saia_qtd,
+            'max_length' => 2,
+            'size' => 2,
+            'inline' => true,
+            'placeholder' => ''
+        ]);
+
+        $this->inputsHelper()->text('saia_tm', [
+            'required' => false,
+            'label' => ' Tamanho',
+            'value' => $this->saia_tm,
+            'max_length'  => 10,
+            'size' => 10
+        ]);
+
         $this->inputsHelper()->integer('bermudas_tectels_qtd', [
             'required' => false,
             'label' => 'Bermudas tectels (masculino)',
@@ -372,7 +393,9 @@ class indice extends clsCadastro
             $this->camiseta_infantil_qtd,
             $this->camiseta_infantil_tm,
             $this->calca_jeans_qtd,
-            $this->calca_jeans_tm
+            $this->calca_jeans_tm,
+            $this->saia_qtd,
+            $this->saia_tm
         );
 
         $this->cod_distribuicao_uniforme = $cadastrou = $obj->cadastra();
@@ -436,7 +459,9 @@ class indice extends clsCadastro
             $this->camiseta_infantil_qtd,
             $this->camiseta_infantil_tm,
             $this->calca_jeans_qtd,
-            $this->calca_jeans_tm
+            $this->calca_jeans_tm,
+            $this->saia_qtd,
+            $this->saia_tm
         );
 
         $detalheAntigo = $obj->detalhe();
@@ -490,6 +515,7 @@ $pagina->MakeAll();
         $j('#camiseta_infantil_qtd').val('').attr('disabled', 'disabled');
         $j('#calca_jeans_qtd').val('').attr('disabled', 'disabled');
         $j('#meias_qtd').val('').attr('disabled', 'disabled');
+        $j('#saia_qtd').val('').attr('disabled', 'disabled');
         $j('#bermudas_tectels_qtd').val('').attr('disabled', 'disabled');
         $j('#bermudas_coton_qtd').val('').attr('disabled', 'disabled');
         $j('#tenis_qtd').val('').attr('disabled', 'disabled');
@@ -503,6 +529,7 @@ $pagina->MakeAll();
         $j('#camiseta_infantil_qtd').removeAttr('disabled');
         $j('#calca_jeans_qtd').removeAttr('disabled');
         $j('#meias_qtd').removeAttr('disabled');
+        $j('#saia_qtd').removeAttr('disabled');
         $j('#bermudas_tectels_qtd').removeAttr('disabled');
         $j('#bermudas_coton_qtd').removeAttr('disabled');
         $j('#tenis_qtd').removeAttr('disabled');

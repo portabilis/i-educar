@@ -13,7 +13,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo("{$this->_instituicao} i-Educar - Distribuições de uniforme escolar");
         $this->processoAp = '578';
-        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -84,6 +83,7 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Quantidade de camisetas infantis (sem manga)', $registro['camiseta_infantil_qtd'] ?: '0']);
             $this->addDetalhe(['Quantidade de calça jeans', $registro['calca_jeans_qtd'] ?: '0']);
             $this->addDetalhe(['Quantidade de meias', $registro['meias_qtd'] ?: '0']);
+            $this->addDetalhe(['Quantidade de saias', $registro['saia_qtd'] ?: '0']);
             $this->addDetalhe(['Bermudas tectels (masculino)', $registro['bermudas_tectels_qtd'] ?: '0']);
             $this->addDetalhe(['Bermudas coton (feminino)', $registro['bermudas_coton_qtd'] ?: '0']);
             $this->addDetalhe(['Quantidade de tênis', $registro['tenis_qtd'] ?: '0']);

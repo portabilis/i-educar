@@ -19,7 +19,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo($this->_instituicao . ' Ano Letivo Etapa');
         $this->processoAp = 561;
-        $this->addEstilo('localizacaoSistema');
     }
 }
 
