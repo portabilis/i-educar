@@ -91,7 +91,6 @@ class ExemptionTest extends TestCase
         $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
     }
 
-
     /**
      * O aluno deverá ser aprovado sem lançamentos em disciplinas dispensadas
      * em todas as etapas
