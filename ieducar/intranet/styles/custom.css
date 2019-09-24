@@ -1125,6 +1125,7 @@ table.tabela-adicao td .btn-detalhes{
 table.paginacao{
   border-collapse: collapse;
   margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 table.paginacao td {

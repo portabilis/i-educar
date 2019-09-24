@@ -87,7 +87,6 @@ class LegacyDisciplineExemption extends Model
 
     /**
      * @param Builder $query
-     *
      * @return Builder
      */
     public function scopeActive($query)
