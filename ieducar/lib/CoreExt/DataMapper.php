@@ -799,13 +799,13 @@ abstract class CoreExt_DataMapper
     {
         foreach ($data as $key => $value) {
             try {
-                $instance->$key = $value;
-            } catch (CoreExt_Exception_InvalidArgumentException $e) {
-                // Caso o campo não tenha um atributo correspondente, procura no
-                // mapa de atributos pelo equivalente e atribue.
                 if (false !== ($index = array_search($key, $this->_attributeMap))) {
                     $instance->$index = $value;
+                } else {
+                    $instance->$key = $value;
                 }
+            } catch (CoreExt_Exception_InvalidArgumentException $e) {
+                //
             }
         }
 
