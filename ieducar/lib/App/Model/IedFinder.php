@@ -1534,7 +1534,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $stages = [];
 
         $sql = '
-            SELECT distinct etapa
+            SELECT distinct etapa, ref_cod_disciplina
             FROM pmieducar.dispensa_disciplina
             JOIN pmieducar.dispensa_etapa
             ON dispensa_disciplina.cod_dispensa = dispensa_etapa.ref_cod_dispensa
@@ -1545,10 +1545,10 @@ class App_Model_IedFinder extends CoreExt_Entity
         $query = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$enrollmentId]]);
 
         foreach ($query as $stage) {
-            $stages[] = $stage['etapa'];
+            $stages[$stage['ref_cod_disciplina']][] = $stage['etapa'];
         }
 
-        return [$disciplineId => $stages];
+        return $stages;
     }
 
     //Retorna a quantidade de etapas resgatadas na function getEtapasComponente
