@@ -160,6 +160,22 @@ class ExemptionTest extends TestCase
         $registration = $this->enrollment->registration;
         $disciplines = $schoolClass->disciplines;
 
+        // Lança notas e faltas para todos as etapas da segunda disciplina
+        $score = [
+            1 => 9.1,
+            2 => 5.4,
+        ];
+
+        $absence = [
+            1 => 3,
+            2 => 3,
+        ];
+
+        $this->postAbsenceForStages($absence, $disciplines[1]);
+        $response = $this->postScoreForStages($score, $disciplines[1]);
+        $this->assertEquals('Aprovado', $response->situacao);
+
+
         // Dispensa a ultima etapa da primeira disciplina
         /** @var LegacyDisciplineExemption $dispensa */
         $dispensa = factory(LegacyDisciplineExemption::class)->create([
@@ -186,22 +202,6 @@ class ExemptionTest extends TestCase
         $this->postAbsenceForStages($absence, $disciplines[0]);
         $response = $this->postScoreForStages($score, $disciplines[0]);
         $this->assertEquals('Aprovado', $response->situacao);
-
-        // Lança notas e faltas para todos as etapas da segunda disciplina
-        $score = [
-            1 => 9.1,
-            2 => 5.4,
-        ];
-
-        $absence = [
-            1 => 3,
-            2 => 3,
-        ];
-
-        $this->postAbsenceForStages($absence, $disciplines[1]);
-        $response = $this->postScoreForStages($score, $disciplines[1]);
-        $this->assertEquals('Aprovado', $response->situacao);
-
 
         $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
     }
