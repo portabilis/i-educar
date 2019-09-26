@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyEvaluationRule;
+use App\Models\LegacyRegistration;
 use App\Models\LegacyRemedialRule;
 use App\Models\LegacySchoolClass;
 use Cocur\Slugify\Slugify;
@@ -871,6 +872,7 @@ class DiarioApiController extends ApiCoreController
             }
 
             foreach ($enrollments as $enrollment) {
+                /*** @var LegacyRegistration $registration */
                 $registration = $enrollment->registration;
                 $student = $registration->student;
                 $person = $student->person;
@@ -878,7 +880,7 @@ class DiarioApiController extends ApiCoreController
                 $matricula = [];
                 $matriculaId = $enrollment->ref_cod_matricula;
                 $turmaId = $enrollment->ref_cod_turma;
-                $serieId = $schoolClass->ref_ref_cod_serie;
+                $serieId = $registration->ref_ref_cod_serie;
                 $componenteCurricularId = $this->getRequest()->componente_curricular_id;
                 $disciplinasDependenciaId = $enrollment->registration->dependencies->values();
                 $matriculaDependencia = $enrollment->registration->dependencia;
@@ -916,11 +918,17 @@ class DiarioApiController extends ApiCoreController
                 // possua alguma deficiência que seja considerada e exista uma
                 // regra de avaliação diferenciada para a turma.
 
-                if ($person->considerable_deficiencies_count && $deficiencyEvaluationRule) {
-                    $matricula['regra'] = $this->getEvaluationRule($deficiencyEvaluationRule);
-                } else {
-                    $matricula['regra'] = $this->getEvaluationRule($evaluationRule);
+                $registrationEvaluationRule = $evaluationRule;
+
+                if ($registration->ref_ref_cod_serie !== $schoolClass->grade_id) {
+                    $registrationEvaluationRule = $registration->getEvaluationRule();
                 }
+
+                if ($person->considerable_deficiencies_count && $deficiencyEvaluationRule) {
+                    $registrationEvaluationRule = $deficiencyEvaluationRule;
+                }
+
+                $matricula['regra'] = $this->getEvaluationRule($registrationEvaluationRule);
 
                 $matricula['regra']['quantidade_etapas'] = $schoolClass->stages->count();
 
