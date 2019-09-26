@@ -798,14 +798,16 @@ abstract class CoreExt_DataMapper
     protected function _mapData($data, CoreExt_Entity $instance)
     {
         foreach ($data as $key => $value) {
+            $index = array_search($key, $this->_attributeMap);
+            
             try {
-                $instance->$key = $value;
-            } catch (CoreExt_Exception_InvalidArgumentException $e) {
-                // Caso o campo não tenha um atributo correspondente, procura no
-                // mapa de atributos pelo equivalente e atribue.
-                if (false !== ($index = array_search($key, $this->_attributeMap))) {
+                if ($index !== false) {
                     $instance->$index = $value;
+                } else {
+                    $instance->$key = $value;
                 }
+            } catch (CoreExt_Exception_InvalidArgumentException $e) {
+                //
             }
         }
 
