@@ -99,6 +99,8 @@ class indice extends clsCadastro
     $this->campoArquivo('arquivo', 'Arquivo', $this->arquivo,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Somente arquivos com formato txt serão aceitos</span>');
 
     $this->nome_url_sucesso = "Importar";
+
+      Portabilis_View_Helper_Application::loadJavascript($this, '/modules/Educacenso/Assets/Javascripts/Importacao.js');
   }
 
   function Novo()
