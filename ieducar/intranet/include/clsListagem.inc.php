@@ -75,7 +75,7 @@ class clsListagem extends clsCampos
                     return;
                 }
 
-                $path = Request::server('PATH_INFO') . '?' . $path;
+                $path = $uri . '?' . $path;
 
                 return $this->simpleRedirect($path);
             }
