@@ -84,7 +84,18 @@ class indice extends clsCadastro
 
   function Gerar()
   {
-    $this->inputsHelper()->dynamic('ano', array('value' => $this->ano));
+      $resources = [
+          null => 'Selecione',
+          date('Y') - 1 => date('Y') - 1,
+          date('Y') => date('Y'),
+      ];
+      $options = [
+          'label' => 'Ano',
+          'resources' => $resources,
+          'value' => $this->ano,
+      ];
+      $this->inputsHelper()->select('ano', $options);
+
     $this->campoArquivo('arquivo', 'Arquivo', $this->arquivo,40,'<br/> <span style="font-style: italic; font-size= 10px;">* Somente arquivos com formato txt serão aceitos</span>');
 
     $this->nome_url_sucesso = "Importar";
