@@ -308,4 +308,23 @@ class LegacySchoolClass extends Model
             'componente_curricular_id'
         )->withPivot('ano_escolar_id', 'escola_id');
     }
+
+    /**
+     * Retorna a regra de avaliação que deve ser utilizada para a turma. Leva
+     * em consideração o parâmetro `utiliza_regra_diferenciada` da escola.
+     *
+     * @return LegacyEvaluationRule
+     */
+    public function getEvaluationRule()
+    {
+        $evaluationRuleGradeYear = $this->hasOne(LegacyEvaluationRuleGradeYear::class, 'serie_id', 'ref_ref_cod_serie')
+            ->where('ano_letivo', $this->ano)
+            ->firstOrFail();
+
+        if ($this->school->utiliza_regra_diferenciada && $evaluationRuleGradeYear->differentiatedEvaluationRule) {
+            return $evaluationRuleGradeYear->differentiatedEvaluationRule;
+        }
+
+        return $evaluationRuleGradeYear->evaluationRule;
+    }
 }
