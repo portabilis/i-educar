@@ -119,6 +119,9 @@ WHERE TRUE
         WHEN matricula.aprovado = 15 THEN
             matricula_turma.ativo = 1
             OR matricula_turma.falecido
+        WHEN matricula.aprovado = 5 THEN
+            matricula_turma.ativo = 1
+            OR matricula_turma.reclassificado
         ELSE matricula_turma.ativo = 1
             OR matricula_turma.transferido
             OR matricula_turma.reclassificado
