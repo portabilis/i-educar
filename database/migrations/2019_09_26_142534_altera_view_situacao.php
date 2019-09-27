@@ -24,7 +24,7 @@ class AlteraViewSituacao extends Migration
      */
     public function down()
     {
-        $sql = file_get_contents(database_path('sqls/views/relatorio.view_situacao.sql'));
+        $sql = file_get_contents(database_path('sqls/views/relatorio.view_situacao-2019-09-26.sql'));
 
         DB::unprepared($sql);
     }
