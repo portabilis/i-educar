@@ -1918,7 +1918,7 @@ class AlunoController extends ApiCoreController
                             and $3::date < coalesce(m.data_cancel::date, mt.data_exclusao::date, current_date))
                        END)
                       END)
-              AND t.ano = $4';
+              AND t.ano = $4 ';
 
             $params = [$instituicaoId, $escolaId, $data, $ano];
 
