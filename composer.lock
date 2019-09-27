@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7dbea36075b4338d292719d273a996db",
+    "content-hash": "5a017f9e03d28d1379df94e1a0cab062",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.112.5",
+            "version": "3.112.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "5c6f05d68576f845a8391b83020b480840eca759"
+                "reference": "224955fcb7ca9edc8de3e4147c0b180aeaee5a48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/5c6f05d68576f845a8391b83020b480840eca759",
-                "reference": "5c6f05d68576f845a8391b83020b480840eca759",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/224955fcb7ca9edc8de3e4147c0b180aeaee5a48",
+                "reference": "224955fcb7ca9edc8de3e4147c0b180aeaee5a48",
                 "shasum": ""
             },
             "require": {
@@ -87,7 +87,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-09-20T22:08:27+00:00"
+            "time": "2019-09-26T18:13:00+00:00"
         },
         {
             "name": "cocur/slugify",
@@ -1098,22 +1098,22 @@
         },
         {
             "name": "honeybadger-io/honeybadger-laravel",
-            "version": "v1.7.2",
+            "version": "v1.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/honeybadger-io/honeybadger-laravel.git",
-                "reference": "2b5209a7df12bf09393174cc663146e5ad516d2a"
+                "reference": "e084eda97051341808095447c1560377b01c3086"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/honeybadger-io/honeybadger-laravel/zipball/2b5209a7df12bf09393174cc663146e5ad516d2a",
-                "reference": "2b5209a7df12bf09393174cc663146e5ad516d2a",
+                "url": "https://api.github.com/repos/honeybadger-io/honeybadger-laravel/zipball/e084eda97051341808095447c1560377b01c3086",
+                "reference": "e084eda97051341808095447c1560377b01c3086",
                 "shasum": ""
             },
             "require": {
                 "honeybadger-io/honeybadger-php": "^1.7",
-                "illuminate/console": "^5.5|^6.0",
-                "illuminate/support": "^5.5|^6.0",
+                "illuminate/console": "^5.5",
+                "illuminate/support": "^5.5",
                 "php": "^7.1",
                 "sixlive/dotenv-editor": "^1.1"
             },
@@ -1163,7 +1163,7 @@
                 "logging",
                 "monitoring"
             ],
-            "time": "2019-09-05T16:28:05+00:00"
+            "time": "2019-09-21T14:45:50+00:00"
         },
         {
             "name": "honeybadger-io/honeybadger-php",
@@ -5211,16 +5211,16 @@
         },
         {
             "name": "laravel/dusk",
-            "version": "v5.5.1",
+            "version": "v5.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/dusk.git",
-                "reference": "9d2a643dbeb27fafd7f7d3961b74ee62eb5081bf"
+                "reference": "aed755282a13a9b36d26854a0105d519aa22fec9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/dusk/zipball/9d2a643dbeb27fafd7f7d3961b74ee62eb5081bf",
-                "reference": "9d2a643dbeb27fafd7f7d3961b74ee62eb5081bf",
+                "url": "https://api.github.com/repos/laravel/dusk/zipball/aed755282a13a9b36d26854a0105d519aa22fec9",
+                "reference": "aed755282a13a9b36d26854a0105d519aa22fec9",
                 "shasum": ""
             },
             "require": {
@@ -5272,7 +5272,7 @@
                 "testing",
                 "webdriver"
             ],
-            "time": "2019-09-12T07:51:16+00:00"
+            "time": "2019-09-24T20:30:07+00:00"
         },
         {
             "name": "laravel/telescope",
