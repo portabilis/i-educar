@@ -8,6 +8,7 @@ use Cocur\Slugify\Slugify;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
@@ -1224,7 +1225,11 @@ class DiarioApiController extends ApiCoreController
 
         $where = array('id' => $componenteCurricularId);
 
-        $area = $mapper->findAll(array('area_conhecimento'), $where);
+        $key = json_encode($where);
+
+        $area = Cache::store('array')->remember("getAreaConhecimento:{$key}", now()->addMinute(), function () use ($mapper, $where) {
+            return $mapper->findAll(array('area_conhecimento'), $where);
+        });
 
         $areaConhecimento = new stdClass();
         $areaConhecimento->id = $area[0]->area_conhecimento->id;
