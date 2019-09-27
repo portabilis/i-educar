@@ -306,7 +306,49 @@ class LegacySchoolClass extends Model
             'modules.componente_curricular_turma',
             'turma_id',
             'componente_curricular_id'
-        )->withPivot('ano_escolar_id', 'escola_id');
+        )->withPivot([
+            'ano_escolar_id',
+            'escola_id',
+            'carga_horaria',
+            'docente_vinculado',
+            'etapas_especificas',
+            'etapas_utilizadas',
+        ]);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function gradeDisciplines()
+    {
+        return $this->belongsToMany(
+            LegacyDiscipline::class,
+            'modules.componente_curricular_ano_escolar',
+            'ano_escolar_id',
+            'componente_curricular_id',
+            'ref_ref_cod_serie',
+            'id'
+        )->withPivot([
+            'carga_horaria',
+            'tipo_nota',
+        ]);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getDisciplines()
+    {
+        if ($this->course->is_standard_calendar) {
+            return $this->gradeDisciplines()
+                ->whereRaw('? = ANY(anos_letivos)', [$this->year])
+                ->get();
+        }
+
+        return $this->disciplines()
+            ->where('ano_escolar_id', $this->grade_id)
+            ->where('escola_id', $this->school_id)
+            ->get();
     }
 
     /**
