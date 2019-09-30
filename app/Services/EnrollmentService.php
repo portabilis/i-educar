@@ -9,8 +9,10 @@ use App\Exceptions\Enrollment\EnrollDateBeforeAcademicYearException;
 use App\Exceptions\Enrollment\ExistsActiveEnrollmentException;
 use App\Exceptions\Enrollment\ExistsActiveEnrollmentSameTimeException;
 use App\Exceptions\Enrollment\NoVacancyException;
+use App\Exceptions\Enrollment\PreviousEnrollCancellationDateException;
 use App\Exceptions\Enrollment\PreviousEnrollDateException;
 use App\Exceptions\Enrollment\PreviousCancellationDateException;
+use App\Exceptions\Enrollment\PreviousEnrollRegistrationDateException;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacyEnrollment;
@@ -139,8 +141,12 @@ class EnrollmentService
      */
     public function cancelEnrollment(LegacyEnrollment $enrollment, DateTime $date)
     {
+        $schoolClass = $enrollment->schoolClass;
+
         if ($date->format('Y-m-d') < $enrollment->schoolClass->begin_academic_year->format('Y-m-d')) {
-            throw new CancellationDateBeforeAcademicYearException($enrollment->schoolClass, $date);
+            if (!$schoolClass->school->institution->allowRegistrationOutAcademicYear) {
+                throw new CancellationDateBeforeAcademicYearException($enrollment->schoolClass, $date);
+            }
         }
 
         if ($date->format('Y-m-d') > $enrollment->schoolClass->end_academic_year->format('Y-m-d')) {
@@ -149,6 +155,10 @@ class EnrollmentService
 
         if ($date < $enrollment->date) {
             throw new PreviousCancellationDateException($enrollment, $date);
+        }
+
+        if ($date < $enrollment->registration->data_matricula) {
+            throw new PreviousEnrollCancellationDateException($enrollment->registration, $date);
         }
 
         $enrollment->ref_usuario_exc = $this->user->getKey();
@@ -180,7 +190,9 @@ class EnrollmentService
         }
 
         if ($date->format('Y-m-d') < $schoolClass->begin_academic_year->format('Y-m-d')) {
-            throw new EnrollDateBeforeAcademicYearException($schoolClass, $date);
+            if (!$schoolClass->school->institution->allowRegistrationOutAcademicYear) {
+                throw new EnrollDateBeforeAcademicYearException($schoolClass, $date);
+            }
         }
 
         if ($date->format('Y-m-d') > $schoolClass->end_academic_year->format('Y-m-d')) {
@@ -202,6 +214,10 @@ class EnrollmentService
             && $registration->lastEnrollment->date_departed->format('Y-m-d') > $date->format('Y-m-d')
         ) {
             throw new PreviousEnrollDateException($date, $registration->lastEnrollment);
+        }
+
+        if ($registration->data_matricula > $date) {
+            throw new PreviousEnrollRegistrationDateException($date, $registration);
         }
 
         $isMandatoryCensoFields = $schoolClass->school->institution->isMandatoryCensoFields();

@@ -323,11 +323,7 @@ abstract class clsBancoSQL_
       }
     }
 
-    $start = microtime(true);
-
     $this->run($this->strStringSQL);
-
-    $this->logQuery($this->strStringSQL, [], $this->getElapsedTime($start));
 
     if (!$this->bConsulta_ID) {
         $erroMsg = "SQL invalido: {$this->strStringSQL}<br>\n";
@@ -490,12 +486,7 @@ abstract class clsBancoSQL_
       if (! is_array($params))
         $params = array($params);
 
-      $start = microtime(true);
-
         $this->run($query, $params);
-
-      $this->logQuery($query, $params, $this->getElapsedTime($start));
-
       }
       catch(Exception $e) {
         $errorMsgs .= "Exception: " . $e->getMessage();
@@ -506,43 +497,6 @@ abstract class clsBancoSQL_
 
       return $this->bConsulta_ID;
   }
-
-    /**
-     * Lança um evento "QueryExecuted".
-     *
-     * @see Connection::logQuery()
-     *
-     * @param string $query
-     * @param array $bindings
-     * @param string $time
-     *
-     * @return void
-     */
-    protected function logQuery($query, $bindings, $time)
-    {
-        if (env('APP_ENV') == 'testing') {
-            return;
-        }
-
-        /** @var Connection $connection */
-        $connection = app(Connection::class);
-
-        $connection->logQuery($query, $bindings, $time);
-    }
-
-    /**
-     * Retorna o tempo gasto na operação.
-     *
-     * @see Connection::getElapsedTime()
-     *
-     * @param int $start
-     *
-     * @return float
-     */
-    protected function getElapsedTime($start)
-    {
-        return round((microtime(true) - $start) * 1000, 2);
-    }
 
     /**
      * Método mockavel para execução de query

@@ -54,6 +54,10 @@ class clsPmieducarDistribuicaoUniforme extends Model
 
     public $calca_jeans_tm;
 
+    public $saia_qtd;
+
+    public $saia_qtm;
+
     public function __construct(
         $cod_distribuicao_uniforme = null,
         $ref_cod_aluno = null,
@@ -78,7 +82,9 @@ class clsPmieducarDistribuicaoUniforme extends Model
         $camiseta_infantil_qtd = null,
         $camiseta_infantil_tm = null,
         $calca_jeans_qtd = null,
-        $calca_jeans_tm = null
+        $calca_jeans_tm = null,
+        $saia_qtd = null,
+        $saia_tm = null
     ) {
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}distribuicao_uniforme";
@@ -90,7 +96,7 @@ class clsPmieducarDistribuicaoUniforme extends Model
             agasalho_tm, camiseta_curta_tm, camiseta_longa_tm, meias_tm, 
             bermudas_tectels_tm, bermudas_coton_tm, tenis_tm, ref_cod_escola,
             camiseta_infantil_qtd, camiseta_infantil_tm, calca_jeans_qtd, 
-            calca_jeans_tm
+            calca_jeans_tm, saia_qtd, saia_tm
         ';
 
         if (is_numeric($cod_distribuicao_uniforme)) {
@@ -151,6 +157,10 @@ class clsPmieducarDistribuicaoUniforme extends Model
             $this->calca_jeans_qtd = $calca_jeans_qtd;
         }
 
+        if (is_numeric($saia_qtd)) {
+            $this->saia_qtd = $saia_qtd;
+        }
+
         $this->agasalho_tm = $agasalho_tm;
         $this->camiseta_curta_tm = $camiseta_curta_tm;
         $this->camiseta_longa_tm = $camiseta_longa_tm;
@@ -160,6 +170,7 @@ class clsPmieducarDistribuicaoUniforme extends Model
         $this->tenis_tm = $tenis_tm;
         $this->ref_cod_escola = $ref_cod_escola;
         $this->calca_jeans_tm = $calca_jeans_tm;
+        $this->saia_tm = $saia_tm;
     }
 
     /**
@@ -313,6 +324,18 @@ class clsPmieducarDistribuicaoUniforme extends Model
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->saia_qtd)) {
+                $campos .= "{$gruda}saia_qtd";
+                $valores .= "{$gruda}{$this->saia_qtd}";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->saia_tm)) {
+                $campos .= "{$gruda}saia_tm";
+                $valores .= "{$gruda}'{$this->saia_tm}'";
+                $gruda = ', ';
+            }
+
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
             return $db->insertId("{$this->_tabela}_seq");
@@ -459,6 +482,18 @@ class clsPmieducarDistribuicaoUniforme extends Model
                 $set .= ",calca_jeans_tm = '{$this->calca_jeans_tm}'";
             } else {
                 $set .= ',calca_jeans_tm = NULL';
+            }
+
+            if ($this->saia_qtd) {
+                $set .= ",saia_qtd = '{$this->saia_qtd}'";
+            } else {
+                $set .= ',saia_qtd = NULL';
+            }
+
+            if ($this->saia_tm) {
+                $set .= ",saia_tm = '{$this->saia_tm}'";
+            } else {
+                $set .= ',saia_tm = NULL';
             }
 
             if ($set) {

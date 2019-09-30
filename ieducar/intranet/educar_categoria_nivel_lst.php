@@ -42,7 +42,6 @@ class clsIndexBase extends clsBase
   public function Formular() {
     $this->SetTitulo($this->_instituicao . 'Categorias ou níveis do servidor');
     $this->processoAp = '829';
-    $this->addEstilo('localizacaoSistema');
   }
 }
 

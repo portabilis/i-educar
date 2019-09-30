@@ -12,7 +12,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo( "{$this->_instituicao} Backups" );
         $this->processoAp = "9998858";
-        $this->addEstilo('localizacaoSistema');
     }
 }
 

@@ -55,7 +55,6 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Importação educacenso');
     $this->processoAp = 9998849;
-    $this->addEstilo('localizacaoSistema');
   }
 }
 

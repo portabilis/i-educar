@@ -61,3 +61,19 @@ $factory->defineAs(LegacyEvaluationRule::class, 'progressao-continuada-nota-conc
 
     ]);
 });
+
+$factory->defineAs(LegacyEvaluationRule::class, 'progressao-calculo-media-recuperacao-ponderada', function () use ($factory) {
+    $evaluationRule = $factory->raw(LegacyEvaluationRule::class);
+
+    return array_merge($evaluationRule, [
+        'tipo_nota' => RegraAvaliacao_Model_Nota_TipoValor::NUMERICA,
+        'formula_recuperacao_id' => factory(LegacyAverageFormula::class, 'calculo-media-ponderada')->create(),
+        'tipo_progressao' => RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MEDIA_PRESENCA,
+        'tipo_presenca' => RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE,
+        'porcentagem_presenca' => 75,
+        'media' => 7,
+        'media_recuperacao' => 6,
+        'nota_maxima_geral' => 10,
+        'nota_minima_geral' => 0,
+    ]);
+});
