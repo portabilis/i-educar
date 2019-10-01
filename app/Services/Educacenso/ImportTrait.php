@@ -38,6 +38,10 @@ trait ImportTrait
         $import->user_id = $this->user->id;
         $import->finished = false;
         $import->save();
+
+        $school = array_map('utf8_encode', $school);
+
+        \App\Jobs\EducacensoImport::dispatch($import, $school);
     }
 
 }

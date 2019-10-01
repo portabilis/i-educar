@@ -9,6 +9,8 @@ class EducacensoImport extends Model
 {
     protected $table = 'educacenso_import';
 
+    protected $fillable = ['year', 'school', 'user_id', 'finished'];
+
     /**
      * @return BelongsTo
      */
