@@ -980,21 +980,23 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      */
     public function getSituacaoFaltas()
     {
-        $presenca = new stdClass();
-        $presenca->totalFaltas = 0;
-        $presenca->horasFaltas = 0;
-        $presenca->porcentagemFalta = 0;
-        $presenca->porcentagemPresenca = 0;
+        $presenca                           = new stdClass();
+        $presenca->totalFaltas              = 0;
+        $presenca->horasFaltas              = 0;
+        $presenca->porcentagemFalta         = 0;
+        $presenca->porcentagemPresenca      = 0;
         $presenca->porcentagemPresencaRegra = $this->getRegraAvaliacaoPorcentagemPresenca();
-        $presenca->tipoFalta = $this->getRegraAvaliacaoTipoPresenca();
-        $presenca->cargaHoraria = $this->getOption('serieCargaHoraria');
-        $presenca->diasLetivos = $this->getOption('serieDiasLetivos');
-        $presenca->cursoHoraFalta = $this->getOption('cursoHoraFalta');
-        $presenca->componentesCurriculares = [];
-        $presenca->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
 
-        $etapa = 0;
-        $faltasComponentes = [];
+        $presenca->tipoFalta                = $this->getRegraAvaliacaoTipoPresenca();
+        $presenca->cargaHoraria             = $this->getOption('serieCargaHoraria');
+        $presenca->diasLetivos              = $this->getOption('serieDiasLetivos');
+
+        $presenca->cursoHoraFalta           = $this->getOption('cursoHoraFalta');
+        $presenca->componentesCurriculares  = [];
+        $presenca->situacao                 = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+
+        $etapa                              = 0;
+        $faltasComponentes                  = [];
 
         $enrollmentData = $this->getOption('matriculaData');
         $enrollmentId = $enrollmentData['cod_matricula'];
@@ -1007,7 +1009,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         // Carrega faltas lançadas (persistidas)
         $this->_loadFalta();
 
-        $tipoFaltaGeral = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::GERAL;
+        $tipoFaltaGeral         = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::GERAL;
         $tipoFaltaPorComponente = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
 
         if ($tipoFaltaGeral) {
@@ -1023,7 +1025,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         } elseif ($tipoFaltaPorComponente) {
             $faltas = $this->getFaltasComponentes();
             $faltas = array_intersect_key($faltas, $componentes);
-            $total = 0;
+            $total  = 0;
             $etapasComponentes = [];
             $faltasComponentes = [];
 
@@ -1037,8 +1039,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
                 // Pega o id de ComponenteCurricular_Model_Componente da última etapa do array
                 $componenteEtapa = array_pop($falta);
-                $id = $componenteEtapa->get('componenteCurricular');
-                $etapa = $componenteEtapa->etapa;
+                $id              = $componenteEtapa->get('componenteCurricular');
+                $etapa           = $componenteEtapa->etapa;
 
                 // Usa stdClass como interface de acesso
                 $faltasComponentes[$id] = new stdClass();
@@ -1049,17 +1051,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $faltasComponentes[$id]->total = $componenteTotal;
 
                 // Calcula a quantidade de horas/faltas no componente
-                $faltasComponentes[$id]->horasFaltas = $this->_calculateHoraFalta(
-                    $componenteTotal,
-                    $presenca->cursoHoraFalta
-                );
+                $faltasComponentes[$id]->horasFaltas =
+                    $this->_calculateHoraFalta($componenteTotal, $presenca->cursoHoraFalta);
 
                 // Calcula a porcentagem de falta no componente
-                $faltasComponentes[$id]->porcentagemFalta = $this->_calculatePorcentagem(
-                    $componentes[$id]->cargaHoraria,
-                    $faltasComponentes[$id]->horasFaltas,
-                    false
-                );
+                $faltasComponentes[$id]->porcentagemFalta =
+                    $this->_calculatePorcentagem(
+                        $componentes[$id]->cargaHoraria,
+                        $faltasComponentes[$id]->horasFaltas,
+                        false
+                    );
 
                 // Calcula a porcentagem de presença no componente
                 $faltasComponentes[$id]->porcentagemPresenca =
@@ -1069,13 +1070,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $lastStage = $this->getLastStage($enrollmentId, $classroomId, $id);
                 if ($etapa == $lastStage || $etapa == 'Rc') {
                     $aprovado = ($faltasComponentes[$id]->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca());
-
-                    if ($faltasComponentes[$id]->situacao = $aprovado) {
-                        App_Model_MatriculaSituacao::APROVADO;
-                    } else {
+                    $faltasComponentes[$id]->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
                         App_Model_MatriculaSituacao::REPROVADO;
-                    }
-
                     // Se etapa = quantidade de etapas dessa disciplina, vamos assumir que é a última etapa
                     // já que essa variável só tem o intuito de dizer que todas etapas da disciplina estão lançadas
                     $etapasComponentes[$this->getOption('etapas')] = $this->getOption('etapas');
@@ -1091,7 +1087,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 unset($componentes[$disciplinaDispensadaTurma]);
                 unset($faltasComponentes[$disciplinaDispensadaTurma]);
             }
-
             if (0 == count($faltasComponentes) ||
                 count($faltasComponentes) != count($componentes)) {
                 $etapa = 1;
@@ -1117,18 +1112,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             );
         }
 
-        $presenca->porcentagemPresenca = 100 - $presenca->porcentagemFalta;
+        $presenca->porcentagemPresenca     = 100 - $presenca->porcentagemFalta;
         $presenca->componentesCurriculares = $faltasComponentes;
 
         // Na última etapa seta situação presença como aprovado ou reprovado.
         if ($etapa == $this->getOption('etapas') || $etapa === 'Rc') {
-            $aprovado = ($presenca->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca());
-
-            if ($presenca->situacao = $aprovado) {
-                App_Model_MatriculaSituacao::APROVADO;
-            } else {
+            $aprovado           = ($presenca->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca());
+            $presenca->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
                 App_Model_MatriculaSituacao::REPROVADO;
-            }
         }
 
         return $presenca;
