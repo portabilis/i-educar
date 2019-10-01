@@ -3,24 +3,21 @@
 namespace App\Services\Educacenso;
 
 use App\Exceptions\Educacenso\NotImplementedYear;
-use App\User;
-use Illuminate\Http\UploadedFile;
+use App\Services\Educacenso\Version2019\ImportService as ImportService2019;
 
 class ImportServiceFactory
 {
     /**
      * Intancia um service de importação
      *
-     * @param UploadedFile $file
      * @param $year
-     * @param User $user
      * @return ImportServiceInterface
      */
-    static public function createImportService(UploadedFile $file, $year, User $user)
+    public static function createImportService($year)
     {
         $class = self::getClassByYear($year);
 
-        return new $class($file, $user);
+        return new $class();
     }
 
     /**
@@ -32,7 +29,7 @@ class ImportServiceFactory
     private static function getClassByYear($year)
     {
         $imports = [
-            2019 => \App\Services\Educacenso\v2019\ImportService::class,
+            2019 => ImportService2019::class,
         ];
 
         if (isset($imports[$year])) {

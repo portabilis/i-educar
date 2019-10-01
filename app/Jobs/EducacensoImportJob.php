@@ -3,15 +3,14 @@
 namespace App\Jobs;
 
 use App\Models\EducacensoImport as EducacensoImportModel;
+use App\Services\Educacenso\ImportServiceFactory;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\Queue;
 
-class EducacensoImport implements ShouldQueue
+class EducacensoImportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     /**
@@ -43,7 +42,8 @@ class EducacensoImport implements ShouldQueue
      */
     public function handle()
     {
-        // todo Implementar lógica da importação
+        $importService = ImportServiceFactory::createImportService($this->educacensoImport->year);
+
 
         $educacensoImport = $this->educacensoImport;
         $educacensoImport->finished = true;

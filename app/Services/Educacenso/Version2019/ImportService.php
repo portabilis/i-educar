@@ -1,34 +1,29 @@
 <?php
 
-namespace App\Services\Educacenso\v2019;
+namespace App\Services\Educacenso\Version2019;
 
 use App\Services\Educacenso\ImportServiceInterface;
-use App\Services\Educacenso\ImportTrait;
 use App\User;
 use Illuminate\Http\UploadedFile;
 
 class ImportService implements ImportServiceInterface
 {
-    use ImportTrait;
-
-    private $school;
-
     /**
-     * @var User
+     * Retorna o ano a que o service se refere
+     *
+     * @return int
      */
-    private $user;
-
-    public function __construct($school, User $user)
-    {
-        $this->school = $school;
-        $this->user = $user;
-    }
-
     public function getYear()
     {
         return 2019;
     }
 
+    /**
+     * Retorna o nome da escola a partir da string do arquivo de importação
+     *
+     * @param $school
+     * @return string
+     */
     public function getSchoolNameByFile($school)
     {
         $columns = explode('|', $school[0]);
@@ -37,6 +32,8 @@ class ImportService implements ImportServiceInterface
     }
 
     /**
+     * Verifica se o arquivo está de acordo com as regras do ano
+     *
      * todo: Implementar validação do arquivo
      * @param UploadedFile $file
      */

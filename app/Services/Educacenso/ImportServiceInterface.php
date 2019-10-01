@@ -2,22 +2,29 @@
 
 namespace App\Services\Educacenso;
 
-use App\Models\EducacensoImport;
-use App\User;
 use Illuminate\Http\UploadedFile;
 
 interface ImportServiceInterface
 {
+    /**
+     * Retorna o ano a que o service se refere
+     *
+     * @return int
+     */
+    public function getYear();
 
-    public function __construct($school, User $user);
-
-    public function handleFile(UploadedFile $file);
-
-    public function createImportProcess($school);
-
-    public function validateFile(UploadedFile $file);
-
+    /**
+     * Retorna o nome da escola a partir da string do arquivo de importação
+     *
+     * @param $school
+     * @return string
+     */
     public function getSchoolNameByFile($school);
 
-    public function getYear();
+    /**
+     * Verifica se o arquivo está de acordo com as regras do ano
+     *
+     * @param UploadedFile $file
+     */
+    public function validateFile(UploadedFile $file);
 }

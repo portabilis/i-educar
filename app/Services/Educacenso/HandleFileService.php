@@ -2,10 +2,11 @@
 
 namespace App\Services\Educacenso;
 
+use App\Jobs\EducacensoImportJob;
 use App\Models\EducacensoImport;
 use Illuminate\Http\UploadedFile;
 
-trait ImportTrait
+class HandleFileService
 {
     /**
      * Processa o arquivo de importação do censo
@@ -41,7 +42,6 @@ trait ImportTrait
 
         $school = array_map('utf8_encode', $school);
 
-        \App\Jobs\EducacensoImport::dispatch($import, $school);
+        EducacensoImportJob::dispatch($import, $school);
     }
-
 }
