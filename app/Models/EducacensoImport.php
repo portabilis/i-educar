@@ -16,6 +16,6 @@ class EducacensoImport extends Model
      */
     public function user()
     {
-        return $this->belongsTo(Individual::class, 'updated_by', 'id');
+        return $this->belongsTo(Individual::class, 'user_id', 'id');
     }
 }
