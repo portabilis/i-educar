@@ -43,7 +43,7 @@ class EducacensoImportJob implements ShouldQueue
     public function handle()
     {
         $importService = ImportServiceFactory::createImportService($this->educacensoImport->year);
-
+        $importService->import($this->importString);
 
         $educacensoImport = $this->educacensoImport;
         $educacensoImport->finished = true;

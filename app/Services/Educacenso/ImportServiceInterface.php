@@ -27,4 +27,12 @@ interface ImportServiceInterface
      * @param UploadedFile $file
      */
     public function validateFile(UploadedFile $file);
+
+    /**
+     * Faz a importação dos dados a partir da string do arquivo do censo
+     *
+     * @param array $importString
+     * @return void
+     */
+    public function import($importString);
 }
