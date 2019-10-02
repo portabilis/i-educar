@@ -55,7 +55,8 @@ class clsPmieducarCandidatoReservaVaga extends Model
                                                     crv.quantidade_membros,
                                                     crv.membros_trabalham,
                                                     crv.mae_fez_pre_natal,
-                                                    crv.hora_solicitacao ';
+                                                    crv.hora_solicitacao,
+                                                    crv.historico';
 
         if (is_numeric($cod_candidato_reserva_vaga)) {
             $this->cod_candidato_reserva_vaga = $cod_candidato_reserva_vaga;
@@ -532,6 +533,38 @@ class clsPmieducarCandidatoReservaVaga extends Model
     }
 
     /**
+     * @return false|string
+     */
+    protected function montaHistorico()
+    {
+        $detalhes = $this->detalhe();
+        $historico = $detalhes['historico'];
+
+        if (is_null($historico)) {
+            $historico = [];
+        } else {
+            $historico = json_decode($historico, true);
+        }
+
+        $mapaSituacao = [
+            null => 'Em espera',
+            'I' => 'Indeferida',
+            'A' => 'Atendida',
+        ];
+
+        $data = $detalhes['data_situacao'] ?? $detalhes['data_solicitacao'];
+        $data = date('d/m/Y', strtotime($data));
+
+        $historico[] = [
+            'situacao' => $mapaSituacao[$detalhes['situacao']] ?? 'Desconhecida',
+            'motivo' => trim($detalhes['motivo']),
+            'data' => $data,
+        ];
+
+        return json_encode($historico);
+    }
+
+    /**
      * @param $ref_cod_escola
      * @param $ref_cod_matricula
      * @param $ref_cod_aluno
@@ -545,10 +578,12 @@ class clsPmieducarCandidatoReservaVaga extends Model
         if (is_numeric($ref_cod_escola) &&
             is_numeric($ref_cod_matricula) &&
             is_numeric($ref_cod_aluno)) {
+            $historico = $this->montaHistorico();
             $sql = "UPDATE pmieducar.candidato_reserva_vaga
                        SET ref_cod_matricula = '{$ref_cod_matricula}',
                            situacao = 'A',
-                           data_situacao = NOW()
+                           data_situacao = NOW(),
+                           historico = '{$historico}'
                      WHERE ref_cod_escola = '{$ref_cod_escola}'
                        AND ref_cod_aluno = '{$ref_cod_aluno}'";
             $db = new clsBanco();
@@ -573,11 +608,13 @@ class clsPmieducarCandidatoReservaVaga extends Model
         $motivo = $motivo == null ? 'null' : '\'' . $motivo . '\'';
 
         if (is_numeric($this->cod_candidato_reserva_vaga)) {
+            $historico = $this->montaHistorico();
             $db = new clsBanco();
             $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga
                                       SET situacao = 'N',
                                           motivo = $motivo,
-                                          data_situacao = NOW()
+                                          data_situacao = NOW(),
+                                          historico = '{$historico}'
                                     WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
             $db->ProximoRegistro();
 
@@ -603,12 +640,14 @@ class clsPmieducarCandidatoReservaVaga extends Model
 
         $situacao = $situacao ?: 'NULL';
         $motivo = $motivo ?: 'NULL';
+        $historico = $this->montaHistorico();
 
         $db = new clsBanco();
         $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga
                                   SET situacao = {$situacao},
                                       motivo = {$motivo},
-                                      data_situacao = NOW()
+                                      data_situacao = NOW(),
+                                      historico = '{$historico}'
                                 WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
 
         return true;
