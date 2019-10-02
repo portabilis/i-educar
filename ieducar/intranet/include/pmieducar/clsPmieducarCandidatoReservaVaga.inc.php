@@ -450,6 +450,16 @@ class clsPmieducarCandidatoReservaVaga extends Model
         return false;
     }
 
+    /**
+     * @param null $ano_letivo
+     * @param null $ref_cod_serie
+     * @param null $ref_cod_aluno
+     * @param null $ref_cod_escola
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
     public function atualizaDesistente($ano_letivo = null, $ref_cod_serie = null, $ref_cod_aluno = null, $ref_cod_escola = null)
     {
         $this->resetCamposLista();
@@ -521,6 +531,15 @@ class clsPmieducarCandidatoReservaVaga extends Model
         return false;
     }
 
+    /**
+     * @param $ref_cod_escola
+     * @param $ref_cod_matricula
+     * @param $ref_cod_aluno
+     *
+     * @return bool|mixed
+     *
+     * @throws Exception
+     */
     public function vinculaMatricula($ref_cod_escola, $ref_cod_matricula, $ref_cod_aluno)
     {
         if (is_numeric($ref_cod_escola) &&
@@ -542,6 +561,13 @@ class clsPmieducarCandidatoReservaVaga extends Model
         return false;
     }
 
+    /**
+     * @param null $motivo
+     *
+     * @return bool|mixed
+     *
+     * @throws Exception
+     */
     public function indefereSolicitacao($motivo = null)
     {
         $motivo = $motivo == null ? 'null' : '\'' . $motivo . '\'';
@@ -561,6 +587,14 @@ class clsPmieducarCandidatoReservaVaga extends Model
         return false;
     }
 
+    /**
+     * @param $situacao
+     * @param null $motivo
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
     public function alteraSituacao($situacao, $motivo = null)
     {
         if (!$this->cod_candidato_reserva_vaga) {
