@@ -229,6 +229,8 @@ class clsPmieducarCandidatoReservaVaga extends Model
         if (is_numeric($this->cod_candidato_reserva_vaga)) {
             $db = new clsBanco();
             $set = '';
+            $gruda = '';
+            $campos = '';
 
             if (is_numeric($this->ano_letivo)) {
                 $set .= "{$gruda}ano_letivo = '{$this->ano_letivo}'";
@@ -332,7 +334,6 @@ class clsPmieducarCandidatoReservaVaga extends Model
                   LEFT JOIN cadastro.pessoa resp_pes ON fis.idpes_responsavel = resp_pes.idpes
                  INNER JOIN pmieducar.serie AS ser ON ser.cod_serie = crv.ref_cod_serie ";
         $whereAnd = ' WHERE ';
-
         $filtros = '';
 
         if (is_numeric($ano_letivo)) {
@@ -457,7 +458,6 @@ class clsPmieducarCandidatoReservaVaga extends Model
                SET situacao = 'D', data_situacao = NOW()";
 
         $whereAnd = ' WHERE ';
-
         $filtros = '';
 
         if (is_numeric($ano_letivo)) {
