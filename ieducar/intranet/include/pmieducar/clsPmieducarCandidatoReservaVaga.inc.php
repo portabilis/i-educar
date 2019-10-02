@@ -14,10 +14,8 @@ class clsPmieducarCandidatoReservaVaga extends Model
     public $ref_cod_turno;
     public $ref_cod_pessoa_cad;
     public $data_cad;
-    public $data_update;
     public $ref_cod_matricula;
     public $situacao;
-    public $data_situacao;
     public $quantidade_membros;
     public $codUsuario;
     public $membros_trabalham;
@@ -38,7 +36,6 @@ class clsPmieducarCandidatoReservaVaga extends Model
         $mae_fez_pre_natal = null,
         $hora_solicitacao = null
     ) {
-        $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'candidato_reserva_vaga crv ';
 
@@ -292,10 +289,8 @@ class clsPmieducarCandidatoReservaVaga extends Model
 
             if (is_string($this->hora_solicitacao) && !empty($this->hora_solicitacao)) {
                 $set .= "{$gruda}hora_solicitacao = '$this->hora_solicitacao'";
-                $gruda = ', ';
             } elseif (empty($this->hora_solicitacao)) {
                 $set .= "{$gruda}hora_solicitacao = NULL";
-                $gruda = ', ';
             }
 
             if ($set) {
@@ -324,7 +319,6 @@ class clsPmieducarCandidatoReservaVaga extends Model
         $ref_cod_aluno = null,
         $situacaoEmEspera = false
     ) {
-        $filtros = '';
         $this->resetCamposLista();
 
         $sql = "SELECT {$this->_campos_lista},
@@ -389,7 +383,6 @@ class clsPmieducarCandidatoReservaVaga extends Model
 
         if ($situacaoEmEspera) {
             $filtros .= " {$whereAnd} crv.situacao IS NULL";
-            $whereAnd = ' AND ';
         }
 
         $db = new clsBanco();
@@ -458,7 +451,6 @@ class clsPmieducarCandidatoReservaVaga extends Model
 
     public function atualizaDesistente($ano_letivo = null, $ref_cod_serie = null, $ref_cod_aluno = null, $ref_cod_escola = null)
     {
-        $filtros = '';
         $this->resetCamposLista();
 
         $sql = "UPDATE {$this->_tabela}
@@ -485,15 +477,10 @@ class clsPmieducarCandidatoReservaVaga extends Model
 
         if (is_numeric($ref_cod_escola)) {
             $filtros .= " {$whereAnd} ref_cod_escola <> {$ref_cod_escola} ";
-            $whereAnd = ' AND ';
         }
 
         $db = new clsBanco();
-        $countCampos = count(explode(',', $this->_campos_lista));
-        $resultado = [];
-
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-
         $db->Consulta($sql);
 
         return true;
@@ -547,24 +534,6 @@ class clsPmieducarCandidatoReservaVaga extends Model
                        AND ref_cod_aluno = '{$ref_cod_aluno}'";
             $db = new clsBanco();
             $db->Consulta($sql);
-            $db->ProximoRegistro();
-
-            return $db->Tupla();
-        }
-
-        return false;
-    }
-
-    public function indefereOutrasReservas($cod_aluno)
-    {
-        if (is_numeric($this->cod_candidato_reserva_vaga) &&
-            is_numeric($cod_aluno)) {
-            $db = new clsBanco();
-            $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga
-                                      SET situacao = 'N',
-                                          data_situacao = NOW()
-                                    WHERE cod_candidato_reserva_vaga <> '{$this->cod_candidato_reserva_vaga}'
-                                      AND ref_cod_aluno = {$cod_aluno} ");
             $db->ProximoRegistro();
 
             return $db->Tupla();
