@@ -9,7 +9,9 @@ interface RegistroImportInterface
     /**
      * Faz a importação dos dados a partir da linha do arquivo
      *
+     * @param string $importString
+     * @param int $year
      * @return void
      */
-    public function import();
+    public function import($importString, $year);
 }
