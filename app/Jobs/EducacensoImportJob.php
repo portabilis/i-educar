@@ -9,6 +9,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\DB;
 
 class EducacensoImportJob implements ShouldQueue
 {
@@ -42,11 +43,15 @@ class EducacensoImportJob implements ShouldQueue
      */
     public function handle()
     {
+        DB::beginTransaction();
+
         $importService = ImportServiceFactory::createImportService($this->educacensoImport->year);
         $importService->import($this->importString);
 
         $educacensoImport = $this->educacensoImport;
         $educacensoImport->finished = true;
         $educacensoImport->save();
+
+        DB::commit();
     }
 }
