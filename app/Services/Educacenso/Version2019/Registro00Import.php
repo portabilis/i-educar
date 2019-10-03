@@ -2,13 +2,19 @@
 
 namespace App\Services\Educacenso\Version2019;
 
+use App\Models\LegacyCity;
+use App\Models\LegacyDistrict;
 use App\Models\LegacyEducationNetwork;
 use App\Models\LegacyInstitution;
+use App\Models\LegacyNeighborhood;
 use App\Models\LegacyOrganization;
 use App\Models\LegacyPerson;
 use App\Models\LegacyPersonAddress;
 use App\Models\LegacyPhone;
 use App\Models\LegacySchool;
+use App\Models\LegacyStreet;
+use App\Models\LegacyZipCodeStreet;
+use App\Models\LegacyZipCodeStreetNeighborhood;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\RegistroImportInterface;
 use App\User;
@@ -20,7 +26,7 @@ class Registro00Import implements RegistroImportInterface
     /**
      * @var string
      */
-    private $importString;
+    private $importArray;
     /**
      * @var User
      */
@@ -32,40 +38,38 @@ class Registro00Import implements RegistroImportInterface
      */
     public function __construct($importString, User $user)
     {
-        $this->importString = $importString;
+        $this->importArray = explode(self::DELIMITER, $importString);
         $this->user = $user;
     }
     /**
      * Faz a importação dos dados a partir da linha do arquivo
      *
-     * @param string $importString
+     * @param string $importArray
      * @param User $user
      * @return void
      */
     public function import()
     {
-        $importArray = explode(self::DELIMITER, $this->importString);
-        $school = $this->getOrCreateSchool($importArray);
+        $school = $this->getOrCreateSchool();
     }
 
     /**
      * Retorna uma escola existente ou cria uma nova
      *
-     * @param array $importString
      * @return LegacySchool
      */
-    private function getOrCreateSchool(array $importString)
+    private function getOrCreateSchool()
     {
-        $schoolInep = SchoolInep::where('cod_escola_inep', $importString[1])->first();
+        $schoolInep = SchoolInep::where('cod_escola_inep', $this->importArray[1])->first();
 
         if ($schoolInep) {
             return $schoolInep->school;
         }
 
         $person = LegacyPerson::create([
-            'nome' => $importString[5],
+            'nome' => $this->importArray[5],
             'tipo' => 'J',
-            'email' => $importString[16],
+            'email' => $this->importArray[16],
             'data_cad' => now(),
             'situacao' => 'P',
             'origem_gravacao' => 'U',
@@ -74,26 +78,26 @@ class Registro00Import implements RegistroImportInterface
 
         $organization = LegacyOrganization::create([
             'idpes' => $person->idpes,
-            'cnpj' => $importString[34] ?: '00000000000100',
+            'cnpj' => $this->importArray[34] ?: '00000000000100',
             'origem_gravacao' => 'M',
             'idpes_cad' => $this->user->id,
             'data_cad' => now(),
             'operacao' => 'I',
-            'fantasia' => $importString[5],
+            'fantasia' => $this->importArray[5],
         ]);
 
         $educationNetword = self::getOrCreateEducationNetwork($this->user);
 
         $school = LegacySchool::create([
-            'situacao_funcionamento' => $importString[2],
-            'sigla' => mb_substr($importString[5], 0, 5, 'UTF-8'),
+            'situacao_funcionamento' => $this->importArray[2],
+            'sigla' => mb_substr($this->importArray[5], 0, 5, 'UTF-8'),
             'data_cadastro' => now(),
             'ativo' => 1,
             'ref_idpes' => $organization->getKey(),
             'ref_usuario_cad' => $this->user->id,
             'ref_cod_escola_rede_ensino' => $educationNetword->getKey(),
             'ref_cod_instituicao' => LegacyInstitution::active()->first()->id,
-            'zona_localizacao' => $importString[18],
+            'zona_localizacao' => $this->importArray[18],
         ]);
 
         $this->createAddress($school);
@@ -120,19 +124,82 @@ class Registro00Import implements RegistroImportInterface
 
     private function createAddress($school)
     {
-        $personAddress = LegacyPersonAddress::find($school->ref_idpes)->exists();
+        $personAddress = LegacyPersonAddress::where('idpes', $school->ref_idpes)->exists();
         if ($personAddress) {
             return;
         }
 
+        $city = LegacyCity::where('cod_ibge', $this->importArray[7])->first();
+        if (!$city) {
+            return;
+        }
 
+        $district = LegacyDistrict::where('idmun', $city->getKey())->where('cod_ibge', $this->importArray[8])->first();
+        if (!$district) {
+            return;
+        }
+
+        $neighborhood = LegacyNeighborhood::firstOrCreate([
+            'idmun' => $city->getKey(),
+            'nome' => $this->importArray[12],
+            'iddis' => $district->getKey(),
+            'origem_gravacao' => 'M',
+            'idpes_cad' => $this->user->id,
+            'data_cad' => now(),
+            'operacao' => 'I',
+            'zona_localizacao' => $this->importArray[18],
+        ]);
+
+        $street = LegacyStreet::firstOrCreate([
+            'idtlog' => 'RUA',
+            'nome' => trim(str_replace('RUA', '', $this->importArray[9])),
+            'idmun' => $city->getKey(),
+            'ident_oficial' => 'N',
+            'origem_gravacao' => 'M',
+            'idpes_cad' => $this->user->id,
+            'data_cad' => now(),
+            'operacao' => 'I',
+        ]);
+
+        LegacyZipCodeStreet::firstOrCreate([
+            'cep' => $this->importArray[6],
+            'idlog' => $street->getKey(),
+            'origem_gravacao' => 'U',
+            'idpes_cad' => $this->user->id,
+            'data_cad' => now(),
+            'operacao' => 'I',
+        ]);
+
+        LegacyZipCodeStreetNeighborhood::firstOrCreate([
+            'cep' => $this->importArray[6],
+            'idlog' => $street->getKey(),
+            'idbai' => $neighborhood->getKey(),
+            'origem_gravacao' => 'U',
+            'idpes_cad' => $this->user->id,
+            'data_cad' => now(),
+            'operacao' => 'I',
+        ]);
+
+        LegacyPersonAddress::create([
+            'idpes' => $school->ref_idpes,
+            'tipo' => '1',
+            'cep' => $this->importArray[6],
+            'idlog' => $street->getKey(),
+            'numero' => $this->importArray[10],
+            'complemento' => $this->importArray[11],
+            'idbai' => $neighborhood->getKey(),
+            'origem_gravacao' => 'M',
+            'idpes_cad' => $this->user->id,
+            'data_cad' => now(),
+            'operacao' => 'I',
+        ]);
     }
 
     private function createSchoolInep($school)
     {
         SchoolInep::create([
             'cod_escola' => $school->getKey(),
-            'cod_escola_inep' => $this->importString[15],
+            'cod_escola_inep' => $this->importArray[1],
             'nome_inep' => '-',
             'fonte' => 'importador',
             'created_at' => now(),
@@ -141,12 +208,12 @@ class Registro00Import implements RegistroImportInterface
 
     private function createPhones($school)
     {
-        if ($this->importString[14]) {
+        if ($this->importArray[14]) {
             LegacyPhone::create([
                 'idpes' => $school->ref_idpes,
                 'tipo' => 1,
-                'ddd' => $this->importString[13],
-                'fone' => $this->importString[14],
+                'ddd' => $this->importArray[13],
+                'fone' => $this->importArray[14],
                 'idpes_cad' => $this->user->id,
                 'origem_gravacao' => 'M',
                 'operacao' => 'I',
@@ -154,12 +221,12 @@ class Registro00Import implements RegistroImportInterface
             ]);
         }
 
-        if ($this->importString[15]) {
+        if ($this->importArray[15]) {
             LegacyPhone::create([
                 'idpes' => $school->ref_idpes,
                 'tipo' => 3,
-                'ddd' => $this->importString[13],
-                'fone' => $this->importString[15],
+                'ddd' => $this->importArray[13],
+                'fone' => $this->importArray[15],
                 'idpes_cad' => $this->user->id,
                 'origem_gravacao' => 'M',
                 'operacao' => 'I',

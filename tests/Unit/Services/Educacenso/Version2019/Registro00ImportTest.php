@@ -50,7 +50,7 @@ class Registro00ImportTest extends TestCase
     public function testCreateSchool()
     {
         $service = new Registro00Import($this->importString, $this->user);
-        Registro00Import::import($this->importString, $this->user);
+        $service->import();
 
         //'42039142'
         $schoolInep = SchoolInep::where('cod_escola_inep', '43012375')->first();

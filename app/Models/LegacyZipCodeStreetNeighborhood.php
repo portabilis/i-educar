@@ -12,7 +12,7 @@ class LegacyZipCodeStreetNeighborhood extends Model
     /**
      * @var string
      */
-    protected $table = 'urbano.cep_logradouro';
+    protected $table = 'urbano.cep_logradouro_bairro';
 
     /**
      * @var string
@@ -25,8 +25,7 @@ class LegacyZipCodeStreetNeighborhood extends Model
     protected $fillable = [
         'cep',
         'idlog',
-        'nroini',
-        'nrofin',
+        'idbai',
         'idpes_rev',
         'data_rev',
         'origem_gravacao',
