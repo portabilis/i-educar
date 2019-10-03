@@ -39,6 +39,20 @@ class LegacySchool extends Model
         'data_exclusao',
         'ref_idpes',
         'ativo',
+        'orgao_vinculado_escola',
+        'situacao_funcionamento',
+        'zona_localizacao',
+        'localizacao_diferenciada',
+        'dependencia_administrativa',
+        'mantenedora_escola_privada',
+        'categoria_escola_privada',
+        'conveniada_com_poder_publico',
+        'cnpj_mantenedora_principal',
+        'regulamentacao',
+        'esfera_administrativa',
+        'unidade_vinculada_outra_instituicao',
+        'inep_escola_sede',
+        'codigo_ies',
     ];
 
     /**
