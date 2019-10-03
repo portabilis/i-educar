@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @deprecated Usar novo módulo de endereço
+ */
 class LegacyDistrict extends Model
 {
     /**
