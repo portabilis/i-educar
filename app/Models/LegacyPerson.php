@@ -26,7 +26,7 @@ class LegacyPerson extends EloquentBaseModel implements Transformable
      * @var array
      */
     protected $fillable = [
-        'nome', 'data_cad', 'tipo', 'situacao', 'origem_gravacao', 'operacao',
+        'nome', 'data_cad', 'tipo', 'situacao', 'origem_gravacao', 'operacao', 'email'
     ];
 
     /**
@@ -40,5 +40,13 @@ class LegacyPerson extends EloquentBaseModel implements Transformable
     public function getNameAttribute()
     {
         return $this->nome;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function address()
+    {
+        return $this->hasOne(LegacyPersonAddress::class, 'idpes', 'idpes');
     }
 }
