@@ -107,7 +107,7 @@ if ($isInstalled) {
             crossorigin="anonymous">
         <link rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|PT+Mono">
-        <link rel="stylesheet" href="css/install.css">
+        <link rel="stylesheet" href="css/install.css?version=<?php echo $currIeducarVersion ?>">
     </head>
 
     <body>
@@ -335,6 +335,6 @@ chmod -R 777 <?= $path . "\n" ?>
         <script
             src="https://www.promisejs.org/polyfills/promise-7.0.4.min.js">
         </script>
-        <script src="js/install.js"></script>
+        <script src="js/install.js?version=<?php echo $currIeducarVersion ?>"></script>
     </body>
 </html>
