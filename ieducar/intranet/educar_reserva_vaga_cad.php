@@ -38,7 +38,6 @@ class clsIndexBase extends clsBase
   function Formular() {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Reserva Vaga');
     $this->processoAp = '639';
-    $this->addEstilo("localizacaoSistema");
   }
 }
 
