@@ -1541,7 +1541,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $query = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$enrollmentId]]);
 
         foreach ($query as $stage) {
-            $stages[] = $stage;
+            $stages[$stage['ref_cod_disciplina']][] = $stage['etapa'];
         }
 
         return $stages;
