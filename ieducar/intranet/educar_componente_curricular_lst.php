@@ -15,7 +15,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo( "{$this->_instituicao} i-Educar - Componentes curriculares" );
         $this->processoAp = "946";
-        $this->addEstilo("localizacaoSistema");
     }
 }
 

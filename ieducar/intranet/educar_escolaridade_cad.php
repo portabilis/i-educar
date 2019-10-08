@@ -43,7 +43,6 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' Servidores - Escolaridade');
     $this->processoAp = '632';
-    $this->addEstilo("localizacaoSistema");
   }
 }
 

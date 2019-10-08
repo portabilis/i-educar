@@ -838,6 +838,8 @@ class App_Model_IedFinder extends CoreExt_Entity
             ON p.idpes = a.ref_idpes
             JOIN pmieducar.escola e
             ON m.ref_ref_cod_escola = e.cod_escola
+            JOIN pmieducar.instituicao
+            ON instituicao.cod_instituicao = e.ref_cod_instituicao
             JOIN pmieducar.matricula_turma mt
             ON mt.ref_cod_matricula = m.cod_matricula
             JOIN pmieducar.turma t
@@ -857,15 +859,9 @@ class App_Model_IedFinder extends CoreExt_Entity
                 mt.ativo = 1
                 OR
                 (
-                    NOT EXISTS
-                    (
-                        SELECT 1
-                        FROM pmieducar.matricula_turma
-                        WHERE matricula_turma.ativo = 1
-                        AND matricula_turma.ref_cod_matricula = mt.ref_cod_matricula
-                    )
-                    AND
-                    (
+                    instituicao.data_base_remanejamento IS NOT NULL
+                    AND mt.data_exclusao::date > instituicao.data_base_remanejamento
+                    AND (
                         mt.transferido
                         OR mt.remanejado
                         OR mt.reclassificado

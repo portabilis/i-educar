@@ -49,7 +49,6 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Vagas por sÃ©rie');
     $this->processoAp = 21253;
-    $this->addEstilo("localizacaoSistema");
   }
 }
 
