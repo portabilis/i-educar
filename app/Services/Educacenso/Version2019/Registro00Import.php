@@ -2,8 +2,9 @@
 
 namespace App\Services\Educacenso\Version2019;
 
+use App\Models\Educacenso\Registro00;
+use App\Models\Educacenso\RegistroEducacenso;
 use App\Models\LegacyCity;
-use App\Models\LegacyComplementSchool;
 use App\Models\LegacyDistrict;
 use App\Models\LegacyEducationNetwork;
 use App\Models\LegacyInstitution;
@@ -22,22 +23,20 @@ use App\Models\LegacyZipCodeStreetNeighborhood;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\RegistroImportInterface;
 use App\User;
-use Carbon\Carbon;
 use DateTime;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\Model\MantenedoraDaEscolaPrivada;
 use iEducar\Modules\Educacenso\Model\OrgaoVinculadoEscola;
 use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
-use Portabilis_Utils_Database;
 
 class Registro00Import implements RegistroImportInterface
 {
     const DELIMITER = '|';
 
     /**
-     * @var string
+     * @var Registro00
      */
-    private $importArray;
+    private $model;
     /**
      * @var User
      */
@@ -48,26 +47,19 @@ class Registro00Import implements RegistroImportInterface
     private $year;
 
     /**
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-
-        $this->user = $user;
-    }
-
-    /**
      * Faz a importação dos dados a partir da linha do arquivo
      *
-     * @param string $importString
+     * @param RegistroEducacenso $model
      * @param int $year
+     * @param $user
      * @return void
      */
-    public function import($importString, $year)
+    public function import(RegistroEducacenso $model, $year, $user)
     {
-        $this->importArray = explode(self::DELIMITER, trim($importString));
+        $this->user = $user;
+        $this->model = $model;
         $this->year = $year;
-        $school = $this->getOrCreateSchool();
+        $this->getOrCreateSchool();
     }
 
     /**
@@ -77,16 +69,16 @@ class Registro00Import implements RegistroImportInterface
      */
     private function getOrCreateSchool()
     {
-        $schoolInep = SchoolInep::where('cod_escola_inep', $this->importArray[1])->first();
+        $schoolInep = SchoolInep::where('cod_escola_inep', $this->model->codigoInep)->first();
 
         if ($schoolInep) {
             return $schoolInep->school;
         }
 
         $person = LegacyPerson::create([
-            'nome' => $this->importArray[5],
+            'nome' => $this->model->nome,
             'tipo' => 'J',
-            'email' => $this->importArray[16],
+            'email' => $this->model->email,
             'data_cad' => now(),
             'situacao' => 'P',
             'origem_gravacao' => 'U',
@@ -95,41 +87,41 @@ class Registro00Import implements RegistroImportInterface
 
         $organization = LegacyOrganization::create([
             'idpes' => $person->idpes,
-            'cnpj' => $this->importArray[34] ?: '00000000000100',
+            'cnpj' => $this->model->cnpjEscolaPrivada ?: '00000000000100',
             'origem_gravacao' => 'M',
             'idpes_cad' => $this->user->id,
             'data_cad' => now(),
             'operacao' => 'I',
-            'fantasia' => $this->importArray[5],
+            'fantasia' => $this->model->nome,
         ]);
 
         $educationNetword = self::getOrCreateEducationNetwork($this->user);
 
         $school = LegacySchool::create([
-            'situacao_funcionamento' => $this->importArray[2],
-            'sigla' => mb_substr($this->importArray[5], 0, 5, 'UTF-8'),
+            'situacao_funcionamento' => $this->model->situacaoFuncionamento,
+            'sigla' => mb_substr($this->model->nome, 0, 5, 'UTF-8'),
             'data_cadastro' => now(),
             'ativo' => 1,
             'ref_idpes' => $organization->getKey(),
             'ref_usuario_cad' => $this->user->id,
             'ref_cod_escola_rede_ensino' => $educationNetword->getKey(),
             'ref_cod_instituicao' => LegacyInstitution::active()->first()->id,
-            'zona_localizacao' => $this->importArray[18],
-            'localizacao_diferenciada' => $this->importArray[19],
-            'dependencia_administrativa' => $this->importArray[20],
+            'zona_localizacao' => $this->model->zonaLocalizacao,
+            'localizacao_diferenciada' => $this->model->localizacaoDiferenciada,
+            'dependencia_administrativa' => $this->model->dependenciaAdministrativa,
             'orgao_vinculado_escola' => $this->getArrayOrgaoVinculado(),
             'mantenedora_escola_privada' => $this->getArrayMantenedora(),
-            'categoria_escola_privada' => $this->importArray[31] ?: null,
-            'conveniada_com_poder_publico' => $this->importArray[32] ?: null,
-            'cnpj_mantenedora_principal' => $this->importArray[33] ?: null,
-            'regulamentacao' => $this->importArray[35] ?: null,
+            'categoria_escola_privada' => $this->model->categoriaEscolaPrivada ?: null,
+            'conveniada_com_poder_publico' => $this->model->conveniadaPoderPublico ?: null,
+            'cnpj_mantenedora_principal' => $this->model->cnpjMantenedoraPrincipal ?: null,
+            'regulamentacao' => $this->model->regulamentacao ?: null,
             'esfera_administrativa' => $this->getEsferaAdministrativa(),
-            'unidade_vinculada_outra_instituicao' => $this->importArray[39] ?: null,
-            'inep_escola_sede' => $this->importArray[40] ?: null,
-            'codigo_ies' => $this->importArray[41] ?: null,
+            'unidade_vinculada_outra_instituicao' => $this->model->unidadeVinculada ?: null,
+            'inep_escola_sede' => $this->model->inepEscolaSede ?: null,
+            'codigo_ies' => $this->model->codigoIes ?: null,
         ]);
 
-        if ($this->importArray[2] == SituacaoFuncionamento::EM_ATIVIDADE) {
+        if ($this->model->situacaoFuncionamento == SituacaoFuncionamento::EM_ATIVIDADE) {
             $this->createAcademicYear($school);
         }
 
@@ -162,30 +154,30 @@ class Registro00Import implements RegistroImportInterface
             return;
         }
 
-        $city = LegacyCity::where('cod_ibge', $this->importArray[7])->first();
+        $city = LegacyCity::where('cod_ibge', $this->model->codigoIbgeMunicipio)->first();
         if (!$city) {
             return;
         }
 
-        $district = LegacyDistrict::where('idmun', $city->getKey())->where('cod_ibge', $this->importArray[8])->first();
+        $district = LegacyDistrict::where('idmun', $city->getKey())->where('cod_ibge', $this->model->codigoIbgeDistrito)->first();
         if (!$district) {
             return;
         }
 
         $neighborhood = LegacyNeighborhood::firstOrCreate([
             'idmun' => $city->getKey(),
-            'nome' => $this->importArray[12],
+            'nome' => $this->model->bairro,
             'iddis' => $district->getKey(),
             'origem_gravacao' => 'M',
             'idpes_cad' => $this->user->id,
             'data_cad' => now(),
             'operacao' => 'I',
-            'zona_localizacao' => $this->importArray[18],
+            'zona_localizacao' => $this->model->zonaLocalizacao,
         ]);
 
         $street = LegacyStreet::firstOrCreate([
             'idtlog' => 'RUA',
-            'nome' => trim(str_replace('RUA', '', $this->importArray[9])),
+            'nome' => trim(str_replace('RUA', '', $this->model->logradouro)),
             'idmun' => $city->getKey(),
             'ident_oficial' => 'N',
             'origem_gravacao' => 'M',
@@ -195,7 +187,7 @@ class Registro00Import implements RegistroImportInterface
         ]);
 
         LegacyZipCodeStreet::firstOrCreate([
-            'cep' => $this->importArray[6],
+            'cep' => $this->model->cep,
             'idlog' => $street->getKey(),
             'origem_gravacao' => 'U',
             'idpes_cad' => $this->user->id,
@@ -204,7 +196,7 @@ class Registro00Import implements RegistroImportInterface
         ]);
 
         LegacyZipCodeStreetNeighborhood::firstOrCreate([
-            'cep' => $this->importArray[6],
+            'cep' => $this->model->cep,
             'idlog' => $street->getKey(),
             'idbai' => $neighborhood->getKey(),
             'origem_gravacao' => 'U',
@@ -216,10 +208,10 @@ class Registro00Import implements RegistroImportInterface
         LegacyPersonAddress::create([
             'idpes' => $school->ref_idpes,
             'tipo' => '1',
-            'cep' => $this->importArray[6],
+            'cep' => $this->model->cep,
             'idlog' => $street->getKey(),
-            'numero' => $this->importArray[10],
-            'complemento' => $this->importArray[11],
+            'numero' => $this->model->numero,
+            'complemento' => $this->model->complemento,
             'idbai' => $neighborhood->getKey(),
             'origem_gravacao' => 'M',
             'idpes_cad' => $this->user->id,
@@ -232,7 +224,7 @@ class Registro00Import implements RegistroImportInterface
     {
         SchoolInep::create([
             'cod_escola' => $school->getKey(),
-            'cod_escola_inep' => $this->importArray[1],
+            'cod_escola_inep' => $this->model->codigoInep,
             'nome_inep' => '-',
             'fonte' => 'importador',
             'created_at' => now(),
@@ -241,12 +233,12 @@ class Registro00Import implements RegistroImportInterface
 
     private function createPhones($school)
     {
-        if ($this->importArray[14]) {
+        if ($this->model->telefone) {
             LegacyPhone::create([
                 'idpes' => $school->ref_idpes,
                 'tipo' => 1,
-                'ddd' => $this->importArray[13],
-                'fone' => $this->importArray[14],
+                'ddd' => $this->model->ddd,
+                'fone' => $this->model->telefone,
                 'idpes_cad' => $this->user->id,
                 'origem_gravacao' => 'M',
                 'operacao' => 'I',
@@ -254,12 +246,12 @@ class Registro00Import implements RegistroImportInterface
             ]);
         }
 
-        if ($this->importArray[15]) {
+        if ($this->model->telefoneOutro) {
             LegacyPhone::create([
                 'idpes' => $school->ref_idpes,
                 'tipo' => 3,
-                'ddd' => $this->importArray[13],
-                'fone' => $this->importArray[15],
+                'ddd' => $this->model->ddd,
+                'fone' => $this->model->telefoneOutro,
                 'idpes_cad' => $this->user->id,
                 'origem_gravacao' => 'M',
                 'operacao' => 'I',
@@ -299,8 +291,8 @@ class Registro00Import implements RegistroImportInterface
             'ref_ref_cod_escola' => $school->getKey(),
             'sequencial' => 1,
             'ref_cod_modulo' => $stageType->getKey(),
-            'data_inicio' => DateTime::createFromFormat('d/m/Y', $this->importArray[3]),
-            'data_fim' => DateTime::createFromFormat('d/m/Y', $this->importArray[4]),
+            'data_inicio' => DateTime::createFromFormat('d/m/Y', $this->model->inicioAnoLetivo),
+            'data_fim' => DateTime::createFromFormat('d/m/Y', $this->model->fimAnoLetivo),
             'dias_letivos' => 200,
         ]);
     }
@@ -309,19 +301,19 @@ class Registro00Import implements RegistroImportInterface
     {
         $arrayOrgaoVinculado = [];
 
-        if ($this->importArray[21]) {
+        if ($this->model->orgaoEducacao) {
             $arrayOrgaoVinculado[] = OrgaoVinculadoEscola::EDUCACAO;
         }
 
-        if ($this->importArray[22]) {
+        if ($this->model->orgaoSeguranca) {
             $arrayOrgaoVinculado[] = OrgaoVinculadoEscola::SEGURANCA;
         }
 
-        if ($this->importArray[23]) {
+        if ($this->model->orgaoSaude) {
             $arrayOrgaoVinculado[] = OrgaoVinculadoEscola::SAUDE;
         }
 
-        if ($this->importArray[24]) {
+        if ($this->model->orgaoOutro) {
             $arrayOrgaoVinculado[] = OrgaoVinculadoEscola::OUTRO;
         }
 
@@ -332,27 +324,27 @@ class Registro00Import implements RegistroImportInterface
     {
         $arrayMantenedora = [];
 
-        if ($this->importArray[25]) {
+        if ($this->model->mantenedoraEmpresa) {
             $arrayMantenedora[] = MantenedoraDaEscolaPrivada::GRUPOS_EMPRESARIAIS;
         }
 
-        if ($this->importArray[26]) {
+        if ($this->model->mantenedoraSindicato) {
             $arrayMantenedora[] = MantenedoraDaEscolaPrivada::SINDICATOS_TRABALHISTAS;
         }
 
-        if ($this->importArray[27]) {
+        if ($this->model->mantenedoraOng) {
             $arrayMantenedora[] = MantenedoraDaEscolaPrivada::ORGANIZACOES_NAO_GOVERNAMENTAIS;
         }
 
-        if ($this->importArray[28]) {
+        if ($this->model->mantenedoraInstituicoes) {
             $arrayMantenedora[] = MantenedoraDaEscolaPrivada::INSTITUICOES_SIM_FINS_LUCRATIVOS;
         }
 
-        if ($this->importArray[29]) {
+        if ($this->model->mantenedoraSistemaS) {
             $arrayMantenedora[] = MantenedoraDaEscolaPrivada::SISTEMA_S;
         }
 
-        if ($this->importArray[30]) {
+        if ($this->model->mantenedoraOscip) {
             $arrayMantenedora[] = MantenedoraDaEscolaPrivada::OSCIP;
         }
 
@@ -361,18 +353,23 @@ class Registro00Import implements RegistroImportInterface
 
     private function getEsferaAdministrativa()
     {
-        if ($this->importArray[36]) {
+        if ($this->model->esferaFederal) {
             return EsferaAdministrativa::FEDERAL;
         }
 
-        if ($this->importArray[37]) {
+        if ($this->model->esferaEstadual) {
             return EsferaAdministrativa::ESTADUAL;
         }
 
-        if ($this->importArray[38]) {
+        if ($this->model->esferaMunicipal) {
             return EsferaAdministrativa::MUNICIPAL;
         }
 
         return null;
+    }
+
+    public static function getModel()
+    {
+        return new Registro00();
     }
 }

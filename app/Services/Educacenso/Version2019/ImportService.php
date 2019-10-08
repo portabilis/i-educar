@@ -2,15 +2,12 @@
 
 namespace App\Services\Educacenso\Version2019;
 
-use App\Services\Educacenso\ImportServiceInterface;
+use App\Services\Educacenso\ImportService as GeneralImportService;
 use App\Services\Educacenso\RegistroImportInterface;
-use App\User;
 use Illuminate\Http\UploadedFile;
 
-class ImportService implements ImportServiceInterface
+class ImportService extends GeneralImportService
 {
-    const DELIMITER = '|';
-
     /**
      * Retorna o ano a que o service se refere
      *
@@ -46,55 +43,17 @@ class ImportService implements ImportServiceInterface
     }
 
     /**
-     * Faz a importação dos dados a partir da string do arquivo do censo
-     *
-     * @param array $importString
-     * @return void
-     */
-    public function import($importString)
-    {
-        foreach ($importString as $line) {
-            $this->importLine($line);
-        }
-    }
-
-    /**
-     * Importa uma linha
-     *
-     * @param string $line
-     */
-    private function importLine($line)
-    {
-        $lineId = $this->getLineId($line);
-
-        $this->getRegistroById($lineId)::import($line);
-    }
-
-    /**
-     * Retorna o ID da linha (registro)
-     *
-     * @param $line
-     * @return string
-     */
-    private function getLineId($line)
-    {
-        $arrayLine = explode(self::DELIMITER, $line);
-
-        return $arrayLine[0];
-    }
-
-    /**
      * Retorna a classe responsável por importar o registro da linha
      *
      * @param $lineId
      * @return RegistroImportInterface
      */
-    private function getRegistroById($lineId)
+    public function getRegistroById($lineId)
     {
         $arrayRegistros = [
             '00' => Registro00Import::class
         ];
 
-        return $arrayRegistros[$lineId];
+        return new $arrayRegistros[$lineId];
     }
 }

@@ -4,10 +4,30 @@ namespace App\Services\Educacenso;
 
 use App\Jobs\EducacensoImportJob;
 use App\Models\EducacensoImport;
+use App\User;
 use Illuminate\Http\UploadedFile;
 
 class HandleFileService
 {
+    /**
+     * @var ImportService
+     */
+    private $yearImportService;
+
+    /**
+     * @var User
+     */
+    private $user;
+
+    /**
+     * @param ImportService $yearImportService
+     * @param User $user
+     */
+    public function __construct(ImportService $yearImportService, User $user)
+    {
+        $this->yearImportService = $yearImportService;
+        $this->user = $user;
+    }
     /**
      * Processa o arquivo de importação do censo
      *
@@ -15,8 +35,6 @@ class HandleFileService
      */
     public function handleFile(UploadedFile $file)
     {
-        $this->validateFile($file);
-
         $splitFileService = new SplitFileService($file);
         $schools = $splitFileService->getSplitedSchools();
 
@@ -34,8 +52,8 @@ class HandleFileService
     public function createImportProcess($school)
     {
         $import = new EducacensoImport();
-        $import->year = $this->getYear();
-        $import->school = $this->getSchoolNameByFile($school);
+        $import->year = $this->yearImportService->getYear();
+        $import->school = $this->yearImportService->getSchoolNameByFile($school);
         $import->user_id = $this->user->id;
         $import->finished = false;
         $import->save();

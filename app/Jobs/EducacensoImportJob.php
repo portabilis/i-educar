@@ -46,7 +46,7 @@ class EducacensoImportJob implements ShouldQueue
         DB::beginTransaction();
 
         $importService = ImportServiceFactory::createImportService($this->educacensoImport->year);
-        $importService->import($this->importString);
+        $importService->import($this->importString, $this->educacensoImport->user);
 
         $educacensoImport = $this->educacensoImport;
         $educacensoImport->finished = true;
