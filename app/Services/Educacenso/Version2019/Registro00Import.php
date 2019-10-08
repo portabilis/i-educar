@@ -31,8 +31,6 @@ use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 
 class Registro00Import implements RegistroImportInterface
 {
-    const DELIMITER = '|';
-
     /**
      * @var Registro00
      */
@@ -245,6 +243,7 @@ class Registro00Import implements RegistroImportInterface
                 'data_cad' => now(),
             ]);
         }
+
 
         if ($this->model->telefoneOutro) {
             LegacyPhone::create([

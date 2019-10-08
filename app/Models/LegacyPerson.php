@@ -49,4 +49,12 @@ class LegacyPerson extends EloquentBaseModel implements Transformable
     {
         return $this->hasOne(LegacyPersonAddress::class, 'idpes', 'idpes');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function phone()
+    {
+        return $this->hasMany(LegacyPhone::class, 'idpes', 'idpes');
+    }
 }
