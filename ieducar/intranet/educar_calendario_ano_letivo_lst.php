@@ -19,7 +19,6 @@ class clsIndexBase extends clsBase
         $this->SetTitulo($this->_instituicao . ' i-Educar - Calendários');
         $this->addScript('calendario');
         $this->processoAp = 620;
-        $this->addEstilo("localizacaoSistema");
     }
 }
 

@@ -14,7 +14,6 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Unificação de pessoas');
     $this->processoAp = "9998878";
-    $this->addEstilo("localizacaoSistema");
   }
 }
 
