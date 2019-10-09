@@ -44,7 +44,7 @@
                     <td class="formlttd" valign="top"><span class="form">{{ $schoolClass->vacancies }}</span></td>
                 </tr>
                 <tr id="tr_ano">
-                    <td class="formmdtd" valign="top"><span class="form">Período de enturmação:</span></td>
+                    <td class="formmdtd" valign="top"><span class="form">Calendário letivo:</span></td>
                     <td class="formmdtd" valign="top"><span class="form">{{ $schoolClass->begin_academic_year->format('d/m/Y') }} à {{ $schoolClass->end_academic_year->format('d/m/Y') }}</span></td>
                 </tr>
             </tbody>
@@ -56,7 +56,13 @@
         <h3>Alunos matriculados e não enturmados</h3>
 
         <p>
-            <div><span class="text-muted">A data da enturmação deve ser entre:</span> <strong>{{ $schoolClass->begin_academic_year->format('d/m/Y') }}</strong> e <strong>{{ $schoolClass->end_academic_year->format('d/m/Y') }}</strong><span class="text-muted">, maior que a data da matrícula e maior que a data de saída da última enturmação do aluno.</span></div>
+            <div>
+            @if($schoolClass->school->institution->allowRegistrationOutAcademicYear)
+                <span class="text-muted">A data de enturmação deve ser maior que a data da matrícula e maior que a data de saída da última enturmação do aluno.</span>
+            @else
+                <span class="text-muted">A data da enturmação deve ser entre:</span> <strong>{{ $schoolClass->begin_academic_year->format('d/m/Y') }}</strong> e <strong>{{ $schoolClass->end_academic_year->format('d/m/Y') }}</strong><span class="text-muted">, maior que a data da matrícula e maior que a data de saída da última enturmação do aluno.</span>
+            @endif
+            </div>
         </p>
 
         <div class="form-row">

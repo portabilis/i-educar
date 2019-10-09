@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Services\PromotionService;
 use App\Services\SchoolClass\AvailableTimeService;
@@ -23,7 +24,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo($this->_instituicao . ' i-Educar - Matrícula');
         $this->processoAp = 578;
-        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -907,6 +907,9 @@ class indice extends clsCadastro
             $dataAnoLetivoInicio = $obj->pegaDataAnoLetivoInicio($this->ref_cod_turma);
             $dataAnoLetivoTermino = $obj->pegaDataAnoLetivoFim($this->ref_cod_turma);
 
+            /** @var LegacyInstitution $instituicao */
+            $instituicao = app(LegacyInstitution::class);
+
             if (empty($dataAnoLetivoTermino)) {
                 $this->mensagem = 'Não está definida a data de término do ano letivo.';
 
@@ -921,12 +924,14 @@ class indice extends clsCadastro
 
                 return false;
             } elseif ($dataMatriculaObj < $dataAnoLetivoInicio) {
-                $this->mensagem = sprintf(
-                    'A data de matrícula precisa ser igual ou maior que a data de início do ano letivo da escola ou turma (%s).',
-                    $dataAnoLetivoInicio->format('d/m/Y')
-                );
+                if (!$instituicao->allowRegistrationOutAcademicYear) {
+                    $this->mensagem = sprintf(
+                        'A data de matrícula precisa ser igual ou maior que a data de início do ano letivo da escola ou turma (%s).',
+                        $dataAnoLetivoInicio->format('d/m/Y')
+                    );
 
-                return false;
+                    return false;
+                }
             }
 
             if ($dataMatriculaObj > $dataAnoLetivoTermino) {

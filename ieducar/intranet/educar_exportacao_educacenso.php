@@ -49,7 +49,6 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Exporta&ccedil;&atilde;o Educacenso');
     $this->processoAp = ($_REQUEST['fase2'] == 1 ? 9998845 : 846);
-    $this->addEstilo('localizacaoSistema');
   }
 }
 

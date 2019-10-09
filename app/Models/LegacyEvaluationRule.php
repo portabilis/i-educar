@@ -28,7 +28,7 @@ class LegacyEvaluationRule extends Model
      * @var array
      */
     protected $fillable = [
-        'instituicao_id', 'nome', 'formula_media_id', 'tipo_nota', 'tipo_progressao', 'tipo_presenca',
+        'instituicao_id', 'nome', 'formula_media_id', 'formula_recuperacao_id', 'tipo_nota', 'tipo_progressao', 'tipo_presenca',
     ];
 
     /**

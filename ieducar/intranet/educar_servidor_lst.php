@@ -14,7 +14,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor');
         $this->processoAp = 635;
-        $this->addEstilo('localizacaoSistema');
     }
 }
 
@@ -132,7 +131,7 @@ class indice extends clsListagem
             foreach ($lista as $registro) {
                 $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
                 $registro['cpf'] = int2CPF($cpfs[$registro['cod_servidor']]);
-                
+
                 $path = 'educar_servidor_det.php';
                 $options = [
                     'query' => [

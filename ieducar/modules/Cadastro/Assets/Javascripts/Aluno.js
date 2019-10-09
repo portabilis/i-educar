@@ -2590,7 +2590,7 @@ if ($j('#transporte_rota').length > 0) {
       $j('#data_emissao_rg').makeUnrequired();
       $j('#orgao_emissao_rg').makeUnrequired();
       $j('#uf_emissao_rg').makeUnrequired();
-      if ($j('#rg').val().length && obrigarCamposCenso) {
+      if ($j('#rg').val().trim().length && obrigarCamposCenso) {
         $j('#data_emissao_rg').makeRequired();
         $j('#orgao_emissao_rg').makeRequired();
         $j('#uf_emissao_rg').makeRequired();

@@ -10,7 +10,6 @@ class clsIndexBase extends clsBase
     function Formular() {
         $this->SetTitulo($this->_instituicao . ' i-Educar - Configuração movimento geral');
         $this->processoAp = 9998867;
-        $this->addEstilo('localizacaoSistema');
     }
 }
 
