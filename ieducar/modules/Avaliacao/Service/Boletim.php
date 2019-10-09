@@ -23,45 +23,54 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     private $exemptedStages = [];
 
-  /**
-   * Prioridade da situação da matrícula, usado para definir a situação
-   * das notas e faltas.
-   * @var array
-   */
-  protected $_situacaoPrioridade = array(
-    App_Model_MatriculaSituacao::EM_ANDAMENTO        => 1,
-    App_Model_MatriculaSituacao::EM_EXAME            => 2,
-    App_Model_MatriculaSituacao::REPROVADO           => 3,
-    App_Model_MatriculaSituacao::APROVADO_APOS_EXAME => 4,
-    App_Model_MatriculaSituacao::APROVADO            => 5
-  );
+    /**
+     * Prioridade da situação da matrícula, usado para definir a situação
+     * das notas e faltas.
+     *
+     * @var array
+     */
+    protected $_situacaoPrioridade = [
+        App_Model_MatriculaSituacao::EM_ANDAMENTO => 1,
+        App_Model_MatriculaSituacao::EM_EXAME => 2,
+        App_Model_MatriculaSituacao::REPROVADO => 3,
+        App_Model_MatriculaSituacao::APROVADO_APOS_EXAME => 4,
+        App_Model_MatriculaSituacao::APROVADO => 5
+    ];
 
-  /**
-   * Construtor.
-   *
-   * Opções de configuração:
-   * - matricula (int), obrigatória
-   * - ComponenteDataMapper (Componente_Model_ComponenteDataMapper), opcional
-   * - RegraDataMapper (Regra_Model_RegraDataMapper), opcional
-   * - NotaAlunoDataMapper (Avaliacao_Model_NotaAlunoDataMapper), opcional
-   *
-   * @param array $options
-   *
-   * @throws App_Model_Exception
-   * @throws CoreExt_Service_Exception
-   * @throws EvaluationRuleNotDefinedInLevel
-   * @throws StudentNotEnrolledInSchoolClass
-   * @throws Exception
-   */
-  public function __construct(array $options = array())
-  {
-    $this->setOptions($options);
-    $this->_setMatriculaInfo();
-    $this->_loadNotas();
-    $this->_loadFalta();
-    $this->_loadParecerDescritivo();
-  }
+    /**
+     * Construtor.
+     *
+     * Opções de configuração:
+     * - matricula (int), obrigatória
+     * - ComponenteDataMapper (Componente_Model_ComponenteDataMapper), opcional
+     * - RegraDataMapper (Regra_Model_RegraDataMapper), opcional
+     * - NotaAlunoDataMapper (Avaliacao_Model_NotaAlunoDataMapper), opcional
+     *
+     * @param array $options
+     *
+     * @throws App_Model_Exception
+     * @throws CoreExt_Service_Exception
+     * @throws EvaluationRuleNotDefinedInLevel
+     * @throws StudentNotEnrolledInSchoolClass
+     * @throws Exception
+     */
+    public function __construct(array $options = [])
+    {
+        $this->setOptions($options);
+        $this->_setMatriculaInfo();
+        $this->_loadNotas();
+        $this->_loadFalta();
+        $this->_loadParecerDescritivo();
+    }
 
+    /**
+     * @param $enrollmentId
+     * @param $disciplineId
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
     private function getExemptedStages($enrollmentId, $disciplineId)
     {
         if (!isset($this->exemptedStages[$enrollmentId])) {
@@ -71,558 +80,583 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         return $this->exemptedStages[$enrollmentId][$disciplineId] ?? [];
     }
 
-  /**
-   * Retorna uma instância de Avaliacao_Model_NotaComponente.
-   *
-   * @param int $id O identificador de ComponenteCurricular_Model_Componente
-   * @param int $etapa A etapa para o qual a nota foi lançada
-   * @return Avaliacao_Model_NotaComponente|NULL
-   */
-  public function getNotaComponente($id, $etapa = 1)
-  {
-    $componentes = $this->getNotasComponentes();
+    /**
+     * Retorna uma instância de Avaliacao_Model_NotaComponente.
+     *
+     * @param int $id    O identificador de ComponenteCurricular_Model_Componente
+     * @param int $etapa A etapa para o qual a nota foi lançada
+     *
+     * @return Avaliacao_Model_NotaComponente|NULL
+     */
+    public function getNotaComponente($id, $etapa = 1)
+    {
+        $componentes = $this->getNotasComponentes();
 
-    if (!isset($componentes[$id])) {
-      return NULL;
+        if (!isset($componentes[$id])) {
+            return null;
+        }
+
+        $notasComponente = $componentes[$id];
+
+        foreach ($notasComponente as $nota) {
+            if ($nota->etapa == $etapa) {
+                return $nota;
+            }
+        }
+
+        return null;
     }
 
-    $notasComponente = $componentes[$id];
+    /**
+     * @param $id
+     *
+     * @return Array|null
+     */
+    public function getMediaComponente($id)
+    {
+        $componentes = $this->getMediasComponentes();
 
-    foreach ($notasComponente as $nota) {
-      if ($nota->etapa == $etapa) {
-        return $nota;
-      }
+        if (!isset($componentes[$id])) {
+            return null;
+        }
+
+        $mediaComponente = $componentes[$id];
+
+        return $mediaComponente[0];
     }
 
-    return NULL;
-  }
+    /**
+     * Retorna uma instância de Avaliacao_Model_NotaGeral.
+     *
+     * @param int $id    O identificador de ComponenteCurricular_Model_Componente
+     * @param int $etapa A etapa para o qual a nota foi lançada
+     *
+     * @return Avaliacao_Model_NotaComponente|NULL
+     */
+    public function getNotaGeral($etapa = 1)
+    {
+        $notasGerais = $this->getNotasGerais();
 
-  public function getMediaComponente($id)
-  {
-    $componentes = $this->getMediasComponentes();
+        foreach ($notasGerais as $nota) {
+            if ($nota->etapa == $etapa) {
+                return $nota;
+            }
+        }
 
-    if (!isset($componentes[$id])) {
-      return NULL;
+        return null;
     }
 
-    $mediaComponente = $componentes[$id];
+    /**
+     * Retorna uma instância de Avaliacao_Model_FaltaAbstract.
+     *
+     * @param int $etapa A etapa para o qual a falta foi lançada
+     * @param int $id    O identificador de ComponenteCurricular_Model_Componente
+     *
+     * @return Avaliacao_Model_FaltaAbstract|NULL
+     */
+    public function getFalta($etapa = 1, $id = null)
+    {
+        if ($this->getRegraAvaliacaoTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+            $faltas = $this->getFaltasComponentes();
 
-    return $mediaComponente[0];
-  }
+            if (!isset($faltas[$id])) {
+                return null;
+            }
 
-  /**
-   * Retorna uma instância de Avaliacao_Model_NotaGeral.
-   *
-   * @param int $id O identificador de ComponenteCurricular_Model_Componente
-   * @param int $etapa A etapa para o qual a nota foi lançada
-   * @return Avaliacao_Model_NotaComponente|NULL
-   */
-  public function getNotaGeral($etapa = 1)
-  {
-    $notasGerais = $this->getNotasGerais();
+            $faltas = $faltas[$id];
+        } else {
+            $faltas = $this->getFaltasGerais();
+        }
 
-    foreach ($notasGerais as $nota) {
-      if ($nota->etapa == $etapa) {
-        return $nota;
-      }
+        foreach ($faltas as $falta) {
+            if ($falta->etapa == $etapa) {
+                return $falta;
+            }
+        }
+
+        return null;
     }
 
-    return NULL;
-  }
+    /**
+     * Retorna uma instância de Avaliacao_Model_ParecerDescritivoAbstract.
+     *
+     * @param int $etapa A etapa para o qual o parecer foi lançado
+     * @param int $id    O identificador de ComponenteCurricular_Model_Componente
+     *
+     * @return Avaliacao_Model_ParecerAbstract|NULL
+     */
+    public function getParecerDescritivo($etapa = 1, $id = null)
+    {
+        $parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
 
-  /**
-   * Retorna uma instância de Avaliacao_Model_FaltaAbstract.
-   *
-   * @param int $etapa A etapa para o qual a falta foi lançada
-   * @param int $id O identificador de ComponenteCurricular_Model_Componente
-   * @return Avaliacao_Model_FaltaAbstract|NULL
-   */
-  public function getFalta($etapa = 1, $id = NULL)
-  {
-    if ($this->getRegraAvaliacaoTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
-      $faltas = $this->getFaltasComponentes();
+        $gerais = [
+            RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
+            RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL
+        ];
 
-      if (!isset($faltas[$id])) {
-        return NULL;
-      }
+        $componentes = [
+            RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
+            RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
+        ];
 
-      $faltas = $faltas[$id];
-    }
-    else {
-      $faltas = $this->getFaltasGerais();
-    }
+        $pareceres = [];
 
-    foreach ($faltas as $falta) {
-      if ($falta->etapa == $etapa) {
-        return $falta;
-      }
-    }
+        if (in_array($parecerDescritivo, $gerais)) {
+            $pareceres = $this->getPareceresGerais();
+        } elseif (in_array($parecerDescritivo, $componentes)) {
+            $pareceres = $this->getPareceresComponentes();
 
-    return NULL;
-  }
+            if (!isset($pareceres[$id])) {
+                return null;
+            }
 
-  /**
-   * Retorna uma instância de Avaliacao_Model_ParecerDescritivoAbstract.
-   *
-   * @param int $etapa A etapa para o qual o parecer foi lançado
-   * @param int $id O identificador de ComponenteCurricular_Model_Componente
-   * @return Avaliacao_Model_ParecerAbstract|NULL
-   */
-  public function getParecerDescritivo($etapa = 1, $id = NULL)
-  {
-    $parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
+            $pareceres = $pareceres[$id];
+        }
 
-    $gerais = array(
-      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
-      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL
-    );
+        foreach ($pareceres as $parecer) {
+            if ($parecer->etapa == $etapa) {
+                return $parecer;
+            }
+        }
 
-    $componentes = array(
-      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
-      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
-    );
-
-    $pareceres = [];
-
-    if (in_array($parecerDescritivo, $gerais)) {
-      $pareceres = $this->getPareceresGerais();
-    }
-    elseif (in_array($parecerDescritivo, $componentes)) {
-      $pareceres = $this->getPareceresComponentes();
-
-      if (!isset($pareceres[$id])) {
-        return NULL;
-      }
-
-      $pareceres = $pareceres[$id];
+        return null;
     }
 
-    foreach ($pareceres as $parecer) {
-      if ($parecer->etapa == $etapa) {
-        return $parecer;
-      }
+    /**
+     * @return $this
+     *
+     * @throws App_Model_Exception
+     * @throws StudentNotEnrolledInSchoolClass
+     * @throws EvaluationRuleNotDefinedInLevel
+     */
+    protected function _setMatriculaInfo()
+    {
+        $codMatricula = $this->getOption('matricula');
+        $matricula = App_Model_IedFinder::getMatricula($codMatricula);
+        $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula($codMatricula, $matricula);
+        $maiorEtapaUtilizada = $etapas;
+
+        // Foi preciso adicionar esta validação pois é possível filtrar sem
+        // selecionar um componente curricular, neste caso um erro SQL era gerado.
+        if ($componenteCurricularId = $this->getComponenteCurricularId()) {
+            $ultimaEtapaEspecifica = App_Model_IedFinder::getUltimaEtapaComponente(
+                $matricula['ref_cod_turma'],
+                $componenteCurricularId
+            );
+
+            if ($ultimaEtapaEspecifica) {
+                $maiorEtapaUtilizada = $ultimaEtapaEspecifica;
+            }
+        }
+
+        $etapaAtual = ($_GET['etapa'] ?? null) == 'Rc' ? $maiorEtapaUtilizada : ($_GET['etapa'] ?? null);
+
+        $this->_setRegra(App_Model_IedFinder::getRegraAvaliacaoPorMatricula(
+            $codMatricula,
+            $this->getRegraDataMapper(),
+            $matricula
+        ));
+
+        $this->_setComponentes(App_Model_IedFinder::getComponentesPorMatricula($codMatricula, $this->getComponenteDataMapper(), $this->getComponenteTurmaDataMapper(), $componenteCurricularId, $etapaAtual, null, $matricula));
+
+        $this->setOption('matriculaData', $matricula);
+        $this->setOption('aprovado', $matricula['aprovado']);
+        $this->setOption('cursoHoraFalta', $matricula['curso_hora_falta']);
+        $this->setOption('cursoCargaHoraria', $matricula['curso_carga_horaria']);
+        $this->setOption('serieCargaHoraria', $matricula['serie_carga_horaria']);
+        $this->setOption('serieDiasLetivos', $matricula['serie_dias_letivos']);
+        $this->setOption('ref_cod_turma', $matricula['ref_cod_turma']);
+        $this->setOption('etapas', $etapas);
+        $this->setOption('etapaAtual', $etapaAtual);
+
+        return $this;
     }
 
-    return NULL;
-  }
+    /**
+     * Carrega todas as notas e médias já lançadas para a matrícula atual.
+     *
+     * @param bool $loadMedias FALSE caso não seja necessário carregar as médias
+     *
+     * @return $this
+     *
+     * @throws Exception
+     */
+    protected function _loadNotas($loadMedias = true)
+    {
+        // Cria uma entrada no boletim caso o aluno/matrícula não a tenha
+        if (!$this->hasNotaAluno()) {
+            $this->_createNotaAluno();
+        }
 
-  /**
-   * @return $this
-   *
-   * @throws App_Model_Exception
-   * @throws StudentNotEnrolledInSchoolClass
-   * @throws EvaluationRuleNotDefinedInLevel
-   */
-  protected function _setMatriculaInfo()
-  {
-    $codMatricula = $this->getOption('matricula');
+        // Se não tiver, vai criar
+        $notaAluno = $this->_getNotaAluno();
 
-    $matricula = App_Model_IedFinder::getMatricula($codMatricula);
-
-    $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula($codMatricula, $matricula);
-
-    $maiorEtapaUtilizada = $etapas;
-
-    // Foi preciso adicionar esta validação pois é possível filtrar sem
-    // selecionar um componente curricular, neste caso um erro SQL era gerado.
-
-    if ($componenteCurricularId = $this->getComponenteCurricularId()) {
-        $ultimaEtapaEspecifica = App_Model_IedFinder::getUltimaEtapaComponente(
-            $matricula['ref_cod_turma'], $componenteCurricularId
+        $notas = $this->getNotaComponenteDataMapper()->findAll(
+            [],
+            ['notaAluno' => $notaAluno->id],
+            ['etapa' => 'ASC']
         );
 
-        if ($ultimaEtapaEspecifica) {
-            $maiorEtapaUtilizada = $ultimaEtapaEspecifica;
-        }
-    }
-
-    $etapaAtual = ($_GET['etapa'] ?? null) == 'Rc' ? $maiorEtapaUtilizada : ($_GET['etapa'] ?? null);
-
-    $this->_setRegra(App_Model_IedFinder::getRegraAvaliacaoPorMatricula(
-        $codMatricula, $this->getRegraDataMapper(), $matricula
-    ));
-
-    $this->_setComponentes(App_Model_IedFinder::getComponentesPorMatricula($codMatricula, $this->getComponenteDataMapper(), $this->getComponenteTurmaDataMapper(), $componenteCurricularId, $etapaAtual, null, $matricula));
-
-    $this->setOption('matriculaData',     $matricula);
-    $this->setOption('aprovado',          $matricula['aprovado']);
-    $this->setOption('cursoHoraFalta',    $matricula['curso_hora_falta']);
-    $this->setOption('cursoCargaHoraria', $matricula['curso_carga_horaria']);
-    $this->setOption('serieCargaHoraria', $matricula['serie_carga_horaria']);
-    $this->setOption('serieDiasLetivos',  $matricula['serie_dias_letivos']);
-    $this->setOption('ref_cod_turma',     $matricula['ref_cod_turma']);
-    $this->setOption('etapas',            $etapas);
-    $this->setOption('etapaAtual',            $etapaAtual);
-
-    return $this;
-  }
-
-  /**
-   * Carrega todas as notas e médias já lançadas para a matrícula atual.
-   *
-   * @param bool $loadMedias FALSE caso não seja necessário carregar as médias
-   *
-   * @return $this
-   *
-   * @throws Exception
-   */
-  protected function _loadNotas($loadMedias = TRUE)
-  {
-    // Cria uma entrada no boletim caso o aluno/matrícula não a tenha
-    if (!$this->hasNotaAluno()) {
-      $this->_createNotaAluno();
-    }
-
-    // Se não tiver, vai criar
-    $notaAluno = $this->_getNotaAluno();
-
-    $notas = $this->getNotaComponenteDataMapper()->findAll(
-      array(), array('notaAluno' => $notaAluno->id), array('etapa' => 'ASC')
-    );
-
-    // Separa cada nota em um array indexado pelo identity do componente
-    $notasComponentes = array();
-    foreach ($notas as $nota) {
-      $notasComponentes[$nota->get('componenteCurricular')][] = $nota;
-    }
-
-    //Carrega as notas indexadas pela etapa
-    $notasGerais = array();
-    $notas = $this->getNotaGeralDataMapper()->findAll(
-      array(), array('notaAluno' => $notaAluno->id), array('etapa' => 'ASC')
-    );
-
-    foreach($notas as $nota){
-      $notasGerais[$nota->get('etapa')] = $nota;
-    }
-
-    $this->setNotasComponentes($notasComponentes);
-    $this->setNotasGerais($notasGerais);
-
-    if (FALSE == $loadMedias) {
-      return $this;
-    }
-
-    return $this->_loadMedias();
-  }
-
-  /**
-   * Carrega as médias dos componentes curriculares já lançadas.
-   *
-   * @return $this
-   *
-   * @throws Exception
-   */
-  protected function _loadMedias()
-  {
-    $notaAluno = $this->_getNotaAluno();
-
-    $medias = $this->getNotaComponenteMediaDataMapper()->findAll(
-      array(), array('notaAluno' => $notaAluno->id)
-    );
-
-    $mediasComponentes = array();
-    foreach ($medias as $media) {
-      $mediasComponentes[$media->get('componenteCurricular')][] = $media;
-    }
-
-    $mediasGerais = array();
-
-    $mediasGerais = $this->getMediaGeralDataMapper()->findAll(
-      array(), array('notaAluno' => $notaAluno->id)
-    );
-
-    foreach ($mediasGerais as $mediaGeral) {
-      $mediasGerais = $mediaGeral;
-    }
-
-    $this->setMediasComponentes($mediasComponentes);
-    $this->setMediaGeral($mediasGerais);
-
-    return $this;
-  }
-
-  /**
-   * Carrega as faltas do aluno, sejam gerais ou por componente.
-   *
-   * @return $this
-   *
-   * @throws Exception
-   */
-  protected function _loadFalta()
-  {
-    // Cria uma entrada no boletim caso o aluno/matrícula não a tenha
-    if (!$this->hasFaltaAluno()) {
-      $this->_createFaltaAluno();
-    }
-
-    // Senão tiver, vai criar
-    $faltaAluno = $this->_getFaltaAluno();
-
-    // Carrega as faltas já lançadas
-    $faltas = $this->getFaltaAbstractDataMapper()->findAll(
-      array(), array('faltaAluno' => $faltaAluno->id), array('etapa' => 'ASC')
-    );
-
-    // Se a falta for do tipo geral, popula um array indexado pela etapa
-    if ($faltaAluno->get('tipoFalta') == RegraAvaliacao_Model_TipoPresenca::GERAL) {
-      $faltasGerais = array();
-
-      foreach ($faltas as $falta) {
-        $faltasGerais[$falta->etapa] = $falta;
-      }
-
-      $this->setFaltasGerais($faltasGerais);
-    }
-    // Separa cada nota em um array indexado pelo identity field do componente
-    elseif ($faltaAluno->get('tipoFalta') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
-      $faltasComponentes = array();
-
-      foreach ($faltas as $falta) {
-        $faltasComponentes[$falta->get('componenteCurricular')][] = $falta;
-      }
-
-      $this->setFaltasComponentes($faltasComponentes);
-    }
-
-    return $this;
-  }
-
-  /**
-   * Carrega os pareceres do aluno, sejam gerais ou por componentes.
-   *
-   * @return $this
-   *
-   * @throws Exception
-   */
-  protected function _loadParecerDescritivo()
-  {
-    if ($this->getRegraAvaliacaoTipoParecerDescritivo() == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
-      return $this;
-    }
-
-    if (!$this->hasParecerDescritivoAluno()) {
-      $this->_createParecerDescritivoAluno();
-    }
-
-    $parecerDescritivoAluno = $this->_getParecerDescritivoAluno();
-
-    $pareceres = $this->getParecerDescritivoAbstractDataMapper()->findAll(
-      array(), array('parecerDescritivoAluno' => $parecerDescritivoAluno->id), array('etapa' => 'ASC')
-    );
-
-    $gerais = array(
-      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
-      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL
-    );
-
-    $componentes = array(
-      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
-      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE
-    );
-
-    $parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
-    if (in_array($parecerDescritivo, $gerais)) {
-      $pareceresGerais = array();
-
-      foreach ($pareceres as $parecer) {
-        $pareceresGerais[$parecer->etapa] = $parecer;
-      }
-
-      $this->setPareceresGerais($pareceresGerais);
-    }
-    elseif (in_array($parecerDescritivo, $componentes)) {
-      $pareceresComponentes = array();
-
-      foreach ($pareceres as $parecer) {
-        $pareceresComponentes[$parecer->get('componenteCurricular')][] = $parecer;
-      }
-
-      $this->setPareceresComponentes($pareceresComponentes);
-    }
-
-    return $this;
-  }
-
-  /**
-   * Verifica se o aluno tem notas lançadas.
-   * @return bool
-   */
-  public function hasNotaAluno()
-  {
-    if (!is_null($this->_getNotaAluno())) {
-      return TRUE;
-    }
-
-    return FALSE;
-  }
-
-  public function getQtdComponentes($ignorarDispensasParciais = false)
-  {
-    $enrollment = $this->getOption('matriculaData');
-
-    $total = count(App_Model_IedFinder::getComponentesPorMatricula(
-        $enrollment['cod_matricula'],
-        $this->getComponenteDataMapper(),
-        $this->getComponenteTurmaDataMapper(),
-        null,
-        null,
-        null,
-        $enrollment,
-        true,
-        $ignorarDispensasParciais
-    ));
-
-    $disciplinesWithoutStage = Portabilis_Utils_Database::fetchPreparedQuery('
-        SELECT COUNT(*) AS count
-        FROM pmieducar.escola_serie_disciplina
-        WHERE TRUE
-        AND ref_ref_cod_serie = $1
-        AND ref_ref_cod_escola = $2
-        AND ativo = 1
-        AND $3 = ANY (anos_letivos)
-        AND etapas_especificas = 1
-        AND etapas_utilizadas LIKE \'\';
-    ', [
-        'params' => [
-            $enrollment['ref_ref_cod_serie'],
-            $enrollment['ref_ref_cod_escola'],
-            $enrollment['ano'],
-        ]
-    ]);
-
-    return $total - (int) $disciplinesWithoutStage[0]['count'];
-  }
-
-  function getSituacaoNotaFalta($flagSituacaoNota, $flagSituacaoFalta)
-  {
-    $situacao                          = new stdClass();
-    $situacao->situacao                = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-    $situacao->aprovado                = TRUE;
-    $situacao->andamento               = FALSE;
-    $situacao->recuperacao             = FALSE;
-    $situacao->aprovadoComDependencia  = FALSE;
-    $situacao->retidoFalta             = FALSE;
-
-    switch ($flagSituacaoNota) {
-      case App_Model_MatriculaSituacao::EM_ANDAMENTO:
-        $situacao->aprovado  = FALSE;
-        $situacao->andamento = TRUE;
-        break;
-      case App_Model_MatriculaSituacao::APROVADO_APOS_EXAME:
-        $situacao->andamento = FALSE;
-        $situacao->recuperacao = TRUE;
-        break;
-      case App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA:
-        $situacao->aprovadoComDependencia = TRUE;
-        break;
-      case App_Model_MatriculaSituacao::EM_EXAME:
-        $situacao->aprovado    = FALSE;
-        $situacao->andamento   = TRUE;
-        $situacao->recuperacao = TRUE;
-        break;
-      case App_Model_MatriculaSituacao::REPROVADO:
-        $situacao->aprovado    = FALSE;
-        break;
-    }
-
-    switch ($flagSituacaoFalta) {
-      case App_Model_MatriculaSituacao::EM_ANDAMENTO:
-        $situacao->aprovado  = FALSE;
-        $situacao->andamento = TRUE;
-        break;
-      case App_Model_MatriculaSituacao::REPROVADO:
-        $situacao->retidoFalta = TRUE;
-        $andamento = FALSE;
-
-        // Permite o lançamento de nota de exame final, mesmo que o aluno
-        // esteja retido por falta, apenas quando a regra de avaliação possuir
-        // uma média para recuperação (exame final).
-
-        if ($this->hasRegraAvaliacaoMediaRecuperacao()) {
-
-          if ($this->getRegraAvaliacaoTipoNota() != RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
-            // Mesmo se reprovado por falta, só da a situação final após o lançamento de todas as notas
-            $situacoesFinais = App_Model_MatriculaSituacao::getSituacoesFinais();
-            $andamento = in_array($flagSituacaoNota, $situacoesFinais) === false;
-          }
-
-          if ($flagSituacaoNota == App_Model_MatriculaSituacao::EM_EXAME) {
-            $andamento = TRUE;
-          }
+        // Separa cada nota em um array indexado pelo identity do componente
+        $notasComponentes = [];
+        foreach ($notas as $nota) {
+            $notasComponentes[$nota->get('componenteCurricular')][] = $nota;
         }
 
-        $situacao->andamento = $andamento;
-        break;
+        //Carrega as notas indexadas pela etapa
+        $notasGerais = [];
+        $notas = $this->getNotaGeralDataMapper()->findAll(
+            [],
+            ['notaAluno' => $notaAluno->id],
+            ['etapa' => 'ASC']
+        );
 
-      case App_Model_MatriculaSituacao::APROVADO:
-        $situacao->retidoFalta = FALSE;
-        break;
-      default:
-        $situacao->andamento = TRUE;
+        foreach ($notas as $nota) {
+            $notasGerais[$nota->get('etapa')] = $nota;
+        }
+
+        $this->setNotasComponentes($notasComponentes);
+        $this->setNotasGerais($notasGerais);
+
+        if (false == $loadMedias) {
+            return $this;
+        }
+
+        return $this->_loadMedias();
     }
 
-      // seta situacao geral
-      if ($situacao->andamento and $situacao->recuperacao)
-          $situacao->situacao = App_Model_MatriculaSituacao::EM_EXAME;
+    /**
+     * Carrega as médias dos componentes curriculares já lançadas.
+     *
+     * @return $this
+     *
+     * @throws Exception
+     */
+    protected function _loadMedias()
+    {
+        $notaAluno = $this->_getNotaAluno();
 
-      elseif (! $situacao->andamento and (!$situacao->aprovado || $situacao->retidoFalta))
-          $situacao->situacao = App_Model_MatriculaSituacao::REPROVADO;
+        $medias = $this->getNotaComponenteMediaDataMapper()->findAll(
+            [],
+            ['notaAluno' => $notaAluno->id]
+        );
 
-      elseif (! $situacao->andamento and $situacao->aprovado and $situacao->recuperacao)
-          $situacao->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
+        $mediasComponentes = [];
+        foreach ($medias as $media) {
+            $mediasComponentes[$media->get('componenteCurricular')][] = $media;
+        }
 
-      elseif (! $situacao->andamento and $situacao->aprovado and $situacao->aprovadoComDependencia)
-          $situacao->situacao = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
+        $mediasGerais = [];
 
-      elseif (! $situacao->andamento and $situacao->aprovado)
-          $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
+        $mediasGerais = $this->getMediaGeralDataMapper()->findAll(
+            [],
+            ['notaAluno' => $notaAluno->id]
+        );
 
-      return $situacao;
-  }
+        foreach ($mediasGerais as $mediaGeral) {
+            $mediasGerais = $mediaGeral;
+        }
 
+        $this->setMediasComponentes($mediasComponentes);
+        $this->setMediaGeral($mediasGerais);
 
-  /**
-   * Retorna a situação geral do aluno, levando em consideração as situações
-   * das notas (médias) e faltas. O retorno é baseado em booleanos, indicando
-   * se o aluno está aprovado, em andamento, em recuperação ou retido por falta.
-   *
-   * Retorna também a situação das notas e faltas tais quais retornadas pelos
-   * métodos getSituacaoComponentesCurriculares() e getSituacaoFaltas().
-   *
-   * <code>
-   * <?php
-   * $situacao = new stdClass();
-   * $situacao->aprovado    = TRUE;
-   * $situacao->andamento   = FALSE;
-   * $situacao->recuperacao = FALSE;
-   * $situacao->retidoFalta = FALSE;
-   * $situacao->nota        = $this->getSituacaoComponentesCurriculares();
-   * $situacao->falta       = $this->getSituacaoFaltas();
-   * </code>
-   *
-   * @return stdClass
-   * @see Avaliacao_Service_Boletim#getSituacaoComponentesCurriculares()
-   * @see Avaliacao_Service_Boletim#getSituacaoFaltas()
-   */
-  public function getSituacaoAluno()
-  {
-    $situacaoNotas  = $this->getSituacaoNotas(true);
-    $situacaoFaltas = $this->getSituacaoFaltas();
+        return $this;
+    }
 
-    $situacao        = $this->getSituacaoNotaFalta($situacaoNotas->situacao, $situacaoFaltas->situacao);
-    $situacao->nota  = $situacaoNotas;
-    $situacao->falta = $situacaoFaltas;
+    /**
+     * Carrega as faltas do aluno, sejam gerais ou por componente.
+     *
+     * @return $this
+     *
+     * @throws Exception
+     */
+    protected function _loadFalta()
+    {
+        // Cria uma entrada no boletim caso o aluno/matrícula não a tenha
+        if (!$this->hasFaltaAluno()) {
+            $this->_createFaltaAluno();
+        }
 
-    return $situacao;
-  }
+        // Senão tiver, vai criar
+        $faltaAluno = $this->_getFaltaAluno();
 
+        // Carrega as faltas já lançadas
+        $faltas = $this->getFaltaAbstractDataMapper()->findAll(
+            [],
+            ['faltaAluno' => $faltaAluno->id],
+            ['etapa' => 'ASC']
+        );
+
+        // Se a falta for do tipo geral, popula um array indexado pela etapa
+        if ($faltaAluno->get('tipoFalta') == RegraAvaliacao_Model_TipoPresenca::GERAL) {
+            $faltasGerais = [];
+
+            foreach ($faltas as $falta) {
+                $faltasGerais[$falta->etapa] = $falta;
+            }
+
+            $this->setFaltasGerais($faltasGerais);
+        } elseif ($faltaAluno->get('tipoFalta') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+            $faltasComponentes = [];
+            // Separa cada nota em um array indexado pelo identity field do componente
+            foreach ($faltas as $falta) {
+                $faltasComponentes[$falta->get('componenteCurricular')][] = $falta;
+            }
+
+            $this->setFaltasComponentes($faltasComponentes);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Carrega os pareceres do aluno, sejam gerais ou por componentes.
+     *
+     * @return $this
+     *
+     * @throws Exception
+     */
+    protected function _loadParecerDescritivo()
+    {
+        if ($this->getRegraAvaliacaoTipoParecerDescritivo() == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
+            return $this;
+        }
+
+        if (!$this->hasParecerDescritivoAluno()) {
+            $this->_createParecerDescritivoAluno();
+        }
+
+        $parecerDescritivoAluno = $this->_getParecerDescritivoAluno();
+
+        $pareceres = $this->getParecerDescritivoAbstractDataMapper()->findAll(
+            [],
+            ['parecerDescritivoAluno' => $parecerDescritivoAluno->id],
+            ['etapa' => 'ASC']
+        );
+
+        $gerais = [
+            RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
+            RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL
+        ];
+
+        $componentes = [
+            RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
+            RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE
+        ];
+
+        $parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
+        if (in_array($parecerDescritivo, $gerais)) {
+            $pareceresGerais = [];
+
+            foreach ($pareceres as $parecer) {
+                $pareceresGerais[$parecer->etapa] = $parecer;
+            }
+
+            $this->setPareceresGerais($pareceresGerais);
+        } elseif (in_array($parecerDescritivo, $componentes)) {
+            $pareceresComponentes = [];
+
+            foreach ($pareceres as $parecer) {
+                $pareceresComponentes[$parecer->get('componenteCurricular')][] = $parecer;
+            }
+
+            $this->setPareceresComponentes($pareceresComponentes);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Verifica se o aluno tem notas lançadas.
+     *
+     * @return bool
+     */
+    public function hasNotaAluno()
+    {
+        if (!is_null($this->_getNotaAluno())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getQtdComponentes($ignorarDispensasParciais = false)
+    {
+        $enrollment = $this->getOption('matriculaData');
+
+        $total = count(App_Model_IedFinder::getComponentesPorMatricula(
+            $enrollment['cod_matricula'],
+            $this->getComponenteDataMapper(),
+            $this->getComponenteTurmaDataMapper(),
+            null,
+            null,
+            null,
+            $enrollment,
+            true,
+            $ignorarDispensasParciais
+        ));
+
+        $disciplinesWithoutStage = Portabilis_Utils_Database::fetchPreparedQuery('
+            SELECT COUNT(*) AS count
+            FROM pmieducar.escola_serie_disciplina
+            WHERE TRUE
+            AND ref_ref_cod_serie = $1
+            AND ref_ref_cod_escola = $2
+            AND ativo = 1
+            AND $3 = ANY (anos_letivos)
+            AND etapas_especificas = 1
+            AND etapas_utilizadas LIKE \'\';
+        ', [
+            'params' => [
+                $enrollment['ref_ref_cod_serie'],
+                $enrollment['ref_ref_cod_escola'],
+                $enrollment['ano'],
+            ]
+        ]);
+
+        return $total - (int)$disciplinesWithoutStage[0]['count'];
+    }
+
+    /**
+     * @param $flagSituacaoNota
+     * @param $flagSituacaoFalta
+     *
+     * @return stdClass
+     */
+    public function getSituacaoNotaFalta($flagSituacaoNota, $flagSituacaoFalta)
+    {
+        $situacao = new stdClass();
+        $situacao->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+        $situacao->aprovado = true;
+        $situacao->andamento = false;
+        $situacao->recuperacao = false;
+        $situacao->aprovadoComDependencia = false;
+        $situacao->retidoFalta = false;
+
+        switch ($flagSituacaoNota) {
+            case App_Model_MatriculaSituacao::EM_ANDAMENTO:
+                $situacao->aprovado = false;
+                $situacao->andamento = true;
+                break;
+            case App_Model_MatriculaSituacao::APROVADO_APOS_EXAME:
+                $situacao->andamento = false;
+                $situacao->recuperacao = true;
+                break;
+            case App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA:
+                $situacao->aprovadoComDependencia = true;
+                break;
+            case App_Model_MatriculaSituacao::EM_EXAME:
+                $situacao->aprovado = false;
+                $situacao->andamento = true;
+                $situacao->recuperacao = true;
+                break;
+            case App_Model_MatriculaSituacao::REPROVADO:
+                $situacao->aprovado = false;
+                break;
+        }
+
+        switch ($flagSituacaoFalta) {
+            case App_Model_MatriculaSituacao::EM_ANDAMENTO:
+                $situacao->aprovado = false;
+                $situacao->andamento = true;
+                break;
+            case App_Model_MatriculaSituacao::REPROVADO:
+                $situacao->retidoFalta = true;
+                $andamento = false;
+
+                // Permite o lançamento de nota de exame final, mesmo que o aluno
+                // esteja retido por falta, apenas quando a regra de avaliação possuir
+                // uma média para recuperação (exame final).
+
+                if ($this->hasRegraAvaliacaoMediaRecuperacao()) {
+                    if ($this->getRegraAvaliacaoTipoNota() != RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+                        // Mesmo se reprovado por falta, só da a situação final após o lançamento de todas as notas
+                        $situacoesFinais = App_Model_MatriculaSituacao::getSituacoesFinais();
+                        $andamento = in_array($flagSituacaoNota, $situacoesFinais) === false;
+                    }
+
+                    if ($flagSituacaoNota == App_Model_MatriculaSituacao::EM_EXAME) {
+                        $andamento = true;
+                    }
+                }
+
+                $situacao->andamento = $andamento;
+                break;
+
+            case App_Model_MatriculaSituacao::APROVADO:
+                $situacao->retidoFalta = false;
+                break;
+            default:
+                $situacao->andamento = true;
+        }
+
+        // seta situacao geral
+        if ($situacao->andamento and $situacao->recuperacao) {
+            $situacao->situacao = App_Model_MatriculaSituacao::EM_EXAME;
+        } elseif (!$situacao->andamento and (!$situacao->aprovado || $situacao->retidoFalta)) {
+            $situacao->situacao = App_Model_MatriculaSituacao::REPROVADO;
+        } elseif (!$situacao->andamento and $situacao->aprovado and $situacao->recuperacao) {
+            $situacao->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
+        } elseif (!$situacao->andamento and $situacao->aprovado and $situacao->aprovadoComDependencia) {
+            $situacao->situacao = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
+        } elseif (!$situacao->andamento and $situacao->aprovado) {
+            $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
+        }
+
+        return $situacao;
+    }
+
+    /**
+     * Retorna a situação geral do aluno, levando em consideração as situações
+     * das notas (médias) e faltas. O retorno é baseado em booleanos, indicando
+     * se o aluno está aprovado, em andamento, em recuperação ou retido por falta.
+     *
+     * Retorna também a situação das notas e faltas tais quais retornadas pelos
+     * métodos getSituacaoComponentesCurriculares() e getSituacaoFaltas().
+     *
+     * <code>
+     * <?php
+     * $situacao = new stdClass();
+     * $situacao->aprovado    = TRUE;
+     * $situacao->andamento   = FALSE;
+     * $situacao->recuperacao = FALSE;
+     * $situacao->retidoFalta = FALSE;
+     * $situacao->nota        = $this->getSituacaoComponentesCurriculares();
+     * $situacao->falta       = $this->getSituacaoFaltas();
+     * </code>
+     *
+     * @return stdClass
+     *
+     * @see Avaliacao_Service_Boletim#getSituacaoComponentesCurriculares()
+     * @see Avaliacao_Service_Boletim#getSituacaoFaltas()
+     */
+    public function getSituacaoAluno()
+    {
+        $situacaoNotas = $this->getSituacaoNotas(true);
+        $situacaoFaltas = $this->getSituacaoFaltas();
+
+        $situacao = $this->getSituacaoNotaFalta($situacaoNotas->situacao, $situacaoFaltas->situacao);
+        $situacao->nota = $situacaoNotas;
+        $situacao->falta = $situacaoFaltas;
+
+        return $situacao;
+    }
+
+    /**
+     * @param $enrollmentId
+     * @param $classroomId
+     * @param $disciplineId
+     *
+     * @return mixed
+     *
+     * @throws Exception
+     */
     private function getLastStage($enrollmentId, $classroomId, $disciplineId)
     {
         $stages = range(1, $this->getOption('etapas'));
         $exemptedStages = $this->getExemptedStages($enrollmentId, $disciplineId);
 
-        if ($this->getRegra()->get('definirComponentePorEtapa') == "1") {
+        if ($this->getRegra()->get('definirComponentePorEtapa') == '1') {
             $specificStagesString = App_Model_IedFinder::getEtapasComponente($classroomId, $disciplineId);
 
             if ($specificStagesString) {
@@ -635,6 +669,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         return max($stages);
     }
 
+    /**
+     * @param $notaAlunoId
+     *
+     * @throws Exception
+     */
     private function deleteNotaComponenteCurricularMediaWithoutNotas($notaAlunoId)
     {
         Portabilis_Utils_Database::fetchPreparedQuery('
@@ -653,1930 +692,2086 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         ]);
     }
 
-  /**
-   * Retorna a situação das notas lançadas para os componentes curriculares cursados pelo aluno. Possui
-   * uma flag "situacao" global, que indica a situação global do aluno, podendo
-   * ser:
-   *
-   * - Em andamento
-   * - Em exame
-   * - Aprovado
-   * - Reprovado
-   *
-   * Esses valores são definidos no enum App_Model_MatriculaSituacao.
-   *
-   * Para cada componente curricular, será indicado a situação do aluno no
-   * componente.
-   *
-   * Esses resultados são retornados como um objeto stdClass que possui dois
-   * atributos: "situacao" e "componentesCurriculares". O primeiro é um tipo
-   * inteiro e o segundo um array indexado pelo id do componente e com um
-   * atributo inteiro "situacao":
-   *
-   * <code>
-   * <?php
-   * $situacao = new stdClass();
-   * $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
-   * $situacao->componentesCurriculares = array();
-   * $situacao->componentesCurriculares[1] = new stdClass();
-   * $situacao->componentesCurriculares[1]->situacao = App_Model_MatriculaSituacao::APROVADO;
-   * </code>
-   *
-   * Esses valores são definidos SOMENTE através da verificação das médias dos
-   * componentes curriculares já avaliados.
-   *
-   * Obs: Anteriormente este metódo se chamava getSituacaoComponentesCurriculares, porem na verdade não retornava a
-   *      situação dos componentes curriculares (que seria a situação baseada nas notas e das faltas lançadas) e sim
-   *      então foi renomeado este metodo para getSituacaoNotas, para que no metódo getSituacaoComponentesCurriculares
-   *      fosse retornado a situação do baseada nas notas e faltas lançadas.
-   *
-   * Obs2: A opção $calcularSituacaoAluno é passada apenas ao calcular a situação geral da matrícula, pois desabilita
-   * algumas verificações que não são necessárias para essa validação, mas que podem ser úteis em outras situações, como
-   * ao calcular a situação de um componente específico
-   *
-   * @return stdClass|NULL Retorna NULL caso não
-   * @see App_Model_MatriculaSituacao
-   */
-  public function getSituacaoNotas($calcularSituacaoAluno = false)
-  {
-    $situacao = new stdClass();
-    $situacao->situacao = 0;
-    $situacao->componentesCurriculares = array();
+    /**
+     * Retorna a situação das notas lançadas para os componentes curriculares cursados pelo aluno. Possui
+     * uma flag "situacao" global, que indica a situação global do aluno, podendo
+     * ser:
+     *
+     * - Em andamento
+     * - Em exame
+     * - Aprovado
+     * - Reprovado
+     *
+     * Esses valores são definidos no enum App_Model_MatriculaSituacao.
+     *
+     * Para cada componente curricular, será indicado a situação do aluno no
+     * componente.
+     *
+     * Esses resultados são retornados como um objeto stdClass que possui dois
+     * atributos: "situacao" e "componentesCurriculares". O primeiro é um tipo
+     * inteiro e o segundo um array indexado pelo id do componente e com um
+     * atributo inteiro "situacao":
+     *
+     * <code>
+     * <?php
+     * $situacao = new stdClass();
+     * $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
+     * $situacao->componentesCurriculares = [;
+     * $situacao->componentesCurriculares[1] = new stdClass();
+     * $situacao->componentesCurriculares[1]->situacao = App_Model_MatriculaSituacao::APROVADO;
+     * </code>
+     *
+     * Esses valores são definidos SOMENTE através da verificação das médias dos
+     * componentes curriculares já avaliados.
+     *
+     * Obs: Anteriormente este metódo se chamava getSituacaoComponentesCurriculares, porem na verdade não retornava a
+     *      situação dos componentes curriculares (que seria a situação baseada nas notas e das faltas lançadas) e sim
+     *      então foi renomeado este metodo para getSituacaoNotas, para que no metódo getSituacaoComponentesCurriculares
+     *      fosse retornado a situação do baseada nas notas e faltas lançadas.
+     *
+     * Obs2: A opção $calcularSituacaoAluno é passada apenas ao calcular a situação geral da matrícula, pois desabilita
+     * algumas verificações que não são necessárias para essa validação, mas que podem ser úteis em outras situações, como
+     * ao calcular a situação de um componente específico
+     *
+     * @return stdClass|NULL Retorna NULL caso não
+     *
+     * @see App_Model_MatriculaSituacao
+     */
+    public function getSituacaoNotas($calcularSituacaoAluno = false)
+    {
+        $situacao = new stdClass();
+        $situacao->situacao = 0;
+        $situacao->componentesCurriculares = [];
 
-    $infosMatricula = $this->getOption('matriculaData');
-    $matriculaId = $infosMatricula['cod_matricula'];
+        $infosMatricula = $this->getOption('matriculaData');
+        $matriculaId = $infosMatricula['cod_matricula'];
 
-    // Carrega as médias pois este método pode ser chamado após a chamada a saveNotas()
-    $mediasComponentes = $this->_loadMedias()->getMediasComponentes();
-    $mediasComponenentesTotal = $mediasComponentes;
-    if (!$calcularSituacaoAluno) {
-        $componentes = $this->getComponentes();
-        $mediasComponentes = array_intersect_key($mediasComponentes, $componentes);
-    }
+        // Carrega as médias pois este método pode ser chamado após a chamada a saveNotas()
+        $mediasComponentes = $this->_loadMedias()->getMediasComponentes();
+        $mediasComponenentesTotal = $mediasComponentes;
 
-    $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
+        if (!$calcularSituacaoAluno) {
+            $componentes = $this->getComponentes();
+            $mediasComponentes = array_intersect_key($mediasComponentes, $componentes);
+        }
 
-    // A situação é "aprovado" por padrão
-    $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
+        $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
 
-    if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
-      $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
-
-      return $situacao;
-    }
-
-    if($this->getRegraAvaliacaoNotaGeralPorEtapa() == "1"){
-
-       $mediaGeral = $this->getMediaGeral();
-
-      if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
-        $media = $mediaGeral->mediaArredondada;
-      }
-      else {
-        $media = $mediaGeral->media;
-      }
-
-      $etapa = $mediaGeral->etapa;
-
-      if ($etapa == $this->getOption('etapas') && $media < $this->getRegraAvaliacaoMedia() && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
-        $situacaoGeral = App_Model_MatriculaSituacao::EM_EXAME;
-      }
-      elseif ($etapa == $this->getOption('etapas') && $media < $this->getRegraAvaliacaoMedia()) {
-        $situacaoGeral = App_Model_MatriculaSituacao::REPROVADO;
-      }
-      elseif ($etapa == 'Rc' && $media < $this->getRegraAvaliacaoMediaRecuperacao()) {
-        $situacaoGeral = App_Model_MatriculaSituacao::REPROVADO;
-      }
-      elseif ($etapa == 'Rc' && $media >= $this->getRegraAvaliacaoMediaRecuperacao() && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
-        $situacaoGeral = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
-      }
-      elseif ($etapa < $this->getOption('etapas') && $etapa != 'Rc') {
-        $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-      }
-      else {
+        // A situação é "aprovado" por padrão
         $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
-      }
 
-      foreach($mediasComponentes as $id => $mediaComponente){
-        $situacao->componentesCurriculares[$id] = new stdClass();
-        $situacao->componentesCurriculares[$id]->situacao = $situacaoGeral;
-      }
+        if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+            $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
 
-      $situacao->situacao = $situacaoGeral;
-
-      return $situacao;
-    }
-
-    if(is_numeric($disciplinaDispensadaTurma)){
-        if (is_array($componentes)) {
-            unset($componentes[$disciplinaDispensadaTurma]);
+            return $situacao;
         }
 
-        unset($mediasComponentes[$disciplinaDispensadaTurma]);
-    }
+        if ($this->getRegraAvaliacaoNotaGeralPorEtapa() == '1') {
+            $mediaGeral = $this->getMediaGeral();
 
-    $totalComponentes = $this->getQtdComponentes($calcularSituacaoAluno);
+            if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
+                $media = $mediaGeral->mediaArredondada;
+            } else {
+                $media = $mediaGeral->media;
+            }
 
-    if (!$calcularSituacaoAluno) {
-        // Se não tiver nenhuma média ou a quantidade for diferente dos componentes
-        // curriculares da matrícula, ainda está em andamento
-        if ((0 == count($mediasComponentes) || count($mediasComponentes) != count($componentes))
-             && $this->getRegraAvaliacaoDefinirComponentePorEtapa() != "1") {
-          $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-        }
-    } elseif($calcularSituacaoAluno && count($mediasComponenentesTotal) < $totalComponentes) {
-        $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-    }
+            $etapa = $mediaGeral->etapa;
 
-    if ((0 == count($mediasComponentes) || count($mediasComponenentesTotal) < $totalComponentes)
-         && $this->getRegraAvaliacaoDefinirComponentePorEtapa() == "1"){
-      $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-    }
+            if ($etapa == $this->getOption('etapas') && $media < $this->getRegraAvaliacaoMedia() && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
+                $situacaoGeral = App_Model_MatriculaSituacao::EM_EXAME;
+            } elseif ($etapa == $this->getOption('etapas') && $media < $this->getRegraAvaliacaoMedia()) {
+                $situacaoGeral = App_Model_MatriculaSituacao::REPROVADO;
+            } elseif ($etapa == 'Rc' && $media < $this->getRegraAvaliacaoMediaRecuperacao()) {
+                $situacaoGeral = App_Model_MatriculaSituacao::REPROVADO;
+            } elseif ($etapa == 'Rc' && $media >= $this->getRegraAvaliacaoMediaRecuperacao() && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
+                $situacaoGeral = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
+            } elseif ($etapa < $this->getOption('etapas') && $etapa != 'Rc') {
+                $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+            } else {
+                $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
+            }
 
-    $qtdComponenteReprovado = 0;
-    $qtdComponentes = 0;
-    $somaMedias = 0;
-    $media = 0;
-    $turmaId = $this->getOption('ref_cod_turma');
-    foreach ($mediasComponentes as $id => $mediaComponente) {
+            foreach ($mediasComponentes as $id => $mediaComponente) {
+                $situacao->componentesCurriculares[$id] = new stdClass();
+                $situacao->componentesCurriculares[$id]->situacao = $situacaoGeral;
+            }
 
-      $etapa = $mediaComponente[0]->etapa;
-      $qtdComponentes++;
-      $somaMedias += $media;
+            $situacao->situacao = $situacaoGeral;
 
-      $lastStage = $this->getLastStage($matriculaId, $turmaId, $id);
-
-      if($this->getRegraAvaliacaoTipoProgressao() == RegraAvaliacao_Model_TipoProgressao::CONTINUADA){
-
-        $getCountNotaCC = App_Model_IedFinder::verificaSeExisteNotasComponenteCurricular($matriculaId, $id);
-
-        if($getCountNotaCC[0]['cc'] == 0) $etapa = 0;
-
-        if ($etapa < $lastStage && (string)$etapa != 'Rc'){
-          $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-          $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-        }else{
-          $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
-          $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
+            return $situacao;
         }
 
-        continue;
-      }
+        if (is_numeric($disciplinaDispensadaTurma)) {
+            if (is_array($componentes)) {
+                unset($componentes[$disciplinaDispensadaTurma]);
+            }
 
-      if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
-        $media = $mediaComponente[0]->mediaArredondada;
-      }
-      else {
-        $media = $mediaComponente[0]->media;
-      }
-
-      $situacaoAtualComponente = $mediaComponente[0]->situacao;
-
-      $permiteSituacaoEmExame = TRUE;
-
-      if ($situacaoAtualComponente == App_Model_MatriculaSituacao::REPROVADO ||
-          $situacaoAtualComponente == App_Model_MatriculaSituacao::APROVADO) {
-        $permiteSituacaoEmExame = FALSE;
-      }
-
-      if ($etapa == $lastStage && $media < $this->getRegraAvaliacaoMedia() && $this->hasRegraAvaliacaoFormulaRecuperacao() && $permiteSituacaoEmExame) {
-
-        // lets make some changes here >:)
-        $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
-
-        if($this->hasRegraAvaliacaoReprovacaoAutomatica()){
-          if(!is_numeric($this->preverNotaRecuperacao($id))){
-            $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
-            $qtdComponenteReprovado++;
-          }
-        }
-      }
-      elseif ($etapa == $lastStage && $media < $this->getRegraAvaliacaoMedia()) {
-        $qtdComponenteReprovado++;
-        $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
-      }
-      elseif ((string)$etapa == 'Rc' && $media < $this->getRegraAvaliacaoMediaRecuperacao()) {
-        $qtdComponenteReprovado++;
-        $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
-      }
-      elseif ((string)$etapa == 'Rc' && $media >= $this->getRegraAvaliacaoMediaRecuperacao() && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
-        $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
-      }
-      elseif ($etapa < $lastStage && (string)$etapa != 'Rc') {
-        $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-      }
-      else {
-        $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
-      }
-
-      if ($this->_situacaoPrioritaria($situacao->componentesCurriculares[$id]->situacao,
-                                        $situacaoGeral)) {
-        $situacaoGeral = $situacao->componentesCurriculares[$id]->situacao;
-      }
-    }
-
-    $matricula = $this->getOption('matriculaData');
-    $serie = App_Model_IedFinder::getSerie($matricula['ref_ref_cod_serie']);
-    $instituicao = App_Model_IedFinder::getInstituicao($matricula['ref_cod_instituicao']);
-
-    $anoConcluinte = ($serie['concluinte'] == 2);
-    $reprovaAnoConcluinte = dbBool($instituicao['reprova_dependencia_ano_concluinte']);
-
-    $aprovaDependencia = !($reprovaAnoConcluinte && $anoConcluinte);
-    $aprovaDependencia = ($aprovaDependencia && !dbBool($matricula['dependencia']));
-    $aprovaDependencia = ($aprovaDependencia && $situacaoGeral == App_Model_MatriculaSituacao::REPROVADO);
-    $aprovaDependencia = ($aprovaDependencia && $qtdComponenteReprovado <= $this->getRegraAvaliacaoQtdDisciplinasDependencia());
-
-    if ($aprovaDependencia) {
-      $situacaoGeral = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
-    }
-
-    if($situacaoGeral == App_Model_MatriculaSituacao::REPROVADO
-        && $this->hasRegraAvaliacaoAprovaMediaDisciplina()
-        && ($somaMedias / $qtdComponentes) >= $this->getRegraAvaliacaoMediaRecuperacao()){
-
-      $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
-
-    }
-
-    // Situação geral
-    $situacao->situacao = $situacaoGeral;
-
-    return $situacao;
-  }
-
-  /**
-   * Retorna a situação das faltas do aluno, sejam por componentes curriculares
-   * ou gerais. A situação pode ser:
-   *
-   * - Em andamento
-   * - Aprovado
-   * - Reprovado
-   *
-   * Retorna outros dados interessantes, a maioria informacional para exibição
-   * ao usuário, como a carga horária (geral e por componente), a porcentagem
-   * de presença (geral e por componente), a porcentagem de falta (geral e
-   * por componente), a hora/falta usada para o cálculo das porcentagens e o
-   * total de faltas geral.
-   *
-   * Esses resultados são retornados como um objeto stdClass que possui os
-   * seguintes atributos:
-   *
-   * <code>
-   * <?php
-   * $presenca = new stdClass();
-   * $presenca->situacao                 = 0;
-   * $presenca->tipoFalta                = 0;
-   * $presenca->cargaHoraria             = 0;
-   * $presenca->cursoHoraFalta           = 0;
-   * $presenca->totalFaltas              = 0;
-   * $presenca->horasFaltas              = 0;
-   * $presenca->porcentagemFalta         = 0;
-   * $presenca->porcentagemPresenca      = 0;
-   * $presenca->porcentagemPresencaRegra = 0;
-   *
-   * $presenca->componentesCurriculares  = array();
-   * $presenca->componentesCurriculares[1] = new stdClass();
-   * $presenca->componentesCurriculares[1]->situacao            = 0;
-   * $presenca->componentesCurriculares[1]->horasFaltas         = 0;
-   * $presenca->componentesCurriculares[1]->porcentagemFalta    = 0;
-   * $presenca->componentesCurriculares[1]->porcentagemPresenca = 0;
-   * </code>
-   *
-   * Esses valores são calculados SOMENTE através das faltas já lançadas.
-   *
-   * @return stdClass
-   * @todo Verificação de situação geral nos moldes dos componentes curriculares
-   *   para falta por componente (se 0 ou diferente de componentes matrícula)
-   */
-  public function getSituacaoFaltas()
-  {
-    $presenca                           = new stdClass();
-    $presenca->totalFaltas              = 0;
-    $presenca->horasFaltas              = 0;
-    $presenca->porcentagemFalta         = 0;
-    $presenca->porcentagemPresenca      = 0;
-    $presenca->porcentagemPresencaRegra = $this->getRegraAvaliacaoPorcentagemPresenca();
-
-    $presenca->tipoFalta                = $this->getRegraAvaliacaoTipoPresenca();
-    $presenca->cargaHoraria             = $this->getOption('serieCargaHoraria');
-    $presenca->diasLetivos              = $this->getOption('serieDiasLetivos');
-
-    $presenca->cursoHoraFalta           = $this->getOption('cursoHoraFalta');
-    $presenca->componentesCurriculares  = array();
-    $presenca->situacao                 = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-
-    $etapa                              = 0;
-    $faltasComponentes                  = array();
-
-    $enrollmentData = $this->getOption('matriculaData');
-    $enrollmentId = $enrollmentData['cod_matricula'];
-    $classroomId = $this->getOption('ref_cod_turma');
-
-    $componentes = $this->getComponentes();
-
-    $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($classroomId);
-
-    // Carrega faltas lançadas (persistidas)
-    $this->_loadFalta();
-
-    $tipoFaltaGeral         = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::GERAL;
-    $tipoFaltaPorComponente = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
-
-    if ($tipoFaltaGeral) {
-      $faltas = $this->getFaltasGerais();
-
-      if (0 == count($faltas)) {
-        $total = 0;
-        $etapa = 0;
-      }
-      else {
-        $total = array_sum(CoreExt_Entity::entityFilterAttr($faltas, 'id', 'quantidade'));
-        $etapa = array_pop($faltas)->etapa;
-      }
-    }
-
-    elseif ($tipoFaltaPorComponente) {
-      $faltas = $this->getFaltasComponentes();
-      $faltas = array_intersect_key($faltas, $componentes);
-      $total  = 0;
-      $etapasComponentes = array();
-      $faltasComponentes = array();
-
-      foreach ($faltas as $key => $falta) {
-        // Total de faltas do componente
-        $componenteTotal = array_sum(CoreExt_Entity::entityFilterAttr($falta,
-          'id', 'quantidade'));
-
-        // Pega o id de ComponenteCurricular_Model_Componente da última etapa do array
-        $componenteEtapa = array_pop($falta);
-        $id              = $componenteEtapa->get('componenteCurricular');
-        $etapa           = $componenteEtapa->etapa;
-
-        // Usa stdClass como interface de acesso
-        $faltasComponentes[$id] = new stdClass();
-        $faltasComponentes[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-        $faltasComponentes[$id]->horasFaltas = NULL;
-        $faltasComponentes[$id]->porcentagemFalta = NULL;
-        $faltasComponentes[$id]->porcentagemPresenca = NULL;
-        $faltasComponentes[$id]->total = $componenteTotal;
-        //$faltasComponentes[$id]->componenteCurricular = $componenteEtapa;
-
-        // Calcula a quantidade de horas/faltas no componente
-        $faltasComponentes[$id]->horasFaltas =
-          $this->_calculateHoraFalta($componenteTotal, $presenca->cursoHoraFalta);
-
-        // Calcula a porcentagem de falta no componente
-        $faltasComponentes[$id]->porcentagemFalta =
-          $this->_calculatePorcentagem($componentes[$id]->cargaHoraria,
-            $faltasComponentes[$id]->horasFaltas, FALSE);
-
-        // Calcula a porcentagem de presença no componente
-        $faltasComponentes[$id]->porcentagemPresenca =
-          100 - $faltasComponentes[$id]->porcentagemFalta;
-
-        // Na última etapa seta situação presença como aprovado ou reprovado.
-        $lastStage = $this->getLastStage($enrollmentId, $classroomId, $id);
-        if ($etapa == $lastStage || $etapa == 'Rc') {
-          $aprovado = ($faltasComponentes[$id]->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca());
-          $faltasComponentes[$id]->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
-                                                          App_Model_MatriculaSituacao::REPROVADO;
-            // Se etapa = quantidade de etapas dessa disciplina, vamos assumir que é a última etapa
-            // já que essa variável só tem o intuito de dizer que todas etapas da disciplina estão lançadas
-            $etapasComponentes[$this->getOption('etapas')] = $this->getOption('etapas');
-        } else {
-            $etapasComponentes[$etapa] = $etapa;
+            unset($mediasComponentes[$disciplinaDispensadaTurma]);
         }
 
-        // Adiciona a quantidade de falta do componente ao total geral de faltas
-        $total += $componenteTotal;
-      }
+        $totalComponentes = $this->getQtdComponentes($calcularSituacaoAluno);
 
+        if (!$calcularSituacaoAluno) {
+            // Se não tiver nenhuma média ou a quantidade for diferente dos componentes
+            // curriculares da matrícula, ainda está em andamento
+            if ((0 == count($mediasComponentes) || count($mediasComponentes) != count($componentes))
+                && $this->getRegraAvaliacaoDefinirComponentePorEtapa() != '1') {
+                $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+            }
+        } elseif ($calcularSituacaoAluno && count($mediasComponenentesTotal) < $totalComponentes) {
+            $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+        }
 
-      if(is_numeric($disciplinaDispensadaTurma)){
-        unset($componentes[$disciplinaDispensadaTurma]);
-        unset($faltasComponentes[$disciplinaDispensadaTurma]);
-      }
-      if (0 == count($faltasComponentes) ||
-        count($faltasComponentes) != count($componentes)) {
-        $etapa = 1;
-      }
-      else {
-        $etapa = min($etapasComponentes);
-      }
-    } // fim if por_componente
+        if ((0 == count($mediasComponentes) || count($mediasComponenentesTotal) < $totalComponentes)
+            && $this->getRegraAvaliacaoDefinirComponentePorEtapa() == '1') {
+            $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+        }
 
-    $presenca->totalFaltas = $total;
-    $presenca->horasFaltas = $this->_calculateHoraFalta($total, $presenca->cursoHoraFalta);
+        $qtdComponenteReprovado = 0;
+        $qtdComponentes = 0;
+        $somaMedias = 0;
+        $media = 0;
+        $turmaId = $this->getOption('ref_cod_turma');
 
-    if ($tipoFaltaGeral) {
-      $presenca->porcentagemFalta = $this->_calculatePorcentagem($presenca->diasLetivos,
-                                                                 $presenca->totalFaltas, FALSE);
+        foreach ($mediasComponentes as $id => $mediaComponente) {
+            $etapa = $mediaComponente[0]->etapa;
+            $qtdComponentes++;
+            $somaMedias += $media;
+
+            $lastStage = $this->getLastStage($matriculaId, $turmaId, $id);
+
+            if ($this->getRegraAvaliacaoTipoProgressao() == RegraAvaliacao_Model_TipoProgressao::CONTINUADA) {
+                $getCountNotaCC = App_Model_IedFinder::verificaSeExisteNotasComponenteCurricular($matriculaId, $id);
+
+                if ($getCountNotaCC[0]['cc'] == 0) {
+                    $etapa = 0;
+                }
+
+                if ($etapa < $lastStage && (string)$etapa != 'Rc') {
+                    $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+                    $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+                } else {
+                    $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
+                    $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
+                }
+
+                continue;
+            }
+
+            if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
+                $media = $mediaComponente[0]->mediaArredondada;
+            } else {
+                $media = $mediaComponente[0]->media;
+            }
+
+            $situacaoAtualComponente = $mediaComponente[0]->situacao;
+
+            $permiteSituacaoEmExame = true;
+
+            if ($situacaoAtualComponente == App_Model_MatriculaSituacao::REPROVADO ||
+                $situacaoAtualComponente == App_Model_MatriculaSituacao::APROVADO) {
+                $permiteSituacaoEmExame = false;
+            }
+
+            if ($etapa == $lastStage && $media < $this->getRegraAvaliacaoMedia() && $this->hasRegraAvaliacaoFormulaRecuperacao() && $permiteSituacaoEmExame) {
+                // lets make some changes here >:)
+                $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
+
+                if ($this->hasRegraAvaliacaoReprovacaoAutomatica()) {
+                    if (!is_numeric($this->preverNotaRecuperacao($id))) {
+                        $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
+                        $qtdComponenteReprovado++;
+                    }
+                }
+            } elseif ($etapa == $lastStage && $media < $this->getRegraAvaliacaoMedia()) {
+                $qtdComponenteReprovado++;
+                $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
+            } elseif ((string)$etapa == 'Rc' && $media < $this->getRegraAvaliacaoMediaRecuperacao()) {
+                $qtdComponenteReprovado++;
+                $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
+            } elseif ((string)$etapa == 'Rc' && $media >= $this->getRegraAvaliacaoMediaRecuperacao() && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
+                $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
+            } elseif ($etapa < $lastStage && (string)$etapa != 'Rc') {
+                $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+            } else {
+                $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
+            }
+
+            if ($this->_situacaoPrioritaria(
+                $situacao->componentesCurriculares[$id]->situacao,
+                $situacaoGeral
+            )) {
+                $situacaoGeral = $situacao->componentesCurriculares[$id]->situacao;
+            }
+        }
+
+        $matricula = $this->getOption('matriculaData');
+        $serie = App_Model_IedFinder::getSerie($matricula['ref_ref_cod_serie']);
+        $instituicao = App_Model_IedFinder::getInstituicao($matricula['ref_cod_instituicao']);
+
+        $anoConcluinte = ($serie['concluinte'] == 2);
+        $reprovaAnoConcluinte = dbBool($instituicao['reprova_dependencia_ano_concluinte']);
+
+        $aprovaDependencia = !($reprovaAnoConcluinte && $anoConcluinte);
+        $aprovaDependencia = ($aprovaDependencia && !dbBool($matricula['dependencia']));
+        $aprovaDependencia = ($aprovaDependencia && $situacaoGeral == App_Model_MatriculaSituacao::REPROVADO);
+        $aprovaDependencia = ($aprovaDependencia && $qtdComponenteReprovado <= $this->getRegraAvaliacaoQtdDisciplinasDependencia());
+
+        if ($aprovaDependencia) {
+            $situacaoGeral = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
+        }
+
+        if ($situacaoGeral == App_Model_MatriculaSituacao::REPROVADO
+            && $this->hasRegraAvaliacaoAprovaMediaDisciplina()
+            && ($somaMedias / $qtdComponentes) >= $this->getRegraAvaliacaoMediaRecuperacao()) {
+            $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
+        }
+
+        // Situação geral
+        $situacao->situacao = $situacaoGeral;
+
+        return $situacao;
     }
-    elseif ($tipoFaltaPorComponente) {
-      $presenca->porcentagemFalta = $this->_calculatePorcentagem($presenca->cargaHoraria,
-                                                                 $presenca->horasFaltas, FALSE);
-    }
-
-    $presenca->porcentagemPresenca     = 100 - $presenca->porcentagemFalta;
-    $presenca->componentesCurriculares = $faltasComponentes;
-
-    // Na última etapa seta situação presença como aprovado ou reprovado.
-    if ($etapa == $this->getOption('etapas') || $etapa === 'Rc') {
-      $aprovado           = ($presenca->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca());
-      $presenca->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
-                                        App_Model_MatriculaSituacao::REPROVADO;
-    }
-
-    return $presenca;
-  }
-
-
-  /**
-   * Retorna a situação dos componentes curriculares cursados pelo aluno. Possui
-   * uma flag "situacao" global, que indica a situação global do aluno, podendo
-   * ser:
-   *
-   * - Em andamento
-   * - Em exame
-   * - Aprovado
-   * - Reprovado
-   *
-   * Esses valores são definidos no enum App_Model_MatriculaSituacao.
-   *
-   * Para cada componente curricular, será indicado a situação do aluno no
-   * componente.
-   *
-   * Esses resultados são retornados como um objeto stdClass que possui dois
-   * atributos: "situacao" e "componentesCurriculares". O primeiro é um tipo
-   * inteiro e o segundo um array indexado pelo id do componente e com um
-   * atributo inteiro "situacao":
-   *
-   * <code>
-   * <?php
-   * $situacao = new stdClass();
-   * $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
-   * $situacao->componentesCurriculares = array();
-   * $situacao->componentesCurriculares[1] = new stdClass();
-   * $situacao->componentesCurriculares[1]->situacao = App_Model_MatriculaSituacao::APROVADO;
-   * </code>
-   *
-   * Esses valores são definidos através da verificação das médias dos
-   * componentes curriculares já avaliados e das faltas lançadas.
-   *
-   * Obs: Anteriormente este metódo SOMENTE verificava a situação baseando-se nas médias lançadas,
-   *      porem o mesmo foi alterado para verificar a situação baseada nas notas e faltas lançadas.
-   *
-   *      A implementa antiga deste metodo esta contida no metodo getSituacaoNotas
-   *
-   * @return stdClass|NULL Retorna NULL caso não
-   * @see App_Model_MatriculaSituacao
-   */
-  public function getSituacaoComponentesCurriculares()
-  {
-    $situacao = new stdClass();
-    $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
-    $situacao->componentesCurriculares = array();
-
-    $componentes = $this->getComponentes();
-    $situacaoNotas = $this->getSituacaoNotas();
-    $situacaoFaltas = $this->getSituacaofaltas();
-
-    foreach ($componentes as $ccId => $componente) {
-      // seta tipos nota, falta
-      $tipoNotaNenhum = $this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
-      $tipoFaltaPorComponente = $this->getRegraAvaliacaoTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
-
-      $situacaoNotaCc = $situacaoNotas->componentesCurriculares[$ccId] ?? null;
-
-      // inicializa 0FaltaCc a ser usado caso tipoFaltaPorComponente
-      $situacaoFaltaCc = new stdClass();
-      $situacaoFaltaCc->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-
-      // caso possua situacaoFalta para o componente substitui situacao inicializada
-      if ($tipoFaltaPorComponente and isset($situacaoFaltas->componentesCurriculares[$ccId])) {
-        $situacaoFaltaCc = $situacaoFaltas->componentesCurriculares[$ccId];
-      }
-
-      // pega situação nota geral ou do componente
-      if ($tipoNotaNenhum) {
-        $situacaoNota = $situacaoNotas->situacao;
-      } else {
-        $situacaoNota = $situacaoNotaCc->situacao;
-      }
-
-      // pega situacao da falta componente ou geral.
-      if ($tipoFaltaPorComponente) {
-        $situacaoFalta = $situacaoFaltas->componentesCurriculares[$ccId]->situacao;
-      } else {
-        $situacaoFalta = $situacaoFaltas->situacao;
-      }
-
-      if (is_null($situacaoNota)) {
-        $situacaoNota = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-      }
-
-      $situacao->componentesCurriculares[$ccId] = $this->getSituacaoNotaFalta($situacaoNota, $situacaoFalta);
-    }
-
-    return $situacao;
-  }
-
-  /**
-   * Verifica se uma determinada situação tem prioridade sobre a outra.
-   *
-   * @param int $item1
-   * @param int $item2
-   * @return bool
-   */
-  protected function _situacaoPrioritaria($item1, $item2)
-  {
-    return ($this->_situacaoPrioridade[$item1] <= $this->_situacaoPrioridade[$item2]);
-  }
-
-  /**
-   * Cria e persiste uma instância de Avaliacao_Model_NotaAluno.
-   * @return bool
-   */
-  protected function _createNotaAluno()
-  {
-    $notaAluno = new Avaliacao_Model_NotaAluno();
-    $notaAluno->matricula = $this->getOption('matricula');
-    return $this->getNotaAlunoDataMapper()->save($notaAluno);
-  }
-
-  /**
-   * Verifica se existe alguma instância de Avaliacao_Model_NotaComponente para
-   * um determinado componente curricular já persistida.
-   *
-   * @param int $id
-   * @return bool
-   */
-  protected function _hasNotaComponente($id)
-  {
-    $notasComponentes = $this->getNotasComponentes();
-    if (!isset($notasComponentes[$id])) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  /**
-   * Verifica se existe uma nota geral lançada com aquele id
-   *
-   * @param int $id
-   * @return bool
-   */
-  protected function _hasNotaGeral($id)
-  {
-    $notasGerais = $this->getNotasGerais();
-    if (!isset($notasGerais[$id])) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  /**
-   * Retorna o field identity de um componente curricular de uma instância de
-   * Avaliacao_Model_NotaComponente já esteja persistida.
-   *
-   * @param Avaliacao_Model_NotaComponente $instance
-   * @return int|NULL Retorna NULL caso a instância não tenha sido lançada
-   */
-  protected function _getNotaIdEtapa(Avaliacao_Model_NotaComponente $instance)
-  {
-    $componenteCurricular = $instance->get('componenteCurricular');
-    if (!$this->_hasNotaComponente($componenteCurricular)) {
-      return NULL;
-    }
-
-    $notasComponentes = $this->getNotasComponentes();
-    foreach ($notasComponentes[$componenteCurricular] as $notaComponente) {
-      if ($instance->etapa == $notaComponente->etapa) {
-        return $notaComponente->id;
-      }
-    }
-
-    return NULL;
-  }
 
     /**
-   * Retorna o id de uma nota já lançada, retorna null caso não seja encontrada
-   */
-  protected function _getNotaGeralIdEtapa(Avaliacao_Model_NotaGeral $instance)
-  {
-    $notasGerais = $this->getNotasGerais();
-    foreach ($notasGerais as $notaGeral) {
-      if ($instance->etapa == $notaGeral->etapa) {
-        return $notaGeral->id;
-      }
-    }
+     * Retorna a situação das faltas do aluno, sejam por componentes curriculares
+     * ou gerais. A situação pode ser:
+     *
+     * - Em andamento
+     * - Aprovado
+     * - Reprovado
+     *
+     * Retorna outros dados interessantes, a maioria informacional para exibição
+     * ao usuário, como a carga horária (geral e por componente), a porcentagem
+     * de presença (geral e por componente), a porcentagem de falta (geral e
+     * por componente), a hora/falta usada para o cálculo das porcentagens e o
+     * total de faltas geral.
+     *
+     * Esses resultados são retornados como um objeto stdClass que possui os
+     * seguintes atributos:
+     *
+     * <code>
+     * <?php
+     * $presenca = new stdClass();
+     * $presenca->situacao                 = 0;
+     * $presenca->tipoFalta                = 0;
+     * $presenca->cargaHoraria             = 0;
+     * $presenca->cursoHoraFalta           = 0;
+     * $presenca->totalFaltas              = 0;
+     * $presenca->horasFaltas              = 0;
+     * $presenca->porcentagemFalta         = 0;
+     * $presenca->porcentagemPresenca      = 0;
+     * $presenca->porcentagemPresencaRegra = 0;
+     *
+     * $presenca->componentesCurriculares  = [;
+     * $presenca->componentesCurriculares[1] = new stdClass();
+     * $presenca->componentesCurriculares[1]->situacao            = 0;
+     * $presenca->componentesCurriculares[1]->horasFaltas         = 0;
+     * $presenca->componentesCurriculares[1]->porcentagemFalta    = 0;
+     * $presenca->componentesCurriculares[1]->porcentagemPresenca = 0;
+     * </code>
+     *
+     * Esses valores são calculados SOMENTE através das faltas já lançadas.
+     *
+     * @return stdClass
+     *
+     * @todo Verificação de situação geral nos moldes dos componentes curriculares
+     *   para falta por componente (se 0 ou diferente de componentes matrícula)
+     */
+    public function getSituacaoFaltas()
+    {
+        $presenca                           = new stdClass();
+        $presenca->totalFaltas              = 0;
+        $presenca->horasFaltas              = 0;
+        $presenca->porcentagemFalta         = 0;
+        $presenca->porcentagemPresenca      = 0;
+        $presenca->porcentagemPresencaRegra = $this->getRegraAvaliacaoPorcentagemPresenca();
 
-    return NULL;
-  }
+        $presenca->tipoFalta                = $this->getRegraAvaliacaoTipoPresenca();
+        $presenca->cargaHoraria             = $this->getOption('serieCargaHoraria');
+        $presenca->diasLetivos              = $this->getOption('serieDiasLetivos');
 
-  /**
-   * Verifica se o aluno tem faltas lançadas.
-   * @return bool
-   */
-  public function hasFaltaAluno()
-  {
-    if (!is_null($this->_getFaltaAluno())) {
-      return TRUE;
-    }
+        $presenca->cursoHoraFalta           = $this->getOption('cursoHoraFalta');
+        $presenca->componentesCurriculares  = [];
+        $presenca->situacao                 = App_Model_MatriculaSituacao::EM_ANDAMENTO;
 
-    return FALSE;
-  }
+        $etapa                              = 0;
+        $faltasComponentes                  = [];
 
-  /**
-   * Cria e persiste uma instância de Avaliacao_Model_NotaAluno.
-   * @return bool
-   */
-  protected function _createFaltaAluno()
-  {
-    $faltaAluno = new Avaliacao_Model_FaltaAluno();
-    $faltaAluno->matricula = $this->getOption('matricula');
-    $faltaAluno->tipoFalta = $this->getRegraAvaliacaoTipoPresenca();
-    return $this->getFaltaAlunoDataMapper()->save($faltaAluno);
-  }
+        $enrollmentData = $this->getOption('matriculaData');
+        $enrollmentId = $enrollmentData['cod_matricula'];
+        $classroomId = $this->getOption('ref_cod_turma');
 
-  /**
-   * Verifica se existe alguma instância de Avaliacao_Model_FaltaGeral já
-   * persistida.
-   *
-   * @return bool
-   */
-  protected function _hasFaltaGeral()
-  {
-    $faltasGerais = $this->getFaltasGerais();
-    if (0 == count($faltasGerais)) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  /**
-   * Verifica se existe alguma instância de Avaliacao_Model_FaltaComponente para
-   * um determinado componente curricular já persistida.
-   *
-   * @param int $id
-   * @return bool
-   */
-  protected function _hasFaltaComponente($id)
-  {
-    $faltasComponentes = $this->getFaltasComponentes();
-    if (!isset($faltasComponentes[$id])) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  /**
-   * Verifica se existe alguma instância de Avaliacao_Model_FaltaAbstract já
-   * persistida em uma determinada etapa e retorna o field identity.
-   *
-   * @param Avaliacao_Model_FaltaAbstract $instance
-   * @return int|NULL
-   */
-  protected function _getFaltaIdEtapa(Avaliacao_Model_FaltaAbstract $instance)
-  {
-    $etapa = $instance->etapa;
-
-    if (!is_null($instance) &&
-      $this->_getFaltaAluno()->get('tipoFalta') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
-
-      $componenteCurricular = $instance->get('componenteCurricular');
-
-      if (!$this->_hasFaltaComponente($componenteCurricular)) {
-        return NULL;
-      }
-
-      $faltasComponentes = $this->getFaltasComponentes();
-      foreach ($faltasComponentes[$componenteCurricular] as $faltaComponente) {
-        if ($etapa == $faltaComponente->etapa) {
-          return $faltaComponente->id;
-        }
-      }
-    }
-    elseif ($this->_getFaltaAluno()->get('tipoFalta') == RegraAvaliacao_Model_TipoPresenca::GERAL) {
-      if (!$this->_hasFaltaGeral()) {
-        return NULL;
-      }
-
-      $faltasGerais = $this->getFaltasGerais();
-      if (isset($faltasGerais[$etapa])) {
-        return $faltasGerais[$etapa]->id;
-      }
-    }
-
-    return NULL;
-  }
-
-  /**
-   * Verifica se o aluno tem pareceres lançados.
-   * @return bool
-   */
-  public function hasParecerDescritivoAluno()
-  {
-    if (!is_null($this->_getParecerDescritivoAluno())) {
-      return TRUE;
-    }
-    return FALSE;
-  }
-
-  /**
-   * Cria e persiste uma instância de Avaliacao_Model_ParecerDescritivoAluno.
-   * @return bool
-   */
-  protected function _createParecerDescritivoAluno()
-  {
-    $parecerDescritivoAluno = new Avaliacao_Model_ParecerDescritivoAluno();
-    $parecerDescritivoAluno->matricula         = $this->getOption('matricula');
-    $parecerDescritivoAluno->parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
-    return $this->getParecerDescritivoAlunoDataMapper()->save($parecerDescritivoAluno);
-  }
-
-  /**
-   * Adiciona um array de instâncias Avaliacao_Model_NotaComponente.
-   *
-   * @param array $notas
-   * @return Avaliacao_Service_Boletim Provê interface fluída
-   */
-  public function addNotas(array $notas)
-  {
-    foreach ($notas as $nota) {
-      $this->addNota($nota);
-    }
-    return $this;
-  }
-
-  /**
-   * Verifica se existe alguma instância de Avaliacao_Model_ParecerDescritivoComponente
-   * persistida para o aluno.
-   *
-   * @param int $id Field identity de ComponenteCurricular_Model_Componente
-   * @return bool
-   */
-  protected function _hasParecerComponente($id)
-  {
-    $pareceresComponentes = $this->getPareceresComponentes();
-    if (!isset($pareceresComponentes[$id])) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  /**
-   * Verifica se existe alguma instância de Avaliacao_Model_ParecerDescritivoGeral
-   * persistida para o aluno.
-   * @return bool
-   */
-  protected function _hasParecerGeral()
-  {
-    if (0 == count($this->getPareceresGerais())) {
-      return FALSE;
-    }
-    return TRUE;
-  }
-
-  /**
-   * Verifica se existe alguma instância de Avaliacao_Model_ParecerDescritivoAbstract
-   * persistida em uma determinada etapa e retorna o field identity.
-   *
-   * @param Avaliacao_Model_ParecerDescritivoAbstract $instance
-   * @return int|NULL
-   */
-  protected function _getParecerIdEtapa(Avaliacao_Model_ParecerDescritivoAbstract $instance)
-  {
-    $gerais = array(
-      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
-      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL
-    );
-
-    $componentes = array(
-      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
-      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
-    );
-
-    $parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
-
-    if (in_array($parecerDescritivo, $gerais)) {
-      if (!$this->_hasParecerGeral()) {
-        return NULL;
-      }
-
-      $pareceres = $this->getPareceresGerais();
-    }
-    elseif (in_array($parecerDescritivo, $componentes)) {
-      if (!$this->_hasParecerComponente($instance->get('componenteCurricular'))) {
-        return NULL;
-      }
-
-      $pareceres = $this->getPareceresComponentes();
-      $pareceres = $pareceres[$instance->get('componenteCurricular')];
-    }
-
-    foreach ($pareceres as $parecer) {
-      if ($instance->etapa == $parecer->etapa) {
-        return $parecer->id;
-      }
-    }
-  }
-
-  /**
-   * Adiciona notas no boletim.
-   * @param Avaliacao_Model_NotaComponente $nota
-   * @return Avaliacao_Service_Boletim Provê interface fluída
-   */
-  public function addNota(Avaliacao_Model_NotaComponente $nota)
-  {
-    $this->setCurrentComponenteCurricular($nota->get('componenteCurricular'));
-
-    $key = 'n_' . spl_object_hash($nota);
-
-    $nota = $this->_addValidators($nota);
-    $nota = $this->_updateEtapa($nota);
-    $nota->notaArredondada = $this->arredondaNota($nota);
-
-    $this->addNotaItem($key, $nota);
-
-    return $this;
-  }
-
-  public function addNotaGeral(Avaliacao_Model_NotaGeral $notaGeral)
-  {
-    $key = 'ng_' . spl_object_hash($notaGeral);
-
-    $notaGeral = $this->_addValidators($notaGeral);
-    $notaGeral = $this->_updateEtapa($notaGeral);
-
-    $notaGeral->notaArredondada = $this->arredondaNota($notaGeral);
-
-    $this->addNotaItem($key, $notaGeral);
-
-    return $this;
-
-  }
-
-  /**
-   * Adiciona um array de instâncias Avaliacao_Model_FaltaAbstract no boletim.
-   *
-   * @param array $faltas
-   * @return Avaliacao_Service_Boletim Provê interface fluída
-   */
-  public function addFaltas(array $faltas)
-  {
-    foreach ($faltas as $falta) {
-      $this->addFalta($falta);
-    }
-    return $this;
-  }
-
-  /**
-   * Adiciona faltas no boletim.
-   * @param Avaliacao_Model_FaltaAbstract $falta
-   * @return Avaliacao_Service_Boletim Provê interface fluída
-   */
-  public function addFalta(Avaliacao_Model_FaltaAbstract $falta)
-  {
-    $key = 'f_' . spl_object_hash($falta);
-
-    $falta = $this->_addValidators($falta);
-    $falta = $this->_updateEtapa($falta);
-
-    $this->addFaltaKey($key, $falta);
-
-    return $this;
-  }
-
-  /**
-   * Adiciona uma array de instâncias de Avaliacao_Model_ParecerDescritivoAbstract
-   * no boletim.
-   *
-   * @param array $pareceres
-   * @return Avaliacao_Service_Boletim Provê interface fluída
-   */
-  public function addPareceres(array $pareceres)
-  {
-    foreach ($pareceres as $parecer) {
-      $this->addParecer($parecer);
-    }
-    return $this;
-  }
-
-  /**
-   * Adiciona uma instância de Avaliacao_Model_ParecerDescritivoAbstract no
-   * boletim.
-   *
-   * @param Avaliacao_Model_ParecerDescritivoAbstract $parecer
-   * @return Avaliacao_Service_Boletim Provê interface fluída
-   */
-  public function addParecer(Avaliacao_Model_ParecerDescritivoAbstract $parecer)
-  {
-    $key = 'p_' . spl_object_hash($parecer);
-
-    $this->addParecerKey($key, $parecer);
-    $this->_updateParecerEtapa($parecer);
-    $this->_addParecerValidators($parecer);
-
-    return $this;
-  }
-
-  /**
-   * Atualiza as opções de validação de uma instância de
-   * CoreExt_Validate_Validatable, com os valores permitidos para os atributos
-   * 'componenteCurricular' e 'etapa'.
-   *
-   * @param CoreExt_Validate_Validatable $nota
-   * @return CoreExt_Validate_Validatable
-   * @todo Substituir variável estática por uma de instância {@see _updateParecerEtapa()}
-   */
-  protected function _addValidators(CoreExt_Validate_Validatable $validatable)
-  {
-    $validators = array();
-
-    // Como os componentes serão os mesmos, fazemos cache do validador
-    if (is_null($this->getValidators())) {
-
-      $componentes = $this->getComponentes();
-      $componentes = CoreExt_Entity::entityFilterAttr($componentes, 'id', 'id');
-
-      // Só pode adicionar uma nota/falta para os componentes cursados
-      $validators['componenteCurricular'] = new CoreExt_Validate_Choice(
-        array('choices' => $componentes
-      ));
-
-      // Pode informar uma nota para as etapas
-      $etapas = $this->getOption('etapas');
-      $etapas = array_merge(range(1, $etapas, 1), array('Rc'));
-
-      $validators['etapa'] = new CoreExt_Validate_Choice(
-        array('choices' => $etapas
-      ));
-
-      $this->setValidators($validators);
-    }
-
-    $validators = $this->getValidators();
-
-    if ($validatable instanceof Avaliacao_Model_NotaComponente || $this->getRegraAvaliacaoTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
-      $validatable->setValidator('componenteCurricular', $validators['componenteCurricular']);
-    }
-    $validatable->setValidator('etapa', $validators['etapa']);
-
-    return $validatable;
-  }
-
-  /**
-   * Atualiza as opções de validação de uma instância de
-   * Avaliacao_Model_ParecerDescritivoAbstract, com os valores permitidos
-   * para os atributos 'componenteCurricular' e 'etapa'.
-   *
-   * @param Avaliacao_Model_ParecerDescritivoAbstract $instance
-   * @return Avaliacao_Model_ParecerDescritivoAbstract
-   */
-  protected function _addParecerValidators(Avaliacao_Model_ParecerDescritivoAbstract $instance)
-  {
-    if (is_null($this->getParecerValidators())) {
-      $validators = array();
-
-      $anuais = array(
-        RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
-        RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE
-      );
-
-      $etapas = array(
-        RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
-        RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
-      );
-
-      $parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
-
-      if (in_array($parecerDescritivo, $anuais)) {
-        $validators['etapa'] = new CoreExt_Validate_Choice(array(
-          'choices' => array('An')
-        ));
-      }
-      elseif (in_array($parecerDescritivo, $etapas)) {
-        $etapas = $this->getOption('etapas');
-        $etapas = array_merge(range(1, $etapas, 1), array('Rc'));
-
-        $validators['etapa'] = new CoreExt_Validate_Choice(array(
-          'choices' => $etapas
-        ));
-      }
-
-      if ($instance instanceof Avaliacao_Model_ParecerDescritivoComponente) {
         $componentes = $this->getComponentes();
-        $componentes = CoreExt_Entity::entityFilterAttr($componentes, 'id', 'id');
 
-        $validators['componenteCurricular'] = new CoreExt_Validate_Choice(array(
-          'choices' => $componentes
-        ));
-      }
+        $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($classroomId);
 
-      // Armazena os validadores na instância
-      $this->setParecerValidators($validators);
-    }
+        // Carrega faltas lançadas (persistidas)
+        $this->_loadFalta();
 
-    $validators = $this->getParecerValidators();
+        $tipoFaltaGeral         = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::GERAL;
+        $tipoFaltaPorComponente = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
 
-    // Etapas
-    $instance->setValidator('etapa', $validators['etapa']);
+        if ($tipoFaltaGeral) {
+            $faltas = $this->getFaltasGerais();
 
-    // Componentes curriculares
-    if ($instance instanceof Avaliacao_Model_ParecerDescritivoComponente) {
-      $instance->setValidator('componenteCurricular', $validators['componenteCurricular']);
-    }
-
-    return $instance;
-  }
-
-  /**
-   * Atualiza a etapa de uma instância de Avaliacao_Model_Etapa.
-   *
-   * @param Avaliacao_Model_Etapa $nota
-   * @return Avaliacao_Model_Etapa
-   */
-  protected function _updateEtapa(Avaliacao_Model_Etapa $instance)
-  {
-    if (!is_null($instance->etapa)) {
-      if($instance->isValid('etapa')){
-        return $instance;
-      }else{
-        throw new CoreExt_Exception_InvalidArgumentException('A etapa informada é inválida.');
-      }
-    }
-
-    $proximaEtapa = 1;
-
-    // Se for falta e do tipo geral, verifica qual foi a última etapa
-    if ($instance instanceof Avaliacao_Model_FaltaGeral) {
-      if (0 < count($this->getFaltasGerais())) {
-        $etapas = CoreExt_Entity::entityFilterAttr($this->getFaltasGerais(), 'id', 'etapa');
-        $proximaEtapa = max($etapas) + 1;
-      }
-    }
-    // Se for nota ou falta por componente, verifica no conjunto qual a última etapa
-    else {
-      if ($instance instanceof Avaliacao_Model_NotaComponente) {
-        $search = '_notasComponentes';
-      }
-      elseif ($instance instanceof Avaliacao_Model_FaltaComponente) {
-        $search = '_faltasComponentes';
-      }
-
-      if (isset($this->{$search}[$instance->get('componenteCurricular')])) {
-        $etapas = CoreExt_Entity::entityFilterAttr(
-          $this->{$search}[$instance->get('componenteCurricular')], 'id', 'etapa'
-        );
-
-        $proximaEtapa = max($etapas) + 1;
-      }
-    }
-
-    // Se ainda estiver dentro dos limites, ok
-    if ($proximaEtapa <= $this->getOption('etapas')) {
-      $instance->etapa = $proximaEtapa;
-    }
-    // Se for maior, verifica se tem recuperação e atribui etapa como 'Rc'
-    elseif ($proximaEtapa > $this->getOption('etapas') &&
-      $this->hasRegraAvaliacaoFormulaRecuperacao()) {
-      $instance->etapa = 'Rc';
-    }
-
-    return $instance;
-  }
-
-  /**
-   * Atualiza a etapa de uma instância de Avaliacao_Model_ParecerDescritivoAbstract
-   * para a última etapa possível.
-   *
-   * @param Avaliacao_Model_ParecerDescritivoAbstract $instance
-   * @return Avaliacao_Model_ParecerDescritivoAbstract
-   */
-  protected function _updateParecerEtapa(Avaliacao_Model_ParecerDescritivoAbstract $instance)
-  {
-    if (!is_null($instance->etapa)) {
-      if($instance->isValid('etapa')){
-        return $instance;
-      }else{
-        throw new CoreExt_Exception_InvalidArgumentException('A etapa informada é inválida.');
-      }
-    }
-
-    $proximaEtapa = 1;
-
-    $anuais = array(
-      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
-      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE
-    );
-
-    $etapas = array(
-      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
-      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
-    );
-
-    $componentes = array(
-      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
-      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
-    );
-
-    $gerais = array(
-      RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
-      RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL
-    );
-
-    $parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
-    if (in_array($parecerDescritivo, $anuais)) {
-      $instance->etapa = 'An';
-      return $instance;
-    }
-    elseif (in_array($parecerDescritivo, $etapas)) {
-      $attrValues = array();
-
-      if (in_array($parecerDescritivo, $gerais)) {
-        $attrValues = $this->getPareceresGerais();
-      }
-      elseif (in_array($parecerDescritivo, $componentes)) {
-        $pareceresComponentes = $this->getPareceresComponentes();
-        if (isset($pareceresComponentes[$instance->get('componenteCurricular')])) {
-          $attrValues = $pareceresComponentes[$instance->get('componenteCurricular')];
-        }
-      }
-
-      if (0 < count($attrValues)) {
-        $etapas = CoreExt_Entity::entityFilterAttr($attrValues, 'id', 'etapa');
-        $proximaEtapa = max($etapas) + 1;
-      }
-    }
-
-    if ($proximaEtapa <= $this->getOption('etapas')) {
-      $instance->etapa = $proximaEtapa;
-    }
-    elseif ($this->hasRegraAvaliacaoFormulaRecuperacao()) {
-      $instance->etapa = 'Rc';
-    }
-
-    return $instance;
-  }
-
-  /**
-   * Arredonda uma nota através da tabela de arredondamento da regra de avaliação.
-   * @param Avaliacao_Model_NotaComponente|int $nota
-   * @return mixed
-   * @throws CoreExt_Exception_InvalidArgumentException
-   */
-  public function arredondaNota($nota)
-  {
-   $componenteId = $nota->get('componenteCurricular');
-
-   if (($nota instanceof Avaliacao_Model_NotaComponente) || ($nota instanceof Avaliacao_Model_NotaGeral)) {
-       $nota = $nota->nota;
-   }
-
-    if (!is_numeric($nota)) {
-      require_once 'CoreExt/Exception/InvalidArgumentException.php';
-      throw new CoreExt_Exception_InvalidArgumentException(sprintf(
-        'O parâmetro $nota ("%s") não é um valor numérico.', $nota
-      ));
-    }
-
-    if ($this->usaTabelaArredondamentoConceitual($componenteId)) {
-        return $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($nota, 1);
-    }
-
-    return $this->getRegraAvaliacaoTabelaArredondamento()->round($nota, 1);
-  }
-
-  public function regraUsaTipoNotaNumericaConceitual()
-  {
-      if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NUMERICACONCEITUAL) {
-          return true;
-      }
-
-      return false;
-  }
-
-  public function componenteUsaNotaConceitual($componenteId)
-  {
-      $serieId = $this->_options['matriculaData']['ref_ref_cod_serie'];
-      $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);
-
-      if ($tipoNota == ComponenteSerie_Model_TipoNota::CONCEITUAL) {
-          return true;
-      }
-
-      return false;
-    }
-
-  public function usaTabelaArredondamentoConceitual ($componenteId)
-  {
-      return $this->regraUsaTipoNotaNumericaConceitual() && $this->componenteUsaNotaConceitual($componenteId);
-  }
-
-  /**
-   * Arredonda uma nota através da tabela de arredondamento da regra de avaliação.
-   * @param Avaliacao_Model_NotaComponente|int $nota
-   * @return mixed
-   * @throws CoreExt_Exception_InvalidArgumentException
-   */
-  public function arredondaMedia($media)
-  {
-    $componenteId = $this->getCurrentComponenteCurricular();
-
-    if ($media instanceof Avaliacao_Model_NotaComponenteMedia) {
-      $media = $media->nota;
-    }
-
-    if (!is_numeric($media)) {
-      require_once 'CoreExt/Exception/InvalidArgumentException.php';
-      throw new CoreExt_Exception_InvalidArgumentException(sprintf(
-        'O parâmetro $media ("%s") não é um valor numérico.', $media
-      ));
-    }
-
-    if ($this->usaTabelaArredondamentoConceitual($componenteId)) {
-        return $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($media, 2);
-    }
-
-    return $this->getRegraAvaliacaoTabelaArredondamento()->round($media, 2);
-  }
-
-  /**
-   * Prevê a nota necessária para que o aluno seja aprovado após a recuperação
-   * escolar.
-   *
-   * @param  int $id
-   * @return int|NULL
-   * @see    TabelaArredondamento_Model_Tabela#predictValue()
-   */
-  public function preverNotaRecuperacao($id)
-  {
-    $notasComponentes = $this->getNotasComponentes();
-
-    if (is_null($this->getRegraAvaliacaoFormulaRecuperacao()) || !isset($notasComponentes[$id])) {
-      return NULL;
-    }
-
-    $notas      = $notasComponentes[$id];
-
-    unset($notas[$this->getOption('etapas')]);
-
-    $somaEtapas = array_sum(CoreExt_Entity::entityFilterAttr($notas, 'etapa', 'nota'));
-
-    $data = array(
-        'Se' => $somaEtapas,
-        'Et' => $this->getOption('etapas'),
-        'Rc' => NULL );
-
-    foreach ($notas as $nota) {
-      $data['E' . $nota->etapa] = $nota->nota;
-    }
-
-    $data = $this->_calculateNotasRecuperacoesEspecificas($id, $data);
-
-    $increment = 0.1;
-    $notaMax = $this->getRegraAvaliacaoNotaMaximaExameFinal();
-
-    if($this->getRegraAvaliacaoQtdCasasDecimais() == 0)
-      $increment = 1;
-
-    // Definida varíavel de incremento e nota máxima, vai testando notas de Recuperação até que o resultado
-    // da média seja superior a média de aprovação de recuperação
-    for($i = $increment ; $i <= $notaMax; $i = round($i+$increment, 1)){
-      $data['Rc']=$i;
-      if ($this->getRegraAvaliacaoFormulaRecuperacao()->execFormulaMedia($data) >= $this->getRegraAvaliacaoMediaRecuperacao())
-        return $i;
-    }
-
-    return null;
-  }
-
-  /**
-   * Recupera notas e calcula variáveis relacionadas com as recuperações específicas
-   *
-   * @param  int $id
-   * @return array $data
-   */
-
-  protected function _calculateNotasRecuperacoesEspecificas($id, $data = array()){
-    // Verifica regras de recuperações (Recuperações específicas por etapa)
-    $regrasRecuperacoes = $this->getRegrasRecuperacao();
-
-    $cont = 0;
-
-    if (count($regrasRecuperacoes)) {
-        $data['Se'] = 0;
-    }
-
-    foreach ($regrasRecuperacoes as $key => $_regraRecuperacao) {
-      $cont++;
-      $notaRecuperacao = $this->getNotaComponente($id, $_regraRecuperacao->getLastEtapa());
-      if($notaRecuperacao && is_numeric($notaRecuperacao->notaRecuperacaoEspecifica)){
-        // Caso tenha nota de recuperação para regra atual, atribuí variável RE+N
-        $substituiMenorNota = (bool)$_regraRecuperacao->substituiMenorNota;
-        $data['RSP'.$cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
-
-        $somaEtapasRecuperacao = 0;
-        $countEtapasRecuperacao = 0;
-
-        foreach ($_regraRecuperacao->getEtapas() as $__etapa){
-          $somaEtapasRecuperacao += $data['E' . $__etapa];
-          $countEtapasRecuperacao++;
-        }
-
-        $mediaEtapasRecuperacao = $somaEtapasRecuperacao / $countEtapasRecuperacao;
-        $mediaEtapasRecuperacaoComRecuperacao = ($mediaEtapasRecuperacao + $notaRecuperacao->notaRecuperacaoEspecifica) / 2;
-
-        if (!$substituiMenorNota) {
-          $data['Se'] += $data['RSP'.$cont] ?? $somaEtapasRecuperacao;
-        } else {
-          $data['Se'] += $data['RSP'.$cont] > $mediaEtapasRecuperacao ? $data['RSP'.$cont] * $countEtapasRecuperacao : $somaEtapasRecuperacao;
-        }
-
-        // Caso média com recuperação seja maior que média das somas das etapas sem recuperação, atribuí variável MRE+N
-        if(!$substituiMenorNota || $mediaEtapasRecuperacaoComRecuperacao > $mediaEtapasRecuperacao)
-          $data['RSPM'.$cont] = $mediaEtapasRecuperacaoComRecuperacao;
-        else
-          $data['RSPM'.$cont] = $mediaEtapasRecuperacao;
-
-        // Caso nota de recuperação seja maior que soma das etapas, atribuí variável SRE+N
-        if(!$substituiMenorNota || $notaRecuperacao->notaRecuperacaoEspecifica > $somaEtapasRecuperacao)
-          $data['RSPS'.$cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
-        else
-          $data['RSPS'.$cont] = $somaEtapasRecuperacao;
-
-      }else{
-        // Caso tenha nota de recuperação para regra atual, atribuí variaveis RSPM+N E RSPS+N
-        // considerando apenas soma das etapas
-        $somaEtapasRecuperacao = 0;
-        $countEtapasRecuperacao = 0;
-
-        foreach ($_regraRecuperacao->getEtapas() as $__etapa){
-          $somaEtapasRecuperacao += $data['E' . $__etapa];
-          $countEtapasRecuperacao++;
-        }
-        $data['Se'] += $somaEtapasRecuperacao;
-        $data['RSPM'.$cont] = $somaEtapasRecuperacao / $countEtapasRecuperacao;
-        $data['RSPS'.$cont] = $somaEtapasRecuperacao;
-      }
-    }
-
-    return $data;
-  }
-
-  /**
-   * @param  numeric $falta
-   * @param  numeric $horaFalta
-   * @return numeric
-   */
-  protected function _calculateHoraFalta($falta, $horaFalta)
-  {
-    return ($falta * $horaFalta);
-  }
-
-  /**
-   * Calcula a proporção de $num2 para $num1.
-   *
-   * @param  numeric $num1
-   * @param  numeric $num2
-   * @param  bool    $decimal Opcional. Se o resultado é retornado como decimal
-   *   ou percentual. O padrão é TRUE.
-   * @return float
-   */
-  protected function _calculatePorcentagem($num1, $num2, $decimal = TRUE)
-  {
-    $num1 = floatval($num1);
-    $num2 = floatval($num2);
-
-    if ($num1 == 0) {
-      return 0;
-    }
-
-    $perc = $num2 / $num1;
-    return ($decimal == TRUE ? $perc : ($perc * 100));
-  }
-
-  /**
-   * Calcula uma média de acordo com uma fórmula de FormulaMedia_Model_Media
-   * da regra de avaliação da série/matrícula do aluno.
-   *
-   * @param array $values
-   * @return float
-   */
-  protected function _calculaMedia(array $values)
-  {
-    if (isset($values['Rc']) && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
-      $media = $this->getRegraAvaliacaoFormulaRecuperacao()->execFormulaMedia($values);
-    }
-    else {
-      $media = $this->getRegraAvaliacaoFormulaMedia()->execFormulaMedia($values);
-    }
-
-    return $media;
-  }
-
-  /**
-   * Insere ou atualiza as notas e/ou faltas que foram adicionadas ao service
-   * e atualiza a matricula do aluno de acordo com a sua performance,
-   * promovendo-o ou retendo-o caso o tipo de progressão da regra de avaliação
-   * seja automática (e que a situação do aluno não esteja em "andamento").
-   *
-   * @see Avaliacao_Service_Boletim#getSituacaoAluno()
-   * @throws CoreExt_Service_Exception|Exception
-   */
-  public function save()
-  {
-    try {
-      $this->saveNotas();
-      $this->saveFaltas();
-      $this->savePareceres();
-      $this->promover();
-    }
-    catch (CoreExt_Service_Exception $e) {
-      throw $e;
-    }
-    catch (Exception $e) {
-      throw $e;
-    }
-  }
-
-  /**
-   * Insere ou atualiza as notas no boletim do aluno.
-   * @return Avaliacao_Service_Boletim Provê interface fluída
-   */
-  public function saveNotas()
-  {
-      if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
-          return $this;
-      }
-
-      $notaAluno = $this->_getNotaAluno();
-      $notas = $this->getNotas();
-
-      foreach ($notas as $nota) {
-          $nota->notaAluno = $notaAluno;
-          if($nota instanceof Avaliacao_Model_NotaComponente){
-              $nota->id = $this->_getNotaIdEtapa($nota);
-              $this->getNotaComponenteDataMapper()->save($nota);
-
-          }elseif($nota instanceof Avaliacao_Model_NotaGeral){
-              $nota->id = $this->_getNotaGeralIdEtapa($nota);
-              $this->getNotaGeralDataMapper()->save($nota);
-          }
-      }
-
-      // Atualiza as médias
-      $this->_updateNotaComponenteMedia();
-      return $this;
-  }
-
-  /**
-   * Insere ou atualiza as faltas no boletim.
-   * @return Avaliacao_Service_Boletim Provê interface fluída
-   */
-  public function saveFaltas()
-  {
-    $faltaAluno = $this->_getFaltaAluno();
-    $faltas = $this->getFaltas();
-
-    foreach ($faltas as $falta) {
-      $falta->faltaAluno = $faltaAluno;
-      $falta->id = $this->_getFaltaIdEtapa($falta);
-      $this->getFaltaAbstractDataMapper()->save($falta);
-    }
-
-    return $this;
-  }
-
-  /**
-   * Insere ou atualiza os pareceres no boletim.
-   * @return Avaliacao_Service_Boletim Provê interface fluída
-   */
-  public function savePareceres()
-  {
-    $parecerAluno = $this->_getParecerDescritivoAluno();
-    $pareceres    = $this->getPareceres();
-
-    foreach ($pareceres as $parecer) {
-      $parecer->parecerDescritivoAluno = $parecerAluno->id;
-      $parecer->id = $this->_getParecerIdEtapa($parecer);
-      $this->getParecerDescritivoAbstractDataMapper()->save($parecer);
-    }
-
-    return $this;
-  }
-
-  protected function reloadComponentes(){
-    $this->_setComponentes(
-        App_Model_IedFinder::getComponentesPorMatricula(
-            $this->getOption('matricula'),
-            $this->getComponenteDataMapper(),
-            $this->getComponenteTurmaDataMapper(),
-            null,
-            $this->getOption('etapaAtual'),
-            null,
-            $this->getOption('matriculaData')
-        )
-    );
-  }
-
-  /**
-   * Promove o aluno de etapa escolar caso esteja aprovado de acordo com o
-   * necessário estabelecido por tipoProgressao de
-   * RegraAvaliacao_Model_Regra.
-   *
-   * @param bool $ok Caso a progressão não seja automática, é necessário uma
-   *   confirmação externa para a promoção do aluno.
-   * @return bool
-   */
-
-  public function promover($novaSituacaoMatricula = NULL)
-  {
-    // Essa função é necessária para promoção pois precisamos considerar a
-    // situação de todas as disciplinas e não só da que está sendo lançada
-    $this->reloadComponentes();
-    $tipoProgressao = $this->getRegraAvaliacaoTipoProgressao();
-    $situacaoMatricula = $this->getOption('aprovado');
-    $situacaoBoletim = $this->getSituacaoAluno();
-    $exceptionMsg = '';
-
-    if ($situacaoMatricula == App_Model_MatriculaSituacao::TRANSFERIDO) {
-        $novaSituacaoMatricula = App_Model_MatriculaSituacao::TRANSFERIDO;
-    } elseif ($situacaoBoletim->andamento) {
-        $novaSituacaoMatricula = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-    } else {
-
-      switch ($tipoProgressao) {
-        case RegraAvaliacao_Model_TipoProgressao::CONTINUADA:
-
-          $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
-          break;
-
-        case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MEDIA_PRESENCA:
-
-          if ($situacaoBoletim->aprovado && !$situacaoBoletim->retidoFalta && $situacaoBoletim->aprovadoComDependencia)
-            $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
-          elseif ($situacaoBoletim->aprovado && !$situacaoBoletim->retidoFalta)
-            $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
-          elseif ($situacaoBoletim->retidoFalta)
-            if (!$situacaoBoletim->aprovado){
-              $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
+            if (0 == count($faltas)) {
+                $total = 0;
+                $etapa = 0;
             } else {
-              $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS;
+                $total = array_sum(CoreExt_Entity::entityFilterAttr($faltas, 'id', 'quantidade'));
+                $etapa = array_pop($faltas)->etapa;
             }
-          else
-            $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
-          break;
+        } elseif ($tipoFaltaPorComponente) {
+            $faltas = $this->getFaltasComponentes();
+            $faltas = array_intersect_key($faltas, $componentes);
+            $total  = 0;
+            $etapasComponentes = [];
+            $faltasComponentes = [];
 
-        case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_SOMENTE_MEDIA || RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL:
+            foreach ($faltas as $key => $falta) {
+                // Total de faltas do componente
+                $componenteTotal = array_sum(CoreExt_Entity::entityFilterAttr(
+                    $falta,
+                    'id',
+                    'quantidade'
+                ));
 
-        if ($situacaoBoletim->aprovado && $situacaoBoletim->aprovadoComDependencia && !$situacaoBoletim->retidoFalta)
-          $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
-        elseif ($situacaoBoletim->retidoFalta)
-          if (!$situacaoBoletim->aprovado){
-            $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
-          } else {
-            $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS;
-          }
-        elseif (!$situacaoBoletim->aprovado)
-            $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
-        else
-            $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
+                // Pega o id de ComponenteCurricular_Model_Componente da última etapa do array
+                $componenteEtapa = array_pop($falta);
+                $id              = $componenteEtapa->get('componenteCurricular');
+                $etapa           = $componenteEtapa->etapa;
 
-          break;
+                // Usa stdClass como interface de acesso
+                $faltasComponentes[$id] = new stdClass();
+                $faltasComponentes[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+                $faltasComponentes[$id]->horasFaltas = null;
+                $faltasComponentes[$id]->porcentagemFalta = null;
+                $faltasComponentes[$id]->porcentagemPresenca = null;
+                $faltasComponentes[$id]->total = $componenteTotal;
 
-        case is_null($novaSituacaoMatricula):
+                // Calcula a quantidade de horas/faltas no componente
+                $faltasComponentes[$id]->horasFaltas =
+                    $this->_calculateHoraFalta($componenteTotal, $presenca->cursoHoraFalta);
 
-          $tipoProgressaoInstance = RegraAvaliacao_Model_TipoProgressao::getInstance();
-          $exceptionMsg = sprintf('Para atualizar a matrícula em uma regra %s é '
-                                  . 'necessário passar o valor do argumento "$novaSituacaoMatricula".',
-                                  $tipoProgressaoInstance->getValue($tipoProgressao));
-          break;
-      }
-    }
+                // Calcula a porcentagem de falta no componente
+                $faltasComponentes[$id]->porcentagemFalta =
+                    $this->_calculatePorcentagem(
+                        $componentes[$id]->cargaHoraria,
+                        $faltasComponentes[$id]->horasFaltas,
+                        false
+                    );
 
-    if($novaSituacaoMatricula == $situacaoMatricula)
-      $exceptionMsg = "Matrícula ({$this->getOption('matricula')}) não precisou ser promovida, " .
-                      "pois a nova situação continua a mesma da anterior ($novaSituacaoMatricula)";
+                // Calcula a porcentagem de presença no componente
+                $faltasComponentes[$id]->porcentagemPresenca =
+                    100 - $faltasComponentes[$id]->porcentagemFalta;
 
-    if ($exceptionMsg) {
-      require_once 'CoreExt/Service/Exception.php';
-      throw new CoreExt_Service_Exception($exceptionMsg);
-    }
+                // Na última etapa seta situação presença como aprovado ou reprovado.
+                $lastStage = $this->getLastStage($enrollmentId, $classroomId, $id);
+                if ($etapa == $lastStage || $etapa == 'Rc') {
+                    $aprovado = ($faltasComponentes[$id]->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca());
+                    $faltasComponentes[$id]->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
+                        App_Model_MatriculaSituacao::REPROVADO;
+                    // Se etapa = quantidade de etapas dessa disciplina, vamos assumir que é a última etapa
+                    // já que essa variável só tem o intuito de dizer que todas etapas da disciplina estão lançadas
+                    $etapasComponentes[$this->getOption('etapas')] = $this->getOption('etapas');
+                } else {
+                    $etapasComponentes[$etapa] = $etapa;
+                }
 
-    return $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'), $novaSituacaoMatricula);
-  }
+                // Adiciona a quantidade de falta do componente ao total geral de faltas
+                $total += $componenteTotal;
+            }
 
-  public function unlockMediaComponente($componente)
-  {
-      try {
-          $media = $this->getNotaComponenteMediaDataMapper()->find(array(
-            'notaAluno' => $this->_getNotaAluno()->id,
-            'componenteCurricular' => $componente
-          ));
+            if (is_numeric($disciplinaDispensadaTurma)) {
+                unset($componentes[$disciplinaDispensadaTurma]);
+                unset($faltasComponentes[$disciplinaDispensadaTurma]);
+            }
+            if (0 == count($faltasComponentes) ||
+                count($faltasComponentes) != count($componentes)) {
+                $etapa = 1;
+            } else {
+                $etapa = min($etapasComponentes);
+            }
+        } // fim if por_componente
 
-          $media->bloqueada = 'f';
+        $presenca->totalFaltas = $total;
+        $presenca->horasFaltas = $this->_calculateHoraFalta($total, $presenca->cursoHoraFalta);
 
-          $media->markOld();
-
-          return $this->getNotaComponenteMediaDataMapper()->save($media);
-      } catch (Exception $e) {
-          return false;
-      }
-  }
-
-  public function updateMediaComponente($media, $componente, $etapa, bool $lock = false) {
-    $lock = $lock === false ? 'f' : 't';
-
-    try {
-      $notaComponenteCurricularMedia = $this->getNotaComponenteMediaDataMapper()->find(array(
-        'notaAluno' => $this->_getNotaAluno()->id,
-        'componenteCurricular' => $componente
-      ));
-
-      $notaComponenteCurricularMedia->media = $media;
-      $notaComponenteCurricularMedia->mediaArredondada = $this->arredondaMedia($media);
-      $notaComponenteCurricularMedia->bloqueada = $lock;
-      $notaComponenteCurricularMedia->situacao = null;
-
-      $notaComponenteCurricularMedia->markOld();
-    } catch (Exeption $e) {
-      $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia(array(
-        'notaAluno' => $this->_getNotaAluno()->id,
-        'componenteCurricular' => $componente,
-        'media' => $media,
-        'mediaArredondada' => $this->arredondaMedia($media),
-        'etapa' => $etapa,
-        'bloqueada' => $lock
-      ));
-    }
-
-    // Salva a média
-    $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
-    $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$componente]->situacao;
-
-    try {
-        // Atualiza situação matricula
-        $this->promover();
-    } catch (Exception $e) {
-        // Evita que uma mensagem de erro apareça caso a situação na matrícula
-        // não seja alterada.
-    }
-
-    //Atualiza a situação de acordo com o que foi inserido na média anteriormente
-    $notaComponenteCurricularMedia->markOld();
-    $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
-  }
-
- public function updateMediaGeral($media, $etapa){
-    $mediaGeral = new Avaliacao_Model_MediaGeral(array(
-      'notaAluno' => $this->_getNotaAluno()->id,
-      'media' => $media,
-      'mediaArredondada' => $this->arredondaMedia($media),
-      'etapa' => $etapa,
-    ));
-
-    try {
-      // Se existir, marca como "old" para possibilitar a atualização
-      $this->getMediaGeralDataMapper()->find(array(
-        $mediaGeral->get('notaAluno')
-      ));
-      $mediaGeral->markOld();
-    }
-    catch (Exception $e) {
-      // Prossegue, sem problemas.
-    }
-
-    // Salva a média
-    $this->getMediaGeralDataMapper()->save($mediaGeral);
-  }
-
-public function alterarSituacao($novaSituacao, $matriculaId){
-  return App_Model_Matricula::setNovaSituacao($matriculaId, $novaSituacao);
-}
-
-  /**
-   * Atualiza a média dos componentes curriculares.
-   */
-  protected function _updateNotaComponenteMedia()
-  {
-    require_once 'Avaliacao/Model/NotaComponenteMedia.php';
-    $this->_loadNotas(FALSE);
-
-    $etapa = 1;
-
-    if($this->getRegraAvaliacaoNotaGeralPorEtapa() == "1"){
-      $notasGerais = array('Se' => 0, 'Et' => $this->getOption('etapas'));
-
-      foreach($this->getNotasGerais() as $id => $notaGeral){
-
-        $etapasNotas = CoreExt_Entity::entityFilterAttr($notaGeral, 'etapa', 'nota');
-
-        // Cria o array formatado para o cálculo da fórmula da média
-        foreach ($etapasNotas as $etapa => $nota) {
-          if (is_numeric($etapa)) {
-            $notasGerais['E' . $etapa] = $nota;
-            $notasGerais['Se'] += $nota;
-            continue;
-          }
-          $notasGerais[$etapa] = $nota;
+        if ($tipoFaltaGeral) {
+            $presenca->porcentagemFalta = $this->_calculatePorcentagem(
+                $presenca->diasLetivos,
+                $presenca->totalFaltas,
+                false
+            );
+        } elseif ($tipoFaltaPorComponente) {
+            $presenca->porcentagemFalta = $this->_calculatePorcentagem(
+                $presenca->cargaHoraria,
+                $presenca->horasFaltas,
+                false
+            );
         }
-      }
 
-      //Calcula a média geral
-      $mediaGeral = $this->_calculaMedia($notasGerais);
+        $presenca->porcentagemPresenca     = 100 - $presenca->porcentagemFalta;
+        $presenca->componentesCurriculares = $faltasComponentes;
 
-      // Cria uma nova instância de média, já com a nota arredondada e a etapa
-      $mediaGeralEtapa = new Avaliacao_Model_MediaGeral(array(
-        'notaAluno' => $this->_getNotaAluno()->id,
-        'media' => $mediaGeral,
-        'mediaArredondada' => $this->arredondaMedia($mediaGeral),
-        'etapa' => $etapa
-      ));
+        // Na última etapa seta situação presença como aprovado ou reprovado.
+        if ($etapa == $this->getOption('etapas') || $etapa === 'Rc') {
+            $aprovado           = ($presenca->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca());
+            $presenca->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
+                App_Model_MatriculaSituacao::REPROVADO;
+        }
 
-      try {
-        // Se existir, marca como "old" para possibilitar a atualização
-        $this->getMediaGeralDataMapper()->find(array(
-          $mediaGeralEtapa->get('notaAluno')
+        return $presenca;
+    }
+
+    /**
+     * Retorna a situação dos componentes curriculares cursados pelo aluno. Possui
+     * uma flag "situacao" global, que indica a situação global do aluno, podendo
+     * ser:
+     *
+     * - Em andamento
+     * - Em exame
+     * - Aprovado
+     * - Reprovado
+     *
+     * Esses valores são definidos no enum App_Model_MatriculaSituacao.
+     *
+     * Para cada componente curricular, será indicado a situação do aluno no
+     * componente.
+     *
+     * Esses resultados são retornados como um objeto stdClass que possui dois
+     * atributos: "situacao" e "componentesCurriculares". O primeiro é um tipo
+     * inteiro e o segundo um array indexado pelo id do componente e com um
+     * atributo inteiro "situacao":
+     *
+     * <code>
+     * <?php
+     * $situacao = new stdClass();
+     * $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
+     * $situacao->componentesCurriculares = [;
+     * $situacao->componentesCurriculares[1] = new stdClass();
+     * $situacao->componentesCurriculares[1]->situacao = App_Model_MatriculaSituacao::APROVADO;
+     * </code>
+     *
+     * Esses valores são definidos através da verificação das médias dos
+     * componentes curriculares já avaliados e das faltas lançadas.
+     *
+     * Obs: Anteriormente este metódo SOMENTE verificava a situação baseando-se nas médias lançadas,
+     *      porem o mesmo foi alterado para verificar a situação baseada nas notas e faltas lançadas.
+     *
+     *      A implementa antiga deste metodo esta contida no metodo getSituacaoNotas
+     *
+     * @return stdClass|NULL Retorna NULL caso não
+     *
+     * @see App_Model_MatriculaSituacao
+     */
+    public function getSituacaoComponentesCurriculares()
+    {
+        $situacao = new stdClass();
+        $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
+        $situacao->componentesCurriculares = [];
+
+        $componentes = $this->getComponentes();
+        $situacaoNotas = $this->getSituacaoNotas();
+        $situacaoFaltas = $this->getSituacaofaltas();
+
+        foreach ($componentes as $ccId => $componente) {
+            // seta tipos nota, falta
+            $tipoNotaNenhum = $this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
+            $tipoFaltaPorComponente = $this->getRegraAvaliacaoTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
+
+            $situacaoNotaCc = $situacaoNotas->componentesCurriculares[$ccId] ?? null;
+
+            // inicializa 0FaltaCc a ser usado caso tipoFaltaPorComponente
+            $situacaoFaltaCc = new stdClass();
+            $situacaoFaltaCc->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+
+            // caso possua situacaoFalta para o componente substitui situacao inicializada
+            if ($tipoFaltaPorComponente and isset($situacaoFaltas->componentesCurriculares[$ccId])) {
+                $situacaoFaltaCc = $situacaoFaltas->componentesCurriculares[$ccId];
+            }
+
+            // pega situação nota geral ou do componente
+            if ($tipoNotaNenhum) {
+                $situacaoNota = $situacaoNotas->situacao;
+            } else {
+                $situacaoNota = $situacaoNotaCc->situacao;
+            }
+
+            // pega situacao da falta componente ou geral.
+            if ($tipoFaltaPorComponente) {
+                $situacaoFalta = $situacaoFaltas->componentesCurriculares[$ccId]->situacao;
+            } else {
+                $situacaoFalta = $situacaoFaltas->situacao;
+            }
+
+            if (is_null($situacaoNota)) {
+                $situacaoNota = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+            }
+
+            $situacao->componentesCurriculares[$ccId] = $this->getSituacaoNotaFalta($situacaoNota, $situacaoFalta);
+        }
+
+        return $situacao;
+    }
+
+    /**
+     * Verifica se uma determinada situação tem prioridade sobre a outra.
+     *
+     * @param int $item1
+     * @param int $item2
+     *
+     * @return bool
+     */
+    protected function _situacaoPrioritaria($item1, $item2)
+    {
+        return ($this->_situacaoPrioridade[$item1] <= $this->_situacaoPrioridade[$item2]);
+    }
+
+    /**
+     * Cria e persiste uma instância de Avaliacao_Model_NotaAluno.
+     *
+     * @return bool
+     */
+    protected function _createNotaAluno()
+    {
+        $notaAluno = new Avaliacao_Model_NotaAluno();
+        $notaAluno->matricula = $this->getOption('matricula');
+
+        return $this->getNotaAlunoDataMapper()->save($notaAluno);
+    }
+
+    /**
+     * Verifica se existe alguma instância de Avaliacao_Model_NotaComponente para
+     * um determinado componente curricular já persistida.
+     *
+     * @param int $id
+     *
+     * @return bool
+     */
+    protected function _hasNotaComponente($id)
+    {
+        $notasComponentes = $this->getNotasComponentes();
+
+        if (!isset($notasComponentes[$id])) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Verifica se existe uma nota geral lançada com aquele id
+     *
+     * @param int $id
+     *
+     * @return bool
+     */
+    protected function _hasNotaGeral($id)
+    {
+        $notasGerais = $this->getNotasGerais();
+
+        if (!isset($notasGerais[$id])) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Retorna o field identity de um componente curricular de uma instância de
+     * Avaliacao_Model_NotaComponente já esteja persistida.
+     *
+     * @param Avaliacao_Model_NotaComponente $instance
+     *
+     * @return int|NULL Retorna NULL caso a instância não tenha sido lançada
+     */
+    protected function _getNotaIdEtapa(Avaliacao_Model_NotaComponente $instance)
+    {
+        $componenteCurricular = $instance->get('componenteCurricular');
+
+        if (!$this->_hasNotaComponente($componenteCurricular)) {
+            return null;
+        }
+
+        $notasComponentes = $this->getNotasComponentes();
+
+        foreach ($notasComponentes[$componenteCurricular] as $notaComponente) {
+            if ($instance->etapa == $notaComponente->etapa) {
+                return $notaComponente->id;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Retorna o id de uma nota já lançada, retorna null caso não seja encontrada
+     */
+    protected function _getNotaGeralIdEtapa(Avaliacao_Model_NotaGeral $instance)
+    {
+        $notasGerais = $this->getNotasGerais();
+
+        foreach ($notasGerais as $notaGeral) {
+            if ($instance->etapa == $notaGeral->etapa) {
+                return $notaGeral->id;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Verifica se o aluno tem faltas lançadas.
+     *
+     * @return bool
+     */
+    public function hasFaltaAluno()
+    {
+        if (!is_null($this->_getFaltaAluno())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Cria e persiste uma instância de Avaliacao_Model_NotaAluno.
+     *
+     * @return bool
+     */
+    protected function _createFaltaAluno()
+    {
+        $faltaAluno = new Avaliacao_Model_FaltaAluno();
+        $faltaAluno->matricula = $this->getOption('matricula');
+        $faltaAluno->tipoFalta = $this->getRegraAvaliacaoTipoPresenca();
+
+        return $this->getFaltaAlunoDataMapper()->save($faltaAluno);
+    }
+
+    /**
+     * Verifica se existe alguma instância de Avaliacao_Model_FaltaGeral já
+     * persistida.
+     *
+     * @return bool
+     */
+    protected function _hasFaltaGeral()
+    {
+        $faltasGerais = $this->getFaltasGerais();
+
+        if (0 == count($faltasGerais)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Verifica se existe alguma instância de Avaliacao_Model_FaltaComponente para
+     * um determinado componente curricular já persistida.
+     *
+     * @param int $id
+     *
+     * @return bool
+     */
+    protected function _hasFaltaComponente($id)
+    {
+        $faltasComponentes = $this->getFaltasComponentes();
+
+        if (!isset($faltasComponentes[$id])) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Verifica se existe alguma instância de Avaliacao_Model_FaltaAbstract já
+     * persistida em uma determinada etapa e retorna o field identity.
+     *
+     * @param Avaliacao_Model_FaltaAbstract $instance
+     *
+     * @return int|NULL
+     */
+    protected function _getFaltaIdEtapa(Avaliacao_Model_FaltaAbstract $instance)
+    {
+        $etapa = $instance->etapa;
+
+        if (!is_null($instance) &&
+            $this->_getFaltaAluno()->get('tipoFalta') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+            $componenteCurricular = $instance->get('componenteCurricular');
+
+            if (!$this->_hasFaltaComponente($componenteCurricular)) {
+                return null;
+            }
+
+            $faltasComponentes = $this->getFaltasComponentes();
+
+            foreach ($faltasComponentes[$componenteCurricular] as $faltaComponente) {
+                if ($etapa == $faltaComponente->etapa) {
+                    return $faltaComponente->id;
+                }
+            }
+        } elseif ($this->_getFaltaAluno()->get('tipoFalta') == RegraAvaliacao_Model_TipoPresenca::GERAL) {
+            if (!$this->_hasFaltaGeral()) {
+                return null;
+            }
+
+            $faltasGerais = $this->getFaltasGerais();
+
+            if (isset($faltasGerais[$etapa])) {
+                return $faltasGerais[$etapa]->id;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Verifica se o aluno tem pareceres lançados.
+     *
+     * @return bool
+     */
+    public function hasParecerDescritivoAluno()
+    {
+        if (!is_null($this->_getParecerDescritivoAluno())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Cria e persiste uma instância de Avaliacao_Model_ParecerDescritivoAluno.
+     *
+     * @return bool
+     */
+    protected function _createParecerDescritivoAluno()
+    {
+        $parecerDescritivoAluno = new Avaliacao_Model_ParecerDescritivoAluno();
+        $parecerDescritivoAluno->matricula = $this->getOption('matricula');
+        $parecerDescritivoAluno->parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
+
+        return $this->getParecerDescritivoAlunoDataMapper()->save($parecerDescritivoAluno);
+    }
+
+    /**
+     * Adiciona um array de instâncias Avaliacao_Model_NotaComponente.
+     *
+     * @param array $notas
+     *
+     * @return Avaliacao_Service_Boletim Provê interface fluída
+     */
+    public function addNotas(array $notas)
+    {
+        foreach ($notas as $nota) {
+            $this->addNota($nota);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Verifica se existe alguma instância de Avaliacao_Model_ParecerDescritivoComponente
+     * persistida para o aluno.
+     *
+     * @param int $id Field identity de ComponenteCurricular_Model_Componente
+     *
+     * @return bool
+     */
+    protected function _hasParecerComponente($id)
+    {
+        $pareceresComponentes = $this->getPareceresComponentes();
+
+        if (!isset($pareceresComponentes[$id])) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Verifica se existe alguma instância de Avaliacao_Model_ParecerDescritivoGeral
+     * persistida para o aluno.
+     *
+     * @return bool
+     */
+    protected function _hasParecerGeral()
+    {
+        if (0 == count($this->getPareceresGerais())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Verifica se existe alguma instância de Avaliacao_Model_ParecerDescritivoAbstract
+     * persistida em uma determinada etapa e retorna o field identity.
+     *
+     * @param Avaliacao_Model_ParecerDescritivoAbstract $instance
+     *
+     * @return int|NULL
+     */
+    protected function _getParecerIdEtapa(Avaliacao_Model_ParecerDescritivoAbstract $instance)
+    {
+        $gerais = [
+            RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
+            RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL
+        ];
+
+        $componentes = [
+            RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
+            RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
+        ];
+
+        $parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
+
+        if (in_array($parecerDescritivo, $gerais)) {
+            if (!$this->_hasParecerGeral()) {
+                return null;
+            }
+
+            $pareceres = $this->getPareceresGerais();
+        } elseif (in_array($parecerDescritivo, $componentes)) {
+            if (!$this->_hasParecerComponente($instance->get('componenteCurricular'))) {
+                return null;
+            }
+
+            $pareceres = $this->getPareceresComponentes();
+            $pareceres = $pareceres[$instance->get('componenteCurricular')];
+        }
+
+        foreach ($pareceres as $parecer) {
+            if ($instance->etapa == $parecer->etapa) {
+                return $parecer->id;
+            }
+        }
+    }
+
+    /**
+     * Adiciona notas no boletim.
+     *
+     * @param Avaliacao_Model_NotaComponente $nota
+     *
+     * @return Avaliacao_Service_Boletim Provê interface fluída
+     */
+    public function addNota(Avaliacao_Model_NotaComponente $nota)
+    {
+        $this->setCurrentComponenteCurricular($nota->get('componenteCurricular'));
+        $key = 'n_' . spl_object_hash($nota);
+        $nota = $this->_addValidators($nota);
+        $nota = $this->_updateEtapa($nota);
+        $nota->notaArredondada = $this->arredondaNota($nota);
+        $this->addNotaItem($key, $nota);
+
+        return $this;
+    }
+
+    /**
+     * @param Avaliacao_Model_NotaGeral $notaGeral
+     *
+     * @return $this
+     */
+    public function addNotaGeral(Avaliacao_Model_NotaGeral $notaGeral)
+    {
+        $key = 'ng_' . spl_object_hash($notaGeral);
+        $notaGeral = $this->_addValidators($notaGeral);
+        $notaGeral = $this->_updateEtapa($notaGeral);
+        $notaGeral->notaArredondada = $this->arredondaNota($notaGeral);
+        $this->addNotaItem($key, $notaGeral);
+
+        return $this;
+    }
+
+    /**
+     * Adiciona um array de instâncias Avaliacao_Model_FaltaAbstract no boletim.
+     *
+     * @param array $faltas
+     *
+     * @return Avaliacao_Service_Boletim Provê interface fluída
+     */
+    public function addFaltas(array $faltas)
+    {
+        foreach ($faltas as $falta) {
+            $this->addFalta($falta);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Adiciona faltas no boletim.
+     *
+     * @param Avaliacao_Model_FaltaAbstract $falta
+     *
+     * @return Avaliacao_Service_Boletim Provê interface fluída
+     */
+    public function addFalta(Avaliacao_Model_FaltaAbstract $falta)
+    {
+        $key = 'f_' . spl_object_hash($falta);
+        $falta = $this->_addValidators($falta);
+        $falta = $this->_updateEtapa($falta);
+        $this->addFaltaKey($key, $falta);
+
+        return $this;
+    }
+
+    /**
+     * Adiciona uma array de instâncias de Avaliacao_Model_ParecerDescritivoAbstract
+     * no boletim.
+     *
+     * @param array $pareceres
+     *
+     * @return Avaliacao_Service_Boletim Provê interface fluída
+     */
+    public function addPareceres(array $pareceres)
+    {
+        foreach ($pareceres as $parecer) {
+            $this->addParecer($parecer);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Adiciona uma instância de Avaliacao_Model_ParecerDescritivoAbstract no
+     * boletim.
+     *
+     * @param Avaliacao_Model_ParecerDescritivoAbstract $parecer
+     *
+     * @return Avaliacao_Service_Boletim Provê interface fluída
+     */
+    public function addParecer(Avaliacao_Model_ParecerDescritivoAbstract $parecer)
+    {
+        $key = 'p_' . spl_object_hash($parecer);
+        $this->addParecerKey($key, $parecer);
+        $this->_updateParecerEtapa($parecer);
+        $this->_addParecerValidators($parecer);
+
+        return $this;
+    }
+
+    /**
+     * Atualiza as opções de validação de uma instância de
+     * CoreExt_Validate_Validatable, com os valores permitidos para os atributos
+     * 'componenteCurricular' e 'etapa'.
+     *
+     * @param CoreExt_Validate_Validatable $nota
+     *
+     * @return CoreExt_Validate_Validatable
+     *
+     * @todo Substituir variável estática por uma de instância {@see _updateParecerEtapa()}
+     */
+    protected function _addValidators(CoreExt_Validate_Validatable $validatable)
+    {
+        $validators = [];
+
+        // Como os componentes serão os mesmos, fazemos cache do validador
+        if (is_null($this->getValidators())) {
+            $componentes = $this->getComponentes();
+            $componentes = CoreExt_Entity::entityFilterAttr($componentes, 'id', 'id');
+
+            // Só pode adicionar uma nota/falta para os componentes cursados
+            $validators['componenteCurricular'] = new CoreExt_Validate_Choice([
+                'choices' => $componentes
+            ]);
+
+            // Pode informar uma nota para as etapas
+            $etapas = $this->getOption('etapas');
+            $etapas = array_merge(range(1, $etapas, 1), ['Rc']);
+
+            $validators['etapa'] = new CoreExt_Validate_Choice([
+                'choices' => $etapas
+            ]);
+
+            $this->setValidators($validators);
+        }
+
+        $validators = $this->getValidators();
+
+        if ($validatable instanceof Avaliacao_Model_NotaComponente || $this->getRegraAvaliacaoTipoPresenca() == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+            $validatable->setValidator('componenteCurricular', $validators['componenteCurricular']);
+        }
+        $validatable->setValidator('etapa', $validators['etapa']);
+
+        return $validatable;
+    }
+
+    /**
+     * Atualiza as opções de validação de uma instância de
+     * Avaliacao_Model_ParecerDescritivoAbstract, com os valores permitidos
+     * para os atributos 'componenteCurricular' e 'etapa'.
+     *
+     * @param Avaliacao_Model_ParecerDescritivoAbstract $instance
+     *
+     * @return Avaliacao_Model_ParecerDescritivoAbstract
+     */
+    protected function _addParecerValidators(Avaliacao_Model_ParecerDescritivoAbstract $instance)
+    {
+        if (is_null($this->getParecerValidators())) {
+            $validators = [];
+
+            $anuais = [
+                RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
+                RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE
+            ];
+
+            $etapas = [
+                RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
+                RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
+            ];
+
+            $parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
+
+            if (in_array($parecerDescritivo, $anuais)) {
+                $validators['etapa'] = new CoreExt_Validate_Choice([
+                    'choices' => ['An']
+                ]);
+            } elseif (in_array($parecerDescritivo, $etapas)) {
+                $etapas = $this->getOption('etapas');
+                $etapas = array_merge(range(1, $etapas, 1), ['Rc']);
+
+                $validators['etapa'] = new CoreExt_Validate_Choice([
+                    'choices' => $etapas
+                ]);
+            }
+
+            if ($instance instanceof Avaliacao_Model_ParecerDescritivoComponente) {
+                $componentes = $this->getComponentes();
+                $componentes = CoreExt_Entity::entityFilterAttr($componentes, 'id', 'id');
+
+                $validators['componenteCurricular'] = new CoreExt_Validate_Choice([
+                    'choices' => $componentes
+                ]);
+            }
+
+            // Armazena os validadores na instância
+            $this->setParecerValidators($validators);
+        }
+
+        $validators = $this->getParecerValidators();
+
+        // Etapas
+        $instance->setValidator('etapa', $validators['etapa']);
+
+        // Componentes curriculares
+        if ($instance instanceof Avaliacao_Model_ParecerDescritivoComponente) {
+            $instance->setValidator('componenteCurricular', $validators['componenteCurricular']);
+        }
+
+        return $instance;
+    }
+
+    /**
+     * Atualiza a etapa de uma instância de Avaliacao_Model_Etapa.
+     *
+     * @param Avaliacao_Model_Etapa $nota
+     *
+     * @return Avaliacao_Model_Etapa
+     */
+    protected function _updateEtapa(Avaliacao_Model_Etapa $instance)
+    {
+        if (!is_null($instance->etapa)) {
+            if ($instance->isValid('etapa')) {
+                return $instance;
+            } else {
+                throw new CoreExt_Exception_InvalidArgumentException('A etapa informada é inválida.');
+            }
+        }
+
+        $proximaEtapa = 1;
+
+        // Se for falta e do tipo geral, verifica qual foi a última etapa
+        if ($instance instanceof Avaliacao_Model_FaltaGeral) {
+            if (0 < count($this->getFaltasGerais())) {
+                $etapas = CoreExt_Entity::entityFilterAttr($this->getFaltasGerais(), 'id', 'etapa');
+                $proximaEtapa = max($etapas) + 1;
+            }
+        } else {
+            // Se for nota ou falta por componente, verifica no conjunto qual a última etapa
+            if ($instance instanceof Avaliacao_Model_NotaComponente) {
+                $search = '_notasComponentes';
+            } elseif ($instance instanceof Avaliacao_Model_FaltaComponente) {
+                $search = '_faltasComponentes';
+            }
+
+            if (isset($this->{$search}[$instance->get('componenteCurricular')])) {
+                $etapas = CoreExt_Entity::entityFilterAttr(
+                    $this->{$search}[$instance->get('componenteCurricular')],
+                    'id',
+                    'etapa'
+                );
+
+                $proximaEtapa = max($etapas) + 1;
+            }
+        }
+
+        // Se ainda estiver dentro dos limites, ok
+        if ($proximaEtapa <= $this->getOption('etapas')) {
+            $instance->etapa = $proximaEtapa;
+        } else {
+            // Se for maior, verifica se tem recuperação e atribui etapa como 'Rc'
+            if ($proximaEtapa > $this->getOption('etapas')
+                && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
+                $instance->etapa = 'Rc';
+            }
+        }
+
+        return $instance;
+    }
+
+    /**
+     * Atualiza a etapa de uma instância de Avaliacao_Model_ParecerDescritivoAbstract
+     * para a última etapa possível.
+     *
+     * @param Avaliacao_Model_ParecerDescritivoAbstract $instance
+     *
+     * @return Avaliacao_Model_ParecerDescritivoAbstract
+     */
+    protected function _updateParecerEtapa(Avaliacao_Model_ParecerDescritivoAbstract $instance)
+    {
+        if (!is_null($instance->etapa)) {
+            if ($instance->isValid('etapa')) {
+                return $instance;
+            } else {
+                throw new CoreExt_Exception_InvalidArgumentException('A etapa informada é inválida.');
+            }
+        }
+
+        $proximaEtapa = 1;
+
+        $anuais = [
+            RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
+            RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE
+        ];
+
+        $etapas = [
+            RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL,
+            RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
+        ];
+
+        $componentes = [
+            RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
+            RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
+        ];
+
+        $gerais = [
+            RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
+            RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL
+        ];
+
+        $parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
+        if (in_array($parecerDescritivo, $anuais)) {
+            $instance->etapa = 'An';
+
+            return $instance;
+        } else {
+            if (in_array($parecerDescritivo, $etapas)) {
+                $attrValues = [];
+
+                if (in_array($parecerDescritivo, $gerais)) {
+                    $attrValues = $this->getPareceresGerais();
+                } else {
+                    if (in_array($parecerDescritivo, $componentes)) {
+                        $pareceresComponentes = $this->getPareceresComponentes();
+
+                        if (isset($pareceresComponentes[$instance->get('componenteCurricular')])) {
+                            $attrValues = $pareceresComponentes[$instance->get('componenteCurricular')];
+                        }
+                    }
+                }
+
+                if (0 < count($attrValues)) {
+                    $etapas = CoreExt_Entity::entityFilterAttr(
+                        $attrValues,
+                        'id',
+                        'etapa'
+                    );
+                    $proximaEtapa = max($etapas) + 1;
+                }
+            }
+        }
+
+        if ($proximaEtapa <= $this->getOption('etapas')) {
+            $instance->etapa = $proximaEtapa;
+        } else {
+            if ($this->hasRegraAvaliacaoFormulaRecuperacao()) {
+                $instance->etapa = 'Rc';
+            }
+        }
+
+        return $instance;
+    }
+
+    /**
+     * Arredonda uma nota através da tabela de arredondamento da regra de avaliação.
+     *
+     * @param Avaliacao_Model_NotaComponente|int $nota
+     *
+     * @return mixed
+     *
+     * @throws CoreExt_Exception_InvalidArgumentException
+     */
+    public function arredondaNota($nota)
+    {
+        $componenteId = $nota->get('componenteCurricular');
+
+        if (($nota instanceof Avaliacao_Model_NotaComponente) || ($nota instanceof Avaliacao_Model_NotaGeral)) {
+            $nota = $nota->nota;
+        }
+
+        if (!is_numeric($nota)) {
+            require_once 'CoreExt/Exception/InvalidArgumentException.php';
+            throw new CoreExt_Exception_InvalidArgumentException(sprintf(
+                'O parâmetro $nota ("%s") não é um valor numérico.',
+                $nota
+            ));
+        }
+
+        if ($this->usaTabelaArredondamentoConceitual($componenteId)) {
+            return $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($nota, 1);
+        }
+
+        return $this->getRegraAvaliacaoTabelaArredondamento()->round($nota, 1);
+    }
+
+    /**
+     * @return bool
+     */
+    public function regraUsaTipoNotaNumericaConceitual()
+    {
+        if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NUMERICACONCEITUAL) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $componenteId
+     *
+     * @return bool
+     */
+    public function componenteUsaNotaConceitual($componenteId)
+    {
+        $serieId = $this->_options['matriculaData']['ref_ref_cod_serie'];
+        $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);
+
+        if ($tipoNota == ComponenteSerie_Model_TipoNota::CONCEITUAL) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $componenteId
+     *
+     * @return bool
+     */
+    public function usaTabelaArredondamentoConceitual($componenteId)
+    {
+        return $this->regraUsaTipoNotaNumericaConceitual() && $this->componenteUsaNotaConceitual($componenteId);
+    }
+
+    /**
+     * Arredonda uma nota através da tabela de arredondamento da regra de avaliação.
+     *
+     * @param Avaliacao_Model_NotaComponente|int $nota
+     *
+     * @return mixed
+     *
+     * @throws CoreExt_Exception_InvalidArgumentException
+     */
+    public function arredondaMedia($media)
+    {
+        $componenteId = $this->getCurrentComponenteCurricular();
+
+        if ($media instanceof Avaliacao_Model_NotaComponenteMedia) {
+            $media = $media->nota;
+        }
+
+        if (!is_numeric($media)) {
+            require_once 'CoreExt/Exception/InvalidArgumentException.php';
+            throw new CoreExt_Exception_InvalidArgumentException(sprintf(
+                'O parâmetro $media ("%s") não é um valor numérico.',
+                $media
+            ));
+        }
+
+        if ($this->usaTabelaArredondamentoConceitual($componenteId)) {
+            return $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($media, 2);
+        }
+
+        return $this->getRegraAvaliacaoTabelaArredondamento()->round($media, 2);
+    }
+
+    /**
+     * Prevê a nota necessária para que o aluno seja aprovado após a recuperação
+     * escolar.
+     *
+     * @param int $id
+     *
+     * @return int|NULL
+     *
+     * @see    TabelaArredondamento_Model_Tabela#predictValue()
+     */
+    public function preverNotaRecuperacao($id)
+    {
+        $notasComponentes = $this->getNotasComponentes();
+
+        if (is_null($this->getRegraAvaliacaoFormulaRecuperacao()) || !isset($notasComponentes[$id])) {
+            return null;
+        }
+
+        $notas = $notasComponentes[$id];
+
+        unset($notas[$this->getOption('etapas')]);
+
+        $somaEtapas = array_sum(CoreExt_Entity::entityFilterAttr(
+            $notas,
+            'etapa',
+            'nota'
         ));
 
-        $mediaGeralEtapa->markOld();
-      }
-      catch (Exception $e) {
-        // Prossegue, sem problemas.
-      }
+        $data = [
+            'Se' => $somaEtapas,
+            'Et' => $this->getOption('etapas'),
+            'Rc' => null
+        ];
 
-      // Salva a média
-      $this->getMediaGeralDataMapper()->save($mediaGeralEtapa);
-    }else{
-      $turmaId = $this->getOption('ref_cod_turma');
-      $infosMatricula = $this->getOption('matriculaData');
-      $matriculaId = $infosMatricula['cod_matricula'];
-      $serieId = $infosMatricula['ref_ref_cod_serie'];
-      $escolaId = $infosMatricula['ref_ref_cod_escola'];
-      $notaAlunoId = $this->_getNotaAluno()->id;
+        foreach ($notas as $nota) {
+            $data['E' . $nota->etapa] = $nota->nota;
+        }
 
-      foreach ($this->getNotasComponentes() as $id => $notasComponentes) {
-        //busca última nota lançada e somente atualiza a média e situação da nota do mesmo componente curricular
-        //pois atualizar todas as médias de todos os componentes pode deixar o sistema com perda de performance e excesso de processamento
+        $data = $this->_calculateNotasRecuperacoesEspecificas($id, $data);
 
-        $currentComponenteCurricular = $this->getCurrentComponenteCurricular();
+        $increment = 0.1;
+        $notaMax = $this->getRegraAvaliacaoNotaMaximaExameFinal();
 
-        if(!isset($currentComponenteCurricular) || $currentComponenteCurricular == $id){
-          // Cria um array onde o índice é a etapa
-          $etapasNotas = CoreExt_Entity::entityFilterAttr($notasComponentes, 'etapa', 'nota');
-          $qtdeEtapas = $this->getOption('etapas');
+        if ($this->getRegraAvaliacaoQtdCasasDecimais() == 0) {
+            $increment = 1;
+        }
 
-          if($this->getRegraAvaliacaoDefinirComponentePorEtapa() == "1"){
-            $qtdeEtapaEspecifica = App_Model_IedFinder::getQtdeEtapasComponente($turmaId, $id, $infosMatricula['ref_cod_aluno']);
+        // Definida varíavel de incremento e nota máxima, vai testando notas de Recuperação até que o resultado
+        // da média seja superior a média de aprovação de recuperação
+        for ($i = $increment; $i <= $notaMax; $i = round($i + $increment, 1)) {
+            $data['Rc'] = $i;
 
-            $qtdeEtapas = ($qtdeEtapaEspecifica ? $qtdeEtapaEspecifica : $qtdeEtapas);
-          }
-
-          $verificaDispensa = App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $id);
-          $consideraEtapas = [];
-
-          for ($i = 1; $i <= $qtdeEtapas; $i++) {
-              $consideraEtapas['C' . $i] = in_array($i, $verificaDispensa) ? 0 : 1;
-
-              if (in_array($i, $verificaDispensa)) {
-                  $consideraEtapas['E' . $i] = 0;
-              }
-          }
-
-          if ($verificaDispensa) {
-            $qtdeEtapas = $qtdeEtapas - count($verificaDispensa);
-          }
-
-          $notas = array_merge(['Se' => 0, 'Et' => $qtdeEtapas], $consideraEtapas);
-
-          // Cria o array formatado para o cálculo da fórmula da média
-          foreach ($etapasNotas as $etapa => $nota) {
-            if (is_numeric($etapa)) {
-              $notas['E' . $etapa] = $nota;
-              $notas['Se'] += $nota;
-              continue;
+            if ($this->getRegraAvaliacaoFormulaRecuperacao()->execFormulaMedia($data) >= $this->getRegraAvaliacaoMediaRecuperacao()) {
+                return $i;
             }
-            $notas[$etapa] = $nota;
-          }
+        }
 
-          $notas = $this->_calculateNotasRecuperacoesEspecificas($id, $notas);
+        return null;
+    }
 
-          // Calcula a média por componente curricular
-          $media = $this->_calculaMedia($notas);
-          $locked = false;
+    /**
+     * Recupera notas e calcula variáveis relacionadas com as recuperações específicas
+     *
+     * @param int $id
+     *
+     * @return array $data
+     */
+    protected function _calculateNotasRecuperacoesEspecificas($id, $data = [])
+    {
+        // Verifica regras de recuperações (Recuperações específicas por etapa)
+        $regrasRecuperacoes = $this->getRegrasRecuperacao();
 
-          try {
-            $notaComponenteCurricularMedia = $this->getNotaComponenteMediaDataMapper()->find(array(
-              'notaAluno' => $this->_getNotaAluno()->id,
-              'componenteCurricular' => $id,
-            ));
+        $cont = 0;
 
-            $locked = (bool) $notaComponenteCurricularMedia->bloqueada;
+        if (count($regrasRecuperacoes)) {
+            $data['Se'] = 0;
+        }
 
-            // A média pode estar bloqueada caso tenha sido alterada manualmente.
-            // Neste caso não acontece a atualização da mesma por aqui e é necessário
-            // desbloqueá-la antes.
-            if (!$locked) {
-                $notaComponenteCurricularMedia->media = $media;
-                $notaComponenteCurricularMedia->mediaArredondada = $this->arredondaMedia($media);
+        foreach ($regrasRecuperacoes as $key => $_regraRecuperacao) {
+            $cont++;
+            $notaRecuperacao = $this->getNotaComponente($id, $_regraRecuperacao->getLastEtapa());
+
+            if ($notaRecuperacao && is_numeric($notaRecuperacao->notaRecuperacaoEspecifica)) {
+                // Caso tenha nota de recuperação para regra atual, atribuí variável RE+N
+                $substituiMenorNota = (bool)$_regraRecuperacao->substituiMenorNota;
+                $data['RSP' . $cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
+
+                $somaEtapasRecuperacao = 0;
+                $countEtapasRecuperacao = 0;
+
+                foreach ($_regraRecuperacao->getEtapas() as $__etapa) {
+                    $somaEtapasRecuperacao += $data['E' . $__etapa];
+                    $countEtapasRecuperacao++;
+                }
+
+                $mediaEtapasRecuperacao = $somaEtapasRecuperacao / $countEtapasRecuperacao;
+                $mediaEtapasRecuperacaoComRecuperacao = ($mediaEtapasRecuperacao + $notaRecuperacao->notaRecuperacaoEspecifica) / 2;
+
+                if (!$substituiMenorNota) {
+                    $data['Se'] += $data['RSP' . $cont] ?? $somaEtapasRecuperacao;
+                } else {
+                    $data['Se'] += $data['RSP' . $cont] > $mediaEtapasRecuperacao ? $data['RSP' . $cont] * $countEtapasRecuperacao : $somaEtapasRecuperacao;
+                }
+
+                // Caso média com recuperação seja maior que média das somas das etapas sem recuperação, atribuí variável MRE+N
+                if (!$substituiMenorNota || $mediaEtapasRecuperacaoComRecuperacao > $mediaEtapasRecuperacao) {
+                    $data['RSPM' . $cont] = $mediaEtapasRecuperacaoComRecuperacao;
+                } else {
+                    $data['RSPM' . $cont] = $mediaEtapasRecuperacao;
+                }
+
+                // Caso nota de recuperação seja maior que soma das etapas, atribuí variável SRE+N
+                if (!$substituiMenorNota || $notaRecuperacao->notaRecuperacaoEspecifica > $somaEtapasRecuperacao) {
+                    $data['RSPS' . $cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
+                } else {
+                    $data['RSPS' . $cont] = $somaEtapasRecuperacao;
+                }
+            } else {
+                // Caso tenha nota de recuperação para regra atual, atribuí variaveis RSPM+N E RSPS+N
+                // considerando apenas soma das etapas
+                $somaEtapasRecuperacao = 0;
+                $countEtapasRecuperacao = 0;
+
+                foreach ($_regraRecuperacao->getEtapas() as $__etapa) {
+                    $somaEtapasRecuperacao += $data['E' . $__etapa];
+                    $countEtapasRecuperacao++;
+                }
+
+                $data['Se'] += $somaEtapasRecuperacao;
+                $data['RSPM' . $cont] = $somaEtapasRecuperacao / $countEtapasRecuperacao;
+                $data['RSPS' . $cont] = $somaEtapasRecuperacao;
             }
+        }
 
-            $notaComponenteCurricularMedia->etapa = $etapa;
+        return $data;
+    }
+
+    /**
+     * @param numeric $falta
+     * @param numeric $horaFalta
+     *
+     * @return numeric
+     */
+    protected function _calculateHoraFalta($falta, $horaFalta)
+    {
+        return ($falta * $horaFalta);
+    }
+
+    /**
+     * Calcula a proporção de $num2 para $num1.
+     *
+     * @param numeric $num1
+     * @param numeric $num2
+     * @param bool    $decimal Opcional. Se o resultado é retornado como decimal
+     *                         ou percentual. O padrão é TRUE.
+     *
+     * @return float
+     */
+    protected function _calculatePorcentagem($num1, $num2, $decimal = true)
+    {
+        $num1 = floatval($num1);
+        $num2 = floatval($num2);
+
+        if ($num1 == 0) {
+            return 0;
+        }
+
+        $perc = $num2 / $num1;
+
+        return ($decimal == true ? $perc : ($perc * 100));
+    }
+
+    /**
+     * Calcula uma média de acordo com uma fórmula de FormulaMedia_Model_Media
+     * da regra de avaliação da série/matrícula do aluno.
+     *
+     * @param array $values
+     *
+     * @return float
+     */
+    protected function _calculaMedia(array $values)
+    {
+        if (isset($values['Rc']) && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
+            $media = $this->getRegraAvaliacaoFormulaRecuperacao()->execFormulaMedia($values);
+        } else {
+            $media = $this->getRegraAvaliacaoFormulaMedia()->execFormulaMedia($values);
+        }
+
+        return $media;
+    }
+
+    /**
+     * Insere ou atualiza as notas e/ou faltas que foram adicionadas ao service
+     * e atualiza a matricula do aluno de acordo com a sua performance,
+     * promovendo-o ou retendo-o caso o tipo de progressão da regra de avaliação
+     * seja automática (e que a situação do aluno não esteja em "andamento").
+     *
+     * @see Avaliacao_Service_Boletim#getSituacaoAluno()
+     *
+     * @throws CoreExt_Service_Exception|Exception
+     */
+    public function save()
+    {
+        try {
+            $this->saveNotas();
+            $this->saveFaltas();
+            $this->savePareceres();
+            $this->promover();
+        } catch (CoreExt_Service_Exception $e) {
+            throw $e;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Insere ou atualiza as notas no boletim do aluno.
+     *
+     * @return Avaliacao_Service_Boletim Provê interface fluída
+     */
+    public function saveNotas()
+    {
+        if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+            return $this;
+        }
+
+        $notaAluno = $this->_getNotaAluno();
+        $notas = $this->getNotas();
+
+        foreach ($notas as $nota) {
+            $nota->notaAluno = $notaAluno;
+
+            if ($nota instanceof Avaliacao_Model_NotaComponente) {
+                $nota->id = $this->_getNotaIdEtapa($nota);
+                $this->getNotaComponenteDataMapper()->save($nota);
+            } else {
+                if ($nota instanceof Avaliacao_Model_NotaGeral) {
+                    $nota->id = $this->_getNotaGeralIdEtapa($nota);
+                    $this->getNotaGeralDataMapper()->save($nota);
+                }
+            }
+        }
+
+        // Atualiza as médias
+        $this->_updateNotaComponenteMedia();
+
+        return $this;
+    }
+
+    /**
+     * Insere ou atualiza as faltas no boletim.
+     *
+     * @return Avaliacao_Service_Boletim Provê interface fluída
+     */
+    public function saveFaltas()
+    {
+        $faltaAluno = $this->_getFaltaAluno();
+        $faltas = $this->getFaltas();
+
+        foreach ($faltas as $falta) {
+            $falta->faltaAluno = $faltaAluno;
+            $falta->id = $this->_getFaltaIdEtapa($falta);
+            $this->getFaltaAbstractDataMapper()->save($falta);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Insere ou atualiza os pareceres no boletim.
+     *
+     * @return Avaliacao_Service_Boletim Provê interface fluída
+     */
+    public function savePareceres()
+    {
+        $parecerAluno = $this->_getParecerDescritivoAluno();
+        $pareceres = $this->getPareceres();
+
+        foreach ($pareceres as $parecer) {
+            $parecer->parecerDescritivoAluno = $parecerAluno->id;
+            $parecer->id = $this->_getParecerIdEtapa($parecer);
+            $this->getParecerDescritivoAbstractDataMapper()->save($parecer);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @throws App_Model_Exception
+     */
+    protected function reloadComponentes()
+    {
+        $this->_setComponentes(
+            App_Model_IedFinder::getComponentesPorMatricula(
+                $this->getOption('matricula'),
+                $this->getComponenteDataMapper(),
+                $this->getComponenteTurmaDataMapper(),
+                null,
+                $this->getOption('etapaAtual'),
+                null,
+                $this->getOption('matriculaData')
+            )
+        );
+    }
+
+    /**
+     * Promove o aluno de etapa escolar caso esteja aprovado de acordo com o
+     * necessário estabelecido por tipoProgressao de
+     * RegraAvaliacao_Model_Regra.
+     *
+     * @param bool $ok Caso a progressão não seja automática, é necessário uma
+     *                 confirmação externa para a promoção do aluno.
+     *
+     * @return bool
+     */
+    public function promover($novaSituacaoMatricula = null)
+    {
+        // Essa função é necessária para promoção pois precisamos considerar a
+        // situação de todas as disciplinas e não só da que está sendo lançada
+        $this->reloadComponentes();
+        $tipoProgressao = $this->getRegraAvaliacaoTipoProgressao();
+        $situacaoMatricula = $this->getOption('aprovado');
+        $situacaoBoletim = $this->getSituacaoAluno();
+        $exceptionMsg = '';
+
+        if ($situacaoMatricula == App_Model_MatriculaSituacao::TRANSFERIDO) {
+            $novaSituacaoMatricula = App_Model_MatriculaSituacao::TRANSFERIDO;
+        } else {
+            if ($situacaoBoletim->andamento) {
+                $novaSituacaoMatricula = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+            } else {
+                switch ($tipoProgressao) {
+                    case RegraAvaliacao_Model_TipoProgressao::CONTINUADA:
+                        $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
+                        break;
+                    case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MEDIA_PRESENCA:
+                        if ($situacaoBoletim->aprovado && !$situacaoBoletim->retidoFalta && $situacaoBoletim->aprovadoComDependencia) {
+                            $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
+                        } else {
+                            if ($situacaoBoletim->aprovado && !$situacaoBoletim->retidoFalta) {
+                                $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
+                            } else {
+                                if ($situacaoBoletim->retidoFalta) {
+                                    if (!$situacaoBoletim->aprovado) {
+                                        $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
+                                    } else {
+                                        $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS;
+                                    }
+                                } else {
+                                    $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
+                                }
+                            }
+                        }
+                        break;
+
+                    case RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_SOMENTE_MEDIA || RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL:
+                        if ($situacaoBoletim->aprovado && $situacaoBoletim->aprovadoComDependencia && !$situacaoBoletim->retidoFalta) {
+                            $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
+                        } else {
+                            if ($situacaoBoletim->retidoFalta) {
+                                if (!$situacaoBoletim->aprovado) {
+                                    $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
+                                } else {
+                                    $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS;
+                                }
+                            } else {
+                                if (!$situacaoBoletim->aprovado) {
+                                    $novaSituacaoMatricula = App_Model_MatriculaSituacao::REPROVADO;
+                                } else {
+                                    $novaSituacaoMatricula = App_Model_MatriculaSituacao::APROVADO;
+                                }
+                            }
+                        }
+
+                        break;
+
+                    case is_null($novaSituacaoMatricula):
+                        $tipoProgressaoInstance = RegraAvaliacao_Model_TipoProgressao::getInstance();
+                        $exceptionMsg = sprintf(
+                            'Para atualizar a matrícula em uma regra %s é '
+                            . 'necessário passar o valor do argumento "$novaSituacaoMatricula".',
+                            $tipoProgressaoInstance->getValue($tipoProgressao)
+                        );
+                        break;
+                }
+            }
+        }
+
+        if ($novaSituacaoMatricula == $situacaoMatricula) {
+            $exceptionMsg = "Matrícula ({$this->getOption('matricula')}) não precisou ser promovida, " .
+                "pois a nova situação continua a mesma da anterior ($novaSituacaoMatricula)";
+        }
+
+        if ($exceptionMsg) {
+            require_once 'CoreExt/Service/Exception.php';
+            throw new CoreExt_Service_Exception($exceptionMsg);
+        }
+
+        return $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'), $novaSituacaoMatricula);
+    }
+
+    /**
+     * @param $componente
+     *
+     * @return bool
+     */
+    public function unlockMediaComponente($componente)
+    {
+        try {
+            $media = $this->getNotaComponenteMediaDataMapper()->find([
+                'notaAluno' => $this->_getNotaAluno()->id,
+                'componenteCurricular' => $componente
+            ]);
+
+            $media->bloqueada = 'f';
+            $media->markOld();
+
+            return $this->getNotaComponenteMediaDataMapper()->save($media);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @param $media
+     * @param $componente
+     * @param $etapa
+     * @param bool $lock
+     *
+     * @throws CoreExt_DataMapper_Exception
+     */
+    public function updateMediaComponente($media, $componente, $etapa, bool $lock = false)
+    {
+        $lock = $lock === false ? 'f' : 't';
+
+        try {
+            $notaComponenteCurricularMedia = $this->getNotaComponenteMediaDataMapper()->find([
+                'notaAluno' => $this->_getNotaAluno()->id,
+                'componenteCurricular' => $componente
+            ]);
+
+            $notaComponenteCurricularMedia->media = $media;
+            $notaComponenteCurricularMedia->mediaArredondada = $this->arredondaMedia($media);
+            $notaComponenteCurricularMedia->bloqueada = $lock;
             $notaComponenteCurricularMedia->situacao = null;
 
             $notaComponenteCurricularMedia->markOld();
-          } catch (Exception $e) {
-            $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia(array(
-              'notaAluno' => $this->_getNotaAluno()->id,
-              'componenteCurricular' => $id,
-              'media' => $media,
-              'mediaArredondada' => $this->arredondaMedia($media),
-              'etapa' => $etapa,
-              'bloqueada' => 'f',
-            ));
-          }
-
-          // Salva a média
-          $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
-
-          //Atualiza a situação de acordo com o que foi inserido na média anteriormente
-          $notaComponenteCurricularMedia->markOld();
-          $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id]->situacao;
-
-          $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
+        } catch (Exeption $e) {
+            $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia([
+                'notaAluno' => $this->_getNotaAluno()->id,
+                'componenteCurricular' => $componente,
+                'media' => $media,
+                'mediaArredondada' => $this->arredondaMedia($media),
+                'etapa' => $etapa,
+                'bloqueada' => $lock
+            ]);
         }
-      }
 
-      $this->deleteNotaComponenteCurricularMediaWithoutNotas($notaAlunoId);
-    }
-  }
+        // Salva a média
+        $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
+        $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$componente]->situacao;
 
-  /**
-   * Atualiza os dados da matrícula do aluno.
-   *
-   * @param int $matricula
-   * @param int $usuario
-   * @param bool $promover
-   * @return bool
-   * @see App_Model_Matricula#atualizaMatricula($matricula, $usuario, $promover)
-   */
-  protected function _updateMatricula($matricula, $usuario, $promover)
-  {
-    return App_Model_Matricula::atualizaMatricula($matricula, $usuario, $promover);
-  }
+        try {
+            // Atualiza situação matricula
+            $this->promover();
+        } catch (Exception $e) {
+            // Evita que uma mensagem de erro apareça caso a situação na matrícula
+            // não seja alterada.
+        }
 
-  public function deleteNota($etapa, $ComponenteCurricularId)
-  {
-    $this->setCurrentComponenteCurricular($ComponenteCurricularId);
-    $nota = $this->getNotaComponente($ComponenteCurricularId, $etapa);
-    $this->getNotaComponenteDataMapper()->delete($nota);
-
-    try {
-        $this->save();
-    } catch (Exception $e) {
-        error_log("Excessao ignorada ao zerar nota a ser removida: " . $e->getMessage());
+        //Atualiza a situação de acordo com o que foi inserido na média anteriormente
+        $notaComponenteCurricularMedia->markOld();
+        $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
     }
 
-    return $this;
-  }
+    /**
+     * @param $media
+     * @param $etapa
+     *
+     * @throws CoreExt_DataMapper_Exception
+     */
+    public function updateMediaGeral($media, $etapa)
+    {
+        $mediaGeral = new Avaliacao_Model_MediaGeral([
+            'notaAluno' => $this->_getNotaAluno()->id,
+            'media' => $media,
+            'mediaArredondada' => $this->arredondaMedia($media),
+            'etapa' => $etapa,
+        ]);
 
+        try {
+            // Se existir, marca como "old" para possibilitar a atualização
+            $this->getMediaGeralDataMapper()->find([
+                $mediaGeral->get('notaAluno')
+            ]);
+            $mediaGeral->markOld();
+        } catch (Exception $e) {
+            // Prossegue, sem problemas.
+        }
 
-  public function deleteFalta($etapa, $ComponenteCurricularId)
-  {
-    $nota = $this->getFalta($etapa, $ComponenteCurricularId);
-    $this->getFaltaAbstractDataMapper()->delete($nota);
-
-    return $this;
-  }
-
-
-  public function deleteParecer($etapa, $ComponenteCurricularId)
-  {
-    $parecer = $this->getParecerDescritivo($etapa, $ComponenteCurricularId);
-    $this->getParecerDescritivoAbstractDataMapper()->delete($parecer);
-
-    return $this;
-  }
-
-  public function deleteNotaGeral($etapa)
-  {
-    $notaGeral = $this->getNotaGeral($etapa);
-    if(!is_null($notaGeral)){
-      $this->getNotaGeralAbstractDataMapper()->delete($notaGeral);
+        // Salva a média
+        $this->getMediaGeralDataMapper()->save($mediaGeral);
     }
 
-    return $this;
-  }
+    /**
+     * @param $novaSituacao
+     * @param $matriculaId
+     *
+     * @return mixed
+     */
+    public function alterarSituacao($novaSituacao, $matriculaId)
+    {
+        return App_Model_Matricula::setNovaSituacao($matriculaId, $novaSituacao);
+    }
+
+    /**
+     * Atualiza a média dos componentes curriculares.
+     */
+    protected function _updateNotaComponenteMedia()
+    {
+        require_once 'Avaliacao/Model/NotaComponenteMedia.php';
+        $this->_loadNotas(false);
+
+        $etapa = 1;
+
+        if ($this->getRegraAvaliacaoNotaGeralPorEtapa() == '1') {
+            $notasGerais = ['Se' => 0, 'Et' => $this->getOption('etapas')];
+
+            foreach ($this->getNotasGerais() as $id => $notaGeral) {
+                $etapasNotas = CoreExt_Entity::entityFilterAttr($notaGeral, 'etapa', 'nota');
+
+                // Cria o array formatado para o cálculo da fórmula da média
+                foreach ($etapasNotas as $etapa => $nota) {
+                    if (is_numeric($etapa)) {
+                        $notasGerais['E' . $etapa] = $nota;
+                        $notasGerais['Se'] += $nota;
+                        continue;
+                    }
+                    $notasGerais[$etapa] = $nota;
+                }
+            }
+
+            //Calcula a média geral
+            $mediaGeral = $this->_calculaMedia($notasGerais);
+
+            // Cria uma nova instância de média, já com a nota arredondada e a etapa
+            $mediaGeralEtapa = new Avaliacao_Model_MediaGeral([
+                'notaAluno' => $this->_getNotaAluno()->id,
+                'media' => $mediaGeral,
+                'mediaArredondada' => $this->arredondaMedia($mediaGeral),
+                'etapa' => $etapa
+            ]);
+
+            try {
+                // Se existir, marca como "old" para possibilitar a atualização
+                $this->getMediaGeralDataMapper()->find([
+                    $mediaGeralEtapa->get('notaAluno')
+                ]);
+
+                $mediaGeralEtapa->markOld();
+            } catch (Exception $e) {
+                // Prossegue, sem problemas.
+            }
+
+            // Salva a média
+            $this->getMediaGeralDataMapper()->save($mediaGeralEtapa);
+        } else {
+            $turmaId = $this->getOption('ref_cod_turma');
+            $infosMatricula = $this->getOption('matriculaData');
+            $matriculaId = $infosMatricula['cod_matricula'];
+            $serieId = $infosMatricula['ref_ref_cod_serie'];
+            $escolaId = $infosMatricula['ref_ref_cod_escola'];
+            $notaAlunoId = $this->_getNotaAluno()->id;
+
+            foreach ($this->getNotasComponentes() as $id => $notasComponentes) {
+                //busca última nota lançada e somente atualiza a média e situação da nota do mesmo componente curricular
+                //pois atualizar todas as médias de todos os componentes pode deixar o sistema com perda de performance e excesso de processamento
+
+                $currentComponenteCurricular = $this->getCurrentComponenteCurricular();
+
+                if (!isset($currentComponenteCurricular) || $currentComponenteCurricular == $id) {
+                    // Cria um array onde o índice é a etapa
+                    $etapasNotas = CoreExt_Entity::entityFilterAttr($notasComponentes, 'etapa', 'nota');
+                    $qtdeEtapas = $this->getOption('etapas');
+
+                    if ($this->getRegraAvaliacaoDefinirComponentePorEtapa() == '1') {
+                        $qtdeEtapaEspecifica = App_Model_IedFinder::getQtdeEtapasComponente($turmaId, $id, $infosMatricula['ref_cod_aluno']);
+
+                        $qtdeEtapas = ($qtdeEtapaEspecifica ? $qtdeEtapaEspecifica : $qtdeEtapas);
+                    }
+
+                    $verificaDispensa = App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $id);
+                    $consideraEtapas = [];
+
+                    for ($i = 1; $i <= $qtdeEtapas; $i++) {
+                        $consideraEtapas['C' . $i] = in_array($i, $verificaDispensa) ? 0 : 1;
+
+                        if (in_array($i, $verificaDispensa)) {
+                            $consideraEtapas['E' . $i] = 0;
+                        }
+                    }
+
+                    if ($verificaDispensa) {
+                        $qtdeEtapas = $qtdeEtapas - count($verificaDispensa);
+                    }
+
+                    $notas = array_merge(['Se' => 0, 'Et' => $qtdeEtapas], $consideraEtapas);
+
+                    // Cria o array formatado para o cálculo da fórmula da média
+                    foreach ($etapasNotas as $etapa => $nota) {
+                        if (is_numeric($etapa)) {
+                            $notas['E' . $etapa] = $nota;
+                            $notas['Se'] += $nota;
+                            continue;
+                        }
+                        $notas[$etapa] = $nota;
+                    }
+
+                    $notas = $this->_calculateNotasRecuperacoesEspecificas($id, $notas);
+
+                    // Calcula a média por componente curricular
+                    $media = $this->_calculaMedia($notas);
+                    $locked = false;
+
+                    try {
+                        $notaComponenteCurricularMedia = $this->getNotaComponenteMediaDataMapper()->find([
+                            'notaAluno' => $this->_getNotaAluno()->id,
+                            'componenteCurricular' => $id,
+                        ]);
+
+                        $locked = (bool)$notaComponenteCurricularMedia->bloqueada;
+
+                        // A média pode estar bloqueada caso tenha sido alterada manualmente.
+                        // Neste caso não acontece a atualização da mesma por aqui e é necessário
+                        // desbloqueá-la antes.
+                        if (!$locked) {
+                            $notaComponenteCurricularMedia->media = $media;
+                            $notaComponenteCurricularMedia->mediaArredondada = $this->arredondaMedia($media);
+                        }
+
+                        $notaComponenteCurricularMedia->etapa = $etapa;
+                        $notaComponenteCurricularMedia->situacao = null;
+
+                        $notaComponenteCurricularMedia->markOld();
+                    } catch (Exception $e) {
+                        $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia([
+                            'notaAluno' => $this->_getNotaAluno()->id,
+                            'componenteCurricular' => $id,
+                            'media' => $media,
+                            'mediaArredondada' => $this->arredondaMedia($media),
+                            'etapa' => $etapa,
+                            'bloqueada' => 'f',
+                        ]);
+                    }
+
+                    // Salva a média
+                    $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
+
+                    //Atualiza a situação de acordo com o que foi inserido na média anteriormente
+                    $notaComponenteCurricularMedia->markOld();
+                    $notaComponenteCurricularMedia->situacao = $this->getSituacaoComponentesCurriculares()->componentesCurriculares[$id]->situacao;
+
+                    $this->getNotaComponenteMediaDataMapper()->save($notaComponenteCurricularMedia);
+                }
+            }
+
+            $this->deleteNotaComponenteCurricularMediaWithoutNotas($notaAlunoId);
+        }
+    }
+
+    /**
+     * Atualiza os dados da matrícula do aluno.
+     *
+     * @param int  $matricula
+     * @param int  $usuario
+     * @param bool $promover
+     *
+     * @return bool
+     *
+     * @see App_Model_Matricula#atualizaMatricula($matricula, $usuario, $promover)
+     */
+    protected function _updateMatricula($matricula, $usuario, $promover)
+    {
+        return App_Model_Matricula::atualizaMatricula($matricula, $usuario, $promover);
+    }
+
+    /**
+     * @param $etapa
+     * @param $ComponenteCurricularId
+     *
+     * @return $this
+     *
+     * @throws Exception
+     */
+    public function deleteNota($etapa, $ComponenteCurricularId)
+    {
+        $this->setCurrentComponenteCurricular($ComponenteCurricularId);
+        $nota = $this->getNotaComponente($ComponenteCurricularId, $etapa);
+        $this->getNotaComponenteDataMapper()->delete($nota);
+
+        try {
+            $this->save();
+        } catch (Exception $e) {
+            error_log('Excessao ignorada ao zerar nota a ser removida: ' . $e->getMessage());
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param $etapa
+     * @param $ComponenteCurricularId
+     *
+     * @return $this
+     *
+     * @throws Exception
+     */
+    public function deleteFalta($etapa, $ComponenteCurricularId)
+    {
+        $nota = $this->getFalta($etapa, $ComponenteCurricularId);
+        $this->getFaltaAbstractDataMapper()->delete($nota);
+
+        return $this;
+    }
+
+    /**
+     * @param $etapa
+     * @param $ComponenteCurricularId
+     *
+     * @return $this
+     *
+     * @throws Exception
+     */
+    public function deleteParecer($etapa, $ComponenteCurricularId)
+    {
+        $parecer = $this->getParecerDescritivo($etapa, $ComponenteCurricularId);
+        $this->getParecerDescritivoAbstractDataMapper()->delete($parecer);
+
+        return $this;
+    }
+
+    /**
+     * @param $etapa
+     *
+     * @return $this
+     *
+     * @throws Exception
+     */
+    public function deleteNotaGeral($etapa)
+    {
+        $notaGeral = $this->getNotaGeral($etapa);
+        if (!is_null($notaGeral)) {
+            $this->getNotaGeralAbstractDataMapper()->delete($notaGeral);
+        }
+
+        return $this;
+    }
 
     /**
      * Verifica se as notas das etapas anteriores foram lançadas para o
      * componente curricular. Lança uma exceção caso contrário.
      *
      * @param int|string $etapaId
-     * @param int $componenteCurricularId
+     * @param int        $componenteCurricularId
      *
      * @return bool
      *
@@ -2595,19 +2790,22 @@ public function alterarSituacao($novaSituacao, $matriculaId){
         // Pelo que eu entendi, caso a opção `definirComponentePorEtapa` é
         // possível lançar notas para etapas futuras.
 
-        if ($this->getRegraAvaliacaoDefinirComponentePorEtapa() == "1") {
+        if ($this->getRegraAvaliacaoDefinirComponentePorEtapa() == '1') {
             return true;
         }
 
-        $etapasDispensadas = (array) App_Model_IedFinder::validaDispensaPorMatricula(
-            $matriculaId, $serieId, $escolaId, $componenteCurricularId
+        $etapasDispensadas = (array)App_Model_IedFinder::validaDispensaPorMatricula(
+            $matriculaId,
+            $serieId,
+            $escolaId,
+            $componenteCurricularId
         );
 
-        $informacoesMatricula = (array) App_Model_IedFinder::getMatricula(
+        $informacoesMatricula = (array)App_Model_IedFinder::getMatricula(
             $matriculaId
         );
 
-        $informacoesEtapas = (array) App_Model_IedFinder::getEtapasDaTurma(
+        $informacoesEtapas = (array)App_Model_IedFinder::getEtapasDaTurma(
             $informacoesMatricula['ref_cod_turma']
         );
 
@@ -2689,7 +2887,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
      * componente curricular. Lança uma exceção caso contrário.
      *
      * @param int|string $etapaId
-     * @param int $componenteCurricularId
+     * @param int        $componenteCurricularId
      *
      * @return bool
      *
@@ -2703,10 +2901,9 @@ public function alterarSituacao($novaSituacao, $matriculaId){
         $serieId = $this->getOption('ref_cod_serie');
         $escolaId = $this->getOption('ref_cod_escola');
 
-        $existeEtapaDispensada = (array) App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $componenteCurricularId);
+        $existeEtapaDispensada = (array)App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $componenteCurricularId);
 
         for ($etapa = 1; $etapa <= $etapaId; $etapa++) {
-
             $faltas = $this->getFaltaAtual($etapa, $componenteCurricularId);
 
             if (in_array($etapa, $existeEtapaDispensada)) {
@@ -2737,7 +2934,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
      * Retorna a nota lançada na etapa para o componente curricular.
      *
      * @param int|string $etapa
-     * @param int $componenteCurricularId
+     * @param int        $componenteCurricularId
      *
      * @return int|string
      */
@@ -2754,7 +2951,7 @@ public function alterarSituacao($novaSituacao, $matriculaId){
      * curricular. Caso não exista, retorna null.
      *
      * @param int|string $etapa
-     * @param int $componenteCurricularId
+     * @param int        $componenteCurricularId
      *
      * @return int|null
      */
@@ -2777,11 +2974,11 @@ public function alterarSituacao($novaSituacao, $matriculaId){
     /**
      * Retorna as regras de avaliação.
      *
-     * @deprecated
+     * @return array
      *
      * @see RegraAvaliacao_Model_Regra::findRegraRecuperacao()
+     * @deprecated
      *
-     * @return array
      */
     public function getRegrasRecuperacao()
     {
