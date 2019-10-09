@@ -632,20 +632,25 @@ class clsPmieducarCandidatoReservaVaga extends Model
      *
      * @throws Exception
      */
-    public function alteraSituacao($situacao, $motivo = null)
+    public function alteraSituacao($situacao, $motivo = null, $data = null)
     {
         if (!$this->cod_candidato_reserva_vaga) {
             return false;
         }
 
         $situacao = $situacao ?: 'NULL';
-        $motivo = $motivo ?: 'NULL';
+        $motivo = $motivo ?: null;
+        if ($data) {
+            $data = "data_solicitacao = '{$data}',";
+        }
+
         $historico = $this->montaHistorico();
 
         $db = new clsBanco();
         $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga
                                   SET situacao = {$situacao},
-                                      motivo = {$motivo},
+                                      motivo = '{$motivo}',
+                                      {$data}
                                       data_situacao = NOW(),
                                       historico = '{$historico}'
                                 WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
