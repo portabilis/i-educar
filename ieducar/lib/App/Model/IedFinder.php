@@ -671,11 +671,13 @@ class App_Model_IedFinder extends CoreExt_Entity
             $where['componente_curricular_id'] = $componenteCurricularId;
         }
 
+        $disciplinaDispensada = self::disciplinaDispensadaDaTurma($turma);
+
         $componentesTurma = $mapper->findAll([], $where);
 
         // Não existem componentes específicos para a turma
         if (0 == count($componentesTurma)) {
-            return self::getEscolaSerieDisciplina(
+            $componentesTurma = self::getEscolaSerieDisciplina(
                 $serieId,
                 $escola,
                 $componenteMapper,
@@ -684,6 +686,9 @@ class App_Model_IedFinder extends CoreExt_Entity
                 $trazerDetalhes,
                 $ano
             );
+
+            unset($componentesTurma[$disciplinaDispensada]);
+            return $componentesTurma;
         }
 
         $componentes = [];
@@ -1099,6 +1104,23 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $disciplinasDispensa;
+    }
+
+    public static function disciplinaDispensadaDaTurma($codTurma)
+    {
+        if (!$codTurma) {
+            return;
+        }
+
+        $sql = "
+            SELECT ref_cod_disciplina_dispensada
+            FROM pmieducar.turma
+            WHERE cod_turma = $1;
+        ";
+
+        $disciplinaDispensada = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => $codTurma]);
+
+        return $disciplinaDispensada[0]['ref_cod_disciplina_dispensada'];
     }
 
     public static function validaDispensaPorMatricula(
