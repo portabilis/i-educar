@@ -1113,9 +1113,11 @@ class App_Model_IedFinder extends CoreExt_Entity
             return;
         }
 
-        $schoolClass = LegacySchoolClass::query()->find($codTurma);
-        $disciplinaDispensada = $schoolClass->ref_cod_disciplina_dispensada;
-        return $disciplinaDispensada;
+        return Cache::store('array')->remember("disciplinaDispensadaDaTurma:{$codTurma}", now()->addMinute(), function () use ($codTurma) {  
+            $schoolClass = LegacySchoolClass::query()->find($codTurma);
+            $disciplinaDispensada = $schoolClass->ref_cod_disciplina_dispensada;
+            return $disciplinaDispensada;
+        });
     }
 
     public static function validaDispensaPorMatricula(
