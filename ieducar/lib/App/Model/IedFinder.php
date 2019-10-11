@@ -3,6 +3,7 @@
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacySchool;
+use App\Models\LegacySchoolClass;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
@@ -1112,15 +1113,9 @@ class App_Model_IedFinder extends CoreExt_Entity
             return;
         }
 
-        $sql = "
-            SELECT ref_cod_disciplina_dispensada
-            FROM pmieducar.turma
-            WHERE cod_turma = $1;
-        ";
-
-        $disciplinaDispensada = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => $codTurma]);
-
-        return $disciplinaDispensada[0]['ref_cod_disciplina_dispensada'];
+        $schoolClass = LegacySchoolClass::query()->find($codTurma);
+        $disciplinaDispensada = $schoolClass->ref_cod_disciplina_dispensada;
+        return $disciplinaDispensada;
     }
 
     public static function validaDispensaPorMatricula(
