@@ -1113,11 +1113,19 @@ class App_Model_IedFinder extends CoreExt_Entity
             return;
         }
 
-        return Cache::store('array')->remember("disciplinaDispensadaDaTurma:{$codTurma}", now()->addMinute(), function () use ($codTurma) {  
-            $schoolClass = LegacySchoolClass::query()->find($codTurma);
-            $disciplinaDispensada = $schoolClass->ref_cod_disciplina_dispensada;
-            return $disciplinaDispensada;
+        $discipline = Cache::store('array')->remember("disciplinaDispensadaDaTurma:{$codTurma}", now()->addMinute(), function () use ($codTurma) { 
+            $discipline = LegacySchoolClass::query()->find($codTurma)->ref_cod_disciplina_dispensada;
+        
+            // Caso não exista a disciplina, armazena a string 'null'
+            return $discipline ?: 'null';
         });
+        
+        // Se o retorno é uma string 'null', sabemos o que o valor real é null
+        if ($discipline === 'null') {
+            return null;
+        }
+        
+        return $discipline;
     }
 
     public static function validaDispensaPorMatricula(
