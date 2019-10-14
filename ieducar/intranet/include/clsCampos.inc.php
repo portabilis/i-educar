@@ -197,37 +197,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         $this->campos['linha_' . $nome] = ['addForm', $nome, $arr_campos];
     }
 
-    public function campoAdicionar(
-        $nome,
-        $campo,
-        $valor,
-        $default,
-        $acao = '',
-        $duplo = false,
-        $descricao = '',
-        $link,
-        $url_janela,
-        $largura_j,
-        $altura_j,
-        $obrigatorio = false,
-        $redirecionamento = ''
-    ) {
-        $this->campos[$nome] = [
-            'adicionar',
-            $campo,
-            $obrigatorio ? '/[^ ]/' : '',
-            $valor,
-            $default,
-            $acao,
-            $descricao,
-            $link,
-            $url_janela,
-            $largura_j,
-            $altura_j,
-            $redirecionamento
-        ];
-    }
-
     public function campoArquivo(
         $nome,
         $campo,
@@ -1566,40 +1535,6 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $componente[3] = (strlen($componente[3]) < 6  || $componente[5] != 5) ? $componente[3] : substr($componente[3], 0, 5);
                         $segundos = ($componente[5] != 5) ? 'true' : 'false';
                         $retorno .= "<input onKeyPress=\"formataHora(this, event, {$segundos});\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[8]} {$componente[9]}>{$componente[7]}";
-                        break;
-
-                    case 'adicionar':
-                        $retorno .= "<select onchange=\"{$componente[5]}\"  class='{$class}' name='{$nome}' id='{$nome}' >";
-
-                        reset($componente[3]);
-
-                        while (list($chave, $texto) = each($componente[3])) {
-                            $retorno .= '<option value="' . urlencode($chave) . '"';
-
-                            if ($chave == $componente[4]) {
-                                $retorno .= ' selected';
-                            }
-
-                            $retorno .= ">$texto</option>";
-                        }
-
-                        $retorno .= '</select>';
-                        $retorno .= "<a href='#' class='imagem' onClick=\"receptor=document.formcadastro.{$nome};newwin=window.open('" . $componente[8] . "', '{$nome}_link', 'width=" . $componente[9] . ', height=' . $componente[10] . ', scollbars=false\');"> <img src=\'/intranet/imagens/nvp_bot_novo.png\' border=0 alt=\'' . $componente[7] . '\'></a>';
-                        $retorno .= "
-            <script type=\"text/javascript\">
-            var receptor;
-              document.formcadastro.{$nome}.muda = function(valor, texto)
-              {
-                novoIndice = this.options.length;
-                this.options[novoIndice] = new Option(texto);
-                opcao = this.options[novoIndice];
-                opcao.value    = valor;
-                opcao.selected = true;
-                {$componente[11]}
-              }
-            </script>
-            ";
-
                         break;
 
                     case 'cpf':
