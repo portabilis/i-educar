@@ -115,28 +115,6 @@ function excluirSumit(id, nome_campo)
 
 
 // Scripts originários de clsCampos.inc.php
-
-/**
- * @TODO Remover função após remover trechos de código para campos 'latitude'
- *   e 'longitude' de clsCampos.inc.php.
- *   Ver: $ egrep -rn 'colocamenos[ ]{0,3}\(' intranet/
- */
-function colocaMenos(campo)
-{
-  if (campo.value.indexOf('0') != -1 || campo.value.indexOf('1') != -1 ||
-    campo.value.indexOf('2') != -1 || campo.value.indexOf('3') != -1 ||
-    campo.value.indexOf('4') != -1 || campo.value.indexOf('5') != -1 ||
-    campo.value.indexOf('6') != -1 || campo.value.indexOf('7') != -1 ||
-    campo.value.indexOf('8') != -1 || campo.value.indexOf('9') != -1
-  ) {
-    if (campo.value.indexOf('-') == -1) {
-      campo.value = '-' + campo.value;
-    }
-  }
-
-  return false;
-}
-
 function formataData(campo, e)
 {
   if (typeof window.event != 'undefined') {

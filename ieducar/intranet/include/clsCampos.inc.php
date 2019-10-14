@@ -1381,14 +1381,6 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $foiDuplo = true;
                         break;
 
-                    case 'latitude':
-                        $retorno .= "<input onBlur=\"colocaMenos(this);\" class='{$class}' type='text' name=\"{$nome}_graus\" value=\"{$componente[3]}\" size=\"3\" maxlength=\"3\"><sup style='vertical-align:top;'>o</sup><input class='{$class}' type='text' name=\"{$nome}_min\" value=\"{$componente[7]}\" size=\"2\" maxlength=\"2\"><sup style='vertical-align:top;'>'</sup><input class='{$class}' type='text' name=\"{$nome}_seg\" value=\"{$componente[8]}\" size=\"2\" maxlength=\"2\"><sup style='vertical-align:top;'>\"</sup>";
-                        break;
-
-                    case 'longitude':
-                        $retorno .= "<input onBlur=\"colocaMenos(this);\" class='{$class}' type='text' name=\"{$nome}_graus\" value=\"{$componente[3]}\" size=\"3\" maxlength=\"3\"><sup style='vertical-align:top;'>o</sup><input class='{$class}' type='text' name=\"{$nome}_min\" value=\"{$componente[7]}\" size=\"2\" maxlength=\"2\"><sup style='vertical-align:top;'>'</sup><input class='{$class}' type='text' name=\"{$nome}_seg\" value=\"{$componente[8]}\" size=\"2\" maxlength=\"2\"><sup style='vertical-align:top;'>\"</sup>";
-                        break;
-
                     case 'texto':
                         if ($componente[10]) {
                             $disabled = 'disabled';
