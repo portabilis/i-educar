@@ -242,7 +242,6 @@ class clsCadastro extends clsCampos
         $retorno .= "\n<!-- cadastro begin -->\n";
         $retorno .= "<form name='$this->__nome' id='$this->__nome' onsubmit='return $this->onSubmit' action='$this->action'  method='post' target='$this->target' $this->form_enctype>\n";
         $retorno .= "<input name='tipoacao' id='tipoacao' type='hidden' value='$this->tipoacao'>\n";
-        $retorno .= "<input name='__sequencia_fluxo' id='__sequencia_fluxo' type='hidden' value='$this->__sequencia_fluxo'>";
 
         if ($this->campos) {
             reset($this->campos);
