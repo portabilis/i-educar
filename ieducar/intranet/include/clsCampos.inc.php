@@ -552,48 +552,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         ];
     }
 
-    public function campoProcurarAdicionar(
-        $nome,
-        $campo,
-        $valor,
-        $tamanhovisivel,
-        $tamanhomaximo,
-        $caminho,
-        $nome_caminho,
-        $caminho_dest,
-        $nome_caminho_dest,
-        $obrigatorio = false,
-        $duplo = false,
-        $descricao = ''
-    ) {
-        $this->campos[$nome] = [
-            'adicionarProcurar',
-            $campo,
-            $obrigatorio ? '/[^ ]/' : '',
-            $valor,
-            $tamanhovisivel,
-            $tamanhomaximo,
-            $descricao,
-            $caminho,
-            $nome_caminho,
-            $caminho_dest,
-            $nome_caminho_dest
-        ];
-    }
-
-    public function campoFone($nome, $campo, $valor, $obrigatorio = false)
-    {
-        $this->campos[$nome] = [
-            'fone',
-            $campo,
-            $obrigatorio ? "/^\([0-9]{2}\)[0-9]{3}[0-9]?\-[0-9]{4}$/" : "*(/^\([0-9]{2}\)[0-9]{3}[0-9]?\-[0-9]{4}$/)",
-            $valor,
-            20,
-            13,
-            '(nn)nnnn-nnnn ou (nn)nnn-nnnn'
-        ];
-    }
-
     public function campoHora($nome, $campo, $valor, $obrigatorio = false, $descricao = '', $acao = '', $limitaHora = true, $desabilitado = false, $maxLength = 5)
     {
         $arr_componente = [
@@ -1876,10 +1834,6 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $retorno .= "<input onKeyPress=\"formataCEP(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$campo_valor}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" $componente[8]>$componente[7]\n";
                         break;
 
-                    case 'fone':
-                        $retorno .= "<input class='{$class}' type='text' name=\"ddd_{$nome}\" id=\"ddd_{$nome}\" value=\"{$componente[3]}\" size=\"3\" maxlength=\"2\"> <input onKeyPress=\"formataFone(this,event);\" class='{$class}' type='text' name=\"fone_{$nome}\" id=\"fone_{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\">\n";
-                        break;
-
                     case 'data':
                         $retorno .= "<input onKeyPress=\"formataData(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[8]}> $componente[7]\n";
                         break;
@@ -2106,10 +2060,6 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                     case 'textoExterno':
                         $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" disabled=true> <a href='#' onclick=\"javascript:$componente[7]\">$componente[8]</a>";
-                        break;
-
-                    case 'adicionarProcurar':
-                        $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" disabled=true> <a href='#' onclick=\"javascript:$componente[7]\">$componente[8]</a>&nbsp;&nbsp;<a  href='#' onclick=\"javascript:$componente[9]\">$componente[10]</a>";
                         break;
 
                     case 'senha':
