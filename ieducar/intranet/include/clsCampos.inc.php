@@ -912,15 +912,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         ];
     }
 
-    public function campoAvulso($nome, $campo, $conteudo)
-    {
-        $this->campos[$nome] = [
-            'avulso',
-            $campo,
-            $conteudo
-        ];
-    }
-
     public function campoQuebra()
     {
         $this->campos['espaco' . $this->num_espaco] = ['espaco', '', '', '', '', '', '', ''];
@@ -2148,10 +2139,6 @@ class clsCampos extends Core_Controller_Page_Abstract
                         }
 
                         $retorno .= '</span>';
-                        break;
-
-                    case 'avulso':
-                        $retorno .= '<div>' . $componente[2] . '</div>';
                         break;
 
                     case 'checkMultiplo':
