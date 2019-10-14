@@ -821,26 +821,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         ];
     }
 
-    public function campoSuggest(
-        $nome,
-        $campo,
-        $valor = '',
-        $obrigatorio = false,
-        $expressao = false,
-        $duplo = false,
-        $descricao = '',
-        $arquivo = 'xml_pessoas.php'
-    ) {
-        $this->campos[$nome] = [
-            'suggest',
-            $campo,
-            $expressao ? $expressao : ($obrigatorio ? '/[^ ]/' : ''),
-            $valor,
-            $descricao,
-            null
-        ];
-    }
-
     public function campoTextoPesquisa(
         $nome,
         $campo,
@@ -1717,16 +1697,6 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                     case 'email':
                         $retorno .= "<input class='{$class}' style='text-align: left;' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" onKeyUp=\"{$componente[8]}\"> $componente[7]";
-                        break;
-
-                    case 'suggest':
-                        $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" onfocus=\"DOM_focusIn();\" onblur=\"DOM_focusOut();\" class=\"DOM_suggest\" style=\"width:250px;\">";
-                        $retorno .= '<script type="text/javascript">';
-                        $retorno .= 'DOM_atual = new Object();';
-                        $retorno .= "DOM_atual.objectId = \"{$nome}\";";
-                        $retorno .= "DOM_atual.arquivo = \"{$componente[7]}\";";
-                        $retorno .= "document.getElementById(\"{$nome}\").onkeyup=function(e){ DOM_atual.objectId=\"{$nome}\"; DOM_navegaUpDown(e); };";
-                        $retorno .= '</script>';
                         break;
 
                     case 'textoPesquisa':
