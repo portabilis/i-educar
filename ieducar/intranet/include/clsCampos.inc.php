@@ -149,25 +149,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         $this->__id_tabela++;
     }
 
-    public function blocoAdicionadorBegin($precadastrados_inline = true)
-    {
-        $this->campos['bloco_beg_' . $this->__blocos] = ['bloco_adicionador', 'begin'];
-
-        $this->campos['teste1'] = ['rotulo', 'teste1', 'teste1', 'teste1'];
-        $this->campos['teste2'] = ['rotulo', 'teste2', 'teste2', 'teste2'];
-        $this->campos['teste3'] = ['rotulo', 'teste3', 'teste3', 'teste3'];
-        $this->campos['teste4'] = ['rotulo', 'teste4', 'teste4', 'teste4'];
-        $this->campos['teste5'] = ['rotulo', 'teste5', 'teste5', 'teste5'];
-
-        $this->__adicionador_inline = $precadastrados_inline;
-    }
-
-    public function blocoAdicionadorEnd()
-    {
-        $this->campos['bloco_end_' . $this->__blocos] = ['bloco_adicionador', 'end'];
-        $this->__blocos++;
-    }
-
     public function campoBoolLista(
         $nome,
         $campo,
@@ -1393,43 +1374,6 @@ class clsCampos extends Core_Controller_Page_Abstract
             } elseif ($componente[0] == 'espaco') {
                 $retorno .= '<tr><td colspan=\'2\'><hr></td></tr>';
                 continue;
-            } elseif ($componente[0] == 'bloco_adicionador') {
-                if ($componente[1] == 'begin') {
-                    // Flag de que estamos no meio de um bloco de adiçã
-                    $this->__adicionando = true;
-
-                    // Se for a primeira vez que cai aqui define o índice como zero,
-                    // nas vezes subsequentes (chamadas por recursividade) o índice será
-                    // passado na chamada da função
-                    if (is_null($adicionador_indice)) {
-                        $adicionador_indice = 0;
-                    }
-
-                    // Cria um array para armazenar os campos a serem repetidos
-                    $adicionador_campos_repeticao = [];
-
-                    // Adiciona o campo begin no ínicio do bloco de repetição
-                    $adicionador_campos_repeticao[$nome] = $componente;
-                } else {
-                    // Desmarca a flag de bloco de adiçã
-                    $this->__adicionando = false;
-
-                    // Adiciona o campo end no fim do bloco de repetição
-                    $adicionador_campos_repeticao[$nome] = $componente;
-
-                    // Ainda não repetiu o bloco por tempo suficiente
-                    $adicionador_indice++;
-                    if ($adicionador_indice < $adicionador_total_valores) {
-                        $retorno .= $this->MakeCampos(
-                            $adicionador_campos_repeticao,
-                            $adicionador_indice,
-                            false,
-                            true,
-                            true,
-                            !$md
-                        );
-                    }
-                }
             } elseif ($componente[0] != 'oculto') {
                 $tipo = $componente[0];
 
