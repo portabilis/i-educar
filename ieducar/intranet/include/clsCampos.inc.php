@@ -498,35 +498,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         }
     }
 
-    public function campoDetalhe(
-        $nome,
-        $campo,
-        $valor,
-        $default,
-        $acao = '',
-        $duplo = false,
-        $descricao = '',
-        $link,
-        $url_janela,
-        $largura_j,
-        $altura_j,
-        $obrigatorio = false
-    ) {
-        $this->campos[$nome] = [
-            'detalhe',
-            $campo,
-            $obrigatorio ? '/[^ ]/' : '',
-            $valor,
-            $default,
-            $acao,
-            $descricao,
-            $link,
-            $url_janela,
-            $largura_j,
-            $altura_j
-        ];
-    }
-
     public function campoHora($nome, $campo, $valor, $obrigatorio = false, $descricao = '', $acao = '', $limitaHora = true, $desabilitado = false, $maxLength = 5)
     {
         $arr_componente = [
@@ -1870,35 +1841,6 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                         break;
 
-                    case 'detalhe':
-                        $retorno .= "<select onchange=\"if(this.value > 0) CarregaDetalhe( '{$nome}_div','" . $componente[8] . "'+this.value); $componente[5]\"  class='{$class}' name='{$nome}' id='{$nome}' >";
-                        reset($componente[3]);
-
-                        while (list($chave, $texto) = each($componente[3])) {
-                            $retorno .= '<option value="' . urlencode($chave) . '"';
-
-                            if ($chave == $componente[4]) {
-                                $retorno .= ' selected';
-                            }
-
-                            $retorno .= ">$texto</option>";
-                        }
-
-                        $retorno .= '</select>';
-
-                        if ($componente[4]) {
-                            $carrega = "CarregaDetalhe('{$nome}_div','" . $componente[8] . $componente[4] . '\');';
-                        }
-
-                        $onClick = "AbreFecha('{$nome}_div', '{$nome}_img');";
-                        $retorno .= "<a href='#' class='imagem' onClick=\"$carrega $onClick\"> <img src='imagens/log-info.gif' border=0 alt='" . $componente[7] . "' id='{$nome}_img'></a>";
-                        $retorno .= "<div style='overflow: hidden;height: 1px;position: relative;width:100%;' name='{$nome}_div' id='{$nome}_div'></div>";
-
-                        $classe = ($classe == 'formmdtd') ?
-                            'formlttd' : 'formmdtd';
-
-                        break;
-
                     case 'cpf':
                         $retorno .= "<input onKeyPress=\"formataCPF(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\">$componente[7]";
                         break;
@@ -2460,50 +2402,6 @@ class clsCampos extends Core_Controller_Page_Abstract
     public function MakeFormat()
     {
         $ret = "
-    function CarregaDetalhe(id_div, endereco)
-    {
-      var elemento_div = document.getElementById(id_div);
-      if (endereco != '') {
-        xmlhttp.open(\"GET\", endereco, true);
-        xmlhttp.onreadystatechange = function()
-        {
-          if (xmlhttp.readyState==4) {
-            elemento_div.innerHTML = xmlhttp.responseText;
-          }
-        }
-
-        xmlhttp.send(null);
-      }
-    }
-
-    function AbreFecha(id_div, id_img)
-    {
-      var elemento_div = document.getElementById(id_div);
-      var elemento_img = document.getElementById(id_img);
-
-      if (!aberto) {
-        elemento_div.style.overflow = 'visible';
-        if (goodIE) {
-          elemento_div.style.height = '0px';
-          elemento_img.src =  'excluir_1.gif';
-          elemento_img.alt =  'Fechar';
-        }
-        else {
-          elemento_div.style.height = '100%';
-          elemento_img.src =  'excluir_1.gif';
-          elemento_img.alt =  'Fechar';
-        }
-      }
-      else {
-        elemento_img.src =  'log-info.gif';
-        elemento_div.style.overflow = 'hidden';
-        elemento_div.style.height = '1px';
-        elemento_img.alt =  'Visualizar detalhes';
-      }
-
-      aberto = !aberto;
-    }
-
     function AdicionaItem(chave, item, nome_pai, submete)
     {
       var x = document.getElementById(nome_pai);
