@@ -286,25 +286,7 @@ class clsCadastro extends clsCampos
     var aberto = false;';
 
         $retorno .= $this->MakeFormat();
-        $retorno .= "
-    function setColor(color)
-    { \n";
-        reset($this->campos);
-        foreach ($this->campos as $nome => $componente) {
-            $validador = $componente[4] ?? null;
 
-            if (!empty($validador)) {
-                if ($validador == 'cor') {
-                    $retorno .= "
-            if (color) {
-              document.$this->__nome.$nome.value = color;
-            }
-            document.getElementById('" . $nome . "1').style.background = '#' + document.$this->__nome.$nome.value; ";
-                }
-            }
-        }
-
-        $retorno .= "}\n";
         $retorno .= 'function acao(){ ';
 
         unset($this->campos['desabilitado_tab']);
