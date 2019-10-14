@@ -12,8 +12,6 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public $__nome = 'formcadastro';
 
-    public $__adicionando = false;
-
     public $__adicionando_tabela = false;
 
     public $__id_tabela = 1;
@@ -1223,15 +1221,8 @@ class clsCampos extends Core_Controller_Page_Abstract
                 continue;
             }
 
-            if ($this->__adicionando && false) {
-                // Adiciona o campo no bloco de repetição
-                $adicionador_campos_repeticao[$nome] = $componente;
-                $adicionador_complemento_campo = "[{$adicionador_indice}]";
-                $campo_valor = $componente[3][$adicionador_indice];
-            } else {
-                $adicionador_complemento_campo = '';
-                $campo_valor = $componente[3] ?? null;
-            }
+            $adicionador_complemento_campo = '';
+            $campo_valor = $componente[3] ?? null;
 
             $nome .= $adicionador_complemento_campo;
             $expressao_regular = $componente[2];
