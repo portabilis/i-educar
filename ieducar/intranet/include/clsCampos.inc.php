@@ -32,8 +32,6 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public $__valores_listas_tabela = [[]];
 
-    public $__nm_tab;
-
     public $__sequencia_fluxo = false;
 
     public $ref_cod_escola;

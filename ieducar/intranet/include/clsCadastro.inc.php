@@ -455,33 +455,6 @@ class clsCadastro extends clsCampos
                         $retornoNaFalha .= "  document.getElementById(\"{$nome}\").className = \"formdestaque\";\n";
                         $retornoNaFalha .= "  alert( 'Preencha o campo \'" . extendChars($componente[1], true) . "\' corretamente!' ); \n";
 
-                        if ($this->__nm_tab) {
-                            $retornoNaFalha .= "
-                  var item = document.getElementById('$nome');
-                  var prox = 1;
-                  do{
-                    item = item.parentNode;
-                    if(item == null)
-                    {
-                      prox = 0;
-                    }
-                    else
-                    {
-                      if(/content[0-9]+/.exec(item.id) != null)
-                      {
-                        prox = 2;
-                      }
-                    }
-                  }while(prox == 1);
-                  if(prox == 2)
-                  {
-                    num_content = +/[0-9]+/.exec(item.id);
-                    num_aba = 2 * num_content - 2;
-                    LTb0('0', num_aba);
-                  }
-              ";
-                        }
-
                         $retornoNaFalha .= "  document.getElementById(\"{$nome}\").focus(); \n";
                         $retornoNaFalha .= "  return false;\n";
                         if ($validador == '/[^ ]/') {
