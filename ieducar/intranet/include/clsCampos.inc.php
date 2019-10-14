@@ -192,11 +192,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         $this->campoLista($nome, $campo, $valor, $default);
     }
 
-    public function campoAddForm($nome, $arr_campos = [])
-    {
-        $this->campos['linha_' . $nome] = ['addForm', $nome, $arr_campos];
-    }
-
     public function campoArquivo(
         $nome,
         $campo,
@@ -1739,52 +1734,6 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $retorno .= "</select> {$componente[7]}";
                         break;
 
-                    case 'AddForm':
-                        $arr_campos["linha_{$nome}"] = ['addForm', $nome, $arr_campos];
-
-                        $span = '';
-                        $input = '';
-                        $cont = 0;
-
-                        if ($arr_campos) {
-                            foreach ($arr_campos as $campo => $atributo) {
-                                $span .= "var span$cont = document.createElement( \"span{$cont}\" );";
-                                $cont++;
-                            }
-                        }
-
-                        $retorno = '
-              function adiciona (obj)
-              {
-                tabela = document.getElementById( \'table_fotos\' );
-                linha = tabela.insertRow( tabela.rows.length );
-
-                var td = document.createElement( "td" );
-                var input = document.createElement( "input" );
-                var botao = document.createElement( "input" );
-
-                botao.setAttribute( "type", "button");
-                botao.setAttribute( "id", "foto_[]" );
-                botao.setAttribute( "name", "foto_[]" );
-                botao.setAttribute( "onclick", "adiciona(this);" );
-                botao.setAttribute( "value", "Adicionar[+]"  );
-
-                input.setAttribute( "type", "text" );
-                input.setAttribute( "id", "foto[]" );
-                input.setAttribute( "name", "foto[]"  );
-                input.setAttribute( "maxlength", "50"  );
-                input.setAttribute( "size", "50"  );
-
-                obj.setAttribute( "onclick", "this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode);"  );
-                obj.setAttribute( "value", "Remover[-]"  );
-
-                linha.appendChild(td);
-                td.appendChild(input);
-                td.appendChild(botao);
-              }
-            ';
-
-                        // no break
                     case 'addCampos':
                         $nome = $componente[1];
                         $nome = str_replace(' ', '_', $nome);
