@@ -14,14 +14,6 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public $__adicionando = false;
 
-    public $__adicionador_inline = false;
-
-    public $__blocos = 0;
-
-    public $__bloco_bt_add = false;
-
-    public $campoFoco = false;
-
     public $__adicionando_tabela = false;
 
     public $__id_tabela = 1;
@@ -40,29 +32,9 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public $__valores_listas_tabela = [[]];
 
-    public $__adicionando_tab = false;
-
-    public $__id_tab;
-
     public $__nm_tab;
 
-    public $__tabs = [];
-
-    public $__campos_tab = [];
-
-    public $__id_tabbed = 1;
-
-    public $__cabecalho_tab = [];
-
-    public $__desabilitado_tab = [];
-
-    public $__segue_fluxo = false;
-
     public $__sequencia_fluxo = false;
-
-    public $__sequencia_default = true;
-
-    public $__acao_enviar_abas = 'acao()';
 
     public $ref_cod_escola;
 
