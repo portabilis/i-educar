@@ -934,11 +934,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         $this->num_espaco++;
     }
 
-    public function setFocus($campo)
-    {
-        $this->campoFoco = $campo;
-    }
-
     public function MakeCampos(
         $array_campos = null,
         $adicionador_indice = null,
