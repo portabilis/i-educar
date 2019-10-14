@@ -912,17 +912,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         ];
     }
 
-    public function campoTheEditor($nome, $campo, $valor, $largura, $altura)
-    {
-        $this->campos[$nome] = [
-            'theEditor',
-            $campo,
-            $valor,
-            $largura,
-            $altura
-        ];
-    }
-
     public function campoAvulso($nome, $campo, $conteudo)
     {
         $this->campos[$nome] = [
@@ -2159,15 +2148,6 @@ class clsCampos extends Core_Controller_Page_Abstract
                         }
 
                         $retorno .= '</span>';
-                        break;
-
-                    case 'theEditor':
-                        $theEditorCampo = $nome;
-                        $theEditorForm = $this->__nome;
-                        $theEditorValue = $componente[2];
-                        $theEditorHeight = $componente[3];
-                        $theEditorWidth = $componente[4];
-                        require_once 'include/clsEditor.inc.php';
                         break;
 
                     case 'avulso':
