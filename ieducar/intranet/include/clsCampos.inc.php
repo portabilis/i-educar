@@ -68,47 +68,6 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public $ref_cod_instituicao;
 
-    public function campoTabInicio($nome, $segue_fluxo = false, $array_sequencia = null)
-    {
-        $this->__id_tab = 1;
-        $this->__nm_tab = $nome;
-        $this->__segue_fluxo = $segue_fluxo;
-
-        if (is_array($array_sequencia)) {
-            $this->__sequencia_fluxo = serialize($array_sequencia);
-            $this->__sequencia_default = false;
-        }
-
-        $this->campos['tabbed_add_' . $this->__id_tabbed] = $this->__id_tabbed;
-    }
-
-    public function campoTabFim()
-    {
-        $this->campos['fim_tab'] = 1;
-        $this->campos['cabecalho_tab'] = $this->__cabecalho_tab;
-        $this->campos['desabilitado_tab'] = $this->__desabilitado_tab;
-        $this->__cabecalho_tab = [];
-        $this->__id_tabbed++;
-    }
-
-    public function campoAdicionaTab($nome_tab, $desabilitado_tab = false)
-    {
-        if ($this->__sequencia_default) {
-            $this->__sequencia_fluxo = unserialize($this->__sequencia_fluxo);
-            $this->__sequencia_fluxo[] = $this->__id_tab;
-            $this->__sequencia_fluxo = serialize($this->__sequencia_fluxo);
-        }
-
-        $this->campos['tab_name_' . $this->__id_tab] = [
-            'nome' => $nome_tab,
-            'id' => $this->__id_tab
-        ];
-
-        $this->__cabecalho_tab[] = $nome_tab;
-        $this->__desabilitado_tab[] = $desabilitado_tab == true ? 1 : 0;
-        $this->__id_tab++;
-    }
-
     public function campoTabelaInicio(
         $nome,
         $titulo = '',
@@ -1101,58 +1060,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         foreach ($arr_campos as $nome => $componente) {
             $nome_add = $nome;
             $campo_tabela = false;
-
-            // Cria nova tab
-            if (preg_match('/^(tabbed_add_[0-9]+)/', $nome) === 1) {
-                $nomes_tab = urlencode(serialize($arr_campos['cabecalho_tab']));
-                unset($arr_campos['cabecalho_tab']);
-
-                // $arr_campos
-                $desabilitado_tab = urlencode(serialize($arr_campos['desabilitado_tab']));
-                unset($arr_campos['desabilitado_tab']);
-
-                $retorno .= '<tr id=\'tr_tab\'>
-                <td valign=\'top\' colspan=\'2\' width=\'100%\' align=\'center\'>';
-
-                $rand = rand();
-
-                $retorno .= "<!-- INICIO TABELA 1 --><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"tabela_principal\" align=center width='100%'>
-                <tr>
-                    <td valign=top height=30>
-                    <link href=\"styles/styles_tab.css?$rand\" rel=\"stylesheet\" type=\"text/css\" />
-                      <script type=\"text/javascript\" language=\"JavaScript1.2\" src=\"scripts/dtabs.js?$rand\"></script>
-                      <script type=\"text/javascript\" src=\"scripts/tabs_cab.php?nomes_tab={$nomes_tab}&desabilitado_tab=$desabilitado_tab\"></script>
-                    </td>
-                </tr>";
-                $retorno .= '<tr>
-                  <td valign=top height=auto class="pageTabb">&nbsp;
-                  <!-- INICIO TABELA 2 -->
-                     <table cellpadding="0" cellspacing="0" border="0" height=auto>
-                       <tr>
-                           <td valign=top width=1><img src="imagens/img/blank.gif" width=1 height=1></td>
-                           <td valign=top width=100% class="tabPage" height="auto">';
-                continue;
-            }
-
-            if (preg_match('/^(tab_name_[0-9]+)/', $nome) === 1) {
-                $retorno .= "<div id=\"content{$componente['id']}\" style=\"visibility: hidden;\" class=\"tabPage\">";
-                $retorno .= '<!-- INICIO TABELA 3 --><table cellpadding="2" cellspacing="0" border="0" width=100%  align=center>';
-
-                continue;
-            }
-
-            if ($nome === 'fim_tab') {
-                $retorno .= '        </td>
-                           <td valign=top width=1><img src=\'imagens/img/blank.gif\' width=1 height=1></td>
-                       </tr>
-                     </table><!-- FIM TABELA 2 -->
-                  </td>
-              </tr>
-            </table><!-- FIM TABELA 1 -->';
-                $retorno .= '<br></td></tr>';
-
-                continue;
-            }
 
             if (preg_match('/^(tab_add_[0-9]+)/', $nome) === 1) {
                 $campo_tabela = true;
