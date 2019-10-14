@@ -527,31 +527,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         ];
     }
 
-    public function campoExterno(
-        $nome,
-        $campo,
-        $valor,
-        $tamanhovisivel,
-        $tamanhomaximo,
-        $caminho,
-        $nome_caminho,
-        $obrigatorio = false,
-        $duplo = false,
-        $descricao = ''
-    ) {
-        $this->campos[$nome] = [
-            'textoExterno',
-            $campo,
-            $obrigatorio ? '/[^ ]/' : '',
-            $valor,
-            $tamanhovisivel,
-            $tamanhomaximo,
-            $descricao,
-            $caminho,
-            $nome_caminho
-        ];
-    }
-
     public function campoHora($nome, $campo, $valor, $obrigatorio = false, $descricao = '', $acao = '', $limitaHora = true, $desabilitado = false, $maxLength = 5)
     {
         $arr_componente = [
@@ -2056,10 +2031,6 @@ class clsCampos extends Core_Controller_Page_Abstract
                     case 'textoDuploInv':
                         $retorno .= "<input class='{$class}' type='text' name=\"{$componente[10]}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" disabled=true>";
                         $foiDuplo = true;
-                        break;
-
-                    case 'textoExterno':
-                        $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" disabled=true> <a href='#' onclick=\"javascript:$componente[7]\">$componente[8]</a>";
                         break;
 
                     case 'senha':
