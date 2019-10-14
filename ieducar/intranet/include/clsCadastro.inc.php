@@ -464,11 +464,6 @@ class clsCadastro extends clsCampos
                         $retorno .= " alert( 'Preencha o campo \'$componente[1]\' corretamente!' ); \n  return false; }";
                         $retorno .= "else { if(! DvCnpjOk( document.getElementById('$nome')) ) return false; }  }";
                         $retorno .= "else{ if(! DvCpfOk( document.getElementById('$nome')) ) return false; }";
-                    } elseif ($nomeCampo == 'listaativarpeso') {
-                        $retorno .= "if(!($validador.test( document.{$this->__nome}.{$nome}_val.value ))) { \n";
-                        $retorno .= " alert( 'Preencha o campo \'$componente[1]\' corretamente!' ); \n";
-                        $retorno .= " document.$this->__nome.{$nome}_val.focus(); \n";
-                        $retorno .= ' return false; } ';
                     } else {
                         //substituito referencia a elementos por padrï¿½o W3C document.getElementById()
                         //quando se referenciava um nome de elemento como um array ex: cadastro[aluno]

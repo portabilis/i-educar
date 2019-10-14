@@ -642,27 +642,6 @@ function pesquisa_valores_popless(caminho, campo)
   }
 }
 
-/**
- * @TODO Remover função após remover trechos de código para campos
- *   'listaativarpeso<select>' de clsCampos.inc.php. Não existem chamadas para
- *   campoFoneListaAtivarPeso<Select>().
- *   Ver: $ egrep -rn 'formataFone[ ]{0,3}\(' intranet/
- */
-function ativaCampo(campo)
-{
-  campo2 = document.getElementById(campo + '_lst');
-  campo3 = document.getElementById(campo + '_val');
-
-  if (campo2.disabled) {
-    campo2.disabled = false;
-    campo3.disabled = false;
-  }
-  else {
-    campo2.disabled = true;
-    campo3.disabled = true;
-  }
-}
-
 function MenuCarregaDados(key, ordem, menu_pai, menu, submenu, titulo, ico_menu,
   alvo, suprime_menu)
 {
