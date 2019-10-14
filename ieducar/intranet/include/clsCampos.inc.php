@@ -384,19 +384,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         ];
     }
 
-    public function campoCor($nome, $campo, $valor, $obrigatorio = false, $descricao = '')
-    {
-        $this->campos[$nome] = [
-            'cor',
-            $campo,
-            $obrigatorio ? '/[^ ]/' : '',
-            $valor,
-            'cor',
-            'cor',
-            $descricao
-        ];
-    }
-
     public function campoCpf($nome, $campo, $valor, $obrigatorio = false, $descricao = false, $disabled = false, $onChange = '')
     {
         $arr_componente = [
@@ -1792,13 +1779,6 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $componente[3] = (strlen($componente[3]) < 6  || $componente[5] != 5) ? $componente[3] : substr($componente[3], 0, 5);
                         $segundos = ($componente[5] != 5) ? 'true' : 'false';
                         $retorno .= "<input onKeyPress=\"formataHora(this, event, {$segundos});\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[8]} {$componente[9]}>{$componente[7]}";
-                        break;
-
-                    case 'cor':
-                        $cor = empty($componente[3]) ? 'ffffff' : $componente[3];
-                        $retorno .= "<input type='text' name='{$nome}' value='$componente[3]' size='6' maxlength='6' onBlur='setColor();' class='{$class}' /> *
-          <a href='#' class='link' onClick=\"newwin=window.open('./cores.html', 'cores', 'width=320, height=260, scollbars=false');\">Alterar cor</a>
-          <span id=\"{$nome}1\" style=\" background:#$cor;\"><a href=\"#\" onClick=\"newwin=window.open('./cores.html', 'cores', 'width=320, height=260, scollbars=false');\"><img src=\"./imagens/shim.gif\" border=\"1\" width=\"40\" style=\"border-color:#000000;\" height=\"18\"></a></span>";
                         break;
 
                     case 'mapa':
