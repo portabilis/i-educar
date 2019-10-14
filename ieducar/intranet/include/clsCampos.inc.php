@@ -1781,12 +1781,6 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $retorno .= "<input onKeyPress=\"formataHora(this, event, {$segundos});\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[8]} {$componente[9]}>{$componente[7]}";
                         break;
 
-                    case 'mapa':
-                        $cor = empty($componente[3]) ? 'ffffff' : $componente[3];
-                        $retorno .= "<input disabled type='text' name='{$nome}' value='$componente[3]' size='6' maxlength='6' onBlur='setColor();' class='{$class}' /> *
-          <a href='#' class='link' onClick=\"newwin=window.open('./escolhe_coordenada.php', 'escolhe_coordenada', 'width=400, height=430, scollbars=false');\">Seleciona Coordenada</a>";
-                        break;
-
                     case 'adicionar':
                         $retorno .= "<select onchange=\"{$componente[5]}\"  class='{$class}' name='{$nome}' id='{$nome}' >";
 
