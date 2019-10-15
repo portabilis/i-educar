@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyEvaluationRule;
+use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyRemedialRule;
 use App\Models\LegacySchoolClass;
@@ -800,6 +801,14 @@ class DiarioApiController extends ApiCoreController
 
     // get
 
+    protected function getRelocationDate()
+    {
+        /** @var LegacyInstitution $institution */
+        $institution = app(LegacyInstitution::class);
+
+        return $institution->relocation_date;
+    }
+
     protected function getMatriculas()
     {
         $regras = $matriculas = [];
@@ -814,13 +823,24 @@ class DiarioApiController extends ApiCoreController
                             $query->where('ref_cod_matricula', $this->getRequest()->matricula_id);
                         });
                         $query->where(function ($query) {
+                            $relocationDate = $this->getRelocationDate();
+
+                            /** @var Builder $query */
                             $query->where('ativo', 1);
-                            $query->orWhere(function ($query) {
-                                $query->orWhere('transferido', true);
-                                $query->orWhere('remanejado', true);
-                                $query->orWhere('reclassificado', true);
-                                $query->orWhere('abandono', true);
-                                $query->orWhere('falecido', true);
+                            $query->when($relocationDate, function ($query) use ($relocationDate) {
+                                /** @var Builder $query */
+                                $query->orWhere(function ($query) use ($relocationDate) {
+                                    /** @var Builder $query */
+                                    $query->where('data_exclusao', '>', $relocationDate);
+                                    $query->where(function ($query) {
+                                        /** @var Builder $query */
+                                        $query->orWhere('transferido', true);
+                                        $query->orWhere('remanejado', true);
+                                        $query->orWhere('reclassificado', true);
+                                        $query->orWhere('abandono', true);
+                                        $query->orWhere('falecido', true);
+                                    });
+                                });
                             });
                         });
                         $query->with([
