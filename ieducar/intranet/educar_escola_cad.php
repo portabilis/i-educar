@@ -115,6 +115,8 @@ class indice extends clsCadastro
     public $situacao_funcionamento;
     public $dependencia_administrativa;
     public $orgao_vinculado_escola;
+    public $latitude;
+    public $longitude;
     public $regulamentacao;
     public $gestor_id;
     public $cargo_gestor;
@@ -865,6 +867,9 @@ class indice extends clsCadastro
                 $this->passou = true;
                 $this->campoOculto("passou", $this->passou);
             }
+
+            $this->inputsHelper()->numeric('latitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->latitude, 'label_hint' => 'São aceito somente números, ponto "." e hífen "-"'));
+            $this->inputsHelper()->numeric('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'São aceito somente números, ponto "." e hífen "-"'));
 
             $this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
             $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra diferenciada", dbBool($this->utiliza_regra_diferenciada), '', false, false, false, 'Se marcado, utilizará regra de avaliação diferenciada informada na Série');
@@ -1696,6 +1701,8 @@ class indice extends clsCadastro
                     $obj->situacao_funcionamento = $this->situacao_funcionamento;
                     $obj->dependencia_administrativa = $this->dependencia_administrativa;
                     $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
+                    $obj->latitude = $this->latitude;
+                    $obj->longitude = $this->longitude;
                     $obj->regulamentacao = $this->regulamentacao;
                     $obj->ref_idpes_gestor = $this->gestor_id;
                     $obj->cargo_gestor = $this->cargo_gestor;
@@ -1860,6 +1867,8 @@ class indice extends clsCadastro
             $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, null, $this->sigla, null, null, 1, null, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
             $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
+            $obj->latitude = $this->latitude;
+            $obj->longitude = $this->longitude;
             $obj->regulamentacao = $this->regulamentacao;
             $obj->situacao_funcionamento = $this->situacao_funcionamento;
             $obj->ref_idpes_gestor = $this->gestor_id;
@@ -2064,6 +2073,8 @@ class indice extends clsCadastro
             $obj = new clsPmieducarEscola($this->cod_escola, null, $this->pessoa_logada, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
             $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
+            $obj->latitude = $this->latitude;
+            $obj->longitude = $this->longitude;
             $obj->regulamentacao = $this->regulamentacao;
             $obj->situacao_funcionamento = $this->situacao_funcionamento;
             $obj->ref_idpes_gestor = $this->gestor_id;
@@ -2157,6 +2168,8 @@ class indice extends clsCadastro
             $obj->situacao_funcionamento = $this->situacao_funcionamento;
             $obj->dependencia_administrativa = $this->dependencia_administrativa;
             $obj->orgao_vinculado_escola = $orgao_vinculado_escola;
+            $obj->latitude = $this->latitude;
+            $obj->longitude = $this->longitude;
             $obj->regulamentacao = $this->regulamentacao;
             $obj->ref_idpes_gestor = $this->gestor_id;
             $obj->cargo_gestor = $this->cargo_gestor;
