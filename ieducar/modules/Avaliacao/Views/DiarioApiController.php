@@ -941,7 +941,7 @@ class DiarioApiController extends ApiCoreController
 
                 $registrationEvaluationRule = $evaluationRule;
 
-                if ($registration->ref_ref_cod_serie !== $schoolClass->grade_id) {
+                if ($registration->ref_ref_cod_serie != $schoolClass->grade_id) {
                     $registrationEvaluationRule = $registration->getEvaluationRule();
                 }
 
