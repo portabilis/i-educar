@@ -639,9 +639,9 @@ class clsPmieducarCandidatoReservaVaga extends Model
         }
 
         $situacao = $situacao ?: 'NULL';
-        $motivo = $motivo ?: null;
+        $motivo = str_replace("\'", "''", addslashes($motivo)) ?: null;
         if ($data) {
-            $data = "data_solicitacao = '{$data}',";
+            $data = "data_solicitacao = to_date('{$data}','DD-MM-YYYY'),";
         }
 
         $historico = $this->montaHistorico();
