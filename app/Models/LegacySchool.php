@@ -92,4 +92,17 @@ class LegacySchool extends Model
     {
         return DB::selectOne('SELECT relatorio.get_nome_escola(:escola) AS nome', ['escola' => $this->id])->nome;
     }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function grades()
+    {
+        return $this->belongsToMany(
+            LegacyLevel::class,
+            'pmieducar.escola_serie',
+            'ref_cod_escola',
+            'ref_cod_serie'
+        )->withPivot('ativo', 'anos_letivos');
+    }
 }
