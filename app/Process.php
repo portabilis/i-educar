@@ -15,6 +15,7 @@ class Process
 
     const CONSULTAS = 9998890;
 
+    const REGISTRATIONS = 578;
     const ENROLLMENT_HISTORY = 1001;
     const ATTENDED_CANDIDATE = 1002;
     const RECLASSIFY_REGISTRATION = 1003;
