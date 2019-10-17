@@ -43,4 +43,17 @@ class LegacyVacancyReservationCandidate extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @inheritDoc
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->data_situacao = now()->format('Y-m-d');
+            $model->hora_solicitacao = now()->format('H:i:s');
+        });
+    }
 }
