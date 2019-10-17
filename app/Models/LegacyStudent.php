@@ -21,7 +21,7 @@ class LegacyStudent extends Model
      * @var array
      */
     protected $fillable = [
-        'ref_idpes', 'data_cadastro',
+        'ref_idpes', 'data_cadastro', 'tipo_responsavel',
     ];
 
     /**
