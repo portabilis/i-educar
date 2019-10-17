@@ -44,6 +44,14 @@ class LegacyStudent extends Model
     /**
      * @return BelongsTo
      */
+    public function individual()
+    {
+        return $this->belongsTo(LegacyIndividual::class, 'ref_idpes');
+    }
+
+    /**
+     * @return BelongsTo
+     */
     public function person()
     {
         return $this->belongsTo(LegacyPerson::class, 'ref_idpes');
