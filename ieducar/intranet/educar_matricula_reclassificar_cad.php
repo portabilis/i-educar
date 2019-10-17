@@ -11,12 +11,14 @@ require_once 'modules/Avaliacao/Model/NotaAlunoDataMapper.php';
 require_once 'modules/Avaliacao/Model/NotaComponenteMediaDataMapper.php';
 require_once 'lib/App/Model/MatriculaSituacao.php';
 
+use App\Process;
+
 class clsIndexBase extends clsBase
 {
     function Formular()
     {
         $this->SetTitulo( "{$this->_instituicao} i-Educar - Reclassificar Matr&iacute;cula" );
-        $this->processoAp = "578";
+        $this->processoAp = Process::RECLASSIFY_REGISTRATION;
     }
 }
 
@@ -60,7 +62,7 @@ class indice extends clsCadastro
         $this->ref_cod_aluno=$_GET["ref_cod_aluno"];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
+        $obj_permissoes->permissao_cadastra( Process::RECLASSIFY_REGISTRATION, $this->pessoa_logada, 7,  "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
 
         $obj_matricula = new clsPmieducarMatricula($this->cod_matricula);
         $det_matricula = $obj_matricula->detalhe();
@@ -138,7 +140,7 @@ class indice extends clsCadastro
     {
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
+        $obj_permissoes->permissao_cadastra(Process::RECLASSIFY_REGISTRATION, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
 
         $this->data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
 
