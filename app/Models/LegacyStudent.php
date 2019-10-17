@@ -30,6 +30,18 @@ class LegacyStudent extends Model
     public $timestamps = false;
 
     /**
+     * @inheritDoc
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->data_cadastro = now();
+        });
+    }
+
+    /**
      * @return BelongsTo
      */
     public function person()

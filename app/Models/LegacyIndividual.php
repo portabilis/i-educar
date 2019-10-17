@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
@@ -35,4 +36,39 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @inheritDoc
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->data_cad = now();
+            $model->origem_gravacao = 'M';
+            $model->operacao = 'I';
+        });
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function person()
+    {
+        return $this->belongsTo(LegacyPerson::class, 'idpes', 'idpes');
+    }
+
+    /**
+     * @param string $cpf
+     *
+     * @return $this
+     */
+    public static function findByCpf($cpf)
+    {
+        $cpf = preg_replace('/[^0-9]/', '', $cpf);
+        $cpf = intval($cpf);
+
+        return static::query()->where('cpf', $cpf)->first();
+    }
 }
