@@ -13,6 +13,8 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use App\Events\RegistrationEvent;
+use App\Listeners\CopyTransferDataListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -34,6 +36,9 @@ class EventServiceProvider extends ServiceProvider
         Authenticated::class => [
             AuthenticatedUser::class
         ],
+        RegistrationEvent::class => [
+            CopyTransferDataListener::class
+        ]
     ];
 
     /**
