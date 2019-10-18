@@ -7,6 +7,7 @@ use App\Services\SchoolClass\AvailableTimeService;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
+use App\Events\RegistrationEvent;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -356,6 +357,7 @@ class indice extends clsCadastro
 
     public function Novo()
     {
+        DB::beginTransaction();
 
         $dependencia = $this->dependencia == 'on';
 
@@ -966,11 +968,12 @@ class indice extends clsCadastro
                 }
 
                 $this->enturmacaoMatricula($this->cod_matricula, $this->ref_cod_turma);
-                $this->verificaSolicitacaoTransferencia();
+                // $this->verificaSolicitacaoTransferencia();
 
                 /** @var LegacyRegistration $registration */
 
                 $registration = LegacyRegistration::find($this->cod_matricula);
+                event(new RegistrationEvent($registration));
 
                 $promocao = new PromotionService($registration->enrollments()->first());
                 $promocao->fakeRequest();
