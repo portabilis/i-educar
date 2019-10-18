@@ -36,4 +36,9 @@ class LegacyStudent extends Model
     {
         return $this->belongsTo(LegacyPerson::class, 'ref_idpes');
     }
+
+    public function registrations()
+    {
+        return $this->hasMany(LegacyRegistration::class, 'ref_cod_aluno');
+    }
 }
