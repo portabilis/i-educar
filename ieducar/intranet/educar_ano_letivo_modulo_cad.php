@@ -697,7 +697,7 @@ class indice extends clsCadastro
         $iDiarioService = app(iDiarioService::class);
 
         foreach ($etapas as $etapa) {
-            if ($iDiarioService->getStepActivityByUnit($escolaId, $etapa)) {
+            if ($iDiarioService->getStepActivityByUnit($escolaId, $etapa, $ano)) {
                 throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas no diário online.');
             }
         }
