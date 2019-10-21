@@ -1314,3 +1314,7 @@ a.btn-detalhes {
   cursor: pointer;
   white-space: nowrap;
 }
+
+.matricula-situacao-deslocamento {
+  color: #FF6600;
+}

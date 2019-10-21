@@ -39,7 +39,6 @@ class clsIndexBase extends clsBase
   function Formular() {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Escolaridade do servidor');
     $this->processoAp = '632';
-    $this->addEstilo("localizacaoSistema");
   }
 }
 

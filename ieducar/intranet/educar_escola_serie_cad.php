@@ -58,7 +58,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo($this->_instituicao . ' i-Educar - Escola S&eacute;rie');
         $this->processoAp = 585;
-        $this->addEstilo("localizacaoSistema");
     }
 }
 
@@ -387,7 +386,7 @@ class indice extends clsCadastro
                     $conteudo .= " </select>";
 
                     if ($this->definirComponentePorEtapa) {
-                        $conteudo .= "  <input style='margin-left:140px; float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' " . ($usarComponente == true ? $checkedEtapaEspecifica : '') . "></label>";
+                        $conteudo .= "  <input style='margin-left:140px; float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' " . $checkedEtapaEspecifica . "></label>";
                         $conteudo .= "  <label style='display: block; float: left; width: 100px;'>Etapas utilizadas: <input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapas_utilizadas}' size='5' maxlength='7'></label>";
                     }
 

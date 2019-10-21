@@ -3,6 +3,7 @@
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacySchool;
+use App\Models\LegacySchoolClass;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
@@ -671,11 +672,13 @@ class App_Model_IedFinder extends CoreExt_Entity
             $where['componente_curricular_id'] = $componenteCurricularId;
         }
 
+        $disciplinaDispensada = self::disciplinaDispensadaDaTurma($turma);
+
         $componentesTurma = $mapper->findAll([], $where);
 
         // Não existem componentes específicos para a turma
         if (0 == count($componentesTurma)) {
-            return self::getEscolaSerieDisciplina(
+            $componentesTurma = self::getEscolaSerieDisciplina(
                 $serieId,
                 $escola,
                 $componenteMapper,
@@ -684,6 +687,9 @@ class App_Model_IedFinder extends CoreExt_Entity
                 $trazerDetalhes,
                 $ano
             );
+
+            unset($componentesTurma[$disciplinaDispensada]);
+            return $componentesTurma;
         }
 
         $componentes = [];
@@ -838,6 +844,8 @@ class App_Model_IedFinder extends CoreExt_Entity
             ON p.idpes = a.ref_idpes
             JOIN pmieducar.escola e
             ON m.ref_ref_cod_escola = e.cod_escola
+            JOIN pmieducar.instituicao
+            ON instituicao.cod_instituicao = e.ref_cod_instituicao
             JOIN pmieducar.matricula_turma mt
             ON mt.ref_cod_matricula = m.cod_matricula
             JOIN pmieducar.turma t
@@ -857,15 +865,9 @@ class App_Model_IedFinder extends CoreExt_Entity
                 mt.ativo = 1
                 OR
                 (
-                    NOT EXISTS
-                    (
-                        SELECT 1
-                        FROM pmieducar.matricula_turma
-                        WHERE matricula_turma.ativo = 1
-                        AND matricula_turma.ref_cod_matricula = mt.ref_cod_matricula
-                    )
-                    AND
-                    (
+                    instituicao.data_base_remanejamento IS NOT NULL
+                    AND mt.data_exclusao::date > instituicao.data_base_remanejamento
+                    AND (
                         mt.transferido
                         OR mt.remanejado
                         OR mt.reclassificado
@@ -1103,6 +1105,27 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $disciplinasDispensa;
+    }
+
+    public static function disciplinaDispensadaDaTurma($codTurma)
+    {
+        if (!$codTurma) {
+            return;
+        }
+
+        $discipline = Cache::store('array')->remember("disciplinaDispensadaDaTurma:{$codTurma}", now()->addMinute(), function () use ($codTurma) {
+            $discipline = LegacySchoolClass::query()->find($codTurma)->ref_cod_disciplina_dispensada ?? null;
+
+            // Caso não exista a disciplina, armazena a string 'null'
+            return $discipline ?: 'null';
+        });
+
+        // Se o retorno é uma string 'null', sabemos o que o valor real é null
+        if ($discipline === 'null') {
+            return null;
+        }
+
+        return $discipline;
     }
 
     public static function validaDispensaPorMatricula(
@@ -1545,7 +1568,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $query = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$enrollmentId]]);
 
         foreach ($query as $stage) {
-            $stages[] = $stage;
+            $stages[$stage['ref_cod_disciplina']][] = $stage['etapa'];
         }
 
         return $stages;

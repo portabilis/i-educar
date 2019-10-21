@@ -1804,7 +1804,7 @@ class AlunoController extends ApiCoreController
         $documentos->num_livro = $this->getRequest()->livro_certidao_civil;
         $documentos->num_folha = $this->getRequest()->folha_certidao_civil;
 
-        $documentos->rg = $this->getRequest()->rg;
+        $documentos->rg = trim($this->getRequest()->rg);
         $documentos->data_exp_rg = Portabilis_Date_Utils::brToPgSQL(
             $this->getRequest()->data_emissao_rg
         );
@@ -1918,7 +1918,7 @@ class AlunoController extends ApiCoreController
                             and $3::date < coalesce(m.data_cancel::date, mt.data_exclusao::date, current_date))
                        END)
                       END)
-              AND t.ano = $4';
+              AND t.ano = $4 ';
 
             $params = [$instituicaoId, $escolaId, $data, $ano];
 

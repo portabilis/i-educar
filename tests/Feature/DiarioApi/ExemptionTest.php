@@ -144,4 +144,66 @@ class ExemptionTest extends TestCase
         $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
     }
 
+    /**
+     * Aluno com dispensa na ultima etapa de uma disciplina, deve ser aprovado após o lançamento
+     * de nota nas etapas não dispensadas
+     */
+    public function testApproveWithExemptionInLastStage()
+    {
+        $schoolClass = $this->enrollment->schoolClass;
+        $school = $schoolClass->school;
+
+        //Cria duas disciplinas e duas etapas
+        $this->createStages($school, 2);
+        $this->createDisciplines($schoolClass, 2);
+
+        $registration = $this->enrollment->registration;
+        $disciplines = $schoolClass->disciplines;
+
+        // Lança notas e faltas para todos as etapas da segunda disciplina
+        $score = [
+            1 => 9.1,
+            2 => 5.4,
+        ];
+
+        $absence = [
+            1 => 3,
+            2 => 3,
+        ];
+
+        $this->postAbsenceForStages($absence, $disciplines[1]);
+        $response = $this->postScoreForStages($score, $disciplines[1]);
+        $this->assertEquals('Aprovado', $response->situacao);
+
+
+        // Dispensa a ultima etapa da primeira disciplina
+        /** @var LegacyDisciplineExemption $dispensa */
+        $dispensa = factory(LegacyDisciplineExemption::class)->create([
+            'ref_cod_matricula' => $registration->id,
+            'ref_cod_disciplina' => $disciplines[0]->id,
+            'ref_cod_escola' => $registration->ref_ref_cod_escola,
+            'ref_cod_serie' => $registration->ref_ref_cod_serie,
+        ]);
+
+        factory(LegacyExemptionStage::class)->create([
+            'ref_cod_dispensa' => $dispensa->cod_dispensa,
+            'etapa' => 2,
+        ]);
+
+        // Sem lançamentos para a etapa dispensada na primeira disciplina
+        $score = [
+            1 => 7,
+        ];
+
+        $absence = [
+            1 => 3,
+        ];
+
+        $this->postAbsenceForStages($absence, $disciplines[0]);
+        $response = $this->postScoreForStages($score, $disciplines[0]);
+        $this->assertEquals('Aprovado', $response->situacao);
+
+        $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
+    }
+
 }
