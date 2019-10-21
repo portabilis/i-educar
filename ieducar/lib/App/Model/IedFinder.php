@@ -3,6 +3,7 @@
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacySchool;
+use App\Models\LegacySchoolClass;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
@@ -671,11 +672,13 @@ class App_Model_IedFinder extends CoreExt_Entity
             $where['componente_curricular_id'] = $componenteCurricularId;
         }
 
+        $disciplinaDispensada = self::disciplinaDispensadaDaTurma($turma);
+
         $componentesTurma = $mapper->findAll([], $where);
 
         // Não existem componentes específicos para a turma
         if (0 == count($componentesTurma)) {
-            return self::getEscolaSerieDisciplina(
+            $componentesTurma = self::getEscolaSerieDisciplina(
                 $serieId,
                 $escola,
                 $componenteMapper,
@@ -684,6 +687,9 @@ class App_Model_IedFinder extends CoreExt_Entity
                 $trazerDetalhes,
                 $ano
             );
+
+            unset($componentesTurma[$disciplinaDispensada]);
+            return $componentesTurma;
         }
 
         $componentes = [];
@@ -1099,6 +1105,27 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         return $disciplinasDispensa;
+    }
+
+    public static function disciplinaDispensadaDaTurma($codTurma)
+    {
+        if (!$codTurma) {
+            return;
+        }
+
+        $discipline = Cache::store('array')->remember("disciplinaDispensadaDaTurma:{$codTurma}", now()->addMinute(), function () use ($codTurma) {
+            $discipline = LegacySchoolClass::query()->find($codTurma)->ref_cod_disciplina_dispensada ?? null;
+
+            // Caso não exista a disciplina, armazena a string 'null'
+            return $discipline ?: 'null';
+        });
+
+        // Se o retorno é uma string 'null', sabemos o que o valor real é null
+        if ($discipline === 'null') {
+            return null;
+        }
+
+        return $discipline;
     }
 
     public static function validaDispensaPorMatricula(
@@ -1541,7 +1568,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $query = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$enrollmentId]]);
 
         foreach ($query as $stage) {
-            $stages[] = $stage;
+            $stages[$stage['ref_cod_disciplina']][] = $stage['etapa'];
         }
 
         return $stages;

@@ -273,7 +273,23 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'ref_ref_cod_pessoa_cad'
         ],
         [
+            'tabela' => 'portal.agenda',
+            'coluna' => 'ref_ref_cod_pessoa_own'
+        ],
+        [
+            'tabela' => 'portal.agenda',
+            'coluna' => 'ref_ref_cod_pessoa_cad'
+        ],
+        [
+            'tabela' => 'portal.agenda',
+            'coluna' => 'ref_ref_cod_pessoa_exc'
+        ],
+        [
             'tabela' => 'portal.agenda_responsavel',
+            'coluna' => 'ref_ref_cod_pessoa_fj'
+        ],
+        [
+            'tabela' => 'portal.funcionario',
             'coluna' => 'ref_ref_cod_pessoa_fj'
         ],
         [
@@ -282,7 +298,12 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         ],
     ];
 
-    protected $chavesDeletarDuplicados = [];
+    protected $chavesDeletarDuplicados = [
+        [
+            'tabela' => 'portal.funcionario',
+            'coluna' => 'ref_cod_pessoa_fj'
+        ],
+    ];
 
     protected $triggersNecessarias = [
         [
