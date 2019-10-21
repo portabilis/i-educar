@@ -55,10 +55,14 @@ class iDiarioService
      *
      * @return bool
      */
-    public function getStepActivityByUnit(int $unitId, int $step): bool
+    public function getStepActivityByUnit(int $unitId, int $year, int $step): bool
     {
         try {
-            $response = $this->get('/api/v2/step_activity', ['unity_id' => $unitId, 'step_number' => $step]);
+            $response = $this->get('/api/v2/step_activity', [
+                'unity_id' => $unitId,
+                'year' => $year,
+                'step_number' => $step
+            ]);
             $body = trim((string)$response->getBody());
 
             if ($body === 'true') {
