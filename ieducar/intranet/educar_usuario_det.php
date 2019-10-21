@@ -38,9 +38,9 @@ class indice extends clsDetalhe
 
         $this->addDetalhe(['Nome', $det_pessoa['nome']]);
 
-        $obj_fisica_cpf = new clsFisica($cod_pessoa);
-        $det_fisica_cpf = $obj_fisica_cpf->detalhe();
-        $this->addDetalhe(['CPF', int2CPF($det_fisica_cpf['cpf'])]);
+        $obj_fisica = new clsFisica($cod_pessoa);
+        $det_fisica = $obj_fisica->detalhe();
+        $this->addDetalhe(['CPF', int2CPF($det_fisica['cpf'])]);
 
         $obj_funcionario = new clsFuncionario($cod_pessoa);
         $det_funcionario = $obj_funcionario->detalhe();
