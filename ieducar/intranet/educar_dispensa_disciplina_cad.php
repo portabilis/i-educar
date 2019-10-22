@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyRegistration;
+use App\Models\LegacySchoolStage;
 use App\Services\PromotionService;
 
 require_once 'include/clsBase.inc.php';
@@ -323,7 +324,12 @@ class indice extends clsCadastro
 
     public function maiorEtapaUtilizada($registration)
     {
-        $totalEtapas = App_Model_IedFinder::getModulo($registration->ref_ref_cod_escola, $registration->ref_cod_curso, $registration->enrollments()->first()->ref_cod_turma, $registration->ano);
+        $where = [
+            'ref_ref_cod_escola' => $registration->ref_ref_cod_escola,
+            'ref_ano' => $registration->ano,
+        ];
+
+        $totalEtapas = LegacySchoolStage::query()->where($where)->count();
         $arrayEtapas = [];
 
         for ($i = 1; $i <= $totalEtapas['total']; $i++)
