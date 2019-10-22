@@ -27,6 +27,13 @@ class LegacyEvaluationRule extends Model
     protected $primaryKey = 'id';
 
     /**
+     * @var array 
+     */
+    protected $casts = [
+        'media_recuperacao_paralela' => 'float',
+    ];
+
+    /**
      * @var array
      */
     protected $fillable = [
