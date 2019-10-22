@@ -832,6 +832,12 @@ class DiarioApiController extends ApiCoreController
                 null,
                 null,
                 null,
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
                 true
             );
 
