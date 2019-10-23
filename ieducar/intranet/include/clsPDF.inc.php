@@ -145,7 +145,7 @@ class clsPDF
       // Construção de página normal
       $this->ClosePage();
       $this->numeroPagina++;
-      PDF_begin_page($this->pdf, $this->largura, $this->altura);
+      PDF_begin_page_ext($this->pdf, $this->largura, $this->altura, "");
       $this->pagOpened = TRUE;
     }
     else {
@@ -372,6 +372,10 @@ class clsPDF
    */
   public function insertImageScaled($tipo, $image, $x, $y, $maxWidth)
   {
+    if ($image == "") {
+        throw new Exception('Parametro $image vazio');
+    }
+
     $image = realpath($image);
     if (! is_readable($image)) {
       throw new Exception('Caminho para arquivo de imagem inválido: "' . $image . '"');
