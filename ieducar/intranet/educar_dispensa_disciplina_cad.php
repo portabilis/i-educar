@@ -329,7 +329,7 @@ class indice extends clsCadastro
             'ref_ano' => $registration->ano,
         ];
 
-        $totalEtapas = LegacySchoolStage::query()->where($where)->count();
+        $totalEtapas['total'] = LegacySchoolStage::query()->where($where)->count();
         $arrayEtapas = [];
 
         for ($i = 1; $i <= $totalEtapas['total']; $i++)
@@ -338,7 +338,6 @@ class indice extends clsCadastro
         }
 
         $arrayEtapas = array_diff($arrayEtapas, $this->etapa);
-
         return max($arrayEtapas);
     }
 
