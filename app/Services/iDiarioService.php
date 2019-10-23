@@ -81,10 +81,14 @@ class iDiarioService
      *
      * @return bool
      */
-    public function getStepActivityByClassroom(int $classroomId, int $step): bool
+    public function getStepActivityByClassroom(int $classroomId, int $year, int $step): bool
     {
         try {
-            $response = $this->get('/api/v2/step_activity', ['classroom_id' => $classroomId, 'step_number' => $step]);
+            $response = $this->get('/api/v2/step_activity', [
+                'classroom_id' => $classroomId,
+                'year' => $year,
+                'step_number' => $step
+            ]);
             $body = trim((string)$response->getBody());
 
             if ($body === 'true') {
