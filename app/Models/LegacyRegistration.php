@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App_Model_MatriculaSituacao;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * LegacyRegistration
  *
  * @property int $id
+ * @property boolean isTransferred
+ * @property boolean isAbandoned
  *
  */
 class LegacyRegistration extends Model
@@ -149,5 +152,15 @@ class LegacyRegistration extends Model
     public function scopeActive($query)
     {
         return $query->where('ativo', 1);
+    }
+
+    public function getIsTransferredAttribute()
+    {
+        return $this->aprovado == App_Model_MatriculaSituacao::TRANSFERIDO;
+    }
+
+    public function getIsAbandonedAttribute()
+    {
+        return $this->aprovado == App_Model_MatriculaSituacao::ABANDONO;
     }
 }
