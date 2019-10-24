@@ -25,15 +25,22 @@ class EducacensoImportJob implements ShouldQueue
     private $importString;
 
     /**
+     * @var string
+     */
+    private $databaseConnection;
+
+    /**
      * Create a new job instance.
      *
      * @param EducacensoImportModel $educacensoImport
      * @param $importString
+     * @param string $databaseConnection
      */
-    public function __construct(EducacensoImportModel $educacensoImport, $importString)
+    public function __construct(EducacensoImportModel $educacensoImport, $importString, $databaseConnection)
     {
         $this->educacensoImport = $educacensoImport;
         $this->importString = $importString;
+        $this->databaseConnection = $databaseConnection;
     }
 
     /**
@@ -43,6 +50,7 @@ class EducacensoImportJob implements ShouldQueue
      */
     public function handle()
     {
+        DB::setDefaultConnection($this->databaseConnection);
         DB::beginTransaction();
 
         $importService = ImportServiceFactory::createImportService($this->educacensoImport->year);

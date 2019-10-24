@@ -6,6 +6,7 @@ use App\Jobs\EducacensoImportJob;
 use App\Models\EducacensoImport;
 use App\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 
 class HandleFileService
 {
@@ -60,6 +61,6 @@ class HandleFileService
 
         $school = array_map('utf8_encode', $school);
 
-        EducacensoImportJob::dispatch($import, $school);
+        EducacensoImportJob::dispatch($import, $school, DB::getDefaultConnection());
     }
 }
