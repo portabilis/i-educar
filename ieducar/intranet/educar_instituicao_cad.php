@@ -258,6 +258,15 @@ class indice extends clsCadastro
         $this->campoCheck('permissao_filtro_abandono_transferencia', 'Não permitir a apresentação de alunos com matrícula em abandono ou transferida na emissão do relatório de frequência', $this->permissao_filtro_abandono_transferencia);
         $this->campoCheck('altera_atestado_para_declaracao', 'Alterar nome do título do menu e relatórios de Atestado para Declaração', $this->altera_atestado_para_declaracao);
         $this->campoCheck('exibir_apenas_professores_alocados', 'Exibir apenas professores alocados nos filtros de emissão do Diário de classe', $this->exibir_apenas_professores_alocados);
+        $this->campoCheck(
+            'ordenar_alunos_sequencial_enturmacao',
+            'Apresentar alunos em relatórios de acordo com a ordenação definida de forma automática/manual na turma',
+            $this->ordenar_alunos_sequencial_enturmacao,
+            null,
+            false,
+            false,
+            false
+        );
 
         $this->campoRotulo('processos_escolares','<b>Processos escolares</b>');
         $this->campoCheck('exigir_vinculo_turma_professor', 'Exigir vínculo com turma para lançamento de notas do professor?', $this->exigir_vinculo_turma_professor);
@@ -324,16 +333,6 @@ class indice extends clsCadastro
             'permitir_matricula_fora_periodo_letivo',
             'Permitir matricular alunos fora do período letivo',
             $this->permitir_matricula_fora_periodo_letivo,
-            null,
-            false,
-            false,
-            false
-        );
-
-        $this->campoCheck(
-            'ordenar_alunos_sequencial_enturmacao',
-            'Mostrar alunos em relatórios de acordo com a ordenação definida manualmente na turma',
-            $this->ordenar_alunos_sequencial_enturmacao,
             null,
             false,
             false,
