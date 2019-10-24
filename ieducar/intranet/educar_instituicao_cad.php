@@ -73,6 +73,7 @@ class indice extends clsCadastro
     public $exibir_apenas_professores_alocados;
     public $bloquear_vinculo_professor_sem_alocacao_escola;
     public $permitir_matricula_fora_periodo_letivo;
+    public $ordenar_alunos_sequencial_enturmacao;
 
     public function Inicializar()
     {
@@ -123,6 +124,7 @@ class indice extends clsCadastro
         $this->exibir_apenas_professores_alocados = dbBool($this->exibir_apenas_professores_alocados);
         $this->bloquear_vinculo_professor_sem_alocacao_escola = dbBool($this->bloquear_vinculo_professor_sem_alocacao_escola);
         $this->permitir_matricula_fora_periodo_letivo = dbBool($this->permitir_matricula_fora_periodo_letivo);
+        $this->ordenar_alunos_sequencial_enturmacao = dbBool($this->ordenar_alunos_sequencial_enturmacao);
 
         return $retorno;
     }
@@ -328,6 +330,16 @@ class indice extends clsCadastro
             false
         );
 
+        $this->campoCheck(
+            'ordenar_alunos_sequencial_enturmacao',
+            'Mostrar alunos em relatórios de acordo com a ordenação definida manualmente na turma',
+            $this->ordenar_alunos_sequencial_enturmacao,
+            null,
+            false,
+            false,
+            false
+        );
+
         $scripts = ['/modules/Cadastro/Assets/Javascripts/Instituicao.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
         $styles = array ('/modules/Cadastro/Assets/Stylesheets/Instituicao.css');
@@ -373,6 +385,7 @@ class indice extends clsCadastro
         $obj->exibir_apenas_professores_alocados = !is_null($this->exibir_apenas_professores_alocados);
         $obj->bloquear_vinculo_professor_sem_alocacao_escola = !is_null($this->bloquear_vinculo_professor_sem_alocacao_escola);
         $obj->permitir_matricula_fora_periodo_letivo = !is_null($this->permitir_matricula_fora_periodo_letivo);
+        $obj->ordenar_alunos_sequencial_enturmacao = !is_null($this->ordenar_alunos_sequencial_enturmacao);
 
         $detalheAntigo = $obj->detalhe();
 
