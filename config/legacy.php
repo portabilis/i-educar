@@ -204,7 +204,6 @@ return [
             'password' => '',
             'logo_name' => '',
         ],
-        'order_student_by_enrollment_sequential' => false,
     ],
 
 ];
