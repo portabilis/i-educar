@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyVacancyReservationCandidate extends Model
 {
@@ -55,5 +56,29 @@ class LegacyVacancyReservationCandidate extends Model
             $model->data_situacao = now()->format('Y-m-d');
             $model->hora_solicitacao = now()->format('H:i:s');
         });
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function grade()
+    {
+        return $this->belongsTo(LegacyGrade::class, 'ref_cod_serie');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function period()
+    {
+        return $this->belongsTo(LegacyPeriod::class, 'ref_cod_turno');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function school()
+    {
+        return $this->belongsTo(LegacySchool::class, 'ref_cod_escola');
     }
 }
