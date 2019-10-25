@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b809688eaf9970067bfc1abc85b1a398",
+    "content-hash": "b2182aa04c3c385142d972392f6404ab",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -703,6 +703,57 @@
                 "schedule"
             ],
             "time": "2019-03-31T00:38:28+00:00"
+        },
+        {
+            "name": "edersoares/laravel-plug-and-play",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/edersoares/laravel-plug-and-play.git",
+                "reference": "80e07938a0cc06e4dbf79a7cd0d533109cd31c70"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/edersoares/laravel-plug-and-play/zipball/80e07938a0cc06e4dbf79a7cd0d533109cd31c70",
+                "reference": "80e07938a0cc06e4dbf79a7cd0d533109cd31c70",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.1",
+                "ext-json": "*",
+                "laravel/framework": "~5.5|~6",
+                "php": ">=7.0.0",
+                "wikimedia/composer-merge-plugin": "^1.4"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "branch-alias": [],
+                "class": "Wikimedia\\Composer\\MergePlugin",
+                "laravel": {
+                    "providers": [
+                        "EderSoares\\Laravel\\PlugAndPlay\\PlugAndPlayServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "EderSoares\\Laravel\\PlugAndPlay\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eder Soares",
+                    "email": "edersoares@me.com",
+                    "homepage": "https://edersoares.me",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Plug and play packages in Laravel",
+            "time": "2019-10-22T02:54:46+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -4600,6 +4651,55 @@
                 "environment"
             ],
             "time": "2019-09-10T21:37:39+00:00"
+        },
+        {
+            "name": "wikimedia/composer-merge-plugin",
+            "version": "v1.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wikimedia/composer-merge-plugin.git",
+                "reference": "81c6ac72a24a67383419c7eb9aa2b3437f2ab100"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wikimedia/composer-merge-plugin/zipball/81c6ac72a24a67383419c7eb9aa2b3437f2ab100",
+                "reference": "81c6ac72a24a67383419c7eb9aa2b3437f2ab100",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0",
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "composer/composer": "~1.0.0",
+                "jakub-onderka/php-parallel-lint": "~0.8",
+                "phpunit/phpunit": "~4.8|~5.0",
+                "squizlabs/php_codesniffer": "~2.1.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.3.x-dev"
+                },
+                "class": "Wikimedia\\Composer\\MergePlugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Wikimedia\\Composer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bryan Davis",
+                    "email": "bd808@wikimedia.org"
+                }
+            ],
+            "description": "Composer plugin to merge multiple composer.json files",
+            "time": "2017-04-25T02:31:25+00:00"
         }
     ],
     "packages-dev": [
