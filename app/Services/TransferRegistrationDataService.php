@@ -15,18 +15,25 @@ class TransferRegistrationDataService
 
     public function transferData()
     {
-        $transfers = $this->getTransfers();
+        $transfer = $this->getTransfer();
 
-        if (!$transfers) {
+        if (!$transfer) {
             return;
         }
 
-        foreach ($transfers as $transfer) {
-            $this->compatibleEvaluationRule($this->registration, $transfer->oldRegistration);
+        if (!$this->hasSameSteps($this->registration, $transfer->oldRegistration)) {
+            // Construir feedback para o usuário
+            return;
         }
+
+        $service = new RegistrationEvaluationRuleService($this->registration);
+        $newRegra = $service->getEvaluationRule();
+        $service = new RegistrationEvaluationRuleService($transfer->oldRegistration);
+        $oldRegra = $service->getEvaluationRule();
+        
     }
 
-    public function getTransfers()
+    public function getTransfer()
     {
         $levelId = $this->registration->ref_ref_cod_serie;
         $year = $this->registration->ano;
@@ -38,40 +45,20 @@ class TransferRegistrationDataService
             ->pluck('cod_matricula')
             ->all();
 
-        $tranfers = LegacyTransferRequest::query()
+        return LegacyTransferRequest::query()
             ->active()
             ->unattended()
             ->whereIn('ref_cod_matricula_saida', $registrationsId)
-            ->get();
-
-        return $tranfers;
+            ->orderBy('data_transferencia', 'desc')
+            ->first();
     }
 
-    public function compatibleEvaluationRule($newRegistration, $oldRegistration)
+    public function hasSameSteps($newRegistration, $oldRegistration)
     {
-        // dd($oldRegistration);
-        $newRegra = new RegistrationEvaluationRuleService($newRegistration);
-        $oldRegra = new RegistrationEvaluationRuleService($oldRegistration);
+        $newRegistrationNumbersOfStages = count($newRegistration->lastEnrollment->schoolClass->stages);
+        $oldRegistrationNumbersOfStages = count($oldRegistration->lastEnrollment->schoolClass->stages);
 
-        dd($newRegra->getEvaluationRule());
-        // tipo de nota
-        // tipo de falta
-        // tipo de parecer
-       
-    //    if ($this->escolaUsaRegraDiferenciada($newRegistration) == $this->escolaUsaRegraDiferenciada($oldRegistration)) {
-    //        return true;
-    //    }
-
-    }
-
-    public function escolaUsaRegraDiferenciada($registration)
-    {
-        return $registration->school->utiliza_regra_diferenciada;
-    }
-
-    public function registrationEvaluationRule($registration)
-    {
-
+        return $newRegistrationNumbersOfStages == $oldRegistrationNumbersOfStages;
     }
 
 }
