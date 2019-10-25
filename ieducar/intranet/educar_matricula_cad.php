@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\Transfer\TransferException;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Services\PromotionService;
@@ -973,7 +974,15 @@ class indice extends clsCadastro
                 /** @var LegacyRegistration $registration */
 
                 $registration = LegacyRegistration::find($this->cod_matricula);
-                event(new RegistrationEvent($registration));
+
+                try {
+                    event(new RegistrationEvent($registration));
+                } catch(TransferException $exception) {
+                    $this->mensagem = 'Os dados da matrícula antiga não puderam ser copiados. Motivo: <br>' . $exception->getMessage();
+
+                    DB::commit();
+                    $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
+                }
 
                 $promocao = new PromotionService($registration->enrollments()->first());
                 $promocao->fakeRequest();

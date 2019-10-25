@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $id
  * @property boolean isTransferred
  * @property boolean isAbandoned
+ * @property LegacyStudentAbsence studentAbsence
  *
  */
 class LegacyRegistration extends Model
@@ -162,5 +163,13 @@ class LegacyRegistration extends Model
     public function getIsAbandonedAttribute()
     {
         return $this->aprovado == App_Model_MatriculaSituacao::ABANDONO;
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function studentAbsence()
+    {
+        return $this->hasOne(LegacyStudentAbsence::class, 'matricula_id');
     }
 }

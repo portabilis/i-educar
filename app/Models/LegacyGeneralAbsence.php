@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class LegacyDisciplineAbsence extends Model
+class LegacyGeneralAbsence extends Model
 {
     /**
      * @var string

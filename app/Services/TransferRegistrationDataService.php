@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\Transfer\StagesAreNotSame;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyTransferRequest;
 
@@ -21,16 +22,13 @@ class TransferRegistrationDataService
             return;
         }
 
-        if (!$this->hasSameSteps($this->registration, $transfer->oldRegistration)) {
-            // Construir feedback para o usuário
-            return;
+        if (!$this->hasSameStages($this->registration, $transfer->oldRegistration)) {
+            throw new StagesAreNotSame();
         }
 
-        $service = new RegistrationEvaluationRuleService($this->registration);
-        $newRegra = $service->getEvaluationRule();
-        $service = new RegistrationEvaluationRuleService($transfer->oldRegistration);
-        $oldRegra = $service->getEvaluationRule();
-        
+        $copyAbsenceService = new CopyAbsenceService($this->registration, $transfer->oldRegistration);
+        $copyAbsenceService->copyAbsences();
+
     }
 
     public function getTransfer()
@@ -53,7 +51,7 @@ class TransferRegistrationDataService
             ->first();
     }
 
-    public function hasSameSteps($newRegistration, $oldRegistration)
+    public function hasSameStages($newRegistration, $oldRegistration)
     {
         $newRegistrationNumbersOfStages = count($newRegistration->lastEnrollment->schoolClass->stages);
         $oldRegistrationNumbersOfStages = count($oldRegistration->lastEnrollment->schoolClass->stages);
