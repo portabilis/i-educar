@@ -231,7 +231,12 @@ class DiarioController extends ApiCoreController
 
                     $valorNota = $serviceBoletim->calculateStageScore($etapa, $notaOriginal, $notaRecuperacao);
 
-                    if ($etapa == 'Rc' && $notaOriginal > $regra->notaMaximaExameFinal) {
+                    $notaValidacao = $notaOriginal;
+                    if (is_numeric($valorNota)) {
+                        $notaValidacao = $valorNota;
+                    }
+
+                    if ($etapa == 'Rc' && $notaValidacao > $regra->notaMaximaExameFinal) {
                         $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima para exame que é {$regra->notaMaximaExameFinal}.", 'error');
                         $this->appendResponse('error', [
                             'code' => Error::EXAM_SCORE_GREATER_THAN_MAX_ALLOWED,
@@ -241,7 +246,7 @@ class DiarioController extends ApiCoreController
                         return false;
                     }
 
-                    if ($etapa != 'Rc' && $notaOriginal > $regra->notaMaximaGeral) {
+                    if ($etapa != 'Rc' && $notaValidacao > $regra->notaMaximaGeral) {
                         $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima geral que é {$regra->notaMaximaGeral}.", 'error');
                         $this->appendResponse('error', [
                             'code' => Error::SCORE_GREATER_THAN_MAX_ALLOWED,
@@ -251,7 +256,7 @@ class DiarioController extends ApiCoreController
                         return false;
                     }
 
-                    if ($notaOriginal < $regra->notaMinimaGeral) {
+                    if ($notaValidacao < $regra->notaMinimaGeral) {
                         $this->messenger->append("A nota {$valorNota} está abaixo da configurada para nota mínima geral que é {$regra->notaMinimaGeral}.", 'error');
                         $this->appendResponse('error', [
                             'code' => Error::SCORE_LESSER_THAN_MIN_ALLOWED,
