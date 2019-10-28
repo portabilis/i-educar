@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property boolean isAbandoned
  * @property LegacyStudentAbsence studentAbsence
  * @property LegacyStudentScore studentScore
+ * @property LegacyStudentDescriptive studentDescriptive
  *
  */
 class LegacyRegistration extends Model
@@ -180,5 +181,13 @@ class LegacyRegistration extends Model
     public function studentScore()
     {
         return $this->hasOne(LegacyStudentScore::class, 'matricula_id');
+    }
+
+        /**
+     * @return HasOne
+     */
+    public function studentDescriptiveOpinion()
+    {
+        return $this->hasOne(LegacyStudentDescriptiveOpinion::class, 'matricula_id');
     }
 }

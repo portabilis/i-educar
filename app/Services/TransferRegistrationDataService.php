@@ -31,6 +31,9 @@ class TransferRegistrationDataService
 
         $copyScoreService = new CopyScoreService($this->registration, $transfer->oldRegistration);
         $copyScoreService->copyScores();
+
+        $copyDescriptiveOpnionService = new CopyDescriptiveOpinionService($this->registration, $transfer->oldRegistration);
+        $copyDescriptiveOpnionService->copyDescriptiveOpinions();
     }
 
     public function getTransfer()
