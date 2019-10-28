@@ -29,6 +29,8 @@ class TransferRegistrationDataService
         $copyAbsenceService = new CopyAbsenceService($this->registration, $transfer->oldRegistration);
         $copyAbsenceService->copyAbsences();
 
+        $copyScoreService = new CopyScoreService($this->registration, $transfer->oldRegistration);
+        $copyScoreService->copyScores();
     }
 
     public function getTransfer()
