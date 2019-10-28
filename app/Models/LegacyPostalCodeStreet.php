@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @deprecated Usar novo módulo de endereço
  */
-class LegacyZipCodeStreet extends Model
+class LegacyPostalCodeStreet extends Model
 {
     /**
      * @var string

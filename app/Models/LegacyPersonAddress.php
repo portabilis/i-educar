@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property string $name
  */
-class LegacyPersonAddress extends EloquentBaseModel implements Transformable
+class LegacyPersonAddress extends Model implements Transformable
 {
     use TransformableTrait;
 

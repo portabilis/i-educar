@@ -7,25 +7,28 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @deprecated Usar novo módulo de endereço
  */
-class LegacyZipCodeStreetNeighborhood extends Model
+class LegacyPlace extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'urbano.cep_logradouro_bairro';
+    protected $table = 'logradouro';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'cep';
+    protected $primaryKey = 'idlog';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'cep',
         'idlog',
-        'idbai',
+        'idtlog',
+        'nome',
+        'idmun',
+        'geom',
+        'ident_oficial',
         'idpes_rev',
         'data_rev',
         'origem_gravacao',

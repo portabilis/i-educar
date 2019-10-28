@@ -17,9 +17,9 @@ use App\Models\LegacySchool;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolStage;
 use App\Models\LegacyStageType;
-use App\Models\LegacyStreet;
-use App\Models\LegacyZipCodeStreet;
-use App\Models\LegacyZipCodeStreetNeighborhood;
+use App\Models\LegacyPlace;
+use App\Models\LegacyPostalCodeStreet;
+use App\Models\LegacyPostalCodeStreetNeighborhood;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\RegistroImportInterface;
 use App\User;
@@ -173,7 +173,7 @@ class Registro00Import implements RegistroImportInterface
             'zona_localizacao' => $this->model->zonaLocalizacao,
         ]);
 
-        $street = LegacyStreet::firstOrCreate([
+        $street = LegacyPlace::firstOrCreate([
             'idtlog' => 'RUA',
             'nome' => trim(str_replace('RUA', '', $this->model->logradouro)),
             'idmun' => $city->getKey(),
@@ -184,7 +184,7 @@ class Registro00Import implements RegistroImportInterface
             'operacao' => 'I',
         ]);
 
-        LegacyZipCodeStreet::firstOrCreate([
+        LegacyPostalCodeStreet::firstOrCreate([
             'cep' => $this->model->cep,
             'idlog' => $street->getKey(),
             'origem_gravacao' => 'U',
@@ -193,7 +193,7 @@ class Registro00Import implements RegistroImportInterface
             'operacao' => 'I',
         ]);
 
-        LegacyZipCodeStreetNeighborhood::firstOrCreate([
+        LegacyPostalCodeStreetNeighborhood::firstOrCreate([
             'cep' => $this->model->cep,
             'idlog' => $street->getKey(),
             'idbai' => $neighborhood->getKey(),
