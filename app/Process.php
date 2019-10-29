@@ -17,6 +17,7 @@ class Process
 
     const ENROLLMENT_HISTORY = 1001;
     const ATTENDED_CANDIDATE = 1002;
+    const BACK_TO_QUEUE = 1003;
     const UNDO_STUDENT_UNIFICATION = 2001;
     const EXEMPTION_LIST = 2002;
 }
