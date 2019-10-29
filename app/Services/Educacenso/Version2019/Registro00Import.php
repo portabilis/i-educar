@@ -367,8 +367,10 @@ class Registro00Import implements RegistroImportInterface
         return null;
     }
 
-    public static function getModel()
+    public static function getModel($arrayColumns)
     {
-        return new Registro00();
+        $registro = new Registro00();
+        $registro->hydrateModel($arrayColumns);
+        return $registro;
     }
 }

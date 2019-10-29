@@ -317,4 +317,17 @@ class Registro00 implements RegistroEducacenso
 
         return $properties[$column];
     }
+
+    /**
+     * Popula os campos do model a partir de um array de colunas
+     * do arquivo do censo
+     *
+     * @param $arrayColumns
+     */
+    public function hydrateModel($arrayColumns)
+    {
+        foreach ($arrayColumns as $key => $value) {
+            $this->{$this->getProperty($key)} = trim($value);
+        }
+    }
 }

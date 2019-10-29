@@ -51,7 +51,8 @@ class ImportService extends GeneralImportService
     public function getRegistroById($lineId)
     {
         $arrayRegistros = [
-            '00' => Registro00Import::class
+            '00' => Registro00Import::class,
+            '10' => Registro10Import::class,
         ];
 
         return new $arrayRegistros[$lineId];
