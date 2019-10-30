@@ -64,6 +64,7 @@ class indice extends clsListagem
         $parametros->setSubmit(0);
         $this->campoTexto('nome', 'Nome do servidor', $this->nome, 50, 255, false);
         $this->campoTexto('matricula_servidor', 'Matrícula', $this->matricula_servidor, 50, 255, false);
+        $this->inputsHelper()->dynamic('escolaridade', ['required' => false]);
         $this->campoCheck('servidor_sem_alocacao', 'Incluir servidores sem alocação', isset($_GET['servidor_sem_alocacao']));
 
         // Paginador
@@ -71,6 +72,10 @@ class indice extends clsListagem
         $this->offset = ($_GET['pagina_' . $this->nome])
             ? $_GET['pagina_' . $this->nome] * $this->limite - $this->limite
             : 0;
+
+        if (!$this->ref_idesco && $_GET['idesco']) {
+            $this->ref_idesco = $_GET['idesco'];
+        }
 
         $obj_servidor = new clsPmieducarServidor();
         $obj_servidor->setOrderby('carga_horaria ASC');
