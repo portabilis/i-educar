@@ -546,7 +546,8 @@ class indice extends clsCadastro
                 'cod_curso_profissional',
                 'tipo_mediacao_didatico_pedagogico',
                 'nao_informar_educacenso',
-                'turma_mais_educacao'
+                'turma_mais_educacao',
+                'local_funcionamento_diferenciado'
             ];
 
             $turmaDestino = new clsPmieducarTurma();
