@@ -29,6 +29,13 @@ class indice extends clsCadastro
     public $idesco;
     public $descricao;
     public $escolaridade;
+    public $findUsage;
+
+    protected function loadAssets()
+    {
+        $jsFile = '/modules/Cadastro/Assets/Javascripts/ModalExclusaoEscolaridade.js';
+        Portabilis_View_Helper_Application::loadJavascript($this, $jsFile);
+    }
 
     public function Inicializar()
     {
@@ -42,6 +49,11 @@ class indice extends clsCadastro
         if (is_numeric($this->idesco)) {
             $obj = new clsCadastroEscolaridade($this->idesco);
             $registro = $obj->detalhe();
+            $this->findUsage = $obj->findUsages();
+
+            if ($this->findUsage) {
+                $this->script_excluir = 'modalOpen();';
+            }
 
             if ($registro) {
                 // Passa todos os valores obtidos no registro para atributos do objeto
@@ -68,6 +80,8 @@ class indice extends clsCadastro
         $this->breadcrumb($nomeMenu . ' escolaridade', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
+
+        $this->loadAssets();
 
         return $retorno;
     }
@@ -138,6 +152,12 @@ class indice extends clsCadastro
     {
         $obj = new clsCadastroEscolaridade($this->idesco, $this->descricao);
         $escolaridade = $obj->detalhe();
+
+        if ($obj->findUsages()) {
+            $this->mensagem = 'Exclusão não realizada - Ainda existe vínculos.<br>';
+            return false;
+        }
+
         $excluiu = $obj->excluir();
         if ($excluiu) {
             $auditoria = new clsModulesAuditoriaGeral('escolaridade', $this->pessoa_logada, $this->idesco);
