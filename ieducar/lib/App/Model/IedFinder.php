@@ -1778,4 +1778,13 @@ class App_Model_IedFinder extends CoreExt_Entity
 
         return null;
     }
+
+    public static function getEscolaridades()
+    {
+        $sql = 'SELECT * FROM cadastro.escolaridade';
+
+        return Portabilis_Array_Utils::setAsIdValue(Portabilis_Utils_Database::fetchPreparedQuery($sql), 'idesco', 'descricao');
+
+
+    }
 }
