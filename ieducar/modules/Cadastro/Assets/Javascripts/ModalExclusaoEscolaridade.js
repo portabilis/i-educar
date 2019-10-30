@@ -36,6 +36,6 @@ function modalHtml() {
   link =  "/intranet/educar_servidor_lst.php?idesco=" + idesco;
   return `<div id="servidores_vinculados">
                 <p>Esta escolaridade está vinculada à servidores</p>
-                <a href=`+ link +` target="_blank"> Clique aqui </a>
+                <a href=`+ link +` > Clique aqui para ver mais </a>
             </div>`;
 }
