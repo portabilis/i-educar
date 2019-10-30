@@ -182,7 +182,7 @@ class clsCadastroEscolaridade extends Model
     /**
      * Exclui um registro.
      *
-     * @return bool
+     * @return bool | array
      */
     public function excluir()
     {
@@ -194,5 +194,38 @@ class clsCadastroEscolaridade extends Model
         }
 
         return false;
+    }
+
+    /**
+     *  Verifica se o tipo de escolaridade está sendo referenciado nas outras tabelas que possuem FK,
+     *  vai retorna uma lista de idpes que possuem vínculo
+     *
+     * @return array|bool
+     * @throws Exception
+     */
+    public function findUsages() {
+        if (! is_numeric($this->idesco)) {
+            return false;
+        }
+
+        $sql = "SELECT cod_servidor
+                  FROM {$this->_tabela}
+                  LEFT JOIN pmieducar.servidor on servidor.ref_idesco = escolaridade.idesco
+                 WHERE {$this->_tabela}.idesco = '{$this->idesco}'";
+
+        $db = new clsBanco();
+        $db->Consulta($sql);
+
+        while ($db->proximoRegistro()) {
+            $results[] = [
+                'cod_servidor' => $db->tupla()['cod_servidor'],
+            ];
+        }
+
+        if (count($results) == 1 && !$results['cod_servidor']) {
+            return false;
+        }
+
+        return json_encode($results);
     }
 }
