@@ -20,9 +20,9 @@ class EducacensoImportJob implements ShouldQueue
     private $educacensoImport;
 
     /**
-     * @var string
+     * @var array
      */
-    private $importString;
+    private $importArray;
 
     /**
      * @var string
@@ -33,13 +33,13 @@ class EducacensoImportJob implements ShouldQueue
      * Create a new job instance.
      *
      * @param EducacensoImportModel $educacensoImport
-     * @param $importString
+     * @param $importArray
      * @param string $databaseConnection
      */
-    public function __construct(EducacensoImportModel $educacensoImport, $importString, $databaseConnection)
+    public function __construct(EducacensoImportModel $educacensoImport, $importArray, $databaseConnection)
     {
         $this->educacensoImport = $educacensoImport;
-        $this->importString = $importString;
+        $this->importArray = $importArray;
         $this->databaseConnection = $databaseConnection;
     }
 
@@ -54,7 +54,7 @@ class EducacensoImportJob implements ShouldQueue
         DB::beginTransaction();
 
         $importService = ImportServiceFactory::createImportService($this->educacensoImport->year);
-        $importService->import($this->importString, $this->educacensoImport->user);
+        $importService->import($this->importArray, $this->educacensoImport->user);
 
         $educacensoImport = $this->educacensoImport;
         $educacensoImport->finished = true;

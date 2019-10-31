@@ -28,7 +28,7 @@ class ImportService extends GeneralImportService
     {
         $columns = explode(self::DELIMITER, $school[0]);
 
-        return $columns[9];
+        return $columns[5];
     }
 
     /**
@@ -54,6 +54,10 @@ class ImportService extends GeneralImportService
             '00' => Registro00Import::class,
             '10' => Registro10Import::class,
         ];
+
+        if (!isset($arrayRegistros[$lineId])) {
+            return;
+        }
 
         return new $arrayRegistros[$lineId];
     }

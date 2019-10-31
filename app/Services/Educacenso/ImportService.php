@@ -36,6 +36,11 @@ abstract class ImportService
 
         $class = $this->getRegistroById($lineId);
         $arrayColumns = explode(self::DELIMITER, $line);
+
+        if (!$class) {
+            return;
+        }
+
         $model = $class::getModel($arrayColumns);
 
         $class->import($model, $this->getYear(), $user);
