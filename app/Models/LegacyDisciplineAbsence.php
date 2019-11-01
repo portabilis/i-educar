@@ -27,7 +27,6 @@ class LegacyDisciplineAbsence extends Model
      */
     public $timestamps = false;
 
-
     /**
      * @return BelongsTo
      */
