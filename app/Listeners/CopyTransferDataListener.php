@@ -15,8 +15,7 @@ class CopyTransferDataListener
      */
     public function handle($event)
     {
-        $service = new TransferRegistrationDataService($event->registration);
-
-        $service->transferData();
+        $service = new TransferRegistrationDataService();
+        $service->transferData($event->registration);
     }
 }

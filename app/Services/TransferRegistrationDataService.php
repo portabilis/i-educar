@@ -8,39 +8,41 @@ use App\Models\LegacyTransferRequest;
 
 class TransferRegistrationDataService
 {
-
-    public function __construct(LegacyRegistration $registration)
+    public function transferData(LegacyRegistration $registration)
     {
-        $this->registration = $registration;
-    }
-
-    public function transferData()
-    {
-        $transfer = $this->getTransfer();
+        $transfer = self::getTransfer($registration);
 
         if (!$transfer) {
             return;
         }
 
-        if (!$this->hasSameStages($this->registration, $transfer->oldRegistration)) {
+        if (!$this->hasSameStages($registration, $transfer->oldRegistration)) {
             throw new StagesAreNotSame();
         }
 
-        $copyAbsenceService = new CopyAbsenceService($this->registration, $transfer->oldRegistration);
+        $copyAbsenceService = new CopyAbsenceService($registration, $transfer->oldRegistration);
         $copyAbsenceService->copyAbsences();
 
-        $copyScoreService = new CopyScoreService($this->registration, $transfer->oldRegistration);
+        $copyScoreService = new CopyScoreService($registration, $transfer->oldRegistration);
         $copyScoreService->copyScores();
 
-        $copyDescriptiveOpnionService = new CopyDescriptiveOpinionService($this->registration, $transfer->oldRegistration);
+        $copyDescriptiveOpnionService = new CopyDescriptiveOpinionService($registration, $transfer->oldRegistration);
         $copyDescriptiveOpnionService->copyDescriptiveOpinions();
     }
 
-    public function getTransfer()
+    public function hasSameStages($newRegistration, $oldRegistration)
     {
-        $levelId = $this->registration->ref_ref_cod_serie;
-        $year = $this->registration->ano;
-        $registrationsId = $this->registration->student
+        $newRegistrationNumbersOfStages = count($newRegistration->lastEnrollment->schoolClass->stages);
+        $oldRegistrationNumbersOfStages = count($oldRegistration->lastEnrollment->schoolClass->stages);
+
+        return $newRegistrationNumbersOfStages == $oldRegistrationNumbersOfStages;
+    }
+
+    public static function getTransfer(LegacyRegistration $registration)
+    {
+        $levelId = $registration->ref_ref_cod_serie;
+        $year = $registration->ano;
+        $registrationsId = $registration->student
             ->registrations()
             ->active()
             ->where('ref_ref_cod_serie', $levelId)
@@ -54,14 +56,6 @@ class TransferRegistrationDataService
             ->whereIn('ref_cod_matricula_saida', $registrationsId)
             ->orderBy('data_transferencia', 'desc')
             ->first();
-    }
-
-    public function hasSameStages($newRegistration, $oldRegistration)
-    {
-        $newRegistrationNumbersOfStages = count($newRegistration->lastEnrollment->schoolClass->stages);
-        $oldRegistrationNumbersOfStages = count($oldRegistration->lastEnrollment->schoolClass->stages);
-
-        return $newRegistrationNumbersOfStages == $oldRegistrationNumbersOfStages;
     }
 
 }

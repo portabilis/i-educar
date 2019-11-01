@@ -15,9 +15,7 @@ class AcceptTransferRequestListener
      */
     public function handle($event)
     {
-        $service = new TransferRegistrationDataService($event->registration);
-
-        $transfer = $service->getTransfer();
+        $transfer = TransferRegistrationDataService::getTransfer($event->registration);
 
         $this->acceptTransferRequest($transfer, $event->registration);
     }
