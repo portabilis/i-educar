@@ -4,7 +4,7 @@ namespace App\Listeners;
 
 use App\Services\TransferRegistrationDataService;
 
-class MeetsTransferRequestListener
+class AcceptTransferRequestListener
 {
 
     /**
@@ -19,10 +19,10 @@ class MeetsTransferRequestListener
 
         $transfer = $service->getTransfer();
 
-        $this->meetsTransferRequest($transfer, $event->registration);
+        $this->acceptTransferRequest($transfer, $event->registration);
     }
 
-    private function meetsTransferRequest($transfer, $newRegistration)
+    private function acceptTransferRequest($transfer, $newRegistration)
     {
         $transfer->update([
             'ref_cod_matricula_entrada' => $newRegistration->cod_matricula
