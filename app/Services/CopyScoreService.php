@@ -36,11 +36,8 @@ class CopyScoreService
         $this->newRegistration = $newRegistration;
         $this->oldRegistration = $oldRegistration;
 
-        $service = new RegistrationEvaluationRuleService($this->newRegistration);
-        $this->newEvaluationRule = $service->getEvaluationRule();
-
-        $service = new RegistrationEvaluationRuleService($this->oldRegistration);
-        $this->oldEvaluationRule = $service->getEvaluationRule();
+        $this->newEvaluationRule = RegistrationEvaluationRuleService::getEvaluationRule($this->newRegistration);
+        $this->oldEvaluationRule = RegistrationEvaluationRuleService::getEvaluationRule($this->oldRegistration);
     }
 
     /**
