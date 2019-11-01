@@ -57,7 +57,7 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
         $log = json_encode([
             'url' => $this->url,
             'payload' => $payload,
-            'response' => $response->getBody()->getContents(),
+            'response' => $response,
         ]);
 
         Log::error($log);
