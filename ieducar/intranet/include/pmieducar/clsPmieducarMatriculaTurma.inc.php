@@ -359,7 +359,8 @@ class clsPmieducarMatriculaTurma extends Model
         $int_ano_turma = false,
         $dependencia = null,
         $apenasTurmasMultiSeriadas = false,
-        $apenasTurmasUnificadas = false
+        $apenasTurmasUnificadas = false,
+        $ultimoSequencialNaTurma = false
     ) {
         $nome = '';
         $tab_aluno = '';
@@ -620,6 +621,16 @@ class clsPmieducarMatriculaTurma extends Model
         }
         if (is_string($dependencia)) {
             $filtros .= "{$whereAnd} m.dependencia = '{$dependencia}'";
+            $whereAnd = ' AND ';
+        }
+
+        if ($ultimoSequencialNaTurma) {
+            $filtros .= "{$whereAnd} mt.sequencial = (
+                SELECT max(sequencial)
+                FROM pmieducar.matricula_turma
+                WHERE matricula_turma.ref_cod_turma = mt.ref_cod_turma
+                AND matricula_turma.ref_cod_matricula = m.cod_matricula
+            )";
             $whereAnd = ' AND ';
         }
 

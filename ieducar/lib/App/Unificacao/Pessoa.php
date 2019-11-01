@@ -22,10 +22,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'idpes'
         ],
         [
-            'tabela' => 'cadastro.fisica_cpf',
-            'coluna' => 'idpes'
-        ],
-        [
             'tabela' => 'cadastro.fisica_foto',
             'coluna' => 'idpes'
         ],
@@ -94,14 +90,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         ],
         [
             'tabela' => 'cadastro.fisica',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'cadastro.fisica_cpf',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'cadastro.fisica_cpf',
             'coluna' => 'idpes_cad'
         ],
         [

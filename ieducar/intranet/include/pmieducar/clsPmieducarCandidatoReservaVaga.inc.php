@@ -14,10 +14,8 @@ class clsPmieducarCandidatoReservaVaga extends Model
     public $ref_cod_turno;
     public $ref_cod_pessoa_cad;
     public $data_cad;
-    public $data_update;
     public $ref_cod_matricula;
     public $situacao;
-    public $data_situacao;
     public $quantidade_membros;
     public $codUsuario;
     public $membros_trabalham;
@@ -38,7 +36,6 @@ class clsPmieducarCandidatoReservaVaga extends Model
         $mae_fez_pre_natal = null,
         $hora_solicitacao = null
     ) {
-        $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'candidato_reserva_vaga crv ';
 
@@ -58,7 +55,8 @@ class clsPmieducarCandidatoReservaVaga extends Model
                                                     crv.quantidade_membros,
                                                     crv.membros_trabalham,
                                                     crv.mae_fez_pre_natal,
-                                                    crv.hora_solicitacao ';
+                                                    crv.hora_solicitacao,
+                                                    crv.historico';
 
         if (is_numeric($cod_candidato_reserva_vaga)) {
             $this->cod_candidato_reserva_vaga = $cod_candidato_reserva_vaga;
@@ -116,8 +114,11 @@ class clsPmieducarCandidatoReservaVaga extends Model
      */
     public function cadastra()
     {
-        if (is_numeric($this->ano_letivo) && is_string($this->data_solicitacao) && is_numeric($this->ref_cod_aluno)
-            && is_numeric($this->ref_cod_serie) && is_numeric($this->ref_cod_pessoa_cad)) {
+        if (is_numeric($this->ano_letivo) &&
+            is_string($this->data_solicitacao) &&
+            is_numeric($this->ref_cod_aluno) &&
+            is_numeric($this->ref_cod_serie) &&
+            is_numeric($this->ref_cod_pessoa_cad)) {
             $db = new clsBanco();
 
             $campos = '';
@@ -229,6 +230,8 @@ class clsPmieducarCandidatoReservaVaga extends Model
         if (is_numeric($this->cod_candidato_reserva_vaga)) {
             $db = new clsBanco();
             $set = '';
+            $gruda = '';
+            $campos = '';
 
             if (is_numeric($this->ano_letivo)) {
                 $set .= "{$gruda}ano_letivo = '{$this->ano_letivo}'";
@@ -289,10 +292,8 @@ class clsPmieducarCandidatoReservaVaga extends Model
 
             if (is_string($this->hora_solicitacao) && !empty($this->hora_solicitacao)) {
                 $set .= "{$gruda}hora_solicitacao = '$this->hora_solicitacao'";
-                $gruda = ', ';
             } elseif (empty($this->hora_solicitacao)) {
                 $set .= "{$gruda}hora_solicitacao = NULL";
-                $gruda = ', ';
             }
 
             if ($set) {
@@ -310,20 +311,30 @@ class clsPmieducarCandidatoReservaVaga extends Model
      *
      * @return array
      */
-    public function lista($ano_letivo = null, $nome = null, $nome_responsavel = null, $ref_cod_escola = null, $ref_cod_serie = null, $ref_cod_curso = null, $ref_cod_turno = null, $ref_cod_aluno = null, $situacaoEmEspera = false)
-    {
-        $filtros = '';
+    public function lista(
+        $ano_letivo = null,
+        $nome = null,
+        $nome_responsavel = null,
+        $ref_cod_escola = null,
+        $ref_cod_serie = null,
+        $ref_cod_curso = null,
+        $ref_cod_turno = null,
+        $ref_cod_aluno = null,
+        $situacaoEmEspera = false
+    ) {
         $this->resetCamposLista();
 
-        $sql = "SELECT {$this->_campos_lista}, resp_pes.nome as nome_responsavel, pes.nome as nome, relatorio.get_nome_escola(crv.ref_cod_escola) as nm_escola
-              FROM {$this->_tabela}
-              INNER JOIN pmieducar.aluno a ON a.cod_aluno = crv.ref_cod_aluno
-              INNER JOIN cadastro.pessoa pes ON pes.idpes = a.ref_idpes
-              INNER JOIN cadastro.fisica fis ON fis.idpes = pes.idpes
-               LEFT JOIN cadastro.pessoa resp_pes ON fis.idpes_responsavel = resp_pes.idpes
-              INNER JOIN pmieducar.serie AS ser ON ser.cod_serie = crv.ref_cod_serie ";
+        $sql = "SELECT {$this->_campos_lista},
+                       resp_pes.nome as nome_responsavel,
+                       pes.nome as nome,
+                       relatorio.get_nome_escola(crv.ref_cod_escola) as nm_escola
+                  FROM {$this->_tabela}
+                 INNER JOIN pmieducar.aluno a ON a.cod_aluno = crv.ref_cod_aluno
+                 INNER JOIN cadastro.pessoa pes ON pes.idpes = a.ref_idpes
+                 INNER JOIN cadastro.fisica fis ON fis.idpes = pes.idpes
+                  LEFT JOIN cadastro.pessoa resp_pes ON fis.idpes_responsavel = resp_pes.idpes
+                 INNER JOIN pmieducar.serie AS ser ON ser.cod_serie = crv.ref_cod_serie ";
         $whereAnd = ' WHERE ';
-
         $filtros = '';
 
         if (is_numeric($ano_letivo)) {
@@ -374,7 +385,6 @@ class clsPmieducarCandidatoReservaVaga extends Model
 
         if ($situacaoEmEspera) {
             $filtros .= " {$whereAnd} crv.situacao IS NULL";
-            $whereAnd = ' AND ';
         }
 
         $db = new clsBanco();
@@ -382,12 +392,13 @@ class clsPmieducarCandidatoReservaVaga extends Model
         $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela}
-              INNER JOIN pmieducar.aluno a ON a.cod_aluno = crv.ref_cod_aluno
-              INNER JOIN cadastro.pessoa pes ON pes.idpes = a.ref_idpes
-              INNER JOIN cadastro.fisica fis ON fis.idpes = pes.idpes
-              LEFT JOIN cadastro.pessoa resp_pes ON fis.idpes_responsavel = resp_pes.idpes
-              INNER JOIN pmieducar.serie AS ser ON ser.cod_serie = crv.ref_cod_serie {$filtros}");
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) 
+                                                   FROM {$this->_tabela}
+                                                  INNER JOIN pmieducar.aluno a ON a.cod_aluno = crv.ref_cod_aluno
+                                                  INNER JOIN cadastro.pessoa pes ON pes.idpes = a.ref_idpes
+                                                  INNER JOIN cadastro.fisica fis ON fis.idpes = pes.idpes
+                                                   LEFT JOIN cadastro.pessoa resp_pes ON fis.idpes_responsavel = resp_pes.idpes
+                                                  INNER JOIN pmieducar.serie AS ser ON ser.cod_serie = crv.ref_cod_serie {$filtros}");
 
         $db->Consulta($sql);
 
@@ -420,12 +431,18 @@ class clsPmieducarCandidatoReservaVaga extends Model
     {
         if (is_numeric($this->cod_candidato_reserva_vaga)) {
             $db = new clsBanco();
-            $db->Consulta("SELECT {$this->_todos_campos}, resp_pes.nome as nome_responsavel, pes.nome as nome, crv.motivo as motivo, relatorio.get_nome_escola(crv.ref_cod_escola) as nm_escola, (SELECT nm_serie FROM pmieducar.serie WHERE cod_serie = ref_cod_serie) as serie FROM {$this->_tabela}
-                      INNER JOIN pmieducar.aluno a ON a.cod_aluno = crv.ref_cod_aluno
-                      INNER JOIN cadastro.pessoa pes ON pes.idpes = a.ref_idpes
-                      INNER JOIN cadastro.fisica fis ON fis.idpes = pes.idpes
-                       LEFT JOIN cadastro.pessoa resp_pes ON fis.idpes_responsavel = resp_pes.idpes
-                      WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
+            $db->Consulta("SELECT {$this->_todos_campos},
+                                          resp_pes.nome as nome_responsavel,
+                                          pes.nome as nome,
+                                          crv.motivo as motivo,
+                                          relatorio.get_nome_escola(crv.ref_cod_escola) as nm_escola,
+                                          (SELECT nm_serie FROM pmieducar.serie WHERE cod_serie = ref_cod_serie) as serie
+                                     FROM {$this->_tabela}
+                                    INNER JOIN pmieducar.aluno a ON a.cod_aluno = crv.ref_cod_aluno
+                                    INNER JOIN cadastro.pessoa pes ON pes.idpes = a.ref_idpes
+                                    INNER JOIN cadastro.fisica fis ON fis.idpes = pes.idpes
+                                     LEFT JOIN cadastro.pessoa resp_pes ON fis.idpes_responsavel = resp_pes.idpes
+                                    WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
             $db->ProximoRegistro();
 
             return $db->Tupla();
@@ -434,16 +451,24 @@ class clsPmieducarCandidatoReservaVaga extends Model
         return false;
     }
 
+    /**
+     * @param null $ano_letivo
+     * @param null $ref_cod_serie
+     * @param null $ref_cod_aluno
+     * @param null $ref_cod_escola
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
     public function atualizaDesistente($ano_letivo = null, $ref_cod_serie = null, $ref_cod_aluno = null, $ref_cod_escola = null)
     {
-        $filtros = '';
         $this->resetCamposLista();
 
         $sql = "UPDATE {$this->_tabela}
                SET situacao = 'D', data_situacao = NOW()";
 
         $whereAnd = ' WHERE ';
-
         $filtros = '';
 
         if (is_numeric($ano_letivo)) {
@@ -463,15 +488,10 @@ class clsPmieducarCandidatoReservaVaga extends Model
 
         if (is_numeric($ref_cod_escola)) {
             $filtros .= " {$whereAnd} ref_cod_escola <> {$ref_cod_escola} ";
-            $whereAnd = ' AND ';
         }
 
         $db = new clsBanco();
-        $countCampos = count(explode(',', $this->_campos_lista));
-        $resultado = [];
-
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-
         $db->Consulta($sql);
 
         return true;
@@ -512,12 +532,60 @@ class clsPmieducarCandidatoReservaVaga extends Model
         return false;
     }
 
+    /**
+     * @return false|string
+     */
+    protected function montaHistorico()
+    {
+        $detalhes = $this->detalhe();
+        $historico = $detalhes['historico'];
+
+        if (is_null($historico)) {
+            $historico = [];
+        } else {
+            $historico = json_decode($historico, true);
+        }
+
+        $mapaSituacao = [
+            null => 'Em espera',
+            'I' => 'Indeferida',
+            'A' => 'Atendida',
+        ];
+
+        $data = $detalhes['data_situacao'] ?? $detalhes['data_solicitacao'];
+        $data = date('d/m/Y', strtotime($data));
+
+        $historico[] = [
+            'situacao' => $mapaSituacao[$detalhes['situacao']] ?? 'Desconhecida',
+            'motivo' => trim($detalhes['motivo']),
+            'data' => $data,
+        ];
+
+        return json_encode($historico);
+    }
+
+    /**
+     * @param $ref_cod_escola
+     * @param $ref_cod_matricula
+     * @param $ref_cod_aluno
+     *
+     * @return bool|mixed
+     *
+     * @throws Exception
+     */
     public function vinculaMatricula($ref_cod_escola, $ref_cod_matricula, $ref_cod_aluno)
     {
-        if (is_numeric($ref_cod_escola) && is_numeric($ref_cod_matricula) && is_numeric($ref_cod_aluno)) {
-            $sql = "UPDATE pmieducar.candidato_reserva_vaga SET ref_cod_matricula = '{$ref_cod_matricula}', situacao = 'A', data_situacao = NOW()
-                      WHERE ref_cod_escola = '{$ref_cod_escola}'
-                      AND ref_cod_aluno = '{$ref_cod_aluno}'";
+        if (is_numeric($ref_cod_escola) &&
+            is_numeric($ref_cod_matricula) &&
+            is_numeric($ref_cod_aluno)) {
+            $historico = $this->montaHistorico();
+            $sql = "UPDATE pmieducar.candidato_reserva_vaga
+                       SET ref_cod_matricula = '{$ref_cod_matricula}',
+                           situacao = 'A',
+                           data_situacao = NOW(),
+                           historico = '{$historico}'
+                     WHERE ref_cod_escola = '{$ref_cod_escola}'
+                       AND ref_cod_aluno = '{$ref_cod_aluno}'";
             $db = new clsBanco();
             $db->Consulta($sql);
             $db->ProximoRegistro();
@@ -528,29 +596,26 @@ class clsPmieducarCandidatoReservaVaga extends Model
         return false;
     }
 
-    public function indefereOutrasReservas($cod_aluno)
-    {
-        if (is_numeric($this->cod_candidato_reserva_vaga) && is_numeric($cod_aluno)) {
-            $db = new clsBanco();
-            $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga SET situacao = 'N', data_situacao = NOW()
-                      WHERE cod_candidato_reserva_vaga <> '{$this->cod_candidato_reserva_vaga}'
-                      AND ref_cod_aluno = {$cod_aluno} ");
-            $db->ProximoRegistro();
-
-            return $db->Tupla();
-        }
-
-        return false;
-    }
-
+    /**
+     * @param null $motivo
+     *
+     * @return bool|mixed
+     *
+     * @throws Exception
+     */
     public function indefereSolicitacao($motivo = null)
     {
         $motivo = $motivo == null ? 'null' : '\'' . $motivo . '\'';
 
         if (is_numeric($this->cod_candidato_reserva_vaga)) {
+            $historico = $this->montaHistorico();
             $db = new clsBanco();
-            $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga SET situacao = 'N', motivo = $motivo, data_situacao = NOW()
-                      WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
+            $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga
+                                      SET situacao = 'N',
+                                          motivo = $motivo,
+                                          data_situacao = NOW(),
+                                          historico = '{$historico}'
+                                    WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
             $db->ProximoRegistro();
 
             return $db->Tupla();
@@ -559,21 +624,36 @@ class clsPmieducarCandidatoReservaVaga extends Model
         return false;
     }
 
-    public function alteraSituacao($situacao, $motivo = null)
+    /**
+     * @param $situacao
+     * @param null $motivo
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function alteraSituacao($situacao, $motivo = null, $data = null)
     {
         if (!$this->cod_candidato_reserva_vaga) {
             return false;
         }
 
         $situacao = $situacao ?: 'NULL';
-        $motivo = $motivo ?: 'NULL';
+        $motivo = str_replace("\'", "''", addslashes($motivo)) ?: null;
+        if ($data) {
+            $data = "data_solicitacao = to_date('{$data}','DD-MM-YYYY'),";
+        }
+
+        $historico = $this->montaHistorico();
 
         $db = new clsBanco();
         $db->Consulta("UPDATE pmieducar.candidato_reserva_vaga
-                                   SET situacao = {$situacao},
-                                       motivo = {$motivo},
-                                       data_situacao = NOW()
-                                 WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
+                                  SET situacao = {$situacao},
+                                      motivo = '{$motivo}',
+                                      {$data}
+                                      data_situacao = NOW(),
+                                      historico = '{$historico}'
+                                WHERE cod_candidato_reserva_vaga = '{$this->cod_candidato_reserva_vaga}'");
 
         return true;
     }
