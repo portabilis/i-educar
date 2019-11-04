@@ -32,20 +32,21 @@ class CopyDescriptiveOpinionService
      */
     private $oldEvaluationRule;
 
-    public function __construct(LegacyRegistration $newRegistration, LegacyRegistration $oldRegistration)
+    /**
+     * Copia notas descritivas de uma matrícula pra outra
+     *
+     * @param LegacyRegistration $newRegistration
+     * @param LegacyRegistration $oldRegistration
+     * @throws MissingDescriptiveOpinionType
+     */
+    public function copyDescriptiveOpinions(LegacyRegistration $newRegistration, LegacyRegistration $oldRegistration)
     {
         $this->newRegistration = $newRegistration;
         $this->oldRegistration = $oldRegistration;
 
         $this->newEvaluationRule = RegistrationEvaluationRuleService::getEvaluationRule($this->newRegistration);
         $this->oldEvaluationRule = RegistrationEvaluationRuleService::getEvaluationRule($this->oldRegistration);
-    }
 
-    /**
-     *
-     */
-    public function copyDescriptiveOpinions()
-    {
         if (!$this->compatibleDescriptiveOpinionType()) {
             return;
         }

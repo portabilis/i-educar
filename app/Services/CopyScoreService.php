@@ -31,20 +31,20 @@ class CopyScoreService
      */
     private $oldEvaluationRule;
 
-    public function __construct(LegacyRegistration $newRegistration, LegacyRegistration $oldRegistration)
+    /**
+     * Copia notas de uma matrícula pra outra
+     *
+     * @param LegacyRegistration $newRegistration
+     * @param LegacyRegistration $oldRegistration
+     */
+    public function copyScores(LegacyRegistration $newRegistration, LegacyRegistration $oldRegistration)
     {
         $this->newRegistration = $newRegistration;
         $this->oldRegistration = $oldRegistration;
 
         $this->newEvaluationRule = RegistrationEvaluationRuleService::getEvaluationRule($this->newRegistration);
         $this->oldEvaluationRule = RegistrationEvaluationRuleService::getEvaluationRule($this->oldRegistration);
-    }
 
-    /**
-     *
-     */
-    public function copyScores()
-    {
         if (!$this->compatibleScoreType()) {
             return;
         }

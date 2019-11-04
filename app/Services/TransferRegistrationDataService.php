@@ -10,7 +10,7 @@ class TransferRegistrationDataService
 {
     public function transferData(LegacyRegistration $registration)
     {
-        $transfer = self::getTransfer($registration);
+        $transfer = $this->getTransfer($registration);
 
         if (!$transfer) {
             return;
@@ -20,14 +20,14 @@ class TransferRegistrationDataService
             throw new StagesAreNotSame();
         }
 
-        $copyAbsenceService = new CopyAbsenceService($registration, $transfer->oldRegistration);
-        $copyAbsenceService->copyAbsences();
+        $copyAbsenceService = new CopyAbsenceService();
+        $copyAbsenceService->copyAbsences($registration, $transfer->oldRegistration);
 
-        $copyScoreService = new CopyScoreService($registration, $transfer->oldRegistration);
-        $copyScoreService->copyScores();
+        $copyScoreService = new CopyScoreService();
+        $copyScoreService->copyScores($registration, $transfer->oldRegistration);
 
-        $copyDescriptiveOpnionService = new CopyDescriptiveOpinionService($registration, $transfer->oldRegistration);
-        $copyDescriptiveOpnionService->copyDescriptiveOpinions();
+        $copyDescriptiveOpnionService = new CopyDescriptiveOpinionService();
+        $copyDescriptiveOpnionService->copyDescriptiveOpinions($registration, $transfer->oldRegistration);
     }
 
     public function hasSameStages($newRegistration, $oldRegistration)
@@ -38,7 +38,7 @@ class TransferRegistrationDataService
         return $newRegistrationNumbersOfStages == $oldRegistrationNumbersOfStages;
     }
 
-    public static function getTransfer(LegacyRegistration $registration)
+    public function getTransfer(LegacyRegistration $registration)
     {
         $levelId = $registration->ref_ref_cod_serie;
         $year = $registration->ano;
