@@ -4,6 +4,7 @@ use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
+use App\Models\Schooling;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
@@ -1781,10 +1782,12 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     public static function getEscolaridades()
     {
-        $sql = 'SELECT * FROM cadastro.escolaridade';
+        $schooling = Schooling::all()->sortBy('descricao');
 
-        return Portabilis_Array_Utils::setAsIdValue(Portabilis_Utils_Database::fetchPreparedQuery($sql), 'idesco', 'descricao');
+        foreach ($schooling as $value) {
+            $return[$value->getIdAttribute()] = $value->getDescriptionAttribute();
+        }
 
-
+        return $return;
     }
 }

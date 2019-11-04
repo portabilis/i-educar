@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Employee;
+use App\Models\Schooling;
 use iEducar\Legacy\Model;
 
 class clsCadastroEscolaridade extends Model
@@ -208,21 +210,16 @@ class clsCadastroEscolaridade extends Model
             return false;
         }
 
-        $sql = "SELECT cod_servidor
-                  FROM {$this->_tabela}
-                  LEFT JOIN pmieducar.servidor on servidor.ref_idesco = escolaridade.idesco
-                 WHERE {$this->_tabela}.idesco = '{$this->idesco}'";
+        $employees = Schooling::select('cod_servidor')
+            ->join('pmieducar.servidor', 'ref_idesco', '=', 'idesco', 'left')
+            ->where('idesco', $this->idesco)
+            ->get();
 
-        $db = new clsBanco();
-        $db->Consulta($sql);
-
-        while ($db->proximoRegistro()) {
-            $results[] = [
-                'cod_servidor' => $db->tupla()['cod_servidor'],
-            ];
+        foreach ($employees as $key => $employe) {
+            $results[$key]['cod_servidor'] = $employe->cod_servidor;
         }
 
-        if (count($results) == 1 && !$results['cod_servidor']) {
+        if (count($results) == 1 && !$results[0]['cod_servidor']) {
             return false;
         }
 
