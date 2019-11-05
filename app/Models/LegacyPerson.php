@@ -35,6 +35,21 @@ class LegacyPerson extends EloquentBaseModel implements Transformable
     public $timestamps = false;
 
     /**
+     * @inheritDoc
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->data_cad = now();
+            $model->situacao = 'I';
+            $model->origem_gravacao = 'M';
+            $model->operacao = 'I';
+        });
+    }
+
+    /**
      * @return string
      */
     public function getNameAttribute()
