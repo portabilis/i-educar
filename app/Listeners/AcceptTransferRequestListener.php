@@ -6,21 +6,37 @@ use App\Services\TransferRegistrationDataService;
 
 class AcceptTransferRequestListener
 {
+    /**
+     * @var TransferRegistrationDataService
+     */
+    private $service;
+
+    /**
+     * @param TransferRegistrationDataService $service
+     */
+    public function __construct(TransferRegistrationDataService $service)
+    {
+        $this->service = $service;
+    }
 
     /**
      * Handle the event.
      *
-     * @param  object  $event
+     * @param object $event
+     *
      * @return void
      */
     public function handle($event)
     {
-        $service = new TransferRegistrationDataService();
-        $transfer = $service->getTransfer($event->registration);
+        $transfer = $this->service->getTransfer($event->registration);
 
         $this->acceptTransferRequest($transfer, $event->registration);
     }
 
+    /**
+     * @param $transfer
+     * @param $newRegistration
+     */
     private function acceptTransferRequest($transfer, $newRegistration)
     {
         $transfer->update([

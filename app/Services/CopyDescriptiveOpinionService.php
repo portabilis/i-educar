@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Contracts\CopyRegistrationData;
 use App\Exceptions\Transfer\MissingDescriptiveOpinionType;
 use App\Models\LegacyDisciplineDescriptiveOpinion;
 use App\Models\LegacyEvaluationRule;
@@ -10,72 +11,83 @@ use App\Models\LegacyRegistration;
 use App\Models\LegacyStudentDescriptiveOpinion;
 use RegraAvaliacao_Model_TipoParecerDescritivo;
 
-class CopyDescriptiveOpinionService
+class CopyDescriptiveOpinionService implements CopyRegistrationData
 {
     /**
-     * @var LegacyRegistration
+     * @var RegistrationEvaluationRuleService
      */
-    private $newRegistration;
+    private $service;
 
     /**
-     * @var LegacyRegistration
+     * CopyAbsenceService constructor.
+     *
+     * @param RegistrationEvaluationRuleService $service
      */
-    private $oldRegistration;
-
-    /**
-     * @var LegacyEvaluationRule
-     */
-    private $newEvaluationRule;
-
-    /**
-     * @var LegacyEvaluationRule
-     */
-    private $oldEvaluationRule;
+    public function __construct(RegistrationEvaluationRuleService $service)
+    {
+        $this->service = $service;
+    }
 
     /**
      * Copia notas descritivas de uma matrícula pra outra
      *
      * @param LegacyRegistration $newRegistration
      * @param LegacyRegistration $oldRegistration
+     *
      * @throws MissingDescriptiveOpinionType
      */
-    public function copyDescriptiveOpinions(LegacyRegistration $newRegistration, LegacyRegistration $oldRegistration)
+    public function copy(LegacyRegistration $newRegistration, LegacyRegistration $oldRegistration)
     {
-        $this->newRegistration = $newRegistration;
-        $this->oldRegistration = $oldRegistration;
+        $newEvaluationRule = $this->service->getEvaluationRule($newRegistration);
+        $oldEvaluationRule = $this->service->getEvaluationRule($oldRegistration);
 
-        $this->newEvaluationRule = RegistrationEvaluationRuleService::getEvaluationRule($this->newRegistration);
-        $this->oldEvaluationRule = RegistrationEvaluationRuleService::getEvaluationRule($this->oldRegistration);
-
-        if (!$this->compatibleDescriptiveOpinionType()) {
+        if (!$this->compatibleDescriptiveOpinionType($newEvaluationRule, $oldEvaluationRule)) {
             return;
         }
 
-        $studentDescriptiveOpinion = $this->createStudentDescriptiveOpinion();
-        $this->createDescriptiveOpinion($studentDescriptiveOpinion);
+        $studentDescriptiveOpinion = $this->createStudentDescriptiveOpinion(
+            $newRegistration,
+            $newEvaluationRule
+        );
+
+        $this->createDescriptiveOpinion(
+            $studentDescriptiveOpinion,
+            $newEvaluationRule,
+            $oldRegistration
+        );
     }
 
     /**
      * Verifica se os tipos de pareceres descritivos das duas regras são iguais
      *
+     * @param LegacyEvaluationRule $newEvaluationRule
+     * @param LegacyEvaluationRule $oldEvaluationRule
+     *
      * @return bool
      */
-    private function compatibleDescriptiveOpinionType()
-    {
-        return $this->newEvaluationRule->parecer_descritivo == $this->oldEvaluationRule->parecer_descritivo;
+    private function compatibleDescriptiveOpinionType(
+        LegacyEvaluationRule $newEvaluationRule,
+        LegacyEvaluationRule $oldEvaluationRule
+    ) {
+        return $newEvaluationRule->parecer_descritivo == $oldEvaluationRule->parecer_descritivo;
     }
 
     /**
      * Cria o registro em parecer_aluno pra nova matrícula
      *
+     * @param LegacyRegistration   $newRegistration
+     * @param LegacyEvaluationRule $newEvaluationRule
+     *
      * @return LegacyStudentDescriptiveOpinion
      */
-    private function createStudentDescriptiveOpinion()
-    {
+    private function createStudentDescriptiveOpinion(
+        LegacyRegistration $newRegistration,
+        LegacyEvaluationRule $newEvaluationRule
+    ) {
         return LegacyStudentDescriptiveOpinion::create(
             [
-                'matricula_id' => $this->newRegistration->getKey(),
-                'parecer_descritivo' => $this->newEvaluationRule->parecer_descritivo,
+                'matricula_id' => $newRegistration->getKey(),
+                'parecer_descritivo' => $newEvaluationRule->parecer_descritivo,
             ]
         );
     }
@@ -84,23 +96,30 @@ class CopyDescriptiveOpinionService
      * Copia os pareceres para a matrícula nova
      *
      * @param LegacyStudentDescriptiveOpinion $studentDescriptiveOpinion
+     * @param LegacyEvaluationRule            $newEvaluationRule
+     *
+     * @param LegacyRegistration              $oldRegistration
+     *
      * @throws MissingDescriptiveOpinionType
      */
-    private function createDescriptiveOpinion($studentDescriptiveOpinion)
-    {
-        if ($this->newEvaluationRule->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
+    private function createDescriptiveOpinion(
+        LegacyStudentDescriptiveOpinion $studentDescriptiveOpinion,
+        LegacyEvaluationRule $newEvaluationRule,
+        LegacyRegistration $oldRegistration
+    ) {
+        if ($newEvaluationRule->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
             return;
         }
 
-        if ($this->newEvaluationRule->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
-            || $this->newEvaluationRule->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
-            $this->copyDisciplineDescriptiveOpinion($studentDescriptiveOpinion);
+        if ($newEvaluationRule->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
+            || $newEvaluationRule->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
+            $this->copyDisciplineDescriptiveOpinion($studentDescriptiveOpinion, $oldRegistration);
             return;
         }
 
-        if ($this->newEvaluationRule->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL
-            || $this->newEvaluationRule->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL) {
-            $this->copyGeneralDescriptiveOpinion($studentDescriptiveOpinion);
+        if ($newEvaluationRule->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL
+            || $newEvaluationRule->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL) {
+            $this->copyGeneralDescriptiveOpinion($studentDescriptiveOpinion, $oldRegistration);
             return;
         }
 
@@ -110,11 +129,14 @@ class CopyDescriptiveOpinionService
     /**
      * Copia parecer por componente
      *
-     * @param $studentDescriptiveOpinion
+     * @param LegacyStudentDescriptiveOpinion $studentDescriptiveOpinion
+     * @param LegacyRegistration              $oldRegistration
      */
-    private function copyDisciplineDescriptiveOpinion($studentDescriptiveOpinion)
-    {
-        $descriptiveOpinions = $this->oldRegistration->studentDescriptiveOpinion->descriptiveOpinions;
+    private function copyDisciplineDescriptiveOpinion(
+        LegacyStudentDescriptiveOpinion $studentDescriptiveOpinion,
+        LegacyRegistration $oldRegistration
+    ) {
+        $descriptiveOpinions = $oldRegistration->studentDescriptiveOpinion->descriptiveOpinions;
 
         foreach ($descriptiveOpinions as $descriptiveOpinion) {
             LegacyDisciplineDescriptiveOpinion::create(
@@ -131,11 +153,14 @@ class CopyDescriptiveOpinionService
     /**
      * Copia parecer geral
      *
-     * @param $studentDescriptiveOpinion
+     * @param LegacyStudentDescriptiveOpinion $studentDescriptiveOpinion
+     * @param LegacyRegistration              $oldRegistration
      */
-    private function copyGeneralDescriptiveOpinion($studentDescriptiveOpinion)
-    {
-        $descriptiveOpinions = $this->oldRegistration->studentDescriptiveOpinion->descriptiveOpinions;
+    private function copyGeneralDescriptiveOpinion(
+        LegacyStudentDescriptiveOpinion $studentDescriptiveOpinion,
+        LegacyRegistration $oldRegistration
+    ) {
+        $descriptiveOpinions = $oldRegistration->studentDescriptiveOpinion->descriptiveOpinions;
 
         foreach ($descriptiveOpinions as $descriptiveOpinion) {
             LegacyGeneralDescriptiveOpinion::create(

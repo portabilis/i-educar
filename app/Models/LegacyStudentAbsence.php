@@ -22,7 +22,7 @@ class LegacyStudentAbsence extends Model
         'tipo_falta',
     ];
 
-    /**
+    /**9
      * @var bool
      */
     public $timestamps = false;

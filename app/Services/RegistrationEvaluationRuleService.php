@@ -2,13 +2,17 @@
 
 namespace App\Services;
 
-use App\Models\LegacyRegistration;
 use App\Models\LegacyEvaluationRule;
+use App\Models\LegacyRegistration;
 
 class RegistrationEvaluationRuleService
 {
-
-    public static function getEvaluationRule(LegacyRegistration $registration)
+    /**
+     * @param LegacyRegistration $registration
+     *
+     * @return LegacyEvaluationRule
+     */
+    public function getEvaluationRule(LegacyRegistration $registration)
     {
         $escolaUsaRegraDiferenciada = $registration->school->utiliza_regra_diferenciada;
         $level = $registration->level;
@@ -16,7 +20,7 @@ class RegistrationEvaluationRuleService
             ->wherePivot('ano_letivo', $registration->ano)
             ->first();
 
-        if($escolaUsaRegraDiferenciada && !empty($evaluationRuleLevel->pivot->regra_avaliacao_diferenciada_id)) {
+        if ($escolaUsaRegraDiferenciada && !empty($evaluationRuleLevel->pivot->regra_avaliacao_diferenciada_id)) {
             $evaluationRuleLevel = LegacyEvaluationRule::find($evaluationRuleLevel->pivot->regra_avaliacao_diferenciada_id);
         }
 

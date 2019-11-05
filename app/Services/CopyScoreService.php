@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Contracts\CopyRegistrationData;
 use App\Models\LegacyDisciplineScore;
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGeneralScore;
@@ -9,27 +10,20 @@ use App\Models\LegacyRegistration;
 use App\Models\LegacyStudentScore;
 use RegraAvaliacao_Model_Nota_TipoValor;
 
-class CopyScoreService
+class CopyScoreService implements CopyRegistrationData
 {
     /**
-     * @var LegacyRegistration
+     * @var RegistrationEvaluationRuleService
      */
-    private $newRegistration;
+    private $service;
 
     /**
-     * @var LegacyRegistration
+     * @param RegistrationEvaluationRuleService $service
      */
-    private $oldRegistration;
-
-    /**
-     * @var LegacyEvaluationRule
-     */
-    private $newEvaluationRule;
-
-    /**
-     * @var LegacyEvaluationRule
-     */
-    private $oldEvaluationRule;
+    public function __construct(RegistrationEvaluationRuleService $service)
+    {
+        $this->service = $service;
+    }
 
     /**
      * Copia notas de uma matrícula pra outra
@@ -37,43 +31,50 @@ class CopyScoreService
      * @param LegacyRegistration $newRegistration
      * @param LegacyRegistration $oldRegistration
      */
-    public function copyScores(LegacyRegistration $newRegistration, LegacyRegistration $oldRegistration)
-    {
-        $this->newRegistration = $newRegistration;
-        $this->oldRegistration = $oldRegistration;
+    public function copy(
+        LegacyRegistration $newRegistration,
+        LegacyRegistration $oldRegistration
+    ) {
+        $newEvaluationRule = $this->service->getEvaluationRule($newRegistration);
+        $oldEvaluationRule = $this->service->getEvaluationRule($oldRegistration);
 
-        $this->newEvaluationRule = RegistrationEvaluationRuleService::getEvaluationRule($this->newRegistration);
-        $this->oldEvaluationRule = RegistrationEvaluationRuleService::getEvaluationRule($this->oldRegistration);
-
-        if (!$this->compatibleScoreType()) {
+        if (!$this->compatibleScoreType($newEvaluationRule, $oldEvaluationRule)) {
             return;
         }
 
-        $studentScore = $this->createStudentScore();
-        $this->createScore($studentScore);
+        $studentScore = $this->createStudentScore($newRegistration);
+
+        $this->createScore($studentScore, $newEvaluationRule, $oldRegistration);
     }
 
     /**
      * Verifica se os tipos de notas das duas regras são iguais
      *
+     * @param LegacyEvaluationRule $newEvaluationRule
+     * @param LegacyEvaluationRule $oldEvaluationRule
+     *
      * @return bool
      */
-    private function compatibleScoreType()
-    {
-        return $this->newEvaluationRule->tipo_nota == $this->oldEvaluationRule->tipo_nota
-            && $this->newEvaluationRule->nota_geral_por_etapa == $this->oldEvaluationRule->nota_geral_por_etapa;
+    private function compatibleScoreType(
+        LegacyEvaluationRule $newEvaluationRule,
+        LegacyEvaluationRule $oldEvaluationRule
+    ) {
+        return $newEvaluationRule->tipo_nota == $oldEvaluationRule->tipo_nota
+            && $newEvaluationRule->nota_geral_por_etapa == $oldEvaluationRule->nota_geral_por_etapa;
     }
 
     /**
      * Cria o registro em nota_aluno pra nova matrícula
      *
+     * @param LegacyRegistration $newRegistration
+     *
      * @return LegacyStudentScore
      */
-    private function createStudentScore()
+    private function createStudentScore(LegacyRegistration $newRegistration)
     {
         return LegacyStudentScore::create(
             [
-                'matricula_id' => $this->newRegistration->getKey(),
+                'matricula_id' => $newRegistration->getKey(),
             ]
         );
     }
@@ -81,30 +82,39 @@ class CopyScoreService
     /**
      * Copia as notas para a matrícula nova
      *
-     * @param LegacyStudentScore $studentScore
+     * @param LegacyStudentScore   $studentScore
+     * @param LegacyEvaluationRule $newEvaluationRule
+     * @param LegacyRegistration   $oldRegistration
      */
-    private function createScore($studentScore)
-    {
-        if ($this->newEvaluationRule->tipo_nota == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+    private function createScore(
+        LegacyStudentScore $studentScore,
+        LegacyEvaluationRule $newEvaluationRule,
+        LegacyRegistration $oldRegistration
+    ) {
+        if ($newEvaluationRule->tipo_nota == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
             return;
         }
 
-        if ($this->newEvaluationRule->nota_geral_por_etapa) {
-            $this->copyGeneralScore($studentScore);
+        if ($newEvaluationRule->nota_geral_por_etapa) {
+            $this->copyGeneralScore($studentScore, $oldRegistration);
+
             return;
         }
 
-        $this->copyDisciplineScore($studentScore);
+        $this->copyDisciplineScore($studentScore, $oldRegistration);
     }
 
     /**
      * Copia nota por componente
      *
-     * @param $studentScore
+     * @param LegacyStudentScore $studentScore
+     * @param LegacyRegistration $oldRegistration
      */
-    private function copyDisciplineScore($studentScore)
-    {
-        $scores = $this->oldRegistration->studentScore->scoreByDiscipline;
+    private function copyDisciplineScore(
+        LegacyStudentScore $studentScore,
+        LegacyRegistration $oldRegistration
+    ) {
+        $scores = $oldRegistration->studentScore->scoreByDiscipline;
 
         foreach ($scores as $score) {
             LegacyDisciplineScore::create(
@@ -125,11 +135,14 @@ class CopyScoreService
     /**
      * Copia nota geral
      *
-     * @param $studentScore
+     * @param LegacyStudentScore $studentScore
+     * @param LegacyRegistration $oldRegistration
      */
-    private function copyGeneralScore($studentScore)
-    {
-        $scores = $this->oldRegistration->studentScore->generalScore;
+    private function copyGeneralScore(
+        LegacyStudentScore $studentScore,
+        LegacyRegistration $oldRegistration
+    ) {
+        $scores = $oldRegistration->studentScore->generalScore;
 
         foreach ($scores as $score) {
             LegacyGeneralScore::create(
