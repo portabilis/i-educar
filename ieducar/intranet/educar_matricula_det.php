@@ -317,7 +317,7 @@ class indice extends clsDetalhe
                 $this->array_botao[] = 'Falecido';
                 $this->array_botao_url_script[] = "go(\"educar_falecido_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\");";
 
-                if ($registro['ref_ref_cod_serie']) {
+                if ($registro['ref_ref_cod_serie'] && $this->permissaoReclassificar()) {
                     $this->array_botao[] = 'Reclassificar';
                     $this->array_botao_url_script[] = "go(\"educar_matricula_reclassificar_cad.php?ref_cod_matricula={$registro['cod_matricula']}&ref_cod_aluno={$registro['ref_cod_aluno']}\")";
                 }
@@ -428,6 +428,13 @@ class indice extends clsDetalhe
         $acesso = new clsPermissoes();
 
         return $acesso->permissao_excluir(627, $this->pessoa_logada, 7, null, true);
+    }
+
+    public function permissaoReclassificar()
+    {
+        $acesso = new clsPermissoes();
+
+        return $acesso->permissao_cadastra(Process::RECLASSIFY_REGISTRATION, $this->pessoa_logada, 7, null, true);
     }
 
     public function canCancelTransferencia($matriculaId)
