@@ -9,20 +9,13 @@ use Storage;
 
 class S3BackupUrlPresigner
 {
-    private $url;
-
-    public function __construct(string $url)
+    public function getPresignedUrl(string $url) : string
     {
-        $this->url = $url;
-    }
-
-    public function getPresignedUrl() : string
-    {
-        $s3Client = $this->getClient();
+        $s3Client = $this->getClient($url);
 
         $command = $s3Client->getCommand('GetObject', [
-            'Bucket' => $this->getBucketFromUrl(),
-            'Key' => $this->getKeyFromUrl(),
+            'Bucket' => $this->getBucketFromUrl($url),
+            'Key' => $this->getKeyFromUrl($url),
         ]);
 
         $request = $s3Client->createPresignedRequest($command, '+10 minutes');
@@ -30,11 +23,11 @@ class S3BackupUrlPresigner
         return (string) $request->getURI();
     }
 
-    private function getClient() : S3Client
+    private function getClient(string $url) : S3Client
     {
         $clientParameters = [
             'version' => 'latest',
-            'region'  => $this->getRegionFromUrl(),
+            'region'  => $this->getRegionFromUrl($url),
             'http'    => [
                 'connect_timeout' => 5
             ],
@@ -47,18 +40,18 @@ class S3BackupUrlPresigner
         return new S3Client($clientParameters);
     }
 
-    private function getBucketFromUrl() : string
+    private function getBucketFromUrl(string $url) : string
     {
-        return explode('/', $this->url)[3];
+        return explode('/', $url)[3];
     }
 
-    private function getKeyFromUrl() : string
+    private function getKeyFromUrl(string $url) : string
     {
-        return implode('/', array_slice(explode('/', $this->url), 4));
+        return implode('/', array_slice(explode('/', $url), 4));
     }
 
-    private function getRegionFromUrl() : string
+    private function getRegionFromUrl(string $url) : string
     {
-        return substr(explode('.', explode('//', $this->url)[1])[0], 3);
+        return substr(explode('.', explode('//', $url)[1])[0], 3);
     }
 }

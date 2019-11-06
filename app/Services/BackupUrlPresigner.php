@@ -6,18 +6,11 @@ use Exception;
 
 class BackupUrlPresigner
 {
-    private $url;
-
-    public function __construct(string $url)
-    {
-        $this->url = $url;
-    }
-
-    public function getPresignedUrl() : string
+    public function getPresignedUrl(string $url) : string
     {
         switch (config('filesystems.cloud')) {
             case 's3':
-                return (new S3BackupUrlPresigner($this->url))->getPresignedUrl();
+                return (new S3BackupUrlPresigner())->getPresignedUrl($url);
             default:
                 throw new Exception('Method BackupUrlPresigner::getPresignedUrl() not implemented for cloud filesystem: '. config('filesystems.cloud'));
         }

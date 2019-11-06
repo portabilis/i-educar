@@ -8,9 +8,9 @@ use Redirect;
 
 class BackupController extends Controller
 {
-    public function download(Request $request)
+    public function download(Request $request, BackupUrlPresigner $backupUrlPresigner)
     {
-        $presignedUrl = (new BackupUrlPresigner($request->url))->getPresignedUrl();
+        $presignedUrl = $backupUrlPresigner->getPresignedUrl($request->url);
 
         return Redirect::away($presignedUrl);
     }
