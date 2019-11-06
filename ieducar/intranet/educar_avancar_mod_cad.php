@@ -148,15 +148,12 @@ class indice extends clsCadastro
                 $mensagem = '';
 
                 if ($count > 0) {
-                    $mensagem .= "O(s) aluno(s) foram rematriculados com sucesso em $this->ano_letivo. Clique <a href='#' onclick='ModalAlunos.init(\"alunos\");'>aqui</a> para conferir os alunos rematrículados</br>";
+                    $mensagem .= "O(s) aluno(s) foram rematriculados com sucesso em $this->ano_letivo. Clique <a href='#' onclick='ModalAlunos.init(\"alunos_rematriculados\");'>aqui</a> para conferir os alunos rematrículados</br>";
 
                     $mensagem .= '</br> As enturmações podem ser realizadas em: Movimentação > Enturmação.';
-
+                    $alunosComSaidaDaEscola = $nomesAlunos;
                     if (count($alunosComSaidaDaEscola) > 0) {
-                        $mensagem .= '</br></br>O(s) seguinte(s) aluno(s) não foram rematriculados, pois possuem saída na escola: </br></br>';
-                        foreach ($alunosComSaidaDaEscola as $nome) {
-                            $mensagem .= "{$nome} </br>";
-                        }
+                        $mensagem .= '</br></br>Alguns alunos não foram rematriculados, pois possuem saída na escola. Clique <a href=\'#\' onclick=\'ModalAlunos.init("alunos_com_saida");\'>aqui</a> para ver esses alunos</br>';
                     }
                 }
 
@@ -164,7 +161,7 @@ class indice extends clsCadastro
                 $this->inputsHelper()->hidden('alunos_com_saida', ['value' => implode(',', $alunosComSaidaDaEscola)]);
                 Session::now('success', $mensagem);
             } elseif (count($alunosSemInep) > 0) {
-                $mensagem = 'Não foi possível realizar a rematrícula, pois o(s) seguinte(s) aluno(s) não possuem o INEP cadastrado: </br></br>';
+                $mensagem = 'Não foi possível realizar a rematrícula, pois alguns alunos não possuem o INEP cadastrado. Clique <a href=\'#\' onclick=\'ModalAlunos.init("alunos_sem_inep");\'>aqui</a> para ver esses alunos</br>';
 
                 foreach ($alunosSemInep as $nome) {
                     $mensagem .= "{$nome} </br>";

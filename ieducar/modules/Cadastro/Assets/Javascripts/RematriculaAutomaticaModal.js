@@ -16,6 +16,15 @@ ModalAlunos = {
       this.dialogContainer = $j('#dialog-container-' + this.idContainer);
     }
 
+    title = 'Alunos(s) rematriculado(s)';
+    if (this.idContainer == 'alunos_com_saida') {
+      title = 'Aluno(s) com data de saída'
+    }
+
+    if (this.idContainer == 'alunos_sem_inep') {
+      title = 'Aluno(s) sem INEP'
+    }
+
     this.dialog = this.dialogContainer.dialog({
       autoOpen: false,
       closeOnEscape: false,
@@ -23,7 +32,7 @@ ModalAlunos = {
       width: 820,
       modal: true,
       resizable: true,
-      title: 'Alunos(s) rematriculado(s)',
+      title: title,
       open: function (event, ui) {
         $j(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
       }
@@ -107,7 +116,7 @@ ModalAlunos = {
     this.dialogContainer.dialog('close');
   },
   init: function (idContainer) {
-    let data = this.urldecode($j('#alunos').val());
+    let data = this.urldecode($j('#' + idContainer).val());
     this.idContainer = idContainer;
 
     this.createDialog();
