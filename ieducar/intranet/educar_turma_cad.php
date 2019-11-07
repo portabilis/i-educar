@@ -2,8 +2,10 @@
 
 use App\Services\iDiarioService;
 use App\Services\SchoolClassService;
+use App\Services\SchoolClass\ExemptedDisciplineLinksRemover;
 use App\Models\School;
 use App\Models\LegacyCourse;
+use App\Models\LegacySchoolClass;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -992,6 +994,10 @@ class indice extends clsCadastro
 
 
             return false;
+        }
+
+        if ($this->ref_cod_disciplina_dispensada) {
+            (new ExemptedDisciplineLinksRemover())->remove(LegacySchoolClass::find($this->cod_turma));
         }
 
         $auditoria = new clsModulesAuditoriaGeral('turma', $this->pessoa_logada, $this->cod_turma);
