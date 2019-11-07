@@ -15,6 +15,7 @@
         "ext-json": "*",
         "ext-pgsql": "*",
         "aws/aws-sdk-php-laravel": "^3.4",
+        "barryvdh/laravel-cors": "^0.11.4",
         "cocur/slugify": "^3.1",
         "composer/semver": "^1.4",
         "cossou/jasperphp": "^2.7",
