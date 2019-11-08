@@ -688,7 +688,12 @@ class App_Model_IedFinder extends CoreExt_Entity
                 $ano
             );
 
-            unset($componentesTurma[$disciplinaDispensada]);
+            foreach($componentesTurma as $key => $componente) {
+                if ($componente->id == $disciplinaDispensada) {
+                    unset($componentesTurma[$key]);
+                }
+            }
+
             return $componentesTurma;
         }
 
