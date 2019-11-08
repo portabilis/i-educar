@@ -599,7 +599,12 @@ class App_Model_IedFinder extends CoreExt_Entity
                 $ano
             );
 
-            unset($componentesTurma[$disciplinaDispensada]);
+            foreach($componentesTurma as $key => $componente) {
+                if ($componente->id == $disciplinaDispensada) {
+                    unset($componentesTurma[$key]);
+                }
+            }
+
             return $componentesTurma;
         }
 
@@ -1046,7 +1051,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         $discipline = Cache::store('array')->remember("disciplinaDispensadaDaTurma:{$codTurma}", now()->addMinute(), function () use ($codTurma) {
-            $discipline = LegacySchoolClass::query()->find($codTurma)->ref_cod_disciplina_dispensada;
+            $discipline = LegacySchoolClass::query()->find($codTurma)->ref_cod_disciplina_dispensada ?? null;
 
             // Caso não exista a disciplina, armazena a string 'null'
             return $discipline ?: 'null';
