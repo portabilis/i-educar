@@ -2,12 +2,49 @@
 
 namespace App\Services;
 
+use App\Exceptions\Transfer\MissingDescriptiveOpinionType;
 use App\Exceptions\Transfer\StagesAreNotSame;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyTransferRequest;
 
 class TransferRegistrationDataService
 {
+    /**
+     * @var CopyAbsenceService
+     */
+    private $copyAbsenceService;
+
+    /**
+     * @var CopyScoreService
+     */
+    private $copyScoreService;
+
+    /**
+     * @var CopyDescriptiveOpinionService
+     */
+    private $copyDescriptiveOpinionService;
+
+    /**
+     * @param CopyAbsenceService            $copyAbsenceService
+     * @param CopyScoreService              $copyScoreService
+     * @param CopyDescriptiveOpinionService $copyDescriptiveOpinionService
+     */
+    public function __construct(
+        CopyAbsenceService $copyAbsenceService,
+        CopyScoreService $copyScoreService,
+        CopyDescriptiveOpinionService $copyDescriptiveOpinionService
+    ) {
+        $this->copyAbsenceService = $copyAbsenceService;
+        $this->copyScoreService = $copyScoreService;
+        $this->copyDescriptiveOpinionService = $copyDescriptiveOpinionService;
+    }
+
+    /**
+     * @param LegacyRegistration $registration
+     *
+     * @throws StagesAreNotSame
+     * @throws MissingDescriptiveOpinionType
+     */
     public function transferData(LegacyRegistration $registration)
     {
         $transfer = $this->getTransfer($registration);
@@ -20,24 +57,32 @@ class TransferRegistrationDataService
             throw new StagesAreNotSame();
         }
 
-        $copyAbsenceService = new CopyAbsenceService();
-        $copyAbsenceService->copyAbsences($registration, $transfer->oldRegistration);
-
-        $copyScoreService = new CopyScoreService();
-        $copyScoreService->copyScores($registration, $transfer->oldRegistration);
-
-        $copyDescriptiveOpnionService = new CopyDescriptiveOpinionService();
-        $copyDescriptiveOpnionService->copyDescriptiveOpinions($registration, $transfer->oldRegistration);
+        $this->copyAbsenceService->copy($registration, $transfer->oldRegistration);
+        $this->copyScoreService->copy($registration, $transfer->oldRegistration);
+        $this->copyDescriptiveOpinionService->copy($registration, $transfer->oldRegistration);
     }
 
-    public function hasSameStages($newRegistration, $oldRegistration)
-    {
+    /**
+     * @param LegacyRegistration $newRegistration
+     * @param LegacyRegistration $oldRegistration
+     *
+     * @return bool
+     */
+    public function hasSameStages(
+        LegacyRegistration $newRegistration,
+        LegacyRegistration $oldRegistration
+    ) {
         $newRegistrationNumbersOfStages = count($newRegistration->lastEnrollment->schoolClass->stages);
         $oldRegistrationNumbersOfStages = count($oldRegistration->lastEnrollment->schoolClass->stages);
 
         return $newRegistrationNumbersOfStages == $oldRegistrationNumbersOfStages;
     }
 
+    /**
+     * @param LegacyRegistration $registration
+     *
+     * @return LegacyTransferRequest
+     */
     public function getTransfer(LegacyRegistration $registration)
     {
         $levelId = $registration->ref_ref_cod_serie;
@@ -57,5 +102,4 @@ class TransferRegistrationDataService
             ->orderBy('data_transferencia', 'desc')
             ->first();
     }
-
 }

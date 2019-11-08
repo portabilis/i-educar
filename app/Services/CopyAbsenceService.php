@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Contracts\CopyRegistrationData;
 use App\Exceptions\Transfer\MissingAbsenceType;
 use App\Models\LegacyDisciplineAbsence;
 use App\Models\LegacyEvaluationRule;
@@ -10,72 +11,72 @@ use App\Models\LegacyRegistration;
 use App\Models\LegacyStudentAbsence;
 use RegraAvaliacao_Model_TipoPresenca;
 
-class CopyAbsenceService
+class CopyAbsenceService implements CopyRegistrationData
 {
     /**
-     * @var LegacyRegistration
+     * @var RegistrationEvaluationRuleService
      */
-    private $newRegistration;
+    private $service;
 
     /**
-     * @var LegacyRegistration
+     * CopyAbsenceService constructor.
+     *
+     * @param RegistrationEvaluationRuleService $service
      */
-    private $oldRegistration;
-
-    /**
-     * @var LegacyEvaluationRule
-     */
-    private $newEvaluationRule;
-
-    /**
-     * @var LegacyEvaluationRule
-     */
-    private $oldEvaluationRule;
+    public function __construct(RegistrationEvaluationRuleService $service)
+    {
+        $this->service = $service;
+    }
 
     /**
      * Copia faltas de uma matrícula pra outra
      *
      * @param LegacyRegistration $newRegistration
      * @param LegacyRegistration $oldRegistration
+     *
      * @throws MissingAbsenceType
      */
-    public function copyAbsences(LegacyRegistration $newRegistration, LegacyRegistration $oldRegistration)
+    public function copy(LegacyRegistration $newRegistration, LegacyRegistration $oldRegistration)
     {
-        $this->newRegistration = $newRegistration;
-        $this->oldRegistration = $oldRegistration;
+        $newEvaluationRule = $this->service->getEvaluationRule($newRegistration);
+        $oldEvaluationRule = $this->service->getEvaluationRule($oldRegistration);
 
-        $this->newEvaluationRule = RegistrationEvaluationRuleService::getEvaluationRule($this->newRegistration);
-        $this->oldEvaluationRule = RegistrationEvaluationRuleService::getEvaluationRule($this->oldRegistration);
-
-        if (!$this->compatibleAbsenceType()) {
+        if (!$this->compatibleAbsenceType($newEvaluationRule, $oldEvaluationRule)) {
             return;
         }
 
-        $studentAbsence = $this->createStudentAbsence();
-        $this->createAbsence($studentAbsence);
+        $studentAbsence = $this->createStudentAbsence($newRegistration, $newEvaluationRule);
+
+        $this->createAbsence($studentAbsence, $oldRegistration, $newEvaluationRule);
     }
 
     /**
      * Verifica se os tipos de presença das duas regras é igual
      *
+     * @param LegacyEvaluationRule $newEvaluationRule
+     * @param LegacyEvaluationRule $oldEvaluationRule
+     *
      * @return bool
      */
-    private function compatibleAbsenceType()
+    private function compatibleAbsenceType($newEvaluationRule, $oldEvaluationRule)
     {
-        return $this->newEvaluationRule->tipo_presenca == $this->oldEvaluationRule->tipo_presenca;
+        return $newEvaluationRule->tipo_presenca == $oldEvaluationRule->tipo_presenca;
     }
 
     /**
      * Cria o registro em falta_aluno pra nova matrícula
      *
+     * @param LegacyRegistration   $newRegistration
+     * @param LegacyEvaluationRule $newEvaluationRule
+     *
      * @return LegacyStudentAbsence
      */
-    private function createStudentAbsence()
+    private function createStudentAbsence($newRegistration, $newEvaluationRule)
     {
         return LegacyStudentAbsence::create(
             [
-                'matricula_id' => $this->newRegistration->getKey(),
-                'tipo_falta' => $this->newEvaluationRule->tipo_presenca,
+                'matricula_id' => $newRegistration->getKey(),
+                'tipo_falta' => $newEvaluationRule->tipo_presenca,
             ]
         );
     }
@@ -84,17 +85,25 @@ class CopyAbsenceService
      * Copia as faltas para a matrícula nova
      *
      * @param LegacyStudentAbsence $studentAbsence
+     * @param LegacyRegistration   $oldRegistration
+     * @param LegacyEvaluationRule $newEvaluationRule
+     *
      * @throws MissingAbsenceType
      */
-    private function createAbsence($studentAbsence)
-    {
-        if ($this->newEvaluationRule->tipo_presenca == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
-            $this->copyDisciplineAbsence($studentAbsence);
+    private function createAbsence(
+        LegacyStudentAbsence $studentAbsence,
+        LegacyRegistration $oldRegistration,
+        LegacyEvaluationRule $newEvaluationRule
+    ) {
+        if ($newEvaluationRule->tipo_presenca == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+            $this->copyDisciplineAbsence($studentAbsence, $oldRegistration);
+
             return;
         }
 
-        if ($this->newEvaluationRule->tipo_presenca == RegraAvaliacao_Model_TipoPresenca::GERAL) {
-            $this->copyGeneralAbsence($studentAbsence);
+        if ($newEvaluationRule->tipo_presenca == RegraAvaliacao_Model_TipoPresenca::GERAL) {
+            $this->copyGeneralAbsence($studentAbsence, $oldRegistration);
+
             return;
         }
 
@@ -104,11 +113,16 @@ class CopyAbsenceService
     /**
      * Copia falta por componente
      *
-     * @param $studentAbsence
+     * @param LegacyStudentAbsence $studentAbsence
+     * @param LegacyRegistration   $oldRegistration
+     *
+     * @return void
      */
-    private function copyDisciplineAbsence($studentAbsence)
-    {
-        $absences = $this->oldRegistration->studentAbsence->absences;
+    private function copyDisciplineAbsence(
+        LegacyStudentAbsence $studentAbsence,
+        LegacyRegistration $oldRegistration
+    ) {
+        $absences = $oldRegistration->studentAbsence->absences;
 
         foreach ($absences as $absence) {
             LegacyDisciplineAbsence::create(
@@ -125,11 +139,14 @@ class CopyAbsenceService
     /**
      * Copia falta geral
      *
-     * @param $studentAbsence
+     * @param LegacyStudentAbsence $studentAbsence
+     * @param LegacyRegistration   $oldRegistration
      */
-    private function copyGeneralAbsence($studentAbsence)
-    {
-        $absences = $this->oldRegistration->studentAbsence->absences;
+    private function copyGeneralAbsence(
+        LegacyStudentAbsence $studentAbsence,
+        LegacyRegistration $oldRegistration
+    ) {
+        $absences = $oldRegistration->studentAbsence->absences;
 
         foreach ($absences as $absence) {
             LegacyGeneralAbsence::create(
