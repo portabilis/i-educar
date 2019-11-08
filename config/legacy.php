@@ -182,6 +182,7 @@ return [
     ],
 
     'report' => [
+        'debug' => env('REPORTS_DEBUG', false),
         'caminho_fundo_certificado' => '',
         'caminho_fundo_carteira_transporte' => '',
         'lei_estudante' => 'Lei municipal',
