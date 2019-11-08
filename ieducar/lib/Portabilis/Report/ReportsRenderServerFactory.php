@@ -147,6 +147,10 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
 
         $json = json_decode($response->getBody()->getContents(), true);
 
+        if (config('legacy.report.debug')) {
+            $this->log($payload, $response->getBody()->getContents());
+        }
+
         if (is_null($json)) {
             $this->log($payload, $response->getBody()->getContents());
 
