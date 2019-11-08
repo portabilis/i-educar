@@ -97,7 +97,7 @@ return [
             'layout' => 'login.tpl',
         ],
         'gtm' => [
-            'id' => ''
+            'id' => env('GOOGLE_TAG_MANAGER'),
         ],
         'rdstation' => [
             'token' => '',
