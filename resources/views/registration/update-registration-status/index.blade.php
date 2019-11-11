@@ -68,7 +68,7 @@
                 <td class="formmdtd" valign="top">
                     <span class="form">
                         <select class="geral" name="ref_cod_serie" id="ref_cod_serie" style="width: 308px;">
-                            <option value="">Selecione uma serie</option>
+                            <option value="">Selecione um curso</option>
                                 @foreach(App_Model_IedFinder::getSeries(null, old('ref_cod_escola', Request::get('ref_cod_escola')), old('ref_cod_curso', Request::get('ref_cod_curso'))) as $id => $name)
                                 <option value="{{$id}}">{{$name}}</option>
                             @endforeach
@@ -87,6 +87,12 @@
                         @endpush
                     @endif
 
+                </td>
+            </tr>
+            <tr id="tr_nm_turma">
+                <td class="formmdtd" valign="top"><span class="form">Turma</span></td>
+                <td class="formmdtd" valign="top">
+                    @include('form.select-school-class')
                 </td>
             </tr>
             <tr id="tr_nm_serie">
@@ -151,5 +157,5 @@
     <script type="text/javascript"
             src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Serie.js") }}"></script>
     <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/ComponenteCurricularEscolaSerie.js") }}"></script>
+            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Turma.js") }}"></script>
 @endprepend
