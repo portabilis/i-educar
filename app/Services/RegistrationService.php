@@ -4,11 +4,26 @@ namespace App\Services;
 
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
+use App\User;
+use clsModulesAuditoriaGeral;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 class RegistrationService
 {
+    /**
+     * @var User
+     */
+    private $user;
+
+    /**
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
     /**
      * @param array $ids
      *
@@ -47,5 +62,23 @@ class RegistrationService
                 });
             })
             ->get();
+    }
+
+    /**
+     * Atualiza a situação de uma matrícula
+     *
+     * @param $registration
+     * @param $status
+     */
+    public function updateStatus(LegacyRegistration $registration, $status)
+    {
+        $auditoria = new clsModulesAuditoriaGeral('update_registration_status', $this->user->getKey());
+        $auditoria->alteracao(
+            ['aprovado' => $registration->aprovado],
+            ['aprovado' => $status]
+        );
+
+        $registration->aprovado = $status;
+        $registration->save();
     }
 }

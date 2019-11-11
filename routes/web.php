@@ -90,6 +90,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/consulta-dispensas', 'ExemptionListController@index')->name('exemption-list.index');
     Route::get('/backup-download', 'BackupController@download')->name('backup.download');
     Route::get('/atualiza-situacao-matriculas', 'UpdateRegistrationStatusController@index')->name('update-registration-status.index');
+    Route::post('/atualiza-situacao-matriculas', 'UpdateRegistrationStatusController@updateStatus')->name('update-registration-status.update-status');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
