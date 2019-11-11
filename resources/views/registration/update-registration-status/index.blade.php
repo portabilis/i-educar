@@ -13,7 +13,9 @@
             </tr>
             <tr id="tr_nm_ano">
                 <td class="formmdtd" valign="top">
-                    <span class="form">Ano*</span><br>
+                    <span class="form">Ano</span>
+                    <span class="campo_obrigatorio">*</span>
+                    <br>
                     <sub style="vertical-align:top;">somente números</sub>
                 </td>
                 <td class="formmdtd" valign="top">
@@ -21,7 +23,10 @@
                 </td>
             </tr>
             <tr id="tr_nm_instituicao">
-                <td class="formlttd" valign="top"><span class="form">Instituição*</span></td>
+                <td class="formlttd" valign="top">
+                    <span class="form">Instituição</span>
+                    <span class="campo_obrigatorio">*</span>
+                </td>
                 <td class="formlttd" valign="top">
                     @include('form.select-institution')
                 </td>
@@ -35,19 +40,85 @@
             <tr id="tr_nm_curso">
                 <td class="formlttd" valign="top"><span class="form">Curso</span></td>
                 <td class="formlttd" valign="top">
-                    @include('form.select-course')
+                    <span class="form">
+                        <select class="geral" name="ref_cod_curso" id="ref_cod_curso" style="width: 308px;">
+                            <option value="">Selecione um curso</option>
+                                @foreach(App_Model_IedFinder::getCursos(Request::get('ref_cod_escola', null)) as $id => $name)
+                                <option value="{{$id}}">{{$name}}</option>
+                            @endforeach
+                        </select>
+                    </span>
+
+                    @if(Request::get('ref_cod_curso'))
+                        @push('scripts')
+                            <script>
+                                (function ($) {
+                                    $(document).ready(function () {
+                                        $j('#ref_cod_curso').val({{Request::get('ref_cod_curso')}})
+                                    });
+                                })(jQuery);
+                            </script>
+                        @endpush
+                    @endif
+
                 </td>
             </tr>
             <tr id="tr_nm_serie">
                 <td class="formmdtd" valign="top"><span class="form">Serie</span></td>
                 <td class="formmdtd" valign="top">
-                    @include('form.select-grade')
+                    <span class="form">
+                        <select class="geral" name="ref_cod_serie" id="ref_cod_serie" style="width: 308px;">
+                            <option value="">Selecione uma serie</option>
+                                @foreach(App_Model_IedFinder::getSeries(null, Request::get('ref_cod_escola', null), Request::get('ref_cod_curso', null)) as $id => $name)
+                                <option value="{{$id}}">{{$name}}</option>
+                            @endforeach
+                        </select>
+                    </span>
+
+                    @if(Request::get('ref_cod_serie'))
+                        @push('scripts')
+                            <script>
+                                (function ($) {
+                                    $(document).ready(function () {
+                                        $j('#ref_cod_serie').val({{Request::get('ref_cod_serie')}})
+                                    });
+                                })(jQuery);
+                            </script>
+                        @endpush
+                    @endif
+
                 </td>
             </tr>
             <tr id="tr_nm_serie">
-                <td class="formlttd" valign="top"><span class="form">Componente curricular</span></td>
                 <td class="formlttd" valign="top">
-                    @include('form.select-discipline-school-grade')
+                    <span class="form">Situação</span>
+                    <span class="campo_obrigatorio">*</span>
+                </td>
+                <td class="formlttd" valign="top">
+                   <span class="form">
+                        <select class="geral" name="situacao" id="situacao" style="width: 308px;">
+                            <option value="">Selecione</option>
+                                @foreach(App_Model_MatriculaSituacao::getInstance()->getValues() as $id => $name)
+                                <option value="{{$id}}">{{$name}}</option>
+                            @endforeach
+                        </select>
+                    </span>
+                </td>
+            </tr>
+            <tr id="tr_nm_serie">
+                <td class="formlttd" valign="top">
+                    <span class="form">Nova situação</span>
+                    <span class="campo_obrigatorio">*</span>
+                </td>
+                <td class="formlttd" valign="top">
+                   <span class="form">
+                        <select class="geral" name="nova_situacao" id="nova_situacao" style="width: 308px;">
+                            <option value="">Selecione</option>
+                                @foreach(App_Model_MatriculaSituacao::getInstance()->getValues() as $id => $name)
+                                <option value="{{$id}}">{{$name}}</option>
+                            @endforeach
+                        </select>
+                    </span>
                 </td>
             </tr>
             </tbody>
