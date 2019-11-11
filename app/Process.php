@@ -14,6 +14,7 @@ class Process
     const MENU_CONFIGURATIONS = 25;
 
     const CONSULTAS = 9998890;
+    const CONFIGURATIONS_TOOLS = 999910;
 
     const REGISTRATIONS = 578;
     const ENROLLMENT_HISTORY = 1001;
@@ -22,4 +23,5 @@ class Process
     const RECLASSIFY_REGISTRATION = 1004;
     const UNDO_STUDENT_UNIFICATION = 2001;
     const EXEMPTION_LIST = 2002;
+    const UPDATE_REGISTRATION_STATUS = 2003;
 }
