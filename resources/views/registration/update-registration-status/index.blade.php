@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <form id="formcadastro" action="" method="get">
+    <form id="formcadastro" action="" method="post">
         <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
             <tbody>
             <tr>
@@ -43,18 +43,18 @@
                     <span class="form">
                         <select class="geral" name="ref_cod_curso" id="ref_cod_curso" style="width: 308px;">
                             <option value="">Selecione um curso</option>
-                                @foreach(App_Model_IedFinder::getCursos(Request::get('ref_cod_escola', null)) as $id => $name)
+                                @foreach(App_Model_IedFinder::getCursos(old('ref_cod_escola', Request::get('ref_cod_escola'))) as $id => $name)
                                 <option value="{{$id}}">{{$name}}</option>
                             @endforeach
                         </select>
                     </span>
 
-                    @if(Request::get('ref_cod_curso'))
+                    @if(old('ref_cod_curso', Request::get('ref_cod_curso')))
                         @push('scripts')
                             <script>
                                 (function ($) {
                                     $(document).ready(function () {
-                                        $j('#ref_cod_curso').val({{Request::get('ref_cod_curso')}})
+                                        $j('#ref_cod_curso').val({{old('ref_cod_curso', Request::get('ref_cod_curso'))}})
                                     });
                                 })(jQuery);
                             </script>
@@ -69,18 +69,18 @@
                     <span class="form">
                         <select class="geral" name="ref_cod_serie" id="ref_cod_serie" style="width: 308px;">
                             <option value="">Selecione uma serie</option>
-                                @foreach(App_Model_IedFinder::getSeries(null, Request::get('ref_cod_escola', null), Request::get('ref_cod_curso', null)) as $id => $name)
+                                @foreach(App_Model_IedFinder::getSeries(null, old('ref_cod_escola', Request::get('ref_cod_escola')), old('ref_cod_curso', Request::get('ref_cod_curso'))) as $id => $name)
                                 <option value="{{$id}}">{{$name}}</option>
                             @endforeach
                         </select>
                     </span>
 
-                    @if(Request::get('ref_cod_serie'))
+                    @if(old('ref_cod_serie', Request::get('ref_cod_serie')))
                         @push('scripts')
                             <script>
                                 (function ($) {
                                     $(document).ready(function () {
-                                        $j('#ref_cod_serie').val({{Request::get('ref_cod_serie')}})
+                                        $j('#ref_cod_serie').val({{old('ref_cod_serie', Request::get('ref_cod_serie'))}})
                                     });
                                 })(jQuery);
                             </script>
