@@ -21,7 +21,8 @@ class LegacyLevel extends Model
      * @var array
      */
     protected $fillable = [
-        'nm_serie', 'ref_usuario_cad', 'ref_cod_curso', 'etapa_curso', 'carga_horaria', 'data_cadastro',
+        'nm_serie', 'ref_usuario_cad', 'ref_cod_curso', 'etapa_curso', 'carga_horaria', 'data_cadastro', 'concluinte',
+        'dias_letivos', 'ativo', 'intervalo'
     ];
 
     /**
