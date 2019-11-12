@@ -85,7 +85,6 @@ class BatchEnrollmentController extends Controller
      * Lista as enturmações da turma e possibilita a desenturmação em lote.
      *
      * @param LegacySchoolClass $schoolClass
-     * @param EnrollmentService $enrollmentService
      *
      * @return View
      */
