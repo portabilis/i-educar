@@ -857,6 +857,19 @@ class DiarioApiController extends ApiCoreController
                                 $query->with('dependencies');
                             }
                         ]);
+
+                        // Pega a última enturmação na turma
+
+                        $query->whereRaw(
+                            '
+                            sequencial = (
+                                SELECT max(sequencial) 
+                                FROM pmieducar.matricula_turma mt 
+                                WHERE mt.ref_cod_turma = matricula_turma.ref_cod_turma 
+                                AND mt.ref_cod_matricula = matricula_turma.ref_cod_matricula
+                            )
+                            '
+                        );
                     },
                 ])
                 ->whereKey($this->getRequest()->turma_id)
