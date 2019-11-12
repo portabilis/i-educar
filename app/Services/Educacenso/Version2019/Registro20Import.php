@@ -10,6 +10,7 @@ use App\Models\LegacyEducationType;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyLevel;
 use App\Models\LegacySchool;
+use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolCourse;
 use App\Models\LegacySchoolGrade;
@@ -17,6 +18,7 @@ use App\Models\SchoolClassInep;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\RegistroImportInterface;
 use App\User;
+use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 
 class Registro20Import implements RegistroImportInterface
 {
@@ -66,7 +68,63 @@ class Registro20Import implements RegistroImportInterface
         $schoolClassType = $this->getOrCreateSchoolClassType();
         $course = $this->getOrCreateCourse($school);
         $level = $this->getOrCreateLevel($school, $course);
-        dd($level);
+
+        $schoolClass = LegacySchoolClass::create(
+            [
+                'ref_ref_cod_escola' => $school->getKey(),
+                'ref_ref_cod_serie' => $level->getKey(),
+                'ref_cod_curso' => $course->getKey(),
+                'ref_cod_turma_tipo' => $schoolClassType->getKey(),
+                'ref_usuario_cad' => $this->user->getKey(),
+                'nm_turma' => $model->nomeTurma,
+                'tipo_mediacao_didatico_pedagogico' => $model->tipoMediacaoDidaticoPedagogico,
+                'hora_inicial' => sprintf("%02d:%02d:00", intval($model->horaInicial), intval($model->horaInicialMinuto)),
+                'hora_final' => sprintf("%02d:%02d:00", intval($model->horaFinal), intval($model->horaFinalMinuto)),
+                'dias_semana' => $this->getArrayDaysWeek(),
+                'tipo_atendimento' => $this->getTipoAtendimento(),
+                'atividades_complementares' => $this->getArrayAtividadesComplementares(),
+                'local_funcionamento_diferenciado' => $model->localFuncionamentoDiferenciado,
+                'etapa_educacenso' => $model->etapaEducacenso,
+            ]
+        );
+    }
+
+    /**
+     * @return string
+     */
+    private function getArrayDaysWeek()
+    {
+        $arrayDaysWeek = [];
+
+        if ($this->model->diaSemanaDomingo) {
+            $arrayDaysWeek[] = 1;
+        }
+
+        if ($this->model->diaSemanaSegunda) {
+            $arrayDaysWeek[] = 2;
+        }
+
+        if ($this->model->diaSemanaTerca) {
+            $arrayDaysWeek[] = 3;
+        }
+
+        if ($this->model->diaSemanaQuarta) {
+            $arrayDaysWeek[] = 4;
+        }
+
+        if ($this->model->diaSemanaQuinta) {
+            $arrayDaysWeek[] = 5;
+        }
+
+        if ($this->model->diaSemanaSexta) {
+            $arrayDaysWeek[] = 6;
+        }
+
+        if ($this->model->diaSemanaSabado) {
+            $arrayDaysWeek[] = 7;
+        }
+
+        return $this->getPostgresIntegerArray($arrayDaysWeek);
     }
 
     /**
@@ -77,6 +135,9 @@ class Registro20Import implements RegistroImportInterface
         return SchoolInep::where('cod_escola_inep', $this->model->codigoEscolaInep)->first();
     }
 
+    /**
+     * @return SchoolClassInep|null
+     */
     private function getSchoolClass()
     {
         if (empty($this->model->inepTurma)) {
@@ -97,6 +158,9 @@ class Registro20Import implements RegistroImportInterface
         return $registro;
     }
 
+    /**
+     * @return LegacySchoolClassType
+     */
     private function getOrCreateSchoolClassType()
     {
         $schoolClassType = LegacySchoolClassType::first();
@@ -706,5 +770,49 @@ class Registro20Import implements RegistroImportInterface
         ];
 
         return $arrayData[$etapa];
+    }
+
+    /**
+     * @param $array
+     * @return string
+     */
+    private function getPostgresIntegerArray($array)
+    {
+        return '{' . implode(',', $array) . '}';
+    }
+
+    /**
+     * @return int|null
+     */
+    private function getTipoAtendimento()
+    {
+        if ($this->model->tipoAtendimentoEscolarizacao) {
+            return TipoAtendimentoTurma::ESCOLARIZACAO;
+        }
+
+        if ($this->model->tipoAtendimentoAtividadeComplementar) {
+            return TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR;
+        }
+
+        if ($this->model->tipoAtendimentoAee) {
+            return TipoAtendimentoTurma::AEE;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return string
+     */
+    private function getArrayAtividadesComplementares()
+    {
+        $arrayAtividades[] = $this->model->tipoAtividadeComplementar1;
+        $arrayAtividades[] = $this->model->tipoAtividadeComplementar2;
+        $arrayAtividades[] = $this->model->tipoAtividadeComplementar3;
+        $arrayAtividades[] = $this->model->tipoAtividadeComplementar4;
+        $arrayAtividades[] = $this->model->tipoAtividadeComplementar5;
+        $arrayAtividades[] = $this->model->tipoAtividadeComplementar6;
+
+        return $this->getPostgresIntegerArray(array_filter($arrayAtividades));
     }
 }
