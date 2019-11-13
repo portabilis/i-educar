@@ -5,15 +5,19 @@ namespace App\Services\Educacenso\Version2019;
 use App\Models\Educacenso\Registro20;
 use App\Models\Educacenso\RegistroEducacenso;
 use App\Models\LegacyCourse;
+use App\Models\LegacyDiscipline;
+use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacyEducationLevel;
 use App\Models\LegacyEducationType;
 use App\Models\LegacyInstitution;
+use App\Models\LegacyKnowledgeArea;
 use App\Models\LegacyLevel;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacySchoolCourse;
 use App\Models\LegacySchoolGrade;
+use App\Models\LegacySchoolGradeDiscipline;
 use App\Models\SchoolClassInep;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\RegistroImportInterface;
@@ -85,8 +89,117 @@ class Registro20Import implements RegistroImportInterface
                 'atividades_complementares' => $this->getArrayAtividadesComplementares(),
                 'local_funcionamento_diferenciado' => $model->localFuncionamentoDiferenciado,
                 'etapa_educacenso' => $model->etapaEducacenso,
+                'max_aluno' => 99,
+                'ativo' => 1,
+                'multiseriada' => 0,
+                'visivel' => true,
+                'tipo_boletim' => 1,
+                'ano' => $this->year,
+                'sgl_turma' => '',
+                'data_cadastro' => now()
             ]
         );
+
+        $this->createInepTurma($schoolClass);
+        $this->createDisciplines($schoolClass, $level, $school);
+    }
+
+    private function createDisciplines($schoolClass, $level, $school)
+    {
+        foreach ($this->model->componentes as $discipline) {
+            $discipline = $this->createDiscipline($discipline);
+            $this->createDisciplineAcademicYear($discipline, $level);
+            $this->createSchoolGradeDiscipline($school, $level, $discipline);
+            $this->createSchoolClassDiscipline($schoolClass, $discipline);
+        }
+    }
+
+    /**
+     * @param $disciplineId
+     * @return LegacyDiscipline
+     */
+    private function createDiscipline($disciplineId)
+    {
+        $discipline = LegacyDiscipline::where('codigo_educacenso', $disciplineId)->first();
+
+        if (!empty($discipline)) {
+            return $discipline;
+        }
+
+        $knowledgeArea = $this->getOrCreateKnowledgeArea();
+
+        $name = self::getComponentes()[$disciplineId] ?? 'Migração';
+
+        return LegacyDiscipline::create([
+            'instituicao_id' => LegacyInstitution::active()->first()->id,
+            'area_conhecimento_id' => $knowledgeArea->getKey(),
+            'nome' => $name,
+            'abreviatura' => mb_substr($name, 0, 3, 'UTF-8'),
+            'codigo_educacenso' => $disciplineId,
+            'tipo_base' => 1,
+        ]);
+    }
+
+    private function createDisciplineAcademicYear($discipline, $level)
+    {
+        if (LegacyDisciplineAcademicYear::where('componente_curricular_id', $discipline->getKey())
+            ->where('ano_escolar_id', $level->getKey())
+            ->exists()) {
+            return;
+        }
+
+        LegacyDisciplineAcademicYear::create([
+            'componente_curricular_id' => $discipline->getKey(),
+            'ano_escolar_id' => $level->getKey(),
+            'anos_letivos' => '{' . $this->year . '}',
+        ]);
+    }
+
+    private function createSchoolGradeDiscipline($school, $level, $discipline)
+    {
+        if (LegacySchoolGradeDiscipline::where('ref_ref_cod_escola', $school->getKey())
+            ->where('ref_ref_cod_serie', $level->getKey())
+            ->where('ref_cod_disciplina', $discipline->getKey())
+            ->where('ativo', 1)
+            ->exists()) {
+            return;
+        }
+
+        LegacySchoolGradeDiscipline::create([
+            'ref_ref_cod_serie' => $level->getKey(),
+            'ref_ref_cod_escola' => $school->getKey(),
+            'ref_cod_disciplina' => $discipline->getKey(),
+            'ativo' => 1,
+            'anos_letivos' => '{' . $this->year . '}',
+        ]);
+    }
+
+    private function createSchoolClassDiscipline(LegacySchoolClass $schoolClass, LegacyDiscipline $discipline)
+    {
+        if ($schoolClass->disciplines()
+            ->where('componente_curricular_id', $discipline->getKey())
+            ->exists()) {
+            return;
+        }
+
+        $schoolClass->disciplines()->attach($discipline->getKey(), [
+            'ano_escolar_id' => $schoolClass->grade->getKey(),
+            'escola_id' => $schoolClass->school->getKey(),
+        ]);
+    }
+
+    private function getOrCreateKnowledgeArea()
+    {
+        $knowledgeArea = LegacyKnowledgeArea::first();
+
+        if (!empty($knowledgeArea)) {
+            return $knowledgeArea;
+        }
+
+        return LegacyKnowledgeArea::create([
+            'instituicao_id' => LegacyInstitution::active()->first()->id,
+            'nome' => 'Migração',
+        ]);
     }
 
     /**
@@ -814,5 +927,22 @@ class Registro20Import implements RegistroImportInterface
         $arrayAtividades[] = $this->model->tipoAtividadeComplementar6;
 
         return $this->getPostgresIntegerArray(array_filter($arrayAtividades));
+    }
+
+    /**
+     * @param LegacySchoolClass $schoolClass
+     */
+    private function createInepTurma(LegacySchoolClass $schoolClass)
+    {
+        if (empty($this->model->inepTurma)) {
+            return;
+        }
+
+        SchoolClassInep::create([
+            'cod_turma' => $schoolClass->getKey(),
+            'cod_turma_inep' => $this->model->inepTurma,
+            'created_at' => now(),
+        ]);
+
     }
 }
