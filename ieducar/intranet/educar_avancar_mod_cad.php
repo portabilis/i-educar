@@ -10,7 +10,6 @@ class clsIndexBase extends clsBase
 }
 
 use App\Models\LegacyInstitution;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class indice extends clsCadastro
@@ -151,7 +150,6 @@ class indice extends clsCadastro
                     $mensagem .= "O(s) aluno(s) foram rematriculados com sucesso em $this->ano_letivo. Clique <a href='#' onclick='ModalAlunos.init(\"alunos_rematriculados\");'>aqui</a> para conferir os alunos rematrículados</br>";
 
                     $mensagem .= '</br> As enturmações podem ser realizadas em: Movimentação > Enturmação.';
-                    $alunosComSaidaDaEscola = $nomesAlunos;
                     if (count($alunosComSaidaDaEscola) > 0) {
                         $mensagem .= '</br></br>Alguns alunos não foram rematriculados, pois possuem saída na escola. Clique <a href=\'#\' onclick=\'ModalAlunos.init("alunos_com_saida");\'>aqui</a> para ver esses alunos</br>';
                     }
