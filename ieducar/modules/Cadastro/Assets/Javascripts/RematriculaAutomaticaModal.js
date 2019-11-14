@@ -33,8 +33,10 @@ ModalAlunos = {
       modal: true,
       resizable: true,
       title: title,
+      zindex: 100000,
       open: function (event, ui) {
         $j(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+        $j(".ui-dialog").css('z-index', 100000);
       }
     });
   },
@@ -121,12 +123,6 @@ ModalAlunos = {
 
     this.createDialog();
     this.makeHtml(data);
-
-    const $msg = $j('.flashMessages__message');
-
-    $msg.fadeOut(250, () => {
-      $msg.remove();
-    })
   },
   urldecode(text) {
     return decodeURIComponent(text.replace(/\+/g, ' '));
