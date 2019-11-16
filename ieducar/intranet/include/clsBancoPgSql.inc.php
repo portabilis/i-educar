@@ -276,18 +276,19 @@ abstract class clsBancoSQL_
     }
   }
 
-  /**
-   * Executa uma consulta SQL.
-   *
-   * @param  string  $consulta    Consulta SQL.
-   * @param  bool    $reescrever  (Opcional) SQL é reescrita para transformar
-   *   sintaxe MySQL em PostgreSQL.
-   * @return bool|resource FALSE em caso de erro ou o identificador da consulta
-   *   em caso de sucesso.
-   *
-   * @throws Exception
-   */
-  public function Consulta($consulta, $reescrever = true)
+    /**
+     * Executa uma consulta SQL.
+     *
+     * @param string $consulta Consulta SQL.
+     * @param bool $reescrever (Opcional) SQL é reescrita para transformar
+     *   sintaxe MySQL em PostgreSQL.
+     * @param bool $forceUseWritePdo Força o uso da conexão de escrita
+     * @return bool|resource FALSE em caso de erro ou o identificador da consulta
+     *   em caso de sucesso.
+     *
+     * @throws Exception
+     */
+  public function Consulta($consulta, $reescrever = true, $forceUseWritePdo = false)
   {
     if (empty($consulta)) {
       return FALSE;
@@ -323,7 +324,7 @@ abstract class clsBancoSQL_
       }
     }
 
-    $this->run($this->strStringSQL);
+    $this->run($this->strStringSQL, [], $forceUseWritePdo);
 
     if (!$this->bConsulta_ID) {
         $erroMsg = "SQL invalido: {$this->strStringSQL}<br>\n";
@@ -341,7 +342,7 @@ abstract class clsBancoSQL_
   function InsertId($str_sequencia = FALSE)
   {
     if ($str_sequencia) {
-      $this->Consulta("SELECT currval('{$str_sequencia}'::text)");
+      $this->Consulta("SELECT currval('{$str_sequencia}'::text)", true, true);
       $this->ProximoRegistro();
       list($valor) = $this->Tupla();
       return $valor;
@@ -503,8 +504,9 @@ abstract class clsBancoSQL_
      *
      * @param string $query
      * @param array $params
+     * @param bool $forceUseWritePdo Força o método publicRun a usar a conexão de escrita
      */
-    private function run(string $query, $params = [])
+    private function run(string $query, $params = [], $forceUseWritePdo = false)
     {
         if (is_numeric(key($params))) {
             $params = array_combine(range('a', chr(96 + count($params))), $params);
@@ -519,6 +521,6 @@ abstract class clsBancoSQL_
             DB::setFetchMode($this->getFetchMode());
         }
 
-        $this->bConsulta_ID = DB::publicRun($query, $params);
+        $this->bConsulta_ID = DB::publicRun($query, $params, $forceUseWritePdo);
     }
 }

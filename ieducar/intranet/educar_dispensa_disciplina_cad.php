@@ -484,6 +484,13 @@ class indice extends clsCadastro
         }
         $notaComponenteCurricularMapper->delete($notaComponenteCurricular[0]);
 
+        $auditoria = new clsModulesAuditoriaGeral('nota_removida_dispensa', $this->pessoa_logada);
+        $auditoria->exclusao([
+            'nota_aluno_id' => $notaAluno,
+            'componente_curricular_id' => $disciplinaId,
+            'etapa' => $etapa,
+        ]);
+
         return true;
     }
 
@@ -505,6 +512,13 @@ class indice extends clsCadastro
             return false;
         }
         $faltaComponenteCurricularMapper->delete($faltaComponenteCurricular[0]);
+
+        $auditoria = new clsModulesAuditoriaGeral('falta_removida_dispensa', $this->pessoa_logada);
+        $auditoria->exclusao([
+            'falta_aluno_id' => $faltaAluno,
+            'componente_curricular_id' => $disciplinaId,
+            'etapa' => $etapa,
+        ]);
 
         return true;
     }
