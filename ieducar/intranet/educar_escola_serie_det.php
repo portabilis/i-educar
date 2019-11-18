@@ -1,5 +1,7 @@
 <?php
 
+use App\Services\SchoolGradeDisciplineService;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -106,6 +108,12 @@ class indice extends clsDetalhe
         } catch (Exception $e) {
         }
 
+        /** @var SchoolGradeDisciplineService $service */
+        $service = app(SchoolGradeDisciplineService::class);
+
+        $disciplines = $service->getAllDisciplines($this->ref_cod_escola, $this->ref_cod_serie)
+            ->pluck('carga_horaria', 'ref_cod_disciplina');
+
         if (0 < count($componentes)) {
             $tabela = '
 <table>
@@ -132,7 +140,7 @@ class indice extends clsDetalhe
                     $color,
                     $componente,
                     $color,
-                    $componente->cargaHoraria
+                    $disciplines[intval($componente->id)] ?? $componente->cargaHoraria
                 );
 
                 $cont++;
