@@ -132,4 +132,36 @@ class LegacyRegistration extends Model
     {
         return $this->aprovado == App_Model_MatriculaSituacao::ABANDONO;
     }
+
+    /**
+     * @return HasMany
+     */
+    public function dependencies()
+    {
+        return $this->hasMany(LegacyDisciplineDependence::class, 'ref_cod_matricula', 'cod_matricula');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function school()
+    {
+        return $this->belongsTo(LegacySchool::class, 'ref_ref_cod_escola');
+    }
+
+    /**
+     * @return LegacyEvaluationRule
+     */
+    public function getEvaluationRule()
+    {
+        $evaluationRuleGradeYear = $this->hasOne(LegacyEvaluationRuleGradeYear::class, 'serie_id', 'ref_ref_cod_serie')
+            ->where('ano_letivo', $this->ano)
+            ->firstOrFail();
+
+        if ($this->school->utiliza_regra_diferenciada && $evaluationRuleGradeYear->differentiatedEvaluationRule) {
+            return $evaluationRuleGradeYear->differentiatedEvaluationRule;
+        }
+
+        return $evaluationRuleGradeYear->evaluationRule;
+    }
 }
