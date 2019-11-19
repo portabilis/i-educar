@@ -186,7 +186,7 @@ class Registro30 implements RegistroEducacenso
      */
     public $dadosAluno;
 
-    private $inepPessoa;
+    public $inepPessoa;
 
     public function hydrateModel($arrayColumns)
     {
@@ -282,6 +282,13 @@ class Registro30 implements RegistroEducacenso
         $this->formacaoContinuadaEducacaoOutros = $arrayColumns[80];
         $this->formacaoContinuadaEducacaoNenhum = $arrayColumns[81];
         $this->email = $arrayColumns[82];
+
+        if ($this->escolaridade) {
+            $this->tipos[self::TIPO_TEACHER] = true;
+            $this->tipos[self::TIPO_MANAGER] = true;
+        } else {
+            $this->tipos[self::TIPO_STUDENT] = true;
+        }
     }
 
     /**

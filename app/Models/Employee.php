@@ -22,6 +22,13 @@ class Employee extends Model
      */
     public $timestamps = false;
 
+    protected $fillable = [
+        'cod_servidor',
+        'ref_cod_instituicao',
+        'data_cadastro',
+        'carga_horaria',
+    ];
+
     /**
      * @return BelongsTo
      */
@@ -42,5 +49,13 @@ class Employee extends Model
             'ref_cod_escola'
         )->withPivot('ref_ref_cod_instituicao', 'ano')
             ->where('servidor_alocacao.ativo', 1);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function person()
+    {
+        return $this->belongsTo(LegacyPerson::class, 'cod_servidor');
     }
 }
