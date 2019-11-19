@@ -252,6 +252,6 @@ class clsModulesAuditoriaNota
         $detFuncionario = $objFuncionario->detalhe();
         $matricula = $detFuncionario['matricula'];
 
-        return $pessoaId . ' - ' . $matricula;
+        return "{$pessoaId} - ' {$matricula}";
     }
 }
