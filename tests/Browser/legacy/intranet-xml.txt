@@ -1,6 +1,5 @@
 educar_acervo_colecao_xml.php
 educar_acervo_editora_xml.php
-educar_aluno_cad_xml.php
 educar_biblioteca_xml.php
 educar_cliente_tipo_xml.php
 educar_colecao_xml.php
