@@ -8,10 +8,10 @@ use App\Models\Employee;
 use App\Models\EmployeeInep;
 use App\Models\LegacyCity;
 use App\Models\LegacyCountry;
-use App\Models\LegacyEmployee;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyPerson;
+use App\Models\LegacyRace;
 use App\Models\LegacyStudent;
 use App\Models\StudentInep;
 use App\Services\Educacenso\RegistroImportInterface;
@@ -81,6 +81,7 @@ class Registro30Import implements RegistroImportInterface
         }
 
         $this->createPersonInep($person);
+        $this->createRace($person);
 
         return $person;
     }
@@ -227,5 +228,56 @@ class Registro30Import implements RegistroImportInterface
             'cod_servidor' => $employee->getKey(),
             'cod_docente_inep' => $this->model->inepPessoa,
         ]);
+    }
+
+    /**
+     * @param LegacyPerson $person
+     */
+    private function createRace($person)
+    {
+        if ($person->individual->race()->count()) {
+            return;
+        }
+
+        $race = $this->getOrCreateRace($person);
+        $person->individual->race()->attach($race);
+    }
+
+    /**
+     * @param $person
+     * @return LegacyRace
+     */
+    private function getOrCreateRace($person)
+    {
+        $race = LegacyRace::where('raca_educacenso', $this->model->raca)->first();
+
+        if (!empty($race)) {
+            return $race;
+        }
+
+        return LegacyRace::create([
+            'idpes_cad' => $this->user->getKey(),
+            'nm_raca' => $this->getRaceName($this->model->raca),
+            'data_cadastro' => now(),
+            'raca_educacenso' => $this->model->raca,
+        ]);
+    }
+
+    /**
+     * @param $raca
+     * @return string
+     */
+    private function getRaceName($raca)
+    {
+        $string = [
+            0 => 'Não declarada',
+            1 => 'Branca',
+            2 => 'Preta',
+            3 => 'Parda',
+            4 => 'Amarela',
+            5 => 'Indígena',
+        ];
+
+        return $string[$raca] ?? 'Não declarada';
     }
 }

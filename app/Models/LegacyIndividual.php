@@ -36,4 +36,17 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function race()
+    {
+        return $this->belongsToMany(
+            LegacyRace::class,
+            'cadastro.fisica_raca',
+            'ref_idpes',
+            'ref_cod_raca'
+        );
+    }
 }

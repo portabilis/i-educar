@@ -57,4 +57,9 @@ class LegacyPerson extends EloquentBaseModel implements Transformable
     {
         return $this->hasMany(LegacyPhone::class, 'idpes', 'idpes');
     }
+
+    public function individual()
+    {
+        return $this->hasOne(LegacyIndividual::class, 'idpes', 'idpes');
+    }
 }
