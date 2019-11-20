@@ -492,7 +492,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             $fisica = new clsFisica($this->cod_pessoa_fj);
             $fisica = $fisica->detalhe();
             $valorCpf = is_numeric($fisica['cpf']) ? int2CPF($fisica['cpf']) : '';
-            $nisPisPasep = $fisica['nis_pis_pasep'];
+            $nisPisPasep = int2Nis($fisica['nis_pis_pasep']);
         }
 
         $this->campoCpf("id_federal", "CPF", $valorCpf);

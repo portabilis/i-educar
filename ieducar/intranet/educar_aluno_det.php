@@ -126,7 +126,7 @@ class indice extends clsDetalhe
             $registro['url'] = $det_pessoa_fj['url'];
 
             $registro['nacionalidade'] = $det_fisica['nacionalidade'];
-            $registro['nis_pis_pasep'] = $det_fisica['nis_pis_pasep'];
+            $registro['nis_pis_pasep'] = int2Nis($det_fisica['nis_pis_pasep']);
 
             $registro['naturalidade'] = $det_fisica['idmun_nascimento']->detalhe();
             $registro['naturalidade'] = $registro['naturalidade']['nome'];
@@ -368,7 +368,7 @@ class indice extends clsDetalhe
         if ($det_fisica['nome_social']) {
             $this->addDetalhe(['Nome Social', strtoupper($det_fisica['nome_social'])]);
         }
-        
+
         if (idFederal2int($registro['cpf'])) {
             $this->addDetalhe(['CPF', $registro['cpf']]);
         }
@@ -1026,7 +1026,7 @@ class indice extends clsDetalhe
         $this->addDetalhe("<input type='hidden' id='aluno_id' name='aluno_id' value='{$registro['cod_aluno']}' />");
         $mostraDependencia = config('legacy.app.matricula.dependencia');
         $this->addDetalhe("<input type='hidden' id='can_show_dependencia' name='can_show_dependencia' value='{$mostraDependencia}' />");
-        
+
         $this->breadcrumb('Aluno', ['/intranet/educar_index.php' => 'Escola']);
         // js
         $scripts = [
