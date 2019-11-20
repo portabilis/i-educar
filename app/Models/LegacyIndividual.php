@@ -49,4 +49,25 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
             'ref_cod_raca'
         );
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function deficiency()
+    {
+        return $this->belongsToMany(
+            LegacyDeficiency::class,
+            'cadastro.fisica_deficiencia',
+            'ref_idpes',
+            'ref_cod_deficiencia'
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function person()
+    {
+        return $this->hasOne(LegacyPerson::class, 'idpes', 'idpes');
+    }
 }

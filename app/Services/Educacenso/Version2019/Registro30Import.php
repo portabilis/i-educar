@@ -8,6 +8,7 @@ use App\Models\Employee;
 use App\Models\EmployeeInep;
 use App\Models\LegacyCity;
 use App\Models\LegacyCountry;
+use App\Models\LegacyDeficiency;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyPerson;
@@ -16,6 +17,7 @@ use App\Models\LegacyStudent;
 use App\Models\StudentInep;
 use App\Services\Educacenso\RegistroImportInterface;
 use App\User;
+use iEducar\Modules\Educacenso\Model\Deficiencias;
 
 class Registro30Import implements RegistroImportInterface
 {
@@ -55,7 +57,9 @@ class Registro30Import implements RegistroImportInterface
 
         $person = $this->getOrCreatePerson();
 
-        dd($person);
+        $this->createPersonInep($person);
+        $this->createRace($person);
+        $this->createDeficiencies($person);
     }
 
     /**
@@ -80,9 +84,6 @@ class Registro30Import implements RegistroImportInterface
             $person = $this->createPerson();
         }
 
-        $this->createPersonInep($person);
-        $this->createRace($person);
-
         return $person;
     }
 
@@ -92,6 +93,10 @@ class Registro30Import implements RegistroImportInterface
     private function getPerson()
     {
         $inepNumber = $this->model->inepPessoa;
+
+        if (empty($inepNumber)) {
+            return $this->getPersonByCpf($this->model->cpf);
+        }
 
         if ($this->model->isStudent()) {
             /** @var StudentInep $studentInep */
@@ -139,12 +144,12 @@ class Registro30Import implements RegistroImportInterface
             'origem_gravacao' => 'U',
             'sexo' => $this->model->sexo == '1' ? 'M' : 'F',
             'data_nasc' => \DateTime::createFromFormat('d/m/Y', $this->model->dataNascimento),
-            'idpes_mae' => $filiacao1,
-            'idpes_pai' => $filiacao2,
+            'idpes_mae' => $filiacao1 ? $filiacao1->getKey() : null,
+            'idpes_pai' => $filiacao2 ? $filiacao2->getKey() : null,
             'nacionalidade' => $this->model->nacionalidade,
-            'idpais_estrangeiro' => LegacyCountry::where('cod_ibge', $this->model->paisNacionalidade)->first()->getkey() ?: null,
-            'idmun_nascimento' => LegacyCity::where('cod_ibge', $this->model->municipioNascimento)->first()->getKey() ?: null,
-            'cpf' => $this->model->cpf,
+            'idpais_estrangeiro' => $this->getCountry($this->model->paisNacionalidade),
+            'idmun_nascimento' => $this->getCity($this->model->municipioNascimento),
+            'cpf' => (int) $this->model->cpf,
         ]);
 
         return $person;
@@ -172,7 +177,8 @@ class Registro30Import implements RegistroImportInterface
         LegacyIndividual::create([
             'idpes' => $person->getKey(),
             'data_cad' => now(),
-            'operacao' => 'I', 'origem_gravacao',
+            'operacao' => 'I',
+            'origem_gravacao' => 'U',
         ]);
 
         return $person;
@@ -183,6 +189,10 @@ class Registro30Import implements RegistroImportInterface
      */
     private function createPersonInep($person)
     {
+        if (empty($this->model->inepPessoa)) {
+            return;
+        }
+
         if ($this->model->isStudent() || true) {
             $this->createStudentInep($person);
         }
@@ -192,6 +202,9 @@ class Registro30Import implements RegistroImportInterface
         }
     }
 
+    /**
+     * @param LegacyPerson $person
+     */
     private function createStudentInep($person)
     {
         if (StudentInep::where('cod_aluno_inep', $this->model->inepPessoa)
@@ -210,6 +223,9 @@ class Registro30Import implements RegistroImportInterface
         ]);
     }
 
+    /**
+     * @param LegacyPerson c$person
+     */
     private function createEmployeeInep($person)
     {
         if (EmployeeInep::where('cod_docente_inep', $this->model->inepPessoa)
@@ -264,6 +280,73 @@ class Registro30Import implements RegistroImportInterface
     }
 
     /**
+     * @param LegacyPerson $person
+     */
+    private function createDeficiencies($person)
+    {
+        if ($this->model->deficienciaCegueira) {
+            $this->createDeficiency($person, Deficiencias::CEGUEIRA);
+        }
+
+        if ($this->model->deficienciaBaixaVisao) {
+            $this->createDeficiency($person, Deficiencias::BAIXA_VISAO);
+        }
+
+        if ($this->model->deficienciaSurdez) {
+            $this->createDeficiency($person, Deficiencias::SURDEZ);
+        }
+
+        if ($this->model->deficienciaAuditiva) {
+            $this->createDeficiency($person, Deficiencias::DEFICIENCIA_AUDITIVA);
+        }
+
+        if ($this->model->deficienciaSurdoCegueira) {
+            $this->createDeficiency($person, Deficiencias::SURDOCEGUEIRA);
+        }
+
+        if ($this->model->deficienciaFisica) {
+            $this->createDeficiency($person, Deficiencias::DEFICIENCIA_FISICA);
+        }
+
+        if ($this->model->deficienciaIntelectual) {
+            $this->createDeficiency($person, Deficiencias::DEFICIENCIA_INTELECTUAL);
+        }
+
+        if ($this->model->deficienciaAutismo) {
+            $this->createDeficiency($person, Deficiencias::TRANSTORNO_ESPECTRO_AUTISTA);
+        }
+
+        if ($this->model->deficienciaAltasHabilidades) {
+            $this->createDeficiency($person, Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO);
+        }
+    }
+
+    /**
+     * @param LegacyPerson $person
+     * @param int $educacendoDeficiency
+     */
+    private function createDeficiency($person, $educacendoDeficiency)
+    {
+        $deficiency = LegacyDeficiency::where('deficiencia_educacenso', $educacendoDeficiency)->first();
+
+        if (empty($deficiency)) {
+            $deficiency = LegacyDeficiency::create([
+                'nm_deficiencia' => Deficiencias::getDescriptiveValues()[$educacendoDeficiency] ?? 'Deficiência',
+                'deficiencia_educacenso' => $educacendoDeficiency,
+            ]);
+        }
+
+        $individual = $person->individual;
+        if($individual->deficiency()
+            ->where('deficiencia_educacenso', $educacendoDeficiency)
+            ->exists()) {
+            return;
+        }
+
+        $individual->deficiency()->attach($deficiency);
+    }
+
+    /**
      * @param $raca
      * @return string
      */
@@ -279,5 +362,43 @@ class Registro30Import implements RegistroImportInterface
         ];
 
         return $string[$raca] ?? 'Não declarada';
+    }
+
+    /**
+     * @param $cpf
+     * @return LegacyPerson|null
+     */
+    private function getPersonByCpf($cpf)
+    {
+        if (empty($cpf)) {
+            return null;
+        }
+
+        /** @var LegacyIndividual $individual */
+        $individual = LegacyIndividual::where('cpf', $cpf)->first();
+
+        if (empty($individual)) {
+            return null;
+        }
+
+        return $individual->person;
+    }
+
+    private function getCity($cityIbge)
+    {
+        if (empty($cityIbge)) {
+            return null;
+        }
+
+        return LegacyCity::where('cod_ibge', $cityIbge)->first()->getKey() ?: null;
+    }
+
+    private function getCountry($countryIbge)
+    {
+        if (empty($countryIbge)) {
+            return null;
+        }
+
+        return LegacyCountry::where('cod_ibge', $countryIbge)->first()->getKey() ?: null;
     }
 }
