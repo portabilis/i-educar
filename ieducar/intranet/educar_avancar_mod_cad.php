@@ -161,10 +161,6 @@ class indice extends clsCadastro
             } elseif (count($alunosSemInep) > 0) {
                 $mensagem = 'Não foi possível realizar a rematrícula, pois alguns alunos não possuem o INEP cadastrado. Clique <a href=\'#\' onclick=\'ModalAlunos.init("alunos_sem_inep");\'>aqui</a> para ver esses alunos</br>';
 
-                foreach ($alunosSemInep as $nome) {
-                    $mensagem .= "{$nome} </br>";
-                }
-
                 $mensagem .= '</br>Por favor, cadastre o INEP do(s) aluno(s) em: Cadastros > Aluno > Alunos > Campo: Código INEP.';
 
                 $this->inputsHelper()->hidden('alunos_sem_inep', ['value' => implode(',', $alunosSemInep)]);
