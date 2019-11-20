@@ -26,6 +26,14 @@ class LegacyValueRoundingTable extends Model
     ];
 
     /**
+     * @var array
+     */
+    protected $casts = [
+        'valor_minimo' => 'float',
+        'valor_maximo' => 'float',
+    ];
+
+    /**
      * @var bool
      */
     public $timestamps = false;

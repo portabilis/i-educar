@@ -3,7 +3,7 @@
     "description": "Software livre de gestão escolar",
     "type": "project",
     "license": "GPL-2.0-or-later",
-    "version": "2.2.10",
+    "version": "2.2.13",
     "keywords": [
         "Portabilis",
         "i-Educar"
@@ -13,6 +13,7 @@
         "php": "^7.2",
         "ext-gd": "*",
         "ext-json": "*",
+        "ext-pdo": "*",
         "ext-pgsql": "*",
         "aws/aws-sdk-php-laravel": "^3.4",
         "barryvdh/laravel-cors": "^0.11.4",
