@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Employee extends Model
 {
@@ -38,7 +40,7 @@ class Employee extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function schools()
     {
@@ -57,5 +59,18 @@ class Employee extends Model
     public function person()
     {
         return $this->belongsTo(LegacyPerson::class, 'cod_servidor');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function schoolingDegree()
+    {
+        return $this->belongsTo(LegacySchoolingDegree::class, 'ref_idesco');
+    }
+
+    public function graduations()
+    {
+        return $this->hasMany(EmployeeGraduation::class, 'employee_id');
     }
 }
