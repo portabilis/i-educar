@@ -116,6 +116,7 @@ ModalAlunos = {
   },
   close: function () {
     this.dialogContainer.dialog('close');
+    $j('.ui-dialog').remove()
   },
   init: function (idContainer) {
     let data = this.urldecode($j('#' + idContainer).val());
