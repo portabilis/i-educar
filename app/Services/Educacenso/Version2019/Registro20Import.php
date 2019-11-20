@@ -934,13 +934,13 @@ class Registro20Import implements RegistroImportInterface
      */
     private function createInepTurma(LegacySchoolClass $schoolClass)
     {
-        if (empty($this->model->inepTurma)) {
+        if (empty($this->model->codTurma)) {
             return;
         }
 
         SchoolClassInep::create([
             'cod_turma' => $schoolClass->getKey(),
-            'cod_turma_inep' => $this->model->inepTurma,
+            'cod_turma_inep' => $this->model->codTurma,
             'created_at' => now(),
         ]);
 

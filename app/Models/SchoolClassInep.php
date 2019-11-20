@@ -15,7 +15,7 @@ class SchoolClassInep extends Model
     /**
      * @var string
      */
-    protected $primaryKey = 'cod_escola';
+    protected $primaryKey = 'cod_turma';
 
     protected $fillable = [
         'cod_turma',

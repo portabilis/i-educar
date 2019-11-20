@@ -35,6 +35,7 @@ abstract class ImportService
         $lineId = $this->getLineId($line);
 
         $class = $this->getRegistroById($lineId);
+        $line = str_replace("\r\n", '', $line);
         $arrayColumns = explode(self::DELIMITER, $line);
 
         if (!$class) {

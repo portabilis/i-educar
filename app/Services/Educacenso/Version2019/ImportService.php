@@ -56,6 +56,7 @@ class ImportService extends GeneralImportService
             '20' => Registro20Import::class,
             '30' => Registro30Import::class,
             '40' => Registro40Import::class,
+            '50' => Registro50Import::class,
         ];
 
         if (!isset($arrayRegistros[$lineId])) {
