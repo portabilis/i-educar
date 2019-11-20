@@ -29,7 +29,8 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
      */
     protected $fillable = [
         'idpes', 'data_cad', 'operacao', 'origem_gravacao', 'sexo', 'data_nascimento', 'idpes_mae', 'idpes_pai',
-        'nacionalidade', 'idpais_estrangeiro', 'idmun_nascimento', 'cpf',
+        'nacionalidade', 'idpais_estrangeiro', 'idmun_nascimento', 'cpf', 'nis_pis_pasep', 'pais_residencia',
+        'zona_localizacao_censo',
     ];
 
     /**
