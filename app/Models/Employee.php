@@ -38,6 +38,14 @@ class Employee extends Model
     }
 
     /**
+     * @return int
+     */
+    public function getIdAttribute()
+    {
+        return $this->cod_servidor;
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function schools()
