@@ -57,9 +57,18 @@ class Registro30Import implements RegistroImportInterface
 
         $person = $this->getOrCreatePerson();
 
-        $this->createPersonInep($person);
         $this->createRace($person);
         $this->createDeficiencies($person);
+
+        if ($this->model->isStudent()) {
+            $student = $this->createStudent($person);
+            $this->createStudentInep($student);
+        }
+
+        if ($this->model->isTeacher() || $this->model->isManager()) {
+            $employee = $this->createEmployee($person);
+            $this->createEmployeeInep($employee);
+        }
     }
 
     /**
@@ -186,36 +195,27 @@ class Registro30Import implements RegistroImportInterface
 
     /**
      * @param LegacyPerson $person
+     * @return LegacyStudent mixed
      */
-    private function createPersonInep($person)
+    private function createStudent($person)
     {
-        if (empty($this->model->inepPessoa)) {
-            return;
-        }
+        $student = LegacyStudent::create([
+            'ref_idpes' => $person->getKey(),
+            'data_cadastro' => now(),
+        ]);
 
-        if ($this->model->isStudent() || true) {
-            $this->createStudentInep($person);
-        }
-
-        if ($this->model->isTeacher() || $this->model->isManager()) {
-            $this->createEmployeeInep($person);
-        }
+        return $student;
     }
 
     /**
-     * @param LegacyPerson $person
+     * @param LegacyStudent $person
      */
-    private function createStudentInep($person)
+    private function createStudentInep($student)
     {
         if (StudentInep::where('cod_aluno_inep', $this->model->inepPessoa)
             ->exists()) {
             return;
         }
-
-        $student = LegacyStudent::create([
-            'ref_idpes' => $person->getKey(),
-            'data_cadastro' => now(),
-        ]);
 
         StudentInep::create([
             'cod_aluno' => $student->getKey(),
@@ -224,21 +224,28 @@ class Registro30Import implements RegistroImportInterface
     }
 
     /**
-     * @param LegacyPerson c$person
+     * @param LegacyPerson $person
+     * @return Employee
      */
-    private function createEmployeeInep($person)
+    private function createEmployee($person)
     {
-        if (EmployeeInep::where('cod_docente_inep', $this->model->inepPessoa)
-            ->exists()) {
-            return;
-        }
-
-        $employee = Employee::create([
+        return Employee::create([
             'cod_servidor' => $person->getKey(),
             'ref_cod_instituicao' => $this->institution->getKey(),
             'carga_horaria' => 0,
             'data_cadastro' => now()
         ]);
+    }
+
+    /**
+     * @param LegacyPerson c$person
+     */
+    private function createEmployeeInep($employee)
+    {
+        if (EmployeeInep::where('cod_docente_inep', $this->model->inepPessoa)
+            ->exists()) {
+            return;
+        }
 
         EmployeeInep::create([
             'cod_servidor' => $employee->getKey(),
