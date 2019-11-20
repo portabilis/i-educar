@@ -80,7 +80,7 @@ class Registro40Import implements RegistroImportInterface
     }
 
     /**
-     * @param Employee $arrayColumns
+     * @param Employee $employee
      * @return void
      */
     private function createOrUpdateManager(Employee $employee) : void
