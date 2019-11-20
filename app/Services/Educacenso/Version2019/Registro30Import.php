@@ -169,8 +169,8 @@ class Registro30Import implements RegistroImportInterface
             'idmun_nascimento' => $this->getCity($this->model->municipioNascimento),
             'cpf' => (int)$this->model->cpf,
             'nis_pis_pasep' => (int)$this->model->nis,
-            'pais_residencia' => $this->model->paisResidencia,
-            'zona_localizacao_censo' => $this->model->localizacaoResidencia,
+            'pais_residencia' => (int)$this->model->paisResidencia,
+            'zona_localizacao_censo' => (int)$this->model->localizacaoResidencia,
         ]);
 
         return $person;
