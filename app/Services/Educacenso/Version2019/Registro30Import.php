@@ -199,8 +199,9 @@ class Registro30Import implements RegistroImportInterface
      */
     private function createStudent($person)
     {
-        $student = LegacyStudent::create([
-            'ref_idpes' => $person->getKey(),
+        $student = LegacyStudent::firstOrCreate([
+            'ref_idpes' => $person->getKey()
+        ], [
             'data_cadastro' => now(),
         ]);
 
@@ -229,9 +230,10 @@ class Registro30Import implements RegistroImportInterface
      */
     private function createEmployee($person)
     {
-        return Employee::create([
+        return Employee::firstOrCreate([
             'cod_servidor' => $person->getKey(),
-            'ref_cod_instituicao' => $this->institution->getKey(),
+            'ref_cod_instituicao' => $this->institution->getKey()
+        ], [
             'carga_horaria' => 0,
             'data_cadastro' => now()
         ]);
@@ -242,6 +244,10 @@ class Registro30Import implements RegistroImportInterface
      */
     private function createEmployeeInep($employee)
     {
+        if (empty($this->model->inepPessoa)) {
+            return;
+        }
+
         if (EmployeeInep::where('cod_docente_inep', $this->model->inepPessoa)
             ->exists()) {
             return;
