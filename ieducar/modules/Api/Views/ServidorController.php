@@ -172,7 +172,6 @@ class ServidorController extends ApiCoreController
                         pt.turno_id,
                         null as permite_lancar_faltas_componente,
                         null as disciplinas,
-                        null as tipo_nota,
                         pt.updated_at,
                         pt.deleted_at
                     from modules.professor_turma_excluidos pt 
