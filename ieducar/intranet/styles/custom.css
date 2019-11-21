@@ -492,6 +492,11 @@ table.calendar .dayLastMonth, .day{
 
 table.calendar .day{
   background-color: #e9f0f8 !;
+  cursor: pointer;
+}
+
+table.calendar .day:hover{
+  opacity: .7;
 }
 
 table.calendar .anotacao{

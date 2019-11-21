@@ -172,8 +172,8 @@ class indice extends clsCadastro
                 'pais_residencia'
             );
 
-            // var_dump($objPessoa); die;
             $this->id_federal = is_numeric($this->id_federal) ? int2CPF($this->id_federal) : '';
+            $this->nis_pis_pasep = int2Nis($this->nis_pis_pasep);
             $this->cep = is_numeric($this->cep) ? int2Cep($this->cep) : '';
             $this->renda_mensal = number_format($this->renda_mensal, 2, ',', '.');
             // $this->data_nasc = $this->data_nasc ? dataFromPgToBr($this->data_nasc) : '';

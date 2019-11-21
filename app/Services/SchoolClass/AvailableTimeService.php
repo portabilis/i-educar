@@ -56,8 +56,8 @@ class AvailableTimeService
 
         $otherSchoolClass = $schoolClassQuery->get();
 
-        foreach ($otherSchoolClass as $otherSchoolClass) {
-            if ($this->schedulesMatch($schoolClass, $otherSchoolClass)) {
+        foreach ($otherSchoolClass as $oneSchoolClass) {
+            if ($this->schedulesMatch($schoolClass, $oneSchoolClass)) {
                 return false;
             }
         }
