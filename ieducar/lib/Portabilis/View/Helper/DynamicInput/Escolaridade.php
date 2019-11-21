@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolingDegree;
+
 require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
 class Portabilis_View_Helper_DynamicInput_Escolaridade extends Portabilis_View_Helper_DynamicInput_CoreSelect
@@ -19,7 +21,7 @@ class Portabilis_View_Helper_DynamicInput_Escolaridade extends Portabilis_View_H
         $resources = $options['resources'];
 
         if (empty($resources)) {
-            $resources = App_Model_IedFinder::getEscolaridades();
+            $resources = LegacySchoolingDegree::all()->getKeyValueArray('descricao');
         }
 
         return $this->insertOption(null, 'Selecione uma Escolaridade', $resources);
