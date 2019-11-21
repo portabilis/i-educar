@@ -1,7 +1,6 @@
 <?php
 
-use App\Models\Employee;
-use App\Models\Schooling;
+use App\Models\LegacySchoolingDegree;
 use iEducar\Legacy\Model;
 
 class clsCadastroEscolaridade extends Model
@@ -210,7 +209,7 @@ class clsCadastroEscolaridade extends Model
             return false;
         }
 
-        $employees = Schooling::select('cod_servidor')
+        $employees = LegacySchoolingDegree::select('cod_servidor')
             ->join('pmieducar.servidor', 'ref_idesco', '=', 'idesco', 'left')
             ->where('idesco', $this->idesco)
             ->get();
