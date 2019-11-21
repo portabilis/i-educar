@@ -159,9 +159,9 @@ class indice extends clsCadastro
                 $this->inputsHelper()->hidden('alunos_com_saida', ['value' => implode(',', $alunosComSaidaDaEscola)]);
                 Session::now('success', $mensagem);
             } elseif (count($alunosSemInep) > 0) {
-                $mensagem = 'Não foi possível realizar a rematrícula, pois alguns alunos não possuem o INEP cadastrado. Clique <a href=\'#\' onclick=\'ModalAlunos.init("alunos_sem_inep");\'>aqui</a> para ver esses alunos</br>';
+                $mensagem = 'Não foi possível realizar a rematrícula, pois alguns alunos não possuem o INEP cadastrado. Clique <a href=\'#\' onclick=\'ModalAlunos.init("alunos_sem_inep");\'>aqui</a> para ver esses alunos.</br>';
 
-                $mensagem .= '</br>Por favor, cadastre o INEP do(s) aluno(s) em: Cadastros > Aluno > Alunos > Campo: Código INEP.';
+                $mensagem .= '</br>Por favor, cadastre o INEP do(s) aluno(s) em: Cadastros > Alunos > Campo: Código INEP.';
 
                 $this->inputsHelper()->hidden('alunos_sem_inep', ['value' => implode(',', $alunosSemInep)]);
                 Session::now('error', $mensagem);
