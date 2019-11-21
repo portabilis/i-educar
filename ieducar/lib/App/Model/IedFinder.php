@@ -678,8 +678,16 @@ class App_Model_IedFinder extends CoreExt_Entity
         }, $componentes);
 
         $key = json_encode(compact('anoEscolar', 'componentes'));
+        $getCargaHoraria = function ($componentes, $id) {
+            foreach ($componentes as $componente) {
+                if ($componente->id == $id && $componente->cargaHoraria) {
+                    return $componente->cargaHoraria;
+                }
+            }
+            return null;
+        };
 
-        return Cache::store('array')->remember("_hydrateComponentes:{$key}", now()->addMinute(), function () use ($anoEscolar, $ids) {
+        return Cache::store('array')->remember("_hydrateComponentes:{$key}", now()->addMinute(), function () use ($anoEscolar, $ids, $componentes, $getCargaHoraria) {
             $disciplinesAcademicYear = LegacyDisciplineAcademicYear::query()
                 ->where('ano_escolar_id', $anoEscolar)
                 ->whereIn('componente_curricular_id', $ids)
@@ -688,7 +696,7 @@ class App_Model_IedFinder extends CoreExt_Entity
             $disciplines = LegacyDiscipline::query()
                 ->whereIn('id', $ids)
                 ->get()
-                ->map(function (LegacyDiscipline $discipline) use ($disciplinesAcademicYear) {
+                ->map(function (LegacyDiscipline $discipline) use ($disciplinesAcademicYear, $componentes, $getCargaHoraria) {
                     return new ComponenteCurricular_Model_Componente([
                         'id' => $discipline->id,
                         'instituicao' => $discipline->instituicao_id,
@@ -696,7 +704,7 @@ class App_Model_IedFinder extends CoreExt_Entity
                         'abreviatura' => $discipline->abreviatura,
                         'tipo_base' => $discipline->tipo_base,
                         'area_conhecimento' => $discipline->area_conhecimento_id,
-                        'cargaHoraria' => $discipline->cargaHoraria ?? $disciplinesAcademicYear->get($discipline->id),
+                        'cargaHoraria' => $getCargaHoraria($componentes, $discipline->id) ?? ($discipline->cargaHoraria ?? $disciplinesAcademicYear->get($discipline->id)),
                         'codigo_educacenso' => $discipline->codigo_educacenso,
                         'ordenamento' => $discipline->ordenamento,
                     ]);
