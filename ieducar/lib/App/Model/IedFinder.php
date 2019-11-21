@@ -4,6 +4,7 @@ use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolingDegree;
 use App\Models\LegacySchoolClassStage;
 use App\Models\LegacySchoolStage;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
