@@ -1737,14 +1737,4 @@ class App_Model_IedFinder extends CoreExt_Entity
 
         return null;
     }
-
-    public static function getEscolaridades()
-    {
-        $schooling = LegacySchoolingDegree::all()->sortBy('descricao');
-        foreach ($schooling as $value) {
-            $return[$value->idesco] = $value->descricao;
-        }
-
-        return $return;
-    }
 }
