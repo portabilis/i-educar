@@ -18,4 +18,9 @@ class EducacensoImport extends Model
     {
         return $this->belongsTo(Individual::class, 'user_id', 'id');
     }
+
+    public function getDateFormat()
+    {
+        return 'Y-m-d H:i:s.u';
+    }
 }
