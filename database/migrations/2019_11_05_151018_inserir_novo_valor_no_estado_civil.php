@@ -34,7 +34,7 @@ class InserirNovoValorNoEstadoCivil extends Migration
     {
         $ideciv = $this->getEstadoCivil() + 1;
 
-        DB::table('cadastro.estado_civil')->insert(['ideciv' => $ideciv, 'descricao' => 'não informado']);
+        DB::table('cadastro.estado_civil')->insert(['ideciv' => $ideciv, 'descricao' => 'Não informado']);
     }
 
     /**
@@ -45,7 +45,7 @@ class InserirNovoValorNoEstadoCivil extends Migration
     public function down()
     {
         DB::table('cadastro.estado_civil')
-            ->where('descricao','não informado')
+            ->where('descricao','Não informado')
             ->delete();
     }
 }
