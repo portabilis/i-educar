@@ -658,10 +658,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         if ($this->getRegra()->get('definirComponentePorEtapa') == '1') {
             $specificStagesString = App_Model_IedFinder::getEtapasComponente($classroomId, $disciplineId);
-
-            if ($specificStagesString) {
-                $stages = explode(',', $specificStagesString);
-            }
         }
 
         $stages = array_diff($stages, $exemptedStages);
