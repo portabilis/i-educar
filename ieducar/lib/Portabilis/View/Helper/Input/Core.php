@@ -231,6 +231,10 @@ class Portabilis_View_Helper_Input_Core
             return $escolaridadeId;
         }
 
+        if (isset($this->viewInstance->idesco) && is_numeric($this->viewInstance->idesco)) {
+            return $this->viewInstance->idesco;
+        }
+
         return null;
     }
 }
