@@ -62,7 +62,7 @@ class FileController
                 if ($size < $this->maxSize) {
                     return true;
                 } else {
-                    $this->errorMessage = 'NÃ£o sÃ£o permitidos arquivos com mais de 250KB.';
+                    $this->errorMessage = 'Não são permitidos arquivos com mais de 250KB.';
 
                     return false;
                 }
