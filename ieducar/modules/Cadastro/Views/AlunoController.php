@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\UrlPresigner;
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
 use iEducar\Modules\Educacenso\Model\RecursosRealizacaoProvas;
 use iEducar\Modules\Educacenso\Model\VeiculoTransporteEscolar;
@@ -377,7 +378,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         }
 
         if ($foto) {
-            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . $foto . '"/>');
+            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . (new UrlPresigner())->getPresignedUrl($foto)  . '"/>');
             $this->inputsHelper()->checkbox('file_delete', array('label' => 'Excluir a foto'));
             $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho m&aacute;ximo: 150KB</span>');
         } else {

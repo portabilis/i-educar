@@ -45,9 +45,9 @@ class PictureController {
     function __construct($imageFile, $maxWidth = NULL, $maxHeight = NULL, $maxSize = NULL,
                              $suportedExtensions = NULL){
 
-        
+
        $this->imageFile = $imageFile;
-       
+
 
         if ($maxWidth!=null)
             $this->maxWidth = $maxWidth;
@@ -77,14 +77,14 @@ class PictureController {
     * @return String
     */
     function sendPicture(){
-        
+
         $tmp = $this->imageFile["tmp_name"];
-        
+
         $file = new File($tmp);
 
         $tenant = config('legacy.app.database.dbname');
 
-        if (Storage::put($tenant, $file, 'public')) {
+        if (Storage::put($tenant, $file)) {
             return Storage::url($file->hashName($tenant));
         } else {
             $this->errorMessage = "Ocorreu um erro no servidor ao enviar foto. Tente novamente.";
@@ -114,7 +114,7 @@ class PictureController {
             {
                 // File size validation
                 if($size < $this->maxSize){
-                    return true;   
+                    return true;
                 }
                 else{
                     $this->errorMessage = "O cadastro n&atilde;o pode ser realizado, a foto possui um tamanho maior do que o permitido.";
@@ -127,10 +127,10 @@ class PictureController {
             }
         }
         else{
-            $this->errorMessage = "Selecione uma imagem."; 
+            $this->errorMessage = "Selecione uma imagem.";
             return false;
         }
-        $this->errorMessage = "Imagem inv&aacute;lida."; 
+        $this->errorMessage = "Imagem inv&aacute;lida.";
         return false;
     }
     /**
@@ -144,7 +144,7 @@ class PictureController {
     }
 
 
-    function getExtension($name) 
+    function getExtension($name)
     {
         $i = strrpos($name,".");
         if (!$i)

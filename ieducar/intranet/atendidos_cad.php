@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyIndividual;
+use App\Services\UrlPresigner;
 use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
@@ -268,7 +269,7 @@ class indice extends clsCadastro
         }
 
         if ($foto) {
-            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="'.$foto.'"/>');
+            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . (new UrlPresigner())->getPresignedUrl($foto) . '"/>');
             $this->inputsHelper()->checkbox('file_delete', ['label' => 'Excluir a foto']);
             $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
         } else {
