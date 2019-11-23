@@ -25,7 +25,7 @@ class clsModulesAuditoriaNota
         //Foi necessário enviar turma pois não á possí­vel saber a turma atual somente através da matrí­cula
         $this->turma = $turmaId;
 
-        $this->usuario = Auth::id();
+        $this->usuario = $this->getUsuarioAtual();
         $this->rotina = 'notas';
 
         $this->notaAntiga = $notaAntiga;
@@ -243,5 +243,15 @@ class clsModulesAuditoriaNota
         $nomeTurma = $detTurma['nm_turma'];
 
         return $nomeTurma;
+    }
+
+    private function getUsuarioAtual()
+    {
+        $pessoaId = Auth::id();
+        $objFuncionario = new clsFuncionario($pessoaId);
+        $detFuncionario = $objFuncionario->detalhe();
+        $matricula = $detFuncionario['matricula'];
+
+        return "{$pessoaId} - {$matricula}";
     }
 }

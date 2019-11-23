@@ -1,33 +1,5 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
- * @version   $Id$
- */
-
 use App\Process;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
@@ -42,80 +14,51 @@ require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
-/**
- * clsIndexBase class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Escola S&eacute;rie');
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Escola Série');
         $this->processoAp = 585;
     }
 }
 
-/**
- * indice class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
- * @todo      Ver a questão de formulários que tem campos dinamicamente
- *   desabilitados de acordo com a requisição (GET, POST ou erro de validação).
- *   A forma atual de usar valores em campos hidden leva a diversos problemas
- *   como aumento da lógica de pré-validação nos métodos Novo() e Editar().
- * @version   @@package_version@@
- */
 class indice extends clsCadastro
 {
-    var $pessoa_logada;
-    var $ref_cod_escola;
-    var $ref_cod_escola_;
-    var $ref_cod_serie;
-    var $ref_cod_serie_;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $hora_inicial;
-    var $hora_final;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $hora_inicio_intervalo;
-    var $hora_fim_intervalo;
-    var $hora_fim_intervalo_;
-    var $ref_cod_instituicao;
-    var $ref_cod_curso;
-    var $escola_serie_disciplina;
-    var $ref_cod_disciplina;
-    var $incluir_disciplina;
-    var $excluir_disciplina;
-    var $disciplinas;
-    var $carga_horaria;
-    var $etapas_especificas;
-    var $etapas_utilizadas;
-    var $definirComponentePorEtapa;
-    var $anos_letivos;
-    var $componente_anos_letivos;
+    public $ref_cod_escola_;
+    public $ref_cod_serie;
+    public $ref_cod_serie_;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $hora_inicial;
+    public $hora_final;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $hora_inicio_intervalo;
+    public $hora_fim_intervalo;
+    public $hora_fim_intervalo_;
+    public $ref_cod_curso;
+    public $escola_serie_disciplina;
+    public $ref_cod_disciplina;
+    public $incluir_disciplina;
+    public $excluir_disciplina;
+    public $disciplinas;
+    public $carga_horaria;
+    public $etapas_especificas;
+    public $etapas_utilizadas;
+    public $definirComponentePorEtapa;
+    public $anos_letivos;
+    public $componente_anos_letivos;
 
     /**
      * @var SchoolLevelsService
      */
     private $escolaSerieService;
 
-    function Inicializar()
+    public function Inicializar()
     {
         $retorno = 'Novo';
-
-
 
         $this->ref_cod_serie = $_GET['ref_cod_serie'];
         $this->ref_cod_escola = $_GET['ref_cod_escola'];
@@ -142,7 +85,7 @@ class indice extends clsCadastro
 
         $this->url_cancelar = ($retorno == 'Editar') ? sprintf('educar_escola_serie_det.php?ref_cod_escola=%d&ref_cod_serie=%d', $registro['ref_cod_escola'], $registro['ref_cod_serie']) : 'educar_escola_serie_lst.php';
 
-        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
         $this->breadcrumb($nomeMenu . ' vínculo entre escola e série', [
             url('intranet/educar_index.php') => 'Escola',
@@ -153,7 +96,7 @@ class indice extends clsCadastro
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         if ($_POST) {
             foreach ($_POST as $campo => $val) {
@@ -177,7 +120,9 @@ class indice extends clsCadastro
         }
 
         $this->definirComponentePorEtapa = $this->escolaSerieService->levelAllowDefineDisciplinePerStage(
-            $this->ref_cod_serie, $anoLetivoSelected);
+            $this->ref_cod_serie,
+            $anoLetivoSelected
+        );
 
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_serie)) {
             $instituicao_desabilitado = true;
@@ -208,17 +153,17 @@ class indice extends clsCadastro
             $this->ref_cod_serie = $this->ref_cod_serie_;
         }
 
-        $opcoes_serie = array('' => 'Selecione');
+        $opcoes_serie = ['' => 'Selecione'];
 
         // Editar
         if ($this->ref_cod_curso) {
             $obj_serie = new clsPmieducarSerie();
             $obj_serie->setOrderby('nm_serie ASC');
             $lst_serie = $obj_serie->lista(
-                array(
+                [
                     'ref_cod_curso' => $this->ref_cod_curso,
                     'ativo' => 1
-                )
+                ]
             );
 
             if (is_array($lst_serie) && count($lst_serie)) {
@@ -267,8 +212,8 @@ class indice extends clsCadastro
         $this->campoHora('hora_final', 'Hora Final', $this->hora_final, false);
         $this->campoHora('hora_inicio_intervalo', 'Hora In&iacute;cio Intervalo', $this->hora_inicio_intervalo, false);
         $this->campoHora('hora_fim_intervalo', 'Hora Fim Intervalo', $this->hora_fim_intervalo, false);
-        $this->campoCheck("bloquear_enturmacao_sem_vagas", "Bloquear enturmação após atingir limite de vagas", $this->bloquear_enturmacao_sem_vagas);
-        $this->campoCheck("bloquear_cadastro_turma_para_serie_com_vagas", "Bloquear cadastro de novas turmas antes de atingir limite de vagas (no mesmo turno)", $this->bloquear_cadastro_turma_para_serie_com_vagas);
+        $this->campoCheck('bloquear_enturmacao_sem_vagas', 'Bloquear enturmação após atingir limite de vagas', $this->bloquear_enturmacao_sem_vagas);
+        $this->campoCheck('bloquear_cadastro_turma_para_serie_com_vagas', 'Bloquear cadastro de novas turmas antes de atingir limite de vagas (no mesmo turno)', $this->bloquear_cadastro_turma_para_serie_com_vagas);
         $this->campoQuebra();
 
         // Inclui disciplinas
@@ -331,11 +276,11 @@ class indice extends clsCadastro
                 $conteudo .= '</div>';
                 $conteudo .= '<br style="clear: left" />';
                 $conteudo .= '<div style="margin-bottom: 10px; float: left">';
-                $conteudo .= "  <label style='display: block; float: left; width: 450px;'><input type='checkbox' name='CheckTodos' onClick='marcarCheck(" . '"disciplinas[]"' . ");'/>Marcar Todos</label>";
-                $conteudo .= "  <label style='display: block; float: left; width: 330px;'><input type='checkbox' name='CheckTodos2' onClick='marcarCheck(" . '"usar_componente[]"' . ");';/>Marcar Todos</label>";
+                $conteudo .= '  <label style=\'display: block; float: left; width: 450px;\'><input type=\'checkbox\' name=\'CheckTodos\' onClick=\'marcarCheck(' . '"disciplinas[]"' . ');\'/>Marcar Todos</label>';
+                $conteudo .= '  <label style=\'display: block; float: left; width: 330px;\'><input type=\'checkbox\' name=\'CheckTodos2\' onClick=\'marcarCheck(' . '"usar_componente[]"' . ');\';/>Marcar Todos</label>';
 
                 if ($this->definirComponentePorEtapa) {
-                    $conteudo .= "  <label style='display: block; float: left; width: 100px; margin-left: 84px;'><input type='checkbox' name='CheckTodos3' onClick='marcarCheck(" . '"etapas_especificas[]"' . ");';/>Marcar Todos</label>";
+                    $conteudo .= '  <label style=\'display: block; float: left; width: 100px; margin-left: 84px;\'><input type=\'checkbox\' name=\'CheckTodos3\' onClick=\'marcarCheck(' . '"etapas_especificas[]"' . ');\';/>Marcar Todos</label>';
                 }
 
                 $conteudo .= '</div>';
@@ -350,7 +295,7 @@ class indice extends clsCadastro
                     if ($this->escola_serie_disciplina[$registro->id] == $registro->id) {
                         $checked = 'checked="checked"';
 
-                        if ($this->escola_serie_disciplina_etapa_especifica[$registro->id] == "1") {
+                        if ($this->escola_serie_disciplina_etapa_especifica[$registro->id] == '1') {
                             $checkedEtapaEspecifica = 'checked="checked"';
                         }
                     }
@@ -383,10 +328,10 @@ class indice extends clsCadastro
                         $seletected = in_array($anoLetivo, $anosLetivosComponente) ? 'selected=selected' : '';
                         $conteudo .= "<option value='{$anoLetivo}' {$seletected}>{$anoLetivo}</option>";
                     }
-                    $conteudo .= " </select>";
+                    $conteudo .= ' </select>';
 
                     if ($this->definirComponentePorEtapa) {
-                        $conteudo .= "  <input style='margin-left:140px; float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' " . $checkedEtapaEspecifica . "></label>";
+                        $conteudo .= "  <input style='margin-left:140px; float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' " . $checkedEtapaEspecifica . '></label>';
                         $conteudo .= "  <label style='display: block; float: left; width: 100px;'>Etapas utilizadas: <input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapas_utilizadas}' size='5' maxlength='7'></label>";
                     }
 
@@ -417,7 +362,7 @@ class indice extends clsCadastro
             );
         }
 
-        $this->campoRotulo("disciplinas_", "Componentes curriculares", "<div id='disciplinas'>$disciplinas</div>");
+        $this->campoRotulo('disciplinas_', 'Componentes curriculares', "<div id='disciplinas'>$disciplinas</div>");
         $this->campoQuebra();
 
         $obj_permissoes = new clsPermissoes();
@@ -425,10 +370,8 @@ class indice extends clsCadastro
         $this->campoOculto('permissao_consulta_dispensas', intval($permissaoConsultaDispensas));
     }
 
-    function Novo()
+    public function Novo()
     {
-
-
         /*
          * Se houve erro na primeira tentativa de cadastro, irá considerar apenas
          * os valores enviados de forma oculta.
@@ -463,12 +406,12 @@ class indice extends clsCadastro
         if ($obj->existe()) {
             $detalheAntigo = $obj->detalhe();
             $cadastrou = $obj->edita();
-            $auditoria = new clsModulesAuditoriaGeral("escola_serie", $this->pessoa_logada);
+            $auditoria = new clsModulesAuditoriaGeral('escola_serie', $this->pessoa_logada);
             $auditoria->alteracao($detalheAntigo, $obj->detalhe());
         } else {
             $cadastrou = $obj->cadastra();
 
-            $auditoria = new clsModulesAuditoriaGeral("escola_serie", $this->pessoa_logada);
+            $auditoria = new clsModulesAuditoriaGeral('escola_serie', $this->pessoa_logada);
             $auditoria->inclusao($obj->detalhe());
         }
 
@@ -493,7 +436,7 @@ class indice extends clsCadastro
                     }
 
                     if (!$cadastrou1) {
-                        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+                        $this->mensagem = 'Cadastro não realizado.<br>';
 
                         return false;
                     }
@@ -504,12 +447,12 @@ class indice extends clsCadastro
             $this->simpleRedirect('educar_escola_serie_lst.php');
         }
 
-        $this->mensagem = 'Cadastro n&atilde;o rrealizado.<br>';
+        $this->mensagem = 'Cadastro não rrealizado.<br>';
 
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         /*
          * Atribui valor para atributos usados em Gerar(), senão o formulário volta
@@ -558,7 +501,7 @@ class indice extends clsCadastro
         $detalheAntigo = $obj->detalhe();
         $editou = $obj->edita();
 
-        $auditoria = new clsModulesAuditoriaGeral("escola_serie", $this->pessoa_logada);
+        $auditoria = new clsModulesAuditoriaGeral('escola_serie', $this->pessoa_logada);
         $auditoria->alteracao($detalheAntigo, $obj->detalhe());
 
         $obj = new clsPmieducarEscolaSerieDisciplina(
@@ -599,7 +542,7 @@ class indice extends clsCadastro
                         $editou1 = $obj->edita();
 
                         if (!$editou1) {
-                            $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+                            $this->mensagem = 'Edição não realizada.<br>';
 
                             return false;
                         }
@@ -607,7 +550,7 @@ class indice extends clsCadastro
                         $cadastrou = $obj->cadastra();
 
                         if (!$cadastrou) {
-                            $this->mensagem = 'Cadastro n&atilde;o realizada.<br>';
+                            $this->mensagem = 'Cadastro não realizada.<br>';
 
                             return false;
                         }
@@ -615,18 +558,17 @@ class indice extends clsCadastro
                 }
             }
 
-            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_escola_serie_lst.php');
         }
 
-        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Edição não realizada.<br>';
+
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
-
-
         $obj = new clsPmieducarEscolaSerie(
             $this->ref_cod_escola_,
             $this->ref_cod_serie_,
@@ -641,7 +583,7 @@ class indice extends clsCadastro
 
         $detalhe = $obj->detalhe();
         $excluiu = $obj->excluir();
-        $auditoria = new clsModulesAuditoriaGeral("escola_serie", $this->pessoa_logada);
+        $auditoria = new clsModulesAuditoriaGeral('escola_serie', $this->pessoa_logada);
         $auditoria->exclusao($detalhe);
 
         if ($excluiu) {
@@ -649,12 +591,12 @@ class indice extends clsCadastro
             $excluiu1 = $obj->excluirTodos();
 
             if ($excluiu1) {
-                $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
+                $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
                 $this->simpleRedirect('educar_escola_serie_lst.php');
             }
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }
@@ -667,11 +609,11 @@ class indice extends clsCadastro
 
     public function loadAssets()
     {
-        $scripts = array(
+        $scripts = [
             '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
             '/modules/Cadastro/Assets/Javascripts/EscolaSerie.js',
             '/modules/Cadastro/Assets/Javascripts/ModalDispensas.js'
-        );
+        ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
@@ -844,7 +786,7 @@ class indice extends clsCadastro
             foreach ($analise['atualizar'] as $update) {
                 if (!empty($update['anos_letivos_remover'])) {
                     foreach ($update['anos_letivos_remover'] as $ano) {
-                        $info = Portabilis_Utils_Database::fetchPreparedQuery("
+                        $info = Portabilis_Utils_Database::fetchPreparedQuery('
                             SELECT COUNT(ncc.*), cc.nome
                             FROM modules.nota_componente_curricular ncc
                             INNER JOIN modules.nota_aluno na on na.id = ncc.nota_aluno_id
@@ -856,7 +798,7 @@ class indice extends clsCadastro
                                 AND m.ano = $3
                                 AND m.ref_ref_cod_escola = $4
                             GROUP BY cc.nome
-                        ", ['params' => [
+                        ', ['params' => [
                             (int) $update['ref_cod_disciplina'],
                             $this->ref_cod_serie,
                             $ano,
@@ -911,15 +853,8 @@ class indice extends clsCadastro
     }
 }
 
-// Instancia objeto de página
 $pagina = new clsIndexBase();
-
-// Instancia objeto de conteúdo
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
 $pagina->addForm($miolo);
-
-// Gera o código HTML
 $pagina->MakeAll();
-?>
