@@ -36,10 +36,34 @@ if (updateButton) {
         loading.style.display = 'block';
         parent.parentNode.removeChild(parent);
 
-        get('/install.php?command=exec&param=migrate&id=' + timestamp)
-            .then(function (result) {
+        const steps = [
+            {
+                command: 'link',
+                description: 'Gerando symlinks'
+            }, {
+                command: 'migrate',
+                description: 'Executando migrações'
+            }
+        ];
+
+        let base = new Promise(function (resolve) {
+            return resolve(true);
+        });
+
+        for (let i = 0; i < steps.length; i++) {
+            const step = steps[i];
+
+            base = base.then(function () {
+                let url = '/install.php?command=exec&param=' + step.command + '&id=' + timestamp;
+
+                if (step.extra) {
+                    url += '&extra=' + step.extra;
+                }
+
+                return get(url);
+            }).then(function (result) {
                 return new Promise(function (resolve, reject) {
-                    const interval = setInterval(function() {
+                    const interval = setInterval(function () {
                         get('/install.php?command=consult&pid=' + result + '&id=' + timestamp)
                             .then(function (result) {
                                 result = parseInt(result, 10);
@@ -48,19 +72,24 @@ if (updateButton) {
                                     resolve(result);
                                     clearInterval(interval);
                                 } else if (result > 0) {
-                                    reject();
+                                    reject(step);
                                     clearInterval(interval);
                                 }
                             });
                     }, 1000);
                 });
-            }).then(function () {
-                alert('Atualização realizada com sucesso!');
-                $.location.reload(true);
-            }).catch(function () {
-                alert('Ocorreu um erro ao atualizar sua instalação' + "\n" + 'Verifique o log em storage/logs para identificar o problema e tente novamente.');
-                $.location.reload(true);
             });
+        }
+
+        base.then(function () {
+            alert('Atualização realizada com sucesso!');
+            $.location.reload(true);
+        });
+
+        base.catch(function (error) {
+            alert('Ocorreu um erro ao atualizar sua instalação' + "\n" + 'Verifique o log em storage/logs para identificar o problema e tente novamente.');
+            $.location.reload(true);
+        });
 
         return false;
     });

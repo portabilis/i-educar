@@ -8,6 +8,7 @@ git checkout-index --prefix=${BUILD_FOLDER}/ -a -f
 cd ${BUILD_FOLDER}
 sed -i.bak 's/APP_ENV=local/APP_ENV=production/g' .env.example && rm .env.example.bak
 sed -i.bak 's/APP_DEBUG=true/APP_DEBUG=false/g' .env.example && rm .env.example.bak
+sed -i.bak 's/DB_HOST=postgres/DB_HOST=localhost/g' .env.example && rm .env.example.bak
 composer install --no-dev --ignore-platform-reqs --optimize-autoloader
 git clone https://github.com/portabilis/i-educar-reports-package.git ieducar/modules/Reports
 rm -fR ieducar/modules/Reports/.git

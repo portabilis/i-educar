@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyIndividual;
+use App\Services\UrlPresigner;
 use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
@@ -172,8 +173,8 @@ class indice extends clsCadastro
                 'pais_residencia'
             );
 
-            // var_dump($objPessoa); die;
             $this->id_federal = is_numeric($this->id_federal) ? int2CPF($this->id_federal) : '';
+            $this->nis_pis_pasep = int2Nis($this->nis_pis_pasep);
             $this->cep = is_numeric($this->cep) ? int2Cep($this->cep) : '';
             $this->renda_mensal = number_format($this->renda_mensal, 2, ',', '.');
             // $this->data_nasc = $this->data_nasc ? dataFromPgToBr($this->data_nasc) : '';
@@ -268,7 +269,7 @@ class indice extends clsCadastro
         }
 
         if ($foto) {
-            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="'.$foto.'"/>');
+            $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . (new UrlPresigner())->getPresignedUrl($foto) . '"/>');
             $this->inputsHelper()->checkbox('file_delete', ['label' => 'Excluir a foto']);
             $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
         } else {

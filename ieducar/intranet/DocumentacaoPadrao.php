@@ -127,7 +127,7 @@ document.getElementById('ref_cod_instituicao').onchange = function()
 document.getElementById('relatorio').onchange = function()
 {
  if (this.selectedIndex!==0) {
-    window.open(this.value,'_blank');
+    window.open(linkUrlPrivada(this.value),'_blank');
  }
 }
 

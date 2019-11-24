@@ -158,11 +158,15 @@ function formataData(campo, e)
   }
 }
 
-function formataHora(campo, e)
+function formataHora(campo, e, segundos = false)
 {
   if (typeof window.event != 'undefined') {
     if (window.event.keyCode != 58) {
       if ((campo.value.length == 2)) {
+        campo.value += ':';
+      }
+
+      if (segundos && (campo.value.length == 5)) {
         campo.value += ':';
       }
     }
@@ -173,6 +177,10 @@ function formataHora(campo, e)
       e.which != 13 && e.which != 0
     ) {
       if ((campo.value.length == 2)) {
+        campo.value += ':';
+      }
+
+      if (segundos && (campo.value.length == 5)) {
         campo.value += ':';
       }
     }
@@ -547,7 +555,7 @@ function formataCNPJ(campo, e)
  *   Ver: $ egrep -rn 'formataFone[ ]{0,3}\(' intranet/
  */
  function formataFoneNew(campo, e)
-{   
+{
     // console.log(e.keyCode);
     if (window.event.keyCode != 40 && (campo.value.length == 0)) {
       campo.value += '(';
@@ -558,7 +566,7 @@ function formataCNPJ(campo, e)
     // Allow: backspace, delete, tab, escape, enter and .
     if ($j.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
          // Allow: Ctrl+A
-        (e.keyCode == 65 && e.ctrlKey === true) || 
+        (e.keyCode == 65 && e.ctrlKey === true) ||
          // Allow: home, end, left, right
         (e.keyCode >= 35 && e.keyCode <= 39)) {
              // let it happen, don't do anything
@@ -753,7 +761,7 @@ function cv_set_campo(campo1, valor1, campo2, valor2, campo3, valor3, campo4,
   obj1          = parent.document.getElementById(campo1);
 
   if (obj1){
-    obj1.value    = valor1;    
+    obj1.value    = valor1;
   }
 
   obj2       = parent.document.getElementById(campo2);
@@ -773,18 +781,18 @@ function cv_set_campo(campo1, valor1, campo2, valor2, campo3, valor3, campo4,
   }
 
   obj5       = parent.document.getElementById(campo5);
-  
+
   if (obj5)
     obj5.value = valor5;
-  
+
 
   obj6       = parent.document.getElementById(campo6);
-  
+
   if (obj6)
     obj6.value = valor6;
 
   obj7          = parent.document.getElementById(campo7);
-  
+
   if (obj7){
     obj7.value    = valor7;
   }

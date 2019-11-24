@@ -24,8 +24,6 @@ class clsFuncionario extends clsPessoaFisica
     public $schema_cadastro = 'cadastro';
     public $schema_portal = 'portal';
     public $tabela_pessoa = 'pessoa';
-    public $tabela_funcionario = 'funcionario';
-    public $tabela_fisica_cpf = 'fisica';
 
     public function __construct($int_idpes = false, $str_matricula = false, $int_cpf = false, $int_ref_cod_setor = false, $str_senha = false, $data_troca_senha = false, $tempo_expira_senha = false, $data_reativa_conta = false, $tempo_expira_conta = false, $ref_cod_funcionario_vinculo = false, $ramal = false, $matricula_permanente = false, $banido = false, $email = null)
     {

@@ -59,6 +59,7 @@ class LegacyLinkCommand extends Command
                 'intranet/scripts',
                 'intranet/static',
                 'intranet/styles',
+                'intranet/tmp',
             ],
             '../' => [
                 'modules',
