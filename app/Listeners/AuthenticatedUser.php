@@ -13,7 +13,7 @@ class AuthenticatedUser
      *
      * @param Authenticated $event
      *
-     * @return void
+     * @throws ValidationException
      */
     public function handle(Authenticated $event)
     {

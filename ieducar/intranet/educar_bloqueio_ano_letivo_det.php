@@ -12,7 +12,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo( "{$this->_instituicao} i-Educar - Bloqueio do ano letivo" );
         $this->processoAp = "21251";
-        $this->addEstilo("localizacaoSistema");
     }
 }
 

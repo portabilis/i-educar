@@ -4,20 +4,29 @@ namespace App\Services\Educacenso\Version2019;
 
 use App\Models\Educacenso\Registro30;
 use App\Models\Educacenso\RegistroEducacenso;
+use App\Models\EducacensoDegree;
+use App\Models\EducacensoInstitution;
 use App\Models\Employee;
+use App\Models\EmployeeGraduation;
 use App\Models\EmployeeInep;
 use App\Models\LegacyCity;
 use App\Models\LegacyCountry;
 use App\Models\LegacyDeficiency;
+use App\Models\LegacyDocument;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyPerson;
 use App\Models\LegacyRace;
+use App\Models\LegacySchoolingDegree;
 use App\Models\LegacyStudent;
 use App\Models\StudentInep;
 use App\Services\Educacenso\RegistroImportInterface;
 use App\User;
 use iEducar\Modules\Educacenso\Model\Deficiencias;
+use iEducar\Modules\Educacenso\Model\Escolaridade;
+use iEducar\Modules\Educacenso\Model\FormacaoContinuada;
+use iEducar\Modules\Educacenso\Model\PosGraduacao;
+use iEducar\Modules\Educacenso\Model\RecursosRealizacaoProvas;
 
 class Registro30Import implements RegistroImportInterface
 {
@@ -61,13 +70,13 @@ class Registro30Import implements RegistroImportInterface
         $this->createDeficiencies($person);
 
         if ($this->model->isStudent()) {
-            $student = $this->createStudent($person);
-            $this->createStudentInep($student);
+            $student = $this->getOrCreateStudent($person);
+            $this->storeStudentData($student);
         }
 
         if ($this->model->isTeacher() || $this->model->isManager()) {
-            $employee = $this->createEmployee($person);
-            $this->createEmployeeInep($employee);
+            $employee = $this->getOrCreateEmployee($person);
+            $this->storeEmployeeData($employee);
         }
     }
 
@@ -158,7 +167,10 @@ class Registro30Import implements RegistroImportInterface
             'nacionalidade' => $this->model->nacionalidade,
             'idpais_estrangeiro' => $this->getCountry($this->model->paisNacionalidade),
             'idmun_nascimento' => $this->getCity($this->model->municipioNascimento),
-            'cpf' => (int) $this->model->cpf,
+            'cpf' => (int)$this->model->cpf,
+            'nis_pis_pasep' => (int)$this->model->nis,
+            'pais_residencia' => (int)$this->model->paisResidencia,
+            'zona_localizacao_censo' => (int)$this->model->localizacaoResidencia,
         ]);
 
         return $person;
@@ -197,15 +209,13 @@ class Registro30Import implements RegistroImportInterface
      * @param LegacyPerson $person
      * @return LegacyStudent mixed
      */
-    private function createStudent($person)
+    private function getOrCreateStudent($person)
     {
-        $student = LegacyStudent::firstOrCreate([
-            'ref_idpes' => $person->getKey()
+        return LegacyStudent::firstOrCreate([
+            'ref_idpes' => $person->getKey(),
         ], [
             'data_cadastro' => now(),
         ]);
-
-        return $student;
     }
 
     /**
@@ -213,6 +223,10 @@ class Registro30Import implements RegistroImportInterface
      */
     private function createStudentInep($student)
     {
+        if (empty($this->model->inepPessoa)) {
+            return;
+        }
+
         if (StudentInep::where('cod_aluno_inep', $this->model->inepPessoa)
             ->exists()) {
             return;
@@ -228,7 +242,7 @@ class Registro30Import implements RegistroImportInterface
      * @param LegacyPerson $person
      * @return Employee
      */
-    private function createEmployee($person)
+    private function getOrCreateEmployee($person)
     {
         return Employee::firstOrCreate([
             'cod_servidor' => $person->getKey(),
@@ -350,7 +364,7 @@ class Registro30Import implements RegistroImportInterface
         }
 
         $individual = $person->individual;
-        if($individual->deficiency()
+        if ($individual->deficiency()
             ->where('deficiencia_educacenso', $educacendoDeficiency)
             ->exists()) {
             return;
@@ -397,6 +411,10 @@ class Registro30Import implements RegistroImportInterface
         return $individual->person;
     }
 
+    /**
+     * @param $cityIbge
+     * @return LegacyCity|null
+     */
     private function getCity($cityIbge)
     {
         if (empty($cityIbge)) {
@@ -406,6 +424,10 @@ class Registro30Import implements RegistroImportInterface
         return LegacyCity::where('cod_ibge', $cityIbge)->first()->getKey() ?: null;
     }
 
+    /**
+     * @param $countryIbge
+     * @return LegacyCountry|null
+     */
     private function getCountry($countryIbge)
     {
         if (empty($countryIbge)) {
@@ -413,5 +435,274 @@ class Registro30Import implements RegistroImportInterface
         }
 
         return LegacyCountry::where('cod_ibge', $countryIbge)->first()->getKey() ?: null;
+    }
+
+    private function createRecursosProvaInep(LegacyStudent $student)
+    {
+        $arrayRecursos = [];
+
+        if ($this->model->recursoLedor) {
+            $arrayRecursos[] = RecursosRealizacaoProvas::AUXILIO_LEDOR;
+        }
+
+        if ($this->model->recursoTranscricao) {
+            $arrayRecursos[] = RecursosRealizacaoProvas::AUXILIO_TRANSCRICAO;
+        }
+
+        if ($this->model->recursoGuia) {
+            $arrayRecursos[] = RecursosRealizacaoProvas::GUIA_INTERPRETE;
+        }
+
+        if ($this->model->recursoTradutor) {
+            $arrayRecursos[] = RecursosRealizacaoProvas::TRADUTOR_INTERPRETE_DE_LIBRAS;
+        }
+
+        if ($this->model->recursoLeituraLabial) {
+            $arrayRecursos[] = RecursosRealizacaoProvas::LEITURA_LABIAL;
+        }
+
+        if ($this->model->recursoProvaAmpliada) {
+            $arrayRecursos[] = RecursosRealizacaoProvas::PROVA_AMPLIADA_FONTE_18;
+        }
+
+        if ($this->model->recursoProvaSuperampliada) {
+            $arrayRecursos[] = RecursosRealizacaoProvas::PROVA_SUPERAMPLIADA_FONTE_24;
+        }
+
+        if ($this->model->recursoAudio) {
+            $arrayRecursos[] = RecursosRealizacaoProvas::CD_COM_AUDIO_PARA_DEFICIENTE_VISUAL;
+        }
+
+        if ($this->model->recursoLinguaPortuguesaSegundaLingua) {
+            $arrayRecursos[] = RecursosRealizacaoProvas::PROVA_LINGUA_PORTUGUESA_SEGUNDA_LINGUA_SURDOS;
+        }
+
+        if ($this->model->recursoVideoLibras) {
+            $arrayRecursos[] = RecursosRealizacaoProvas::PROVA_EM_VIDEO_EM_LIBRAS;
+        }
+
+        if ($this->model->recursoBraile) {
+            $arrayRecursos[] = RecursosRealizacaoProvas::MATERIAL_DIDATICO_E_PROVA_EM_BRAILLE;
+        }
+
+        if ($this->model->recursoNenhum) {
+            $arrayRecursos[] = RecursosRealizacaoProvas::NENHUM;
+        }
+
+        $student->recursos_prova_inep = $this->getPostgresIntegerArray($arrayRecursos);
+        $student->save();
+    }
+
+    /**
+     * @param $array
+     * @return string
+     */
+    private function getPostgresIntegerArray($array)
+    {
+        return '{' . implode(',', $array) . '}';
+    }
+
+    /**
+     * @param LegacyStudent $student
+     */
+    private function createCertidaoNascimento(LegacyStudent $student)
+    {
+        if (empty($this->model->certidaoNascimento)) {
+            return;
+        }
+
+        LegacyDocument::updateOrCreate(
+            ['idpes' => $student->person->getKey(),],
+            [
+                'certidao_nascimento' => $this->model->certidaoNascimento,
+                'origem_gravacao' => 'U',
+                'operacao' => 'I',
+                'data_cad' => now(),
+            ]
+        );
+    }
+
+    /**
+     * @param LegacyStudent $student
+     */
+    private function storeStudentData(LegacyStudent $student)
+    {
+        $this->createStudentInep($student);
+        $this->createRecursosProvaInep($student);
+        $this->createCertidaoNascimento($student);
+
+        $student->justificativa_falta_documentacao = (int)$this->model->justificativaFaltaDocumentacao;
+        $student->save();
+    }
+
+    /**
+     * @param Employee $employee
+     */
+    private function storeEmployeeData(Employee $employee)
+    {
+        $this->createEmployeeInep($employee);
+        $this->createEscolaridade($employee);
+        $this->createEmployeeGraduations($employee);
+        $this->storeEmployeePostgraduate($employee);
+        $this->storeEmployeeCourses($employee);
+
+        $employee->tipo_ensino_medio_cursado = (int)$this->model->tipoEnsinoMedioCursado;
+    }
+
+    /**
+     * @param Employee $employee
+     */
+    private function createEscolaridade(Employee $employee)
+    {
+        if ($employee->schoolingDegree()->count()) {
+            return;
+        }
+
+        $schoolingDegree = LegacySchoolingDegree::firstOrCreate(
+            ['escolaridade' => $this->model->escolaridade],
+            ['descricao' => Escolaridade::getDescriptiveValues()[$this->model->escolaridade] ?? 'Escolaridade']
+        );
+
+        $employee->ref_idesco = $schoolingDegree->getKey();
+        $employee->save();
+    }
+
+    /**
+     * @param Employee $employee
+     */
+    private function createEmployeeGraduations(Employee $employee)
+    {
+        $arrayCursos = array_filter($this->model->formacaoCurso);
+        $arrayInstituicoes = array_filter($this->model->formacaoInstituicao);
+        $arrayAnosConclusao = array_filter($this->model->formacaoAnoConclusao);
+        $arrayComponentes = array_filter($this->model->formacaoComponenteCurricular);
+
+        if (empty($arrayCursos)) {
+            return;
+        }
+
+        if ($employee->graduations->count()) {
+            return;
+        }
+
+        foreach ($arrayCursos as $key => $curso) {
+            $degree = EducacensoDegree::where('curso_id', $curso)->first();
+            $institution = EducacensoInstitution::where('ies_id', $arrayInstituicoes[$key])->first();
+
+            if (empty($degree) || empty($institution)) {
+                continue;
+            }
+
+            EmployeeGraduation::create([
+                'employee_id' => $employee->getKey(),
+                'course_id' => $degree->getKey(),
+                'completion_year' => $arrayAnosConclusao[$key] ?? null,
+                'college_id' => $institution->getKey(),
+                'discipline_id' => $arrayComponentes[$key] ?? null,
+            ]);
+        }
+
+    }
+
+    /**
+     * @param Employee $employee
+     */
+    private function storeEmployeePostgraduate(Employee $employee)
+    {
+        $arrayPostGraduate = [];
+
+        if ($this->model->posGraduacaoEspecializacao) {
+            $arrayPostGraduate[] = PosGraduacao::ESPECIALIZACAO;
+        }
+
+        if ($this->model->posGraduacaoMestrado) {
+            $arrayPostGraduate[] = PosGraduacao::MESTRADO;
+        }
+
+        if ($this->model->posGraduacaoDoutorado) {
+            $arrayPostGraduate[] = PosGraduacao::DOUTORADO;
+        }
+
+        if ($this->model->posGraduacaoNaoPossui) {
+            $arrayPostGraduate[] = PosGraduacao::NAO_POSSUI;
+        }
+
+        $employee->pos_graduacao = $this->getPostgresIntegerArray($arrayPostGraduate);
+        $employee->save();
+    }
+
+    private function storeEmployeeCourses(Employee $employee)
+    {
+        $arrayCourses = [];
+
+        if ($this->model->formacaoContinuadaCreche) {
+            $arrayCourses[] = FormacaoContinuada::CRECHE;
+        }
+
+        if ($this->model->formacaoContinuadaPreEscola) {
+            $arrayCourses[] = FormacaoContinuada::PRE_ESCOLA;
+        }
+
+        if ($this->model->formacaoContinuadaAnosIniciaisFundamental) {
+            $arrayCourses[] = FormacaoContinuada::ANOS_INICIAIS;
+        }
+
+        if ($this->model->formacaoContinuadaAnosFinaisFundamental) {
+            $arrayCourses[] = FormacaoContinuada::ANOS_FINAIS;
+        }
+
+        if ($this->model->formacaoContinuadaEnsinoMedio) {
+            $arrayCourses[] = FormacaoContinuada::ENSINO_MEDIO;
+        }
+
+        if ($this->model->formacaoContinuadaEducacaoJovensAdultos) {
+            $arrayCourses[] = FormacaoContinuada::EJA;
+        }
+
+        if ($this->model->formacaoContinuadaEducacaoEspecial) {
+            $arrayCourses[] = FormacaoContinuada::EDUCACAO_ESPECIAL;
+        }
+
+        if ($this->model->formacaoContinuadaEducacaoIndigena) {
+            $arrayCourses[] = FormacaoContinuada::EDUCACAO_INDIGENA;
+        }
+
+        if ($this->model->formacaoContinuadaEducacaoCampo) {
+            $arrayCourses[] = FormacaoContinuada::EDUCACAO_DO_CAMPO;
+        }
+
+        if ($this->model->formacaoContinuadaEducacaoAmbiental) {
+            $arrayCourses[] = FormacaoContinuada::EDUCACAO_AMBIENTAL;
+        }
+
+        if ($this->model->formacaoContinuadaEducacaoDireitosHumanos) {
+            $arrayCourses[] = FormacaoContinuada::EDUCACAO_DIREITOS_HUMANOS;
+        }
+
+        if ($this->model->formacaoContinuadaGeneroDiversidadeSexual) {
+            $arrayCourses[] = FormacaoContinuada::GENERO_DIVERSIDADE_SEXUAL;
+        }
+
+        if ($this->model->formacaoContinuadaDireitosCriancaAdolescente) {
+            $arrayCourses[] = FormacaoContinuada::DIREITOS_CRIANCA_ADOLESCENTE;
+        }
+
+        if ($this->model->formacaoContinuadaEducacaoRelacoesEticoRaciais) {
+            $arrayCourses[] = FormacaoContinuada::CRECHE;
+        }
+
+        if ($this->model->formacaoContinuadaEducacaoGestaoEscolar) {
+            $arrayCourses[] = FormacaoContinuada::GESTAO_ESCOLAR;
+        }
+
+        if ($this->model->formacaoContinuadaEducacaoOutros) {
+            $arrayCourses[] = FormacaoContinuada::OUTROS;
+        }
+
+        if ($this->model->formacaoContinuadaEducacaoNenhum) {
+            $arrayCourses[] = FormacaoContinuada::NENHUM;
+        }
+
+        $employee->curso_formacao_continuada = $this->getPostgresIntegerArray($arrayCourses);
     }
 }

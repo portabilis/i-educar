@@ -1,8 +1,8 @@
 <?php
 
-use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Facades\Log;
 
 require_once 'lib/Portabilis/Report/ReportFactory.php';
 
@@ -45,6 +45,25 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
     private $timezone;
 
     /**
+     * Loga erros da requisição ao servidor de relatórios.
+     *
+     * @param array  $payload
+     * @param string $response
+     *
+     * @return void
+     */
+    protected function log($payload, $response)
+    {
+        $log = json_encode([
+            'url' => $this->url,
+            'payload' => $payload,
+            'response' => $response,
+        ]);
+
+        Log::error($log);
+    }
+
+    /**
      * @inheritdoc
      */
     public function setSettings($config)
@@ -69,10 +88,10 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
      * @param Portabilis_Report_ReportCore $report
      * @param array                        $options
      *
-     * @return string
-     *
      * @throws GuzzleException
      * @throws Exception
+     *
+     * @return string
      */
     public function dumps($report, $options = [])
     {
@@ -111,7 +130,7 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
         $data = $report->getJsonData();
         $data = $report->modify($data);
 
-        $response = $client->request('POST', $this->url, [
+        $payload = [
             'json' => [
                 'report' => $templateName,
                 'url' => $url,
@@ -122,15 +141,25 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
                 'Accept' => 'application/json',
                 'Authorization' => 'Token ' . $this->token,
             ]
-        ]);
+        ];
+
+        $response = $client->request('POST', $this->url, $payload);
 
         $json = json_decode($response->getBody()->getContents(), true);
 
+        if (config('legacy.report.debug')) {
+            $this->log($payload, $response->getBody()->getContents());
+        }
+
         if (is_null($json)) {
+            $this->log($payload, $response->getBody()->getContents());
+
             throw new Exception('Não foi possível analisar a resposta do serviço.');
         }
 
         if ($json['success'] == false) {
+            $this->log($payload, $response->getBody()->getContents());
+
             throw new Exception($json['error'] ?? $json['message']);
         }
 

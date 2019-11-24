@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\UrlPresigner;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
@@ -50,6 +51,7 @@ class indice extends clsDetalhe
     public $sus;
     public $url_laudo_medico;
     public $url_documento;
+    private $urlPresigner;
 
     public function Gerar()
     {
@@ -126,7 +128,7 @@ class indice extends clsDetalhe
             $registro['url'] = $det_pessoa_fj['url'];
 
             $registro['nacionalidade'] = $det_fisica['nacionalidade'];
-            $registro['nis_pis_pasep'] = $det_fisica['nis_pis_pasep'];
+            $registro['nis_pis_pasep'] = int2Nis($det_fisica['nis_pis_pasep']);
 
             $registro['naturalidade'] = $det_fisica['idmun_nascimento']->detalhe();
             $registro['naturalidade'] = $registro['naturalidade']['nome'];
@@ -349,7 +351,7 @@ class indice extends clsDetalhe
                 'Foto',
                 sprintf(
                     '<img src="arquivos/educar/aluno/small/%s" border="0">',
-                    $registro['caminho_foto']
+                    $this->urlPresigner()->getPresignedUrl($registro['caminho_foto'])
                 )
             ]);
         }
@@ -358,7 +360,7 @@ class indice extends clsDetalhe
             if ($caminhoFoto != null and $caminhoFoto != '') {
                 $this->addDetalhe([
                     'Nome Aluno',
-                    $registro['nome_aluno'] . '<p><img height="117" src="' . $caminhoFoto . '"/></p>'
+                    $registro['nome_aluno'] . '<p><img height="117" src="' . $this->urlPresigner()->getPresignedUrl($caminhoFoto) . '"/></p>'
                 ]);
             } else {
                 $this->addDetalhe(['Nome Aluno', $registro['nome_aluno']]);
@@ -368,7 +370,7 @@ class indice extends clsDetalhe
         if ($det_fisica['nome_social']) {
             $this->addDetalhe(['Nome Social', strtoupper($det_fisica['nome_social'])]);
         }
-        
+
         if (idFederal2int($registro['cpf'])) {
             $this->addDetalhe(['CPF', $registro['cpf']]);
         }
@@ -586,7 +588,7 @@ class indice extends clsDetalhe
                 $tabela .= '<tr bgcolor=\'' . $cor . '\'
                         align=\'center\'>
                           <td>
-                            <a href=\'' . $documento->url . '\'
+                            <a href=\'' . $this->urlPresigner()->getPresignedUrl($documento->url) . '\'
                                target=\'_blank\' > Visualizar documento ' . (count($documento) > 1 ? ($key + 1) : '') . '
                             </a>
                           </td>
@@ -605,8 +607,8 @@ class indice extends clsDetalhe
             $arrayLaudoMedico = json_decode($registro['url_laudo_medico']);
             foreach ($arrayLaudoMedico as $key => $laudoMedico) {
                 $cor = $cor == '#D1DADF' ? '#f5f9fd' : '#D1DADF';
-
-                $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$laudoMedico->url}' target='_blank' > Visualizar laudo " . (count($arrayLaudoMedico) > 1 ? ($key + 1) : '') . ' </a></td></tr>';
+                $laudoMedicoUrl = $this->urlPresigner()->getPresignedUrl($laudoMedico->url);
+                $tabela .= "<tr bgcolor='{$cor}' align='center'><td><a href='{$laudoMedicoUrl}' target='_blank' > Visualizar laudo " . (count($arrayLaudoMedico) > 1 ? ($key + 1) : '') . ' </a></td></tr>';
             }
 
             $tabela .= '</table>';
@@ -1026,7 +1028,7 @@ class indice extends clsDetalhe
         $this->addDetalhe("<input type='hidden' id='aluno_id' name='aluno_id' value='{$registro['cod_aluno']}' />");
         $mostraDependencia = config('legacy.app.matricula.dependencia');
         $this->addDetalhe("<input type='hidden' id='can_show_dependencia' name='can_show_dependencia' value='{$mostraDependencia}' />");
-        
+
         $this->breadcrumb('Aluno', ['/intranet/educar_index.php' => 'Escola']);
         // js
         $scripts = [
@@ -1040,6 +1042,15 @@ class indice extends clsDetalhe
         $styles = ['/modules/Cadastro/Assets/Stylesheets/Aluno.css'];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+    }
+
+    private function urlPresigner()
+    {
+        if (!isset($this->urlPresigner)) {
+            $this->urlPresigner = new UrlPresigner();
+        }
+
+        return $this->urlPresigner;
     }
 }
 

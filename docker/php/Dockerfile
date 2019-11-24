@@ -52,3 +52,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 COPY php.ini /usr/local/etc/php/php.ini
+
+COPY pdflib.so /usr/local/lib/php/extensions/no-debug-non-zts-20180731/pdflib.so
+RUN echo "extension=/usr/local/lib/php/extensions/no-debug-non-zts-20180731/pdflib.so" > /usr/local/etc/php/conf.d/pdflib.ini
+
+RUN docker-php-ext-install pcntl

@@ -65,18 +65,6 @@ function updateMessagePosition()
   last.style.top  = (findPosY(last_td) + 2) + 'px';
 }
 
-if (document.createStyleSheet) {
-  document.createStyleSheet('styles/calendario.css');
-}
-else {
-  var objHead = document.getElementsByTagName('head');
-  var objCSS = objHead[0].appendChild(document.createElement('link'));
-
-  objCSS.rel  = 'stylesheet';
-  objCSS.href = 'styles/calendario.css';
-  objCSS.type = 'text/css';
-}
-
 var cX = 0;
 var cY = 0;
 
