@@ -74,9 +74,13 @@ function checkAll(id){
     $j( '.check_componente_area_' + id).prop( "checked", isChecked );
     $j( '.area_conhecimento_' + id + ' .carga_horaria').prop("disabled", !isChecked);
     $j( '.area_conhecimento_' + id + ' .tipo_nota').prop("disabled", !isChecked);
+    $j( '.area_conhecimento_' + id + ' .anos_letivos').prop("disabled", !isChecked);
+    $j( '.area_conhecimento_' + id + ' .anos_letivos').trigger("chosen:updated");
     if(!isChecked){
         $j( '.area_conhecimento_' + id + ' .carga_horaria').val('');
         $j( '.area_conhecimento_' + id + ' .tipo_nota').val('');
+        $j( '.area_conhecimento_' + id + ' .anos_letivos').val('');
+        $j( '.area_conhecimento_' + id + ' .anos_letivos').trigger("chosen:updated");
     }
 }
 

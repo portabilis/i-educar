@@ -18,7 +18,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo("{$this->_instituicao} i-Educar - Tipo do AEE do aluno");
         $this->processoAp = "578";
-        $this->addEstilo("localizacaoSistema");
     }
 }
 

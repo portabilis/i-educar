@@ -272,6 +272,8 @@ class PessoaController extends ApiCoreController
         $details['nome_responsavel'] = $this->toUtf8($details['nome_responsavel'], ['transform' => true]);
         $details['cep'] = int2CEP($details['cep']);
 
+        $details['nis_pis_pasep'] = int2Nis($details['nis_pis_pasep']);
+
         $details['num_termo'] = $this->toUtf8($details['num_termo']);
         $details['num_folha'] = $this->toUtf8($details['num_folha']);
         $details['num_livro'] = $this->toUtf8($details['num_livro']);

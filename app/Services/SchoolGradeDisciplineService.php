@@ -8,13 +8,31 @@ use Illuminate\Support\Collection;
 class SchoolGradeDisciplineService
 {
     /**
-     * @param $schoolId
-     * @param $gradeId
+     * @param int $school
+     * @param int $grade
+     *
      * @return LegacySchoolGradeDiscipline[]|Collection
      */
-    public function getDisciplines($schoolId, $gradeId)
+    public function getDisciplines($school, $grade)
     {
-        return LegacySchoolGradeDiscipline::where('ref_ref_cod_escola', $schoolId)
-            ->where('ref_ref_cod_serie', $gradeId)->get()->pluck('discipline');
+        return LegacySchoolGradeDiscipline::query()
+            ->where('ref_ref_cod_escola', $school)
+            ->where('ref_ref_cod_serie', $grade)
+            ->get()
+            ->pluck('discipline');
+    }
+
+    /**
+     * @param int $school
+     * @param int $grade
+     *
+     * @return LegacySchoolGradeDiscipline[]|Collection
+     */
+    public function getAllDisciplines($school, $grade)
+    {
+        return LegacySchoolGradeDiscipline::query()
+            ->where('ref_ref_cod_escola', $school)
+            ->where('ref_ref_cod_serie', $grade)
+            ->get();
     }
 }

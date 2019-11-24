@@ -17,9 +17,7 @@ class clsIndexBase extends clsBase
     function Formular()
     {
         $this->SetTitulo($this->_instituicao . ' i-Educar - Calendários');
-        $this->addScript('calendario');
         $this->processoAp = 620;
-        $this->addEstilo("localizacaoSistema");
     }
 }
 
@@ -471,6 +469,12 @@ class indice extends clsListagem
       }
 
       $retorno .= '</tbody> </table>';
+
+      $scripts = [
+        '/intranet/scripts/calendario.js'
+      ];
+
+      Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 
       return $retorno;
   }
