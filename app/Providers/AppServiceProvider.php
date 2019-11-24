@@ -2,22 +2,18 @@
 
 namespace App\Providers;
 
-use App\Models\SchoolManager;
-use App\Observers\SchoolManagerObserver;
-use App\Providers\Postgres\DatabaseServiceProvider;
-use Exception;
-use App\Services\CacheManager;
 use App\Models\LegacyInstitution;
+use App\Providers\Postgres\DatabaseServiceProvider;
+use App\Services\CacheManager;
 use App\Services\StudentUnificationService;
 use Barryvdh\Debugbar\ServiceProvider as DebugbarServiceProvider;
-use iEducar\Support\Navigation\Breadcrumb;
+use Exception;
 use iEducar\Modules\ErrorTracking\HoneyBadgerTracker;
 use iEducar\Modules\ErrorTracking\Tracker;
+use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;

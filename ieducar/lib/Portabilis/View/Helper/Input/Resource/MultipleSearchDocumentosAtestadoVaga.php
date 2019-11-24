@@ -23,6 +23,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchDocumentosAtestadoVaga
                 'doc_nis' => 'N&uacute;mero de Identifica&ccedil;&atilde;o Social - NIS',
                 'responsabilidade_nao_genitor' => 'Documento de responsável não genitor',
                 'intolerancia_alergia' => 'Laudo médico para intolerância ou alergia',
+                'tipo_sanguineo' => 'Tipo Sanguíneo',
             ];
         }
 

@@ -12,7 +12,7 @@ class LegacyDistrict extends Model
     /**
      * @var string
      */
-    protected $table = 'distrito';
+    protected $table = 'public.distrito';
 
     /**
      * @var string
@@ -33,6 +33,9 @@ class LegacyDistrict extends Model
         'data_cad',
         'idpes_cad',
         'origem_gravacao',
+        'origem_gravacao',
+        'idpes_cad',
+        'data_cad',
         'operacao',
     ];
 
@@ -40,4 +43,21 @@ class LegacyDistrict extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @inheritDoc
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $district = LegacyDistrict::query()->whereKey($model->idmun)->first();
+
+            $model->origem_gravacao = 'M';
+            $model->data_cad = now();
+            $model->operacao = 'I';
+            $model->iddis = $district->getKey();
+        });
+    }
 }

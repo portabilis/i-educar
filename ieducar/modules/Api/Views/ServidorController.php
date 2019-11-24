@@ -162,7 +162,7 @@ class ServidorController extends ApiCoreController
                     and pt.ano = $2
                     and t.ref_ref_cod_escola in ({$escola})
                     {$where}
-                    group by id, ccae.tipo_nota, date(ccae.updated_at)
+                    group by id, ccae.tipo_nota, greatest(pt.updated_at, date(ccae.updated_at))
                 )
                 union all
                 (
