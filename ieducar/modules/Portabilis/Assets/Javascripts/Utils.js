@@ -3,6 +3,9 @@
 
 $j = jQuery.noConflict();
 
+function linkUrlPrivada(url) {
+  return '/abre-url-privada?url=' + encodeURI(url);
+}
 
 function buildId(id) {
   return typeof(id) == 'string' && id.length > 0 && id.charAt(0) != '#' ? '#' + id : id;

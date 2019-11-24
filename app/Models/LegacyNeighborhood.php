@@ -12,7 +12,8 @@ class LegacyNeighborhood extends Model
     /**
      * @var string
      */
-    protected $table = 'bairro';
+    protected $table = 'public.bairro';
+
 
     /**
      * @var string
@@ -42,4 +43,18 @@ class LegacyNeighborhood extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @inheritDoc
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->origem_gravacao = 'M';
+            $model->data_cad = now();
+            $model->operacao = 'I';
+        });
+    }
 }

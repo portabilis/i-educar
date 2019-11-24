@@ -770,22 +770,23 @@ class clsPmieducarCandidatoFilaUnica extends Model
         return false;
     }
 
-    public function alteraSituacao($situacao, $motivo = null)
+    public function alteraSituacao($situacao, $motivo = null, $data = null)
     {
         if (!$this->cod_candidato_fila_unica) {
             return false;
         }
 
         $situacao = $situacao ?: 'NULL';
-        $motivo = $motivo ?: 'NULL';
+        $motivo = str_replace("\'", "''", $motivo) ?: 'NULL';
         $historico = $this->montaHistorico();
+        $data = $data ?: 'NOW()';
 
         $db = new clsBanco();
         $db->Consulta("UPDATE pmieducar.candidato_fila_unica
                           SET situacao = {$situacao},
-                              motivo = {$motivo},
+                              motivo = '{$motivo}',
                               data_situacao = NOW(),
-                              data_solicitacao = NOW(),
+                              data_solicitacao = '{$data}',
                               hora_solicitacao = NOW(),
                               historico = '{$historico}'
                         WHERE cod_candidato_fila_unica = '{$this->cod_candidato_fila_unica}'");

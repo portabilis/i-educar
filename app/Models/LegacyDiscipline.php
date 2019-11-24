@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyDiscipline extends Model
 {
@@ -61,5 +62,13 @@ class LegacyDiscipline extends Model
     public function getEducacensoCodeAttribute()
     {
         return $this->codigo_educacenso;
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function knowledgeArea()
+    {
+        return $this->belongsTo(LegacyKnowledgeArea::class, 'area_conhecimento_id');
     }
 }

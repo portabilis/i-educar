@@ -6,6 +6,8 @@ require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/geral.inc.php");
 require_once 'Portabilis/Date/Utils.php';
 
+use App\Services\BackupUrlPresigner;
+
 class clsIndexBase extends clsBase
 {
     function Formular()
@@ -84,15 +86,18 @@ class indice extends clsListagem
         $total = $objBackup->_total;
 
         // monta a lista
+        $baseDownloadUrl = route('backup.download');
         if(is_array($lista) && count($lista))
         {
             foreach ($lista AS $registro)
             {
                 $dataBackup = Portabilis_Date_Utils::pgSQLToBr($registro['data_backup']);
 
+                $url = $baseDownloadUrl . '?url=' . urlencode($registro['caminho']);
+
                 $this->addLinhas( array(
-                    "<a href=\"{$registro["caminho"]}\">{$registro["caminho"]}</a>",
-                    "<a href=\"{$registro["caminho"]}\">{$dataBackup}</a>"
+                    "<a href=\"$url\">{$registro["caminho"]}</a>",
+                    "<a href=\"$url\">{$dataBackup}</a>"
                 ) );
             }
         }

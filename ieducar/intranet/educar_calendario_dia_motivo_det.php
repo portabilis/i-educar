@@ -11,7 +11,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo( "{$this->_instituicao} i-Educar - Calend&aacute;rio Dia Motivo" );
         $this->processoAp = "576";
-        $this->addEstilo("localizacaoSistema");
     }
 }
 
