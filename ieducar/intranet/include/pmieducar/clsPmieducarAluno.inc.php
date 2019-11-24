@@ -495,6 +495,7 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->autorizado_um) && $this->autorizado_um != 'NULL') {
+                $this->autorizado_um = str_replace('\'', '\'\'', $this->autorizado_um);
                 $set .= "{$gruda}autorizado_um = '{$this->autorizado_um}'";
                 $gruda = ', ';
             } elseif ($this->autorizado_um == 'NULL') {
@@ -511,6 +512,7 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->autorizado_dois) && $this->autorizado_dois != 'NULL') {
+                $this->autorizado_dois = str_replace('\'', '\'\'', $this->autorizado_dois);
                 $set .= "{$gruda}autorizado_dois = '{$this->autorizado_dois}'";
                 $gruda = ', ';
             } elseif ($this->autorizado_dois == 'NULL') {
@@ -527,6 +529,7 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->autorizado_tres) && $this->autorizado_tres != 'NULL') {
+                $this->autorizado_tres = str_replace('\'', '\'\'', $this->autorizado_tres);
                 $set .= "{$gruda}autorizado_tres = '{$this->autorizado_tres}'";
                 $gruda = ', ';
             } elseif ($this->autorizado_tres == 'NULL') {
@@ -543,6 +546,7 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->autorizado_quatro) && $this->autorizado_quatro != 'NULL') {
+                $this->autorizado_quatro = str_replace('\'', '\'\'', $this->autorizado_quatro);
                 $set .= "{$gruda}autorizado_quatro = '{$this->autorizado_quatro}'";
                 $gruda = ', ';
             } elseif ($this->autorizado_quatro == 'NULL') {
@@ -559,6 +563,7 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->autorizado_cinco) && $this->autorizado_cinco != 'NULL') {
+                $this->autorizado_cinco = str_replace('\'', '\'\'', $this->autorizado_cinco);
                 $set .= "{$gruda}autorizado_cinco = '{$this->autorizado_cinco}'";
                 $gruda = ', ';
             } elseif ($this->autorizado_cinco == 'NULL') {

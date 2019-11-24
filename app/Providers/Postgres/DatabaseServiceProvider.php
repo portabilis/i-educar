@@ -2,6 +2,7 @@
 
 namespace App\Providers\Postgres;
 
+use Illuminate\Database\Connection;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use PDO;
@@ -15,20 +16,12 @@ class DatabaseServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $app = $this->app;
-        $this->app['db']->extend('pgsql', function ($config, $name) use($app) {
-            $connection = $app['db.factory']->make($config, $name);
+        Connection::resolverFor('pgsql', function ($connection, $database, $prefix, $config) {
+            $connection = new PostgresConnection($connection, $database, $prefix, $config);
 
-            $new_connection = new PostgresConnection(
-                $connection->getPdo(),
-                $connection->getDatabaseName(),
-                $connection->getTablePrefix(),
-                $config
-            );
+            $connection->getPdo()->exec('SET search_path = "$user", public, portal, cadastro, pmieducar, urbano, modules;');
 
-            $new_connection->getPdo()->exec('SET search_path = "$user", public, portal, cadastro, pmieducar, urbano, modules;');
-
-            return $new_connection;
+            return $connection;
         });
 
         Event::listen('Illuminate\Database\Events\QueryExecuted', function ($query) {

@@ -1,8 +1,17 @@
 <?php
 
+use App\Models\LegacyEvaluationRule;
+use App\Models\LegacyInstitution;
+use App\Models\LegacyRegistration;
+use App\Models\LegacyRemedialRule;
+use App\Models\LegacySchoolClass;
 use Cocur\Slugify\Slugify;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'Avaliacao/Model/NotaGeralDataMapper.php';
@@ -792,62 +801,123 @@ class DiarioApiController extends ApiCoreController
 
     // get
 
+    protected function getRelocationDate()
+    {
+        /** @var LegacyInstitution $institution */
+        $institution = app(LegacyInstitution::class);
+
+        return $institution->relocation_date;
+    }
+
     protected function getMatriculas()
     {
-        $regras = $matriculas = array();
+        $regras = $matriculas = [];
 
         if ($this->canGetMatriculas()) {
-            $alunos = new clsPmieducarMatriculaTurma();
-            $alunos->setOrderby("sequencial_fechamento , translate(pessoa.nome,'" . Portabilis_String_Utils::toLatin1(åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ) . "', '" . Portabilis_String_Utils::toLatin1(aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN) . "')");
+            /** @var LegacySchoolClass $schoolClass */
+            $schoolClass = LegacySchoolClass::query()
+                ->with([
+                    'enrollments' => function ($query) {
+                        /** @var Builder $query */
+                        $query->when($this->getRequest()->matricula_id, function ($query) {
+                            $query->where('ref_cod_matricula', $this->getRequest()->matricula_id);
+                        });
+                        $query->where(function ($query) {
+                            $relocationDate = $this->getRelocationDate();
 
-            $alunos = $alunos->lista(
-                $this->getRequest()->matricula_id,
-                $this->getRequest()->turma_id,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                2,
-                $this->getRequest()->serie_id,
-                $this->getRequest()->curso_id,
-                $this->getRequest()->escola_id,
-                $this->getRequest()->instituicao_id,
-                $this->getRequest()->aluno_id,
-                null,
-                null,
-                null,
-                null,
-                $this->getRequest()->ano,
-                null,
-                true,
-                null,
-                null,
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                true
-            );
+                            /** @var Builder $query */
+                            $query->where('ativo', 1);
+                            $query->when($relocationDate, function ($query) use ($relocationDate) {
+                                /** @var Builder $query */
+                                $query->orWhere(function ($query) use ($relocationDate) {
+                                    /** @var Builder $query */
+                                    $query->where('data_exclusao', '>', $relocationDate);
+                                    $query->where(function ($query) {
+                                        /** @var Builder $query */
+                                        $query->orWhere('transferido', true);
+                                        $query->orWhere('remanejado', true);
+                                        $query->orWhere('reclassificado', true);
+                                        $query->orWhere('abandono', true);
+                                        $query->orWhere('falecido', true);
+                                    });
+                                });
+                            });
+                        });
+                        $query->with([
+                            'registration' => function ($query) {
+                                $query->with([
+                                    'student' => function ($query) {
+                                        $query->with([
+                                            'person' => function ($query) {
+                                                $query->withCount('considerableDeficiencies');
+                                            }
+                                        ]);
+                                    }
+                                ]);
+                                $query->with('dependencies');
+                            }
+                        ]);
 
-            if (!is_array($alunos)) {
-                $alunos = array();
+                        // Pega a última enturmação na turma
+
+                        $query->whereRaw(
+                            '
+                            sequencial = (
+                                SELECT max(sequencial) 
+                                FROM pmieducar.matricula_turma mt 
+                                WHERE mt.ref_cod_turma = matricula_turma.ref_cod_turma 
+                                AND mt.ref_cod_matricula = matricula_turma.ref_cod_matricula
+                            )
+                            '
+                        );
+                    },
+                ])
+                ->whereKey($this->getRequest()->turma_id)
+                ->firstOrFail();
+
+            // Ordena as enturmações pelo sequencial de fechamento e o nome da
+            // pessoa conforme comportamento do código anterior.
+
+            $enrollments = $schoolClass->enrollments->sortBy(function ($enrollment) {
+                return Str::slug($enrollment->registration->student->person->name);
+            })->sortBy(function ($enrollment) {
+                return $enrollment->sequencial_fechamento;
+            });
+
+            // Pega a regra de avaliação da turma e busca no banco de dados
+            // suas tabelas de arredondamento (numérica e conceitual), valores
+            // de arredondamento para as duas tabelas e regras de recuperação.
+
+            $evaluationRule = $schoolClass->getEvaluationRule();
+
+            $evaluationRule->load('roundingTable.roundingValues');
+            $evaluationRule->load('conceptualRoundingTable.roundingValues');
+            $evaluationRule->load('remedialRules');
+
+            // Caso a regra de avaliação possua uma regra diferenciada para
+            // alunos com deficiência, também irá buscar no banco de dados por
+            // suas tabelas de arredondamento (numérica e conceitual), valores
+            // de arredondamento para as duas tabelas e regras de recuperação.
+
+            if ($deficiencyEvaluationRule = $evaluationRule->deficiencyEvaluationRule) {
+                $deficiencyEvaluationRule->load('roundingTable.roundingValues');
+                $deficiencyEvaluationRule->load('conceptualRoundingTable.roundingValues');
+                $deficiencyEvaluationRule->load('remedialRules');
             }
 
-            foreach ($alunos as $aluno) {
-                $matricula = array();
-                $matriculaId = $aluno['ref_cod_matricula'];
-                $turmaId = $aluno['ref_cod_turma'];
-                $serieId = $aluno['ref_ref_cod_serie'];
+            foreach ($enrollments as $enrollment) {
+                /*** @var LegacyRegistration $registration */
+                $registration = $enrollment->registration;
+                $student = $registration->student;
+                $person = $student->person;
+
+                $matricula = [];
+                $matriculaId = $enrollment->ref_cod_matricula;
+                $turmaId = $enrollment->ref_cod_turma;
+                $serieId = $registration->ref_ref_cod_serie;
                 $componenteCurricularId = $this->getRequest()->componente_curricular_id;
-                $disciplinasDependenciaId = App_Model_IedFinder::getDisciplinasDependenciaPorMatricula($matriculaId, $serieId, $this->getRequest()->escola_id);
-                $objMatriculaTurma = new clsPmieducarMatriculaTurma();
-                $matriculaDependencia = $objMatriculaTurma->verficaEnturmacaoDeDependencia($matriculaId, $turmaId);
+                $disciplinasDependenciaId = $enrollment->registration->dependencies->values();
+                $matriculaDependencia = $enrollment->registration->dependencia;
 
                 if (!empty($componenteCurricularId) && $matriculaDependencia && !in_array($componenteCurricularId, $disciplinasDependenciaId)) {
                     continue;
@@ -856,29 +926,45 @@ class DiarioApiController extends ApiCoreController
                 // seta id da matricula a ser usado pelo metodo serviceBoletim
                 $this->setCurrentMatriculaId($matriculaId);
 
-                if (!(dbBool($aluno['remanejado']) || dbBool($aluno['transferido']) || dbBool($aluno['abandono']) || dbBool($aluno['reclassificado']) || dbBool($aluno['falecido']))) {
+                if (!($enrollment->remanejado || $enrollment->transferido || $enrollment->abandono || $enrollment->reclassificado || $enrollment->falecido)) {
                     $matricula['componentes_curriculares'] = $this->loadComponentesCurricularesForMatricula($matriculaId, $turmaId, $serieId);
                 }
 
-                $matricula['matricula_id'] = $aluno['ref_cod_matricula'];
-                $matricula['aluno_id'] = $aluno['ref_cod_aluno'];
-                $matricula['nome'] = $this->safeString($aluno['nome_aluno']);
+                $matricula['matricula_id'] = $registration->getKey();
+                $matricula['aluno_id'] = $student->getKey();
+                $matricula['nome'] = $person->name;
 
-                if (dbBool($aluno['remanejado'])) {
+                if ($enrollment->remanejado) {
                     $matricula['situacao_deslocamento'] = 'Remanejado';
-                } elseif (dbBool($aluno['transferido'])) {
+                } elseif ($enrollment->transferido) {
                     $matricula['situacao_deslocamento'] = 'Transferido';
-                } elseif (dbBool($aluno['abandono'])) {
+                } elseif ($enrollment->abandono) {
                     $matricula['situacao_deslocamento'] = 'Abandono';
-                } elseif (dbBool($aluno['reclassificado'])) {
+                } elseif ($enrollment->reclassificado) {
                     $matricula['situacao_deslocamento'] = 'Reclassificado';
-                } elseif (dbBool($aluno['falecido'])) {
+                } elseif ($enrollment->falecido) {
                     $matricula['situacao_deslocamento'] = 'Falecido';
                 } else {
                     $matricula['situacao_deslocamento'] = null;
                 }
 
-                $matricula['regra'] = $this->getRegraAvaliacao();
+                // Utiliza a regra de avaliação diferenciada quando o aluno
+                // possua alguma deficiência que seja considerada e exista uma
+                // regra de avaliação diferenciada para a turma.
+
+                $registrationEvaluationRule = $evaluationRule;
+
+                if ($registration->ref_ref_cod_serie != $schoolClass->grade_id) {
+                    $registrationEvaluationRule = $registration->getEvaluationRule();
+                }
+
+                if ($person->considerable_deficiencies_count && $deficiencyEvaluationRule) {
+                    $registrationEvaluationRule = $deficiencyEvaluationRule;
+                }
+
+                $matricula['regra'] = $this->getEvaluationRule($registrationEvaluationRule);
+
+                $matricula['regra']['quantidade_etapas'] = $schoolClass->stages->count();
 
                 $regras[$matricula['regra']['id']] = $matricula['regra'];
 
@@ -886,8 +972,7 @@ class DiarioApiController extends ApiCoreController
             }
         }
 
-        // adiciona regras de avaliacao
-        if (!empty($matriculas)) {
+        if ($matriculas) {
             $this->appendResponse('details', array_values($regras));
         }
 
@@ -1173,7 +1258,11 @@ class DiarioApiController extends ApiCoreController
 
         $where = array('id' => $componenteCurricularId);
 
-        $area = $mapper->findAll(array('area_conhecimento'), $where);
+        $key = json_encode($where);
+
+        $area = Cache::store('array')->remember("getAreaConhecimento:{$key}", now()->addMinute(), function () use ($mapper, $where) {
+            return $mapper->findAll(array('area_conhecimento'), $where);
+        });
 
         $areaConhecimento = new stdClass();
         $areaConhecimento->id = $area[0]->area_conhecimento->id;
@@ -1508,79 +1597,28 @@ class DiarioApiController extends ApiCoreController
         return $this->safeString($parecer, $transform = false);
     }
 
-    protected function getOpcoesFaltas()
+    protected function getRoundingValues($evaluationRule, $roundingTable)
     {
-        $opcoes = array();
+        $options = [];
 
-        foreach (range(0, 100, 1) as $f) {
-            $opcoes[$f] = $f;
-        }
+        if ($evaluationRule->tipo_nota != RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+            $roudingValues = $roundingTable->roundingValues;
 
-        return $opcoes;
-    }
-
-    protected function canGetOpcoesNotas()
-    {
-        return true;
-    }
-
-    protected function getOpcoesNotas()
-    {
-        $opcoes = array();
-
-        if ($this->canGetOpcoesNotas()) {
-            $tpNota = $this->serviceBoletim()->getRegra()->get('tipoNota');
-            $cnsNota = RegraAvaliacao_Model_Nota_TipoValor;
-
-            if ($tpNota != $cnsNota::NENHUM) {
-                $tabela = $this->serviceBoletim()->getRegra()->tabelaArredondamento->findTabelaValor();
-
-                foreach ($tabela as $index => $item) {
-                    if ($tpNota == $cnsNota::NUMERICA) {
-                        $nota = str_replace(',', '.', (string) $item->nome);
-                        $opcoes[$nota] = $nota;
-                    } else {
-                        // $nota                   = str_replace(',', '.', (string) $item->valorMaximo);
-                        $opcoes[$index] = array('valor_minimo' => str_replace(',', '.', (string) $item->valorMinimo),
-                            'valor_maximo' => str_replace(',', '.', (string) $item->valorMaximo),
-                            'descricao' => $this->safeString($item->nome . ' (' . $item->descricao . ')'));
-
-                    }
+            foreach ($roudingValues as $index => $roudingValue) {
+                if ($evaluationRule->tipo_nota == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
+                    $nota = str_replace(',', '.', (string) $roudingValue->nome);
+                    $options[$nota] = $nota;
+                } else {
+                    $options[$index] = [
+                        'valor_minimo' => str_replace(',', '.', (string) $roudingValue->valor_minimo),
+                        'valor_maximo' => str_replace(',', '.', (string) $roudingValue->valor_maximo),
+                        'descricao' => $this->safeString($roudingValue->nome . ' (' . $roudingValue->descricao . ')'),
+                    ];
                 }
             }
         }
 
-        return $opcoes;
-    }
-
-    //Usado apenas quando na regra o sistema de nota é "Numérica e conceitual"
-    protected function getOpcoesNotasConceituais()
-    {
-        $opcoes = array();
-
-        if ($this->canGetOpcoesNotas()) {
-            $tpNota = $this->serviceBoletim()->getRegra()->get('tipoNota');
-            $cnsNota = RegraAvaliacao_Model_Nota_TipoValor;
-
-            if ($tpNota != $cnsNota::NENHUM) {
-                $tabela = $this->serviceBoletim()->getRegra()->tabelaArredondamentoConceitual->findTabelaValor();
-
-                foreach ($tabela as $index => $item) {
-                    if ($tpNota == $cnsNota::NUMERICA) {
-                        $nota = str_replace(',', '.', (string) $item->nome);
-                        $opcoes[$nota] = $nota;
-                    } else {
-                        // $nota                   = str_replace(',', '.', (string) $item->valorMaximo);
-                        $opcoes[$index] = array('valor_minimo' => str_replace(',', '.', (string) $item->valorMinimo),
-                            'valor_maximo' => str_replace(',', '.', (string) $item->valorMaximo),
-                            'descricao' => $this->safeString($item->nome . ' (' . $item->descricao . ')'));
-
-                    }
-                }
-            }
-        }
-
-        return $opcoes;
+        return $options;
     }
 
     protected function getNavegacaoTab()
@@ -1588,122 +1626,120 @@ class DiarioApiController extends ApiCoreController
         return $this->getRequest()->navegacao_tab;
     }
 
-    protected function canGetRegraAvaliacao()
+    /**
+     * Retorna um array com todos os dados necessários para a interface do
+     * faltas e notas sobre a regra de avaliação.
+     *
+     * @param LegacyEvaluationRule $evaluationRule
+     *
+     * @return array
+     */
+    protected function getEvaluationRule($evaluationRule)
     {
-        return true;
-    }
+        $rule = [
+            'id' => $evaluationRule->id,
+            'nome' => $evaluationRule->nome,
+            'nota_maxima_geral' => $evaluationRule->nota_maxima_geral,
+            'nota_minima_geral' => $evaluationRule->nota_minima_geral,
+            'nota_maxima_exame_final' => $evaluationRule->nota_maxima_exame_final,
+            'qtd_casas_decimais' => $evaluationRule->qtd_casas_decimais,
+            'regra_diferenciada_id' => $evaluationRule->regra_diferenciada_id,
+        ];
 
-    protected function getRegraAvaliacao()
-    {
-        $itensRegra = array();
+        $tpPresenca = $evaluationRule->tipo_presenca;
 
-        if ($this->canGetRegraAvaliacao()) {
-            $regra = $this->serviceBoletim()->getRegra();
-            $itensRegra['id'] = $regra->get('id');
-            $itensRegra['nome'] = $this->safeString($regra->get('nome'));
-            $itensRegra['nota_maxima_geral'] = $regra->get('notaMaximaGeral');
-            $itensRegra['nota_minima_geral'] = $regra->get('notaMinimaGeral');
-            $itensRegra['nota_maxima_exame_final'] = $regra->get('notaMaximaExameFinal');
-            $itensRegra['qtd_casas_decimais'] = $regra->get('qtdCasasDecimais');
-            $itensRegra['regra_diferenciada_id'] = $regra->get('regraDiferenciada');
-
-            // tipo presença
-            $cnsPresenca = RegraAvaliacao_Model_TipoPresenca;
-            $tpPresenca = $this->serviceBoletim()->getRegra()->get('tipoPresenca');
-
-            if ($tpPresenca == $cnsPresenca::GERAL) {
-                $itensRegra['tipo_presenca'] = 'geral';
-            } elseif ($tpPresenca == $cnsPresenca::POR_COMPONENTE) {
-                $itensRegra['tipo_presenca'] = 'por_componente';
-            } else {
-                $itensRegra['tipo_presenca'] = $tpPresenca;
-            }
-
-            // tipo nota
-            $cnsNota = RegraAvaliacao_Model_Nota_TipoValor;
-            $tpNota = $this->serviceBoletim()->getRegra()->get('tipoNota');
-
-            if ($tpNota == $cnsNota::NENHUM) {
-                $itensRegra['tipo_nota'] = 'nenhum';
-            } elseif ($tpNota == $cnsNota::NUMERICA) {
-                $itensRegra['tipo_nota'] = 'numerica';
-            } elseif ($tpNota == $cnsNota::CONCEITUAL) {
-                $itensRegra['tipo_nota'] = 'conceitual';
-                //incluido opcoes notas, pois notas conceituais requer isto para visualizar os nomes
-            } elseif ($tpNota == $cnsNota::NUMERICACONCEITUAL) {
-                $itensRegra['tipo_nota'] = 'numericaconceitual';
-            } else {
-                $itensRegra['tipo_nota'] = $tpNota;
-            }
-
-            //Lançamento de nota manual
-            $tpProgressao = $this->serviceBoletim()->getRegra()->get('tipoProgressao');
-            $itensRegra['progressao_manual'] = ($tpProgressao == RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL);
-            $itensRegra['progressao_continuada'] = ($tpProgressao == RegraAvaliacao_Model_TipoProgressao::CONTINUADA);
-
-            // tipo parecer
-            $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo;
-            $tpParecer = $this->serviceBoletim()->getRegra()->get('parecerDescritivo');
-
-            if ($tpParecer == $cnsParecer::NENHUM) {
-                $itensRegra['tipo_parecer_descritivo'] = 'nenhum';
-            } elseif ($tpParecer == $cnsParecer::ETAPA_COMPONENTE) {
-                $itensRegra['tipo_parecer_descritivo'] = 'etapa_componente';
-            } elseif ($tpParecer == $cnsParecer::ETAPA_GERAL) {
-                $itensRegra['tipo_parecer_descritivo'] = 'etapa_geral';
-            } elseif ($tpParecer == $cnsParecer::ANUAL_COMPONENTE) {
-                $itensRegra['tipo_parecer_descritivo'] = 'anual_componente';
-            } elseif ($tpParecer == $cnsParecer::ANUAL_GERAL) {
-                $itensRegra['tipo_parecer_descritivo'] = 'anual_geral';
-            } else {
-                $itensRegra['tipo_parecer_descritivo'] = $tpParecer;
-            }
-
-            // opcoes notas
-            $itensRegra['opcoes_notas'] = $this->getOpcoesNotas();
-            if ($tpNota == $cnsNota::NUMERICACONCEITUAL) {
-                $itensRegra['opcoes_notas_conceituais'] = $this->getOpcoesNotasConceituais();
-            }
-
-            // etapas
-            $itensRegra['quantidade_etapas'] = $this->serviceBoletim()->getOption('etapas');
+        if ($tpPresenca == RegraAvaliacao_Model_TipoPresenca::GERAL) {
+            $rule['tipo_presenca'] = 'geral';
+        } elseif ($tpPresenca == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+            $rule['tipo_presenca'] = 'por_componente';
+        } else {
+            $rule['tipo_presenca'] = $tpPresenca;
         }
 
-        $itensRegra['nomenclatura_exame'] = (config('legacy.app.diario.nomenclatura_exame') == 0 ? 'exame' : 'conselho');
+        $tpNota = $evaluationRule->tipo_nota;
 
-        //tipo de recuperação paralela
-        $tipoRecuperacaoParalela = $regra->get('tipoRecuperacaoParalela');
+        if ($tpNota == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+            $rule['tipo_nota'] = 'nenhum';
+        } elseif ($tpNota == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
+            $rule['tipo_nota'] = 'numerica';
+        } elseif ($tpNota == RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL) {
+            $rule['tipo_nota'] = 'conceitual';
+        } elseif ($tpNota == RegraAvaliacao_Model_Nota_TipoValor::NUMERICACONCEITUAL) {
+            $rule['tipo_nota'] = 'numericaconceitual';
+        } else {
+            $rule['tipo_nota'] = $tpNota;
+        }
+
+        $tpProgressao = $evaluationRule->tipo_progressao;
+        $rule['progressao_manual'] = $tpProgressao == RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL;
+        $rule['progressao_continuada'] = $tpProgressao == RegraAvaliacao_Model_TipoProgressao::CONTINUADA;
+
+        $tpParecer = $evaluationRule->parecer_descritivo;
+
+        if ($tpParecer == RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
+            $rule['tipo_parecer_descritivo'] = 'nenhum';
+        } elseif ($tpParecer == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE) {
+            $rule['tipo_parecer_descritivo'] = 'etapa_componente';
+        } elseif ($tpParecer == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) {
+            $rule['tipo_parecer_descritivo'] = 'etapa_geral';
+        } elseif ($tpParecer == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
+            $rule['tipo_parecer_descritivo'] = 'anual_componente';
+        } elseif ($tpParecer == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL) {
+            $rule['tipo_parecer_descritivo'] = 'anual_geral';
+        } else {
+            $rule['tipo_parecer_descritivo'] = $tpParecer;
+        }
+
+        $rule['opcoes_notas'] = $this->getRoundingValues($evaluationRule, $evaluationRule->roundingTable);
+
+        if ($tpNota == RegraAvaliacao_Model_Nota_TipoValor::NUMERICACONCEITUAL) {
+            $rule['opcoes_notas_conceituais'] = $this->getRoundingValues($evaluationRule, $evaluationRule->conceptualRoundingTable);
+        }
+
+        $rule['nomenclatura_exame'] = config('legacy.app.diario.nomenclatura_exame') == 0 ? 'exame' : 'conselho';
+
+        $tipoRecuperacaoParalela = $evaluationRule->tipo_recuperacao_paralela;
 
         if ($tipoRecuperacaoParalela == RegraAvaliacao_Model_TipoRecuperacaoParalela::NAO_USAR) {
-            $itensRegra['tipo_recuperacao_paralela'] = 'nao_utiliza';
+            $rule['tipo_recuperacao_paralela'] = 'nao_utiliza';
         } elseif ($tipoRecuperacaoParalela == RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPA) {
-            $itensRegra['tipo_recuperacao_paralela'] = 'por_etapa';
-            $itensRegra['media_recuperacao_paralela'] = $this->serviceBoletim()->getRegra()->get('mediaRecuperacaoParalela');
-            $itensRegra['calcula_media_rec_paralela'] = $this->serviceBoletim()->getRegra()->get('calculaMediaRecParalela');
+            $rule['tipo_recuperacao_paralela'] = 'por_etapa';
+            $rule['media_recuperacao_paralela'] = $evaluationRule->media_recuperacao_paralela;
+            $rule['calcula_media_rec_paralela'] = $evaluationRule->calcula_media_rec_paralela;
         } elseif ($tipoRecuperacaoParalela == RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS) {
-            $itensRegra['tipo_recuperacao_paralela'] = 'etapas_especificas';
+            $rule['tipo_recuperacao_paralela'] = 'etapas_especificas';
 
             $etapa = $this->getRequest()->etapa;
-            if ($regraRecuperacao = $regra->getRegraRecuperacaoByEtapa($etapa)) {
-                $itensRegra['habilita_campo_etapa_especifica'] = $regraRecuperacao->getLastEtapa() == $etapa;
-                $itensRegra['tipo_recuperacao_paralela_nome'] = $regraRecuperacao->get('descricao');
-                $itensRegra['tipo_recuperacao_paralela_nota_maxima'] = $regraRecuperacao->get('notaMaxima');
-            } else {
-                $itensRegra['habilita_campo_etapa_especifica'] = false;
-                $itensRegra['tipo_recuperacao_paralela_nome'] = '';
-                $itensRegra['tipo_recuperacao_paralela_nota_maxima'] = 0;
+
+            /** @var Collection $remedialRules */
+            if ($remedialRules = $evaluationRule->remedialRules) {
+                /** @var LegacyRemedialRule $remedialRule */
+                $remedialRule = $remedialRules->first(function ($remedialRule) use ($etapa) {
+                    /** @var LegacyRemedialRule $remedialRule */
+                    return in_array($etapa, $remedialRule->getStages());
+                });
             }
 
+            if (isset($remedialRule)) {
+                $rule['habilita_campo_etapa_especifica'] = $remedialRule->getLastStage() == $etapa;
+                $rule['tipo_recuperacao_paralela_nome'] = $remedialRule->descricao;
+                $rule['tipo_recuperacao_paralela_nota_maxima'] = $remedialRule->nota_maxima;
+            } else {
+                $rule['habilita_campo_etapa_especifica'] = false;
+                $rule['tipo_recuperacao_paralela_nome'] = '';
+                $rule['tipo_recuperacao_paralela_nota_maxima'] = 0;
+            }
         }
-        if ($regra->get('notaGeralPorEtapa') == '1') {
-            $itensRegra['nota_geral_por_etapa'] = "SIM";
+
+        if ($evaluationRule->nota_geral_por_etapa == '1') {
+            $rule['nota_geral_por_etapa'] = "SIM";
         } else {
-            $itensRegra['nota_geral_por_etapa'] = "NAO UTILIZA";
+            $rule['nota_geral_por_etapa'] = "NAO UTILIZA";
         }
 
-        $itensRegra['definir_componente_por_etapa'] = $regra->get('definirComponentePorEtapa') == 1;
+        $rule['definir_componente_por_etapa'] = $evaluationRule->definir_componente_etapa == 1;
 
-        return $itensRegra;
+        return $rule;
     }
 
     protected function inserirAuditoriaNotas($notaAntiga, $notaNova)

@@ -117,7 +117,11 @@ class relatorios
     $this->pdf->Write( $this->numeroPagina, $this->pdf->largura - $this->margem_direita - 25, 125, 15, 80, $this->fonte_titulo, 10, "#000000", "center" );
 
     // Insere o brasao da prefeitura
-    $image = config('legacy.app.template.pdf.logo', 'imagens/brasao.gif');
+    $brasaoDefault = 'imagens/nvp_brasao_print.gif';
+    $image = config('legacy.app.template.pdf.logo', $brasaoDefault);
+    if ($image == '') {
+        $image = $brasaoDefault;
+    }
     $this->pdf->insertImageScaled("gif", $image, $this->margem_esquerda + 4,
       74, 45);
 

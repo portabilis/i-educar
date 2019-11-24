@@ -9,6 +9,8 @@ require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
 
 require_once 'App/Model/ZonaLocalizacao.php';
 
+use App\Services\UrlPresigner;
+
 class clsIndex extends clsBase
 {
     public function Formular()
@@ -63,7 +65,7 @@ class indice extends clsDetalhe
         $caminhoFoto = $objFoto->detalhe();
         if ($caminhoFoto!=false) {
             $this->addDetalhe(['Nome', $detalhe['nome'].'
-                <p><img height="117" src="'.$caminhoFoto['caminho'].'"/></p>']);
+                <p><img height="117" src="' . (new UrlPresigner())->getPresignedUrl($caminhoFoto['caminho']) . '"/></p>']);
         } else {
             $this->addDetalhe(['Nome', $detalhe['nome']]);
         }

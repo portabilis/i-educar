@@ -14,7 +14,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Ocorr&ecirc;ncia Disciplinar" );
         $this->processoAp = "580";
-        $this->addEstilo("localizacaoSistema");
     }
 }
 

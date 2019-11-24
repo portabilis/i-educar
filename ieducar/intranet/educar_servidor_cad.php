@@ -836,6 +836,10 @@ JS;
             }
         }
         $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
+        if (!$existe_funcao_professor) {
+            $this->excluiDisciplinas();
+            $this->excluiCursos();
+        }
 
         if ($existe_funcao_professor) {
             if ($cursos_disciplina) {
