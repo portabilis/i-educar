@@ -121,7 +121,7 @@ function addLaudoMedico(url, data) {
         .addClass('decorated')
         .attr('id', 'link_visualizar_laudo_medico_' + $id)
         .attr('target', '_blank')
-        .attr('href', url)
+        .attr('href', linkUrlPrivada(url))
         .css('cursor', 'pointer')
         .css('margin-left', '10px'))
     ).insertBefore($j('#laudo_medico'));
@@ -284,7 +284,7 @@ function addDocumento(url, data) {
         .addClass('decorated')
         .attr('id', 'link_visualizar_documento_' + $id)
         .attr('target', '_blank')
-        .attr('href', url)
+        .attr('href', linkUrlPrivada(url))
         .css('cursor', 'pointer')
         .css('margin-left', '10px'))
     ).insertBefore($j('#documento'));
@@ -2590,7 +2590,7 @@ if ($j('#transporte_rota').length > 0) {
       $j('#data_emissao_rg').makeUnrequired();
       $j('#orgao_emissao_rg').makeUnrequired();
       $j('#uf_emissao_rg').makeUnrequired();
-      if ($j('#rg').val().length && obrigarCamposCenso) {
+      if ($j('#rg').val().trim().length && obrigarCamposCenso) {
         $j('#data_emissao_rg').makeRequired();
         $j('#orgao_emissao_rg').makeRequired();
         $j('#uf_emissao_rg').makeRequired();

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LegacyRoundingTable extends Model
 {
@@ -22,4 +23,12 @@ class LegacyRoundingTable extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @return HasMany
+     */
+    public function roundingValues()
+    {
+        return $this->hasMany(LegacyValueRoundingTable::class, 'tabela_arredondamento_id', 'id');
+    }
 }

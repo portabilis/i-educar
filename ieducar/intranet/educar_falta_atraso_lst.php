@@ -50,7 +50,6 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' Servidores - Falta Atraso');
     $this->processoAp = 635;
-    $this->addEstilo("localizacaoSistema");
   }
 }
 
