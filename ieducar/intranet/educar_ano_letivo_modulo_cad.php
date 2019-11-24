@@ -546,7 +546,8 @@ class indice extends clsCadastro
                 'cod_curso_profissional',
                 'tipo_mediacao_didatico_pedagogico',
                 'nao_informar_educacenso',
-                'turma_mais_educacao'
+                'turma_mais_educacao',
+                'local_funcionamento_diferenciado'
             ];
 
             $turmaDestino = new clsPmieducarTurma();
@@ -697,7 +698,7 @@ class indice extends clsCadastro
         $iDiarioService = app(iDiarioService::class);
 
         foreach ($etapas as $etapa) {
-            if ($iDiarioService->getStepActivityByUnit($escolaId, $etapa)) {
+            if ($iDiarioService->getStepActivityByUnit($escolaId, $ano, $etapa)) {
                 throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas no diário online.');
             }
         }

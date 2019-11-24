@@ -1,6 +1,7 @@
 <?php
 
 use iEducar\Legacy\Model;
+use Illuminate\Support\Facades\Cache;
 
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Portabilis/Utils/Database.php';
@@ -1910,20 +1911,23 @@ class clsPmieducarTurma extends Model
 
     public static function verificaDisciplinaDispensada($turmaId, $componenteId)
     {
-        $sql = 'SELECT ref_cod_disciplina_dispensada as disciplina_dispensada FROM pmieducar.turma WHERE cod_turma = $1';
-
-        $params = ['params' => $turmaId, 'return_only' => 'first-field'];
-        $disciplina_dispensada = Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
-
-        return $disciplina_dispensada == $componenteId;
+        return static::getDisciplinaDispensada($turmaId) == $componenteId;
     }
 
     public static function getDisciplinaDispensada($turmaId)
     {
-        $sql = 'SELECT ref_cod_disciplina_dispensada as disciplina_dispensada FROM pmieducar.turma WHERE cod_turma = $1';
+        $key = json_encode(compact('turmaId'));
 
-        $params = ['params' => $turmaId, 'return_only' => 'first-field'];
-        $disciplina_dispensada = Portabilis_Utils_Database::fetchPreparedQuery($sql, $params);
+        $disciplina_dispensada = Cache::store('array')->remember("getDisciplinaDispensada:{$key}", now()->addMinute(), function () use ($turmaId) {
+            $sql = 'SELECT ref_cod_disciplina_dispensada as disciplina_dispensada FROM pmieducar.turma WHERE cod_turma = $1';
+
+            $params = ['params' => $turmaId, 'return_only' => 'first-field'];
+            return Portabilis_Utils_Database::fetchPreparedQuery($sql, $params) ?? 'null';
+        });
+
+        if ($disciplina_dispensada === 'null') {
+            $disciplina_dispensada = null;
+        }
 
         return $disciplina_dispensada;
     }

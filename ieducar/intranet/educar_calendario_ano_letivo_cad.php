@@ -16,7 +16,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo( "{$this->_instituicao} i-Educar - Calendario Ano Letivo" );
         $this->processoAp = "620";
-        $this->addEstilo("localizacaoSistema");
     }
 }
 

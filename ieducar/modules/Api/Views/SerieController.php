@@ -131,25 +131,42 @@ class SerieController extends ApiCoreController
 
         if (is_array($escolas)) {
             foreach ($escolas as $key => $escola) {
-                $query[$key] = "SELECT distinct s.cod_serie, s.nm_serie
-                              FROM pmieducar.serie s
-                             INNER JOIN pmieducar.escola_serie es ON es.ref_cod_serie = s.cod_serie
-                             WHERE es.ativo = 1
-                               AND s.ativo = 1
-                               AND es.ref_cod_escola = $escola ";
+                $query[$key] = "
+                    SELECT DISTINCT
+                        s.cod_serie,
+                        s.nm_serie
+                    FROM pmieducar.serie s
+                    INNER JOIN pmieducar.escola_serie es ON es.ref_cod_serie = s.cod_serie
+                    INNER JOIN pmieducar.escola e ON e.cod_escola = es.ref_cod_escola
+                    INNER JOIN pmieducar.escola_curso ec ON ec.ref_cod_escola = e.cod_escola 
+                    INNER JOIN pmieducar.curso c ON c.cod_curso = ec.ref_cod_curso
+                        AND c.cod_curso = s.ref_cod_curso
+                    WHERE true
+                        AND es.ativo = 1
+                        AND s.ativo = 1
+                        AND es.ref_cod_escola = $escola
+                ";
             }
 
             $query = implode("\n INTERSECT \n", $query);
             $orderBy = ' ORDER BY nm_serie ASC ';
             $sql = $query . $orderBy;
         } else {
-            $sql = "SELECT distinct s.cod_serie, s.nm_serie
-                  FROM pmieducar.serie s
-                 INNER JOIN pmieducar.escola_serie es ON es.ref_cod_serie = s.cod_serie
-                 WHERE es.ativo = 1
-                   AND s.ativo = 1
-                   AND es.ref_cod_escola = $escolas
-                 ORDER BY s.nm_serie ASC ";
+            $sql = "
+                SELECT DISTINCT
+                    s.cod_serie,
+                    s.nm_serie
+                FROM pmieducar.serie s
+                INNER JOIN pmieducar.escola_serie es ON es.ref_cod_serie = s.cod_serie
+                INNER JOIN pmieducar.escola e ON e.cod_escola = es.ref_cod_escola
+                INNER JOIN pmieducar.escola_curso ec ON ec.ref_cod_escola = e.cod_escola 
+                INNER JOIN pmieducar.curso c ON c.cod_curso = ec.ref_cod_curso
+                    AND c.cod_curso = s.ref_cod_curso
+                WHERE true
+                    AND es.ativo = 1
+                    AND s.ativo = 1
+                    AND es.ref_cod_escola = $escolas
+                ORDER BY s.nm_serie ASC ";
         }
 
         $series = $this->fetchPreparedQuery($sql);

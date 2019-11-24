@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyEvaluationRuleGradeYear extends Model
 {
@@ -30,4 +31,20 @@ class LegacyEvaluationRuleGradeYear extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @return BelongsTo
+     */
+    public function evaluationRule()
+    {
+        return $this->belongsTo(LegacyEvaluationRule::class, 'regra_avaliacao_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function differentiatedEvaluationRule()
+    {
+        return $this->belongsTo(LegacyEvaluationRule::class, 'regra_avaliacao_diferenciada_id');
+    }
 }

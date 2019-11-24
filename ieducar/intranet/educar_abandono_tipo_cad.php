@@ -37,7 +37,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Abandono" );
         $this->processoAp = "950";
-        $this->addEstilo("localizacaoSistema");
     }
 }
 
