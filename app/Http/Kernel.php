@@ -21,6 +21,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrustProxies::class,
         \App\Http\Middleware\ChangeAppName::class,
         \App\Http\Middleware\ConnectTenantDatabase::class,
+        \App\Http\Middleware\LoadSettings::class,
     ];
 
     /**
@@ -38,12 +39,12 @@ class Kernel extends HttpKernel
             // \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\SetLayoutVariables::class,
-            \App\Http\Middleware\LoadSettings::class,
         ],
 
         'api' => [
             'throttle:60,1',
             'bindings',
+            \Barryvdh\Cors\HandleCors::class
         ],
     ];
 

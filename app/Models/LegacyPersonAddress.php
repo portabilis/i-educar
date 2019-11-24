@@ -3,16 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Prettus\Repository\Contracts\Transformable;
-use Prettus\Repository\Traits\TransformableTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property string $name
  */
-class LegacyPersonAddress extends Model implements Transformable
+class LegacyPersonAddress extends Model
 {
-    use TransformableTrait;
 
     /**
      * @var string
@@ -60,5 +57,16 @@ class LegacyPersonAddress extends Model implements Transformable
     public function person()
     {
         return $this->belongsTo(LegacyPersonAddress::class, 'idpes', 'idpes');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->origem_gravacao = 'M';
+            $model->data_cad = now();
+            $model->operacao = 'I';
+        });
     }
 }

@@ -594,7 +594,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         ];
     }
 
-    public function campoHora($nome, $campo, $valor, $obrigatorio = false, $descricao = '', $acao = '', $limitaHora = true, $desabilitado = false)
+    public function campoHora($nome, $campo, $valor, $obrigatorio = false, $descricao = '', $acao = '', $limitaHora = true, $desabilitado = false, $maxLength = 5)
     {
         $arr_componente = [
             'hora',
@@ -602,7 +602,7 @@ class clsCampos extends Core_Controller_Page_Abstract
             $limitaHora ? ($obrigatorio ? '/^([0-1]?[0-9]|2[0-3]):([0-5][0-9])(:[0-5][0-9])?$/' : '*(/^([0-1]?[0-9]|2[0-3]):([0-5][0-9])(:[0-5][0-9])?$/)') : ($obrigatorio ? '/[0-9]{2}:[0-9]{2}/' : '*(/[0-9]{2}:[0-9]{2}/)'),
             $valor,
             6,
-            5,
+            $maxLength,
             'hh:mm',
             $descricao,
             $acao,
@@ -1962,8 +1962,9 @@ class clsCampos extends Core_Controller_Page_Abstract
                         break;
 
                     case 'hora':
-                        $componente[3] = strlen($componente[3]) < 6 ? $componente[3] : substr($componente[3], 0, 5);
-                        $retorno .= "<input onKeyPress=\"formataHora(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[8]} {$componente[9]}>{$componente[7]}";
+                        $componente[3] = (strlen($componente[3]) < 6  || $componente[5] != 5) ? $componente[3] : substr($componente[3], 0, 5);
+                        $segundos = ($componente[5] != 5) ? 'true' : 'false';
+                        $retorno .= "<input onKeyPress=\"formataHora(this, event, {$segundos});\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[8]} {$componente[9]}>{$componente[7]}";
                         break;
 
                     case 'cor':

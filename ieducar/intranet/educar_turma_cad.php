@@ -228,6 +228,7 @@ class indice extends clsCadastro
 
         $this->campoOculto('obrigar_campos_censo', (int)$obrigarCamposCenso);
         $this->campoOculto('cod_turma', $this->cod_turma);
+        $this->campoOculto('ano_letivo_', $this->ano);
         $this->campoOculto('dependencia_administrativa', $this->dependencia_administrativa);
         $this->campoOculto('modalidade_curso', $this->modalidade_curso);
         $this->campoOculto('retorno', $this->retorno);
@@ -1304,6 +1305,7 @@ class indice extends clsCadastro
     protected function validaModulos()
     {
         $turmaId = $this->cod_turma;
+        $anoTurma = $this->ano_letivo_;
         $etapasCount = count($this->data_inicio);
         $etapasCountAntigo = (int) Portabilis_Utils_Database::selectField(
             'SELECT COUNT(*) AS count FROM pmieducar.turma_modulo WHERE ref_cod_turma = $1',
@@ -1360,7 +1362,7 @@ class indice extends clsCadastro
         $iDiarioService = app(iDiarioService::class);
 
         foreach ($etapas as $etapa) {
-            if ($iDiarioService->getStepActivityByClassroom($turmaId, $etapa)) {
+            if ($iDiarioService->getStepActivityByClassroom($turmaId, $anoTurma, $etapa)) {
                 throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas no diário online.');
             }
         }

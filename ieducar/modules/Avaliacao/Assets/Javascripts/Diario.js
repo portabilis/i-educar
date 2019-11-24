@@ -1088,7 +1088,7 @@ function handleSearch($resultTable, dataResponse) {
                                   .attr('id', 'situacao-matricula-' + value.matricula_id)
                                   .data('matricula_id', value.matricula_id)
                                   .addClass('center')
-                                  .css('color', '#FF6600')
+                                  .addClass('matricula-situacao-deslocamento')
                                   .html(value.situacao_deslocamento)
                                   .appendTo($linha);
 

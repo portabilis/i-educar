@@ -17,12 +17,18 @@ use Illuminate\Database\Eloquent\Model;
 class LegacyPhone extends Model
 {
     /**
-     * @var array
+     * @var string
      */
     protected $table = 'cadastro.fone_pessoa';
 
+    /**
+     * @var string
+     */
     protected $primaryKey = 'idpes';
 
+    /**
+     * @var array
+     */
     protected $fillable = [
         'idpes',
         'tipo',
@@ -32,7 +38,30 @@ class LegacyPhone extends Model
         'origem_gravacao',
         'operacao',
         'data_cad',
+        'idpes_rev',
+        'data_rev',
+        'origem_gravacao',
+        'idpes_cad',
+        'data_cad',
+        'operacao',
     ];
 
+    /**
+     * @var bool
+     */
     public $timestamps = false;
+
+    /**
+     * @inheritDoc
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->origem_gravacao = 'M';
+            $model->data_cad = now();
+            $model->operacao = 'I';
+        });
+    }
 }

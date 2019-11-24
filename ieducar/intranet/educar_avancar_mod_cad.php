@@ -43,7 +43,8 @@ class indice extends clsCadastro
         $this->inputsHelper()->date('data_matricula', ['label' => 'Data da matricula', 'placeholder' => 'dd/mm/yyyy']);
 
         Portabilis_View_Helper_Application::loadJavascript($this, [
-            '/modules/Cadastro/Assets/Javascripts/RematriculaAutomatica.js'
+            '/modules/Cadastro/Assets/Javascripts/RematriculaAutomatica.js',
+            '/modules/Cadastro/Assets/Javascripts/RematriculaAutomaticaModal.js'
         ]);
     }
 
@@ -146,32 +147,23 @@ class indice extends clsCadastro
                 $mensagem = '';
 
                 if ($count > 0) {
-                    $mensagem .= "Rematriculado os seguinte(s) $count aluno(s) com sucesso em $this->ano_letivo: </br></br>";
-
-                    foreach ($nomesAlunos as $nome) {
-                        $mensagem .= "{$nome} </br>";
-                    }
+                    $mensagem .= "O(s) aluno(s) foram rematriculados com sucesso em $this->ano_letivo. Clique <a href='#' onclick='ModalAlunos.init(\"alunos_rematriculados\");'>aqui</a> para conferir os alunos rematrículados</br>";
 
                     $mensagem .= '</br> As enturmações podem ser realizadas em: Movimentação > Enturmação.';
-
                     if (count($alunosComSaidaDaEscola) > 0) {
-                        $mensagem .= '</br></br>O(s) seguinte(s) aluno(s) não foram rematriculados, pois possuem saída na escola: </br></br>';
-                        foreach ($alunosComSaidaDaEscola as $nome) {
-                            $mensagem .= "{$nome} </br>";
-                        }
+                        $mensagem .= '</br></br>Alguns alunos não foram rematriculados, pois possuem saída na escola. Clique <a href=\'#\' onclick=\'ModalAlunos.init("alunos_com_saida");\'>aqui</a> para ver esses alunos</br>';
                     }
                 }
 
+                $this->inputsHelper()->hidden('alunos_rematriculados', ['value' => implode(',', $nomesAlunos)]);
+                $this->inputsHelper()->hidden('alunos_com_saida', ['value' => implode(',', $alunosComSaidaDaEscola)]);
                 Session::now('success', $mensagem);
             } elseif (count($alunosSemInep) > 0) {
-                $mensagem = 'Não foi possível realizar a rematrícula, pois o(s) seguinte(s) aluno(s) não possuem o INEP cadastrado: </br></br>';
+                $mensagem = 'Não foi possível realizar a rematrícula, pois alguns alunos não possuem o INEP cadastrado. Clique <a href=\'#\' onclick=\'ModalAlunos.init("alunos_sem_inep");\'>aqui</a> para ver esses alunos.</br>';
 
-                foreach ($alunosSemInep as $nome) {
-                    $mensagem .= "{$nome} </br>";
-                }
+                $mensagem .= '</br>Por favor, cadastre o INEP do(s) aluno(s) em: Cadastros > Alunos > Campo: Código INEP.';
 
-                $mensagem .= '</br>Por favor, cadastre o INEP do(s) aluno(s) em: Cadastros > Aluno > Alunos > Campo: Código INEP.';
-
+                $this->inputsHelper()->hidden('alunos_sem_inep', ['value' => implode(',', $alunosSemInep)]);
                 Session::now('error', $mensagem);
             } elseif ($this->existeMatriculasAprovadasReprovadas($escolaId, $cursoId, $serieId, $turmaId, $this->ano_letivo)) {
                 Session::now('error', 'Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados em ' . ($this->ano_letivo - 1) . '.');

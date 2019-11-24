@@ -15,7 +15,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo( "{$this->_instituicao} i-Educar - Motivo Transfer&ecirc;ncia" );
         $this->processoAp = "575";
-        $this->addEstilo("localizacaoSistema");
     }
 }
 

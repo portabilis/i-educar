@@ -224,4 +224,17 @@ class Portabilis_View_Helper_Input_Core
 
         return null;
     }
+
+    protected function getEscolaridadesId($escolaridadeId = null)
+    {
+        if (!is_null($escolaridadeId) && is_numeric($escolaridadeId)) {
+            return $escolaridadeId;
+        }
+
+        if (isset($this->viewInstance->idesco) && is_numeric($this->viewInstance->idesco)) {
+            return $this->viewInstance->idesco;
+        }
+
+        return null;
+    }
 }
