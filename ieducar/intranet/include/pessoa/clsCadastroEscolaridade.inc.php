@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacySchoolingDegree;
 use iEducar\Legacy\Model;
 
 class clsCadastroEscolaridade extends Model
@@ -182,7 +183,7 @@ class clsCadastroEscolaridade extends Model
     /**
      * Exclui um registro.
      *
-     * @return bool
+     * @return bool | array
      */
     public function excluir()
     {
@@ -194,5 +195,33 @@ class clsCadastroEscolaridade extends Model
         }
 
         return false;
+    }
+
+    /**
+     *  Verifica se o tipo de escolaridade está sendo referenciado nas outras tabelas que possuem FK,
+     *  vai retorna uma lista de idpes que possuem vínculo
+     *
+     * @return array|bool
+     * @throws Exception
+     */
+    public function findUsages() {
+        if (! is_numeric($this->idesco)) {
+            return false;
+        }
+
+        $employees = LegacySchoolingDegree::select('cod_servidor')
+            ->join('pmieducar.servidor', 'ref_idesco', '=', 'idesco', 'left')
+            ->where('idesco', $this->idesco)
+            ->get();
+
+        foreach ($employees as $key => $employe) {
+            $results[$key]['cod_servidor'] = $employe->cod_servidor;
+        }
+
+        if (count($results) == 1 && !$results[0]['cod_servidor']) {
+            return false;
+        }
+
+        return json_encode($results);
     }
 }

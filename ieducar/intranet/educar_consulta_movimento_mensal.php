@@ -8,7 +8,6 @@ class clsIndexBase extends clsBase
     public function Formular()
     {
         $this->SetTitulo($this->_instituicao . ' i-Educar - Consulta de movimento mensal');
-        $this->addEstilo("localizacaoSistema");
         $this->processoAp = 9998910;
     }
 }

@@ -73,6 +73,7 @@ class indice extends clsCadastro
     public $exibir_apenas_professores_alocados;
     public $bloquear_vinculo_professor_sem_alocacao_escola;
     public $permitir_matricula_fora_periodo_letivo;
+    public $ordenar_alunos_sequencial_enturmacao;
 
     public function Inicializar()
     {
@@ -123,6 +124,7 @@ class indice extends clsCadastro
         $this->exibir_apenas_professores_alocados = dbBool($this->exibir_apenas_professores_alocados);
         $this->bloquear_vinculo_professor_sem_alocacao_escola = dbBool($this->bloquear_vinculo_professor_sem_alocacao_escola);
         $this->permitir_matricula_fora_periodo_letivo = dbBool($this->permitir_matricula_fora_periodo_letivo);
+        $this->ordenar_alunos_sequencial_enturmacao = dbBool($this->ordenar_alunos_sequencial_enturmacao);
 
         return $retorno;
     }
@@ -256,6 +258,15 @@ class indice extends clsCadastro
         $this->campoCheck('permissao_filtro_abandono_transferencia', 'Não permitir a apresentação de alunos com matrícula em abandono ou transferida na emissão do relatório de frequência', $this->permissao_filtro_abandono_transferencia);
         $this->campoCheck('altera_atestado_para_declaracao', 'Alterar nome do título do menu e relatórios de Atestado para Declaração', $this->altera_atestado_para_declaracao);
         $this->campoCheck('exibir_apenas_professores_alocados', 'Exibir apenas professores alocados nos filtros de emissão do Diário de classe', $this->exibir_apenas_professores_alocados);
+        $this->campoCheck(
+            'ordenar_alunos_sequencial_enturmacao',
+            'Apresentar alunos em relatórios de acordo com a ordenação definida de forma automática/manual na turma',
+            $this->ordenar_alunos_sequencial_enturmacao,
+            null,
+            false,
+            false,
+            false
+        );
 
         $this->campoRotulo('processos_escolares','<b>Processos escolares</b>');
         $this->campoCheck('exigir_vinculo_turma_professor', 'Exigir vínculo com turma para lançamento de notas do professor?', $this->exigir_vinculo_turma_professor);
@@ -373,6 +384,7 @@ class indice extends clsCadastro
         $obj->exibir_apenas_professores_alocados = !is_null($this->exibir_apenas_professores_alocados);
         $obj->bloquear_vinculo_professor_sem_alocacao_escola = !is_null($this->bloquear_vinculo_professor_sem_alocacao_escola);
         $obj->permitir_matricula_fora_periodo_letivo = !is_null($this->permitir_matricula_fora_periodo_letivo);
+        $obj->ordenar_alunos_sequencial_enturmacao = !is_null($this->ordenar_alunos_sequencial_enturmacao);
 
         $detalheAntigo = $obj->detalhe();
 
