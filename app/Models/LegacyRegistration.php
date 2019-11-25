@@ -39,6 +39,10 @@ class LegacyRegistration extends Model
         'dependencia',
         'ref_ref_cod_serie',
         'ref_cod_curso',
+        'ativo',
+        'aprovado',
+        'data_matricula',
+        'ultima_matricula'
     ];
 
     /**

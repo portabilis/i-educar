@@ -157,6 +157,7 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
 
         $this->inepEscola = $arrayColumns[2];
         $this->inepAluno = $arrayColumns[4];
+        $this->inepTurma = $arrayColumns[6];
         $this->etapaAluno = $arrayColumns[8];
         $this->tipoAtendimentoDesenvolvimentoFuncoesGognitivas = $arrayColumns[9];
         $this->tipoAtendimentoDesenvolvimentoVidaAutonoma = $arrayColumns[10];
