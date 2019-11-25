@@ -85,7 +85,7 @@ class Registro00Import implements RegistroImportInterface
 
         $organization = LegacyOrganization::create([
             'idpes' => $person->idpes,
-            'cnpj' => $this->model->cnpjEscolaPrivada ?: '00000000000100',
+            'cnpj' => $this->model->cnpjEscolaPrivada ?: rand(1, 99) . rand(1, 999) . rand(1, 999) . rand(1, 9999) . rand(1, 99),
             'origem_gravacao' => 'M',
             'idpes_cad' => $this->user->id,
             'data_cad' => now(),
