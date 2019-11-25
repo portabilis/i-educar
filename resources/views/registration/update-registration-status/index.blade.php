@@ -104,7 +104,7 @@
                    <span class="form">
                         <select class="geral" name="situacao" id="situacao" style="width: 308px;">
                             <option value="">Selecione</option>
-                                @foreach(App_Model_MatriculaSituacao::getInstance()->getValues() as $id => $name)
+                                @foreach(App_Model_MatriculaSituacao::getInstance()->getEnums() as $id => $name)
                                 <option value="{{$id}}">{{$name}}</option>
                             @endforeach
                         </select>
@@ -120,7 +120,7 @@
                    <span class="form">
                         <select class="geral" name="nova_situacao" id="nova_situacao" style="width: 308px;">
                             <option value="">Selecione</option>
-                                @foreach(App_Model_MatriculaSituacao::getInstance()->getValues() as $id => $name)
+                                @foreach(App_Model_MatriculaSituacao::getInstance()->getEnums() as $id => $name)
                                 <option value="{{$id}}">{{$name}}</option>
                             @endforeach
                         </select>
