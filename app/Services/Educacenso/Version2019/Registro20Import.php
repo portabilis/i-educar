@@ -411,29 +411,16 @@ class Registro20Import implements RegistroImportInterface
             ->where('etapa_curso', $levelData['etapa'])
             ->first();
 
-        if (!empty($level)) {
-            return $level;
+        if (empty($level)) {
+            $level = $this->createLevel($levelData, $course);
         }
-
-        $level = LegacyLevel::create([
-            'nm_serie' => $levelData['serie'],
-            'ref_usuario_cad' => $this->user->id,
-            'ref_cod_curso' => $course->getKey(),
-            'etapa_curso' => $levelData['etapa'],
-            'carga_horaria' => 800,
-            'dias_letivos' => 200,
-            'data_cadastro' => now(),
-            'concluinte' => ($levelData['etapa'] == $levelData['etapas']) ? 1 : 0,
-            'ativo' => 1,
-            'intervalo' => 1,
-        ]);
 
         $schoolGrade = LegacySchoolGrade::where('ref_cod_escola', $school->getKey())
             ->where('ref_cod_serie', $level->getKey())
             ->first();
 
         if (!empty($schoolGrade)) {
-            return $schoolGrade;
+            return $level;
         }
 
         LegacySchoolGrade::create([
@@ -942,6 +929,27 @@ class Registro20Import implements RegistroImportInterface
             'cod_turma' => $schoolClass->getKey(),
             'cod_turma_inep' => $this->model->inepTurma,
             'created_at' => now(),
+        ]);
+
+    }
+
+    /**
+     * @param $levelData
+     * @param LegacyCourse $course
+     */
+    private function createLevel($levelData, $course)
+    {
+        return LegacyLevel::create([
+            'nm_serie' => $levelData['serie'],
+            'ref_usuario_cad' => $this->user->id,
+            'ref_cod_curso' => $course->getKey(),
+            'etapa_curso' => $levelData['etapa'],
+            'carga_horaria' => 800,
+            'dias_letivos' => 200,
+            'data_cadastro' => now(),
+            'concluinte' => ($levelData['etapa'] == $levelData['etapas']) ? 1 : 0,
+            'ativo' => 1,
+            'intervalo' => 1,
         ]);
 
     }
