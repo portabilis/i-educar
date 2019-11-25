@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateRegistrationStatusRequest;
 use App\Models\LegacyRegistration;
-use App\Models\Registration;
 use App\Process;
 use App\Services\RegistrationService;
 use Illuminate\Http\Request;
