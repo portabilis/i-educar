@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -104,5 +105,13 @@ class LegacySchool extends Model
             'ref_cod_escola',
             'ref_cod_serie'
         )->withPivot('ativo', 'anos_letivos');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function schoolClasses()
+    {
+        return $this->hasMany(LegacySchoolClass::class, 'ref_ref_cod_escola');
     }
 }

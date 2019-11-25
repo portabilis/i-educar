@@ -75,6 +75,8 @@ class Individual extends Model
     }
 
     /**
+     * @param $value
+     *
      * @return string
      */
     public function getMotherNameAttribute($value)
@@ -87,6 +89,8 @@ class Individual extends Model
     }
 
     /**
+     * @param $value
+     *
      * @return string
      */
     public function getFatherNameAttribute($value)
@@ -99,6 +103,8 @@ class Individual extends Model
     }
 
     /**
+     * @param $value
+     *
      * @return string
      */
     public function getGuardianNameAttribute($value)

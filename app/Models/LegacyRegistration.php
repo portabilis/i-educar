@@ -183,11 +183,35 @@ class LegacyRegistration extends Model
         return $this->hasOne(LegacyStudentScore::class, 'matricula_id');
     }
 
-        /**
+    /**
      * @return HasOne
      */
     public function studentDescriptiveOpinion()
     {
         return $this->hasOne(LegacyStudentDescriptiveOpinion::class, 'matricula_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function dependencies()
+    {
+        return $this->hasMany(LegacyDisciplineDependence::class, 'ref_cod_matricula', 'cod_matricula');
+    }
+
+    /**
+     * @return LegacyEvaluationRule
+     */
+    public function getEvaluationRule()
+    {
+        $evaluationRuleGradeYear = $this->hasOne(LegacyEvaluationRuleGradeYear::class, 'serie_id', 'ref_ref_cod_serie')
+            ->where('ano_letivo', $this->ano)
+            ->firstOrFail();
+
+        if ($this->school->utiliza_regra_diferenciada && $evaluationRuleGradeYear->differentiatedEvaluationRule) {
+            return $evaluationRuleGradeYear->differentiatedEvaluationRule;
+        }
+
+        return $evaluationRuleGradeYear->evaluationRule;
     }
 }
