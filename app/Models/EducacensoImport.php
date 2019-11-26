@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EducacensoImport extends Model
 {
-    protected $table = 'educacenso_import';
+    protected $table = 'educacenso_imports';
 
     protected $fillable = ['year', 'school', 'user_id', 'finished'];
 
