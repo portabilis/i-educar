@@ -133,7 +133,7 @@
         <div class="separator"></div>
 
         <div style="text-align: center">
-            <button class="btn-green" type="submit">Buscar</button>
+            <button class="btn-green" type="submit">Salvar</button>
         </div>
 
     </form>

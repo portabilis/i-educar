@@ -242,6 +242,18 @@ class EnrollmentService
     }
 
     /**
+     * Atualiza o campo transferido na enturmação para TRUE
+     *
+     * @param LegacyEnrollment $enrollment
+     * @throws Throwable
+     */
+    public function markAsTransferred(LegacyEnrollment $enrollment)
+    {
+        $enrollment->remanejado = true;
+        $enrollment->saveOrFail();
+    }
+
+    /**
      * Atualiza o campo remanejado na enturmação para TRUE
      *
      * @param LegacyEnrollment $enrollment
@@ -250,6 +262,42 @@ class EnrollmentService
     public function markAsRelocated(LegacyEnrollment $enrollment)
     {
         $enrollment->remanejado = true;
+        $enrollment->saveOrFail();
+    }
+
+    /**
+     * Atualiza o campo reclassificado na enturmação para TRUE
+     *
+     * @param LegacyEnrollment $enrollment
+     * @throws Throwable
+     */
+    public function markAsReclassified(LegacyEnrollment $enrollment)
+    {
+        $enrollment->reclassificado = true;
+        $enrollment->saveOrFail();
+    }
+
+    /**
+     * Atualiza o campo abandono na enturmação para TRUE
+     *
+     * @param LegacyEnrollment $enrollment
+     * @throws Throwable
+     */
+    public function markAsAbandoned(LegacyEnrollment $enrollment)
+    {
+        $enrollment->abandono = true;
+        $enrollment->saveOrFail();
+    }
+
+    /**
+     * Atualiza o campo falecido na enturmação para TRUE
+     *
+     * @param LegacyEnrollment $enrollment
+     * @throws Throwable
+     */
+    public function markAsDeceased(LegacyEnrollment $enrollment)
+    {
+        $enrollment->falecido = true;
         $enrollment->saveOrFail();
     }
 
