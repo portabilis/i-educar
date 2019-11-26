@@ -312,25 +312,9 @@ class Registro20Import implements RegistroImportInterface
 
         $course = LegacyCourse::where('nm_curso', 'ilike', $courseData['curso'])->first();
 
-        if (!empty($course)) {
-            return $course;
+        if (empty($course)) {
+            $course = $this->createCourse($educationLevel, $educationType, $courseData);
         }
-
-        $course = LegacyCourse::create([
-            'ref_usuario_cad' => $this->user->id,
-            'ref_cod_nivel_ensino' => $educationLevel->getKey(),
-            'ref_cod_tipo_ensino' => $educationType->getKey(),
-            'nm_curso' => $courseData['curso'],
-            'sgl_curso' => substr($courseData['curso'], 0, 15),
-            'qtd_etapas' => $courseData['etapas'],
-            'carga_horaria' => 800 * $courseData['etapas'],
-            'data_cadastro' => now(),
-            'ref_cod_instituicao' => LegacyInstitution::active()->first()->id,
-            'ativo' => 1,
-            'modalidade_curso' => $this->model->modalidadeCurso,
-            'padrao_ano_escolar' => 1,
-            'multi_seriado' => 1,
-        ]);
 
         $schoolCourse = LegacySchoolCourse::where('ref_cod_escola', $school->getKey())
             ->where('ref_cod_curso', $course->getKey())
@@ -936,6 +920,7 @@ class Registro20Import implements RegistroImportInterface
     /**
      * @param $levelData
      * @param LegacyCourse $course
+     * @return
      */
     private function createLevel($levelData, $course)
     {
@@ -952,5 +937,30 @@ class Registro20Import implements RegistroImportInterface
             'intervalo' => 1,
         ]);
 
+    }
+
+    /**
+     * @param LegacyEducationLevel $educationLevel
+     * @param LegacyEducationType $educationType
+     * @param array $courseData
+     * @return LegacyCourse
+     */
+    private function createCourse($educationLevel, $educationType, $courseData)
+    {
+        return LegacyCourse::create([
+            'ref_usuario_cad' => $this->user->id,
+            'ref_cod_nivel_ensino' => $educationLevel->getKey(),
+            'ref_cod_tipo_ensino' => $educationType->getKey(),
+            'nm_curso' => $courseData['curso'],
+            'sgl_curso' => substr($courseData['curso'], 0, 15),
+            'qtd_etapas' => $courseData['etapas'],
+            'carga_horaria' => 800 * $courseData['etapas'],
+            'data_cadastro' => now(),
+            'ref_cod_instituicao' => LegacyInstitution::active()->first()->id,
+            'ativo' => 1,
+            'modalidade_curso' => $this->model->modalidadeCurso,
+            'padrao_ano_escolar' => 1,
+            'multi_seriado' => 1,
+        ]);
     }
 }
