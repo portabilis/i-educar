@@ -14,6 +14,7 @@ class RenameEducacensoImport extends Migration
     public function up()
     {
         Schema::dropIfExists('educacenso_import');
+        Schema::dropIfExists('educacenso_imports');
 
         Schema::create('educacenso_imports', function (Blueprint $table) {
             $table->bigIncrements('id');
