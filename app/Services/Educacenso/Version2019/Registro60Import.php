@@ -119,6 +119,7 @@ class Registro60Import implements RegistroImportInterface
                 'ativo' => 1,
                 'aprovado' => App_Model_MatriculaSituacao::APROVADO,
                 'ref_cod_curso' => $schoolClass->course->getKey(),
+                'ref_ref_cod_escola' => $schoolClass->school->getKey(),
                 'data_matricula' => now(),
                 'data_cadastro' => now(),
                 'ultima_matricula' => 1,
