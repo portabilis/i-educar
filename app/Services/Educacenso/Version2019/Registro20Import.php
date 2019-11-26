@@ -22,6 +22,7 @@ use App\Models\SchoolClassInep;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\RegistroImportInterface;
 use App\User;
+use Exception;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 
 class Registro20Import implements RegistroImportInterface
@@ -308,6 +309,10 @@ class Registro20Import implements RegistroImportInterface
 
         if ($this->model->tipoAtendimentoAee) {
             $courseData = $this->getDataAee();
+        }
+
+        if (empty($courseData)) {
+            throw new Exception('Não foi possível encontrar os dados do curso');
         }
 
         $course = LegacyCourse::where('nm_curso', 'ilike', $courseData['curso'])->first();
@@ -853,7 +858,7 @@ class Registro20Import implements RegistroImportInterface
             ]
         ];
 
-        return $arrayData[$etapa];
+        return $arrayData[$etapa] ?? null;
     }
 
     /**
