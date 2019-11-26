@@ -51,7 +51,6 @@ class Registro50Import implements RegistroImportInterface
         $this->year = $year;
         $this->user = $user;
         $this->model = $model;
-        $this->model->inepTurma = $this->model->codigoTurma; // TODO: REMOVER
         $this->institution = app(LegacyInstitution::class);
 
         $schoolClass = $this->getSchoolClass();
