@@ -29,6 +29,8 @@ class EducacensoImportJob implements ShouldQueue
      */
     private $databaseConnection;
 
+    public $timeout = 300;
+
     /**
      * Create a new job instance.
      *
