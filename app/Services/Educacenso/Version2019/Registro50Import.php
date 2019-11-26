@@ -27,7 +27,6 @@ class Registro50Import implements RegistroImportInterface
      */
     private $user;
 
-
     /**
      * @var int
      */
