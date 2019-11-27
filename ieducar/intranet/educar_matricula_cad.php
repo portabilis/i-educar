@@ -977,7 +977,7 @@ class indice extends clsCadastro
                 try {
                     event(new RegistrationEvent($registration));
                 } catch(TransferException $exception) {
-                    $this->mensagem = 'Os dados da matrícula antiga não puderam ser copiados. Motivo: <br>' . $exception->getMessage();
+                    $this->mensagem = 'Não foi possível copiar os dados da matrícula antiga. ' . $exception->getMessage();
 
                     DB::commit();
                     $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
