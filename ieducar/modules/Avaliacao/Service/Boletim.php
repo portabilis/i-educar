@@ -752,7 +752,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         if (!$calcularSituacaoAluno) {
             $componentes = $this->getComponentes();
-            $mediasComponentes = array_intersect_key($mediasComponentes, $componentes);
+            $calculandoComponenteAgrupado = !empty(array_intersect_key(array_flip($this->codigoDisciplinasAglutinadas()), $componentes));
+            if (!$calculandoComponenteAgrupado) {
+                $mediasComponentes = array_intersect_key($mediasComponentes, $componentes);
+            }
         }
 
         $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
@@ -858,11 +861,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 continue;
             }
 
-            if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
-                $media = $mediaComponente[0]->mediaArredondada;
-            } else {
-                $media = $mediaComponente[0]->media;
-            }
+            $media = $this->calculaMediaAglutinada($mediaComponente[0], $mediasComponentes);
 
             $situacaoAtualComponente = $mediaComponente[0]->situacao;
 
@@ -1123,6 +1122,43 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         return $presenca;
+    }
+
+    /**
+     * Aglutina médias para calculo de situação caso parametrizado, ou retorna média do componente
+     *
+     * @return float
+     */
+    private function calculaMediaAglutinada(Avaliacao_Model_NotaComponenteMedia $mediaComponente, array $mediasComponentes)
+    {
+
+        $codigos = $this->codigoDisciplinasAglutinadas();
+        if (empty($codigos) || !in_array($mediaComponente->componenteCurricular->id, $codigos)) {
+            return $this->valorMediaSituacao($mediaComponente);
+        }
+
+        $mediaTotal = 0;
+        foreach ($codigos as $codigo) {
+            if (!isset($mediasComponentes[$codigo][0])) {
+                continue;
+            }
+
+            $mediaTotal += $this->valorMediaSituacao($mediasComponentes[$codigo][0]);
+        }
+
+        return $mediaTotal;
+    }
+
+    /**
+     * Retorna o valor da média considerado para calculo de situação conforme regra
+     *
+     * @return float
+     */
+    private function valorMediaSituacao(Avaliacao_Model_NotaComponenteMedia $mediaComponente)
+    {
+        $regraNotaNumerica = $this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA;
+
+        return $regraNotaNumerica ? $mediaComponente->mediaArredondada : $mediaComponente->media;
     }
 
     /**

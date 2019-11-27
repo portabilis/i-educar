@@ -9,6 +9,20 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
      * @var RegraAvaliacao_Model_Regra
      */
     protected $_regra;
+    protected $_codigoDisciplinasAglutinadas;
+
+    public function codigoDisciplinasAglutinadas()
+    {
+        if (!isset($this->_codigoDisciplinasAglutinadas)) {
+            if (empty($this->getRegraAvaliacao()->disciplinasAglutinadas)) {
+                $this->_codigoDisciplinasAglutinadas = [];
+            } else {
+                $this->_codigoDisciplinasAglutinadas = explode(',', $this->getRegraAvaliacao()->disciplinasAglutinadas);
+            }
+        }
+
+        return $this->_codigoDisciplinasAglutinadas;
+    }
 
     /**
      * @return RegraAvaliacao_Model_Regra
