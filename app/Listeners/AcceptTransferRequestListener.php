@@ -30,6 +30,10 @@ class AcceptTransferRequestListener
     {
         $transfer = $this->service->getTransfer($event->registration);
 
+        if (empty($transfer)) {
+            return;
+        }
+
         $this->acceptTransferRequest($transfer, $event->registration);
     }
 
