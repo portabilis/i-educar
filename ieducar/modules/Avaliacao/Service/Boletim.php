@@ -835,11 +835,19 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $somaMedias = 0;
         $media = 0;
         $turmaId = $this->getOption('ref_cod_turma');
+        $codigosAglutinados = $this->codigoDisciplinasAglutinadas();
 
         foreach ($mediasComponentes as $id => $mediaComponente) {
-            $etapa = $mediaComponente[0]->etapa;
+            $mediaComponente = $mediaComponente[0];
+            $etapa = $mediaComponente->etapa;
             $qtdComponentes++;
+            $media = $this->calculaMediaAglutinada($mediaComponente, $mediasComponentes);
             $somaMedias += $media;
+
+
+            if (!empty($codigosAglutinados) && in_array($id, $codigosAglutinados) && $id != $codigosAglutinados[0]) {
+                continue;
+            }
 
             $lastStage = $this->getLastStage($matriculaId, $turmaId, $id);
 
@@ -861,10 +869,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 continue;
             }
 
-            $media = $this->calculaMediaAglutinada($mediaComponente[0], $mediasComponentes);
-
-            $situacaoAtualComponente = $mediaComponente[0]->situacao;
-
+            $situacaoAtualComponente = $mediaComponente->situacao;
             $permiteSituacaoEmExame = true;
 
             if ($situacaoAtualComponente == App_Model_MatriculaSituacao::REPROVADO ||
@@ -902,6 +907,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             )) {
                 $situacaoGeral = $situacao->componentesCurriculares[$id]->situacao;
             }
+        }
+
+        // Copia situação da primeira disciplina para o restante
+        foreach ($codigosAglutinados as $id) {
+            $situacao->componentesCurriculares[$id]->situacao = $situacao->componentesCurriculares[$codigosAglutinados[0]]->situacao;
         }
 
         $matricula = $this->getOption('matriculaData');
@@ -1129,7 +1139,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      *
      * @return float
      */
-    private function calculaMediaAglutinada(Avaliacao_Model_NotaComponenteMedia $mediaComponente, array $mediasComponentes)
+    private function calculaMediaAglutinada(Avaliacao_Model_NotaComponenteMedia $mediaComponente, array $mediasComponentes) : float
     {
 
         $codigos = $this->codigoDisciplinasAglutinadas();
@@ -1147,6 +1157,18 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         return $mediaTotal;
+    }
+
+    public function exibeSituacao($componenteCurricularId) : bool
+    {
+        return $this->exibeNotaNecessariaExame($componenteCurricularId) || $componenteCurricularId == $this->codigoDisciplinasAglutinadas()[0];
+    }
+
+    public function exibeNotaNecessariaExame($componenteCurricularId) : bool
+    {
+        $codigos = $this->codigoDisciplinasAglutinadas();
+
+        return empty($codigos) || !in_array($componenteCurricularId, $codigos);
     }
 
     /**
