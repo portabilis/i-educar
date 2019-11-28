@@ -9,7 +9,12 @@ class S3UrlPresigner
 {
     public function getPresignedUrl(string $url) : string
     {
-        return (string) Storage::disk('s3')->temporaryUrl($this->getKeyFromUrl($url), Carbon::now()->addMinutes(5));
+        $key = $this->getKeyFromUrl($url);
+        if (empty($key)) {
+            return '';
+        }
+
+        return (string) Storage::disk('s3')->temporaryUrl($this->getKeyFromUrl($key), Carbon::now()->addMinutes(5));
     }
 
     private function getKeyFromUrl(string $url) : string
