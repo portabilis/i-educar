@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\Transfer\TransferException;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Services\PromotionService;
@@ -7,6 +8,7 @@ use App\Services\SchoolClass\AvailableTimeService;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
+use App\Events\RegistrationEvent;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -356,6 +358,7 @@ class indice extends clsCadastro
 
     public function Novo()
     {
+        DB::beginTransaction();
 
         $dependencia = $this->dependencia == 'on';
 
@@ -966,11 +969,19 @@ class indice extends clsCadastro
                 }
 
                 $this->enturmacaoMatricula($this->cod_matricula, $this->ref_cod_turma);
-                $this->verificaSolicitacaoTransferencia();
 
                 /** @var LegacyRegistration $registration */
 
                 $registration = LegacyRegistration::find($this->cod_matricula);
+
+                try {
+                    event(new RegistrationEvent($registration));
+                } catch(TransferException $exception) {
+                    $this->mensagem = 'Não foi possível copiar os dados da matrícula antiga. ' . $exception->getMessage();
+
+                    DB::commit();
+                    $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
+                }
 
                 $promocao = new PromotionService($registration->enrollments()->first());
                 $promocao->fakeRequest();
@@ -1045,52 +1056,6 @@ class indice extends clsCadastro
         return $falecido;
     }
 
-    public function verificaSolicitacaoTransferencia()
-    {
-        $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
-
-        $lst_transferencia = $obj_transferencia->lista(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            null,
-            $this->ref_cod_aluno,
-            false
-        );
-
-        if (!is_array($lst_transferencia)) {
-            return;
-        }
-
-        foreach ($lst_transferencia as $transferencia) {
-            $obj_matricula = new clsPmieducarMatricula($transferencia['ref_cod_matricula_saida']);
-            $det_matricula = $obj_matricula->detalhe();
-
-            // Caso a solicitação em aberto seja para a mesma série selecionada
-            if (
-                $det_matricula['ref_ref_cod_serie'] == $this->ref_cod_serie
-                && $det_matricula['ano'] == $this->ano
-            ) {
-                $cod_transferencia = $transferencia['cod_transferencia_solicitacao'];
-                $cod_matricula_transferencia = $det_matricula['cod_matricula'];
-
-                $this->copiaNotasFaltas($cod_matricula_transferencia, $this->cod_matricula);
-                $this->atendeSolicitacaoTransferencia($cod_transferencia, $this->cod_matricula);
-                break;
-            }
-        }
-    }
-
     public function bloqueiaMatriculaSerieNaoSeguinte()
     {
         $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
@@ -1132,18 +1097,6 @@ class indice extends clsCadastro
         }
 
         return false;
-    }
-
-    public function copiaNotasFaltas($matriculaAntiga, $matriculaNova)
-    {
-        $db = new clsBanco();
-        $db->Consulta("SELECT modules.copia_notas_transf({$matriculaAntiga},{$matriculaNova});");
-    }
-
-    public function atendeSolicitacaoTransferencia($codTranferencia, $codMatriculaEntrada)
-    {
-        $obj_transferencia = new clsPmieducarTransferenciaSolicitacao($codTranferencia, null, $this->pessoa_logada, null, $codMatriculaEntrada);
-        $obj_transferencia->edita();
     }
 
     public function desativaEnturmacoesMatricula($matriculaId)
