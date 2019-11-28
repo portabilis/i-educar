@@ -1005,6 +1005,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $componentes = $this->getComponentes();
 
         $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($classroomId);
+        
+        if (is_numeric($disciplinaDispensadaTurma)) {
+            unset($componentes[$disciplinaDispensadaTurma]);
+        }
 
         // Carrega faltas lançadas (persistidas)
         $this->_loadFalta();
@@ -1083,10 +1087,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $total += $componenteTotal;
             }
 
-            if (is_numeric($disciplinaDispensadaTurma)) {
-                unset($componentes[$disciplinaDispensadaTurma]);
-                unset($faltasComponentes[$disciplinaDispensadaTurma]);
-            }
             if (0 == count($faltasComponentes) ||
                 count($faltasComponentes) != count($componentes)) {
                 $etapa = 1;
