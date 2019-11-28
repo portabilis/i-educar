@@ -14,7 +14,7 @@ class S3UrlPresigner
             return '';
         }
 
-        return (string) Storage::disk('s3')->temporaryUrl($this->getKeyFromUrl($key), Carbon::now()->addMinutes(5));
+        return (string) Storage::disk('s3')->temporaryUrl($key, Carbon::now()->addMinutes(5));
     }
 
     private function getKeyFromUrl(string $url) : string
