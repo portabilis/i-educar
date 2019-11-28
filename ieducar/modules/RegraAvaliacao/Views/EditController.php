@@ -619,7 +619,7 @@ class EditController extends Core_Controller_Page_EditController
             $this->getEntity()->disciplinasAglutinadas,
             5,
             50,
-            true,
+            false,
             false,
             false,
             $this->_getHelp('disciplinasAglutinadas')
