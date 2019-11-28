@@ -3,6 +3,7 @@
 use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
 use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
+use App\Models\LegacyIndividual;
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
@@ -591,34 +592,23 @@ class PessoaController extends ApiCoreController
 
     protected function createOrUpdatePessoaFisica($pessoaId)
     {
-        $fisica = new clsFisica();
-        $fisica->idpes = $pessoaId;
-        $fisica->data_nasc = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->datanasc);
-        $fisica->sexo = $this->getRequest()->sexo;
-        $fisica->ref_cod_sistema = 'NULL';
-        $fisica->ideciv = $this->getRequest()->estadocivil;
-        //$fisica->idpes_pai = "NULL";
-        //$fisica->idpes_mae = "NULL";
-        $fisica->idmun_nascimento = $this->getRequest()->naturalidade;
-        $ddd_fone_fixo = $this->getRequest()->ddd_telefone_1;
-        $fone_fixo = $this->getRequest()->telefone_1;
-        $ddd_fone_mov = $this->getRequest()->ddd_telefone_mov;
-        $fone_mov = $this->getRequest()->telefone_mov;
-        $fisica->falecido = $this->getRequest()->falecido == 'true';
-        $fisica->idpais_estrangeiro = $this->getRequest()->pais_origem_id;
-        $fisica->nacionalidade = $this->getRequest()->tipo_nacionalidade;
-        $fisica->zona_localizacao_censo = $this->getRequest()->zona_localizacao_censo;
-        $fisica->localizacao_diferenciada = $this->getRequest()->localizacao_diferenciada;
-        $fisica->nome_social = $this->getRequest()->nome_social;
-        $fisica->pais_residencia = $this->getRequest()->pais_residencia;
+        $individual = LegacyIndividual::findOrNew($pessoaId);
+        $individual->idpes = $pessoaId;
+        $individual->data_nasc = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->datanasc);
+        $individual->sexo = $this->getRequest()->sexo;
+        $individual->ref_cod_sistema = null;
+        $individual->ideciv = $this->getRequest()->estadocivil ?: $individual->ideciv;
+        $individual->idmun_nascimento = $this->getRequest()->naturalidade ?: $individual->idmun_nascimento;
+        $individual->pais_residencia = $this->getRequest()->pais_residencia ?: $individual->pais_residencia;
+        $individual->falecido = $this->getRequest()->falecido == 'true';
+        $individual->idpais_estrangeiro = $this->getRequest()->pais_origem_id ?: $individual->idpais_estrangeiro;
+        $individual->nacionalidade = $this->getRequest()->tipo_nacionalidade ?: $individual->nacionalidade;
+        $individual->zona_localizacao_censo = $this->getRequest()->zona_localizacao_censo ?: $individual->zona_localizacao_censo;
+        $individual->localizacao_diferenciada = $this->getRequest()->localizacao_diferenciada ?: $individual->localizacao_diferenciada;
+        $individual->nome_social = $this->getRequest()->nome_social ?: $individual->nome_social;
 
-        $sql = 'select 1 from cadastro.fisica WHERE idpes = $1 limit 1';
+        $individual->saveOrFail();
 
-        if (Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1) {
-            $fisica->cadastra();
-        } else {
-            $fisica->edita();
-        }
 
         $raca = new clsCadastroFisicaRaca($pessoaId, $this->getRequest()->cor_raca);
         if ($raca->existe()) {
@@ -627,16 +617,21 @@ class PessoaController extends ApiCoreController
             $raca->cadastra();
         }
 
+        $ddd_fone_fixo = $this->getRequest()->ddd_telefone_1;
+        $fone_fixo = $this->getRequest()->telefone_1;
+        $ddd_fone_mov = $this->getRequest()->ddd_telefone_mov;
+        $fone_mov = $this->getRequest()->telefone_mov;
+
         if ($fone_fixo || $fone_fixo == '') {
             $ddd_fixo = $ddd_fone_fixo;
             $fone_fixo = $fone_fixo;
-            $telefone = new clsPessoaTelefone($fisica->idpes, 1, $fone_fixo, $ddd_fixo);
+            $telefone = new clsPessoaTelefone($individual->idpes, 1, $fone_fixo, $ddd_fixo);
             $telefone->cadastra();
         }
         if ($fone_mov || $fone_mov == '') {
             $ddd_mov = $ddd_fone_mov;
             $fone_mov = $fone_mov;
-            $telefone = new clsPessoaTelefone($fisica->idpes, 2, $fone_mov, $ddd_mov);
+            $telefone = new clsPessoaTelefone($individual->idpes, 2, $fone_mov, $ddd_mov);
             $telefone->cadastra();
         }
     }
