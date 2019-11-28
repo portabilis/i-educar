@@ -752,8 +752,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         if (!$calcularSituacaoAluno) {
             $componentes = $this->getComponentes();
-            $calculandoComponenteAgrupado = !empty(array_intersect_key(array_flip($this->codigoDisciplinasAglutinadas()), $componentes));
-            if (!$calculandoComponenteAgrupado) {
+            $calculaComponenteAgrupado = !empty(array_intersect_key(array_flip($this->codigoDisciplinasAglutinadas()), $componentes));
+            if (!$calculaComponenteAgrupado) {
                 $mediasComponentes = array_intersect_key($mediasComponentes, $componentes);
             }
         }
