@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int                $course_id
  * @property int                $grade_id
  * @property int                $vacancies
+ * @property int                $exempted_discipline_id
  * @property Carbon             $begin_academic_year
  * @property Carbon             $end_academic_year
  * @property LegacyCourse       $course
@@ -107,6 +108,14 @@ class LegacySchoolClass extends Model
     public function getGradeIdAttribute()
     {
         return $this->ref_ref_cod_serie;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExemptedDisciplineIdAttribute()
+    {
+        return $this->ref_cod_disciplina_dispensada;
     }
 
     /**

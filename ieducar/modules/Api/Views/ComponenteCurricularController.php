@@ -149,6 +149,7 @@ function getComponentesCurricularesPorSerie(){
                  INNER JOIN modules.area_conhecimento ac ON (ac.id = cc.area_conhecimento_id)
                  INNER JOIN pmieducar.escola_ano_letivo al ON (al.ref_cod_escola = turma.ref_ref_cod_escola)
                  WHERE turma.cod_turma = $1
+                   AND cc.id <> COALESCE(turma.ref_cod_disciplina_dispensada,0)
                    AND al.ano = $2 ";
       $params = [$turmaId, $ano];
 
@@ -177,7 +178,9 @@ function getComponentesCurricularesPorSerie(){
                 WHERE t.cod_turma = $1
                   AND al.ano = $2
                   AND $2 = ANY(esd.anos_letivos)
-                  AND t.ativo = 1 ";
+                  AND t.ativo = 1
+                  AND cc.id <> COALESCE(t.ref_cod_disciplina_dispensada,0)
+                  ";
 
         $params = [$turmaId, $ano];
 
