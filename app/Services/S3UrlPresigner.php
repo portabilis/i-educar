@@ -14,6 +14,7 @@ class S3UrlPresigner
 
     private function getKeyFromUrl(string $url) : string
     {
+        $url = preg_replace('/\?.*/', '', $url);
         return implode('/', array_slice(explode('/', $url), 3));
     }
 }
