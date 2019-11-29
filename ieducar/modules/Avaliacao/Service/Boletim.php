@@ -841,13 +841,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $mediaComponente = $mediaComponente[0];
             $etapa = $mediaComponente->etapa;
             $qtdComponentes++;
-            $media = $this->calculaMediaAglutinada($mediaComponente, $mediasComponentes);
+            $media = $this->valorMediaSituacao($mediaComponente);
             $somaMedias += $media;
-
-
-            if (!empty($codigosAglutinados) && in_array($id, $codigosAglutinados) && $id != $codigosAglutinados[0]) {
-                continue;
-            }
 
             $lastStage = $this->getLastStage($matriculaId, $turmaId, $id);
 
@@ -1135,40 +1130,38 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     /**
-     * Aglutina médias para calculo de situação caso parametrizado, ou retorna média do componente
+     * Retorna array de etapa => nota, considerando regra de aglutinaçãoo quando padronizado
      *
-     * @return float
+     * @return array
      */
-    private function calculaMediaAglutinada(Avaliacao_Model_NotaComponenteMedia $mediaComponente, array $mediasComponentes) : float
+    private function calculaEtapaNotasAglutinada(int $componenteCurricularId, array $notasComponentes) : array
     {
-
         $codigos = $this->codigoDisciplinasAglutinadas();
-        if (empty($codigos) || !in_array($mediaComponente->componenteCurricular->id, $codigos)) {
-            return $this->valorMediaSituacao($mediaComponente);
+        if (empty($codigos) || !in_array($componenteCurricularId, $codigos)) {
+            return CoreExt_Entity::entityFilterAttr($notasComponentes[$componenteCurricularId], 'etapa', 'nota');
         }
 
-        $mediaTotal = 0;
+        $somaEtapaNotas = [];
         foreach ($codigos as $codigo) {
-            if (!isset($mediasComponentes[$codigo][0])) {
-                continue;
+            $etapaNotas = CoreExt_Entity::entityFilterAttr($notasComponentes[$codigo], 'etapa', 'nota');
+            foreach ($etapaNotas as $etapa => $nota) {
+                $somaEtapaNotas[$etapa] = ($somaEtapaNotas[$etapa] ?? 0) + $nota;
             }
-
-            $mediaTotal += $this->valorMediaSituacao($mediasComponentes[$codigo][0]);
         }
 
-        return $mediaTotal;
+        return $somaEtapaNotas;
     }
 
     public function exibeSituacao($componenteCurricularId) : bool
     {
-        return $this->exibeNotaNecessariaExame($componenteCurricularId) || $componenteCurricularId == $this->codigoDisciplinasAglutinadas()[0];
+        return $this->exibeNotaNecessariaExame($componenteCurricularId);
     }
 
     public function exibeNotaNecessariaExame($componenteCurricularId) : bool
     {
         $codigos = $this->codigoDisciplinasAglutinadas();
 
-        return empty($codigos) || !in_array($componenteCurricularId, $codigos);
+        return empty($codigos) || !in_array($componenteCurricularId, $codigos) || $componenteCurricularId == $this->codigoDisciplinasAglutinadas()[0];;
     }
 
     /**
@@ -2084,15 +2077,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             return null;
         }
 
-        $notas = $notasComponentes[$id];
+        $etapaNotas = $this->calculaEtapaNotasAglutinada($id, $notasComponentes);
 
-        unset($notas[$this->getOption('etapas')]);
 
-        $somaEtapas = array_sum(CoreExt_Entity::entityFilterAttr(
-            $notas,
-            'etapa',
-            'nota'
-        ));
+        $somaEtapas = array_sum($etapaNotas);
 
         $data = [
             'Se' => $somaEtapas,
@@ -2100,8 +2088,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             'Rc' => null
         ];
 
-        foreach ($notas as $nota) {
-            $data['E' . $nota->etapa] = $nota->nota;
+        foreach ($etapaNotas as $etapa => $nota) {
+            $data['E' . $etapa] = $nota;
         }
 
         $data = $this->_calculateNotasRecuperacoesEspecificas($id, $data);
@@ -2648,7 +2636,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
                 if (!isset($currentComponenteCurricular) || $currentComponenteCurricular == $id) {
                     // Cria um array onde o índice é a etapa
-                    $etapasNotas = CoreExt_Entity::entityFilterAttr($notasComponentes, 'etapa', 'nota');
+                    $etapasNotas = $this->calculaEtapaNotasAglutinada($id, $this->getNotasComponentes());
+
                     $qtdeEtapas = $this->getOption('etapas');
 
                     if ($this->getRegraAvaliacaoDefinirComponentePorEtapa() == '1') {
