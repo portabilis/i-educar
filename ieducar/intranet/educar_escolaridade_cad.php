@@ -1,33 +1,5 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author      Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
- * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package     Core
- * @subpackage  Escolaridade
- * @since       Arquivo disponível desde a versão 1.0.0
- * @version     $Id$
- */
-
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -39,145 +11,166 @@ use iEducar\Support\View\SelectOptions;
 
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Servidores - Escolaridade');
-    $this->processoAp = '632';
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Servidores - Escolaridade');
+        $this->processoAp = '632';
+    }
 }
 
 class indice extends clsCadastro
 {
-  /**
-   * Referência a usuário da sessão
-   * @var int
-   */
-  var $pessoa_logada = NULL;
+    /**
+     * Referência a usuário da sessão
+     *
+     * @var int
+     */
+    public $pessoa_logada = null;
+    public $idesco;
+    public $descricao;
+    public $escolaridade;
+    public $findUsage;
 
-  var $idesco;
-  var $descricao;
-  var $escolaridade;
+    protected function loadAssets()
+    {
+        $jsFile = '/modules/Cadastro/Assets/Javascripts/ModalExclusaoEscolaridade.js';
+        Portabilis_View_Helper_Application::loadJavascript($this, $jsFile);
+    }
 
-  function Inicializar()
-  {
-    $retorno = 'Novo';
+    public function Inicializar()
+    {
+        $retorno = 'Novo';
 
-    $this->idesco = $_GET['idesco'];
+        $this->idesco = $_GET['idesco'];
 
-    $obj_permissoes = new clsPermissoes();
-    $obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 3, 'educar_escolaridade_lst.php');
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 3, 'educar_escolaridade_lst.php');
 
-    if (is_numeric($this->idesco)) {
-      $obj = new clsCadastroEscolaridade($this->idesco);
-      $registro = $obj->detalhe();
+        if (is_numeric($this->idesco)) {
+            $obj = new clsCadastroEscolaridade($this->idesco);
+            $registro = $obj->detalhe();
+            $this->findUsage = $obj->findUsages();
 
-      if ($registro) {
-        // Passa todos os valores obtidos no registro para atributos do objeto
-        foreach($registro as $campo => $val) {
-          $this->$campo = $val;
+            if ($this->findUsage) {
+                $this->script_excluir = 'modalOpen();';
+            }
+
+            if ($registro) {
+                // Passa todos os valores obtidos no registro para atributos do objeto
+                foreach ($registro as $campo => $val) {
+                    $this->$campo = $val;
+                }
+
+                if ($obj_permissoes->permissao_excluir(632, $this->pessoa_logada, 3)) {
+                    $this->fexcluir = true;
+                }
+
+                $retorno = 'Editar';
+            }
         }
 
-        if ($obj_permissoes->permissao_excluir(632, $this->pessoa_logada, 3)) {
-          $this->fexcluir = true;
+        $this->url_cancelar = ($retorno == 'Editar') ?
+            'educar_escolaridade_det.php?idesco=' . $registro['idesco'] :
+            'educar_escolaridade_lst.php';
+
+        $this->nome_url_cancelar = 'Cancelar';
+
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
+
+        $this->breadcrumb($nomeMenu . ' escolaridade', [
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
+
+        $this->loadAssets();
+
+        return $retorno;
+    }
+
+    public function Gerar()
+    {
+        // Primary keys
+        $this->campoOculto('idesco', $this->idesco);
+
+        // Outros campos
+        $this->campoTexto('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 30, 255, true);
+
+        $options = ['label' => 'Escolaridade educacenso', 'resources' => SelectOptions::escolaridades(), 'value' => $this->escolaridade];
+        $this->inputsHelper()->select('escolaridade', $options);
+    }
+
+    public function Novo()
+    {
+        $tamanhoDesc = strlen($this->descricao);
+        if ($tamanhoDesc > 60) {
+            $this->mensagem = 'A descrição deve conter no máximo 60 caracteres.<br>';
+
+            return false;
         }
 
-        $retorno = 'Editar';
-      }
+        $obj = new clsCadastroEscolaridade(null, $this->descricao, $this->escolaridade);
+        $cadastrou = $obj->cadastra();
+
+        if ($cadastrou) {
+            $escolaridade = new clsCadastroEscolaridade($cadastrou);
+            $escolaridade = $escolaridade->detalhe();
+
+            $auditoria = new clsModulesAuditoriaGeral('escolaridade', $this->pessoa_logada, $cadastrou);
+            $auditoria->inclusao($escolaridade);
+
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
+            $this->simpleRedirect('educar_escolaridade_lst.php');
+        }
+
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+
+        return false;
     }
 
-    $this->url_cancelar = ($retorno == 'Editar') ?
-      'educar_escolaridade_det.php?idesco=' . $registro['idesco'] :
-      'educar_escolaridade_lst.php';
+    public function Editar()
+    {
+        $escolaridade = new clsCadastroEscolaridade($this->idesco);
+        $escolaridadeAntes = $escolaridade->detalhe();
 
-    $this->nome_url_cancelar = 'Cancelar';
+        $obj = new clsCadastroEscolaridade($this->idesco, $this->descricao, $this->escolaridade);
+        $editou = $obj->edita();
+        if ($editou) {
+            $escolaridadeDepois = $escolaridade->detalhe();
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+            $auditoria = new clsModulesAuditoriaGeral('escolaridade', $this->pessoa_logada, $this->idesco);
+            $auditoria->alteracao($escolaridadeAntes, $escolaridadeDepois);
 
-    $this->breadcrumb($nomeMenu . ' escolaridade', [
-        url('intranet/educar_servidores_index.php') => 'Servidores',
-    ]);
+            $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+            $this->simpleRedirect('educar_escolaridade_lst.php');
+        }
 
-    return $retorno;
-  }
+        $this->mensagem = 'Edição não realizada.<br>';
 
-  function Gerar()
-  {
-    // Primary keys
-    $this->campoOculto('idesco', $this->idesco);
-
-    // Outros campos
-    $this->campoTexto('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 30, 255, TRUE);
-
-    $options = array('label' => 'Escolaridade educacenso', 'resources' => SelectOptions::escolaridades(), 'value' => $this->escolaridade);
-    $this->inputsHelper()->select('escolaridade', $options);
-  }
-
-  function Novo()
-  {
-    $tamanhoDesc = strlen($this->descricao);
-    if($tamanhoDesc > 60){
-      $this->mensagem = 'A descrição deve conter no máximo 60 caracteres.<br>';
-      return FALSE;
+        return false;
     }
 
-    $obj = new clsCadastroEscolaridade(NULL, $this->descricao, $this->escolaridade);
-    $cadastrou = $obj->cadastra();
+    public function Excluir()
+    {
+        $obj = new clsCadastroEscolaridade($this->idesco, $this->descricao);
+        $escolaridade = $obj->detalhe();
 
-    if ($cadastrou) {
+        if ($obj->findUsages()) {
+            $this->mensagem = 'Exclusão não realizada - Ainda existe vínculos.<br>';
+            return false;
+        }
 
-      $escolaridade = new clsCadastroEscolaridade($cadastrou);
-      $escolaridade = $escolaridade->detalhe();
+        $excluiu = $obj->excluir();
+        if ($excluiu) {
+            $auditoria = new clsModulesAuditoriaGeral('escolaridade', $this->pessoa_logada, $this->idesco);
+            $auditoria->exclusao($escolaridade);
 
-      $auditoria = new clsModulesAuditoriaGeral("escolaridade", $this->pessoa_logada, $cadastrou);
-      $auditoria->inclusao($escolaridade);
+            $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
+            $this->simpleRedirect('educar_escolaridade_lst.php');
+        }
 
-      $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-      $this->simpleRedirect('educar_escolaridade_lst.php');
+        $this->mensagem = 'Exclusão não realizada.<br>';
+
+        return false;
     }
-
-    $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-    return FALSE;
-  }
-
-  function Editar()
-  {
-    $escolaridade = new clsCadastroEscolaridade($this->idesco);
-    $escolaridadeAntes = $escolaridade->detalhe();
-
-    $obj = new clsCadastroEscolaridade($this->idesco, $this->descricao, $this->escolaridade);
-    $editou = $obj->edita();
-    if ($editou) {
-
-      $escolaridadeDepois = $escolaridade->detalhe();
-
-      $auditoria = new clsModulesAuditoriaGeral("escolaridade", $this->pessoa_logada, $this->idesco);
-      $auditoria->alteracao($escolaridadeAntes, $escolaridadeDepois);
-
-      $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      $this->simpleRedirect('educar_escolaridade_lst.php');
-    }
-
-    $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-    return FALSE;
-  }
-
-  function Excluir()
-  {
-    $obj = new clsCadastroEscolaridade($this->idesco, $this->descricao);
-    $escolaridade = $obj->detalhe();
-    $excluiu = $obj->excluir();
-    if ($excluiu) {
-
-      $auditoria = new clsModulesAuditoriaGeral("escolaridade", $this->pessoa_logada, $this->idesco);
-      $auditoria->exclusao($escolaridade);
-
-      $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-      $this->simpleRedirect('educar_escolaridade_lst.php');
-    }
-
-    $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
-    return FALSE;
-  }
 }
 
 // Instancia objeto de página

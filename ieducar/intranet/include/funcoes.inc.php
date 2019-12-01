@@ -37,7 +37,7 @@ function int2CPF($int)
 
 function loadJson($file)
 {
-  $jsonFile = file_get_contents($file);   
+  $jsonFile = file_get_contents($file);
   return json_decode($jsonFile, true);
 }
 
@@ -353,4 +353,9 @@ function dbBool($val)
 {
   return ($val === 'true' || $val === 't' || $val === TRUE || $val == 1 ||
     $val === 'yes' || $val === 'y' || $val === 'sim' || $val === 's');
+}
+
+function int2Nis($nis)
+{
+    return is_numeric($nis) ? str_pad($nis, 11, '0', STR_PAD_LEFT) : '';
 }
