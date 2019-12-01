@@ -105,7 +105,9 @@
                         <select class="geral" name="situacao" id="situacao" style="width: 308px;">
                             <option value="">Selecione</option>
                                 @foreach(App_Model_MatriculaSituacao::getInstance()->getEnums() as $id => $name)
-                                <option value="{{$id}}">{{$name}}</option>
+                                <option value="{{$id}}" @if(old('situacao', Request::get('situacao')) == $id) selected @endif>
+                                    {{$name}}
+                                </option>
                             @endforeach
                         </select>
                     </span>
@@ -121,9 +123,53 @@
                         <select class="geral" name="nova_situacao" id="nova_situacao" style="width: 308px;">
                             <option value="">Selecione</option>
                                 @foreach(App_Model_MatriculaSituacao::getInstance()->getEnums() as $id => $name)
-                                <option value="{{$id}}">{{$name}}</option>
+                                <option value="{{$id}}" @if(old('nova_situacao', Request::get('nova_situacao')) == $id) selected @endif>
+                                    {{$name}}
+                                </option>
                             @endforeach
                         </select>
+                    </span>
+                </td>
+            </tr>
+
+            <tr id="tr_nm_motivo" class="field-transfer">
+                <td class="formlttd" valign="top">
+                    <span class="form">Motivo da Transferência</span>
+                    <span class="campo_obrigatorio">*</span>
+                </td>
+                <td class="formlttd" valign="top">
+                   <span class="form">
+                        <select class="geral" name="transferencia_tipo" id="transferencia_tipo" style="width: 308px;">
+                            <option value="">Selecione</option>
+                                @foreach(\App\Models\LegacyTransferType::all()->getKeyValueArray('nm_tipo') as $id => $name)
+                                <option value="{{$id}}" @if(old('transferencia_tipo', Request::get('transferencia_tipo')) == $id) selected @endif>
+                                    {{$name}}
+                                </option>
+                            @endforeach
+                        </select>
+                    </span>
+                </td>
+            </tr>
+
+            <tr id="tr_nm_data" class="field-transfer">
+                <td class="formlttd" valign="top">
+                    <span class="form">Data da Transferência</span>
+                    <span class="campo_obrigatorio">*</span>
+                </td>
+                <td class="formlttd" valign="top">
+                   <span class="form">
+                       <input onkeypress="formataData(this, event);" class="obrigatorio" type="text" name="transferencia_data" id="transferencia_data" value="{{date('d/m/Y')}}" size="9" maxlength="10" placeholder="dd/mm/yyyy">
+                    </span>
+                </td>
+            </tr>
+
+            <tr id="tr_nm_data" class="field-transfer">
+                <td class="formlttd" valign="top">
+                    <span class="form">Obsercações da Transferência</span>
+                </td>
+                <td class="formlttd" valign="top">
+                   <span class="form">
+                       <textarea class="geral" name="transferencia_observacoes" id="transferencia_observacoes" cols="60" rows="5" style="wrap:virtual"></textarea>
                     </span>
                 </td>
             </tr>
@@ -146,6 +192,20 @@
 @endsection
 
 @prepend('scripts')
+    <script>
+        if ($j('#nova_situacao').val() != '4') {
+            $j('.field-transfer').hide();
+        }
+
+        $j('#nova_situacao').on('change', function(){
+            if ($j(this).val() == '4') {
+                $j('.field-transfer').show();
+            } else {
+                $j('.field-transfer').hide();
+            }
+        })
+    </script>
+
     <script type="text/javascript"
             src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
     <script type="text/javascript"

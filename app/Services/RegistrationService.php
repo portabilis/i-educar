@@ -5,9 +5,11 @@ namespace App\Services;
 use App\Models\LegacyEnrollment;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacyTransferRequest;
 use App\User;
 use App_Model_MatriculaSituacao;
 use clsModulesAuditoriaGeral;
+use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -69,11 +71,12 @@ class RegistrationService
     /**
      * Atualiza a situação de uma matrícula
      *
-     * @param $registration
-     * @param $status
+     * @param LegacyRegistration $registration
+     * @param array $data
      */
-    public function updateStatus(LegacyRegistration $registration, $status)
+    public function updateStatus(LegacyRegistration $registration, $data)
     {
+        $status = $data['nova_situacao'];
         $auditoria = new clsModulesAuditoriaGeral('update_registration_status', $this->user->getKey());
         $auditoria->alteracao(
             ['aprovado' => $registration->aprovado],
@@ -83,17 +86,25 @@ class RegistrationService
         $registration->aprovado = $status;
         $registration->save();
 
-        $this->checkUpdatedStatusAction($status, $registration);
+        $this->checkUpdatedStatusAction($data, $registration);
     }
 
     /**
-     * @param $newStatus
+     * @param array $data
      * @param LegacyRegistration $registration
      */
-    private function checkUpdatedStatusAction($newStatus, LegacyRegistration $registration)
+    private function checkUpdatedStatusAction($data, LegacyRegistration $registration)
     {
+        $newStatus = $data['nova_situacao'];
+
         if ($newStatus == App_Model_MatriculaSituacao::TRANSFERIDO) {
             $this->markEnrollmentsAsTransferred($registration);
+            $this->createTransferRequest(
+                $data['transferencia_data'],
+                $data['transferencia_tipo'],
+                $data['transferencia_observacoes'],
+                $registration
+            );
         }
 
         if ($newStatus == App_Model_MatriculaSituacao::RECLASSIFICADO) {
@@ -144,5 +155,24 @@ class RegistrationService
     private function getActiveEnrollments(LegacyRegistration $registration)
     {
         return $registration->activeEnrollments;
+    }
+
+    /**
+     * @param string $date
+     * @param integer $type
+     * @param string $comments
+     * @param LegacyRegistration $registration
+     */
+    private function createTransferRequest($date, $type, $comments, $registration)
+    {
+        LegacyTransferRequest::create([
+            'ref_cod_transferencia_tipo' => $type,
+            'ref_usuario_cad' => $this->user->getKey(),
+            'ref_cod_matricula_saida' => $registration->getKey(),
+            'observacao' => $comments,
+            'data_cadastro' => now(),
+            'ativo' => 1,
+            'data_transferencia' => DateTime::createFromFormat('d/m/Y', $date),
+        ]);
     }
 }

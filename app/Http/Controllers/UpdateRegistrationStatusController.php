@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateRegistrationStatusRequest;
 use App\Models\LegacyRegistration;
+use App\Models\LegacyTransferType;
 use App\Process;
 use App\Services\RegistrationService;
+use App_Model_MatriculaSituacao;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -66,7 +68,15 @@ class UpdateRegistrationStatusController extends Controller
         DB::beginTransaction();
 
         foreach ($registrations as $registration) {
-            $registrationService->updateStatus($registration, $request->get('nova_situacao'));
+            $registrationService->updateStatus(
+                $registration,
+                $request->only([
+                    'nova_situacao',
+                    'transferencia_data',
+                    'transferencia_tipo',
+                    'transferencia_observacoes',
+                ])
+            );
         }
 
         DB::commit();
