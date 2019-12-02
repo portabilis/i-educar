@@ -66,7 +66,7 @@ function addDocumento(id, titulo, url, display){
                                                                                            .addClass('decorated')
                                                                                            .attr('id','link_visualizar_documento_'+id)
                                                                                            .attr('target','_blank')
-                                                                                           .attr('href',url)
+                                                                                           .attr('href',linkUrlPrivada(url))
                                                                                            .css({ "cursor": "pointer", "color" : "#556B2F"})
                                                                                            .css('margin-left','10px')))
                                                                           .insertAfter($j('#aviso_formato'));

@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int                $course_id
  * @property int                $grade_id
  * @property int                $vacancies
+ * @property int                $exempted_discipline_id
  * @property Carbon             $begin_academic_year
  * @property Carbon             $end_academic_year
  * @property LegacyCourse       $course
@@ -107,6 +108,14 @@ class LegacySchoolClass extends Model
     public function getGradeIdAttribute()
     {
         return $this->ref_ref_cod_serie;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExemptedDisciplineIdAttribute()
+    {
+        return $this->ref_cod_disciplina_dispensada;
     }
 
     /**
@@ -306,6 +315,67 @@ class LegacySchoolClass extends Model
             'modules.componente_curricular_turma',
             'turma_id',
             'componente_curricular_id'
-        )->withPivot('ano_escolar_id', 'escola_id');
+        )->withPivot([
+            'ano_escolar_id',
+            'escola_id',
+            'carga_horaria',
+            'docente_vinculado',
+            'etapas_especificas',
+            'etapas_utilizadas',
+        ]);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function gradeDisciplines()
+    {
+        return $this->belongsToMany(
+            LegacyDiscipline::class,
+            'modules.componente_curricular_ano_escolar',
+            'ano_escolar_id',
+            'componente_curricular_id',
+            'ref_ref_cod_serie',
+            'id'
+        )->withPivot([
+            'carga_horaria',
+            'tipo_nota',
+        ]);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getDisciplines()
+    {
+        if ($this->course->is_standard_calendar) {
+            return $this->gradeDisciplines()
+                ->whereRaw('? = ANY(anos_letivos)', [$this->year])
+                ->get();
+        }
+
+        return $this->disciplines()
+            ->where('ano_escolar_id', $this->grade_id)
+            ->where('escola_id', $this->school_id)
+            ->get();
+    }
+
+    /**
+     * Retorna a regra de avaliação que deve ser utilizada para a turma. Leva
+     * em consideração o parâmetro `utiliza_regra_diferenciada` da escola.
+     *
+     * @return LegacyEvaluationRule
+     */
+    public function getEvaluationRule()
+    {
+        $evaluationRuleGradeYear = $this->hasOne(LegacyEvaluationRuleGradeYear::class, 'serie_id', 'ref_ref_cod_serie')
+            ->where('ano_letivo', $this->ano)
+            ->firstOrFail();
+
+        if ($this->school->utiliza_regra_diferenciada && $evaluationRuleGradeYear->differentiatedEvaluationRule) {
+            return $evaluationRuleGradeYear->differentiatedEvaluationRule;
+        }
+
+        return $evaluationRuleGradeYear->evaluationRule;
     }
 }
