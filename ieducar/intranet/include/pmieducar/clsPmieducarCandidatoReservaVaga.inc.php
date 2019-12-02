@@ -553,7 +553,7 @@ class clsPmieducarCandidatoReservaVaga extends Model
         ];
 
         $data = $detalhes['data_situacao'] ?? $detalhes['data_solicitacao'];
-        $data = date('d/m/Y', strtotime($data));
+        $data = date('d/m/Y', strtotime($data ?? 'now'));
 
         $historico[] = [
             'situacao' => $mapaSituacao[$detalhes['situacao']] ?? 'Desconhecida',
