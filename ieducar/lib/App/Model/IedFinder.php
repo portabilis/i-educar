@@ -4,10 +4,14 @@ use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacySchool;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolingDegree;
+use App\Models\LegacySchoolClassStage;
+use App\Models\LegacySchoolStage;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\AcademicYear\Exceptions\DisciplineNotLinkedToRegistrationException;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 require_once 'CoreExt/Entity.php';
 require_once 'App/Model/Exception.php';
@@ -450,111 +454,6 @@ class App_Model_IedFinder extends CoreExt_Entity
         return $ret;
     }
 
-    /**
-     * Retorna o total de módulos do ano letivo da escola ou turma (caso o ano
-     * escolar do curso não seja "padrão"). Retorna um array com o total de
-     * módulos atribuídos ao ano letivo e o nome do módulo. Ex:
-     *
-     * <code>
-     * <?php
-     * array(
-     *   'total' => 4,
-     *   'nome'  => 'Bimestre'
-     * );
-     * </code>
-     *
-     * @param int      $codEscola
-     * @param int      $codCurso
-     * @param int      $codTurma
-     * @param int|NULL $ano       Ano letivo da escola ou turma. Opcional.
-     *
-     * @return array
-     */
-    public static function getModulo(
-        $codEscola,
-        $codCurso,
-        $codTurma,
-        $ano = null
-    ) {
-        $modulos = [];
-
-        $curso = self::addClassToStorage(
-            'clsPmieducarCurso',
-            null,
-            'include/pmieducar/clsPmieducarCurso.inc.php'
-        );
-
-        $curso->cod_curso = $codCurso;
-        $curso = $curso->detalhe();
-
-        $padraoAnoEscolar = $curso['padrao_ano_escolar'] == 1 ? true : false;
-
-        // Segue o padrão
-        if (true == $padraoAnoEscolar) {
-            $escolaAnoLetivo = self::addClassToStorage(
-                'clsPmieducarEscolaAnoLetivo',
-                null,
-                'include/pmieducar/clsPmieducarEscolaAnoLetivo.inc.php'
-            );
-
-            $anosEmAndamento = $escolaAnoLetivo->lista(
-                $codEscola,
-                $ano,
-                null,
-                null,
-                1,
-                null,
-                null,
-                null,
-                null,
-                1
-            );
-
-            $anoLetivoModulo = self::addClassToStorage(
-                'clsPmieducarAnoLetivoModulo',
-                null,
-                'include/pmieducar/clsPmieducarAnoLetivoModulo.inc.php'
-            );
-
-            $modulos = $anoLetivoModulo->lista($ano, $codEscola);
-        } else {
-            $turmaModulo = self::addClassToStorage(
-                'clsPmieducarTurmaModulo',
-                null,
-                'include/pmieducar/clsPmieducarTurmaModulo.inc.php'
-            );
-
-            $modulos = $turmaModulo->lista($codTurma);
-        }
-
-        if (false === $modulos) {
-            return 0;
-        }
-
-        // Total de módulos
-        $total = count($modulos);
-
-        // Código do tipo de módulo
-        $modulo = array_shift($modulos);
-        $codModulo = $modulo['ref_cod_modulo'];
-
-        // Recupera do regstry o objeto legado
-        $modulo = self::addClassToStorage(
-            'clsPmieducarModulo',
-            null,
-            'include/pmieducar/clsPmieducarModulo.inc.php'
-        );
-
-        $modulo->cod_modulo = $codModulo;
-        $modulo = $modulo->detalhe();
-        $modulo = $modulo['nm_tipo'];
-
-        return [
-            'total' => $total,
-            'nome' => $modulo
-        ];
-    }
-
     public static function getAnosLetivosEscolaSerie($escolaId, $serieId)
     {
         $params = [$escolaId, $serieId];
@@ -606,16 +505,25 @@ class App_Model_IedFinder extends CoreExt_Entity
             throw new App_Model_Exception('O parametro escolaId não pode ser nulo');
         }
 
-        // Disciplinas na série na escola
-        $escolaSerieDisciplina = self::addClassToStorage(
-            'clsPmieducarEscolaSerieDisciplina',
-            null,
-            'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php'
-        );
+        $key = json_encode(compact('serieId', 'escolaId', 'disciplinaId', 'etapa', 'ano'));
 
-        $disciplinas = $escolaSerieDisciplina->lista($serieId, $escolaId, $disciplinaId, 1, false, $etapa, $ano);
+        $disciplinas = Cache::store('array')->remember("getEscolaSerieDisciplina:{$key}", now()->addMinute(), function () use ($serieId, $escolaId, $disciplinaId, $etapa, $ano) {
+            $escolaSerieDisciplina = self::addClassToStorage(
+                'clsPmieducarEscolaSerieDisciplina',
+                null,
+                'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php'
+            );
 
-        if (false === $disciplinas) {
+            $disciplinas = $escolaSerieDisciplina->lista($serieId, $escolaId, $disciplinaId, 1, false, $etapa, $ano);
+
+            if (false === $disciplinas) {
+                return [];
+            }
+
+            return $disciplinas;
+        });
+
+        if (empty($disciplinas)) {
             throw new DisciplineNotLinkedToRegistrationException($escolaId, $disciplinaId, $ano, $serieId);
         }
 
@@ -672,9 +580,13 @@ class App_Model_IedFinder extends CoreExt_Entity
             $where['componente_curricular_id'] = $componenteCurricularId;
         }
 
-        $disciplinaDispensada = self::disciplinaDispensadaDaTurma($turma);
+        $key = json_encode($where);
 
-        $componentesTurma = $mapper->findAll([], $where);
+        $componentesTurma = Cache::store('array')->remember("getComponentesTurma:$key", now()->addMinute(), function () use ($mapper, $where) {
+            return $mapper->findAll([], $where);
+        });
+
+        $disciplinaDispensada = self::disciplinaDispensadaDaTurma($turma);
 
         // Não existem componentes específicos para a turma
         if (0 == count($componentesTurma)) {
@@ -726,16 +638,22 @@ class App_Model_IedFinder extends CoreExt_Entity
 
     public static function getTipoNotaComponenteSerie($componenteId, $serieId)
     {
-        $sql = '
-            SELECT tipo_nota
-            FROM modules.componente_curricular_ano_escolar
-            WHERE ano_escolar_id = $1
-            AND componente_curricular_id = $2
-        ';
+        $key = json_encode(compact('componenteId', 'serieId'));
 
-        $tipoNota = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$serieId, $componenteId], 'return_only' => 'first-row']);
+        $value = Cache::store('array')->remember("getTipoNotaComponenteSerie:{$key}", now()->addMinute(), function () use ($serieId, $componenteId) {
+            $sql = '
+                SELECT tipo_nota
+                FROM modules.componente_curricular_ano_escolar
+                WHERE ano_escolar_id = $1
+                AND componente_curricular_id = $2
+            ';
 
-        return $tipoNota['tipo_nota'];
+            $tipoNota = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$serieId, $componenteId], 'return_only' => 'first-row']);
+
+            return $tipoNota['tipo_nota'] ?? 'null';
+        });
+
+        return $value === 'null' ? null : $value;
     }
 
     /**
@@ -760,29 +678,41 @@ class App_Model_IedFinder extends CoreExt_Entity
             return intval($componente->id);
         }, $componentes);
 
-        $disciplinesAcademicYear = LegacyDisciplineAcademicYear::query()
-            ->where('ano_escolar_id', $anoEscolar)
-            ->whereIn('componente_curricular_id', $ids)
-            ->pluck('carga_horaria', 'componente_curricular_id');
+        $key = json_encode(compact('anoEscolar', 'componentes'));
+        $getCargaHoraria = function ($componentes, $id) {
+            foreach ($componentes as $componente) {
+                if ($componente->id == $id && $componente->cargaHoraria) {
+                    return $componente->cargaHoraria;
+                }
+            }
+            return null;
+        };
 
-        $disciplines = LegacyDiscipline::query()
-            ->whereIn('id', $ids)
-            ->get()
-            ->map(function (LegacyDiscipline $discipline) use ($disciplinesAcademicYear) {
-                return new ComponenteCurricular_Model_Componente([
-                    'id' => $discipline->id,
-                    'instituicao' => $discipline->instituicao_id,
-                    'nome' => $discipline->nome,
-                    'abreviatura' => $discipline->abreviatura,
-                    'tipo_base' => $discipline->tipo_base,
-                    'area_conhecimento' => $discipline->area_conhecimento_id,
-                    'cargaHoraria' => $discipline->cargaHoraria ?? $disciplinesAcademicYear->get($discipline->id),
-                    'codigo_educacenso' => $discipline->codigo_educacenso,
-                    'ordenamento' => $discipline->ordenamento,
-                ]);
-            })->keyBy('id')->all();
+        return Cache::store('array')->remember("_hydrateComponentes:{$key}", now()->addMinute(), function () use ($anoEscolar, $ids, $componentes, $getCargaHoraria) {
+            $disciplinesAcademicYear = LegacyDisciplineAcademicYear::query()
+                ->where('ano_escolar_id', $anoEscolar)
+                ->whereIn('componente_curricular_id', $ids)
+                ->pluck('carga_horaria', 'componente_curricular_id');
 
-        return $disciplines;
+            $disciplines = LegacyDiscipline::query()
+                ->whereIn('id', $ids)
+                ->get()
+                ->map(function (LegacyDiscipline $discipline) use ($disciplinesAcademicYear, $componentes, $getCargaHoraria) {
+                    return new ComponenteCurricular_Model_Componente([
+                        'id' => $discipline->id,
+                        'instituicao' => $discipline->instituicao_id,
+                        'nome' => $discipline->nome,
+                        'abreviatura' => $discipline->abreviatura,
+                        'tipo_base' => $discipline->tipo_base,
+                        'area_conhecimento' => $discipline->area_conhecimento_id,
+                        'cargaHoraria' => $getCargaHoraria($componentes, $discipline->id) ?? ($discipline->cargaHoraria ?? $disciplinesAcademicYear->get($discipline->id)),
+                        'codigo_educacenso' => $discipline->codigo_educacenso,
+                        'ordenamento' => $discipline->ordenamento,
+                    ]);
+                })->keyBy('id')->all();
+
+            return $disciplines;
+        });
     }
 
     /**
@@ -836,6 +766,7 @@ class App_Model_IedFinder extends CoreExt_Entity
                 s.carga_horaria AS serie_carga_horaria,
                 s.dias_letivos AS serie_dias_letivos,
                 c.nm_curso AS curso_nome,
+                c.padrao_ano_escolar,
                 s.nm_serie AS serie_nome,
                 s.concluinte AS serie_concluinte,
                 rasa.regra_avaliacao_diferenciada_id as serie_regra_avaliacao_diferenciada_id,
@@ -924,12 +855,16 @@ class App_Model_IedFinder extends CoreExt_Entity
         }
 
         if (dbBool($matricula['escola_utiliza_regra_diferenciada']) && is_numeric($matricula['serie_regra_avaliacao_diferenciada_id'])) {
-            $intRegra = $matricula['serie_regra_avaliacao_diferenciada_id'];
+            $id = $matricula['serie_regra_avaliacao_diferenciada_id'];
         } else {
-            $intRegra = $matricula['serie_regra_avaliacao_id'];
+            $id = $matricula['serie_regra_avaliacao_id'];
         }
 
-        $regra = $mapper->find($intRegra);
+        $key = json_encode(compact('id'));
+
+        $regra = Cache::store('array')->remember("getRegraAvaliacaoPorMatricula:{$key}", now()->addMinute(), function () use ($mapper, $id) {
+            return $mapper->find($id);
+        });
 
         if ($possuiDeficiencia && $regra->regraDiferenciada) {
             $regra = $regra->regraDiferenciada;
@@ -1091,17 +1026,23 @@ class App_Model_IedFinder extends CoreExt_Entity
         $etapa,
         $ignorarDispensasParciais = false
     ) {
-        $dispensas = self::addClassToStorage(
-            'clsPmieducarDispensaDisciplina',
-            null,
-            'include/pmieducar/clsPmieducarDispensaDisciplina.inc.php'
-        );
+        $key = json_encode(compact('codMatricula', 'codSerie', 'codEscola', 'etapa', 'ignorarDispensasParciais'));
 
-        $dispensas = $dispensas->disciplinaDispensadaEtapa($codMatricula, $codSerie, $codEscola, $etapa, $ignorarDispensasParciais);
+        $dispensas = Cache::store('array')->remember("getDisciplinasDispensadasPorMatricula:{$key}", now()->addMinute(), function () use ($codMatricula, $codSerie, $codEscola, $etapa, $ignorarDispensasParciais) {
+            $dispensas = self::addClassToStorage(
+                'clsPmieducarDispensaDisciplina',
+                null,
+                'include/pmieducar/clsPmieducarDispensaDisciplina.inc.php'
+            );
 
-        if (false === $dispensas) {
-            return [];
-        }
+            $dispensas = $dispensas->disciplinaDispensadaEtapa($codMatricula, $codSerie, $codEscola, $etapa, $ignorarDispensasParciais);
+
+            if (false === $dispensas) {
+                return [];
+            }
+
+            return $dispensas;
+        });
 
         $disciplinasDispensa = [];
 
@@ -1177,17 +1118,23 @@ class App_Model_IedFinder extends CoreExt_Entity
         $codSerie,
         $codEscola
     ) {
-        $disciplinas = self::addClassToStorage(
-            'clsPmieducarDisciplinaDependencia',
-            null,
-            'include/pmieducar/clsPmieducarDisciplinaDependencia.inc.php'
-        );
+        $key = json_encode(compact('codMatricula', 'codSerie', 'codEscola'));
 
-        $disciplinas = $disciplinas->lista($codMatricula, $codSerie, $codEscola);
+        $disciplinas = Cache::store('array')->remember("getDisciplinasDependenciaPorMatricula:{$key}", now()->addMinute(), function () use ($codMatricula, $codSerie, $codEscola) {
+            $disciplinas = self::addClassToStorage(
+                'clsPmieducarDisciplinaDependencia',
+                null,
+                'include/pmieducar/clsPmieducarDisciplinaDependencia.inc.php'
+            );
 
-        if (false === $disciplinas) {
-            return [];
-        }
+            $disciplinas = $disciplinas->lista($codMatricula, $codSerie, $codEscola);
+
+            if (false === $disciplinas) {
+                return [];
+            }
+
+            return $disciplinas;
+        });
 
         $disciplinasDependencia = [];
 
@@ -1210,21 +1157,32 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getQuantidadeDeModulosMatricula($codMatricula, $matricula = null)
     {
-        $modulos = [];
-
-        // matricula
         if (empty($matricula)) {
             $matricula = self::getMatricula($codMatricula);
         }
 
-        $codEscola = $matricula['ref_ref_cod_escola'];
-        $codCurso = $matricula['ref_cod_curso'];
-        $codTurma = $matricula['ref_cod_turma'];
-        $ano = $matricula['ano'];
+        if ($matricula['padrao_ano_escolar'] ?? null) {
+            $where = [
+                'ref_ref_cod_escola' => $matricula['ref_ref_cod_escola'],
+                'ref_ano' => $matricula['ano'],
+            ];
 
-        $modulos = self::getModulo($codEscola, $codCurso, $codTurma, $ano);
+            $key = json_encode($where);
 
-        return $modulos['total'];
+            return Cache::store('array')->remember("getQuantidadeDeModulosMatricula:{$key}", now()->addMinute(), function () use ($where) {
+                return LegacySchoolStage::query()->where($where)->count();
+            });
+        }
+
+        $where = [
+            'ref_cod_turma' => $matricula['ref_cod_turma'],
+        ];
+
+        $key = json_encode($where);
+
+        return Cache::store('array')->remember("getQuantidadeDeModulosMatricula:{$key}", now()->addMinute(), function () use ($where) {
+            return LegacySchoolClassStage::query()->where($where)->count();
+        });
     }
 
     /**
@@ -1514,21 +1472,24 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getEtapasComponente($turma, $componente)
     {
-        $sql = '
-            SELECT componente_curricular_turma.etapas_utilizadas
-            FROM modules.componente_curricular_turma
-            WHERE componente_curricular_turma.turma_id = $1
-            AND componente_curricular_turma.componente_curricular_id = $2
-            AND componente_curricular_turma.etapas_especificas = 1
-        ';
+        $key = json_encode(compact('turma', 'componente'));
 
-        $resultado = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$turma, $componente]]);
+        return Cache::store('array')->remember("getEtapasComponente:{$key}", now()->addMinute(), function () use ($turma, $componente) {
+            $sql = '
+                SELECT componente_curricular_turma.etapas_utilizadas
+                FROM modules.componente_curricular_turma
+                WHERE componente_curricular_turma.turma_id = $1
+                AND componente_curricular_turma.componente_curricular_id = $2
+                AND componente_curricular_turma.etapas_especificas = 1
+            ';
 
-        if ($resultado) {
-            return explode(',', $resultado[0]['etapas_utilizadas']);
-        }
+            $resultado = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$turma, $componente]]);
 
-        $sql = '
+            if ($resultado) {
+                return explode(',', $resultado[0]['etapas_utilizadas']);
+            }
+
+            $sql = '
             SELECT escola_serie_disciplina.etapas_utilizadas
             FROM pmieducar.escola_serie_disciplina
             INNER JOIN pmieducar.turma ON (turma.ref_ref_cod_serie = escola_serie_disciplina.ref_ref_cod_serie
@@ -1538,13 +1499,14 @@ class App_Model_IedFinder extends CoreExt_Entity
             AND escola_serie_disciplina.etapas_especificas = 1
         ';
 
-        $resultado = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$turma, $componente]]);
+            $resultado = Portabilis_Utils_Database::fetchPreparedQuery($sql, ['params' => [$turma, $componente]]);
 
-        if ($resultado) {
-            return explode(',', $resultado[0]['etapas_utilizadas']);
-        }
+            if ($resultado) {
+                return explode(',', $resultado[0]['etapas_utilizadas']);
+            }
 
-        return [];
+            return [];
+        });
     }
 
     /**
