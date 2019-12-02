@@ -62,7 +62,7 @@ class FileController {
 
         $file = new File($tmp);
 
-        if (Storage::put($tenant, $file, 'public')) {
+        if (Storage::put($tenant, $file)) {
             return Storage::url($file->hashName($tenant));
         } else {
             $this->errorMessage = "Ocorreu um erro no servidor ao enviar foto. Tente novamente.";
@@ -111,7 +111,7 @@ class FileController {
     }
 
 
-    function getExtension($name) 
+    function getExtension($name)
     {
         $i = strrpos($name,".");
         if (!$i)

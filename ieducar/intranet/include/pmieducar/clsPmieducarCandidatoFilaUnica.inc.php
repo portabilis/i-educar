@@ -521,6 +521,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
         }
 
         if (is_string($nome)) {
+            $nome = str_replace('\'', '\'\'', $nome);
             $filtros .= "{$whereAnd} upper(nome) LIKE upper('%{$nome}%')";
             $whereAnd = ' AND ';
         }
@@ -534,6 +535,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
         }
 
         if (is_string($nome_responsavel)) {
+            $nome_responsavel = str_replace('\'', '\'\'', $nome_responsavel);
             $filtros .= "{$whereAnd} (SELECT upper(replace(textcat_all(nome),' <br>',','))
                                         FROM (SELECT p.nome
                                                 FROM pmieducar.responsaveis_aluno ra

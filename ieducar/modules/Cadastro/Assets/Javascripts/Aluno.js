@@ -121,7 +121,7 @@ function addLaudoMedico(url, data) {
         .addClass('decorated')
         .attr('id', 'link_visualizar_laudo_medico_' + $id)
         .attr('target', '_blank')
-        .attr('href', url)
+        .attr('href', linkUrlPrivada(url))
         .css('cursor', 'pointer')
         .css('margin-left', '10px'))
     ).insertBefore($j('#laudo_medico'));
@@ -284,7 +284,7 @@ function addDocumento(url, data) {
         .addClass('decorated')
         .attr('id', 'link_visualizar_documento_' + $id)
         .attr('target', '_blank')
-        .attr('href', url)
+        .attr('href', linkUrlPrivada(url))
         .css('cursor', 'pointer')
         .css('margin-left', '10px'))
     ).insertBefore($j('#documento'));
