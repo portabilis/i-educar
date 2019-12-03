@@ -1161,7 +1161,7 @@ class App_Model_IedFinder extends CoreExt_Entity
             $matricula = self::getMatricula($codMatricula);
         }
 
-        if ($matricula['padrao_ano_escolar']) {
+        if ($matricula['padrao_ano_escolar'] ?? null) {
             $where = [
                 'ref_ref_cod_escola' => $matricula['ref_ref_cod_escola'],
                 'ref_ano' => $matricula['ano'],
