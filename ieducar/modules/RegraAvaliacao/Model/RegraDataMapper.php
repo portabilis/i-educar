@@ -36,6 +36,7 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
         'notaGeralPorEtapa' => 'nota_geral_por_etapa',
         'definirComponentePorEtapa' => 'definir_componente_etapa',
         'qtdDisciplinasDependencia' => 'qtd_disciplinas_dependencia',
+        'disciplinasAglutinadas' => 'disciplinas_aglutinadas',
         'qtdMatriculasDependencia' => 'qtd_matriculas_dependencia',
         'aprovaMediaDisciplina' => 'aprova_media_disciplina',
         'reprovacaoAutomatica' => 'reprovacao_automatica',

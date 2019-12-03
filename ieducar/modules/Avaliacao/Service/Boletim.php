@@ -748,7 +748,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         if (!$calcularSituacaoAluno) {
             $componentes = $this->getComponentes();
-            $mediasComponentes = array_intersect_key($mediasComponentes, $componentes);
+            $calculaComponenteAgrupado = !empty(array_intersect_key(array_flip($this->codigoDisciplinasAglutinadas()), $componentes));
+            if (!$calculaComponenteAgrupado) {
+                $mediasComponentes = array_intersect_key($mediasComponentes, $componentes);
+            }
         }
 
         $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
@@ -828,10 +831,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $somaMedias = 0;
         $media = 0;
         $turmaId = $this->getOption('ref_cod_turma');
+        $codigosAglutinados = $this->codigoDisciplinasAglutinadas();
 
         foreach ($mediasComponentes as $id => $mediaComponente) {
-            $etapa = $mediaComponente[0]->etapa;
+            $mediaComponente = $mediaComponente[0];
+            $etapa = $mediaComponente->etapa;
             $qtdComponentes++;
+            $media = $this->valorMediaSituacao($mediaComponente);
             $somaMedias += $media;
 
             $lastStage = $this->getLastStage($matriculaId, $turmaId, $id);
@@ -854,14 +860,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 continue;
             }
 
-            if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA) {
-                $media = $mediaComponente[0]->mediaArredondada;
-            } else {
-                $media = $mediaComponente[0]->media;
-            }
-
-            $situacaoAtualComponente = $mediaComponente[0]->situacao;
-
+            $situacaoAtualComponente = $mediaComponente->situacao;
             $permiteSituacaoEmExame = true;
 
             if ($situacaoAtualComponente == App_Model_MatriculaSituacao::REPROVADO ||
@@ -899,6 +898,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             )) {
                 $situacaoGeral = $situacao->componentesCurriculares[$id]->situacao;
             }
+        }
+
+        // Copia situação da primeira disciplina para o restante
+        foreach ($codigosAglutinados as $id) {
+            $situacao->componentesCurriculares[$id]->situacao = $situacao->componentesCurriculares[$codigosAglutinados[0]]->situacao;
         }
 
         $matricula = $this->getOption('matriculaData');
@@ -1119,6 +1123,53 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         return $presenca;
+    }
+
+    /**
+     * Retorna array de etapa => nota, considerando regra de aglutinaçãoo quando padronizado
+     *
+     * @return array
+     */
+    private function calculaEtapaNotasAglutinada(int $componenteCurricularId, array $notasComponentes) : array
+    {
+        $codigos = $this->codigoDisciplinasAglutinadas();
+        if (empty($codigos) || !in_array($componenteCurricularId, $codigos)) {
+            return CoreExt_Entity::entityFilterAttr($notasComponentes[$componenteCurricularId], 'etapa', 'nota');
+        }
+
+        $somaEtapaNotas = [];
+        foreach ($codigos as $codigo) {
+            $etapaNotas = CoreExt_Entity::entityFilterAttr($notasComponentes[$codigo], 'etapa', 'nota');
+            foreach ($etapaNotas as $etapa => $nota) {
+                $somaEtapaNotas[$etapa] = ($somaEtapaNotas[$etapa] ?? 0) + $nota;
+            }
+        }
+
+        return $somaEtapaNotas;
+    }
+
+    public function exibeSituacao($componenteCurricularId) : bool
+    {
+        return $this->exibeNotaNecessariaExame($componenteCurricularId);
+    }
+
+    public function exibeNotaNecessariaExame($componenteCurricularId) : bool
+    {
+        $codigos = $this->codigoDisciplinasAglutinadas();
+
+        return empty($codigos) || !in_array($componenteCurricularId, $codigos) || $componenteCurricularId == $this->codigoDisciplinasAglutinadas()[0];;
+    }
+
+    /**
+     * Retorna o valor da média considerado para calculo de situação conforme regra
+     *
+     * @return float
+     */
+    private function valorMediaSituacao(Avaliacao_Model_NotaComponenteMedia $mediaComponente)
+    {
+        $regraNotaNumerica = $this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NUMERICA;
+
+        return $regraNotaNumerica ? $mediaComponente->mediaArredondada : $mediaComponente->media;
     }
 
     /**
@@ -2022,15 +2073,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             return null;
         }
 
-        $notas = $notasComponentes[$id];
+        $etapaNotas = $this->calculaEtapaNotasAglutinada($id, $notasComponentes);
 
-        unset($notas[$this->getOption('etapas')]);
 
-        $somaEtapas = array_sum(CoreExt_Entity::entityFilterAttr(
-            $notas,
-            'etapa',
-            'nota'
-        ));
+        $somaEtapas = array_sum($etapaNotas);
 
         $data = [
             'Se' => $somaEtapas,
@@ -2038,8 +2084,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             'Rc' => null
         ];
 
-        foreach ($notas as $nota) {
-            $data['E' . $nota->etapa] = $nota->nota;
+        foreach ($etapaNotas as $etapa => $nota) {
+            $data['E' . $etapa] = $nota;
         }
 
         $data = $this->_calculateNotasRecuperacoesEspecificas($id, $data);
@@ -2586,7 +2632,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
                 if (!isset($currentComponenteCurricular) || $currentComponenteCurricular == $id) {
                     // Cria um array onde o índice é a etapa
-                    $etapasNotas = CoreExt_Entity::entityFilterAttr($notasComponentes, 'etapa', 'nota');
+                    $etapasNotas = $this->calculaEtapaNotasAglutinada($id, $this->getNotasComponentes());
+
                     $qtdeEtapas = $this->getOption('etapas');
 
                     if ($this->getRegraAvaliacaoDefinirComponentePorEtapa() == '1') {
