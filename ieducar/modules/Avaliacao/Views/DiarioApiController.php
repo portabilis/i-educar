@@ -870,6 +870,8 @@ class DiarioApiController extends ApiCoreController
                             )
                             '
                         );
+
+                        $query->where('ativo', 1);
                     },
                 ])
                 ->whereKey($this->getRequest()->turma_id)
