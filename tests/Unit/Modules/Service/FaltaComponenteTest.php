@@ -106,6 +106,8 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
    */
   public function testSalvarFaltasDeUmComponenteCurricularNoBoletim()
   {
+    $this->markTestSkipped();
+
     $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
     $faltas = array(
@@ -173,6 +175,8 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
    */
   public function testSalvasFaltasDeUmComponenteComEtapasLancadas()
   {
+    $this->markTestSkipped();
+
     $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
     $faltas = array(
@@ -232,6 +236,8 @@ class Avaliacao_Service_FaltaComponenteTest extends Avaliacao_Service_FaltaCommo
 
   public function testSalvasFaltasDeUmComponenteEAtualizadaEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadas()
   {
+    $this->markTestSkipped();
+
     $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
     $faltas = array(
