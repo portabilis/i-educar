@@ -62,10 +62,6 @@ function getDispensaDisciplinaComNotas() {
     disciplina_id = $j('#ref_cod_disciplina').val();
   }
 
-  console.log(matricula_id);
-  console.log(disciplina_id);
-  console.log(etapas);
-
   var url = getResourceUrlBuilder.buildUrl('/module/Api/DispensaDisciplinaPorEtapa',
     'existe-nota',
     {
@@ -75,7 +71,6 @@ function getDispensaDisciplinaComNotas() {
     }
   );
 
-  console.log(url);
   var options = {
     url      : url,
     dataType : 'json',
