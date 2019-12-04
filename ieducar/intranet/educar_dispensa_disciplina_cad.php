@@ -106,6 +106,7 @@ class indice extends clsCadastro
 
         $this->breadcrumb('Dispensa de componentes curriculares',['educar_index.php' => 'Escola']);
         $this->modoEdicao = $retorno == 'Editar';
+        $this->loadAssets();
         return $retorno;
     }
 
@@ -175,6 +176,7 @@ class indice extends clsCadastro
         if ($this->modoEdicao) {
             $this->campoRotulo('nm_disciplina', 'Disciplina', $opcoes[$this->ref_cod_disciplina]);
             $this->campoOculto('ref_cod_disciplina', $this->ref_cod_disciplina);
+            $this->campoOculto('modo_edicao', $this->modoEdicao);
         } else {
             $this->inputsHelper()->multipleSearchComponenteCurricular(null, ['label' => 'Componentes lecionados', 'required' => true], ['searchForArea' => true]);
         }
@@ -528,6 +530,16 @@ class indice extends clsCadastro
         $componenteCurricular = $mapper->find($disciplinaId)->nome;
 
         return $componenteCurricular;
+    }
+
+    public function loadAssets()
+    {
+        $scripts = [
+            '/modules/Cadastro/Assets/Javascripts/ModalDispensasDisciplinaCad.js',
+            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+        ];
+
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 }
 
