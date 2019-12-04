@@ -42,6 +42,7 @@ RUN apt-get install -y postgresql-client
 
 RUN apt-get install -y libpng-dev
 RUN docker-php-ext-install gd
+RUN docker-php-ext-install pcntl
 
 RUN apt-get install -y jq git
 
