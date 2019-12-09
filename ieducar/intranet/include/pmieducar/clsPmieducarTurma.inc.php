@@ -1212,6 +1212,7 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_ref_cod_serie)) {
+            $mult = '';
             if ($bool_verifica_serie_multiseriada == true) {
                 $mult = " OR  t.ref_ref_cod_serie_mult = '{$int_ref_ref_cod_serie}' ";
             }

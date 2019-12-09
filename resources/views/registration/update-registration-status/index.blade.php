@@ -90,17 +90,17 @@
                 </td>
             </tr>
             <tr id="tr_nm_turma">
-                <td class="formmdtd" valign="top"><span class="form">Turma</span></td>
-                <td class="formmdtd" valign="top">
+                <td class="formlttd" valign="top"><span class="form">Turma</span></td>
+                <td class="formlttd" valign="top">
                     @include('form.select-school-class')
                 </td>
             </tr>
             <tr id="tr_nm_serie">
-                <td class="formlttd" valign="top">
+                <td class="formmdtd" valign="top">
                     <span class="form">Situação</span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
-                <td class="formlttd" valign="top">
+                <td class="formmdtd" valign="top">
                    <span class="form">
                         <select class="geral" name="situacao" id="situacao" style="width: 308px;">
                             <option value="">Selecione</option>

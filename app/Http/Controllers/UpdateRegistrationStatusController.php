@@ -63,6 +63,8 @@ class UpdateRegistrationStatusController extends Controller
             $query->where('ref_ref_cod_serie', $request->get('ref_cod_serie'));
         }
 
+        $query->where('aprovado', $request->get('situacao'));
+
         $registrations = $query->get();
 
         DB::beginTransaction();
@@ -81,6 +83,6 @@ class UpdateRegistrationStatusController extends Controller
 
         DB::commit();
 
-        return redirect()->route('update-registration-status.index')->with('success', count($registrations) . ' matrículas atualizadas com sucesso');
+        return redirect()->route('update-registration-status.index')->with('success', count($registrations) . ' matrículas atualizadas com sucesso.');
     }
 }
