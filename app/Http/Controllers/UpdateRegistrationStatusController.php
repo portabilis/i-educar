@@ -54,7 +54,7 @@ class UpdateRegistrationStatusController extends Controller
 
         if ($request->get('ref_cod_turma')) {
             $schoolClassId = $request->get('ref_cod_turma');
-            $query->whereHas('activeEnrollments', function ($enrollmentQuery) use ($schoolClassId) {
+            $query->whereHas('enrollments', function ($enrollmentQuery) use ($schoolClassId) {
                 $enrollmentQuery->where('ref_cod_turma', $schoolClassId);
             });
         }
