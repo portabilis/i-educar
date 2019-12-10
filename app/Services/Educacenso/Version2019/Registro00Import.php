@@ -157,7 +157,7 @@ class Registro00Import implements RegistroImportInterface
             return;
         }
 
-        $district = LegacyDistrict::where('idmun', $city->getKey())->where('cod_ibge', $this->model->codigoIbgeDistrito)->first();
+        $district = $this->getDistrict($city, $this->model->codigoIbgeDistrito);
         if (!$district) {
             return;
         }
@@ -372,5 +372,21 @@ class Registro00Import implements RegistroImportInterface
         $registro = new Registro00();
         $registro->hydrateModel($arrayColumns);
         return $registro;
+    }
+
+    /**
+     * @param LegacyCity $city
+     * @param string $codigoIbgeDistrito
+     * @return LegacyDistrict|null
+     */
+    private function getDistrict(LegacyCity $city, string $codigoIbgeDistrito)
+    {
+        if (!$codigoIbgeDistrito) {
+            return null;
+        }
+
+        $codigoIbgeDistrito = substr($codigoIbgeDistrito, -2, 2);
+
+        return LegacyDistrict::where('idmun', $city->getKey())->where('cod_ibge', $codigoIbgeDistrito)->first();
     }
 }
