@@ -208,7 +208,7 @@ class Registro00Import implements RegistroImportInterface
             'tipo' => '1',
             'cep' => $this->model->cep,
             'idlog' => $street->getKey(),
-            'numero' => $this->model->numero,
+            'numero' => is_numeric($this->model->numero) ? $this->model->numero : null,
             'complemento' => $this->model->complemento,
             'idbai' => $neighborhood->getKey(),
             'origem_gravacao' => 'M',
