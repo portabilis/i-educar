@@ -26,7 +26,7 @@ class UpdateRegistrationStatusController extends Controller
 
         $this->menu(Process::UPDATE_REGISTRATION_STATUS);
 
-        return view('registration.update-registration-status.index');
+        return view('registration.update-registration-status.index', ['user' => $request->user()]);
     }
 
     /**
