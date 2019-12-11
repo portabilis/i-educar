@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Session;
 
 require_once('include/clsBanco.inc.php');
 require_once('include/Geral.inc.php');
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsJuridica
 {
@@ -73,8 +72,6 @@ class clsJuridica
 
             if ($this->idpes) {
                 $detalhe = $this->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('juridica', $this->pessoa_logada, $this->idpes);
-                $auditoria->inclusao($detalhe);
             }
 
             return true;
@@ -124,9 +121,6 @@ class clsJuridica
                 $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->schema}.{$this->tabela} SET $campos WHERE idpes = '$this->idpes' ");
 
-                $auditoria = new clsModulesAuditoriaGeral('juridica', $this->pessoa_logada, $this->idpes);
-                $auditoria->alteracao($detalheAntigo, $this->detalhe());
-
                 return true;
             }
         }
@@ -145,8 +139,6 @@ class clsJuridica
             $db = new clsBanco();
             $detalheAntigo = $this->detalhe();
             $db->Consulta("DELETE FROM {$this->schema}.{$this->tabela} WHERE idpes = {$this->idpes}");
-            $auditoria = new clsModulesAuditoriaGeral('juridica', $this->pessoa_logada, $this->idpes);
-            $auditoria->exclusao($detalheAntigo, $this->detalhe());
 
             return true;
         }

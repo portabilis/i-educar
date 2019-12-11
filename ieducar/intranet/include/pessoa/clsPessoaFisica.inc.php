@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Session;
 
 require_once 'include/clsBanco.inc.php';
 require_once 'include/Geral.inc.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsPessoaFisica extends clsPessoaFj
 {
@@ -532,9 +531,6 @@ class clsPessoaFisica extends clsPessoaFj
 
             if ($excluir) {
                 $db->Consulta("UPDATE cadastro.fisica SET ref_usuario_exc = $this->pessoa_logada, data_exclusao = NOW() WHERE idpes = $this->idpes");
-
-                $auditoria = new clsModulesAuditoriaGeral('fisica', $this->pessoa_logada, $this->idpes);
-                $auditoria->exclusao($detalheAntigo, $this->detalheSimples());
             }
         }
     }
