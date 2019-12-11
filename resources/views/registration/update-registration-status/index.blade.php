@@ -177,20 +177,15 @@
                     </span>
                 </td>
             </tr>
+            <tr>
+                <td class="formdktd" colspan="2"></td>
+            </tr>
             </tbody>
         </table>
-
-        <div class="separator"></div>
 
         <div style="text-align: center">
             <button class="btn-green" type="submit">Salvar</button>
         </div>
-
-    </form>
-
-
-    <div class="separator"></div>
-
 
     </form>
 @endsection
