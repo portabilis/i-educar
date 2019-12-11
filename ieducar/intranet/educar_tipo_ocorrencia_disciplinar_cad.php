@@ -6,7 +6,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/geral.inc.php");
-require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -90,18 +89,10 @@ class indice extends clsCadastro
 
     function Novo()
     {
-
-
         $obj = new clsPmieducarTipoOcorrenciaDisciplinar( null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, $this->max_ocorrencias, null, null, 1, $this->ref_cod_instituicao );
         $cadastrou = $obj->cadastra();
         if( $cadastrou )
         {
-            $tipoOcorrenciaDisciplinar = new clsPmieducarTipoOcorrenciaDisciplinar($cadastrou);
-            $tipoOcorrenciaDisciplinar = $tipoOcorrenciaDisciplinar->detalhe();
-
-            $auditoria = new clsModulesAuditoriaGeral("tipo_ocorrencia_disciplinar", $this->pessoa_logada, $cadastrou);
-            $auditoria->inclusao($tipoOcorrenciaDisciplinar);
-
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
             $this->simpleRedirect('educar_tipo_ocorrencia_disciplinar_lst.php');
         }
@@ -113,19 +104,10 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
-        $tipoOcorrenciaDisciplinarDetalhe = new clsPmieducarTipoOcorrenciaDisciplinar($this->cod_tipo_ocorrencia_disciplinar);
-        $tipoOcorrenciaDisciplinarDetalheAntes = $tipoOcorrenciaDisciplinarDetalhe->detalhe();
-
         $obj = new clsPmieducarTipoOcorrenciaDisciplinar( $this->cod_tipo_ocorrencia_disciplinar, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, $this->max_ocorrencias, null, null, 1, $this->ref_cod_instituicao );
         $editou = $obj->edita();
         if( $editou )
         {
-            $tipoOcorrenciaDisciplinarDetalheDepois = $tipoOcorrenciaDisciplinarDetalhe->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral("tipo_ocorrencia_disciplinar", $this->pessoa_logada, $this->cod_tipo_ocorrencia_disciplinar);
-            $auditoria->alteracao($tipoOcorrenciaDisciplinarDetalheAntes, $tipoOcorrenciaDisciplinarDetalheDepois);
-
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_tipo_ocorrencia_disciplinar_lst.php');
         }
@@ -137,16 +119,10 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-
-
         $obj = new clsPmieducarTipoOcorrenciaDisciplinar($this->cod_tipo_ocorrencia_disciplinar, $this->pessoa_logada, null, null, null, null, null, null, 0);
-        $tipoOcorrenciaDisciplinar = $obj->detalhe();
         $excluiu = $obj->excluir();
         if( $excluiu )
         {
-            $auditoria = new clsModulesAuditoriaGeral("tipo_ocorrencia_disciplinar", $this->pessoa_logada, $this->cod_tipo_ocorrencia_disciplinar);
-            $auditoria->exclusao($tipoOcorrenciaDisciplinar);
-
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_tipo_ocorrencia_disciplinar_lst.php');
         }
