@@ -6,7 +6,6 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'Portabilis/View/Helper/Application.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -491,12 +490,6 @@ class indice extends clsCadastro
 
             $this->cod_curso = $cadastrou = $obj->cadastra();
             if ($cadastrou) {
-                $curso = new clsPmieducarCurso($this->cod_curso);
-                $curso = $curso->detalhe();
-
-                $auditoria = new clsModulesAuditoriaGeral('curso', $this->pessoa_logada, $this->cod_curso);
-                $auditoria->inclusao($curso);
-
                 $this->gravaEtapacurso($cadastrou);
                 $this->habilitacao_curso = unserialize(urldecode($this->habilitacao_curso));
 
@@ -577,10 +570,6 @@ class indice extends clsCadastro
             $alterouPadraoAnoEscolar = $detalheAntigo['padrao_ano_escolar'] != $this->padrao_ano_escolar;
             $editou = $obj->edita();
             if ($editou) {
-                $detalheAtual = $obj->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('curso', $this->pessoa_logada, $this->cod_curso);
-                $auditoria->alteracao($detalheAntigo, $detalheAtual);
-
                 $this->gravaEtapacurso($this->cod_curso);
                 $this->habilitacao_curso = unserialize(urldecode($this->habilitacao_curso));
                 $obj  = new clsPmieducarHabilitacaoCurso(null, $this->cod_curso);
@@ -651,11 +640,8 @@ class indice extends clsCadastro
 			$this->pessoa_logada
     	);
 
-        $curso = $obj->detalhe();
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $auditoria = new clsModulesAuditoriaGeral('curso', $this->pessoa_logada, $this->cod_curso);
-            $auditoria->exclusao($curso);
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_curso_lst.php');
         }
