@@ -1005,7 +1005,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $componentes = $this->getComponentes();
 
         $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($classroomId);
-        
+
         if (is_numeric($disciplinaDispensadaTurma)) {
             unset($componentes[$disciplinaDispensadaTurma]);
         }
@@ -1139,6 +1139,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         $somaEtapaNotas = [];
         foreach ($codigos as $codigo) {
+            if (!isset($notasComponentes[$codigo])) {
+                continue;
+            }
+
             $etapaNotas = CoreExt_Entity::entityFilterAttr($notasComponentes[$codigo], 'etapa', 'nota');
             foreach ($etapaNotas as $etapa => $nota) {
                 $somaEtapaNotas[$etapa] = ($somaEtapaNotas[$etapa] ?? 0) + $nota;
