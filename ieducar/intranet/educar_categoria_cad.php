@@ -29,7 +29,6 @@ require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
 require_once("include/pmieducar/clsPmieducarCategoriaObra.inc.php");
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -98,8 +97,6 @@ class indice extends clsCadastro
     }
 
     function Novo(){
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 592, $this->pessoa_logada, 11,  "educar_categoria_lst.php" );
 
@@ -107,9 +104,6 @@ class indice extends clsCadastro
         $this->id = $cadastrou = $obj->cadastra();
         if($cadastrou){
       $obj->id = $this->id;
-      $detalhe = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("categoria_obra", $this->pessoa_logada, $this->id);
-      $auditoria->inclusao($detalhe);
 
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
             $this->simpleRedirect('educar_categoria_lst.php');
@@ -121,18 +115,12 @@ class indice extends clsCadastro
     }
 
     function Editar(){
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(592, $this->pessoa_logada, 11, "educar_categoria_lst.php");
 
         $obj = new clsPmieducarCategoriaObra($this->id, $this->descricao, $this->observacoes);
-    $detalheAntigo = $obj->detalhe();
         $editou = $obj->edita();
         if( $editou ){
-      $detalheAtual = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("categoria_obra", $this->pessoa_logada, $this->id);
-      $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_categoria_lst.php');
         }
@@ -143,18 +131,12 @@ class indice extends clsCadastro
     }
 
     function Excluir(){
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(592, $this->pessoa_logada, 11,  "educar_categoria_lst.php");
 
         $obj = new clsPmieducarCategoriaObra($this->id);
-    $detalhe = $obj->detalhe();
         $excluiu = $obj->excluir();
         if($excluiu){
-
-      $auditoria = new clsModulesAuditoriaGeral("categoria_obra", $this->pessoa_logada, $this->id);
-      $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_categoria_lst.php');
         }
