@@ -109,9 +109,11 @@
                         <select class="geral" name="situacao" id="situacao" style="width: 308px;">
                             <option value="">Selecione</option>
                                 @foreach(App_Model_MatriculaSituacao::getInstance()->getEnums() as $id => $name)
-                                <option value="{{$id}}" @if(old('situacao', Request::get('situacao')) == $id) selected @endif>
-                                    {{$name}}
-                                </option>
+                                    @if(!in_array($id, [4,6,5,11,15]))
+                                        <option value="{{$id}}" @if(old('situacao', Request::get('situacao')) == $id) selected @endif>
+                                            {{$name}}
+                                        </option>
+                                    @endif
                             @endforeach
                         </select>
                     </span>
@@ -127,9 +129,11 @@
                         <select class="geral" name="nova_situacao" id="nova_situacao" style="width: 308px;">
                             <option value="">Selecione</option>
                                 @foreach(App_Model_MatriculaSituacao::getInstance()->getEnums() as $id => $name)
-                                <option value="{{$id}}" @if(old('nova_situacao', Request::get('nova_situacao')) == $id) selected @endif>
-                                    {{$name}}
-                                </option>
+                                    @if($id != 11)
+                                        <option value="{{$id}}" @if(old('nova_situacao', Request::get('nova_situacao')) == $id) selected @endif>
+                                            {{$name}}
+                                        </option>
+                                    @endif
                             @endforeach
                         </select>
                     </span>
