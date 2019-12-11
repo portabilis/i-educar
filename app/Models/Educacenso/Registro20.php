@@ -446,7 +446,7 @@ class Registro20 implements RegistroEducacenso
 
         $componentesExistentes = [];
         foreach ($componentesImportacao as $key => $value) {
-            if ($value == '0') {
+            if ($value != '1') {
                 continue;
             }
 
