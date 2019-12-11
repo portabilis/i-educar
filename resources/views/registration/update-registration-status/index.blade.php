@@ -66,11 +66,11 @@
                 </td>
             </tr>
             <tr id="tr_nm_serie">
-                <td class="formmdtd" valign="top"><span class="form">Serie</span></td>
+                <td class="formmdtd" valign="top"><span class="form">Série</span></td>
                 <td class="formmdtd" valign="top">
                     <span class="form">
                         <select class="geral" name="ref_cod_serie" id="ref_cod_serie" style="width: 308px;">
-                            <option value="">Selecione uma serie</option>
+                            <option value="">Selecione uma série</option>
                              @if (old('ref_cod_curso', Request::get('ref_cod_curso')) || ($user->isAdmin() || $user->isInstitutional()))
                                 @foreach(App_Model_IedFinder::getSeries(null, old('ref_cod_escola', Request::get('ref_cod_escola')), old('ref_cod_curso', Request::get('ref_cod_curso'))) as $id => $name)
                                     <option value="{{$id}}">{{$name}}</option>
