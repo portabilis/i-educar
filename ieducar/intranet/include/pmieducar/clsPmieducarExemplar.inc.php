@@ -4,7 +4,6 @@ use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsPmieducarExemplar extends Model
 {
@@ -173,8 +172,6 @@ class clsPmieducarExemplar extends Model
             $this->cod_exemplar = $db->InsertId("{$this->_tabela}_cod_exemplar_seq");
             if ($this->cod_exemplar) {
                 $detalhe = $this->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('exemplar', $this->pessoa_logada, $this->cod_exemplar);
-                $auditoria->inclusao($detalhe);
             }
 
             return $this->cod_exemplar;
@@ -254,8 +251,6 @@ class clsPmieducarExemplar extends Model
                 $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_exemplar = '{$this->cod_exemplar}'");
                 $detalheAtual = $this->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('exemplar', $this->pessoa_logada, $this->cod_exemplar);
-                $auditoria->alteracao($detalheAntigo, $detalheAtual);
 
                 return true;
             }
