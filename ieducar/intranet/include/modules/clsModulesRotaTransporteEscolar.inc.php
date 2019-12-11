@@ -4,7 +4,6 @@ use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsModulesRotaTransporteEscolar extends Model
 {
@@ -136,8 +135,6 @@ class clsModulesRotaTransporteEscolar extends Model
 
             if ($this->cod_rota_transporte_escolar) {
                 $detalhe = $this->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('rota_transporte_escolar', $this->pessoa_logada, $this->cod_rota_transporte_escolar);
-                $auditoria->inclusao($detalhe);
             }
 
             return $this->cod_rota_transporte_escolar;
@@ -201,8 +198,6 @@ class clsModulesRotaTransporteEscolar extends Model
             if ($set) {
                 $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_rota_transporte_escolar = '{$this->cod_rota_transporte_escolar}'");
-                $auditoria = new clsModulesAuditoriaGeral('rota_transporte_escolar', $this->pessoa_logada, $this->cod_rota_transporte_escolar);
-                $auditoria->alteracao($detalheAntigo, $this->detalhe());
 
                 return true;
             }
@@ -395,9 +390,6 @@ class clsModulesRotaTransporteEscolar extends Model
             $sql = "DELETE FROM {$this->_tabela} WHERE cod_rota_transporte_escolar = '{$this->cod_rota_transporte_escolar}'";
             $db = new clsBanco();
             $db->Consulta($sql);
-
-            $auditoria = new clsModulesAuditoriaGeral('rota_transporte_escolar', $this->pessoa_logada, $this->cod_rota_transporte_escolar);
-            $auditoria->exclusao($detalhe);
 
             return true;
         }
