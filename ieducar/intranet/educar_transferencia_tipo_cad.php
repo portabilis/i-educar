@@ -4,7 +4,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/geral.inc.php");
-require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -85,18 +84,10 @@ class indice extends clsCadastro
 
     function Novo()
     {
-
-
         $obj = new clsPmieducarTransferenciaTipo( null,null,$this->pessoa_logada,$this->nm_tipo,$this->desc_tipo,null,null,1,$this->ref_cod_instituicao );
         $cadastrou = $obj->cadastra();
         if( $cadastrou )
         {
-            $transferenciaTipo = new clsPmieducarTransferenciaTipo($cadastrou);
-            $transferenciaTipo = $transferenciaTipo->detalhe();
-
-            $auditoria = new clsModulesAuditoriaGeral("transferencia_tipo", $this->pessoa_logada, $cadastrou);
-            $auditoria->inclusao($transferenciaTipo);
-
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
             $this->simpleRedirect('educar_transferencia_tipo_lst.php');
         }
@@ -108,19 +99,10 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
-        $transferenciaTipoDetalhe = new clsPmieducarTransferenciaTipo($this->cod_transferencia_tipo);
-        $transferenciaTipoDetalheAntes = $transferenciaTipoDetalhe->detalhe();
-
         $obj = new clsPmieducarTransferenciaTipo( $this->cod_transferencia_tipo,$this->pessoa_logada,null,$this->nm_tipo,$this->desc_tipo,null,null,1,$this->ref_cod_instituicao );
         $editou = $obj->edita();
         if( $editou )
         {
-            $transferenciaTipoDetalheDepois = $transferenciaTipoDetalhe->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral("transferencia_tipo", $this->pessoa_logada, $this->cod_transferencia_tipo);
-            $auditoria->alteracao($transferenciaTipoDetalheAntes, $transferenciaTipoDetalheDepois);
-
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_transferencia_tipo_lst.php');
         }
@@ -132,16 +114,10 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-
-
         $obj = new clsPmieducarTransferenciaTipo( $this->cod_transferencia_tipo, $this->pessoa_logada, null, null, null, null, null, 0);
-        $transferenciaTipo = $obj->detalhe();
         $excluiu = $obj->excluir();
         if( $excluiu )
         {
-            $auditoria = new clsModulesAuditoriaGeral("transferencia_tipo", $this->pessoa_logada, $this->cod_transferencia_tipo);
-            $auditoria->exclusao($transferenciaTipo);
-
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_transferencia_tipo_lst.php');
         }
