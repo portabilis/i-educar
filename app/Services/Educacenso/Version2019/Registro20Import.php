@@ -39,6 +39,14 @@ class Registro20Import implements RegistroImportInterface
      * @var int
      */
     private $year;
+    /**
+     * @var \Illuminate\Contracts\Foundation\Application
+     */
+
+    /**
+     * @var LegacyInstitution
+     */
+    private $institution;
 
     /**
      * Faz a importação dos dados a partir da linha do arquivo
@@ -53,6 +61,7 @@ class Registro20Import implements RegistroImportInterface
         $this->user = $user;
         $this->model = $model;
         $this->year = $year;
+        $this->institution = app(LegacyInstitution::class);
 
         $schoolInep = $this->getSchool();
 
@@ -81,7 +90,7 @@ class Registro20Import implements RegistroImportInterface
                 'ref_cod_curso' => $course->getKey(),
                 'ref_cod_turma_tipo' => $schoolClassType->getKey(),
                 'ref_usuario_cad' => $this->user->getKey(),
-                'nm_turma' => $model->nomeTurma,
+                'nm_turma' => utf8_decode($model->nomeTurma),
                 'tipo_mediacao_didatico_pedagogico' => $model->tipoMediacaoDidaticoPedagogico,
                 'hora_inicial' => sprintf("%02d:%02d:00", intval($model->horaInicial), intval($model->horaInicialMinuto)),
                 'hora_final' => sprintf("%02d:%02d:00", intval($model->horaFinal), intval($model->horaFinalMinuto)),
@@ -97,7 +106,8 @@ class Registro20Import implements RegistroImportInterface
                 'tipo_boletim' => 1,
                 'ano' => $this->year,
                 'sgl_turma' => '',
-                'data_cadastro' => now()
+                'data_cadastro' => now(),
+                'ref_cod_instituicao' => $this->institution->id,
             ]
         );
 
@@ -132,7 +142,7 @@ class Registro20Import implements RegistroImportInterface
         $name = self::getComponentes()[$disciplineId] ?? 'Migração';
 
         return LegacyDiscipline::create([
-            'instituicao_id' => LegacyInstitution::active()->first()->id,
+            'instituicao_id' => $this->institution->id,
             'area_conhecimento_id' => $knowledgeArea->getKey(),
             'nome' => $name,
             'abreviatura' => mb_substr($name, 0, 3, 'UTF-8'),
@@ -198,7 +208,7 @@ class Registro20Import implements RegistroImportInterface
         }
 
         return LegacyKnowledgeArea::create([
-            'instituicao_id' => LegacyInstitution::active()->first()->id,
+            'instituicao_id' => $this->institution->id,
             'nome' => 'Migração',
         ]);
     }
@@ -288,7 +298,7 @@ class Registro20Import implements RegistroImportInterface
             'nm_tipo' => 'Regular',
             'sgl_tipo' => 'Reg',
             'data_cadastro' => now(),
-            'ref_cod_instituicao' => LegacyInstitution::active()->first()->id,
+            'ref_cod_instituicao' => $this->institution->id,
         ]);
     }
 
@@ -356,7 +366,7 @@ class Registro20Import implements RegistroImportInterface
             'ref_usuario_cad' => $this->user->id,
             'nm_nivel' => 'Ano',
             'data_cadastro' => now(),
-            'ref_cod_instituicao' => LegacyInstitution::active()->first()->id,
+            'ref_cod_instituicao' => $this->institution->id,
         ]);
     }
 
@@ -375,7 +385,7 @@ class Registro20Import implements RegistroImportInterface
             'ref_usuario_cad' => $this->user->id,
             'nm_tipo' => 'Padrão',
             'data_cadastro' => now(),
-            'ref_cod_instituicao' => LegacyInstitution::active()->first()->id,
+            'ref_cod_instituicao' => $this->institution->id,
         ]);
     }
 
@@ -961,7 +971,7 @@ class Registro20Import implements RegistroImportInterface
             'qtd_etapas' => $courseData['etapas'],
             'carga_horaria' => 800 * $courseData['etapas'],
             'data_cadastro' => now(),
-            'ref_cod_instituicao' => LegacyInstitution::active()->first()->id,
+            'ref_cod_instituicao' => $this->institution->id,
             'ativo' => 1,
             'modalidade_curso' => $this->model->modalidadeCurso,
             'padrao_ano_escolar' => 1,

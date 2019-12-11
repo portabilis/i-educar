@@ -43,6 +43,14 @@ class Registro00Import implements RegistroImportInterface
      * @var int
      */
     private $year;
+    /**
+     * @var \Illuminate\Contracts\Foundation\Application
+     */
+
+    /**
+     * @var LegacyInstitution
+     */
+    private $institution;
 
     /**
      * Faz a importação dos dados a partir da linha do arquivo
@@ -57,6 +65,7 @@ class Registro00Import implements RegistroImportInterface
         $this->user = $user;
         $this->model = $model;
         $this->year = $year;
+        $this->institution = app(LegacyInstitution::class);
         $this->getOrCreateSchool();
     }
 
@@ -103,7 +112,7 @@ class Registro00Import implements RegistroImportInterface
             'ref_idpes' => $organization->getKey(),
             'ref_usuario_cad' => $this->user->id,
             'ref_cod_escola_rede_ensino' => $educationNetword->getKey(),
-            'ref_cod_instituicao' => LegacyInstitution::active()->first()->id,
+            'ref_cod_instituicao' => $this->institution->id,
             'zona_localizacao' => $this->model->zonaLocalizacao,
             'localizacao_diferenciada' => $this->model->localizacaoDiferenciada,
             'dependencia_administrativa' => $this->model->dependenciaAdministrativa,
@@ -140,7 +149,7 @@ class Registro00Import implements RegistroImportInterface
             'ref_usuario_cad' => $this->user->id,
             'nm_rede' => 'Importação Educacenso',
             'ativo' => 1,
-            'ref_cod_instituicao' => LegacyInstitution::active()->first()->id,
+            'ref_cod_instituicao' => $this->institution->id,
             'data_cadastro' => now(),
         ]);
     }
