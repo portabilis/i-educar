@@ -764,12 +764,12 @@ class Registro10Fields implements RegistroEducacenso
         $this->energiaInexistente = $arrayColumns[26];
         $this->esgotoRedePublica = $arrayColumns[27];
         $this->esgotoFossaComum = $arrayColumns[28];
-        $this->esgotoInexistente = $arrayColumns[29];
-        $this->lixoColetaPeriodica = $arrayColumns[30];
-        $this->lixoQueima = $arrayColumns[31];
-        $this->lixoJogaOutraArea = $arrayColumns[32];
-        $this->lixoDestinacaoPoderPublico = $arrayColumns[33];
-        $this->lixoEnterra = $arrayColumns[34];
+        $this->esgotoFossaRudimentar = $arrayColumns[29];
+        $this->esgotoInexistente = $arrayColumns[30];
+        $this->lixoColetaPeriodica = $arrayColumns[31];
+        $this->lixoQueima = $arrayColumns[32];
+        $this->lixoEnterra = $arrayColumns[33];
+        $this->lixoDestinacaoPoderPublico = $arrayColumns[34];
         $this->lixoJogaOutraArea = $arrayColumns[35];
         $this->tratamentoLixoSeparacao = $arrayColumns[36];
         $this->tratamentoLixoReaproveitamento = $arrayColumns[37];
@@ -844,7 +844,7 @@ class Registro10Fields implements RegistroEducacenso
         $this->acessoInternetNaoPossui = $arrayColumns[106];
         $this->computadoresMesaAcessoInternet = $arrayColumns[107];
         $this->dispositovosPessoaisAcessoInternet = $arrayColumns[108];
-        $this->internetBandaLarga = $arrayColumns[109];
+        $this->acessoInternet = $arrayColumns[109];
         $this->redeLocalCabo = $arrayColumns[110];
         $this->redeLocalWireless = $arrayColumns[111];
         $this->redeLocalNaoExiste = $arrayColumns[112];
