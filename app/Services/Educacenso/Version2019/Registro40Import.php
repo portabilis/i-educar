@@ -96,16 +96,20 @@ class Registro40Import implements RegistroImportInterface
             'school_id' => $school->id,
         ]);
 
-        if (empty($this->model->criterioAcesso) || empty($this->model->tipoVinculo)) {
-            return;
+        $manager->role_id = $this->model->cargo;
+        $manager->access_criteria_id = $this->model->criterioAcesso ?: null;
+        $manager->access_criteria_description = $this->model->especificacaoCriterioAcesso;
+        $manager->link_type_id = $this->model->tipoVinculo ?: null;
+        if (!$this->existsChiefSchoolManager($school)) {
+            $manager->chief = true;
         }
 
-        $manager->role_id = $this->model->cargo;
-        $manager->access_criteria_id = (int) $this->model->criterioAcesso;
-        $manager->access_criteria_description = $this->model->especificacaoCriterioAcesso;
-        $manager->link_type_id = (int) $this->model->tipoVinculo;
-
         $manager->saveOrFail();
+    }
+
+    private function existsChiefSchoolManager(LegacySchool $school) : bool
+    {
+        return $school->schoolManagers()->where('chief', true)->exists();
     }
 
     /**
