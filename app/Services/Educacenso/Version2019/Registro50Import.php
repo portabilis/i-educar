@@ -11,6 +11,8 @@ use App\Models\LegacySchoolClassTeacherDiscipline;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolClass;
 use App\Models\LegacyDiscipline;
+use App\Models\LegacyEmployeeRole;
+use App\Models\LegacyRole;
 use App\Models\SchoolClassInep;
 use App\Services\Educacenso\RegistroImportInterface;
 use App\User;
@@ -38,6 +40,11 @@ class Registro50Import implements RegistroImportInterface
     private $institution;
 
     /**
+     * @var LegacyRole
+     */
+    private $_legacyRole;
+
+    /**
      * Faz a importação dos dados a partir da linha do arquivo
      *
      * @param RegistroEducacenso $model
@@ -62,6 +69,7 @@ class Registro50Import implements RegistroImportInterface
             return;
         }
 
+        $this->setEmployeeAsTeacher($employee);
         $this->createSchoolClassTeacher($schoolClass, $employee);
     }
 
@@ -104,6 +112,66 @@ class Registro50Import implements RegistroImportInterface
         }
 
         return $employeeInep->employee ?? null;
+    }
+
+    /**
+     * @param $employee Employee
+     *
+     * @return void
+     */
+    private function setEmployeeAsTeacher(Employee $employee) : void
+    {
+        if ($this->employeeHasTeacherRole($employee)) {
+            return;
+        }
+
+        $defaultRole = $this->getDefaultTeacherRole();
+        LegacyEmployeeRole::create([
+            'ref_cod_funcao' => $defaultRole->id,
+            'ref_cod_servidor' => $employee->id,
+            'ref_ref_cod_instituicao' => $this->institution->id,
+        ]);
+    }
+
+
+    /**
+     * @param $employee Employee
+     *
+     * @return bool
+     */
+    private function employeeHasTeacherRole(Employee $employee) : bool
+    {
+        return LegacyEmployeeRole::where('ref_cod_servidor', $employee->id)
+            ->whereHas('role', function ($query) {
+                $query->ativo();
+                $query->professor();
+            })->exists();
+    }
+
+
+    /**
+     * @return LegacyRole
+     */
+    private function getDefaultTeacherRole() : LegacyRole
+    {
+        if (!empty($this->_legacyRole)) {
+            return $this->_legacyRole;
+        }
+
+        $this->_legacyRole = LegacyRole::firstOrCreate(
+            [
+                'ref_cod_instituicao' => $this->institution->id,
+                'professor' => 1,
+                'ativo' => 1,
+            ],
+            [
+                'ref_usuario_cad' => $this->user->id,
+                'nm_funcao' => 'Professor',
+                'abreviatura' => 'Prof',
+            ]
+        );
+
+        return $this->_legacyRole;
     }
 
     /**
