@@ -16,7 +16,7 @@ class ChangeFrequenciaMatricula1Decimal extends Migration
         $sql = <<<SQL
 CREATE OR REPLACE FUNCTION modules.frequencia_da_matricula(p_matricula_id integer) RETURNS double precision
     LANGUAGE plpgsql
-    AS $function$
+    AS $$
     DECLARE
         v_regra_falta integer;
         v_falta_aluno_id  integer;
@@ -68,7 +68,7 @@ CREATE OR REPLACE FUNCTION modules.frequencia_da_matricula(p_matricula_id intege
             RETURN  TRUNC((100 - ((v_total_faltas * (v_hora_falta*100))/v_qtd_horas_serie)), 1);
           END IF;
       END;
-    $function$;
+    $$;
 SQL;
 
         DB::unprepared($sql);
@@ -81,10 +81,10 @@ SQL;
      */
     public function down()
     {
-        $sql <<<SQL
+        $sql = <<<SQL
 CREATE OR REPLACE FUNCTION modules.frequencia_da_matricula(p_matricula_id integer) RETURNS double precision
     LANGUAGE plpgsql
-    AS $function$
+    AS $$
     DECLARE
         v_regra_falta integer;
         v_falta_aluno_id  integer;
@@ -136,7 +136,7 @@ CREATE OR REPLACE FUNCTION modules.frequencia_da_matricula(p_matricula_id intege
             RETURN  (100 - ((v_total_faltas * (v_hora_falta*100))/v_qtd_horas_serie));
           END IF;
       END;
-    $function$;
+    $$;
 
 SQL;
 
