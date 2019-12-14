@@ -202,6 +202,10 @@ class Registro50Import implements RegistroImportInterface
     private function linkDisciplines(LegacySchoolClassTeacher $schoolClassTeacher) : void
     {
         foreach ($this->model->componentes as $codigoEducacenso) {
+            if (empty(trim($codigoEducacenso))) {
+                continue;
+            }
+
             $discipline = LegacyDiscipline::where('codigo_educacenso', $codigoEducacenso)->first();
 
             if (!$discipline) {
