@@ -566,7 +566,10 @@ class Registro30Import implements RegistroImportInterface
 
         $schoolingDegree = LegacySchoolingDegree::firstOrCreate(
             ['idesco' => $this->model->escolaridade],
-            ['descricao' => Escolaridade::getDescriptiveValues()[$this->model->escolaridade] ?? 'Escolaridade',]
+            [
+                'descricao' => Escolaridade::getDescriptiveValues()[$this->model->escolaridade] ?? 'Escolaridade',
+                'escolaridade' => $this->model->escolaridade
+            ]
         );
 
         $employee->ref_idesco = $schoolingDegree->getKey();
