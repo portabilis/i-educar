@@ -863,13 +863,15 @@ class DiarioApiController extends ApiCoreController
                         $query->whereRaw(
                             '
                             sequencial = (
-                                SELECT max(sequencial) 
-                                FROM pmieducar.matricula_turma mt 
-                                WHERE mt.ref_cod_turma = matricula_turma.ref_cod_turma 
+                                SELECT max(sequencial)
+                                FROM pmieducar.matricula_turma mt
+                                WHERE mt.ref_cod_turma = matricula_turma.ref_cod_turma
                                 AND mt.ref_cod_matricula = matricula_turma.ref_cod_matricula
                             )
                             '
                         );
+
+                        $query->where('ativo', 1);
                     },
                 ])
                 ->whereKey($this->getRequest()->turma_id)
@@ -1124,6 +1126,10 @@ class DiarioApiController extends ApiCoreController
             $ccId = $this->getRequest()->componente_curricular_id;
         }
 
+        if (!$this->serviceBoletim()->exibeSituacao($ccId)) {
+            return null;
+        }
+
         $situacao = null;
 
         $situacoes = $this->getSituacaoComponentes();
@@ -1141,7 +1147,7 @@ class DiarioApiController extends ApiCoreController
         try {
             $componentesCurriculares = $this->serviceBoletim()->getSituacaoComponentesCurriculares()->componentesCurriculares;
             foreach($componentesCurriculares as $componenteCurricularId => $situacaoCc){
-                $situacoes[$componenteCurricularId] = App_Model_MatriculaSituacao::getInstance()->getValue($situacaoCc->situacao);
+                $situacoes[$componenteCurricularId] = $this->serviceBoletim()->exibeSituacao($componenteCurricularId) ? App_Model_MatriculaSituacao::getInstance()->getValue($situacaoCc->situacao) : null;
             }
 
         } catch (Exception $e) {
@@ -1525,6 +1531,10 @@ class DiarioApiController extends ApiCoreController
     {
         if (is_null($componenteCurricularId)) {
             $componenteCurricularId = $this->getRequest()->componente_curricular_id;
+        }
+
+        if (!$this->serviceBoletim()->exibeNotaNecessariaExame($componenteCurricularId)) {
+            return null;
         }
 
         $nota = urldecode($this->serviceBoletim()->preverNotaRecuperacao($componenteCurricularId));

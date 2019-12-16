@@ -33,6 +33,7 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
         'notaGeralPorEtapa' => null,
         'definirComponentePorEtapa' => null,
         'qtdDisciplinasDependencia' => null,
+        'disciplinasAglutinadas' => null,
         'qtdMatriculasDependencia' => null,
         'aprovaMediaDisciplina' => null,
         'reprovacaoAutomatica' => null,

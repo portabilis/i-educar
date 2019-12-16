@@ -213,11 +213,11 @@ class TurmaController extends ApiCoreController
             }
 
             $sql = "
-                SELECT 
-                    t.cod_turma as id, 
-                    t.nm_turma as nome, 
-                    t.ano, 
-                    t.ref_ref_cod_escola as escola_id, 
+                SELECT
+                    t.cod_turma as id,
+                    t.nm_turma as nome,
+                    t.ano,
+                    t.ref_ref_cod_escola as escola_id,
                     t.turma_turno_id as turno_id,
                     t.ref_cod_curso as curso_id,
                     t.ref_ref_cod_serie as serie_id,
@@ -225,19 +225,19 @@ class TurmaController extends ApiCoreController
                    ra.regra_diferenciada_id as regra_avaliacao_diferenciada_id,
                     t.updated_at,
                     (
-                        CASE t.ativo WHEN 1 THEN 
-                            NULL 
-                        ELSE 
+                        CASE t.ativo WHEN 1 THEN
+                            NULL
+                        ELSE
                             t.data_exclusao::timestamp(0)
                         END
                     ) AS deleted_at
-                FROM pmieducar.turma t 
-                INNER JOIN pmieducar.escola e 
-                    ON e.cod_escola = t.ref_ref_cod_escola 
+                FROM pmieducar.turma t
+                INNER JOIN pmieducar.escola e
+                    ON e.cod_escola = t.ref_ref_cod_escola
                 INNER JOIN modules.regra_avaliacao_serie_ano rasa ON true
                     AND rasa.serie_id = t.ref_ref_cod_serie
                     AND rasa.ano_letivo = $2
-                INNER JOIN modules.regra_avaliacao ra 
+                INNER JOIN modules.regra_avaliacao ra
                     ON ra.id = (case when e.utiliza_regra_diferenciada then rasa.regra_avaliacao_diferenciada_id else rasa.regra_avaliacao_id end)
                 WHERE t.ref_cod_instituicao = $1
                     AND t.ano = $2
@@ -352,17 +352,18 @@ class TurmaController extends ApiCoreController
              inner join cadastro.pessoa on(aluno.ref_idpes = pessoa.idpes)
              inner join pmieducar.matricula on(aluno.cod_aluno = matricula.ref_cod_aluno)
              inner join pmieducar.matricula_turma on(matricula.cod_matricula = matricula_turma.ref_cod_matricula)
-             inner join modules.nota_exame on(matricula.cod_matricula = nota_exame.ref_cod_matricula)
              inner join pmieducar.turma on(matricula_turma.ref_cod_turma = turma.cod_turma)
              inner join modules.nota_aluno on(matricula.cod_matricula = nota_aluno.matricula_id)
-             inner join modules.nota_componente_curricular_media on(nota_aluno.id = nota_componente_curricular_media.nota_aluno_id
-                                                                    and nota_componente_curricular_media.componente_curricular_id = nota_exame.ref_cod_componente_curricular)
+             inner join modules.nota_componente_curricular_media on(nota_aluno.id = nota_componente_curricular_media.nota_aluno_id)
+             left join modules.nota_exame
+                on matricula.cod_matricula = nota_exame.ref_cod_matricula
+                and nota_componente_curricular_media.componente_curricular_id = nota_exame.ref_cod_componente_curricular
              where aluno.ativo = 1
                and matricula.ativo = 1
                and matricula_turma.ativo = 1
                and turma.ref_cod_instituicao = $1
                and matricula_turma.ref_cod_turma = $2
-               and (case when $3 = 0 then true else $3 = nota_exame.ref_cod_componente_curricular end)
+               and (case when $3 = 0 then true else $3 = nota_componente_curricular_media.componente_curricular_id end)
                and nota_componente_curricular_media.situacao = 7';
 
         $sql .= ' ORDER BY matricula_turma.sequencial_fechamento, translate(upper(pessoa.nome),\'áéíóúýàèìòùãõâêîôûäëïöüÿçÁÉÍÓÚÝÀÈÌÒÙÃÕÂÊÎÔÛÄËÏÖÜÇ\',\'AEIOUYAEIOUAOAEIOUAEIOUYCAEIOUYAEIOUAOAEIOUAEIOUC\')';
