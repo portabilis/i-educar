@@ -143,12 +143,24 @@ class EscolaController extends ApiCoreController
     {
         if ($this->canGetEtapasPorEscola()) {
             $ano = $this->getRequest()->ano ? $this->getRequest()->ano : 0;
+            $escola = $this->getRequest()->escola;
 
-            $sql = '
+            $where = '';
+
+            if ($escola) {
+                if (is_array($escola)) {
+                    $escola = implode(',', $escola);
+                }
+
+                $where = " AND eal.ref_cod_escola in ({$escola})";
+            }
+
+            $sql = "
                 select distinct 
                     ref_cod_escola as escola_id,
                     ano as ano, 
-                    m.nm_tipo as descricao
+                    m.nm_tipo as descricao,
+                    andamento as em_
                 from pmieducar.escola_ano_letivo eal
                 inner join pmieducar.ano_letivo_modulo alm
                     on true 
@@ -166,8 +178,9 @@ class EscolaController extends ApiCoreController
                         end
                     )
                 and andamento = 1
+                {$where} 
                 order by ref_cod_escola, ano
-            ';
+            ";
 
             $anosLetivos = $this->fetchPreparedQuery($sql, [$ano]);
 
