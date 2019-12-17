@@ -160,7 +160,7 @@ class EscolaController extends ApiCoreController
                     ref_cod_escola as escola_id,
                     ano as ano, 
                     m.nm_tipo as descricao,
-                    andamento as em_
+                    andamento as ano_em_aberto
                 from pmieducar.escola_ano_letivo eal
                 inner join pmieducar.ano_letivo_modulo alm
                     on true 
@@ -177,15 +177,20 @@ class EscolaController extends ApiCoreController
                             ano = $1 
                         end
                     )
-                and andamento = 1
                 {$where} 
                 order by ref_cod_escola, ano
             ";
 
             $anosLetivos = $this->fetchPreparedQuery($sql, [$ano]);
 
-            $attrs = ['escola_id', 'ano', 'descricao'];
+            $attrs = ['escola_id', 'ano', 'descricao', 'ano_em_aberto'];
             $anosLetivos = Portabilis_Array_Utils::filterSet($anosLetivos, $attrs);
+
+            $anosLetivos = array_map(function ($ano) {
+                $ano['ano_em_aberto'] = boolval($ano['ano_em_aberto']);
+
+                return $ano;
+            }, $anosLetivos);
 
             foreach ($anosLetivos as $index => $anoLetivo) {
                 $anosLetivos[$index] = array_merge($anosLetivos[$index], $this->getEtapasAnoEscola($anoLetivo['ano'], $anoLetivo['escola_id']));
