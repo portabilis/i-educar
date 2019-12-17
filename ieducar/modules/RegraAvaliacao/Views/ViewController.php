@@ -5,11 +5,24 @@ require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 
 class ViewController extends Core_Controller_Page_ViewController
 {
-
+    /**
+     * @var string
+     */
     protected $_dataMapper = 'RegraAvaliacao_Model_RegraDataMapper';
+
+    /**
+     * @var string
+     */
     protected $_titulo = 'Detalhes da regra de avaliação';
+
+    /**
+     * @var int
+     */
     protected $_processoAp = 947;
 
+    /**
+     * @var array
+     */
     protected $_tableMap = [
         'Nome' => 'nome',
         'Sistema de nota' => 'tipoNota',
@@ -30,17 +43,13 @@ class ViewController extends Core_Controller_Page_ViewController
         'Número máximo de casas decimais' => 'qtdCasasDecimais',
     ];
 
+    /**
+     * {@inheritdoc}
+     */
     protected function _preRender()
     {
-
-        $localizacao = new LocalizacaoSistema();
-
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => 'Detalhe da regra de avalia&ccedil;&otilde;o'
+        $this->breadcrumb('Detalhes da regra de avaliação', [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
     }
 }

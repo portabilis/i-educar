@@ -594,7 +594,7 @@ class PessoaController extends ApiCoreController
     {
         $individual = LegacyIndividual::findOrNew($pessoaId);
         $individual->idpes = $pessoaId;
-        $individual->data_nasc = Portabilis_Date_Utils::brToPgSQL($this->getRequest()->datanasc);
+        $individual->data_nasc = empty($this->getRequest()->datanasc) ? null : Portabilis_Date_Utils::brToPgSQL($this->getRequest()->datanasc);
         $individual->sexo = $this->getRequest()->sexo;
         $individual->ref_cod_sistema = null;
         $individual->ideciv = $this->getRequest()->estadocivil ?: $individual->ideciv;
