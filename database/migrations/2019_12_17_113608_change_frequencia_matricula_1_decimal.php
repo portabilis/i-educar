@@ -50,7 +50,7 @@ CREATE OR REPLACE FUNCTION modules.frequencia_da_matricula(p_matricula_id intege
                 v_total_faltas := (SELECT SUM(quantidade)
                                      FROM modules.falta_geral
                                     WHERE falta_aluno_id = v_falta_aluno_id);
-                RETURN TRUNC((((v_qtd_dias_letivos_serie - v_total_faltas) * 100 ) / v_qtd_dias_letivos_serie ),1);
+                RETURN TRUNC((((v_qtd_dias_letivos_serie - v_total_faltas) * 100 ) / v_qtd_dias_letivos_serie )::numeric,1);
           ELSE
 
             v_qtd_horas_serie := ( SELECT s.carga_horaria
@@ -59,13 +59,13 @@ CREATE OR REPLACE FUNCTION modules.frequencia_da_matricula(p_matricula_id intege
                                     WHERE m.cod_matricula = p_matricula_id);
 
             v_total_faltas := (SELECT SUM(quantidade)
-                                 FROM falta_componente_curricular
+                                 FROM modules.falta_componente_curricular
                                 WHERE falta_aluno_id = v_falta_aluno_id);
             v_hora_falta := (SELECT hora_falta
                                FROM pmieducar.curso c
                               INNER JOIN pmieducar.matricula m ON (c.cod_curso = m.ref_cod_curso)
                               WHERE m.cod_matricula = p_matricula_id);
-            RETURN  TRUNC((100 - ((v_total_faltas * (v_hora_falta*100))/v_qtd_horas_serie)), 1);
+            RETURN  TRUNC((100 - ((v_total_faltas * (v_hora_falta*100))/v_qtd_horas_serie))::numeric, 1);
           END IF;
       END;
     $$;
