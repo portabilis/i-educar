@@ -173,7 +173,7 @@ class Registro00Import implements RegistroImportInterface
 
         $neighborhood = LegacyNeighborhood::firstOrCreate([
             'idmun' => $city->getKey(),
-            'nome' => utf8_decode($this->model->bairro),
+            'nome' => $this->model->bairro,
             'iddis' => $district->getKey(),
             'origem_gravacao' => 'M',
             'idpes_cad' => $this->user->id,
@@ -218,7 +218,7 @@ class Registro00Import implements RegistroImportInterface
             'cep' => $this->model->cep,
             'idlog' => $street->getKey(),
             'numero' => (int) (is_numeric($this->model->numero) ? $this->model->numero : null),
-            'complemento' => utf8_decode($this->model->complemento),
+            'complemento' => $this->model->complemento,
             'idbai' => $neighborhood->getKey(),
             'origem_gravacao' => 'M',
             'idpes_cad' => $this->user->id,
