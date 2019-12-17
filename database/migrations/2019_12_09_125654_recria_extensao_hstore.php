@@ -3,7 +3,7 @@
 use App\Support\Database\AsView;
 use Illuminate\Database\Migrations\Migration;
 
-class RecriaExtensaoHsotore extends Migration
+class RecriaExtensaoHstore extends Migration
 {
     use AsView;
     /**
