@@ -187,7 +187,7 @@ class EscolaController extends ApiCoreController
             $anosLetivos = Portabilis_Array_Utils::filterSet($anosLetivos, $attrs);
 
             $anosLetivos = array_map(function ($ano) {
-                $ano['ano_em_aberto'] = boolval($ano['ano_em_aberto']);
+                $ano['ano_em_aberto'] = $ano['ano_em_aberto'] == 1;
 
                 return $ano;
             }, $anosLetivos);
