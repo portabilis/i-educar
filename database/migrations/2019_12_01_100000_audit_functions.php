@@ -55,7 +55,7 @@ begin
 	begin 
 		return current_setting('audit.enabled');
 	exception when others then 
-		return false;
+		return true;
 	end;
 end;
 \$function$
