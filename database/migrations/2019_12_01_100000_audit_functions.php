@@ -71,7 +71,7 @@ SQL;
     private function getSqlForAuditFunction()
     {
         return <<<SQL
-create function audit() 
+create function public.audit() 
 returns trigger as
 \$function$
 begin 

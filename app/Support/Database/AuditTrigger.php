@@ -48,7 +48,7 @@ trait AuditTrigger
         return <<<SQL
 create trigger {$trigger}
 after insert or update or delete on {$table}
-for each row execute procedure audit();
+for each row execute procedure public.audit();
 SQL;
     }
 
