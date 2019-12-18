@@ -320,7 +320,9 @@ class clsPmieducarCandidatoReservaVaga extends Model
         $ref_cod_curso = null,
         $ref_cod_turno = null,
         $ref_cod_aluno = null,
-        $situacaoEmEspera = false
+        $situacaoEmEspera = false,
+        $situacao = null,
+        $protocolo = null
     ) {
         $this->resetCamposLista();
 
@@ -385,6 +387,20 @@ class clsPmieducarCandidatoReservaVaga extends Model
 
         if ($situacaoEmEspera) {
             $filtros .= " {$whereAnd} crv.situacao IS NULL";
+            $whereAnd = ' AND ';
+        }
+
+        if ($situacao) {
+            if ($situacao == 'E') {
+                $filtros .= " {$whereAnd} crv.situacao IS NULL";
+            } else {
+                $filtros .= " {$whereAnd} crv.situacao = '{$situacao}'";
+            }
+            $whereAnd = ' AND ';
+        }
+
+        if ($protocolo) {
+            $filtros .= " {$whereAnd} crv.cod_candidato_reserva_vaga = {$protocolo}";
         }
 
         $db = new clsBanco();
