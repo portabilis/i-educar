@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use Illuminate\Database\Connection;
+use Illuminate\Http\Request;
 
 class ConfigureAuthenticatedUserForAudit
 {
@@ -12,11 +13,18 @@ class ConfigureAuthenticatedUserForAudit
     private $connection;
 
     /**
-     * @param Connection $connection
+     * @var Request
      */
-    public function __construct(Connection $connection)
+    private $request;
+
+    /**
+     * @param Connection $connection
+     * @param Request    $request
+     */
+    public function __construct(Connection $connection, Request $request)
     {
         $this->connection = $connection;
+        $this->request = $request;
     }
 
     /**
@@ -36,6 +44,7 @@ class ConfigureAuthenticatedUserForAudit
         $context = json_encode([
             'user_id' => $id,
             'user_name' => $name,
+            'origin' => $this->request->fullUrl(),
         ]);
 
         $pdo->exec("SET \"audit.enabled\" = {$enabled};");
