@@ -2071,6 +2071,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      */
     public function preverNotaRecuperacao($id)
     {
+        $turmaId = $this->getOption('ref_cod_turma');
+        $infosMatricula = $this->getOption('matriculaData');
+        $matriculaId = $infosMatricula['cod_matricula'];
+        $serieId = $infosMatricula['ref_ref_cod_serie'];
+        $escolaId = $infosMatricula['ref_ref_cod_escola'];
+
         $notasComponentes = $this->getNotasComponentes();
 
         if (is_null($this->getRegraAvaliacaoFormulaRecuperacao()) || !isset($notasComponentes[$id])) {
@@ -2079,6 +2085,23 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         $etapaNotas = $this->calculaEtapaNotasAglutinada($id, $notasComponentes);
 
+        $qtdeEtapas = $this->getOption('etapas');
+
+        if ($this->getRegraAvaliacaoDefinirComponentePorEtapa() == '1') {
+            $qtdeEtapaEspecifica = App_Model_IedFinder::getQtdeEtapasComponente($turmaId, $id, $infosMatricula['ref_cod_aluno']);
+
+            $qtdeEtapas = ($qtdeEtapaEspecifica ? $qtdeEtapaEspecifica : $qtdeEtapas);
+        }
+        $verificaDispensa = App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $id);
+        $consideraEtapas = [];
+
+        for ($i = 1; $i <= $qtdeEtapas; $i++) {
+            $consideraEtapas['C' . $i] = in_array($i, $verificaDispensa) ? 0 : 1;
+
+            if (in_array($i, $verificaDispensa)) {
+                $consideraEtapas['E' . $i] = 0;
+            }
+        }
 
         $somaEtapas = array_sum($etapaNotas);
 
@@ -2087,6 +2110,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             'Et' => $this->getOption('etapas'),
             'Rc' => null
         ];
+
+        $data = array_merge($data, $consideraEtapas);
 
         foreach ($etapaNotas as $etapa => $nota) {
             $data['E' . $etapa] = $nota;
