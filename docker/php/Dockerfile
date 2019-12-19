@@ -12,6 +12,8 @@ ENV XDEBUG_REMOTE_PORT 9000
 ENV XDEBUG_REMOTE_ENABLE 0
 ENV XDEBUG_AUTOSTART 0
 
+RUN echo "deb http://ftp.us.debian.org/debian sid main" >> /etc/apt/sources.list
+
 RUN apt-get update -y
 
 RUN pecl install xdebug
@@ -26,9 +28,6 @@ RUN docker-php-ext-install pdo_pgsql
 RUN pecl install redis
 RUN docker-php-ext-enable redis
 RUN rm -rf /tmp/pear
-
-RUN mkdir -p /usr/share/man/man1
-RUN apt-get install -y default-jdk
 
 RUN docker-php-ext-install bcmath
 
@@ -57,3 +56,5 @@ COPY pdflib.so /usr/local/lib/php/extensions/no-debug-non-zts-20180731/pdflib.so
 RUN echo "extension=/usr/local/lib/php/extensions/no-debug-non-zts-20180731/pdflib.so" > /usr/local/etc/php/conf.d/pdflib.ini
 
 RUN docker-php-ext-install pcntl
+
+RUN apt-get install openjdk-8-jdk -y

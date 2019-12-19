@@ -136,6 +136,7 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
             $model->data_cad = now();
             $model->origem_gravacao = 'M';
             $model->operacao = 'I';
+            $model->pais_residencia = $model->pais_residencia ?? 76;
         });
     }
 
