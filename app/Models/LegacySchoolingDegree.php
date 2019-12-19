@@ -20,7 +20,7 @@ class LegacySchoolingDegree extends Model
      * @var array
      */
     protected $fillable = [
-        'idesco', 'descricao'
+        'idesco', 'descricao', 'escolaridade',
     ];
 
     /**

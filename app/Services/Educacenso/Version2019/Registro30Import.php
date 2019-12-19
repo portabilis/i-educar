@@ -25,6 +25,7 @@ use App\User;
 use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Modules\Educacenso\Model\Escolaridade;
 use iEducar\Modules\Educacenso\Model\FormacaoContinuada;
+use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use iEducar\Modules\Educacenso\Model\PosGraduacao;
 use iEducar\Modules\Educacenso\Model\RecursosRealizacaoProvas;
 
@@ -143,9 +144,8 @@ class Registro30Import implements RegistroImportInterface
     private function createPerson()
     {
         $filiacao1 = $this->createFiliacao($this->model->filiacao1);
-        $filiacao2 = $this->createFiliacao($this->model->filiacao1);
+        $filiacao2 = $this->createFiliacao($this->model->filiacao2);
 
-        $this->createFiliacao($this->model->filiacao2);
         $person = LegacyPerson::create([
             'nome' => $this->model->nomePessoa,
             'data_cad' => now(),
@@ -153,6 +153,7 @@ class Registro30Import implements RegistroImportInterface
             'situacao' => 'P',
             'origem_gravacao' => 'U',
             'operacao' => 'I',
+            'email' => $this->model->email,
         ]);
 
         LegacyIndividual::create([
@@ -166,9 +167,9 @@ class Registro30Import implements RegistroImportInterface
             'idpes_pai' => $filiacao2 ? $filiacao2->getKey() : null,
             'nacionalidade' => $this->model->nacionalidade,
             'idpais_estrangeiro' => $this->getCountry($this->model->paisNacionalidade),
-            'idmun_nascimento' => $this->getCity($this->model->municipioNascimento),
-            'cpf' => (int)$this->model->cpf,
-            'nis_pis_pasep' => (int)$this->model->nis,
+            'idmun_nascimento' => $this->model->nacionalidade == Nacionalidade::BRASILEIRA ? $this->getCity($this->model->municipioNascimento) : null,
+            'cpf' => $this->model->cpf ?: null,
+            'nis_pis_pasep' => $this->model->nis ?: null,
             'pais_residencia' => (int)$this->model->paisResidencia,
             'zona_localizacao_censo' => (int)$this->model->localizacaoResidencia,
         ]);
@@ -551,6 +552,7 @@ class Registro30Import implements RegistroImportInterface
         $this->storeEmployeeCourses($employee);
 
         $employee->tipo_ensino_medio_cursado = (int)$this->model->tipoEnsinoMedioCursado;
+        $employee->save();
     }
 
     /**
@@ -564,7 +566,10 @@ class Registro30Import implements RegistroImportInterface
 
         $schoolingDegree = LegacySchoolingDegree::firstOrCreate(
             ['idesco' => $this->model->escolaridade],
-            ['descricao' => Escolaridade::getDescriptiveValues()[$this->model->escolaridade] ?? 'Escolaridade',]
+            [
+                'descricao' => Escolaridade::getDescriptiveValues()[$this->model->escolaridade] ?? 'Escolaridade',
+                'escolaridade' => $this->model->escolaridade
+            ]
         );
 
         $employee->ref_idesco = $schoolingDegree->getKey();
@@ -708,5 +713,6 @@ class Registro30Import implements RegistroImportInterface
         }
 
         $employee->curso_formacao_continuada = $this->getPostgresIntegerArray($arrayCourses);
+        $employee->save();
     }
 }

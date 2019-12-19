@@ -90,7 +90,7 @@ class Registro20Import implements RegistroImportInterface
                 'ref_cod_curso' => $course->getKey(),
                 'ref_cod_turma_tipo' => $schoolClassType->getKey(),
                 'ref_usuario_cad' => $this->user->getKey(),
-                'nm_turma' => utf8_decode($model->nomeTurma),
+                'nm_turma' => $model->nomeTurma,
                 'tipo_mediacao_didatico_pedagogico' => $model->tipoMediacaoDidaticoPedagogico,
                 'hora_inicial' => sprintf("%02d:%02d:00", intval($model->horaInicial), intval($model->horaInicialMinuto)),
                 'hora_final' => sprintf("%02d:%02d:00", intval($model->horaFinal), intval($model->horaFinalMinuto)),

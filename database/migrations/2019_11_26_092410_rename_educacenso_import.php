@@ -16,7 +16,7 @@ class RenameEducacensoImport extends Migration
         Schema::dropIfExists('educacenso_import');
         Schema::dropIfExists('educacenso_imports');
 
-        Schema::create('educacenso_imports', function (Blueprint $table) {
+        Schema::create('public.educacenso_imports', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('year');
             $table->string('school');

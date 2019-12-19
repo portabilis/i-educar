@@ -182,7 +182,7 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
         $this->veiculoTransporteAquaviarioCapacidade5 = $arrayColumns[29];
         $this->veiculoTransporteAquaviarioCapacidade5a15 = $arrayColumns[30];
         $this->veiculoTransporteAquaviarioCapacidade15a35 = $arrayColumns[31];
-        $this->veiculoTransporteAquaviarioCapacidadeAcima35 = $arrayColumns[32];
+        $this->veiculoTransporteAquaviarioCapacidadeAcima35 = (int)$arrayColumns[32];
     }
 }
 
