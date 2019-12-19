@@ -89,6 +89,14 @@ class LegacyEvaluationRule extends Model
     /**
      * @return bool
      */
+    public function isSpecificRetake ()
+    {
+        return $this->tipo_recuperacao_paralela == self::PARALLEL_REMEDIAL_PER_SPECIFIC_STAGE;
+    }
+
+    /**
+     * @return bool
+     */
     public function isSumScoreCalculation()
     {
         return $this->tipo_recuperacao_paralela == self::PARALLEL_REMEDIAL_PER_STAGE

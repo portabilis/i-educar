@@ -73,7 +73,13 @@ class DiarioController extends ApiCoreController
 
         $valid = in_array($componenteCurricularId, $componentesTurma);
         if (!$valid) {
-            throw new CoreExt_Exception("Componente curricular de código $componenteCurricularId não existe para a turma $turmaId .");
+            $this->messenger->append("Componente curricular de código {$componenteCurricularId} não existe para a turma {$turmaId}.", 'error');
+            $this->appendResponse('error', [
+                'code' => Error::DISCIPLINE_NOT_EXISTS_FOR_SCHOOL_CLASS,
+                'message' => "Componente curricular de código {$componenteCurricularId} não existe para a turma {$turmaId}.",
+            ]);
+
+            return false;
         }
 
         return $valid;
@@ -402,7 +408,13 @@ class DiarioController extends ApiCoreController
                     }
 
                     if ($this->getRegra($matriculaId)->get('tipoPresenca') != RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
-                        throw new CoreExt_Exception(Portabilis_String_Utils::toLatin1("A regra da turma $turmaId não permite lançamento de faltas por componente."));
+                        $this->messenger->append("A regra da turma $turmaId não permite lançamento de faltas por componente.", 'error');
+                        $this->appendResponse('error', [
+                            'code' => Error::SCHOOL_CLASS_DOESNT_ALOW_FREQUENCY_BY_DISCIPLINE,
+                            'message' => "A regra da turma $turmaId não permite lançamento de faltas por componente.",
+                        ]);
+
+                        return false;
                     }
 
                     foreach ($faltaTurmaAluno as $componenteCurricularId => $faltaTurmaAlunoDisciplina) {

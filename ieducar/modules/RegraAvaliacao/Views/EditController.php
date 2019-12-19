@@ -121,6 +121,10 @@ class EditController extends Core_Controller_Page_EditController
             'label' => 'Quantidade de matriculas de dependência',
             'help' => 'Preencha a quantidade de matrículas de dependência permitidas por aluno. Preencha com 0 caso não exista.'
         ],
+        'disciplinasAglutinadas' => [
+            'label' => 'Disciplinas aglutinadas',
+            'help' => 'Disciplinas aglutinadas terão as médias somadas para calcular a situação. Formato: Código separado por vírgula (Ex: 1,2)'
+        ],
         'recuperacaoDescricao' => [
             'label' => 'Descrição do exame:',
             'help' => 'Exemplo: Recuperação semestral I'
@@ -607,6 +611,18 @@ class EditController extends Core_Controller_Page_EditController
             3,
             true,
             $this->_getHelp('qtdMatriculasDependencia')
+        );
+
+        $this->campoTexto(
+            'disciplinasAglutinadas',
+            $this->_getLabel('disciplinasAglutinadas'),
+            $this->getEntity()->disciplinasAglutinadas,
+            5,
+            50,
+            false,
+            false,
+            false,
+            $this->_getHelp('disciplinasAglutinadas')
         );
 
         $this->campoCheck(

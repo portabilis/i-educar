@@ -118,9 +118,20 @@ class EducacensoRepository
                                                                                ON (UPPER(ee.bairro) = UPPER(b.nome))
                                                                        WHERE ee.idpes = e.ref_idpes
                                                                        LIMIT 1)))
-            LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
+            LEFT JOIN public.municipio ON (municipio.idmun = COALESCE(bairro.idmun, (SELECT m.idmun
+                                                                           FROM public.municipio m
+                                                                          INNER JOIN cadastro.endereco_externo ee
+                                                                             ON (UPPER(ee.cidade) = UPPER(m.nome))
+                                                                          WHERE ee.idpes = e.ref_idpes
+                                                                          LIMIT 1)))
             LEFT JOIN public.uf ON (uf.sigla_uf = COALESCE(municipio.sigla_uf, ee.sigla_uf))
-            LEFT JOIN public.distrito ON (distrito.idmun = bairro.idmun)
+            LEFT JOIN public.distrito ON (distrito.idmun = COALESCE(bairro.idmun, (SELECT d.idmun
+                                                                       FROM public.distrito d
+                                                                      INNER JOIN public.municipio m on d.idmun = m.idmun
+                                                                      INNER JOIN cadastro.endereco_externo ee
+                                                                         ON (UPPER(ee.cidade) = UPPER(m.nome))
+                                                                       WHERE ee.idpes = e.ref_idpes
+                                                                       LIMIT 1)))
 
             LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
             LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
