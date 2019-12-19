@@ -4,23 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class LegacySchoolingDegree extends Model
+/**
+ * @deprecated Usar novo módulo de endereço
+ */
+class LegacyCountry extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'cadastro.escolaridade';
+    protected $table = 'pais';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'idesco';
+    protected $primaryKey = 'idpais';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'idesco', 'descricao'
+        'idpais',
+        'nome',
+        'geom',
+        'cod_ibge',
     ];
 
     /**
