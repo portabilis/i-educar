@@ -3,6 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+
+/**
+ * @deprecated Usar novo módulo de endereço
+ */
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LegacyCity extends Model
@@ -10,6 +14,7 @@ class LegacyCity extends Model
     /**
      * @var string
      */
+
     protected $table = 'public.municipio';
 
     /**
