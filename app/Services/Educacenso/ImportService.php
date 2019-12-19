@@ -35,8 +35,14 @@ abstract class ImportService
         $lineId = $this->getLineId($line);
 
         $class = $this->getRegistroById($lineId);
-        $model = $class::getModel();
-        $model = $this->hydrateModel($model, $line);
+        $line = str_replace("\r\n", '', $line);
+        $arrayColumns = explode(self::DELIMITER, $line);
+
+        if (!$class) {
+            return;
+        }
+
+        $model = $class::getModel($arrayColumns);
 
         $class->import($model, $this->getYear(), $user);
     }
@@ -52,17 +58,6 @@ abstract class ImportService
         $arrayLine = explode(self::DELIMITER, $line);
 
         return $arrayLine[0];
-    }
-
-    private function hydrateModel(RegistroEducacenso $model, $line)
-    {
-        $data = explode(self::DELIMITER, $line);
-
-        foreach ($data as $key => $value) {
-            $model->{$model->getProperty($key)} = trim($value);
-        }
-
-        return $model;
     }
 
     /**

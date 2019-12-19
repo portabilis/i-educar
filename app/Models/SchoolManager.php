@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SchoolManager extends Model
 {
+    protected $fillable = [
+        'employee_id',
+        'school_id',
+    ];
+
     /**
      * @return BelongsTo
      */
