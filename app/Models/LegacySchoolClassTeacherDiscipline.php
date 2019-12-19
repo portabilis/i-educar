@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LegacySchoolClassTeacherDiscipline extends Model
 {
+
     public $incrementing = false;
     public $primaryKey = null;
     protected $fillable = [

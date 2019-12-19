@@ -3082,6 +3082,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         $evaluationRule = $this->getEvaluationRule();
 
+        if ($evaluationRule->isSpecificRetake()) {
+            return $score;
+        }
+
         $service = new StageScoreCalculationService();
 
         if ($evaluationRule->isAverageBetweenScoreAndRemedialCalculation()) {
