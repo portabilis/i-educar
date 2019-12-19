@@ -43,6 +43,14 @@ class Registro00Import implements RegistroImportInterface
      * @var int
      */
     private $year;
+    /**
+     * @var \Illuminate\Contracts\Foundation\Application
+     */
+
+    /**
+     * @var LegacyInstitution
+     */
+    private $institution;
 
     /**
      * Faz a importação dos dados a partir da linha do arquivo
@@ -57,6 +65,7 @@ class Registro00Import implements RegistroImportInterface
         $this->user = $user;
         $this->model = $model;
         $this->year = $year;
+        $this->institution = app(LegacyInstitution::class);
         $this->getOrCreateSchool();
     }
 
@@ -85,7 +94,7 @@ class Registro00Import implements RegistroImportInterface
 
         $organization = LegacyOrganization::create([
             'idpes' => $person->idpes,
-            'cnpj' => $this->model->cnpjEscolaPrivada ?: '00000000000100',
+            'cnpj' => $this->model->cnpjEscolaPrivada ?: rand(1, 99) . rand(1, 999) . rand(1, 999) . rand(1, 9999) . rand(1, 99),
             'origem_gravacao' => 'M',
             'idpes_cad' => $this->user->id,
             'data_cad' => now(),
@@ -103,7 +112,7 @@ class Registro00Import implements RegistroImportInterface
             'ref_idpes' => $organization->getKey(),
             'ref_usuario_cad' => $this->user->id,
             'ref_cod_escola_rede_ensino' => $educationNetword->getKey(),
-            'ref_cod_instituicao' => LegacyInstitution::active()->first()->id,
+            'ref_cod_instituicao' => $this->institution->id,
             'zona_localizacao' => $this->model->zonaLocalizacao,
             'localizacao_diferenciada' => $this->model->localizacaoDiferenciada,
             'dependencia_administrativa' => $this->model->dependenciaAdministrativa,
@@ -140,7 +149,7 @@ class Registro00Import implements RegistroImportInterface
             'ref_usuario_cad' => $this->user->id,
             'nm_rede' => 'Importação Educacenso',
             'ativo' => 1,
-            'ref_cod_instituicao' => LegacyInstitution::active()->first()->id,
+            'ref_cod_instituicao' => $this->institution->id,
             'data_cadastro' => now(),
         ]);
     }
@@ -157,14 +166,14 @@ class Registro00Import implements RegistroImportInterface
             return;
         }
 
-        $district = LegacyDistrict::where('idmun', $city->getKey())->where('cod_ibge', $this->model->codigoIbgeDistrito)->first();
+        $district = $this->getDistrict($city, $this->model->codigoIbgeDistrito);
         if (!$district) {
             return;
         }
 
         $neighborhood = LegacyNeighborhood::firstOrCreate([
             'idmun' => $city->getKey(),
-            'nome' => $this->model->bairro,
+            'nome' => utf8_decode($this->model->bairro),
             'iddis' => $district->getKey(),
             'origem_gravacao' => 'M',
             'idpes_cad' => $this->user->id,
@@ -208,8 +217,8 @@ class Registro00Import implements RegistroImportInterface
             'tipo' => '1',
             'cep' => $this->model->cep,
             'idlog' => $street->getKey(),
-            'numero' => $this->model->numero,
-            'complemento' => $this->model->complemento,
+            'numero' => (int) (is_numeric($this->model->numero) ? $this->model->numero : null),
+            'complemento' => utf8_decode($this->model->complemento),
             'idbai' => $neighborhood->getKey(),
             'origem_gravacao' => 'M',
             'idpes_cad' => $this->user->id,
@@ -372,5 +381,21 @@ class Registro00Import implements RegistroImportInterface
         $registro = new Registro00();
         $registro->hydrateModel($arrayColumns);
         return $registro;
+    }
+
+    /**
+     * @param LegacyCity $city
+     * @param string $codigoIbgeDistrito
+     * @return LegacyDistrict|null
+     */
+    private function getDistrict(LegacyCity $city, string $codigoIbgeDistrito)
+    {
+        if (!$codigoIbgeDistrito) {
+            return null;
+        }
+
+        $codigoIbgeDistrito = substr($codigoIbgeDistrito, -2, 2);
+
+        return LegacyDistrict::where('idmun', $city->getKey())->where('cod_ibge', $codigoIbgeDistrito)->first();
     }
 }

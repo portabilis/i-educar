@@ -133,7 +133,7 @@ class Registro10Import implements RegistroImportInterface
         $school->codigo_lingua_indigena = $this->getArrayLinguaIndigena();
         $school->exame_selecao_ingresso = $model->exameSelecaoIngresso;
         $school->reserva_vagas_cotas = $this->getArrayReservaVagas();
-        $school->predio_compartilhado_outra_escola = $model->predioCompartilhadoOutraEscola;
+        $school->predio_compartilhado_outra_escola = $model->predioCompartilhadoOutraEscola ?: null;
         $school->usa_espacos_equipamentos_atividades_regulares = $model->usaEspacosEquipamentosAtividadesRegulares;
         $school->orgaos_colegiados = $this->getArrayOrgaosColegiados();
         $school->projeto_politico_pedagogico = $model->projetoPoliticoPedagogico;

@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Employee extends Model
 {
@@ -37,6 +36,14 @@ class Employee extends Model
     public function inep()
     {
         return $this->belongsTo(EmployeeInep::class, 'cod_servidor', 'cod_servidor');
+    }
+
+    /**
+     * @return int
+     */
+    public function getIdAttribute()
+    {
+        return $this->cod_servidor;
     }
 
     /**
