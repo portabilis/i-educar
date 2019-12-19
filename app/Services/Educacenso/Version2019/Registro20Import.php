@@ -22,6 +22,7 @@ use App\Models\SchoolClassInep;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\RegistroImportInterface;
 use App\User;
+use Exception;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 
 class Registro20Import implements RegistroImportInterface
@@ -38,6 +39,14 @@ class Registro20Import implements RegistroImportInterface
      * @var int
      */
     private $year;
+    /**
+     * @var \Illuminate\Contracts\Foundation\Application
+     */
+
+    /**
+     * @var LegacyInstitution
+     */
+    private $institution;
 
     /**
      * Faz a importação dos dados a partir da linha do arquivo
@@ -52,6 +61,7 @@ class Registro20Import implements RegistroImportInterface
         $this->user = $user;
         $this->model = $model;
         $this->year = $year;
+        $this->institution = app(LegacyInstitution::class);
 
         $schoolInep = $this->getSchool();
 
@@ -80,15 +90,15 @@ class Registro20Import implements RegistroImportInterface
                 'ref_cod_curso' => $course->getKey(),
                 'ref_cod_turma_tipo' => $schoolClassType->getKey(),
                 'ref_usuario_cad' => $this->user->getKey(),
-                'nm_turma' => $model->nomeTurma,
+                'nm_turma' => utf8_decode($model->nomeTurma),
                 'tipo_mediacao_didatico_pedagogico' => $model->tipoMediacaoDidaticoPedagogico,
                 'hora_inicial' => sprintf("%02d:%02d:00", intval($model->horaInicial), intval($model->horaInicialMinuto)),
                 'hora_final' => sprintf("%02d:%02d:00", intval($model->horaFinal), intval($model->horaFinalMinuto)),
                 'dias_semana' => $this->getArrayDaysWeek(),
                 'tipo_atendimento' => $this->getTipoAtendimento(),
                 'atividades_complementares' => $this->getArrayAtividadesComplementares(),
-                'local_funcionamento_diferenciado' => $model->localFuncionamentoDiferenciado,
-                'etapa_educacenso' => $model->etapaEducacenso,
+                'local_funcionamento_diferenciado' => (int) $model->localFuncionamentoDiferenciado,
+                'etapa_educacenso' => (int) $model->etapaEducacenso,
                 'max_aluno' => 99,
                 'ativo' => 1,
                 'multiseriada' => 0,
@@ -96,7 +106,8 @@ class Registro20Import implements RegistroImportInterface
                 'tipo_boletim' => 1,
                 'ano' => $this->year,
                 'sgl_turma' => '',
-                'data_cadastro' => now()
+                'data_cadastro' => now(),
+                'ref_cod_instituicao' => $this->institution->id,
             ]
         );
 
@@ -110,7 +121,6 @@ class Registro20Import implements RegistroImportInterface
             $discipline = $this->createDiscipline($discipline);
             $this->createDisciplineAcademicYear($discipline, $level);
             $this->createSchoolGradeDiscipline($school, $level, $discipline);
-            $this->createSchoolClassDiscipline($schoolClass, $discipline);
         }
     }
 
@@ -131,7 +141,7 @@ class Registro20Import implements RegistroImportInterface
         $name = self::getComponentes()[$disciplineId] ?? 'Migração';
 
         return LegacyDiscipline::create([
-            'instituicao_id' => LegacyInstitution::active()->first()->id,
+            'instituicao_id' => $this->institution->id,
             'area_conhecimento_id' => $knowledgeArea->getKey(),
             'nome' => $name,
             'abreviatura' => mb_substr($name, 0, 3, 'UTF-8'),
@@ -197,7 +207,7 @@ class Registro20Import implements RegistroImportInterface
         }
 
         return LegacyKnowledgeArea::create([
-            'instituicao_id' => LegacyInstitution::active()->first()->id,
+            'instituicao_id' => $this->institution->id,
             'nome' => 'Migração',
         ]);
     }
@@ -287,7 +297,7 @@ class Registro20Import implements RegistroImportInterface
             'nm_tipo' => 'Regular',
             'sgl_tipo' => 'Reg',
             'data_cadastro' => now(),
-            'ref_cod_instituicao' => LegacyInstitution::active()->first()->id,
+            'ref_cod_instituicao' => $this->institution->id,
         ]);
     }
 
@@ -310,27 +320,15 @@ class Registro20Import implements RegistroImportInterface
             $courseData = $this->getDataAee();
         }
 
-        $course = LegacyCourse::where('nm_curso', 'ilike', $courseData['curso'])->first();
-
-        if (!empty($course)) {
-            return $course;
+        if (empty($courseData)) {
+            throw new Exception('Não foi possível encontrar os dados do curso');
         }
 
-        $course = LegacyCourse::create([
-            'ref_usuario_cad' => $this->user->id,
-            'ref_cod_nivel_ensino' => $educationLevel->getKey(),
-            'ref_cod_tipo_ensino' => $educationType->getKey(),
-            'nm_curso' => $courseData['curso'],
-            'sgl_curso' => substr($courseData['curso'], 0, 15),
-            'qtd_etapas' => $courseData['etapas'],
-            'carga_horaria' => 800 * $courseData['etapas'],
-            'data_cadastro' => now(),
-            'ref_cod_instituicao' => LegacyInstitution::active()->first()->id,
-            'ativo' => 1,
-            'modalidade_curso' => $this->model->modalidadeCurso,
-            'padrao_ano_escolar' => 1,
-            'multi_seriado' => 1,
-        ]);
+        $course = LegacyCourse::where('nm_curso', 'ilike', $courseData['curso'])->first();
+
+        if (empty($course)) {
+            $course = $this->createCourse($educationLevel, $educationType, $courseData);
+        }
 
         $schoolCourse = LegacySchoolCourse::where('ref_cod_escola', $school->getKey())
             ->where('ref_cod_curso', $course->getKey())
@@ -367,7 +365,7 @@ class Registro20Import implements RegistroImportInterface
             'ref_usuario_cad' => $this->user->id,
             'nm_nivel' => 'Ano',
             'data_cadastro' => now(),
-            'ref_cod_instituicao' => LegacyInstitution::active()->first()->id,
+            'ref_cod_instituicao' => $this->institution->id,
         ]);
     }
 
@@ -386,7 +384,7 @@ class Registro20Import implements RegistroImportInterface
             'ref_usuario_cad' => $this->user->id,
             'nm_tipo' => 'Padrão',
             'data_cadastro' => now(),
-            'ref_cod_instituicao' => LegacyInstitution::active()->first()->id,
+            'ref_cod_instituicao' => $this->institution->id,
         ]);
     }
 
@@ -411,29 +409,16 @@ class Registro20Import implements RegistroImportInterface
             ->where('etapa_curso', $levelData['etapa'])
             ->first();
 
-        if (!empty($level)) {
-            return $level;
+        if (empty($level)) {
+            $level = $this->createLevel($levelData, $course);
         }
-
-        $level = LegacyLevel::create([
-            'nm_serie' => $levelData['serie'],
-            'ref_usuario_cad' => $this->user->id,
-            'ref_cod_curso' => $course->getKey(),
-            'etapa_curso' => $levelData['etapa'],
-            'carga_horaria' => 800,
-            'dias_letivos' => 200,
-            'data_cadastro' => now(),
-            'concluinte' => ($levelData['etapa'] == $levelData['etapas']) ? 1 : 0,
-            'ativo' => 1,
-            'intervalo' => 1,
-        ]);
 
         $schoolGrade = LegacySchoolGrade::where('ref_cod_escola', $school->getKey())
             ->where('ref_cod_serie', $level->getKey())
             ->first();
 
         if (!empty($schoolGrade)) {
-            return $schoolGrade;
+            return $level;
         }
 
         LegacySchoolGrade::create([
@@ -462,21 +447,21 @@ class Registro20Import implements RegistroImportInterface
             6 => 'Língua/Literatura portuguesa',
             7 => 'Língua/Literatura extrangeira - Inglês',
             8 => 'Língua/Literatura extrangeira - Espanhol',
-            30 => 'Língua/Literatura extrangeira - Francês',
             9 => 'Língua/Literatura extrangeira - Outra',
             10 => 'Artes (educação artística, teatro, dança, música, artes plásticas e outras)',
             11 => 'Educação física',
             12 => 'História',
             13 => 'Geografia',
             14 => 'Filosofia',
-            28 => 'Estudos sociais',
-            29 => 'Sociologia',
             16 => 'Informática/Computação',
             17 => 'Disciplinas dos Cursos Técnicos Profissionais;',
             23 => 'LIBRAS',
             25 => 'Disciplinas pedagógicas',
             26 => 'Ensino religioso',
             27 => 'Língua indígena',
+            28 => 'Estudos sociais',
+            29 => 'Sociologia',
+            30 => 'Língua/Literatura extrangeira - Francês',
             31 => 'Língua Portuguesa como Segunda Língua',
             32 => 'Estágio Curricular Supervisionado',
             99 => 'Outras disciplinas'
@@ -882,7 +867,7 @@ class Registro20Import implements RegistroImportInterface
             ]
         ];
 
-        return $arrayData[$etapa];
+        return $arrayData[$etapa] ?? null;
     }
 
     /**
@@ -944,5 +929,52 @@ class Registro20Import implements RegistroImportInterface
             'created_at' => now(),
         ]);
 
+    }
+
+    /**
+     * @param $levelData
+     * @param LegacyCourse $course
+     * @return
+     */
+    private function createLevel($levelData, $course)
+    {
+        return LegacyLevel::create([
+            'nm_serie' => $levelData['serie'],
+            'ref_usuario_cad' => $this->user->id,
+            'ref_cod_curso' => $course->getKey(),
+            'etapa_curso' => $levelData['etapa'],
+            'carga_horaria' => 800,
+            'dias_letivos' => 200,
+            'data_cadastro' => now(),
+            'concluinte' => ($levelData['etapa'] == $levelData['etapas']) ? 1 : 0,
+            'ativo' => 1,
+            'intervalo' => 1,
+        ]);
+
+    }
+
+    /**
+     * @param LegacyEducationLevel $educationLevel
+     * @param LegacyEducationType $educationType
+     * @param array $courseData
+     * @return LegacyCourse
+     */
+    private function createCourse($educationLevel, $educationType, $courseData)
+    {
+        return LegacyCourse::create([
+            'ref_usuario_cad' => $this->user->id,
+            'ref_cod_nivel_ensino' => $educationLevel->getKey(),
+            'ref_cod_tipo_ensino' => $educationType->getKey(),
+            'nm_curso' => $courseData['curso'],
+            'sgl_curso' => substr($courseData['curso'], 0, 15),
+            'qtd_etapas' => $courseData['etapas'],
+            'carga_horaria' => 800 * $courseData['etapas'],
+            'data_cadastro' => now(),
+            'ref_cod_instituicao' => $this->institution->id,
+            'ativo' => 1,
+            'modalidade_curso' => $this->model->modalidadeCurso,
+            'padrao_ano_escolar' => 1,
+            'multi_seriado' => 1,
+        ]);
     }
 }

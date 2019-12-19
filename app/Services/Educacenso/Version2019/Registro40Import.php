@@ -96,10 +96,14 @@ class Registro40Import implements RegistroImportInterface
             'school_id' => $school->id,
         ]);
 
+        if (empty($this->model->criterioAcesso) || empty($this->model->tipoVinculo)) {
+            return;
+        }
+
         $manager->role_id = $this->model->cargo;
-        $manager->access_criteria_id = $this->model->criterioAcesso;
+        $manager->access_criteria_id = (int) $this->model->criterioAcesso;
         $manager->access_criteria_description = $this->model->especificacaoCriterioAcesso;
-        $manager->link_type_id = $this->model->tipoVinculo;
+        $manager->link_type_id = (int) $this->model->tipoVinculo;
 
         $manager->saveOrFail();
     }

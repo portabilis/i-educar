@@ -421,7 +421,9 @@ class Registro30Import implements RegistroImportInterface
             return null;
         }
 
-        return LegacyCity::where('cod_ibge', $cityIbge)->first()->getKey() ?: null;
+        $legacyCity = LegacyCity::where('cod_ibge', $cityIbge)->first();
+
+        return $legacyCity ? $legacyCity->getKey() : null;
     }
 
     /**
@@ -434,7 +436,9 @@ class Registro30Import implements RegistroImportInterface
             return null;
         }
 
-        return LegacyCountry::where('cod_ibge', $countryIbge)->first()->getKey() ?: null;
+        $legacyCountry = LegacyCountry::where('cod_ibge', $countryIbge)->first();
+
+        return $legacyCountry ? $legacyCountry->getKey() : null;
     }
 
     private function createRecursosProvaInep(LegacyStudent $student)
@@ -559,8 +563,8 @@ class Registro30Import implements RegistroImportInterface
         }
 
         $schoolingDegree = LegacySchoolingDegree::firstOrCreate(
-            ['escolaridade' => $this->model->escolaridade],
-            ['descricao' => Escolaridade::getDescriptiveValues()[$this->model->escolaridade] ?? 'Escolaridade']
+            ['idesco' => $this->model->escolaridade],
+            ['descricao' => Escolaridade::getDescriptiveValues()[$this->model->escolaridade] ?? 'Escolaridade',]
         );
 
         $employee->ref_idesco = $schoolingDegree->getKey();
