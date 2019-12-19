@@ -20,4 +20,8 @@ class LegacyDeficiency extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    protected $fillable = [
+        'nm_deficiencia', 'deficiencia_educacenso', 'desconsidera_regra_diferenciada'
+    ];
 }

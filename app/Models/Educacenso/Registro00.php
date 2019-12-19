@@ -264,4 +264,70 @@ class Registro00 implements RegistroEducacenso
      */
     public $anoFimAnoLetivo;
 
+    /**
+     * @param int $column
+     * @return string
+     */
+    public function getProperty($column)
+    {
+        $properties = [
+            'registro',
+            'codigoInep',
+            'situacaoFuncionamento',
+            'inicioAnoLetivo',
+            'fimAnoLetivo',
+            'nome',
+            'cep',
+            'codigoIbgeMunicipio',
+            'codigoIbgeDistrito',
+            'logradouro',
+            'numero',
+            'complemento',
+            'bairro',
+            'ddd',
+            'telefone',
+            'telefoneOutro',
+            'email',
+            'orgaoRegional',
+            'zonaLocalizacao',
+            'localizacaoDiferenciada',
+            'dependenciaAdministrativa',
+            'orgaoEducacao',
+            'orgaoSeguranca',
+            'orgaoSaude',
+            'orgaoOutro',
+            'mantenedoraEmpresa',
+            'mantenedoraSindicato',
+            'mantenedoraOng',
+            'mantenedoraInstituicoes',
+            'mantenedoraSistemaS',
+            'mantenedoraOscip',
+            'categoriaEscolaPrivada',
+            'conveniadaPoderPublico',
+            'cnpjMantenedoraPrincipal',
+            'cnpjEscolaPrivada',
+            'regulamentacao',
+            'esferaFederal',
+            'esferaEstadual',
+            'esferaMunicipal',
+            'unidadeVinculada',
+            'inepEscolaSede',
+            'codigoIes',
+        ];
+
+        return $properties[$column];
+    }
+
+    /**
+     * Popula os campos do model a partir de um array de colunas
+     * do arquivo do censo
+     *
+     * @param $arrayColumns
+     */
+    public function hydrateModel($arrayColumns)
+    {
+        foreach ($arrayColumns as $key => $value) {
+            $this->{$this->getProperty($key)} = trim($value);
+        }
+    }
 }

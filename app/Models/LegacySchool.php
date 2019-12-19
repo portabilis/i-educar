@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
@@ -31,10 +32,28 @@ class LegacySchool extends Model
     protected $fillable = [
         'cod_escola',
         'ref_usuario_cad',
+        'ref_usuario_exc',
         'ref_cod_instituicao',
         'ref_cod_escola_rede_ensino',
         'sigla',
         'data_cadastro',
+        'data_exclusao',
+        'ref_idpes',
+        'ativo',
+        'orgao_vinculado_escola',
+        'situacao_funcionamento',
+        'zona_localizacao',
+        'localizacao_diferenciada',
+        'dependencia_administrativa',
+        'mantenedora_escola_privada',
+        'categoria_escola_privada',
+        'conveniada_com_poder_publico',
+        'cnpj_mantenedora_principal',
+        'regulamentacao',
+        'esfera_administrativa',
+        'unidade_vinculada_outra_instituicao',
+        'inep_escola_sede',
+        'codigo_ies',
     ];
 
     /**
@@ -92,6 +111,14 @@ class LegacySchool extends Model
     public function getNameAttribute()
     {
         return DB::selectOne('SELECT relatorio.get_nome_escola(:escola) AS nome', ['escola' => $this->id])->nome;
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function inep()
+    {
+        return $this->hasOne(SchoolInep::class, 'cod_escola', 'cod_escola');
     }
 
     /**

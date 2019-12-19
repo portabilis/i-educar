@@ -4,12 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @deprecated Usar novo módulo de endereço
+ */
 class LegacyNeighborhood extends Model
 {
     /**
      * @var string
      */
     protected $table = 'public.bairro';
+
 
     /**
      * @var string
