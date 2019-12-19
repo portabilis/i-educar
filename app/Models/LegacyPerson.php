@@ -75,6 +75,14 @@ class LegacyPerson extends EloquentBaseModel implements Transformable
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function individual()
+    {
+        return $this->hasOne(LegacyIndividual::class, 'idpes', 'idpes');
+    }
+
+    /**
      * @return BelongsToMany
      */
     public function deficiencies()

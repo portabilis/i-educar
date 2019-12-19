@@ -30,6 +30,9 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
      */
     protected $fillable = [
         'idpes',
+        'data_nascimento',
+        'zona_localizacao_censo',
+        'idpes',
         'data_nasc',
         'sexo',
         'idpes_mae',
@@ -89,6 +92,40 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
     public $timestamps = false;
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function race()
+    {
+        return $this->belongsToMany(
+            LegacyRace::class,
+            'cadastro.fisica_raca',
+            'ref_idpes',
+            'ref_cod_raca'
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function deficiency()
+    {
+        return $this->belongsToMany(
+            LegacyDeficiency::class,
+            'cadastro.fisica_deficiencia',
+            'ref_idpes',
+            'ref_cod_deficiencia'
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function person()
+    {
+        return $this->hasOne(LegacyPerson::class, 'idpes', 'idpes');
+    }
+
+    /**
      * @inheritDoc
      */
     protected static function boot()
@@ -100,14 +137,6 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
             $model->origem_gravacao = 'M';
             $model->operacao = 'I';
         });
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function person()
-    {
-        return $this->belongsTo(LegacyPerson::class, 'idpes', 'idpes');
     }
 
     /**

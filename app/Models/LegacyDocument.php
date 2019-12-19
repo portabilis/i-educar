@@ -4,23 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class LegacySchoolingDegree extends Model
+/**
+ * LegacyCourse
+ *
+ * @property string $name Nome do curso
+ */
+class LegacyDocument extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'cadastro.escolaridade';
+    protected $table = 'cadastro.documento';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'idesco';
+    protected $primaryKey = 'idpes';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'idesco', 'descricao'
+        'idpes', 'rg', 'certidao_nascimento', 'data_cad', 'operacao', 'origem_gravacao'
     ];
 
     /**

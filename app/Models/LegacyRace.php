@@ -4,23 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class LegacySchoolingDegree extends Model
+class LegacyRace extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'cadastro.escolaridade';
+    protected $table = 'cadastro.raca';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'idesco';
+    protected $primaryKey = 'cod_raca';
 
     /**
      * @var array
      */
     protected $fillable = [
-        'idesco', 'descricao'
+        'idpes_cad',
+        'nm_raca',
+        'data_cadastro',
+        'raca_educacenso',
     ];
 
     /**
