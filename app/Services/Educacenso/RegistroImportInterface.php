@@ -2,13 +2,26 @@
 
 namespace App\Services\Educacenso;
 
+use App\Models\Educacenso\RegistroEducacenso;
+use App\User;
+
 interface RegistroImportInterface
 {
     /**
-     * Faz a importação dos dados a partir da linha do arquivo
+     * Faz a importação dos dados a partir do model que representa o registro do educacenso
      *
-     * @param array $importString
+     * @param RegistroEducacenso $model
+     * @param int $year
+     * @param User $user
      * @return void
      */
-    public static function import($importString);
+    public function import(RegistroEducacenso $model, $year, User $user);
+
+    /**
+     * Returna um model representando os dados do registro
+     *
+     * @param $arrayColumns
+     * @return RegistroEducacenso
+     */
+    public static function getModel($arrayColumns);
 }

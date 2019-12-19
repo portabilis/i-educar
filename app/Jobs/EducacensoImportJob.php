@@ -10,6 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class EducacensoImportJob implements ShouldQueue
 {
@@ -20,26 +21,28 @@ class EducacensoImportJob implements ShouldQueue
     private $educacensoImport;
 
     /**
-     * @var string
+     * @var array
      */
-    private $importString;
+    private $importArray;
 
     /**
      * @var string
      */
     private $databaseConnection;
 
+    public $timeout = 600;
+
     /**
      * Create a new job instance.
      *
      * @param EducacensoImportModel $educacensoImport
-     * @param $importString
+     * @param $importArray
      * @param string $databaseConnection
      */
-    public function __construct(EducacensoImportModel $educacensoImport, $importString, $databaseConnection)
+    public function __construct(EducacensoImportModel $educacensoImport, $importArray, $databaseConnection)
     {
         $this->educacensoImport = $educacensoImport;
-        $this->importString = $importString;
+        $this->importArray = $importArray;
         $this->databaseConnection = $databaseConnection;
     }
 
@@ -47,16 +50,25 @@ class EducacensoImportJob implements ShouldQueue
      * Execute the job.
      *
      * @return void
+     * @throws Throwable
      */
     public function handle()
     {
         DB::setDefaultConnection($this->databaseConnection);
-        
-        $importService = ImportServiceFactory::createImportService($this->educacensoImport->year);
-        $importService->import($this->importString);
+        DB::beginTransaction();
+
+        try {
+            $importService = ImportServiceFactory::createImportService($this->educacensoImport->year);
+            $importService->import($this->importArray, $this->educacensoImport->user);
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
 
         $educacensoImport = $this->educacensoImport;
         $educacensoImport->finished = true;
         $educacensoImport->save();
+
+        DB::commit();
     }
 }

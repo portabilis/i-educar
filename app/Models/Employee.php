@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Employee extends Model
 {
@@ -22,6 +23,13 @@ class Employee extends Model
      */
     public $timestamps = false;
 
+    protected $fillable = [
+        'cod_servidor',
+        'ref_cod_instituicao',
+        'data_cadastro',
+        'carga_horaria',
+    ];
+
     /**
      * @return BelongsTo
      */
@@ -31,7 +39,15 @@ class Employee extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return int
+     */
+    public function getIdAttribute()
+    {
+        return $this->cod_servidor;
+    }
+
+    /**
+     * @return BelongsToMany
      */
     public function schools()
     {
@@ -42,5 +58,26 @@ class Employee extends Model
             'ref_cod_escola'
         )->withPivot('ref_ref_cod_instituicao', 'ano')
             ->where('servidor_alocacao.ativo', 1);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function person()
+    {
+        return $this->belongsTo(LegacyPerson::class, 'cod_servidor');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function schoolingDegree()
+    {
+        return $this->belongsTo(LegacySchoolingDegree::class, 'ref_idesco');
+    }
+
+    public function graduations()
+    {
+        return $this->hasMany(EmployeeGraduation::class, 'employee_id');
     }
 }

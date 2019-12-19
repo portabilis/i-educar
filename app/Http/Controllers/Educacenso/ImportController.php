@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Educacenso;
 use App\Http\Controllers\Controller;
 use App\Models\EducacensoImport;
 use App\Process;
-use App\Services\Educacenso\ImportFileService;
+use App\Services\Educacenso\HandleFileService;
+use App\Services\Educacenso\ImportService;
 use App\Services\Educacenso\ImportServiceFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +20,7 @@ class ImportController extends Controller
 
         $yearImportService = ImportServiceFactory::createImportService($request->get('ano'));
 
-        $importFileService = new ImportFileService($yearImportService, Auth::user());
+        $importFileService = new HandleFileService($yearImportService, Auth::user());
         $importFileService->handleFile($file);
 
         return redirect()->route('educacenso.history');

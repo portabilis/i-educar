@@ -26,7 +26,8 @@ class LegacyCourse extends Model
      */
     protected $fillable = [
         'ref_usuario_cad', 'ref_cod_tipo_regime', 'ref_cod_nivel_ensino', 'ref_cod_tipo_ensino', 'nm_curso',
-        'sgl_curso', 'qtd_etapas', 'carga_horaria', 'data_cadastro', 'ref_cod_instituicao', 'hora_falta',
+        'sgl_curso', 'qtd_etapas', 'carga_horaria', 'data_cadastro', 'ref_cod_instituicao', 'hora_falta', 'ativo',
+        'modalidade_curso', 'padrao_ano_escolar', 'multi_seriado'
     ];
 
     /**

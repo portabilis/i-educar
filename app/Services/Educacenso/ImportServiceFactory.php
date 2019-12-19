@@ -11,7 +11,7 @@ class ImportServiceFactory
      * Intancia um service de importação
      *
      * @param $year
-     * @return ImportServiceInterface
+     * @return ImportService
      */
     public static function createImportService($year)
     {

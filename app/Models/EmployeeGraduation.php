@@ -8,6 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EmployeeGraduation extends Model
 {
+    protected $fillable = [
+        'employee_id',
+        'course_id',
+        'completion_year',
+        'college_id',
+        'discipline_id',
+    ];
     /**
      * @return BelongsTo
      */
