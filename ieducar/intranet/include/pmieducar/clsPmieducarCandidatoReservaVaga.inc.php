@@ -452,7 +452,8 @@ class clsPmieducarCandidatoReservaVaga extends Model
                                           pes.nome as nome,
                                           crv.motivo as motivo,
                                           relatorio.get_nome_escola(crv.ref_cod_escola) as nm_escola,
-                                          (SELECT nm_serie FROM pmieducar.serie WHERE cod_serie = ref_cod_serie) as serie
+                                          (SELECT nm_serie FROM pmieducar.serie WHERE cod_serie = ref_cod_serie) as serie,
+                                          fis.cpf
                                      FROM {$this->_tabela}
                                     INNER JOIN pmieducar.aluno a ON a.cod_aluno = crv.ref_cod_aluno
                                     INNER JOIN cadastro.pessoa pes ON pes.idpes = a.ref_idpes
