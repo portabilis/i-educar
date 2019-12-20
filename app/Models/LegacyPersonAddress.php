@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property string $name
+ */
 class LegacyPersonAddress extends Model
 {
+
     /**
      * @var string
      */
@@ -47,8 +52,13 @@ class LegacyPersonAddress extends Model
     public $timestamps = false;
 
     /**
-     * @inheritDoc
+     * @return BelongsTo
      */
+    public function person()
+    {
+        return $this->belongsTo(LegacyPersonAddress::class, 'idpes', 'idpes');
+    }
+
     protected static function boot()
     {
         parent::boot();

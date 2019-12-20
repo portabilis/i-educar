@@ -24,6 +24,7 @@ class LegacySchoolClassType extends Model
         'nm_tipo',
         'sgl_tipo',
         'data_cadastro',
+        'ref_cod_instituicao',
     ];
 
     /**

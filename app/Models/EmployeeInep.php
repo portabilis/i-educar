@@ -5,6 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * EmployeeInep
+ *
+ * @property Employee $employee
+ *
+ */
 class EmployeeInep extends Model
 {
     /**
@@ -22,5 +28,13 @@ class EmployeeInep extends Model
     public function getNumberAttribute()
     {
         return $this->cod_docente_inep;
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'cod_servidor', 'cod_servidor');
     }
 }
