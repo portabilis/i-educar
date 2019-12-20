@@ -2056,6 +2056,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             return $this->getRegraAvaliacaoTabelaArredondamentoConceitual()->round($media, 2);
         }
 
+        //Arredonda média para quantidade de casas decimais permitidas
+        $media = round($media, $this->getRegraAvaliacaoQtdCasasDecimais());
+
         return $this->getRegraAvaliacaoTabelaArredondamento()->round($media, 2);
     }
 
