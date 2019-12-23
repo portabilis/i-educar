@@ -103,7 +103,7 @@ CREATE OR REPLACE VIEW relatorio.view_historico_series_anos_extra_curricular AS
         (historico_por_disciplina.dependencia OPERATOR(relatorio.->) (((historico_disciplinas.disciplina || '-'::text) || '9'::text) || '-dependencia'::text))::boolean AS disciplina_dependencia9,
         (
             SELECT m.cod_matricula
-            FROM matricula m
+            FROM pmieducar.matricula m
             WHERE m.ano = (
                 (
                     SELECT max(he.ano) AS max
