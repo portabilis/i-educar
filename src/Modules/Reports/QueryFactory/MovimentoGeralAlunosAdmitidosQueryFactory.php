@@ -53,7 +53,7 @@ class MovimentoGeralAlunosAdmitidosQueryFactory extends QueryFactory
                     end)
             )
             and mt.sequencial = 1
-            and coalesce(mt.data_enturmacao, m.data_cadastro) between :data_inicial::date and :data_final::date
+            and (coalesce(mt.data_enturmacao, m.data_cadastro) > :data_inicial::date and coalesce(mt.data_enturmacao, m.data_cadastro) < data_final::date)
         order by
             pessoa.nome asc
 SQL;
