@@ -145,7 +145,7 @@ CREATE OR REPLACE VIEW relatorio.view_historico_series_anos AS
             historico_disciplinas_1.nota,
             historico_disciplinas_1.faltas,
             historico_disciplinas_1.tipo_base
-        FROM historico_disciplinas historico_disciplinas_1
+        FROM pmieducar.historico_disciplinas historico_disciplinas_1
     ) historico_disciplinas ON historico_escolar.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND historico_escolar.sequencial = historico_disciplinas.ref_sequencial
     JOIN LATERAL (
         SELECT
@@ -275,7 +275,7 @@ CREATE OR REPLACE VIEW relatorio.view_historico_series_anos AS
                     historico_disciplinas_2.faltas,
                     historico_disciplinas_2.carga_horaria_disciplina,
                     historico_disciplinas_2.dependencia
-                FROM historico_disciplinas historico_disciplinas_2
+                FROM pmieducar.historico_disciplinas historico_disciplinas_2
             ) historico_disciplinas_1 ON historico_escolar_1.ref_cod_aluno = historico_disciplinas_1.ref_ref_cod_aluno AND historico_escolar_1.sequencial = historico_disciplinas_1.ref_sequencial
             WHERE historico_escolar_1.extra_curricular = 0
                 AND historico_escolar_1.ativo = 1
