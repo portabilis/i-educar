@@ -119,7 +119,7 @@ class AjustaCargaHorariaViewHistoricoSeriesAnos extends Migration
                     (historico_por_disciplina.dependencia OPERATOR(relatorio.->) (((historico_disciplinas.disciplina || '-'::text) || '9'::text) || '-dependencia'::text))::boolean AS disciplina_dependencia9,
                     (
                         SELECT m.cod_matricula
-                        FROM matricula m
+                        FROM pmieducar.matricula m
                         WHERE m.ano = (
                             (
                                 SELECT max(he.ano) AS max
@@ -473,7 +473,7 @@ SQL;
                     (historico_por_disciplina.dependencia OPERATOR(relatorio.->) (((historico_disciplinas.disciplina || '-'::text) || '9'::text) || '-dependencia'::text))::boolean AS disciplina_dependencia9,
                     (
                         SELECT m.cod_matricula
-                        FROM matricula m
+                        FROM pmieducar.matricula m
                         WHERE m.ano = (
                             (
                                 SELECT max(he.ano) AS max
