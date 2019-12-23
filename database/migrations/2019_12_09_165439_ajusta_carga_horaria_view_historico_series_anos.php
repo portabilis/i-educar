@@ -355,7 +355,6 @@ class AjustaCargaHorariaViewHistoricoSeriesAnos extends Migration
                 ORDER BY historico_disciplinas.disciplina;
 SQL;
         DB::unprepared($sql);
-        DB::unprepared('ALTER TABLE relatorio.view_historico_series_anos OWNER TO ieducar;');
     }
 
     /**
@@ -709,6 +708,5 @@ SQL;
                 ORDER BY historico_disciplinas.disciplina;
 SQL;
         DB::unprepared($sql);
-        DB::unprepared('ALTER TABLE relatorio.view_historico_series_anos OWNER TO ieducar;');
     }
 }
