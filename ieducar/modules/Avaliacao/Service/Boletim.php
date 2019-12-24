@@ -2634,7 +2634,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
                 $currentComponenteCurricular = $this->getCurrentComponenteCurricular();
 
-                if (!isset($currentComponenteCurricular) || $currentComponenteCurricular == $id) {
+                if (!isset($currentComponenteCurricular) || $currentComponenteCurricular == $id || (in_array($id, $this->codigoDisciplinasAglutinadas()) && in_array($currentComponenteCurricular, $this->codigoDisciplinasAglutinadas()))) {
                     // Cria um array onde o índice é a etapa
                     $etapasNotas = $this->calculaEtapaNotasAglutinada($id, $this->getNotasComponentes());
 
