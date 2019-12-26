@@ -28,7 +28,7 @@ class CreateModulesTabelaArredondamentoValorTable extends Migration
                     id integer NOT NULL,
                     tabela_arredondamento_id integer NOT NULL,
                     nome character varying(5) NOT NULL,
-                    descricao character varying(25),
+                    descricao character varying(50),
                     valor_minimo numeric(5,3),
                     valor_maximo numeric(5,3),
                     casa_decimal_exata smallint,
