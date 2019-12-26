@@ -3,7 +3,7 @@
 use App\Support\Database\WhenDeleted;
 use Illuminate\Database\Migrations\Migration;
 
-class MoveExcludedModulesRegraAvaliacaoSerieAno extends Migration
+class AddTriggerDeletedAtInModulesRegraAvaliacaoSerieAnoExcluidosTable extends Migration
 {
     use WhenDeleted;
 
