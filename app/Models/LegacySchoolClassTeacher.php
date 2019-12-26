@@ -6,6 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class LegacySchoolClassTeacher extends Model
 {
+
+    protected $fillable = [
+        'ano',
+        'instituicao_id',
+        'turma_id',
+        'servidor_id',
+        'funcao_exercida',
+        'tipo_vinculo',
+    ];
+
     /**
      * @var string
      */

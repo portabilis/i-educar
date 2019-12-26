@@ -4,6 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Phone
+ *
+ * @property int $person_id
+ * @property int $type_id
+ * @property int $area_code
+ * @property int $number
+ * @property int $created_by
+ * @property int $updated_by
+ */
 class LegacyPhone extends Model
 {
     /**
@@ -24,6 +34,10 @@ class LegacyPhone extends Model
         'tipo',
         'ddd',
         'fone',
+        'idpes_cad',
+        'origem_gravacao',
+        'operacao',
+        'data_cad',
         'idpes_rev',
         'data_rev',
         'origem_gravacao',

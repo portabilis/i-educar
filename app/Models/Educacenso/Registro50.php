@@ -120,6 +120,28 @@ class Registro50 implements RegistroEducacenso, ItemOfRegistro30
      */
     public $etapaEducacensoTurma;
 
+    public function hydrateModel(array $arrayColumns) : void
+    {
+        array_unshift($arrayColumns, null);
+        unset($arrayColumns[0]);
+
+        $this->registro = $arrayColumns[1];
+        $this->inepEscola = $arrayColumns[2];
+        $this->codigoPessoa = $arrayColumns[3];
+        $this->inepDocente = $arrayColumns[4];
+        $this->codigoTurma = $arrayColumns[5];
+        $this->inepTurma = $arrayColumns[6];
+        $this->funcaoDocente = $arrayColumns[7];
+        $this->tipoVinculo = $arrayColumns[8];
+        $this->componentes = [];
+
+        for ($index = 9; $index <= count($arrayColumns); $index++) {
+            if (!empty($arrayColumns[$index])) {
+                $this->componentes[] = $arrayColumns[$index];
+            }
+        }
+    }
+
     /**
      * @return bool
      */
@@ -142,5 +164,16 @@ class Registro50 implements RegistroEducacenso, ItemOfRegistro30
     public function getCodigoServidor()
     {
         return $this->codigoPessoa;
+    }
+
+    /**
+     * Retorna a propriedade da classe correspondente ao dado no arquivo do censo
+     *
+     * @param int $column
+     * @return string
+     */
+    public function getProperty($column)
+    {
+        // TODO: Implement getProperty() method.
     }
 }

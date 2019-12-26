@@ -2,6 +2,7 @@
 
 namespace App\Models\Educacenso;
 
+use App\Services\Educacenso\Version2019\Registro20Import;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
@@ -12,143 +13,221 @@ use App_Model_IedFinder;
 class Registro20 implements RegistroEducacenso
 {
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $codTurma;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $codigoEscolaInep;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $codEscola;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $codCurso;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $codSerie;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $nomeTurma;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $horaInicial;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $horaFinal;
 
     /**
-      * @var array
-      */
+     * @var array
+     */
     public $diasSemana;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $tipoAtendimento;
 
     /**
-      * @var array
-      */
+     * @var array
+     */
     public $atividadesComplementares;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $etapaEducacenso;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $nomeEscola;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $tipoMediacaoDidaticoPedagogico;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $possuiServidor;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $possuiServidorDocente;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $possuiServidorLibras;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $possuiServidorLibrasOuAuxiliarEad;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $possuiServidorDiferenteLibrasOuAuxiliarEad;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $possuiAlunoNecessitandoTradutor;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $possuiServidorNecessitandoTradutor;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $localFuncionamentoDiferenciado;
 
     /**
-      * @var array
-      */
+     * @var array
+     */
     public $localFuncionamento;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $modalidadeCurso;
 
     /**
-      * @var array
-      */
+     * @var array
+     */
     public $componentes;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $codCursoProfissional;
 
     /**
-      * @var string
-      */
+     * @var string
+     */
     public $anoTurma;
 
+    public $inepTurma;
+
+    public $horaInicialMinuto;
+
+    public $horaFinalMinuto;
+
+    public $diaSemanaDomingo;
+
+    public $diaSemanaSegunda;
+
+    public $diaSemanaTerca;
+
+    public $diaSemanaQuarta;
+
+    public $diaSemanaQuinta;
+
+    public $diaSemanaSexta;
+
+    public $diaSemanaSabado;
+
+    public $tipoAtendimentoEscolarizacao;
+
+    public $tipoAtendimentoAtividadeComplementar;
+
+    public $tipoAtendimentoAee;
+
+    public $tipoAtividadeComplementar1;
+
+    public $tipoAtividadeComplementar2;
+
+    public $tipoAtividadeComplementar3;
+
+    public $tipoAtividadeComplementar4;
+
+    public $tipoAtividadeComplementar5;
+
+    public $tipoAtividadeComplementar6;
+
     /**
-      * @return bool
-      */
+     * @param $arrayColumns
+     */
+    public function hydrateModel($arrayColumns)
+    {
+        array_unshift($arrayColumns, null);
+        unset($arrayColumns[0]);
+
+        $this->codigoEscolaInep = $arrayColumns[2];
+        $this->codTurma = $arrayColumns[3];
+        $this->inepTurma = $arrayColumns[4];
+        $this->nomeTurma = $arrayColumns[5];
+        $this->tipoMediacaoDidaticoPedagogico = $arrayColumns[6];
+        $this->horaInicial = $arrayColumns[7];
+        $this->horaInicialMinuto = $arrayColumns[8];
+        $this->horaFinal = $arrayColumns[9];
+        $this->horaFinalMinuto = $arrayColumns[10];
+        $this->diaSemanaDomingo = $arrayColumns[11];
+        $this->diaSemanaSegunda = $arrayColumns[12];
+        $this->diaSemanaTerca = $arrayColumns[13];
+        $this->diaSemanaQuarta = $arrayColumns[14];
+        $this->diaSemanaQuinta = $arrayColumns[15];
+        $this->diaSemanaSexta = $arrayColumns[16];
+        $this->diaSemanaSabado = $arrayColumns[17];
+        $this->tipoAtendimentoEscolarizacao = $arrayColumns[18];
+        $this->tipoAtendimentoAtividadeComplementar = $arrayColumns[19];
+        $this->tipoAtendimentoAee = $arrayColumns[20];
+        $this->tipoAtividadeComplementar1 = $arrayColumns[21];
+        $this->tipoAtividadeComplementar2 = $arrayColumns[22];
+        $this->tipoAtividadeComplementar3 = $arrayColumns[23];
+        $this->tipoAtividadeComplementar4 = $arrayColumns[24];
+        $this->tipoAtividadeComplementar5 = $arrayColumns[25];
+        $this->tipoAtividadeComplementar6 = $arrayColumns[26];
+        $this->localFuncionamentoDiferenciado = $arrayColumns[27];
+        $this->modalidadeCurso = $arrayColumns[28];
+        $this->etapaEducacenso = $arrayColumns[29];
+        $this->codCurso = $arrayColumns[30];
+        $this->componentes = $this->getComponentesByImportFile(array_slice($arrayColumns, 30, 26));
+    }
+
+    /**
+     * @return bool
+     */
     public function horarioFuncionamentoValido()
     {
         if ($this->horaInicial >= $this->horaFinal) {
@@ -163,26 +242,26 @@ class Registro20 implements RegistroEducacenso
     }
 
     /**
-      * @return bool
-      */
+     * @return bool
+     */
     private function validaHoras($horas)
     {
         return strlen($horas) == 2 && $horas >= '00' && $horas <= '23';
     }
 
     /**
-      * @return bool
-      */
+     * @return bool
+     */
     private function validaMinutos($minutos)
     {
-        return strlen($minutos) == 2 && $minutos <= '55' && ((int) $minutos % 5) == 0;
+        return strlen($minutos) == 2 && $minutos <= '55' && ((int)$minutos % 5) == 0;
     }
 
     public function getLocalFuncionamentoDescriptiveValue()
     {
         $descriptiveValues = LocalFuncionamento::getDescriptiveValues();
 
-        $descriptiveValues = array_filter($descriptiveValues, function($key) {
+        $descriptiveValues = array_filter($descriptiveValues, function ($key) {
             return in_array($key, $this->localFuncionamento);
         }, ARRAY_FILTER_USE_KEY);
 
@@ -232,20 +311,20 @@ class Registro20 implements RegistroEducacenso
             case 17:
             case 18:
             case 69:
-                return [1,2,4,17,25,29];
+                return [1, 2, 4, 17, 25, 29];
                 break;
             case 19:
             case 20:
             case 21:
             case 41:
             case 70:
-                return [17,25,28];
+                return [17, 25, 28];
                 break;
             case 23:
             case 22:
             case 56:
             case 72:
-                return [17,25];
+                return [17, 25];
                 break;
             case 73:
                 return [25];
@@ -256,7 +335,7 @@ class Registro20 implements RegistroEducacenso
             case 28:
             case 29:
             case 71:
-                return [5,17,25,28];
+                return [5, 17, 25, 28];
                 break;
             case 30:
             case 31:
@@ -265,19 +344,19 @@ class Registro20 implements RegistroEducacenso
             case 34:
             case 74:
             case 67:
-                return [5,25,28];
+                return [5, 25, 28];
                 break;
             case 35:
             case 36:
             case 37:
             case 38:
-                return [17,28];
+                return [17, 28];
                 break;
             case 39:
             case 40:
             case 64:
             case 68:
-                return [1,2,3,4,5,6,7,8,9,10,11,12,13,14,16,23,25,26,27,28,29,30,31,99];
+                return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 23, 25, 26, 27, 28, 29, 30, 31, 99];
                 break;
             default:
                 return [];
@@ -316,7 +395,7 @@ class Registro20 implements RegistroEducacenso
     {
         $componentes = $this->componentes();
 
-        return array_map(function($componente) {
+        return array_map(function ($componente) {
             return $componente->get('codigo_educacenso');
         }, $componentes);
     }
@@ -328,7 +407,7 @@ class Registro20 implements RegistroEducacenso
     {
         $componentes = $this->componentes();
 
-        return array_map(function($componente) {
+        return array_map(function ($componente) {
             return $componente->get('id');
         }, $componentes);
     }
@@ -359,5 +438,21 @@ class Registro20 implements RegistroEducacenso
     public function educacaoDistancia()
     {
         return $this->tipoMediacaoDidaticoPedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA;
+    }
+
+    private function getComponentesByImportFile($componentesImportacao)
+    {
+        $arrayComponentes = array_keys(Registro20Import::getComponentes());
+
+        $componentesExistentes = [];
+        foreach ($componentesImportacao as $key => $value) {
+            if ($value != '1') {
+                continue;
+            }
+
+            $componentesExistentes[] = $arrayComponentes[$key];
+        }
+
+        return $componentesExistentes;
     }
 }
