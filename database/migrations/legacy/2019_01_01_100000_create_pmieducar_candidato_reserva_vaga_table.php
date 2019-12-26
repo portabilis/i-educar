@@ -42,7 +42,8 @@ class CreatePmieducarCandidatoReservaVagaTable extends Migration
                     quantidade_membros smallint,
                     mae_fez_pre_natal boolean DEFAULT false,
                     membros_trabalham smallint,
-                    hora_solicitacao time without time zone
+                    hora_solicitacao time without time zone,
+	                historico json NULL
                 );
                 
                 ALTER TABLE ONLY pmieducar.candidato_reserva_vaga

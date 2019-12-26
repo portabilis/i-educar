@@ -192,7 +192,8 @@ class CreatePmieducarEscolaTable extends Migration
                     orgaos_colegiados int4[] NULL,
                     exame_selecao_ingresso int4 NULL,
                     reserva_vagas_cotas int4[] NULL,
-                    projeto_politico_pedagogico int4 NULL
+                    projeto_politico_pedagogico int4 NULL,
+	                updated_at timestamp NULL DEFAULT now()
                 );
                 
                 ALTER TABLE ONLY pmieducar.escola

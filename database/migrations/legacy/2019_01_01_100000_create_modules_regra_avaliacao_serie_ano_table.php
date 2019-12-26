@@ -21,7 +21,8 @@ class CreateModulesRegraAvaliacaoSerieAnoTable extends Migration
                     serie_id integer NOT NULL,
                     regra_avaliacao_id integer NOT NULL,
                     regra_avaliacao_diferenciada_id integer,
-                    ano_letivo smallint NOT NULL
+                    ano_letivo smallint NOT NULL,
+	                updated_at timestamp NOT NULL DEFAULT now()
                 );
                 
                 ALTER TABLE ONLY modules.regra_avaliacao_serie_ano
