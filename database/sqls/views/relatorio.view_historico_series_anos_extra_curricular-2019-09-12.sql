@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW relatorio.view_historico_series_anos_extra_curricular AS 
+CREATE OR REPLACE VIEW relatorio.view_historico_series_anos_extra_curricular AS
     SELECT
         historico_disciplinas.ref_ref_cod_aluno AS cod_aluno,
         historico_disciplinas.disciplina,
@@ -103,11 +103,11 @@ CREATE OR REPLACE VIEW relatorio.view_historico_series_anos_extra_curricular AS
         (historico_por_disciplina.dependencia OPERATOR(relatorio.->) (((historico_disciplinas.disciplina || '-'::text) || '9'::text) || '-dependencia'::text))::boolean AS disciplina_dependencia9,
         (
             SELECT m.cod_matricula
-            FROM matricula m
+            FROM pmieducar.matricula m
             WHERE m.ano = (
                 (
                     SELECT max(he.ano) AS max
-                    FROM historico_escolar he
+                    FROM pmieducar.historico_escolar he
                     WHERE he.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
                     AND he.ativo = 1
                     AND he.extra_curricular = 1
@@ -125,7 +125,7 @@ CREATE OR REPLACE VIEW relatorio.view_historico_series_anos_extra_curricular AS
             SELECT textcat_all(tabl.obs) AS textcat_all
             FROM (
                 SELECT phe.observacao AS obs
-                FROM historico_escolar phe
+                FROM pmieducar.historico_escolar phe
                 WHERE phe.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
                 AND phe.ativo = 1
                 AND phe.extra_curricular = 1
@@ -134,7 +134,7 @@ CREATE OR REPLACE VIEW relatorio.view_historico_series_anos_extra_curricular AS
                 ORDER BY phe.ano
             ) tabl
         ) AS observacao_all
-    FROM historico_escolar
+    FROM pmieducar.historico_escolar
     JOIN LATERAL (
         SELECT
             historico_disciplinas_1.sequencial,
@@ -143,7 +143,7 @@ CREATE OR REPLACE VIEW relatorio.view_historico_series_anos_extra_curricular AS
             btrim(relatorio.get_texto_sem_caracter_especial(historico_disciplinas_1.nm_disciplina::character varying)::text) AS disciplina,
             historico_disciplinas_1.nota,
             historico_disciplinas_1.faltas
-        FROM historico_disciplinas historico_disciplinas_1
+        FROM pmieducar.historico_disciplinas historico_disciplinas_1
     ) historico_disciplinas ON historico_escolar.ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno AND historico_escolar.sequencial = historico_disciplinas.ref_sequencial
     JOIN LATERAL (
         SELECT
@@ -242,7 +242,7 @@ CREATE OR REPLACE VIEW relatorio.view_historico_series_anos_extra_curricular AS
                 historico_disciplinas_1.dependencia::text AS dependencia_value,
                 historico_disciplinas_1.disciplina,
                 historico_escolar_1.ref_cod_aluno
-            FROM historico_escolar historico_escolar_1
+            FROM pmieducar.historico_escolar historico_escolar_1
             JOIN LATERAL (
                 SELECT
                     historico_disciplinas_2.sequencial,
@@ -253,7 +253,7 @@ CREATE OR REPLACE VIEW relatorio.view_historico_series_anos_extra_curricular AS
                     historico_disciplinas_2.faltas,
                     historico_disciplinas_2.carga_horaria_disciplina,
                     historico_disciplinas_2.dependencia
-                FROM historico_disciplinas historico_disciplinas_2
+                FROM pmieducar.historico_disciplinas historico_disciplinas_2
             ) historico_disciplinas_1 ON historico_escolar_1.ref_cod_aluno = historico_disciplinas_1.ref_ref_cod_aluno AND historico_escolar_1.sequencial = historico_disciplinas_1.ref_sequencial
             WHERE historico_escolar_1.extra_curricular = 1
             AND historico_escolar_1.ativo = 1
@@ -263,7 +263,7 @@ CREATE OR REPLACE VIEW relatorio.view_historico_series_anos_extra_curricular AS
             AND historico_escolar_1.sequencial = (
                 (
                     SELECT hee.sequencial
-                    FROM historico_escolar hee
+                    FROM pmieducar.historico_escolar hee
                     WHERE "substring"(hee.nm_serie::text, 1, 1) = "substring"(historico_escolar_1.nm_serie::text, 1, 1)
                     AND hee.ref_cod_aluno = historico_escolar_1.ref_cod_aluno
                     AND hee.extra_curricular = 1
