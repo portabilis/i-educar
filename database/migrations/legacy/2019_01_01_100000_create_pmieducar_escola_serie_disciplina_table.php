@@ -18,6 +18,7 @@ class CreatePmieducarEscolaSerieDisciplinaTable extends Migration
                 SET default_with_oids = false;
 
                 CREATE TABLE pmieducar.escola_serie_disciplina (
+	                id serial NOT NULL,
                     ref_ref_cod_serie integer NOT NULL,
                     ref_ref_cod_escola integer NOT NULL,
                     ref_cod_disciplina integer NOT NULL,
@@ -30,7 +31,9 @@ class CreatePmieducarEscolaSerieDisciplinaTable extends Migration
                 );
                 
                 ALTER TABLE ONLY pmieducar.escola_serie_disciplina
-                    ADD CONSTRAINT escola_serie_disciplina_pkey PRIMARY KEY (ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina);
+                    ADD CONSTRAINT escola_serie_disciplina_pkey PRIMARY KEY (id);
+                    
+                CREATE UNIQUE INDEX pmieducar_escola_serie_disciplina_ref_ref_cod_serie_ref_ref_cod ON pmieducar.escola_serie_disciplina USING btree (ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina);
             '
         );
     }

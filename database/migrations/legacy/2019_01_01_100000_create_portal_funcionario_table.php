@@ -44,7 +44,8 @@ class CreatePortalFuncionarioTable extends Migration
                     status_token character varying(191) NULL,
                     matricula_interna character varying(30),
                     receber_novidades smallint,
-                    atualizou_cadastro smallint
+                    atualizou_cadastro smallint,
+	                data_expiracao date NULL
                 );
                 
                 ALTER TABLE ONLY portal.funcionario

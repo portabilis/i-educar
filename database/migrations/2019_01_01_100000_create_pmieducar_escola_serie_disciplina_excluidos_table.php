@@ -15,6 +15,7 @@ class CreatePmieducarEscolaSerieDisciplinaExcluidosTable extends Migration
     public function up()
     {
         Schema::create('pmieducar.escola_serie_disciplina_excluidos', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('ref_ref_cod_serie');
             $table->integer('ref_ref_cod_escola');
             $table->integer('ref_cod_disciplina');
