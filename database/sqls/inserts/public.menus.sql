@@ -124,8 +124,8 @@ INSERT INTO public.menus VALUES (123, 84, 'Tipos de cor ou raça', 'Tipos de cor
 INSERT INTO public.menus VALUES (124, 84, 'Tipos de deficiência', 'Tipos de deficiência da pessoa', '/intranet/educar_deficiencia_lst.php', NULL, 0, 4, 631, 21170, 999934, true, NULL, NULL);
 INSERT INTO public.menus VALUES (125, 84, 'Tipos de religião', 'Tipos de religião da pessoa', '/intranet/educar_religiao_lst.php', NULL, 0, 4, 579, 21219, 999934, true, NULL, NULL);
 INSERT INTO public.menus VALUES (126, 99, 'Unificação de pessoas', 'Unificação de pessoas', '/intranet/educar_unifica_pessoa.php', NULL, 0, 4, 9998878, 9998878, 9998877, true, NULL, NULL);
-INSERT INTO public.menus VALUES (127, 81, 'Consulta de movimento geral', 'Consulta de movimento geral', '/intranet/educar_consulta_movimento_geral.php', NULL, 0, 4, 9998900, 9998900, 9998890, true, NULL, NULL);
-INSERT INTO public.menus VALUES (128, 81, 'Consulta de movimento mensal', 'Consulta de movimento mensal', '/intranet/educar_consulta_movimento_mensal.php', NULL, 0, 4, 9998910, 9998910, 9998890, true, NULL, NULL);
+INSERT INTO public.menus VALUES (127, 81, 'Consulta de movimento geral', 'Consulta de movimento geral', '/intranet/educar_consulta_movimento_geral.php', NULL, 2, 4, 9998900, 9998900, 9998890, true, NULL, NULL);
+INSERT INTO public.menus VALUES (128, 81, 'Consulta de movimento mensal', 'Consulta de movimento mensal', '/intranet/educar_consulta_movimento_mensal.php', NULL, 3, 4, 9998910, 9998910, 9998890, true, NULL, NULL);
 INSERT INTO public.menus VALUES (129, 113, 'Tipos de ensino', 'Tipos de ensino do curso', '/intranet/educar_tipo_ensino_lst.php', NULL, 0, 5, 558, 21222, 21140, true, NULL, NULL);
 INSERT INTO public.menus VALUES (130, 113, 'Tipos de habilitação', 'Tipos de habilitação do curso', '/intranet/educar_habilitacao_lst.php', NULL, 0, 5, 573, 21208, 21140, true, NULL, NULL);
 INSERT INTO public.menus VALUES (131, 113, 'Tipos de nível ensino', 'Tipos de nível ensino do curso', '/intranet/educar_nivel_ensino_lst.php', NULL, 0, 5, 571, 21224, 21140, true, NULL, NULL);
