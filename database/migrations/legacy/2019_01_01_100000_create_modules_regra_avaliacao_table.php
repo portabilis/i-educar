@@ -27,7 +27,7 @@ class CreateModulesRegraAvaliacaoTable extends Migration
                 CREATE TABLE modules.regra_avaliacao (
                     id integer NOT NULL,
                     instituicao_id integer NOT NULL,
-                    formula_media_id integer NOT NULL,
+                    formula_media_id integer NULL,
                     formula_recuperacao_id integer,
                     tabela_arredondamento_id integer,
                     nome character varying(50) NOT NULL,
@@ -53,7 +53,9 @@ class CreateModulesRegraAvaliacaoTable extends Migration
                     tabela_arredondamento_id_conceitual integer,
                     regra_diferenciada_id integer,
 	                updated_at timestamp NULL DEFAULT now(),
-	                calcula_media_rec_paralela int2 NOT NULL DEFAULT \'0\'::smallint
+	                calcula_media_rec_paralela int2 NOT NULL DEFAULT \'0\'::smallint,
+                    tipo_calculo_recuperacao_paralela int4 NOT NULL DEFAULT 1,
+                    disciplinas_aglutinadas varchar(191) NULL
                 );
 
                 ALTER SEQUENCE modules.regra_avaliacao_id_seq OWNED BY modules.regra_avaliacao.id;
