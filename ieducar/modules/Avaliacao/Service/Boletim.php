@@ -2139,7 +2139,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             }
         }
 
-        return null;
+        return "+{$notaMax}";
     }
 
     /**

@@ -1537,7 +1537,7 @@ class DiarioApiController extends ApiCoreController
             return null;
         }
 
-        $nota = urldecode($this->serviceBoletim()->preverNotaRecuperacao($componenteCurricularId));
+        $nota = $this->serviceBoletim()->preverNotaRecuperacao($componenteCurricularId);
 
         return str_replace(',', '.', $nota);
     }
