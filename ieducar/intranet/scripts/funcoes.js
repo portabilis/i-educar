@@ -10,8 +10,8 @@ function FiltraCampo(codigo) {
     var s = "";
 
 	tam = codigo.length;
-	for (i = 0; i < tam ; i++) {  
-		if (codigo.substring(i,i + 1) == "0" || 
+	for (i = 0; i < tam ; i++) {
+		if (codigo.substring(i,i + 1) == "0" ||
            	codigo.substring(i,i + 1) == "1" ||
             codigo.substring(i,i + 1) == "2" ||
             codigo.substring(i,i + 1) == "3" ||
@@ -36,7 +36,7 @@ function DvCnpjOk(e) {
         dv_cnpj = s.substring(tam-2,tam);
         for ( i = 0; i < 2; i++ ) {
             soma = 0;
-            for ( j = 0; j < 12; j++ ) 
+            for ( j = 0; j < 12; j++ )
                 soma += s.substring(j,j+1)*((11+i-j)%8+2);
             if ( i == 1 ) soma += digito * 2;
             digito = 11 - soma  % 11;
@@ -59,20 +59,20 @@ function DvCnpjOk(e) {
 function FormataCnpj(e) {
     var s = "";
     var r = "";
-    
+
     s = FiltraCampo(e.value);
     tam =  s.length;
-    r = s.substring(0,2) + "." + s.substring(2,5) + "." + s.substring(5,8) 
+    r = s.substring(0,2) + "." + s.substring(2,5) + "." + s.substring(5,8)
     r += "/" + s.substring(8,12) + "-" + s.substring(12,14);
-    if ( tam < 3 ) 
+    if ( tam < 3 )
         s = r.substring(0,tam);
-    else if ( tam < 6 ) 
+    else if ( tam < 6 )
         s = r.substring(0,tam+1);
-    else if ( tam < 9 ) 
+    else if ( tam < 9 )
         s = r.substring(0,tam+2);
-    else if ( tam < 13 ) 
+    else if ( tam < 13 )
         s = r.substring(0,tam+3);
-    else 
+    else
         s = r.substring(0,tam+4);
     e.value = s;
     return s;
@@ -132,18 +132,18 @@ function DvCpfOk(e) {
 
 function FormataCpf(e) {
     var s = "";
-    
+
     s = FiltraCampo(e.value);
     tam =  s.length;
-    r = s.substring(0,3) + "." + s.substring(3,6) + "." + s.substring(6,9) 
+    r = s.substring(0,3) + "." + s.substring(3,6) + "." + s.substring(6,9)
     r += "-" + s.substring(9,11);
-    if ( tam < 4 ) 
+    if ( tam < 4 )
         s = r.substring(0,tam);
-    else if ( tam < 7 ) 
+    else if ( tam < 7 )
         s = r.substring(0,tam+1);
-    else if ( tam < 10 ) 
+    else if ( tam < 10 )
         s = r.substring(0,tam+2);
-    else  
+    else
         s = r.substring(0,tam+3);
     e.value = s;
     return s;
@@ -181,23 +181,23 @@ function DvProcessoOk(e) {
 
 function FormataProcesso(e) {
     var s = "";
-    
+
     s = FiltraCampo(e.value);
     tam =  s.length;
-    if ( tam == 17 && s.substring(0,5) == "02000" && 
-                 s.substring(11,13) == "20" ) 
+    if ( tam == 17 && s.substring(0,5) == "02000" &&
+                 s.substring(11,13) == "20" )
         ano_dig = 4;
     else ano_dig = 2;
 
     r = s.substring(0,5) + "." + s.substring(5,11) + "/";
     r+= s.substring(11,11+ano_dig)  + "-" + s.substring(11+ano_dig,13+ano_dig);
-    if ( tam < 6 ) 
+    if ( tam < 6 )
         s = r.substring(0,tam);
-    else if ( tam < 12 ) 
+    else if ( tam < 12 )
         s = r.substring(0,tam+1);
-    else if ( tam < 12 + ano_dig ) 
+    else if ( tam < 12 + ano_dig )
         s = r.substring(0,tam+2);
-    else  
+    else
         s = r.substring(0,tam+3);
     e.value = s;
     return s;
@@ -232,17 +232,17 @@ function DataOk(e) {
 
 function FormataData(e) {
     var s = "";
-    
+
     s = FiltraCampo(e.value);
     tam =  s.length;
 
     r = s.substring(0,2) + "/" + s.substring(2,4) + "/";
     r+= s.substring(4,8);
-    if ( tam < 3 ) 
+    if ( tam < 3 )
         s = r.substring(0,tam);
-    else if ( tam < 5 ) 
+    else if ( tam < 5 )
         s = r.substring(0,tam+1);
-    else  
+    else
         s = r.substring(0,tam+2);
     e.value = s;
     return s;
@@ -275,44 +275,20 @@ function CepOk(e) {
 
 function FormataCep(e) {
     var s = "";
-    
+
     s = FiltraCampo(e.value);
     tam =  s.length;
 	r = s.substring(0,5) + "-" + s.substring(5,8);
-    if ( tam < 6 ) 
+    if ( tam < 6 )
         s = r.substring(0,tam);
-    else  
+    else
         s = r.substring(0,tam+1);
     e.value = s;
     return s;
 }
- 
-function FormataFoneFax(e) {
-    var s = "";
-    var res = "";
-
-    s = FiltraCampo(e.value);
-    while ( s.substring(0,1) == "0" ) {
-        s1 = s.substring(1,s.length);
-        s = s1;
-    }
-    if ( s.length == 14 || s.length == 12 )
-        s = s.substring(s.length-10,s.length);
-    if ( s.length == 13 || s.length == 11 )
-        s = s.substring(s.length-9,s.length);
-
-    res = s.substring(s.length-4,s.length);
-    if ( s.length > 4  && s.length < 9 )
-        res = s.substring(0,s.length-4)+"-"+res;
-    if ( s.length > 8  )
-        res = "(0XX" + s.substring(0,2) + ") " +
-                   s.substring(2,s.length-4) + "-" + res;
-    e.value = res;
-    return res;
-}
 
 function Varredura(e,varNotNull){
-	
+
 }
 
 function FormataCpfCnpj(e) {
@@ -330,7 +306,7 @@ function FormataCpfCnpj(e) {
    			}
 		}
         s=FormataCpf(e);
-			
+
 		return s;
     }
     else if ( s.length == 14 ) {
@@ -348,11 +324,11 @@ function FormataCpfCnpj(e) {
          alert(mensagem);
 		 return s='';
      }
-    
+
 }
 
 function submeter(e){
-	if(document.formulario.bt_submit.value.length<3) 
+	if(document.formulario.bt_submit.value.length<3)
 		document.formulario.bt_submit.disabled=true;
 	else document.formulario.bt_submit.disabled=false;
 }
@@ -362,16 +338,16 @@ function informaCpfCnpj(e) {
 	var alt = true;
 	s = FiltraCampo(e.value);
     if ( s.length == 11 ) {
-		if (DvCpfOk(e)) 
+		if (DvCpfOk(e))
 			document.formulario.bt_submit.disabled=false;
 		else{
 			document.formulario.bt_submit.disabled=true
-			document.formulario.NUM_PESSOA_NOME_CNPJ_CPF.focus();	
+			document.formulario.NUM_PESSOA_NOME_CNPJ_CPF.focus();
 		}
         s=FormataCpf(e);
     }
     else if ( s.length == 14 ) {
-		if (DvCnpjOk(e)) 
+		if (DvCnpjOk(e))
 			document.formulario.bt_submit.disabled=false;
 		else{
 			document.formulario.bt_submit.disabled=true;
@@ -385,7 +361,7 @@ function informaCpfCnpj(e) {
 	else {
 		if (document.formulario.bt_submit.disabled==false)
 			document.formulario.bt_submit.disabled=true;
-		
+
 	}
     return s;
 }
@@ -458,7 +434,7 @@ function FloatOk(e,min,max) {
         alert(mensagem);
         return false;
     }
-    if ( e.value.length > 0 && v >= min && v <= max  ) { 
+    if ( e.value.length > 0 && v >= min && v <= max  ) {
     	e.value = parseFloat(e.value);
 	return true;
     }
@@ -497,7 +473,7 @@ function VerificarForm(f) {
                 sbmt = false;
             }
         }
-        if ((e.type == "select-one")  && !e.optional 
+        if ((e.type == "select-one")  && !e.optional
                && e.selectedIndex == 0 ) {
             sbmt = false;
         }
