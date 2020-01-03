@@ -93,8 +93,8 @@ class indice extends clsCadastro
 
             /** @var LegacyRegistration $registration */
             $registration = LegacyRegistration::find($this->ref_cod_matricula);
-            if ($registration->lastEnrollment()->first()) {
-                $promocao = new PromotionService($registration->lastEnrollment()->first());
+            if ($lastEnrollment = $registration->lastEnrollment()->first()) {
+                $promocao = new PromotionService($lastEnrollment);
                 $promocao->fakeRequest();
             }
 
