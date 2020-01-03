@@ -240,47 +240,6 @@
     var aux = '';
     var aberto = false;
 
-    function CarregaDetalhe(id_div, endereco) {
-        var elemento_div = document.getElementById(id_div);
-        if (endereco != '') {
-            xmlhttp.open("GET", endereco, true);
-            xmlhttp.onreadystatechange = function () {
-                if (xmlhttp.readyState == 4) {
-                    elemento_div.innerHTML = xmlhttp.responseText;
-                }
-            }
-
-            xmlhttp.send(null);
-        }
-    }
-
-    function AbreFecha(id_div, id_img) {
-        var elemento_div = document.getElementById(id_div);
-        var elemento_img = document.getElementById(id_img);
-
-        if (!aberto) {
-            elemento_div.style.overflow = 'visible';
-            if (goodIE) {
-                elemento_div.style.height = '0px';
-                elemento_img.src = 'excluir_1.gif';
-                elemento_img.alt = 'Fechar';
-            }
-            else {
-                elemento_div.style.height = '100%';
-                elemento_img.src = 'excluir_1.gif';
-                elemento_img.alt = 'Fechar';
-            }
-        }
-        else {
-            elemento_img.src = 'log-info.gif';
-            elemento_div.style.overflow = 'hidden';
-            elemento_div.style.height = '1px';
-            elemento_img.alt = 'Visualizar detalhes';
-        }
-
-        aberto = !aberto;
-    }
-
     function AdicionaItem(chave, item, nome_pai, submete) {
         var x = document.getElementById(nome_pai);
 

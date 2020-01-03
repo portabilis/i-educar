@@ -31,6 +31,21 @@ class LegacySchoolClassTest extends EloquentTestCase
         return LegacySchoolClass::class;
     }
 
+    public function testCreateUsingEloquent()
+    {
+        $this->markTestSkipped();
+    }
+
+    public function testUpdateUsingEloquent()
+    {
+        $this->markTestSkipped();
+    }
+
+    public function testDeleteUsingEloquent()
+    {
+        $this->markTestSkipped();
+    }
+
     /**
      * Serão cadastradas:
      *

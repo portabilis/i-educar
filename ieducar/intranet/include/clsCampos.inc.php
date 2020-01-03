@@ -12,16 +12,6 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public $__nome = 'formcadastro';
 
-    public $__adicionando = false;
-
-    public $__adicionador_inline = false;
-
-    public $__blocos = 0;
-
-    public $__bloco_bt_add = false;
-
-    public $campoFoco = false;
-
     public $__adicionando_tabela = false;
 
     public $__id_tabela = 1;
@@ -40,74 +30,9 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public $__valores_listas_tabela = [[]];
 
-    public $__adicionando_tab = false;
-
-    public $__id_tab;
-
-    public $__nm_tab;
-
-    public $__tabs = [];
-
-    public $__campos_tab = [];
-
-    public $__id_tabbed = 1;
-
-    public $__cabecalho_tab = [];
-
-    public $__desabilitado_tab = [];
-
-    public $__segue_fluxo = false;
-
-    public $__sequencia_fluxo = false;
-
-    public $__sequencia_default = true;
-
-    public $__acao_enviar_abas = 'acao()';
-
     public $ref_cod_escola;
 
     public $ref_cod_instituicao;
-
-    public function campoTabInicio($nome, $segue_fluxo = false, $array_sequencia = null)
-    {
-        $this->__id_tab = 1;
-        $this->__nm_tab = $nome;
-        $this->__segue_fluxo = $segue_fluxo;
-
-        if (is_array($array_sequencia)) {
-            $this->__sequencia_fluxo = serialize($array_sequencia);
-            $this->__sequencia_default = false;
-        }
-
-        $this->campos['tabbed_add_' . $this->__id_tabbed] = $this->__id_tabbed;
-    }
-
-    public function campoTabFim()
-    {
-        $this->campos['fim_tab'] = 1;
-        $this->campos['cabecalho_tab'] = $this->__cabecalho_tab;
-        $this->campos['desabilitado_tab'] = $this->__desabilitado_tab;
-        $this->__cabecalho_tab = [];
-        $this->__id_tabbed++;
-    }
-
-    public function campoAdicionaTab($nome_tab, $desabilitado_tab = false)
-    {
-        if ($this->__sequencia_default) {
-            $this->__sequencia_fluxo = unserialize($this->__sequencia_fluxo);
-            $this->__sequencia_fluxo[] = $this->__id_tab;
-            $this->__sequencia_fluxo = serialize($this->__sequencia_fluxo);
-        }
-
-        $this->campos['tab_name_' . $this->__id_tab] = [
-            'nome' => $nome_tab,
-            'id' => $this->__id_tab
-        ];
-
-        $this->__cabecalho_tab[] = $nome_tab;
-        $this->__desabilitado_tab[] = $desabilitado_tab == true ? 1 : 0;
-        $this->__id_tab++;
-    }
 
     public function campoTabelaInicio(
         $nome,
@@ -149,56 +74,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         $this->__id_tabela++;
     }
 
-    public function blocoAdicionadorBegin($precadastrados_inline = true)
-    {
-        $this->campos['bloco_beg_' . $this->__blocos] = ['bloco_adicionador', 'begin'];
-
-        $this->campos['teste1'] = ['rotulo', 'teste1', 'teste1', 'teste1'];
-        $this->campos['teste2'] = ['rotulo', 'teste2', 'teste2', 'teste2'];
-        $this->campos['teste3'] = ['rotulo', 'teste3', 'teste3', 'teste3'];
-        $this->campos['teste4'] = ['rotulo', 'teste4', 'teste4', 'teste4'];
-        $this->campos['teste5'] = ['rotulo', 'teste5', 'teste5', 'teste5'];
-
-        $this->__adicionador_inline = $precadastrados_inline;
-    }
-
-    public function blocoAdicionadorEnd()
-    {
-        $this->campos['bloco_end_' . $this->__blocos] = ['bloco_adicionador', 'end'];
-        $this->__blocos++;
-    }
-
-    public function campoAnexarLista(
-        $nome,
-        $campo,
-        $valor,
-        $default,
-        $valores_ja_incluidos = false,
-        $caminho = '',
-        $acao = '',
-        $duplo = false,
-        $descricao = '',
-        $descricao2 = ''
-    ) {
-        $this->campos[$nome] = [
-            'anexarListaPesquisa',
-            $campo,
-            '',
-            $valor,
-            $default,
-            $acao,
-            $descricao,
-            $caminho,
-            $descricao2,
-            $valores_ja_incluidos
-        ];
-    }
-
-    public function campoAddCampos($nome, $arr_campos = [], $arr_valores = [])
-    {
-        $this->campos[$nome] = ['addCampos', $nome, false, $arr_campos, $arr_valores];
-    }
-
     public function campoBoolLista(
         $nome,
         $campo,
@@ -216,42 +91,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         }
 
         $this->campoLista($nome, $campo, $valor, $default);
-    }
-
-    public function campoAddForm($nome, $arr_campos = [])
-    {
-        $this->campos['linha_' . $nome] = ['addForm', $nome, $arr_campos];
-    }
-
-    public function campoAdicionar(
-        $nome,
-        $campo,
-        $valor,
-        $default,
-        $acao = '',
-        $duplo = false,
-        $descricao = '',
-        $link,
-        $url_janela,
-        $largura_j,
-        $altura_j,
-        $obrigatorio = false,
-        $redirecionamento = ''
-    ) {
-        $this->campos[$nome] = [
-            'adicionar',
-            $campo,
-            $obrigatorio ? '/[^ ]/' : '',
-            $valor,
-            $default,
-            $acao,
-            $descricao,
-            $link,
-            $url_janela,
-            $largura_j,
-            $altura_j,
-            $redirecionamento
-        ];
     }
 
     public function campoArquivo(
@@ -384,19 +223,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         ];
     }
 
-    public function campoCor($nome, $campo, $valor, $obrigatorio = false, $descricao = '')
-    {
-        $this->campos[$nome] = [
-            'cor',
-            $campo,
-            $obrigatorio ? '/[^ ]/' : '',
-            $valor,
-            'cor',
-            'cor',
-            $descricao
-        ];
-    }
-
     public function campoCpf($nome, $campo, $valor, $obrigatorio = false, $descricao = false, $disabled = false, $onChange = '')
     {
         $arr_componente = [
@@ -498,102 +324,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         }
     }
 
-    public function campoDetalhe(
-        $nome,
-        $campo,
-        $valor,
-        $default,
-        $acao = '',
-        $duplo = false,
-        $descricao = '',
-        $link,
-        $url_janela,
-        $largura_j,
-        $altura_j,
-        $obrigatorio = false
-    ) {
-        $this->campos[$nome] = [
-            'detalhe',
-            $campo,
-            $obrigatorio ? '/[^ ]/' : '',
-            $valor,
-            $default,
-            $acao,
-            $descricao,
-            $link,
-            $url_janela,
-            $largura_j,
-            $altura_j
-        ];
-    }
-
-    public function campoExterno(
-        $nome,
-        $campo,
-        $valor,
-        $tamanhovisivel,
-        $tamanhomaximo,
-        $caminho,
-        $nome_caminho,
-        $obrigatorio = false,
-        $duplo = false,
-        $descricao = ''
-    ) {
-        $this->campos[$nome] = [
-            'textoExterno',
-            $campo,
-            $obrigatorio ? '/[^ ]/' : '',
-            $valor,
-            $tamanhovisivel,
-            $tamanhomaximo,
-            $descricao,
-            $caminho,
-            $nome_caminho
-        ];
-    }
-
-    public function campoProcurarAdicionar(
-        $nome,
-        $campo,
-        $valor,
-        $tamanhovisivel,
-        $tamanhomaximo,
-        $caminho,
-        $nome_caminho,
-        $caminho_dest,
-        $nome_caminho_dest,
-        $obrigatorio = false,
-        $duplo = false,
-        $descricao = ''
-    ) {
-        $this->campos[$nome] = [
-            'adicionarProcurar',
-            $campo,
-            $obrigatorio ? '/[^ ]/' : '',
-            $valor,
-            $tamanhovisivel,
-            $tamanhomaximo,
-            $descricao,
-            $caminho,
-            $nome_caminho,
-            $caminho_dest,
-            $nome_caminho_dest
-        ];
-    }
-
-    public function campoFone($nome, $campo, $valor, $obrigatorio = false)
-    {
-        $this->campos[$nome] = [
-            'fone',
-            $campo,
-            $obrigatorio ? "/^\([0-9]{2}\)[0-9]{3}[0-9]?\-[0-9]{4}$/" : "*(/^\([0-9]{2}\)[0-9]{3}[0-9]?\-[0-9]{4}$/)",
-            $valor,
-            20,
-            13,
-            '(nn)nnnn-nnnn ou (nn)nnn-nnnn'
-        ];
-    }
-
     public function campoHora($nome, $campo, $valor, $obrigatorio = false, $descricao = '', $acao = '', $limitaHora = true, $desabilitado = false, $maxLength = 5)
     {
         $arr_componente = [
@@ -674,79 +404,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         } else {
             $this->__campos_tabela[] = $arr_componente;
         }
-    }
-
-    public function campoListaDin(
-        $nome,
-        $campo,
-        $valor,
-        $default,
-        $acao = '',
-        $arquivo,
-        $campo_destino,
-        $_GET_campos = [],
-        $complemento = '',
-        $desabilitado = false,
-        $obrigatorio = true,
-        $function_extra = '',
-        $duplo = false
-    ) {
-        $filtro = ($obrigatorio) ? '/[^ ]/' : '';
-
-        $this->campos[$nome] = [
-            'listaDin',
-            $campo,
-            $filtro,
-            $valor,
-            $default,
-            $acao,
-            '',
-            $campo_destino,
-            $complemento,
-            $desabilitado ? 'disabled' : '',
-            $arquivo,
-            $nome,
-            $_GET_campos,
-            $function_extra,
-            $duplo
-        ];
-    }
-
-    public function campoListaAtivarPeso(
-        $nome,
-        $campo,
-        $valor,
-        $default = '0',
-        $ativado = false,
-        $colunas = '10',
-        $tamanho = '10',
-        $default1 = ''
-    ) {
-        $this->campos[$nome] = [
-            'listaativarpeso',
-            $campo,
-            '/[^ ]/',
-            $valor,
-            $default,
-            $ativado,
-            '',
-            $colunas,
-            $tamanho,
-            $default1
-        ];
-    }
-
-    public function campoListaAtivarPesoSelect($nome, $campo, $valor, $default = '0', $ativado = false, $valor2)
-    {
-        $this->campos[$nome] = [
-            'listaativarpesoselect',
-            $campo,
-            '/[^ ]/',
-            $valor,
-            $default,
-            $ativado,
-            $valor2
-        ];
     }
 
     /**
@@ -1029,26 +686,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         ];
     }
 
-    public function campoSuggest(
-        $nome,
-        $campo,
-        $valor = '',
-        $obrigatorio = false,
-        $expressao = false,
-        $duplo = false,
-        $descricao = '',
-        $arquivo = 'xml_pessoas.php'
-    ) {
-        $this->campos[$nome] = [
-            'suggest',
-            $campo,
-            $expressao ? $expressao : ($obrigatorio ? '/[^ ]/' : ''),
-            $valor,
-            $descricao,
-            null
-        ];
-    }
-
     public function campoTextoPesquisa(
         $nome,
         $campo,
@@ -1120,26 +757,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         ];
     }
 
-    public function campoTheEditor($nome, $campo, $valor, $largura, $altura)
-    {
-        $this->campos[$nome] = [
-            'theEditor',
-            $campo,
-            $valor,
-            $largura,
-            $altura
-        ];
-    }
-
-    public function campoAvulso($nome, $campo, $conteudo)
-    {
-        $this->campos[$nome] = [
-            'avulso',
-            $campo,
-            $conteudo
-        ];
-    }
-
     public function campoQuebra()
     {
         $this->campos['espaco' . $this->num_espaco] = ['espaco', '', '', '', '', '', '', ''];
@@ -1160,11 +777,6 @@ class clsCampos extends Core_Controller_Page_Abstract
         ];
 
         $this->num_espaco++;
-    }
-
-    public function setFocus($campo)
-    {
-        $this->campoFoco = $campo;
     }
 
     public function MakeCampos(
@@ -1415,58 +1027,6 @@ class clsCampos extends Core_Controller_Page_Abstract
             $nome_add = $nome;
             $campo_tabela = false;
 
-            // Cria nova tab
-            if (preg_match('/^(tabbed_add_[0-9]+)/', $nome) === 1) {
-                $nomes_tab = urlencode(serialize($arr_campos['cabecalho_tab']));
-                unset($arr_campos['cabecalho_tab']);
-
-                // $arr_campos
-                $desabilitado_tab = urlencode(serialize($arr_campos['desabilitado_tab']));
-                unset($arr_campos['desabilitado_tab']);
-
-                $retorno .= '<tr id=\'tr_tab\'>
-                <td valign=\'top\' colspan=\'2\' width=\'100%\' align=\'center\'>';
-
-                $rand = rand();
-
-                $retorno .= "<!-- INICIO TABELA 1 --><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"tabela_principal\" align=center width='100%'>
-                <tr>
-                    <td valign=top height=30>
-                    <link href=\"styles/styles_tab.css?$rand\" rel=\"stylesheet\" type=\"text/css\" />
-                      <script type=\"text/javascript\" language=\"JavaScript1.2\" src=\"scripts/dtabs.js?$rand\"></script>
-                      <script type=\"text/javascript\" src=\"scripts/tabs_cab.php?nomes_tab={$nomes_tab}&desabilitado_tab=$desabilitado_tab\"></script>
-                    </td>
-                </tr>";
-                $retorno .= '<tr>
-                  <td valign=top height=auto class="pageTabb">&nbsp;
-                  <!-- INICIO TABELA 2 -->
-                     <table cellpadding="0" cellspacing="0" border="0" height=auto>
-                       <tr>
-                           <td valign=top width=1><img src="imagens/img/blank.gif" width=1 height=1></td>
-                           <td valign=top width=100% class="tabPage" height="auto">';
-                continue;
-            }
-
-            if (preg_match('/^(tab_name_[0-9]+)/', $nome) === 1) {
-                $retorno .= "<div id=\"content{$componente['id']}\" style=\"visibility: hidden;\" class=\"tabPage\">";
-                $retorno .= '<!-- INICIO TABELA 3 --><table cellpadding="2" cellspacing="0" border="0" width=100%  align=center>';
-
-                continue;
-            }
-
-            if ($nome === 'fim_tab') {
-                $retorno .= '        </td>
-                           <td valign=top width=1><img src=\'imagens/img/blank.gif\' width=1 height=1></td>
-                       </tr>
-                     </table><!-- FIM TABELA 2 -->
-                  </td>
-              </tr>
-            </table><!-- FIM TABELA 1 -->';
-                $retorno .= '<br></td></tr>';
-
-                continue;
-            }
-
             if (preg_match('/^(tab_add_[0-9]+)/', $nome) === 1) {
                 $campo_tabela = true;
                 $javascript = '';
@@ -1659,15 +1219,8 @@ class clsCampos extends Core_Controller_Page_Abstract
                 continue;
             }
 
-            if ($this->__adicionando && false) {
-                // Adiciona o campo no bloco de repetição
-                $adicionador_campos_repeticao[$nome] = $componente;
-                $adicionador_complemento_campo = "[{$adicionador_indice}]";
-                $campo_valor = $componente[3][$adicionador_indice];
-            } else {
-                $adicionador_complemento_campo = '';
-                $campo_valor = $componente[3] ?? null;
-            }
+            $adicionador_complemento_campo = '';
+            $campo_valor = $componente[3] ?? null;
 
             $nome .= $adicionador_complemento_campo;
             $expressao_regular = $componente[2];
@@ -1687,43 +1240,6 @@ class clsCampos extends Core_Controller_Page_Abstract
             } elseif ($componente[0] == 'espaco') {
                 $retorno .= '<tr><td colspan=\'2\'><hr></td></tr>';
                 continue;
-            } elseif ($componente[0] == 'bloco_adicionador') {
-                if ($componente[1] == 'begin') {
-                    // Flag de que estamos no meio de um bloco de adiçã
-                    $this->__adicionando = true;
-
-                    // Se for a primeira vez que cai aqui define o índice como zero,
-                    // nas vezes subsequentes (chamadas por recursividade) o índice será
-                    // passado na chamada da função
-                    if (is_null($adicionador_indice)) {
-                        $adicionador_indice = 0;
-                    }
-
-                    // Cria um array para armazenar os campos a serem repetidos
-                    $adicionador_campos_repeticao = [];
-
-                    // Adiciona o campo begin no ínicio do bloco de repetição
-                    $adicionador_campos_repeticao[$nome] = $componente;
-                } else {
-                    // Desmarca a flag de bloco de adiçã
-                    $this->__adicionando = false;
-
-                    // Adiciona o campo end no fim do bloco de repetição
-                    $adicionador_campos_repeticao[$nome] = $componente;
-
-                    // Ainda não repetiu o bloco por tempo suficiente
-                    $adicionador_indice++;
-                    if ($adicionador_indice < $adicionador_total_valores) {
-                        $retorno .= $this->MakeCampos(
-                            $adicionador_campos_repeticao,
-                            $adicionador_indice,
-                            false,
-                            true,
-                            true,
-                            !$md
-                        );
-                    }
-                }
             } elseif ($componente[0] != 'oculto') {
                 $tipo = $componente[0];
 
@@ -1794,148 +1310,6 @@ class clsCampos extends Core_Controller_Page_Abstract
                 }
 
                 switch ($tipo) {
-                    case 'anexarListaPesquisa':
-                        $inicio = 0;
-                        $javascript = '';
-                        $inclusos = [];
-
-                        $retorno .= "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" id=\"anexador_{$nome}\">";
-
-                        if (is_array($componente[9])) {
-                            // Existem itens já incluídos, monta a lista com eles (com o botão remover ao lado)
-                            foreach ($componente[9] as $ja_incluido) {
-                                list($cod, $label) = $ja_incluido;
-
-                                $retorno .= "<tr><td><select onchange=\"{$componente[5]}\"  class='{$class}' name='{$nome}[]' id='{$nome}_{$inicio}'>";
-
-                                $opcoes = $componente[3];
-
-                                if ($componente[7]) {
-                                    // É um adicionador, então vamos inserir os já incluídos na lista padrão
-                                    $opcoes[$cod] = $label;
-                                }
-
-                                reset($opcoes);
-
-                                while (list($chave, $texto) = each($opcoes)) {
-                                    $retorno .= "<option id=\"{$nome}_{$inicio}_" . urlencode($chave) . '" value="' . urlencode($chave) . '"';
-
-                                    if ($chave == $cod) {
-                                        $retorno .= ' selected';
-                                    }
-
-                                    $retorno .= ">$texto</option>";
-                                }
-
-                                $retorno .= '</select>';
-
-                                if ($componente[7]) {
-                                    $retorno .= "<img src=\"imagens/lupa.png\" alt=\"Pesquisa\" border=\"0\" onclick=\"pesquisa_valores_popless('{$componente[7]}', '{$nome}_{$inicio}')\">";
-                                }
-
-                                $retorno .= " {$componente[8]}</td><td id=\"td_adicionador_{$nome}_{$inicio}\" style=\"padding-left:30px;\"><img name=\"adicionador_{$nome}_{$inicio}\" id=\"adicionador_{$nome}_{$inicio}\" onclick=\"remove_{$nome}('{$inicio}');\" src=\"/intranet/imagens/banco_imagens/excluirrr.png\" title=\"Excluir\" border=0></td></tr>";
-                                $inclusos[] = $inicio;
-
-                                $inicio++;
-                            }
-                        }
-
-                        $inclusos[] = $inicio;
-                        $javascript .= "\nitens_{$nome} = [" . implode(',', $inclusos) . '];';
-
-                        $retorno .= "<tr><td><select onchange=\"{$componente[5]}\"  class='{$class}' name='{$nome}[]' id='{$nome}_{$inicio}'>";
-                        $javascript .= "
-  function remove_{$nome}(id)
-  {
-    posicao = 0;
-    tabela = document.getElementById( 'anexador_{$nome}' );
-
-    for (i = 0; i < id; i++) {
-      if (itens_{$nome}[i] >= id) {
-        break;
-      }
-
-      if (itens_{$nome}[i] != null) {
-        posicao++;
-      }
-    }
-
-    itens_{$nome}[id] = null;
-    tabela.deleteRow( posicao );
-  }
-
-  function duplica_{$nome}()
-  {
-    id = itens_{$nome}.length;
-    id = itens_{$nome}.length;
-
-    tabela = document.getElementById( 'anexador_{$nome}' );
-
-    linha = tabela.insertRow( tabela.rows.length );
-
-    col1 = linha.insertCell( 0 );
-    col2 = linha.insertCell( 1 );
-    col2.style.paddingLeft = '30px';
-
-    sel = document.createElement('select');
-    novoIndice = 0;
-            ";
-
-                        reset($componente[3]);
-
-                        while (list($chave, $texto) = each($componente[3])) {
-                            $retorno .= "<option id=\"{$nome}_{$inicio}_" . urlencode($chave) . '" value="' . urlencode($chave) . '"';
-
-                            $javascript .= "
-    sel.options[novoIndice] = new Option( '{$texto}' );
-    sel.options[novoIndice].value = '" . urlencode($chave) . '\';
-              ';
-
-                            if ($chave == $componente[4]) {
-                                $retorno .= ' selected';
-                                $javascript .= '
-    sel.options[novoIndice].selected = true;
-                ';
-                            }
-
-                            $retorno .= ">$texto</option>";
-                            $javascript .= '
-    novoIndice++;
-              ';
-                        }
-
-                        $retorno .= '</select>';
-                        $javascript .= "
-    sel.className = '{$class}';
-    col1.appendChild(sel);
-
-    img         = document.createElement('img');
-    img.src     = 'imagens/banco_imagens/entrada2.gif';
-    img.title   = 'Incluir';
-    img.id      = 'adicionador_{$nome}_' + id;
-    img.name    = 'adicionador_{$nome}_' + id;
-    img.onclick = function() { duplica_{$nome}(); };
-
-    col2.appendChild(img);
-
-    id_antecessor = id - 1;
-
-    img_ant     = document.getElementById('adicionador_{$nome}_' + id_antecessor);
-    img_ant.src = '/intranet/imagens/banco_imagens/excluirrr.png';
-
-    document.getElementById('adicionador_{$nome}_' + id_antecessor).onclick = function() { onclick=remove_{$nome}(this.name.substr(this.name.lastIndexOf( '_' ) + 1)); };
-
-    itens_{$nome}[id] = id;
-  }
-            ";
-
-                        if ($componente[7]) {
-                            $retorno .= "<img src=\"imagens/lupa.png\" alt=\"Pesquisa\" border=\"0\" onclick=\"pesquisa_valores_popless('{$componente[7]}', '{$nome}_{$inicio}')\">";
-                        }
-
-                        $retorno .= " {$componente[8]}</td><td id=\"td_adicionador_{$nome}_{$inicio}\" style=\"padding-left:30px;\"><img name=\"adicionador_{$nome}_{$inicio}\" id=\"adicionador_{$nome}_{$inicio}\" onclick=\"duplica_{$nome}();\" src=\"imagens/banco_imagens/entrada2.gif\" title=\"Incluir\" border=0></td></tr></table><script type=\"text/javascript\">$javascript</script>";
-                        break;
-
                     case 'rotuloDuplo':
                         $foiDuplo = true;
                         // no break
@@ -1947,10 +1321,6 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                     case 'cep':
                         $retorno .= "<input onKeyPress=\"formataCEP(this, event);\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$campo_valor}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" $componente[8]>$componente[7]\n";
-                        break;
-
-                    case 'fone':
-                        $retorno .= "<input class='{$class}' type='text' name=\"ddd_{$nome}\" id=\"ddd_{$nome}\" value=\"{$componente[3]}\" size=\"3\" maxlength=\"2\"> <input onKeyPress=\"formataFone(this,event);\" class='{$class}' type='text' name=\"fone_{$nome}\" id=\"fone_{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\">\n";
                         break;
 
                     case 'data':
@@ -1965,82 +1335,6 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $componente[3] = (strlen($componente[3]) < 6  || $componente[5] != 5) ? $componente[3] : substr($componente[3], 0, 5);
                         $segundos = ($componente[5] != 5) ? 'true' : 'false';
                         $retorno .= "<input onKeyPress=\"formataHora(this, event, {$segundos});\" class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" {$componente[8]} {$componente[9]}>{$componente[7]}";
-                        break;
-
-                    case 'cor':
-                        $cor = empty($componente[3]) ? 'ffffff' : $componente[3];
-                        $retorno .= "<input type='text' name='{$nome}' value='$componente[3]' size='6' maxlength='6' onBlur='setColor();' class='{$class}' /> *
-          <a href='#' class='link' onClick=\"newwin=window.open('./cores.html', 'cores', 'width=320, height=260, scollbars=false');\">Alterar cor</a>
-          <span id=\"{$nome}1\" style=\" background:#$cor;\"><a href=\"#\" onClick=\"newwin=window.open('./cores.html', 'cores', 'width=320, height=260, scollbars=false');\"><img src=\"./imagens/shim.gif\" border=\"1\" width=\"40\" style=\"border-color:#000000;\" height=\"18\"></a></span>";
-                        break;
-
-                    case 'mapa':
-                        $cor = empty($componente[3]) ? 'ffffff' : $componente[3];
-                        $retorno .= "<input disabled type='text' name='{$nome}' value='$componente[3]' size='6' maxlength='6' onBlur='setColor();' class='{$class}' /> *
-          <a href='#' class='link' onClick=\"newwin=window.open('./escolhe_coordenada.php', 'escolhe_coordenada', 'width=400, height=430, scollbars=false');\">Seleciona Coordenada</a>";
-                        break;
-
-                    case 'adicionar':
-                        $retorno .= "<select onchange=\"{$componente[5]}\"  class='{$class}' name='{$nome}' id='{$nome}' >";
-
-                        reset($componente[3]);
-
-                        while (list($chave, $texto) = each($componente[3])) {
-                            $retorno .= '<option value="' . urlencode($chave) . '"';
-
-                            if ($chave == $componente[4]) {
-                                $retorno .= ' selected';
-                            }
-
-                            $retorno .= ">$texto</option>";
-                        }
-
-                        $retorno .= '</select>';
-                        $retorno .= "<a href='#' class='imagem' onClick=\"receptor=document.formcadastro.{$nome};newwin=window.open('" . $componente[8] . "', '{$nome}_link', 'width=" . $componente[9] . ', height=' . $componente[10] . ', scollbars=false\');"> <img src=\'/intranet/imagens/nvp_bot_novo.png\' border=0 alt=\'' . $componente[7] . '\'></a>';
-                        $retorno .= "
-            <script type=\"text/javascript\">
-            var receptor;
-              document.formcadastro.{$nome}.muda = function(valor, texto)
-              {
-                novoIndice = this.options.length;
-                this.options[novoIndice] = new Option(texto);
-                opcao = this.options[novoIndice];
-                opcao.value    = valor;
-                opcao.selected = true;
-                {$componente[11]}
-              }
-            </script>
-            ";
-
-                        break;
-
-                    case 'detalhe':
-                        $retorno .= "<select onchange=\"if(this.value > 0) CarregaDetalhe( '{$nome}_div','" . $componente[8] . "'+this.value); $componente[5]\"  class='{$class}' name='{$nome}' id='{$nome}' >";
-                        reset($componente[3]);
-
-                        while (list($chave, $texto) = each($componente[3])) {
-                            $retorno .= '<option value="' . urlencode($chave) . '"';
-
-                            if ($chave == $componente[4]) {
-                                $retorno .= ' selected';
-                            }
-
-                            $retorno .= ">$texto</option>";
-                        }
-
-                        $retorno .= '</select>';
-
-                        if ($componente[4]) {
-                            $carrega = "CarregaDetalhe('{$nome}_div','" . $componente[8] . $componente[4] . '\');';
-                        }
-
-                        $onClick = "AbreFecha('{$nome}_div', '{$nome}_img');";
-                        $retorno .= "<a href='#' class='imagem' onClick=\"$carrega $onClick\"> <img src='imagens/log-info.gif' border=0 alt='" . $componente[7] . "' id='{$nome}_img'></a>";
-                        $retorno .= "<div style='overflow: hidden;height: 1px;position: relative;width:100%;' name='{$nome}_div' id='{$nome}_div'></div>";
-
-                        $classe = ($classe == 'formmdtd') ?
-                            'formlttd' : 'formmdtd';
-
                         break;
 
                     case 'cpf':
@@ -2085,14 +1379,6 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                         $retorno .= "> {$componente[4]} ";
                         $foiDuplo = true;
-                        break;
-
-                    case 'latitude':
-                        $retorno .= "<input onBlur=\"colocaMenos(this);\" class='{$class}' type='text' name=\"{$nome}_graus\" value=\"{$componente[3]}\" size=\"3\" maxlength=\"3\"><sup style='vertical-align:top;'>o</sup><input class='{$class}' type='text' name=\"{$nome}_min\" value=\"{$componente[7]}\" size=\"2\" maxlength=\"2\"><sup style='vertical-align:top;'>'</sup><input class='{$class}' type='text' name=\"{$nome}_seg\" value=\"{$componente[8]}\" size=\"2\" maxlength=\"2\"><sup style='vertical-align:top;'>\"</sup>";
-                        break;
-
-                    case 'longitude':
-                        $retorno .= "<input onBlur=\"colocaMenos(this);\" class='{$class}' type='text' name=\"{$nome}_graus\" value=\"{$componente[3]}\" size=\"3\" maxlength=\"3\"><sup style='vertical-align:top;'>o</sup><input class='{$class}' type='text' name=\"{$nome}_min\" value=\"{$componente[7]}\" size=\"2\" maxlength=\"2\"><sup style='vertical-align:top;'>'</sup><input class='{$class}' type='text' name=\"{$nome}_seg\" value=\"{$componente[8]}\" size=\"2\" maxlength=\"2\"><sup style='vertical-align:top;'>\"</sup>";
                         break;
 
                     case 'texto':
@@ -2140,16 +1426,6 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $retorno .= "<input class='{$class}' style='text-align: left;' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" onKeyUp=\"{$componente[8]}\"> $componente[7]";
                         break;
 
-                    case 'suggest':
-                        $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" onfocus=\"DOM_focusIn();\" onblur=\"DOM_focusOut();\" class=\"DOM_suggest\" style=\"width:250px;\">";
-                        $retorno .= '<script type="text/javascript">';
-                        $retorno .= 'DOM_atual = new Object();';
-                        $retorno .= "DOM_atual.objectId = \"{$nome}\";";
-                        $retorno .= "DOM_atual.arquivo = \"{$componente[7]}\";";
-                        $retorno .= "document.getElementById(\"{$nome}\").onkeyup=function(e){ DOM_atual.objectId=\"{$nome}\"; DOM_navegaUpDown(e); };";
-                        $retorno .= '</script>';
-                        break;
-
                     case 'textoPesquisa':
                         if ($componente[10]) {
                             $disabled = 'disabled';
@@ -2175,14 +1451,6 @@ class clsCampos extends Core_Controller_Page_Abstract
                     case 'textoDuploInv':
                         $retorno .= "<input class='{$class}' type='text' name=\"{$componente[10]}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" disabled=true>";
                         $foiDuplo = true;
-                        break;
-
-                    case 'textoExterno':
-                        $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" disabled=true> <a href='#' onclick=\"javascript:$componente[7]\">$componente[8]</a>";
-                        break;
-
-                    case 'adicionarProcurar':
-                        $retorno .= "<input class='{$class}' type='text' name=\"{$nome}\" id=\"{$nome}\" value=\"{$componente[3]}\" size=\"{$componente[4]}\" maxlength=\"{$componente[5]}\" disabled=true> <a href='#' onclick=\"javascript:$componente[7]\">$componente[8]</a>&nbsp;&nbsp;<a  href='#' onclick=\"javascript:$componente[9]\">$componente[10]</a>";
                         break;
 
                     case 'senha':
@@ -2261,352 +1529,6 @@ class clsCampos extends Core_Controller_Page_Abstract
                         }
 
                         $retorno .= "</select> {$componente[7]}";
-                        break;
-
-                    case 'AddForm':
-                        $arr_campos["linha_{$nome}"] = ['addForm', $nome, $arr_campos];
-
-                        $span = '';
-                        $input = '';
-                        $cont = 0;
-
-                        if ($arr_campos) {
-                            foreach ($arr_campos as $campo => $atributo) {
-                                $span .= "var span$cont = document.createElement( \"span{$cont}\" );";
-                                $cont++;
-                            }
-                        }
-
-                        $retorno = '
-              function adiciona (obj)
-              {
-                tabela = document.getElementById( \'table_fotos\' );
-                linha = tabela.insertRow( tabela.rows.length );
-
-                var td = document.createElement( "td" );
-                var input = document.createElement( "input" );
-                var botao = document.createElement( "input" );
-
-                botao.setAttribute( "type", "button");
-                botao.setAttribute( "id", "foto_[]" );
-                botao.setAttribute( "name", "foto_[]" );
-                botao.setAttribute( "onclick", "adiciona(this);" );
-                botao.setAttribute( "value", "Adicionar[+]"  );
-
-                input.setAttribute( "type", "text" );
-                input.setAttribute( "id", "foto[]" );
-                input.setAttribute( "name", "foto[]"  );
-                input.setAttribute( "maxlength", "50"  );
-                input.setAttribute( "size", "50"  );
-
-                obj.setAttribute( "onclick", "this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode);"  );
-                obj.setAttribute( "value", "Remover[-]"  );
-
-                linha.appendChild(td);
-                td.appendChild(input);
-                td.appendChild(botao);
-              }
-            ';
-
-                        // no break
-                    case 'addCampos':
-                        $nome = $componente[1];
-                        $nome = str_replace(' ', '_', $nome);
-
-                        $arr_campos = $componente[3];
-                        $arr_valores = $componente[4];
-                        $arr_tipos = [];
-
-                        $input = '';
-                        $strCampos = '';
-                        $setAtributos = '';
-                        $addCampo = '';
-                        $valores = '';
-                        $br = '';
-                        $ValEditar = '';
-
-                        $quebra = '';
-                        $inicio = "<div id=\"div{$nome}0\">";
-
-                        $cont = 0;
-
-                        if ($arr_campos) {
-                            foreach ($arr_campos as $campo => $atributo) {
-                                $atributo['quebra'] = !isset($atributo['quebra']) ?
-                                    true : $atributo['quebra'];
-
-                                $arr_tipos[$campo] = $atributo['type'];
-
-                                if (!empty($atributo['campo'])) {
-                                    $atributo['campo'] = "<br>{$atributo['campo']}:<br>";
-                                } else {
-                                    $atributo['campo'] = '';
-                                }
-
-                                $disabled = !empty($atributo['disabled']) ?
-                                    ' disabled = true ' : '';
-
-                                $inicio .= "$quebra<span >{$atributo['campo']}</span>
-                <input id='{$atributo['id']}0' name='{$atributo['name']}[]' ";
-
-                                $input .= "var input_$campo = document.createElement( \"input\" );\n";
-                                $input .= "var span_$campo = document.createElement( \"span\" );\n";
-                                $input .= "span_$campo.setAttribute( \"id\", \"span_$campo\"+cont{$nome} );\n";
-
-                                $id = $atributo['id'];
-
-                                if ($atributo) {
-                                    foreach ($atributo as $formId => $valor) {
-                                        if ($formId == 'id') {
-                                            $setAtributos .= "input_{$campo}.setAttribute( \"$formId\", \"{$valor}\"+cont{$nome} );\n";
-                                        } elseif ($formId == 'name') {
-                                            $valores .= "document.getElementById( \"{$id}\"+cont{$nome} ).name = \"{$valor}[]\"; \n ";
-                                        } elseif ($formId != 'quebra' || $formId == 'campo') {
-                                            $valor = $formId == 'disabled' ? 'TRUE' : $valor;
-                                            $setAtributos .= "input_{$campo}.setAttribute( '$formId', '$valor' );\n";
-                                            $inicio .= "$formId = '$valor'";
-                                        }
-                                    }
-                                }
-
-                                $inicio .= "{$disabled} >";
-                                $quebra = $atributo['quebra'] == true || !isset($atributo['quebra']) ?
-                                    '<br>' : '';
-
-                                $addCampo .= "\n div_{$nome}.appendChild(span_{$campo});  \n document.getElementById(\"span_$campo\"+cont{$nome}).innerHTML = '$quebra{$atributo['campo']}  ';\n div_{$nome}.appendChild(input_{$campo});\n";
-
-                                $atributo['campo'] = '';
-                            }
-                        }
-
-                        if ($arr_valores) {
-                            if (array_key_exists('options', $arr_valores)) {
-                                $opcoes = array_pop($arr_campos);
-                                print_r($opcoes);
-                            }
-
-                            foreach ($arr_valores as $val) {
-                                $ValEditar .= '<div>';
-
-                                if ($val) {
-                                    $chave = key($arr_valores);
-
-                                    $valor_chave = reset($val);
-                                    $disabled = substr($valor_chave, -2);
-                                    $valor_chave = substr($valor_chave, 0, -2);
-
-                                    $disabled = $disabled == '_1' ?
-                                        'disabled' : '';
-
-                                    foreach ($arr_tipos as $id => $type) {
-                                        if ($type == 'file') {
-                                            $ValEditar .= "{$valor_chave}<br>";
-                                        } elseif ($type != 'button') {
-                                            if ($type == 'hidden') {
-                                                $valor_chave = (!$valor_chave) ?
-                                                    $chave : $valor_chave;
-
-                                                $disabled = '';
-                                            } elseif (strstr($id, 'data') != false) {
-                                                $keypress = ' onKeyPress="formataData(this, event);" maxlength="10"';
-                                            } else {
-                                                $keypress = '';
-                                            }
-
-                                            $ValEditar .= "<input type='{$type}' $keypress class='geral' value='{$valor_chave}' name='edit_{$id}[{$chave}]' $disabled><br>";
-                                        }
-
-                                        $valor_chave = next($val);
-                                    }
-
-                                    $chave = next($arr_valores);
-                                    $chave = key($arr_valores);
-                                }
-                                $ValEditar .= '<img vspace=\'4\' src=\'imagens/banco_imagens/excluir.gif\' onclick=\'this.parentNode.parentNode.removeChild(this.parentNode);\'><hr></div>';
-                            }
-                        }
-
-                        $inicio .= "<img hspace='5' src='imagens/banco_imagens/incluir.gif' onclick='adiciona_{$nome}();'><br><br>";
-                        $retorno .= "
-              <script type=\"text/javascript\">
-                  var cont{$nome} = 1;
-
-                  function adiciona_{$nome}()
-                  {
-                    principal = document.getElementById('{$nome}');
-
-                    var div_{$nome} = document.createElement(\"div\");\n;
-                    var div_linha = document.createElement(\"hr\");\n;
-
-                    $input
-                    principal.appendChild(div_{$nome});
-                    div_{$nome}.appendChild(div_linha);
-                    add_new = '<img hspace=\'5\' src=\'imagens/banco_imagens/incluir.gif\' onclick=\'adiciona_{$nome}();\'>';
-                    del = '<img hspace=\'5\' src=\'imagens/banco_imagens/excluir.gif\' onclick=\'this.parentNode.parentNode.removeChild(this.parentNode);\'><br><br>';
-
-                    div_{$nome}.setAttribute(\"id\", \"div{$nome}\"+cont{$nome});\n
-                    $setAtributos
-
-                    $addCampo
-
-                    document.getElementById('div{$nome}'+cont{$nome}).innerHTML += add_new;
-                    document.getElementById('div{$nome}'+cont{$nome}).innerHTML += del;
-
-                    $valores
-
-                    cont{$nome}++;
-                  }
-              </script>
-
-            <div =\"valores{$nome}\">
-              $ValEditar
-            </div>
-
-            <div id=\"{$nome}\">
-              $inicio
-            </div>
-            ";
-                        break;
-
-                    case 'listaDin':
-                        $url = 'var campos = [];';
-
-                        if ($componente[12]) {
-                            foreach ($componente[12] as $key => $campo) {
-                                $url .= "campos[$key] = '$campo';";
-                            }
-                        }
-
-                        $rand = rand(1, 10000);
-                        $script = "
-            <script type=\"text/javascript\">
-            function get_{$componente[11]}()
-            {
-              $url
-              url = '?';
-              junta = '';
-              for (i = 0; i < campos.length; i++) {
-                url += junta+campos[i]+'='+document.getElementById(campos[i]).value;
-                junta = '&';
-              }
-
-              // define qual a funcao que devera ser executada quando o xml for carregado
-              DOM_execute_when_xmlhttpChange = function() { get_{$componente[11]}Done(); };
-              strURL = \"{$componente[10]}\"+url+'&rand='+\"{$url}\";
-              DOM_loadXMLDoc(strURL);
-            }
-
-            function get_{$componente[11]}Done()
-            {
-              var valores = [];
-              var campos  = [];
-              ObjSelect   = document.getElementById(\"{$componente[7]}\");
-              ObjSelect.options.length =0;
-              ObjSelect.options[ObjSelect.options.length] = new Option ('Selecione', '0', true, true);
-
-              for (i = 0; i < DOM_itensArray.length; i = i + 2) {
-                objXML = DOM_itensArray[i].firstChild;
-                valores[i] = objXML.data;
-
-                objXML = DOM_itensArray[i+1].firstChild;
-                campos[i] = objXML.data;
-
-                ObjSelect.options[ObjSelect.options.length] = new Option (campos[i], valores[i],  true, true);
-              }
-
-              ObjSelect.value = 0;
-              {$componente[13]}
-            }
-            </script>
-            ";
-
-                        $retorno .= "$script<select onchange=\"{$componente[5]} get_{$componente[11]}();\"  class='{$class}' name='{$nome}' id='{$nome}' {$componente[8]}>";
-
-                        reset($componente[3]);
-
-                        while (list($chave, $texto) = each($componente[3])) {
-                            $retorno .= "<option id=\"{$nome}_" . urlencode($chave) . '" value="' . urlencode($chave) . '"';
-
-                            if ($chave == $componente[4]) {
-                                $retorno .= ' selected';
-                            }
-
-                            $retorno .= ">$texto</option>";
-                        }
-
-                        $retorno .= '</select>';
-
-                        if ($componente[14]) {
-                            $foiDuplo = true;
-                        }
-
-                        break;
-
-                    case 'listaativarpeso':
-                        $retorno .= '<input type=\'checkbox\' ';
-                        $retorno .= ($componente[5]) ? 'checked' : '';
-                        $retorno .= " name='' onclick='ativaCampo(\"{$nome}\")'>&nbsp;&nbsp;<select ";
-                        $retorno .= ($componente[5]) ? '' : 'disabled';
-                        $retorno .= " class='{$class}' name='{$nome}_lst' id='{$nome}_lst'>";
-
-                        reset($componente[3]);
-
-                        while (list($chave, $texto) = each($componente[3])) {
-                            $retorno .= "<option id=\"{$nome}_" . urlencode($chave) . '" value="' . urlencode($chave) . '"';
-
-                            if ($chave == $componente[4]) {
-                                $retorno .= ' selected';
-                            }
-
-                            $retorno .= ">$texto</option>";
-                        }
-
-                        $retorno .= '</select> &nbsp;&nbsp; <input ';
-
-                        $retorno .= ($componente[5]) ?
-                            '' : 'disabled';
-
-                        $retorno .= " name='{$nome}_val' id='{$nome}_val' type='text' size='{$componente[7]}' maxlength='{$componente[8]}' value={$componente[9]}>";
-                        break;
-
-                    case 'listaativarpesoselect':
-                        $retorno .= '<input type=\'checkbox\' ';
-                        $retorno .= ($componente[5]) ? 'checked' : '';
-                        $retorno .= " name='' onclick='ativaCampo(\"{$nome}\")'>&nbsp;&nbsp;<select ";
-                        $retorno .= ($componente[5]) ? '' : 'disabled';
-                        $retorno .= " class='{$class}' name='{$nome}_lst' id='{$nome}_lst'>";
-
-                        reset($componente[3]);
-
-                        while (list($chave, $texto) = each($componente[3])) {
-                            $retorno .= "<option id=\"{$nome}_" . urlencode($chave) . '" value="' . urlencode($chave) . '"';
-
-                            if ($chave == $componente[4]) {
-                                $retorno .= ' selected';
-                            }
-
-                            $retorno .= ">$texto</option>";
-                        }
-
-                        $retorno .= '</select> &nbsp;&nbsp;';
-                        $retorno .= '<select ';
-
-                        $retorno .= ($componente[5]) ?
-                            '' : 'disabled';
-
-                        $retorno .= " class='{$class}' name='{$nome}_val' id='{$nome}_val'>";
-                        reset($componente[6]);
-
-                        while (list($chave, $texto) = each($componente[6])) {
-                            $retorno .= "<option id=\"{$nome}_" . urlencode($chave) . '" value="' . urlencode($chave) . '"';
-
-                            if ($chave == $componente[9]) {
-                                $retorno .= ' selected';
-                            }
-
-                            $retorno .= ">$texto</option>";
-                        }
-                        $retorno .= '</select>';
                         break;
 
                     case 'listapesquisa':
@@ -2706,19 +1628,6 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $retorno .= '</span>';
                         break;
 
-                    case 'theEditor':
-                        $theEditorCampo = $nome;
-                        $theEditorForm = $this->__nome;
-                        $theEditorValue = $componente[2];
-                        $theEditorHeight = $componente[3];
-                        $theEditorWidth = $componente[4];
-                        require_once 'include/clsEditor.inc.php';
-                        break;
-
-                    case 'avulso':
-                        $retorno .= '<div>' . $componente[2] . '</div>';
-                        break;
-
                     case 'checkMultiplo':
                         $tmpRetorno = [];
 
@@ -2753,50 +1662,6 @@ class clsCampos extends Core_Controller_Page_Abstract
     public function MakeFormat()
     {
         $ret = "
-    function CarregaDetalhe(id_div, endereco)
-    {
-      var elemento_div = document.getElementById(id_div);
-      if (endereco != '') {
-        xmlhttp.open(\"GET\", endereco, true);
-        xmlhttp.onreadystatechange = function()
-        {
-          if (xmlhttp.readyState==4) {
-            elemento_div.innerHTML = xmlhttp.responseText;
-          }
-        }
-
-        xmlhttp.send(null);
-      }
-    }
-
-    function AbreFecha(id_div, id_img)
-    {
-      var elemento_div = document.getElementById(id_div);
-      var elemento_img = document.getElementById(id_img);
-
-      if (!aberto) {
-        elemento_div.style.overflow = 'visible';
-        if (goodIE) {
-          elemento_div.style.height = '0px';
-          elemento_img.src =  'excluir_1.gif';
-          elemento_img.alt =  'Fechar';
-        }
-        else {
-          elemento_div.style.height = '100%';
-          elemento_img.src =  'excluir_1.gif';
-          elemento_img.alt =  'Fechar';
-        }
-      }
-      else {
-        elemento_img.src =  'log-info.gif';
-        elemento_div.style.overflow = 'hidden';
-        elemento_div.style.height = '1px';
-        elemento_img.alt =  'Visualizar detalhes';
-      }
-
-      aberto = !aberto;
-    }
-
     function AdicionaItem(chave, item, nome_pai, submete)
     {
       var x = document.getElementById(nome_pai);

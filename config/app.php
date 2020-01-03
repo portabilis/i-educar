@@ -176,7 +176,8 @@ return [
         // App\Providers\TelescopeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Tooleks\LaravelAssetVersion\Providers\AssetServiceProvider::class,
-        Prettus\Repository\Providers\RepositoryServiceProvider::class
+        Prettus\Repository\Providers\RepositoryServiceProvider::class,
+        App\Providers\HorizonServiceProvider::class
     ],
 
     /*

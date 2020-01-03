@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @deprecated Usar novo módulo de endereço
+ */
 class LegacyDistrict extends Model
 {
     /**
@@ -27,6 +30,9 @@ class LegacyDistrict extends Model
         'cod_ibge',
         'idpes_rev',
         'data_rev',
+        'data_cad',
+        'idpes_cad',
+        'origem_gravacao',
         'origem_gravacao',
         'idpes_cad',
         'data_cad',

@@ -918,7 +918,7 @@ class DiarioApiController extends ApiCoreController
                 $turmaId = $enrollment->ref_cod_turma;
                 $serieId = $registration->ref_ref_cod_serie;
                 $componenteCurricularId = $this->getRequest()->componente_curricular_id;
-                $disciplinasDependenciaId = $enrollment->registration->dependencies->values();
+                $disciplinasDependenciaId = $enrollment->registration->dependencies->pluck('ref_cod_disciplina')->toArray();
                 $matriculaDependencia = $enrollment->registration->dependencia;
 
                 if (!empty($componenteCurricularId) && $matriculaDependencia && !in_array($componenteCurricularId, $disciplinasDependenciaId)) {
@@ -1537,7 +1537,7 @@ class DiarioApiController extends ApiCoreController
             return null;
         }
 
-        $nota = urldecode($this->serviceBoletim()->preverNotaRecuperacao($componenteCurricularId));
+        $nota = $this->serviceBoletim()->preverNotaRecuperacao($componenteCurricularId);
 
         return str_replace(',', '.', $nota);
     }
