@@ -181,7 +181,7 @@ class EscolaController extends ApiCoreController
                                     where ref_cod_escola = eal.ref_cod_escola 
                                     and andamento = 2 
                                     order by ano desc 
-                                    limit 1
+                                    limit 2
                                 )
                             ) 
                         else 
