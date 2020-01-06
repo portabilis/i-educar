@@ -225,7 +225,9 @@ class PromocaoApiController extends ApiCoreController
     {
         $defaultValue = 0;
         // FIXME #parameters
-        $tpPresenca = $this->boletimService(null)->getRegra()->get('tipoPresenca');
+        $regra = $this->boletimService(null)->getRegra();
+        $tpPresenca = $regra->get('tipoPresenca');
+        $regraNaoUsaNota = $this->regraNaoUsaNota($regra->get('tipoNota'));
 
         $componentesCurriculares = $this->loadComponentesCurriculares($matriculaId);
 
@@ -233,6 +235,10 @@ class PromocaoApiController extends ApiCoreController
             // FIXME #parameters
             foreach (range(1, $this->boletimService(null)->getOption('etapas')) as $etapa) {
                 $hasNotaOrParecerInEtapa = false;
+
+                if ($regraNaoUsaNota) {
+                    $hasNotaOrParecerInEtapa = true;
+                }
 
                 foreach ($componentesCurriculares as $cc) {
                     $nota = $this->getNota($etapa, $cc['id']);
@@ -266,7 +272,7 @@ class PromocaoApiController extends ApiCoreController
                     $nota = $this->getNota($etapa, $cc['id']);
                     $parecer = $this->getParecerDescritivo($etapa, $cc['id']);
 
-                    if (trim($nota) != '' || trim($parecer) != '') {
+                    if ($regraNaoUsaNota || trim($nota) != '' || trim($parecer) != '') {
                         // FIXME #parameters
                         $falta = $this->boletimService(null)->getFalta($etapa, $cc['id'])->quantidade;
 
@@ -427,5 +433,16 @@ class PromocaoApiController extends ApiCoreController
         } else {
             $this->notImplementedOperationError();
         }
+    }
+
+    /**
+     * Verifica se a regra de avaliação não usa nota
+     *
+     * @param int $tipoNota
+     * @return bool
+     */
+    private function regraNaoUsaNota($tipoNota)
+    {
+        return $tipoNota == RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
     }
 }
