@@ -172,7 +172,13 @@ class EscolaController extends ApiCoreController
                 where true 
                     and (
                         case when $1 = 0 then 
-                            true 
+                            (
+                                andamento = 1
+                                or 
+                                ano in (
+                                    select ref_ano from pmieducar.escola_ano_letivo where ref_cod_escola = eal.ref_cod_escola and andamento = 2 limit 2
+                                )
+                            ) 
                         else 
                             ano = $1 
                         end
