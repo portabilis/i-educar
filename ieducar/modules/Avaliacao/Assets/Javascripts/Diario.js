@@ -16,6 +16,8 @@ var SEARCH_ORIENTATION = '';
 
 var nomenclatura_exame = '';
 
+var regra_dependencia = '';
+
 // funcoes usados pelo modulo Frontend/Process.js
 var onClickSelectAllEvent = false;
 var onClickActionEvent    = false;
@@ -1030,6 +1032,7 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   $tableSearchDetails.show();
 
   nomenclatura_exame = dataDetails[0].nomenclatura_exame;
+  regra_dependencia = dataDetails[0].regra_dependencia;
 
   $tableSearchDetails.data('regras', dataDetails);
 }
@@ -1719,7 +1722,9 @@ function situacaoFinalField($matriculaId, $situacao){
   $optionAprovado.appendTo($selectSituacao);
   $optionRetido.appendTo($selectSituacao);
   $optionAprovadoPeloConselho.appendTo($selectSituacao);
-  $optionAprovadoComDependencia.appendTo($selectSituacao);
+  if (regra_dependencia) {
+    $optionAprovadoComDependencia.appendTo($selectSituacao);
+  }
 
   var $element = $j('<tr />').addClass('center resultado-final');
   $j('<td />').addClass('center resultado-final').html(safeUtf8Decode('Situação final')).appendTo($element);

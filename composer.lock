@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "232baf8b61d6f1755fd29af9ce40a121",
+    "content-hash": "1c2b4cfc07ff85465e80c55762fbd73e",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -60,16 +60,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.130.2",
+            "version": "3.130.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "35289d9dd5184dd1106e49f99ef5074a84635b5c"
+                "reference": "916356edb5c30fa564d02de94bde51a9c0bb4469"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/35289d9dd5184dd1106e49f99ef5074a84635b5c",
-                "reference": "35289d9dd5184dd1106e49f99ef5074a84635b5c",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/916356edb5c30fa564d02de94bde51a9c0bb4469",
+                "reference": "916356edb5c30fa564d02de94bde51a9c0bb4469",
                 "shasum": ""
             },
             "require": {
@@ -140,7 +140,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-12-23T19:12:28+00:00"
+            "time": "2020-01-02T19:13:50+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -1014,27 +1014,26 @@
         },
         {
             "name": "egulias/email-validator",
-            "version": "2.1.12",
+            "version": "2.1.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/egulias/EmailValidator.git",
-                "reference": "a6255605af39f2db7f5cb62e672bd8a7bad8d208"
+                "reference": "834593d5900615639208417760ba6a17299e2497"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/a6255605af39f2db7f5cb62e672bd8a7bad8d208",
-                "reference": "a6255605af39f2db7f5cb62e672bd8a7bad8d208",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/834593d5900615639208417760ba6a17299e2497",
+                "reference": "834593d5900615639208417760ba6a17299e2497",
                 "shasum": ""
             },
             "require": {
                 "doctrine/lexer": "^1.0.1",
-                "php": ">= 5.5"
+                "php": ">=5.5"
             },
             "require-dev": {
-                "dominicsayers/isemail": "dev-master",
-                "phpunit/phpunit": "^4.8.35||^5.7||^6.0",
-                "satooshi/php-coveralls": "^1.0.1",
-                "symfony/phpunit-bridge": "^4.4@dev"
+                "dominicsayers/isemail": "^3.0.7",
+                "phpunit/phpunit": "^4.8.36|^7.5.15",
+                "satooshi/php-coveralls": "^1.0.1"
             },
             "suggest": {
                 "ext-intl": "PHP Internationalization Libraries are required to use the SpoofChecking validation"
@@ -1068,20 +1067,20 @@
                 "validation",
                 "validator"
             ],
-            "time": "2019-12-20T12:49:39+00:00"
+            "time": "2019-12-30T08:14:25+00:00"
         },
         {
             "name": "erusev/parsedown",
-            "version": "1.7.3",
+            "version": "1.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/erusev/parsedown.git",
-                "reference": "6d893938171a817f4e9bc9e86f2da1e370b7bcd7"
+                "reference": "cb17b6477dfff935958ba01325f2e8a2bfa6dab3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/erusev/parsedown/zipball/6d893938171a817f4e9bc9e86f2da1e370b7bcd7",
-                "reference": "6d893938171a817f4e9bc9e86f2da1e370b7bcd7",
+                "url": "https://api.github.com/repos/erusev/parsedown/zipball/cb17b6477dfff935958ba01325f2e8a2bfa6dab3",
+                "reference": "cb17b6477dfff935958ba01325f2e8a2bfa6dab3",
                 "shasum": ""
             },
             "require": {
@@ -1114,7 +1113,7 @@
                 "markdown",
                 "parser"
             ],
-            "time": "2019-03-17T18:48:37+00:00"
+            "time": "2019-12-30T22:54:17+00:00"
         },
         {
             "name": "fideloper/proxy",
@@ -1769,16 +1768,16 @@
         },
         {
             "name": "laravel/horizon",
-            "version": "v3.4.5",
+            "version": "v3.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/horizon.git",
-                "reference": "025f953b4902a9b0b172e6d5fe19d0809701259e"
+                "reference": "78516806b280b360996e514565bc0e1f8d3cc7e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/horizon/zipball/025f953b4902a9b0b172e6d5fe19d0809701259e",
-                "reference": "025f953b4902a9b0b172e6d5fe19d0809701259e",
+                "url": "https://api.github.com/repos/laravel/horizon/zipball/78516806b280b360996e514565bc0e1f8d3cc7e3",
+                "reference": "78516806b280b360996e514565bc0e1f8d3cc7e3",
                 "shasum": ""
             },
             "require": {
@@ -1834,7 +1833,7 @@
                 "laravel",
                 "queue"
             ],
-            "time": "2019-12-23T19:45:03+00:00"
+            "time": "2019-12-30T22:01:12+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -1901,16 +1900,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.61",
+            "version": "1.0.62",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "4fb13c01784a6c9f165a351e996871488ca2d8c9"
+                "reference": "14dd5d7dff5fbc29ca9a2a53ff109760e40d91a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/4fb13c01784a6c9f165a351e996871488ca2d8c9",
-                "reference": "4fb13c01784a6c9f165a351e996871488ca2d8c9",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/14dd5d7dff5fbc29ca9a2a53ff109760e40d91a0",
+                "reference": "14dd5d7dff5fbc29ca9a2a53ff109760e40d91a0",
                 "shasum": ""
             },
             "require": {
@@ -1981,7 +1980,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2019-12-08T21:46:50+00:00"
+            "time": "2019-12-29T14:46:55+00:00"
         },
         {
             "name": "league/flysystem-aws-s3-v3",
@@ -2388,23 +2387,25 @@
         },
         {
             "name": "mtdowling/jmespath.php",
-            "version": "2.4.0",
+            "version": "2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jmespath/jmespath.php.git",
-                "reference": "adcc9531682cf87dfda21e1fd5d0e7a41d292fac"
+                "reference": "52168cb9472de06979613d365c7f1ab8798be895"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jmespath/jmespath.php/zipball/adcc9531682cf87dfda21e1fd5d0e7a41d292fac",
-                "reference": "adcc9531682cf87dfda21e1fd5d0e7a41d292fac",
+                "url": "https://api.github.com/repos/jmespath/jmespath.php/zipball/52168cb9472de06979613d365c7f1ab8798be895",
+                "reference": "52168cb9472de06979613d365c7f1ab8798be895",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=5.4.0",
+                "symfony/polyfill-mbstring": "^1.4"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0"
+                "composer/xdebug-handler": "^1.2",
+                "phpunit/phpunit": "^4.8.36|^7.5.15"
             },
             "bin": [
                 "bin/jp.php"
@@ -2412,7 +2413,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -2439,7 +2440,7 @@
                 "json",
                 "jsonpath"
             ],
-            "time": "2016-12-03T22:08:25+00:00"
+            "time": "2019-12-30T18:03:34+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -5463,16 +5464,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.6.0",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "ecbc8f3ed2cafca3cfca3d5febaae5a9d2899508"
+                "reference": "4c97f814aa2f0dd4d5bedc89181c10ef12c004c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/ecbc8f3ed2cafca3cfca3d5febaae5a9d2899508",
-                "reference": "ecbc8f3ed2cafca3cfca3d5febaae5a9d2899508",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/4c97f814aa2f0dd4d5bedc89181c10ef12c004c5",
+                "reference": "4c97f814aa2f0dd4d5bedc89181c10ef12c004c5",
                 "shasum": ""
             },
             "require": {
@@ -5491,7 +5492,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -5520,7 +5521,7 @@
                 "throwable",
                 "whoops"
             ],
-            "time": "2019-12-25T10:00:00+00:00"
+            "time": "2019-12-29T10:00:00+00:00"
         },
         {
             "name": "friendsofphp/php-cs-fixer",
@@ -5711,16 +5712,16 @@
         },
         {
             "name": "laravel/dusk",
-            "version": "v5.7.0",
+            "version": "v5.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/dusk.git",
-                "reference": "9881d5c9aa7435602899b8e51843c6ec9f3d6cc5"
+                "reference": "5a160ed9ca39dcde910d971733fa750a5eb1d329"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/dusk/zipball/9881d5c9aa7435602899b8e51843c6ec9f3d6cc5",
-                "reference": "9881d5c9aa7435602899b8e51843c6ec9f3d6cc5",
+                "url": "https://api.github.com/repos/laravel/dusk/zipball/5a160ed9ca39dcde910d971733fa750a5eb1d329",
+                "reference": "5a160ed9ca39dcde910d971733fa750a5eb1d329",
                 "shasum": ""
             },
             "require": {
@@ -5775,7 +5776,7 @@
                 "testing",
                 "webdriver"
             ],
-            "time": "2019-12-17T17:19:21+00:00"
+            "time": "2019-12-30T21:45:39+00:00"
         },
         {
             "name": "laravel/telescope",
@@ -6334,16 +6335,16 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "4.3.3",
+            "version": "4.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "2ecaa9fef01634c83bfa8dc1fe35fb5cef223a62"
+                "reference": "da3fd972d6bafd628114f7e7e036f45944b62e9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/2ecaa9fef01634c83bfa8dc1fe35fb5cef223a62",
-                "reference": "2ecaa9fef01634c83bfa8dc1fe35fb5cef223a62",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/da3fd972d6bafd628114f7e7e036f45944b62e9c",
+                "reference": "da3fd972d6bafd628114f7e7e036f45944b62e9c",
                 "shasum": ""
             },
             "require": {
@@ -6355,6 +6356,7 @@
             "require-dev": {
                 "doctrine/instantiator": "^1.0.5",
                 "mockery/mockery": "^1.0",
+                "phpdocumentor/type-resolver": "0.4.*",
                 "phpunit/phpunit": "^6.4"
             },
             "type": "library",
@@ -6381,7 +6383,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2019-12-20T13:40:23+00:00"
+            "time": "2019-12-28T18:55:12+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",

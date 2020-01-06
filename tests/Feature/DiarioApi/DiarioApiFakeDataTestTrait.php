@@ -48,7 +48,7 @@ trait DiarioApiFakeDataTestTrait
         ]);
         $level = $schoolClass->grade;
 
-        $level->evaluationRules()->attach($evaluationRule->id, ['ano_letivo' => 2019]);
+        $level->evaluationRules()->attach($evaluationRule->id, ['ano_letivo' => now()->year]);
 
         $school = $schoolClass->school;
 
