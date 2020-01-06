@@ -151,14 +151,14 @@ class PromocaoApiController extends ApiCoreController
     {
         try {
             // FIXME #parameters
-            $this->boletimService(null)->save();
+            $this->boletimService()->save();
         } catch (CoreExt_Service_Exception $e) {
             // excecoes ignoradas :( pois servico lanca excecoes de alertas, que não são exatamente erros.
             // error_log('CoreExt_Service_Exception ignorada: ' . $e->getMessage());
         }
     }
 
-    protected function boletimService($matriculaId, $reload = false)
+    protected function boletimService($reload = false)
     {
         $matriculaId = $this->matriculaId();
 
@@ -187,7 +187,7 @@ class PromocaoApiController extends ApiCoreController
     protected function getNota($etapa = null, $componenteCurricularId)
     {
         // FIXME #parameters
-        $nota = urldecode($this->boletimService(null)->getNotaComponente($componenteCurricularId, $etapa)->nota);
+        $nota = urldecode($this->boletimService()->getNotaComponente($componenteCurricularId, $etapa)->nota);
 
         return str_replace(',', '.', $nota);
     }
@@ -195,10 +195,10 @@ class PromocaoApiController extends ApiCoreController
     protected function getEtapaParecer($etapaDefault)
     {
         // FIXME #parameters
-        if ($etapaDefault != 'An' && ($this->boletimService(null)->getRegra()->get('parecerDescritivo') ==
+        if ($etapaDefault != 'An' && ($this->boletimService()->getRegra()->get('parecerDescritivo') ==
                 RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE ||
                 // FIXME #parameters
-                $this->boletimService(null)->getRegra()->get('parecerDescritivo') ==
+                $this->boletimService()->getRegra()->get('parecerDescritivo') ==
                 RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL)) {
             $etapaDefault = 'An';
         }
@@ -209,15 +209,15 @@ class PromocaoApiController extends ApiCoreController
     protected function getParecerDescritivo($etapa, $componenteCurricularId)
     {
         // FIXME #parameters
-        if ($this->boletimService(null)->getRegra()->get('parecerDescritivo') ==
+        if ($this->boletimService()->getRegra()->get('parecerDescritivo') ==
             RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE ||
             // FIXME #parameters
-            $this->boletimService(null)->getRegra()->get('parecerDescritivo') ==
+            $this->boletimService()->getRegra()->get('parecerDescritivo') ==
             RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
             // FIXME #parameters
-            return $this->boletimService(null)->getParecerDescritivo($this->getEtapaParecer($etapa), $componenteCurricularId);
+            return $this->boletimService()->getParecerDescritivo($this->getEtapaParecer($etapa), $componenteCurricularId);
         } else {
-            return $this->boletimService(null)->getParecerDescritivo($this->getEtapaParecer($etapa));
+            return $this->boletimService()->getParecerDescritivo($this->getEtapaParecer($etapa));
         }
     }
 
@@ -225,7 +225,7 @@ class PromocaoApiController extends ApiCoreController
     {
         $defaultValue = 0;
         // FIXME #parameters
-        $regra = $this->boletimService(null)->getRegra();
+        $regra = $this->boletimService()->getRegra();
         $tpPresenca = $regra->get('tipoPresenca');
         $regraNaoUsaNota = $this->regraNaoUsaNota($regra->get('tipoNota'));
 
@@ -233,7 +233,7 @@ class PromocaoApiController extends ApiCoreController
 
         if ($tpPresenca == RegraAvaliacao_Model_TipoPresenca::GERAL) {
             // FIXME #parameters
-            foreach (range(1, $this->boletimService(null)->getOption('etapas')) as $etapa) {
+            foreach (range(1, $this->boletimService()->getOption('etapas')) as $etapa) {
                 $hasNotaOrParecerInEtapa = false;
 
                 if ($regraNaoUsaNota) {
@@ -252,7 +252,7 @@ class PromocaoApiController extends ApiCoreController
 
                 if ($hasNotaOrParecerInEtapa) {
                     // FIXME #parameters
-                    $falta = $this->boletimService(null)->getFalta($etapa)->quantidade;
+                    $falta = $this->boletimService()->getFalta($etapa)->quantidade;
 
                     if (is_null($falta)) {
                         $notaFalta = new Avaliacao_Model_FaltaGeral([
@@ -260,25 +260,25 @@ class PromocaoApiController extends ApiCoreController
                             'etapa' => $etapa
                         ]);
                         // FIXME #parameters
-                        $this->boletimService(null)->addFalta($notaFalta);
+                        $this->boletimService()->addFalta($notaFalta);
                         $this->messenger->append("Lançado falta geral (valor $defaultValue) para etapa $etapa (matrícula $matriculaId)", 'notice');
                     }
                 }
             }//for etapa
         } elseif ($tpPresenca == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
             // FIXME #parameters
-            foreach (range(1, $this->boletimService(null)->getOption('etapas')) as $etapa) {
+            foreach (range(1, $this->boletimService()->getOption('etapas')) as $etapa) {
                 foreach ($componentesCurriculares as $cc) {
                     $nota = $this->getNota($etapa, $cc['id']);
                     $parecer = $this->getParecerDescritivo($etapa, $cc['id']);
 
                     if ($regraNaoUsaNota || trim($nota) != '' || trim($parecer) != '') {
                         // FIXME #parameters
-                        $falta = $this->boletimService(null)->getFalta($etapa, $cc['id'])->quantidade;
+                        $falta = $this->boletimService()->getFalta($etapa, $cc['id'])->quantidade;
 
                         if (is_null($falta)) {
                             // FIXME #parameters
-                            $this->boletimService(null)->addFalta(
+                            $this->boletimService()->addFalta(
                                 new Avaliacao_Model_FaltaComponente([
                                     'componenteCurricular' => $cc['id'],
                                     'quantidade' => $defaultValue,
@@ -398,7 +398,7 @@ class PromocaoApiController extends ApiCoreController
             $componenteId = $_componente->get('id');
 
             // FIXME #parameters
-            $nota_exame = str_replace(',', '.', $this->boletimService(null)->preverNotaRecuperacao($componenteId));
+            $nota_exame = str_replace(',', '.', $this->boletimService()->preverNotaRecuperacao($componenteId));
 
             if (!empty($nota_exame)) {
                 $this->createOrUpdateNotaExame($matriculaId, $componenteId, $nota_exame);
