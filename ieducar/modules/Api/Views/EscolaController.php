@@ -176,7 +176,12 @@ class EscolaController extends ApiCoreController
                                 andamento = 1
                                 or 
                                 ano in (
-                                    select ref_ano from pmieducar.escola_ano_letivo where ref_cod_escola = eal.ref_cod_escola and andamento = 2 limit 2
+                                    select ano 
+                                    from pmieducar.escola_ano_letivo 
+                                    where ref_cod_escola = eal.ref_cod_escola 
+                                    and andamento = 2 
+                                    order by ano desc 
+                                    limit 1
                                 )
                             ) 
                         else 
