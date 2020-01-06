@@ -360,6 +360,10 @@ class EnrollmentService
      */
     public function reorderSchoolClass(LegacyEnrollment $enrollment)
     {
+        if (!$enrollment->sequencial_fechamento) {
+            return;
+        }
+
         $schoolClass = $enrollment->schoolClass;
         $schoolClass->enrollments()->where('sequencial_fechamento', '>', $enrollment->sequencial_fechamento)
             ->orderBy('sequencial_fechamento')
