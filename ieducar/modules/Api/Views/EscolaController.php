@@ -179,7 +179,6 @@ class EscolaController extends ApiCoreController
                                     select ano 
                                     from pmieducar.escola_ano_letivo 
                                     where ref_cod_escola = eal.ref_cod_escola 
-                                    and andamento = 2 
                                     order by ano desc 
                                     limit 2
                                 )
