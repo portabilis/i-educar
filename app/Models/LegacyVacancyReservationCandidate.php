@@ -81,4 +81,12 @@ class LegacyVacancyReservationCandidate extends Model
     {
         return $this->belongsTo(LegacySchool::class, 'ref_cod_escola');
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function student()
+    {
+        return $this->belongsTo(LegacyStudent::class, 'ref_cod_aluno');
+    }
 }
