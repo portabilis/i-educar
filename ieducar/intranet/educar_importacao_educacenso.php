@@ -86,8 +86,8 @@ class indice extends clsCadastro
   {
       $resources = [
           null => 'Selecione',
-          '2018',
-          '2019',
+          '2018' => '2018',
+          '2019' => '2019',
       ];
       $options = [
           'label' => 'Ano',
