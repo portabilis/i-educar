@@ -1,13 +1,19 @@
 <?php
 
 use App\Support\Database\DropForeignKey;
+use App\Support\Database\EnableDisableForeignKeys;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class DropSomeForeignKeysInCadastroDocumentoTable extends Migration
 {
-    use DropForeignKey;
+    use DropForeignKey, EnableDisableForeignKeys;
+
+    /**
+     * @var bool
+     */
+    public $withinTransaction = false;
 
     /**
      * Run the migrations.
@@ -16,6 +22,8 @@ class DropSomeForeignKeysInCadastroDocumentoTable extends Migration
      */
     public function up()
     {
+        $this->disableForeignKeys();
+
         $this->dropForeignKeysIn('documento');
 
         Schema::table('cadastro.documento', function (Blueprint $table) {
@@ -44,5 +52,7 @@ class DropSomeForeignKeysInCadastroDocumentoTable extends Migration
                 ->onUpdate('restrict')
                 ->onDelete('restrict');
         });
+
+        $this->enableForeignKeys();
     }
 }
