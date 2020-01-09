@@ -9,20 +9,24 @@ trait EnableDisableForeignKeys
     /**
      * Disable foreign keys check.
      *
+     * @param string $table
+     *
      * @return void
      */
-    protected function disableForeignKeys()
+    protected function disableForeignKeys($table)
     {
-        DB::statement('SET session_replication_role = replica;');
+        DB::statement("ALTER TABLE {$table} DISABLE TRIGGER ALL;");
     }
 
     /**
      * Enable foreign keys check.
      *
+     * @param string $table
+     *
      * @return void
      */
-    protected function enableForeignKeys()
+    protected function enableForeignKeys($table)
     {
-        DB::statement('SET session_replication_role = origin;');
+        DB::statement("ALTER TABLE {$table} ENABLE TRIGGER ALL;");
     }
 }
