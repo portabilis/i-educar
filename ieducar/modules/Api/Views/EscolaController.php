@@ -143,12 +143,24 @@ class EscolaController extends ApiCoreController
     {
         if ($this->canGetEtapasPorEscola()) {
             $ano = $this->getRequest()->ano ? $this->getRequest()->ano : 0;
+            $escola = $this->getRequest()->escola;
 
-            $sql = '
+            $where = '';
+
+            if ($escola) {
+                if (is_array($escola)) {
+                    $escola = implode(',', $escola);
+                }
+
+                $where = " AND eal.ref_cod_escola in ({$escola})";
+            }
+
+            $sql = "
                 select distinct 
                     ref_cod_escola as escola_id,
                     ano as ano, 
-                    m.nm_tipo as descricao
+                    m.nm_tipo as descricao,
+                    andamento as ano_em_aberto
                 from pmieducar.escola_ano_letivo eal
                 inner join pmieducar.ano_letivo_modulo alm
                     on true 
@@ -160,19 +172,35 @@ class EscolaController extends ApiCoreController
                 where true 
                     and (
                         case when $1 = 0 then 
-                            true 
+                            (
+                                andamento = 1
+                                or 
+                                ano in (
+                                    select ano 
+                                    from pmieducar.escola_ano_letivo 
+                                    where ref_cod_escola = eal.ref_cod_escola 
+                                    order by ano desc 
+                                    limit 2
+                                )
+                            ) 
                         else 
                             ano = $1 
                         end
                     )
-                and andamento = 1
+                {$where} 
                 order by ref_cod_escola, ano
-            ';
+            ";
 
             $anosLetivos = $this->fetchPreparedQuery($sql, [$ano]);
 
-            $attrs = ['escola_id', 'ano', 'descricao'];
+            $attrs = ['escola_id', 'ano', 'descricao', 'ano_em_aberto'];
             $anosLetivos = Portabilis_Array_Utils::filterSet($anosLetivos, $attrs);
+
+            $anosLetivos = array_map(function ($ano) {
+                $ano['ano_em_aberto'] = $ano['ano_em_aberto'] == 1;
+
+                return $ano;
+            }, $anosLetivos);
 
             foreach ($anosLetivos as $index => $anoLetivo) {
                 $anosLetivos[$index] = array_merge($anosLetivos[$index], $this->getEtapasAnoEscola($anoLetivo['ano'], $anoLetivo['escola_id']));

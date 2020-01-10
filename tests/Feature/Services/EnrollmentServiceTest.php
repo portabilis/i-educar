@@ -335,7 +335,7 @@ class EnrollmentServiceTest extends TestCase
     }
 
     /**
-     * Instituição sem data base, a ultima enturmação deverá ser retornada
+     * Instituição com data base antes da data de remanejamento, devera retornar null
      */
     public function testGetPreviousEnrollmentWithRelocationDateBeforeDepartedDate()
     {
@@ -350,11 +350,11 @@ class EnrollmentServiceTest extends TestCase
 
         $lastEnrollment = $this->service->getPreviousEnrollmentAccordingToRelocationDate($enrollment->registration);
 
-        $this->assertEquals($enrollment->id, $lastEnrollment->id);
+        $this->assertNull($lastEnrollment);
     }
 
     /**
-     * Instituição sem data base, a ultima enturmação deverá ser retornada
+     * Instituição com data base depois da data de remanejamento, a ultima enturmação deverá ser retornada
      */
     public function testGetPreviousEnrollmentWithRelocationDateAfterDepartedDate()
     {
@@ -369,7 +369,7 @@ class EnrollmentServiceTest extends TestCase
 
         $lastEnrollment = $this->service->getPreviousEnrollmentAccordingToRelocationDate($enrollment->registration);
 
-        $this->assertNull($lastEnrollment);
+        $this->assertEquals($enrollment->id, $lastEnrollment->id);
     }
 
     public function testReorder()
