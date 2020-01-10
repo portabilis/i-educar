@@ -165,6 +165,14 @@ class EnrollmentService
         $enrollment->data_exclusao = $date;
         $enrollment->ativo = 0;
 
+        $relocationDate = $enrollment->schoolClass->school->institution->relocation_date;
+
+        // Se a matrícula anterior data de saída antes da data base (ou não houver data base)
+        // reordena o sequencial da turma de origem
+        if (!$relocationDate || $date < $relocationDate) {
+            $this->reorderSchoolClass($enrollment);
+        }
+
         return $enrollment->saveOrFail();
     }
 
@@ -318,10 +326,8 @@ class EnrollmentService
 
         $dateDeparted = $previousEnrollment->date_departed;
 
-        $relocationDate = $previousEnrollment->schoolClass->school->institution->relocation_date;
-
-        if (!$relocationDate || $relocationDate < $dateDeparted) {
-           return $previousEnrollment;
+        if ($this->withoutRelocationDateOrDateIsBefore($previousEnrollment, $dateDeparted)) {
+            return $previousEnrollment;
         }
     }
 
@@ -340,5 +346,53 @@ class EnrollmentService
         });
 
         return true;
+    }
+
+    /**
+     * Reordena os sequenciais da turma baseado em uma matrícula que vai ser remanejada
+     *
+     * Altera o sequencial da matrícula anterior para null
+     * e atualiza todos os sequenciais da turma de origem a partir do sequencial do aluno
+     * remanejado devem ser atualizados subtraindo 1
+     *
+     * @param LegacyEnrollment $enrollment
+     * @param DateTime $date
+     */
+    public function reorderSchoolClass(LegacyEnrollment $enrollment)
+    {
+        if (!$enrollment->sequencial_fechamento) {
+            return;
+        }
+
+        $schoolClass = $enrollment->schoolClass;
+        $schoolClass->enrollments()->where('sequencial_fechamento', '>', $enrollment->sequencial_fechamento)
+            ->orderBy('sequencial_fechamento')
+            ->get()
+            ->each(function (LegacyEnrollment $enrollment) {
+                $enrollment->sequencial_fechamento -= 1;
+                $enrollment->save();
+        });
+
+        $enrollment->sequencial_fechamento = 9999;
+        $enrollment->save();
+    }
+
+    /**
+     * Verifica se a instituição não usa database
+     * ou se a data informada é antes da database
+     *
+     * @param LegacyEnrollment $enrollment
+     * @param DateTime $date
+     * @return bool
+     */
+    private function withoutRelocationDateOrDateIsBefore($enrollment, $date)
+    {
+        $relocationDate = $enrollment->schoolClass->school->institution->relocation_date;
+
+        if (!$relocationDate || $date < $relocationDate) {
+            return true;
+        }
+
+        return false;
     }
 }
