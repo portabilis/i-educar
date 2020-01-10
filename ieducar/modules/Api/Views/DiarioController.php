@@ -252,7 +252,7 @@ class DiarioController extends ApiCoreController
                         return false;
                     }
 
-                    if ($etapa != 'Rc' && $notaValidacao > $regra->nota_maxima_geral) {
+                    if ($etapa != 'Rc' && $notaValidacao > $regra->nota_maxima_geral && !$regra->isSumScoreCalculation()) {
                         $this->messenger->append("A nota {$valorNota} está acima da configurada para nota máxima geral que é {$regra->nota_maxima_geral}.", 'error');
                         $this->appendResponse('error', [
                             'code' => Error::SCORE_GREATER_THAN_MAX_ALLOWED,
