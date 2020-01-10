@@ -99,7 +99,7 @@ class Registro40Import implements RegistroImportInterface
         $manager->role_id = $this->model->cargo;
         $manager->access_criteria_id = $this->model->criterioAcesso ?: null;
         $manager->access_criteria_description = $this->model->especificacaoCriterioAcesso;
-        $manager->link_type_id = $this->model->tipoVinculo ?: null;
+        $manager->link_type_id = (int)$this->model->tipoVinculo ?: null;
         if (!$this->existsChiefSchoolManager($school)) {
             $manager->chief = true;
         }
