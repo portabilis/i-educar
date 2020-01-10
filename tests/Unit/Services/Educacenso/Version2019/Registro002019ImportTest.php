@@ -92,7 +92,7 @@ class Registro002019ImportTest extends TestCase
         $phones = $school->person->phone;
 
         $this->assertCount(1, $phones);
-        $this->assertEquals($model->telefone, $phones->first()->fone);
+        $this->assertEquals((int)$model->telefone, (int)$phones->first()->fone);
     }
 
     /**
