@@ -5,7 +5,6 @@ require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Educacenso/Model/AlunoDataMapper.php';
-require_once 'include/public/clsPublicSetorBai.inc.php';
 require_once 'Portabilis/Utils/CustomLabel.php';
 
 class clsIndexBase extends clsBase
@@ -63,7 +62,6 @@ class indice extends clsListagem
     public $ref_cod_escola;
     public $ref_cod_curso;
     public $ref_cod_serie;
-    public $idsetorbai;
 
     public function Gerar()
     {
@@ -88,20 +86,6 @@ class indice extends clsListagem
         $this->campoTexto('nome_pai', 'Nome do Pai', $this->nome_pai, 50, 255);
         $this->campoTexto('nome_mae', 'Nome da Mãe', $this->nome_mae, 50, 255);
         $this->campoTexto('nome_responsavel', 'Nome do Responsável', $this->nome_responsavel, 50, 255);
-
-        $opcoes = ['' => 'Selecione'];
-            $objTemp = new clsPublicSetorBai();
-            $objTemp->setOrderBy(' nome asc ');
-            $lista = $objTemp->lista();
-
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['idsetorbai']] = $registro['nome'];
-                }
-            }
-
-        $this->campoLista('idsetorbai', 'Setor', $opcoes, $this->idsetorbai, null, null, null, null, null, false);
-
         $this->campoRotulo('filtros_matricula', '<b>Filtros de matrículas em andamento</b>');
 
         $this->inputsHelper()->integer('ano', ['required' => false, 'value' => $this->ano, 'max_length' => 4]);
@@ -186,8 +170,7 @@ class indice extends clsListagem
             $this->ref_cod_instituicao,
             $this->ref_cod_escola,
             $this->ref_cod_curso,
-            $this->ref_cod_serie,
-            $this->idsetorbai
+            $this->ref_cod_serie
         );
 
         $total = $aluno->_total;
