@@ -1004,15 +1004,31 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
     $j('<td />').html(descricaoCompletaRegra).appendTo($linha);
 
     //corrige acentuação
-    var tipoNota = regra.tipo_nota.replace('_', ' ');
-    if (tipoNota == 'numerica')
-      tipoNota = 'numérica';
-    $j('<td />').html(safeToUpperCase(safeUtf8Decode(tipoNota))).appendTo($linha);
+    var tipoNota = safeToUpperCase(regra.tipo_nota.replace('_', ' '));
+    var tipo_recuperacao_paralela = safeToUpperCase(regra.tipo_recuperacao_paralela.replace('_', ' '));
+    var nota_geral_por_etapa = safeToUpperCase(regra.nota_geral_por_etapa.replace('_', ' '));
 
+    if (tipoNota == 'NUMERICA') {
+      tipoNota = 'NUMÉRICA';
+    }
+
+    if (tipo_recuperacao_paralela == 'ETAPAS ESPECIFICAS') {
+      tipo_recuperacao_paralela = 'ETAPAS ESPECÍFICAS';
+    }
+
+    if (tipo_recuperacao_paralela == 'NAO UTILIZA') {
+      tipo_recuperacao_paralela = 'NÃO UTILIZA';
+    }
+
+    if (nota_geral_por_etapa == 'NAO UTILIZA') {
+      nota_geral_por_etapa = 'NÃO UTILIZA';
+    }
+
+    $j('<td />').html(safeUtf8Decode(tipoNota)).appendTo($linha);
     $j('<td />').html(safeToUpperCase(regra.tipo_presenca.replace('_', ' '))).appendTo($linha);
     $j('<td />').html(safeToUpperCase(regra.tipo_parecer_descritivo.replace('_', ' '))).appendTo($linha);
-    $j('<td />').html(safeToUpperCase(regra.tipo_recuperacao_paralela.replace('_', ' '))).appendTo($linha);
-    $j('<td />').html(safeToUpperCase(regra.nota_geral_por_etapa.replace('_', ' '))).appendTo($linha);
+    $j('<td />').html(tipo_recuperacao_paralela).appendTo($linha);
+    $j('<td />').html(nota_geral_por_etapa).appendTo($linha);
     $linha.appendTo($tableSearchDetails);
   });
 
