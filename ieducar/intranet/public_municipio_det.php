@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\City;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -53,9 +55,7 @@ class indice extends clsDetalhe
         $det_sigla_uf = $obj_sigla_uf->detalhe();
         $registro['sigla_uf'] = $det_sigla_uf['nome'];
 
-        $obj_idmun_pai = new clsMunicipio($registro['idmun_pai']);
-        $det_idmun_pai = $obj_idmun_pai->detalhe();
-        $registro['idmun_pai'] = $det_idmun_pai['nome'];
+        $registro['idmun_pai'] = City::getNameById($registro['idmun_pai']);
 
         if ($registro['nome']) {
             $this->addDetalhe(['Nome', "{$registro['nome']}"]);

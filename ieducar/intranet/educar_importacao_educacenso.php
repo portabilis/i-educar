@@ -2,6 +2,12 @@
 //error_reporting(E_ALL);
 //ini_set("display_errors", 1);
 
+use App\Models\City;
+use App\Models\Country;
+use App\Models\District;
+use App\Models\PersonHasPlace;
+use App\Models\Place;
+use App\Models\State;
 use iEducar\Modules\Educacenso\RunMigrations;
 
 ini_set("max_execution_time", 0);
@@ -1571,87 +1577,42 @@ class indice extends clsCadastro
 
   function cadastraEndereco($idpes, $cep, $logradouro, $enderecoNumero, $complemento, $nomeBairro, $ufIbge, $municipioIbge, $distritoIbge, $localizacao){
     $enderecoNumero = (int) $enderecoNumero;
-    // TODO (Notificar quando endereço não for criado?)
 
-    if($this->checkEnderecoPessoa($idpes)){
+    if(PersonHasPlace::query()->where('person_id', $idpes)->exists()){
       return false;
     }
 
-    $idmun = $municipioIbge ? $this->getMunicipioByCodIbge($municipioIbge) : null;
+    $city = City::findByIbgeCode($municipioIbge);
 
-    if(!$idmun){
+    if(empty($city)){
       return false;
     }
 
-    $iddis = $distritoIbge ? $this->getDistritoByCodIbge($distritoIbge) : null;
+    if ($distritoIbge) {
+      $district = District::findByIbgeCode($distritoIbge);
 
-    if(!$iddis){
-      $iddis = $this->getDistritoByMunicipio($idmun);
-    }
+      // TODO Addressing
+      // Salvar o ID do distrito no cadastro da escola
 
-    if(!$iddis){
-      return false;
-    }
-
-    $idbai = $this->getOrCreateBairro($idmun, $iddis, $nomeBairro, $localizacao);
-
-    $idlog = $this->getOrCreateLogradouro($logradouro, $idmun);
-
-    if(!$idlog || !$idbai){
-      return false;
-    }
-
-    $obj = new clsCepLogradouro($cep, $idlog);
-    if(!$obj->existe()){
-      $obj->cadastra();
-    }
-    $obj = new clsCepLogradouroBairro($idlog, $cep, $idbai);
-    if(!$obj->existe()){
-      $obj->cadastra();
-    }
-
-    $objEndereco = new clsPessoaEndereco($idpes, $cep, $idlog, $idbai, $enderecoNumero, $complemento);
-    $objEndereco->idpes_cad = $this->pessoa_logada;
-    $objEndereco->cadastra();
-  }
-
-  function getOrCreateLogradouro($logradouro, $idmun){
-    $logradouro = utf8_encode($logradouro);
-    $idlog = $this->getLogradouro($logradouro, $idmun);
-
-    if(!$idlog){
-      $split = explode(' ', $logradouro, 2);
-      $parteLogradouro = isset($split[1]) ? $split[1] : $logradouro;
-
-      // TODO: Verificar forma melhor de verificar o tipo do logradouro na string
-      if($split[0] == "RUA"){
-        $logradouro = $parteLogradouro;
+      if(empty($district)){
+          return false;
       }
-      $objLogradouro = new clsLogradouro();
-      $objLogradouro->idtlog = "RUA";
-      $objLogradouro->nome = $logradouro;
-      $objLogradouro->idmun = $idmun;
-      $objLogradouro->ident_oficial = "N";
-      $idlog = $objLogradouro->cadastra();
     }
 
-    return $idlog;
-  }
+    $place = Place::query()->create([
+        'city_id' => $city->getKey(),
+        'address' => $logradouro,
+        'number' => $enderecoNumero,
+        'complement' => $complemento,
+        'neighborhood' => $nomeBairro,
+        'postal_code' => $cep,
+    ]);
 
-  function getLogradouro($logradouro, $idmun){
-    $split = explode(' ', $logradouro, 2);
-    $parteLogradouro = isset($split[1]) ? $split[1] : $logradouro;
-
-    $sql = "SELECT idlog
-            from public.logradouro
-            WHERE (
-              nome ILIKE '{$logradouro}'
-              OR nome ILIKE '{$parteLogradouro}'
-            ) AND idmun = {$idmun}
-            limit 1
-    ";
-
-    return Portabilis_Utils_Database::selectField($sql);
+    PersonHasPlace::query()->create([
+        'person_id' => $idpes,
+        'place_id' => $place->getKey(),
+        'type' => 1,
+    ]);
   }
 
   function getOrCreateDeficiencia($deficienciaEducacenso){
@@ -1698,75 +1659,22 @@ class indice extends clsCadastro
     return Portabilis_Utils_Database::selectField($sql);
   }
 
-  function getOrCreateBairro($idmun, $iddis, $nomeBairro, $localizacao){
-    $idbai = $this->getBairro($idmun, $iddis, $nomeBairro);
-    $nomeBairro = utf8_decode($nomeBairro);
-    if(!$idbai){
-      $bairro = new clsBairro();
-      $bairro->idmun = $idmun;
-      $bairro->iddis = $iddis;
-      $bairro->nome = $nomeBairro;
-      $bairro->zona_localizacao = $localizacao;
-      $idbai = $bairro->cadastra();
-    }
-
-    return $idbai;
-  }
-
-  function getBairro($idmun, $iddis, $nomeBairro){
-    $nomeBairro = utf8_encode($nomeBairro);
-    $sql = "SELECT idbai
-              FROM public.bairro
-              WHERE idmun = {$idmun}
-              AND iddis = {$iddis}
-              AND nome ILIKE '{$nomeBairro}%'
-    ";
-    return Portabilis_Utils_Database::selectField($sql);
-  }
-
-  function getDistritoByMunicipio($idmun){
-    $sql = "SELECT iddis
-              from public.distrito
-              where idmun = {$idmun}
-              limit 1 ";
-
-    return Portabilis_Utils_Database::selectField($sql);
-  }
-
-  function getDistritoByCodIbge($distritoIbge){
-    $sql = "SELECT iddis
-              from public.distrito
-              where cod_ibge = '{$distritoIbge}'
-              limit 1 ";
-
-    return Portabilis_Utils_Database::selectField($sql);
-  }
-
   function getMunicipioByCodIbge($municipioIbge){
-    $sql = "SELECT idmun
-              from public.municipio
-              where cod_ibge = '{$municipioIbge}'
-              limit 1 ";
+    $city = City::findByIbgeCode($municipioIbge);
 
-    return Portabilis_Utils_Database::selectField($sql);
+    return $city->getKey() ?? null;
   }
 
   function getUfByCodIbge($ufIbge){
-    $sql = "SELECT sigla_uf
-              from public.uf
-              where cod_ibge = '{$ufIbge}'
-              limit 1 ";
+    $state = State::findByIbgeCode($ufIbge);
 
-    return Portabilis_Utils_Database::selectField($sql);
+    return $state->getKey() ?? $state->abbreviation;
   }
 
   function getPaisByCodIbge($paisIbge){
-    $sql = "SELECT idpais
-              from public.pais
-              where cod_ibge = '{$paisIbge}'
-              limit 1 ";
+    $country = Country::findByIbgeCode($paisIbge);
 
-    return Portabilis_Utils_Database::selectField($sql);
+    return $country->getKey() ?? null;
   }
 
   function getOrgaoEmissorRgByCodCenso($orgaoEmissorRgCenso){
@@ -1774,12 +1682,6 @@ class indice extends clsCadastro
               from cadastro.orgao_emissor_rg
               where codigo_educacenso = '{$orgaoEmissorRgCenso}'
               limit 1 ";
-
-    return Portabilis_Utils_Database::selectField($sql);
-  }
-
-  function checkEnderecoPessoa($idpes){
-    $sql = "SELECT idpes from cadastro.endereco_pessoa where idpes = {$idpes} limit 1 ";
 
     return Portabilis_Utils_Database::selectField($sql);
   }

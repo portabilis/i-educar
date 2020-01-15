@@ -86,16 +86,6 @@ class indice extends clsListagem
         $chave = "";
 
       if ($busca == 'S') {
-        if ($parametros->getPessoaNovo() == 'S') {
-          if ($parametros->getPessoaTela() == "window") {
-                        $this->acao = "set_campo_pesquisa(\"".$parametros->getPessoaCampo()."\", \"0\", \"submit\")";
-            $this->nome_acao = "Novo";
-          } elseif ($parametros->getPessoaTela() == "frame") {
-            $this->acao = "go( \"pesquisa_pessoa_cad.php?pessoa=F&cod=0&ref_cod_sistema=".$parametros->getCodSistema()."&pessoa_cpf=".$parametros->getPessoaCPF()."\" )";
-            $this->nome_acao = "Novo";
-          }
-        }
-
         if (is_numeric($chave_busca)) {
           $obj_pessoa = new clsPessoaFisica();
           $lst_pessoa = $obj_pessoa->lista( null, ( ( $cpf ) ? idFederal2int( $cpf ) : null ), $iniciolimit, $limite, false, $parametros->getCodSistema(), $chave_busca );
@@ -131,17 +121,8 @@ class indice extends clsListagem
                         $funcao .= "{$virgula} 'submit' )";
                     else
                         $funcao .= " )";
-                    if ( $parametros->getPessoaEditar() == "S" ) {
-                        if ( $parametros->getPessoaTela() == "frame" ) {
-                            $this->addLinhas( array( "<a href='pesquisa_pessoa_cad.php?pessoa=F&cod={$pessoa["idpes"]}&ref_cod_sistema=".$parametros->getCodSistema()."'>{$pessoa["cpf"]}</a>", "<a href='pesquisa_pessoa_cad.php?pessoa=F&cod={$pessoa["idpes"]}&ref_cod_sistema=".$parametros->getCodSistema()."'>{$pessoa["nome"]}</a>" ) );
-                        }
-                        else {
-                            $this->addLinhas( array( "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa["cpf"]}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa["nome"]}</a>" ) );
-                        }
-                    }
-                    else {
-                        $this->addLinhas( array( "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa["cpf"]}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa["nome"]}</a>" ) );
-                    }
+
+                    $this->addLinhas( array( "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa["cpf"]}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa["nome"]}</a>" ) );
                     $total = $pessoa['total'];
                 }
             }
@@ -178,16 +159,6 @@ class indice extends clsListagem
             $iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"] * $limite - $limite: 0;
 
             if ( $busca == 'S' ) {
-                if ( $parametros->getPessoaNovo() == 'S' ) {
-                    if ( $parametros->getPessoaTela() == "window" ) {
-                        $this->acao      = "set_campo_pesquisa( \"".$parametros->getPessoaCampo()."\", \"0\", \"submit\" )";
-                        $this->nome_acao = "Novo";
-                    }
-                    elseif ( $parametros->getPessoaTela() == "frame" ) {
-                        $this->acao      = "go( \"pesquisa_pessoa_cad.php?pessoa=J&cod=0\" )";
-                        $this->nome_acao = "Novo";
-                    }
-                }
                 if ( is_numeric( $chave_busca ) ) {
                     $obj_pessoa = new clsPessoaJuridica();
                     $lst_pessoa = $obj_pessoa->lista( ( ( $cnpj ) ? idFederal2int( $cnpj ) : null ), false, false, $iniciolimit, $limite, false, false, false, $chave_busca );
@@ -222,17 +193,8 @@ class indice extends clsListagem
                         $funcao .= "{$virgula} 'submit' )";
                     else
                         $funcao .= " )";
-                    if ( $campos["edita"]["permitir"] == "S" ) {
-                        if ( $parametros->getPessoaTela() == "frame" ) {
-                            $this->addLinhas( array( "<a href='pesquisa_pessoa_cad.php?pessoa=J&cod={$pessoa["idpes"]}'>{$pessoa["cnpj"]}</a>", "<a href='pesquisa_pessoa_cad.php?pessoa=J&cod={$pessoa["idpes"]}'>{$pessoa["nome"]}</a>" ) );
-                        }
-                        else {
-                            $this->addLinhas( array( "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa["cnpj"]}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa["nome"]}</a>" ) );
-                        }
-                    }
-                    else {
-                        $this->addLinhas( array( "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa["cnpj"]}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa["nome"]}</a>" ) );
-                    }
+
+                    $this->addLinhas( array( "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa["cnpj"]}</a>", "<a href='javascript:void( 0 );' onclick=\"javascript:{$funcao}\">{$pessoa["nome"]}</a>" ) );
                     $total = $pessoa['total'];
                 }
             }
@@ -257,16 +219,6 @@ class indice extends clsListagem
             $limite      = 10;
             $iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"] * $limite - $limite: 0;
             if ( $busca == 'S' ) {
-                if ( $parametros->getPessoaNovo() == 'S' ) {
-                    if ( $parametros->getPessoaTela() == "window" ) {
-                        $this->acao      = "set_campo_pesquisa( \"".$parametros->getPessoaCampo()."\", \"0\", \"submit\" )";
-                        $this->nome_acao = "Novo";
-                    }
-                    elseif ( $parametros->getPessoaTela() == "frame" ) {
-                        $this->acao      = "go( \"pesquisa_pessoa_cad.php?pessoa=FJ&cod=0&ref_cod_sistema=".$parametros->getCodSistema()."&pessoa_cpf=".$parametros->getPessoaCPF()."\" )";
-                        $this->nome_acao = "Novo";
-                    }
-                }
                 if ( is_numeric( $chave_busca ) ) {
                     $obj_pessoa = new clsPessoaFj();
                     $lst_pessoa = $obj_pessoa->lista_rapida( $chave_busca, null, idFederal2int( $id_federal ), $iniciolimit, $limite, null,"nome ASC", $parametros->getCodSistema() );
@@ -306,11 +258,7 @@ class indice extends clsListagem
                     $det_pes = $obj_pes->detalhe();
                     if ( $parametros->getPessoaEditar() == "S" ) {
                         if ( $parametros->getPessoaTela() == "frame" ) {
-
-                            if ( $det_pes["tipo"] == "J" )
-                                $this->addLinhas( array( "<a href='pesquisa_pessoa_cad.php?pessoa={$det_pes["tipo"]}&cod={$pessoa["idpes"]}'>{$pessoa["cnpj"]}</a>", "<a href='pesquisa_pessoa_cad.php?pessoa={$det_pes["tipo"]}&cod={$pessoa["idpes"]}'>{$pessoa["nome"]}</a>" ) );
-                            elseif ( $det_pes["tipo"] == "F" )
-                                $this->addLinhas( array( "<a href='pesquisa_pessoa_cad.php?pessoa={$det_pes["tipo"]}&cod={$pessoa["idpes"]}&ref_cod_sistema=".$parametros->getCodSistema()."'>{$pessoa["cpf"]}</a>", "<a href='pesquisa_pessoa_cad.php?pessoa={$det_pes["tipo"]}&cod={$pessoa["idpes"]}&ref_cod_sistema=".$parametros->getCodSistema()."'>{$pessoa["nome"]}</a>" ) );
+                            //
                         }
                         else {
                             if($det_pes["tipo"] == "J" )
@@ -350,19 +298,6 @@ class indice extends clsListagem
 
             if ( $busca == 'S' )
             {
-                if ( $parametros->getPessoaNovo() == 'S' )
-                {
-                    if ( $parametros->getPessoaTela() == "window" )
-                    {
-                        $this->acao      = "set_campo_pesquisa( \"".$parametros->getPessoaCampo()."\", \"0\", \"submit\" )";
-                        $this->nome_acao = "Novo";
-                    }
-                    elseif ( $parametros->getPessoaTela() == "frame" )
-                    {
-                        $this->acao      = "go( \"pesquisa_pessoa_cad.php?pessoa=F&cod=0&ref_cod_sistema=".$parametros->getCodSistema()."&pessoa_cpf=".$parametros->getPessoaCPF()."\" )";
-                        $this->nome_acao = "Novo";
-                    }
-                }
                 if ( is_numeric( $chave_busca ) )
                 {
                     $obj_funcionario = new clsFuncionario();
@@ -409,7 +344,7 @@ class indice extends clsListagem
                     {
                         if ( $parametros->getPessoaTela() == "frame" )
                         {
-                            $this->addLinhas( array( "<a href='pesquisa_pessoa_cad.php?pessoa=F&cod={$pessoa["idpes"]}'>{$pessoa["matricula"]}</a>", "<a href='pesquisa_pessoa_cad.php?pessoa=F&cod={$pessoa["idpes"]}&ref_cod_sistema=".$parametros->getCodSistema()."'>{$pessoa["nome"]}</a>" ) );
+                            //
                         }
                         else
                         {
