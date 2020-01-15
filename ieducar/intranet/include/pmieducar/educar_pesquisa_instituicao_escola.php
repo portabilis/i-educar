@@ -59,31 +59,13 @@
                     foreach ($lista_instituicao23 as $instituicao)
                     {
                         $obj_escola = new clsPmieducarEscola();
-                        //$obj_escola->setCamposLista("cod_escola,ref_idpes");
                         $lista_escola23 = $obj_escola->lista(null,null,null,$instituicao["cod_instituicao"],null,null,null,null,null,null,1);
 
                         $escolas = " instituicao['_{$instituicao["cod_instituicao"]}'] = new Array();\n";
 
                         if($lista_escola23)
                         {
-                            //$escolas = "instituicao['_{$instituicao["cod_instituicao"]}'] = new Array({$obj_escola->_total});\n";
-
                             foreach ($lista_escola23 as $escola) {
-
-                        /*      if($escola['ref_idpes'])
-                                {
-                                    $obj_juridica = new clsJuridica($escola['ref_idpes']);
-                                    $det_juridica = $obj_juridica->detalhe();
-                                    $escola['nm_escola'] = $det_juridica['fantasia'];
-
-                                }else
-                                {
-                                    $obj_escola_complemento = new clsPmieducarEscolaComplemento($escolas['cod_escola']);
-                                    $obj_escola_complemento->setCamposLista("nm_escola");
-                                    $det_escola_complemento = $obj_escola_complemento->detalhe();
-                                    $escola['nm_escola'] = $det_escola_complemento['nm_escola'];
-                                }
-                            */
                                 $escolas .= " instituicao['_{$instituicao["cod_instituicao"]}'][instituicao['_{$instituicao["cod_instituicao"]}'].length] = new Array({$escola["cod_escola"]},'{$escola["nome"]}');\n";
                             }
 
@@ -93,7 +75,7 @@
 
                     echo $script = "<script> var numero_intituicoes = {$obj_instituicao->_total} \n var instituicao = new Array(); \n {$instituicoes}</script>\n";
                 }
-                //**
+
                 echo "<!-- {$this->ref_cod_instituicao} -->";
                 $this->campoLista( "ref_cod_instituicao", "Institui&ccedil;&atilde;o", $opcoes_instituicao, $this->ref_cod_instituicao,"EscolaInstituicao();",null,null,null,null,$obrigatorio);
         }
