@@ -78,7 +78,12 @@ class indice extends clsCadastro
     public $ref_cod_candidato_fila_unica;
 
     public $ref_cod_turma_copiar_enturmacoes;
+
     private $availableTimeService;
+
+    public $transferido = 4;
+
+    public $situacaoUltimaMatricula;
 
     public function Inicializar()
     {
@@ -346,6 +351,7 @@ class indice extends clsCadastro
 
         if (!is_null($mensagemErro)) {
             $this->mensagem = $mensagemErro;
+
             return false;
         }
 
@@ -969,22 +975,23 @@ class indice extends clsCadastro
                 }
 
                 $this->enturmacaoMatricula($this->cod_matricula, $this->ref_cod_turma);
+                if ($this->situacaoUltimaMatricula == $this->transferido) {
+                    /** @var LegacyRegistration $registration */
 
-                /** @var LegacyRegistration $registration */
+                    $registration = LegacyRegistration::find($this->cod_matricula);
 
-                $registration = LegacyRegistration::find($this->cod_matricula);
+                    try {
+                        event(new RegistrationEvent($registration));
+                    } catch (TransferException $exception) {
+                        $this->mensagem = 'Não foi possível copiar os dados da matrícula antiga. ' . $exception->getMessage();
 
-                try {
-                    event(new RegistrationEvent($registration));
-                } catch(TransferException $exception) {
-                    $this->mensagem = 'Não foi possível copiar os dados da matrícula antiga. ' . $exception->getMessage();
+                        DB::commit();
+                        $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
+                    }
 
-                    DB::commit();
-                    $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
+                    $promocao = new PromotionService($registration->enrollments()->first());
+                    $promocao->fakeRequest();
                 }
-
-                $promocao = new PromotionService($registration->enrollments()->first());
-                $promocao->fakeRequest();
 
                 $this->mensagem = 'Cadastro efetuado com sucesso.<br />';
 
@@ -1071,24 +1078,23 @@ class indice extends clsCadastro
         $objSequenciaSerie = new clsPmieducarSequenciaSerie;
 
         $dadosUltimaMatricula = $objMatricula->getDadosUltimaMatricula($this->ref_cod_aluno);
-        $situacaoUltimaMatricula = $dadosUltimaMatricula[0]['aprovado'];
+        $this->situacaoUltimaMatricula = $dadosUltimaMatricula[0]['aprovado'];
         $serieUltimaMatricula = $dadosUltimaMatricula[0]['ref_ref_cod_serie'];
         $aprovado = [1, 12, 13];
         $reprovado = [2, 14];
-        $transferido = 4;
 
         if (!$dadosUltimaMatricula) {
             return true;
         }
 
-        if ($situacaoUltimaMatricula == $transferido) {
+        if ($this->situacaoUltimaMatricula == $this->transferido) {
             return true;
         }
 
-        if (in_array($situacaoUltimaMatricula, $aprovado)) {
+        if (in_array($this->situacaoUltimaMatricula, $aprovado)) {
             $serieNovaMatricula = $objSequenciaSerie->lista($serieUltimaMatricula);
             $serieNovaMatricula = $serieNovaMatricula[0]['ref_serie_destino'];
-        } elseif (in_array($situacaoUltimaMatricula, $reprovado)) {
+        } elseif (in_array($this->situacaoUltimaMatricula, $reprovado)) {
             $serieNovaMatricula = $serieUltimaMatricula;
         }
 
