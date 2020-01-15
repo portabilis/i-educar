@@ -44,7 +44,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url({{ Asset::get('svg/bg.svg') }});
+    background-image: url({{ Asset::get('/svg/bg.svg') }});
     background-size: 100% 100%;
     background-repeat: no-repeat;
   }
