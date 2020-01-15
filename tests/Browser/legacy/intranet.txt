@@ -376,9 +376,6 @@ public_municipio_lst.php
 public_pais_cad.php
 public_pais_det.php
 public_pais_lst.php
-public_setor_cad.php
-public_setor_det.php
-public_setor_lst.php
 public_uf_cad.php
 public_uf_det.php
 public_uf_lst.php

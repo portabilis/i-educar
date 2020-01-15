@@ -237,7 +237,7 @@ SQL;
 
         $db = new clsBanco();
         $db->consulta("SELECT (CASE
-                               WHEN escola.utiliza_regra_diferenciada AND serie.regra_avaliacao_diferenciada_id IS NOT NULL
+                               WHEN escola.utiliza_regra_diferenciada AND rasa.regra_avaliacao_diferenciada_id IS NOT NULL
                                THEN regra_avaliacao_diferenciada.qtd_disciplinas_dependencia
                                ELSE regra_avaliacao.qtd_disciplinas_dependencia
                                 END) AS qtd_disciplinas_dependencia

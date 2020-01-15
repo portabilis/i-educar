@@ -5,7 +5,6 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
 require_once 'include/public/clsPublicDistrito.inc.php';
-require_once 'include/public/clsPublicSetorBai.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 require_once 'App/Model/ZonaLocalizacao.php';
@@ -35,7 +34,6 @@ class indice extends clsCadastro
     public $iddis;
     public $idpais;
     public $sigla_uf;
-    public $idsetorbai;
 
     public function Inicializar()
     {
@@ -168,20 +166,6 @@ class indice extends clsCadastro
 
         $this->campoLista('iddis', 'Distrito', $opcoes, $this->iddis);
 
-        $opcoes = ['' => 'Selecione'];
-
-        $objTemp = new clsPublicSetorBai();
-        $objTemp->setOrderBy(' nome asc ');
-        $lista = $objTemp->lista();
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes[$registro['idsetorbai']] = $registro['nome'];
-            }
-        }
-
-        $this->campoLista('idsetorbai', 'Setor', $opcoes, $this->idsetorbai, null, null, null, null, null, false);
-
         $zona = App_Model_ZonaLocalizacao::getInstance();
         $this->campoLista(
             'zona_localizacao',
@@ -211,8 +195,6 @@ class indice extends clsCadastro
             $this->zona_localizacao,
             $this->iddis
         );
-
-        $obj->idsetorbai = $this->idsetorbai;
 
         $cadastrou = $obj->cadastra();
 
@@ -254,8 +236,6 @@ class indice extends clsCadastro
             $this->zona_localizacao,
             $this->iddis
         );
-
-        $obj->idsetorbai = $this->idsetorbai;
 
         $editou = $obj->edita();
 
