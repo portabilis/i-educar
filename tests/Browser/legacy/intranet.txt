@@ -243,8 +243,6 @@ educar_pagamento_multa_lst.php
 educar_parecer_turma_cad.php
 educar_pesquisa_acervo_lst.php
 educar_pesquisa_aluno.php
-educar_pesquisa_cep_log_bairro.php
-educar_pesquisa_cep_log_bairro2.php
 educar_pesquisa_cliente_lst.php
 educar_pesquisa_municipio_lst.php
 educar_pesquisa_obra_lst.php
@@ -354,7 +352,6 @@ index.php
 meusdados.php
 pesquisa_cep_lst.php
 pesquisa_funcionario_lst.php
-pesquisa_pessoa_cad.php
 pesquisa_pessoa_lst.php
 portal_acesso_cad.php
 portal_acesso_det.php
