@@ -3,7 +3,7 @@
 use App\Support\Database\AsView;
 use Illuminate\Database\Migrations\Migration;
 
-class RecreateViewDadosEscola extends Migration
+class RecreateRelatorioViewDadosEscolaView extends Migration
 {
     use AsView;
 
@@ -14,7 +14,16 @@ class RecreateViewDadosEscola extends Migration
      */
     public function up()
     {
-        $this->dropView('relatorio.view_dados_escola');
         $this->createView('relatorio.view_dados_escola');
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        $this->dropView('relatorio.view_dados_escola');
     }
 }
