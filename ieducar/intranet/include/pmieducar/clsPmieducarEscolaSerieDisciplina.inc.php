@@ -447,13 +447,13 @@ class clsPmieducarEscolaSerieDisciplina extends Model
         return false;
     }
 
-    public function existeDependencia(array $listaComponentesSelecionados, $acao = null)
+    public function existeDependencia(array $listaComponentesSelecionados, bool $exclusao = false)
     {
         if (is_numeric($this->ref_ref_cod_serie) && is_numeric($this->ref_ref_cod_escola)) {
             $componentesSelecionados = join(',', $listaComponentesSelecionados);
 
             $condicao = 'NOT IN';
-            if ($acao == 'excluir') {
+            if ($exclusao) {
                 $condicao = 'IN';
             }
             $db = new clsBanco();

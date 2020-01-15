@@ -588,7 +588,7 @@ class indice extends clsCadastro
             1
         );
 
-        $existeDependencia = $objEscolaSerieDisciplina->existeDependencia($this->disciplinas, 'excluir');
+        $existeDependencia = $objEscolaSerieDisciplina->existeDependencia($this->disciplinas, true);
 
         if ($existeDependencia) {
             $this->mensagem = 'Não foi possível remover o componente. Existe registros de dependência neste componente.<br>';
