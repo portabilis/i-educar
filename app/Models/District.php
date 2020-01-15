@@ -2,21 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasIbgeCode;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Place extends Model
+class District extends Model
 {
+    use HasIbgeCode;
+
     /**
      * @var array
      */
     protected $fillable = [
-        'city_id',
-        'address',
-        'number',
-        'complement',
-        'neighborhood',
-        'postal_code',
+        'city_id', 'name', 'ibge_code',
     ];
 
     /**
