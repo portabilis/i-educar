@@ -284,8 +284,12 @@ class indice extends clsCadastro
             if ($notasAluno && count($notasAluno)) {
                 $notaAlunoId = $notasAluno[0]->get('id');
 
-                (new Avaliacao_Model_NotaComponenteMediaDataMapper())
-                    ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::TRANSFERIDO);
+                try {
+                    (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                        ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::TRANSFERIDO);
+                } catch(\Throwable $exception) {
+                    DB::rollback();
+                }
             }
 
             DB::commit();
