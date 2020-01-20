@@ -148,18 +148,10 @@ class indice extends clsListagem
                 $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
                 $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
                 $idpes = $det_ref_cod_escola["ref_idpes"];
-                if ($idpes)
-                {
-                    $obj_escola = new clsPessoaJuridica( $idpes );
-                    $obj_escola_det = $obj_escola->detalhe();
-                    $registro["ref_cod_escola"] = $obj_escola_det["fantasia"];
-                }
-                else
-                {
-                    $obj_escola = new clsPmieducarEscolaComplemento( $registro["ref_cod_escola"] );
-                    $obj_escola_det = $obj_escola->detalhe();
-                    $registro["ref_cod_escola"] = $obj_escola_det["nm_escola"];
-                }
+
+                $obj_escola = new clsPessoaJuridica( $idpes );
+                $obj_escola_det = $obj_escola->detalhe();
+                $registro["ref_cod_escola"] = $obj_escola_det["fantasia"];
 
                 $lista_busca = array(
                     "<a href=\"educar_biblioteca_dados_det.php?cod_biblioteca={$registro["cod_biblioteca"]}\">{$registro["nm_biblioteca"]}</a>",

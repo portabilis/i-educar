@@ -1707,6 +1707,7 @@ class DiarioApiController extends ApiCoreController
         }
 
         $rule['nomenclatura_exame'] = config('legacy.app.diario.nomenclatura_exame') == 0 ? 'exame' : 'conselho';
+        $rule['regra_dependencia'] = config('legacy.app.matricula.dependencia') ? true : false;
 
         $tipoRecuperacaoParalela = $evaluationRule->tipo_recuperacao_paralela;
 
