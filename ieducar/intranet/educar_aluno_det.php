@@ -298,28 +298,6 @@ class indice extends clsDetalhe
                 if ($obj_bairro_det) {
                     $registro['nm_bairro'] = $obj_bairro_det['nome'];
                 }
-            } else {
-                $obj_endereco = new clsEnderecoExterno($this->ref_idpes);
-
-                if ($obj_endereco_det = $obj_endereco->detalhe()) {
-                    $registro['id_cep'] = $obj_endereco_det['cep'];
-                    $registro['cidade'] = $obj_endereco_det['cidade'];
-                    $registro['nm_bairro'] = $obj_endereco_det['bairro'];
-                    $registro['nm_logradouro'] = $obj_endereco_det['logradouro'];
-                    $registro['numero'] = $obj_endereco_det['numero'];
-                    $registro['letra'] = $obj_endereco_det['letra'];
-                    $registro['complemento'] = $obj_endereco_det['complemento'];
-                    $registro['andar'] = $obj_endereco_det['andar'];
-                    $registro['apartamento'] = $obj_endereco_det['apartamento'];
-                    $registro['bloco'] = $obj_endereco_det['bloco'];
-                    $registro['idtlog'] = $obj_endereco_det['idtlog']->detalhe();
-                    $registro['idtlog'] = $registro['idtlog']['descricao'];
-
-                    $det_uf = $obj_endereco_det['sigla_uf']->detalhe();
-                    $registro['ref_sigla_uf'] = $det_uf['nome'] ?? null;
-
-                    $registro['cep_'] = int2CEP($registro['id_cep']);
-                }
             }
         }
 

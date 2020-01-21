@@ -7,7 +7,6 @@ require_once 'include/pessoa/clsPessoaJuridica.inc.php';
 require_once 'include/pessoa/clsPessoaFisica.inc.php';
 require_once 'include/pessoa/clsPessoaTelefone.inc.php';
 require_once 'include/pessoa/clsEnderecoPessoa.inc.php';
-require_once 'include/pessoa/clsEnderecoExterno.inc.php';
 require_once 'include/pessoa/clsEndereco.inc.php';
 require_once 'include/pessoa/clsFisicaCpf.inc.php';
 require_once 'include/pessoa/clsFisica.inc.php';
