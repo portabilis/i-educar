@@ -306,7 +306,9 @@ class indice extends clsCadastro
             $this->idlog,
             false,
             false,
-            'cep ASC'
+            'cep ASC',
+            null,
+            null
         );
         if ($lst_cep_logradouro_bairro) {
             foreach ($lst_cep_logradouro_bairro as $cep) {
