@@ -434,21 +434,17 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             where esc.ref_cod_instituicao = $1 and esc.cod_escola = $2
             and pes.idpes = esc.ref_idpes) as nome,
 
-            (select coalesce((select coalesce((select municipio.nome from public.municipio,
+            (select municipio.nome from public.municipio,
             cadastro.endereco_pessoa, cadastro.juridica, public.bairro, pmieducar.escola
             where endereco_pessoa.idbai = bairro.idbai and bairro.idmun = municipio.idmun and
             juridica.idpes = endereco_pessoa.idpes and juridica.idpes = escola.ref_idpes and
-            escola.cod_escola = $2),(select endereco_externo.cidade from cadastro.endereco_externo,
-            pmieducar.escola where endereco_externo.idpes = escola.ref_idpes and escola.cod_escola = $2))),
-            (select municipio from pmieducar.escola_complemento where ref_cod_escola = $2))) as cidade,
+            escola.cod_escola = $2) as cidade,
 
-            (select coalesce((select coalesce((select municipio.sigla_uf from public.municipio,
+            (select municipio.sigla_uf from public.municipio,
             cadastro.endereco_pessoa, cadastro.juridica, public.bairro, pmieducar.escola
             where endereco_pessoa.idbai = bairro.idbai and bairro.idmun = municipio.idmun and
             juridica.idpes = endereco_pessoa.idpes and juridica.idpes = escola.ref_idpes and
-            escola.cod_escola = $2),(select endereco_externo.sigla_uf from cadastro.endereco_externo,
-            pmieducar.escola where endereco_externo.idpes = escola.ref_idpes and escola.cod_escola = $2))),
-            (select inst.ref_sigla_uf from pmieducar.instituicao inst where inst.cod_instituicao = $1))) as uf';
+            escola.cod_escola = $2) as uf';
 
         $params = ['params' => [$this->getrequest()->instituicao_id, $escolaId], 'return_only' => 'first-line'];
 
