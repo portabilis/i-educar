@@ -771,7 +771,7 @@ class indice extends clsCadastro
                 $this->campoOculto("logradouro_", $this->logradouro_);
                 $this->campoOculto("idlog", $this->idlog);
                 $this->campoOculto("idtlog_", $this->idtlog_);
-                $disabled = false;
+                $disabled = true;
 
                 if ($this->idlog && $this->idbai && $this->cep && $this->ref_idpes) {
                     $this->campoOculto("cep_", $this->cep);
