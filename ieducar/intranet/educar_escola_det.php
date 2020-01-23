@@ -86,28 +86,6 @@ class indice extends clsDetalhe
                 }
             }
 
-            if (empty($endereco_lst)) {
-                $tipo = 2;
-                $obj_endereco = new clsEnderecoExterno();
-                $endereco_lst = $obj_endereco->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $registro['ref_idpes']);
-
-                if ($endereco_lst) {
-                    foreach ($endereco_lst as $endereco) {
-                        $cep = $endereco['cep'];
-                        $sigla_uf = $endereco['sigla_uf']->detalhe();
-                        $sigla_uf = $sigla_uf['nome'];
-                        $cidade = $endereco['cidade'];
-                        $idtlog = $endereco['idtlog']->detalhe();
-                        $tipo_logradouro = $idtlog['descricao'];
-                        $logradouro = $endereco['logradouro'];
-                        $bairro = $endereco['bairro'];
-                        $numero = $endereco['numero'];
-                        $complemento = $endereco['complemento'];
-                        $andar = $endereco['andar'];
-                    }
-                }
-            }
-
             $obj_telefone = new clsPessoaTelefone();
             $telefone_lst = $obj_telefone->lista($registro['ref_idpes'], 'tipo');
             if ($telefone_lst) {

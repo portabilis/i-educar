@@ -728,9 +728,6 @@ class PreMatriculaController extends ApiCoreController
             1
         );
 
-        // $this->messenger->append(" pessoaid: " . $pessoaId . "CEP: " . $cep . "Logradouro: " . $logradouroId . "Bairro: " . $bairroId . "Número: " . $numero . "COmplemento:  " . $complemento);
-        // forçado exclusão, assim ao cadastrar endereco_pessoa novamente,
-        // será excluido endereco_externo (por meio da trigger fcn_aft_ins_endereco_pessoa).
         $endereco->exclui();
         $endereco->cadastra();
     }
