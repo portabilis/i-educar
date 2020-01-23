@@ -198,28 +198,6 @@ class indice extends clsCadastro
                         $this->andar       = $det_endereco["andar"];
                         $this->apartamento = $det_endereco["apartamento"];
                     }
-                    else {
-                        $obj_end_ext = new clsEnderecoExterno( $this->cod_pessoa_fj );
-                        $det_end_ext = $obj_end_ext->detalhe();
-                        if ( $det_end_ext ) {
-                            $obj_uf            = $det_end_ext["sigla_uf"];
-                            $det_uf            = $obj_uf->detalhe();
-                            $this->sigla_uf    = $det_uf["sigla_uf"];
-                            $this->cidade      = $det_end_ext["cidade"];
-                            $this->cep         = $det_end_ext["cep"];
-                            $obj_idtlog        = $det_end_ext["idtlog"];
-                            $det_idtlog        = $obj_idtlog->detalhe();
-                            $this->idtlog      = $det_idtlog["idtlog"];
-                            $this->logradouro  = $det_end_ext["logradouro"];
-                            $this->numero      = $det_end_ext["numero"];
-                            $this->letra       = $det_end_ext["letra"];
-                            $this->complemento = $det_end_ext["complemento"];
-                            $this->bairro      = $det_end_ext["bairro"];
-                            $this->bloco       = $det_end_ext["bloco"];
-                            $this->andar       = $det_end_ext["andar"];
-                            $this->apartamento = $det_end_ext["apartamento"];
-                        }
-                    }
                 }
                 elseif ( $this->pessoa == "J" ) {
                     $obj_juridica           = new clsPessoaJuridica( $this->cod_pessoa_fj );
@@ -271,28 +249,6 @@ class indice extends clsCadastro
                         $this->bloco       = $det_endereco["bloco"];
                         $this->andar       = $det_endereco["andar"];
                         $this->apartamento = $det_endereco["apartamento"];
-                    }
-                    else {
-                        $obj_end_ext = new clsEnderecoExterno( $this->cod_pessoa_fj );
-                        $det_end_ext = $obj_end_ext->detalhe();
-                        if ( $det_end_ext ) {
-                            $obj_uf            = $det_end_ext["sigla_uf"];
-                            $det_uf            = $obj_uf->detalhe();
-                            $this->sigla_uf    = $det_uf["sigla_uf"];
-                            $this->cidade      = $det_end_ext["cidade"];
-                            $this->cep         = $det_end_ext["cep"];
-                            $obj_idtlog        = $det_end_ext["idtlog"];
-                            $det_idtlog        = $obj_idtlog->detalhe();
-                            $this->idtlog      = $det_idtlog["idtlog"];
-                            $this->logradouro  = $det_end_ext["logradouro"];
-                            $this->numero      = $det_end_ext["numero"];
-                            $this->letra       = $det_end_ext["letra"];
-                            $this->complemento = $det_end_ext["complemento"];
-                            $this->bairro      = $det_end_ext["bairro"];
-                            $this->bloco       = $det_end_ext["bloco"];
-                            $this->andar       = $det_end_ext["andar"];
-                            $this->apartamento = $det_end_ext["apartamento"];
-                        }
                     }
                 }
                 $this->retorno  = "Editar";
@@ -802,18 +758,6 @@ class indice extends clsCadastro
             elseif( $objEndereco->detalhe() ) {
                 $objEndereco2->exclui();
             }
-            else {
-                $this->cep      = idFederal2int( $this->cep );
-                $objEnderecoExterno = new clsEnderecoExterno( $this->cod_pessoa_fj );
-
-                $objEnderecoExterno2 = new clsEnderecoExterno( $this->cod_pessoa_fj, "1", $this->idtlog, $this->logradouro, $this->numero, $this->letra, $this->complemento, $this->bairro, $this->cep, $this->cidade, $this->sigla_uf, false, $this->bloco, $this->apartamento, $this->andar );
-                if( $objEnderecoExterno->detalhe() ) {
-                    $objEnderecoExterno2->edita();
-                }
-                else {
-                    $objEnderecoExterno2->cadastra();
-                }
-            }
             if ( is_numeric( $idpes ) ) {
                 $obj_pessoa = new clsPessoaFj( $idpes );
                 $pessoa     = $obj_pessoa->detalhe();
@@ -918,11 +862,6 @@ class indice extends clsCadastro
                 $this->cep = idFederal2Int( $this->cep );
                 $objEndereco = new clsPessoaEndereco( $this->cod_pessoa_fj, $this->cep, $this->idlog, $this->idbai, $this->numero, $this->complemento, false, $this->letra );
                 $objEndereco->cadastra();
-            }
-            else {
-                $this->cep = idFederal2int( $this->cep );
-                $objEnderecoExterno = new clsEnderecoExterno( $this->cod_pessoa_fj, "1", $this->idtlog, $this->logradouro, $this->numero, $this->letra, $this->complemento, $this->bairro, $this->cep, $this->cidade, $this->sigla_uf, false );
-                $objEnderecoExterno->cadastra();
             }
             if ( is_numeric( $this->cod_pessoa_fj ) ) {
                 $obj_pessoa = new clsPessoaFj( $this->cod_pessoa_fj );
@@ -1048,47 +987,6 @@ class indice extends clsCadastro
             if ( $detEndereco && $this->cep && $this->idlog && $this->idbai ) {
                 $objEndereco2->edita();
             }
-            elseif ( $this->cep && $this->idlog && $this->idbai ) {
-                $objEndereco2->cadastra();
-                $objEnderecoExterno = new clsEnderecoExterno( $this->cod_pessoa_fj );
-                if ( $objEnderecoExterno->detalhe() )
-                    $objEnderecoExterno->exclui();
-            }
-            elseif ( $detEndereco ) {
-                $objEndereco2->exclui();
-                $this->cep = $this->cep;
-                $objEnderecoExterno = new clsEnderecoExterno( $this->cod_pessoa_fj );
-                $detEnderecoExterno = $objEnderecoExterno->detalhe();
-
-                $objEnderecoExterno2 = new clsEnderecoExterno( $this->cod_pessoa_fj, "1", $this->idtlog, $this->logradouro, $this->numero, $this->letra, $this->complemento, $this->bairro, $this->cep, $this->cidade, $this->sigla_uf, false, $this->bloco, $this->apartamento, $this->andar );
-                if( $detEnderecoExterno ) {
-                    $objEnderecoExterno2->edita();
-                    if ( $detEndereco ) {
-                        $objEndereco->exclui();
-                    }
-                }
-                else {
-                    $objEnderecoExterno2->cadastra();
-                    if ( $detEndereco ) {
-                        $objEndereco->exclui();
-                    }
-                }
-            }
-            else {
-                $this->cep          = idFederal2int( $this->cep );
-                $objEnderecoExterno = new clsEnderecoExterno( $this->cod_pessoa_fj );
-
-                $objEnderecoExterno2 = new clsEnderecoExterno( $this->cod_pessoa_fj, "1", $this->idtlog, $this->logradouro, $this->numero, $this->letra, $this->complemento, $this->bairro, $this->cep, $this->cidade, $this->sigla_uf, false, $this->bloco, $this->apartamento, $this->andar );
-                if( $objEnderecoExterno->detalhe() ) {
-                    $objEnderecoExterno2->edita();
-                }
-                else {
-                    $objEnderecoExterno2->cadastra();
-                    if ( $detEndereco ) {
-                        $objEndereco->exclui();
-                    }
-                }
-            }
             if ( is_numeric( $this->cod_pessoa_fj ) ) {
                 $obj_pessoa = new clsPessoaFj( $this->cod_pessoa_fj );
                 $pessoa = $obj_pessoa->lista_rapida( $this->cod_pessoa_fj );
@@ -1187,26 +1085,6 @@ class indice extends clsCadastro
             }
             elseif ( $this->cep && $this->idlog && $this->idbai ) {
                 $objEndereco2->cadastra();
-            }
-            elseif ( $detEndereco ) {
-                $objEndereco2->exclui();
-                $this->cep = $this->cep;
-                $objEnderecoExterno = new clsEnderecoExterno( $this->cod_pessoa_fj );
-                $detEnderecoExterno = $objEnderecoExterno->detalhe();
-
-                $objEnderecoExterno2 = new clsEnderecoExterno( $this->cod_pessoa_fj, "1", $this->idtlog, $this->logradouro, $this->numero, $this->letra, $this->complemento, $this->bairro, $this->cep, $this->cidade, $this->sigla_uf, false, $this->bloco, $this->apartamento, $this->andar );
-                if( $detEnderecoExterno ) {
-                    $objEnderecoExterno2->edita();
-                    if ( $detEndereco ) {
-                        $objEndereco->exclui();
-                    }
-                }
-                else {
-                    $objEnderecoExterno2->cadastra();
-                    if ( $detEndereco ) {
-                        $objEndereco->exclui();
-                    }
-                }
             }
             if ( is_numeric( $this->cod_pessoa_fj ) ) {
                 $obj_pessoa = new clsPessoaFj( $this->cod_pessoa_fj );

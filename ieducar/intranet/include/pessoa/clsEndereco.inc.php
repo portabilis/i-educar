@@ -31,8 +31,7 @@ class clsEndereco
     }
 
     /**
-     * Retorna o endereço da pessoa cadastrada (tabela cadastro.endereco_pessoa
-     * ou cadastro.endereco_externo) como array associativo.
+     * Retorna o endereço da pessoa cadastrada como array associativo.
      *
      * @return array|FALSE caso não haja um endereço cadastrado.
      */
