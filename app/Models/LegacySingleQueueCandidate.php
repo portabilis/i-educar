@@ -107,7 +107,14 @@ class LegacySingleQueueCandidate extends Model
      */
     public function schools()
     {
-        return $this->hasMany(LegacySchoolSingleQueueCandidate::class, 'ref_cod_candidato_fila_unica');
+        return $this->belongsToMany(
+            LegacySchool::class,
+            'pmieducar.escola_candidato_fila_unica',
+            'ref_cod_candidato_fila_unica',
+            'ref_cod_escola',
+            'cod_candidato_fila_unica',
+            'cod_escola',
+        );
     }
 
     /**
