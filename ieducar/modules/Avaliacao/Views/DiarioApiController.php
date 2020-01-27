@@ -882,7 +882,9 @@ class DiarioApiController extends ApiCoreController
             // Ordena as enturmações pelo sequencial de fechamento e o nome da
             // pessoa conforme comportamento do código anterior.
 
-            $enrollments = $schoolClass->enrollments->sortBy(function ($enrollment) {
+            $enrollments = $schoolClass->enrollments->filter(function($enrollment){
+                return $enrollment->registration->student->ativo == 1;
+            })->sortBy(function ($enrollment) {
                 return Str::slug($enrollment->registration->student->person->name);
             })->sortBy(function ($enrollment) {
                 return $enrollment->sequencial_fechamento;
