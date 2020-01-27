@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
@@ -92,7 +94,7 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
     public $timestamps = false;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function race()
     {
@@ -105,7 +107,7 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function deficiency()
     {
@@ -118,11 +120,19 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function person()
     {
         return $this->hasOne(LegacyPerson::class, 'idpes', 'idpes');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function document()
+    {
+        return $this->hasOne(LegacyDocument::class, 'idpes');
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class LegacyStudent extends Model
 {
@@ -60,5 +61,20 @@ class LegacyStudent extends Model
     public function registrations()
     {
         return $this->hasMany(LegacyRegistration::class, 'ref_cod_aluno');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function guardians()
+    {
+        return $this->belongsToMany(
+            LegacyPerson::class,
+            'pmieducar.responsaveis_aluno',
+            'ref_cod_aluno',
+            'ref_idpes',
+            'cod_aluno',
+            'idpes'
+        );
     }
 }
