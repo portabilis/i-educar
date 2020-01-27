@@ -847,6 +847,8 @@ class DiarioApiController extends ApiCoreController
                             'registration' => function ($query) {
                                 $query->with([
                                     'student' => function ($query) {
+                                        $query->where('ativo', 1);
+
                                         $query->with([
                                             'person' => function ($query) {
                                                 $query->withCount('considerableDeficiencies');
