@@ -847,8 +847,6 @@ class DiarioApiController extends ApiCoreController
                             'registration' => function ($query) {
                                 $query->with([
                                     'student' => function ($query) {
-                                        $query->where('ativo', 1);
-
                                         $query->with([
                                             'person' => function ($query) {
                                                 $query->withCount('considerableDeficiencies');
@@ -873,6 +871,12 @@ class DiarioApiController extends ApiCoreController
                             '
                         );
 
+                        $query->whereHas('registration', function ($query) {
+                            $query->whereHas('student', function ($query) {
+                                $query->where('ativo', 1);
+                            });
+                        });
+
                         $query->where('ativo', 1);
                     },
                 ])
@@ -882,9 +886,7 @@ class DiarioApiController extends ApiCoreController
             // Ordena as enturmações pelo sequencial de fechamento e o nome da
             // pessoa conforme comportamento do código anterior.
 
-            $enrollments = $schoolClass->enrollments->filter(function($enrollment){
-                return $enrollment->registration->student->ativo == 1;
-            })->sortBy(function ($enrollment) {
+            $enrollments = $schoolClass->enrollments->sortBy(function ($enrollment) {
                 return Str::slug($enrollment->registration->student->person->name);
             })->sortBy(function ($enrollment) {
                 return $enrollment->sequencial_fechamento;
