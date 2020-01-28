@@ -6,7 +6,6 @@
 # repository you can go to https://docs.sourcelevel.io/configuration and see the configuration
 # details.
 ---
-styleguide: plataformatec/linters
 engines:
   phan:
     enabled: false
