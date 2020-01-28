@@ -52,6 +52,7 @@ class clsPmieducarInstituicao extends Model
     public $bloquear_vinculo_professor_sem_alocacao_escola;
     public $permitir_matricula_fora_periodo_letivo;
     public $ordenar_alunos_sequencial_enturmacao;
+    public $obrigar_telefone_pessoa;
 
     public function __construct(
         $cod_instituicao = null,
@@ -83,7 +84,8 @@ class clsPmieducarInstituicao extends Model
         $exibir_apenas_professores_alocados = null,
         $bloquear_vinculo_professor_sem_alocacao_escola = null,
         $permitir_matricula_fora_periodo_letivo = null,
-        $ordenar_alunos_sequencial_enturmacao = null
+        $ordenar_alunos_sequencial_enturmacao = null,
+        $obrigar_telefone_pessoa = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
@@ -139,7 +141,8 @@ class clsPmieducarInstituicao extends Model
             exibir_apenas_professores_alocados,
             bloquear_vinculo_professor_sem_alocacao_escola,
             permitir_matricula_fora_periodo_letivo,
-            ordenar_alunos_sequencial_enturmacao
+            ordenar_alunos_sequencial_enturmacao,
+            obrigar_telefone_pessoa
         ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -255,6 +258,10 @@ class clsPmieducarInstituicao extends Model
 
         if (is_bool($ordenar_alunos_sequencial_enturmacao)) {
             $this->ordenar_alunos_sequencial_enturmacao = $ordenar_alunos_sequencial_enturmacao;
+        }
+
+        if (is_bool($obrigar_telefone_pessoa)) {
+            $this->obrigar_telefone_pessoa = $obrigar_telefone_pessoa;
         }
     }
 
@@ -652,6 +659,16 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
+            if (dbBool($this->obrigar_telefone_pessoa)) {
+                $campos .= "{$gruda}obrigar_telefone_pessoa";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}obrigar_telefone_pessoa";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
             if (is_string($this->orgao_regional) and !empty($this->orgao_regional)) {
                 $campos .= "{$gruda}orgao_regional";
                 $valores .= "{$gruda}'{$this->orgao_regional}'";
@@ -1016,6 +1033,14 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             } else {
                 $set .= "{$gruda}ordenar_alunos_sequencial_enturmacao = false ";
+                $gruda = ', ';
+            }
+
+            if (dbBool($this->obrigar_telefone_pessoa)) {
+                $set .= "{$gruda}obrigar_telefone_pessoa = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}obrigar_telefone_pessoa = false ";
                 $gruda = ', ';
             }
 
