@@ -6,6 +6,8 @@
 # repository you can go to https://docs.sourcelevel.io/configuration and see the configuration
 # details.
 ---
+pull_requests:
+  comments: false
 engines:
   phan:
     enabled: false
