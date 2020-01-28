@@ -10,11 +10,11 @@ pull_requests:
   comments: false
 engines:
   phan:
-    enabled: true
+    enabled: false
   fixme:
     enabled: false
   phpmd:
-    enabled: true
+    enabled: false
   eslint:
     enabled: false
   csslint:
@@ -22,7 +22,7 @@ engines:
   scss-lint:
     enabled: false
   remark-lint:
-    enabled: false
+    enabled: true
 exclude_paths:
 - config
 - public
