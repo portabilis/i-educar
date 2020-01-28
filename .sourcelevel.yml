@@ -10,11 +10,11 @@ pull_requests:
   comments: false
 engines:
   phan:
-    enabled: false
+    enabled: true
   fixme:
     enabled: false
   phpmd:
-    enabled: false
+    enabled: true
   eslint:
     enabled: false
   csslint:
