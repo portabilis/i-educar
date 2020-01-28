@@ -1921,6 +1921,10 @@ function canShowParentsFields() {
 
                     bValid = bValid && ($j('#cep_').val() == '' ? true : validateEndereco());
 
+                    if (!validaObrigatoriedadeTelefone()) {
+                        bValid = false;
+                    }
+
                     if ($j('#zona_localizacao_censo').hasClass('obrigatorio')) {
                       bValid = bValid && checkSelect($j('#zona_localizacao_censo'), "zona localização");
                     }
@@ -2291,6 +2295,19 @@ function canShowParentsFields() {
             } else {
                 return true;
             }
+        }
+
+        function validaObrigatoriedadeTelefone() {
+            let obrigarTelefonePessoa = $j('#obrigar_telefone_pessoa').val() == '1';
+            let telefoneFixo = $j('#telefone_fixo').val();
+            let telefoneCel = $j('#telefone_cel').val();
+
+            if (obrigarTelefonePessoa && telefoneFixo == '' && telefoneCel == '') {
+                messageUtils.error("É necessário informar um Telefone ou Celular.");
+                return false;
+            }
+
+            return true;
         }
 
         $j('#pai_id').change(function () {
