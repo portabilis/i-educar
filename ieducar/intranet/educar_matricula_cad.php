@@ -81,9 +81,13 @@ class indice extends clsCadastro
 
     private $availableTimeService;
 
-    public $transferido = 4;
+    private $transferido = 4;
 
-    public $situacaoUltimaMatricula;
+    private $situacaoUltimaMatricula;
+
+    private $serieUltimaMatricula;
+
+    private $anoUltimaMatricula;
 
     public function Inicializar()
     {
@@ -975,7 +979,11 @@ class indice extends clsCadastro
                 }
 
                 $this->enturmacaoMatricula($this->cod_matricula, $this->ref_cod_turma);
-                if ($this->situacaoUltimaMatricula == $this->transferido) {
+
+                if ($this->situacaoUltimaMatricula == $this->transferido &&
+                    $this->serieUltimaMatricula == $this->ref_cod_serie &&
+                    $this->anoUltimaMatricula == $this->ano
+                )  {
                     /** @var LegacyRegistration $registration */
 
                     $registration = LegacyRegistration::find($this->cod_matricula);
@@ -1079,7 +1087,8 @@ class indice extends clsCadastro
 
         $dadosUltimaMatricula = $objMatricula->getDadosUltimaMatricula($this->ref_cod_aluno);
         $this->situacaoUltimaMatricula = $dadosUltimaMatricula[0]['aprovado'];
-        $serieUltimaMatricula = $dadosUltimaMatricula[0]['ref_ref_cod_serie'];
+        $this->serieUltimaMatricula = $dadosUltimaMatricula[0]['ref_ref_cod_serie'];
+        $this->anoUltimaMatricula = $dadosUltimaMatricula[0]['ano'];
         $aprovado = [1, 12, 13];
         $reprovado = [2, 14];
 
@@ -1092,10 +1101,10 @@ class indice extends clsCadastro
         }
 
         if (in_array($this->situacaoUltimaMatricula, $aprovado)) {
-            $serieNovaMatricula = $objSequenciaSerie->lista($serieUltimaMatricula);
+            $serieNovaMatricula = $objSequenciaSerie->lista($this->serieUltimaMatricula);
             $serieNovaMatricula = $serieNovaMatricula[0]['ref_serie_destino'];
         } elseif (in_array($this->situacaoUltimaMatricula, $reprovado)) {
-            $serieNovaMatricula = $serieUltimaMatricula;
+            $serieNovaMatricula = $this->serieUltimaMatricula;
         }
 
         if ($this->ref_cod_serie == $serieNovaMatricula) {
