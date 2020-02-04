@@ -136,13 +136,7 @@ class LegacyEnrollment extends Model
      */
     public function period()
     {
-        if (! isset($this->turno_id)) {
-            return false;
-        }
-
-        $period = LegacyPeriod::find($this->turno_id);
-
-        return $period->getNameAttribute();
+        return $this->belongsTo(LegacyPeriod::class, 'turno_id')->withDefault();
     }
 
     /**
@@ -150,7 +144,7 @@ class LegacyEnrollment extends Model
      *
      * @return BelongsTo
      */
-    public function employeeCreator()
+    public function createdBy()
     {
         return $this->belongsTo(Employee::class, 'ref_usuario_cad');
     }
@@ -160,7 +154,7 @@ class LegacyEnrollment extends Model
      *
      * @return BelongsTo
      */
-    public function employeeEditor()
+    public function updatedBy()
     {
         return $this->belongsTo(Employee::class, 'ref_usuario_exc');
     }

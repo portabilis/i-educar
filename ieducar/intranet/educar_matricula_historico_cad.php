@@ -41,7 +41,7 @@ class indice extends clsCadastro
         $this->breadcrumb('Histórico de enturmações da matrícula', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-        $link = route('enrollments.enrollmentHistory', ['id' => $this->ref_cod_matricula]);
+        $link = route('enrollments.enrollment-history', ['id' => $this->ref_cod_matricula]);
         $this->url_cancelar = $link;
 
         return $retorno;
