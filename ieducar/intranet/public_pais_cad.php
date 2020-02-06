@@ -91,16 +91,16 @@ class indice extends clsCadastro
     public function Novo()
     {
         return $this->create([
-            'name' => $this->nome,
-            'ibge_code' => $this->cod_ibge,
+            'name' => request('nome'),
+            'ibge_code' => request('cod_ibge'),
         ]);
     }
 
     public function Editar()
     {
         return $this->update($this->idpais, [
-            'name' => $this->nome,
-            'ibge_code' => $this->cod_ibge,
+            'name' => request('nome'),
+            'ibge_code' => request('cod_ibge'),
         ]);
     }
 

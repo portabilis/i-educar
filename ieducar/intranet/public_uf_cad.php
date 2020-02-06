@@ -106,10 +106,10 @@ class indice extends clsCadastro
         }
 
         return $this->create([
-            'name' => $this->nome,
-            'country_id' => $this->idpais,
-            'ibge_code' => $this->cod_ibge,
-            'abbreviation' => $this->sigla_uf,
+            'name' => request('nome'),
+            'country_id' => request('idpais'),
+            'ibge_code' => request('cod_ibge'),
+            'abbreviation' => request('sigla_uf'),
         ]);
     }
 
@@ -133,10 +133,10 @@ class indice extends clsCadastro
         }
 
         return $this->update($this->id, [
-            'name' => $this->nome,
-            'country_id' => $this->idpais,
-            'ibge_code' => $this->cod_ibge,
-            'abbreviation' => $this->sigla_uf,
+            'name' => request('nome'),
+            'country_id' => request('idpais'),
+            'ibge_code' => request('cod_ibge'),
+            'abbreviation' => request('sigla_uf'),
         ]);
     }
 
