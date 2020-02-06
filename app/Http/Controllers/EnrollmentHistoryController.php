@@ -24,7 +24,6 @@ class EnrollmentHistoryController extends Controller
 
         $registration = LegacyRegistration::find($id);
 
-
         return view('enrollments.enrollmentHistory', ['registration' => $registration]);
     }
 }

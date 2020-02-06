@@ -37,9 +37,6 @@
             <tr>
                 <td class="formdktd" colspan="2"></td>
             </tr>
-            <tr>
-                <td colspan="2"></td>
-            </tr>
         </table>
     </div>
     <div>
@@ -63,43 +60,43 @@
                     <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Usuário criou</td>
                     <td class="formdktd" valign="top" align="left" style="font-weight:bold;">Usuário editou</td>
                 </tr>
-                @foreach($registration->enrollments as $enrollment)
+                @foreach($registration->enrollments->sortBy('sequencial') as $key => $enrollment)
                 <tr>
-                    <td class="formlttd" valign="top" align="left">
+                    <td {!! ($key % 2) == 0 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
                         <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ $enrollment->sequencial }}</a>
                     </td>
-                    <td class="formlttd" valign="top" align="left">
+                    <td {!! ($key % 2) == 0 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
                         <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ $enrollment->schoolClass->getNameAttribute() }}</a>
                     </td>
-                    <td class="formlttd" valign="top" align="left">
+                    <td {!! ($key % 2) == 0 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
                         <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ $enrollment->period->getNameAttribute() }}</a>
                     </td>
-                    <td class="formlttd" valign="top" align="left">
+                    <td {!! ($key % 2) == 0 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
                         <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ $enrollment->ativo ? 'Sim' : 'Não'}}</a>
                     </td>
-                    <td class="formlttd" valign="top" align="left">
+                    <td {!! ($key % 2) == 0 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
                         <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ dataToBrasil($enrollment->getDateAttribute()) ?? null }}</a>
                     </td>
-                    <td class="formlttd" valign="top" align="left">
+                    <td {!! ($key % 2) == 0 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
                         <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ dataToBrasil($enrollment->getDateDepartedAttribute()) ?? null }}</a>
                     </td>
-                    <td class="formlttd" valign="top" align="left">
+                    <td {!! ($key % 2) == 0 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
                         <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ $enrollment->transferido ? 'Sim' : 'Não' }}</a>
                     </td>
-                    <td class="formlttd" valign="top" align="left">
+                    <td {!! ($key % 2) == 0 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
                         <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ $enrollment->remanejado ? 'Sim' : 'Não' }}</a>
                     </td>
-                    <td class="formlttd" valign="top" align="left">
+                    <td {!! ($key % 2) == 0 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
                         <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ $enrollment->reclassificado ? 'Sim' : 'Não' }}</a>
-                    </td><td class="formlttd" valign="top" align="left">
+                    </td><td {!! ($key % 2) == 0 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
                         <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ $enrollment->abandono ? 'Sim' : 'Não' }}</a>
                     </td>
-                    <td class="formlttd" valign="top" align="left">
+                    <td {!! ($key % 2) == 0 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
                         <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ $enrollment->falecido ? 'Sim' : 'Não' }}</a>
-                    </td><td class="formlttd" valign="top" align="left">
+                    </td><td {!! ($key % 2) == 0 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
                         <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ $enrollment->createdBy->person->name ?? null }}</a>
                     </td>
-                    <td class="formlttd" valign="top" align="left">
+                    <td {!! ($key % 2) == 0 ? 'class="formlttd"' : 'class="formmdtd"' !!} valign="top" align="left">
                         <a href="/intranet/educar_matricula_historico_cad.php?ref_cod_matricula={{ $registration->id }}&ref_cod_turma={{ $enrollment->schoolClass->id }}&sequencial={{ $enrollment->sequencial }}">{{ $enrollment->updatedBy->person->name ?? null }}</a>
                     </td>
                 </tr>
