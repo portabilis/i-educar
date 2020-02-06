@@ -118,9 +118,9 @@ class indice extends clsCadastro
         }
 
         return $this->create([
-            'name' => $this->nome,
-            'ibge_code' => $this->cod_ibge,
-            'city_id' => $this->idmun,
+            'name' => request('nome'),
+            'ibge_code' => request('cod_ibge'),
+            'city_id' => request('idmun'),
         ]);
     }
 
@@ -133,9 +133,9 @@ class indice extends clsCadastro
         }
 
         return $this->update($this->iddis, [
-            'name' => $this->nome,
-            'ibge_code' => $this->cod_ibge,
-            'city_id' => $this->idmun,
+            'name' => request('nome'),
+            'ibge_code' => request('cod_ibge'),
+            'city_id' => request('idmun'),
         ]);
     }
 

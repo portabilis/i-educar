@@ -100,9 +100,9 @@ class indice extends clsCadastro
         }
 
         return $this->create([
-            'name' => $this->nome,
-            'state_id' => $this->iduf,
-            'ibge_code' => $this->cod_ibge,
+            'name' => request('nome'),
+            'state_id' => request('iduf'),
+            'ibge_code' => request('cod_ibge'),
         ]);
     }
 
@@ -115,9 +115,9 @@ class indice extends clsCadastro
         }
 
         return $this->update($this->idmun, [
-            'name' => $this->nome,
-            'state_id' => $this->iduf,
-            'ibge_code' => $this->cod_ibge,
+            'name' => request('nome'),
+            'state_id' => request('iduf'),
+            'ibge_code' => request('cod_ibge'),
         ]);
     }
 
