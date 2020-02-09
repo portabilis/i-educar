@@ -125,45 +125,32 @@ class PessoaController extends ApiCoreController
             (select num_folha from cadastro.documento where documento.idpes = fisica.idpes) as num_folha,
             (select certidao_nascimento from cadastro.documento where documento.idpes = fisica.idpes) as certidao_nascimento,
             (select certidao_casamento from cadastro.documento where documento.idpes = fisica.idpes) as certidao_casamento,
-            (SELECT COALESCE((SELECT cep FROM cadastro.endereco_pessoa WHERE idpes = $2),
-             (SELECT cep FROM cadastro.endereco_externo WHERE idpes = $2))) as cep,
+            (SELECT cep FROM cadastro.endereco_pessoa WHERE idpes = $2) as cep,
 
-             (SELECT COALESCE((SELECT l.nome FROM public.logradouro l, cadastro.endereco_pessoa ep WHERE l.idlog = ep.idlog and ep.idpes = $2),
-             (SELECT logradouro FROM cadastro.endereco_externo WHERE idpes = $2))) as logradouro,
+             (SELECT l.nome FROM public.logradouro l, cadastro.endereco_pessoa ep WHERE l.idlog = ep.idlog and ep.idpes = $2) as logradouro,
 
-             (SELECT COALESCE((SELECT l.idtlog FROM public.logradouro l, cadastro.endereco_pessoa ep WHERE l.idlog = ep.idlog and ep.idpes = $2),
-             (SELECT idtlog FROM cadastro.endereco_externo WHERE idpes = $2))) as idtlog,
+             (SELECT l.idtlog FROM public.logradouro l, cadastro.endereco_pessoa ep WHERE l.idlog = ep.idlog and ep.idpes = $2) as idtlog,
 
-           (SELECT COALESCE((SELECT b.nome FROM public.bairro b, cadastro.endereco_pessoa ep WHERE b.idbai = ep.idbai and ep.idpes = $2),
-             (SELECT bairro FROM cadastro.endereco_externo WHERE idpes = $2))) as bairro,
+           (SELECT b.nome FROM public.bairro b, cadastro.endereco_pessoa ep WHERE b.idbai = ep.idbai and ep.idpes = $2) as bairro,
 
-             (SELECT COALESCE((SELECT b.zona_localizacao FROM public.bairro b, cadastro.endereco_pessoa ep WHERE b.idbai = ep.idbai and ep.idpes = $2),
-             (SELECT zona_localizacao FROM cadastro.endereco_externo WHERE idpes = $2))) as zona_localizacao,
+             (SELECT b.zona_localizacao FROM public.bairro b, cadastro.endereco_pessoa ep WHERE b.idbai = ep.idbai and ep.idpes = $2) as zona_localizacao,
 
-             (SELECT COALESCE((SELECT l.idmun FROM public.logradouro l, cadastro.endereco_pessoa ep WHERE l.idlog = ep.idlog and ep.idpes = $2),
-             (SELECT idmun FROM public.logradouro l, urbano.cep_logradouro cl, cadastro.endereco_externo ee
-              WHERE cl.idlog = l.idlog AND cl.cep = ee.cep and ee.idpes = $2 order by 1 desc limit 1))) as idmun,
+             (SELECT l.idmun FROM public.logradouro l, cadastro.endereco_pessoa ep WHERE l.idlog = ep.idlog and ep.idpes = $2) as idmun,
 
               idmun_nascimento,
 
 
-              (SELECT COALESCE((SELECT numero FROM cadastro.endereco_pessoa WHERE idpes = $2),
-             (SELECT numero FROM cadastro.endereco_externo WHERE idpes = $2))) as numero,
+              (SELECT numero FROM cadastro.endereco_pessoa WHERE idpes = $2) as numero,
 
-              (SELECT COALESCE((SELECT letra FROM cadastro.endereco_pessoa WHERE idpes = $2),
-             (SELECT letra FROM cadastro.endereco_externo WHERE idpes = $2))) as letra,
+              (SELECT letra FROM cadastro.endereco_pessoa WHERE idpes = $2) as letra,
 
-              (SELECT COALESCE((SELECT complemento FROM cadastro.endereco_pessoa WHERE idpes = $2),
-             (SELECT complemento FROM cadastro.endereco_externo WHERE idpes = $2))) as complemento,
+              (SELECT complemento FROM cadastro.endereco_pessoa WHERE idpes = $2) as complemento,
 
-              (SELECT COALESCE((SELECT andar FROM cadastro.endereco_pessoa WHERE idpes = $2),
-             (SELECT andar FROM cadastro.endereco_externo WHERE idpes = $2))) as andar,
+              (SELECT andar FROM cadastro.endereco_pessoa WHERE idpes = $2) as andar,
 
-              (SELECT COALESCE((SELECT bloco FROM cadastro.endereco_pessoa WHERE idpes = $2),
-             (SELECT bloco FROM cadastro.endereco_externo WHERE idpes = $2))) as bloco,
+              (SELECT bloco FROM cadastro.endereco_pessoa WHERE idpes = $2) as bloco,
 
-              (SELECT COALESCE((SELECT apartamento FROM cadastro.endereco_pessoa WHERE idpes = $2),
-             (SELECT apartamento FROM cadastro.endereco_externo WHERE idpes = $2))) as apartamento,
+              (SELECT apartamento FROM cadastro.endereco_pessoa WHERE idpes = $2) as apartamento,
 
 
              (SELECT idbai FROM cadastro.endereco_pessoa WHERE idpes = $2) as idbai,
@@ -669,8 +656,6 @@ class PessoaController extends ApiCoreController
             $this->getRequest()->andar
         );
 
-        // forçado exclusão, assim ao cadastrar endereco_pessoa novamente,
-        // será excluido endereco_externo (por meio da trigger fcn_aft_ins_endereco_pessoa).
         $endereco->exclui();
         $endereco->cadastra();
     }
