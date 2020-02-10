@@ -1,0 +1,29 @@
+# This configuration was used SourceLevel to review the portabilis/i-educar-portabilis repository
+# on 44050ca4916a346cb01216fec3231836d3523cbe.
+# You can make this the default configuration for future reviews by moving this
+# file to your repository as `.sourcelevel.yml` and pushing it to GitHub, and tweak
+# it as you wish - To know more on how to change this file to better review your
+# repository you can go to https://docs.sourcelevel.io/configuration and see the configuration
+# details.
+---
+pull_requests:
+  comments: false
+engines:
+  phan:
+    enabled: false
+  fixme:
+    enabled: false
+  phpmd:
+    enabled: false
+  eslint:
+    enabled: false
+  csslint:
+    enabled: false
+  scss-lint:
+    enabled: false
+  remark-lint:
+    enabled: true
+exclude_paths:
+- config
+- public
+- tests

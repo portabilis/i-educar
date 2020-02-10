@@ -125,4 +125,37 @@ class LegacyEnrollment extends Model
     {
         return $this->belongsTo(LegacySchoolClass::class, 'ref_cod_turma');
     }
+
+
+    /**
+     * Retorna o turno do aluno.
+     *
+     * Relação com turma_turno.
+     *
+     * @return bool | string
+     */
+    public function period()
+    {
+        return $this->belongsTo(LegacyPeriod::class, 'turno_id')->withDefault();
+    }
+
+    /**
+     * Relação com servidor.
+     *
+     * @return BelongsTo
+     */
+    public function createdBy()
+    {
+        return $this->belongsTo(Employee::class, 'ref_usuario_cad');
+    }
+
+    /**
+     * Relação com servidor.
+     *
+     * @return BelongsTo
+     */
+    public function updatedBy()
+    {
+        return $this->belongsTo(Employee::class, 'ref_usuario_exc');
+    }
 }

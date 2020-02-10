@@ -220,4 +220,12 @@ class LegacyRegistration extends Model
 
         return $evaluationRuleGradeYear->evaluationRule;
     }
+
+    /**
+     * @return string
+     */
+    public function getStatusDescriptionAttribute()
+    {
+        return (new RegistrationStatus)->getDescriptiveValues()[(int) $this->aprovado];
+    }
 }

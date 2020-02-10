@@ -871,6 +871,12 @@ class DiarioApiController extends ApiCoreController
                             '
                         );
 
+                        $query->whereHas('registration', function ($query) {
+                            $query->whereHas('student', function ($query) {
+                                $query->where('ativo', 1);
+                            });
+                        });
+
                         $query->where('ativo', 1);
                     },
                 ])

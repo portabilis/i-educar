@@ -32,4 +32,20 @@ class LegacyDocument extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->origem_gravacao = 'M';
+            $model->operacao = 'I';
+            $model->data_cad = now()->format('Y-m-d');
+        });
+    }
 }

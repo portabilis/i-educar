@@ -880,14 +880,20 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 if ($this->hasRegraAvaliacaoReprovacaoAutomatica()) {
                     if (!is_numeric($this->preverNotaRecuperacao($id))) {
                         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
-                        $qtdComponenteReprovado++;
+                        if ($this->exibeSituacao($id)) {
+                            $qtdComponenteReprovado++;
+                        }
                     }
                 }
             } elseif ($etapa == $lastStage && $media < $this->getRegraAvaliacaoMedia()) {
-                $qtdComponenteReprovado++;
+                if ($this->exibeSituacao($id)) {
+                    $qtdComponenteReprovado++;
+                }
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
             } elseif ((string)$etapa == 'Rc' && $media < $this->getRegraAvaliacaoMediaRecuperacao()) {
-                $qtdComponenteReprovado++;
+                if ($this->exibeSituacao($id)) {
+                    $qtdComponenteReprovado++;
+                }
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
             } elseif ((string)$etapa == 'Rc' && $media >= $this->getRegraAvaliacaoMediaRecuperacao() && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
@@ -1122,7 +1128,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         // Na última etapa seta situação presença como aprovado ou reprovado.
         if ($etapa == $this->getOption('etapas') || $etapa === 'Rc') {
-            $aprovado           = ($presenca->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca());
+            $aprovado           = (
+                $presenca->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca() ||
+                $this->getRegraAvaliacaoTipoProgressao() == RegraAvaliacao_Model_TipoProgressao::CONTINUADA
+            );
             $presenca->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
                 App_Model_MatriculaSituacao::REPROVADO;
         }

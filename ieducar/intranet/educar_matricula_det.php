@@ -402,7 +402,8 @@ class indice extends clsDetalhe
 
         if ($this->user()->can('view', Process::ENROLLMENT_HISTORY)) {
             $this->array_botao[] = 'Histórico de enturmações';
-            $this->array_botao_url_script[] = "go(\"educar_matricula_historico_lst.php?ref_cod_matricula={$registro['cod_matricula']}\")";
+            $link = route('enrollments.enrollment-history', ['id' => $registro['cod_matricula']]);
+            $this->array_botao_url_script[] = "go(\"{$link}\")";
         }
 
         $this->url_cancelar = 'educar_aluno_det.php?cod_aluno=' . $registro['ref_cod_aluno'];

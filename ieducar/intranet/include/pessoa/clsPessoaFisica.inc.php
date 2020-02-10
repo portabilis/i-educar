@@ -171,15 +171,8 @@ class clsPessoaFisica extends clsPessoaFj
         }
 
         if (is_numeric($this->tipo_endereco)) {
-            if ($this->tipo_endereco == 1) {
-                // Interno
-                $where .= "{$whereAnd} idpes IN (SELECT idpes FROM cadastro.endereco_pessoa)";
-                $whereAnd = ' AND ';
-            } elseif ($this->tipo_endereco == 2) {
-                // Externo
-                $where .= "{$whereAnd} idpes IN (SELECT idpes FROM cadastro.endereco_externo)";
-                $whereAnd = ' AND ';
-            }
+            // Interno
+            $where .= "{$whereAnd} idpes IN (SELECT idpes FROM cadastro.endereco_pessoa)";
         }
 
         if ($inicio_limite !== false && $qtd_registros) {

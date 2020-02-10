@@ -74,6 +74,7 @@ class indice extends clsCadastro
     public $bloquear_vinculo_professor_sem_alocacao_escola;
     public $permitir_matricula_fora_periodo_letivo;
     public $ordenar_alunos_sequencial_enturmacao;
+    public $obrigar_telefone_pessoa;
 
     public function Inicializar()
     {
@@ -125,6 +126,7 @@ class indice extends clsCadastro
         $this->bloquear_vinculo_professor_sem_alocacao_escola = dbBool($this->bloquear_vinculo_professor_sem_alocacao_escola);
         $this->permitir_matricula_fora_periodo_letivo = dbBool($this->permitir_matricula_fora_periodo_letivo);
         $this->ordenar_alunos_sequencial_enturmacao = dbBool($this->ordenar_alunos_sequencial_enturmacao);
+        $this->obrigar_telefone_pessoa = dbBool($this->obrigar_telefone_pessoa);
 
         return $retorno;
     }
@@ -339,6 +341,16 @@ class indice extends clsCadastro
             false
         );
 
+        $this->campoCheck(
+            'obrigar_telefone_pessoa',
+            'Obrigar o preenchimento de um telefone no cadastro de pessoa física',
+            $this->obrigar_telefone_pessoa,
+            null,
+            false,
+            false,
+            false
+        );
+
         $scripts = ['/modules/Cadastro/Assets/Javascripts/Instituicao.js'];
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
         $styles = array ('/modules/Cadastro/Assets/Stylesheets/Instituicao.css');
@@ -385,6 +397,7 @@ class indice extends clsCadastro
         $obj->bloquear_vinculo_professor_sem_alocacao_escola = !is_null($this->bloquear_vinculo_professor_sem_alocacao_escola);
         $obj->permitir_matricula_fora_periodo_letivo = !is_null($this->permitir_matricula_fora_periodo_letivo);
         $obj->ordenar_alunos_sequencial_enturmacao = !is_null($this->ordenar_alunos_sequencial_enturmacao);
+        $obj->obrigar_telefone_pessoa = !is_null($this->obrigar_telefone_pessoa);
 
         $detalheAntigo = $obj->detalhe();
 
