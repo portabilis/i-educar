@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class DropCadastroEnderecoPessoaTable extends Migration
 {
@@ -12,15 +12,10 @@ class DropCadastroEnderecoPessoaTable extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('cadastro.endereco_pessoa');
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
+        DB::unprepared(
+            '
+                drop table if exists cadastro.endereco_pessoa cascade;
+            '
+        );
     }
 }
