@@ -33,7 +33,7 @@ class indice extends clsCadastro
         $this->sequencial = $_GET['sequencial'];
 
         if ($this->user()->cannot('modify', Process::ENROLLMENT_HISTORY)) {
-            $this->simpleRedirect(url('intranet/educar_matricula_historico_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula));
+            $this->simpleRedirect("/enrollment-history/{$this->ref_cod_matricula}");
         }
 
         $this->fexcluir = $this->user()->can('remove', Process::ENROLLMENT_HISTORY);
@@ -41,8 +41,8 @@ class indice extends clsCadastro
         $this->breadcrumb('Histórico de enturmações da matrícula', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->url_cancelar = 'educar_matricula_historico_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula;
+        $link = route('enrollments.enrollment-history', ['id' => $this->ref_cod_matricula]);
+        $this->url_cancelar = $link;
 
         return $retorno;
     }
@@ -210,7 +210,7 @@ class indice extends clsCadastro
             }
 
             $this->mensagem = 'Edição efetuada com sucesso.';
-            $this->simpleRedirect('educar_matricula_historico_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
+            $this->simpleRedirect("/enrollment-history/{$this->ref_cod_matricula}");
         }
 
         $this->mensagem = 'Edição não realizada.';
@@ -230,7 +230,7 @@ class indice extends clsCadastro
 
         if ($excluiu) {
             $this->mensagem = 'Exclusão efetuada com sucesso.';
-            $this->simpleRedirect('educar_matricula_historico_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
+            $this->simpleRedirect("/enrollment-history/{$this->ref_cod_matricula}");
         }
 
         $this->mensagem = 'Exclusão não realizada.';

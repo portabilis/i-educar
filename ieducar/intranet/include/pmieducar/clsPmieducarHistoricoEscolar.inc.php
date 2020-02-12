@@ -843,21 +843,18 @@ class clsPmieducarHistoricoEscolar extends Model
             where esc.ref_cod_instituicao = {$cod_instituicao} and esc.cod_escola = {$cod_escola}
             and pes.idpes = esc.ref_idpes) as nome,
 
-            (select coalesce((select coalesce((select municipio.nome from public.municipio,
+            (select municipio.nome from public.municipio,
             cadastro.endereco_pessoa, cadastro.juridica, public.bairro, pmieducar.escola
             where endereco_pessoa.idbai = bairro.idbai and bairro.idmun = municipio.idmun and
             juridica.idpes = endereco_pessoa.idpes and juridica.idpes = escola.ref_idpes and
-            escola.cod_escola = {$cod_escola}),(select endereco_externo.cidade from cadastro.endereco_externo,
-            pmieducar.escola where endereco_externo.idpes = escola.ref_idpes and escola.cod_escola = {$cod_escola}))),
-            (select municipio from pmieducar.escola_complemento where ref_cod_escola = {$cod_escola}))) as cidade,
+            escola.cod_escola = {$cod_escola}
+            ) as cidade,
 
-            (select coalesce((select coalesce((select municipio.sigla_uf from public.municipio,
+            (select municipio.sigla_uf from public.municipio,
             cadastro.endereco_pessoa, cadastro.juridica, public.bairro, pmieducar.escola
             where endereco_pessoa.idbai = bairro.idbai and bairro.idmun = municipio.idmun and
             juridica.idpes = endereco_pessoa.idpes and juridica.idpes = escola.ref_idpes and
-            escola.cod_escola = {$cod_escola}),(select endereco_externo.sigla_uf from cadastro.endereco_externo,
-            pmieducar.escola where endereco_externo.idpes = escola.ref_idpes and escola.cod_escola = {$cod_escola}))),
-            (select inst.ref_sigla_uf from pmieducar.instituicao inst where inst.cod_instituicao = {$cod_instituicao}))) as uf";
+            escola.cod_escola = {$cod_escola}) as uf";
         $db = new clsBanco();
         $db->Consulta($sql);
         $db->ProximoRegistro();

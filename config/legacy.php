@@ -190,7 +190,7 @@ return [
         'portaria_aprovacao_pontos' => 'Resolução n° 12/2011 - CME, Artigo 7°, § 2°;',
         'modelo_ficha_individual' => 'todos',
         'mostrar_relatorios' => '',
-        'logo_file_name' => 'brasil.png',
+        'logo_file_name' => env('REPORTS_LOGO', 'brasil.png'),
         'show_error_details' => true,
         'default_factory' => env('REPORTS_FACTORY', 'Portabilis_Report_ReportFactoryPHPJasper'),
         'source_path' => env('REPORTS_SOURCE_PATH', base_path('ieducar/modules/Reports/ReportSources/')),

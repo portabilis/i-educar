@@ -38,10 +38,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'idpes'
         ],
         [
-            'tabela' => 'cadastro.endereco_externo',
-            'coluna' => 'idpes'
-        ],
-        [
             'tabela' => 'cadastro.pessoa',
             'coluna' => 'idpes'
         ],
@@ -207,14 +203,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         [
             'tabela' => 'pmieducar.escola',
             'coluna' => 'ref_idpes_secretario_escolar'
-        ],
-        [
-            'tabela' => 'cadastro.endereco_externo',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'cadastro.endereco_externo',
-            'coluna' => 'idpes_cad'
         ],
         [
             'tabela' => 'cadastro.pessoa',

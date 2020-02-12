@@ -145,20 +145,13 @@ class indice extends clsListagem
                 if ( $det_bib ) {
                     $obj_inst = new clsPmieducarInstituicao( $det_bib["ref_cod_instituicao"] );
                     $det_inst = $obj_inst->detalhe();
-                    $obj_esc  = new clsPmieducarEscolaComplemento( $det_bib["ref_cod_escola"] );
-                    $det_esc  = $obj_esc->detalhe();
-                    if ( $det_esc ) {
-                        $nome_escola = $det_esc["nm_escola"];
-                    }
-                    else {
-                        $obj_escola = new clsPmieducarEscola( $det_bib["ref_cod_escola"] );
-                        $det_escola = $obj_escola->detalhe();
-                        if ( $det_escola ) {
-                            $obj_pes = new clsPessoa_( $det_escola["ref_idpes"] );
-                            $det_pes = $obj_pes->detalhe();
-                            if ( $det_pes ) {
-                                $nome_escola = $det_pes["nome"];
-                            }
+                    $obj_escola = new clsPmieducarEscola( $det_bib["ref_cod_escola"] );
+                    $det_escola = $obj_escola->detalhe();
+                    if ( $det_escola ) {
+                        $obj_pes = new clsPessoa_( $det_escola["ref_idpes"] );
+                        $det_pes = $obj_pes->detalhe();
+                        if ( $det_pes ) {
+                            $nome_escola = $det_pes["nome"];
                         }
                     }
                 }

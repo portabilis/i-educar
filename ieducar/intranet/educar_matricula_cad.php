@@ -78,7 +78,16 @@ class indice extends clsCadastro
     public $ref_cod_candidato_fila_unica;
 
     public $ref_cod_turma_copiar_enturmacoes;
+
     private $availableTimeService;
+
+    private $transferido = 4;
+
+    private $situacaoUltimaMatricula;
+
+    private $serieUltimaMatricula;
+
+    private $anoUltimaMatricula;
 
     public function Inicializar()
     {
@@ -346,6 +355,7 @@ class indice extends clsCadastro
 
         if (!is_null($mensagemErro)) {
             $this->mensagem = $mensagemErro;
+
             return false;
         }
 
@@ -381,7 +391,7 @@ class indice extends clsCadastro
 
         if ($somente_do_bairro) {
             $db = new clsBanco();
-            $bairro_escola = $db->CampoUnico("select Upper(bairro) from cadastro.endereco_externo where idpes = (select idpes from cadastro.juridica where idpes = (select ref_idpes from pmieducar.escola where cod_escola = {$this->ref_cod_escola}))");
+            $bairro_escola = $db->CampoUnico("select Upper(nome) from public.bairro where idbai = (select idbai from cadastro.endereco_pessoa where idpes = (select ref_idpes from pmieducar.escola where cod_escola = {$this->ref_cod_escola}))");
 
             $db = new clsBanco();
             $bairro_aluno = $db->CampoUnico("select Upper(nome) from public.bairro where idbai = (select idbai from cadastro.endereco_pessoa where idpes = (select ref_idpes from pmieducar.aluno where cod_aluno = {$this->ref_cod_aluno}))");
@@ -970,21 +980,26 @@ class indice extends clsCadastro
 
                 $this->enturmacaoMatricula($this->cod_matricula, $this->ref_cod_turma);
 
-                /** @var LegacyRegistration $registration */
+                if ($this->situacaoUltimaMatricula == $this->transferido &&
+                    $this->serieUltimaMatricula == $this->ref_cod_serie &&
+                    $this->anoUltimaMatricula == $this->ano
+                )  {
+                    /** @var LegacyRegistration $registration */
 
-                $registration = LegacyRegistration::find($this->cod_matricula);
+                    $registration = LegacyRegistration::find($this->cod_matricula);
 
-                try {
-                    event(new RegistrationEvent($registration));
-                } catch(TransferException $exception) {
-                    $this->mensagem = 'Não foi possível copiar os dados da matrícula antiga. ' . $exception->getMessage();
+                    try {
+                        event(new RegistrationEvent($registration));
+                    } catch (TransferException $exception) {
+                        $this->mensagem = 'Não foi possível copiar os dados da matrícula antiga. ' . $exception->getMessage();
 
-                    DB::commit();
-                    $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
+                        DB::commit();
+                        $this->simpleRedirect('educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
+                    }
+
+                    $promocao = new PromotionService($registration->enrollments()->first());
+                    $promocao->fakeRequest();
                 }
-
-                $promocao = new PromotionService($registration->enrollments()->first());
-                $promocao->fakeRequest();
 
                 $this->mensagem = 'Cadastro efetuado com sucesso.<br />';
 
@@ -1071,25 +1086,25 @@ class indice extends clsCadastro
         $objSequenciaSerie = new clsPmieducarSequenciaSerie;
 
         $dadosUltimaMatricula = $objMatricula->getDadosUltimaMatricula($this->ref_cod_aluno);
-        $situacaoUltimaMatricula = $dadosUltimaMatricula[0]['aprovado'];
-        $serieUltimaMatricula = $dadosUltimaMatricula[0]['ref_ref_cod_serie'];
+        $this->situacaoUltimaMatricula = $dadosUltimaMatricula[0]['aprovado'];
+        $this->serieUltimaMatricula = $dadosUltimaMatricula[0]['ref_ref_cod_serie'];
+        $this->anoUltimaMatricula = $dadosUltimaMatricula[0]['ano'];
         $aprovado = [1, 12, 13];
         $reprovado = [2, 14];
-        $transferido = 4;
 
         if (!$dadosUltimaMatricula) {
             return true;
         }
 
-        if ($situacaoUltimaMatricula == $transferido) {
+        if ($this->situacaoUltimaMatricula == $this->transferido) {
             return true;
         }
 
-        if (in_array($situacaoUltimaMatricula, $aprovado)) {
-            $serieNovaMatricula = $objSequenciaSerie->lista($serieUltimaMatricula);
+        if (in_array($this->situacaoUltimaMatricula, $aprovado)) {
+            $serieNovaMatricula = $objSequenciaSerie->lista($this->serieUltimaMatricula);
             $serieNovaMatricula = $serieNovaMatricula[0]['ref_serie_destino'];
-        } elseif (in_array($situacaoUltimaMatricula, $reprovado)) {
-            $serieNovaMatricula = $serieUltimaMatricula;
+        } elseif (in_array($this->situacaoUltimaMatricula, $reprovado)) {
+            $serieNovaMatricula = $this->serieUltimaMatricula;
         }
 
         if ($this->ref_cod_serie == $serieNovaMatricula) {

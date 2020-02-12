@@ -86,28 +86,6 @@ class indice extends clsDetalhe
                 }
             }
 
-            if (empty($endereco_lst)) {
-                $tipo = 2;
-                $obj_endereco = new clsEnderecoExterno();
-                $endereco_lst = $obj_endereco->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $registro['ref_idpes']);
-
-                if ($endereco_lst) {
-                    foreach ($endereco_lst as $endereco) {
-                        $cep = $endereco['cep'];
-                        $sigla_uf = $endereco['sigla_uf']->detalhe();
-                        $sigla_uf = $sigla_uf['nome'];
-                        $cidade = $endereco['cidade'];
-                        $idtlog = $endereco['idtlog']->detalhe();
-                        $tipo_logradouro = $idtlog['descricao'];
-                        $logradouro = $endereco['logradouro'];
-                        $bairro = $endereco['bairro'];
-                        $numero = $endereco['numero'];
-                        $complemento = $endereco['complemento'];
-                        $andar = $endereco['andar'];
-                    }
-                }
-            }
-
             $obj_telefone = new clsPessoaTelefone();
             $telefone_lst = $obj_telefone->lista($registro['ref_idpes'], 'tipo');
             if ($telefone_lst) {
@@ -126,20 +104,18 @@ class indice extends clsDetalhe
 
         } else {
             $tipo = 3;
-            $obj_escola = new clsPmieducarEscolaComplemento($this->cod_escola);
-            $obj_escola_det = $obj_escola->detalhe();
-            $nm_escola = $obj_escola_det['nm_escola'];
-            $cep = $obj_escola_det['cep'];
-            $numero = $obj_escola_det['numero'];
-            $complemento = $obj_escola_det['complemento'];
-            $email = $obj_escola_det['email'];
-            $cidade = $obj_escola_det['municipio'];
-            $bairro = $obj_escola_det['bairro'];
-            $logradouro = $obj_escola_det['logradouro'];
-            $ddd_telefone = $obj_escola_det['ddd_telefone'];
-            $telefone = $obj_escola_det['telefone'];
-            $ddd_telefone_fax = $obj_escola_det['ddd_fax'];
-            $telefone_fax = $obj_escola_det['fax'];
+            $nm_escola = null;
+            $cep = null;
+            $numero = null;
+            $complemento = null;
+            $email = null;
+            $cidade = null;
+            $bairro = null;
+            $logradouro = null;
+            $ddd_telefone = null;
+            $telefone = null;
+            $ddd_telefone_fax = null;
+            $telefone_fax = null;
         }
 
         $obj_ref_cod_escola_rede_ensino = new clsPmieducarEscolaRedeEnsino($registro['ref_cod_escola_rede_ensino']);
