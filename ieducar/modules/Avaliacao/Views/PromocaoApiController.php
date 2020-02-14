@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\LegacyRegistration;
+use App\Models\LegacySchoolStage;
+
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'Avaliacao/Service/Boletim.php';
 require_once 'App/Model/MatriculaSituacao.php';
@@ -352,6 +355,9 @@ class PromocaoApiController extends ApiCoreController
             }
 
             if ($this->matriculaId() != 0 && is_numeric($this->matriculaId())) {
+                $registration = LegacyRegistration::find($this->matriculaId());
+                $_GET['etapa'] = $this->maiorEtapaUtilizada($registration);
+
                 $situacaoAnterior = $this->loadSituacaoArmazenadaMatricula($this->matriculaId());
 
                 $this->lancarFaltasNaoLancadas($this->matriculaId());
@@ -444,5 +450,23 @@ class PromocaoApiController extends ApiCoreController
     private function regraNaoUsaNota($tipoNota)
     {
         return $tipoNota == RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
+    }
+
+    private function maiorEtapaUtilizada($registration)
+    {
+        $where = [
+            'ref_ref_cod_escola' => $registration->ref_ref_cod_escola,
+            'ref_ano' => $registration->ano,
+        ];
+
+        $totalEtapas['total'] = LegacySchoolStage::query()->where($where)->count();
+        $arrayEtapas = [];
+
+        for ($i = 1; $i <= $totalEtapas['total']; $i++)
+        {
+            $arrayEtapas[$i] = strval($i);
+        }
+
+        return max($arrayEtapas);
     }
 }
