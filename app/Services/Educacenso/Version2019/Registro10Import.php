@@ -125,18 +125,18 @@ class Registro10Import implements RegistroImportInterface
         $school->qtd_secretario_escolar = $model->qtdSecretarioEscolar ?: null;
         $school->qtd_segurancas = $model->qtdSegurancas ?: null;
         $school->qtd_tecnicos = $model->qtdTecnicos ?: null;
-        $school->alimentacao_escolar_alunos = $model->alimentacaoEscolarAlunos;
+        $school->alimentacao_escolar_alunos = $model->alimentacaoEscolarAlunos ?: null;
         $school->organizacao_ensino = $this->getArrayOrganizacaoEnsino();
         $school->instrumentos_pedagogicos = $this->getArrayInstrumentosPedagogicos();
-        $school->educacao_indigena = $model->educacaoIndigena;
+        $school->educacao_indigena = $model->educacaoIndigena ?: null;
         $school->lingua_ministrada = $model->linguaIndigena ? LinguaMinistrada::INDIGENA : LinguaMinistrada::PORTUGUESA;
         $school->codigo_lingua_indigena = $this->getArrayLinguaIndigena();
-        $school->exame_selecao_ingresso = $model->exameSelecaoIngresso;
+        $school->exame_selecao_ingresso = $model->exameSelecaoIngresso ?: null;
         $school->reserva_vagas_cotas = $this->getArrayReservaVagas();
         $school->predio_compartilhado_outra_escola = $model->predioCompartilhadoOutraEscola ?: null;
-        $school->usa_espacos_equipamentos_atividades_regulares = $model->usaEspacosEquipamentosAtividadesRegulares;
+        $school->usa_espacos_equipamentos_atividades_regulares = $model->usaEspacosEquipamentosAtividadesRegulares ?: null;
         $school->orgaos_colegiados = $this->getArrayOrgaosColegiados();
-        $school->projeto_politico_pedagogico = $model->projetoPoliticoPedagogico;
+        $school->projeto_politico_pedagogico = $model->projetoPoliticoPedagogico ?: null;
 
         $school->save();
     }
