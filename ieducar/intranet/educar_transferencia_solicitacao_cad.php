@@ -1,6 +1,8 @@
 <?php
 
+use App\Events\TransferEvent;
 use App\Models\LegacyRegistration;
+use App\Models\LegacyTransferRequest;
 use App\Services\PromotionService;
 use Illuminate\Support\Facades\DB;
 
@@ -293,6 +295,9 @@ class indice extends clsCadastro
             }
 
             DB::commit();
+
+            event(new TransferEvent(LegacyTransferRequest::findOrFail($cadastrou)));
+
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
         }

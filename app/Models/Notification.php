@@ -15,6 +15,7 @@ class Notification extends Model
         'text',
         'link',
         'read_at',
-        'user_id'
+        'user_id',
+        'type_id',
     ];
 }

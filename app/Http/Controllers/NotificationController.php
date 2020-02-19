@@ -4,22 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Notification;
 use App\Process;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class NotificationController extends Controller
 {
     /**
      * @param Request $request
+     * @param User $user
      * @return View
      */
-    public function index(Request $request)
+    public function index(Request $request, User $user)
     {
         $this->breadcrumb('Notificações', []);
 
         $this->menu(Process::SCHEDULE);
 
         $query = Notification::query();
+
+        $query->where('user_id', $user->getKey());
 
         if ($request->get('type')) {
             $query->where('type_id', $request->get('type'));
