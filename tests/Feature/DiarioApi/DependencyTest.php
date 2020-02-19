@@ -58,4 +58,55 @@ class DependencyTest extends TestCase
         $registration = $this->enrollment->registration;
         $this->assertEquals(App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA, $registration->refresh()->aprovado);
     }
+
+    /**
+     * Quando o número de disciplinas em dependencia é maior do que o configurado, incluindo reprovações por falta,
+     * deve retornar Reprovado
+     */
+    public function testShouldReturnsReprovedWhenDependenciesIsOver()
+    {
+        $this->enrollment = $this->getProgressionWithAverageCalculationWeightedRecovery();
+
+        $schoolClass = $this->enrollment->schoolClass;
+        $school = $schoolClass->school;
+
+        $this->createStages($school, 2);
+        $this->createDisciplines($schoolClass, 2);
+
+        $evaluationRule = $schoolClass->grade->evaluationRules()->first();
+        $evaluationRule->qtd_disciplinas_dependencia = 1;
+        $evaluationRule->save();
+
+        $disciplines = $schoolClass->disciplines;
+
+        $score = [
+            1 => 4,
+            2 => 1,
+        ];
+        $absence = [
+            1 => 1,
+            2 => 3,
+        ];
+
+        $this->postAbsenceForStages($absence, $disciplines[0]);
+        $this->postScoreForStages($score, $disciplines[0]);
+        $response = $this->postExam($this->enrollment, $disciplines[0]->id, 'Rc', '1');
+        $this->assertEquals('Retido', $response->situacao);
+
+        $score = [
+            1 => 10,
+            2 => 10,
+        ];
+        $absence = [
+            1 => 100,
+            2 => 3,
+        ];
+
+        $this->postAbsenceForStages($absence, $disciplines[1]);
+        $response = $this->postScoreForStages($score, $disciplines[1]);
+        $this->assertEquals('Retido', $response->situacao);
+
+        $registration = $this->enrollment->registration;
+        $this->assertEquals(App_Model_MatriculaSituacao::REPROVADO, $registration->refresh()->aprovado);
+    }
 }
