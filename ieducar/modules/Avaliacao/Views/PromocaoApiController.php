@@ -459,14 +459,6 @@ class PromocaoApiController extends ApiCoreController
             'ref_ano' => $registration->ano,
         ];
 
-        $totalEtapas['total'] = LegacySchoolStage::query()->where($where)->count();
-        $arrayEtapas = [];
-
-        for ($i = 1; $i <= $totalEtapas['total']; $i++)
-        {
-            $arrayEtapas[$i] = strval($i);
-        }
-
-        return max($arrayEtapas);
+        return LegacySchoolStage::query()->where($where)->count();
     }
 }
