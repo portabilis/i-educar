@@ -230,7 +230,10 @@ class PromocaoApiController extends ApiCoreController
         // FIXME #parameters
         $regra = $this->boletimService()->getRegra();
         $tpPresenca = $regra->get('tipoPresenca');
-        $regraNaoUsaNota = $this->regraNaoUsaNota($regra->get('tipoNota'));
+
+        //todo: Desabilitado temporariamente devido a problemas com aprovações indevidas
+        // #6995
+        $regraNaoUsaNota = false;//$this->regraNaoUsaNota($regra->get('tipoNota'));
 
         $componentesCurriculares = $this->loadComponentesCurriculares($matriculaId);
 
