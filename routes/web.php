@@ -98,6 +98,8 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::post('/atualiza-situacao-matriculas', 'UpdateRegistrationStatusController@updateStatus')->name('update-registration-status.update-status');
 
     Route::get('/abre-url-privada', 'OpenPrivateUrlController@open')->name('open_private_url.open');
+
+    Route::get('/notificacoes', 'NotificationController@index')->name('notifications.index');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
