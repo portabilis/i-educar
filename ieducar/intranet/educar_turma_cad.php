@@ -1586,15 +1586,13 @@ class indice extends clsCadastro
 
     protected function getCountMatriculas($escolaId, $turmaId)
     {
-        $ano = $this->getAnoEscolarEmAndamento($escolaId);
-
-        if (!is_numeric($ano)) {
+        if (!is_numeric($this->ano_letivo)) {
             $this->mensagem = 'N&atilde;o foi possivel obter um ano em andamento, por favor, inicie um ano para a escola ou desative a configura&ccedil;&atilde;o (para s&eacute;rie e escola) \'Bloquear cadastro de novas turmas antes de atingir limite de vagas (no mesmo turno)\'.';
 
             return false;
         }
 
-        $sql = "select count(cod_matricula) as matriculas from pmieducar.matricula, pmieducar.matricula_turma where ano = $ano and matricula.ativo = 1 and matricula_turma.ativo = matricula.ativo and cod_matricula = ref_cod_matricula and ref_cod_turma = $turmaId";
+        $sql = "select count(cod_matricula) as matriculas from pmieducar.matricula, pmieducar.matricula_turma where ano = {$this->ano_letivo} and matricula.ativo = 1 and matricula_turma.ativo = matricula.ativo and cod_matricula = ref_cod_matricula and ref_cod_turma = {$turmaId}";
 
         return $this->getDb()->CampoUnico($sql);
     }
@@ -1606,7 +1604,7 @@ class indice extends clsCadastro
         if ($escolaSerie['bloquear_cadastro_turma_para_serie_com_vagas'] == 1) {
             $turmas = new clsPmieducarTurma();
 
-            $turmas = $turmas->lista(null, null, null, $serieId, $escolaId, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, $turnoId, null, null, true);
+            $turmas = $turmas->lista(null, null, null, $serieId, $escolaId, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, $turnoId, null, $this->ano_letivo, true);
 
             foreach ($turmas as $turma) {
                 $countMatriculas = $this->getCountMatriculas($escolaId, $turma['cod_turma']);
