@@ -23,6 +23,19 @@
                     </span>
                 </td>
             </tr>
+            <tr id="tr_nm_instituicao">
+                <td class="formmdtd" valign="top"><span class="form">Tipo:</span></td>
+                <td class="formmdtd" valign="top">
+                    <span class="form">
+                        <select class="geral" name="type" id="type" style="width: 308px;">
+                            <option value="">Selecione</option>
+                            @foreach(\App\Models\NotificationType::all() as $type)
+                                <option value="{{$type->id}}" @if(Request::get('type') == $type->id) selected @endif>{{$type->name}}</option>
+                            @endforeach
+                        </select>
+                    </span>
+                </td>
+            </tr>
             </tbody>
         </table>
 

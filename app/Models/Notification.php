@@ -10,7 +10,7 @@ class Notification extends Model
      * @var string
      */
     protected $table = 'public.notifications';
-    
+
     protected $fillable = [
         'text',
         'link',

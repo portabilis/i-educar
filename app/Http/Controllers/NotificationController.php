@@ -19,6 +19,12 @@ class NotificationController extends Controller
 
         $this->menu(Process::SCHEDULE);
 
-        return view('notification.index', ['notifications' => Notification::paginate()]);
+        $query = Notification::query();
+
+        if ($request->get('type')) {
+            $query->where('type_id', $request->get('type'));
+        }
+
+        return view('notification.index', ['notifications' => $query->paginate()]);
     }
 }
