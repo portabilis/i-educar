@@ -1579,15 +1579,10 @@ class indice extends clsCadastro
         return $escolaSerie->detalhe();
     }
 
-    protected function getAnoEscolarEmAndamento($escolaId)
-    {
-        return $this->getDb()->CampoUnico("select ano from pmieducar.escola_ano_letivo where ativo = 1 and andamento = 1 and ref_cod_escola = $escolaId");
-    }
-
-    protected function getCountMatriculas($escolaId, $turmaId)
+    protected function getCountMatriculas($turmaId)
     {
         if (!is_numeric($this->ano_letivo)) {
-            $this->mensagem = 'N&atilde;o foi possivel obter um ano em andamento, por favor, inicie um ano para a escola ou desative a configura&ccedil;&atilde;o (para s&eacute;rie e escola) \'Bloquear cadastro de novas turmas antes de atingir limite de vagas (no mesmo turno)\'.';
+            $this->mensagem = 'É necessário informar um ano letivo.';
 
             return false;
         }
@@ -1607,7 +1602,7 @@ class indice extends clsCadastro
             $turmas = $turmas->lista(null, null, null, $serieId, $escolaId, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, $turnoId, null, $this->ano_letivo, true);
 
             foreach ($turmas as $turma) {
-                $countMatriculas = $this->getCountMatriculas($escolaId, $turma['cod_turma']);
+                $countMatriculas = $this->getCountMatriculas($turma['cod_turma']);
 
                 // countMatriculas retorna false e adiciona mensagem, se não obter ano em andamento
                 if ($countMatriculas === false) {
