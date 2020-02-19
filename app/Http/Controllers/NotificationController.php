@@ -25,6 +25,16 @@ class NotificationController extends Controller
             $query->where('type_id', $request->get('type'));
         }
 
+        if ($request->get('status')) {
+            if ($request->get('status') == '1') {
+                $query->whereNotNull('read_at');
+            }
+
+            if ($request->get('status') == '2') {
+                $query->whereNull('read_at');
+            }
+        }
+
         return view('notification.index', ['notifications' => $query->paginate()]);
     }
 }
