@@ -244,7 +244,7 @@ class PromocaoApiController extends ApiCoreController
             ->where('data_fim', '<', now())
             ->orderBy('sequencial');
 
-        if ($stages->exists()) {
+        if (!$stages->exists()) {
             $stages = LegacySchoolStage::query(['sequencial'])
                 ->where([
                     'ref_ref_cod_escola' => $escolaId,
