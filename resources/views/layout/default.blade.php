@@ -175,9 +175,12 @@
                     <a href="{{ url('intranet/meusdados.php') }}" class="avatar" title="Meus dados">
                         <img height="35" src="{{ url('intranet/imagens/user-perfil.png') }}" alt="Perfil">
                     </a>
-                    <a href="#" class="notifications">
-                        <img alt="Notificação" id="notificacao" src="{{ url('intranet/imagens/icon-nav-notifications.png') }}">
-                    </a>
+                    <div class="dropdown">
+                        <div class="dropbtn"><img alt="Notificação" src="{{ url('intranet/imagens/icon-nav-notifications.png') }}"></div>
+                        <div class="dropdown-content content-notifications">
+                           <a href="/notificacoes" class="btn-all-notifications">Ver todas</a>
+                        </div>
+                    </div>
                 </div>
             </header>
         </td>
@@ -290,6 +293,22 @@
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/select2.full.min.js") }}"></script>
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/pt-BR.js") }}"></script>
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/flash-messages.js") }}"></script>
+<script src="https://js.pusher.com/5.1/pusher.min.js"></script>
+<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/notifications.js") }}"></script>
+<script>
+    getNotifications();
+
+    var pusher = new Pusher('0b78d29f7376054d4b88', {
+        cluster: 'us2',
+        forceTLS: true
+    });
+
+    var channel = pusher.subscribe('{{config('app.slug')}}-notification-{{$loggedUser->personId}}');
+    channel.bind('App\\Events\\NotificationEvent', function(data) {
+        var notification = data.notification;
+        $j('.content-notifications').prepend('<a href="' + notification.link + '">' + notification.text + '</a>');
+    });
+</script>
 
 @include('layout.vue')
 

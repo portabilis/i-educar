@@ -100,6 +100,8 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/abre-url-privada', 'OpenPrivateUrlController@open')->name('open_private_url.open');
 
     Route::get('/notificacoes', 'NotificationController@index')->name('notifications.index');
+    Route::get('/notificacoes/retorna-notificacoes-usuario', 'NotificationController@getByLoggedUser')->name('notifications.get-by-logged-user');
+    Route::get('/notificacoes/marca-como-lida', 'NotificationController@markAsRead')->name('notifications.mark-as-read');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {

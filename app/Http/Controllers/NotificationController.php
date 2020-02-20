@@ -40,6 +40,24 @@ class NotificationController extends Controller
             }
         }
 
+        $query->orderBy('created_at', 'desc');
+
         return view('notification.index', ['notifications' => $query->paginate()]);
+    }
+
+    public function markAsRead(Request $request, User $user)
+    {
+        $notifications = $request->get('notifications');
+
+        Notification::where('user_id', $user->getKey())
+            ->whereIn('id', $notifications)
+            ->update(['read_at' => now()]);
+    }
+
+    public function getByLoggedUser(User $user)
+    {
+        return Notification::where('user_id', $user->getKey())
+            ->limit(5)
+            ->get();
     }
 }

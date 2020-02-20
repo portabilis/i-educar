@@ -200,6 +200,18 @@ span.error_notice {
   display: block;
 }
 
+.content-notifications a{
+  font-size: 12px !important;
+}
+
+.content-notifications {
+  width: 400px !important;
+}
+
+.btn-all-notifications {
+  text-align: center !important;
+}
+
 img#help {
     position: relative;
     top: 7px;
