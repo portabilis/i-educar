@@ -58,7 +58,8 @@ class NotificationController extends Controller
     {
         return Notification::where('user_id', $user->getKey())
             ->limit(5)
-            ->orderBy('read_at')
+            ->orderBy('read_at', 'desc')
+            ->orderBy('created_at')
             ->get();
     }
 }
