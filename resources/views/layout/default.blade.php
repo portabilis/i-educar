@@ -176,9 +176,9 @@
                     <a href="{{ url('intranet/meusdados.php') }}" class="avatar" title="Meus dados">
                         <img height="35" src="{{ url('intranet/imagens/user-perfil.png') }}" alt="Perfil">
                     </a>
-                    <div class="dropdown">
-                        <div class="dropbtn"><img alt="Notificação" src="{{ url('intranet/imagens/icon-nav-notifications.png') }}"></div>
-                        <div class="dropdown-content content-notifications">
+                    <div class="dropdown notifications">
+                        <div class="dropbtn notifications"><img alt="Notificação" src="{{ url('intranet/imagens/icon-nav-notifications.png') }}"></div>
+                        <div class="dropdown-content-notifications">
                            <a href="/notificacoes" class="btn-all-notifications">Ver todas</a>
                         </div>
                     </div>
@@ -286,6 +286,17 @@
 <script type='text/javascript'>(function ($) {
     $(document).ready(function () {
             fixupFieldsWidth();
+            $('.dropdown.notifications').click(function(){
+                if ($('.dropdown-content-notifications').is(':visible')) {
+                    $('.dropdown-content-notifications').css('display','none');
+                } else {
+                    $('.dropdown-content-notifications').css('display','block');
+                }
+                event.stopPropagation();
+            });
+            $(document).click(function() {
+                $('.dropdown-content-notifications').css('display','none');
+            });
         });
     })(jQuery);
 </script>
