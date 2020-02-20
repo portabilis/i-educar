@@ -504,6 +504,7 @@ resourceOptions.handleGet = function (dataResponse) {
     $j('#religiao_id').val(dataResponse.religiao_id);
     $j('#tipo_transporte').val(dataResponse.tipo_transporte);
     $j('#alfabetizado').attr('checked', dataResponse.alfabetizado);
+    document.getElementById('emancipado').checked = dataResponse.emancipado;
     $j('#autorizado_um').val(dataResponse.autorizado_um);
     $j('#parentesco_um').val(dataResponse.parentesco_um);
     $j('#autorizado_dois').val(dataResponse.autorizado_dois);
