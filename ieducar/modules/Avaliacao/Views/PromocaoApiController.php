@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacySchoolClassStage;
 use App\Models\LegacySchoolStage;
 
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
@@ -236,19 +237,30 @@ class PromocaoApiController extends ApiCoreController
 
         $ano = $this->boletimService()->getOption('matriculaData')['ano'];
         $escolaId = $this->boletimService()->getOption('matriculaData')['ref_ref_cod_escola'];
-        $schoolStages = LegacySchoolStage::query()
-            ->where(['ref_ref_cod_escola'=> $escolaId, 'ref_ano' => $ano])
-            ->where('data_fim', '<', now())
-            ->get(['data_fim', 'sequencial']);
+        $turmaId = $this->boletimService()->getOption('matriculaData')['ref_cod_turma'];
 
-        foreach($schoolStages as $schoolStage) {
-            $getSchoolStages[] = $schoolStage->sequencial;
+        $stages = LegacySchoolClassStage::query(['sequencial'])
+            ->where(['ref_cod_turma' => $turmaId])
+            ->where('data_fim', '<', now())
+            ->orderBy('sequencial');
+
+        if ($stages->exists()) {
+            $stages = LegacySchoolStage::query(['sequencial'])
+                ->where([
+                    'ref_ref_cod_escola' => $escolaId,
+                    'ref_ano' => $ano
+                ])
+                ->where('data_fim', '<', now())
+                ->orderBy('sequencial');
         }
 
-        sort($getSchoolStages);
+        foreach($stages->get() as $stage) {
+            $getStages[] = $stage->sequencial;
+        }
+
         $etapas = array_map(function($arr) {
             return $arr;
-        }, $getSchoolStages);
+        }, $getStages);
 
         if ($tpPresenca == RegraAvaliacao_Model_TipoPresenca::GERAL) {
             // FIXME #parameters
