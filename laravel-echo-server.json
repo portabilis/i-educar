@@ -5,8 +5,7 @@
 	"database": "redis",
 	"databaseConfig": {
 		"redis": {
-      "host": "localhost",
-      "password": "123456"
+      "host": "localhost"
     },
 		"sqlite": {
 			"databasePath": "/database/laravel-echo-server.sqlite"

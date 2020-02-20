@@ -263,6 +263,23 @@ span.error_notice {
   text-align: center !important;
 }
 
+span.notification-balloon {
+  background-color: red;
+  padding: 5px;
+  border: 2px solid #47728f;
+  height: 0;
+  position: absolute;
+  border-radius: 50%;
+  top: 10px;
+  margin-left: -12px;
+  display: none;
+}
+
+.dropdown-content-notifications a.not-read {
+  font-weight: bold;
+  background-color: #e9f0f8;
+}
+
 img#help {
     position: relative;
     top: 7px;

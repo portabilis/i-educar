@@ -177,7 +177,10 @@
                         <img height="35" src="{{ url('intranet/imagens/user-perfil.png') }}" alt="Perfil">
                     </a>
                     <div class="dropdown notifications">
-                        <div class="dropbtn notifications"><img alt="Notificação" src="{{ url('intranet/imagens/icon-nav-notifications.png') }}"></div>
+                        <div class="dropbtn notifications">
+                            <img alt="Notificação" src="{{ url('intranet/imagens/icon-nav-notifications.png') }}">
+                            <span class="notification-balloon"></span>
+                        </div>
                         <div class="dropdown-content-notifications">
                            <a href="/notificacoes" class="btn-all-notifications">Ver todas</a>
                         </div>
@@ -286,17 +289,6 @@
 <script type='text/javascript'>(function ($) {
     $(document).ready(function () {
             fixupFieldsWidth();
-            $('.dropdown.notifications').click(function(){
-                if ($('.dropdown-content-notifications').is(':visible')) {
-                    $('.dropdown-content-notifications').css('display','none');
-                } else {
-                    $('.dropdown-content-notifications').css('display','block');
-                }
-                event.stopPropagation();
-            });
-            $(document).click(function() {
-                $('.dropdown-content-notifications').css('display','none');
-            });
         });
     })(jQuery);
 </script>
@@ -313,7 +305,10 @@
     window.Echo.channel('ieducar-{{config('app.slug')}}-notification-{{$loggedUser->personId}}')
         .listen('NotificationEvent', (e) => {
             var notification = e.notification;
-            $j('.content-notifications').prepend('<a href="' + notification.link + '">' + notification.text + '</a>');
+            notRead = notification.read_at == null;
+            className = notRead ? 'not-read' : 'read';
+            $j('.dropdown-content-notifications').prepend('<a href="' + notification.link + '" data-id="' + notification.id + '" class="' +className+ '">' + notification.text + '</a>');
+            $j('.notification-balloon').show();
         });
 
     {{--var pusher = new Pusher('0b78d29f7376054d4b88', {--}}
@@ -324,7 +319,7 @@
     {{--var channel = pusher.subscribe('{{config('app.slug')}}-notification-{{$loggedUser->personId}}');--}}
     {{--channel.bind('App\\Events\\NotificationEvent', function(data) {--}}
     //     var notification = data.notification;
-    //     $j('.content-notifications').prepend('<a href="' + notification.link + '">' + notification.text + '</a>');
+    //     $j('.dropdown-content-notifications').prepend('<a href="' + notification.link + '">' + notification.text + '</a>');
     {{--});--}}
 </script>
 
