@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacySchoolStage;
+
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'Avaliacao/Service/Boletim.php';
 require_once 'App/Model/MatriculaSituacao.php';
@@ -228,15 +230,30 @@ class PromocaoApiController extends ApiCoreController
         $regra = $this->boletimService()->getRegra();
         $tpPresenca = $regra->get('tipoPresenca');
 
-        //todo: Desabilitado temporariamente devido a problemas com aprovações indevidas
-        // #6995
-        $regraNaoUsaNota = false;//$this->regraNaoUsaNota($regra->get('tipoNota'));
+        $regraNaoUsaNota = $this->regraNaoUsaNota($regra->get('tipoNota'));
 
         $componentesCurriculares = $this->loadComponentesCurriculares($matriculaId);
 
+        $ano = $this->boletimService()->getOption('matriculaData')['ano'];
+        $escolaId = $this->boletimService()->getOption('matriculaData')['ref_ref_cod_escola'];
+        $schoolStages = LegacySchoolStage::query()
+            ->where(['ref_ref_cod_escola'=> $escolaId, 'ref_ano' => $ano])
+            ->where('data_fim', '<', now())
+            ->get(['data_fim', 'sequencial']);
+
+        foreach($schoolStages as $schoolStage) {
+            $getSchoolStages[] = $schoolStage->sequencial;
+        }
+
+        sort($getSchoolStages);
+        $etapas = array_map(function($arr) {
+            return $arr;
+        }, $getSchoolStages);
+
         if ($tpPresenca == RegraAvaliacao_Model_TipoPresenca::GERAL) {
             // FIXME #parameters
-            foreach (range(1, $this->boletimService()->getOption('etapas')) as $etapa) {
+
+            foreach ($etapas as $etapa) {
                 $hasNotaOrParecerInEtapa = false;
 
                 if ($regraNaoUsaNota) {
@@ -270,7 +287,7 @@ class PromocaoApiController extends ApiCoreController
             }//for etapa
         } elseif ($tpPresenca == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
             // FIXME #parameters
-            foreach (range(1, $this->boletimService()->getOption('etapas')) as $etapa) {
+            foreach ($etapas as $etapa) {
                 foreach ($componentesCurriculares as $cc) {
                     $nota = $this->getNota($etapa, $cc['id']);
                     $parecer = $this->getParecerDescritivo($etapa, $cc['id']);
