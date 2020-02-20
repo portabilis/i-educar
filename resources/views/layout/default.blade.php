@@ -4,6 +4,7 @@
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="-1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>i-Educar @if(isset($title)) - {!! $title !!} @endif</title>
 
@@ -293,21 +294,27 @@
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/select2.full.min.js") }}"></script>
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/pt-BR.js") }}"></script>
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/flash-messages.js") }}"></script>
-<script src="https://js.pusher.com/5.1/pusher.min.js"></script>
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/notifications.js") }}"></script>
+<script type="text/javascript" src="{{ Asset::get("/js/app.js") }}"></script>
 <script>
     getNotifications();
 
-    var pusher = new Pusher('0b78d29f7376054d4b88', {
-        cluster: 'us2',
-        forceTLS: true
-    });
+    window.Echo.channel('ieducar-{{config('app.slug')}}-notification-{{$loggedUser->personId}}')
+        .listen('NotificationEvent', (e) => {
+            var notification = e.notification;
+            $j('.content-notifications').prepend('<a href="' + notification.link + '">' + notification.text + '</a>');
+        });
 
-    var channel = pusher.subscribe('{{config('app.slug')}}-notification-{{$loggedUser->personId}}');
-    channel.bind('App\\Events\\NotificationEvent', function(data) {
-        var notification = data.notification;
-        $j('.content-notifications').prepend('<a href="' + notification.link + '">' + notification.text + '</a>');
-    });
+    {{--var pusher = new Pusher('0b78d29f7376054d4b88', {--}}
+    {{--    cluster: 'us2',--}}
+    {{--    forceTLS: true--}}
+    {{--});--}}
+
+    {{--var channel = pusher.subscribe('{{config('app.slug')}}-notification-{{$loggedUser->personId}}');--}}
+    {{--channel.bind('App\\Events\\NotificationEvent', function(data) {--}}
+    //     var notification = data.notification;
+    //     $j('.content-notifications').prepend('<a href="' + notification.link + '">' + notification.text + '</a>');
+    {{--});--}}
 </script>
 
 @include('layout.vue')
