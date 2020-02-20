@@ -18,6 +18,7 @@ $j('.dropdown.notifications').click(function() {
       $j('.dropdown-content-notifications').css('display','none');
       $j('.dropdown-content-notifications a.not-read').addClass('read');
       $j('.dropdown-content-notifications a.not-read').removeClass('not-read');
+      $j('.notification-balloon').hide();
 
   } else {
       openBoxNotification();
@@ -25,14 +26,16 @@ $j('.dropdown.notifications').click(function() {
   event.stopPropagation();
 });
 $j(document).click(function() {
-  $j('.dropdown-content-notifications').css('display','none');
-  $j('.dropdown-content-notifications a.not-read').addClass('read');
-  $j('.dropdown-content-notifications a.not-read').removeClass('not-read');
+  if ($j('.dropdown-content-notifications').is(':visible')) {
+    $j('.dropdown-content-notifications').css('display','none');
+    $j('.dropdown-content-notifications a.not-read').addClass('read');
+    $j('.dropdown-content-notifications a.not-read').removeClass('not-read');
+    $j('.notification-balloon').hide();
+  }
 });
 
 function openBoxNotification() {
   $j('.dropdown-content-notifications').css('display','block');
-  $j('.notification-balloon').hide();
 
   notifications = [];
 
