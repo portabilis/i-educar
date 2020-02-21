@@ -97,18 +97,21 @@
         "check-style": "vendor/bin/php-cs-fixer --diff --dry-run --verbose fix",
         "fix-style": "vendor/bin/php-cs-fixer fix",
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
+        "npm": "npm install",
         "new-install": [
             "@composer install",
             "@set-permissions",
             "@php artisan key:generate --ansi",
             "@php artisan legacy:link --ansi",
-            "@php artisan migrate --seed --force --ansi"
+            "@php artisan migrate --seed --force --ansi",
+            "@npm"
         ],
         "update-install": [
             "@composer install",
             "@set-permissions",
             "@php artisan legacy:link --ansi",
-            "@php artisan migrate --force --ansi"
+            "@php artisan migrate --force --ansi",
+            "@npm"
         ],
         "post-install-cmd": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
