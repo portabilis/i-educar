@@ -1,8 +1,8 @@
 function startListenChannel(notificationsChannel) {
   window.Echo.channel(notificationsChannel).listen('NotificationEvent', (e) => {
     let notification = e.notification;
-    let notRead = notification.read_at == null;
-    let className = notRead ? 'not-read' : 'read';
+    let unread = notification.read_at == null;
+    let className = unread ? 'unread' : 'read';
     $j('.dropdown-content-notifications').prepend('<a href="' + notification.link + '" data-id="' + notification.id + '" class="' +className+ '">' + notification.text + '</a>');
     $j('.notification-balloon').show();
 
@@ -22,12 +22,12 @@ function startListenChannel(notificationsChannel) {
 function getNotifications() {
   $j.get("/notificacoes/retorna-notificacoes-usuario", function (data) {
     $j.each(data, function( index, value ) {
-      let notRead = value.read_at == null;
-      let className = notRead ? 'not-read' : 'read';
+      let unread = value.read_at == null;
+      let className = unread ? 'unread' : 'read';
 
       $j('.dropdown-content-notifications').append('<a href="' + value.link + '" data-id="' + value.id + '" class="' +className+ '">' + value.text + '</a>');
 
-      if(notRead) {
+      if(unread) {
         $j('.notification-balloon').show();
       }
     });
@@ -39,8 +39,8 @@ function getNotifications() {
 $j('.dropdown.notifications').click(function() {
   if ($j('.dropdown-content-notifications').is(':visible')) {
       $j('.dropdown-content-notifications').css('display','none');
-      $j('.dropdown-content-notifications a.not-read').addClass('read');
-      $j('.dropdown-content-notifications a.not-read').removeClass('not-read');
+      $j('.dropdown-content-notifications a.unread').addClass('read');
+      $j('.dropdown-content-notifications a.unread').removeClass('unread');
       $j('.notification-balloon').hide();
   } else {
       openBoxNotification();
@@ -51,8 +51,8 @@ $j('.dropdown.notifications').click(function() {
 $j(document).click(function() {
   if ($j('.dropdown-content-notifications').is(':visible')) {
     $j('.dropdown-content-notifications').css('display','none');
-    $j('.dropdown-content-notifications a.not-read').addClass('read');
-    $j('.dropdown-content-notifications a.not-read').removeClass('not-read');
+    $j('.dropdown-content-notifications a.unread').addClass('read');
+    $j('.dropdown-content-notifications a.unread').removeClass('unread');
     $j('.notification-balloon').hide();
   }
 });

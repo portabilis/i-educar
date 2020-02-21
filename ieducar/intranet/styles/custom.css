@@ -245,6 +245,7 @@ span.error_notice {
   display: block;
   text-align: left;
   font-size: 14px;
+  border-bottom: 1px solid #ccdce6;
 }
 
 .ieducar-header-links .dropdown-content-notifications a:hover {
@@ -275,7 +276,7 @@ span.notification-balloon {
   display: none;
 }
 
-.dropdown-content-notifications a.not-read {
+.dropdown-content-notifications a.unread {
   font-weight: bold;
   background-color: #e9f0f8;
 }
