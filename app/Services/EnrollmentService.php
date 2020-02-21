@@ -326,7 +326,7 @@ class EnrollmentService
 
         $dateDeparted = $previousEnrollment->date_departed;
 
-        if (!$this->withoutRelocationDateOrDateIsBefore($previousEnrollment, $dateDeparted)) {
+        if ($this->withoutRelocationDateOrDateIsAfter($previousEnrollment, $dateDeparted)) {
             return $previousEnrollment;
         }
     }
@@ -385,14 +385,10 @@ class EnrollmentService
      * @param DateTime $date
      * @return bool
      */
-    private function withoutRelocationDateOrDateIsBefore($enrollment, $date)
+    private function withoutRelocationDateOrDateIsAfter($enrollment, $date)
     {
         $relocationDate = $enrollment->schoolClass->school->institution->relocation_date;
 
-        if (!$relocationDate || $date < $relocationDate) {
-            return true;
-        }
-
-        return false;
+        return !$relocationDate || $date >= $relocationDate;
     }
 }
