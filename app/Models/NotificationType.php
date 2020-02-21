@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class NotificationType extends Model
 {
     const TRANSFERENCIA = 1;
+    const OUTROS = 2;
 
     /**
      * @var string
