@@ -296,41 +296,11 @@
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/select2.full.min.js") }}"></script>
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/select2/pt-BR.js") }}"></script>
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/flash-messages.js") }}"></script>
-<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/notifications.js") }}"></script>
 <script type="text/javascript" src="{{ Asset::get("/js/app.js") }}"></script>
+<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/notifications.js") }}"></script>
 <script>
     getNotifications();
-
-    window.Echo.channel('ieducar-{{config('app.slug')}}-notification-{{$loggedUser->personId}}')
-        .listen('NotificationEvent', (e) => {
-            var notification = e.notification;
-            notRead = notification.read_at == null;
-            className = notRead ? 'not-read' : 'read';
-            $j('.dropdown-content-notifications').prepend('<a href="' + notification.link + '" data-id="' + notification.id + '" class="' +className+ '">' + notification.text + '</a>');
-            $j('.notification-balloon').show();
-
-            notifications = [];
-
-            $j.each($j('.dropdown-content-notifications').find('a'),function(index, value){
-                notifications.push($j(value).data('id'));
-            });
-
-            if (notifications.length > 5) {
-                keyRemove = notifications.length - 2;
-                $j("a[data-id='" + notifications[keyRemove] + "']").remove();
-            }
-        });
-
-    {{--var pusher = new Pusher('0b78d29f7376054d4b88', {--}}
-    {{--    cluster: 'us2',--}}
-    {{--    forceTLS: true--}}
-    {{--});--}}
-
-    {{--var channel = pusher.subscribe('{{config('app.slug')}}-notification-{{$loggedUser->personId}}');--}}
-    {{--channel.bind('App\\Events\\NotificationEvent', function(data) {--}}
-    //     var notification = data.notification;
-    //     $j('.dropdown-content-notifications').prepend('<a href="' + notification.link + '">' + notification.text + '</a>');
-    {{--});--}}
+    startListenChannel('ieducar-{{config('app.slug')}}-notification-{{$loggedUser->personId}}');
 </script>
 
 @include('layout.vue')
