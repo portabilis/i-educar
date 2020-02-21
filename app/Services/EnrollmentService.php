@@ -326,7 +326,7 @@ class EnrollmentService
 
         $dateDeparted = $previousEnrollment->date_departed;
 
-        if ($this->withoutRelocationDateOrDateIsBefore($previousEnrollment, $dateDeparted)) {
+        if (!$this->withoutRelocationDateOrDateIsBefore($previousEnrollment, $dateDeparted)) {
             return $previousEnrollment;
         }
     }
