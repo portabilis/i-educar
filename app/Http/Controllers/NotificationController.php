@@ -47,7 +47,7 @@ class NotificationController extends Controller
 
     public function markAsRead(Request $request, User $user)
     {
-        $notifications = $request->get('notifications');
+        $notifications = $request->get('notifications', []);
 
         Notification::where('user_id', $user->getKey())
             ->whereIn('id', $notifications)
