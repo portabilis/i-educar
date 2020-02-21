@@ -82,7 +82,13 @@ class AjustaViewDeSituacao extends Migration
                         WHEN situacao_matricula.cod_situacao = 1 THEN (matricula.aprovado = ANY (ARRAY[1, 12, 13])) AND (NOT matricula_turma.reclassificado OR matricula_turma.reclassificado IS NULL) AND (NOT matricula_turma.abandono OR matricula_turma.abandono IS NULL) AND (NOT matricula_turma.remanejado OR matricula_turma.remanejado IS NULL) AND (NOT matricula_turma.transferido OR matricula_turma.transferido IS NULL) AND (NOT matricula_turma.falecido OR matricula_turma.falecido IS NULL)
                         WHEN situacao_matricula.cod_situacao = ANY (ARRAY[3, 12, 13]) THEN matricula.aprovado = situacao_matricula.cod_situacao AND (NOT matricula_turma.reclassificado OR matricula_turma.reclassificado IS NULL) AND (NOT matricula_turma.abandono OR matricula_turma.abandono IS NULL) AND (NOT matricula_turma.remanejado OR matricula_turma.remanejado IS NULL) AND (NOT matricula_turma.transferido OR matricula_turma.transferido IS NULL) AND (NOT matricula_turma.falecido OR matricula_turma.falecido IS NULL)
                         ELSE matricula.aprovado = situacao_matricula.cod_situacao
-                    END;
+                    END
+                    AND matricula_turma.sequencial = (
+                        SELECT max(sequencial)
+                        FROM pmieducar.matricula_turma mt
+                        WHERE mt.ref_cod_turma = matricula_turma.ref_cod_turma
+                        AND mt.ref_cod_matricula = matricula.cod_matricula
+                    );
 SQL
         );
     }
