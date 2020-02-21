@@ -28,17 +28,17 @@ class NotificationsService
         }
 
         foreach($users as $user) {
-            $this->createByUser($user, $text, $link, $typeNotification);
+            $this->createByUser($user->getKey(), $text, $link, $typeNotification);
         }
     }
 
-    private function createByUser($user, $text, $link, $type)
+    public function createByUser($userId, $text, $link, $type)
     {
         $notification = Notification::create([
             'text' => $text,
             'link' => $link,
             'type_id' => $type,
-            'user_id' => $user->getKey(),
+            'user_id' => $userId,
         ]);
 
         event(new NotificationEvent($notification));

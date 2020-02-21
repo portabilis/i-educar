@@ -4,12 +4,14 @@ function getNotifications() {
       notRead = value.read_at == null;
       className = notRead ? 'not-read' : 'read';
 
-      $j('.dropdown-content-notifications').prepend('<a href="' + value.link + '" data-id="' + value.id + '" class="' +className+ '">' + value.text + '</a>');
+      $j('.dropdown-content-notifications').append('<a href="' + value.link + '" data-id="' + value.id + '" class="' +className+ '">' + value.text + '</a>');
 
       if(notRead) {
         $j('.notification-balloon').show();
-      } 
+      }
     });
+
+    $j('.dropdown-content-notifications').append(' <a href="/notificacoes" class="btn-all-notifications">Ver todas</a>');
   });
 }
 

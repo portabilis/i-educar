@@ -182,7 +182,6 @@
                             <span class="notification-balloon"></span>
                         </div>
                         <div class="dropdown-content-notifications">
-                           <a href="/notificacoes" class="btn-all-notifications">Ver todas</a>
                         </div>
                     </div>
                 </div>
@@ -316,7 +315,7 @@
                 notifications.push($j(value).data('id'));
             });
 
-            if (notifications.length >= 5) {
+            if (notifications.length > 5) {
                 keyRemove = notifications.length - 2;
                 $j("a[data-id='" + notifications[keyRemove] + "']").remove();
             }
