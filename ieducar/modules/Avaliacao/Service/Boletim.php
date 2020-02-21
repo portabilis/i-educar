@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\LegacyEvaluationRule;
+use App\Models\LegacyGrade;
+use App\Models\LegacyInstitution;
 use App\Services\StageScoreCalculationService;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
@@ -635,6 +637,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $situacaoNotas = $this->getSituacaoNotas(true);
         $situacaoFaltas = $this->getSituacaoFaltas();
 
+        if ($this->allowsApproveWithDependence($situacaoNotas->situacao)) {
+            $situacaoNotas->situacao = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
+        }
+
         $situacao = $this->getSituacaoNotaFalta($situacaoNotas->situacao, $situacaoFaltas->situacao);
         $situacao->nota = $situacaoNotas;
         $situacao->falta = $situacaoFaltas;
@@ -914,22 +920,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         // Copia situação da primeira disciplina para o restante
         foreach ($codigosAglutinados as $id) {
             $situacao->componentesCurriculares[$id]->situacao = $situacao->componentesCurriculares[$codigosAglutinados[0]]->situacao;
-        }
-
-        $matricula = $this->getOption('matriculaData');
-        $serie = App_Model_IedFinder::getSerie($matricula['ref_ref_cod_serie']);
-        $instituicao = App_Model_IedFinder::getInstituicao($matricula['ref_cod_instituicao']);
-
-        $anoConcluinte = ($serie['concluinte'] == 2);
-        $reprovaAnoConcluinte = dbBool($instituicao['reprova_dependencia_ano_concluinte']);
-
-        $aprovaDependencia = !($reprovaAnoConcluinte && $anoConcluinte);
-        $aprovaDependencia = ($aprovaDependencia && !dbBool($matricula['dependencia']));
-        $aprovaDependencia = ($aprovaDependencia && $situacaoGeral == App_Model_MatriculaSituacao::REPROVADO);
-        $aprovaDependencia = ($aprovaDependencia && $qtdComponenteReprovado <= $this->getRegraAvaliacaoQtdDisciplinasDependencia());
-
-        if ($aprovaDependencia) {
-            $situacaoGeral = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
         }
 
         if ($situacaoGeral == App_Model_MatriculaSituacao::REPROVADO
@@ -3114,5 +3104,53 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         return $service->calculateRemedial($score, $remedial);
+    }
+
+    /**
+     * Verifica se a matrícula pode ficar aprovada com dependência
+     *
+     * @param integer $status
+     * @return bool
+     * @throws App_Model_Exception
+     * @throws Exception
+     */
+    private function allowsApproveWithDependence($newRegistrationStatus)
+    {
+        $matricula = $this->getOption('matriculaData');
+        $serie = LegacyGrade::find($matricula['ref_ref_cod_serie']);
+        $instituicao = app(LegacyInstitution::class);
+
+        $concluding = ($serie->concluinte == 2);
+        $reprovesConcluding = $instituicao->reprova_dependencia_ano_concluinte;
+
+        if ($concluding && $reprovesConcluding) {
+            return false;
+        }
+
+        if ($matricula['dependencia']) {
+            return false;
+        }
+
+        if ($newRegistrationStatus != App_Model_MatriculaSituacao::REPROVADO) {
+            return false;
+        }
+
+        $disciplineAverages = $this->_loadMedias()->getMediasComponentes();
+
+        $amountReproved = 0;
+        foreach ($disciplineAverages as $disciplineId => $disciplineAverage) {
+            $disciplineAverage = $disciplineAverage[0];
+
+            if (!$this->exibeSituacao($disciplineId)) {
+                continue;
+            }
+
+            if ($disciplineAverage->situacao == App_Model_MatriculaSituacao::REPROVADO) {
+                $amountReproved++;
+            }
+
+        }
+
+        return $amountReproved <= $this->getRegraAvaliacaoQtdDisciplinasDependencia();
     }
 }
