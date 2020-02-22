@@ -894,23 +894,11 @@ class clsPmieducarAluno extends Model
         $sql .= '
              LEFT JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes
              LEFT JOIN cadastro.fisica ON fisica.idpes = a.ref_idpes';
-        if ($idsetorbai) {
-            $sql .= '
-            INNER JOIN cadastro.endereco_pessoa ep ON (a.ref_idpes = ep.idpes)
-            INNER JOIN public.bairro b ON (ep.idbai = b.idbai)
-            INNER JOIN public.setor_bai sb ON (sb.idsetorbai = b.idsetorbai)
-          ';
-        }
 
         $whereAnd = ' WHERE ';
 
         if (is_numeric($int_cod_aluno)) {
             $filtros .= "{$whereAnd} cod_aluno = {$int_cod_aluno}";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($idsetorbai)) {
-            $filtros .= "{$whereAnd} sb.idsetorbai = {$idsetorbai}";
             $whereAnd = ' AND ';
         }
 
@@ -1160,14 +1148,6 @@ class clsPmieducarAluno extends Model
             $sqlCount = "SELECT COUNT(DISTINCT cod_aluno) FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
         } else {
             $sqlCount = "SELECT COUNT(0) FROM {$this->_tabela} ";
-        }
-
-        if ($idsetorbai) {
-            $sqlCount .= '
-        INNER JOIN cadastro.endereco_pessoa ep ON (a.ref_idpes = ep.idpes)
-        INNER JOIN public.bairro b ON (ep.idbai = b.idbai)
-        INNER JOIN public.setor_bai sb ON (sb.idsetorbai = b.idsetorbai)
-      ';
         }
 
         $sqlCount .= $filtros;

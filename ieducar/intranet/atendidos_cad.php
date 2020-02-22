@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyIndividual;
+use App\Models\LegacyInstitution;
 use App\Services\UrlPresigner;
 use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
@@ -1130,6 +1131,12 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!$this->validaObrigatoriedadeTelefone()) {
+            $this->mensagem = 'É necessário informar um Telefone residencial ou Celular.';
+
+            return false;
+        }
+
         $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
         $this->savePhoto($pessoaId);
         $this->createOrUpdatePessoaFisica($pessoaId);
@@ -1287,6 +1294,19 @@ class indice extends clsCadastro
         $validator = new NisValidator($this->nis_pis_pasep ?? '');
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaObrigatoriedadeTelefone()
+    {
+        $institution = app(LegacyInstitution::class);
+        $telefoneObrigatorio = $institution->obrigar_telefone_pessoa;
+        $possuiTelefoneInformado = (!empty($this->telefone_1) || !empty($this->telefone_2));
+
+        if ($telefoneObrigatorio && !$possuiTelefoneInformado) {
             return false;
         }
 

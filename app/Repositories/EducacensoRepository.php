@@ -35,13 +35,13 @@ class EducacensoRepository
               FROM pmieducar.ano_letivo_modulo
               WHERE ano_letivo_modulo.ref_ano = :year AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS "fimAnoLetivo",
             j.fantasia AS nome,
-            COALESCE(ep.cep, ee.cep) AS cep,
+            ep.cep AS cep,
             municipio.cod_ibge AS "codigoIbgeMunicipio",
             distrito.cod_ibge AS "codigoIbgeDistrito",
-            COALESCE(l.idtlog || l.nome, ee.idtlog || ee.logradouro) AS logradouro,
-            COALESCE(ep.numero, ee.numero) AS numero,
-            COALESCE(ep.complemento, ee.complemento) AS complemento,
-            COALESCE(bairro.nome, ee.bairro) AS bairro,
+            l.idtlog || l.nome AS logradouro,
+            ep.numero AS numero,
+            ep.complemento AS complemento,
+            bairro.nome AS bairro,
             (SELECT COALESCE(
               (SELECT min(fone_pessoa.ddd)
                     FROM cadastro.fone_pessoa
@@ -110,28 +110,11 @@ class EducacensoRepository
             INNER JOIN cadastro.pessoa p ON (e.ref_idpes = p.idpes)
             INNER JOIN cadastro.juridica j ON (j.idpes = p.idpes)
             LEFT JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
-            LEFT JOIN cadastro.endereco_externo ee ON (ee.idpes = p.idpes)
             LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
-            LEFT JOIN public.bairro ON (bairro.idbai = COALESCE(ep.idbai, (SELECT b.idbai
-                                                                       FROM public.bairro b
-                                                                           INNER JOIN cadastro.endereco_externo ee
-                                                                               ON (UPPER(ee.bairro) = UPPER(b.nome))
-                                                                       WHERE ee.idpes = e.ref_idpes
-                                                                       LIMIT 1)))
-            LEFT JOIN public.municipio ON (municipio.idmun = COALESCE(bairro.idmun, (SELECT m.idmun
-                                                                           FROM public.municipio m
-                                                                          INNER JOIN cadastro.endereco_externo ee
-                                                                             ON (UPPER(ee.cidade) = UPPER(m.nome))
-                                                                          WHERE ee.idpes = e.ref_idpes
-                                                                          LIMIT 1)))
-            LEFT JOIN public.uf ON (uf.sigla_uf = COALESCE(municipio.sigla_uf, ee.sigla_uf))
-            LEFT JOIN public.distrito ON (distrito.idmun = COALESCE(bairro.idmun, (SELECT d.idmun
-                                                                       FROM public.distrito d
-                                                                      INNER JOIN public.municipio m on d.idmun = m.idmun
-                                                                      INNER JOIN cadastro.endereco_externo ee
-                                                                         ON (UPPER(ee.cidade) = UPPER(m.nome))
-                                                                       WHERE ee.idpes = e.ref_idpes
-                                                                       LIMIT 1)))
+            LEFT JOIN public.bairro ON (bairro.idbai = ep.idbai)
+            LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
+            LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
+            LEFT JOIN public.distrito ON (distrito.idmun = bairro.idmun)
 
             LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
             LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)

@@ -581,6 +581,21 @@ class indice extends clsCadastro
             0
         );
 
+        $objEscolaSerieDisciplina = new clsPmieducarEscolaSerieDisciplina(
+            $this->ref_cod_serie_,
+            $this->ref_cod_escola_,
+            $campo,
+            1
+        );
+
+        $existeDependencia = $objEscolaSerieDisciplina->existeDependencia($this->disciplinas, true);
+
+        if ($existeDependencia) {
+            $this->mensagem = 'Não foi possível remover o componente. Existe registros de dependência neste componente.<br>';
+            $this->simpleRedirect("educar_escola_serie_cad.php?ref_cod_escola={$this->ref_cod_escola_}&ref_cod_serie={$this->ref_cod_serie_}");
+            return false;
+        };
+
         $detalhe = $obj->detalhe();
         $excluiu = $obj->excluir();
         $auditoria = new clsModulesAuditoriaGeral('escola_serie', $this->pessoa_logada);

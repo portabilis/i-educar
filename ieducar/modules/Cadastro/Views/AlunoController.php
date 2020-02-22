@@ -1485,14 +1485,20 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $instituicao = $clsInstituicao->primeiraAtiva();
         $obrigarCamposCenso = FALSE;
         $obrigarDocumentoPessoa = FALSE;
+        $obrigarTelefonePessoa = FALSE;
+
         if ($instituicao && isset($instituicao['obrigar_campos_censo'])) {
             $obrigarCamposCenso = dbBool($instituicao['obrigar_campos_censo']);
         }
         if ($instituicao && isset($instituicao['obrigar_documento_pessoa'])) {
             $obrigarDocumentoPessoa = dbBool($instituicao['obrigar_documento_pessoa']);
         }
+        if ($instituicao && isset($instituicao['obrigar_telefone_pessoa'])) {
+            $obrigarTelefonePessoa = dbBool($instituicao['obrigar_telefone_pessoa']);
+        }
         $this->CampoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
         $this->CampoOculto('obrigar_documento_pessoa', (int) $obrigarDocumentoPessoa);
+        $this->CampoOculto('obrigar_telefone_pessoa', (int) $obrigarTelefonePessoa);
 
         $racas         = new clsCadastroRaca();
         $racas         = $racas->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE);

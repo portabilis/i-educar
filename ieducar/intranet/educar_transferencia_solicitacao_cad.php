@@ -2,6 +2,7 @@
 
 use App\Models\LegacyRegistration;
 use App\Services\PromotionService;
+use Illuminate\Support\Facades\DB;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -197,6 +198,8 @@ class indice extends clsCadastro
 
     public function Novo()
     {
+        DB::beginTransaction();
+
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
 
@@ -281,13 +284,20 @@ class indice extends clsCadastro
             if ($notasAluno && count($notasAluno)) {
                 $notaAlunoId = $notasAluno[0]->get('id');
 
-                (new Avaliacao_Model_NotaComponenteMediaDataMapper())
-                    ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::TRANSFERIDO);
+                try {
+                    (new Avaliacao_Model_NotaComponenteMediaDataMapper())
+                        ->updateSituation($notaAlunoId, App_Model_MatriculaSituacao::TRANSFERIDO);
+                } catch(\Throwable $exception) {
+                    DB::rollback();
+                }
             }
 
+            DB::commit();
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
         }
+
+        DB::rollback();
 
         $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
 
