@@ -50,14 +50,19 @@ trait DiarioApiRequestTestTrait
         return json_decode($response->content());
     }
 
-    public function postScore($enrollment, $disciplineId, $stage, $score)
+    public function postExam($enrollment, $disciplineId, $stage, $score)
+    {
+        return $this->postScore($enrollment, $disciplineId, $stage, $score, 'nota_exame');
+    }
+
+    public function postScore($enrollment, $disciplineId, $stage, $score, $resource = 'nota')
     {
         $this->cleanGlobals();
 
         $schoolClass = $enrollment->schoolClass;
 
         $data = [
-            'resource' => 'nota',
+            'resource' => $resource,
             'oper' => 'post',
             'instituicao_id' => $schoolClass->school->institution->id,
             'escola_id' => $schoolClass->school_id,
