@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\PersonHasPlace;
 use iEducar\Legacy\Model;
 
 require_once 'include/clsBanco.inc.php';
@@ -223,26 +224,27 @@ class clsPessoaFj extends Model
             $objPessoa = new clsPessoa_($this->idpes);
             $detalhePessoa = $objPessoa->detalhe();
 
-            $objEndereco = new clsEndereco($this->idpes);
-            $detalheEndereco = $objEndereco->detalhe();
+            $has = PersonHasPlace::query()->with('place.city.state')->where('person_id', $this->idpes)->first();
 
-            if ($detalheEndereco) {
-                $this->bairro = $detalheEndereco['bairro'];
-                $this->logradouro = $detalheEndereco['logradouro'];
-                $this->sigla_uf = $detalheEndereco['sigla_uf'];
-                $this->cidade = $detalheEndereco['cidade'];
-                $this->reside_desde = $detalheEndereco['reside_desde'] ?? null;
-                $this->idtlog = $detalheEndereco['idtlog'];
-                $this->complemento = $detalheEndereco['complemento'];
-                $this->numero = $detalheEndereco['numero'];
-                $this->letra = $detalheEndereco['letra'];
-                $this->idlog = $detalheEndereco['idlog'];
-                $this->idbai = $detalheEndereco['idbai'];
-                $this->cep = $detalheEndereco['cep'];
-                $this->apartamento = $detalheEndereco['apartamento'];
-                $this->bloco = $detalheEndereco['bloco'];
-                $this->andar = $detalheEndereco['andar'];
-                $this->zona_localizacao = $detalheEndereco['zona_localizacao'];
+            if ($has) {
+                $place = $has->place;
+
+                $this->bairro = $place->neighborhood;
+                $this->logradouro = $place->address;
+                $this->sigla_uf = $place->city->state->abbreviation;
+                $this->cidade = $place->city->name;
+                $this->reside_desde = null;
+                $this->idtlog = $place->id;
+                $this->complemento = $place->complement;
+                $this->numero = $place->number;
+                $this->letra = null;
+                $this->idlog = $place->id;
+                $this->idbai = $place->id;
+                $this->cep = $place->postal_code;
+                $this->apartamento = null;
+                $this->bloco = null;
+                $this->andar = null;
+                $this->zona_localizacao = null;
 
                 $detalhePessoa['bairro'] = $this->bairro;
                 $detalhePessoa['logradouro'] = $this->logradouro;

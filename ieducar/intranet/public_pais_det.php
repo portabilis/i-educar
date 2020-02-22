@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\Country;
+use iEducar\Legacy\InteractWithDatabase;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
-require_once 'include/public/geral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -16,9 +18,21 @@ class clsIndexBase extends clsBase
 
 class indice extends clsDetalhe
 {
+    use InteractWithDatabase;
+
     public $idpais;
     public $nome;
     public $geom;
+
+    public function model()
+    {
+        return Country::class;
+    }
+
+    public function index()
+    {
+        return 'public_pais_lst.php';
+    }
 
     public function Gerar()
     {
@@ -26,25 +40,17 @@ class indice extends clsDetalhe
 
         $this->idpais = $_GET['idpais'];
 
-        $tmp_obj = new clsPublicPais($this->idpais);
-        $registro = $tmp_obj->detalhe();
+        $country = $this->find($this->idpais);
 
-        if (!$registro) {
-            $this->simpleRedirect('public_pais_lst.php');
-        }
-
-        if ($registro['nome']) {
-            $this->addDetalhe(['Nome', "{$registro['nome']}"]);
-        }
-        if ($registro['geom']) {
-            $this->addDetalhe(['Geom', "{$registro['geom']}"]);
+        if ($country->name) {
+            $this->addDetalhe(['Nome', "{$country->name}"]);
         }
 
         $obj_permissao = new clsPermissoes();
 
         if ($obj_permissao->permissao_cadastra(753, $this->pessoa_logada, 7, null, true)) {
             $this->url_novo = 'public_pais_cad.php';
-            $this->url_editar = "public_pais_cad.php?idpais={$registro['idpais']}";
+            $this->url_editar = "public_pais_cad.php?idpais={$country->id}";
         }
 
         $this->url_cancelar = 'public_pais_lst.php';
