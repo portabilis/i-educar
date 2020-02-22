@@ -359,15 +359,9 @@ pesquisa_pessoa_lst.php
 portal_acesso_cad.php
 portal_acesso_det.php
 portal_acesso_lst.php
-public_bairro_cad.php
-public_bairro_det.php
-public_bairro_lst.php
 public_distrito_cad.php
 public_distrito_det.php
 public_distrito_lst.php
-public_logradouro_cad.php
-public_logradouro_det.php
-public_logradouro_lst.php
 public_municipio_cad.php
 public_municipio_det.php
 public_municipio_lst.php
