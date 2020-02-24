@@ -243,7 +243,7 @@ class indice extends clsCadastro
             $countryId = $state->country_id;
         }
 
-        $lista_pais_origem = ['45' => 'País da escola'] + Country::query()->orderBy('name')->pluck('name', 'id');
+        $lista_pais_origem = ['45' => 'País da escola'] + Country::query()->orderBy('name')->pluck('name', 'id')->toArray();
 
         $this->campoLista('idpais', 'Pa&iacute;s da Escola', $lista_pais_origem, $countryId);
 
