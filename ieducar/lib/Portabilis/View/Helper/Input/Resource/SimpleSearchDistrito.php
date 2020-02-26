@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\District;
+
 require_once 'lib/Portabilis/View/Helper/Input/SimpleSearch.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/Portabilis/String/Utils.php';
@@ -23,11 +25,10 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchDistrito extends Portabi
     protected function resourceValue($id)
     {
         if ($id) {
-            $sql = 'select nome from public.distrito where iddis = $1';
-            $options = ['params' => $id, 'return_only' => 'first-field'];
-            $distrito = $id . ' - ' . Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
+            $district = District::query()->find($id);
+            $distrito = $id . ' - ' . $district->name;
 
-            return Portabilis_String_Utils::toLatin1($distrito, ['transform' => true, 'escape' => false]);
+            return $distrito;
         }
     }
 

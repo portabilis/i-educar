@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\City;
+use iEducar\Legacy\InteractWithDatabase;
+use iEducar\Legacy\SelectOptions;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -16,6 +20,8 @@ class clsIndexBase extends clsBase
 
 class indice extends clsListagem
 {
+    use InteractWithDatabase, SelectOptions;
+
     public $__limite;
     public $__offset;
     public $idmun;
@@ -32,6 +38,11 @@ class indice extends clsListagem
     public $operacao;
     public $idpais;
 
+    public function model()
+    {
+        return City::class;
+    }
+
     public function Gerar()
     {
         $this->__titulo = 'Município - Listagem';
@@ -45,60 +56,38 @@ class indice extends clsListagem
             'Estado'
         ]);
 
-        $opcoes = ['' => 'Selecione'];
-
-        $objTemp = new clsPais();
-        $lista = $objTemp->lista(false, false, false, false, false, 'nome ASC');
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes["{$registro['idpais']}"] = "{$registro['nome']}";
-            }
-        }
+        $opcoes = ['' => 'Selecione'] + $this->getCountries();
 
         $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais, '', false, '', '', false, false);
 
         $opcoes = ['' => 'Selecione'];
 
         if ($this->idpais) {
-            $objTemp = new clsUf();
-            $lista = $objTemp->lista(false, false, $this->idpais, false, false, 'nome ASC');
-
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes["{$registro['sigla_uf']}"] = "{$registro['nome']}";
-                }
-            }
+            $opcoes += $this->getStates($this->idpais);
         }
 
-        $this->campoLista('sigla_uf', 'Estado', $opcoes, $this->sigla_uf, '', false, '', '', false, false);
+        $this->campoLista('iduf', 'Estado', $opcoes, $this->iduf, '', false, '', '', false, false);
         $this->campoTexto('nome', 'Nome', $this->nome, 30, 60, false);
 
         $this->__limite = 20;
         $this->__offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->__limite - $this->__limite : 0;
 
-        $obj_municipio = new clsPublicMunicipio();
-        $obj_municipio->setOrderby('nome ASC');
-        $obj_municipio->setLimite($this->__limite, $this->__offset);
+        [$data, $total] = $this->paginate($this->__limite, $this->__offset, function ($query) {
+            $query->with('state');
+            $query->orderBy('name');
+            $query->when($this->nome, function ($query) {
+                $query->whereUnaccent('name', $this->nome);
+            });
+            $query->when($this->iduf, function ($query) {
+                $query->where('state_id', $this->iduf);
+            });
+        });
 
-        $lista = $obj_municipio->lista(
-            $this->nome,
-            $this->sigla_uf
-        );
-
-        $total = $obj_municipio->_total;
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $obj_sigla_uf = new clsUf($registro['sigla_uf']);
-                $det_sigla_uf = $obj_sigla_uf->detalhe();
-                $registro['sigla_uf'] = $det_sigla_uf['nome'];
-
-                $this->addLinhas([
-                    "<a href=\"public_municipio_det.php?idmun={$registro['idmun']}\">{$registro['nome']}</a>",
-                    "<a href=\"public_municipio_det.php?idmun={$registro['idmun']}\">{$registro['sigla_uf']}</a>"
-                ]);
-            }
+        foreach ($data as $item) {
+            $this->addLinhas([
+                "<a href=\"public_municipio_det.php?idmun={$item->id}\">{$item->name}</a>",
+                "<a href=\"public_municipio_det.php?idmun={$item->id}\">{$item->state->abbreviation}</a>"
+            ]);
         }
 
         $this->addPaginador2('public_municipio_lst.php', $total, $_GET, $this->nome, $this->__limite);
@@ -130,7 +119,7 @@ $pagina->MakeAll();
   document.getElementById('idpais').onchange = function () {
     var campoPais = document.getElementById('idpais').value;
 
-    var campoUf = document.getElementById('sigla_uf');
+    var campoUf = document.getElementById('iduf');
     campoUf.length = 1;
     campoUf.disabled = true;
     campoUf.options[0].text = 'Carregando estado...';
@@ -140,7 +129,7 @@ $pagina->MakeAll();
   }
 
   function getUf (xml_uf) {
-    var campoUf = document.getElementById('sigla_uf');
+    var campoUf = document.getElementById('iduf');
     var DOM_array = xml_uf.getElementsByTagName("estado");
 
     if (DOM_array.length) {
@@ -149,7 +138,7 @@ $pagina->MakeAll();
       campoUf.disabled = false;
 
       for (var i = 0; i < DOM_array.length; i++) {
-        campoUf.options[campoUf.options.length] = new Option(DOM_array[i].firstChild.data, DOM_array[i].getAttribute("sigla_uf"), false, false);
+        campoUf.options[campoUf.options.length] = new Option(DOM_array[i].firstChild.data, DOM_array[i].getAttribute("id"), false, false);
       }
     } else
       campoUf.options[0].text = 'O pais não possui nenhum estado';

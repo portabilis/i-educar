@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\State;
+
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -69,17 +71,7 @@ class indice extends clsCadastro
 
         $this->campoCep( "cep", "CEP", $this->cep, false );
 
-        $opcoes = array( "" => "Selecione" );
-
-        $objTemp = new clsUf();
-        $lista = $objTemp->lista();
-        if ( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista as $registro )
-            {
-                $opcoes["{$registro['sigla_uf']}"] = "{$registro['nome']}";
-            }
-        }
+        $opcoes = array( "" => "Selecione" ) + State::getListKeyAbbreviation()->toArray();
 
         $this->campoLista( "ref_sigla_uf", "Estado", $opcoes, $this->ref_sigla_uf, '', false, '', '', false, false );
 
@@ -87,16 +79,6 @@ class indice extends clsCadastro
         $this->campoTexto( "bairro", "Bairro", $this->bairro, 30, 60, false );
 
         $opcoes = array( "" => "Selecione" );
-
-        $objTemp = new clsTipoLogradouro();
-        $lista = $objTemp->lista();
-        if ( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista as $registro )
-            {
-                $opcoes["{$registro['idtlog']}"] = "{$registro['descricao']}";
-            }
-        }
 
         $this->campoLista( "ref_idtlog", "Tipo Logradouro", $opcoes, $this->ref_idtlog, '', false, '', '', false, false );
 

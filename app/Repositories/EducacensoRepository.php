@@ -35,13 +35,13 @@ class EducacensoRepository
               FROM pmieducar.ano_letivo_modulo
               WHERE ano_letivo_modulo.ref_ano = :year AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS "fimAnoLetivo",
             j.fantasia AS nome,
-            COALESCE(ep.cep, ee.cep) AS cep,
+            ep.cep AS cep,
             municipio.cod_ibge AS "codigoIbgeMunicipio",
             distrito.cod_ibge AS "codigoIbgeDistrito",
-            COALESCE(l.idtlog || l.nome, ee.idtlog || ee.logradouro) AS logradouro,
-            COALESCE(ep.numero, ee.numero) AS numero,
-            COALESCE(ep.complemento, ee.complemento) AS complemento,
-            COALESCE(bairro.nome, ee.bairro) AS bairro,
+            l.idtlog || l.nome AS logradouro,
+            ep.numero AS numero,
+            ep.complemento AS complemento,
+            bairro.nome AS bairro,
             (SELECT COALESCE(
               (SELECT min(fone_pessoa.ddd)
                     FROM cadastro.fone_pessoa
