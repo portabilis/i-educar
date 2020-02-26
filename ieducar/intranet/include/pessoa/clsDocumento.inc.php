@@ -67,33 +67,20 @@ class clsDocumento
 
         $this->rg = $int_rg;
         $this->data_exp_rg = $str_data_exp_rg;
-        $objUj = new clsUf($str_sigla_uf_exp_rg);
-
-        if ($objUj->detalhe()) {
-            $this->sigla_uf_exp_rg = $str_sigla_uf_exp_rg;
-        }
+        $this->sigla_uf_exp_rg = $str_sigla_uf_exp_rg;
 
         $this->tipo_cert_civil = $int_tipo_cert_civil;
         $this->num_termo = $int_num_termo;
         $this->num_livro = $int_num_livro;
         $this->num_folha = $int_num_folha;
         $this->data_emissao_cert_civil = $str_data_emissao_cert_civil;
-        $objUj = new clsUf($str_sigla_uf_cert_civil);
-
-        if ($objUj->detalhe()) {
-            $this->sigla_uf_cert_civil = $str_sigla_uf_cert_civil;
-        }
+        $this->sigla_uf_cert_civil = $str_sigla_uf_cert_civil;
 
         $this->cartorio_cert_civil = $str_cartorio_cert_civil;
         $this->num_cart_trabalho = $int_num_cart_trabalho;
         $this->serie_cart_trabalho = $int_serie_cart_trabalho;
         $this->data_emissao_cart_trabalho = $str_data_emissao_cart_trabalho;
-
-        $objUj = new clsUf($str_sigla_uf_cart_trabalho);
-
-        if ($objUj->detalhe()) {
-            $this->sigla_uf_cart_trabalho = $str_sigla_uf_cart_trabalho;
-        }
+        $this->sigla_uf_cart_trabalho = $str_sigla_uf_cart_trabalho;
 
         $this->num_tit_eleitor = $int_num_tit_eleitor;
         $this->zona_tit_eleitor = $int_zona_tit_eleitor;

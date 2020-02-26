@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\Country;
+use iEducar\Legacy\InteractWithDatabase;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
-require_once 'include/public/geral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -16,11 +18,23 @@ class clsIndexBase extends clsBase
 
 class indice extends clsListagem
 {
+    use InteractWithDatabase;
+
     public $__limite;
     public $__offset;
     public $idpais;
     public $nome;
     public $geom;
+
+    public function model()
+    {
+        return Country::class;
+    }
+
+    public function index()
+    {
+        return 'public_pais_lst.php';
+    }
 
     public function Gerar()
     {
@@ -39,23 +53,17 @@ class indice extends clsListagem
         $this->__limite = 20;
         $this->__offset = isset($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->__limite - $this->__limite : 0;
 
-        $obj_pais = new clsPublicPais();
-        $obj_pais->setOrderby('nome ASC');
-        $obj_pais->setLimite($this->__limite, $this->__offset);
+        [$data, $total] = $this->paginate($this->__limite, $this->__offset, function ($query) {
+            $query->when($this->nome, function ($query) {
+                $query->whereUnaccent('name', $this->nome);
+            });
+            $query->orderBy('name');
+        });
 
-        $lista = $obj_pais->lista(
-            null,
-            $this->nome
-        );
-
-        $total = $obj_pais->_total;
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $this->addLinhas([
-                    "<a href=\"public_pais_det.php?idpais={$registro['idpais']}\">{$registro['nome']}</a>"
-                ]);
-            }
+        foreach ($data as $item) {
+            $this->addLinhas([
+                "<a href=\"public_pais_det.php?idpais={$item->id}\">{$item->name}</a>"
+            ]);
         }
 
         $this->addPaginador2('public_pais_lst.php', $total, $_GET, $this->nome, $this->__limite);

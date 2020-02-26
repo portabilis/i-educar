@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\State;
+
 require_once 'lib/Portabilis/View/Helper/Input/CoreSelect.php';
 
 class Portabilis_View_Helper_Input_Resource_Uf extends Portabilis_View_Helper_Input_CoreSelect
@@ -9,9 +11,8 @@ class Portabilis_View_Helper_Input_Resource_Uf extends Portabilis_View_Helper_In
         $resources = $options['resources'];
 
         if (empty($options['resources'])) {
-            $resources = new clsUf();
-            $resources = $resources->lista();
-            $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'sigla_uf', 'sigla_uf');
+            $states = State::query()->get()->values();
+            $resources = Portabilis_Array_Utils::setAsIdValue($states->toArray(), 'abbreviation', 'abbreviation');
         }
 
         return $this->insertOption(null, 'Estado', $resources);
