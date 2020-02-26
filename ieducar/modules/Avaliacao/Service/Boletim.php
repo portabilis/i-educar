@@ -1665,6 +1665,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      */
     public function addFalta(Avaliacao_Model_FaltaAbstract $falta)
     {
+        $this->setCurrentComponenteCurricular($falta->get('componenteCurricular'));
         $key = 'f_' . spl_object_hash($falta);
         $falta = $this->_addValidators($falta);
         $falta = $this->_updateEtapa($falta);
@@ -2350,6 +2351,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $falta->id = $this->_getFaltaIdEtapa($falta);
             $this->getFaltaAbstractDataMapper()->save($falta);
         }
+
+        // Atualiza as médias
+        $this->_updateNotaComponenteMedia();
 
         return $this;
     }
