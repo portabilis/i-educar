@@ -198,7 +198,7 @@ function certidaoCasamentoInvalida() {
 }
 
 var submitForm = function(event) {
-  if ($j('#cep_').val()){
+  if ($j('#postal_code').val()){
     if (!validateEndereco()){
       return;
     }
@@ -268,20 +268,9 @@ $j(document).ready(function() {
     validatesUniquenessOfCpf();
   });
 
-
-  // ao clicar na lupa de pesquisa de cep, move página para cima,
-  // pois (exceto no ie), a popup de pesquisa é exibida no topo da página.
-  if (! $j.browser.msie) {
-    $j('#cep_').siblings('img').click(function(){
-      $j('body,html').animate({ scrollTop: $j('body').offset().top }, 'fast');
-    });
-  }
-
   $submitButton.removeAttr('onclick');
   $submitButton.click(submitForm);
 
-  hideEnderecoFields();
-  fixUpPlaceholderEndereco();
   permiteEditarEndereco();
 
   function verificaObrigatoriedadeRg() {

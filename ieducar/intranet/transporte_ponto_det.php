@@ -93,10 +93,9 @@ class indice extends clsDetalhe
     if (is_numeric($registro['cep']) && is_numeric($registro['idlog']) && is_numeric($registro['idbai'])){
       $this->addDetalhe( array("CEP", int2CEP($registro['cep'])) );
       $this->addDetalhe( array("Município - UF", $registro['municipio'] . ' - '. $registro['sigla_uf']) );
-      $this->addDetalhe( array("Distrito", $registro['distrito']) );
       $this->addDetalhe( array("Bairro", $registro['bairro']) );
       $this->addDetalhe( array("Zona de localização", $registro['zona_localizacao'] == 1 ? 'Urbana' : 'Rural' ) );
-      $this->addDetalhe( array("Endereço", $registro['idtlog'] . ' ' . $registro['logradouro']) );
+      $this->addDetalhe( array("Endereço", $registro['logradouro']) );
       $this->addDetalhe( array("Número", $registro['numero']) );
       $this->addDetalhe( array("Complemento", $registro['complemento']) );
     }
