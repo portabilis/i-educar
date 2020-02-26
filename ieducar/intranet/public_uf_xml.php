@@ -6,7 +6,8 @@ header('Content-type: text/xml; charset=UTF-8');
 
 require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
 
-$id = isset($_GET['pais']) ? $_GET['pais'] : null;
+$id = $_GET['pais'] ?? null;
+$abbreviation = $_GET['abbreviation'] ?? null;
 
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
@@ -14,7 +15,13 @@ print '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
 print '<query>' . PHP_EOL;
 
 if ($id == strval(intval($id))) {
-    $states = State::query()->where('country_id', $id)->pluck('name', 'id');
+    $key = 'id';
+
+    if ($abbreviation) {
+        $key = 'abbreviation';
+    }
+
+    $states = State::query()->where('country_id', $id)->pluck('name', $key);
 
     foreach ($states as $id => $name) {
         print sprintf(
