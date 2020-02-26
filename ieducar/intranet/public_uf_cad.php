@@ -97,7 +97,10 @@ class indice extends clsCadastro
             return false;
         }
 
-        $exists = $this->newQuery()->where('abbreviation', Str::upper($this->sigla_uf))->exists();
+        $exists = $this->newQuery()
+            ->where('abbreviation', Str::upper($this->sigla_uf))
+            ->where('country_id', request('idpais'))
+            ->exists();
 
         if ($exists) {
             $this->mensagem = 'A sigla já existe para outro estado.<br>';
@@ -123,6 +126,7 @@ class indice extends clsCadastro
 
         $exists = $this->newQuery()
             ->where('abbreviation', Str::upper($this->sigla_uf))
+            ->where('country_id', request('idpais'))
             ->where('id', '<>', $this->id)
             ->exists();
 
