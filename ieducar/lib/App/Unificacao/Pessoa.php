@@ -26,8 +26,8 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'idpes'
         ],
         [
-            'tabela' => 'cadastro.endereco_pessoa',
-            'coluna' => 'idpes'
+            'tabela' => 'public.person_has_place',
+            'coluna' => 'person_id'
         ],
         [
             'tabela' => 'cadastro.fone_pessoa',
@@ -94,14 +94,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         ],
         [
             'tabela' => 'cadastro.fone_pessoa',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'cadastro.endereco_pessoa',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'cadastro.endereco_pessoa',
             'coluna' => 'idpes_cad'
         ],
         [
