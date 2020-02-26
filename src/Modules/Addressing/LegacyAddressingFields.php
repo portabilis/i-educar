@@ -76,7 +76,7 @@ trait LegacyAddressingFields
 
         $searchPostalCode = '<a id="search-postal-code" href="javascript:void(0)" class="span-busca-cep" style="color: blue; margin-left: 10px;">Preencher automaticamente usando o CEP</a>';
         $notKnowMyPostalCode = '<a href="http://www.buscacep.correios.com.br/sistemas/buscacep/" target="_blank" class="span-busca-cep" style="color: blue; margin-left: 10px;">Não sei meu CEP</a>';
-        $loading = '<img id="postal_code_search_loading" src="imagens/indicator.gif" style="margin-left: 10px; visibility: hidden">';
+        $loading = '<img id="postal_code_search_loading" src="/intranet/imagens/indicator.gif" style="margin-left: 10px; visibility: hidden">';
 
         $disabled = empty($this->postal_code);
 
