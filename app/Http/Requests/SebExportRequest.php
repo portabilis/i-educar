@@ -21,7 +21,7 @@ class SebExportRequest extends FormRequest
     {
         return [
             'ano.required' => 'O ano é obrigatório.',
-            'ano.date_format' => 'O campo Ano deve ser um ano válido.',
+            'ano.date_format' => 'O campo ano deve ser um ano válido.',
             'ref_cod_instituicao.required' => 'A instituição é obrigatória.',
         ];
     }
