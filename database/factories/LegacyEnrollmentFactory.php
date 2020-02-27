@@ -27,3 +27,11 @@ $factory->defineAs(LegacyEnrollment::class, 'active', function (Faker $faker) us
         'ativo' => 1
     ]);
 });
+
+$factory->defineAs(LegacyEnrollment::class, 'inactive', function (Faker $faker) use ($factory) {
+    $enrollment = $factory->raw(LegacyEnrollment::class);
+
+    return array_merge($enrollment, [
+        'ativo' => 0
+    ]);
+});

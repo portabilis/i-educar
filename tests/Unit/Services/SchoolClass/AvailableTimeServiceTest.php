@@ -227,4 +227,29 @@ class AvailableTimeServiceTest extends TestCase
 
         $this->assertTrue($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
     }
+
+    /**
+     * @return void
+     */
+    public function testWithInactiveEnrollmentsSameDaySameTimeSameYearReturnsTrue()
+    {
+        $schoolClass = factory(LegacySchoolClass::class, 'morning')->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $otherSchoolClass = factory(LegacySchoolClass::class, 'morning')->create(['tipo_mediacao_didatico_pedagogico' => 1]);
+        $registration = factory(LegacyRegistration::class)->create(['ano' => $schoolClass->ano, 'aprovado' => 3]);
+
+        factory(LegacySchoolClassStage::class)->create([
+            'ref_cod_turma' => $schoolClass,
+        ]);
+
+        factory(LegacySchoolClassStage::class)->create([
+            'ref_cod_turma' => $otherSchoolClass,
+        ]);
+
+        factory(LegacyEnrollment::class, 'inactive')->create([
+            'ref_cod_turma' => $otherSchoolClass->cod_turma,
+            'ref_cod_matricula' => $registration->cod_matricula,
+        ]);
+
+        $this->assertTrue($this->service->isAvailable($registration->ref_cod_aluno, $schoolClass->cod_turma));
+    }
 }
