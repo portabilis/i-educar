@@ -243,11 +243,11 @@ class indice extends clsCadastro
             $countryId = $state->country_id;
         }
 
-        $lista_pais_origem = ['45' => 'País da escola'] + Country::query()->orderBy('name')->pluck('name', 'id')->toArray();
+        $lista_pais_origem = ['' => 'Selecione um país'] + Country::query()->orderBy('name')->pluck('name', 'id')->toArray();
 
-        $this->campoLista('idpais', 'Pa&iacute;s da Escola', $lista_pais_origem, $countryId);
+        $this->campoLista('idpais', 'Pa&iacute;s da Escola', $lista_pais_origem, $countryId ?? 45);
 
-        $lista_estado = ['SC' => 'Selecione um estado'] + State::getListKeyAbbreviation()->toArray();
+        $lista_estado = ['' => 'Selecione um estado'] + State::getListKeyAbbreviation()->toArray();
 
         $this->campoLista('escola_uf', 'Estado da Escola', $lista_estado, $this->escola_uf);
         $this->campoTexto('nm_curso', 'Curso', $this->nm_curso, 30, 255, false, false, false, _cl('historico.cadastro.curso_detalhe'));
