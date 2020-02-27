@@ -42,6 +42,7 @@ class AvailableTimeService
                     $registrationQuery->where('ref_cod_aluno', $studentId);
                     $registrationQuery->where('ano', $schoolClass->ano);
                     $registrationQuery->where('aprovado', 3);
+                    $registrationQuery->where('ativo', 1);
                 })->where('ativo', 1);
 
                 if ($this->enrollmentDate) {
