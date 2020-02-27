@@ -9,6 +9,11 @@ class ExportService
 {
     private $converter;
 
+    public function __construct(EducacensoStepConverter $converter)
+    {
+        $this->converter = $converter;
+    }
+
     public function export(array $filters) : string
     {
         $export = '';
@@ -54,10 +59,6 @@ class ExportService
 
     private function convertEducacensoStep(int $educacensoStep) : string
     {
-        if (!$this->converter) {
-            $this->converter = new EducacensoStepConverter();
-        }
-
         return $this->converter->convert($educacensoStep);
     }
 
