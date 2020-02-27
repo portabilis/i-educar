@@ -64,8 +64,8 @@ class ExportQuery
         $this->query->whereNotNull('turma.etapa_educacenso');
         $this->query->where('matricula.aprovado', App_Model_MatriculaSituacao::EM_ANDAMENTO);
 
-        if (!empty($filters['ref_ref_cod_escola'])) {
-            $this->query->where('ref_ref_cod_escola', $filters['ref_ref_cod_escola']);
+        if (!empty($filters['ref_cod_escola'])) {
+            $this->query->where('escola.cod_escola', $filters['ref_cod_escola']);
         }
     }
 }
