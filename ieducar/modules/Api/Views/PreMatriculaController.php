@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\City;
+use iEducar\Modules\Addressing\LegacyAddressingFields;
+use Illuminate\Support\Str;
+
 require_once 'Portabilis/Controller/ApiCoreController.php';
 require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/String/Utils.php';
@@ -9,6 +13,7 @@ require_once 'include/pmieducar/geral.inc.php';
 
 class PreMatriculaController extends ApiCoreController
 {
+    use LegacyAddressingFields;
 
     protected function canHomologarPreMatricula()
     {
@@ -667,92 +672,22 @@ class PreMatriculaController extends ApiCoreController
 
     protected function createOrUpdateEndereco($pessoaAlunoId, $cep, $rua, $numero, $complemento, $bairro, $cidade, $estado, $pais)
     {
-        $municipioId = Portabilis_Utils_Database::selectField('SELECT idmun FROM public.municipio WHERE translate(upper(nome),\'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',\'AAAAAAEEEEIIIIOOOOOUUUUCYN\') = translate(upper($1),\'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',\'AAAAAAEEEEIIIIOOOOOUUUUCYN\') limit 1', $cidade);
-        $distritoId = Portabilis_Utils_Database::selectField('SELECT iddis FROM public.distrito WHERE translate(upper(nome),\'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',\'AAAAAAEEEEIIIIOOOOOUUUUCYN\') = translate(upper($1),\'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',\'AAAAAAEEEEIIIIOOOOOUUUUCYN\') limit 1', $cidade);
+        $city = City::queryFindByName($cidade)->whereHas('state', function ($query) use ($estado) {
+            $query->where('abbreviation', Str::upper($estado));
+        })->first();
 
-        if ($municipioId) {
-            $bairroId = Portabilis_Utils_Database::selectField('SELECT idbai FROM public.bairro WHERE translate(upper(nome),\'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',\'AAAAAAEEEEIIIIOOOOOUUUUCYN\') = translate(upper($1),\'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',\'AAAAAAEEEEIIIIOOOOOUUUUCYN\') and idmun = $2 limit 1', [$bairro, $municipioId]);
-            $logradouroId = Portabilis_Utils_Database::selectField('SELECT idlog FROM public.logradouro WHERE translate(upper(nome),\'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',\'AAAAAAEEEEIIIIOOOOOUUUUCYN\') = translate(upper($1),\'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',\'AAAAAAEEEEIIIIOOOOOUUUUCYN\') and idmun = $2 limit 1', [$rua, $municipioId]);
+        if (empty($city)) {
+            return;
         }
 
-        // $this->messenger->append("Bairro: " . $bairroId . "Logradouro: " . $logradouroId . "Municipio: " . $municipioId . "Distrito: " . $distritoId . "cep: " . $cep);
-        // $this->messenger->append(" parametros: " . $pessoaAlunoId." ". $cep." ". $rua." ". $numero." ". $complemento." ". $bairro." ". $cidade." ". $estado." ". $pais);
+        $this->postal_code = $cep;
+        $this->address = $rua;
+        $this->number = $numero;
+        $this->complement = $complemento;
+        $this->neighborhood = $bairro;
+        $this->city_id = $city->getKey();
 
-        if ($cep && is_numeric($bairroId) && is_numeric($logradouroId)) {
-            $this->_createOrUpdatePessoaEndereco($pessoaAlunoId, $cep, $logradouroId, $numero, $complemento, $bairroId);
-        } elseif ($cep && is_numeric($municipioId) && is_numeric($distritoId)) {
-            if (!is_numeric($bairroId)) {
-                $bairroId = $this->createBairro($bairro, $municipioId, $distritoId);
-            }
-            if (!is_numeric($logradouroId)) {
-                $logradouroId = $this->createLogradouro($rua, $municipioId);
-            }
-
-            $this->_createOrUpdatePessoaEndereco($pessoaAlunoId, $cep, $logradouroId, $numero, $complemento, $bairroId);
-        } else {
-            $endereco = new clsPessoaEndereco($pessoaAlunoId);
-            $endereco->exclui();
-        }
-    }
-
-    protected function _createOrUpdatePessoaEndereco($pessoaId, $cep, $logradouroId, $numero, $complemento, $bairroId)
-    {
-        $objCepLogradouro = new ClsCepLogradouro($cep, $logradouroId);
-
-        if (!$objCepLogradouro->existe()) {
-            $objCepLogradouro->cadastra();
-        }
-
-        $objCepLogradouroBairro = new ClsCepLogradouroBairro();
-        $objCepLogradouroBairro->cep = $cep;
-        $objCepLogradouroBairro->idbai = $bairroId;
-        $objCepLogradouroBairro->idlog = $logradouroId;
-
-        if (!$objCepLogradouroBairro->existe()) {
-            $objCepLogradouroBairro->cadastra();
-        }
-
-        $endereco = new clsPessoaEndereco(
-            $pessoaId,
-            $cep,
-            $logradouroId,
-            $bairroId,
-            $numero,
-            $complemento,
-            false,
-            false,
-            false,
-            false,
-            false,
-            1,
-            1
-        );
-
-        $endereco->exclui();
-        $endereco->cadastra();
-    }
-
-    protected function createBairro($bairro, $municipioId, $distritoId)
-    {
-        $objBairro = new clsBairro(null, $municipioId, null, addslashes($bairro), 1);
-        $objBairro->iddis = $distritoId;
-
-        return $objBairro->cadastra();
-    }
-
-    protected function createLogradouro($logradouro, $municipioId)
-    {
-        $objLogradouro = new clsLogradouro(
-            null,
-            'RUA',
-            $logradouro,
-            $municipioId,
-            null,
-            'S',
-            1
-        );
-
-        return $objLogradouro->cadastra();
+        $this->saveAddress($pessoaAlunoId);
     }
 
     protected function excluirInformacoesAluno($alunoId)

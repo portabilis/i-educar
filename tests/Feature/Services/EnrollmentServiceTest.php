@@ -350,7 +350,7 @@ class EnrollmentServiceTest extends TestCase
 
         $lastEnrollment = $this->service->getPreviousEnrollmentAccordingToRelocationDate($enrollment->registration);
 
-        $this->assertNull($lastEnrollment);
+        $this->assertEquals($enrollment->id, $lastEnrollment->id);
     }
 
     /**
@@ -369,7 +369,7 @@ class EnrollmentServiceTest extends TestCase
 
         $lastEnrollment = $this->service->getPreviousEnrollmentAccordingToRelocationDate($enrollment->registration);
 
-        $this->assertEquals($enrollment->id, $lastEnrollment->id);
+        $this->assertNull($lastEnrollment);
     }
 
     public function testReorder()

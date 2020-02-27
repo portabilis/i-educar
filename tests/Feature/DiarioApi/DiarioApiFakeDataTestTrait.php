@@ -116,6 +116,22 @@ trait DiarioApiFakeDataTestTrait
         return $enrollment;
     }
 
+    public function getProgressionWithAverageCalculationWeightedRecovery()
+    {
+        $roundingTable = factory(LegacyRoundingTable::class, 'numeric')->create();
+        factory(LegacyValueRoundingTable::class, 10)->create([
+            'tabela_arredondamento_id' => $roundingTable->id,
+        ]);
+
+        $evaluationRule = factory(LegacyEvaluationRule::class, 'progressao-calculo-media-recuperacao-ponderada')->create([
+            'tabela_arredondamento_id' => $roundingTable->id,
+        ]);
+
+        $enrollment = $this->getCommonFakeData($evaluationRule);
+
+        return $enrollment;
+    }
+
     public function createStages($school, $stages)
     {
         for ($count = 1; $count <= $stages; $count++) {

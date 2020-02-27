@@ -10,13 +10,13 @@ class Place extends Model
     /**
      * @var array
      */
-    protected $casts = [
-        'neighborhood_id' => 'integer',
-        'city_id' => 'integer',
-        'number' => 'integer',
-        'postal_code' => 'integer',
-        'created_by' => 'integer',
-        'updated_by' => 'integer',
+    protected $fillable = [
+        'city_id',
+        'address',
+        'number',
+        'complement',
+        'neighborhood',
+        'postal_code',
     ];
 
     /**
@@ -27,4 +27,3 @@ class Place extends Model
         return $this->belongsTo(City::class);
     }
 }
-
