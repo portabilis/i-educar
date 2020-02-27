@@ -1148,7 +1148,6 @@ class AlunoController extends ApiCoreController
                 'parentesco_cinco',
                 'emancipado'
             ];
-            //var_dump($aluno['emancipado']);
 
             $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);
 
