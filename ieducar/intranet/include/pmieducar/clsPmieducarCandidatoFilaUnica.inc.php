@@ -26,6 +26,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
     public $ativo;
     public $sexo;
     public $ideciv;
+    public $comments;
 
     public function __construct(
         $cod_candidato_fila_unica = null,
@@ -70,7 +71,8 @@ class clsPmieducarCandidatoFilaUnica extends Model
                                                        cfu.data_situacao,
                                                        cfu.via_judicial,
                                                        cfu.via_judicial_doc,
-                                                       cfu.ativo';
+                                                       cfu.ativo,
+                                                       cfu.comments';
 
         if (is_numeric($cod_candidato_fila_unica)) {
             $this->cod_candidato_fila_unica = $cod_candidato_fila_unica;
@@ -243,6 +245,12 @@ class clsPmieducarCandidatoFilaUnica extends Model
                 $gruda = ', ';
             }
 
+            if (is_string($this->comments)) {
+                $campos .= "{$gruda}comments";
+                $valores .= "{$gruda}'{$this->comments}'";
+                $gruda = ', ';
+            }
+
             $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
             $gruda = ', ';
@@ -350,6 +358,14 @@ class clsPmieducarCandidatoFilaUnica extends Model
 
             if (is_numeric($this->ativo)) {
                 $set .= "{$gruda}ativo = {$this->ativo}";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->comments)) {
+                $set .= "{$gruda}comments = '{$this->comments}'";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}comments = NULL";
                 $gruda = ', ';
             }
 
