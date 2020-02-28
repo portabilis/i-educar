@@ -12,14 +12,14 @@ use App\Services\NotificationsService;
 class TransferNotificationListener
 {
     /**
-     * @var NotificationsService
+     * @var NotificationService
      */
     protected $service;
 
     /**
-     * @param NotificationsService $service
+     * @param NotificationService $service
      */
-    public function __construct(NotificationsService $service)
+    public function __construct(NotificationService $service)
     {
         $this->service = $service;
     }
@@ -48,8 +48,8 @@ class TransferNotificationListener
             $registration->ano
         );
 
-        $link = 'intranet/educar_matricula_det.php?cod_matricula=' . $registration->getKey();
+        $link = '/intranet/educar_matricula_det.php?cod_matricula=' . $registration->getKey();
 
-        $this->service->createByPermission(Process::NOTIFY_TRANSFER, $message, $link, NotificationType::TRANSFERENCIA);
+        $this->service->createByPermission(Process::NOTIFY_TRANSFER, $message, $link, NotificationType::TRANSFER);
     }
 }

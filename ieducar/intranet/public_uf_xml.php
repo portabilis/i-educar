@@ -1,9 +1,10 @@
 <?php
 
+use App\Models\State;
+
 header('Content-type: text/xml; charset=UTF-8');
 
 require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
-require_once 'include/pessoa/clsUf.inc.php';
 
 $id = isset($_GET['pais']) ? $_GET['pais'] : null;
 
@@ -13,14 +14,13 @@ print '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
 print '<query>' . PHP_EOL;
 
 if ($id == strval(intval($id))) {
-    $uf = new clsUf();
-    $ufs = $uf->lista(null, null, $id, null, null, 'sigla_uf');
+    $states = State::query()->where('country_id', $id)->pluck('name', 'id');
 
-    foreach ($ufs as $uf) {
+    foreach ($states as $id => $name) {
         print sprintf(
-            '  <estado sigla_uf="%s">%s</estado>' . PHP_EOL,
-            $uf['sigla_uf'],
-            $uf['nome']
+            '  <estado id="%s">%s</estado>' . PHP_EOL,
+            $id,
+            $name
         );
     }
 }

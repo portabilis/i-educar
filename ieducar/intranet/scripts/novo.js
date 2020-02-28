@@ -1,8 +1,8 @@
 function subgoogle()
-{				
-	formulario = document.getElementById("formg");				
+{
+	formulario = document.getElementById("formg");
 	caminho = "q="+encodeURI(formulario.w.value) + " site:itajai.sc.gov.br"
-	formulario.w.value = "";				
+	formulario.w.value = "";
 	caminho = "http://www.google.com/search?hl=en&"+caminho;
 	janelaa = window.open(caminho, "janelaa", "");
 	janelaa.focus();
@@ -28,30 +28,30 @@ function tamanhoTela()
 	    winW = document.body.clientWidth;
 	    winH = document.body.clientHeight;
 	}
-	
+
 	if (winW < 955 )
 	{
 		document.getElementById('padraoPMI').style['visibility']='hidden';
 		document.getElementById('padraoPMI').style.display='none';
 		document.getElementById('padraoPMI').style['width']='0px';
 		document.getElementById('padraoPMI').style['height']='0px';
-		
-		
-		document.getElementById('tbPrincipalP').style['width']='0';	
+
+
+		document.getElementById('tbPrincipalP').style['width']='0';
 		document.getElementById('tbPrincipalP').style['height']='0';
 		document.getElementById('r1c1').style['height']='160';
 		document.getElementById('r1c2').style['height']='160';
 		document.getElementById('tbPrincipal').style['width']='756';
-		
+
 	}
 }
 
 function FiltraCampo(codigo) {
     var s = "";
-	
+
 	tam = codigo.length;
-	for (i = 0; i < tam ; i++) {  
-		if (codigo.substring(i,i + 1) == "0" || 
+	for (i = 0; i < tam ; i++) {
+		if (codigo.substring(i,i + 1) == "0" ||
            	codigo.substring(i,i + 1) == "1" ||
             codigo.substring(i,i + 1) == "2" ||
             codigo.substring(i,i + 1) == "3" ||
@@ -75,7 +75,7 @@ function DvCnpjOk(e) {
         dv_cnpj = s.substring(tam-2,tam);
         for ( i = 0; i < 2; i++ ) {
             soma = 0;
-            for ( j = 0; j < 12; j++ ) 
+            for ( j = 0; j < 12; j++ )
                 soma += s.substring(j,j+1)*((11+i-j)%8+2);
             if ( i == 1 ) soma += digito * 2;
             digito = 11 - soma  % 11;
@@ -146,7 +146,7 @@ function openPage(url_pagina, nome_pagina, largura, altura, scroll, top, left)
 	janela = window.open(url_pagina,  nome_pagina, largura, altura, top, left, statusbar=scroll);
 	janela.focus();
 }
-		
+
 function verificaTamanhoEmail(campo, e)
 {
 	if( typeof window.event != "undefined" )
@@ -158,7 +158,7 @@ function verificaTamanhoEmail(campo, e)
 				alert("Excedido nъmero maximo de caracteres, por favor use no mбximo e 16 caracteres!");
 			}
 		}
-		
+
 	}
 	else
 	{
@@ -172,7 +172,7 @@ function verificaTamanhoEmail(campo, e)
 	}
 }
 
-function trocaHora() 	{ 		
+function trocaHora() 	{
 
 	tempo++;
 	dias = Math.floor(tempo / 86400);
@@ -186,7 +186,7 @@ function trocaHora() 	{
 	var data = "";
 	if(dias)
 	{
-		data = dias+" dias  "; 
+		data = dias+" dias  ";
 	}
 	if(horas)
 	{
@@ -235,7 +235,7 @@ function move_pessoa_reuniao(idpes,acao,reuniao,grupo,div)
 	{
 		document.getElementById(div).innerHTML = "<a href='#' onclick='move_pessoa_reuniao("+idpes+",1,"+reuniao+","+grupo+","+div+")'><img src='imagens/nvp_bot_entra_reuniao.gif' border='0'></a>";
 	}
-	
+
 }
 
 function marcar_todos()
@@ -247,7 +247,7 @@ function marcar_todos()
 			{
 				document.getElementById("top_"+marcar[i]).checked = true;
 			}
-		}	
+		}
 }
 
 function desmarcar_todos()
@@ -261,69 +261,16 @@ function desmarcar_todos()
 				document.getElementById("top_"+marcar[i]).checked = false;
 			}
 		}
-}		
+}
 
 function desmarcar_marcar(id)
 {
 	if(!document.getElementById(id).checked )
-	{	
+	{
 		document.getElementById("marcar").checked = false;
 	}else
 	{
 		document.getElementById("desmarcar").checked = false;
-	}
-}
-
-function setValores(rootDocument, desabilita, cep, idlog, nm_log, idtlog, nm_mun, sigla_uf, idbai, nm_bai, numero, letra, complemento, bloco, andar, apartamento)
-{
-	rootDocument.getElementById('cep_').value = cep.substr(0,5)+'-'+cep.substr(5);
-	rootDocument.getElementById('cep').value = cep.substr(0,5)+'-'+cep.substr(5);
-	rootDocument.getElementById('cep_').disabled = desabilita;
-	
-	//campo oculto
-	rootDocument.getElementById('idlog').value = idlog;
-	
-	rootDocument.getElementById('logradouro').value = nm_log;
-	rootDocument.getElementById('logradouro').disabled = desabilita;
-	
-	//campo oculto
-	rootDocument.getElementById('idtlog').value = idtlog;
-	
-	rootDocument.getElementById('cidade').value = nm_mun;
-	rootDocument.getElementById('cidade').disabled = desabilita;
-	
-	rootDocument.getElementById('sigla_uf').value = sigla_uf;
-	rootDocument.getElementById('sigla_uf').disabled = desabilita;
-	
-	//campo oculto
-	rootDocument.getElementById('idbai').value = idbai;
-	rootDocument.getElementById('bairro').value = nm_bai;
-	rootDocument.getElementById('bairro').disabled = desabilita;
-	
-	rootDocument.getElementById('numero').value = numero;
-	
-	if(rootDocument.getElementById('letra'))
-	{
-		rootDocument.getElementById('letra').value = letra;
-	}
-	
-	if(rootDocument.getElementById('complemento'))
-	{
-		rootDocument.getElementById('complemento').value = complemento;
-	}
-
-	if(rootDocument.getElementById('bloco'))
-	{
-		rootDocument.getElementById('bloco').value = bloco;
-	}
-	
-	if(rootDocument.getElementById('andar'))
-	{
-		rootDocument.getElementById('andar').value = andar;
-	}
-	if(rootDocument.getElementById('apartamento'))
-	{
-		rootDocument.getElementById('apartamento').value = apartamento;
 	}
 }
 

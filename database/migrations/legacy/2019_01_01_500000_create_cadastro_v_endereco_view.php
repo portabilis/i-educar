@@ -17,7 +17,7 @@ class CreateCadastroVEnderecoView extends Migration
         );
 
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../../sqls/views/cadastro.v_endereco.sql')
+            file_get_contents(__DIR__ . '/../../sqls/views/cadastro.v_endereco-2019-09-06.sql')
         );
     }
 

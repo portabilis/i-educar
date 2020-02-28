@@ -14,7 +14,7 @@ class InsertNotificationTypeOther extends Migration
     public function up()
     {
         DB::table('public.notification_type')->insert([
-            'id' => NotificationType::OUTROS,
+            'id' => NotificationType::OTHER,
             'name' => 'Outros'
         ]);
     }
@@ -26,6 +26,6 @@ class InsertNotificationTypeOther extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('public.notifications_type');
     }
 }

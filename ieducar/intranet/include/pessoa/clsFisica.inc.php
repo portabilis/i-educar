@@ -145,18 +145,12 @@ class clsFisica
             $this->idpes_con = $idpes_con;
         }
         if (is_numeric($idpais_estrangeiro)) {
-            $objPais = new clsPais($idpais_estrangeiro);
-            if ($objPais->detalhe()) {
-                $this->idpais_estrangeiro = $idpais_estrangeiro;
-            }
+            $this->idpais_estrangeiro = $idpais_estrangeiro;
         } elseif ($idpais_estrangeiro == 'NULL') {
             $this->idpais_estrangeiro = $idpais_estrangeiro;
         }
         if (is_numeric($idmun_nascimento)) {
-            $objMunicipio = new clsMunicipio($idmun_nascimento);
-            if ($objMunicipio->detalhe()) {
-                $this->idmun_nascimento = $idmun_nascimento;
-            }
+            $this->idmun_nascimento = $idmun_nascimento;
         } elseif ($idmun_nascimento == 'NULL') {
             $this->idmun_nascimento = $idmun_nascimento;
         }
@@ -942,8 +936,6 @@ class clsFisica
             $tupla = $db->Tupla();
             $tupla['idesco'] =  $tupla['idesco'];
             $tupla['ideciv'] = new clsEstadoCivil($tupla['ideciv']);
-            $tupla['idpais_estrangeiro'] = new clsPais($tupla['idpais_estrangeiro']);
-            $tupla['idmun_nascimento'] = new clsMunicipio($tupla['idmun_nascimento']);
             $tupla['idocup'] = new clsOcupacao($tupla['idocup']);
 
             $tupla['total'] = $total;
@@ -972,8 +964,6 @@ class clsFisica
 
                 $tupla['idesco'] = new clsEscolaridade($tupla['idesco']);
                 $tupla['ideciv'] = new clsEstadoCivil($tupla['ideciv']);
-                $tupla['idpais_estrangeiro'] = new clsPais($tupla['idpais_estrangeiro']);
-                $tupla['idmun_nascimento'] = new clsMunicipio($tupla['idmun_nascimento']);
                 $tupla['idocup'] = new clsOcupacao($tupla['idocup']);
 
                 return $tupla;
@@ -986,8 +976,6 @@ class clsFisica
 
                 $tupla['idesco'] = new clsEscolaridade($tupla['idesco']);
                 $tupla['ideciv'] = new clsEstadoCivil($tupla['ideciv']);
-                $tupla['idpais_estrangeiro'] = new clsPais($tupla['idpais_estrangeiro']);
-                $tupla['idmun_nascimento'] = new clsMunicipio($tupla['idmun_nascimento']);
                 $tupla['idocup'] = new clsOcupacao($tupla['idocup']);
 
                 return $tupla;

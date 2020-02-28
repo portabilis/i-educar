@@ -25,6 +25,9 @@ class AlterNotificationAddType extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('public.notifications', function (Blueprint $table) {
+            $table->dropColumn('type_id');
+        });
     }
+
 }
