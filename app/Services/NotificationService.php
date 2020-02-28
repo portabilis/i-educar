@@ -8,7 +8,7 @@ use App\Models\LegacyUser;
 use App\Models\Notification;
 use Illuminate\Support\Facades\DB;
 
-class NotificationsService
+class NotificationService
 {
     public function createByPermission($permissionId, $text, $link, $typeNotification)
     {
