@@ -26,6 +26,6 @@ class InsertNotificationTypeOther extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('public.notifications_type');
+        DB::table('public.notification_type')->delete(NotificationType::OTHER);
     }
 }
