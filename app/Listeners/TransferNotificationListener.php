@@ -7,7 +7,7 @@ use App\Exceptions\Transfer\StagesAreNotSame;
 use App\Models\LegacyTransferRequest;
 use App\Models\NotificationType;
 use App\Process;
-use App\Services\NotificationsService;
+use App\Services\NotificationService;
 
 class TransferNotificationListener
 {
