@@ -144,7 +144,9 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
         } catch (Exception $e) {
             if (config('legacy.modules.error.track')) {
                 $tracker = TrackerFactory::getTracker(config('legacy.modules.error.tracker_name'));
-                $tracker->notify($e);
+                $data['controller'] = app('request')->path();
+                $data['action'] = $this->report->templateName();
+                $tracker->notify($e, $data);
             }
 
             $nivelUsuario = (new clsPermissoes)->nivel_acesso($this->getSession()->id_pessoa);
