@@ -401,7 +401,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
                        f.sexo,
                        f.ideciv,
                        s.nm_serie,
-                       ep.observacoes,
+                       cfu.comments AS observacoes,
                        (cfu.ano_letivo || to_char(cfu.cod_candidato_fila_unica, 'fm00000000')) AS protocolo,
                        (CASE cfu.situacao
                         WHEN 'A' THEN 'Atendida'
@@ -426,8 +426,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
             INNER JOIN cadastro.pessoa p ON (p.idpes = a.ref_idpes)
             INNER JOIN cadastro.fisica f ON (f.idpes = a.ref_idpes)
             INNER JOIN pmieducar.serie s ON (s.cod_serie = cfu.ref_cod_serie)
-             LEFT JOIN cadastro.documento d ON (d.idpes = a.ref_idpes)
-             LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)";
+             LEFT JOIN cadastro.documento d ON (d.idpes = a.ref_idpes)";
 
         $filtros = '';
 
