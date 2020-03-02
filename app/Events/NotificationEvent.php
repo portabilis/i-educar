@@ -20,13 +20,20 @@ class NotificationEvent implements ShouldBroadcast
     public $notification;
 
     /**
+     * @var string
+     */
+    private $tenant;
+
+    /**
      * Create a new event instance.
      *
      * @param Notification $notification
+     * @param string $tenant
      */
-    public function __construct(Notification $notification)
+    public function __construct(Notification $notification, $tenant)
     {
         $this->notification = $notification;
+        $this->tenant = $tenant;
     }
 
     /**
@@ -36,6 +43,6 @@ class NotificationEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel(DB::getDefaultConnection() . '-notification-' . md5($this->notification->user_id));
+        return new Channel($this->tenant . '-notification-' . md5($this->notification->user_id));
     }
 }

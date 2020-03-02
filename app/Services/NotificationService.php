@@ -41,6 +41,6 @@ class NotificationService
             'user_id' => $userId,
         ]);
 
-        event(new NotificationEvent($notification));
+        event(new NotificationEvent($notification, DB::getDefaultConnection()));
     }
 }
