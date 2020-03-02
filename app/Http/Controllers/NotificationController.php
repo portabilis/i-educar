@@ -20,7 +20,7 @@ class NotificationController extends Controller
     {
         $this->breadcrumb('Notificações', []);
 
-        $this->menu(Process::NOTIFICATIONS);
+        $this->menu(Process::SCHEDULE);
 
         $query = Notification::query();
 
