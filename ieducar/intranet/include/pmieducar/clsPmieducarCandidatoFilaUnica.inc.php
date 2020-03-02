@@ -26,6 +26,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
     public $ativo;
     public $sexo;
     public $ideciv;
+    public $comments;
 
     public function __construct(
         $cod_candidato_fila_unica = null,
@@ -70,7 +71,8 @@ class clsPmieducarCandidatoFilaUnica extends Model
                                                        cfu.data_situacao,
                                                        cfu.via_judicial,
                                                        cfu.via_judicial_doc,
-                                                       cfu.ativo';
+                                                       cfu.ativo,
+                                                       cfu.comments';
 
         if (is_numeric($cod_candidato_fila_unica)) {
             $this->cod_candidato_fila_unica = $cod_candidato_fila_unica;
@@ -243,6 +245,12 @@ class clsPmieducarCandidatoFilaUnica extends Model
                 $gruda = ', ';
             }
 
+            if (is_string($this->comments)) {
+                $campos .= "{$gruda}comments";
+                $valores .= "{$gruda}'{$this->comments}'";
+                $gruda = ', ';
+            }
+
             $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
             $gruda = ', ';
@@ -353,6 +361,14 @@ class clsPmieducarCandidatoFilaUnica extends Model
                 $gruda = ', ';
             }
 
+            if (is_string($this->comments)) {
+                $set .= "{$gruda}comments = '{$this->comments}'";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}comments = NULL";
+                $gruda = ', ';
+            }
+
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_candidato_fila_unica = {$this->cod_candidato_fila_unica}");
 
@@ -385,7 +401,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
                        f.sexo,
                        f.ideciv,
                        s.nm_serie,
-                       ep.observacoes,
+                       cfu.comments AS observacoes,
                        (cfu.ano_letivo || to_char(cfu.cod_candidato_fila_unica, 'fm00000000')) AS protocolo,
                        (CASE cfu.situacao
                         WHEN 'A' THEN 'Atendida'
@@ -410,8 +426,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
             INNER JOIN cadastro.pessoa p ON (p.idpes = a.ref_idpes)
             INNER JOIN cadastro.fisica f ON (f.idpes = a.ref_idpes)
             INNER JOIN pmieducar.serie s ON (s.cod_serie = cfu.ref_cod_serie)
-             LEFT JOIN cadastro.documento d ON (d.idpes = a.ref_idpes)
-             LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)";
+             LEFT JOIN cadastro.documento d ON (d.idpes = a.ref_idpes)";
 
         $filtros = '';
 
