@@ -36,6 +36,6 @@ class NotificationEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel(DB::getDefaultConnection() . '-notification-' . $this->notification->user_id);
+        return new Channel(DB::getDefaultConnection() . '-notification-' . md5($this->notification->user_id));
     }
 }
