@@ -1,4 +1,4 @@
-var simpleSearchDistritoOptions = {
+var simpleSearchDistrictOptions = {
 
   params: {
     city_id: function () {
@@ -8,7 +8,7 @@ var simpleSearchDistritoOptions = {
 
   canSearch: function () {
     if (!$j('#city_id').val()) {
-      alert('Selecione um teste.');
+      alert('Selecione uma cidade.');
       return false;
     }
 
