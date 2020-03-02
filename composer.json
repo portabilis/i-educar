@@ -3,7 +3,7 @@
     "description": "Software livre de gestão escolar",
     "type": "project",
     "license": "GPL-2.0-or-later",
-    "version": "2.2.19",
+    "version": "2.2.20",
     "keywords": [
         "Portabilis",
         "i-Educar"
@@ -62,7 +62,8 @@
         ],
         "psr-4": {
             "App\\": "app/",
-            "iEducar\\": "src"
+            "iEducar\\": "src",
+            "iEducar\\Packages\\Reports\\": "ieducar/modules/Reports/src"
         }
     },
     "autoload-dev": {
