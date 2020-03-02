@@ -300,7 +300,7 @@
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/notifications.js") }}"></script>
 <script>
     getNotifications();
-    startListenChannel('ieducar-{{config('app.name')}}-notification-{{md5($loggedUser->personId)}}');
+    startListenChannel('ieducar-{{\DB::getDefaultConnection()}}-notification-{{md5($loggedUser->personId)}}');
 </script>
 
 @include('layout.vue')
