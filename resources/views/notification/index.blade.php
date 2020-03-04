@@ -58,8 +58,8 @@
         <tbody>
         @forelse($notifications as $notification)
             <tr>
-                <td><a href="{{$notification->link}}">{{$notification->text}}</a></td>
-                <td><a href="{{$notification->link}}"> @if($notification->read_at) Lida @else Não lida @endif </a></td>
+                <td><a href="{{$notification->link}}" target="_blank">{{$notification->text}}</a></td>
+                <td><a href="{{$notification->link}}" target="_blank"> @if($notification->read_at) Lida @else Não lida @endif </a></td>
                 <td>{{$notification->created_at->format('d/m/Y H:i')}}</td>
             </tr>
         @empty
