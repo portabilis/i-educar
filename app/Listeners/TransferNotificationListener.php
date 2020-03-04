@@ -2,8 +2,6 @@
 
 namespace App\Listeners;
 
-use App\Exceptions\Transfer\MissingDescriptiveOpinionType;
-use App\Exceptions\Transfer\StagesAreNotSame;
 use App\Models\LegacyTransferRequest;
 use App\Models\NotificationType;
 use App\Process;
@@ -29,9 +27,6 @@ class TransferNotificationListener
      *
      * @param object $event
      *
-     * @throws MissingDescriptiveOpinionType
-     * @throws StagesAreNotSame
-     *
      * @return void
      */
     public function handle($event)
@@ -40,7 +35,8 @@ class TransferNotificationListener
         $transfer = $event->transfer;
         $registration = $transfer->oldRegistration;
 
-        $message = sprintf('O(a) aluno(a) %s, %s, %s, %s, %s foi transferido(a) da rede.',
+        $message = sprintf(
+            'O(a) aluno(a) %s, %s, %s, %s, %s foi transferido(a) da rede.',
             $registration->student->person->name,
             $registration->school->name,
             $registration->level->name,

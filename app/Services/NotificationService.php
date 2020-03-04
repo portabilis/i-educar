@@ -27,7 +27,7 @@ class NotificationService
                 ->all());
         }
 
-        foreach($users as $user) {
+        foreach ($users as $user) {
             $this->createByUser($user->getKey(), $text, $link, $typeNotification);
         }
     }
