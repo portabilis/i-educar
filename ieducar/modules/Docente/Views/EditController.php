@@ -1,10 +1,11 @@
 <?php
 
+use App\Models\State;
+
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'Educacenso/Model/CursoSuperiorDataMapper.php';
 require_once 'Educacenso/Model/IesDataMapper.php';
 require_once 'Docente/Model/LicenciaturaDataMapper.php';
-require_once 'include/public/clsPublicUf.inc.php';
 
 class EditController extends Core_Controller_Page_EditController
 {
@@ -118,17 +119,9 @@ class EditController extends Core_Controller_Page_EditController
             $this->getEntity()->anoConclusao
         );
 
-        // UF da IES.
-        $ufs = new clsPublicUf();
-        $ufs = $ufs->lista();
-
-        $opcoes = [];
-
-        foreach ($ufs as $uf) {
-            $opcoes[$uf['sigla_uf']] = $uf['sigla_uf'];
-        }
-
-        ksort($opcoes);
+        $opcoes = State::getListKeyAbbreviation()->toArray();
+        $opcoes = array_keys($opcoes);
+        $opcoes = array_combine($opcoes, $opcoes);
 
         // Caso não seja uma instância persistida, usa a UF do locale.
         $uf = $this->getEntity()->ies->uf

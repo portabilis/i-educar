@@ -70,7 +70,7 @@ document.getElementById('idpais').onchange = function() {
 	campoEstado.options[0] = new Option( 'Carregando estados', '', false, false );
 
 	var xml1 = new ajax(getEstado_XML);
-	strURL = "public_uf_xml.php?pais="+campoPais;
+	strURL = "public_uf_xml.php?pais="+campoPais+"&abbreviation=true";
 	xml1.envia(strURL);
 }
 
@@ -88,7 +88,7 @@ function getEstado_XML(xml)
 	for ( var j = 0; j < estados.length; j++ )
 	{
 
-		campoEstado.options[campoEstado.options.length] = new Option( estados[j].firstChild.nodeValue, estados[j].getAttribute('sigla_uf'), false, false );
+		campoEstado.options[campoEstado.options.length] = new Option( estados[j].firstChild.nodeValue, estados[j].getAttribute('id'), false, false );
 
 	}
 	if ( campoEstado.length == 1 ) {

@@ -216,7 +216,8 @@ class clsPmieducarEscola extends Model
           e.qtd_profissionais_preparacao,
           e.qtd_bombeiro,
           e.qtd_psicologo,
-          e.qtd_fonoaudiologo
+          e.qtd_fonoaudiologo,
+          e.iddis
           ';
 
         if (is_numeric($ref_usuario_cad)) {

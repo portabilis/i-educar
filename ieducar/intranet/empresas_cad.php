@@ -1,9 +1,10 @@
 <?php
 
+use iEducar\Modules\Addressing\LegacyAddressingFields;
+
 $desvio_diretorio = "";
 require_once("include/clsBase.inc.php");
 require_once("include/clsCadastro.inc.php");
-require_once("include/clsCadastroPessoas.inc.php");
 require_once("include/clsBanco.inc.php");
 
 class clsIndex extends clsBase
@@ -17,7 +18,7 @@ class clsIndex extends clsBase
 
 class indice extends clsCadastro
 {
-    use clsCadastroEndereco;
+    use LegacyAddressingFields;
 
     // Dados do Juridico
     var $cod_pessoa_fj,
@@ -43,20 +44,6 @@ class indice extends clsCadastro
         $telefone_mov,
         $ddd_telefone_fax,
         $telefone_fax;
-
-    // Variáveis relativas ao endereco
-    var $bairro,
-        $idbai,
-        $cidade,
-        $logradouro,
-        $idlog,
-        $idtlog,
-        $cep,
-        $cep_,
-        $sigla_uf,
-        $complemento,
-        $letra,
-        $numero;
 
     // Variaveis de Controle
     var $busca_empresa,
@@ -98,19 +85,8 @@ class indice extends clsCadastro
             $this->telefone_mov = $detalhePessoaJuridica['fone_mov'];
             $this->ddd_telefone_fax = $detalhePessoaJuridica['ddd_fax'];
             $this->telefone_fax = $detalhePessoaJuridica['fone_fax'];
-            $this->cidade = $detalhePessoaJuridica['cidade'];
-            $this->bairro = $detalhePessoaJuridica['bairro'];
-            $this->logradouro = $detalhePessoaJuridica['logradouro'];
-            $this->cep = int2CEP($detalhePessoaJuridica['cep']);
-            $this->idlog = $detalhePessoaJuridica['idlog'];
-            $this->idbai = $detalhePessoaJuridica['idbai'];
-            $this->idtlog = $detalhePessoaJuridica['idtlog'];
-            $this->sigla_uf = $detalhePessoaJuridica['sigla_uf'];
 
-            $this->complemento = $detalhePessoaJuridica['complemento'];
-            $this->numero = $detalhePessoaJuridica['numero'];
-            $this->letra = $detalhePessoaJuridica['letra'];
-
+            $this->loadAddress($this->cod_pessoa_fj);
 
             $this->retorno = "Editar";
         }
@@ -152,7 +128,7 @@ class indice extends clsCadastro
                 $this->campoCnpj("cnpj", "CNPJ", $this->cnpj, true);
             }
 
-            $this->criaCamposEnderecamento();
+            $this->viewAddress();
 
             $this->inputTelefone('1', 'Telefone 1');
             $this->inputTelefone('2', 'Telefone 2');
@@ -167,8 +143,7 @@ class indice extends clsCadastro
         }
 
         Portabilis_View_Helper_Application::loadJavascript($this, [
-            '/modules/Cadastro/Assets/Javascripts/Empresa.js',
-            '/modules/Cadastro/Assets/Javascripts/Endereco.js'
+            '/modules/Cadastro/Assets/Javascripts/Addresses.js',
         ]);
     }
 
@@ -229,7 +204,8 @@ class indice extends clsCadastro
                 }
             }
 
-            $this->createOrUpdateEndereco($this->cod_pessoa_fj);
+            $this->saveAddress($this->cod_pessoa_fj);
+
             $this->simpleRedirect('empresas_lst.php');
         }
 
@@ -308,7 +284,8 @@ class indice extends clsCadastro
             }
         }
 
-        $this->createOrUpdateEndereco($this->cod_pessoa_fj);
+        $this->saveAddress($this->cod_pessoa_fj);
+
         $this->simpleRedirect('empresas_lst.php');
     }
 
