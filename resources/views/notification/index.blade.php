@@ -51,6 +51,7 @@
         <thead>
         <tr>
             <th>Texto</th>
+            <th>Status</th>
             <th>Data</th>
         </tr>
         </thead>
@@ -58,11 +59,12 @@
         @forelse($notifications as $notification)
             <tr>
                 <td><a href="{{$notification->link}}">{{$notification->text}}</a></td>
+                <td><a href="{{$notification->link}}"> @if($notification->read_at) Lida @else Não lida @endif </a></td>
                 <td>{{$notification->created_at->format('d/m/Y H:i')}}</td>
             </tr>
         @empty
             <tr>
-                <td colspan="2">Não existe nenhuma notificação</td>
+                <td colspan="3">Não existe nenhuma notificação</td>
             </tr>
         @endforelse
         </tbody>
