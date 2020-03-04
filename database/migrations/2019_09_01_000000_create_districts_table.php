@@ -13,7 +13,7 @@ class CreateDistrictsTable extends Migration
      */
     public function up()
     {
-        Schema::create('districts', function (Blueprint $table) {
+        Schema::create('public.districts', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('city_id');
             $table->string('name');
@@ -30,6 +30,6 @@ class CreateDistrictsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('districts');
+        Schema::dropIfExists('public.districts');
     }
 }
