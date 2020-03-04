@@ -36,7 +36,7 @@
                     j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
                 j.async = true;
                 j.src =
-                    'https://www.googletagmanager.com/gtm.js?id=' + i + '&version={{ config('assets.version') }}' + dl;
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + '&version=' + {{ config('assets.version') }} + dl;
                 f.parentNode.insertBefore(j, f);
             })(window, document, 'script', 'dataLayer', '{{$config['app']['gtm']['id']}}');</script>
         <!-- End Google Tag Manager -->
