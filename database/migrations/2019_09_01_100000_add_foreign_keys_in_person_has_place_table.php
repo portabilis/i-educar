@@ -13,9 +13,9 @@ class AddForeignKeysInPersonHasPlaceTable extends Migration
      */
     public function up()
     {
-        Schema::table('person_has_place', function (Blueprint $table) {
+        Schema::table('public.person_has_place', function (Blueprint $table) {
             $table->foreign('person_id')->on('cadastro.pessoa')->references('idpes');
-            $table->foreign('place_id')->on('places')->references('id');
+            $table->foreign('place_id')->on('public.places')->references('id');
         });
     }
 
@@ -26,7 +26,7 @@ class AddForeignKeysInPersonHasPlaceTable extends Migration
      */
     public function down()
     {
-        Schema::table('person_has_place', function (Blueprint $table) {
+        Schema::table('public.person_has_place', function (Blueprint $table) {
             $table->dropForeign(['person_id']);
             $table->dropForeign(['place_id']);
         });
