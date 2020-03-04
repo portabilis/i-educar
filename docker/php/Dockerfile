@@ -12,7 +12,26 @@ ENV XDEBUG_REMOTE_PORT 9000
 ENV XDEBUG_REMOTE_ENABLE 0
 ENV XDEBUG_AUTOSTART 0
 
+RUN apt-get update -y
+RUN apt-get install -y wget
+
+#
+# Adiciona o repositório do OpenJDK 8.
+#
+# https://packages.debian.org/sid/amd64/openjdk-8-jdk/download
+# https://github.com/balena-io-library/base-images/issues/273#issuecomment-349649205
+#
 RUN echo "deb http://ftp.us.debian.org/debian sid main" >> /etc/apt/sources.list
+
+#
+# Adiciona o repositório do Postgres 9.5 Client.
+#
+# https://www.postgresql.org/download/linux/debian/
+# https://stackoverflow.com/questions/50757647/e-gnupg-gnupg2-and-gnupg1-do-not-seem-to-be-installed-but-one-of-them-is-requ
+#
+RUN apt-get install -y gnupg2
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 
 RUN apt-get update -y
 
@@ -37,7 +56,7 @@ RUN apt-get install -y libzip-dev
 RUN docker-php-ext-install zip
 
 RUN mkdir -p /usr/share/man/man7
-RUN apt-get install -y postgresql-client
+RUN apt-get install -y postgresql-contrib-9.5
 
 RUN apt-get install -y libpng-dev
 RUN docker-php-ext-install gd
