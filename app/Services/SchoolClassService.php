@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\LegacyLevel;
 use App\Models\LegacySchoolClass;
-use DateTime;
 use iEducar\Modules\SchoolClass\Period;
 
 class SchoolClassService
@@ -48,6 +47,7 @@ class SchoolClassService
      *
      * @param integer $levelId
      * @param integer $academicYear
+     *
      * @return bool
      */
     public function isRequiredAlternativeReportCard($levelId, $academicYear): bool
@@ -69,6 +69,7 @@ class SchoolClassService
      *
      * @param string $startTime
      * @param string $endTime
+     *
      * @return string
      *
      * @throws \Exception
