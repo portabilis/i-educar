@@ -93,6 +93,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'help' => '',
         ),
 
+        'emancipado' => [
+            'label' => 'Emancipado'
+        ],
+
         'transporte' => array(
             'label' => 'Transporte escolar público',
             'help' => '',
@@ -915,6 +919,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         if (config('legacy.app.alunos.nao_apresentar_campo_alfabetizado')) {
             $this->inputsHelper()->hidden('alfabetizado');
         }
+
+        $options = ['label' => $this->_getLabel('emancipado')];
+        $this->inputsHelper()->checkbox('emancipado', $options);
 
         $this->campoArquivo('documento', Portabilis_String_Utils::toLatin1($this->_getLabel('documento')), $this->documento, 40, Portabilis_String_Utils::toLatin1("<br/> <span id='span-documento' style='font-style: italic; font-size= 10px;''> São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 250KB</span>", array('escape' => false)));
 

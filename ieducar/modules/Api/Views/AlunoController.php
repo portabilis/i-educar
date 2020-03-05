@@ -615,6 +615,7 @@ class AlunoController extends ApiCoreController
             $aluno->analfabeto = $this->getRequest()->alfabetizado ? 0 : 1;
         }
 
+        $aluno->emancipado = (bool) $this->getRequest()->emancipado;
         $aluno->tipo_responsavel = $tiposResponsavel[$this->getRequest()->tipo_responsavel];
         $aluno->ref_usuario_exc = $this->getSession()->id_pessoa;
 
@@ -1144,7 +1145,8 @@ class AlunoController extends ApiCoreController
                 'autorizado_quatro',
                 'parentesco_quatro',
                 'autorizado_cinco',
-                'parentesco_cinco'
+                'parentesco_cinco',
+                'emancipado'
             ];
 
             $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);

@@ -97,6 +97,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/atualiza-situacao-matriculas', 'UpdateRegistrationStatusController@index')->name('update-registration-status.index');
     Route::post('/atualiza-situacao-matriculas', 'UpdateRegistrationStatusController@updateStatus')->name('update-registration-status.update-status');
 
+    Route::get('/exportacao-para-o-seb', 'SebExportController@index')->name('seb-export.index');
+    Route::post('/exportacao-para-o-seb', 'SebExportController@export')->name('seb-export.export');
+
     Route::get('/abre-url-privada', 'OpenPrivateUrlController@open')->name('open_private_url.open');
 });
 
