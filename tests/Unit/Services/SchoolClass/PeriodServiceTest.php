@@ -42,7 +42,7 @@ class PeriodServiceTest extends TestCase
         $period = $this->service->getPeriodByTime('13:00', '15:00');
         $this->assertEquals(Period::AFTERNOON, $period);
 
-        $period = $this->service->getPeriodByTime('13:00', '15:00');
+        $period = $this->service->getPeriodByTime('13:00', '17:00');
         $this->assertEquals(Period::AFTERNOON, $period);
     }
 
