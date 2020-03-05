@@ -136,7 +136,7 @@ class indice extends clsDetalhe
             $registro['naturalidade'] = City::getNameById($det_fisica['idmun_nascimento']);
 
             $countryName = Country::query()->find($det_fisica['idpais_estrangeiro']);
-            $registro['pais_origem'] = $countryName;
+            $registro['pais_origem'] = $countryName->name;
 
             $registro['ref_idpes_responsavel'] = $det_fisica['idpes_responsavel'];
 

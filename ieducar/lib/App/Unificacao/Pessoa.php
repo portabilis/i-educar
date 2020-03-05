@@ -149,30 +149,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'ref_idpes'
         ],
         [
-            'tabela' => 'public.distrito',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'public.distrito',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'urbano.cep_logradouro',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'urbano.cep_logradouro',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'urbano.cep_logradouro_bairro',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'urbano.cep_logradouro_bairro',
-            'coluna' => 'idpes_cad'
-        ],
-        [
             'tabela' => 'cadastro.documento',
             'coluna' => 'idpes_rev'
         ],
@@ -203,30 +179,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         [
             'tabela' => 'cadastro.pessoa',
             'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'public.bairro',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'public.bairro',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'public.logradouro',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'public.logradouro',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'public.municipio',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'public.municipio',
-            'coluna' => 'idpes_cad'
         ],
         [
             'tabela' => 'pmieducar.candidato_reserva_vaga',

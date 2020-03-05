@@ -16,6 +16,7 @@ class Process
 
     const CONSULTAS = 9998890;
 
+    const MENU_SCHOOL_TOOLS = 999926;
     const EDUCACENSO_IMPORTACOES = 9998848;
 
     const CONFIGURATIONS_TOOLS = 999910;
@@ -31,4 +32,6 @@ class Process
     const EDUCACENSO_IMPORT_HISTORY = 2004;
     const UPDATE_REGISTRATION_STATUS = 2005;
     const NOTIFY_TRANSFER = 2006;
+    const MENU_SCHOOL_TOOLS_EXPORTS = 1020;
+    const SEB_EXPORT = 1021;
 }

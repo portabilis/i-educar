@@ -10,6 +10,8 @@ class Country extends Model
 {
     use HasIbgeCode;
 
+    const BRASIL = 45;
+
     /**
      * @var array
      */
