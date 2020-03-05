@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\LegacySchoolClass;
-use App\Services\SchoolClassService;
+use App\Services\SchoolClass\PeriodService;
 use App_Model_TipoMediacaoDidaticoPedagogico;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -48,7 +48,7 @@ class UpdateSchoolClassPeriod extends Command
             ->where('tipo_mediacao_didatico_pedagogico', App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL)
             ->get();
 
-        $service = new SchoolClassService();
+        $service = new PeriodService();
 
         DB::beginTransaction();
 
