@@ -45,7 +45,7 @@ class UpdateSchoolClassPeriod extends Command
             ->whereNotNull('hora_inicial')
             ->whereNotNull('hora_final')
             ->where('ativo', 1)
-            ->where('tipo_mediacao_didatico_pedagogico', App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL)
+            ->where('ano', '>=', 2019)
             ->get();
 
         $service = new PeriodService();
