@@ -16,6 +16,7 @@ class clsPmieducarAluno extends Model
     public $ativo;
     public $caminho_foto;
     public $analfabeto;
+    public $emancipado;
     public $nm_pai;
     public $nm_mae;
     public $tipo_responsavel;
@@ -74,7 +75,7 @@ class clsPmieducarAluno extends Model
         $this->_campos_lista = $this->_todos_campos = 'a.cod_aluno, a.ref_cod_religiao, a.ref_usuario_exc,
         a.ref_usuario_cad, a.ref_idpes, a.data_cadastro, a.data_exclusao, a.ativo, a.caminho_foto, a.analfabeto, a.nm_pai, a.nm_mae,tipo_responsavel, a.aluno_estado_id, a.recursos_prova_inep, a.recebe_escolarizacao_em_outro_espaco,
         a.justificativa_falta_documentacao, a.url_laudo_medico::text, a.codigo_sistema, a.veiculo_transporte_escolar, a.parentesco_um, a.autorizado_um, a.parentesco_dois, a.autorizado_dois,
-        a.parentesco_tres, a.autorizado_tres, a.parentesco_quatro, a.autorizado_quatro, a.parentesco_cinco, a.autorizado_cinco, a.url_documento::text';
+        a.parentesco_tres, a.autorizado_tres, a.parentesco_quatro, a.autorizado_quatro, a.parentesco_cinco, a.autorizado_cinco, a.url_documento::text, a.emancipado';
 
         if (is_numeric($ref_usuario_exc)) {
                     $this->ref_usuario_exc = $ref_usuario_exc;
@@ -212,6 +213,12 @@ class clsPmieducarAluno extends Model
             if (is_numeric($this->analfabeto)) {
                 $campos .= "{$gruda}analfabeto";
                 $valores .= "{$gruda}'{$this->analfabeto}'";
+                $gruda = ', ';
+            }
+
+            if ($this->emancipado) {
+                $campos .= "{$gruda}emancipado";
+                $valores .= "{$gruda}TRUE";
                 $gruda = ', ';
             }
 
@@ -418,6 +425,12 @@ class clsPmieducarAluno extends Model
 
             if (is_numeric($this->analfabeto)) {
                 $set .= "{$gruda}analfabeto = '{$this->analfabeto}'";
+                $gruda = ', ';
+            }
+
+            if (isset($this->emancipado)) {
+                $condicaoBd = $this->emancipado ? 'TRUE' : 'FALSE';
+                $set .= "{$gruda}emancipado = {$condicaoBd}";
                 $gruda = ', ';
             }
 
