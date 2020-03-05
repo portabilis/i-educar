@@ -21,7 +21,7 @@ use App\Models\LegacySchoolGradeDiscipline;
 use App\Models\SchoolClassInep;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\RegistroImportInterface;
-use App\Services\SchoolClassService;
+use App\Services\SchoolClass\PeriodService;
 use App\User;
 use Exception;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
@@ -997,7 +997,7 @@ class Registro20Import implements RegistroImportInterface
             return null;
         }
 
-        $service = new SchoolClassService();
+        $service = new PeriodService();
         return $service->getPeriodByTime($horaInicial, $horaFinal);
     }
 }
