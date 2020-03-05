@@ -24,8 +24,14 @@ function getNotifications() {
     $j.each(data, function( index, value ) {
       let unread = value.read_at == null;
       let className = unread ? 'unread' : 'read';
+      let dateObj = new Date(value.created_at);
+      let dateString = dateObj.toLocaleString('pt-BR');
 
-      $j('.dropdown-content-notifications').append('<a href="' + value.link + '" data-id="' + value.id + '" class="' +className+ '">' + value.text + '</a>');
+      $j('.dropdown-content-notifications').append(`
+        <a href="` + value.link + `" data-id="` + value.id + `" class="` +className+ `">
+          <p>` + value.text  + `</p>
+          <p class="date-notification"> ` + dateString + `</p>
+        </a>`);
 
       if(unread) {
         $j('.notification-balloon').show();

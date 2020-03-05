@@ -281,6 +281,12 @@ span.notification-balloon {
   background-color: #e9f0f8;
 }
 
+.dropdown-content-notifications p.date-notification {
+  text-align: right;
+  font-size: 10px;
+  color: #999;
+}
+
 img#help {
     position: relative;
     top: 7px;
