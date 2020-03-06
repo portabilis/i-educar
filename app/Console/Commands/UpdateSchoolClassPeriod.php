@@ -44,7 +44,6 @@ class UpdateSchoolClassPeriod extends Command
         $schoolClasses = LegacySchoolClass::whereNull('turma_turno_id')
             ->whereNotNull('hora_inicial')
             ->whereNotNull('hora_final')
-            ->where('ativo', 1)
             ->where('ano', '>=', 2019)
             ->get();
 
