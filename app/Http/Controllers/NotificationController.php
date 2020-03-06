@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use iEducar\Modules\Notifications\Status;
 
 class NotificationController extends Controller
 {
@@ -31,11 +32,11 @@ class NotificationController extends Controller
         }
 
         if ($request->get('status')) {
-            if ($request->get('status') == '1') {
+            if ($request->get('status') == STATUS::READ) {
                 $query->whereNotNull('read_at');
             }
 
-            if ($request->get('status') == '2') {
+            if ($request->get('status') == STATUS::UNREAD) {
                 $query->whereNull('read_at');
             }
         }

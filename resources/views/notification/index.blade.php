@@ -17,8 +17,8 @@
                     <span class="form">
                         <select class="geral" name="status" id="status" style="width: 308px;">
                             <option value="0" @if(Request::get('status') == null) selected @endif>Todas</option>
-                            <option value="1" @if(Request::get('status') == 1) selected @endif>Lidas</option>
-                            <option value="2" @if(Request::get('status') == 2) selected @endif>Não lidas</option>
+                            <option value="1" @if(Request::get('status') == iEducar\Modules\Notifications\Status::READ) selected @endif>Lidas</option>
+                            <option value="2" @if(Request::get('status') == iEducar\Modules\Notifications\Status::UNREAD) selected @endif>Não lidas</option>
                         </select>
                     </span>
                 </td>
