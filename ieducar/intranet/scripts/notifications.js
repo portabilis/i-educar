@@ -3,7 +3,15 @@ function startListenChannel(notificationsChannel) {
     let notification = e.notification;
     let unread = notification.read_at == null;
     let className = unread ? 'unread' : 'read';
-    $j('.dropdown-content-notifications').prepend('<a href="' + notification.link + '" data-id="' + notification.id + '" class="' +className+ '">' + notification.text + '</a>');
+    let dateObj = new Date(notification.created_at);
+    let dateString = dateObj.toLocaleString('pt-BR');
+
+    $j('.dropdown-content-notifications').prepend(`
+      <a href="` + notification.link + `" data-id="` + notification.id + `" class="` +className+ `">
+        <p>` + notification.text  + `</p>
+        <p class="date-notification"> ` + dateString + `</p>
+      </a>`);
+
     $j('.notification-balloon').show();
 
     let notifications = [];
