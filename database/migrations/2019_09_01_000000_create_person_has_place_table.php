@@ -13,7 +13,7 @@ class CreatePersonHasPlaceTable extends Migration
      */
     public function up()
     {
-        Schema::create('person_has_place', function (Blueprint $table) {
+        Schema::create('public.person_has_place', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('person_id');
             $table->integer('place_id');
@@ -31,6 +31,6 @@ class CreatePersonHasPlaceTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('person_has_place');
+        Schema::dropIfExists('public.person_has_place');
     }
 }

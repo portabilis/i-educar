@@ -13,8 +13,8 @@ class AddForeignKeysInStatesTable extends Migration
      */
     public function up()
     {
-        Schema::table('states', function (Blueprint $table) {
-            $table->foreign('country_id')->on('countries')->references('id');
+        Schema::table('public.states', function (Blueprint $table) {
+            $table->foreign('country_id')->on('public.countries')->references('id');
         });
     }
 
@@ -25,7 +25,7 @@ class AddForeignKeysInStatesTable extends Migration
      */
     public function down()
     {
-        Schema::table('states', function (Blueprint $table) {
+        Schema::table('public.states', function (Blueprint $table) {
             $table->dropForeign(['country_id']);
         });
     }
