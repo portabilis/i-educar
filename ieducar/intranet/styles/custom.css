@@ -287,6 +287,22 @@ span.notification-balloon {
   color: #999;
 }
 
+.notifications-bar {
+  display: flow-root;
+  color: #646b71;
+  padding: 5px 15px !important;
+  border-bottom: 1px solid #ccdce6;
+  background: #eee !important;
+}
+
+.notifications-bar a.btn-all-notifications {
+  padding: 0 !important;
+  float: right;
+  background: none;
+  border: 0 !important;
+  color: #188ad1 !important;
+}
+
 img#help {
     position: relative;
     top: 7px;

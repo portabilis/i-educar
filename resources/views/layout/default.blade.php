@@ -182,6 +182,10 @@
                             <span class="notification-balloon"></span>
                         </div>
                         <div class="dropdown-content-notifications">
+                            <div class="notifications-bar">
+                                <span> Notificações </span>
+                                <a href="/notificacoes" class="btn-all-notifications">Ver todas</a>
+                            </div>
                         </div>
                     </div>
                 </div>

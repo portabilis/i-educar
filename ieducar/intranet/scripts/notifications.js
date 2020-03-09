@@ -6,7 +6,7 @@ function startListenChannel(notificationsChannel) {
     let dateObj = new Date(notification.created_at);
     let dateString = dateObj.toLocaleString('pt-BR');
 
-    $j('.dropdown-content-notifications').prepend(`
+    $j('.dropdown-content-notifications .notifications-bar').after(`
       <a href="` + notification.link + `" data-id="` + notification.id + `" class="` +className+ `">
         <p>` + notification.text  + `</p>
         <p class="date-notification"> ` + dateString + `</p>
@@ -46,7 +46,6 @@ function getNotifications() {
       }
     });
 
-    $j('.dropdown-content-notifications').append(' <a href="/notificacoes" class="btn-all-notifications">Ver todas</a>');
   });
 }
 
