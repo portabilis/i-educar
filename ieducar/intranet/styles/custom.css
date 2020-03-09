@@ -295,12 +295,29 @@ span.notification-balloon {
   background: #eee !important;
 }
 
-.notifications-bar a.btn-all-notifications {
+.notifications-bar a.btn-all-notifications,
+.notifications-bar a.btn-mark-all-read {
   padding: 0 !important;
   float: right;
   background: none;
   border: 0 !important;
+  color: #646b71 !important;
+}
+
+.notifications-bar a.btn-all-notifications:hover,
+.notifications-bar a.btn-mark-all-read:hover {
   color: #188ad1 !important;
+}
+
+.notifications-bar a.btn-mark-all-read {
+  padding-right: 7px !important;
+  margin-right: 7px;
+  border-right: 1px solid #ccdce6 !important;
+  cursor: pointer;
+}
+
+tr.unread td {
+  font-weight: bold;
 }
 
 img#help {

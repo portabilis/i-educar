@@ -185,6 +185,7 @@
                             <div class="notifications-bar">
                                 <span> Notificações </span>
                                 <a href="/notificacoes" class="btn-all-notifications">Ver todas</a>
+                                <a class="btn-mark-all-read">Marcar todas como lidas (<span class="not-read-count">0</span>)</a>
                             </div>
                         </div>
                     </div>

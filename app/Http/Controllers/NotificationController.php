@@ -55,6 +55,12 @@ class NotificationController extends Controller
             ->update(['read_at' => now()]);
     }
 
+    public function markAllRead(User $user)
+    {
+        Notification::where('user_id', $user->getKey())
+            ->update(['read_at' => now()]);
+    }
+
     public function getByLoggedUser(User $user)
     {
         return Notification::where('user_id', $user->getKey())
@@ -62,5 +68,13 @@ class NotificationController extends Controller
             ->orderBy('read_at', 'desc')
             ->orderBy('created_at', 'desc')
             ->get();
+    }
+
+    public function getNotReadCount(User $user)
+    {
+        $notifications = Notification::where('user_id', $user->getKey())
+            ->whereNull('read_at');
+
+        return $notifications->count();
     }
 }
