@@ -242,7 +242,7 @@ class PessoaController extends ApiCoreController
             $details['city_name'] = $place->city->name;
             $details['state_abbreviation'] = $place->city->state->abbreviation;
 
-            $details['cep'] = $place->postal_code;
+            $details['cep'] = int2CEP($place->postal_code);
             $details['logradouro'] = $place->address;
             $details['idtlog'] = $place->id;
             $details['bairro'] = $place->neighborhood;
