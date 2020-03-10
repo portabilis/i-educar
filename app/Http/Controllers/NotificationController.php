@@ -67,8 +67,10 @@ class NotificationController extends Controller
 
     public function getByLoggedUser(User $user)
     {
+        $limit = $this->getLimit($user);
+
         return Notification::where('user_id', $user->getKey())
-            ->limit(5)
+            ->limit($limit)
             ->orderBy('read_at', 'desc')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -80,5 +82,15 @@ class NotificationController extends Controller
             ->whereNull('read_at');
 
         return $notifications->count();
+    }
+
+    private function getLimit(User $user)
+    {
+        $notRead = $this->getNotReadCount($user);
+        if ($notRead > 5) {
+            return $notRead;
+        }
+
+        return 5;
     }
 }
