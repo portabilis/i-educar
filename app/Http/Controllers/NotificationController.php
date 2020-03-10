@@ -41,6 +41,10 @@ class NotificationController extends Controller
             }
         }
 
+        if ($request->get('text')) {
+            $query->where('text', 'ilike', '%' . $request->get('text') . '%');
+        }
+
         $query->orderBy('created_at', 'desc');
 
         return view('notification.index', ['notifications' => $query->paginate()]);

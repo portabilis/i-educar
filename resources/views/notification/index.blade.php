@@ -24,8 +24,8 @@
                 </td>
             </tr>
             <tr id="tr_nm_instituicao">
-                <td class="formmdtd" valign="top"><span class="form">Tipo:</span></td>
-                <td class="formmdtd" valign="top">
+                <td class="formlttd" valign="top"><span class="form">Tipo:</span></td>
+                <td class="formlttd" valign="top">
                     <span class="form">
                         <select class="geral" name="type" id="type" style="width: 308px;">
                             <option value="">Selecione</option>
@@ -35,6 +35,11 @@
                         </select>
                     </span>
                 </td>
+            </tr>
+            <tr>
+                <td class="formmdtd" valign="top"><span>Texto:</span></td>
+                <td class="formmdtd" valign="top">
+                <input type="text" name="text" id="text" style="width: 400px;" value="{{Request::get('text')}}" />
             </tr>
             </tbody>
         </table>
