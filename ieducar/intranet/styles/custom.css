@@ -236,6 +236,9 @@ span.error_notice {
   z-index: 1;
   right: 19px;
   top: 41px;
+  max-height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .ieducar-header-links .dropdown-content-notifications a {
@@ -293,6 +296,7 @@ span.notification-balloon {
   padding: 5px 15px !important;
   border-bottom: 1px solid #ccdce6;
   background: #eee !important;
+  font-weight: bold !important;
 }
 
 .notifications-bar a.btn-all-notifications,
