@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\LegacyLevel;
 use App\Models\LegacySchoolClass;
+use iEducar\Modules\SchoolClass\Period;
 
 class SchoolClassService
 {
@@ -46,6 +47,7 @@ class SchoolClassService
      *
      * @param integer $levelId
      * @param integer $academicYear
+     *
      * @return bool
      */
     public function isRequiredAlternativeReportCard($levelId, $academicYear): bool
@@ -54,7 +56,7 @@ class SchoolClassService
             ->wherePivot('ano_letivo', $academicYear)
             ->get()
             ->first();
-        
+
         if (empty($evaluationRule->regra_diferenciada_id)) {
             return false;
         }

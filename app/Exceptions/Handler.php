@@ -89,7 +89,7 @@ class Handler extends ExceptionHandler
     private function getController()
     {
         if (app()->runningInConsole()) {
-            return [];
+            return null;
         }
 
         $controller = explode('@', $this->getActionName())[0];
@@ -109,7 +109,7 @@ class Handler extends ExceptionHandler
     private function getAction()
     {
         if (app()->runningInConsole()) {
-            return [];
+            return null;
         }
 
         return explode('@', $this->getActionName())[1];

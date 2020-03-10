@@ -13,8 +13,8 @@ class AddForeignKeysInPlacesTable extends Migration
      */
     public function up()
     {
-        Schema::table('places', function (Blueprint $table) {
-            $table->foreign('city_id')->on('cities')->references('id');
+        Schema::table('public.places', function (Blueprint $table) {
+            $table->foreign('city_id')->on('public.cities')->references('id');
         });
     }
 
@@ -25,7 +25,7 @@ class AddForeignKeysInPlacesTable extends Migration
      */
     public function down()
     {
-        Schema::table('places', function (Blueprint $table) {
+        Schema::table('public.places', function (Blueprint $table) {
             $table->dropForeign(['city_id']);
         });
     }

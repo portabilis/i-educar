@@ -378,6 +378,21 @@ class EnrollmentService
     }
 
     /**
+     * Compara data de saída da enturmação com data base para definir a
+     * reordenação, ou não, dos sequenciais
+     *
+     * @param LegacyEnrollment $enrollment
+     */
+    public function reorderSchoolClassAccordingToRelocationDate(LegacyEnrollment $enrollment)
+    {
+        $relocationDate = $enrollment->schoolClass->school->institution->relocation_date;
+
+        if(!$relocationDate || $enrollment->data_exclusao < $relocationDate) {
+            $this->reorderSchoolClass($enrollment);
+        }
+    }
+
+    /**
      * Verifica se a instituição não usa database
      * ou se a data informada é antes da database
      *
