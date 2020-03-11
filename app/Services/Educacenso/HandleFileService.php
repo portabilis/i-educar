@@ -59,7 +59,7 @@ class HandleFileService
         $import->finished = false;
         $import->save();
 
-        $school = array_map('utf8_decode', $school);
+        $school = array_map('utf8_encode', $school);
 
         EducacensoImportJob::dispatch($import, $school, DB::getDefaultConnection());
     }
