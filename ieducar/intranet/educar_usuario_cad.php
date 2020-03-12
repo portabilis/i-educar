@@ -136,7 +136,7 @@ class indice extends clsCadastro
             $this->campoOculto('ref_pessoa', $this->ref_pessoa);
         }
 
-        $this->campoTexto('matricula', 'Matrícula', $this->matricula, 12, 12, true);
+        $this->campoTexto('matricula', 'Matrícula', $this->matricula, 12, 12, true, false, false, '', '', '', 'onKeyUp');
         $this->campoSenha('_senha', 'Senha', null, $cadastrando, empty($cadastrando) ? 'Preencha apenas se desejar alterar a senha' : '');
         $this->campoEmail('email', 'E-mail usuário', $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
         $this->campoTexto('matricula_interna', 'Matrícula interna', $this->matricula_interna, 30, 30, false, false, false, 'Utilizado somente para registro, caso a instituição deseje que a matrícula interna deste funcionário seja registrada no sistema.');
@@ -170,7 +170,6 @@ class indice extends clsCadastro
 
         /** @var User $user */
         $user = Auth::user();
-
         // verifica se pessoa logada é super-usuario
         if ($user->isAdmin()) {
             $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1);
@@ -209,9 +208,14 @@ class indice extends clsCadastro
 
         $scripts = ['/modules/Cadastro/Assets/Javascripts/Usuario.js'];
 
-        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
-
         $this->acao_enviar = 'valida()';
+        if(!$this->canChange($user, $this->ref_pessoa)) {
+            $this->acao_enviar = null;
+            $this->fexcluir = null;
+            $scripts[] = '/modules/Cadastro/Assets/Javascripts/disableAllFields.js';
+        }
+
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
     public function Novo()
@@ -274,6 +278,12 @@ class indice extends clsCadastro
 
     public function Editar()
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if(!$this->canChange($user, $this->ref_pessoa)) {
+            return false;
+        }
+
         if ($this->email && !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             $this->mensagem = 'Formato do e-mail inválido.';
 
@@ -433,6 +443,41 @@ class indice extends clsCadastro
             $usuarioEscola->ref_cod_escola = $e;
             $usuarioEscola->cadastra();
         }
+    }
+
+    /**
+     * Verifica se o usuário logado pode alterar o usuário em questão
+     *
+     * Caso algum usuário com nível diferente de admin tentar alterar dados do usuário admin,
+     * esse método retornará false
+     *
+     * @param User $currentUser
+     * @param integer $changedUserId
+     * @return bool
+     */
+    private function canChange(User $currentUser, $changedUserId)
+    {
+        if (!$changedUserId) {
+            return true;
+        }
+
+        if ($currentUser->isAdmin()) {
+            return true;
+        }
+
+        /** @var User $changedUser */
+        $changedUser = User::find($changedUserId);
+
+        if (!$changedUser->isAdmin()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function disableFields()
+    {
+        dd($this->campos);
     }
 }
 
