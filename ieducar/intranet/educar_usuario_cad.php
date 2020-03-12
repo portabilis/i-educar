@@ -379,6 +379,12 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if(!$this->canChange($user, $this->ref_pessoa)) {
+            return false;
+        }
+        
         $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa);
         $detalhe = $obj_funcionario->detalhe();
 
