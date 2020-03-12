@@ -136,7 +136,7 @@ class indice extends clsCadastro
             $this->campoOculto('ref_pessoa', $this->ref_pessoa);
         }
 
-        $this->campoTexto('matricula', 'Matrícula', $this->matricula, 12, 12, true, false, false, '', '', '', 'onKeyUp');
+        $this->campoTexto('matricula', 'Matrícula', $this->matricula, 12, 12, true);
         $this->campoSenha('_senha', 'Senha', null, $cadastrando, empty($cadastrando) ? 'Preencha apenas se desejar alterar a senha' : '');
         $this->campoEmail('email', 'E-mail usuário', $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
         $this->campoTexto('matricula_interna', 'Matrícula interna', $this->matricula_interna, 30, 30, false, false, false, 'Utilizado somente para registro, caso a instituição deseje que a matrícula interna deste funcionário seja registrada no sistema.');
