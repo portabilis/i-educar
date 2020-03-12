@@ -474,11 +474,6 @@ class indice extends clsCadastro
 
         return false;
     }
-
-    private function disableFields()
-    {
-        dd($this->campos);
-    }
 }
 
 $pagina = new clsIndexBase();
