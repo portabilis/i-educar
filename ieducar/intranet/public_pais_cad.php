@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\Country;
+use iEducar\Legacy\InteractWithDatabase;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
-require_once 'include/public/geral.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
@@ -18,38 +20,38 @@ class clsIndexBase extends clsBase
 
 class indice extends clsCadastro
 {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
+    use InteractWithDatabase;
 
     public $idpais;
     public $nome;
     public $geom;
     public $cod_ibge;
 
+    public function model()
+    {
+        return Country::class;
+    }
+
+    public function index()
+    {
+        return 'public_pais_lst.php';
+    }
+
     public function Inicializar()
     {
         $retorno = 'Novo';
 
-        $this->idpais=$_GET['idpais'];
+        $this->idpais = $_GET['idpais'];
 
         if (is_numeric($this->idpais)) {
-            $obj = new clsPublicPais($this->idpais);
-            $registro  = $obj->detalhe();
-            if ($registro) {
-                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
-                    $this->$campo = $val;
-                }
+            $country = $this->find($this->idpais);
 
-//              $this->fexcluir = true;
-
-                $retorno = 'Editar';
-            }
+            $this->nome = $country->name;
+            $this->cod_ibge = $country->ibge_code;
+            $retorno = 'Editar';
         }
-        $this->url_cancelar = ($retorno == 'Editar') ? "public_pais_det.php?idpais={$registro['idpais']}" : 'public_pais_lst.php';
+
+        $this->url_cancelar = $retorno == 'Editar' ? "public_pais_det.php?idpais={$this->idpais}" : 'public_pais_lst.php';
         $this->nome_url_cancelar = 'Cancelar';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
@@ -88,66 +90,23 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        $obj = new clsPublicPais(null, $this->nome, $this->geom, $this->cod_ibge);
-        $cadastrou = $obj->cadastra();
-        if ($cadastrou) {
-            $enderecamento = new clsPublicPais($cadastrou);
-            $enderecamento->cadastrou = $cadastrou;
-            $enderecamento = $enderecamento->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral('Endereçamento de País', $this->pessoa_logada, $cadastrou);
-            $auditoria->inclusao($enderecamento);
-
-            $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
-            $this->simpleRedirect('public_pais_lst.php');
-        }
-
-        $this->mensagem = 'Cadastro não realizado.<br>';
-
-        return false;
+        return $this->create([
+            'name' => request('nome'),
+            'ibge_code' => request('cod_ibge'),
+        ]);
     }
 
     public function Editar()
     {
-        $enderecamentoDetalhe = new clsPublicPais($this->idpais);
-        $enderecamentoDetalhe->cadastrou = $this->idpais;
-        $enderecamentoDetalheAntes = $enderecamentoDetalhe->detalhe();
-
-        $obj = new clsPublicPais($this->idpais, $this->nome, $this->geom, $this->cod_ibge);
-        $editou = $obj->edita();
-
-        if ($editou) {
-            $enderecamentoDetalheDepois = $enderecamentoDetalhe->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral('Endereçamento de País', $this->pessoa_logada, $this->idpais);
-            $auditoria->alteracao($enderecamentoDetalheAntes, $enderecamentoDetalheDepois);
-
-            $this->mensagem = 'Edição efetuada com sucesso.<br>';
-            $this->simpleRedirect('public_pais_lst.php');
-        }
-
-        $this->mensagem = 'Edição não realizada.<br>';
-
-        return false;
+        return $this->update($this->idpais, [
+            'name' => request('nome'),
+            'ibge_code' => request('cod_ibge'),
+        ]);
     }
 
     public function Excluir()
     {
-        $obj = new clsPublicPais($this->idpais);
-
-        $enderecamento = $obj->detalhe();
-        $enderecamentoDetalhe->cadastrou = $this->cadastrou;
-
-        $excluiu = $obj->excluir();
-        if ($excluiu) {
-            $auditoria = new clsModulesAuditoriaGeral('Endereçamento de País', $this->pessoa_logada, $this->cadastrou);
-            $auditoria->exclusao($enderecamento);
-
-            $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
-            $this->simpleRedirect('public_pais_lst.php');
-        }
-
-        $this->mensagem = 'Exclusão não realizada.<br>';
-
-        return false;
+        return $this->delete($this->idpais);
     }
 }
 

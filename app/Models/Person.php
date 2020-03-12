@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class Person extends Model
 {
@@ -31,5 +32,20 @@ class Person extends Model
     public function getRegistryOriginDescriptionAttribute()
     {
         return (new RegistryOrigin)->getDescriptiveValues()[(int) $this->registry_origin];
+    }
+
+    /**
+     * @return HasOneThrough
+     */
+    public function place()
+    {
+        return $this->hasOneThrough(
+            Place::class,
+            PersonHasPlace::class,
+            'person_id',
+            'id',
+            'id',
+            'place_id'
+        )->orderBy('type');
     }
 }

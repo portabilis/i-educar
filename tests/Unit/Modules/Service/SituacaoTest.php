@@ -29,6 +29,9 @@
  * @version     $Id$
  */
 
+use App\Models\LegacyLevel;
+use App\Models\LegacyRegistration;
+
 require_once __DIR__.'/TestCommon.php';
 
 /**
@@ -61,6 +64,14 @@ class Avaliacao_Service_SituacaoTest extends Avaliacao_Service_TestCommon
     $service->expects($this->any())
         ->method('getRegra')
         ->will($this->returnValue($regra));
+
+    $registration = factory(LegacyRegistration::class)->create([
+        'ref_ref_cod_serie' => factory(LegacyLevel::class)->create(),
+        'dependencia' => true,
+    ]);
+    $service->expects($this->any())
+        ->method('getOption')
+        ->will($this->returnValue($registration->toArray()));
 
     $notaSituacoes = [
       1 => App_Model_MatriculaSituacao::APROVADO,

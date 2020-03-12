@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyRegistration;
+use App\Models\LegacySchoolClassStage;
 use App\Models\LegacySchoolStage;
 
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
@@ -231,15 +232,41 @@ class PromocaoApiController extends ApiCoreController
         $regra = $this->boletimService()->getRegra();
         $tpPresenca = $regra->get('tipoPresenca');
 
-        //todo: Desabilitado temporariamente devido a problemas com aprovações indevidas
-        // #6995
-        $regraNaoUsaNota = false;//$this->regraNaoUsaNota($regra->get('tipoNota'));
+        $regraNaoUsaNota = $this->regraNaoUsaNota($regra->get('tipoNota'));
 
         $componentesCurriculares = $this->loadComponentesCurriculares($matriculaId);
 
+        $ano = $this->boletimService()->getOption('matriculaData')['ano'];
+        $escolaId = $this->boletimService()->getOption('matriculaData')['ref_ref_cod_escola'];
+        $turmaId = $this->boletimService()->getOption('matriculaData')['ref_cod_turma'];
+
+        $stages = LegacySchoolClassStage::query(['sequencial'])
+            ->where(['ref_cod_turma' => $turmaId])
+            ->where('data_fim', '<', now())
+            ->orderBy('sequencial');
+
+        if (!$stages->exists()) {
+            $stages = LegacySchoolStage::query(['sequencial'])
+                ->where([
+                    'ref_ref_cod_escola' => $escolaId,
+                    'ref_ano' => $ano
+                ])
+                ->where('data_fim', '<', now())
+                ->orderBy('sequencial');
+        }
+
+        foreach($stages->get() as $stage) {
+            $getStages[] = $stage->sequencial;
+        }
+
+        $etapas = array_map(function($arr) {
+            return $arr;
+        }, $getStages);
+
         if ($tpPresenca == RegraAvaliacao_Model_TipoPresenca::GERAL) {
             // FIXME #parameters
-            foreach (range(1, $this->boletimService()->getOption('etapas')) as $etapa) {
+
+            foreach ($etapas as $etapa) {
                 $hasNotaOrParecerInEtapa = false;
 
                 if ($regraNaoUsaNota) {
@@ -273,7 +300,7 @@ class PromocaoApiController extends ApiCoreController
             }//for etapa
         } elseif ($tpPresenca == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
             // FIXME #parameters
-            foreach (range(1, $this->boletimService()->getOption('etapas')) as $etapa) {
+            foreach ($etapas as $etapa) {
                 foreach ($componentesCurriculares as $cc) {
                     $nota = $this->getNota($etapa, $cc['id']);
                     $parecer = $this->getParecerDescritivo($etapa, $cc['id']);

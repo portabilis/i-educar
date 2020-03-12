@@ -1,9 +1,13 @@
 <?php
 
+use App\Models\State;
+use iEducar\Legacy\InteractWithDatabase;
+use iEducar\Legacy\SelectOptions;
+use Illuminate\Support\Str;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
-require_once 'include/public/geral.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 require_once 'App/Model/Pais.php';
@@ -20,31 +24,44 @@ class clsIndexBase extends clsBase
 
 class indice extends clsCadastro
 {
+    use InteractWithDatabase, SelectOptions;
+
+    public $id;
     public $sigla_uf;
     public $nome;
     public $geom;
     public $idpais;
     public $cod_ibge;
 
+    public function model()
+    {
+        return State::class;
+    }
+
+    public function index()
+    {
+        return 'public_uf_lst.php';
+    }
+
     public function Inicializar()
     {
         $retorno = 'Novo';
 
+        $this->id = $_GET['id'];
         $this->sigla_uf = $_GET['sigla_uf'];
 
-        if (is_string($this->sigla_uf)) {
-            $obj = new clsPublicUf($this->sigla_uf);
-            $registro = $obj->detalhe();
+        if (is_numeric($this->id)) {
+            $state = $this->find($this->id);
 
-            if ($registro) {
-                foreach ($registro as $campo => $val) {
-                    $this->$campo = $val;
-                }
+            $this->sigla_uf = $state->abbreviation;
+            $this->nome = $state->name;
+            $this->idpais = $state->country_id;
+            $this->cod_ibge = $state->ibge_code;
 
-                $retorno = 'Editar';
-            }
+            $retorno = 'Editar';
         }
-        $this->url_cancelar = $retorno == 'Editar' ? "public_uf_det.php?sigla_uf={$registro['sigla_uf']}" : 'public_uf_lst.php';
+
+        $this->url_cancelar = $retorno == 'Editar' ? "public_uf_det.php?id={$this->id}" : 'public_uf_lst.php';
         $this->nome_url_cancelar = 'Cancelar';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
@@ -57,17 +74,9 @@ class indice extends clsCadastro
 
     public function Gerar()
     {
-        $opcoes = ['' => 'Selecione'];
+        $opcoes = ['' => 'Selecione'] + $this->getCountries();
 
-        $objTemp = new clsPais();
-        $lista = $objTemp->lista(false, false, false, false, false, 'nome ASC');
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes["{$registro['idpais']}"] = "{$registro['nome']}";
-            }
-        }
-
+        $this->campoOculto('id', $this->id);
         $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais);
         $this->campoTexto('sigla_uf', 'Sigla Uf', $this->sigla_uf, 3, 3, true);
         $this->campoTexto('nome', 'Nome', $this->nome, 30, 30, true);
@@ -88,31 +97,23 @@ class indice extends clsCadastro
             return false;
         }
 
-        $obj = new clsPublicUf(strtoupper($this->sigla_uf));
-        $duplica = $obj->verificaDuplicidade();
+        $exists = $this->newQuery()
+            ->where('abbreviation', Str::upper($this->sigla_uf))
+            ->where('country_id', request('idpais'))
+            ->exists();
 
-        if ($duplica) {
+        if ($exists) {
             $this->mensagem = 'A sigla já existe para outro estado.<br>';
 
             return false;
-        } else {
-            $obj = new clsPublicUf($this->sigla_uf, $this->nome, $this->geom, $this->idpais, $this->cod_ibge);
-            $cadastrou = $obj->cadastra();
-            if ($cadastrou) {
-                $enderecamento = new clsPublicUf($cadastrou);
-                $enderecamento->cadastrou = $cadastrou;
-                $enderecamento = $enderecamento->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('Endereçamento de Estado', $this->pessoa_logada, $cadastrou);
-                $auditoria->inclusao($enderecamento);
-
-                $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
-                $this->simpleRedirect('public_uf_lst.php');
-            }
-
-            $this->mensagem = 'Cadastro não realizado.<br>';
-
-            return false;
         }
+
+        return $this->create([
+            'name' => request('nome'),
+            'country_id' => request('idpais'),
+            'ibge_code' => request('cod_ibge'),
+            'abbreviation' => request('sigla_uf'),
+        ]);
     }
 
     public function Editar()
@@ -123,34 +124,24 @@ class indice extends clsCadastro
             return false;
         }
 
-        $enderecamentoDetalhe = new clsPublicUf($this->sigla_uf);
-        $enderecamentoDetalhe->cadastrou = $this->sigla_uf;
-        $enderecamentoDetalheAntes = $enderecamentoDetalhe->detalhe();
+        $exists = $this->newQuery()
+            ->where('abbreviation', Str::upper($this->sigla_uf))
+            ->where('country_id', request('idpais'))
+            ->where('id', '<>', $this->id)
+            ->exists();
 
-        $obj = new clsPublicUf(strtoupper($this->sigla_uf));
-        $duplica = $obj->verificaDuplicidade();
-
-        if ($duplica) {
+        if ($exists) {
             $this->mensagem = 'A sigla já existe para outro estado.<br>';
 
             return false;
-        } else {
-            $obj = new clsPublicUf($this->sigla_uf, $this->nome, $this->geom, $this->idpais, $this->cod_ibge);
-            $editou = $obj->edita();
-
-            if ($editou) {
-                $enderecamentoDetalheDepois = $enderecamentoDetalhe->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('Endereçamento de Estado', $this->pessoa_logada, $this->sigla_uf);
-                $auditoria->alteracao($enderecamentoDetalheAntes, $enderecamentoDetalheDepois);
-
-                $this->mensagem = 'Edição efetuada com sucesso.<br>';
-                $this->simpleRedirect('public_uf_lst.php');
-            }
-
-            $this->mensagem = 'Edição não realizada.<br>';
-
-            return false;
         }
+
+        return $this->update($this->id, [
+            'name' => request('nome'),
+            'country_id' => request('idpais'),
+            'ibge_code' => request('cod_ibge'),
+            'abbreviation' => request('sigla_uf'),
+        ]);
     }
 
     public function Excluir()
@@ -161,21 +152,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        $obj = new clsPublicUf($this->sigla_uf);
-        $enderecamento = $obj->detalhe();
-        $excluiu = $obj->excluir();
-
-        if ($excluiu) {
-            $auditoria = new clsPublicUf('Endereçamento de Estado', $this->pessoa_logada, $this->sigla_uf);
-            $auditoria->exclusao($enderecamento);
-
-            $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
-            $this->simpleRedirect('public_uf_lst.php');
-        }
-
-        $this->mensagem = 'Exclusão não realizada.<br>';
-
-        return false;
+        return $this->delete($this->id);
     }
 }
 

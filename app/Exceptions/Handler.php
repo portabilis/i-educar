@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Http\Controllers\LegacyController;
 use Exception;
 use iEducar\Modules\ErrorTracking\Tracker;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -41,7 +42,13 @@ class Handler extends ExceptionHandler
     public function report(Exception $exception)
     {
         if (config('app.trackerror') && $this->shouldReport($exception)) {
-            app(Tracker::class)->notify($exception, $this->getContext());
+            $data = [
+                'context' => $this->getContext(),
+                'controller' => $this->getController(),
+                'action' => $this->getAction(),
+            ];
+
+            app(Tracker::class)->notify($exception, $data);
         }
 
         parent::report($exception);
@@ -50,7 +57,7 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param Request   $request
+     * @param Request $request
      * @param Exception $exception
      *
      * @return Response
@@ -72,5 +79,47 @@ class Handler extends ExceptionHandler
         }
 
         return app('request')->all();
+    }
+
+    /**
+     * Returns current controller
+     *
+     * @return array|mixed
+     */
+    private function getController()
+    {
+        if (app()->runningInConsole()) {
+            return null;
+        }
+
+        $controller = explode('@', $this->getActionName())[0];
+
+        if ($controller == class_basename(LegacyController::class)) {
+            $controller = app('request')->path();
+        }
+
+        return $controller;
+    }
+
+    /**
+     * Returns current action
+     *
+     * @return array|mixed
+     */
+    private function getAction()
+    {
+        if (app()->runningInConsole()) {
+            return null;
+        }
+
+        return explode('@', $this->getActionName())[1];
+    }
+
+    private function getActionName()
+    {
+        $controller = app('request')->route()->getAction();
+        $controller = class_basename($controller['controller']);
+
+        return $controller;
     }
 }

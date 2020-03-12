@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\UrlPresigner;
+use iEducar\Modules\Addressing\LegacyAddressingFields;
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
 use iEducar\Modules\Educacenso\Model\RecursosRealizacaoProvas;
 use iEducar\Modules\Educacenso\Model\VeiculoTransporteEscolar;
@@ -20,6 +21,8 @@ require_once 'Portabilis/String/Utils.php';
 
 class AlunoController extends Portabilis_Controller_Page_EditController
 {
+    use LegacyAddressingFields;
+
     protected $_dataMapper = 'Usuario_Model_FuncionarioDataMapper';
 
     protected $_titulo = 'Cadastro de aluno';
@@ -89,6 +92,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             'label' => 'Alfabetizado',
             'help' => '',
         ),
+
+        'emancipado' => [
+            'label' => 'Emancipado'
+        ],
 
         'transporte' => array(
             'label' => 'Transporte escolar público',
@@ -913,6 +920,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             $this->inputsHelper()->hidden('alfabetizado');
         }
 
+        $options = ['label' => $this->_getLabel('emancipado')];
+        $this->inputsHelper()->checkbox('emancipado', $options);
+
         $this->campoArquivo('documento', Portabilis_String_Utils::toLatin1($this->_getLabel('documento')), $this->documento, 40, Portabilis_String_Utils::toLatin1("<br/> <span id='span-documento' style='font-style: italic; font-size= 10px;''> São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 250KB</span>", array('escape' => false)));
 
         $this->inputsHelper()->hidden('url_documento');
@@ -1301,51 +1311,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $enderecamentoObrigatorio = false;
         $desativarCamposDefinidosViaCep = true;
 
-        $this->campoCep(
-            'cep_',
-            'CEP',
-            '',
-            $enderecamentoObrigatorio,
-            '-',
-            "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500, 550, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'/intranet/educar_pesquisa_cep_log_bairro2.php?campo1=bairro_bairro&campo2=bairro_id&campo3=cep&campo4=logradouro_logradouro&campo5=logradouro_id&campo6=distrito_id&campo7=distrito_distrito&campo8=ref_idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=municipio_municipio&campo12=idtlog&campo13=municipio_id&campo14=zona_localizacao\'></iframe>');\">",
-            false
-        );
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Município'), 'required' => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);
-
-        $helperOptions = array(
-            'objectName' => 'municipio',
-            'hiddenInputOptions' => array('options' => array('value' => $this->municipio_id))
-        );
-
-        $this->inputsHelper()->simpleSearchMunicipio('municipio', $options, $helperOptions);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Distrito'), 'required' => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);
-
-        $helperOptions = array(
-            'objectName' => 'distrito',
-            'hiddenInputOptions' => array('options' => array('value' => $this->distrito_id))
-        );
-
-        $this->inputsHelper()->simpleSearchDistrito('distrito', $options, $helperOptions);
-
-        $helperOptions = array('hiddenInputOptions' => array('options' => array('value' => $this->bairro_id)));
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1('Bairro / Zona de Localização - <b>Buscar</b>'), 'required' => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);
-
-        $this->inputsHelper()->simpleSearchBairro('bairro', $options, $helperOptions);
-
-        $options = array(
-            'label' => 'Bairro / Zona de Localização - <b>Cadastrar</b>',
-            'placeholder' => 'Bairro',
-            'value' => $this->bairro,
-            'max_length' => 40,
-            'disabled' => $desativarCamposDefinidosViaCep,
-            'inline' => true,
-            'required' => $enderecamentoObrigatorio
-        );
-
-        $this->inputsHelper()->text('bairro', $options);
+        $this->viewAddress();
 
         // zona localização
         $zonas = App_Model_ZonaLocalizacao::getInstance();
@@ -1372,112 +1338,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->select('pais_residencia', $options);
 
-        $helperOptions = array('hiddenInputOptions' => array('options' => array('value' => $this->logradouro_id)));
-
-        $options = array('label' => 'Tipo / Logradouro - <b>Buscar</b>', 'required' => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);
-
-        $this->inputsHelper()->simpleSearchLogradouro('logradouro', $options, $helperOptions);
-
-        // tipo logradouro
-
-        $options = array(
-            'label' => 'Tipo / Logradouro - <b>Cadastrar</b>',
-            'value' => $this->idtlog,
-            'disabled' => $desativarCamposDefinidosViaCep,
-            'inline' => true,
-            'required' => $enderecamentoObrigatorio
-        );
-
-        $helperOptions = array(
-            'attrName' => 'idtlog'
-        );
-
-        $this->inputsHelper()->tipoLogradouro($options, $helperOptions);
-
-        // logradouro
-        $options = array(
-            'label' => '',
-            'placeholder' => 'Logradouro',
-            'value' => '',
-            'max_length' => 150,
-            'disabled' => $desativarCamposDefinidosViaCep,
-            'required' => $enderecamentoObrigatorio
-        );
-
-        $this->inputsHelper()->text('logradouro', $options);
-
-        // complemento
-        $options = array(
-            'required' => false,
-            'value' => '',
-            'max_length' => 20
-        );
-
-        $this->inputsHelper()->text('complemento', $options);
-
-        // numero
-        $options = array(
-            'required' => false,
-            'label' => 'Número / Letra',
-            'placeholder' => Portabilis_String_Utils::toLatin1('Número'),
-            'value' => '',
-            'max_length' => 6,
-            'inline' => true
-        );
-
-        $this->inputsHelper()->integer('numero', $options);
-
-        // letra
-        $options = array(
-            'required' => false,
-            'label' => '',
-            'placeholder' => 'Letra',
-            'value' => $this->letra,
-            'max_length' => 1,
-            'size' => 15
-        );
-
-        $this->inputsHelper()->text('letra', $options);
-
-        // apartamento
-        $options = array(
-            'required' => false,
-            'label' => 'Nº apartamento / Bloco / Andar',
-            'placeholder' => 'Apartamento',
-            'value' => $this->apartamento,
-            'max_length' => 6,
-            'inline' => true
-        );
-
-        $this->inputsHelper()->integer('apartamento', $options);
-
-        // bloco
-        $options = array(
-            'required' => false,
-            'label' => '',
-            'placeholder' => 'Bloco',
-            'value' => $this->bloco,
-            'max_length' => 20,
-            'size' => 15,
-            'inline' => true
-        );
-
-        $this->inputsHelper()->text('bloco', $options);
-
-        // andar
-        $options = array(
-            'required' => false,
-            'label' => '',
-            'placeholder' => 'Andar',
-            'value' => $this->andar,
-            'max_length' => 2
-        );
-
-        $this->inputsHelper()->integer('andar', $options);
-
-        $script = '/modules/Cadastro/Assets/Javascripts/Endereco.js';
-
-        Portabilis_View_Helper_Application::loadJavascript($this, $script);
+        Portabilis_View_Helper_Application::loadJavascript($this, [
+            '/modules/Cadastro/Assets/Javascripts/Endereco.js',
+        '/modules/Cadastro/Assets/Javascripts/Addresses.js',
+        ]);
 
         $this->loadResourceAssets($this->getDispatcher());
 

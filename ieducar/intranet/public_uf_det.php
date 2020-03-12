@@ -1,9 +1,11 @@
 <?php
 
+use App\Models\State;
+use iEducar\Legacy\InteractWithDatabase;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
-require_once 'include/public/geral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -16,49 +18,55 @@ class clsIndexBase extends clsBase
 
 class indice extends clsDetalhe
 {
+    use InteractWithDatabase;
+
+    public $id;
     public $sigla_uf;
     public $nome;
-    public $geom;
+    public $cod_ibge;
     public $idpais;
+
+    public function model()
+    {
+        return State::class;
+    }
+
+    public function index()
+    {
+        return 'public_uf_lst.php';
+    }
 
     public function Gerar()
     {
         $this->titulo = 'Uf - Detalhe';
 
-        $this->sigla_uf = $_GET['sigla_uf'];
+        $this->id = $_GET['id'];
 
-        $tmp_obj = new clsPublicUf($this->sigla_uf);
-        $registro = $tmp_obj->detalhe();
+        $model = $this->find($this->id);
 
-        if (!$registro) {
-            $this->simpleRedirect('public_uf_lst.php');
-        }
+        $this->nome = $model->name;
+        $this->sigla_uf = $model->abbreviation;
+        $this->idpais = $model->country_id;
+        $this->cod_ibge = $model->ibge_code;
 
-        $obj_idpais = new clsPais($registro['idpais']);
-        $det_idpais = $obj_idpais->detalhe();
-        $registro['idpais'] = $det_idpais['nome'];
-
-        if ($registro['sigla_uf']) {
-            $this->addDetalhe(['Sigla Uf', "{$registro['sigla_uf']}"]);
+        if ($this->sigla_uf) {
+            $this->addDetalhe(['Sigla Uf', $this->sigla_uf]);
         }
-        if ($registro['nome']) {
-            $this->addDetalhe(['Nome', "{$registro['nome']}"]);
+        if ($this->nome) {
+            $this->addDetalhe(['Nome', $this->nome]);
         }
-        if ($registro['geom']) {
-            $this->addDetalhe(['Geom', "{$registro['geom']}"]);
+        if ($this->idpais) {
+            $this->addDetalhe(['Pais', $model->country->name]);
         }
-        if ($registro['idpais']) {
-            $this->addDetalhe(['Pais', "{$registro['idpais']}"]);
-        }
-        if ($registro['cod_ibge']) {
-            $this->addDetalhe(['Código INEP', "{$registro['cod_ibge']}"]);
+        if ($this->cod_ibge) {
+            $this->addDetalhe(['Código INEP', $this->cod_ibge]);
         }
 
         $obj_permissao = new clsPermissoes();
 
         if ($obj_permissao->permissao_cadastra(754, $this->pessoa_logada, 7, null, true)) {
             $this->url_novo = 'public_uf_cad.php';
-            $this->url_editar = "public_uf_cad.php?sigla_uf={$registro['sigla_uf']}";
+            $this->url_editar = "public_uf_cad.php?id={$this->id}";
         }
 
         $this->url_cancelar = 'public_uf_lst.php';

@@ -97,11 +97,7 @@ class indice extends clsDetalhe
                 $end = ' nº ' . $detalhe['numero'];
             }
 
-            if ($detalhe['apartamento']) {
-                $end .= ' apto ' . $detalhe['apartamento'];
-            }
-
-            $this->addDetalhe(['Endereço',strtolower($detalhe['idtlog']) . ': ' . $detalhe['logradouro'] . ' ' . $end]);
+            $this->addDetalhe(['Endereço', $detalhe['logradouro'] . ' ' . $end]);
         }
 
         if ($detalhe['complemento']) {
