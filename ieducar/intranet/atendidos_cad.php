@@ -156,7 +156,7 @@ class indice extends clsCadastro
             $this->data_admissao = $this->data_admissao ? dataFromPgToBr($this->data_admissao) : '';
 
             $this->estado_civil_id = $this->estado_civil->ideciv;
-            $this->pais_origem_id = $this->pais_origem->idpais;
+            $this->pais_origem_id = $this->pais_origem;
             $this->naturalidade_id = $this->naturalidade;
 
             $raca = new clsCadastroFisicaRaca($this->cod_pessoa_fj);
