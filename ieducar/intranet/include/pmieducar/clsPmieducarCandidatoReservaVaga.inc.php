@@ -345,11 +345,13 @@ class clsPmieducarCandidatoReservaVaga extends Model
         }
 
         if (is_string($nome)) {
+            $nome = pg_escape_string($nome);
             $filtros .= " {$whereAnd} (LOWER(pes.nome)) LIKE (LOWER('%{$nome}%')) ";
             $whereAnd = ' AND ';
         }
 
         if (is_string($nome_responsavel)) {
+            $nome_responsavel = pg_escape_string($nome_responsavel);
             $filtros .= " {$whereAnd} (LOWER(resp_pes.nome)) LIKE (LOWER('%{$nome_responsavel}%')) ";
             $whereAnd = ' AND ';
         }
@@ -408,7 +410,7 @@ class clsPmieducarCandidatoReservaVaga extends Model
         $resultado = [];
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-        $this->_total = $db->CampoUnico("SELECT COUNT(0) 
+        $this->_total = $db->CampoUnico("SELECT COUNT(0)
                                                    FROM {$this->_tabela}
                                                   INNER JOIN pmieducar.aluno a ON a.cod_aluno = crv.ref_cod_aluno
                                                   INNER JOIN cadastro.pessoa pes ON pes.idpes = a.ref_idpes
