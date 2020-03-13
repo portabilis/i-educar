@@ -56,7 +56,8 @@ class CreatePmieducarAlunoTable extends Migration
                     url_documento json,
 	                recebe_escolarizacao_em_outro_espaco int2 NOT NULL DEFAULT 1,
                     recursos_prova_inep integer[],
-	                updated_at timestamp NULL DEFAULT now()
+	                updated_at timestamp NULL DEFAULT now(),
+	                emancipado bool NOT NULL DEFAULT false
                 );
                 
                 ALTER TABLE ONLY pmieducar.aluno
