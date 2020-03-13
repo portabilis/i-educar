@@ -60,16 +60,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.133.29",
+            "version": "3.133.36",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "ec8f628041e0d1de4fad76ac041c6025bd38d2da"
+                "reference": "59e824e235220730a8e1d276d036a9f085486512"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ec8f628041e0d1de4fad76ac041c6025bd38d2da",
-                "reference": "ec8f628041e0d1de4fad76ac041c6025bd38d2da",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/59e824e235220730a8e1d276d036a9f085486512",
+                "reference": "59e824e235220730a8e1d276d036a9f085486512",
                 "shasum": ""
             },
             "require": {
@@ -140,30 +140,30 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-03-04T19:10:59+00:00"
+            "time": "2020-03-13T18:09:32+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
-            "version": "3.4.0",
+            "version": "3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php-laravel.git",
-                "reference": "90f72efd7ec85c1141b397079112f58e0ca0143b"
+                "reference": "7a3705461c06dc1ce8496fbf9b22ec96f769b3a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php-laravel/zipball/90f72efd7ec85c1141b397079112f58e0ca0143b",
-                "reference": "90f72efd7ec85c1141b397079112f58e0ca0143b",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php-laravel/zipball/7a3705461c06dc1ce8496fbf9b22ec96f769b3a7",
+                "reference": "7a3705461c06dc1ce8496fbf9b22ec96f769b3a7",
                 "shasum": ""
             },
             "require": {
                 "aws/aws-sdk-php": "~3.0",
-                "illuminate/support": "~5.1|~6.0",
+                "illuminate/support": "^5.1 || ^6.0 || ^7.0",
                 "php": ">=5.5.9"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0|~5.0",
-                "vlucas/phpdotenv": "~2.0|~3.0"
+                "phpunit/phpunit": "^4.0 || ^5.0",
+                "vlucas/phpdotenv": "^1.0 || ^2.0 || ^3.0 || ^4.0"
             },
             "suggest": {
                 "laravel/framework": "To test the Laravel bindings",
@@ -195,7 +195,7 @@
                     "homepage": "http://aws.amazon.com"
                 }
             ],
-            "description": "A simple Laravel 5 service provider for including the AWS SDK for PHP.",
+            "description": "A simple Laravel 5/6/7 service provider for including the AWS SDK for PHP.",
             "homepage": "http://aws.amazon.com/sdkforphp2",
             "keywords": [
                 "amazon",
@@ -204,10 +204,12 @@
                 "ec2",
                 "laravel",
                 "laravel 5",
+                "laravel 6",
+                "laravel 7",
                 "s3",
                 "sdk"
             ],
-            "time": "2019-09-09T21:00:25+00:00"
+            "time": "2020-03-11T19:35:23+00:00"
         },
         {
             "name": "barryvdh/laravel-cors",
@@ -962,28 +964,27 @@
         },
         {
             "name": "edersoares/laravel-plug-and-play",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/edersoares/laravel-plug-and-play.git",
-                "reference": "80e07938a0cc06e4dbf79a7cd0d533109cd31c70"
+                "reference": "6248e0465da0fd3129811453582974f084aa8b09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/edersoares/laravel-plug-and-play/zipball/80e07938a0cc06e4dbf79a7cd0d533109cd31c70",
-                "reference": "80e07938a0cc06e4dbf79a7cd0d533109cd31c70",
+                "url": "https://api.github.com/repos/edersoares/laravel-plug-and-play/zipball/6248e0465da0fd3129811453582974f084aa8b09",
+                "reference": "6248e0465da0fd3129811453582974f084aa8b09",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^1.1",
                 "ext-json": "*",
-                "laravel/framework": "~5.5|~6",
+                "laravel/framework": "~5.5|~6|~7",
                 "php": ">=7.0.0",
                 "wikimedia/composer-merge-plugin": "^1.4"
             },
             "type": "composer-plugin",
             "extra": {
-                "branch-alias": [],
                 "class": "Wikimedia\\Composer\\MergePlugin",
                 "laravel": {
                     "providers": [
@@ -1009,7 +1010,7 @@
                 }
             ],
             "description": "Plug and play packages in Laravel",
-            "time": "2019-10-22T02:54:46+00:00"
+            "time": "2020-03-05T12:37:35+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -1619,60 +1620,6 @@
             "time": "2018-09-29T18:48:56+00:00"
         },
         {
-            "name": "laravel/envoy",
-            "version": "v1.6.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/envoy.git",
-                "reference": "45fc4c3ebf070437b7367e5294314d618c3201fd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laravel/envoy/zipball/45fc4c3ebf070437b7367e5294314d618c3201fd",
-                "reference": "45fc4c3ebf070437b7367e5294314d618c3201fd",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/support": "~4.1 || ~5.0 || ^6.0",
-                "nategood/httpful": "~0.2",
-                "symfony/console": "~3.0 || ~4.0 || ^5.0",
-                "symfony/process": "~3.0 || ~4.0 || ^5.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^7.0"
-            },
-            "bin": [
-                "bin/envoy"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Laravel\\Envoy\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylor@laravel.com"
-                }
-            ],
-            "description": "Elegant SSH tasks for PHP.",
-            "keywords": [
-                "laravel",
-                "ssh"
-            ],
-            "time": "2020-02-18T19:21:34+00:00"
-        },
-        {
             "name": "laravel/framework",
             "version": "v5.8.37",
             "source": {
@@ -1954,16 +1901,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.64",
+            "version": "1.0.65",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "d13c43dbd4b791f815215959105a008515d1a2e0"
+                "reference": "8f17b3ba67097aafb8318cd5c553b1acf7c891c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/d13c43dbd4b791f815215959105a008515d1a2e0",
-                "reference": "d13c43dbd4b791f815215959105a008515d1a2e0",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/8f17b3ba67097aafb8318cd5c553b1acf7c891c8",
+                "reference": "8f17b3ba67097aafb8318cd5c553b1acf7c891c8",
                 "shasum": ""
             },
             "require": {
@@ -2034,7 +1981,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2020-02-05T18:14:17+00:00"
+            "time": "2020-03-08T18:53:20+00:00"
         },
         {
             "name": "league/flysystem-aws-s3-v3",
@@ -2199,30 +2146,30 @@
         },
         {
             "name": "markbaker/complex",
-            "version": "1.4.7",
+            "version": "1.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MarkBaker/PHPComplex.git",
-                "reference": "1ea674a8308baf547cbcbd30c5fcd6d301b7c000"
+                "reference": "8eaa40cceec7bf0518187530b2e63871be661b72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MarkBaker/PHPComplex/zipball/1ea674a8308baf547cbcbd30c5fcd6d301b7c000",
-                "reference": "1ea674a8308baf547cbcbd30c5fcd6d301b7c000",
+                "url": "https://api.github.com/repos/MarkBaker/PHPComplex/zipball/8eaa40cceec7bf0518187530b2e63871be661b72",
+                "reference": "8eaa40cceec7bf0518187530b2e63871be661b72",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.6.0|^7.0.0"
             },
             "require-dev": {
-                "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3",
-                "phpcompatibility/php-compatibility": "^8.0",
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
+                "phpcompatibility/php-compatibility": "^9.0",
                 "phpdocumentor/phpdocumentor": "2.*",
                 "phploc/phploc": "2.*",
                 "phpmd/phpmd": "2.*",
                 "phpunit/phpunit": "^4.8.35|^5.4.0",
                 "sebastian/phpcpd": "2.*",
-                "squizlabs/php_codesniffer": "^3.3.0"
+                "squizlabs/php_codesniffer": "^3.4.0"
             },
             "type": "library",
             "autoload": {
@@ -2290,7 +2237,7 @@
                 "complex",
                 "mathematics"
             ],
-            "time": "2018-10-13T23:28:42+00:00"
+            "time": "2020-03-11T20:15:49+00:00"
         },
         {
             "name": "markbaker/matrix",
@@ -2495,56 +2442,6 @@
                 "jsonpath"
             ],
             "time": "2019-12-30T18:03:34+00:00"
-        },
-        {
-            "name": "nategood/httpful",
-            "version": "0.3.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nategood/httpful.git",
-                "reference": "0cded3ea97ba905600de9ceb9ef13f3ab681587c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/nategood/httpful/zipball/0cded3ea97ba905600de9ceb9ef13f3ab681587c",
-                "reference": "0cded3ea97ba905600de9ceb9ef13f3ab681587c",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": ">=7.2"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Httpful": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nate Good",
-                    "email": "me@nategood.com",
-                    "homepage": "http://nategood.com"
-                }
-            ],
-            "description": "A Readable, Chainable, REST friendly, PHP HTTP Client",
-            "homepage": "http://github.com/nategood/httpful",
-            "keywords": [
-                "api",
-                "curl",
-                "http",
-                "requests",
-                "rest",
-                "restful"
-            ],
-            "time": "2020-01-25T01:13:13+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -5103,16 +5000,16 @@
         },
         {
             "name": "vlucas/phpdotenv",
-            "version": "v3.6.0",
+            "version": "v3.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
-                "reference": "1bdf24f065975594f6a117f0f1f6cabf1333b156"
+                "reference": "8f7961f7b9deb3b432452c18093cf16f88205902"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/1bdf24f065975594f6a117f0f1f6cabf1333b156",
-                "reference": "1bdf24f065975594f6a117f0f1f6cabf1333b156",
+                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/8f7961f7b9deb3b432452c18093cf16f88205902",
+                "reference": "8f7961f7b9deb3b432452c18093cf16f88205902",
                 "shasum": ""
             },
             "require": {
@@ -5121,7 +5018,11 @@
                 "symfony/polyfill-ctype": "^1.9"
             },
             "require-dev": {
+                "ext-filter": "*",
                 "phpunit/phpunit": "^4.8.35 || ^5.0 || ^6.0 || ^7.0"
+            },
+            "suggest": {
+                "ext-filter": "Required to use the boolean validator."
             },
             "type": "library",
             "extra": {
@@ -5156,7 +5057,7 @@
                 "env",
                 "environment"
             ],
-            "time": "2019-09-10T21:37:39+00:00"
+            "time": "2020-03-12T13:44:00+00:00"
         },
         {
             "name": "wikimedia/composer-merge-plugin",
@@ -6691,16 +6592,16 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "v1.10.2",
+            "version": "v1.10.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "b4400efc9d206e83138e2bb97ed7f5b14b831cd9"
+                "reference": "451c3cd1418cf640de218914901e51b064abb093"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/b4400efc9d206e83138e2bb97ed7f5b14b831cd9",
-                "reference": "b4400efc9d206e83138e2bb97ed7f5b14b831cd9",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/451c3cd1418cf640de218914901e51b064abb093",
+                "reference": "451c3cd1418cf640de218914901e51b064abb093",
                 "shasum": ""
             },
             "require": {
@@ -6750,7 +6651,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2020-01-20T15:57:02+00:00"
+            "time": "2020-03-05T15:02:03+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
