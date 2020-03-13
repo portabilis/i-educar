@@ -170,7 +170,6 @@ class indice extends clsCadastro
 
         /** @var User $user */
         $user = Auth::user();
-
         // verifica se pessoa logada é super-usuario
         if ($user->isAdmin()) {
             $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1);
@@ -209,9 +208,14 @@ class indice extends clsCadastro
 
         $scripts = ['/modules/Cadastro/Assets/Javascripts/Usuario.js'];
 
-        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
-
         $this->acao_enviar = 'valida()';
+        if(!$this->canChange($user, $this->ref_pessoa)) {
+            $this->acao_enviar = null;
+            $this->fexcluir = null;
+            $scripts[] = '/modules/Cadastro/Assets/Javascripts/disableAllFields.js';
+        }
+
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
     public function Novo()
@@ -274,6 +278,12 @@ class indice extends clsCadastro
 
     public function Editar()
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if(!$this->canChange($user, $this->ref_pessoa)) {
+            return false;
+        }
+
         if ($this->email && !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             $this->mensagem = 'Formato do e-mail inválido.';
 
@@ -369,6 +379,12 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if(!$this->canChange($user, $this->ref_pessoa)) {
+            return false;
+        }
+        
         $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa);
         $detalhe = $obj_funcionario->detalhe();
 
@@ -433,6 +449,36 @@ class indice extends clsCadastro
             $usuarioEscola->ref_cod_escola = $e;
             $usuarioEscola->cadastra();
         }
+    }
+
+    /**
+     * Verifica se o usuário logado pode alterar o usuário em questão
+     *
+     * Caso algum usuário com nível diferente de admin tentar alterar dados do usuário admin,
+     * esse método retornará false
+     *
+     * @param User $currentUser
+     * @param integer $changedUserId
+     * @return bool
+     */
+    private function canChange(User $currentUser, $changedUserId)
+    {
+        if (!$changedUserId) {
+            return true;
+        }
+
+        if ($currentUser->isAdmin()) {
+            return true;
+        }
+
+        /** @var User $changedUser */
+        $changedUser = User::find($changedUserId);
+
+        if (!$changedUser->isAdmin()) {
+            return true;
+        }
+
+        return false;
     }
 }
 
