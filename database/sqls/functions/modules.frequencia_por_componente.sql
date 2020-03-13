@@ -49,7 +49,7 @@ BEGIN
         RETURN 0;
     END IF;
 
-                        RETURN  trunc((100 - ((v_total_faltas * (v_hora_falta*100))/qtde_carga_horaria))::numeric, 1);
+    RETURN  trunc((100 - ((v_total_faltas * (v_hora_falta*100))/qtde_carga_horaria))::numeric, 1);
 
 END;
 $$;

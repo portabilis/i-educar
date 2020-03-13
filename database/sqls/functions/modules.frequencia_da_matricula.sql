@@ -48,7 +48,7 @@ BEGIN
                 WHERE falta_aluno_id = v_falta_aluno_id
             );
 
-            RETURN TRUNC((((v_qtd_dias_letivos_serie - v_total_faltas) * 100 ) / v_qtd_dias_letivos_serie ),1);
+            RETURN TRUNC((((v_qtd_dias_letivos_serie - v_total_faltas) * 100 ) / v_qtd_dias_letivos_serie )::numeric,1);
     ELSE
 
         v_qtd_horas_serie := (
@@ -70,8 +70,7 @@ BEGIN
             INNER JOIN pmieducar.matricula m ON (c.cod_curso = m.ref_cod_curso)
             WHERE m.cod_matricula = p_matricula_id
         );
-
-        RETURN  TRUNC((100 - ((v_total_faltas * (v_hora_falta*100))/v_qtd_horas_serie)), 1);
+        RETURN  TRUNC((100 - ((v_total_faltas * (v_hora_falta*100))/v_qtd_horas_serie))::numeric, 1);
     END IF;
 END;
 $function$;
