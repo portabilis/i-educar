@@ -2,6 +2,13 @@ CREATE OR REPLACE VIEW relatorio.view_historico_series_anos AS
     SELECT
         historico_disciplinas.ref_ref_cod_aluno AS cod_aluno,
         historico_disciplinas.disciplina,
+        (select ordenamento
+          from pmieducar.historico_disciplinas s
+          where ref_ref_cod_aluno = historico_disciplinas.ref_ref_cod_aluno
+          and btrim(relatorio.get_texto_sem_caracter_especial(nm_disciplina::character varying)::text) = historico_disciplinas.disciplina
+          and ordenamento is not null
+          order by ref_sequencial desc
+          limit 1) as ordenamento,
         array_agg(historico_disciplinas.tipo_base) AS tipos_base,
         (historico_por_disciplina.anos OPERATOR(relatorio.->) (((historico_disciplinas.disciplina || '-'::text) || '1'::text) || '-ano'::text))::integer AS ano_1serie,
         (historico_por_disciplina.anos OPERATOR(relatorio.->) (((historico_disciplinas.disciplina || '-'::text) || '2'::text) || '-ano'::text))::integer AS ano_2serie,
@@ -337,4 +344,4 @@ CREATE OR REPLACE VIEW relatorio.view_historico_series_anos AS
         historico_por_disciplina.nota,
         historico_por_disciplina.carga_horaria_disciplina,
         historico_por_disciplina.dependencia
-    ORDER BY historico_disciplinas.disciplina;
+    ORDER BY ordenamento, historico_disciplinas.disciplina;
