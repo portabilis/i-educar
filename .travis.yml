@@ -6,6 +6,42 @@ matrix:
 
       php:
         - '7.3'
+
+      sudo: required
+
+      dist: xenial
+
+      addons:
+        postgresql: '9.5'
+        chrome: stable
+
+      cache:
+        directories:
+          - $HOME/.composer/cache
+
+      before_script:
+        - composer new-install
+        - php artisan serve > /dev/null 2>&1 &
+
+      script:
+        - vendor/bin/phpunit
+        - vendor/bin/phpunit --testsuite Diario
+
+      env:
+        - APP_URL=http://localhost:8000
+        - APP_ENV=testing
+        - DB_CONNECTION=pgsql
+        - DB_HOST=localhost
+        - DB_PORT=5432
+        - DB_DATABASE=travis
+        - DB_USERNAME=postgres
+        - DB_PASSWORD=
+        - API_ACCESS_KEY=ieducar-access-key
+        - API_SECRET_KEY=ieducar-secret-key
+
+    - language: php
+
+      php:
         - '7.4'
 
       sudo: required
