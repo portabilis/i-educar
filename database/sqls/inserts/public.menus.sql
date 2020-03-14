@@ -161,3 +161,6 @@ INSERT INTO public.menus VALUES (167, 3, 'Permitir lançamento de notas/faltas f
 INSERT INTO public.menus VALUES (168, 3, 'Permitir editar endereço no cadastro de pessoa física', NULL, NULL, NULL, 9999, 2, 999878, 999878, 55, true, NULL, NULL);
 INSERT INTO public.menus VALUES (169, 3, 'Histórico de enturmações da matrícula', NULL, NULL, NULL, 99, 1, 1001, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (170, 3, 'Desfazer unificação de alunos', NULL, NULL, NULL, 99, 1, 2001, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (230, 31, 'Histórico de importações', NULL, '/educacenso/importacao/historico', NULL, 99, 1, 2004, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (233, 20, 'Exportações', 'Exportações', NULL, NULL, 99, 1, 1020, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (234, 233, 'Exportação para o SEB', 'Exportação para o SEB', '/exportacao-para-o-seb', NULL, 99, 1, 1021, NULL, NULL, true, NULL, NULL);
