@@ -1,7 +1,5 @@
 DROP TRIGGER trg_aft_documento ON cadastro.documento;
 DROP TRIGGER trg_aft_documento_provisorio ON cadastro.documento;
-DROP TRIGGER trg_aft_ins_endereco_externo ON cadastro.endereco_externo;
-DROP TRIGGER trg_aft_ins_endereco_pessoa ON cadastro.endereco_pessoa;
 DROP TRIGGER trigger_audita_falta_componente_curricular ON modules.falta_componente_curricular;
 DROP TRIGGER trigger_audita_falta_geral ON modules.falta_geral;
 DROP TRIGGER trigger_audita_media_geral ON modules.media_geral;
