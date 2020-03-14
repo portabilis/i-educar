@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFunctionGetTelefonePessoa extends Migration
+class AddFunctionRelatorioGetTelefonePessoa extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class CreateFunctionGetTelefonePessoa extends Migration
      */
     public function up()
     {
-        DB::unprepared(file_get_contents(__DIR__ . '/../sqls/functions/2019_01_23_relatorio.get_telefone_pessoa.sql'));
+        DB::unprepared(file_get_contents(__DIR__ . '/../sqls/functions/relatorio.get_telefone_pessoa.sql'));
     }
 
     /**
