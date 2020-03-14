@@ -14,18 +14,6 @@ class AddForeignKeysInCadastroDocumentoTable extends Migration
     public function up()
     {
         Schema::table('cadastro.documento', function (Blueprint $table) {
-            $table->foreign('sigla_uf_exp_rg')
-               ->references('sigla_uf')
-               ->on('uf');
-
-            $table->foreign('sigla_uf_cert_civil')
-               ->references('sigla_uf')
-               ->on('uf');
-
-            $table->foreign('sigla_uf_cart_trabalho')
-               ->references('sigla_uf')
-               ->on('uf');
-
             $table->foreign('idpes_rev')
                ->references('idpes')
                ->on('cadastro.pessoa')
@@ -61,9 +49,6 @@ class AddForeignKeysInCadastroDocumentoTable extends Migration
     public function down()
     {
         Schema::table('cadastro.documento', function (Blueprint $table) {
-            $table->dropForeign(['sigla_uf_exp_rg']);
-            $table->dropForeign(['sigla_uf_cert_civil']);
-            $table->dropForeign(['sigla_uf_cart_trabalho']);
             $table->dropForeign(['idpes_rev']);
             $table->dropForeign(['idpes_cad']);
             $table->dropForeign(['idorg_exp_rg']);

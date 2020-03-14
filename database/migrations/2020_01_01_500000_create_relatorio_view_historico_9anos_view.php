@@ -17,7 +17,7 @@ class CreateRelatorioViewHistorico9anosView extends Migration
         );
 
         DB::unprepared(
-            file_get_contents(__DIR__ . '/../sqls/views/relatorio.view_historico_9anos.sql')
+            file_get_contents(__DIR__ . '/../sqls/views/relatorio.view_historico_9_anos.sql')
         );
     }
 

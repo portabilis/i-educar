@@ -49,17 +49,9 @@ class AddForeignKeysInCadastroFisicaTable extends Migration
                ->on('cadastro.pessoa')
                ->onDelete('restrict');
 
-            $table->foreign('idpais_estrangeiro')
-               ->references('idpais')
-               ->on('pais');
-
             $table->foreign('idocup')
                ->references('idocup')
                ->on('cadastro.ocupacao');
-
-            $table->foreign('idmun_nascimento')
-               ->references('idmun')
-               ->on('municipio');
 
             $table->foreign('ideciv')
                ->references('ideciv')
@@ -90,9 +82,7 @@ class AddForeignKeysInCadastroFisicaTable extends Migration
             $table->dropForeign(['idpes_mae']);
             $table->dropForeign(['idpes_con']);
             $table->dropForeign(['idpes']);
-            $table->dropForeign(['idpais_estrangeiro']);
             $table->dropForeign(['idocup']);
-            $table->dropForeign(['idmun_nascimento']);
             $table->dropForeign(['ideciv']);
             $table->dropForeign(['idesco']);
             $table->dropForeign(['ref_cod_religiao']);
