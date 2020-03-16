@@ -120,7 +120,6 @@ class DatabaseRestoreCommand extends Command
         return [
             'modules.auditoria',
             'modules.auditoria_geral',
-            'pmieducar.auditoria_nota_dispensa',
         ];
     }
 
