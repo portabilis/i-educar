@@ -384,7 +384,7 @@ class indice extends clsCadastro
         if(!$this->canChange($user, $this->ref_pessoa)) {
             return false;
         }
-        
+
         $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa);
         $detalhe = $obj_funcionario->detalhe();
 
@@ -473,6 +473,10 @@ class indice extends clsCadastro
 
         /** @var User $changedUser */
         $changedUser = User::find($changedUserId);
+
+        if (empty($changedUser)) {
+            return true;
+        }
 
         if (!$changedUser->isAdmin()) {
             return true;
