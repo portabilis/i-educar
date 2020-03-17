@@ -197,6 +197,8 @@ class indice extends clsCadastro
     public $qtd_bombeiro;
     public $qtd_psicologo;
     public $qtd_fonoaudiologo;
+    public $qtd_vice_diretor;
+    public $qtd_orientador_comunitario;
 
     private $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
@@ -212,6 +214,8 @@ class indice extends clsCadastro
         'qtd_bombeiro' => 'Bombeiro(a) brigadista, profissionais de assistência a saúde (urgência e emergência), Enfermeiro(a), Técnico(a) de enfermagem e socorrista',
         'qtd_psicologo' => 'Psicólogo(a) Escolar',
         'qtd_fonoaudiologo' => 'Fonoaudiólogo(a)',
+        'qtd_vice_diretor' => 'Vice-diretor(a) ou diretor(a) adjunto(a), profissionais responsáveis pela gestão administrativa e/ou financeira',
+        'qtd_orientador_comunitario' => 'Orientador(a) comunitário(a) ou assistente social'
     ];
 
     public function Inicializar()
