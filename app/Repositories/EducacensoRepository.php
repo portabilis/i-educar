@@ -37,7 +37,7 @@ class EducacensoRepository
             j.fantasia AS nome,
             ep.cep AS cep,
             municipio.cod_ibge AS "codigoIbgeMunicipio",
-            distrito.cod_ibge AS "codigoIbgeDistrito",
+            districts.ibge_code AS "codigoIbgeDistrito",
             l.idtlog || l.nome AS logradouro,
             ep.numero AS numero,
             ep.complemento AS complemento,
@@ -95,7 +95,7 @@ class EducacensoRepository
             e.esfera_administrativa AS "esferaAdministrativa",
             e.cod_escola AS "idEscola",
             municipio.idmun AS "idMunicipio",
-            distrito.iddis AS "idDistrito",
+            districts.id AS "idDistrito",
             i.cod_instituicao AS "idInstituicao",
             uf.sigla_uf AS "siglaUf",
             (SELECT EXTRACT(YEAR FROM min(ano_letivo_modulo.data_inicio))
@@ -114,7 +114,7 @@ class EducacensoRepository
             LEFT JOIN public.bairro ON (bairro.idbai = ep.idbai)
             LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
             LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
-            LEFT JOIN public.distrito ON (distrito.idmun = bairro.idmun)
+            LEFT JOIN public.districts ON (districts.id = e.iddis)
 
             LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
             LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
