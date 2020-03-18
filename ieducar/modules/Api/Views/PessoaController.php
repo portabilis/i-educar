@@ -242,7 +242,7 @@ class PessoaController extends ApiCoreController
             $details['city_name'] = $place->city->name;
             $details['state_abbreviation'] = $place->city->state->abbreviation;
 
-            $details['cep'] = $place->postal_code;
+            $details['cep'] = int2CEP($place->postal_code);
             $details['logradouro'] = $place->address;
             $details['idtlog'] = $place->id;
             $details['bairro'] = $place->neighborhood;
@@ -568,7 +568,7 @@ class PessoaController extends ApiCoreController
         $individual->nacionalidade = $this->getRequest()->tipo_nacionalidade ?: $individual->nacionalidade;
         $individual->zona_localizacao_censo = $this->getRequest()->zona_localizacao_censo ?: $individual->zona_localizacao_censo;
         $individual->localizacao_diferenciada = $this->getRequest()->localizacao_diferenciada ?: $individual->localizacao_diferenciada;
-        $individual->nome_social = $this->getRequest()->nome_social ?: $individual->nome_social;
+        $individual->nome_social = $this->getRequest()->nome_social ?? $this->getRequest()->nome_social;
 
         $individual->saveOrFail();
 
