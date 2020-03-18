@@ -573,6 +573,15 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
+        if ($escola->equipamentosAcessoInternetComputadorMesa() && $escola->quantidadeComputadoresAlunosNaoPreenchida()) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se pelo menos um dos campos da seção Quantidade de computadores de uso dos aluno foi preenchido.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Seção: Quantidade de computadores de uso dos aluno)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true
+            ];
+        }
+
         if (!$escola->quantidadeProfissionaisPreenchida()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a escola não preencheu nenhuma informação referente à quantidade de profissionais, portanto é necessário informar pelo menos um profissional.",

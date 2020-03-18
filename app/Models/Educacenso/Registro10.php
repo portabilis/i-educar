@@ -681,6 +681,15 @@ class Registro10 extends Registro10Fields
         return in_array(RedeLocal::NENHUMA, $this->redeLocal) && count($this->redeLocal) > 1;
     }
 
+    public function quantidadeComputadoresAlunosNaoPreenchida()
+    {
+        return (
+            $this->quantidadeComputadoresAlunosMesa == null &&
+            $this->quantidadeComputadoresAlunosPortateis == null &&
+            $this->quantidadeComputadoresAlunosTablets == null
+        );
+    }
+
     /**
      * @return bool
      */

@@ -2823,6 +2823,12 @@ class indice extends clsCadastro
 
     protected function validaQuantidadeComputadoresAlunos()
     {
+        $quantidadesNaoPreenchidas = (
+            $this->quantidade_computadores_alunos_mesa == '' &&
+            $this->quantidade_computadores_alunos_portateis == '' &&
+            $this->quantidade_computadores_alunos_tablets == ''
+        );
+
         if ($this->quantidade_computadores_alunos_mesa == '0') {
             $this->mensagem = 'O campo: <b>Computadores de mesa</b> não pode ser preenchido com 0';
             return false;
@@ -2835,6 +2841,11 @@ class indice extends clsCadastro
 
         if ($this->quantidade_computadores_alunos_tablets == '0') {
             $this->mensagem = 'O campo: <b>Tablets</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if (in_array(EquipamentosAcessoInternet::COMPUTADOR_MESA, $this->equipamentos_acesso_internet) && $quantidadesNaoPreenchidas) {
+            $this->mensagem = 'Preencha pelo menos um dos campos da seção <b>Quantidade de computadores de uso dos aluno</b> quando o campo <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> for preenchido com <b>Computadores de mesa, portáteis e tablets da escola (no laboratório de informática, biblioteca, sala de aula, etc.)</b>.';
             return false;
         }
 

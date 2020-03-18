@@ -210,7 +210,7 @@ class Registro10 extends AbstractRegistro
         $data->tratamentoLixo = Portabilis_Utils_Database::pgArrayToArray($data->tratamentoLixo);
         $data->recursosAcessibilidade = Portabilis_Utils_Database::pgArrayToArray($data->recursosAcessibilidade);
         $data->usoInternet = Portabilis_Utils_Database::pgArrayToArray($data->usoInternet);
-        $data->equipamentos_acesso_internet = Portabilis_Utils_Database::pgArrayToArray($data->equipamentos_acesso_internet);
+        $data->equipamentosAcessoInternet = Portabilis_Utils_Database::pgArrayToArray($data->equipamentosAcessoInternet);
         $data->equipamentos = Portabilis_Utils_Database::pgArrayToArray($data->equipamentos);
         $data->redeLocal = Portabilis_Utils_Database::pgArrayToArray($data->redeLocal);
         $data->orgaosColegiados = Portabilis_Utils_Database::pgArrayToArray($data->orgaosColegiados);
