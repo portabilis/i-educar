@@ -196,8 +196,132 @@ span.error_notice {
 
 .topo .dropdown-content a:hover {color: #188ad1}
 
-.topo .dropdown:hover .dropdown-content {
+.ieducar-header-links .dropdown.notifications {
+  float: right;
+  margin: 0;
+  z-index: 99999999;
+}
+
+.ieducar-header-links .dropbtn.notifications {
+  color: #ffffff;
+  padding: 0 5px;
+  margin-right: 15px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  background-image: none;
+  background-repeat: no-repeat;
+  background-position: center right;
+  background-size: 12px;
+}
+
+.ieducar-header-links .dropbtn.notifications:hover,
+.dropdown:hover .dropbtn.notifications {
+  background-image: none;
+  background-repeat: no-repeat;
+  background-position: center right;
+}
+
+.topo .dropdown:hover .dropdown-content.menu {
   display: block;
+}
+
+
+.ieducar-header-links .dropdown-content-notifications {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 150px;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  right: 19px;
+  top: 41px;
+  max-height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.ieducar-header-links .dropdown-content-notifications a {
+  color: #646b71;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid #ccdce6;
+}
+
+.ieducar-header-links .dropdown-content-notifications a:hover {
+  color: #188ad1
+}
+
+.dropdown-content-notifications a {
+  font-size: 12px !important;
+}
+
+.dropdown-content-notifications {
+  width: 400px !important;
+}
+
+.btn-all-notifications {
+  text-align: center !important;
+}
+
+span.notification-balloon {
+  background-color: red;
+  padding: 5px;
+  border: 2px solid #47728f;
+  height: 0;
+  position: absolute;
+  border-radius: 50%;
+  top: 10px;
+  margin-left: -12px;
+  display: none;
+}
+
+.dropdown-content-notifications a.unread {
+  font-weight: bold;
+  background-color: #e9f0f8;
+}
+
+.dropdown-content-notifications p.date-notification {
+  text-align: right;
+  font-size: 10px;
+  color: #999;
+}
+
+.notifications-bar {
+  display: flow-root;
+  color: #646b71;
+  padding: 5px 15px !important;
+  border-bottom: 1px solid #ccdce6;
+  background: #eee !important;
+  font-weight: bold !important;
+}
+
+.notifications-bar a.btn-all-notifications,
+.notifications-bar a.btn-mark-all-read {
+  padding: 0 !important;
+  float: right;
+  background: none;
+  border: 0 !important;
+  color: #646b71 !important;
+}
+
+.notifications-bar a.btn-all-notifications:hover,
+.notifications-bar a.btn-mark-all-read:hover {
+  color: #188ad1 !important;
+}
+
+.notifications-bar a.btn-mark-all-read {
+  padding-right: 7px !important;
+  margin-right: 7px;
+  border-right: 1px solid #ccdce6 !important;
+  cursor: pointer;
+}
+
+tr.unread td {
+  font-weight: bold;
 }
 
 img#help {
