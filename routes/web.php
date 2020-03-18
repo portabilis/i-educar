@@ -101,6 +101,12 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::post('/exportacao-para-o-seb', 'SebExportController@export')->name('seb-export.export');
 
     Route::get('/abre-url-privada', 'OpenPrivateUrlController@open')->name('open_private_url.open');
+
+    Route::get('/notificacoes', 'NotificationController@index')->name('notifications.index');
+    Route::get('/notificacoes/retorna-notificacoes-usuario', 'NotificationController@getByLoggedUser')->name('notifications.get-by-logged-user');
+    Route::get('/notificacoes/quantidade-nao-lidas', 'NotificationController@getNotReadCount')->name('notifications.get-not-read-count');
+    Route::post('/notificacoes/marca-como-lida', 'NotificationController@markAsRead')->name('notifications.mark-as-read');
+    Route::post('/notificacoes/marca-todas-como-lidas', 'NotificationController@markAllRead')->name('notifications.mark-all-read');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
