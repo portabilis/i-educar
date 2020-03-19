@@ -2226,6 +2226,7 @@ class indice extends clsCadastro
                 $this->validaSalasUtilizadasForaEscola() &&
                 $this->validaSalasClimatizadas() &&
                 $this->validaSalasAcessibilidade() &&
+                $this->validaEquipamentosAcessoInternet() &&
                 $this->validaRecursos() &&
                 $this->validaQuantidadeComputadoresAlunos() &&
                 $this->validaQuantidadeEquipamentosEnsino() &&
@@ -2795,6 +2796,16 @@ class indice extends clsCadastro
 
         if (in_array(ReservaVagasCotas::NAO_POSSUI, $this->reserva_vagas_cotas) && count($this->reserva_vagas_cotas) > 1) {
             $this->mensagem = 'Não é possível informar mais de uma opção no campo: <b>Reserva de vagas por sistema de cotas para grupos específicos de alunos(as)</b>, quando a opção: <b>Sem reservas de vagas para sistema de cotas (ampla concorrência)</b> estiver selecionada.';
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaEquipamentosAcessoInternet()
+    {
+        if(in_array(2, $this->equipamentos_acesso_internet) && !in_array(3, $this->rede_local)) {
+            $this->mensagem = "O campo: <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> não deve ser preenchido com a opção: <b>Dispositivos pessoais (computadores portáteis, celulares, tablets, etc.)</b> quando o campo: <b>Rede local de interligação de computadores</b> não possuir a opção: <b>Wireless</b> selecionada.";
             return false;
         }
 
