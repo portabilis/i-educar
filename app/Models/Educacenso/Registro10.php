@@ -20,6 +20,7 @@ use iEducar\Modules\Educacenso\Model\Banheiros;
 use iEducar\Modules\Educacenso\Model\Laboratorios;
 use iEducar\Modules\Educacenso\Model\OrganizacaoEnsino;
 use iEducar\Modules\Educacenso\Model\OrgaosColegiados;
+use iEducar\Modules\Educacenso\Validator\School\HasDifferentStepsOfChildEducationValidator;
 
 class Registro10 extends Registro10Fields
 {
@@ -907,6 +908,12 @@ class Registro10 extends Registro10Fields
     public function organizacaoEnsinoAlternanciaRegular()
     {
         return in_array(OrganizacaoEnsino::ALTERNANCIA_REGULAR, $this->organizacaoEnsino);
+    }
+
+    public function HasDifferentStepsOfChildEducation()
+    {
+        $hasDifferentStepsOfChildEducation = new HasDifferentStepsOfChildEducationValidator($this->codEscola);
+        return $hasDifferentStepsOfChildEducation->isValid();
     }
 
     /**

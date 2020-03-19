@@ -37,6 +37,7 @@ use iEducar\Modules\Educacenso\Model\UsoInternet;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use iEducar\Modules\ValueObjects\SchoolManagerValueObject;
 use iEducar\Support\View\SelectOptions;
+use iEducar\Modules\Educacenso\Validator\School\HasDifferentStepsOfChildEducationValidator;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -1301,11 +1302,17 @@ class indice extends clsCadastro
             );
             $this->inputsHelper()->booleanSelect('fundamental_ciclo', $options);
 
+            $obrigarOrganizacaoEnsino = false;
+            if ($this->cod_escola) {
+                $obrigarOrganizacaoEnsino = new HasDifferentStepsOfChildEducationValidator($this->cod_escola);
+                $obrigarOrganizacaoEnsino = $obrigarOrganizacaoEnsino->isValid();
+            }
+
             $helperOptions = ['objectName' => 'organizacao_ensino'];
             $options = [
                 'label' => 'Forma(s) de organização do ensino',
                 'size' => 50,
-                'required' => false,
+                'required' => $obrigarCamposCenso && $obrigarOrganizacaoEnsino,
                 'options' => [
                     'values' => $this->organizacao_ensino,
                     'all_values' => OrganizacaoEnsino::getDescriptiveValues()
