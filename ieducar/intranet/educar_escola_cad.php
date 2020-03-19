@@ -1825,10 +1825,6 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->validaBanheiros()) {
-            return false;
-        }
-
         if (!$this->validaCamposCenso()) {
             return false;
         }
@@ -2229,6 +2225,7 @@ class indice extends clsCadastro
                 $this->inepEscolaSedeDiferenteDaEscolaPrincipal() &&
                 $this->validateCensusManagerRules() &&
                 $this->validaEscolaCompartilhaPredio() &&
+                $this->validaBanheiros() &&
                 $this->validaSalasUtilizadasDentroEscola() &&
                 $this->validaSalasUtilizadasForaEscola() &&
                 $this->validaSalasClimatizadas() &&
