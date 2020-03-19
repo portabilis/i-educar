@@ -203,7 +203,7 @@ class indice extends clsCadastro
         'qtd_auxiliar_administrativo' => 'Auxiliares de secretaria ou auxiliares administrativos, atendentes',
         'qtd_apoio_pedagogico' => 'Profissionais de apoio e supervisão pedagógica: pedagogo(a), coordenador(a) pedagógico(a), orientador(a) educacional, supervisor(a) escolar e coordenador(a) de área de ensino',
         'qtd_coordenador_turno' => 'Coordenador(a) de turno/disciplina',
-        'qtd_tecnicos' => 'Técnicos(as), monitores(as) ou auxiliares de laboratório(s)',
+        'qtd_tecnicos' => 'Técnicos(as), monitores(as), supervisores(as) ou auxiliares de laboratório(s), de apoio a tecnologias educacionais ou em multimeios/multimídias eletrônico-digitais',
         'qtd_bibliotecarios' => 'Bibliotecário(a), auxiliar de biblioteca ou monitor(a) da sala de leitura',
         'qtd_segurancas' => 'Seguranças, guarda ou segurança patrimonial',
         'qtd_auxiliar_servicos_gerais' => 'Auxiliar de serviços gerais, porteiro(a), zelador(a), faxineiro(a), horticultor(a), jardineiro(a)',
