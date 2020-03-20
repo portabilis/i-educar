@@ -167,6 +167,7 @@ class clsPmieducarEscola extends Model
     public $qtd_bombeiro;
     public $qtd_psicologo;
     public $qtd_fonoaudiologo;
+    public $iddis;
 
     public function __construct(
         $cod_escola = null,
@@ -216,7 +217,8 @@ class clsPmieducarEscola extends Model
           e.qtd_profissionais_preparacao,
           e.qtd_bombeiro,
           e.qtd_psicologo,
-          e.qtd_fonoaudiologo
+          e.qtd_fonoaudiologo,
+          e.iddis
           ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -1221,6 +1223,12 @@ class clsPmieducarEscola extends Model
             if (is_numeric($this->qtd_fonoaudiologo)) {
                 $campos .= "{$gruda}qtd_fonoaudiologo";
                 $valores .= "{$gruda}$this->qtd_fonoaudiologo";
+                $gruda = ', ';
+            }
+
+            if (is_integer($this->iddis) && $this->iddis > 0) {
+                $campos .= "{$gruda}iddis";
+                $valores .= "{$gruda}$this->iddis";
                 $gruda = ', ';
             }
 
@@ -2294,6 +2302,14 @@ class clsPmieducarEscola extends Model
             } elseif (is_null($this->qtd_fonoaudiologo) || $this->qtd_fonoaudiologo == '') {
                 $gruda = ', ';
                 $set .= "{$gruda}qtd_fonoaudiologo = NULL ";
+            }
+
+            if (is_integer($this->iddis) && $this->iddis > 0) {
+                $gruda = ', ';
+                $set .= "{$gruda}iddis = '{$this->iddis}'";
+            } elseif (is_null($this->iddis) || $this->iddis == '') {
+                $gruda = ', ';
+                $set .= "{$gruda}iddis = NULL ";
             }
 
             if ($set) {

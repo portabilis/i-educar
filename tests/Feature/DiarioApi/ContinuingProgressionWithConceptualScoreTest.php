@@ -150,11 +150,12 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
     }
 
     /**
-     * @todo Remover Skip (line 157) depois que resolver bug deste teste, onde retorna retido na situação do componente curricular, quando é esperado aprovado (line 179).
+     * Regra com progressão continuada
+     *
+     * Após o lançamentos das notas, não deverá reprovar mesmo com número de presenças insuficiente
      */
     public function testContinuingProgressionMoreThanAbsenceLimitAfterAllScoreAndAbsencePosted()
     {
-        $this->markTestSkipped();
         $schoolClass = $this->enrollment->schoolClass;
         $disciplines = $schoolClass->disciplines;
 

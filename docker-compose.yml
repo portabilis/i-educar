@@ -20,6 +20,7 @@ services:
       - postgres
       - redis
     environment:
+      PGPASSWORD: ieducar
       XDEBUG_IDEKEY: xdebug
       XDEBUG_REMOTE_HOST: 127.0.0.1
       XDEBUG_REMOTE_PORT: 9000

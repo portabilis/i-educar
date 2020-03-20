@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\City;
+use App\Models\Country;
+use App\Models\PersonHasPlace;
 use App\Services\UrlPresigner;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
@@ -130,11 +133,10 @@ class indice extends clsDetalhe
             $registro['nacionalidade'] = $det_fisica['nacionalidade'];
             $registro['nis_pis_pasep'] = int2Nis($det_fisica['nis_pis_pasep']);
 
-            $registro['naturalidade'] = $det_fisica['idmun_nascimento']->detalhe();
-            $registro['naturalidade'] = $registro['naturalidade']['nome'];
+            $registro['naturalidade'] = City::getNameById($det_fisica['idmun_nascimento']);
 
-            $registro['pais_origem'] = $det_fisica['idpais_estrangeiro']->detalhe();
-            $registro['pais_origem'] = $registro['pais_origem']['nome'];
+            $countryName = Country::query()->find($det_fisica['idpais_estrangeiro']);
+            $registro['pais_origem'] = $countryName->name;
 
             $registro['ref_idpes_responsavel'] = $det_fisica['idpes_responsavel'];
 
@@ -254,51 +256,11 @@ class indice extends clsDetalhe
             $registro['secao_tit_eleitor'] = $detalheDocumento['secao_titulo_eleitor'] ?? null;
             $registro['idorg_exp_rg'] = $detalheDocumento['ref_idorg_rg'] ?? null;
 
-            $obj_endereco = new clsPessoaEndereco($this->ref_idpes);
-
-            if ($obj_endereco_det = $obj_endereco->detalhe()) {
-                $registro['id_cep'] = $obj_endereco_det['cep']->cep;
-                $registro['id_bairro'] = $obj_endereco_det['idbai'];
-                $registro['id_logradouro'] = $obj_endereco_det['idlog'];
-                $registro['numero'] = $obj_endereco_det['numero'];
-                $registro['letra'] = $obj_endereco_det['letra'];
-                $registro['complemento'] = $obj_endereco_det['complemento'];
-                $registro['andar'] = $obj_endereco_det['andar'];
-                $registro['apartamento'] = $obj_endereco_det['apartamento'];
-                $registro['bloco'] = $obj_endereco_det['bloco'];
-                $registro['nm_logradouro'] = $obj_endereco_det['logradouro'] ?? null;
-                $registro['cep_'] = int2CEP($registro['id_cep']);
-
-                $obj_bairro = new clsBairro($registro['id_bairro']);
-                $obj_bairro_det = $obj_bairro->detalhe();
-
-                if ($obj_bairro_det) {
-                    $registro['nm_bairro'] = $obj_bairro_det['nome'];
-                }
-
-                $obj_log = new clsLogradouro($registro['id_logradouro']);
-                $obj_log_det = $obj_log->detalhe();
-
-                if ($obj_log_det) {
-                    $registro['nm_logradouro'] = $obj_log_det['nome'];
-                    $registro['idtlog'] = $obj_log_det['idtlog']->detalhe();
-                    $registro['idtlog'] = $registro['idtlog']['descricao'];
-
-                    $obj_mun = new clsMunicipio($obj_log_det['idmun']);
-                    $det_mun = $obj_mun->detalhe();
-
-                    if ($det_mun) {
-                        $registro['cidade'] = ucfirst(strtolower($det_mun['nome']));
-                    }
-                }
-
-                $obj_bairro = new clsBairro($registro['id_bairro']);
-                $obj_bairro_det = $obj_bairro->detalhe();
-
-                if ($obj_bairro_det) {
-                    $registro['nm_bairro'] = $obj_bairro_det['nome'];
-                }
-            }
+            $place = PersonHasPlace::query()
+                ->with('place.city.state')
+                ->where('person_id', $this->ref_idpes)
+                ->orderBy('type')
+                ->first();
         }
 
         if ($registro['cod_aluno']) {
@@ -370,55 +332,16 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Estado Civil', $registro['ideciv']]);
         }
 
-        if ($registro['id_cep']) {
-            $this->addDetalhe(['CEP', $registro['cep_']]);
-        }
+        if (isset($place)) {
+            $place = $place->place;
 
-        if (isset($registro['ref_sigla_uf']) && !empty($registro['ref_sigla_uf'])) {
-            $this->addDetalhe(['UF', $registro['ref_sigla_uf'] ?? null]);
-        }
-
-        if ($registro['cidade']) {
-            $this->addDetalhe(['Cidade', $registro['cidade']]);
-        }
-
-        if ($registro['nm_bairro']) {
-            $this->addDetalhe(['Bairro', $registro['nm_bairro']]);
-        }
-
-        if ($registro['nm_logradouro']) {
-            $logradouro = '';
-
-            if ($registro['idtlog']) {
-                $logradouro .= $registro['idtlog'] . ' ';
-            }
-
-            $logradouro .= $registro['nm_logradouro'];
-            $this->addDetalhe(['Logradouro', $logradouro]);
-        }
-
-        if ($registro['numero']) {
-            $this->addDetalhe(['Número', $registro['numero']]);
-        }
-
-        if ($registro['letra']) {
-            $this->addDetalhe(['Letra', $registro['letra']]);
-        }
-
-        if ($registro['complemento']) {
-            $this->addDetalhe(['Complemento', $registro['complemento']]);
-        }
-
-        if ($registro['bloco']) {
-            $this->addDetalhe(['Bloco', $registro['bloco']]);
-        }
-
-        if ($registro['andar']) {
-            $this->addDetalhe(['Andar', $registro['andar']]);
-        }
-
-        if ($registro['apartamento']) {
-            $this->addDetalhe(['Apartamento', $registro['apartamento']]);
+            $this->addDetalhe(['Logradouro', $place->address]);
+            $this->addDetalhe(['Número', $place->number]);
+            $this->addDetalhe(['Complemento', $place->complement]);
+            $this->addDetalhe(['Bairro', $place->neighborhood]);
+            $this->addDetalhe(['Cidade', $place->city->name]);
+            $this->addDetalhe(['UF', $place->city->state->abbreviation]);
+            $this->addDetalhe(['CEP', int2CEP($place->postal_code)]);
         }
 
         if ($registro['naturalidade']) {

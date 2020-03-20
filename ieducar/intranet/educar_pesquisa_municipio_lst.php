@@ -1,6 +1,8 @@
 <?php
 
 
+use App\Models\City;
+use App\Models\State;
 use Illuminate\Support\Facades\Session;
 
 require_once ("include/clsBase.inc.php");
@@ -75,13 +77,8 @@ class indice extends clsListagem
         ) );
 
 
-        $obj_uf = new clsUf(false, false, 1);
-        $lst_uf = $obj_uf->lista(false, false, false, false, false, "sigla_uf");
-        $array_uf = array('' => 'Todos');
-        foreach ($lst_uf as $uf)
-        {
-            $array_uf[$uf['sigla_uf']] = $uf['nome'];
-        }
+        $array_uf = array('' => 'Todos') + State::getListKeyAbbreviation()->toArray();
+
         if(!isset($this->sigla_uf))
         {
             $this->sigla_uf = config('legacy.app.locale.province', '');
@@ -101,31 +98,26 @@ class indice extends clsListagem
         $this->limite = 20;
         $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_municipio = new clsMunicipio();
-        //$obj_municipio->setOrderby( "nome ASC" );
-        //$obj_municipio->setLimite( $this->limite, $this->offset );
+        $cities = City::query()
+            ->with('state')
+            ->where('name', 'ilike', "%{$this->nome}%")
+            ->whereHas('state', function ($query) {
+                $query->where('abbreviation', $this->sigla_uf);
+            })
+            ->orderBy('name')
+            ->paginate(null, ['*'], $pageName = "pagina_{$this->nome}");
 
-        $lista = $obj_municipio->lista($this->nome,$this->sigla_uf,null,null,null,null,null,null,null,$this->offset,$this->limite,"nome ASC");
+        $total = $cities->total();
 
-        $total = $obj_municipio->_total;
-
-        // monta a lista
-        if( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista AS $registro )
-            {
-                    $obj_sigla_uf = new clsUf($registro["sigla_uf"]->sigla_uf);
-                    $det_sigla_uf = $obj_sigla_uf->detalhe();
-                    $registro["sigla_uf"] = $det_sigla_uf["nome"];
-
-                $campo1 = Session::get('campo1');
-                $script = " onclick=\"addSel1('{$campo1}','{$registro['idmun']}','{$registro['nome']}'); fecha();\"";
-                $this->addLinhas( array(
-                    "<a href=\"javascript:void(0);\" {$script}>{$registro["nome"]}</a>",
-                    "<a href=\"javascript:void(0);\" {$script}>{$registro["sigla_uf"]}</a>"
-                ) );
-            }
+        foreach ($cities as $city) {
+            $campo1 = Session::get('campo1');
+            $script = " onclick=\"addSel1('{$campo1}','{$city->id}','{$city->name}'); fecha();\"";
+            $this->addLinhas( array(
+                "<a href=\"javascript:void(0);\" {$script}>{$city->name}</a>",
+                "<a href=\"javascript:void(0);\" {$script}>{$city->state->name}</a>"
+            ) );
         }
+
         $this->addPaginador2( "educar_pesquisa_municipio_lst.php", $total, $_GET, $this->nome, $this->limite );
 
         $this->largura = "100%";

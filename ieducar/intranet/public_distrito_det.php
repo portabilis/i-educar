@@ -1,10 +1,13 @@
 <?php
 
+use App\Models\District;
+use iEducar\Legacy\InteractWithDatabase;
+use iEducar\Legacy\SelectOptions;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
-require_once 'include/public/clsPublicDistrito.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -17,73 +20,55 @@ class clsIndexBase extends clsBase
 
 class indice extends clsDetalhe
 {
+    use InteractWithDatabase, SelectOptions;
+
     public $idmun;
     public $geom;
     public $iddis;
     public $nome;
-    public $idpes_rev;
-    public $data_rev;
-    public $origem_gravacao;
-    public $idpes_cad;
-    public $data_cad;
-    public $operacao;
+
+    public function model()
+    {
+        return District::class;
+    }
+
+    public function index()
+    {
+        return 'public_distrito_lst.php';
+    }
 
     public function Gerar()
     {
         $this->titulo = 'Distrito - Detalhe';
         $this->iddis = $_GET['iddis'];
 
-        $tmp_obj = new clsPublicDistrito();
-        $lst_distrito = $tmp_obj->lista(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $this->iddis
-        );
+        $district = $this->find($this->iddis);
 
-        if (!$lst_distrito) {
-            $this->simpleRedirect('public_distrito_lst.php');
-        } else {
-            $registro = $lst_distrito[0];
+        if ($district->name) {
+            $this->addDetalhe(['Nome', $district->name]);
         }
 
-        if ($registro['nome']) {
-            $this->addDetalhe(['Nome', $registro['nome']]);
+        if ($district->city->name) {
+            $this->addDetalhe(['Município', $district->city->name]);
         }
 
-        if ($registro['nm_municipio']) {
-            $this->addDetalhe(['Município', $registro['nm_municipio']]);
+        if ($district->city->state->name) {
+            $this->addDetalhe(['Estado', $district->city->state->name]);
         }
 
-        if ($registro['nm_estado']) {
-            $this->addDetalhe(['Estado', $registro['nm_estado']]);
+        if ($district->city->state->country->name) {
+            $this->addDetalhe(['Pais', $district->city->state->country->name]);
         }
 
-        if ($registro['nm_pais']) {
-            $this->addDetalhe(['Pais', $registro['nm_pais']]);
-        }
-
-        if ($registro['cod_ibge']) {
-            $this->addDetalhe(['Código INEP', $registro['cod_ibge']]);
+        if ($district->ibge_code) {
+            $this->addDetalhe(['Código INEP', $district->ibge_code]);
         }
 
         $obj_permissao = new clsPermissoes();
 
         if ($obj_permissao->permissao_cadastra(759, $this->pessoa_logada, 7, null, true)) {
             $this->url_novo = 'public_distrito_cad.php';
-            $this->url_editar = 'public_distrito_cad.php?iddis=' . $registro['iddis'];
+            $this->url_editar = 'public_distrito_cad.php?iddis=' . $this->iddis;
         }
 
         $this->url_cancelar = 'public_distrito_lst.php';

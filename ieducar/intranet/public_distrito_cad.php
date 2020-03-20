@@ -1,10 +1,13 @@
 <?php
 
+use App\Models\District;
+use iEducar\Legacy\InteractWithDatabase;
+use iEducar\Legacy\SelectOptions;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
-require_once 'include/public/clsPublicDistrito.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 require_once 'App/Model/Pais.php';
@@ -21,6 +24,8 @@ class clsIndexBase extends clsBase
 
 class indice extends clsCadastro
 {
+    use InteractWithDatabase, SelectOptions;
+
     public $idmun;
     public $geom;
     public $iddis;
@@ -33,7 +38,17 @@ class indice extends clsCadastro
     public $data_cad;
     public $operacao;
     public $idpais;
-    public $sigla_uf;
+    public $iduf;
+
+    public function model()
+    {
+        return District::class;
+    }
+
+    public function index()
+    {
+        return 'public_distrito_lst.php';
+    }
 
     public function Inicializar()
     {
@@ -41,41 +56,19 @@ class indice extends clsCadastro
         $this->iddis = $_GET['iddis'];
 
         if (is_numeric($this->iddis)) {
-            $obj_distrito = new clsPublicDistrito();
-            $lst_distrito = $obj_distrito->lista(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                $this->iddis
-            );
+            $district = $this->find($this->iddis);
 
-            if ($lst_distrito) {
-                $registro = $lst_distrito[0];
-            }
+            $this->nome = $district->name;
+            $this->idmun = $district->city_id;
+            $this->iduf = $district->city->state_id;
+            $this->idpais = $district->city->state->country_id;
+            $this->cod_ibge = $district->ibge_code;
 
-            if ($registro) {
-                foreach ($registro as $campo => $val) {
-                    $this->$campo = $val;
-                }
-
-                $retorno = 'Editar';
-            }
+            $retorno = 'Editar';
         }
 
         $this->url_cancelar = $retorno == 'Editar'
-            ? 'public_distrito_det.php?iddis=' . $registro['iddis']
+            ? 'public_distrito_det.php?iddis=' . $this->iddis
             : 'public_distrito_lst.php';
 
         $this->nome_url_cancelar = 'Cancelar';
@@ -93,59 +86,22 @@ class indice extends clsCadastro
     {
         $this->campoOculto('iddis', $this->iddis);
 
-        $opcoes = ['' => 'Selecione'];
-
-        $objTemp = new clsPais();
-        $lista = $objTemp->lista(false, false, false, false, false, 'nome ASC');
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes[$registro['idpais']] = $registro['nome'];
-            }
-        }
+        $opcoes = ['' => 'Selecione'] + $this->getCountries();
 
         $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais);
 
         $opcoes = ['' => 'Selecione'];
 
         if ($this->idpais) {
-            $objTemp = new clsUf();
-
-            $lista = $objTemp->lista(false, false, $this->idpais, false, false, 'nome ASC');
-
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['sigla_uf']] = $registro['nome'];
-                }
-            }
+            $opcoes += $this->getStates($this->idpais);
         }
 
-        $this->campoLista('sigla_uf', 'Estado', $opcoes, $this->sigla_uf);
+        $this->campoLista('iduf', 'Estado', $opcoes, $this->iduf);
 
         $opcoes = ['' => 'Selecione'];
 
-        if ($this->sigla_uf) {
-            $objTemp = new clsMunicipio();
-            $lista = $objTemp->lista(
-                false,
-                $this->sigla_uf,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                'nome ASC'
-            );
-
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['idmun']] = $registro['nome'];
-                }
-            }
+        if ($this->iduf) {
+            $opcoes += $this->getCities($this->iduf);
         }
 
         $this->campoLista('idmun', 'Município', $opcoes, $this->idmun);
@@ -161,38 +117,11 @@ class indice extends clsCadastro
             return false;
         }
 
-        $obj = new clsPublicDistrito(
-            $this->idmun,
-            null,
-            null,
-            $this->nome,
-            null,
-            null,
-            'U',
-            $this->pessoa_logada,
-            null,
-            'I',
-            null,
-            9,
-            $this->cod_ibge
-        );
-
-        $cadastrou = $obj->cadastra();
-
-        if ($cadastrou) {
-            $enderecamento = new clsPublicDistrito();
-            $enderecamento->iddis = $cadastrou;
-            $enderecamento = $enderecamento->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral('Endereçamento de Distrito', $this->pessoa_logada, $cadastrou);
-            $auditoria->inclusao($enderecamento);
-
-            $this->mensagem = 'Cadastro efetuado com sucesso.<br>';
-            $this->simpleRedirect('public_distrito_lst.php');
-        }
-
-        $this->mensagem = 'Cadastro não realizado.<br>';
-
-        return false;
+        return $this->create([
+            'name' => request('nome'),
+            'ibge_code' => request('cod_ibge'),
+            'city_id' => request('idmun'),
+        ]);
     }
 
     public function Editar()
@@ -203,40 +132,11 @@ class indice extends clsCadastro
             return false;
         }
 
-        $enderecamentoDetalhe = new clsPublicDistrito(null, null, $this->iddis);
-        $enderecamentoDetalhe->cadastrou = $this->iddis;
-        $enderecamentoDetalheAntes = $enderecamentoDetalhe->detalhe();
-
-        $obj = new clsPublicDistrito(
-            $this->idmun,
-            null,
-            $this->iddis,
-            $this->nome,
-            $this->pessoa_logada,
-            null,
-            'U',
-            null,
-            null,
-            'I',
-            null,
-            9,
-            $this->cod_ibge
-        );
-
-        $editou = $obj->edita();
-
-        if ($editou) {
-            $enderecamentoDetalheDepois = $enderecamentoDetalhe->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral('Endereçamento de Distrito', $this->pessoa_logada, $this->iddis);
-            $auditoria->alteracao($enderecamentoDetalheAntes, $enderecamentoDetalheDepois);
-
-            $this->mensagem = 'Edição efetuada com sucesso.<br>';
-            $this->simpleRedirect('public_distrito_lst.php');
-        }
-
-        $this->mensagem = 'Edição não realizada.<br>';
-
-        return false;
+        return $this->update($this->iddis, [
+            'name' => request('nome'),
+            'ibge_code' => request('cod_ibge'),
+            'city_id' => request('idmun'),
+        ]);
     }
 
     public function Excluir()
@@ -247,17 +147,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        $obj = new clsPublicDistrito(null, null, $this->iddis, null, $this->pessoa_logada);
-        $excluiu = $obj->excluir();
-
-        if ($excluiu) {
-            $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
-            $this->simpleRedirect('public_distrito_lst.php');
-        }
-
-        $this->mensagem = 'Exclusão não realizada.<br>';
-
-        return false;
+        return $this->delete($this->iddis);
     }
 }
 
@@ -269,63 +159,63 @@ $pagina->MakeAll();
 
 ?>
 <script type='text/javascript'>
-  document.getElementById('idpais').onchange = function () {
-    var campoPais = document.getElementById('idpais').value;
+document.getElementById('idpais').onchange = function () {
+  var campoPais = document.getElementById('idpais').value;
 
-    var campoUf = document.getElementById('sigla_uf');
+  var campoUf = document.getElementById('iduf');
+  campoUf.length = 1;
+  campoUf.disabled = true;
+  campoUf.options[0].text = 'Carregando estado...';
+
+  var xml_uf = new ajax(getUf);
+  xml_uf.envia('public_uf_xml.php?pais=' + campoPais);
+};
+
+function getUf(xml_uf) {
+  var campoUf = document.getElementById('iduf');
+  var DOM_array = xml_uf.getElementsByTagName('estado');
+
+  if (DOM_array.length) {
     campoUf.length = 1;
-    campoUf.disabled = true;
-    campoUf.options[0].text = 'Carregando estado...';
+    campoUf.options[0].text = 'Selecione um estado';
+    campoUf.disabled = false;
 
-    var xml_uf = new ajax(getUf);
-    xml_uf.envia('public_uf_xml.php?pais=' + campoPais);
-  }
-
-  function getUf (xml_uf) {
-    var campoUf = document.getElementById('sigla_uf');
-    var DOM_array = xml_uf.getElementsByTagName('estado');
-
-    if (DOM_array.length) {
-      campoUf.length = 1;
-      campoUf.options[0].text = 'Selecione um estado';
-      campoUf.disabled = false;
-
-      for (var i = 0; i < DOM_array.length; i++) {
-        campoUf.options[campoUf.options.length] = new Option(DOM_array[i].firstChild.data,
-          DOM_array[i].getAttribute('sigla_uf'), false, false);
-      }
-    } else {
-      campoUf.options[0].text = 'O pais não possui nenhum estado';
+    for (var i = 0; i < DOM_array.length; i++) {
+      campoUf.options[campoUf.options.length] = new Option(DOM_array[i].firstChild.data,
+        DOM_array[i].getAttribute('id'), false, false);
     }
+  } else {
+    campoUf.options[0].text = 'O pais não possui nenhum estado';
   }
+}
 
-  document.getElementById('sigla_uf').onchange = function () {
-    var campoUf = document.getElementById('sigla_uf').value;
+document.getElementById('iduf').onchange = function () {
+  var campoUf = document.getElementById('iduf').value;
 
-    var campoMunicipio = document.getElementById('idmun');
+  var campoMunicipio = document.getElementById('idmun');
+  campoMunicipio.length = 1;
+  campoMunicipio.disabled = true;
+  campoMunicipio.options[0].text = 'Carregando município...';
+
+  var xml_municipio = new ajax(getMunicipio);
+  xml_municipio.envia('public_municipio_xml.php?uf=' + campoUf);
+};
+
+function getMunicipio(xml_municipio) {
+  var campoMunicipio = document.getElementById('idmun');
+  var DOM_array = xml_municipio.getElementsByTagName('municipio');
+
+  if (DOM_array.length) {
     campoMunicipio.length = 1;
-    campoMunicipio.disabled = true;
-    campoMunicipio.options[0].text = 'Carregando município...';
+    campoMunicipio.options[0].text = 'Selecione um município';
+    campoMunicipio.disabled = false;
 
-    var xml_municipio = new ajax(getMunicipio);
-    xml_municipio.envia('public_municipio_xml.php?uf=' + campoUf);
-  }
-
-  function getMunicipio (xml_municipio) {
-    var campoMunicipio = document.getElementById('idmun');
-    var DOM_array = xml_municipio.getElementsByTagName('municipio');
-
-    if (DOM_array.length) {
-      campoMunicipio.length = 1;
-      campoMunicipio.options[0].text = 'Selecione um município';
-      campoMunicipio.disabled = false;
-
-      for (var i = 0; i < DOM_array.length; i++) {
-        campoMunicipio.options[campoMunicipio.options.length] = new Option(DOM_array[i].firstChild.data,
-          DOM_array[i].getAttribute('idmun'), false, false);
-      }
-    } else {
-      campoMunicipio.options[0].text = 'O estado não possui nenhum município';
+    for (var i = 0; i < DOM_array.length; i++) {
+      campoMunicipio.options[campoMunicipio.options.length] = new Option(DOM_array[i].firstChild.data,
+        DOM_array[i].getAttribute('idmun'), false, false);
     }
+  } else {
+    campoMunicipio.options[0].text = 'O estado não possui nenhum município';
   }
+}
 </script>

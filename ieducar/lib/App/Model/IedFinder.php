@@ -801,8 +801,11 @@ class App_Model_IedFinder extends CoreExt_Entity
                 mt.ativo = 1
                 OR
                 (
-                    instituicao.data_base_remanejamento IS NOT NULL
-                    AND mt.data_exclusao::date > instituicao.data_base_remanejamento
+                    CASE
+                        WHEN instituicao.data_base_remanejamento IS NOT NULL
+                            THEN mt.data_exclusao::date > instituicao.data_base_remanejamento
+                        ELSE true
+                    END
                     AND (
                         mt.transferido
                         OR mt.remanejado

@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\LegacyIndividual;
+use App\Models\LegacyInstitution;
 use App\Services\UrlPresigner;
+use iEducar\Modules\Addressing\LegacyAddressingFields;
 use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
@@ -13,7 +15,6 @@ use iEducar\Support\View\SelectOptions;
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsCadastroPessoas.inc.php';
 require_once 'include/pessoa/clsCadastroRaca.inc.php';
 
 require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
@@ -42,18 +43,13 @@ class clsIndex extends clsBase
 
 class indice extends clsCadastro
 {
-    use clsCadastroEndereco;
+    use LegacyAddressingFields;
 
     public $cod_pessoa_fj;
     public $nm_pessoa;
     public $nome_social;
     public $id_federal;
     public $data_nasc;
-    public $endereco;
-    public $cep;
-    public $idlog;
-    public $idbai;
-    public $sigla_uf;
     public $ddd_telefone_1;
     public $telefone_1;
     public $ddd_telefone_2;
@@ -66,19 +62,10 @@ class indice extends clsCadastro
     public $tipo_pessoa;
     public $sexo;
     public $busca_pessoa;
-    public $complemento;
-    public $apartamento;
-    public $bloco;
-    public $andar;
-    public $numero;
     public $retorno;
-    public $zona_localizacao;
     public $cor_raca;
     public $sus;
     public $nis_pis_pasep;
-    public $municipio_id;
-    public $bairro_id;
-    public $logradouro_id;
     public $ocupacao;
     public $empresa;
     public $ddd_telefone_empresa;
@@ -88,6 +75,7 @@ class indice extends clsCadastro
     public $data_admissao;
     public $zona_localizacao_censo;
     public $localizacao_diferenciada;
+    public $pais_residencia;
 
     // Variáveis para controle da foto
     public $objPhoto;
@@ -113,10 +101,7 @@ class indice extends clsCadastro
                 $this->ddd_telefone_1, $this->telefone_1, $this->ddd_telefone_2,
                 $this->telefone_2, $this->ddd_telefone_mov, $this->telefone_mov,
                 $this->ddd_telefone_fax, $this->telefone_fax, $this->email,
-                $this->tipo_pessoa, $this->sexo, $this->cidade,
-                $this->bairro, $this->logradouro, $this->cep, $this->idlog, $this->idbai,
-                $this->idtlog, $this->sigla_uf, $this->complemento, $this->numero,
-                $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao, $this->estado_civil,
+                $this->tipo_pessoa, $this->sexo, $this->estado_civil,
                 $this->pai_id, $this->mae_id, $this->tipo_nacionalidade, $this->pais_origem, $this->naturalidade,
                 $this->letra, $this->sus, $this->nis_pis_pasep, $this->ocupacao, $this->empresa, $this->ddd_telefone_empresa,
                 $this->telefone_empresa, $this->pessoa_contato, $this->renda_mensal, $this->data_admissao, $this->falecido,
@@ -138,20 +123,6 @@ class indice extends clsCadastro
                 'email',
                 'tipo',
                 'sexo',
-                'cidade',
-                'bairro',
-                'logradouro',
-                'cep',
-                'idlog',
-                'idbai',
-                'idtlog',
-                'sigla_uf',
-                'complemento',
-                'numero',
-                'bloco',
-                'apartamento',
-                'andar',
-                'zona_localizacao',
                 'ideciv',
                 'idpes_pai',
                 'idpes_mae',
@@ -176,16 +147,17 @@ class indice extends clsCadastro
                 'pais_residencia'
             );
 
+            $this->loadAddress($this->cod_pessoa_fj);
+
             $this->id_federal = is_numeric($this->id_federal) ? int2CPF($this->id_federal) : '';
             $this->nis_pis_pasep = int2Nis($this->nis_pis_pasep);
-            $this->cep = is_numeric($this->cep) ? int2Cep($this->cep) : '';
             $this->renda_mensal = number_format($this->renda_mensal, 2, ',', '.');
             // $this->data_nasc = $this->data_nasc ? dataFromPgToBr($this->data_nasc) : '';
             $this->data_admissao = $this->data_admissao ? dataFromPgToBr($this->data_admissao) : '';
 
             $this->estado_civil_id = $this->estado_civil->ideciv;
-            $this->pais_origem_id = $this->pais_origem->idpais;
-            $this->naturalidade_id = $this->naturalidade->idmun;
+            $this->pais_origem_id = $this->pais_origem;
+            $this->naturalidade_id = $this->naturalidade;
 
             $raca = new clsCadastroFisicaRaca($this->cod_pessoa_fj);
             $raca = $raca->detalhe();
@@ -220,17 +192,9 @@ class indice extends clsCadastro
         $detalhe = $objPessoa->queryRapida(
             $this->cod_pessoa_fj,
             'idpes',
-            'complemento',
             'nome',
             'cpf',
             'data_nasc',
-            'logradouro',
-            'idtlog',
-            'numero',
-            'apartamento',
-            'cidade',
-            'sigla_uf',
-            'cep',
             'ddd_1',
             'fone_1',
             'ddd_2',
@@ -243,7 +207,6 @@ class indice extends clsCadastro
             'url',
             'tipo',
             'sexo',
-            'zona_localizacao',
             'ativo',
             'data_exclusao'
         );
@@ -747,117 +710,32 @@ class indice extends clsCadastro
         // Religião
         $this->inputsHelper()->religiao(['required' => false, 'label' => 'Religião']);
 
-        $this->criaCamposEnderecamento();
+        $this->viewAddress();
 
-        $options = [
+        $this->inputsHelper()->select('pais_residencia', [
             'label' => 'País de residência',
             'value' => $this->pais_residencia ?: PaisResidencia::BRASIL ,
             'resources' => PaisResidencia::getDescriptiveValues(),
             'required' => true,
-        ];
+        ]);
 
-        $this->inputsHelper()->select('pais_residencia', $options);
-
-        // zona localização
-
-        $zonas = [
-            '' => 'Selecione',
-            1 => 'Urbana',
-            2 => 'Rural'
-        ];
-
-        $options = [
+        $this->inputsHelper()->select('zona_localizacao_censo', [
             'label' => 'Zona de residência',
             'value' => $this->zona_localizacao_censo,
-            'resources' => $zonas,
+            'resources' => [
+                '' => 'Selecione',
+                1 => 'Urbana',
+                2 => 'Rural'
+            ],
             'required' => $obrigarCamposCenso,
-        ];
+        ]);
 
-        $this->inputsHelper()->select('zona_localizacao_censo', $options);
-
-        $options = [
+        $this->inputsHelper()->select('localizacao_diferenciada', [
             'label' => 'Localização diferenciada',
             'value' => $this->localizacao_diferenciada,
             'resources' => SelectOptions::localizacoesDiferenciadasPessoa(),
             'required' => false,
-        ];
-
-        $this->inputsHelper()->select('localizacao_diferenciada', $options);
-
-        // complemento
-
-        $options = [
-            'required' => false,
-            'value' => $this->complemento,
-            'max_length' => 20
-        ];
-
-        $this->inputsHelper()->text('complemento', $options);
-
-        // numero
-
-        $options = [
-            'required' => false,
-            'label' => 'Número / Letra',
-            'placeholder' => 'Número',
-            'value' => $this->numero,
-            'max_length' => 6,
-            'inline' => true
-        ];
-
-        $this->inputsHelper()->integer('numero', $options);
-
-        // letra
-
-        $options = [
-            'required' => false,
-            'label' => '',
-            'placeholder' => 'Letra',
-            'value' => $this->letra,
-            'max_length' => 1,
-            'size' => 15
-        ];
-
-        $this->inputsHelper()->text('letra', $options);
-
-        // apartamento
-
-        $options = [
-            'required' => false,
-            'label' => 'Nº apartamento / Bloco / Andar',
-            'placeholder' => 'Nº apartamento',
-            'value' => $this->apartamento,
-            'max_length' => 6,
-            'inline' => true
-        ];
-
-        $this->inputsHelper()->integer('apartamento', $options);
-
-        // bloco
-
-        $options = [
-            'required' => false,
-            'label' => '',
-            'placeholder' => 'Bloco',
-            'value' => $this->bloco,
-            'max_length' => 20,
-            'size' => 15,
-            'inline' => true
-        ];
-
-        $this->inputsHelper()->text('bloco', $options);
-
-        // andar
-
-        $options = [
-            'required' => false,
-            'label' => '',
-            'placeholder' => 'Andar',
-            'value' => $this->andar,
-            'max_length' => 2
-        ];
-
-        $this->inputsHelper()->integer('andar', $options);
+        ]);
 
         // contato
         $this->campoRotulo('contato', '<b>Contato</b>', '', '', 'Informações de contato da pessoa');
@@ -892,6 +770,7 @@ class indice extends clsCadastro
 
         $script = [
             '/modules/Cadastro/Assets/Javascripts/PessoaFisica.js',
+            '/modules/Cadastro/Assets/Javascripts/Addresses.js',
             '/modules/Cadastro/Assets/Javascripts/Endereco.js'
         ];
 
@@ -1130,12 +1009,18 @@ class indice extends clsCadastro
             return false;
         }
 
+        if (!$this->validaObrigatoriedadeTelefone()) {
+            $this->mensagem = 'É necessário informar um Telefone residencial ou Celular.';
+
+            return false;
+        }
+
         $pessoaId = $this->createOrUpdatePessoa($pessoaIdOrNull);
         $this->savePhoto($pessoaId);
         $this->createOrUpdatePessoaFisica($pessoaId);
         $this->createOrUpdateDocumentos($pessoaId);
         $this->createOrUpdateTelefones($pessoaId);
-        $this->createOrUpdateEndereco($pessoaId);
+        $this->saveAddress($pessoaId);
         $this->afterChangePessoa($pessoaId);
 
         return true;
@@ -1287,6 +1172,19 @@ class indice extends clsCadastro
         $validator = new NisValidator($this->nis_pis_pasep ?? '');
         if (!$validator->isValid()) {
             $this->mensagem = $validator->getMessage();
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validaObrigatoriedadeTelefone()
+    {
+        $institution = app(LegacyInstitution::class);
+        $telefoneObrigatorio = $institution->obrigar_telefone_pessoa;
+        $possuiTelefoneInformado = (!empty($this->telefone_1) || !empty($this->telefone_2));
+
+        if ($telefoneObrigatorio && !$possuiTelefoneInformado) {
             return false;
         }
 

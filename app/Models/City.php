@@ -2,42 +2,23 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasIbgeCode;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
-/**
- * City
- *
- * @property int    $id
- * @property string $name
- * @property string $formatted_name
- * @property string $state_id
- * @property int    $ibge_code
- * @property int    $parent_id
- * @property int    $created_by
- * @property int    $updated_by
- * @property int    $created_at
- * @property int    $updated_at
- * @property int    $registry_origin
- */
 class City extends Model
 {
+    use HasIbgeCode;
+    
     /**
      * @var array
      */
-    protected $casts = [
-        'ibge_code' => 'integer',
-        'created_by' => 'integer',
-        'updated_by' => 'integer',
+    protected $fillable = [
+        'state_id', 'name', 'ibge_code',
     ];
-
-    /**
-     * @return string
-     */
-    public function getFormattedNameAttribute()
-    {
-        return "{$this->name}/{$this->state_id}";
-    }
 
     /**
      * @return BelongsTo
@@ -48,34 +29,52 @@ class City extends Model
     }
 
     /**
-     * @return BelongsTo
+     * @return HasMany
      */
-    public function parent()
+    public function districts()
     {
-        return $this->belongsTo(City::class, 'parent_id', 'id');
+        return $this->hasMany(District::class);
     }
 
     /**
-     * @return BelongsTo
+     * @return HasMany
      */
-    public function updatedBy()
+    public function places()
     {
-        return $this->belongsTo(Individual::class, 'updated_by', 'id');
+        return $this->hasMany(Place::class);
     }
 
     /**
-     * @return BelongsTo
+     * @param string $name
+     *
+     * @return Builder
      */
-    public function createdBy()
+    public static function queryFindByName($name)
     {
-        return $this->belongsTo(Individual::class, 'created_by', 'id');
+        return static::query()->whereRaw("translate(upper(name),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$name}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')");
     }
 
     /**
+     * @param int $id
+     *
      * @return string
      */
-    public function getRegistryOriginDescriptionAttribute()
+    public static function getNameById($id)
     {
-        return (new RegistryOrigin)->getDescriptiveValues()[(int) $this->registry_origin];
+        $city = static::query()->find($id);
+
+        return $city->name ?? '';
+    }
+
+    /**
+     * @param string $abbreviation
+     *
+     * @return Collection
+     */
+    public static function getListByAbbreviation($abbreviation)
+    {
+        return static::query()->whereHas('state', function ($query) use ($abbreviation) {
+            $query->where('abbreviation', $abbreviation);
+        })->orderBy('name')->pluck('name', 'id');
     }
 }

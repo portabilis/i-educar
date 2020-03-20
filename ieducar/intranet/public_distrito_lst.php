@@ -1,10 +1,13 @@
 <?php
 
+use App\Models\District;
+use iEducar\Legacy\InteractWithDatabase;
+use iEducar\Legacy\SelectOptions;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
-require_once 'include/public/clsPublicDistrito.inc.php';
 require_once 'CoreExt/View/Helper/UrlHelper.php';
 
 class clsIndexBase extends clsBase
@@ -18,6 +21,8 @@ class clsIndexBase extends clsBase
 
 class indice extends clsListagem
 {
+    use InteractWithDatabase, SelectOptions;
+
     public $__limite;
     public $__offset;
     public $idmun;
@@ -31,7 +36,17 @@ class indice extends clsListagem
     public $data_cad;
     public $operacao;
     public $idpais;
-    public $sigla_uf;
+    public $iduf;
+
+    public function model()
+    {
+        return District::class;
+    }
+
+    public function index()
+    {
+        return 'public_distrito_lst.php';
+    }
 
     public function Gerar()
     {
@@ -48,16 +63,7 @@ class indice extends clsListagem
             'Pais'
         ]);
 
-        $opcoes = ['' => 'Selecione'];
-
-        $objTemp = new clsPais();
-        $lista = $objTemp->lista(false, false, false, false, false, 'nome ASC');
-
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes[$registro['idpais']] = $registro['nome'];
-            }
-        }
+        $opcoes = ['' => 'Selecione'] + $this->getCountries();
 
         $this->campoLista(
             'idpais',
@@ -75,28 +81,14 @@ class indice extends clsListagem
         $opcoes = ['' => 'Selecione'];
 
         if ($this->idpais) {
-            $objTemp = new clsUf();
-            $lista = $objTemp->lista(
-                false,
-                false,
-                $this->idpais,
-                false,
-                false,
-                'nome ASC'
-            );
-
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['sigla_uf']] = $registro['nome'];
-                }
-            }
+            $opcoes += $this->getStates($this->idpais);
         }
 
         $this->campoLista(
-            'sigla_uf',
+            'iduf',
             'Estado',
             $opcoes,
-            $this->sigla_uf,
+            $this->iduf,
             '',
             false,
             '',
@@ -107,28 +99,8 @@ class indice extends clsListagem
 
         $opcoes = ['' => 'Selecione'];
 
-        if ($this->sigla_uf) {
-            $objTemp = new clsMunicipio();
-            $lista = $objTemp->lista(
-                false,
-                $this->sigla_uf,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                'nome ASC'
-            );
-
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['idmun']] = $registro['nome'];
-                }
-            }
+        if ($this->iduf) {
+            $opcoes += $this->getCities($this->iduf);
         }
 
         $this->campoLista(
@@ -149,44 +121,29 @@ class indice extends clsListagem
         $this->__limite = 20;
         $this->__offset = ($_GET['pagina_' . $this->nome]) ? ($_GET['pagina_' . $this->nome] * $this->__limite - $this->__limite) : 0;
 
-    $obj_distrito = new clsPublicDistrito();
-    $obj_distrito->setOrderby('nome ASC');
-    $obj_distrito->setLimite($this->__limite, $this->__offset);
-
-        $lista = $obj_distrito->lista(
-            $this->idmun,
-            null,
-            $this->nome,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $this->idpais,
-            $this->sigla_uf
-        );
-
-        $total = $obj_distrito->_total;
+        [$data, $total] = $this->paginate($this->__limite, $this->__offset, function ($query) {
+            $query->with('city.state.country');
+            $query->orderBy('name');
+            $query->when($this->nome, function ($query) {
+                $query->whereUnaccent('name', $this->nome);
+            });
+            $query->when($this->idmun, function ($query) {
+                $query->where('city_id', $this->idmun);
+            });
+        });
 
         $url = CoreExt_View_Helper_UrlHelper::getInstance();
         $options = ['query' => ['iddis' => null]];
 
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $options['query']['iddis'] = $registro['iddis'];
+        foreach ($data as $district) {
+            $options['query']['iddis'] = $district->id;
 
-                $this->addLinhas([
-                    $url->l($registro['nome'], 'public_distrito_det.php', $options),
-                    $url->l($registro['nm_municipio'], 'public_distrito_det.php', $options),
-                    $url->l($registro['nm_estado'], 'public_distrito_det.php', $options),
-                    $url->l($registro['nm_pais'], 'public_distrito_det.php', $options)
-                ]);
-            }
+            $this->addLinhas([
+                $url->l($district->name, 'public_distrito_det.php', $options),
+                $url->l($district->city->name, 'public_distrito_det.php', $options),
+                $url->l($district->city->state->name, 'public_distrito_det.php', $options),
+                $url->l($district->city->state->country->name, 'public_distrito_det.php', $options)
+            ]);
         }
 
     $this->addPaginador2('public_distrito_lst.php', $total, $_GET, $this->nome, $this->__limite);
@@ -217,7 +174,7 @@ $pagina->MakeAll();
   document.getElementById('idpais').onchange = function () {
     var campoPais = document.getElementById('idpais').value;
 
-    var campoUf = document.getElementById('sigla_uf');
+    var campoUf = document.getElementById('iduf');
     campoUf.length = 1;
     campoUf.disabled = true;
     campoUf.options[0].text = 'Carregando estado...';
@@ -227,7 +184,7 @@ $pagina->MakeAll();
   }
 
   function getUf (xml_uf) {
-    var campoUf = document.getElementById('sigla_uf');
+    var campoUf = document.getElementById('iduf');
     var DOM_array = xml_uf.getElementsByTagName('estado');
 
     if (DOM_array.length) {
@@ -237,7 +194,7 @@ $pagina->MakeAll();
 
       for (var i = 0; i < DOM_array.length; i++) {
         campoUf.options[campoUf.options.length] = new Option(
-          DOM_array[i].firstChild.data, DOM_array[i].getAttribute('sigla_uf'),
+          DOM_array[i].firstChild.data, DOM_array[i].getAttribute('id'),
           false, false
         );
       }
@@ -246,8 +203,8 @@ $pagina->MakeAll();
     }
   }
 
-  document.getElementById('sigla_uf').onchange = function () {
-    var campoUf = document.getElementById('sigla_uf').value;
+  document.getElementById('iduf').onchange = function () {
+    var campoUf = document.getElementById('iduf').value;
 
     var campoMunicipio = document.getElementById('idmun');
     campoMunicipio.length = 1;

@@ -34,6 +34,8 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
         ->name('enrollments.enroll.create');
     Route::post('/matricula/{registration}/enturmar/{schoolClass}', 'EnrollmentController@enroll')
         ->name('enrollments.enroll');
+    Route::get('/enrollment-history/{id}', 'EnrollmentHistoryController@show')
+        ->name('enrollments.enrollment-history');
 
     Route::get('/enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@indexEnroll')
         ->name('enrollments.batch.enroll.index');
@@ -95,7 +97,16 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/atualiza-situacao-matriculas', 'UpdateRegistrationStatusController@index')->name('update-registration-status.index');
     Route::post('/atualiza-situacao-matriculas', 'UpdateRegistrationStatusController@updateStatus')->name('update-registration-status.update-status');
 
+    Route::get('/exportacao-para-o-seb', 'SebExportController@index')->name('seb-export.index');
+    Route::post('/exportacao-para-o-seb', 'SebExportController@export')->name('seb-export.export');
+
     Route::get('/abre-url-privada', 'OpenPrivateUrlController@open')->name('open_private_url.open');
+
+    Route::get('/notificacoes', 'NotificationController@index')->name('notifications.index');
+    Route::get('/notificacoes/retorna-notificacoes-usuario', 'NotificationController@getByLoggedUser')->name('notifications.get-by-logged-user');
+    Route::get('/notificacoes/quantidade-nao-lidas', 'NotificationController@getNotReadCount')->name('notifications.get-not-read-count');
+    Route::post('/notificacoes/marca-como-lida', 'NotificationController@markAsRead')->name('notifications.mark-as-read');
+    Route::post('/notificacoes/marca-todas-como-lidas', 'NotificationController@markAllRead')->name('notifications.mark-all-read');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
