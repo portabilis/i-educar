@@ -4,6 +4,7 @@ $j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="tu
 $j('td .formdktd b').remove();
 $j('.tablecadastro td .formdktd div').remove();
 $j('#tab1').addClass('turmaTab-active').removeClass('turmaTab');
+$j('#ref_cod_disciplina_dispensada').css('maxWidth', '600px');
 
 // Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
 $j('#codigo_inep_educacenso').closest('tr').attr('id','tr_codigo_inep_educacenso');
@@ -199,7 +200,7 @@ $j('#tipo_mediacao_didatico_pedagogico').on('change', function(){
   }
 }).trigger('change');
 
-function buscaEtapasDaEscola() {  
+function buscaEtapasDaEscola() {
   var urlApi = getResourceUrlBuilder.buildUrl('/module/Api/Escola', 'etapas-da-escola-por-ano', {
     escola_id : $j('#ref_cod_escola').val(),
     ano : new Date().getFullYear()
