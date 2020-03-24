@@ -46,7 +46,6 @@ function modalOpen(thisElement) {
     var line = elementLine.replace(/\D/g, '');
     idLastLineUsed = line;
     fillInputs();
-    addEventsManagerInputs();
     $j("#modal_school_managers").dialog("open");
     changeManagerRole($j('select[id="managers_role_id[' + idLastLineUsed + ']"]'));
 }
@@ -97,15 +96,6 @@ function htmlFormModal() {
                     <input type="text" name="managers_email" id="managers_email" size="62" maxlength="50" class="text">
                 </form>
             </div>`;
-}
-
-function addEventsManagerInputs() {
-    $j.each($j('#managers_access_criteria_id'), function (index, field) {
-        field.on('change', function () {
-            changeAccessCriteria(this);
-        });
-        changeAccessCriteria(this);
-    });
 }
 
 function changeManagerRole(field) {
