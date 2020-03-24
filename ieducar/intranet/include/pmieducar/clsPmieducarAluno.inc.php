@@ -896,7 +896,7 @@ class clsPmieducarAluno extends Model
         $filtros = '';
         $this->resetCamposLista();
 
-        $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social, COALESCE(nome_social, pessoa.nome) AS ordem_aluno, COALESCE(a.nm_mae, pessoa_mae.nome) AS nome_mae';
+        $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social, COALESCE(nome_social, pessoa.nome) AS ordem_aluno, COALESCE(a.nm_mae, pessoa_mae.nome) AS nome_mae, educacenso_cod_aluno.cod_aluno_inep AS codigo_inep';
 
         if ($filtra_baseado_matricula) {
             $sql = "SELECT distinct {$this->_campos_lista} FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
@@ -907,7 +907,8 @@ class clsPmieducarAluno extends Model
         $joins = '
              LEFT JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes
              LEFT JOIN cadastro.fisica ON fisica.idpes = a.ref_idpes
-             LEFT JOIN cadastro.pessoa AS pessoa_mae ON pessoa_mae.idpes = fisica.idpes_mae';
+             LEFT JOIN cadastro.pessoa AS pessoa_mae ON pessoa_mae.idpes = fisica.idpes_mae
+             LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = a.cod_aluno';
 
         $sql .= $joins;
 
