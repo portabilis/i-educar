@@ -180,7 +180,6 @@ class indice extends clsCadastro
     public $managers_role_id;
     public $servidor_id;
     public $managers_access_criteria_id;
-    public $managers_access_criteria_description;
     public $managers_link_type_id;
     public $managers_chief;
     public $managers_email;
@@ -2429,7 +2428,6 @@ class indice extends clsCadastro
                     old('managers_chief')[$key],
                     old('servidor_id')[$key],
                     old('managers_access_criteria_id')[$key],
-                    old('managers_access_criteria_description')[$key],
                     old('managers_link_type_id')[$key],
                     old('managers_email')[$key],
                 ];
@@ -2462,7 +2460,6 @@ class indice extends clsCadastro
         $this->inputsHelper()->select('managers_role_id', $options);
         $this->campoRotulo('detalhes', 'Detalhes', '<a class="btn-detalhes" onclick="modalOpen(this)">Dados adicionais do(a) gestor(a)</a>');
         $this->campoOculto('managers_access_criteria_id', null);
-        $this->campoOculto('managers_access_criteria_description', null);
         $this->campoOculto('managers_link_type_id', null);
         $this->campoOculto('managers_email', null);
 
@@ -2494,7 +2491,6 @@ class indice extends clsCadastro
             $this->managers_chief[$key] ?? (int)$schoolManager->chief,
             $this->servidor_id[$key] ?? $schoolManager->employee_id,
             $this->managers_access_criteria_id[$key] ?? $schoolManager->access_criteria_id,
-            $this->managers_access_criteria_description[$key] ?? $schoolManager->access_criteria_description,
             $this->managers_link_type_id[$key] ?? $schoolManager->link_type_id,
             $this->managers_email[$key] ?? $schoolManager->individual->person->email,
         ];
@@ -2519,7 +2515,6 @@ class indice extends clsCadastro
             $valueObject->schoolId = $schoolId;
             $valueObject->roleId = $this->managers_role_id[$key] ?: null;
             $valueObject->accessCriteriaId = $this->managers_access_criteria_id[$key] ?: null;
-            $valueObject->accessCriteriaDescription = $this->managers_access_criteria_description[$key];
             $valueObject->linkTypeId = $this->managers_link_type_id[$key] ?: null;
             $valueObject->isChief = $this->managers_chief[$key];
             $schoolService->storeManager($valueObject);
@@ -2580,13 +2575,12 @@ class indice extends clsCadastro
             $valueObject->inepId = $this->managers_inep_id[$key];
             $valueObject->roleId = $this->managers_role_id[$key];
             $valueObject->accessCriteriaId = $this->managers_access_criteria_id[$key];
-            $valueObject->accessCriteriaDescription = $this->managers_access_criteria_description[$key];
             $valueObject->linkTypeId = $this->managers_link_type_id[$key];
             $valueObject->isChief = $this->managers_chief[$key];
             $managers[] = $valueObject;
         }
 
-        $managersValidator = new SchoolManagers($managers, $this->dependencia_administrativa);
+        $managersValidator = new SchoolManagers($managers, $this->dependencia_administrativa, $this->situacao);
 
         if (!$managersValidator->isValid()) {
             $this->mensagem = implode('<br>', $managersValidator->getMessage());
