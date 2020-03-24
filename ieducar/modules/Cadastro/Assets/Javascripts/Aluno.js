@@ -1172,19 +1172,12 @@ var checkTipoCertidaoCivil = function () {
 
 function disableJustificativaFields() {
     $jField = $j('#justificativa_falta_documentacao');
-    $jField.makeUnrequired();
     $jField.attr('disabled', 'disabled');
 }
 
 function enableJustificativaFields() {
     $jField = $j('#justificativa_falta_documentacao');
     $jField.removeAttr('disabled');
-
-    if ($j('#obrigar_campos_censo').val() == '1') {
-      $jField.makeRequired();
-    } else {
-      $jField.makeUnrequired();
-    }
 }
 
 var handleGetPersonParentDetails = function (dataResponse, parentType) {
