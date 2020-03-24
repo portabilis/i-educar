@@ -779,7 +779,9 @@ class Registro10 extends Registro10Fields
             $this->qtdProfissionaisPreparacao ||
             $this->qtdBombeiro ||
             $this->qtdPsicologo ||
-            $this->qtdFonoaudiologo;
+            $this->qtdFonoaudiologo ||
+            $this->qtdViceDiretor ||
+            $this->qtdOrientadorComunitario;
     }
 
     /**
