@@ -194,12 +194,12 @@ class Registro10 extends AbstractRegistro
             empty($data->url) ? 0 : 1, // 159
             $data->compartilhaEspacosAtividadesIntegracao ?: 0, // 160
             $data->usaEspacosEquipamentosAtividadesRegulares ?: 0, // 161
-            $data->orgaosColegiadosAssociacaoPais() ?: null, // 162
-            $data->orgaosColegiadosAssociacaoPaisEMestres() ?: null, // 163
-            $data->orgaosColegiadosConselhoEscolar() ?: null, // 164
-            $data->orgaosColegiadosGremioEstudantil() ?: null, // 165
-            $data->orgaosColegiadosOutros() ?: null, // 166
-            $data->orgaosColegiadosNenhum() ?: null, // 167
+            $data->orgaosColegiadosAssociacaoPais() ?: 0, // 162
+            $data->orgaosColegiadosAssociacaoPaisEMestres() ?: 0, // 163
+            $data->orgaosColegiadosConselhoEscolar() ?: 0, // 164
+            $data->orgaosColegiadosGremioEstudantil() ?: 0, // 165
+            $data->orgaosColegiadosOutros() ?: 0, // 166
+            $data->orgaosColegiadosNenhum() ?: 0, // 167
             $data->projetoPoliticoPedagogico ?: 0, // 168
         ];
 
