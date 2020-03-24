@@ -904,9 +904,11 @@ class clsPmieducarAluno extends Model
             $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         }
 
-        $sql .= '
+        $joins = '
              LEFT JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes
              LEFT JOIN cadastro.fisica ON fisica.idpes = a.ref_idpes';
+
+        $sql .= $joins;
 
         $whereAnd = ' WHERE ';
 
@@ -978,16 +980,7 @@ class clsPmieducarAluno extends Model
         if (is_string($str_nome_aluno)) {
             $str_nome_aluno = pg_escape_string($str_nome_aluno);
 
-            $filtros .= "{$whereAnd} EXISTS (
-                     SELECT
-                       1
-                     FROM
-                       cadastro.pessoa
-                       inner join cadastro.fisica ON (fisica.idpes = pessoa.idpes)
-                     WHERE
-                       cadastro.pessoa.idpes = ref_idpes
-                       AND translate(upper(coalesce(nome_social, '') || nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_aluno}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
-                   )";
+            $filtros .= "{$whereAnd}  translate(upper(coalesce(fisica.nome_social, '') || pessoa.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_aluno}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
 
             $whereAnd = ' AND ';
         }
@@ -1163,6 +1156,7 @@ class clsPmieducarAluno extends Model
             $sqlCount = "SELECT COUNT(0) FROM {$this->_tabela} ";
         }
 
+        $sqlCount .= $joins;
         $sqlCount .= $filtros;
 
         $this->_total = $db->CampoUnico($sqlCount);
