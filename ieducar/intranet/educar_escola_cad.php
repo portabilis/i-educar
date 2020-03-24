@@ -199,6 +199,7 @@ class indice extends clsCadastro
     public $qtd_fonoaudiologo;
     public $qtd_vice_diretor;
     public $qtd_orientador_comunitario;
+    public $iddis;
 
     private $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
@@ -1610,6 +1611,7 @@ class indice extends clsCadastro
                     $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
                     $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
                     $obj->esfera_administrativa = $this->esfera_administrativa;
+                    $obj->iddis = (int)$this->district_id;
                     foreach ($this->inputsRecursos as $key => $value) {
                         $obj->{$key} = $this->{$key};
                     }
@@ -1758,6 +1760,7 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
+            $obj->iddis = (int)$this->district_id;
             foreach ($this->inputsRecursos as $key => $value) {
                 $obj->{$key} = $this->{$key};
             }
@@ -1955,6 +1958,7 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
+            $obj->iddis = (int)$this->district_id;
             foreach ($this->inputsRecursos as $key => $value) {
                 $obj->{$key} = $this->{$key};
             }
@@ -2049,6 +2053,7 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
+            $obj->iddis = (int)$this->district_id;
             foreach ($this->inputsRecursos as $key => $value) {
                 $obj->{$key} = $this->{$key};
             }

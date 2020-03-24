@@ -169,6 +169,7 @@ class clsPmieducarEscola extends Model
     public $qtd_fonoaudiologo;
     public $qtd_vice_diretor;
     public $qtd_orientador_comunitario;
+    public $iddis;
 
     public function __construct(
         $cod_escola = null,
@@ -1238,6 +1239,12 @@ class clsPmieducarEscola extends Model
             if (is_numeric($this->qtd_orientador_comunitario)) {
                 $campos .= "{$gruda}qtd_orientador_comunitario";
                 $valores .= "{$gruda}$this->qtd_orientador_comunitario";
+                $gruda = ', ';
+            }
+
+            if (is_integer($this->iddis) && $this->iddis > 0) {
+                $campos .= "{$gruda}iddis";
+                $valores .= "{$gruda}$this->iddis";
                 $gruda = ', ';
             }
 
@@ -2329,6 +2336,14 @@ class clsPmieducarEscola extends Model
                 $set .= "{$gruda}qtd_orientador_comunitario = NULL ";
             }
 
+            if (is_integer($this->iddis) && $this->iddis > 0) {
+                $gruda = ', ';
+                $set .= "{$gruda}iddis = '{$this->iddis}'";
+            } elseif (is_null($this->iddis) || $this->iddis == '') {
+                $gruda = ', ';
+                $set .= "{$gruda}iddis = NULL ";
+            }
+
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_escola = '{$this->cod_escola}'");
 
@@ -2453,6 +2468,7 @@ class clsPmieducarEscola extends Model
         }
 
         if (is_string($str_nome)) {
+            $str_nome = pg_escape_string($str_nome);
             $filtros .= "{$whereAnd} translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
         }
