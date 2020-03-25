@@ -915,7 +915,7 @@ class clsPmieducarAluno extends Model
         $whereAnd = ' WHERE ';
 
         if (is_numeric($int_cod_aluno)) {
-            $filtros .= "{$whereAnd} cod_aluno = {$int_cod_aluno}";
+            $filtros .= "{$whereAnd} a.cod_aluno = {$int_cod_aluno}";
             $whereAnd = ' AND ';
         }
 
