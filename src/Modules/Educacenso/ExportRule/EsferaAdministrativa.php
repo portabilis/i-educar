@@ -19,8 +19,14 @@ class EsferaAdministrativa implements EducacensoExportRule
             Regulamentacao::EM_TRAMITACAO
         ];
 
-        if (!in_array($registro00->regulamentacao, $values)) {
-            $registro00->esferaAdministrativa = null;
+        if (in_array($registro00->regulamentacao, $values)) {
+            $registro00->esferaFederal = (int) $registro00->esferaFederal;
+            $registro00->esferaEstadual = (int) $registro00->esferaEstadual;
+            $registro00->esferaMunicipal = (int) $registro00->esferaMunicipal;
+        } else {
+            $registro00->esferaFederal = null;
+            $registro00->esferaEstadual = null;
+            $registro00->esferaMunicipal = null;
         }
 
         return $registro00;
