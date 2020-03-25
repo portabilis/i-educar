@@ -1058,7 +1058,7 @@ class clsPmieducarAluno extends Model
         }
 
         if (is_numeric($int_ref_cod_escola)) {
-            $filtros .= "{$whereAnd} cod_aluno IN ( SELECT ref_cod_aluno FROM pmieducar.matricula WHERE ref_ref_cod_escola = '{$int_ref_cod_escola}' AND ultima_matricula = 1)";
+            $filtros .= "{$whereAnd} a.cod_aluno IN ( SELECT ref_cod_aluno FROM pmieducar.matricula WHERE ref_ref_cod_escola = '{$int_ref_cod_escola}' AND ultima_matricula = 1)";
             $whereAnd = ' AND ';
         }
 
@@ -1073,7 +1073,7 @@ class clsPmieducarAluno extends Model
         }
 
         if (!empty($cod_inep) && is_numeric($cod_inep)) {
-            $filtros .= "{$whereAnd} cod_aluno IN( SELECT cod_aluno FROM modules.educacenso_cod_aluno WHERE cod_aluno_inep = {$cod_inep})";
+            $filtros .= "{$whereAnd} a.cod_aluno IN( SELECT cod_aluno FROM modules.educacenso_cod_aluno WHERE cod_aluno_inep = {$cod_inep})";
             $whereAnd = ' AND ';
         }
 
@@ -1153,7 +1153,7 @@ class clsPmieducarAluno extends Model
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
         if ($filtra_baseado_matricula) {
-            $sqlCount = "SELECT COUNT(DISTINCT cod_aluno) FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
+            $sqlCount = "SELECT COUNT(DISTINCT a.cod_aluno) FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
         } else {
             $sqlCount = "SELECT COUNT(0) FROM {$this->_tabela} ";
         }
