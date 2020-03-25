@@ -45,7 +45,7 @@ class ExisteEnturmacoesEjaOuEducacaoProfissionalValidator implements EducacensoV
      */
     public function getMessage()
     {
-        return "Não existem turmas diferentes de Educação infantil nesta escola";
+        return "Não existem matrículas de EJA ou Educação Profissional para o aluno.";
     }
 
 }
