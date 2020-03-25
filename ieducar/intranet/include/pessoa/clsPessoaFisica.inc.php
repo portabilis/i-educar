@@ -141,7 +141,7 @@ class clsPessoaFisica extends clsPessoaFj
         $where = '';
 
         if (is_string($str_nome) && $str_nome != '') {
-            $str_nome = addslashes($str_nome);
+            $str_nome = pg_escape_string($str_nome);
             $str_nome = str_replace(' ', '%', $str_nome);
 
             $where .= "{$whereAnd} translate(upper(coalesce(nome_social, '') || nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
@@ -149,7 +149,7 @@ class clsPessoaFisica extends clsPessoaFj
         }
 
         if (is_string($numeric_cpf)) {
-            $numeric_cpf = addslashes($numeric_cpf);
+            $numeric_cpf = pg_escape_string($numeric_cpf);
 
             $where .= "{$whereAnd} cpf::varchar ILIKE E'%{$numeric_cpf}%' ";
             $whereAnd = ' AND ';

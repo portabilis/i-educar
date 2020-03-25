@@ -461,6 +461,11 @@ function validateGraduations() {
       messageUtils.error('O campo: Instituição de Educação Superior é obrigatório.', collegeName);
       result = false;
     }
+
+    if (collegeName.val() != '' && collegeId.val() == '') {
+      messageUtils.error('O campo: Instituição de Educação Superior precisa ser uma instituição válida.', collegeName);
+      result = false;
+    }
   });
 
   return result;
