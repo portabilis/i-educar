@@ -1242,7 +1242,7 @@ class indice extends clsCadastro
 
             $this->campoRotulo(
                 'quantidade_computadores_alunos',
-                '<b>Quantidade de computadores de uso dos aluno</b>'
+                '<b>Quantidade de computadores de uso dos alunos</b>'
             );
 
             $options = array('label' => 'Computadores de mesa (desktop)', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_mesa, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
@@ -2880,7 +2880,7 @@ class indice extends clsCadastro
         }
 
         if (in_array(EquipamentosAcessoInternet::COMPUTADOR_MESA, $this->equipamentos_acesso_internet) && $quantidadesNaoPreenchidas) {
-            $this->mensagem = 'Preencha pelo menos um dos campos da seção <b>Quantidade de computadores de uso dos aluno</b> quando o campo <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> for preenchido com <b>Computadores de mesa, portáteis e tablets da escola (no laboratório de informática, biblioteca, sala de aula, etc.)</b>.';
+            $this->mensagem = 'Preencha pelo menos um dos campos da seção <b>Quantidade de computadores de uso dos alunos</b> quando o campo <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> for preenchido com <b>Computadores de mesa, portáteis e tablets da escola (no laboratório de informática, biblioteca, sala de aula, etc.)</b>.';
             return false;
         }
 
