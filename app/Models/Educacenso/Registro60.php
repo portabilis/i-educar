@@ -100,6 +100,11 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
     public $veiculoTransporteEscolar;
 
     /**
+     * @var string Campo usado somente na análise
+     */
+    public $localFuncionamentoDiferenciadoTurma;
+
+    /**
      * @return bool
      */
     public function transportePublicoRequired()
