@@ -1086,6 +1086,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
             if ($pessoa->isStudent()) {
                 $studentDataAnalysis = new Register30StudentDataAnalysis($pessoa);
+                $studentDataAnalysis->setYear($this->getRequest()->ano);
                 $studentDataAnalysis->run();
                 $mensagem = array_merge($mensagem, $studentDataAnalysis->getMessages());
             }

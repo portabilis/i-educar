@@ -19,6 +19,8 @@ class Register30StudentDataAnalysis implements AnalysisInterface
      */
     private $data;
 
+    private $year;
+
     /**
      * @var array
      */
@@ -27,6 +29,11 @@ class Register30StudentDataAnalysis implements AnalysisInterface
     public function __construct(RegistroEducacenso $data)
     {
         $this->data = $data;
+    }
+
+    public function setYear($year)
+    {
+        $this->year = $year;
     }
 
     public function run()
@@ -64,7 +71,7 @@ class Register30StudentDataAnalysis implements AnalysisInterface
             ];
         }
 
-        $precisaInformarCPF = new ExisteEnturmacoesEjaOuEducacaoProfissionalValidator($data->codigoEscola, $data->codigoAluno, 2020);
+        $precisaInformarCPF = new ExisteEnturmacoesEjaOuEducacaoProfissionalValidator($data->codigoEscola, $data->codigoAluno, $this->year);
         $precisaInformarCPF = $precisaInformarCPF->isValid();
 
         if (!$data->cpf && $precisaInformarCPF) {
