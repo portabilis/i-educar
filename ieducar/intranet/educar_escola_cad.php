@@ -198,6 +198,9 @@ class indice extends clsCadastro
     public $qtd_bombeiro;
     public $qtd_psicologo;
     public $qtd_fonoaudiologo;
+    public $qtd_vice_diretor;
+    public $qtd_orientador_comunitario;
+    public $iddis;
 
     private $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
@@ -213,6 +216,8 @@ class indice extends clsCadastro
         'qtd_bombeiro' => 'Bombeiro(a) brigadista, profissionais de assistência a saúde (urgência e emergência), Enfermeiro(a), Técnico(a) de enfermagem e socorrista',
         'qtd_psicologo' => 'Psicólogo(a) Escolar',
         'qtd_fonoaudiologo' => 'Fonoaudiólogo(a)',
+        'qtd_vice_diretor' => 'Vice-diretor(a) ou diretor(a) adjunto(a), profissionais responsáveis pela gestão administrativa e/ou financeira',
+        'qtd_orientador_comunitario' => 'Orientador(a) comunitário(a) ou assistente social'
     ];
 
     public function Inicializar()
@@ -1613,6 +1618,7 @@ class indice extends clsCadastro
                     $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
                     $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
                     $obj->esfera_administrativa = $this->esfera_administrativa;
+                    $obj->iddis = (int)$this->district_id;
                     foreach ($this->inputsRecursos as $key => $value) {
                         $obj->{$key} = $this->{$key};
                     }
@@ -1761,6 +1767,7 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
+            $obj->iddis = (int)$this->district_id;
             foreach ($this->inputsRecursos as $key => $value) {
                 $obj->{$key} = $this->{$key};
             }
@@ -1958,6 +1965,7 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
+            $obj->iddis = (int)$this->district_id;
             foreach ($this->inputsRecursos as $key => $value) {
                 $obj->{$key} = $this->{$key};
             }
@@ -2052,6 +2060,7 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
+            $obj->iddis = (int)$this->district_id;
             foreach ($this->inputsRecursos as $key => $value) {
                 $obj->{$key} = $this->{$key};
             }
@@ -2339,11 +2348,22 @@ class indice extends clsCadastro
     protected function validaDadosTelefones()
     {
         return $this->validaDDDTelefone($this->p_ddd_telefone_1, $this->p_telefone_1, 'Telefone 1') &&
-        $this->validaTelefone($this->p_telefone_1, 'Telefone 1') &&
-        $this->validaDDDTelefone($this->p_ddd_telefone_2, $this->p_telefone_2, 'Telefone 2') &&
-        $this->validaTelefone($this->p_telefone_2, 'Telefone 2') &&
-        $this->validaDDDTelefone($this->p_ddd_telefone_mov, $this->p_telefone_mov, 'Celular') &&
-        $this->validaDDDTelefone($this->p_ddd_telefone_fax, $this->p_telefone_fax, 'Fax');
+            $this->validaTelefone($this->p_telefone_1, 'Telefone 1') &&
+            $this->validaDDDTelefone($this->p_ddd_telefone_2, $this->p_telefone_2, 'Telefone 2') &&
+            $this->validaTelefone($this->p_telefone_2, 'Telefone 2') &&
+            $this->validaDDDTelefone($this->p_ddd_telefone_mov, $this->p_telefone_mov, 'Celular') &&
+            $this->validaDDDTelefone($this->p_ddd_telefone_fax, $this->p_telefone_fax, 'Fax') &&
+            $this->validaTelefones($this->p_telefone_1, $this->p_telefone_2);
+    }
+
+    protected function validaTelefones($telefone1, $telefone2)
+    {
+        if ($telefone1 == $telefone2) {
+            $this->mensagem = 'O campo: Telefone 2 não pode ter o mesmo valor do campo: Telefone 1';
+            return false;
+        }
+
+        return true;
     }
 
     protected function validaDDDTelefone($valorDDD = null, $valorTelefone = null, $nomeCampo)
