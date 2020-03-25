@@ -576,7 +576,8 @@ SQL;
                     turma.tipo_mediacao_didatico_pedagogico "tipoMediacaoTurma",
                     aluno.veiculo_transporte_escolar "veiculoTransporteEscolar",
                     curso.modalidade_curso as "modalidadeCurso",
-                    turma.local_funcionamento_diferenciado AS "localFuncionamentoDiferenciadoTurma"
+                    turma.local_funcionamento_diferenciado AS "localFuncionamentoDiferenciadoTurma",
+                    fisica.pais_residencia AS "paisResidenciaAluno",
                      FROM pmieducar.aluno
                      JOIN pmieducar.matricula ON matricula.ref_cod_aluno = aluno.cod_aluno
                      JOIN pmieducar.escola ON escola.cod_escola = matricula.ref_ref_cod_escola
