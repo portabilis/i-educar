@@ -2,6 +2,7 @@
 
 namespace App\Models\Educacenso;
 
+use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use Transporte_Model_Responsavel;
@@ -14,7 +15,6 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
     public $inepEscola;
     public $codigoPessoa;
     public $inepAluno;
-    public $codigoTUrma;
     public $inepTurma;
     public $matriculaAluno;
     public $etapaAluno;
@@ -134,6 +134,17 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
     {
         return $this->tipoAtendimentoTurma == TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR ||
             $this->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE;
+    }
+
+    /**
+     * @return bool
+     */
+    public function recebeEscolarizacaoOutroEspacoIsRequired()
+    {
+        return $this->tipoAtendimentoTurma == TipoAtendimentoTurma::ESCOLARIZACAO ||
+            $this->tipoMediacaoTurma == TipoMediacaoDidaticoPedagogico::PRESENCIAL ||
+            $this->localFuncionamentoDiferenciadoTurma == \App_Model_LocalFuncionamentoDiferenciado::NAO_ESTA ||
+            $this->localFuncionamentoDiferenciadoTurma == \App_Model_LocalFuncionamentoDiferenciado::SALA_ANEXA;
     }
 
     public function getCodigoPessoa()

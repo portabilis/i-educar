@@ -1394,7 +1394,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
             if (is_null($aluno->transportePublico) && $aluno->transportePublicoRequired()) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados.  Verifique se o transporte escolar público do(a) aluno(a) {$nomeAluno} foi informado.",
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verifique se o transporte escolar público do(a) aluno(a) {$nomeAluno} foi informado.",
                     'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados Pessoais > Campo: Transporte escolar público)',
                     'linkPath' => "/module/Cadastro/aluno?id={$codigoAluno}",
                     'fail' => true
@@ -1414,6 +1414,15 @@ class EducacensoAnaliseController extends ApiCoreController
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verifique se o código INEP do aluno {$nomeAluno}, matriculado na turma {$nomeTurma}, possui 12 dígitos.",
                     'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados gerais > Campo: Código INEP)',
+                    'linkPath' => "/module/Cadastro/aluno?id={$codigoAluno}",
+                    'fail' => true
+                ];
+            }
+
+            if ((!$aluno->recebeEscolarizacaoOutroEspacao) && $aluno->recebeEscolarizacaoOutroEspacoIsRequired()) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verifique se a escolarização em outro espaço foi informada para o(a) aluno(a) {$nomeAluno}.",
+                    'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados Educacenso > Campo: Recebe escolarização em outro espaço (diferente da escola))',
                     'linkPath' => "/module/Cadastro/aluno?id={$codigoAluno}",
                     'fail' => true
                 ];
