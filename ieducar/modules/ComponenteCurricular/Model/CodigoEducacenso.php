@@ -24,14 +24,14 @@ class ComponenteCurricular_Model_CodigoEducacenso extends CoreExt_Enum
         28 => 'Estudos sociais',
         29 => 'Sociologia',
         16 => 'Informática/Computação',
-        17 => 'Disciplinas dos Cursos Técnicos Profissionais;',
+        17 => 'Áreas do conhecimento profissionalizantes',
         23 => 'LIBRAS',
-        25 => 'Disciplinas pedagógicas',
+        25 => 'Áreas do conhecimento pedagógicas',
         26 => 'Ensino religioso',
         27 => 'Língua indígena',
         31 => 'Língua Portuguesa como Segunda Língua',
         32 => 'Estágio Curricular Supervisionado',
-        99 => 'Outras disciplinas'
+        99 => 'Outras áreas do conhecimento'
     ];
 
     public function getData()
