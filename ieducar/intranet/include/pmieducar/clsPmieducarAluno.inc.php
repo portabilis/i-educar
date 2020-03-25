@@ -982,7 +982,7 @@ class clsPmieducarAluno extends Model
         if (is_string($str_nome_aluno)) {
             $str_nome_aluno = pg_escape_string($str_nome_aluno);
 
-            $filtros .= "{$whereAnd}  translate(upper(coalesce(fisica.nome_social, '') || pessoa.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_aluno}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $filtros .= "{$whereAnd}  unaccent(coalesce(fisica.nome_social, '') || pessoa.nome) LIKE unaccent('%{$str_nome_aluno}%')";
 
             $whereAnd = ' AND ';
         }
