@@ -502,7 +502,6 @@ class EducacensoExportController extends ApiCoreController
                 $gestor->inepGestor,
                 $gestor->cargo,
                 $gestor->criterioAcesso,
-                $gestor->especificacaoCriterioAcesso,
                 $gestor->tipoVinculo
             ];
 

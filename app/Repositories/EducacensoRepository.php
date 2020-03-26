@@ -264,9 +264,9 @@ SQL;
                educacenso_cod_docente.cod_docente_inep AS "inepGestor",
                school_managers.role_id AS cargo,
                school_managers.access_criteria_id AS "criterioAcesso",
-               school_managers.access_criteria_description AS "especificacaoCriterioAcesso",
                school_managers.link_type_id AS "tipoVinculo",
-               escola.dependencia_administrativa AS "dependenciaAdministrativa"
+               escola.dependencia_administrativa AS "dependenciaAdministrativa",
+               escola.situacao_funcionamento AS "situacaoFuncionamento"
           FROM school_managers
           JOIN pmieducar.escola ON escola.cod_escola = school_managers.school_id
      LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
