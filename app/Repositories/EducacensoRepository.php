@@ -577,7 +577,7 @@ SQL;
                     aluno.veiculo_transporte_escolar "veiculoTransporteEscolar",
                     curso.modalidade_curso as "modalidadeCurso",
                     turma.local_funcionamento_diferenciado AS "localFuncionamentoDiferenciadoTurma",
-                    fisica.pais_residencia AS "paisResidenciaAluno",
+                    fisica.pais_residencia AS "paisResidenciaAluno"
                      FROM pmieducar.aluno
                      JOIN pmieducar.matricula ON matricula.ref_cod_aluno = aluno.cod_aluno
                      JOIN pmieducar.escola ON escola.cod_escola = matricula.ref_ref_cod_escola
@@ -586,6 +586,7 @@ SQL;
                      JOIN pmieducar.turma ON turma.cod_turma = matricula_turma.ref_cod_turma
                      JOIN pmieducar.curso ON curso.cod_curso = turma.ref_cod_curso
                      JOIN cadastro.pessoa ON pessoa.idpes = aluno.ref_idpes
+                     JOIN cadastro.fisica ON fisica.idpes = pessoa.idpes
                 LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
                 LEFT JOIN modules.educacenso_cod_turma ON educacenso_cod_turma.cod_turma = turma.cod_turma
                 LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = aluno.cod_aluno
