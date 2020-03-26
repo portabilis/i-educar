@@ -10,7 +10,9 @@ $j(document).ready(function(){
   ];
 
   const recordsFirstStepNotActive = [
-    '00'
+    '00',
+    '30',
+    '40'
   ];
 
   const recordsSecondStep = [

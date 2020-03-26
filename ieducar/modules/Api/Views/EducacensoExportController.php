@@ -145,11 +145,16 @@ class EducacensoExportController extends ApiCoreController
         $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
         $continuaExportacao = true;
         $export = $this->exportaDadosRegistro00($escolaId, $ano, $continuaExportacao);
+
         if ($continuaExportacao) {
             $export .= $this->exportaDadosRegistro10($escolaId, $ano);
             $export .= $this->exportaDadosRegistro20($escolaId, $ano);
-            $export .= $this->exportaDadosRegistro30($escolaId, $ano);
-            $export .= $this->exportaDadosRegistro40($escolaId);
+        }
+
+        $export .= $this->exportaDadosRegistro30($escolaId, $ano);
+        $export .= $this->exportaDadosRegistro40($escolaId);
+
+        if ($continuaExportacao) {
             $export .= $this->exportaDadosRegistro50($escolaId, $ano);
             $export .= $this->exportaDadosRegistro60($escolaId, $ano);
         }
