@@ -264,9 +264,9 @@ SQL;
                educacenso_cod_docente.cod_docente_inep AS "inepGestor",
                school_managers.role_id AS cargo,
                school_managers.access_criteria_id AS "criterioAcesso",
-               school_managers.access_criteria_description AS "especificacaoCriterioAcesso",
                school_managers.link_type_id AS "tipoVinculo",
-               escola.dependencia_administrativa AS "dependenciaAdministrativa"
+               escola.dependencia_administrativa AS "dependenciaAdministrativa",
+               escola.situacao_funcionamento AS "situacaoFuncionamento"
           FROM school_managers
           JOIN pmieducar.escola ON escola.cod_escola = school_managers.school_id
      LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
@@ -798,8 +798,7 @@ SQL;
                 (ARRAY[9] <@ aluno.recursos_prova_inep)::INT "recursoBraile",
                 (ARRAY[14] <@ aluno.recursos_prova_inep)::INT "recursoNenhum",
                 fisica.nis_pis_pasep AS "nis",
-                documento.certidao_nascimento AS "certidaoNascimento",
-                aluno.justificativa_falta_documentacao AS "justificativaFaltaDocumentacao"
+                documento.certidao_nascimento AS "certidaoNascimento"
             FROM pmieducar.aluno
                  JOIN cadastro.fisica ON fisica.idpes = aluno.ref_idpes
             LEFT JOIN cadastro.documento ON documento.idpes = fisica.idpes

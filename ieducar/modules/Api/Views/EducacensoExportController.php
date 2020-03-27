@@ -430,7 +430,6 @@ class EducacensoExportController extends ApiCoreController
                 $pessoa->recursoNenhum,
                 $pessoa->nis,
                 $pessoa->certidaoNascimento,
-                $pessoa->justificativaFaltaDocumentacao,
                 $pessoa->paisResidencia,
                 $pessoa->cep,
                 $pessoa->municipioResidencia,
@@ -502,7 +501,6 @@ class EducacensoExportController extends ApiCoreController
                 $gestor->inepGestor,
                 $gestor->cargo,
                 $gestor->criterioAcesso,
-                $gestor->especificacaoCriterioAcesso,
                 $gestor->tipoVinculo
             ];
 

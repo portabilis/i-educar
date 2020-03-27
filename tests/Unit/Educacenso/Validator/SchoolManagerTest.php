@@ -12,13 +12,18 @@ use Tests\TestCase;
 
 class SchoolManagerTest extends TestCase
 {
+    public function getInstance($arrayValueObject, $administrativeDependency = 1, $operatingSituation = 1)
+    {
+        return new SchoolManagers($arrayValueObject, $administrativeDependency, $operatingSituation);
+    }
+
     public function testEmptyManagerShouldBeInvalid()
     {
         $this->markTestSkipped();
 
         $valueObject = $this->getFakeValueObject();
         $valueObject->individualId = null;
-        $validator = new SchoolManagers([$valueObject], 1);
+        $validator = $this->getInstance([$valueObject]);
         $this->assertFalse($validator->isValid());
     }
 
@@ -26,7 +31,7 @@ class SchoolManagerTest extends TestCase
     {
         $valueObject = $this->getFakeValueObject();
         $valueObject->roleId = null;
-        $validator = new SchoolManagers([$valueObject], 1);
+        $validator = $this->getInstance([$valueObject]);
         $this->assertFalse($validator->isValid());
     }
 
@@ -37,26 +42,26 @@ class SchoolManagerTest extends TestCase
         $valueObject = $this->getFakeValueObject();
         $valueObject->roleId = SchoolManagerRole::DIRETOR;
         $valueObject->accessCriteriaId = null;
-        $validator = new SchoolManagers([$valueObject],1);
+        $validator = $this->getInstance([$valueObject]);
         $this->assertFalse($validator->isValid());
 
         $valueObject->accessCriteriaId = 1;
-        $validator = new SchoolManagers([$valueObject], 1);
+        $validator = $this->getInstance([$valueObject]);
         $this->assertTrue($validator->isValid());
     }
 
     public function testAccessCriteriaIsOtherAndDescriptionIsEmptyShouldBeInvalid()
     {
         $this->markTestSkipped();
-        
+
         $valueObject = $this->getFakeValueObject();
         $valueObject->accessCriteriaId = SchoolManagerAccessCriteria::OUTRO;
         $valueObject->accessCriteriaDescription = null;
-        $validator = new SchoolManagers([$valueObject], 1);
+        $validator = $this->getInstance([$valueObject]);
         $this->assertFalse($validator->isValid());
 
         $valueObject->accessCriteriaDescription = '1';
-        $validator = new SchoolManagers([$valueObject], 1);
+        $validator = $this->getInstance([$valueObject]);
         $this->assertTrue($validator->isValid());
     }
 
@@ -67,15 +72,15 @@ class SchoolManagerTest extends TestCase
         $valueObject = $this->getFakeValueObject();
         $valueObject->roleId = SchoolManagerRole::DIRETOR;
         $valueObject->linkTypeId = null;
-        $validator = new SchoolManagers([$valueObject], DependenciaAdministrativaEscola::FEDERAL);
+        $validator = $this->getInstance([$valueObject], DependenciaAdministrativaEscola::FEDERAL);
         $this->assertFalse($validator->isValid());
 
         $valueObject->linkTypeId = 1;
-        $validator = new SchoolManagers([$valueObject], DependenciaAdministrativaEscola::FEDERAL);
+        $validator = $this->getInstance([$valueObject], DependenciaAdministrativaEscola::FEDERAL);
         $this->assertTrue($validator->isValid());
 
         $valueObject->linkTypeId = null;
-        $validator = new SchoolManagers([$valueObject], DependenciaAdministrativaEscola::PRIVADA);
+        $validator = $this->getInstance([$valueObject], DependenciaAdministrativaEscola::PRIVADA);
         $this->assertTrue($validator->isValid());
     }
 
