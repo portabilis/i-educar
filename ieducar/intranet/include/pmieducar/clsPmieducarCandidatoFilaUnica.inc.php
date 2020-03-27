@@ -387,8 +387,20 @@ class clsPmieducarCandidatoFilaUnica extends Model
     public function lista(
         $nome = null,
         $nome_responsavel = null,
-        $ref_cod_escola = null
+        $ref_cod_escola = null,
+        $getEscolas = false
     ) {
+        $sqlEscolas = 'null';
+
+        if ($getEscolas) {
+            $sqlEscolas = " (SELECT string_agg(j.fantasia, ', ')
+                          FROM pmieducar.escola_candidato_fila_unica ecfu
+                    INNER JOIN pmieducar.escola e ON e.cod_escola = ecfu.ref_cod_escola
+                    INNER JOIN cadastro.juridica j ON j.idpes = e.ref_idpes
+                         WHERE ecfu.ref_cod_candidato_fila_unica = cfu.cod_candidato_fila_unica
+                      GROUP BY ecfu.ref_cod_candidato_fila_unica) AS escolas";
+        }
+
         $sql = "SELECT {$this->_campos_lista},
                        p.nome,
                        f.data_nasc,
@@ -408,19 +420,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
                         WHEN 'I' THEN 'Indeferida'
                         WHEN 'D' THEN 'Desistente'
                         ELSE 'Em espera' END) AS situacao_desc,
-                       (SELECT (STRING_AGG(nome, ', '))
-                          FROM (SELECT p.nome
-                                  FROM pmieducar.responsaveis_aluno ra
-                                 INNER JOIN cadastro.pessoa p ON (p.idpes = ra.ref_idpes)
-                                 WHERE ref_cod_aluno = cfu.ref_cod_aluno
-                                 ORDER BY vinculo_familiar
-                                 LIMIT 3) r) AS responsaveis,
-                       (SELECT string_agg(j.fantasia, ', ')
-                          FROM pmieducar.escola_candidato_fila_unica ecfu
-                    INNER JOIN pmieducar.escola e ON e.cod_escola = ecfu.ref_cod_escola
-                    INNER JOIN cadastro.juridica j ON j.idpes = e.ref_idpes
-                         WHERE ecfu.ref_cod_candidato_fila_unica = cfu.cod_candidato_fila_unica
-                      GROUP BY ecfu.ref_cod_candidato_fila_unica) AS escolas
+                        {$sqlEscolas}
                   FROM {$this->_tabela} cfu
             INNER JOIN pmieducar.aluno a ON (a.cod_aluno = cfu.ref_cod_aluno)
             INNER JOIN cadastro.pessoa p ON (p.idpes = a.ref_idpes)
