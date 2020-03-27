@@ -1172,19 +1172,12 @@ var checkTipoCertidaoCivil = function () {
 
 function disableJustificativaFields() {
     $jField = $j('#justificativa_falta_documentacao');
-    $jField.makeUnrequired();
     $jField.attr('disabled', 'disabled');
 }
 
 function enableJustificativaFields() {
     $jField = $j('#justificativa_falta_documentacao');
     $jField.removeAttr('disabled');
-
-    if ($j('#obrigar_campos_censo').val() == '1') {
-      $jField.makeRequired();
-    } else {
-      $jField.makeUnrequired();
-    }
 }
 
 var handleGetPersonParentDetails = function (dataResponse, parentType) {
@@ -1838,7 +1831,7 @@ function canShowParentsFields() {
         }
         $j('#zona_localizacao_censo').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
 
-        $j('<label>').html('Localização diferenciada').attr('for', 'localizacao_diferenciada').insertBefore($j('#localizacao_diferenciada'));
+        $j('<label>').html('Localização diferenciada de residência').attr('for', 'localizacao_diferenciada').insertBefore($j('#localizacao_diferenciada'));
         $j('#localizacao_diferenciada').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
 
         $label = $j('<label>').html('Raça').attr('for', 'cor_raca').attr('style', 'display:block;').insertBefore($j('#cor_raca'));

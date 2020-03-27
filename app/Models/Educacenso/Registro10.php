@@ -1067,4 +1067,14 @@ class Registro10 extends Registro10Fields
     {
         return $this->linguaMinistrada == 2;
     }
+
+    /**
+     * @return bool
+     */
+    public function possuiComputadoresDeMesaTabletsEPortateis()
+    {
+        return !empty($this->quantidadeComputadoresAlunosMesa) ||
+            !empty($this->quantidadeComputadoresAlunosPortateis) ||
+            !empty($this->quantidadeComputadoresAlunosTablets);
+    }
 }
