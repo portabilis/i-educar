@@ -44,12 +44,6 @@ class Registro40 extends AbstractRegistro
      */
     public function getExportFormatData($escolaId)
     {
-        $modelArray = $this->getData($escolaId);
-
-        foreach ($modelArray as $registro40) {
-            $registro40->especificacaoCriterioAcesso = $this->convertStringToCenso($registro40->especificacaoCriterioAcesso);
-        }
-
-        return $modelArray;
+        return $this->getData($escolaId);
     }
 }

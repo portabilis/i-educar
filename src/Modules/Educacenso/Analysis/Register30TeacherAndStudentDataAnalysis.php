@@ -30,15 +30,6 @@ class Register30TeacherAndStudentDataAnalysis implements AnalysisInterface
     {
         $data = $this->data;
 
-        if (!$data->paisResidencia) {
-            $this->messages[] = [
-                'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verifique se o país de residência do(a) aluno(a)/docente {$data->nomePessoa} foi informada.",
-                'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: País de residência)',
-                'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
-                'fail' => true
-            ];
-        }
-
         if ($data->paisResidencia == PaisResidencia::BRASIL && !$data->localizacaoResidencia) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verifique se a zona de residência do(a) aluno(a)/docente {$data->nomePessoa} foi informada.",
