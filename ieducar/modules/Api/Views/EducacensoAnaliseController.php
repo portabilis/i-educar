@@ -33,6 +33,7 @@ use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\Regulamentacao;
 use iEducar\Modules\Educacenso\Model\SchoolManagerAccessCriteria;
 use iEducar\Modules\Educacenso\Model\SchoolManagerRole;
+use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\Validator\CnpjMantenedoraPrivada;
@@ -1168,9 +1169,9 @@ class EducacensoAnaliseController extends ApiCoreController
                 ];
             }
 
-            if (!$gestor->criterioAcesso && $gestor->cargo == SchoolManagerRole::DIRETOR) {
+            if (!$gestor->criterioAcesso && $gestor->cargo == SchoolManagerRole::DIRETOR && $gestor->situacaoFuncionamento == SituacaoFuncionamento::EM_ATIVIDADE) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que o gestor escolar {$nomeGestor}  é diretor(a), portanto é necessário informar o critério de acesso ao cargo.",
+                    'text' => "Dados para formular o registro 40 da escola {$nomeEscola} não encontrados. Verificamos que o gestor escolar {$nomeGestor} é diretor(a) e a situação de funcionamento da escola é em atividade, portanto é necessário informar o critério de acesso ao cargo.",
                     'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados gerais > Tabela Gestores escolares > Link: Dados adicionais do(a) gestor(a) > Campo: Critério de acesso ao cargo)',
                     'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$codEscola}",
                     'fail' => true
