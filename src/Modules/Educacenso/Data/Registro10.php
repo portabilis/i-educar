@@ -142,9 +142,9 @@ class Registro10 extends AbstractRegistro
             $data->equipamentosAcessoInternetComputadorMesa() ?: 0 , // 107
             $data->equipamentosAcessoInternetDispositivosPessoais() ?: 0 , // 108
             $data->usoInternetNaoPossui() ? null : ($data->acessoInternet ?: 0), // 109
-            $data->possuiComputadores() ? ($data->redeLocalACabo() ?: 0) : null, // 110
-            $data->possuiComputadores() ? ($data->redeLocalWireless() ?: 0) : null, // 111
-            $data->possuiComputadores() ? ($data->redeLocalNenhuma() ?: 0) : null, // 112
+            ($data->possuiComputadores() && $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalACabo() ?: 0) : null, // 110
+            ($data->possuiComputadores() && $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalWireless() ?: 0) : null, // 111
+            ($data->possuiComputadores() && $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalNenhuma() ?: 0) : null, // 112
             $data->qtdAuxiliarAdministrativo ?: null, // 113
             $data->qtdAuxiliarServicosGerais ?: null, // 114
             $data->qtdBibliotecarios ?: null, // 115
