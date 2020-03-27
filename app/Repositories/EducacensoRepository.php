@@ -798,8 +798,7 @@ SQL;
                 (ARRAY[9] <@ aluno.recursos_prova_inep)::INT "recursoBraile",
                 (ARRAY[14] <@ aluno.recursos_prova_inep)::INT "recursoNenhum",
                 fisica.nis_pis_pasep AS "nis",
-                documento.certidao_nascimento AS "certidaoNascimento",
-                aluno.justificativa_falta_documentacao AS "justificativaFaltaDocumentacao"
+                documento.certidao_nascimento AS "certidaoNascimento"
             FROM pmieducar.aluno
                  JOIN cadastro.fisica ON fisica.idpes = aluno.ref_idpes
             LEFT JOIN cadastro.documento ON documento.idpes = fisica.idpes
