@@ -13,7 +13,7 @@ $j("#modal_school_managers").dialog({
     title: 'Dados adicionais do(a) gestor(a)',
     buttons: {
         "Gravar": function () {
-            if (validateAccessCriteriaId() && validateAccessCriteriaDescription() && validateLinkType()) {
+            if (validateAccessCriteriaId() && validateLinkType()) {
                 fillHiddenInputs();
                 $j(this).dialog("close");
             }
@@ -46,31 +46,26 @@ function modalOpen(thisElement) {
     var line = elementLine.replace(/\D/g, '');
     idLastLineUsed = line;
     fillInputs();
-    addEventsManagerInputs();
     $j("#modal_school_managers").dialog("open");
     changeManagerRole($j('select[id="managers_role_id[' + idLastLineUsed + ']"]'));
 }
 
 function fillHiddenInputs() {
     let accessCriteriaId = $j("#managers_access_criteria_id").val(),
-        accessCriteriaIdDescription = $j("#managers_access_criteria_description").val(),
         linkTypeId = $j("#managers_link_type_id").val(),
         email = $j("#managers_email").val();
 
     $j('input[id^="managers_access_criteria_id[' + idLastLineUsed + ']').val(accessCriteriaId);
-    $j('input[id^="managers_access_criteria_description[' + idLastLineUsed + ']').val(accessCriteriaIdDescription);
     $j('input[id^="managers_link_type_id[' + idLastLineUsed + ']').val(linkTypeId);
     $j('input[id^="managers_email[' + idLastLineUsed + ']').val(email);
 }
 
 function fillInputs() {
     let accessCriteriaId = $j('input[id^="managers_access_criteria_id[' + idLastLineUsed + ']').val(),
-        accessCriteriaIdDescription = $j('input[id^="managers_access_criteria_description[' + idLastLineUsed + ']').val(),
         linkTypeId = $j('input[id^="managers_link_type_id[' + idLastLineUsed + ']').val(),
         email = $j('input[id^="managers_email[' + idLastLineUsed + ']').val();
 
     $j("#managers_access_criteria_id").val(accessCriteriaId);
-    $j("#managers_access_criteria_description").val(accessCriteriaIdDescription);
     $j("#managers_link_type_id").val(linkTypeId);
     $j("#managers_email").val(email);
 }
@@ -89,8 +84,6 @@ function htmlFormModal() {
                         <option value="6">Processo seletivo qualificado e eleição com a participação da comunidade escolar</option>
                         <option value="7">Outros</option>
                     </select>
-                    <label for="managers_access_criteria_description">Especificação do critério de acesso</label>
-                    <input type="text" name="managers_access_criteria_description" id="managers_access_criteria_description" size="62" maxlength="100" class="text">
                     <label for="managers_link_type_id">Tipo de vínculo</label>
                     <select class="select ui-widget-content ui-corner-all" name="managers_link_type_id" id="managers_link_type_id">
                         <option value="">Selecione</option>
@@ -103,15 +96,6 @@ function htmlFormModal() {
                     <input type="text" name="managers_email" id="managers_email" size="62" maxlength="50" class="text">
                 </form>
             </div>`;
-}
-
-function addEventsManagerInputs() {
-    $j.each($j('#managers_access_criteria_id'), function (index, field) {
-        field.on('change', function () {
-            changeAccessCriteria(this);
-        });
-        changeAccessCriteria(this);
-    });
 }
 
 function changeManagerRole(field) {
@@ -130,19 +114,6 @@ function changeManagerRole(field) {
     } else {
         linkType.prop('disabled', true);
     }
-
-    changeAccessCriteria(accessCriteria)
-}
-
-function changeAccessCriteria(field) {
-    let accessCriteriaDescription = $j('#managers_access_criteria_description');
-
-    if ($j(field).val() == SCHOOL_MANAGER_ACCESS_CRITERIA.OUTRO.toString()) {
-        accessCriteriaDescription.prop('disabled', false);
-    } else {
-        accessCriteriaDescription.prop('disabled', true);
-        accessCriteriaDescription.val('');
-    }
 }
 
 function validateAccessCriteriaId() {
@@ -156,23 +127,6 @@ function validateAccessCriteriaId() {
 
     if ($j('#managers_access_criteria_id').val() == '') {
         messageUtils.error("O campo: <b>Critério de acesso ao cargo</b> deve ser preenchido quando o campo: <b>Cargo</b> for: <b>Diretor</b>");
-        return false;
-    }
-
-    return true;
-}
-
-function validateAccessCriteriaDescription() {
-    if (!obrigarCamposCenso){
-        return true;
-    }
-
-    if ($j('#managers_access_criteria_id').val() != SCHOOL_MANAGER_ACCESS_CRITERIA.OUTRO.toString()) {
-        return true;
-    }
-
-    if ($j('#managers_access_criteria_description').val() == '') {
-        messageUtils.error("O campo: <b>Especificação do critério de acesso</b> deve ser preenchido quando o campo: <b>Critério de acesso ao cargo</b> for: <b>Outros</b>");
         return false;
     }
 

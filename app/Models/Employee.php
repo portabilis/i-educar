@@ -80,4 +80,17 @@ class Employee extends Model
     {
         return $this->hasMany(EmployeeGraduation::class, 'employee_id');
     }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function disciplines()
+    {
+        return $this->belongsToMany(
+            LegacyDiscipline::class,
+            'pmieducar.servidor_disciplina',
+            'ref_cod_servidor',
+            'ref_cod_disciplina'
+        )->withPivot('ref_ref_cod_instituicao', 'ref_cod_curso');
+    }
 }
