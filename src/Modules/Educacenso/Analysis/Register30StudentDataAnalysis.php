@@ -7,6 +7,7 @@ use App\Models\Educacenso\RegistroEducacenso;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
+use iEducar\Modules\Educacenso\Validator\ExisteEnturmacoesEjaOuEducacaoProfissionalValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
 use Illuminate\Support\Facades\DB;
 use Portabilis_Utils_Database;
@@ -18,6 +19,8 @@ class Register30StudentDataAnalysis implements AnalysisInterface
      */
     private $data;
 
+    private $year;
+
     /**
      * @var array
      */
@@ -26,6 +29,11 @@ class Register30StudentDataAnalysis implements AnalysisInterface
     public function __construct(RegistroEducacenso $data)
     {
         $this->data = $data;
+    }
+
+    public function setYear($year)
+    {
+        $this->year = $year;
     }
 
     public function run()
@@ -63,6 +71,18 @@ class Register30StudentDataAnalysis implements AnalysisInterface
             ];
         }
 
+        $precisaInformarCPF = new ExisteEnturmacoesEjaOuEducacaoProfissionalValidator($data->codigoEscola, $data->codigoAluno, $this->year);
+        $precisaInformarCPF = $precisaInformarCPF->isValid();
+
+        if (!$data->cpf && $precisaInformarCPF) {
+            $this->messages[] = [
+                'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o(a) aluno(a) {$data->nomePessoa} está vinculado à uma turma de EJA ou Educação Profissional, portanto é necessário informar o campo: CPF.",
+                'path' => '(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: CPF)',
+                'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
+                'fail' => true
+            ];
+        }
+
         $birthCertificateValidator = new BirthCertificateValidator($data->certidaoNascimento, $data->dataNascimento);
         if ($data->certidaoNascimento && !$birthCertificateValidator->validateCertificateDigits()) {
             $this->messages[] = [
@@ -91,14 +111,6 @@ class Register30StudentDataAnalysis implements AnalysisInterface
             ];
         }
 
-        if ($data->semDocumentacao() && !$data->justificativaFaltaDocumentacao) {
-            $this->messages[] = [
-                'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o(a) aluno(a) {$data->nomePessoa} não possui nenhuma documentação informada (CPF, NIS ou Certidão de Nascimento (nova)), portanto é necessário justificar a falta das documentações.",
-                'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados pessoais > Campo: Justificativa para a falta de documentação)',
-                'linkPath' => "/module/Cadastro/aluno?id={$data->codigoAluno}",
-                'fail' => true
-            ];
-        }
     }
 
     public function getMessages(): array

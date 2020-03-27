@@ -51,6 +51,10 @@ const EQUIPAMENTOS = {
     COMPUTADORES: 1
 };
 
+const EQUIPAMENTOS_ACESSO_INTERNET = {
+  COMPUTADORES: '1'
+};
+
 var submitForm = function(){
   var canSubmit = validationUtils.validatesFields(true);
 
@@ -757,7 +761,7 @@ function habilitaCampoRedeLocal() {
     $j("#rede_local").trigger("chosen:updated");
 }
 function habilitaCamposQuantidadeComputadoresAlunos() {
-    let disabled = $j.inArray(EQUIPAMENTOS.COMPUTADORES.toString(), $j('#equipamentos').val()) == -1;
+    let disabled = $j.inArray(EQUIPAMENTOS_ACESSO_INTERNET.COMPUTADORES, $j('#equipamentos_acesso_internet').val()) == -1;
 
     $j('#quantidade_computadores_alunos_mesa, #quantidade_computadores_alunos_portateis, #quantidade_computadores_alunos_tablets').prop('disabled', disabled);
     $j("#quantidade_computadores_alunos_mesa, #quantidade_computadores_alunos_portateis, #quantidade_computadores_alunos_tablets").trigger("chosen:updated");
@@ -765,7 +769,10 @@ function habilitaCamposQuantidadeComputadoresAlunos() {
 
 $j('#equipamentos').on('change', function () {
     habilitaCampoRedeLocal();
-    habilitaCamposQuantidadeComputadoresAlunos();
+});
+
+$j('#equipamentos_acesso_internet').on('change', function () {
+  habilitaCamposQuantidadeComputadoresAlunos();
 });
 
 function habilitaCampoEducacaoIndigena() {
