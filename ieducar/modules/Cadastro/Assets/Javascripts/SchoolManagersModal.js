@@ -102,7 +102,7 @@ function changeManagerRole(field) {
     let accessCriteria = $j('#managers_access_criteria_id'),
         linkType = $j('#managers_link_type_id');
 
-    if ($j(field).val() == SCHOOL_MANAGER_ROLE.DIRETOR.toString()) {
+    if ($j(field).val() == SCHOOL_MANAGER_ROLE.DIRETOR.toString() && $j('#situacao_funcionamento').val() == SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE) {
         accessCriteria.prop('disabled', false);
     } else {
         accessCriteria.prop('disabled', true);
@@ -125,8 +125,12 @@ function validateAccessCriteriaId() {
         return true;
     }
 
+    if ($j('#situacao_funcionamento').val() != SITUACAO_FUNCIONAMENTO.EM_ATIVIDADE) {
+        return true;
+    }
+
     if ($j('#managers_access_criteria_id').val() == '') {
-        messageUtils.error("O campo: <b>Critério de acesso ao cargo</b> deve ser preenchido quando o campo: <b>Cargo</b> for: <b>Diretor</b>");
+        messageUtils.error("O campo: <b>Critério de acesso ao cargo</b> deve ser preenchido quando o campo: <b>Cargo</b> for: <b>Diretor</b> e o campo: <b>Situação de funcionamento</b> for: <b>Em atividade</b>");
         return false;
     }
 
