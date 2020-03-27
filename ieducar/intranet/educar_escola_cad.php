@@ -684,7 +684,7 @@ class indice extends clsCadastro
                     'objectName' => 'district',
                     'hiddenInputOptions' => [
                         'options' => [
-                            'value' => $this->iddis,
+                            'value' => $this->iddis ?? $this->district_id,
                         ],
                     ],
                 ]);
