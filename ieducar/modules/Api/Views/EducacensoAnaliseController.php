@@ -1053,7 +1053,7 @@ class EducacensoAnaliseController extends ApiCoreController
         $mensagem = [];
 
         $mensagem[] = [
-            'text' => "<span class='avisos-educacenso'><b>Aviso:</b> Dados para formular o registro 30 da escola {$pessoas[0]->nomeEscola} sujeito à valor inválido. Certifique-se que os(as) alunos(as) ou docentes residentes de outro país, que não seja o Brasil, possuam o País de residência informado corretamente.</span>",
+            'text' => "<span class='avisos-educacenso'><b>Aviso:</b> O campo: País de residência possui valor padrão: Brasil. Certifique-se que os(as) alunos(as) ou docentes residentes de outro país, que não seja Brasil, possuam o País de residência informado corretamente.</span>",
             'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: País de residência)',
             'linkPath' => "/intranet/atendidos_lst.php",
             'fail' => false
@@ -1096,6 +1096,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
             if ($pessoa->isStudent()) {
                 $studentDataAnalysis = new Register30StudentDataAnalysis($pessoa);
+                $studentDataAnalysis->setYear($this->getRequest()->ano);
                 $studentDataAnalysis->run();
                 $mensagem = array_merge($mensagem, $studentDataAnalysis->getMessages());
             }
