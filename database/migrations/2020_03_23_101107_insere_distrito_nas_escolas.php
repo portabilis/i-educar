@@ -25,8 +25,8 @@ class InsereDistritoNasEscolas extends Migration
                  inner join public.places p on p.id = php.place_id
                  inner join public.districts d on p.city_id = d.city_id
                 where e.iddis is null
-                group by e.iddis, e.cod_escola, d.city_id, d.id
-                having count(d.city_id) = 1) as data
+                and d.ibge_code = \'05\'
+                group by e.iddis, e.cod_escola, d.city_id, d.id) as data
                 where escola.cod_escola = data.cod_escola;';
         DB::unprepared($sql);
     }
