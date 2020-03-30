@@ -12,7 +12,7 @@ class ExisteEnturmacoesEjaOuEducacaoProfissionalValidator implements EducacensoV
     private $year;
     private $steps;
 
-    public function __construct(int $school, int $student, int $year)
+    public function __construct($school, $student, $year)
     {
         $this->school = $school;
         $this->student = $student;

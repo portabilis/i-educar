@@ -2604,7 +2604,7 @@ class indice extends clsCadastro
             $managers[] = $valueObject;
         }
 
-        $managersValidator = new SchoolManagers($managers, $this->dependencia_administrativa, $this->situacao);
+        $managersValidator = new SchoolManagers($managers, $this->dependencia_administrativa, $this->situacao_funcionamento);
 
         if (!$managersValidator->isValid()) {
             $this->mensagem = implode('<br>', $managersValidator->getMessage());
