@@ -37,6 +37,7 @@ use iEducar\Modules\Educacenso\Model\UsoInternet;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use iEducar\Modules\ValueObjects\SchoolManagerValueObject;
 use iEducar\Support\View\SelectOptions;
+use iEducar\Modules\Educacenso\Validator\School\HasDifferentStepsOfChildEducationValidator;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -205,7 +206,7 @@ class indice extends clsCadastro
         'qtd_auxiliar_administrativo' => 'Auxiliares de secretaria ou auxiliares administrativos, atendentes',
         'qtd_apoio_pedagogico' => 'Profissionais de apoio e supervisão pedagógica: pedagogo(a), coordenador(a) pedagógico(a), orientador(a) educacional, supervisor(a) escolar e coordenador(a) de área de ensino',
         'qtd_coordenador_turno' => 'Coordenador(a) de turno/disciplina',
-        'qtd_tecnicos' => 'Técnicos(as), monitores(as) ou auxiliares de laboratório(s)',
+        'qtd_tecnicos' => 'Técnicos(as), monitores(as), supervisores(as) ou auxiliares de laboratório(s), de apoio a tecnologias educacionais ou em multimeios/multimídias eletrônico-digitais',
         'qtd_bibliotecarios' => 'Bibliotecário(a), auxiliar de biblioteca ou monitor(a) da sala de leitura',
         'qtd_segurancas' => 'Seguranças, guarda ou segurança patrimonial',
         'qtd_auxiliar_servicos_gerais' => 'Auxiliar de serviços gerais, porteiro(a), zelador(a), faxineiro(a), horticultor(a), jardineiro(a)',
@@ -684,7 +685,7 @@ class indice extends clsCadastro
                     'objectName' => 'district',
                     'hiddenInputOptions' => [
                         'options' => [
-                            'value' => $this->iddis,
+                            'value' => $this->iddis ?? $this->district_id,
                         ],
                     ],
                 ]);
@@ -1240,7 +1241,7 @@ class indice extends clsCadastro
 
             $this->campoRotulo(
                 'quantidade_computadores_alunos',
-                '<b>Quantidade de computadores de uso dos aluno</b>'
+                '<b>Quantidade de computadores de uso dos alunos</b>'
             );
 
             $options = array('label' => 'Computadores de mesa (desktop)', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_mesa, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
@@ -1305,11 +1306,17 @@ class indice extends clsCadastro
             );
             $this->inputsHelper()->booleanSelect('fundamental_ciclo', $options);
 
+            $obrigarOrganizacaoEnsino = false;
+            if ($this->cod_escola) {
+                $obrigarOrganizacaoEnsino = new HasDifferentStepsOfChildEducationValidator($this->cod_escola);
+                $obrigarOrganizacaoEnsino = $obrigarOrganizacaoEnsino->isValid();
+            }
+
             $helperOptions = ['objectName' => 'organizacao_ensino'];
             $options = [
                 'label' => 'Forma(s) de organização do ensino',
                 'size' => 50,
-                'required' => false,
+                'required' => $obrigarCamposCenso && $obrigarOrganizacaoEnsino,
                 'options' => [
                     'values' => $this->organizacao_ensino,
                     'all_values' => OrganizacaoEnsino::getDescriptiveValues()
@@ -2226,10 +2233,12 @@ class indice extends clsCadastro
                 $this->inepEscolaSedeDiferenteDaEscolaPrincipal() &&
                 $this->validateCensusManagerRules() &&
                 $this->validaEscolaCompartilhaPredio() &&
+                $this->validaBanheiros() &&
                 $this->validaSalasUtilizadasDentroEscola() &&
                 $this->validaSalasUtilizadasForaEscola() &&
                 $this->validaSalasClimatizadas() &&
                 $this->validaSalasAcessibilidade() &&
+                $this->validaEquipamentosAcessoInternet() &&
                 $this->validaRecursos() &&
                 $this->validaQuantidadeComputadoresAlunos() &&
                 $this->validaQuantidadeEquipamentosEnsino() &&
@@ -2656,6 +2665,16 @@ class indice extends clsCadastro
         return true;
     }
 
+    protected function validaBanheiros()
+    {
+        if (!in_array(1, $this->banheiros) && count($this->banheiros) > 0) {
+            $this->mensagem = "O campo: <b>Banheiros</b> deve ser preenchido também com a opçao <b>Banheiro</b> quando outras opções forem selecionadas";
+            return false;
+        }
+
+        return true;
+    }
+
     protected function validaSalasUtilizadasDentroEscola()
     {
         if ($this->numero_salas_utilizadas_dentro_predio == '0') {
@@ -2801,6 +2820,16 @@ class indice extends clsCadastro
         return true;
     }
 
+    protected function validaEquipamentosAcessoInternet()
+    {
+        if(in_array(2, $this->equipamentos_acesso_internet) && !in_array(3, $this->rede_local)) {
+            $this->mensagem = "O campo: <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> não deve ser preenchido com a opção: <b>Dispositivos pessoais (computadores portáteis, celulares, tablets, etc.)</b> quando o campo: <b>Rede local de interligação de computadores</b> não possuir a opção: <b>Wireless</b> selecionada.";
+            return false;
+        }
+
+        return true;
+    }
+
     protected function validaRecursos()
     {
         $algumCampoPreenchido = false;
@@ -2823,6 +2852,12 @@ class indice extends clsCadastro
 
     protected function validaQuantidadeComputadoresAlunos()
     {
+        $quantidadesNaoPreenchidas = (
+            $this->quantidade_computadores_alunos_mesa == '' &&
+            $this->quantidade_computadores_alunos_portateis == '' &&
+            $this->quantidade_computadores_alunos_tablets == ''
+        );
+
         if ($this->quantidade_computadores_alunos_mesa == '0') {
             $this->mensagem = 'O campo: <b>Computadores de mesa</b> não pode ser preenchido com 0';
             return false;
@@ -2835,6 +2870,11 @@ class indice extends clsCadastro
 
         if ($this->quantidade_computadores_alunos_tablets == '0') {
             $this->mensagem = 'O campo: <b>Tablets</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if (in_array(EquipamentosAcessoInternet::COMPUTADOR_MESA, $this->equipamentos_acesso_internet) && $quantidadesNaoPreenchidas) {
+            $this->mensagem = 'Preencha pelo menos um dos campos da seção <b>Quantidade de computadores de uso dos alunos</b> quando o campo <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> for preenchido com <b>Computadores de mesa, portáteis e tablets da escola (no laboratório de informática, biblioteca, sala de aula, etc.)</b>.';
             return false;
         }
 

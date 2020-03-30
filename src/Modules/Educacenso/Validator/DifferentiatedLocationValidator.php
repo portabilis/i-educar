@@ -24,7 +24,7 @@ class DifferentiatedLocationValidator implements EducacensoValidator
     {
         if (LocalizacaoDiferenciadaPessoa::AREA_ASSENTAMENTO == $this->differentiatedLocation &&
             App_Model_ZonaLocalizacao::URBANA == $this->locationZone) {
-            $this->message = 'O campo: Localização diferenciada não pode ser preenchido com <b>Área de assentamento</b> quando o campo: Zona de residência for <b>Urbana</b>.';
+            $this->message = 'O campo: Localização diferenciada de residência não pode ser preenchido com <b>Área de assentamento</b> quando o campo: Zona de residência for <b>Urbana</b>.';
 
             return false;
         }
