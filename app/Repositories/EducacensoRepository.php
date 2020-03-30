@@ -264,9 +264,9 @@ SQL;
                educacenso_cod_docente.cod_docente_inep AS "inepGestor",
                school_managers.role_id AS cargo,
                school_managers.access_criteria_id AS "criterioAcesso",
-               school_managers.access_criteria_description AS "especificacaoCriterioAcesso",
                school_managers.link_type_id AS "tipoVinculo",
-               escola.dependencia_administrativa AS "dependenciaAdministrativa"
+               escola.dependencia_administrativa AS "dependenciaAdministrativa",
+               escola.situacao_funcionamento AS "situacaoFuncionamento"
           FROM school_managers
           JOIN pmieducar.escola ON escola.cod_escola = school_managers.school_id
      LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
@@ -575,7 +575,9 @@ SQL;
                     matricula_turma.tipo_atendimento "tipoAtendimentoMatricula",
                     turma.tipo_mediacao_didatico_pedagogico "tipoMediacaoTurma",
                     aluno.veiculo_transporte_escolar "veiculoTransporteEscolar",
-                    curso.modalidade_curso as "modalidadeCurso"
+                    curso.modalidade_curso as "modalidadeCurso",
+                    turma.local_funcionamento_diferenciado AS "localFuncionamentoDiferenciadoTurma",
+                    fisica.pais_residencia AS "paisResidenciaAluno"
                      FROM pmieducar.aluno
                      JOIN pmieducar.matricula ON matricula.ref_cod_aluno = aluno.cod_aluno
                      JOIN pmieducar.escola ON escola.cod_escola = matricula.ref_ref_cod_escola
@@ -584,6 +586,7 @@ SQL;
                      JOIN pmieducar.turma ON turma.cod_turma = matricula_turma.ref_cod_turma
                      JOIN pmieducar.curso ON curso.cod_curso = turma.ref_cod_curso
                      JOIN cadastro.pessoa ON pessoa.idpes = aluno.ref_idpes
+                     JOIN cadastro.fisica ON fisica.idpes = pessoa.idpes
                 LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
                 LEFT JOIN modules.educacenso_cod_turma ON educacenso_cod_turma.cod_turma = turma.cod_turma
                 LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = aluno.cod_aluno
@@ -798,8 +801,7 @@ SQL;
                 (ARRAY[9] <@ aluno.recursos_prova_inep)::INT "recursoBraile",
                 (ARRAY[14] <@ aluno.recursos_prova_inep)::INT "recursoNenhum",
                 fisica.nis_pis_pasep AS "nis",
-                documento.certidao_nascimento AS "certidaoNascimento",
-                aluno.justificativa_falta_documentacao AS "justificativaFaltaDocumentacao"
+                documento.certidao_nascimento AS "certidaoNascimento"
             FROM pmieducar.aluno
                  JOIN cadastro.fisica ON fisica.idpes = aluno.ref_idpes
             LEFT JOIN cadastro.documento ON documento.idpes = fisica.idpes

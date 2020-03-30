@@ -483,6 +483,15 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
+        if (!$escola->preenchimentoCorretoBanheiro()) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que o campo Banheiros foi preenchido incorretamente.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dependências > Campo: Banheiros)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true
+            ];
+        }
+
         if (!$escola->existeRecursosAcessibilidade()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se alguma opção dos recursos de acessibilidade que a escola possui foi informada.",
@@ -573,6 +582,15 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
+        if ($escola->equipamentosAcessoInternetComputadorMesa() && $escola->quantidadeComputadoresAlunosNaoPreenchida()) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se pelo menos um dos campos da seção Quantidade de computadores de uso dos alunos foi preenchido.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Equipamentos > Seção: Quantidade de computadores de uso dos alunos)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true
+            ];
+        }
+
         if (!$escola->quantidadeProfissionaisPreenchida()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a escola não preencheu nenhuma informação referente à quantidade de profissionais, portanto é necessário informar pelo menos um profissional.",
@@ -586,6 +604,15 @@ class EducacensoAnaliseController extends ApiCoreController
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que a alimentação escolar para os alunos(as) não foi informada.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Infraestrutura > Campo: Alimentação escolar para os alunos(as))',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (empty($escola->organizacaoEnsino) && $escola->HasDifferentStepsOfChildEducation()) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que o campo: Forma(s) de organização do ensino não foi informado.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Forma(s) de organização do ensino)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true
             ];
@@ -1052,7 +1079,7 @@ class EducacensoAnaliseController extends ApiCoreController
         $mensagem = [];
 
         $mensagem[] = [
-            'text' => "<span class='avisos-educacenso'><b>Aviso:</b> Dados para formular o registro 30 da escola {$pessoas[0]->nomeEscola} sujeito à valor inválido. Certifique-se que os(as) alunos(as) ou docentes residentes de outro país, que não seja o Brasil, possuam o País de residência informado corretamente.</span>",
+            'text' => "<span class='avisos-educacenso'><b>Aviso:</b> O campo: País de residência possui valor padrão: Brasil. Certifique-se que os(as) alunos(as) ou docentes residentes de outro país, que não seja Brasil, possuam o País de residência informado corretamente.</span>",
             'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: País de residência)',
             'linkPath' => "/intranet/atendidos_lst.php",
             'fail' => false
@@ -1095,6 +1122,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
             if ($pessoa->isStudent()) {
                 $studentDataAnalysis = new Register30StudentDataAnalysis($pessoa);
+                $studentDataAnalysis->setYear($this->getRequest()->ano);
                 $studentDataAnalysis->run();
                 $mensagem = array_merge($mensagem, $studentDataAnalysis->getMessages());
             }
@@ -1394,7 +1422,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
             if (is_null($aluno->transportePublico) && $aluno->transportePublicoRequired()) {
                 $mensagem[] = [
-                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados.  Verifique se o transporte escolar público do(a) aluno(a) {$nomeAluno} foi informado.",
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verifique se o transporte escolar público do(a) aluno(a) {$nomeAluno} foi informado.",
                     'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados Pessoais > Campo: Transporte escolar público)',
                     'linkPath' => "/module/Cadastro/aluno?id={$codigoAluno}",
                     'fail' => true
@@ -1414,6 +1442,15 @@ class EducacensoAnaliseController extends ApiCoreController
                 $mensagem[] = [
                     'text' => "Dados para formular o registro 60 da escola {$nomeEscola} possui valor inválido. Verifique se o código INEP do aluno {$nomeAluno}, matriculado na turma {$nomeTurma}, possui 12 dígitos.",
                     'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados gerais > Campo: Código INEP)',
+                    'linkPath' => "/module/Cadastro/aluno?id={$codigoAluno}",
+                    'fail' => true
+                ];
+            }
+
+            if ((!$aluno->recebeEscolarizacaoOutroEspacao) && $aluno->recebeEscolarizacaoOutroEspacoIsRequired()) {
+                $mensagem[] = [
+                    'text' => "Dados para formular o registro 60 da escola {$nomeEscola} não encontrados. Verifique se a escolarização em outro espaço foi informada para o(a) aluno(a) {$nomeAluno}.",
+                    'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados Educacenso > Campo: Recebe escolarização em outro espaço (diferente da escola))',
                     'linkPath' => "/module/Cadastro/aluno?id={$codigoAluno}",
                     'fail' => true
                 ];
