@@ -67,11 +67,15 @@ class EducacensoController extends Controller
         $records = [];
 
         if ($record == '20') {
-            $records['record20'] = $repository->getDataForRecord20($school, $year);
+            $records['record20'] = collect($repository->getDataForRecord20($school, $year))
+                ->sortBy('nomeTurma')
+                ->values();
         }
 
         if ($record == '40') {
-            $records['record40'] = $repository->getDataForRecord40($school);
+            $records['record40'] = collect($repository->getDataForRecord40($school))
+                ->sortBy('nomePessoa')
+                ->values();
         }
 
         if ($record == '50') {
@@ -79,21 +83,28 @@ class EducacensoController extends Controller
 
             $records['record50'] = $repository->getDataForRecord50($year, $school);
 
-            $records['record50'] = collect($records['record50'])->map(function ($item) {
-                $disciplines = explode(',', substr($item->componentes, 1, -1));
+            $records['record50'] = collect($records['record50'])
+                ->map(function ($item) {
+                    $disciplines = explode(',', substr($item->componentes, 1, -1));
 
-                $item->componentes = collect($disciplines)->unique()->map(function ($discipline) {
-                    $data = ComponenteCurricular_Model_CodigoEducacenso::getDescription($discipline);
+                    $item->componentes = collect($disciplines)->unique()->map(function ($discipline) {
+                        $data = ComponenteCurricular_Model_CodigoEducacenso::getDescription($discipline);
 
-                    return $data;
-                })->toArray();
+                        return $data;
+                    })->toArray();
 
-                return $item;
-            })->values();
+                    return $item;
+                })
+                ->sortBy(function ($data) {
+                    return "{$data->nomeDocente}{$data->nomeTurma}";
+                })
+                ->values();
         }
 
         if ($record == '60') {
-            $records['record60'] = $repository->getDataForRecord60($school, $year);
+            $records['record60'] = collect($repository->getDataForRecord60($school, $year))
+                ->sortBy('nomeAluno')
+                ->values();
         }
 
         return $this->view($institution, $records);

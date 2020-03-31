@@ -129,6 +129,7 @@
                 <th>INEP do(a) docente</th>
                 <th>Nome do(a) docente</th>
                 <th>Função</th>
+                <th>Turma</th>
                 <th>Disciplinas</th>
             </tr>
         </thead>
@@ -141,7 +142,8 @@
                     <td>{{ $item->inepDocente }}</td>
                     <td>{{ $item->nomeDocente }}</td>
                     <td>{{ \iEducar\Modules\Servidores\Model\FuncaoExercida::getDescription($item->funcaoDocente) }}</td>
-                    <td>{{ implode(',', $item->componentes) }}</td>
+                    <td>{{ $item->nomeTurma }}</td>
+                    <td>{{ implode(', ', $item->componentes) }}</td>
                 </tr>
             @empty
                 <tr>
