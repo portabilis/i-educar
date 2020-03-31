@@ -24,9 +24,15 @@
                     </td>
                 </tr>
                 <tr>
+                    <td>Instituição<span class="campo_obrigatorio">*</span></td>
+                    <td>
+                        @include('form.select-institution')
+                    </td>
+                </tr>
+                <tr>
                     <td>Escola<span class="campo_obrigatorio">*</span></td>
                     <td>
-                        @include('layout.select.school')
+                        @include('form.select-school')
                     </td>
                 </tr>
                 <tr>
@@ -191,3 +197,9 @@
 
     <div style="height: 30px;"></div>
 @endsection
+
+@prepend('scripts')
+    <script type="text/javascript" src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
+    <script type="text/javascript" src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/DynamicInput.js") }}"></script>
+    <script type="text/javascript" src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Escola.js") }}"></script>
+@endprepend

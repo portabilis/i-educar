@@ -61,7 +61,7 @@ class EducacensoController extends Controller
         LegacyInstitution $institution
     ) {
         $record = $request->input('record');
-        $school = $request->input('school');
+        $school = $request->input('ref_cod_escola');
         $year = $request->input('year');
 
         $records = [];
