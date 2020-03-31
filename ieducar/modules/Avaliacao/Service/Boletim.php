@@ -2352,6 +2352,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $this->getFaltaAbstractDataMapper()->save($falta);
         }
 
+        if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+            return $this;
+        }
+
         // Atualiza as médias
         $this->_updateNotaComponenteMedia();
 
