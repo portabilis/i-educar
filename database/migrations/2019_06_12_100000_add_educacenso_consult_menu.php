@@ -13,12 +13,6 @@ class AddEducacensoConsultMenu extends Migration
      */
     public function up()
     {
-        // É necessário fazer este insert enquanto não migrar os tipos de usuários
-
-        DB::unprepared(
-            'INSERT INTO portal.menu_submenu VALUES (847, 70, 2,\'Consulta 1ª fase - Matrícula inicial\', \'/educacenso/consulta\', null, 3);'
-        );
-
         $submenu = Menu::create([
             'parent_id' => Menu::query()->where('process', 70)->firstOrFail()->getKey(),
             'title' => 'Consultas',
@@ -47,10 +41,6 @@ class AddEducacensoConsultMenu extends Migration
      */
     public function down()
     {
-        DB::unprepared(
-            'DELETE FROM portal.menu_submenu WHERE cod_menu_submenu = 847;'
-        );
-
         Menu::query()
             ->where('process', 847)
             ->delete();

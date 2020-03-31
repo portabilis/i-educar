@@ -118,11 +118,6 @@ class LegacySchool extends Model
         return $this->belongsTo(LegacyOrganization::class, 'ref_idpes');
     }
 
-    public function getNameAttribute()
-    {
-        return DB::selectOne('SELECT relatorio.get_nome_escola(:escola) AS nome', ['escola' => $this->id])->nome;
-    }
-
     /**
      * @return HasOne
      */
