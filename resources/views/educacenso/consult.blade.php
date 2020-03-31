@@ -69,7 +69,7 @@
                     <td>{{ $item->nomeEscola }}</td>
                     <td>{{ $item->nomeTurma }}</td>
                     <td>{{ \iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma::getDescription($item->tipoAtendimento) }}</td>
-                    <td>{{ $item->horaInicial }} - {{ $item->horaFinal }}</td>
+                    <td>{{ substr($item->horaInicial, 0, 5) }} - {{ substr($item->horaFinal, 0, 5) }}</td>
                 </tr>
             @empty
             <tr>
@@ -90,8 +90,8 @@
                 <th>INEP da escola</th>
                 <th>Nome da escola</th>
                 <th>Código da pessoa</th>
-                <th>INEP do gestor</th>
-                <th>Nome do gestor</th>
+                <th>INEP do(a) gestor(a)</th>
+                <th>Nome do(a) gestor(a)</th>
                 <th>Cargo</th>
                 <th>Tipo de vínculo</th>
             </tr>
@@ -126,8 +126,8 @@
                 <th>INEP da escola</th>
                 <th>Nome da escola</th>
                 <th>Código da pessoa</th>
-                <th>INEP do docente</th>
-                <th>Nome do docente</th>
+                <th>INEP do(a) docente</th>
+                <th>Nome do(a) docente</th>
                 <th>Função</th>
                 <th>Disciplinas</th>
             </tr>
@@ -162,8 +162,8 @@
                 <th>INEP da escola</th>
                 <th>Nome da escola</th>
                 <th>Código da pessoa</th>
-                <th>INEP do aluno</th>
-                <th>Nome do aluno</th>
+                <th>INEP do(a) aluno(a)</th>
+                <th>Nome do(a) aluno(a)</th>
                 <th>Turma</th>
             </tr>
         </thead>
