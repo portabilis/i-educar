@@ -1069,7 +1069,7 @@ class DiarioApiController extends ApiCoreController
     protected function trySaveServiceBoletimFaltas()
     {
         try {
-            $this->serviceBoletim()->saveFaltas();
+            $this->serviceBoletim()->saveFaltas(true);
             $this->serviceBoletim()->promover();
         } catch (CoreExt_Service_Exception $e) {
         }
