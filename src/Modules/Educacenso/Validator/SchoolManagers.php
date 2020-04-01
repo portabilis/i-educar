@@ -85,7 +85,7 @@ class SchoolManagers implements EducacensoValidator
 
         if ($valueObject->roleId == SchoolManagerRole::DIRETOR && empty($valueObject->accessCriteriaId) && $this->operatingSituation == SituacaoFuncionamento::EM_ATIVIDADE) {
             $this->valid = false;
-            $this->message[] = 'O campo: <b>Critério de acesso ao cargo</b> deve ser preenchido quando o campo: <b>Cargo</b> for: <b>Diretor</b>';
+            $this->message[] = 'O campo: <b>Critério de acesso ao cargo</b> deve ser preenchido quando o campo: <b>Cargo</b> for: <b>Diretor</b> e o campo: <b>Situação de funcionamento</b> for: <b>Em atividade</b>';
         }
 
         $publicDependency = [

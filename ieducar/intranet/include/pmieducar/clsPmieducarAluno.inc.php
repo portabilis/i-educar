@@ -896,7 +896,7 @@ class clsPmieducarAluno extends Model
         $filtros = '';
         $this->resetCamposLista();
 
-        $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social, COALESCE(nome_social, pessoa.nome) AS ordem_aluno';
+        $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social, COALESCE(nome_social, pessoa.nome) AS ordem_aluno, COALESCE(a.nm_mae, pessoa_mae.nome) AS nome_mae, educacenso_cod_aluno.cod_aluno_inep AS codigo_inep';
 
         if ($filtra_baseado_matricula) {
             $sql = "SELECT distinct {$this->_campos_lista} FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
@@ -904,14 +904,18 @@ class clsPmieducarAluno extends Model
             $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         }
 
-        $sql .= '
+        $joins = '
              LEFT JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes
-             LEFT JOIN cadastro.fisica ON fisica.idpes = a.ref_idpes';
+             LEFT JOIN cadastro.fisica ON fisica.idpes = a.ref_idpes
+             LEFT JOIN cadastro.pessoa AS pessoa_mae ON pessoa_mae.idpes = fisica.idpes_mae
+             LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = a.cod_aluno';
+
+        $sql .= $joins;
 
         $whereAnd = ' WHERE ';
 
         if (is_numeric($int_cod_aluno)) {
-            $filtros .= "{$whereAnd} cod_aluno = {$int_cod_aluno}";
+            $filtros .= "{$whereAnd} a.cod_aluno = {$int_cod_aluno}";
             $whereAnd = ' AND ';
         }
 
@@ -978,16 +982,7 @@ class clsPmieducarAluno extends Model
         if (is_string($str_nome_aluno)) {
             $str_nome_aluno = pg_escape_string($str_nome_aluno);
 
-            $filtros .= "{$whereAnd} EXISTS (
-                     SELECT
-                       1
-                     FROM
-                       cadastro.pessoa
-                       inner join cadastro.fisica ON (fisica.idpes = pessoa.idpes)
-                     WHERE
-                       cadastro.pessoa.idpes = ref_idpes
-                       AND translate(upper(coalesce(nome_social, '') || nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_aluno}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
-                   )";
+            $filtros .= "{$whereAnd}  unaccent(coalesce(fisica.nome_social, '') || pessoa.nome) LIKE unaccent('%{$str_nome_aluno}%')";
 
             $whereAnd = ' AND ';
         }
@@ -1063,7 +1058,7 @@ class clsPmieducarAluno extends Model
         }
 
         if (is_numeric($int_ref_cod_escola)) {
-            $filtros .= "{$whereAnd} cod_aluno IN ( SELECT ref_cod_aluno FROM pmieducar.matricula WHERE ref_ref_cod_escola = '{$int_ref_cod_escola}' AND ultima_matricula = 1)";
+            $filtros .= "{$whereAnd} a.cod_aluno IN ( SELECT ref_cod_aluno FROM pmieducar.matricula WHERE ref_ref_cod_escola = '{$int_ref_cod_escola}' AND ultima_matricula = 1)";
             $whereAnd = ' AND ';
         }
 
@@ -1078,7 +1073,7 @@ class clsPmieducarAluno extends Model
         }
 
         if (!empty($cod_inep) && is_numeric($cod_inep)) {
-            $filtros .= "{$whereAnd} cod_aluno IN( SELECT cod_aluno FROM modules.educacenso_cod_aluno WHERE cod_aluno_inep = {$cod_inep})";
+            $filtros .= "{$whereAnd} a.cod_aluno IN( SELECT cod_aluno FROM modules.educacenso_cod_aluno WHERE cod_aluno_inep = {$cod_inep})";
             $whereAnd = ' AND ';
         }
 
@@ -1158,11 +1153,12 @@ class clsPmieducarAluno extends Model
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
         if ($filtra_baseado_matricula) {
-            $sqlCount = "SELECT COUNT(DISTINCT cod_aluno) FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
+            $sqlCount = "SELECT COUNT(DISTINCT a.cod_aluno) FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
         } else {
             $sqlCount = "SELECT COUNT(0) FROM {$this->_tabela} ";
         }
 
+        $sqlCount .= $joins;
         $sqlCount .= $filtros;
 
         $this->_total = $db->CampoUnico($sqlCount);

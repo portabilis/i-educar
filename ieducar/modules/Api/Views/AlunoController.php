@@ -1239,6 +1239,8 @@ class AlunoController extends ApiCoreController
 
             $modified = $this->getRequest()->modified;
             $escola = $this->getRequest()->escola;
+            $ano = $this->getRequest()->ano ?? null;
+            $cursando = $this->getRequest()->apenas_cursando ?? null;
 
             if (is_array($escola)) {
                 $escola = implode(', ', $escola);
@@ -1247,12 +1249,23 @@ class AlunoController extends ApiCoreController
             $params = [];
 
             $where = '';
+            $whereAno = '';
+            $whereCursando = '';
             $whereDeleteds = '';
 
             if ($modified) {
                 $params[] = $modified;
                 $where = 'AND greatest(p.data_rev::timestamp(0), f.data_rev::timestamp(0), a.updated_at, ff.updated_at) >= $1';
                 $whereDeleteds = 'AND aluno_excluidos.deleted_at >= $1';
+            }
+
+            if ($ano) {
+                $ano = intval($ano);
+                $whereAno = " AND ano = {$ano}";
+            }
+
+            if ($cursando) {
+                $whereCursando = " AND aprovado = 3";
             }
 
             $sql = "
@@ -1275,7 +1288,12 @@ class AlunoController extends ApiCoreController
                 LEFT JOIN cadastro.fisica_foto ff ON p.idpes = ff.idpes
                 WHERE TRUE
                 and exists (
-                    select * from pmieducar.matricula where ref_ref_cod_escola in ({$escola}) and ref_cod_aluno = a.cod_aluno
+                    select * 
+                    from pmieducar.matricula
+                    where ref_ref_cod_escola in ({$escola}) 
+                    and ref_cod_aluno = a.cod_aluno
+                    $whereAno
+                    $whereCursando
                 )
                 {$where}
 
@@ -1294,7 +1312,12 @@ class AlunoController extends ApiCoreController
                 LEFT JOIN cadastro.fisica_foto ff ON p.idpes = ff.idpes
                 WHERE TRUE
                 and exists (
-                    select * from pmieducar.matricula where ref_ref_cod_escola in ({$escola}) and ref_cod_aluno = aluno_excluidos.cod_aluno
+                    select * 
+                    from pmieducar.matricula 
+                    where ref_ref_cod_escola in ({$escola}) 
+                    and ref_cod_aluno = aluno_excluidos.cod_aluno
+                    $whereAno
+                    $whereCursando
                 )
                 {$whereDeleteds}
 
