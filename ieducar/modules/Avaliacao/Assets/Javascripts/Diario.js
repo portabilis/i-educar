@@ -195,10 +195,10 @@ var changeNota = function(event) {
   }
 
   var $element = $j(this);
-  setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
   lockedAverage($element, function () {
     changeResource($element, postNota, deleteNota);
   });
+  setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
 };
 
 
