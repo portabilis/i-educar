@@ -2339,9 +2339,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * Insere ou atualiza as faltas no boletim.
      *
+     * @param bool $updateAverage
      * @return Avaliacao_Service_Boletim Provê interface fluída
+     * @throws CoreExt_DataMapper_Exception
      */
-    public function saveFaltas()
+    public function saveFaltas($updateAverage = false)
     {
         $faltaAluno = $this->_getFaltaAluno();
         $faltas = $this->getFaltas();
@@ -2356,8 +2358,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             return $this;
         }
 
-        // Atualiza as médias
-        $this->_updateNotaComponenteMedia();
+        if ($updateAverage) {
+            // Atualiza as médias
+            $this->_updateNotaComponenteMedia();
+        }
 
         return $this;
     }
