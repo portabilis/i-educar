@@ -17,6 +17,11 @@ class DatabaseToCsvExporter implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
+     * @var int
+     */
+    public $timeout = 900;
+
+    /**
      * @var Export
      */
     private $export;
