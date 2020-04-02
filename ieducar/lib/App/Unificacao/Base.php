@@ -11,14 +11,16 @@ class App_Unificacao_Base
     protected $codPessoaLogada;
     protected $db;
     protected $transacao;
+    protected $unificationId;
 
-    public function __construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, clsBanco $db, $transacao = true)
+    public function __construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, clsBanco $db, $transacao = true, $unificationId)
     {
         $this->codigoUnificador = $codigoUnificador;
         $this->codigosDuplicados = $codigosDuplicados;
         $this->codPessoaLogada = $codPessoaLogada;
         $this->db = $db;
         $this->transacao = $transacao;
+        $this->unificationId = $unificationId;
     }
 
     public function unifica()

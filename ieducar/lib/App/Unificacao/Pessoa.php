@@ -232,9 +232,9 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         ]
     ];
 
-    public function __construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, clsBanco $db, bool $transacao = true)
+    public function __construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, clsBanco $db, bool $transacao = true, $unificationId)
     {
-        parent::__construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, $db, $transacao);
+        parent::__construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, $db, $transacao, $unificationId);
 
         if (is_dir(base_path('ieducar/intranet/filaunica'))) {
             $this->chavesManterTodosVinculos[] = [
