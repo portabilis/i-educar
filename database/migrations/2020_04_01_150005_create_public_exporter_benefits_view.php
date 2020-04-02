@@ -1,6 +1,6 @@
 <?php
 
-use iEducar\Packages\Exporter\Support\Database\MigrationUtils;
+use App\Support\Database\MigrationUtils;
 use Illuminate\Database\Migrations\Migration;
 
 class CreatePublicExporterBenefitsView extends Migration

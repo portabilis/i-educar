@@ -1,6 +1,6 @@
 <?php
 
-namespace iEducar\Packages\Exporter\Support\Database;
+namespace App\Support\Database;
 
 use Illuminate\Support\Facades\DB;
 

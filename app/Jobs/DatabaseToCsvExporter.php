@@ -1,6 +1,6 @@
 <?php
 
-namespace iEducar\Packages\Exporter\Jobs;
+namespace App\Jobs;
 
 use App\Exports\EloquentExporter;
 use App\Models\Exporter\Export;
