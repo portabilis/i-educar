@@ -89,7 +89,7 @@ class indice extends clsCadastro
 
     DB::beginTransaction();
     $unificationId = $this->createLog($codPessoaPrincipal, $codPessoas, $this->pessoa_logada);
-    $unificador = new App_Unificacao_Pessoa($codPessoaPrincipal, $codPessoas, $this->pessoa_logada, new clsBanco(), FALSE, $unificationId);
+    $unificador = new App_Unificacao_Pessoa($codPessoaPrincipal, $codPessoas, $this->pessoa_logada, new clsBanco(), $unificationId);
 
     try {
         $unificador->unifica();
