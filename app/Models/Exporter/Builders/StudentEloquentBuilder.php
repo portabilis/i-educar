@@ -19,7 +19,7 @@ class StudentEloquentBuilder extends Builder
      */
     public function __construct(QueryBuilder $query)
     {
-        $query->where('year', Carbon::now()->year);
+        $query->where('exporter_student.year', Carbon::now()->year);
 
         parent::__construct($query);
     }
