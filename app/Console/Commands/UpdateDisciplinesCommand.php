@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Services\Discipline\MoveDisciplineDataService;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UpdateDisciplinesCommand extends Command
@@ -34,9 +35,11 @@ class UpdateDisciplinesCommand extends Command
     {
         $filename = $this->argument('filename');
 
-        $service = (new MoveDisciplineDataService())
-            ->setDefaultCopiers();
+        $service = new MoveDisciplineDataService();
+        $service->setDefaultCopiers();
 
+        DB::beginTransaction();
         Excel::import($service, $filename);
+        DB::commit();
     }
 }
