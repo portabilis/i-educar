@@ -186,10 +186,15 @@ class clsListagem extends clsCampos
                 }
             }
 
-            /**
-             * HTML do paginador.
-             */
-            $strReturn = '<table class=\'paginacao\' border="0" cellpadding="0" cellspacing="0" align="center"><tr>';
+            $strReturn = <<<HTML
+<table>
+  <tr>
+    <td>Total de registros: {$intTotalRegistros}</td>
+  </tr>
+</table>
+HTML;
+
+            $strReturn .= '<table class=\'paginacao\' border="0" cellpadding="0" cellspacing="0" align="center"><tr>';
 
             // Setas de início e anterior
             $imagem = ($intPaginaAtual > 1) ? 'seta' :'seta_transp';
