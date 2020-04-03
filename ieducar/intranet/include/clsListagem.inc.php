@@ -228,21 +228,6 @@ HTML;
         }
     }
 
-    public function addPaginador($argumento, $inicio, $buffer = false)
-    {
-        $visual = 1 + $this->numeropaginador;
-
-        if (!$buffer || (($this->numeropaginador > $inicio - 6) && ($this->numeropaginador < $inicio + 6))) {
-            if ($inicio == $this->numeropaginador) {
-                $this->paginador[] = [$visual, $argumento."&iniciolimit={$this->numeropaginador}", false];
-            } else {
-                $this->paginador[] = [$visual, $argumento."&iniciolimit={$this->numeropaginador}", true];
-            }
-        }
-
-        $this->numeropaginador++;
-    }
-
     /**
      * Cria o código HTML.
      *
