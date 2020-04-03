@@ -74,7 +74,7 @@ class ExportController extends Controller
         $data = $request->merge([
             'hash' => md5(time()),
             'user_id' => $request->user()->getKey(),
-            'filename' => 'alunos-' . date('Ymd') . '.csv',
+            'filename' => 'alunos.csv',
         ])->only([
             'model', 'fields', 'hash', 'user_id', 'filename',
         ]);
