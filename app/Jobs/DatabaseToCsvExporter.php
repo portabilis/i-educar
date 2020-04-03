@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Exports\EloquentExporter;
 use App\Models\Exporter\Export;
+use App\Models\NotificationType;
 use App\Services\NotificationService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -98,7 +99,7 @@ class DatabaseToCsvExporter implements ShouldQueue
             $this->export->user_id,
             $this->getMessageToNotification(),
             $url,
-            1
+            NotificationType::EXPORT_STUDENT
         );
 
         $this->export->url = $url;
