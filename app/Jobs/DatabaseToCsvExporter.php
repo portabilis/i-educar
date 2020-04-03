@@ -8,6 +8,7 @@ use App\Models\NotificationType;
 use App\Services\NotificationService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -26,11 +27,6 @@ class DatabaseToCsvExporter implements ShouldQueue
      * @var Export
      */
     private $export;
-
-    /**
-     * @var NotificationService
-     */
-    private $notification;
 
     /**
      * Create a new job instance.
@@ -79,12 +75,15 @@ class DatabaseToCsvExporter implements ShouldQueue
      * Execute the job.
      *
      * @param NotificationService $notification
+     * @param DatabaseManager     $manager
      *
      * @return void
      */
-    public function handle(NotificationService $notification)
+    public function handle(NotificationService $notification, DatabaseManager $manager)
     {
-        $this->notification = $notification;
+        $manager->setDefaultConnection(
+            $this->export->getConnectionName()
+        );
 
         $exporter = new EloquentExporter($this->export);
 
