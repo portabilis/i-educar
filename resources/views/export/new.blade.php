@@ -28,13 +28,21 @@
         </tr>
         <tr>
           <td class="formlttd" valign="top" colspan="2">
+            <div style="padding-top: 10px">
+              <input id="select-all" type="checkbox" />
+              <label for="select-all">Selecionar todos</label>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="formlttd" valign="top" colspan="2">
             <div style="display: flex; justify-content: space-between; padding-right: 20px">
               @foreach($export->getExportedColumnsByGroup() as $group => $itens)
                 <div>
                   <h4>{{ $group }}</h4>
                   @foreach($itens as $key => $label)
                     <div>
-                      <input type="checkbox" name="fields[]" id="checkbox-{{ $key }}" value="{{ $key }}" />
+                      <input class="fields" type="checkbox" name="fields[]" id="checkbox-{{ $key }}" value="{{ $key }}" />
                       <label for="checkbox-{{ $key }}">{{ $label }}</label>
                     </div>
                   @endforeach
@@ -55,3 +63,16 @@
 
   </form>
 @endsection
+
+@push('scripts')
+  <script>
+  jQuery(document).ready(function () {
+    jQuery('#select-all').click(function () {
+      jQuery('.fields').prop('checked', this.checked);
+    });
+    jQuery('.fields').click(function () {
+      jQuery('#select-all').prop('checked', false);
+    });
+  });
+  </script>
+@endpush
