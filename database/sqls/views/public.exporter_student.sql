@@ -6,8 +6,8 @@ select
 	s.nm_serie as grade,
 	c.nm_curso as course,
 	m.data_matricula as registration_date,
-	m.aprovado as status,
 	m.ano as year,
+	vs.cod_situacao as status,
 	vs.texto_situacao as status_text,
 	a.cod_aluno as student_id,
 	m.cod_matricula as registration_id,
@@ -37,5 +37,4 @@ and vs.sequencial = mt.sequencial
 where true
 and a.ativo = 1
 and m.ativo = 1
-and mt.ativo = 1
 order by a.ref_idpes
