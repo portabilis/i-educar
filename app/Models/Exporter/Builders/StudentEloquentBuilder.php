@@ -3,7 +3,6 @@
 namespace App\Models\Exporter\Builders;
 
 use App\Support\Database\JoinableBuilder;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\JoinClause;
@@ -19,8 +18,6 @@ class StudentEloquentBuilder extends Builder
      */
     public function __construct(QueryBuilder $query)
     {
-        $query->where('exporter_student.year', Carbon::now()->year);
-
         parent::__construct($query);
     }
 

@@ -30,7 +30,6 @@ class Student extends Model
     {
         return [
             'Aluno' => [
-                'id' => 'ID',
                 'name' => 'Nome',
                 'social_name' => 'Nome social',
                 'cpf' => 'CPF',
@@ -44,6 +43,24 @@ class Student extends Model
                 'phones.phones' => 'Telefones',
                 'benefits.benefits' => 'Benefícios',
                 'disabilities.disabilities' => 'Deficiências',
+            ],
+            'Códigos' => [
+                'id' => 'ID Pessoa',
+                'student_id' => 'ID Aluno',
+                'registration_id' => 'ID Matrícula',
+                'school_id' => 'ID Escola',
+                'school_class_id' => 'ID Turma',
+                'grade_id' => 'ID Série',
+                'course_id' => 'ID Curso',
+            ],
+            'Escola' => [
+                'school' => 'Escola',
+                'school_class' => 'Turma',
+                'grade' => 'Série',
+                'course' => 'Curso',
+                'registration_date' => 'Data da Matrícula',
+                'year' => 'Ano',
+                'status_text' => 'Situação da Matrícula',
             ],
             'Endereço' => [
                 'place.address' => 'Logradouro',
