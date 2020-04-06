@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LegacyRegistrationScore extends Model
 {
@@ -27,4 +28,12 @@ class LegacyRegistrationScore extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @return BelongsTo
+     */
+    public function registration()
+    {
+        return $this->belongsTo(LegacyRegistration::class, 'matricula_id');
+    }
 }
