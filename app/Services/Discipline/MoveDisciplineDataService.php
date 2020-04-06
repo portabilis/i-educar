@@ -44,6 +44,7 @@ class MoveDisciplineDataService implements ToCollection
         $this->moveDataServices = [
             new MoveDataTeacherDiscipline(),
             new MoveDataDisciplineScore(),
+            new MoveDataDisciplineScoreAverage(),
         ];
     }
 
