@@ -51,4 +51,12 @@ class EloquentExporter implements FromQuery, WithChunkReading, WithHeadings
     {
         return $this->export->getExportQuery();
     }
+
+    /**
+     * @return int
+     */
+    public function getExportCount()
+    {
+        return $this->export->getExportQuery()->count();
+    }
 }

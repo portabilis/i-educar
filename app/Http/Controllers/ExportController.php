@@ -7,6 +7,7 @@ use App\Models\Exporter\Export;
 use App\Models\Exporter\Student;
 use App\Models\Person;
 use App\Process;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -78,6 +79,36 @@ class ExportController extends Controller
         ])->only([
             'model', 'fields', 'hash', 'user_id', 'filename',
         ]);
+
+        if ($status = $request->input('situacao_matricula')) {
+            $data['filters'][] = [
+                'column' => 'exporter_student.status',
+                'operator' => '=',
+                'value' => $status,
+            ];
+        }
+
+        if ($year = $request->input('ano')) {
+            $data['filters'][] = [
+                'column' => 'exporter_student.year',
+                'operator' => '=',
+                'value' => intval($year),
+            ];
+        }
+
+        if ($request->input('ref_cod_escola')) {
+            $data['filters'][] = [
+                'column' => 'exporter_student.school_id',
+                'operator' => 'in',
+                'value' => [$request->input('ref_cod_escola')]
+            ];
+        } elseif ($request->user()->isSchooling()) {
+            $data['filters'][] = [
+                'column' => 'exporter_student.school_id',
+                'operator' => 'in',
+                'value' => $request->user()->schools->pluck('cod_escola')->all(),
+            ];
+        }
 
         $export = Export::create($data);
 

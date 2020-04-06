@@ -24,6 +24,7 @@ class Export extends Model
         'url',
         'hash',
         'filename',
+        'filters',
     ];
 
     /**
@@ -31,6 +32,7 @@ class Export extends Model
      */
     protected $casts = [
         'fields' => 'json',
+        'filters' => 'json',
     ];
 
     /**
@@ -102,6 +104,30 @@ class Export extends Model
             $query->{$relation}($columns);
         }
 
+        $this->applyFilters($query);
+
         return $query;
+    }
+
+    /**
+     * @param Builder $query
+     */
+    public function applyFilters(Builder $query)
+    {
+        foreach ($this->filters as $filter) {
+            $column = $filter['column'];
+            $operator = $filter['operator'];
+            $value = $filter['value'];
+
+            switch ($operator) {
+                case '=':
+                    $query->where($column, $value);
+                    break;
+
+                case 'in':
+                    $query->whereIn($column, $value);
+                    break;
+            }
+        }
     }
 }

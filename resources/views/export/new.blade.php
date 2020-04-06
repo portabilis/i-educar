@@ -12,12 +12,52 @@
           <td class="formdktd" colspan="2" height="24"><b>Exportações</b></td>
         </tr>
         <tr>
+          <td class="formlttd" valign="top">
+            <span class="form">Ano</span>
+          </td>
+          <td class="formlttd" valign="top">
+            <span class="form">
+              @include('form.select-year')
+            </span>
+          </td>
+        </tr>
+        <tr>
           <td class="formmdtd" valign="top"><span class="form">Exportar dados de:</span></td>
           <td class="formmdtd" valign="top">
             <span class="form">
               <select class="geral" name="status" id="status" style="width: 308px;">
                 <option value="1">Alunos</option>
               </select>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td class="formlttd" valign="top">
+            <span class="form">Instituição</span>
+          </td>
+          <td class="formlttd" valign="top">
+            <span class="form">
+              @include('form.select-institution')
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td class="formmdtd" valign="top">
+            <span class="form">Escola</span>
+          </td>
+          <td class="formmdtd" valign="top">
+            <span class="form">
+              @include('form.select-school')
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td class="formmdtd" valign="top">
+            <span class="form">Situação da Matrícula</span>
+          </td>
+          <td class="formmdtd" valign="top">
+            <span class="form">
+              @include('form.select-registration-status')
             </span>
           </td>
         </tr>
@@ -36,9 +76,9 @@
         </tr>
         <tr>
           <td class="formlttd" valign="top" colspan="2">
-            <div style="display: flex; justify-content: space-between; padding-right: 20px">
+            <div style="display: flex; flex-wrap: wrap; padding-right: 20px">
               @foreach($export->getExportedColumnsByGroup() as $group => $itens)
-                <div>
+                <div style="min-width: 25%">
                   <h4>{{ $group }}</h4>
                   @foreach($itens as $key => $label)
                     <div>
@@ -75,4 +115,8 @@
     });
   });
   </script>
+
+  <script type="text/javascript" src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
+  <script type="text/javascript" src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/DynamicInput.js") }}"></script>
+  <script type="text/javascript" src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Escola.js") }}"></script>
 @endpush
