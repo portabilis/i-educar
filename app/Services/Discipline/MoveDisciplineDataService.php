@@ -45,6 +45,7 @@ class MoveDisciplineDataService implements ToCollection
             new MoveDataTeacherDiscipline(),
             new MoveDataDisciplineScore(),
             new MoveDataDisciplineScoreAverage(),
+            new MoveDataScoreExam(),
         ];
     }
 
