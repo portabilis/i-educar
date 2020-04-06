@@ -3,7 +3,6 @@
 namespace App\Services\Discipline;
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
 class MoveDisciplineDataService implements ToCollection
