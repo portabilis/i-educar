@@ -16,10 +16,9 @@ class MoveDataTeacherDiscipline implements MoveDisciplineDataInterface
                     $schoolClassQuery->where('ano', $year);
 
                     if ($gradeId) {
-                        $schoolClassQuery->where('ref_ref_cod_serie');
+                        $schoolClassQuery->where('ref_ref_cod_serie', $gradeId);
                     }
                 });
-            })
-            ->update(['componente_curricular_id' => $disciplineTo]);
+            })->update(['componente_curricular_id' => $disciplineTo]);
     }
 }
