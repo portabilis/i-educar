@@ -46,7 +46,7 @@ class DatabaseToCsvExporter implements ShouldQueue
     public function transformTenantFilename(Export $export)
     {
         return sprintf(
-            '%s/%s/%s',
+            '%s/csv/%s/%s',
             $export->getConnectionName(),
             $export->hash,
             $export->filename
