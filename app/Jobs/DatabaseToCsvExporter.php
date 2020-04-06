@@ -64,11 +64,13 @@ class DatabaseToCsvExporter implements ShouldQueue
     }
 
     /**
+     * @param EloquentExporter $exporter
+     *
      * @return string
      */
-    public function getMessageToNotification()
+    public function getMessageToNotification(EloquentExporter $exporter)
     {
-        return "Sua exportação de dados foi realizada com sucesso. Clique aqui para fazer download do arquivo {$this->export->filename}.";
+        return "Foram exportados {$exporter->getExportCount()} registros. Clique aqui para fazer download do arquivo {$this->export->filename}.";
     }
 
     /**
@@ -96,7 +98,7 @@ class DatabaseToCsvExporter implements ShouldQueue
 
         $notification->createByUser(
             $this->export->user_id,
-            $this->getMessageToNotification(),
+            $this->getMessageToNotification($exporter),
             $url,
             NotificationType::EXPORT_STUDENT
         );
