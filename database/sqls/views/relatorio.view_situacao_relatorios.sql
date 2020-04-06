@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW relatorio.view_situacao AS
+CREATE OR REPLACE VIEW relatorio.view_situacao_relatorios AS
 SELECT matricula.cod_matricula,
        situacao_matricula.cod_situacao,
        matricula_turma.ref_cod_turma AS cod_turma,
