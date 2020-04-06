@@ -188,6 +188,10 @@ class indice extends clsDetalhe
             {
                 $registro["aprovado"] = "Transferido";
             }
+            elseif ($registro["aprovado"] == 5)
+            {
+                $registro["aprovado"] = "Reclassificado";
+            }
             elseif ($registro['aprovado'] == 6) {
                 $registro["aprovado"] = "Abandono";
             }

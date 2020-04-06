@@ -298,7 +298,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         $isValid = $this->validatesPresenceOf($this->getRequest()->situacao, $name, $raiseExceptionOnError);
 
         if ($isValid) {
-            $expectedOpers = ['buscar-matricula', 'aprovado', 'reprovado', 'em-andamento', 'transferido'];
+            $expectedOpers = ['buscar-matricula', 'aprovado', 'reprovado', 'em-andamento', 'transferido', 'reclassificado', 'abandono'];
             $isValid = $this->validatesValueInSetOf($this->getRequest()->situacao, $expectedOpers, $name,
                 $raiseExceptionOnError);
         }
@@ -483,7 +483,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 'aprovado' => App_Model_MatriculaSituacao::APROVADO,
                 'reprovado' => App_Model_MatriculaSituacao::REPROVADO,
                 'em-andamento' => App_Model_MatriculaSituacao::EM_ANDAMENTO,
-                'transferido' => App_Model_MatriculaSituacao::TRANSFERIDO
+                'transferido' => App_Model_MatriculaSituacao::TRANSFERIDO,
+                'reclassificado' => App_Model_MatriculaSituacao::RECLASSIFICADO,
+                'abandono' => App_Model_MatriculaSituacao::ABANDONO
             ];
             $situacao = $situacoes[$this->getRequest()->situacao];
         }
@@ -1004,7 +1006,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 'reprovado-faltas' => App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS,
                 'em-andamento' => App_Model_MatriculaSituacao::EM_ANDAMENTO,
                 'aprovado-conselho' => App_Model_MatriculaSituacao::APROVADO_PELO_CONSELHO,
-                'aprovado-dependencia' => App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA
+                'aprovado-dependencia' => App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA,
+                'reclassificado' => App_Model_MatriculaSituacao::RECLASSIFICADO,
+                'abandono' => App_Model_MatriculaSituacao::ABANDONO
             ];
 
             foreach ($alunos as $aluno) {
