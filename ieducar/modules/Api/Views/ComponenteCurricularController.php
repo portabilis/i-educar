@@ -92,12 +92,12 @@ class ComponenteCurricularController extends ApiCoreController
 
     private function getComponentesCurricularesMigrados()
     {
-        $created = $this->getRequest()->created;
+        $modified = $this->getRequest()->modified;
 
         $query = MigratedDiscipline::query();
 
-        if ($created) {
-            $query->where('created_at', '>=', $created);
+        if ($modified) {
+            $query->where('created_at', '>=', $modified);
         }
 
         return array('disciplinas' => $query->get());
