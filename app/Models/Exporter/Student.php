@@ -118,6 +118,14 @@ class Student extends Model
     }
 
     /**
+     * @return string
+     */
+    public function getLabel()
+    {
+        return 'Alunos';
+    }
+
+    /**
      * @return array
      */
     public function getAllowedExportedColumns()

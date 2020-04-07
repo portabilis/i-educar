@@ -100,6 +100,14 @@ class Person extends Model
     }
 
     /**
+     * @return string
+     */
+    public function getLabel()
+    {
+        return 'Pessoas';
+    }
+
+    /**
      * @return array
      */
     public function getAllowedExportedColumns()
