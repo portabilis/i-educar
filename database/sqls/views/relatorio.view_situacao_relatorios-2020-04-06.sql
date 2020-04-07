@@ -19,7 +19,7 @@ SELECT matricula.cod_matricula,
            WHEN matricula.aprovado = 14 THEN 'Rp. Faltas'::character varying
            WHEN matricula.aprovado = 15 THEN 'Falecido'::character varying
            ELSE 'Recl'::character varying
-           END AS texto_situacao,
+           END                       AS texto_situacao,
        CASE
            WHEN matricula_turma.remanejado THEN 'Rem'::character varying
            WHEN matricula_turma.transferido THEN 'Trs'::character varying
@@ -36,34 +36,67 @@ SELECT matricula.cod_matricula,
            WHEN matricula.aprovado = 14 THEN 'RpFt'::character varying
            WHEN matricula.aprovado = 15 THEN 'Fal'::character varying
            ELSE 'Recl'::character varying
-           END AS texto_situacao_simplificado
+           END                       AS texto_situacao_simplificado
 FROM relatorio.situacao_matricula,
      matricula
          JOIN escola ON escola.cod_escola = matricula.ref_ref_cod_escola
          JOIN instituicao ON instituicao.cod_instituicao = escola.ref_cod_instituicao
          LEFT JOIN matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
-WHERE true AND matricula.ativo = 1 AND
-    CASE
-        WHEN instituicao.data_base_remanejamento IS NULL THEN COALESCE(matricula_turma.remanejado, false) = false
-        ELSE true
-        END AND
-    CASE
-        WHEN matricula.aprovado = 4 THEN matricula_turma.ativo = 1 OR matricula_turma.transferido OR matricula_turma.reclassificado OR matricula_turma.remanejado OR matricula_turma.sequencial = (( SELECT max(mt.sequencial) AS max
-                                                                                                                                                                                                     FROM matricula_turma mt
-                                                                                                                                                                                                     WHERE mt.ref_cod_matricula = matricula.cod_matricula))
-        WHEN matricula.aprovado = 6 THEN matricula_turma.ativo = 1 OR matricula_turma.abandono OR (matricula_turma.transferido OR matricula_turma.reclassificado OR matricula_turma.remanejado) AND matricula_turma.sequencial < (( SELECT max(mt.sequencial) AS max
-                                                                                                                                                                                                                                    FROM matricula_turma mt
-                                                                                                                                                                                                                                    WHERE mt.ref_cod_matricula = matricula.cod_matricula))
-        WHEN matricula.aprovado = 15 THEN matricula_turma.ativo = 1 OR matricula_turma.falecido
-        ELSE matricula_turma.ativo = 1 OR matricula_turma.transferido OR matricula_turma.reclassificado OR matricula_turma.abandono OR matricula_turma.remanejado OR matricula_turma.falecido AND matricula_turma.sequencial < (( SELECT max(mt.sequencial) AS max
-                                                                                                                                                                                                                                  FROM matricula_turma mt
-                                                                                                                                                                                                                                  WHERE mt.ref_cod_matricula = matricula.cod_matricula))
-        END AND
-    CASE
-        WHEN situacao_matricula.cod_situacao = 10 THEN matricula.aprovado = ANY (ARRAY[1, 2, 3, 4, 5, 6, 12, 13, 14, 15])
-        WHEN situacao_matricula.cod_situacao = 9 THEN (matricula.aprovado = ANY (ARRAY[1, 2, 3, 5, 12, 13, 14])) AND (NOT matricula_turma.reclassificado OR matricula_turma.reclassificado IS NULL) AND (NOT matricula_turma.abandono OR matricula_turma.abandono IS NULL) AND (NOT matricula_turma.remanejado OR matricula_turma.remanejado IS NULL) AND (NOT matricula_turma.transferido OR matricula_turma.transferido IS NULL) AND (NOT matricula_turma.falecido OR matricula_turma.falecido IS NULL)
-        WHEN situacao_matricula.cod_situacao = 2 THEN (matricula.aprovado = ANY (ARRAY[2, 14])) AND (NOT matricula_turma.reclassificado OR matricula_turma.reclassificado IS NULL) AND (NOT matricula_turma.abandono OR matricula_turma.abandono IS NULL) AND (NOT matricula_turma.remanejado OR matricula_turma.remanejado IS NULL) AND (NOT matricula_turma.transferido OR matricula_turma.transferido IS NULL) AND (NOT matricula_turma.falecido OR matricula_turma.falecido IS NULL)
-        WHEN situacao_matricula.cod_situacao = 1 THEN (matricula.aprovado = ANY (ARRAY[1, 12, 13])) AND (NOT matricula_turma.reclassificado OR matricula_turma.reclassificado IS NULL) AND (NOT matricula_turma.abandono OR matricula_turma.abandono IS NULL) AND (NOT matricula_turma.remanejado OR matricula_turma.remanejado IS NULL) AND (NOT matricula_turma.transferido OR matricula_turma.transferido IS NULL) AND (NOT matricula_turma.falecido OR matricula_turma.falecido IS NULL)
-        WHEN situacao_matricula.cod_situacao = ANY (ARRAY[3, 12, 13]) THEN matricula.aprovado = situacao_matricula.cod_situacao AND (NOT matricula_turma.reclassificado OR matricula_turma.reclassificado IS NULL) AND (NOT matricula_turma.abandono OR matricula_turma.abandono IS NULL) AND (NOT matricula_turma.remanejado OR matricula_turma.remanejado IS NULL) AND (NOT matricula_turma.transferido OR matricula_turma.transferido IS NULL) AND (NOT matricula_turma.falecido OR matricula_turma.falecido IS NULL)
-        ELSE matricula.aprovado = situacao_matricula.cod_situacao
-        END;
+WHERE true
+  AND matricula.ativo = 1
+  AND CASE
+          WHEN instituicao.data_base_remanejamento IS NULL THEN COALESCE(matricula_turma.remanejado, false) = false
+          ELSE true
+    END
+  AND CASE
+          WHEN matricula.aprovado = 4 THEN matricula_turma.ativo = 1 OR matricula_turma.transferido OR
+                                           matricula_turma.reclassificado OR matricula_turma.remanejado OR
+                                           matricula_turma.sequencial = ((SELECT max(mt.sequencial) AS max
+                                                                          FROM matricula_turma mt
+                                                                          WHERE mt.ref_cod_matricula = matricula.cod_matricula))
+          WHEN matricula.aprovado = 6 THEN matricula_turma.ativo = 1 OR matricula_turma.abandono OR
+                                           (matricula_turma.transferido OR matricula_turma.reclassificado OR
+                                            matricula_turma.remanejado) AND
+                                           matricula_turma.sequencial < ((SELECT max(mt.sequencial) AS max
+                                                                          FROM matricula_turma mt
+                                                                          WHERE mt.ref_cod_matricula = matricula.cod_matricula))
+          WHEN matricula.aprovado = 15 THEN matricula_turma.ativo = 1 OR matricula_turma.falecido
+          ELSE matricula_turma.ativo = 1 OR matricula_turma.transferido OR matricula_turma.reclassificado OR
+               matricula_turma.abandono OR matricula_turma.remanejado OR
+               matricula_turma.falecido AND matricula_turma.sequencial < ((SELECT max(mt.sequencial) AS max
+                                                                           FROM matricula_turma mt
+                                                                           WHERE mt.ref_cod_matricula = matricula.cod_matricula))
+    END
+  AND CASE
+          WHEN situacao_matricula.cod_situacao = 10
+              THEN matricula.aprovado = ANY (ARRAY [1, 2, 3, 4, 5, 6, 12, 13, 14, 15])
+          WHEN situacao_matricula.cod_situacao = 9 THEN (matricula.aprovado = ANY (ARRAY [1, 2, 3, 5, 12, 13, 14])) AND
+                                                        (NOT matricula_turma.reclassificado OR
+                                                         matricula_turma.reclassificado IS NULL) AND
+                                                        (NOT matricula_turma.abandono OR matricula_turma.abandono IS NULL) AND
+                                                        (NOT matricula_turma.remanejado OR matricula_turma.remanejado IS NULL) AND
+                                                        (NOT matricula_turma.transferido OR matricula_turma.transferido IS NULL) AND
+                                                        (NOT matricula_turma.falecido OR matricula_turma.falecido IS NULL)
+          WHEN situacao_matricula.cod_situacao = 2 THEN (matricula.aprovado = ANY (ARRAY [2, 14])) AND
+                                                        (NOT matricula_turma.reclassificado OR
+                                                         matricula_turma.reclassificado IS NULL) AND
+                                                        (NOT matricula_turma.abandono OR matricula_turma.abandono IS NULL) AND
+                                                        (NOT matricula_turma.remanejado OR matricula_turma.remanejado IS NULL) AND
+                                                        (NOT matricula_turma.transferido OR matricula_turma.transferido IS NULL) AND
+                                                        (NOT matricula_turma.falecido OR matricula_turma.falecido IS NULL)
+          WHEN situacao_matricula.cod_situacao = 1 THEN (matricula.aprovado = ANY (ARRAY [1, 12, 13])) AND
+                                                        (NOT matricula_turma.reclassificado OR
+                                                         matricula_turma.reclassificado IS NULL) AND
+                                                        (NOT matricula_turma.abandono OR matricula_turma.abandono IS NULL) AND
+                                                        (NOT matricula_turma.remanejado OR matricula_turma.remanejado IS NULL) AND
+                                                        (NOT matricula_turma.transferido OR matricula_turma.transferido IS NULL) AND
+                                                        (NOT matricula_turma.falecido OR matricula_turma.falecido IS NULL)
+          WHEN situacao_matricula.cod_situacao = ANY (ARRAY [3, 12, 13]) THEN
+                  matricula.aprovado = situacao_matricula.cod_situacao AND
+                  (NOT matricula_turma.reclassificado OR matricula_turma.reclassificado IS NULL) AND
+                  (NOT matricula_turma.abandono OR matricula_turma.abandono IS NULL) AND
+                  (NOT matricula_turma.remanejado OR matricula_turma.remanejado IS NULL) AND
+                  (NOT matricula_turma.transferido OR matricula_turma.transferido IS NULL) AND
+                  (NOT matricula_turma.falecido OR matricula_turma.falecido IS NULL)
+          ELSE matricula.aprovado = situacao_matricula.cod_situacao
+    END;
