@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\LogUnification;
+use iEducar\Modules\Unification\PersonLogUnification;
+use Illuminate\Support\Facades\DB;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -83,16 +87,33 @@ class indice extends clsCadastro
         return false;
     }
 
-    $unificador = new App_Unificacao_Pessoa($codPessoaPrincipal, $codPessoas, $this->pessoa_logada, new clsBanco(), FALSE);
+    DB::beginTransaction();
+    $unificationId = $this->createLog($codPessoaPrincipal, $codPessoas, $this->pessoa_logada);
+    $unificador = new App_Unificacao_Pessoa($codPessoaPrincipal, $codPessoas, $this->pessoa_logada, new clsBanco(), $unificationId);
+
     try {
         $unificador->unifica();
+        DB::commit();
     } catch (CoreExt_Exception $exception) {
+        DB::rollBack();
         $this->mensagem = $exception->getMessage();
         return FALSE;
     }
 
     $this->mensagem = "<span>Pessoas unificadas com sucesso.</span>";
     return true;
+  }
+
+  private function createLog($mainId, $duplicatesId, $createdBy)
+  {
+    $log = new LogUnification();
+    $log->type = PersonLogUnification::getType();
+    $log->main_id = $mainId;
+    $log->duplicates_id = json_encode($duplicatesId);
+    $log->created_by = $createdBy;
+    $log->updated_by = $createdBy;
+    $log->save();
+    return $log->id;
   }
 }
 

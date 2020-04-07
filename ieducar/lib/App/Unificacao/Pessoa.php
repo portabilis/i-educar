@@ -232,9 +232,9 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         ]
     ];
 
-    public function __construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, clsBanco $db, bool $transacao = true)
+    public function __construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, clsBanco $db, $unificationId)
     {
-        parent::__construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, $db, $transacao);
+        parent::__construct($codigoUnificador, $codigosDuplicados, $codPessoaLogada, $db, $unificationId);
 
         if (is_dir(base_path('ieducar/intranet/filaunica'))) {
             $this->chavesManterTodosVinculos[] = [
@@ -255,7 +255,7 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
     public function unifica()
     {
         $this->unificaClientes();
-        $unificadorServidor = new App_Unificacao_Servidor($this->codigoUnificador, $this->codigosDuplicados, $this->codPessoaLogada, $this->db, $this->transacao);
+        $unificadorServidor = new App_Unificacao_Servidor($this->codigoUnificador, $this->codigosDuplicados, $this->codPessoaLogada, $this->db, $this->unificationId);
         $unificadorServidor->unifica();
         parent::unifica();
     }
@@ -283,7 +283,7 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         if (COUNT($codigoClientes) < 2) {
             return true;
         }
-        $unificadorCliente = new App_Unificacao_Cliente(array_shift($codigoClientes), $codigoClientes, $this->codPessoaLogada, $this->db, $this->transacao);
+        $unificadorCliente = new App_Unificacao_Cliente(array_shift($codigoClientes), $codigoClientes, $this->codPessoaLogada, $this->db, $this->unificationId);
         $unificadorCliente->unifica();
     }
 
