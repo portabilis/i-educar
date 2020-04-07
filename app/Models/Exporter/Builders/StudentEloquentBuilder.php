@@ -12,16 +12,6 @@ class StudentEloquentBuilder extends Builder
     use JoinableBuilder;
 
     /**
-     * StudentEloquentBuilder constructor.
-     *
-     * @param QueryBuilder $query
-     */
-    public function __construct(QueryBuilder $query)
-    {
-        parent::__construct($query);
-    }
-
-    /**
      * @param array $columns
      *
      * @return StudentEloquentBuilder

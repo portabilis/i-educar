@@ -29,6 +29,15 @@ class Student extends Model
     public function getExportedColumnsByGroup()
     {
         return [
+            'Códigos' => [
+                'id' => 'ID Pessoa',
+                'student_id' => 'ID Aluno',
+                'registration_id' => 'ID Matrícula',
+                'school_id' => 'ID Escola',
+                'school_class_id' => 'ID Turma',
+                'grade_id' => 'ID Série',
+                'course_id' => 'ID Curso',
+            ],
             'Aluno' => [
                 'name' => 'Nome',
                 'social_name' => 'Nome social',
@@ -40,18 +49,6 @@ class Student extends Model
                 'organization' => 'Empresa',
                 'monthly_income' => 'Renda Mensal',
                 'gender' => 'Gênero',
-                'phones.phones' => 'Telefones',
-                'benefits.benefits' => 'Benefícios',
-                'disabilities.disabilities' => 'Deficiências',
-            ],
-            'Códigos' => [
-                'id' => 'ID Pessoa',
-                'student_id' => 'ID Aluno',
-                'registration_id' => 'ID Matrícula',
-                'school_id' => 'ID Escola',
-                'school_class_id' => 'ID Turma',
-                'grade_id' => 'ID Série',
-                'course_id' => 'ID Curso',
             ],
             'Escola' => [
                 'school' => 'Escola',
@@ -61,6 +58,11 @@ class Student extends Model
                 'registration_date' => 'Data da Matrícula',
                 'year' => 'Ano',
                 'status_text' => 'Situação da Matrícula',
+            ],
+            'Informações' => [
+                'phones.phones' => 'Telefones',
+                'benefits.benefits' => 'Benefícios',
+                'disabilities.disabilities' => 'Deficiências',
             ],
             'Endereço' => [
                 'place.address' => 'Logradouro',

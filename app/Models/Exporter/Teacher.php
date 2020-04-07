@@ -29,20 +29,6 @@ class Teacher extends Model
     public function getExportedColumnsByGroup()
     {
         return [
-            'Professor' => [
-                'person.name' => 'Nome',
-                'person.social_name' => 'Nome social',
-                'person.cpf' => 'CPF',
-                'person.date_of_birth' => 'Data de nascimento',
-                'person.email' => 'E-mail',
-                'person.sus' => 'Número SUS',
-                'person.occupation' => 'Ocupação',
-                'person.organization' => 'Empresa',
-                'person.monthly_income' => 'Renda Mensal',
-                'person.gender' => 'Gênero',
-                'phones.phones' => 'Telefones',
-                'disabilities.disabilities' => 'Deficiências',
-            ],
             'Códigos' => [
                 'id' => 'ID Pessoa',
                 'school_id' => 'ID Escola',
@@ -50,13 +36,29 @@ class Teacher extends Model
                 'grade_id' => 'ID Série',
                 'course_id' => 'ID Curso',
             ],
+            'Professor' => [
+                'name' => 'Nome',
+                'social_name' => 'Nome social',
+                'cpf' => 'CPF',
+                'date_of_birth' => 'Data de nascimento',
+                'email' => 'E-mail',
+                'sus' => 'Número SUS',
+                'occupation' => 'Ocupação',
+                'organization' => 'Empresa',
+                'monthly_income' => 'Renda Mensal',
+                'gender' => 'Gênero',
+            ],
             'Escola' => [
                 'school' => 'Escola',
                 'school_class' => 'Turma',
-                'disciplines.disciplines' => 'Disciplinas',
                 'grade' => 'Série',
                 'course' => 'Curso',
                 'year' => 'Ano',
+                'disciplines.disciplines' => 'Disciplinas',
+            ],
+            'Informações' => [
+                'phones.phones' => 'Telefones',
+                'disabilities.disabilities' => 'Deficiências',
             ],
             'Endereço' => [
                 'place.address' => 'Logradouro',
