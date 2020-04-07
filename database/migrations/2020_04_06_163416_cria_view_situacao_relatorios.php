@@ -14,7 +14,7 @@ class CriaViewSituacaoRelatorios extends Migration
      */
     public function up()
     {
-        $this->createView('relatorio.view_situacao_relatorios');
+        $this->createView('relatorio.view_situacao_relatorios', '2020-04-06');
     }
 
     /**
