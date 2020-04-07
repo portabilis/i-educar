@@ -28,14 +28,14 @@ class MoveDisciplineDataService implements ToCollection
                 continue;
             }
 
-            $this->moveData($disciplineFrom, $disciplineTo, $year, $gradeId);
-
             MigratedDiscipline::create([
                 'old_discipline_id' => $disciplineFrom,
                 'new_discipline_id' => $disciplineTo,
                 'grade_id' => $gradeId,
                 'year' => $year,
             ]);
+
+            $this->moveData($disciplineFrom, $disciplineTo, $year, $gradeId);
         }
     }
 
