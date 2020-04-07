@@ -36,6 +36,27 @@ class Export extends Model
     ];
 
     /**
+     * @return array
+     */
+    public function getAllowedExports()
+    {
+        return [
+            1 => new Student(),
+            2 => new Teacher(),
+        ];
+    }
+
+    /**
+     * @param int $code
+     *
+     * @return mixed
+     */
+    public function getExportByCode($code)
+    {
+        return $this->getAllowedExports()[$code] ?? new Student();
+    }
+
+    /**
      * @return EloquentExporter
      */
     public function getExporter()
