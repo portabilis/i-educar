@@ -55,10 +55,10 @@
         </tr>
         @if(request('type', 1) == 1)
         <tr>
-          <td class="formmdtd" valign="top">
+          <td class="formlttd" valign="top">
             <span class="form">Situação da Matrícula</span>
           </td>
-          <td class="formmdtd" valign="top">
+          <td class="formlttd" valign="top">
             <span class="form">
               @include('form.select-registration-status')
             </span>
@@ -67,7 +67,7 @@
         @endif
         <tr>
           <td class="formlttd" valign="top" colspan="2">
-            <span class="form">Selecione os campos que deseja exportar</span>
+            <div style="margin-top: 20px">Selecione os campos que deseja exportar</div>
           </td>
         </tr>
         <tr>
