@@ -16,7 +16,7 @@ class ExportController extends Controller
     /**
      * @return View
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->breadcrumb('Exportações', [
             url('/intranet/educar_configuracoes_index.php') => 'Configurações',
@@ -26,7 +26,8 @@ class ExportController extends Controller
 
         $query = Export::query();
 
-        $query->orderByDesc('created_at');
+        $query->where('user_id', $request->user()->getKey())
+            ->orderByDesc('created_at');
 
         return view('export.index', [
             'exports' => $query->paginate(),
