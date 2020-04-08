@@ -2,6 +2,7 @@
 
 namespace App\Services\Discipline;
 
+use App\Models\MigratedDiscipline;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
@@ -26,6 +27,13 @@ class MoveDisciplineDataService implements ToCollection
             if (!is_numeric($disciplineTo) || !is_numeric($disciplineFrom)) {
                 continue;
             }
+
+            MigratedDiscipline::create([
+                'old_discipline_id' => $disciplineFrom,
+                'new_discipline_id' => $disciplineTo,
+                'grade_id' => $gradeId,
+                'year' => $year,
+            ]);
 
             $this->moveData($disciplineFrom, $disciplineTo, $year, $gradeId);
         }

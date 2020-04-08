@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\MigratedDiscipline;
+
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
@@ -87,6 +89,19 @@ class ComponenteCurricularController extends ApiCoreController
       return array('disciplinas' => $disciplinas);
     }
   }
+
+    private function getComponentesCurricularesMigrados()
+    {
+        $modified = $this->getRequest()->modified;
+
+        $query = MigratedDiscipline::query();
+
+        if ($modified) {
+            $query->where('created_at', '>=', $modified);
+        }
+
+        return array('disciplinas' => $query->get());
+    }
 
 function getComponentesCurricularesPorSerie(){
     if($this->canGetComponentesCurriculares()){
@@ -214,6 +229,8 @@ function getComponentesCurricularesPorSerie(){
       $this->appendResponse($this->getComponentesCurricularesPorEscolaSerieAno());
     elseif($this->isRequestFor('get', 'componentes-curriculares-for-multiple-search'))
       $this->appendResponse($this->getComponentesCurricularesForMultipleSearch());
+    elseif($this->isRequestFor('get', 'componentes-curriculares-migrados'))
+      $this->appendResponse($this->getComponentesCurricularesMigrados());
     else
       $this->notImplementedOperationError();
   }
