@@ -251,4 +251,12 @@ class Individual extends Model
     {
         return $this->belongsTo(User::class, 'id', 'cod_usuario');
     }
+
+    /**
+     * @return HasOne
+     */
+    public function employee()
+    {
+        return $this->hasOne(Employee::class, 'cod_servidor', 'id');
+    }
 }

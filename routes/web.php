@@ -107,6 +107,10 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/notificacoes/quantidade-nao-lidas', 'NotificationController@getNotReadCount')->name('notifications.get-not-read-count');
     Route::post('/notificacoes/marca-como-lida', 'NotificationController@markAsRead')->name('notifications.mark-as-read');
     Route::post('/notificacoes/marca-todas-como-lidas', 'NotificationController@markAllRead')->name('notifications.mark-all-read');
+
+    Route::get('/exportacoes', 'ExportController@index')->name('export.index');
+    Route::get('/exportacoes/novo', 'ExportController@form')->name('export.form');
+    Route::post('/exportacoes/exportar', 'ExportController@export')->name('export.export');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
