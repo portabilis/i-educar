@@ -7,6 +7,7 @@ use App\Models\Exporter\Export;
 use App\Models\NotificationType;
 use App\Services\NotificationService;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -29,6 +30,11 @@ class DatabaseToCsvExporter implements ShouldQueue
     private $export;
 
     /**
+     * @var EloquentExporter
+     */
+    private $exporter;
+
+    /**
      * Create a new job instance.
      *
      * @param Export $export
@@ -36,6 +42,18 @@ class DatabaseToCsvExporter implements ShouldQueue
     public function __construct(Export $export)
     {
         $this->export = $export;
+    }
+
+    /**
+     * @return EloquentExporter
+     */
+    public function getExporter()
+    {
+        if (empty($this->exporter)) {
+            $this->exporter = new EloquentExporter($this->export);
+        }
+
+        return $this->exporter;
     }
 
     /**
@@ -79,6 +97,8 @@ class DatabaseToCsvExporter implements ShouldQueue
      * @param NotificationService $notification
      * @param DatabaseManager     $manager
      *
+     * @throws FileNotFoundException
+     *
      * @return void
      */
     public function handle(NotificationService $notification, DatabaseManager $manager)
@@ -87,14 +107,24 @@ class DatabaseToCsvExporter implements ShouldQueue
             $this->export->getConnectionName()
         );
 
-        $exporter = new EloquentExporter($this->export);
+        $exporter = $this->getExporter();
 
-        $filename = $this->transformTenantFilename($this->export);
+        $file = $this->export->hash;
+
+        $manager->unprepared(
+            "COPY ({$exporter->query()}) TO '/tmp/{$file}' CSV HEADER;"
+        );
+
+        $sftp = 'sftp:' . $manager->getConfig('host');
+
+        Storage::disk()->put(
+            $filename = $this->transformTenantFilename($this->export),
+            Storage::disk($sftp)->get("/tmp/{$file}")
+        );
+
+        Storage::disk($sftp)->delete("/tmp/{$file}");
+
         $url = $this->transformTenantUrl($filename);
-
-        $exporter->store($filename, null, null, [
-            'visibility' => 'public',
-        ]);
 
         $notification->createByUser(
             $this->export->user_id,

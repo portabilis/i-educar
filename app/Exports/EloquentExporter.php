@@ -45,11 +45,11 @@ class EloquentExporter implements FromQuery, WithChunkReading, WithHeadings
     }
 
     /**
-     * @return Builder
+     * @return string
      */
     public function query()
     {
-        return $this->export->getExportQuery();
+        return $this->export->getExportQuery()->toSql();
     }
 
     /**
