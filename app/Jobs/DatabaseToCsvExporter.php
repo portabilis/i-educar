@@ -104,7 +104,7 @@ class DatabaseToCsvExporter implements ShouldQueue
     public function handle(NotificationService $notification, DatabaseManager $manager)
     {
         $manager->setDefaultConnection(
-            $this->export->getConnectionName()
+            $sftp = $this->export->getConnectionName()
         );
 
         $exporter = $this->getExporter();
@@ -114,8 +114,6 @@ class DatabaseToCsvExporter implements ShouldQueue
         $manager->unprepared(
             "COPY ({$exporter->query()}) TO '/tmp/{$file}' CSV HEADER;"
         );
-
-        $sftp = 'sftp:' . $manager->getConfig('host');
 
         Storage::disk()->put(
             $filename = $this->transformTenantFilename($this->export),
