@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class LegacyDisciplineScore extends Model
+class LegacyDisciplineScoreAverage extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'modules.nota_componente_curricular';
+    protected $table = 'modules.nota_componente_curricular_media';
 
     /**
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'nota_aluno_id';
 
     /**
      * @var array
@@ -23,12 +23,11 @@ class LegacyDisciplineScore extends Model
     protected $fillable = [
         'nota_aluno_id',
         'componente_curricular_id',
-        'nota',
-        'nota_arredondada',
+        'media',
+        'media_arredondada',
         'etapa',
-        'nota_recuperacao',
-        'nota_original',
-        'nota_recuperacao_especifica'
+        'situacao',
+        'bloqueada',
     ];
 
     /**
