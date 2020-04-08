@@ -284,6 +284,7 @@ class indice extends clsCadastro
             2 => 'Reprovado',
             3 => 'Cursando',
             4 => 'Transferido',
+            5 => 'Reclassificado',
             6 => 'Abandono',
             12 => 'Aprovado com dependência',
             13 => 'Aprovado pelo conselho',

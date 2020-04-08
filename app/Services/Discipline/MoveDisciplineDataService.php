@@ -24,7 +24,7 @@ class MoveDisciplineDataService implements ToCollection
             $gradeId = $row[2];
             $year = $row[3];
 
-            if (!is_int($disciplineTo) || !is_int($disciplineFrom)) {
+            if (!is_numeric($disciplineTo) || !is_numeric($disciplineFrom)) {
                 continue;
             }
 

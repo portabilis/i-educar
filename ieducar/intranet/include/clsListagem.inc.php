@@ -186,10 +186,15 @@ class clsListagem extends clsCampos
                 }
             }
 
-            /**
-             * HTML do paginador.
-             */
-            $strReturn = '<table class=\'paginacao\' border="0" cellpadding="0" cellspacing="0" align="center"><tr>';
+            $strReturn = <<<HTML
+<table>
+  <tr>
+    <td>Total de registros: {$intTotalRegistros}</td>
+  </tr>
+</table>
+HTML;
+
+            $strReturn .= '<table class=\'paginacao\' border="0" cellpadding="0" cellspacing="0" align="center"><tr>';
 
             // Setas de início e anterior
             $imagem = ($intPaginaAtual > 1) ? 'seta' :'seta_transp';
@@ -221,21 +226,6 @@ class clsListagem extends clsCampos
 
             $this->paginador2 = $strReturn;
         }
-    }
-
-    public function addPaginador($argumento, $inicio, $buffer = false)
-    {
-        $visual = 1 + $this->numeropaginador;
-
-        if (!$buffer || (($this->numeropaginador > $inicio - 6) && ($this->numeropaginador < $inicio + 6))) {
-            if ($inicio == $this->numeropaginador) {
-                $this->paginador[] = [$visual, $argumento."&iniciolimit={$this->numeropaginador}", false];
-            } else {
-                $this->paginador[] = [$visual, $argumento."&iniciolimit={$this->numeropaginador}", true];
-            }
-        }
-
-        $this->numeropaginador++;
     }
 
     /**
