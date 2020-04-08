@@ -22,7 +22,7 @@ class StudentEloquentBuilder extends Builder
             $this->joinColumns('mother', $columns)
         );
 
-        return $this->leftJoin('exporter_student as mother', function (JoinClause $join) {
+        return $this->leftJoin('exporter_person as mother', function (JoinClause $join) {
             $join->on('exporter_student.mother_id', '=', 'mother.id');
         });
     }
@@ -38,7 +38,7 @@ class StudentEloquentBuilder extends Builder
             $this->joinColumns('father', $columns)
         );
 
-        return $this->leftJoin('exporter_student as father', function (JoinClause $join) {
+        return $this->leftJoin('exporter_person as father', function (JoinClause $join) {
             $join->on('exporter_student.father_id', '=', 'father.id');
         });
     }
@@ -54,7 +54,7 @@ class StudentEloquentBuilder extends Builder
             $this->joinColumns('guardian', $columns)
         );
 
-        return $this->leftJoin('exporter_student as guardian', function (JoinClause $join) {
+        return $this->leftJoin('exporter_person as guardian', function (JoinClause $join) {
             $join->on('exporter_student.guardian_id', '=', 'guardian.id');
         });
     }
