@@ -83,23 +83,6 @@ class Export extends Model
     }
 
     /**
-     * @return array
-     */
-    public function getExportHeading()
-    {
-        $model = $this->newExportModel();
-        $allowed = $model->getAllowedExportedColumns();
-
-        $headers = [];
-
-        foreach ($this->fields as $field) {
-            $headers[] = $allowed[$field];
-        }
-
-        return $headers;
-    }
-
-    /**
      * @return Builder
      */
     public function getExportQuery()

@@ -5,6 +5,8 @@ namespace App\Models\Exporter;
 use App\Models\Exporter\Builders\StudentEloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class Student extends Model
 {
@@ -12,6 +14,11 @@ class Student extends Model
      * @var string
      */
     protected $table = 'exporter_student';
+
+    /**
+     * @var Collection
+     */
+    protected $alias;
 
     /**
      * @param Builder $query
@@ -128,12 +135,18 @@ class Student extends Model
     }
 
     /**
-     * @return array
+     * @param string $column
+     *
+     * @return string
      */
-    public function getAllowedExportedColumns()
+    public function alias($column)
     {
-        return collect($this->getExportedColumnsByGroup())->flatMap(function ($item) {
-            return $item;
-        })->all();
+        if (empty($this->alias)) {
+            $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(function ($item) {
+                return $item;
+            });
+        }
+
+        return $this->alias->get($column, $column);
     }
 }
