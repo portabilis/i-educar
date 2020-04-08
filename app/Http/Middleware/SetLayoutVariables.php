@@ -21,7 +21,6 @@ class SetLayoutVariables
     {
         View::share('loggedUser', session('logged_user'));
         View::share('config', config('legacy'));
-        View::share('uniqueHash', uniqid('', true));
 
         return $next($request);
     }
