@@ -5,6 +5,7 @@ namespace App\Models\Exporter;
 use App\Models\Exporter\Builders\PersonEloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 
 class Person extends Model
 {
@@ -12,6 +13,11 @@ class Person extends Model
      * @var string
      */
     protected $table = 'exporter_person';
+
+    /**
+     * @var Collection
+     */
+    protected $alias;
 
     /**
      * @param Builder $query
@@ -100,12 +106,26 @@ class Person extends Model
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getAllowedExportedColumns()
+    public function getLabel()
     {
-        return collect($this->getExportedColumnsByGroup())->flatMap(function ($item) {
-            return $item;
-        })->all();
+        return 'Pessoas';
+    }
+
+    /**
+     * @param string $column
+     *
+     * @return string
+     */
+    public function alias($column)
+    {
+        if (empty($this->alias)) {
+            $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(function ($item) {
+                return $item;
+            });
+        }
+
+        return $this->alias->get($column, $column);
     }
 }

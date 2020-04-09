@@ -36,6 +36,27 @@ class Export extends Model
     ];
 
     /**
+     * @return array
+     */
+    public function getAllowedExports()
+    {
+        return [
+            1 => new Student(),
+            2 => new Teacher(),
+        ];
+    }
+
+    /**
+     * @param int $code
+     *
+     * @return mixed
+     */
+    public function getExportByCode($code)
+    {
+        return $this->getAllowedExports()[$code] ?? new Student();
+    }
+
+    /**
      * @return EloquentExporter
      */
     public function getExporter()
@@ -59,23 +80,6 @@ class Export extends Model
     public function newExportQueryBuilder()
     {
         return $this->newExportModel()->newQuery();
-    }
-
-    /**
-     * @return array
-     */
-    public function getExportHeading()
-    {
-        $model = $this->newExportModel();
-        $allowed = $model->getAllowedExportedColumns();
-
-        $headers = [];
-
-        foreach ($this->fields as $field) {
-            $headers[] = $allowed[$field];
-        }
-
-        return $headers;
     }
 
     /**
@@ -121,11 +125,12 @@ class Export extends Model
 
             switch ($operator) {
                 case '=':
-                    $query->where($column, $value);
+                    $query->whereRaw("{$column} {$operator} {$value}");
                     break;
 
                 case 'in':
-                    $query->whereIn($column, $value);
+                    $value = implode(', ', $value);
+                    $query->whereRaw("{$column} {$operator} ({$value})");
                     break;
             }
         }

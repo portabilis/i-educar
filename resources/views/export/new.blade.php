@@ -26,7 +26,9 @@
           <td class="formmdtd" valign="top">
             <span class="form">
               <select class="geral" name="status" id="status" style="width: 308px;">
-                <option value="1">Alunos</option>
+                @foreach($export->getAllowedExports() as $code => $exportItem)
+                <option @if(request('type', 1) == $code) selected @endif value="{{ $code }}">{{ $exportItem->getLabel() }}</option>
+                @endforeach
               </select>
             </span>
           </td>
@@ -51,19 +53,21 @@
             </span>
           </td>
         </tr>
+        @if(request('type', 1) == 1)
         <tr>
-          <td class="formmdtd" valign="top">
+          <td class="formlttd" valign="top">
             <span class="form">Situação da Matrícula</span>
           </td>
-          <td class="formmdtd" valign="top">
+          <td class="formlttd" valign="top">
             <span class="form">
               @include('form.select-registration-status')
             </span>
           </td>
         </tr>
+        @endif
         <tr>
           <td class="formlttd" valign="top" colspan="2">
-            <span class="form">Selecione os campos que deseja exportar</span>
+            <div style="margin-top: 20px">Selecione os campos que deseja exportar</div>
           </td>
         </tr>
         <tr>
@@ -77,7 +81,7 @@
         <tr>
           <td class="formlttd" valign="top" colspan="2">
             <div style="display: flex; flex-wrap: wrap; padding-right: 20px">
-              @foreach($export->getExportedColumnsByGroup() as $group => $itens)
+              @foreach($exportation->getExportedColumnsByGroup() as $group => $itens)
                 <div style="min-width: 25%">
                   <h4>{{ $group }}</h4>
                   @foreach($itens as $key => $label)
@@ -89,7 +93,7 @@
                 </div>
               @endforeach
             </div>
-            <input type="hidden" name="model" value="{{ get_class($export) }}">
+            <input type="hidden" name="model" value="{{ get_class($exportation) }}">
           </td>
         </tr>
       </tbody>
@@ -112,6 +116,9 @@
     });
     jQuery('.fields').click(function () {
       jQuery('#select-all').prop('checked', false);
+    });
+    jQuery('#status').change(function () {
+      window.location.href = '{{ route('export.form') }}?type=' + jQuery('#status').val();
     });
   });
   </script>

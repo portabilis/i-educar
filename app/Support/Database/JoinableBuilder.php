@@ -6,8 +6,10 @@ trait JoinableBuilder
 {
     public function joinColumns($table, $columns)
     {
-        return array_map(function ($column) use ($table) {
-            $alias = $table === $column ? $table : "{$table}_{$column}";
+        $model = $this->getModel();
+
+        return array_map(function ($column) use ($model, $table) {
+            $alias = $model->alias("{$table}.{$column}");
 
             return "{$table}.{$column} as {$alias}";
         }, $columns);
@@ -15,8 +17,13 @@ trait JoinableBuilder
 
     public function select($columns = ['*'])
     {
-        $columns = array_map(function ($column) {
-            return "{$this->getModel()->getTable()}.{$column}";
+        $model = $this->getModel();
+        $table = $model->getTable();
+
+        $columns = array_map(function ($column) use ($model, $table) {
+            $alias = $model->alias($column);
+
+            return "{$table}.{$column} as {$alias}";
         }, $columns);
 
         return parent::select($columns);
