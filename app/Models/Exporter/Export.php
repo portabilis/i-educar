@@ -24,6 +24,7 @@ class Export extends Model
         'url',
         'hash',
         'filename',
+        'filters',
     ];
 
     /**
@@ -31,7 +32,29 @@ class Export extends Model
      */
     protected $casts = [
         'fields' => 'json',
+        'filters' => 'json',
     ];
+
+    /**
+     * @return array
+     */
+    public function getAllowedExports()
+    {
+        return [
+            1 => new Student(),
+            2 => new Teacher(),
+        ];
+    }
+
+    /**
+     * @param int $code
+     *
+     * @return mixed
+     */
+    public function getExportByCode($code)
+    {
+        return $this->getAllowedExports()[$code] ?? new Student();
+    }
 
     /**
      * @return EloquentExporter
@@ -60,23 +83,6 @@ class Export extends Model
     }
 
     /**
-     * @return array
-     */
-    public function getExportHeading()
-    {
-        $model = $this->newExportModel();
-        $allowed = $model->getAllowedExportedColumns();
-
-        $headers = [];
-
-        foreach ($this->fields as $field) {
-            $headers[] = $allowed[$field];
-        }
-
-        return $headers;
-    }
-
-    /**
      * @return Builder
      */
     public function getExportQuery()
@@ -102,6 +108,31 @@ class Export extends Model
             $query->{$relation}($columns);
         }
 
+        $this->applyFilters($query);
+
         return $query;
+    }
+
+    /**
+     * @param Builder $query
+     */
+    public function applyFilters(Builder $query)
+    {
+        foreach ($this->filters as $filter) {
+            $column = $filter['column'];
+            $operator = $filter['operator'];
+            $value = $filter['value'];
+
+            switch ($operator) {
+                case '=':
+                    $query->whereRaw("{$column} {$operator} {$value}");
+                    break;
+
+                case 'in':
+                    $value = implode(', ', $value);
+                    $query->whereRaw("{$column} {$operator} ({$value})");
+                    break;
+            }
+        }
     }
 }

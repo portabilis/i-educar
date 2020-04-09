@@ -7,6 +7,7 @@ use App\Models\Exporter\Export;
 use App\Models\NotificationType;
 use App\Services\NotificationService;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -21,12 +22,17 @@ class DatabaseToCsvExporter implements ShouldQueue
     /**
      * @var int
      */
-    public $timeout = 900;
+    public $timeout = 1800;
 
     /**
      * @var Export
      */
     private $export;
+
+    /**
+     * @var EloquentExporter
+     */
+    private $exporter;
 
     /**
      * Create a new job instance.
@@ -39,6 +45,18 @@ class DatabaseToCsvExporter implements ShouldQueue
     }
 
     /**
+     * @return EloquentExporter
+     */
+    public function getExporter()
+    {
+        if (empty($this->exporter)) {
+            $this->exporter = new EloquentExporter($this->export);
+        }
+
+        return $this->exporter;
+    }
+
+    /**
      * @param Export $export
      *
      * @return string
@@ -46,7 +64,7 @@ class DatabaseToCsvExporter implements ShouldQueue
     public function transformTenantFilename(Export $export)
     {
         return sprintf(
-            '%s/%s/%s',
+            '%s/csv/%s/%s',
             $export->getConnectionName(),
             $export->hash,
             $export->filename
@@ -64,11 +82,13 @@ class DatabaseToCsvExporter implements ShouldQueue
     }
 
     /**
+     * @param EloquentExporter $exporter
+     *
      * @return string
      */
-    public function getMessageToNotification()
+    public function getMessageToNotification(EloquentExporter $exporter)
     {
-        return "Sua exportação de dados foi realizada com sucesso. Clique aqui para fazer download do arquivo {$this->export->filename}.";
+        return "Foram exportados {$exporter->getExportCount()} registros. Clique aqui para fazer download do arquivo {$this->export->filename}.";
     }
 
     /**
@@ -77,26 +97,37 @@ class DatabaseToCsvExporter implements ShouldQueue
      * @param NotificationService $notification
      * @param DatabaseManager     $manager
      *
+     * @throws FileNotFoundException
+     *
      * @return void
      */
     public function handle(NotificationService $notification, DatabaseManager $manager)
     {
         $manager->setDefaultConnection(
-            $this->export->getConnectionName()
+            $sftp = $this->export->getConnectionName()
         );
 
-        $exporter = new EloquentExporter($this->export);
+        $exporter = $this->getExporter();
 
-        $filename = $this->transformTenantFilename($this->export);
+        $file = $this->export->hash;
+
+        $manager->unprepared(
+            "COPY ({$exporter->query()}) TO '/tmp/{$file}' CSV HEADER;"
+        );
+
+        Storage::disk()->put(
+            $filename = $this->transformTenantFilename($this->export),
+            Storage::disk($sftp)->get("/tmp/{$file}"),
+            'public'
+        );
+
+        Storage::disk($sftp)->delete("/tmp/{$file}");
+
         $url = $this->transformTenantUrl($filename);
-
-        $exporter->store($filename, null, null, [
-            'visibility' => 'public',
-        ]);
 
         $notification->createByUser(
             $this->export->user_id,
-            $this->getMessageToNotification(),
+            $this->getMessageToNotification($exporter),
             $url,
             NotificationType::EXPORT_STUDENT
         );

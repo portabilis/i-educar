@@ -5,6 +5,8 @@ namespace App\Models\Exporter;
 use App\Models\Exporter\Builders\StudentEloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class Student extends Model
 {
@@ -12,6 +14,11 @@ class Student extends Model
      * @var string
      */
     protected $table = 'exporter_student';
+
+    /**
+     * @var Collection
+     */
+    protected $alias;
 
     /**
      * @param Builder $query
@@ -29,8 +36,16 @@ class Student extends Model
     public function getExportedColumnsByGroup()
     {
         return [
+            'Códigos' => [
+                'id' => 'ID Pessoa',
+                'student_id' => 'ID Aluno',
+                'registration_id' => 'ID Matrícula',
+                'school_id' => 'ID Escola',
+                'school_class_id' => 'ID Turma',
+                'grade_id' => 'ID Série',
+                'course_id' => 'ID Curso',
+            ],
             'Aluno' => [
-                'id' => 'ID',
                 'name' => 'Nome',
                 'social_name' => 'Nome social',
                 'cpf' => 'CPF',
@@ -41,6 +56,17 @@ class Student extends Model
                 'organization' => 'Empresa',
                 'monthly_income' => 'Renda Mensal',
                 'gender' => 'Gênero',
+            ],
+            'Escola' => [
+                'school' => 'Escola',
+                'school_class' => 'Turma',
+                'grade' => 'Série',
+                'course' => 'Curso',
+                'registration_date' => 'Data da Matrícula',
+                'year' => 'Ano',
+                'status_text' => 'Situação da Matrícula',
+            ],
+            'Informações' => [
                 'phones.phones' => 'Telefones',
                 'benefits.benefits' => 'Benefícios',
                 'disabilities.disabilities' => 'Deficiências',
@@ -101,12 +127,26 @@ class Student extends Model
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getAllowedExportedColumns()
+    public function getLabel()
     {
-        return collect($this->getExportedColumnsByGroup())->flatMap(function ($item) {
-            return $item;
-        })->all();
+        return 'Alunos';
+    }
+
+    /**
+     * @param string $column
+     *
+     * @return string
+     */
+    public function alias($column)
+    {
+        if (empty($this->alias)) {
+            $this->alias = collect($this->getExportedColumnsByGroup())->flatMap(function ($item) {
+                return $item;
+            });
+        }
+
+        return $this->alias->get($column, $column);
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\DatabaseToCsvExporter;
 use App\Models\Exporter\Export;
 use App\Models\Exporter\Student;
-use App\Models\Person;
+use App\Models\Exporter\Teacher;
 use App\Process;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,7 +16,7 @@ class ExportController extends Controller
     /**
      * @return View
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->breadcrumb('Exportações', [
             url('/intranet/educar_configuracoes_index.php') => 'Configurações',
@@ -26,7 +26,8 @@ class ExportController extends Controller
 
         $query = Export::query();
 
-        $query->orderByDesc('created_at');
+        $query->where('user_id', $request->user()->getKey())
+            ->orderByDesc('created_at');
 
         return view('export.index', [
             'exports' => $query->paginate(),
@@ -35,10 +36,11 @@ class ExportController extends Controller
 
     /**
      * @param Request $request
+     * @param Export  $export
      *
      * @return View
      */
-    public function form(Request $request)
+    public function form(Request $request, Export $export)
     {
         $this->breadcrumb('Nova Exportação', [
             url('/intranet/educar_configuracoes_index.php') => 'Configurações',
@@ -47,20 +49,11 @@ class ExportController extends Controller
 
         $this->menu(Process::DATA_EXPORT);
 
-        $type = $request->query('type', 1);
-
-        switch ($type) {
-            case 2:
-                $export = new Person();
-                break;
-
-            case 1:
-            default:
-                $export = new Student();
-        }
-
         return view('export.new', [
             'export' => $export,
+            'exportation' => $export->getExportByCode(
+                $request->query('type', 1)
+            ),
         ]);
     }
 
@@ -71,18 +64,119 @@ class ExportController extends Controller
      */
     public function export(Request $request)
     {
+        $export = Export::create(
+            $this->filter($request)
+        );
+
+        $this->dispatch(
+            new DatabaseToCsvExporter($export)
+        );
+
+        return redirect()->route('export.index');
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    protected function filter(Request $request)
+    {
         $data = $request->merge([
             'hash' => md5(time()),
             'user_id' => $request->user()->getKey(),
-            'filename' => 'alunos-' . date('Ymd') . '.csv',
         ])->only([
-            'model', 'fields', 'hash', 'user_id', 'filename',
+            'model', 'fields', 'hash', 'user_id',
         ]);
 
-        $export = Export::create($data);
+        $model = $data['model'];
 
-        $this->dispatch(new DatabaseToCsvExporter($export));
+        if ($model === Student::class) {
+            $data = $this->filterStudents($request, $data);
+        }
 
-        return redirect()->route('export.index');
+        if ($model === Teacher::class) {
+            $data = $this->filterTeachers($request, $data);
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param Request $request
+     * @param array   $data
+     *
+     * @return array
+     */
+    protected function filterStudents(Request $request, $data)
+    {
+        $data['filename'] = 'alunos.csv';
+
+        if ($status = $request->input('situacao_matricula')) {
+            $data['filters'][] = [
+                'column' => 'exporter_student.status',
+                'operator' => '=',
+                'value' => $status,
+            ];
+        }
+
+        if ($year = $request->input('ano')) {
+            $data['filters'][] = [
+                'column' => 'exporter_student.year',
+                'operator' => '=',
+                'value' => intval($year),
+            ];
+        }
+
+        if ($request->input('ref_cod_escola')) {
+            $data['filters'][] = [
+                'column' => 'exporter_student.school_id',
+                'operator' => 'in',
+                'value' => [$request->input('ref_cod_escola')]
+            ];
+        } elseif ($request->user()->isSchooling()) {
+            $data['filters'][] = [
+                'column' => 'exporter_student.school_id',
+                'operator' => 'in',
+                'value' => $request->user()->schools->pluck('cod_escola')->all(),
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param Request $request
+     * @param array   $data
+     *
+     * @return array
+     */
+    public function filterTeachers(Request $request, $data)
+    {
+        $data['filename'] = 'professores.csv';
+
+        if ($year = $request->input('ano')) {
+            $data['filters'][] = [
+                'column' => 'exporter_teacher.year',
+                'operator' => '=',
+                'value' => intval($year),
+            ];
+        }
+
+        if ($request->input('ref_cod_escola')) {
+            $data['filters'][] = [
+                'column' => 'exporter_teacher.school_id',
+                'operator' => 'in',
+                'value' => [$request->input('ref_cod_escola')]
+            ];
+        } elseif ($request->user()->isSchooling()) {
+            $data['filters'][] = [
+                'column' => 'exporter_teacher.school_id',
+                'operator' => 'in',
+                'value' => $request->user()->schools->pluck('cod_escola')->all(),
+            ];
+        }
+
+        return $data;
     }
 }

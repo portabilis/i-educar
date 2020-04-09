@@ -3,16 +3,9 @@
 namespace App\Exports;
 
 use App\Models\Exporter\Export;
-use Illuminate\Database\Eloquent\Builder;
-use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class EloquentExporter implements FromQuery, WithChunkReading, WithHeadings
+class EloquentExporter
 {
-    use Exportable;
-
     /**
      * @var Export
      */
@@ -29,26 +22,18 @@ class EloquentExporter implements FromQuery, WithChunkReading, WithHeadings
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function headings(): array
+    public function query()
     {
-        return $this->export->getExportHeading();
+        return $this->export->getExportQuery()->toSql();
     }
 
     /**
      * @return int
      */
-    public function chunkSize(): int
+    public function getExportCount()
     {
-        return 500;
-    }
-
-    /**
-     * @return Builder
-     */
-    public function query()
-    {
-        return $this->export->getExportQuery();
+        return $this->export->getExportQuery()->count();
     }
 }
