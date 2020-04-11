@@ -2,10 +2,61 @@
 
 namespace App\Repositories;
 
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
 class EducacensoRepository
 {
+    /**
+     * @param int $year
+     * @param int $school
+     *
+     * @return Builder
+     */
+    public function getBuilderForRecord20($year, $school)
+    {
+        return DB::table('public.educacenso_record20')
+            ->where('anoTurma', $year)
+            ->where('codEscola', $school);
+    }
+
+    /**
+     * @param int $school
+     *
+     * @return Builder
+     */
+    public function getBuilderForRecord40($school)
+    {
+        return DB::table('public.educacenso_record40')
+            ->where('codEscola', $school);
+    }
+
+    /**
+     * @param int $year
+     * @param int $school
+     *
+     * @return Builder
+     */
+    public function getBuilderForRecord50($year, $school)
+    {
+        return DB::table('public.educacenso_record50')
+            ->where('anoTurma', $year)
+            ->where('codEscola', $school);
+    }
+
+    /**
+     * @param int $year
+     * @param int $school
+     *
+     * @return Builder
+     */
+    public function getBuilderForRecord60($year, $school)
+    {
+        return DB::table('public.educacenso_record60')
+            ->where('anoTurma', $year)
+            ->where('codEscola', $school);
+    }
+
     /**
      * @param $sql
      * @param array $params
