@@ -38,7 +38,6 @@ SELECT
     cadastro.pessoa.nome "nomeAluno",
     aluno.cod_aluno "codigoAluno",
     turma.tipo_atendimento "tipoAtendimentoTurma",
-    turma.cod_turma "codigoTurma",
     turma.etapa_educacenso "etapaTurma",
     matricula.cod_matricula "codigoMatricula",
     turma.nm_turma "nomeTurma",
