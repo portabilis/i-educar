@@ -37,9 +37,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/enrollment-history/{id}', 'EnrollmentHistoryController@show')
         ->name('enrollments.enrollment-history');
 
-    Route::get('/educacenso/consulta', 'EducacensoController@show')
-        ->name('educacenso.show');
-    Route::post('/educacenso/consulta', 'EducacensoController@consult')
+    Route::get('/educacenso/consulta', 'EducacensoController@consult')
         ->name('educacenso.consult');
 
     Route::get('/enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@indexEnroll')

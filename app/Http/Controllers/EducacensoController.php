@@ -13,10 +13,11 @@ class EducacensoController extends Controller
     /**
      * @param LegacyInstitution $institution
      * @param array             $records
+     * @param null              $paginate
      *
      * @return View
      */
-    private function view(LegacyInstitution $institution, $records = [])
+    private function view(LegacyInstitution $institution, $records = [], $paginate = null)
     {
         $this->breadcrumb('Consulta 1ª fase - Matrícula inicial', [
             url('intranet/educar_educacenso_index.php') => 'Educacenso',
@@ -31,21 +32,12 @@ class EducacensoController extends Controller
         return view('educacenso.consult', [
             'institution' => $institution,
             'schools' => $schools,
+            'paginate' => $paginate,
             'record20' => $records['record20'] ?? null,
             'record40' => $records['record40'] ?? null,
             'record50' => $records['record50'] ?? null,
             'record60' => $records['record60'] ?? null,
         ]);
-    }
-
-    /**
-     * @param LegacyInstitution $institution
-     *
-     * @return View
-     */
-    public function show(LegacyInstitution $institution)
-    {
-        return $this->view($institution);
     }
 
     /**
@@ -60,37 +52,44 @@ class EducacensoController extends Controller
         EducacensoRepository $repository,
         LegacyInstitution $institution
     ) {
-        $record = $request->input('record');
-        $school = $request->input('ref_cod_escola');
-        $year = $request->input('year');
+        $record = $request->query('record');
+        $school = $request->query('ref_cod_escola');
+        $year = $request->query('year');
+
+        if (empty($record) || empty($school) || empty($year)) {
+            return $this->view($institution);
+        }
 
         $records = [];
 
         if ($record == '20') {
-            $records['record20'] = collect($repository->getDataForRecord20($school, $year))
-                ->sortBy('nomeTurma')
-                ->values();
+            $paginate = $repository->getBuilderForRecord20($year, $school)
+                ->orderBy('nomeTurma')
+                ->paginate();
+
+            $records['record20'] = $paginate->items();
         }
 
         if ($record == '40') {
-            $records['record40'] = collect($repository->getDataForRecord40($school))
-                ->sortBy('nomePessoa')
-                ->values();
+            $paginate = $repository->getBuilderForRecord40($school)
+                ->orderBy('nomePessoa')
+                ->paginate();
+
+            $records['record40'] = $paginate->items();
         }
 
         if ($record == '50') {
             require_once base_path('ieducar/modules/ComponenteCurricular/Model/CodigoEducacenso.php');
 
-            $records['record50'] = $repository->getDataForRecord50($year, $school);
+            $paginate = $repository->getBuilderForRecord50($year, $school)
+                ->paginate();
 
-            $records['record50'] = collect($records['record50'])
+            $records['record50'] = collect($paginate->items())
                 ->map(function ($item) {
                     $disciplines = explode(',', substr($item->componentes, 1, -1));
 
                     $item->componentes = collect($disciplines)->unique()->map(function ($discipline) {
-                        $data = ComponenteCurricular_Model_CodigoEducacenso::getDescription($discipline);
-
-                        return $data;
+                        return ComponenteCurricular_Model_CodigoEducacenso::getDescription($discipline);
                     })->toArray();
 
                     return $item;
@@ -102,11 +101,13 @@ class EducacensoController extends Controller
         }
 
         if ($record == '60') {
-            $records['record60'] = collect($repository->getDataForRecord60($school, $year))
-                ->sortBy('nomeAluno')
-                ->values();
+            $paginate = $repository->getBuilderForRecord60($year, $school)
+                ->orderBy('nomeAluno')
+                ->paginate();
+
+            $records['record60'] = $paginate->items();
         }
 
-        return $this->view($institution, $records);
+        return $this->view($institution, $records, $paginate);
     }
 }

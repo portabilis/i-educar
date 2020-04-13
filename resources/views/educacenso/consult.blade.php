@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <form id="formcadastro" method="post" action="{{ route('educacenso.consult') }}">
+    <form id="formcadastro" method="get" action="{{ route('educacenso.consult') }}">
         <table class="table-default table-form">
             <thead>
                 <tr>
@@ -194,6 +194,10 @@
     </table>
     <div class="separator"></div>
     @endif
+
+    @isset($paginate)
+        {{ $paginate->appends(request()->query())->links() }}
+    @endisset
 
     <div style="height: 30px;"></div>
 @endsection
