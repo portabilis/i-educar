@@ -176,8 +176,8 @@ class indice extends clsListagem
         $total = $aluno->_total;
 
         foreach ($alunos as $registro) {
-            $nomeAluno = strtoupper($registro['nome_aluno']);
-            $nomeSocial = strtoupper($registro['nome_social']);
+            $nomeAluno = $registro['nome_aluno'];
+            $nomeSocial = $registro['nome_social'];
 
             if ($nomeSocial) {
                 $nomeAluno = $nomeSocial . '<br> <i>Nome de registro: </i>' . $nomeAluno;
