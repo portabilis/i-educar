@@ -1169,24 +1169,6 @@ class clsPmieducarAluno extends Model
         return false;
     }
 
-    /**
-     * Retorna um array com os dados de um registro.
-     *
-     * @return array
-     */
-    public function existePessoa()
-    {
-        if (is_numeric($this->ref_idpes)) {
-            $db = new clsBanco();
-            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_idpes = '{$this->ref_idpes}'");
-            $db->ProximoRegistro();
-
-            return $db->Tupla();
-        }
-
-        return false;
-    }
-
     public function verificaInep($cod_aluno = null)
     {
         if (is_numeric($cod_aluno)) {
