@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\LegacyPerson;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 require_once 'include/clsBanco.inc.php';
 require_once 'include/Geral.inc.php';
@@ -423,9 +425,19 @@ class clsFisica
             }
 
             if (is_string($this->nome_social) && !empty($this->nome_social)) {
+                $slug = Str::lower(Str::slug($this->nome_social, ' '));
+
+                $person = LegacyPerson::query()->find($this->idpes);
+                $person->slug = "{$slug} {$person->slug}";
+                $person->save();
+
                 $campos  .= ', nome_social';
                 $valores .= ", '$this->nome_social'";
             } else {
+                $person = LegacyPerson::query()->find($this->idpes);
+                $person->slug = Str::lower(Str::slug($person->nome, ' '));
+                $person->save();
+
                 $campos  .= ', nome_social';
                 $valores .= ', NULL';
             }
@@ -685,8 +697,13 @@ class clsFisica
             }
 
             if (is_string($this->nome_social)) {
+                $slug = Str::lower(Str::slug($this->nome_social, ' '));
+
+                $person = LegacyPerson::query()->find($this->idpes);
+                $person->slug = "{$slug} {$person->slug}";
+                $person->save();
+
                 $set .= "$gruda nome_social = '{$this->nome_social}'";
-                $gruda = ', ';
             }
 
             if ($set) {
