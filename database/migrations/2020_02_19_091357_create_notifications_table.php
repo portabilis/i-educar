@@ -13,7 +13,7 @@ class CreateNotificationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('notifications', function (Blueprint $table) {
+        Schema::create('public.notifications', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('text');
             $table->string('link')->nullable();
@@ -30,6 +30,6 @@ class CreateNotificationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notifications');
+        Schema::dropIfExists('public.notifications');
     }
 }
