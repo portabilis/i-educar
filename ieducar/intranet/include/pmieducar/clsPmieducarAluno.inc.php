@@ -680,7 +680,7 @@ class clsPmieducarAluno extends Model
         }
 
         if (is_string($str_nome_aluno)) {
-            $filtros .= "{$whereAnd} translate(upper(coalesce(fisica.nome_social, '') || pessoa.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_aluno}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $filtros .= "{$whereAnd} pessoa.slug ILIKE '%{$str_nome_aluno}%'";
             $whereAnd = ' AND ';
         }
 
@@ -691,9 +691,9 @@ class clsPmieducarAluno extends Model
                 $and_nome_pai_mae = '';
 
                 $and_nome_resp = "
-          (translate(upper(pai_mae.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
+          (pai_mae.slug ILIKE '%$str_nome_responsavel%') AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
           OR
-          (translate(upper(pai_mae.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae";
+          (pai_mae.slug ILIKE '%$str_nome_responsavel%') AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae";
 
                 $and_resp = ' AND ';
             }
@@ -944,9 +944,9 @@ class clsPmieducarAluno extends Model
 
             if (is_string($str_nome_responsavel)) {
                 $and_nome_resp = "
-              (translate(upper(pai_mae.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
+              (pai_mae.slug ILIKE '%$str_nome_responsavel%') AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
               OR
-              (translate(upper(pai_mae.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) AND (aluno.tipo_responsavel = 'p') AND pai_mae.idpes = fisica_aluno.idpes_pai";
+              (pai_mae.slug ILIKE '%$str_nome_responsavel%') AND (aluno.tipo_responsavel = 'p') AND pai_mae.idpes = fisica_aluno.idpes_pai";
 
                 $and_resp = 'AND';
             }
@@ -1048,7 +1048,7 @@ class clsPmieducarAluno extends Model
                 $str_nm_pai2 = addslashes($str_nm_pai2);
 
                 $complemento_sql .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_pai ON (pessoa_pai.idpes = f.idpes_pai)';
-                $complemento_where .= "{$and_where} (translate(upper(pessoa_pai.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE (translate(upper('%{$str_nm_pai2}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')))";
+                $complemento_where .= "{$and_where} (pessoa_pai.slug ILIKE '%{$str_nm_pai2}%')";
                 $and_where = ' AND ';
             }
 
@@ -1056,7 +1056,7 @@ class clsPmieducarAluno extends Model
                 $str_nm_mae2 = addslashes($str_nm_mae2);
 
                 $complemento_sql .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_mae ON (pessoa_mae.idpes = f.idpes_mae)';
-                $complemento_where .= "{$and_where} (translate(upper(pessoa_mae.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE (translate(upper('%{$str_nm_mae2}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')))";
+                $complemento_where .= "{$and_where} (pessoa_mae.slug ILIKE '%{$str_nm_mae2}%')";
                 $and_where = ' AND ';
             }
 
@@ -1064,7 +1064,7 @@ class clsPmieducarAluno extends Model
                 $str_nm_responsavel2 = addslashes($str_nm_responsavel2);
 
                 $complemento_sql .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_responsavel ON (pessoa_responsavel.idpes = f.idpes_responsavel)';
-                $complemento_where .= "{$and_where} (translate(upper(pessoa_responsavel.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE (translate(upper('%{$str_nm_responsavel2}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')))";
+                $complemento_where .= "{$and_where} (pessoa_responsavel.slug ILIKE '%{$str_nm_responsavel2}%')";
                 $and_where = ' AND ';
             }
 

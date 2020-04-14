@@ -72,7 +72,7 @@ class clsPessoaFisica extends clsPessoaFj
             $str_nome = str_replace(' ', '%', $str_nome);
             $str_nome = pg_escape_string($str_nome);
 
-            $where .= "{$whereAnd} translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $where .= "{$whereAnd} slug ILIKE '%{$str_nome}%'";
             $whereAnd = ' AND ';
         }
 
@@ -144,7 +144,7 @@ class clsPessoaFisica extends clsPessoaFj
             $str_nome = pg_escape_string($str_nome);
             $str_nome = str_replace(' ', '%', $str_nome);
 
-            $where .= "{$whereAnd} translate(upper(coalesce(nome_social, '') || nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $where .= "{$whereAnd} slug ILIKE '%{$str_nome}%'";
             $whereAnd = ' AND ';
         }
 
