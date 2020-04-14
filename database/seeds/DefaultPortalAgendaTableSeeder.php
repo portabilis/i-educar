@@ -12,8 +12,11 @@ class DefaultPortalAgendaTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::unprepared(
-            file_get_contents(__DIR__ . '/../sqls/inserts/portal.agenda.sql')
-        );
+        DB::table('portal.agenda')->insert([
+            'cod_agenda' => 1,
+            'ref_ref_cod_pessoa_cad' => 1,
+            'nm_agenda' => 'Administrador',
+            'data_cad' => now(),
+        ]);
     }
 }

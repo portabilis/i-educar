@@ -12,8 +12,28 @@ class DefaultPortalFuncionarioVinculoTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::unprepared(
-            file_get_contents(__DIR__ . '/../sqls/inserts/portal.funcionario_vinculo.sql')
-        );
+        DB::table('portal.funcionario_vinculo')->insert([
+            'cod_funcionario_vinculo' => 3,
+            'nome' => 'Efetivo',
+            'abreviatura' => 'Efet',
+        ]);
+
+        DB::table('portal.funcionario_vinculo')->insert([
+            'cod_funcionario_vinculo' => 4,
+            'nome' => 'Contratado',
+            'abreviatura' => 'Cont',
+        ]);
+
+        DB::table('portal.funcionario_vinculo')->insert([
+            'cod_funcionario_vinculo' => 5,
+            'nome' => 'Comissionado',
+            'abreviatura' => 'Com',
+        ]);
+
+        DB::table('portal.funcionario_vinculo')->insert([
+            'cod_funcionario_vinculo' => 6,
+            'nome' => 'Estagiário',
+            'abreviatura' => 'Est',
+        ]);
     }
 }
