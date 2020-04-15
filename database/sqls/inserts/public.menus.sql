@@ -32,6 +32,7 @@ INSERT INTO public.menus VALUES (30, 5, 'Exportações', NULL, NULL, NULL, 1, 2,
 INSERT INTO public.menus VALUES (31, 5, 'Importações', NULL, NULL, NULL, 1, 2, NULL, 9998848, 70, true, NULL, NULL);
 INSERT INTO public.menus VALUES (32, 4, 'Cadastros', NULL, NULL, NULL, 1, 2, NULL, 999911, 71, true, NULL, NULL);
 INSERT INTO public.menus VALUES (33, 4, 'Relatórios', NULL, NULL, NULL, 2, 2, NULL, 999913, 71, true, NULL, NULL);
+INSERT INTO public.menus VALUES (34, 21, 'Tipos', 'Autores de obras', NULL, NULL, 1, 3, NULL, 999900, 15858, true, NULL, NULL);
 INSERT INTO public.menus VALUES (35, 21, 'Bibliotecas', 'Bibliotecas', '/intranet/educar_biblioteca_lst.php', NULL, 2, 3, 591, 15880, 15858, true, NULL, NULL);
 INSERT INTO public.menus VALUES (36, 21, 'Configurações', 'Configurações de bibliotecas', '/intranet/educar_biblioteca_dados_lst.php', NULL, 2, 3, 629, 15890, 15858, true, NULL, NULL);
 INSERT INTO public.menus VALUES (37, 21, 'Obras', 'Obras', '/intranet/educar_acervo_lst.php', NULL, 3, 3, 598, 15878, 15858, true, NULL, NULL);
@@ -97,6 +98,9 @@ INSERT INTO public.menus VALUES (97, 30, '1ª fase - Matrícula inicial', 'Expor
 INSERT INTO public.menus VALUES (98, 31, 'Importação educacenso', 'Importação educacenso', '/intranet/educar_importacao_educacenso.php', NULL, 0, 3, 9998849, 9998849, 9998848, true, NULL, NULL);
 INSERT INTO public.menus VALUES (99, 10, 'Unificações', NULL, NULL, NULL, 1, 3, NULL, 9998877, 9998876, true, NULL, NULL);
 INSERT INTO public.menus VALUES (100, 49, 'Cópia de rotas', 'Cópia de rotas do transporte', '/intranet/transporte_copia_rotas.php', NULL, 0, 4, 21246, 21246, 21244, true, NULL, NULL);
+INSERT INTO public.menus VALUES (101, 34, 'Obras', 'Autores de obras', NULL, NULL, 1, 4, NULL, 999901, 999900, true, NULL, NULL);
+INSERT INTO public.menus VALUES (102, 34, 'Exemplares', 'Autores de obras', NULL, NULL, 3, 4, NULL, 999903, 999900, true, NULL, NULL);
+INSERT INTO public.menus VALUES (103, 34, 'Clientes', 'Autores de obras', NULL, NULL, 4, 4, NULL, 999904, 999900, true, NULL, NULL);
 INSERT INTO public.menus VALUES (104, 75, 'Funções', 'Funções do servidor', '/intranet/educar_funcao_lst.php', NULL, 1, 4, 634, 21153, 999912, true, NULL, NULL);
 INSERT INTO public.menus VALUES (105, 75, 'Escolaridade', 'Escolaridade do servidor', '/intranet/educar_escolaridade_lst.php', NULL, 2, 4, 632, 21146, 999912, true, NULL, NULL);
 INSERT INTO public.menus VALUES (106, 75, 'Categoria ou níveis', 'Categoria ou níveis do servidor', '/intranet/educar_categoria_nivel_lst.php', NULL, 3, 4, 829, 21156, 999912, true, NULL, NULL);

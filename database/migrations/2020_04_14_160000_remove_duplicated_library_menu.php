@@ -23,7 +23,9 @@ class RemoveDuplicatedLibraryMenu extends Migration
             ->whereIn('menu_id', $menus)
             ->delete();
 
-        Menu::query()->whereIn('id', $menus)->delete();
+        Menu::query()->whereIn('id', $menus)->update([
+            'process' => null,
+        ]);
 
         Menu::query()
             ->where('link', '/intranet/educar_categoria_lst.php')
