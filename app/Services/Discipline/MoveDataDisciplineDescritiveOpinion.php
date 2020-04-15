@@ -9,7 +9,7 @@ class MoveDataDisciplineDescritiveOpinion implements MoveDisciplineDataInterface
 {
     public function moveData($disciplineFrom, $disciplineTo, $year, $gradeId)
     {
-        LegacyDisciplineDescriptiveOpinion::query()
+        return LegacyDisciplineDescriptiveOpinion::query()
             ->where('componente_curricular_id', $disciplineFrom)
             ->whereHas('studentDescriptiveOpinion', function (Builder $studentDescriptiveOpinionQuery) use ($gradeId, $year) {
                 $studentDescriptiveOpinionQuery->whereHas('registration', function (Builder $registrationQuery) use ($gradeId, $year) {

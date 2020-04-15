@@ -9,7 +9,7 @@ class MoveDataTeacherDiscipline implements MoveDisciplineDataInterface
 {
     public function moveData($disciplineFrom, $disciplineTo, $year, $gradeId)
     {
-        LegacySchoolClassTeacherDiscipline::query()
+        return LegacySchoolClassTeacherDiscipline::query()
             ->where('componente_curricular_id', $disciplineFrom)
             ->whereHas('schoolClassTeacher', function (Builder $schoolClassTeacherQuery) use ($gradeId, $year) {
                 $schoolClassTeacherQuery->whereHas('schoolClass', function (Builder $schoolClassQuery) use ($gradeId, $year) {
