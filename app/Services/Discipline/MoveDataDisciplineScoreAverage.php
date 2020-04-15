@@ -9,7 +9,7 @@ class MoveDataDisciplineScoreAverage implements MoveDisciplineDataInterface
 {
     public function moveData($disciplineFrom, $disciplineTo, $year, $gradeId)
     {
-        LegacyDisciplineScoreAverage::query()
+        return LegacyDisciplineScoreAverage::query()
             ->where('componente_curricular_id', $disciplineFrom)
             ->whereHas('registrationScore', function (Builder $registrationScoreQuery) use ($gradeId, $year) {
                 $registrationScoreQuery->whereHas('registration', function (Builder $registrationQuery) use ($gradeId, $year) {

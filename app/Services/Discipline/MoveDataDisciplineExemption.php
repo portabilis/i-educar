@@ -9,7 +9,7 @@ class MoveDataDisciplineExemption implements MoveDisciplineDataInterface
 {
     public function moveData($disciplineFrom, $disciplineTo, $year, $gradeId)
     {
-        LegacyDisciplineExemption::query()
+        return LegacyDisciplineExemption::query()
             ->where('ref_cod_disciplina', $disciplineFrom)
             ->whereHas('registration', function (Builder $registrationQuery) use ($gradeId, $year) {
                 $registrationQuery->where('ano', $year);

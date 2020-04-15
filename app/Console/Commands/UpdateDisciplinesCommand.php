@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Services\Discipline\MoveDisciplineDataService;
+use iEducar\Support\Output\CommandOutput;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +36,8 @@ class UpdateDisciplinesCommand extends Command
     {
         $filename = $this->argument('filename');
 
-        $service = new MoveDisciplineDataService();
+        $output = new CommandOutput($this->output);
+        $service = new MoveDisciplineDataService($output);
         $service->setDefaultCopiers();
 
         DB::beginTransaction();

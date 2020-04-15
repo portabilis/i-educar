@@ -9,7 +9,7 @@ class MoveDataDisciplineAbsence implements MoveDisciplineDataInterface
 {
     public function moveData($disciplineFrom, $disciplineTo, $year, $gradeId)
     {
-        LegacyDisciplineAbsence::query()
+        return LegacyDisciplineAbsence::query()
             ->where('componente_curricular_id', $disciplineFrom)
             ->whereHas('studentAbsence', function (Builder $registrationScoreQuery) use ($gradeId, $year) {
                 $registrationScoreQuery->whereHas('registration', function (Builder $registrationQuery) use ($gradeId, $year) {
