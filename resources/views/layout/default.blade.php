@@ -23,6 +23,7 @@
             'teachers_count': '{{ $loggedUser->teachers_count }}',
             'classes_count': '{{ $loggedUser->classes_count }}',
         }];
+        window.useEcho = '{{ config('broadcasting.default') }}' !== '';
     </script>
 
     @if(!empty($config['app']['gtm']['id']))
@@ -305,7 +306,10 @@
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/notifications.js") }}"></script>
 <script>
     getNotifications();
-    startListenChannel('ieducar-{{\DB::getDefaultConnection()}}-notification-{{md5($loggedUser->personId)}}');
+
+    if (window.useEcho) {
+        startListenChannel('ieducar-{{\DB::getDefaultConnection()}}-notification-{{md5($loggedUser->personId)}}');
+    }
 </script>
 
 @include('layout.vue')

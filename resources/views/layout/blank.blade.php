@@ -22,6 +22,7 @@
           'teachers_count': '{{ $loggedUser->teachers_count }}',
           'classes_count': '{{ $loggedUser->classes_count }}',
         }];
+        window.useEcho = '{{ config('broadcasting.default') }}' !== '';
     </script>
 
 @if(!empty($config['app']['gtm']['id']))
