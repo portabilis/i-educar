@@ -2,6 +2,7 @@
 
 namespace App\Services\Discipline;
 
+use App\Contracts\Output;
 use App\Models\MigratedDiscipline;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -12,6 +13,11 @@ class MoveDisciplineDataService implements ToCollection
      * @var MoveDisciplineDataInterface[]
      */
     private $moveDataServices = [];
+
+    /**
+     * @var Output
+     */
+    private $output;
 
     /**
      * @inheritDoc
@@ -42,7 +48,9 @@ class MoveDisciplineDataService implements ToCollection
     public function moveData($disciplineFrom, $disciplineTo, $year, $gradeId)
     {
         foreach ($this->moveDataServices as $moveDataService) {
-            $moveDataService->moveData($disciplineFrom, $disciplineTo, $year, $gradeId);
+            $updatedResources = $moveDataService->moveData($disciplineFrom, $disciplineTo, $year, $gradeId);
+
+            $this->sendInfoMessage($disciplineFrom, $disciplineTo, get_class($moveDataService), $updatedResources);
         }
     }
 
@@ -67,5 +75,34 @@ class MoveDisciplineDataService implements ToCollection
     {
         $this->moveDataServices[] = $moveDataServices;
         return $this;
+    }
+
+    /**
+     * Seta classe de output
+     * @param Output $output
+     */
+    public function setOutput(Output $output)
+    {
+        $this->output = $output;
+    }
+
+    /**
+     * Envia uma mensagem para o output com as informações do movimento de dados
+     *
+     * @param integer $disciplineFrom
+     * @param integer $disciplineTo
+     * @param string $copier
+     * @param integer $updatedResources
+     */
+    private function sendInfoMessage($disciplineFrom, $disciplineTo, $copier, $updatedResources)
+    {
+        $this->output->info(
+            sprintf('%s recursos atualizados do compoente %s para %s - %s', [
+                $updatedResources,
+                $disciplineFrom,
+                $disciplineTo,
+                $copier
+            ])
+        );
     }
 }

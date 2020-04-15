@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Services\Discipline\MoveDisciplineDataService;
+use iEducar\Support\Output\CommandOutput;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\DB;
@@ -37,6 +38,9 @@ class UpdateDisciplinesCommand extends Command
 
         $service = new MoveDisciplineDataService();
         $service->setDefaultCopiers();
+
+        $output = new CommandOutput($this->output);
+        $service->setOutput($output);
 
         DB::beginTransaction();
         Excel::import($service, $filename);
