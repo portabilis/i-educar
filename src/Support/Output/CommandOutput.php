@@ -27,4 +27,14 @@ class CommandOutput implements Output
     {
         $this->output->writeln($message);
     }
+
+    public function progressStart($max)
+    {
+        $this->output->progressStart($max);
+    }
+
+    public function progressFinish()
+    {
+        $this->output->progressFinish();
+    }
 }

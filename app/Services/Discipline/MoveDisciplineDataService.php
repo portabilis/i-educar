@@ -20,10 +20,25 @@ class MoveDisciplineDataService implements ToCollection
     private $output;
 
     /**
+     * @var array
+     */
+    private $messages;
+
+    /**
+     * @param Output $output
+     */
+    public function __construct(Output $output)
+    {
+        $this->output = $output;
+    }
+
+    /**
      * @inheritDoc
      */
     public function collection(Collection $rows)
     {
+        $this->output->progressStart($rows->count());
+
         foreach ($rows as $row) {
             $disciplineFrom = $row[0];
             $disciplineTo = $row[1];
@@ -42,7 +57,12 @@ class MoveDisciplineDataService implements ToCollection
             ]);
 
             $this->moveData($disciplineFrom, $disciplineTo, $year, $gradeId);
+
+            $this->output->progressAdvance();
         }
+
+        $this->output->progressFinish();
+        $this->sendLog();
     }
 
     public function moveData($disciplineFrom, $disciplineTo, $year, $gradeId)
@@ -50,7 +70,7 @@ class MoveDisciplineDataService implements ToCollection
         foreach ($this->moveDataServices as $moveDataService) {
             $updatedResources = $moveDataService->moveData($disciplineFrom, $disciplineTo, $year, $gradeId);
 
-            $this->sendInfoMessage($disciplineFrom, $disciplineTo, get_class($moveDataService), $updatedResources);
+            $this->addInfoMessage($disciplineFrom, $disciplineTo, get_class($moveDataService), $updatedResources);
         }
     }
 
@@ -78,31 +98,34 @@ class MoveDisciplineDataService implements ToCollection
     }
 
     /**
-     * Seta classe de output
-     * @param Output $output
-     */
-    public function setOutput(Output $output)
-    {
-        $this->output = $output;
-    }
-
-    /**
-     * Envia uma mensagem para o output com as informações do movimento de dados
+     * Adiciona uma mensagem de informação
      *
      * @param integer $disciplineFrom
      * @param integer $disciplineTo
      * @param string $copier
      * @param integer $updatedResources
      */
-    private function sendInfoMessage($disciplineFrom, $disciplineTo, $copier, $updatedResources)
+    private function addInfoMessage($disciplineFrom, $disciplineTo, $copier, $updatedResources)
     {
-        $this->output->info(
-            sprintf('%s recursos atualizados do compoente %s para %s - %s', [
+        $this->messages[$copier][] =
+            sprintf('%s recursos atualizados do componente %s para %s',
                 $updatedResources,
                 $disciplineFrom,
-                $disciplineTo,
-                $copier
-            ])
-        );
+                $disciplineTo
+            );
+    }
+
+    /**
+     * Envia uma mensagem para o output com as informações do movimento de dados
+     */
+    private function sendLog()
+    {
+        foreach ($this->messages as $copier => $copierMessages) {
+            $this->output->info('---- ' . $copier . ' ----');
+
+            foreach ($copierMessages as $message) {
+                $this->output->info($message);
+            }
+        }
     }
 }

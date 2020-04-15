@@ -10,6 +10,17 @@ interface Output
     public function progressAdvance();
 
     /**
+     * Inicia a indicação de progresso
+     * @param $count
+     */
+    public function progressStart($max);
+
+    /**
+     * Finaliza a indicação de progresso
+     */
+    public function progressFinish();
+
+    /**
      * Envia uma mensagem de informação
      *
      * @param string $message

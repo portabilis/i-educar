@@ -36,11 +36,9 @@ class UpdateDisciplinesCommand extends Command
     {
         $filename = $this->argument('filename');
 
-        $service = new MoveDisciplineDataService();
-        $service->setDefaultCopiers();
-
         $output = new CommandOutput($this->output);
-        $service->setOutput($output);
+        $service = new MoveDisciplineDataService($output);
+        $service->setDefaultCopiers();
 
         DB::beginTransaction();
         Excel::import($service, $filename);
