@@ -286,7 +286,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
         if (!$escola->orgaoRegional) {
             $mensagem[] = [
-                'text' => "<span class='avisos-educacenso'><b>Aviso:</b> Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que o código do órgão regional de ensino não foi preenchido, caso seu estado possua uma subdivisão e a escola {$nomeEscola} não for federal vinculada a Setec, o código deve ser inserido conforme a 'Tabela de Órgãos Regionais'.</span>",
+                'text' => "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 00 da escola {$nomeEscola} não encontrados. Verificamos que o código do órgão regional de ensino não foi preenchido, caso seu estado possua uma subdivisão e a escola {$nomeEscola} não for federal vinculada a Setec, o código deve ser inserido conforme a 'Tabela de Órgãos Regionais'.</span>",
                 'path' => '(Escola > Cadastros > Instituição > Editar > Aba: Dados gerais > Campo: Código do órgão regional de ensino)',
                 'linkPath' => "/intranet/educar_instituicao_cad.php?cod_instituicao={$codInstituicao}",
                 'fail' => false
@@ -468,7 +468,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
         if ($escola->possuiDependencias != 1) {
             $mensagem[] = [
-                'text' => "<span class='avisos-educacenso'><b>Aviso: </b> Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Nenhum campo foi preenchido referente as dependências existentes na escola, portanto todos serão registrados como <b>não</b>.</span>",
+                'text' => "<span class='avisos-educacenso'><b>Aviso não impeditivo: </b> Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Nenhum campo foi preenchido referente as dependências existentes na escola, portanto todos serão registrados como <b>não</b>.</span>",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dependências > Campo: Possui dependências?)',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => false
@@ -1001,7 +1001,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
                 foreach ($disciplinesWithoutTeacher as $discipline) {
                     $mensagem[] = [
-                        'text' => $educacaoDistancia ? "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que o tipo de mediação da turma {$nomeTurma} é educação a distância, portanto a disciplina {$discipline->nome} deve possuir um docente vinculado." : "<span class='avisos-educacenso'><b>Aviso:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$discipline->nome} da turma {$nomeTurma} não possui docente vinculado, portanto será exportada como: 2 (Sim, oferece disciplina sem docente vinculado).</span>",
+                        'text' => $educacaoDistancia ? "Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. Verificamos que o tipo de mediação da turma {$nomeTurma} é educação a distância, portanto a disciplina {$discipline->nome} deve possuir um docente vinculado." : "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$discipline->nome} da turma {$nomeTurma} não possui docente vinculado, portanto será exportada como: 2 (Sim, oferece disciplina sem docente vinculado).</span>",
                         'path' => '(Servidores > Cadastros > Servidores)',
                         'linkPath' => "/intranet/educar_servidor_lst.php",
                         'fail' => $educacaoDistancia
@@ -1018,7 +1018,7 @@ class EducacensoAnaliseController extends ApiCoreController
 
                     if (in_array($componente->get('codigo_educacenso'), $turma->getForbiddenDisciplines())) {
                         $mensagem[] = [
-                            'text' => "<span class='avisos-educacenso'><b>Aviso:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$componente->get('nome')} da turma {$nomeTurma} não está de acordo com a Tabela de Regras de Disciplinas do Censo, portanto não será exportada.</span>",
+                            'text' => "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> Dados para formular o registro 20 da escola {$turma->nomeEscola} não encontrados. A disciplina {$componente->get('nome')} da turma {$nomeTurma} não está de acordo com a Tabela de Regras de Disciplinas do Censo, portanto não será exportada.</span>",
                             'path' => '(Escola > Cadastros > Componentes curriculares > Editar > Disciplina Educacenso)',
                             'linkPath' => "/module/ComponenteCurricular/edit?id={$componente->get('id')}",
                             'fail' => false
@@ -1080,7 +1080,7 @@ class EducacensoAnaliseController extends ApiCoreController
         $mensagem = [];
 
         $mensagem[] = [
-            'text' => "<span class='avisos-educacenso'><b>Aviso:</b> O campo: País de residência possui valor padrão: Brasil. Certifique-se que os(as) alunos(as) ou docentes residentes de outro país, que não seja Brasil, possuam o País de residência informado corretamente.</span>",
+            'text' => "<span class='avisos-educacenso'><b>Aviso não impeditivo:</b> O campo: País de residência possui valor padrão: Brasil. Certifique-se que os(as) alunos(as) ou docentes residentes de outro país, que não seja Brasil, possuam o País de residência informado corretamente.</span>",
             'path' => '(Pessoas > Cadastros > Pessoas físicas > Editar > Campo: País de residência)',
             'linkPath' => "/intranet/atendidos_lst.php",
             'fail' => false
