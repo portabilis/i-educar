@@ -20,10 +20,8 @@ inner join pmieducar.aluno a
 on p.id = a.ref_idpes
 inner join pmieducar.matricula m
 on m.ref_cod_aluno = a.cod_aluno
-inner join pmieducar.escola e
-on e.cod_escola = m.ref_ref_cod_escola
 inner join cadastro.pessoa ep
-on ep.idpes = e.ref_idpes
+on ep.idpes = m.ref_ref_cod_escola
 inner join pmieducar.serie s
 on s.cod_serie = m.ref_ref_cod_serie
 inner join pmieducar.curso c
