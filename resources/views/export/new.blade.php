@@ -101,9 +101,26 @@
 
     <div class="separator"></div>
 
-    <div style="text-align: center">
-      <button class="btn-green" type="submit">Exportar</button>
+    <div style="width: 500px; margin: 20px auto 10px;">
+      <p class="text-muted">Leia e marque o checkbox abaixo:</p>
+      <div style="display: flex;">
+        <input id="agree" name="agree" value="agree" type="checkbox" />
+        <label for="agree" style="font-size: 14px">
+          Declaro entender que é minha a responsabilidade de cuidar da integridade das informações e de garantir a
+          confidencialidade dos dados e a privacidade dos indivíduos que terão suas informações acessadas.
+        </label>
+      </div>
     </div>
+
+    <div style="text-align: center; margin-bottom: 10px">
+      <button id="export-button" class="btn-green" type="submit" disabled>Exportar</button>
+    </div>
+
+    <style>
+    #export-button[disabled] {
+      opacity: 0.7;
+    }
+    </style>
 
   </form>
 @endsection
@@ -119,6 +136,9 @@
     });
     jQuery('#status').change(function () {
       window.location.href = '{{ route('export.form') }}?type=' + jQuery('#status').val();
+    });
+    jQuery('#agree').change(function () {
+      jQuery('#export-button').prop('disabled', !jQuery('#agree').prop('checked'));
     });
   });
   </script>

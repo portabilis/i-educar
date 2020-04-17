@@ -14,6 +14,8 @@ use Illuminate\View\View;
 class ExportController extends Controller
 {
     /**
+     * @param Request $request
+     *
      * @return View
      */
     public function index(Request $request)
@@ -64,6 +66,10 @@ class ExportController extends Controller
      */
     public function export(Request $request)
     {
+        if (empty($request->filled(['agree']))) {
+            return redirect()->route('export.form');
+        }
+
         $export = Export::create(
             $this->filter($request)
         );
