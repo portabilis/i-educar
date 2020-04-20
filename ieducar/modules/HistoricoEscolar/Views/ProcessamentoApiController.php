@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
+
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'Avaliacao/Service/Boletim.php';
@@ -521,6 +523,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $matriculaId = $this->getRequest()->matricula_id;
 
             try {
+                DB::beginTransaction();
+
                 $alunoId = $this->getAlunoIdByMatriculaId($matriculaId);
                 $dadosMatricula = $this->getdadosMatricula($matriculaId);
                 $dadosEscola = $this->getdadosEscola($dadosMatricula['escola_id']);
@@ -610,6 +614,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     $this->appendMsg('Histórico reprocessado com sucesso', 'success');
                 }
             } catch (Exception $e) {
+                DB::rollBack();
                 $this->appendMsg('Erro ao processar histórico, detalhes:' . $e->getMessage(), 'error', true);
             }
 
@@ -618,6 +623,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
             $this->appendResponse('situacao_historico', $situacaoHistorico);
             $this->appendResponse('link_to_historico', $linkToHistorico);
+            DB::commit();
         }
     }
 
