@@ -521,7 +521,6 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     {
         if ($this->canPostProcessamento()) {
             $matriculaId = $this->getRequest()->matricula_id;
-            header('Content-Type: text/html; charset=utf-8');
             try {
                 DB::beginTransaction();
 
