@@ -521,7 +521,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     {
         if ($this->canPostProcessamento()) {
             $matriculaId = $this->getRequest()->matricula_id;
-
+            header('Content-Type: text/html; charset=utf-8');
             try {
                 DB::beginTransaction();
 
@@ -668,6 +668,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $casasDecimais = $this->getService()->getRegra()->get('qtdCasasDecimais');
             $aprovadoDependencia = $this->getSituacaoMatricula() == 12;
 
+            $isGlobalScoreForStage = $this->getService()->getEvaluationRule()->isGlobalScore();
+
             foreach ($this->getService()->getComponentes() as $componenteCurricular) {
                 if (!$this->shouldProcessAreaConhecimento($componenteCurricular->get('area_conhecimento'))) {
                     continue;
@@ -709,7 +711,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     $notaConceitualNumerica = sprintf('%.'.$casasDecimais.'f', $notaConceitualNumerica);
                 }
 
-                if ($processarMediaGeral) {
+                if ($processarMediaGeral && $isGlobalScoreForStage) {
                     $nota = '-';
                 }
 
@@ -750,7 +752,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                         $nota = number_format(($value['nota_conceitual_numerica'] / $value['count']), 2, ',', '');
                     }
 
-                    if ($processarMediaGeral) {
+                    if ($processarMediaGeral && $isGlobalScoreForStage) {
                         $nota = '-';
                     }
 
@@ -1064,6 +1066,12 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         }
     }
 
+    /**
+     * @param bool $raiseExceptionOnErrors
+     * @param bool $appendMsgOnErrors
+     * @return Avaliacao_Service_Boletim|null
+     * @throws Exception
+     */
     protected function getService($raiseExceptionOnErrors = false, $appendMsgOnErrors = true)
     {
         if (isset($this->service) && !is_null($this->service)) {
