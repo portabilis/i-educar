@@ -68,7 +68,7 @@ class Registro002019ImportTest extends TestCase
         /** @var LegacySchool $school */
         $school = $schoolInep->school;
 
-        $this->assertEquals(strtoupper($model->nome), $school->name);
+        $this->assertEquals($model->nome, $school->name);
     }
 
     /**
