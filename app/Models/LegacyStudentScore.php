@@ -57,4 +57,12 @@ class LegacyStudentScore extends Model
     {
         return $this->hasMany(LegacyDisciplineScoreAverage::class, 'nota_aluno_id');
     }
+
+    /**
+     * @return HasMany
+     */
+    public function averageGeneral()
+    {
+        return $this->hasMany(LegacyGeneralAverage::class, 'nota_aluno_id');
+    }
 }
