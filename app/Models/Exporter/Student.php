@@ -63,12 +63,15 @@ class Student extends Model
             ],
             'Escola' => [
                 'school' => 'Escola',
+                'school_inep' => 'Código INEP',
                 'school_class' => 'Turma',
                 'grade' => 'Série',
                 'course' => 'Curso',
                 'registration_date' => 'Data da Matrícula',
                 'year' => 'Ano',
                 'status_text' => 'Situação da Matrícula',
+                'period' => 'Turno',
+                'school_class_stage' => 'Etapa Educacenso',
             ],
             'Informações' => [
                 'phones.phones' => 'Telefones',
