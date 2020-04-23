@@ -71,7 +71,7 @@
     <div class="separator"></div>
 
     <div style="text-align: center">
-        {{ $unifications->links() }}
+        {{ $unifications->appends(request()->except('page'))->links() }}
     </div>
 
     <div style="text-align: center">
