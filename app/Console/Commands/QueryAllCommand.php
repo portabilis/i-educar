@@ -3,12 +3,14 @@
 namespace App\Console\Commands;
 
 use App\Menu;
+use App\Support\Database\Connections;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
 class QueryAllCommand extends Command
 {
+    use Connections;
     /**
      * The name and signature of the console command.
      *
@@ -22,16 +24,6 @@ class QueryAllCommand extends Command
      * @var string
      */
     protected $description = 'Count duplicated scores';
-
-    /**
-     * @return array
-     */
-    private function getConnections()
-    {
-        $connections = config('database.connections');
-
-        return array_diff(array_keys($connections), ['sqlite', 'mysql', 'pgsql', 'sqlsrv', 'bussolastaging']);
-    }
 
     /**
      * Execute the console command.
