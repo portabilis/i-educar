@@ -1476,6 +1476,11 @@ function updateComponenteCurricular($targetElement, matriculaId, cc, regra) {
 
     var $fieldNN = notaNecessariaField(matriculaId, cc.id, (cc.nota_necessaria_exame || '-'));
 
+    if (!formulaCalculoMediaRecuperacao) {
+      $fieldNotaExame.hide();
+      $fieldNN.hide();
+    }
+
     if (cc.nota_exame == '' && safeToLowerCase(cc.situacao) != 'em exame'){
       $fieldNotaExame.children().hide();
       $fieldNN.children().text('-');
@@ -1541,6 +1546,7 @@ var hDefinirComponentesEtapa;
 var hProgressaoManual;
 var hProgressaoContinuada;
 var hAlgumaProgressaoManual;
+var formulaCalculoMediaRecuperacao;
 
 function updateComponenteCurricularHeaders($targetElement, $tagElement) {
   var regras = $tableSearchDetails.data('regras');
@@ -1554,6 +1560,7 @@ function updateComponenteCurricularHeaders($targetElement, $tagElement) {
   hProgressaoManual = regras.filter(function(regra){return regra.progressao_manual; }).length == regras.length;
   hProgressaoContinuada = regras.filter(function(regra){return regra.progressao_continuada; }).length == regras.length;
   hAlgumaProgressaoManual = regras.filter(function(regra){return regra.progressao_manual; }).length;
+  formulaCalculoMediaRecuperacao = regras.filter(function(regra){return regra.calcula_media_rec_paralela; }).length > 0;
 
   $tagElement.clone().addClass('center').html(safeUtf8Decode('Situação')).appendTo($targetElement);
 
@@ -1568,9 +1575,11 @@ function updateComponenteCurricularHeaders($targetElement, $tagElement) {
       $tagElement.clone().addClass('center').html(safeUtf8Decode(tipoRecuperacaoParalelaNome)).appendTo($targetElement);
     }
     if (hUltimaEtapa || (hDefinirComponentesEtapa && !hProgressaoContinuada)){
-      $tagElement.clone().addClass('center').html('Nota '+nomenclatura_exame).appendTo($targetElement);
-      if (!hDefinirComponentesEtapa) {
+      if (formulaCalculoMediaRecuperacao) {
+        $tagElement.clone().addClass('center').html('Nota ' + nomenclatura_exame).appendTo($targetElement);
+        if (!hDefinirComponentesEtapa) {
           $tagElement.clone().addClass('center').html(safeUtf8Decode('Nota necessária no ' + nomenclatura_exame)).appendTo($targetElement);
+        }
       }
       if(hAlgumaProgressaoManual){
         $tagElement.clone().addClass('center').html(safeUtf8Decode('Média final')).appendTo($targetElement);
