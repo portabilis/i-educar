@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
+
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'Avaliacao/Service/Boletim.php';
@@ -519,8 +521,9 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     {
         if ($this->canPostProcessamento()) {
             $matriculaId = $this->getRequest()->matricula_id;
-
             try {
+                DB::beginTransaction();
+
                 $alunoId = $this->getAlunoIdByMatriculaId($matriculaId);
                 $dadosMatricula = $this->getdadosMatricula($matriculaId);
                 $dadosEscola = $this->getdadosEscola($dadosMatricula['escola_id']);
@@ -610,6 +613,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     $this->appendMsg('Histórico reprocessado com sucesso', 'success');
                 }
             } catch (Exception $e) {
+                DB::rollBack();
                 $this->appendMsg('Erro ao processar histórico, detalhes:' . $e->getMessage(), 'error', true);
             }
 
@@ -618,6 +622,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
             $this->appendResponse('situacao_historico', $situacaoHistorico);
             $this->appendResponse('link_to_historico', $linkToHistorico);
+            DB::commit();
         }
     }
 
@@ -662,6 +667,8 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $casasDecimais = $this->getService()->getRegra()->get('qtdCasasDecimais');
             $aprovadoDependencia = $this->getSituacaoMatricula() == 12;
 
+            $isGlobalScoreForStage = $this->getService()->getEvaluationRule()->isGlobalScore();
+
             foreach ($this->getService()->getComponentes() as $componenteCurricular) {
                 if (!$this->shouldProcessAreaConhecimento($componenteCurricular->get('area_conhecimento'))) {
                     continue;
@@ -703,7 +710,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     $notaConceitualNumerica = sprintf('%.'.$casasDecimais.'f', $notaConceitualNumerica);
                 }
 
-                if ($processarMediaGeral) {
+                if ($processarMediaGeral && $isGlobalScoreForStage) {
                     $nota = '-';
                 }
 
@@ -744,7 +751,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                         $nota = number_format(($value['nota_conceitual_numerica'] / $value['count']), 2, ',', '');
                     }
 
-                    if ($processarMediaGeral) {
+                    if ($processarMediaGeral && $isGlobalScoreForStage) {
                         $nota = '-';
                     }
 
@@ -1058,6 +1065,12 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         }
     }
 
+    /**
+     * @param bool $raiseExceptionOnErrors
+     * @param bool $appendMsgOnErrors
+     * @return Avaliacao_Service_Boletim|null
+     * @throws Exception
+     */
     protected function getService($raiseExceptionOnErrors = false, $appendMsgOnErrors = true)
     {
         if (isset($this->service) && !is_null($this->service)) {
