@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\DatabaseToCsvExporter;
 use App\Models\Exporter\Export;
+use App\Models\Exporter\SocialAssistance;
 use App\Models\Exporter\Student;
 use App\Models\Exporter\Teacher;
 use App\Process;
@@ -98,11 +99,15 @@ class ExportController extends Controller
         $model = $data['model'];
 
         if ($model === Student::class) {
-            $data = $this->filterStudents($request, $data);
+            $data = $this->filterStudents($request, $data, 'exporter_student');
         }
 
         if ($model === Teacher::class) {
             $data = $this->filterTeachers($request, $data);
+        }
+
+        if ($model === SocialAssistance::class) {
+            $data = $this->filterStudents($request, $data, 'exporter_social_assistance');
         }
 
         return $data;
@@ -114,13 +119,13 @@ class ExportController extends Controller
      *
      * @return array
      */
-    protected function filterStudents(Request $request, $data)
+    protected function filterStudents(Request $request, $data, $table)
     {
         $data['filename'] = 'alunos.csv';
 
         if ($status = $request->input('situacao_matricula')) {
             $data['filters'][] = [
-                'column' => 'exporter_student.status',
+                'column' => $table . '.status',
                 'operator' => '=',
                 'value' => $status,
             ];
@@ -128,7 +133,7 @@ class ExportController extends Controller
 
         if ($year = $request->input('ano')) {
             $data['filters'][] = [
-                'column' => 'exporter_student.year',
+                'column' => $table . '.year',
                 'operator' => '=',
                 'value' => intval($year),
             ];
@@ -136,13 +141,13 @@ class ExportController extends Controller
 
         if ($request->input('ref_cod_escola')) {
             $data['filters'][] = [
-                'column' => 'exporter_student.school_id',
+                'column' => $table . '.school_id',
                 'operator' => 'in',
                 'value' => [$request->input('ref_cod_escola')]
             ];
         } elseif ($request->user()->isSchooling()) {
             $data['filters'][] = [
-                'column' => 'exporter_student.school_id',
+                'column' => $table . '.school_id',
                 'operator' => 'in',
                 'value' => $request->user()->schools->pluck('cod_escola')->all(),
             ];
