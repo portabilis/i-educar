@@ -52,7 +52,7 @@ class CheckInstitutionConfigurationsJob implements ShouldQueue
 
         $text = 'Bem-vindo a ' . date('Y') . '! Lembre-se de conferir se as datas de troca de turma e deslocamento estão corretas no cadastro da Instituição (Escola > Cadastro > Instituição).';
 
-        $notificationsService->createByUserLevel(1, $text, null, NotificationType::OTHER);
+        $notificationsService->createByUserLevel(LegacyUserType::LEVEL_INSTITUTIONAL, $text, null, NotificationType::OTHER);
     }
 
     private function areFilledDateFields()
