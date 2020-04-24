@@ -2357,6 +2357,10 @@ class indice extends clsCadastro
 
     protected function validaTelefones($telefone1, $telefone2)
     {
+        if (empty($telefone1) && empty($telefone2)) {
+            return true;
+        }
+
         if ($telefone1 == $telefone2) {
             $this->mensagem = 'O campo: Telefone 2 não pode ter o mesmo valor do campo: Telefone 1';
             return false;
