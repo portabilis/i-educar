@@ -129,7 +129,7 @@ function expandClose(id){
 function getCursos(){
     var url = getResourceUrlBuilder.buildUrl('/module/Api/Curso',
                                              'cursos',
-                                             { instituicao_id : instituicao_id }
+                                             { instituicao_id : instituicao_id, ativo : 1 }
     );
     var options = {
         url      : url,
