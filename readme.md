@@ -1,3 +1,5 @@
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/portabilis/i-educar) 
+
 [![Latest Release](https://img.shields.io/github/release/portabilis/i-educar.svg?label=latest%20release)](https://github.com/portabilis/i-educar/releases)
 ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/quality-score.png?b=master)
 ![](https://scrutinizer-ci.com/g/portabilis/i-educar/badges/build.png?b=master)
