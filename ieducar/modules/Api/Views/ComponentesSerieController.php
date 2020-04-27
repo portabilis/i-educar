@@ -2,6 +2,7 @@
 
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacySchoolGradeDiscipline;
+use App\Services\CheckPostedDataService;
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
@@ -110,28 +111,13 @@ class ComponentesSerieController extends ApiCoreController
                     continue;
                 }
 
+                $service = new CheckPostedDataService;
                 foreach ($update['anos_letivos_removidos'] as $ano) {
-                    $info = Portabilis_Utils_Database::fetchPreparedQuery('
-                        SELECT COUNT(ncc.*), cc.nome
-                        FROM modules.nota_componente_curricular ncc
-                        INNER JOIN modules.nota_aluno na on na.id = ncc.nota_aluno_id
-                        INNER JOIN pmieducar.matricula m on m.cod_matricula = na.matricula_id
-                        INNER JOIN modules.componente_curricular cc on cc.id = ncc.componente_curricular_id
-                        WHERE TRUE
-                            AND ncc.componente_curricular_id = $1
-                            AND m.ref_ref_cod_serie = $2
-                            AND m.ano = $3
-                        GROUP BY cc.nome
-                    ', ['params' => [
-                        $update['id'],
-                        $serieId,
-                        $ano
-                    ]]);
 
-                    $count = (int) $info[0]['count'] ?? 0;
-
-                    if ($count > 0) {
-                        $erros[] = sprintf('Não é possível desvincular o ano %d de "%s" pois já existem notas lançadas para este componente nesta série e ano.', $ano, $info[0]['nome']);
+                    try {
+                        $hasDataPosted = $service->hasDataPosted($update['id'], $serieId, $ano); die;
+                    } catch (\Throwable $th) {
+                        print_r($th); die;
                     }
                 }
             }
