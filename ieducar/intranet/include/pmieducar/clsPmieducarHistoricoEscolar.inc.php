@@ -879,8 +879,8 @@ class clsPmieducarHistoricoEscolar extends Model
             $registration = LegacyRegistration::findOrFail($detalhes['ref_cod_matricula']);
             $service = new GlobalAverageService();
             $average = $service->getGlobalAverage($registration);
-            
-            $mediaGeral = number_format($average, 1, '.', ',');
+            $mediaGeral = $this->arredondaNota($registration->cod_matricula, $average, 2);
+            $mediaGeral = number_format($mediaGeral, 1, '.', ',');
 
             $sql = "INSERT INTO pmieducar.historico_disciplinas values ({$sequencial}, {$this->ref_cod_aluno}, {$this->sequencial}, 'Média Geral', {$mediaGeral});";
             $db = new clsBanco();
@@ -890,5 +890,13 @@ class clsPmieducarHistoricoEscolar extends Model
         } else {
             return null;
         }
+    }
+
+    private function arredondaNota($codMatricula, $nota, $tipoNota) {
+        $regraAvaliacao = App_Model_IedFinder::getRegraAvaliacaoPorMatricula(
+            $codMatricula
+        );
+
+        return $regraAvaliacao->tabelaArredondamento->round($nota, $tipoNota);
     }
 }
