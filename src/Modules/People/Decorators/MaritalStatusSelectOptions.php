@@ -22,6 +22,7 @@ class MaritalStatusSelectOptions
             MaritalStatus::SEPARATED => 'Separado(a)',
             MaritalStatus::SINGLE => 'Solteiro(a)',
             MaritalStatus::WIDOWER => 'Viúvo(a)',
+            MaritalStatus::UNINFORMED => 'Não informado',
         ];
     }
 
