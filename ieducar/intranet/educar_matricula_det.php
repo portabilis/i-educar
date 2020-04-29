@@ -52,6 +52,17 @@ class indice extends clsDetalhe
 
     public $ativo;
 
+    public function getDescription($description)
+    {
+        if (empty($description)) {
+            return $description;
+        }
+
+        $lessDescription = substr($description, 0, strrpos(substr($description, 0, 200), ' ')) . '...';
+
+        return "<div align='justify'> <span class='desc-red'>{$lessDescription}</span> <span class='descricao' style='display: none'>{$description}</span><a href='javascript:void(0)' class='ver-mais'>Mostrar mais</a><a href='javascript:void(0)' style='display: none' class='ver-menos'>Mostrar menos</a></div>";
+    }
+
     public function Gerar()
     {
         // carrega estilo para feedback messages, exibindo msgs da api.
@@ -245,6 +256,8 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Motivo do Abandono', $tipoAbandono['nome']]);
             $this->addDetalhe(['Observação', $observacaoAbandono]);
         }
+
+        $this->addDetalhe(['Descrição', $this->getDescription($registro['descricao_reclassificacao'])]);
 
         $this->addDetalhe(['Formando', $registro['formando'] == 0 ? 'N&atilde;o' : 'Sim']);
 
