@@ -25,6 +25,13 @@ class GlobalAverageService
 
     private function getAverageGlobalScore(LegacyRegistration $registration)
     {
+        if (
+            empty($registration->studentScore)
+            || empty($registration->studentScore->averageGeneral)
+        ) {
+            return 0;
+        }
+
         $scores = $registration->studentScore->averageGeneral->pluck('media');
 
         return $scores->avg();
@@ -32,6 +39,13 @@ class GlobalAverageService
 
     private function getAverage(LegacyRegistration $registration)
     {
+        if (
+            empty($registration->studentScore)
+            || empty($registration->studentScore->averageByDiscipline)
+        ) {
+            return 0;
+        }
+
         $scores = $registration->studentScore->averageByDiscipline->pluck('media');
 
         return $scores->avg();
