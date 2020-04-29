@@ -106,19 +106,15 @@ class ComponentesSerieController extends ApiCoreController
         }
 
         if ($updateInfo['update']) {
+            $service = new CheckPostedDataService;
+
             foreach ($updateInfo['update'] as $update) {
                 if (empty($update['anos_letivos_removidos'])) {
                     continue;
                 }
 
-                $service = new CheckPostedDataService;
                 foreach ($update['anos_letivos_removidos'] as $ano) {
-
-                    try {
-                        $hasDataPosted = $service->hasDataPosted($update['id'], $serieId, $ano); die;
-                    } catch (\Throwable $th) {
-                        print_r($th); die;
-                    }
+                    $hasDataPosted = $service->hasDataPosted($update['id'], $serieId, $ano);
                 }
             }
         }
