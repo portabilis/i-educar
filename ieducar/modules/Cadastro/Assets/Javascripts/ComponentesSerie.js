@@ -15,7 +15,6 @@ if(modoEdicao){
     $j('#ref_cod_serie').attr('disabled', 'true');
     getCursos();
     getSeries();
-    updateAreaConhecimento();
 }
 
 $j("#ref_cod_instituicao").change(function() {
@@ -199,6 +198,8 @@ function handleGetSeries(response){
         }
         comboSerie.append('<option value="' + series[i].id + '"' + selected + '>' + series[i].nome + '</option>');
     }
+
+    updateAreaConhecimento();
 }
 
 function carregaDadosComponentesSerie(){
