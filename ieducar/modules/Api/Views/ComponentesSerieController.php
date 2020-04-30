@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacySchoolGradeDiscipline;
 use App\Services\CheckPostedDataService;
@@ -82,25 +83,12 @@ class ComponentesSerieController extends ApiCoreController
 
                 //...
 
-                $info = Portabilis_Utils_Database::fetchPreparedQuery('
-                    SELECT COUNT(ncc.*), cc.nome
-                    FROM modules.nota_componente_curricular ncc
-                    INNER JOIN modules.nota_aluno na on na.id = ncc.nota_aluno_id
-                    INNER JOIN pmieducar.matricula m on m.cod_matricula = na.matricula_id
-                    INNER JOIN modules.componente_curricular cc on cc.id = ncc.componente_curricular_id
-                    WHERE TRUE
-                        AND ncc.componente_curricular_id = $1
-                        AND m.ref_ref_cod_serie = $2
-                    GROUP BY cc.nome
-                ', ['params' => [
-                    $componenteId,
-                    $serieId
-                ]]);
+                $service = new CheckPostedDataService;
+                $hasDataPosted = $service->hasDataPosted($componenteId, $serieId, null);
+                $discipline = LegacyDiscipline::find($componenteId);
 
-                $count = (int) $info[0]['count'] ?? 0;
-
-                if ($count > 0) {
-                    $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas lançadas para este componente nesta série.', $info[0]['nome']);
+                if ($hasDataPosted) {
+                    $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série.', $discipline->nome);
                 }
             }
         }
@@ -115,6 +103,11 @@ class ComponentesSerieController extends ApiCoreController
 
                 foreach ($update['anos_letivos_removidos'] as $ano) {
                     $hasDataPosted = $service->hasDataPosted($update['id'], $serieId, $ano);
+                    $discipline = LegacyDiscipline::find($update['id']);
+
+                    if ($hasDataPosted) {
+                        $erros[] = sprintf('Não é possível desvincular o ano %d de "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série e ano.', $ano, $discipline->nome);
+                    }
                 }
             }
         }
