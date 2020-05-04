@@ -257,7 +257,7 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Observação', $observacaoAbandono]);
         }
 
-        if ($registro[aprovado] == 5){
+        if ($registro[aprovado] == App_Model_MatriculaSituacao::RECLASSIFICADO){
             $this->addDetalhe(['Descrição', $this->getDescription($registro['descricao_reclassificacao'])]);
         }
 
