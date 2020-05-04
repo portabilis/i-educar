@@ -752,6 +752,7 @@ class indice extends clsCadastro
         }
 
         if ($analise['remover']) {
+            $service = new CheckPostedDataService;
             foreach ($analise['remover'] as $componenteId) {
                 $info = Portabilis_Utils_Database::fetchPreparedQuery('
                     SELECT COUNT(cct.*), cc.nome
@@ -774,25 +775,24 @@ class indice extends clsCadastro
                     $erros[] = sprintf('Não é possível desvincular "%s" pois existem turmas vinculadas a este componente.', $info[0]['nome']);
                 }
 
-                $service = new CheckPostedDataService;
                 $hasDataPosted = $service->hasDataPostedInGrade((int)$componenteId, $this->ref_cod_serie, null, $this->ref_cod_escola);
-                $discipline = LegacyDiscipline::find((int)$componenteId);
 
                 if ($hasDataPosted) {
+                    $discipline = LegacyDiscipline::find((int)$componenteId);
                     $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série e escola.', $discipline->nome);
                 }
             }
         }
 
         if ($analise['atualizar']) {
+            $service = new CheckPostedDataService;
             foreach ($analise['atualizar'] as $update) {
                 if (!empty($update['anos_letivos_remover'])) {
                     foreach ($update['anos_letivos_remover'] as $ano) {
-                        $service = new CheckPostedDataService;
                         $hasDataPosted = $service->hasDataPostedInGrade((int)$update['ref_cod_disciplina'], $this->ref_cod_serie, $ano, $this->ref_cod_escola);
-                        $discipline = LegacyDiscipline::find((int)$update['ref_cod_disciplina']);
 
                         if ($hasDataPosted) {
+                            $discipline = LegacyDiscipline::find((int)$update['ref_cod_disciplina']);
                             $erros[] = sprintf('Não é possível desvincular o ano %d de "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série, ano e escola.', $ano, $discipline->nome);
                         }
                     }

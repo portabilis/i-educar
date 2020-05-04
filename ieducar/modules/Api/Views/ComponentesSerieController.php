@@ -61,6 +61,7 @@ class ComponentesSerieController extends ApiCoreController
         $erros = [];
 
         if ($updateInfo['delete']) {
+            $service = new CheckPostedDataService;
             foreach ($updateInfo['delete'] as $componenteId) {
                 $info = Portabilis_Utils_Database::fetchPreparedQuery('
                     SELECT COUNT(cct.*), cc.nome
@@ -83,11 +84,10 @@ class ComponentesSerieController extends ApiCoreController
 
                 //...
 
-                $service = new CheckPostedDataService;
                 $hasDataPosted = $service->hasDataPostedInGrade($componenteId, $serieId, null);
-                $discipline = LegacyDiscipline::find($componenteId);
 
                 if ($hasDataPosted) {
+                    $discipline = LegacyDiscipline::find($componenteId);
                     $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série.', $discipline->nome);
                 }
             }
@@ -103,9 +103,9 @@ class ComponentesSerieController extends ApiCoreController
 
                 foreach ($update['anos_letivos_removidos'] as $ano) {
                     $hasDataPosted = $service->hasDataPostedInGrade($update['id'], $serieId, $ano);
-                    $discipline = LegacyDiscipline::find($update['id']);
 
                     if ($hasDataPosted) {
+                        $discipline = LegacyDiscipline::find($update['id']);
                         $erros[] = sprintf('Não é possível desvincular o ano %d de "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série e ano.', $ano, $discipline->nome);
                     }
                 }
