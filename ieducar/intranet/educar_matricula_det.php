@@ -58,7 +58,7 @@ class indice extends clsDetalhe
             return $description;
         }
 
-        $lessDescription = substr($description, 0, strrpos(substr($description, 0, 200), ' ')) . '...';
+        $lessDescription = substr($description, 0, strpos($description, ' ', 200)) . '...';
 
         return "<div align='justify'> <span class='desc-red'>{$lessDescription}</span> <span class='descricao' style='display: none'>{$description}</span><a href='javascript:void(0)' class='ver-mais'>Mostrar mais</a><a href='javascript:void(0)' style='display: none' class='ver-menos'>Mostrar menos</a></div>";
     }
@@ -257,7 +257,9 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Observação', $observacaoAbandono]);
         }
 
-        $this->addDetalhe(['Descrição', $this->getDescription($registro['descricao_reclassificacao'])]);
+        if ($registro[aprovado] == 5){
+            $this->addDetalhe(['Descrição', $this->getDescription($registro['descricao_reclassificacao'])]);
+        }
 
         $this->addDetalhe(['Formando', $registro['formando'] == 0 ? 'N&atilde;o' : 'Sim']);
 
