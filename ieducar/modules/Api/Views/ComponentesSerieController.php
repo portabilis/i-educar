@@ -84,7 +84,7 @@ class ComponentesSerieController extends ApiCoreController
                 //...
 
                 $service = new CheckPostedDataService;
-                $hasDataPosted = $service->hasDataPosted($componenteId, $serieId, null);
+                $hasDataPosted = $service->hasDataPostedInGrade($componenteId, $serieId, null);
                 $discipline = LegacyDiscipline::find($componenteId);
 
                 if ($hasDataPosted) {
@@ -102,7 +102,7 @@ class ComponentesSerieController extends ApiCoreController
                 }
 
                 foreach ($update['anos_letivos_removidos'] as $ano) {
-                    $hasDataPosted = $service->hasDataPosted($update['id'], $serieId, $ano);
+                    $hasDataPosted = $service->hasDataPostedInGrade($update['id'], $serieId, $ano);
                     $discipline = LegacyDiscipline::find($update['id']);
 
                     if ($hasDataPosted) {
