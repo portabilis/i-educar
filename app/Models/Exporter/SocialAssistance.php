@@ -45,10 +45,10 @@ class SocialAssistance extends Model
             'Escola' => [
                 'school' => 'Escola',
                 'school_inep' => 'Código INEP',
-                'grade' => 'Série',
-                'course' => 'Curso',
                 'period' => 'Turno',
                 'school_class_stage' => 'Etapa Educacenso',
+                'attendance_type' => 'Tipo de atendimento da turma',
+                'course_stage' => 'Etapas do curso',
             ],
         ];
     }
