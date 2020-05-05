@@ -38,11 +38,7 @@ class ReservavagaController extends ApiCoreController
                    AND candidato_reserva_vaga.ano_letivo = $2
                    AND candidato_reserva_vaga.ref_cod_escola = $4
                    AND ((candidato_reserva_vaga.situacao = \'A\') or candidato_reserva_vaga.situacao IS NULL)
-                   AND translate(public.fcn_upper(trim(pessoa.nome)),
-                       \'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',
-                       \'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN\') = translate(public.fcn_upper(trim($1)),
-                       \'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',
-                       \'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN\')';
+                   AND trim(pessoa.slug) = trim($1)';
 
             $params = [$nome, $anoLetivo, Portabilis_Date_Utils::brToPgSQL($dataNascimento), $escola];
 
@@ -62,11 +58,7 @@ class ReservavagaController extends ApiCoreController
                WHERE fisica.data_nasc = $3
                  AND ((candidato_reserva_vaga.situacao = \'A\') or candidato_reserva_vaga.situacao IS NULL)
                  AND candidato_reserva_vaga.ano_letivo = $2
-                 AND translate(public.fcn_upper(trim(pessoa.nome)),
-                     \'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',
-                     \'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN\') = translate(public.fcn_upper(trim($1)),
-                     \'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',
-                     \'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN\')';
+                 AND trim(pessoa.slug) = trim($1)';
 
             $candidato = $this->fetchPreparedQuery($sql, [$nome, $anoLetivo, Portabilis_Date_Utils::brToPgSQL($dataNascimento)]);
 
@@ -96,11 +88,7 @@ class ReservavagaController extends ApiCoreController
                   AND responsavel.cpf = $2
                   AND matricula.aprovado = 3
                   AND matricula.ano = $4
-                  AND translate(public.fcn_upper(trim(pessoa.nome)),
-                      \'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',
-                      \'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN\') = translate(public.fcn_upper(trim($1)),
-                      \'åáàãâäéèêëíìîïóòõôöúùüûçÿýñÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',
-                      \'aaaaaaeeeeiiiiooooouuuucyynAAAAAAEEEEIIIIOOOOOUUUUCYN\')';
+                  AND trim(pessoa.slug) = trim($1)';
 
             $aluno = $this->fetchPreparedQuery($sql, [$nome, idFederal2int($cpfResponsavel), Portabilis_Date_Utils::brToPgSQL($dataNascimento), $anoReserva]);
 
