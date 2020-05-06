@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Individual;
 use App\Models\LogUnification;
 use iEducar\Modules\Unification\PersonLogUnification;
 use Illuminate\Support\Facades\DB;
@@ -112,8 +113,26 @@ class indice extends clsCadastro
     $log->duplicates_id = json_encode($duplicatesId);
     $log->created_by = $createdBy;
     $log->updated_by = $createdBy;
+    $log->duplicates_name = json_encode($this->getNamesOfUnifiedPeople($duplicatesId));
     $log->save();
     return $log->id;
+  }
+
+  /**
+   * Retorna os nomes das pessoas unificadas
+   *
+   * @param integer[] $duplicatesId
+   * @return string[]
+  */
+  private function getNamesOfUnifiedPeople($duplicatesId)
+  {
+      $names = [];
+
+      foreach ($duplicatesId as $personId){
+          $names[] = Individual::findOrFail($personId)->real_name;
+      }
+
+      return $names;
   }
 }
 
