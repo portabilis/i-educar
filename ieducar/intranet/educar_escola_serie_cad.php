@@ -3,6 +3,8 @@
 use App\Process;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
+use App\Services\CheckPostedDataService;
+use App\Models\LegacyDiscipline;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -750,6 +752,7 @@ class indice extends clsCadastro
         }
 
         if ($analise['remover']) {
+            $service = new CheckPostedDataService;
             foreach ($analise['remover'] as $componenteId) {
                 $info = Portabilis_Utils_Database::fetchPreparedQuery('
                     SELECT COUNT(cct.*), cc.nome
@@ -772,58 +775,25 @@ class indice extends clsCadastro
                     $erros[] = sprintf('Não é possível desvincular "%s" pois existem turmas vinculadas a este componente.', $info[0]['nome']);
                 }
 
-                $info = Portabilis_Utils_Database::fetchPreparedQuery('
-                    SELECT COUNT(ncc.*), cc.nome
-                    FROM modules.nota_componente_curricular ncc
-                    INNER JOIN modules.nota_aluno na on na.id = ncc.nota_aluno_id
-                    INNER JOIN pmieducar.matricula m on m.cod_matricula = na.matricula_id
-                    INNER JOIN modules.componente_curricular cc on cc.id = ncc.componente_curricular_id
-                    WHERE TRUE
-                        AND ncc.componente_curricular_id = $1
-                        AND m.ref_ref_cod_serie = $2
-                        AND m.ref_ref_cod_escola = $3
-                    GROUP BY cc.nome
-                ', ['params' => [
-                    (int) $componenteId,
-                    $this->ref_cod_serie,
-                    $this->ref_cod_escola
-                ]]);
+                $hasDataPosted = $service->hasDataPostedInGrade((int)$componenteId, $this->ref_cod_serie, null, $this->ref_cod_escola);
 
-                $count = (int) $info[0]['count'] ?? 0;
-
-                if ($count > 0) {
-                    $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas lançadas para este componente nesta série e escola.', $info[0]['nome']);
+                if ($hasDataPosted) {
+                    $discipline = LegacyDiscipline::find((int)$componenteId);
+                    $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série e escola.', $discipline->nome);
                 }
             }
         }
 
         if ($analise['atualizar']) {
+            $service = new CheckPostedDataService;
             foreach ($analise['atualizar'] as $update) {
                 if (!empty($update['anos_letivos_remover'])) {
                     foreach ($update['anos_letivos_remover'] as $ano) {
-                        $info = Portabilis_Utils_Database::fetchPreparedQuery('
-                            SELECT COUNT(ncc.*), cc.nome
-                            FROM modules.nota_componente_curricular ncc
-                            INNER JOIN modules.nota_aluno na on na.id = ncc.nota_aluno_id
-                            INNER JOIN pmieducar.matricula m on m.cod_matricula = na.matricula_id
-                            INNER JOIN modules.componente_curricular cc on cc.id = ncc.componente_curricular_id
-                            WHERE TRUE
-                                AND ncc.componente_curricular_id = $1
-                                AND m.ref_ref_cod_serie = $2
-                                AND m.ano = $3
-                                AND m.ref_ref_cod_escola = $4
-                            GROUP BY cc.nome
-                        ', ['params' => [
-                            (int) $update['ref_cod_disciplina'],
-                            $this->ref_cod_serie,
-                            $ano,
-                            $this->ref_cod_escola
-                        ]]);
+                        $hasDataPosted = $service->hasDataPostedInGrade((int)$update['ref_cod_disciplina'], $this->ref_cod_serie, $ano, $this->ref_cod_escola);
 
-                        $count = (int) $info[0]['count'] ?? 0;
-
-                        if ($count > 0) {
-                            $erros[] = sprintf('Não é possível desvincular o ano %d de "%s" pois já existem notas lançadas para este componente nesta série, ano e escola.', $ano, $info[0]['nome']);
+                        if ($hasDataPosted) {
+                            $discipline = LegacyDiscipline::find((int)$update['ref_cod_disciplina']);
+                            $erros[] = sprintf('Não é possível desvincular o ano %d de "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série, ano e escola.', $ano, $discipline->nome);
                         }
                     }
                 }
