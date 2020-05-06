@@ -4,6 +4,7 @@ namespace iEducar\Modules\Unification;
 
 use App\Models\Individual;
 use App\Models\LogUnification;
+use App\Models\Student;
 
 class PersonLogUnification implements LogUnificationTypeInterface
 {
@@ -13,7 +14,7 @@ class PersonLogUnification implements LogUnificationTypeInterface
      */
     public function getMainPersonName(LogUnification $logUnification)
     {
-        // TODO: Implement getMainPersonName() method.
+        return $logUnification->main->real_name;
     }
 
     /**
@@ -22,7 +23,7 @@ class PersonLogUnification implements LogUnificationTypeInterface
      */
     public function getDuplicatedPeopleName(LogUnification $logUnification)
     {
-        // TODO: Implement getDuplicatedPeopleName() method.
+        return (array) json_decode($logUnification->duplicates_name);
     }
 
     /**
