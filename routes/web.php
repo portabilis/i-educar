@@ -68,6 +68,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/unificacao-aluno/{unification}', 'StudentLogUnificationController@show')->name('student-log-unification.show');
     Route::get('/unificacao-aluno/{unification}/undo', 'StudentLogUnificationController@undo')->name('student-log-unification.undo');
 
+    Route::get('/unificacao-pessoa', 'PersonLogUnificationController@index')->name('person-log-unification.index');
+    Route::get('/unificacao-pessoa/{unification}', 'PersonLogUnificationController@show')->name('person-log-unification.show');
+
     Route::get('intranet/index.php', 'LegacyController@intranet')
         ->defaults('uri', 'index.php')
         ->name('home');
