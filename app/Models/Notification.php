@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Notification extends Model
 {
@@ -18,4 +19,12 @@ class Notification extends Model
         'user_id',
         'type_id',
     ];
+
+    /**
+     * @return BelongsTo
+     */
+    public function type()
+    {
+        return $this->belongsTo(NotificationType::class);
+    }
 }
