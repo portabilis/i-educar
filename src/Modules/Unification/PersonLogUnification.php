@@ -14,7 +14,11 @@ class PersonLogUnification implements LogUnificationTypeInterface
      */
     public function getMainPersonName(LogUnification $logUnification)
     {
-        return $logUnification->main->real_name;
+        if ($logUnification->main) {
+            return $logUnification->main->real_name;
+        }
+
+        return 'Pessoa não encontrada';
     }
 
     /**
