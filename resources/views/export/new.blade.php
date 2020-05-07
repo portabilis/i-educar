@@ -140,6 +140,11 @@
     jQuery('#agree').change(function () {
       jQuery('#export-button').prop('disabled', !jQuery('#agree').prop('checked'));
     });
+
+    if (jQuery('#status').val() == 3) {
+      jQuery('.fields').prop('checked', true);
+      jQuery('#situacao_matricula').val(9);
+    }
   });
   </script>
 
