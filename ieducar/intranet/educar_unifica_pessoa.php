@@ -190,7 +190,7 @@ $j('#btn_enviar').val('Unificar');
 
   function showConfirmationMessage() {
       makeDialog({
-          content: 'O processo de unificação de pessoas não poderá ser desfeito via sistema. Deseja continuar?',
+          content: 'O processo de unificação de pessoas não poderá ser desfeito. Deseja continuar?',
           title: 'Atenção!',
           maxWidth: 860,
           width: 860,
