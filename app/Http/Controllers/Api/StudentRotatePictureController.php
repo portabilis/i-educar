@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\LegacyStudent;
+use App\Services\UrlPresigner;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
@@ -17,9 +19,11 @@ class StudentRotatePictureController extends Controller
      * @param Request       $request
      * @param LegacyStudent $student
      *
+     * @throws Exception
+     *
      * @return array
      */
-    public function rotate(Request $request, LegacyStudent $student)
+    public function rotate(Request $request, LegacyStudent $student, UrlPresigner $presigner)
     {
         $url = $request->input('url');
         $angle = $request->input('angle', 90);
@@ -42,7 +46,7 @@ class StudentRotatePictureController extends Controller
             $picture->saveOrFail();
 
             return [
-                'url' => Storage::url($filename),
+                'url' => $presigner->getPresignedUrl($url),
             ];
         }
 
