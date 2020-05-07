@@ -48,7 +48,6 @@ class SocialAssistance extends Model
                 'period' => 'Turno',
                 'school_class_stage' => 'Etapa Educacenso',
                 'attendance_type' => 'Tipo de atendimento da turma',
-                'course_stage' => 'Etapas do curso',
             ],
         ];
     }
