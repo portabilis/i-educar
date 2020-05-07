@@ -298,9 +298,13 @@ class indice extends clsDetalhe
 
         if ($registro['nome_aluno']) {
             if ($caminhoFoto != null and $caminhoFoto != '') {
+                $url = $this->urlPresigner()->getPresignedUrl($caminhoFoto);
+
                 $this->addDetalhe([
                     'Nome Aluno',
-                    $registro['nome_aluno'] . '<p><img height="117" src="' . $this->urlPresigner()->getPresignedUrl($caminhoFoto) . '"/></p>'
+                    $registro['nome_aluno'] . '<p><img id="student-picture" height="117" src="' . $url . '"/></p>'
+                        . '<div><a class="rotate-picture" data-angle="90" href="javascript:void(0)"><i class="fa fa-rotate-left"></i> Girar para esquerda</a></div>'
+                        . '<div><a class="rotate-picture" data-angle="-90" href="javascript:void(0)"><i class="fa fa-rotate-right"></i> Girar para direita</a></div>'
                 ]);
             } else {
                 $this->addDetalhe(['Nome Aluno', $registro['nome_aluno']]);

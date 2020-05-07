@@ -136,6 +136,14 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
     }
 
     /**
+     * @return HasOne
+     */
+    public function picture()
+    {
+        return $this->hasOne(LegacyIndividualPicture::class, 'idpes');
+    }
+
+    /**
      * @inheritDoc
      */
     protected static function boot()
