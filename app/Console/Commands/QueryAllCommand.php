@@ -23,7 +23,7 @@ class QueryAllCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Count duplicated scores';
+    protected $description = 'Run a query in all databases connections';
 
     /**
      * Execute the console command.
