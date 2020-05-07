@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Notification;
+use App\Models\NotificationType;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Queue\SerializesModels;
@@ -44,5 +45,14 @@ class NotificationEvent implements ShouldBroadcast
     public function broadcastOn()
     {
         return new Channel($this->tenant . '-notification-' . md5($this->notification->user_id));
+    }
+
+    public function tags()
+    {
+        return [
+            $this->tenant,
+            'notification',
+            $this->notification->type->name,
+        ];
     }
 }
