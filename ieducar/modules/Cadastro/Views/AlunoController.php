@@ -254,8 +254,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         'motocicleta' => array('label' => 'Possui motocicleta?'),
 
-        'computador' => array('label' => 'Possui computador?'),
-
         'geladeira' => array('label' => 'Possui geladeira?'),
 
         'fogao' => array('label' => 'Possui fogão?'),
@@ -267,8 +265,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         'video_dvd' => array('label' => 'Possui vídeo/DVD?'),
 
         'televisao' => array('label' => 'Possui televisão?'),
-
-        'celular' => array('label' => 'Possui celular?'),
 
         'telefone' => array('label' => 'Possui telefone?'),
 
@@ -1216,9 +1212,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('motocicleta')), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('motocicleta', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('computador')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('computador', $options);
-
         $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('geladeira')), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('geladeira', $options);
 
@@ -1263,9 +1256,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             ]
         ];
         $this->inputsHelper()->multipleSearchCustom('_', $options, $helperOptions);
-
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('celular')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('celular', $options);
 
         $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quant_pessoas')), 'size' => 5, 'max_length' => 2, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->integer('quant_pessoas', $options);

@@ -744,11 +744,6 @@ resourceOptions.handleGet = function (dataResponse) {
         $j('#motocicleta').val('on');
     }
 
-    if (dataResponse.computador == 'S') {
-        $j('#computador').attr('checked', true);
-        $j('#computador').val('on');
-    }
-
     if (dataResponse.geladeira == 'S') {
         $j('#geladeira').attr('checked', true);
         $j('#geladeira').val('on');
@@ -792,11 +787,6 @@ resourceOptions.handleGet = function (dataResponse) {
     if (dataResponse.ddd_celular == 'S') {
         $j('#ddd_celular').attr('checked', true);
         $j('#ddd_celular').val('on');
-    }
-
-    if (dataResponse.celular == 'S') {
-        $j('#celular').attr('checked', true);
-        $j('#celular').val('on');
     }
 
     if (dataResponse.agua_encanada == 'S') {

@@ -19,14 +19,12 @@ class clsModulesMoradiaAluno extends Model
     public $empregada_domestica;
     public $automovel;
     public $motocicleta;
-    public $computador;
     public $geladeira;
     public $fogao;
     public $maquina_lavar;
     public $microondas;
     public $video_dvd;
     public $televisao;
-    public $celular;
     public $telefone;
     public $recursos_tecnologicos;
     public $quant_pessoas;
@@ -52,14 +50,12 @@ class clsModulesMoradiaAluno extends Model
         $empregada_domestica = null,
         $automovel = null,
         $motocicleta = null,
-        $computador = null,
         $geladeira = null,
         $fogao = null,
         $maquina_lavar = null,
         $microondas = null,
         $video_dvd = null,
         $televisao = null,
-        $celular = null,
         $telefone = null,
         $recursos_tecnologicos = null,
         $quant_pessoas = null,
@@ -78,7 +74,7 @@ class clsModulesMoradiaAluno extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_aluno,
         moradia, material, casa_outra, moradia_situacao,
         quartos, sala, copa, banheiro, garagem, empregada_domestica,
-      automovel, motocicleta, computador, geladeira, fogao, maquina_lavar, microondas, video_dvd,televisao, celular, telefone, recursos_tecnologicos, quant_pessoas, renda, agua_encanada, poco, energia, esgoto, fossa, lixo';
+      automovel, motocicleta, geladeira, fogao, maquina_lavar, microondas, video_dvd,televisao, telefone, recursos_tecnologicos, quant_pessoas, renda, agua_encanada, poco, energia, esgoto, fossa, lixo';
 
         if (is_numeric($ref_cod_aluno)) {
             $this->ref_cod_aluno = $ref_cod_aluno;
@@ -128,10 +124,6 @@ class clsModulesMoradiaAluno extends Model
             $this->motocicleta = $motocicleta;
         }
 
-        if (is_string($computador)) {
-            $this->computador = $computador;
-        }
-
         if (is_string($geladeira)) {
             $this->geladeira = $geladeira;
         }
@@ -154,10 +146,6 @@ class clsModulesMoradiaAluno extends Model
 
         if (is_string($televisao)) {
             $this->televisao = $televisao;
-        }
-
-        if (is_string($celular)) {
-            $this->celular = $celular;
         }
 
         if (is_string($telefone)) {
@@ -329,12 +317,6 @@ class clsModulesMoradiaAluno extends Model
                 $gruda = ', ';
             }
 
-            if (is_string($this->celular)) {
-                $campos .= "{$gruda}celular";
-                $valores .= "{$gruda}'{$this->celular}'";
-                $gruda = ', ';
-            }
-
             if (is_string($this->telefone)) {
                 $campos .= "{$gruda}telefone";
                 $valores .= "{$gruda}'{$this->telefone}'";
@@ -479,11 +461,6 @@ class clsModulesMoradiaAluno extends Model
                 $gruda = ', ';
             }
 
-            if (is_string($this->computador)) {
-                $set .= "{$gruda}computador = '{$this->computador}'";
-                $gruda = ', ';
-            }
-
             if (is_string($this->geladeira)) {
                 $set .= "{$gruda}geladeira = '{$this->geladeira}'";
                 $gruda = ', ';
@@ -511,11 +488,6 @@ class clsModulesMoradiaAluno extends Model
 
             if (is_string($this->televisao)) {
                 $set .= "{$gruda}televisao = '{$this->televisao}'";
-                $gruda = ', ';
-            }
-
-            if (is_string($this->celular)) {
-                $set .= "{$gruda}celular = '{$this->celular}'";
                 $gruda = ', ';
             }
 

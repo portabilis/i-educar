@@ -502,14 +502,12 @@ class AlunoController extends ApiCoreController
         $obj->empregada_domestica = ($this->getRequest()->empregada_domestica == 'on' ? 'S' : 'N');
         $obj->automovel = ($this->getRequest()->automovel == 'on' ? 'S' : 'N');
         $obj->motocicleta = ($this->getRequest()->motocicleta == 'on' ? 'S' : 'N');
-        $obj->computador = ($this->getRequest()->computador == 'on' ? 'S' : 'N');
         $obj->geladeira = ($this->getRequest()->geladeira == 'on' ? 'S' : 'N');
         $obj->fogao = ($this->getRequest()->fogao == 'on' ? 'S' : 'N');
         $obj->maquina_lavar = ($this->getRequest()->maquina_lavar == 'on' ? 'S' : 'N');
         $obj->microondas = ($this->getRequest()->microondas == 'on' ? 'S' : 'N');
         $obj->video_dvd = ($this->getRequest()->video_dvd == 'on' ? 'S' : 'N');
         $obj->televisao = ($this->getRequest()->televisao == 'on' ? 'S' : 'N');
-        $obj->celular = ($this->getRequest()->celular == 'on' ? 'S' : 'N');
         $obj->telefone = ($this->getRequest()->telefone == 'on' ? 'S' : 'N');
 
         $recursosTeconologicos = array_filter((array)$this->getRequest()->recursos_tecnologicos__);
