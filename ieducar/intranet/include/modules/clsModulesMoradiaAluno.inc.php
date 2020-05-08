@@ -28,6 +28,7 @@ class clsModulesMoradiaAluno extends Model
     public $televisao;
     public $celular;
     public $telefone;
+    public $recursos_tecnologicos;
     public $quant_pessoas;
     public $renda;
     public $agua_encanada;
@@ -60,6 +61,7 @@ class clsModulesMoradiaAluno extends Model
         $televisao = null,
         $celular = null,
         $telefone = null,
+        $recursos_tecnologicos = null,
         $quant_pessoas = null,
         $renda = null,
         $agua_encanada = null,
@@ -76,7 +78,7 @@ class clsModulesMoradiaAluno extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_aluno,
         moradia, material, casa_outra, moradia_situacao,
         quartos, sala, copa, banheiro, garagem, empregada_domestica,
-      automovel, motocicleta, computador, geladeira, fogao, maquina_lavar, microondas, video_dvd,televisao, celular, telefone, quant_pessoas, renda, agua_encanada, poco, energia, esgoto, fossa, lixo';
+      automovel, motocicleta, computador, geladeira, fogao, maquina_lavar, microondas, video_dvd,televisao, celular, telefone, recursos_tecnologicos, quant_pessoas, renda, agua_encanada, poco, energia, esgoto, fossa, lixo';
 
         if (is_numeric($ref_cod_aluno)) {
             $this->ref_cod_aluno = $ref_cod_aluno;
@@ -160,6 +162,10 @@ class clsModulesMoradiaAluno extends Model
 
         if (is_string($telefone)) {
             $this->telefone = $telefone;
+        }
+
+        if (is_string($recursos_tecnologicos)) {
+            $this->recursos_tecnologicos = $recursos_tecnologicos;
         }
 
         if (is_string($quant_pessoas)) {
@@ -332,6 +338,12 @@ class clsModulesMoradiaAluno extends Model
             if (is_string($this->telefone)) {
                 $campos .= "{$gruda}telefone";
                 $valores .= "{$gruda}'{$this->telefone}'";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->recursos_tecnologicos)) {
+                $campos .= "{$gruda}recursos_tecnologicos";
+                $valores .= "{$gruda}'{$this->recursos_tecnologicos}'";
                 $gruda = ', ';
             }
 
@@ -509,6 +521,11 @@ class clsModulesMoradiaAluno extends Model
 
             if (is_string($this->telefone)) {
                 $set .= "{$gruda}telefone = '{$this->telefone}'";
+                $gruda = ', ';
+            }
+
+            if (is_string($this->recursos_tecnologicos)) {
+                $set .= "{$gruda}recursos_tecnologicos = '{$this->recursos_tecnologicos}'";
                 $gruda = ', ';
             }
 

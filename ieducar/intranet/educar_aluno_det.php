@@ -857,6 +857,11 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Possui televisão', $reg['televisao']]);
             $this->addDetalhe(['Possui celular', $reg['celular']]);
             $this->addDetalhe(['Possui telefone', $reg['telefone']]);
+
+            $recursosTecnlogicos = json_decode($reg['recursos_tecnologicos']);
+            $recursosTecnlogicos = implode(", ", $recursosTecnlogicos);
+            $this->addDetalhe(['Possui acesso à recursos técnologicos?', $recursosTecnlogicos]);
+
             $this->addDetalhe(['Quantidade de pessoas', $reg['quant_pessoas']]);
             $this->addDetalhe(['Renda familiar', 'R$ ' . $reg['renda']]);
             $this->addDetalhe(['Possui água encanada', $reg['agua_encanada']]);

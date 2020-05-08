@@ -235,8 +235,24 @@ var newSubmitForm = function (event) {
         }
     }
 
+    if (!validaObrigatoriedadeRecursosTecnologicos()) {
+        return false;
+    }
+
     submitFormExterno();
 };
+
+function validaObrigatoriedadeRecursosTecnologicos() {
+    let obrigarRecursosTecnologicos = $j('#obrigar_recursos_tecnologicos').val() == '1';
+    let recursosTecnologicos = $j('#recursos_tecnologicos__').val();
+
+    if (obrigarRecursosTecnologicos && !recursosTecnologicos) {
+        messageUtils.error("É necessário informar o campo: <strong>Possui acesso à recursos tecnológicos?</strong> da aba: <strong>Moradia</strong>.");
+        return false;
+    }
+
+    return true;
+}
 
 var $loadingDocumento = $j('<img>')
     .attr('src', 'imagens/indicator.gif')
@@ -838,6 +854,13 @@ resourceOptions.handleGet = function (dataResponse) {
     $j('#moradia').val(dataResponse.moradia).change();
     $j('#material').val(dataResponse.material).change();
     $j('#moradia_situacao').val(dataResponse.moradia_situacao).change();
+
+    if (dataResponse.recursos_tecnologicos) {
+        var recursosTecnologicos = JSON.parse(dataResponse.recursos_tecnologicos);
+        $j('#recursos_tecnologicos__').val(recursosTecnologicos);
+        $j('#recursos_tecnologicos__').trigger("chosen:updated");
+    }
+
     $j('#justificativa_falta_documentacao').val(dataResponse.justificativa_falta_documentacao).change();
 
     // Transporte escolar
