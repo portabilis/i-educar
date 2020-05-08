@@ -87,15 +87,12 @@ class indice extends clsCadastro
         return false;
     }
 
-    DB::beginTransaction();
     $unificationId = $this->createLog($codPessoaPrincipal, $codPessoas, $this->pessoa_logada);
     $unificador = new App_Unificacao_Pessoa($codPessoaPrincipal, $codPessoas, $this->pessoa_logada, new clsBanco(), $unificationId);
 
     try {
         $unificador->unifica();
-        DB::commit();
     } catch (CoreExt_Exception $exception) {
-        DB::rollBack();
         $this->mensagem = $exception->getMessage();
         return FALSE;
     }
