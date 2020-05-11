@@ -152,4 +152,10 @@ class iDiarioService
             ]
         ]);
     }
+
+    public static function hasIdiarioConfigurations()
+    {
+        return !empty(config('legacy.config.url_novo_educacao'))
+            && !empty(config('legacy.config.token_novo_educacao'));
+    }
 }
