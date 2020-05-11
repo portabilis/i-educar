@@ -117,6 +117,26 @@ class iDiarioService
         return false;
     }
 
+    public function getClassroomsActivityByDiscipline(array $classroomId, int $disciplineId): bool
+    {
+        $data = [
+            'classrooms' => implode(',', $classroomId),
+            'discipline' => $disciplineId
+        ];
+        try {
+            $response = $this->get('/api/v2/discipline_activity', $data);
+            $body = trim((string)$response->getBody());
+
+            if ($body === 'true') {
+                return true;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return false;
+    }
+
     /**
      * @param string $path
      * @param array $query
