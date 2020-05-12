@@ -114,7 +114,7 @@ class MatriculaController extends ApiCoreController
     /**
      * Método para possibilitar a busca apenas de alunos transferidos, será
      * substituído em futuras versões.
-     * 
+     *
      * @deprecated
      *
      * @return array
@@ -300,7 +300,7 @@ class MatriculaController extends ApiCoreController
         }
 
         $sql = "
-            SELECT 
+            SELECT
                 m.ref_cod_aluno AS aluno_id,
                 m.cod_matricula AS matricula_id,
                 m.ref_ref_cod_escola AS escola_id,
@@ -358,7 +358,7 @@ class MatriculaController extends ApiCoreController
                 $params[] = $updatedAt;
             }
 
-            $sql = '(SELECT 
+            $sql = '(SELECT
                        matricula_turma.id,
                        matricula.cod_matricula as matricula_id,
                        matricula_turma.ref_cod_turma AS turma_id,
@@ -371,10 +371,10 @@ class MatriculaController extends ApiCoreController
                            WHEN COALESCE(instituicao.data_base_transferencia, instituicao.data_base_remanejamento) IS NULL THEN FALSE
                            WHEN matricula.aprovado = 4 AND
                                 matricula_turma.transferido AND
-                                matricula_turma.data_exclusao > ($1 || to_char(instituicao.data_base_transferencia, \'-mm-dd\'))::DATE THEN TRUE
+                                matricula_turma.data_exclusao > pmieducar.get_date_in_year($1, instituicao.data_base_transferencia) THEN TRUE
                            WHEN matricula.aprovado = 3 AND
                                 matricula_turma.remanejado AND
-                                matricula_turma.data_exclusao > ($1 || to_char(instituicao.data_base_remanejamento, \'-mm-dd\'))::DATE THEN TRUE
+                                matricula_turma.data_exclusao > pmieducar.get_date_in_year($1, instituicao.data_base_remanejamento) THEN TRUE
                            ELSE FALSE
                        END AS apresentar_fora_da_data,
                        matricula_turma.turno_id,
@@ -388,9 +388,9 @@ class MatriculaController extends ApiCoreController
                     ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
                  WHERE matricula.ref_ref_cod_escola in (' . $escola . ')
                    AND matricula.ano = $1::integer
-                 ' . $whereMatriculaTurma . ') 
+                 ' . $whereMatriculaTurma . ')
                  UNION ALL
-                 (SELECT 
+                 (SELECT
                        matricula_turma_excluidos.id,
                        matricula.cod_matricula as matricula_id,
                        matricula_turma_excluidos.ref_cod_turma AS turma_id,
@@ -403,10 +403,10 @@ class MatriculaController extends ApiCoreController
                            WHEN COALESCE(instituicao.data_base_transferencia, instituicao.data_base_remanejamento) IS NULL THEN FALSE
                            WHEN matricula.aprovado = 4 AND
                                 matricula_turma_excluidos.transferido AND
-                                matricula_turma_excluidos.data_exclusao > ($1 || to_char(instituicao.data_base_transferencia, \'-mm-dd\'))::DATE THEN TRUE
+                                matricula_turma_excluidos.data_exclusao > pmieducar.get_date_in_year($1, instituicao.data_base_transferencia) THEN TRUE
                            WHEN matricula.aprovado = 3 AND
                                 matricula_turma_excluidos.remanejado AND
-                                matricula_turma_excluidos.data_exclusao > ($1 || to_char(instituicao.data_base_remanejamento, \'-mm-dd\'))::DATE THEN TRUE
+                                matricula_turma_excluidos.data_exclusao > pmieducar.get_date_in_year($1, instituicao.data_base_remanejamento) THEN TRUE
                            ELSE FALSE
                        END AS apresentar_fora_da_data,
                        matricula_turma_excluidos.turno_id,
@@ -418,9 +418,9 @@ class MatriculaController extends ApiCoreController
                     ON instituicao.cod_instituicao = escola.ref_cod_instituicao
             INNER JOIN pmieducar.matricula_turma_excluidos
                     ON matricula_turma_excluidos.ref_cod_matricula = matricula.cod_matricula
-                 WHERE matricula.ref_ref_cod_escola in (' . $escola . ') 
+                 WHERE matricula.ref_ref_cod_escola in (' . $escola . ')
                    AND matricula.ano = $1::integer ' . $whereMatriculaExcluidos . ')
-                   
+
                    ORDER BY updated_at';
 
             $enturmacoes = $this->fetchPreparedQuery($sql, $params, false);
@@ -769,7 +769,7 @@ class MatriculaController extends ApiCoreController
 
         $sql = "
             (
-                SELECT 
+                SELECT
                     m.cod_matricula AS matricula_id,
                     dd.ref_cod_disciplina AS disciplina_id,
                     dd.updated_at,
@@ -784,7 +784,7 @@ class MatriculaController extends ApiCoreController
             )
             UNION ALL
             (
-                SELECT 
+                SELECT
                     m.cod_matricula AS matricula_id,
                     dd.ref_cod_disciplina AS disciplina_id,
                     dd.updated_at,
@@ -881,7 +881,7 @@ class MatriculaController extends ApiCoreController
                 $escola = 0;
             }
 
-            $sql = 'SELECT id, deleted_at 
+            $sql = 'SELECT id, deleted_at
                     FROM pmieducar.matricula_turma_excluidos
                     JOIN pmieducar.matricula ON matricula.cod_matricula = matricula_turma_excluidos.ref_cod_matricula
                     WHERE matricula.ano = $1
