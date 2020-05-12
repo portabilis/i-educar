@@ -371,10 +371,10 @@ class MatriculaController extends ApiCoreController
                            WHEN COALESCE(instituicao.data_base_transferencia, instituicao.data_base_remanejamento) IS NULL THEN FALSE
                            WHEN matricula.aprovado = 4 AND
                                 matricula_turma.transferido AND
-                                matricula_turma.data_exclusao > pmieducar.retorna_database_transferencia($1, cod_instituicao) THEN TRUE
+                                matricula_turma.data_exclusao > pmieducar.get_date_in_year($1, instituicao.data_base_transferencia) THEN TRUE
                            WHEN matricula.aprovado = 3 AND
                                 matricula_turma.remanejado AND
-                                matricula_turma.data_exclusao > pmieducar.retorna_database_remanejamento($1, cod_instituicao) THEN TRUE
+                                matricula_turma.data_exclusao > pmieducar.get_date_in_year($1, instituicao.data_base_remanejamento) THEN TRUE
                            ELSE FALSE
                        END AS apresentar_fora_da_data,
                        matricula_turma.turno_id,
@@ -403,10 +403,10 @@ class MatriculaController extends ApiCoreController
                            WHEN COALESCE(instituicao.data_base_transferencia, instituicao.data_base_remanejamento) IS NULL THEN FALSE
                            WHEN matricula.aprovado = 4 AND
                                 matricula_turma_excluidos.transferido AND
-                                matricula_turma_excluidos.data_exclusao > pmieducar.retorna_database_transferencia($1, cod_instituicao) THEN TRUE
+                                matricula_turma_excluidos.data_exclusao > pmieducar.get_date_in_year($1, instituicao.data_base_transferencia) THEN TRUE
                            WHEN matricula.aprovado = 3 AND
                                 matricula_turma_excluidos.remanejado AND
-                                matricula_turma_excluidos.data_exclusao > pmieducar.retorna_database_remanejamento($1, cod_instituicao) THEN TRUE
+                                matricula_turma_excluidos.data_exclusao > pmieducar.get_date_in_year($1, instituicao.data_base_remanejamento) THEN TRUE
                            ELSE FALSE
                        END AS apresentar_fora_da_data,
                        matricula_turma_excluidos.turno_id,
