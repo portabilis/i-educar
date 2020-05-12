@@ -30,10 +30,10 @@ class RemoveColunasNaoUtilizadasDaTabelaMoradiaAluno extends Migration
     public function down()
     {
         Schema::table('modules.moradia_aluno', function (Blueprint $table) {
-            $table->string('celular', 1)->nullable();
+            $table->char('celular', 1)->nullable();
         });
         Schema::table('modules.moradia_aluno', function (Blueprint $table) {
-            $table->string('computador', 1)->nullable();
+            $table->char('computador', 1)->nullable();
         });
     }
 }
