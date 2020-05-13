@@ -1,12 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use App\Support\Database\MigrationUtils;
 use Illuminate\Database\Migrations\Migration;
 
 class AddFieldsInExporterStudent extends Migration
 {
-    use \App\Support\Database\MigrationUtils;
+    use MigrationUtils;
 
     /**
      * Run the migrations.
