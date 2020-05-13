@@ -246,6 +246,10 @@ function validaObrigatoriedadeRecursosTecnologicos() {
     let obrigarRecursosTecnologicos = $j('#obrigar_recursos_tecnologicos').val() == '1';
     let recursosTecnologicos = $j('#recursos_tecnologicos__').val();
 
+    if (Array.isArray(recursosTecnologicos)) {
+        recursosTecnologicos = recursosTecnologicos.toString();
+    }
+
     if (obrigarRecursosTecnologicos && !recursosTecnologicos) {
         messageUtils.error("É necessário informar o campo: <strong>Possui acesso à recursos tecnológicos?</strong> da aba: <strong>Moradia</strong>.");
         return false;
