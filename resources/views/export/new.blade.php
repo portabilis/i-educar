@@ -143,7 +143,7 @@
 
     if (jQuery('#status').val() == 3) {
       jQuery('.fields').prop('checked', true);
-      jQuery('#situacao_matricula').val(9);
+      jQuery('#situacao_matricula').val(3);
     }
   });
   </script>
