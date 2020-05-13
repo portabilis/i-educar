@@ -53,7 +53,7 @@
             </span>
           </td>
         </tr>
-        @if(request('type', 1) == 1)
+        @if(in_array(request('type', 1), [1,3]))
         <tr>
           <td class="formlttd" valign="top">
             <span class="form">Situação da Matrícula</span>
@@ -140,6 +140,11 @@
     jQuery('#agree').change(function () {
       jQuery('#export-button').prop('disabled', !jQuery('#agree').prop('checked'));
     });
+
+    if (jQuery('#status').val() == 3) {
+      jQuery('.fields').prop('checked', true);
+      jQuery('#situacao_matricula').val(3);
+    }
   });
   </script>
 

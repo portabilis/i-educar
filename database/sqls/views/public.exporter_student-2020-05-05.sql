@@ -15,8 +15,9 @@ select
     m.ref_ref_cod_serie as grade_id,
     m.ref_ref_cod_escola as school_id,
     t.cod_turma as school_class_id,
+    t.tipo_atendimento as attendance_type,
     ece.cod_escola_inep as school_inep,
-    eec.name as school_class_stage,
+    eec.id as school_class_stage,
     coalesce(tm.nome, tt.nome) as period
 from public.exporter_person p
          inner join pmieducar.aluno a

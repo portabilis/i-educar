@@ -43,6 +43,7 @@ class Export extends Model
         return [
             1 => new Student(),
             2 => new Teacher(),
+            3 => new SocialAssistance(),
         ];
     }
 
