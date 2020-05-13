@@ -57,7 +57,7 @@ class indice extends clsCadastro
                 {
                     $this->fexcluir = true;
                 }
-                $retorno = "Editar";
+                $retorno = "Edição";
             }
 
             if($this->professor == '0')
