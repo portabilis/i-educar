@@ -235,7 +235,8 @@ class AlunoController extends ApiCoreController
             $this->validateDeficiencies() &&
             $this->validateBirthCertificate() &&
             $this->validateNis() &&
-            $this->validateInepExam()
+            $this->validateInepExam() &&
+            $this->validateTechnologicalResources()
         );
     }
 
@@ -246,7 +247,8 @@ class AlunoController extends ApiCoreController
             $this->validateDeficiencies()&&
             $this->validateBirthCertificate()&&
             $this->validateNis()&&
-            $this->validateInepExam()
+            $this->validateInepExam()&&
+            $this->validateTechnologicalResources()
         );
     }
 
@@ -303,6 +305,21 @@ class AlunoController extends ApiCoreController
 
         $this->messenger->append($validator->getMessage());
         return false;
+    }
+
+        /**
+     * @return bool
+     */
+    private function validateTechnologicalResources()
+    {
+        $technologicalResources = array_filter((array)$this->getRequest()->recursos_tecnologicos__);
+
+        if (in_array('Nenhum', $technologicalResources) && count($technologicalResources) > 1) {
+            $this->messenger->append('Não é possível informar mais de uma opção no campo: <strong>Possui acesso à recursos tecnológicos?</strong>, quando a opção: <b>Nenhum</b> estiver selecionada.');
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -485,15 +502,17 @@ class AlunoController extends ApiCoreController
         $obj->empregada_domestica = ($this->getRequest()->empregada_domestica == 'on' ? 'S' : 'N');
         $obj->automovel = ($this->getRequest()->automovel == 'on' ? 'S' : 'N');
         $obj->motocicleta = ($this->getRequest()->motocicleta == 'on' ? 'S' : 'N');
-        $obj->computador = ($this->getRequest()->computador == 'on' ? 'S' : 'N');
         $obj->geladeira = ($this->getRequest()->geladeira == 'on' ? 'S' : 'N');
         $obj->fogao = ($this->getRequest()->fogao == 'on' ? 'S' : 'N');
         $obj->maquina_lavar = ($this->getRequest()->maquina_lavar == 'on' ? 'S' : 'N');
         $obj->microondas = ($this->getRequest()->microondas == 'on' ? 'S' : 'N');
         $obj->video_dvd = ($this->getRequest()->video_dvd == 'on' ? 'S' : 'N');
         $obj->televisao = ($this->getRequest()->televisao == 'on' ? 'S' : 'N');
-        $obj->celular = ($this->getRequest()->celular == 'on' ? 'S' : 'N');
         $obj->telefone = ($this->getRequest()->telefone == 'on' ? 'S' : 'N');
+
+        $recursosTeconologicos = array_filter((array)$this->getRequest()->recursos_tecnologicos__);
+        $obj->recursos_tecnologicos = json_encode(array_values($recursosTeconologicos));
+
         $obj->quant_pessoas = $this->getRequest()->quant_pessoas;
         $obj->renda = floatval(preg_replace("/[^0-9\.]/", '', str_replace(',', '.', $this->getRequest()->renda)));
         $obj->agua_encanada = ($this->getRequest()->agua_encanada == 'on' ? 'S' : 'N');

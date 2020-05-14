@@ -852,15 +852,18 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Possui empregada doméstica', $reg['empregada_domestica']]);
             $this->addDetalhe(['Possui automóvel', $reg['automovel']]);
             $this->addDetalhe(['Possui motocicleta', $reg['motocicleta']]);
-            $this->addDetalhe(['Possui computador', $reg['computador']]);
             $this->addDetalhe(['Possui geladeira', $reg['geladeira']]);
             $this->addDetalhe(['Possui fogão', $reg['fogao']]);
             $this->addDetalhe(['Possui máquina de lavar', $reg['maquina_lavar']]);
             $this->addDetalhe(['Possui microondas', $reg['microondas']]);
             $this->addDetalhe(['Possui vídeo/dvd', $reg['video_dvd']]);
             $this->addDetalhe(['Possui televisão', $reg['televisao']]);
-            $this->addDetalhe(['Possui celular', $reg['celular']]);
             $this->addDetalhe(['Possui telefone', $reg['telefone']]);
+
+            $recursosTecnlogicos = json_decode($reg['recursos_tecnologicos']);
+            $recursosTecnlogicos = implode(", ", $recursosTecnlogicos);
+            $this->addDetalhe(['Possui acesso à recursos técnologicos?', $recursosTecnlogicos]);
+
             $this->addDetalhe(['Quantidade de pessoas', $reg['quant_pessoas']]);
             $this->addDetalhe(['Renda familiar', 'R$ ' . $reg['renda']]);
             $this->addDetalhe(['Possui água encanada', $reg['agua_encanada']]);
