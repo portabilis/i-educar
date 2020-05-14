@@ -48,7 +48,7 @@ from public.exporter_person p
          left join pmieducar.turma_turno tm
                    on tm.id = mt.turno_id
          left join modules.moradia_aluno ma
-	                 on ma.ref_cod_aluno = a.cod_aluno
+		on ma.ref_cod_aluno = a.cod_aluno
 where true
   and a.ativo = 1
   and m.ativo = 1
