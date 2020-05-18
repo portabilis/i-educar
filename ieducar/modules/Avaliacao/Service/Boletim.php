@@ -385,7 +385,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $tipoPresenca = $this->getRegraAvaliacaoTipoPresenca();
 
         // Carrega as faltas já lançadas
-        $faltas = $this->getFaltas($loadCyclicRegimeData);
+        $faltas = $this->getFaltasLancadas($loadCyclicRegimeData);
 
         // Se a falta for do tipo geral, popula um array indexado pela etapa
         if ($tipoPresenca == RegraAvaliacao_Model_TipoPresenca::GERAL) {
@@ -429,12 +429,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     /**
+     * @param bool $loadCyclicRegimeData
      * @return Avaliacao_Model_FaltaGeral[]
      * @throws Exception
      */
-    private function getFaltas()
+    private function getFaltasLancadas($loadCyclicRegimeData = false)
     {
-        if ($this->getRegraAvaliacaoTipoProgressao() == RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL_CICLO) {
+        if ($loadCyclicRegimeData && $this->getRegraAvaliacaoTipoProgressao() == RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL_CICLO) {
             return $this->retornaFaltasCiclo($this->getOption('matricula'));
         }
 
