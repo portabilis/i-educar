@@ -6,6 +6,7 @@ use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Services\CyclicRegimeService;
 use App\Services\StageScoreCalculationService;
+use App\Services\StudentAbsenceService;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
@@ -462,8 +463,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         /** @var LegacyRegistration[] $registrations */
         $registrations = app(CyclicRegimeService::class)->getAllRegistrationsOfCycle($matricula);
 
-        /** @var \App\Services\StudentAbsenceService $studentAbsenceService */
-        $studentAbsenceService = app(\App\Services\StudentAbsenceService::class);
+        /** @var StudentAbsenceService $studentAbsenceService */
+        $studentAbsenceService = app(StudentAbsenceService::class);
         foreach ($registrations as $registration) {
             $faltaAluno = $studentAbsenceService->getOrCreateStudentAbsence($registration, $this->getEvaluationRule());
 
