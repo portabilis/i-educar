@@ -3,6 +3,8 @@
 use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGrade;
 use App\Models\LegacyInstitution;
+use App\Models\LegacyRegistration;
+use App\Services\CyclicRegimeService;
 use App\Services\StageScoreCalculationService;
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
@@ -368,47 +370,112 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * Carrega as faltas do aluno, sejam gerais ou por componente.
      *
+     * @param bool $loadCyclicRegimeData Se true, carrega todas as faltas do ciclo, caso a regra de avaliaçao tenha essa configuraçao
      * @return $this
      *
      * @throws Exception
      */
-    protected function _loadFalta()
+    protected function _loadFalta($loadCyclicRegimeData = false)
     {
         // Cria uma entrada no boletim caso o aluno/matrícula não a tenha
         if (!$this->hasFaltaAluno()) {
             $this->_createFaltaAluno();
         }
 
+        $tipoPresenca = $this->getRegraAvaliacaoTipoPresenca();
+
+        // Carrega as faltas já lançadas
+        $faltas = $this->getFaltas($loadCyclicRegimeData);
+
+        // Se a falta for do tipo geral, popula um array indexado pela etapa
+        if ($tipoPresenca == RegraAvaliacao_Model_TipoPresenca::GERAL) {
+            $faltasGerais = [];
+            $faltasGeraisCiclo = [];
+
+            foreach ($faltas as $falta) {
+                $faltasGerais[$falta->etapa] = $falta;
+
+                if ($loadCyclicRegimeData) {
+                    $faltasGeraisCiclo[] = $falta;
+                }
+            }
+
+            $this->setFaltasGerais($faltasGerais);
+
+            if ($loadCyclicRegimeData) {
+                $this->setFaltasGeraisCiclo($faltasGeraisCiclo);
+            }
+        } elseif ($tipoPresenca == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
+            $faltasComponentes = [];
+            $faltasComponentesCiclo = [];
+
+            // Separa cada nota em um array indexado pelo identity field do componente
+            foreach ($faltas as $falta) {
+                $faltasComponentes[$falta->get('componenteCurricular')][] = $falta;
+
+                if ($loadCyclicRegimeData) {
+                    $faltasComponentesCiclo[] = $falta;
+                }
+            }
+
+            $this->setFaltasComponentes($faltasComponentes);
+
+            if ($loadCyclicRegimeData) {
+                $this->setFaltasComponentesCiclo($faltasGeraisCiclo);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Avaliacao_Model_FaltaGeral[]
+     * @throws Exception
+     */
+    private function getFaltas()
+    {
+        header ('Content-type: text/html; charset=UTF-8');
+
+        if ($this->getRegraAvaliacaoTipoProgressao() == RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL_CICLO) {
+            return $this->retornaFaltasCiclo($this->getOption('matricula'));
+        }
+
         // Senão tiver, vai criar
         $faltaAluno = $this->_getFaltaAluno();
 
-        // Carrega as faltas já lançadas
-        $faltas = $this->getFaltaAbstractDataMapper()->findAll(
+        return $this->getFaltaAbstractDataMapper()->findAll(
             [],
             ['faltaAluno' => $faltaAluno->id],
             ['etapa' => 'ASC']
         );
+    }
 
-        // Se a falta for do tipo geral, popula um array indexado pela etapa
-        if ($faltaAluno->get('tipoFalta') == RegraAvaliacao_Model_TipoPresenca::GERAL) {
-            $faltasGerais = [];
+    /**
+     * Retorna as faltas de todas as series do ciclo
+     *
+     * @param $matricula
+     * @return Avaliacao_Model_FaltaGeral[]
+     */
+    private function retornaFaltasCiclo($matricula)
+    {
+        $faltas = [];
 
-            foreach ($faltas as $falta) {
-                $faltasGerais[$falta->etapa] = $falta;
-            }
+        /** @var LegacyRegistration[] $registrations */
+        $registrations = app(CyclicRegimeService::class)->getAllRegistrationsOfCycle($matricula);
 
-            $this->setFaltasGerais($faltasGerais);
-        } elseif ($faltaAluno->get('tipoFalta') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
-            $faltasComponentes = [];
-            // Separa cada nota em um array indexado pelo identity field do componente
-            foreach ($faltas as $falta) {
-                $faltasComponentes[$falta->get('componenteCurricular')][] = $falta;
-            }
+        /** @var \App\Services\StudentAbsenceService $studentAbsenceService */
+        $studentAbsenceService = app(\App\Services\StudentAbsenceService::class);
+        foreach ($registrations as $registration) {
+            $faltaAluno = $studentAbsenceService->getOrCreateStudentAbsence($registration, $this->getEvaluationRule());
 
-            $this->setFaltasComponentes($faltasComponentes);
+            $faltas = array_merge($faltas, $this->getFaltaAbstractDataMapper()->findAll(
+                [],
+                ['faltaAluno' => $faltaAluno->getKey()],
+                ['etapa' => 'ASC']
+            ));
         }
 
-        return $this;
+        return $faltas;
     }
 
     /**
@@ -1012,23 +1079,25 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         // Carrega faltas lançadas (persistidas)
-        $this->_loadFalta();
+        // O parametro true força o carregamento de faltas do regime ciclico (faltas de todas as series do curso), caso a regra de avaliaçao tenha essa configuraçao
+        $this->_loadFalta(true);
 
         $tipoFaltaGeral         = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::GERAL;
         $tipoFaltaPorComponente = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
 
         if ($tipoFaltaGeral) {
-            $faltas = $this->getFaltasGerais();
+            $faltas = $this->getFaltasGeraisCiclo();
 
             if (0 == count($faltas)) {
                 $total = 0;
                 $etapa = 0;
             } else {
+
                 $total = array_sum(CoreExt_Entity::entityFilterAttr($faltas, 'id', 'quantidade'));
                 $etapa = array_pop($faltas)->etapa;
             }
         } elseif ($tipoFaltaPorComponente) {
-            $faltas = $this->getFaltasComponentes();
+            $faltas = $this->getFaltasComponentesCiclo();
             $faltas = array_intersect_key($faltas, $componentes);
             $total  = 0;
             $etapasComponentes = [];
