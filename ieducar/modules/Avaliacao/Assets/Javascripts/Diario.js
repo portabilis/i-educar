@@ -1402,7 +1402,7 @@ function getNotaRecuperacaoEspecificaMaxLength(regra){
 }
 
 
-function updateComponenteCurricular($targetElement, matriculaId, cc, regra) {q
+function updateComponenteCurricular($targetElement, matriculaId, cc, regra) {
   var usaRecuperacaoParalelaPorEtapa = (regra.tipo_recuperacao_paralela == 'por_etapa');
   var useNota                = regra.tipo_nota != 'nenhum';
   var useParecer             = regra.tipo_parecer_descritivo != 'nenhum';
