@@ -434,8 +434,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      */
     private function getFaltas()
     {
-        header ('Content-type: text/html; charset=UTF-8');
-
         if ($this->getRegraAvaliacaoTipoProgressao() == RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL_CICLO) {
             return $this->retornaFaltasCiclo($this->getOption('matricula'));
         }
@@ -1184,7 +1182,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         $presenca->porcentagemPresenca     = 100 - $presenca->porcentagemFalta;
         $presenca->componentesCurriculares = $faltasComponentes;
-
         // Na última etapa seta situação presença como aprovado ou reprovado.
         if ($etapa == $this->getOption('etapas') || $etapa === 'Rc') {
             $aprovado           = (
