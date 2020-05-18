@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property LegacyStudentAbsence studentAbsence
  * @property LegacyStudentScore studentScore
  * @property LegacyStudentDescriptive studentDescriptive
+ * @property LegacyCourse course
  *
  */
 class LegacyRegistration extends Model
@@ -116,6 +117,15 @@ class LegacyRegistration extends Model
         return $this->belongsTo(LegacyLevel::class, 'ref_ref_cod_serie');
     }
 
+    /**
+     * Relação com o curso.
+     *
+     * @return BelongsTo
+     */
+    public function course()
+    {
+        return $this->belongsTo(LegacyCourse::class, 'ref_cod_curso');
+    }
 
     /**
      * @return HasMany
