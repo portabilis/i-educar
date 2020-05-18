@@ -421,7 +421,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $this->setFaltasComponentes($faltasComponentes);
 
             if ($loadCyclicRegimeData) {
-                $this->setFaltasComponentesCiclo($faltasGeraisCiclo);
+                $this->setFaltasComponentesCiclo($faltasComponentesCiclo);
             }
         }
 
