@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\Output;
+use App\Mail\NewUserMail;
 use App\Models\LegacyEmployee;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
@@ -12,6 +13,7 @@ use App\Models\LegacyUserType;
 use App\Support\Database\Connections;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
