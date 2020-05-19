@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Contracts\Output;
-use App\Mail\NewUserMail;
 use App\Models\LegacyEmployee;
 use App\Models\LegacyIndividual;
 use App\Models\LegacyInstitution;
@@ -11,12 +10,8 @@ use App\Models\LegacyPerson;
 use App\Models\LegacyUser;
 use App\Models\LegacyUserType;
 use App\Support\Database\Connections;
-use App\User;
-use Illuminate\Mail\Message;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
@@ -70,7 +65,6 @@ class ImportUsersService implements ToCollection
             $this->sendPasswordEmail($login, $email, $password);
 
             $this->output->progressAdvance();
-            die;
         }
 
         $this->output->progressFinish();
@@ -88,30 +82,13 @@ class ImportUsersService implements ToCollection
      */
     public function createUser($name, $user, $password, $email, $forceResetPassword)
     {
-        if ($this->multiTenant) {
-            $this->createUserByConnection($name, $user, $password, $email, $forceResetPassword);
+        if (!$this->multiTenant) {
+            return $this->createUserByConnection($name, $user, $password, $email, $forceResetPassword);
         }
 
         foreach ($this->getConnections() as $connection) {
             $this->createUserByConnection($name, $user, $password, $email, $forceResetPassword, $connection);
         }
-    }
-
-    /**
-     * Envia um email informando a senha do usuário
-     *
-     * @param $login
-     * @param string $email
-     * @param string $password
-     */
-    public function sendPasswordEmail($login, $email, $password)
-    {
-        $url = [];
-        if (!$this->multiTenant) {
-            $url = config('app.url');
-        }
-
-        Mail::send(new NewUserMail($login, $email, $password, $url));
     }
 
     /**
@@ -121,12 +98,23 @@ class ImportUsersService implements ToCollection
      * @param string $email
      * @param bool $forceResetPassword
      * @param string|null $connection
-     * @return mixed
+     * @return LegacyUser|null
      */
     private function createUserByConnection(string $name, string $user, string $password, string $email, bool $forceResetPassword, $connection = null)
     {
         if ($connection) {
             DB::setDefaultConnection($connection);
+        }
+
+        if ($this->loginExists($user)){
+            $message = sprintf('O usuário %s não pode ser criado a matrícula já está em uso', $user);
+
+            if ($connection) {
+                $message .= ' - ' . $connection;
+            }
+
+            $this->output->info($message);
+            return;
         }
 
         $person = LegacyPerson::create([
@@ -156,5 +144,27 @@ class ImportUsersService implements ToCollection
             'data_cadastro' => now(),
             'ativo' => 1,
         ]);
+    }
+
+    private function loginExists(string $user)
+    {
+        return LegacyEmployee::where('matricula', $user)->exists();
+    }
+
+    /**
+     * Envia um email informando a senha do usuário
+     *
+     * @param $login
+     * @param string $email
+     * @param string $password
+     */
+    public function sendPasswordEmail($login, $email, $password)
+    {
+        $url = [];
+        if (!$this->multiTenant) {
+            $url = config('app.url');
+        }
+
+        Mail::send(new NewUserMail($login, $email, $password, $url));
     }
 }

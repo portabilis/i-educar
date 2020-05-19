@@ -35,12 +35,8 @@ class ImportUsersCommand extends Command
     {
         $filename = $this->argument('filename');
 
-        DB::beginTransaction();
-
         $output = new CommandOutput($this->output);
         $service = new ImportUsersService($output, $this->option('multi-tenant'), $this->option('force-reset-password'));
-
-        DB::rollBack();
 
         Excel::import($service, $filename);
     }
