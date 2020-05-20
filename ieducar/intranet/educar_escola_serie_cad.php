@@ -789,7 +789,7 @@ class indice extends clsCadastro
                     $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série e escola.', $discipline->nome);
                 }
 
-                if ($iDiarioService && $schoolClass->count() && $iDiarioService->getClassroomsActivityByDiscipline($schoolClass, $componenteId)) {
+                if ($iDiarioService && $schoolClass->count() && $iDiarioService->getClassroomsActivityByDiscipline($schoolClass->toArray(), $componenteId)) {
                     $discipline = LegacyDiscipline::find($componenteId);
                     $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série e escola no iDiário', $discipline->nome);
                 }
@@ -813,7 +813,7 @@ class indice extends clsCadastro
                             ->where('ano', $ano)
                             ->pluck('cod_turma');
 
-                        if ($iDiarioService && $schoolClass->count() && $iDiarioService->getClassroomsActivityByDiscipline($schoolClass, $update['ref_cod_disciplina'])) {
+                        if ($iDiarioService && $schoolClass->count() && $iDiarioService->getClassroomsActivityByDiscipline($schoolClass->toArray(), $update['ref_cod_disciplina'])) {
                             $discipline = LegacyDiscipline::find($update['ref_cod_disciplina']);
                             $erros[] = sprintf('Não é possível desvincular o ano %d de "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série, ano e escola no iDiário', $ano, $discipline->nome);
                         }
