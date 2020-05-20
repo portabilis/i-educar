@@ -97,7 +97,7 @@ class ComponentesSerieController extends ApiCoreController
                     $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série.', $discipline->nome);
                 }
 
-                if ($iDiarioService && $schoolClass->count() && $iDiarioService->getClassroomsActivityByDiscipline($schoolClass, $componenteId)) {
+                if ($iDiarioService && $schoolClass->count() && $iDiarioService->getClassroomsActivityByDiscipline($schoolClass->toArray(), $componenteId)) {
                     $discipline = LegacyDiscipline::find($componenteId);
                     $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série no iDiário.', $discipline->nome);
                 }
