@@ -841,7 +841,9 @@ class clsPmieducarAluno extends Model
         $autorizado_quatro = null,
         $parentesco_quatro = null,
         $autorizado_cinco = null,
-        $parentesco_cinco = null
+        $parentesco_cinco = null,
+        $int_cpf_aluno = null,
+        $int_rg_aluno = null
     ) {
         $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie);// || is_numeric($periodo);
 
@@ -936,6 +938,21 @@ class clsPmieducarAluno extends Model
 
             $filtros .= "{$whereAnd}  unaccent(coalesce(fisica.nome_social, '') || pessoa.nome) LIKE unaccent('%{$str_nome_aluno}%')";
 
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_cpf_aluno)) {
+            $filtros .= "{$whereAnd}  fisica.cpf = '{$int_cpf_aluno}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_rg_aluno)) {
+            $filtros .= "{$whereAnd} EXISTS (
+                            SELECT 1
+                            FROM cadastro.documento cd
+                            WHERE cd.idpes = a.ref_idpes
+                            AND cd.rg = '{$int_rg_aluno}'
+                        )";
             $whereAnd = ' AND ';
         }
 
