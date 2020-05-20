@@ -4,6 +4,7 @@ use App\Models\LegacyEvaluationRule;
 use App\Models\LegacyGrade;
 use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
+use App\Models\LegacyStudentAbsence;
 use App\Services\CyclicRegimeService;
 use App\Services\StageScoreCalculationService;
 use App\Services\StudentAbsenceService;
@@ -415,7 +416,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $faltasComponentes[$falta->get('componenteCurricular')][] = $falta;
 
                 if ($loadCyclicRegimeData) {
-                    $faltasComponentesCiclo[] = $falta;
+                    $studentAbsence = LegacyStudentAbsence::find($falta->get('faltaAluno'));
+                    $faltasComponentesCiclo[$falta->get('componenteCurricular') . '||' . $studentAbsence->matricula_id][] = $falta;
                 }
             }
 
@@ -436,7 +438,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      */
     private function getFaltasLancadas($loadCyclicRegimeData = false)
     {
-        if ($loadCyclicRegimeData && $this->getRegraAvaliacaoTipoProgressao() == RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL_CICLO) {
+        if ($loadCyclicRegimeData) {
             return $this->retornaFaltasCiclo($this->getOption('matricula'));
         }
 
@@ -476,6 +478,28 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         return $faltas;
+    }
+
+
+    /**
+     * Retorna os componentes de todas as séries do ciclo
+     *
+     * @param $matricula
+     */
+    private function getComponentesRegimeCiclico($matricula)
+    {
+        /** @var LegacyRegistration[] $registrations */
+        $registrations = app(CyclicRegimeService::class)->getAllRegistrationsOfCycle($matricula);
+
+        $componentes = [];
+        foreach ($registrations as $registration) {
+            $buscaComponentes = App_Model_IedFinder::getComponentesPorMatricula($registration->getKey(), $this->getComponenteDataMapper(), $this->getComponenteTurmaDataMapper(), null, null, null, null);
+            foreach ($buscaComponentes as $componente) {
+                $componentes[$componente->get('id') . '||' . $matricula] = $componente;
+            }
+        }
+
+        return $componentes;
     }
 
     /**
@@ -1080,13 +1104,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         // Carrega faltas lançadas (persistidas)
         // O parametro true força o carregamento de faltas do regime ciclico (faltas de todas as series do curso), caso a regra de avaliaçao tenha essa configuraçao
-        $this->_loadFalta(true);
+        $this->_loadFalta($this->isCyclicRegime());
 
         $tipoFaltaGeral         = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::GERAL;
         $tipoFaltaPorComponente = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
 
         if ($tipoFaltaGeral) {
-            $faltas = $this->getFaltasGeraisCiclo();
+            $faltas = $this->getFaltasGerais();
+            if ($this->isCyclicRegime()) {
+                $faltas = $this->getFaltasGeraisCiclo();
+            }
 
             if (0 == count($faltas)) {
                 $total = 0;
@@ -1097,7 +1124,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $etapa = array_pop($faltas)->etapa;
             }
         } elseif ($tipoFaltaPorComponente) {
-            $faltas = $this->getFaltasComponentesCiclo();
+            $faltas = $this->getFaltasComponentes();
+
+            if ($this->isCyclicRegime()) {
+                $faltas = $this->getFaltasComponentesCiclo();
+                $componentes = $this->getComponentesRegimeCiclico($enrollmentId);
+            }
+
             $faltas = array_intersect_key($faltas, $componentes);
             $total  = 0;
             $etapasComponentes = [];
@@ -1113,8 +1146,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
                 // Pega o id de ComponenteCurricular_Model_Componente da última etapa do array
                 $componenteEtapa = array_pop($falta);
-                $id              = $componenteEtapa->get('componenteCurricular');
-                $etapa           = $componenteEtapa->etapa;
+
+                $id = $componenteEtapa->get('componenteCurricular');
+                if ($this->isCyclicRegime()) {
+                    $studentAbsence = LegacyStudentAbsence::find($falta->get('faltaAluno'));
+                    $id = $componenteEtapa->get('componenteCurricular') . '||' . $studentAbsence->matricula_id;
+                }
+
+                $etapa = $componenteEtapa->etapa;
 
                 // Usa stdClass como interface de acesso
                 $faltasComponentes[$id] = new stdClass();
