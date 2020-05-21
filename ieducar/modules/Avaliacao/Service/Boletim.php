@@ -1149,7 +1149,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
                 $id = $componenteEtapa->get('componenteCurricular');
                 if ($this->isCyclicRegime()) {
-                    $studentAbsence = LegacyStudentAbsence::find($falta->get('faltaAluno'));
+                    $studentAbsence = LegacyStudentAbsence::find($componenteEtapa->get('faltaAluno'));
                     $id = $componenteEtapa->get('componenteCurricular') . '||' . $studentAbsence->matricula_id;
                 }
 
