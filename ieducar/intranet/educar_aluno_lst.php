@@ -176,14 +176,12 @@ class indice extends clsListagem
         $total = $aluno->_total;
 
         foreach ($alunos as $registro) {
-            $alunoInepId = $this->tryLoadAlunoInepId($registro['cod_aluno']);
-            $nomeAluno = strtoupper($registro['nome_aluno']);
-            $nomeSocial = strtoupper($registro['nome_social']);
+            $nomeAluno = $registro['nome_aluno'];
+            $nomeSocial = $registro['nome_social'];
 
             if ($nomeSocial) {
                 $nomeAluno = $nomeSocial . '<br> <i>Nome de registro: </i>' . $nomeAluno;
             }
-            $nomeMae = strtoupper($this->loadNomeMae($registro));
 
             // responsavel
             $aluno->cod_aluno = $registro['cod_aluno'];
@@ -194,16 +192,16 @@ class indice extends clsListagem
                 $linhas = [
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['cod_aluno']}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeAluno}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeMae}</a>",
+                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['nome_mae']}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeResponsavel}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$responsavel['cpf_responsavel']}</a>"
                 ];
             } else {
                 $linhas = [
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['cod_aluno']}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$alunoInepId}</a>",
+                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['codigo_inep']}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeAluno}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeMae}</a>",
+                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['nome_mae']}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeResponsavel}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$responsavel['cpf_responsavel']}</a>"
                 ];
@@ -238,36 +236,6 @@ class indice extends clsListagem
         Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter.js']);
 
         $this->breadcrumb('Alunos', ['/intranet/educar_index.php' => 'Escola']);
-    }
-
-    protected function loadNomeMae($aluno)
-    {
-        $nome = $aluno['nm_mae'];
-
-        $pessoaAluno = new clsFisica($aluno['ref_idpes']);
-        $pessoaAluno = $pessoaAluno->detalhe();
-
-        if ($pessoaAluno['idpes_mae']) {
-            $pessoaMae = new clsPessoaFj($pessoaAluno['idpes_mae']);
-            $pessoaMae = $pessoaMae->detalhe();
-            $nome = $pessoaMae['nome'];
-        }
-
-        return $nome;
-    }
-
-    protected function tryLoadAlunoInepId($alunoId)
-    {
-        $dataMapper = new Educacenso_Model_AlunoDataMapper();
-
-        try {
-            $alunoInep = $dataMapper->find(['cod_aluno' => $alunoId]);
-            $id = $alunoInep->alunoInep;
-        } catch (Exception $e) {
-            $id = '';
-        }
-
-        return $id;
     }
 }
 

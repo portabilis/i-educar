@@ -43,4 +43,23 @@ class NotificationService
 
         event(new NotificationEvent($notification, DB::getDefaultConnection()));
     }
+
+    /**
+     * Envia uma notificação para todos os usuários do nível informado por parâmetro
+     *
+     * @param $level
+     * @param $text
+     * @param $link
+     * @param $type
+     */
+    public function createByUserLevel($level, $text, $link, $type)
+    {
+        $users = LegacyUser::whereHas('type', function($typeQuery) use ($level) {
+            $typeQuery->where('nivel', $level);
+        })->get();
+
+        foreach ($users as $user) {
+            $this->createByUser($user->getKey(), $text, $link, $type);
+        }
+    }
 }

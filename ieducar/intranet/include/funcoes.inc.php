@@ -84,57 +84,6 @@ function limpa_acentos( $str_nome )
   return $str_nome;
 }
 
-function transforma_minusculo($str_nome)
-{
-  $nome = mb_strtolower($str_nome);
-  $arrayNome = explode(" ", $nome);
-  $nome = '';
-
-  foreach ($arrayNome as $parte) {
-    if ($parte != 'de' && $parte != 'da' && $parte != 'dos' && $parte != 'do' &&
-      $parte != 'das' && $parte != 'e') {
-      $nome .= mb_strtoupper(mb_substr($parte, 0, 1)) . mb_substr($parte, 1) . ' ';
-    }
-    else {
-      $nome .= $parte . ' ';
-    }
-  }
-
-  $procura1   = array('Á', 'É', 'Í', 'Ó', 'Ú', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Ä', 'Ë', 'Ï', 'Ö', 'Ü', 'Ç', 'Ã', 'Õ', 'Â', 'Ô');
-  $substitui1 = array('á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ì', 'ò', 'ù', 'ä', 'ë', 'ï', 'ö', 'ü', 'ç', 'ã', 'õ', 'â', 'ô');
-
-  $nome = str_replace($procura1, $substitui1, $nome);
-
-  return $nome;
-}
-
-function minimiza_capitaliza($str)
-{
-  $nome = strtolower($str);
-  $arrayNome = explode(' ', $nome);
-  $nome ='';
-  $gruda = '';
-
-  foreach ($arrayNome as $parte) {
-    if ($parte != 'de' && $parte != 'da' && $parte != 'dos' && $parte != 'do' &&
-      $parte != 'das' && $parte != 'e') {
-      $nome .= $gruda . strtoupper(substr($parte,0,1)).substr($parte,1);
-    }
-    else {
-      $nome .= $gruda . $parte;
-    }
-
-    $gruda = ' ';
-  }
-
-  /**
-   * @todo Mais um tratamento de acentos, ver funcoes.inc.php#transforma_minusculo().
-   */
-  $nome = str_replace(array('Ú','Ô','Ç','Á', 'É', 'Í', 'Ó', 'Ã', 'Ê', 'Ï', 'Ö', 'Ü', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Õ'),
-                      array('ú','ô','ç','á', 'é', 'í', 'ó', 'ã', 'ê', 'ï', 'ö', 'ü', 'à', 'è', 'ì', 'ò', 'ù', 'õ'), $nome );
-  return $nome;
-}
-
 /**
  * Formata a data para o formato brasileiro
  *

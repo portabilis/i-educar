@@ -254,8 +254,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         'motocicleta' => array('label' => 'Possui motocicleta?'),
 
-        'computador' => array('label' => 'Possui computador?'),
-
         'geladeira' => array('label' => 'Possui geladeira?'),
 
         'fogao' => array('label' => 'Possui fogão?'),
@@ -268,9 +266,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         'televisao' => array('label' => 'Possui televisão?'),
 
-        'celular' => array('label' => 'Possui celular?'),
-
         'telefone' => array('label' => 'Possui telefone?'),
+
+        'recursos_tecnologicos' => array('label' => 'Possui acesso à recursos tecnológicos?'),
 
         'quant_pessoas' => array('label' => 'Quantidades de pessoas residentes no lar'),
 
@@ -1214,9 +1212,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('motocicleta')), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('motocicleta', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('computador')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('computador', $options);
-
         $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('geladeira')), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('geladeira', $options);
 
@@ -1238,8 +1233,29 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('telefone')), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('telefone', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('celular')), 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->checkbox('celular', $options);
+
+        $obrigarRecursosTecnologicos = (bool)config('legacy.app.alunos.obrigar_recursos_tecnologicos');
+        $this->CampoOculto('obrigar_recursos_tecnologicos', (int) $obrigarRecursosTecnologicos);
+
+        $helperOptions = array('objectName'  => 'recursos_tecnologicos');
+        $recursosTecnologicos = [
+            'Internet' => 'Acesso à internet (em casa)',
+            'Computador' => 'Computador',
+            'Smartphone' => 'Smartphone (celular)',
+            'WhatsApp' => 'WhatsApp',
+            'Nenhum' => 'Nenhum',
+        ];
+
+        $options = [
+            'label' => $this->_getLabel('recursos_tecnologicos'),
+            'size' => 50,
+            'required' => $obrigarRecursosTecnologicos,
+            'options' => [
+                'values' => $this->recursos_tecnologicos,
+                'all_values' => $recursosTecnologicos,
+            ]
+        ];
+        $this->inputsHelper()->multipleSearchCustom('_', $options, $helperOptions);
 
         $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quant_pessoas')), 'size' => 5, 'max_length' => 2, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->integer('quant_pessoas', $options);

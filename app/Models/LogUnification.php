@@ -66,7 +66,7 @@ class LogUnification extends Model
      */
     public function personMain()
     {
-        return $this->belongsTo(Individual::class, 'main_id')
+        return $this->belongsTo(LegacyPerson::class, 'main_id')
             ->where('type', Individual::class);
     }
 

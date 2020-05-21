@@ -118,7 +118,6 @@ class indice extends clsListagem
             foreach ($lst_func as $pessoa) {
                 $ativo = ($pessoa['ativo'] == '1') ? 'Ativo' : 'Inativo';
                 $total = $pessoa['_total'];
-                $pessoa['nome'] = minimiza_capitaliza($pessoa['nome']);
 
                 if ($pessoa['nivel'] == 1) {
                     $nivel = 'Poli-Institucional';

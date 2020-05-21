@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyRegistration;
+use App\Services\GlobalAverageService;
 use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Session;
 
@@ -874,23 +876,27 @@ class clsPmieducarHistoricoEscolar extends Model
         if ($this->sequencial && $this->ref_cod_aluno) {
             $detalhes = $this->detalhe();
 
-            $sql = "SELECT media
-                    FROM modules.media_geral
-                    INNER JOIN modules.nota_aluno ON (nota_aluno.id = media_geral.nota_aluno_id)
-                    WHERE nota_aluno.matricula_id = {$detalhes['ref_cod_matricula']};";
-            $db = new clsBanco();
-            $db->Consulta($sql);
-            $db->ProximoRegistro();
-
-            $mediaGeral = $db->Tupla();
-            $mediaGeral = number_format($mediaGeral[0], 1, '.', ',');
+            $registration = LegacyRegistration::findOrFail($detalhes['ref_cod_matricula']);
+            $service = new GlobalAverageService();
+            $average = $service->getGlobalAverage($registration);
+            $mediaGeral = $this->arredondaNota($registration->cod_matricula, $average, 2);
+            $mediaGeral = number_format($mediaGeral, 1, '.', ',');
 
             $sql = "INSERT INTO pmieducar.historico_disciplinas values ({$sequencial}, {$this->ref_cod_aluno}, {$this->sequencial}, 'Média Geral', {$mediaGeral});";
+            $db = new clsBanco();
             $db->Consulta($sql);
 
             return true;
         } else {
             return null;
         }
+    }
+
+    private function arredondaNota($codMatricula, $nota, $tipoNota) {
+        $regraAvaliacao = App_Model_IedFinder::getRegraAvaliacaoPorMatricula(
+            $codMatricula
+        );
+
+        return $regraAvaliacao->tabelaArredondamento->round($nota, $tipoNota);
     }
 }
