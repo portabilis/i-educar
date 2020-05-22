@@ -495,7 +495,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         foreach ($registrations as $registration) {
             $buscaComponentes = App_Model_IedFinder::getComponentesPorMatricula($registration->getKey(), $this->getComponenteDataMapper(), $this->getComponenteTurmaDataMapper(), null, null, null, null);
             foreach ($buscaComponentes as $componente) {
-                $componentes[$componente->get('id') . '||' . $matricula] = $componente;
+                $componentes[$componente->get('id') . '||' . $registration->getKey()] = $componente;
             }
         }
 
@@ -1080,8 +1080,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $presenca->porcentagemPresencaRegra = $this->getRegraAvaliacaoPorcentagemPresenca();
 
         $presenca->tipoFalta                = $this->getRegraAvaliacaoTipoPresenca();
-        $presenca->cargaHoraria             = $this->getOption('serieCargaHoraria');
-        $presenca->diasLetivos              = $this->getOption('serieDiasLetivos');
+        $presenca->cargaHoraria             = $this->getCargaHoraria($this->getOption('matricula'));
+        $presenca->diasLetivos              = $this->getDiasLetivosHoraria($this->getOption('matricula'));
 
         $presenca->cursoHoraFalta           = $this->getOption('cursoHoraFalta');
         $presenca->componentesCurriculares  = [];
@@ -3271,5 +3271,39 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         return $amountReproved <= $this->getRegraAvaliacaoQtdDisciplinasDependencia();
+    }
+
+    private function getCargaHoraria($registration)
+    {
+        if (!$this->isCyclicRegime()) {
+            return $this->getOption('serieCargaHoraria');
+        }
+
+        /** @var LegacyRegistration[] $registrations */
+        $registrations = app(CyclicRegimeService::class)->getAllRegistrationsOfCycle($registration);
+
+        $cargaHoraria = 0;
+        foreach ($registrations as $registration) {
+            $cargaHoraria += $registration->grade->carga_horaria;
+        }
+
+        return $cargaHoraria;
+    }
+
+    private function getDiasLetivosHoraria($registration)
+    {
+        if (!$this->isCyclicRegime()) {
+            return $this->getOption('serieDiasLetivos');
+        }
+
+       /** @var LegacyRegistration[] $registrations */
+        $registrations = app(CyclicRegimeService::class)->getAllRegistrationsOfCycle($registration);
+
+        $diasLetivos = 0;
+        foreach ($registrations as $registration) {
+            $diasLetivos += $registration->grade->dias_letivos;
+        }
+
+        return $diasLetivos;
     }
 }
