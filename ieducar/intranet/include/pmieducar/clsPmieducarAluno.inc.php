@@ -951,7 +951,7 @@ class clsPmieducarAluno extends Model
                             SELECT 1
                             FROM cadastro.documento cd
                             WHERE cd.idpes = a.ref_idpes
-                            AND cd.rg = '{$int_rg_aluno}'
+                            AND translate(cd.rg, './-', '') = translate('$int_rg_aluno', './-', '')
                         )";
             $whereAnd = ' AND ';
         }
