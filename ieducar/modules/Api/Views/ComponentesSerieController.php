@@ -2,8 +2,10 @@
 
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;
+use App\Models\LegacyGrade;
 use App\Models\LegacySchoolGradeDiscipline;
 use App\Services\CheckPostedDataService;
+use App\Services\iDiarioService;
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
@@ -59,9 +61,13 @@ class ComponentesSerieController extends ApiCoreController
     protected function validaAtualizacao($serieId, $updateInfo)
     {
         $erros = [];
+        $iDiarioService = $this->getIdiarioService();
 
         if ($updateInfo['delete']) {
+            $schoolClass = LegacyGrade::find($serieId)->schoolClass->pluck('cod_turma');
+
             $service = new CheckPostedDataService;
+
             foreach ($updateInfo['delete'] as $componenteId) {
                 $info = Portabilis_Utils_Database::fetchPreparedQuery('
                     SELECT COUNT(cct.*), cc.nome
@@ -90,6 +96,11 @@ class ComponentesSerieController extends ApiCoreController
                     $discipline = LegacyDiscipline::find($componenteId);
                     $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série.', $discipline->nome);
                 }
+
+                if ($iDiarioService && $schoolClass->count() && $iDiarioService->getClassroomsActivityByDiscipline($schoolClass->toArray(), $componenteId)) {
+                    $discipline = LegacyDiscipline::find($componenteId);
+                    $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série no iDiário.', $discipline->nome);
+                }
             }
         }
 
@@ -107,6 +118,12 @@ class ComponentesSerieController extends ApiCoreController
                     if ($hasDataPosted) {
                         $discipline = LegacyDiscipline::find($update['id']);
                         $erros[] = sprintf('Não é possível desvincular o ano %d de "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série e ano.', $ano, $discipline->nome);
+                    }
+
+                    $schoolClass = LegacyGrade::find($serieId)->schoolClass()->where('ano', $ano)->pluck('cod_turma');
+                    if ($iDiarioService && $schoolClass->count() && $iDiarioService->getClassroomsActivityByDiscipline($schoolClass->toArray(), $update['id'])) {
+                        $discipline = LegacyDiscipline::find($update['id']);
+                        $erros[] = sprintf('Não é possível desvincular o ano %d de "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série e ano no iDiário', $ano, $discipline->nome);
                     }
                 }
             }
@@ -403,5 +420,19 @@ SQL;
         }
 
         return $arrayComponentes;
+    }
+
+    /**
+     * Retorna instância do iDiarioService
+     *
+     * @return iDiarioService|null
+     */
+    private function getIdiarioService()
+    {
+        if (iDiarioService::hasIdiarioConfigurations()) {
+            return app(iDiarioService::class);
+        }
+
+        return null;
     }
 }
