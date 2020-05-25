@@ -86,7 +86,7 @@ class indice extends clsListagem
         $this->campoTexto('nome_aluno', 'Nome do aluno', $this->nome_aluno, 50, 255, false);
         $this->campoData('data_nascimento', 'Data de Nascimento', $this->data_nascimento);
         $this->campoCpf('cpf_aluno', 'CPF', $this->cpf_aluno);
-        $this->campoNumero('rg_aluno', 'RG', $this->rg_aluno);
+        $this->campoTexto('rg_aluno', 'RG', $this->rg_aluno);
         $this->campoTexto('nome_pai', 'Nome do Pai', $this->nome_pai, 50, 255);
         $this->campoTexto('nome_mae', 'Nome da Mãe', $this->nome_mae, 50, 255);
         $this->campoTexto('nome_responsavel', 'Nome do Responsável', $this->nome_responsavel, 50, 255);
