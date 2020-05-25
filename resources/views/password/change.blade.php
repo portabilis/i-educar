@@ -2,7 +2,7 @@
 
 @section('content')
     <h2>Alterar senha</h2>
-
+    <p>Para sua segurança, sua senha deverá ser alterada no primeiro acesso</p>
     <form action="{{ route('post-change-password') }}" method="post">
 
         {{csrf_field()}}
@@ -17,10 +17,5 @@
         <input type="password" name="password_confirmation" id="password-confirm">
 
         <button type="submit" class="submit">Entrar</button>
-
-        <div class="remember">
-            <a href="{{ route('login') }}">Fazer login?</a>
-        </div>
-
     </form>
 @endsection
