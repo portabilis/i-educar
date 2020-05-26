@@ -21,7 +21,7 @@ class DefaultPmieducarEscolaLocalizacaoTableSeeder extends Seeder
         ]);
 
         DB::table('pmieducar.escola_localizacao')->insert([
-            'cod_escola_localizacao' => 1,
+            'cod_escola_localizacao' => 2,
             'ref_usuario_cad' => 1,
             'nm_localizacao' => 'Rural',
             'data_cadastro' => now(),

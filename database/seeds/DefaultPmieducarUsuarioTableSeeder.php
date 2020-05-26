@@ -14,6 +14,7 @@ class DefaultPmieducarUsuarioTableSeeder extends Seeder
     {
         DB::table('pmieducar.usuario')->insert([
             'cod_usuario' => 1,
+            'ref_cod_tipo_usuario' => 1,
             'ref_funcionario_cad' => 1,
             'data_cadastro' => now(),
         ]);

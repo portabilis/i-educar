@@ -16,7 +16,6 @@ class DefaultPmieducarTipoUsuarioTableSeeder extends Seeder
             'cod_tipo_usuario' => 1,
             'nm_tipo' => 'Administrador',
             'nivel' => 1,
-            'cod_usuario' => 1,
             'ref_funcionario_cad' => 1,
             'data_cadastro' => now(),
         ]);
