@@ -23,7 +23,7 @@ class MigrateEducacensoDegreeData2020 extends Migration
 
             $degree = EducacensoDegree::where('curso_id', $data[1])->first();
             $degree->curso_id = $data[3];
-            $degree->nome = $data[4];
+            $degree->nome = explode(' - ', $data[4])[0];
             $degree->save();
         }
     }

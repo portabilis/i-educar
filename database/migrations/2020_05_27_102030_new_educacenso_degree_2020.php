@@ -23,7 +23,7 @@ class NewEducacensoDegree2020 extends Migration
 
             EducacensoDegree::create([
                 'curso_id' => $data[1],
-                'nome' => $data[2],
+                'nome' => explode(' - ', $data[2])[0],
                 'classe_id' => $data[0],
                 'user_id' => 1,
                 'created_at' => now(),
