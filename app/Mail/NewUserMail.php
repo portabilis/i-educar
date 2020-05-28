@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\User;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Throwable;
@@ -18,11 +19,6 @@ class NewUserMail extends Mailable
     /**
      * @var string
      */
-    public $login;
-
-    /**
-     * @var string
-     */
     public $password;
 
     /**
@@ -31,19 +27,23 @@ class NewUserMail extends Mailable
     public $url;
 
     /**
+     * @var User
+     */
+    private $user;
+
+    /**
      * Create a new message instance.
      *
-     * @param $login
-     * @param $email
+     * @param User $user
      * @param $password
      * @param null $url
      */
-    public function __construct($login, $email, $password, $url = null)
+    public function __construct($user, $password, $url = null)
     {
-        $this->to($email);
+        $this->to($user->email);
         $this->subject('Bem-vindo ao i-Educar!');
 
-        $this->login = $login;
+        $this->user = $user;
         $this->password = $password;
         $this->url = $url;
     }

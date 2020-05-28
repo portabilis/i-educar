@@ -11,6 +11,7 @@ use App\Models\LegacyPerson;
 use App\Models\LegacyUser;
 use App\Models\LegacyUserType;
 use App\Support\Database\Connections;
+use App\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -156,17 +157,16 @@ class ImportUsersService implements ToCollection
     /**
      * Envia um email informando a senha do usuário
      *
-     * @param $login
-     * @param string $email
+     * @param User $user
      * @param string $password
      */
-    public function sendPasswordEmail($login, $email, $password)
+    public function sendPasswordEmail($user, $password)
     {
         $url = [];
         if (!$this->multiTenant) {
             $url = config('app.url');
         }
 
-        Mail::send(new NewUserMail($login, $email, $password, $url));
+        Mail::send(new NewUserMail($user, $password, $url));
     }
 }
