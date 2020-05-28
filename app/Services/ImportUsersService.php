@@ -63,9 +63,9 @@ class ImportUsersService implements ToCollection
             $password = Str::random(8);
             $login = $row[3];
 
-            $this->createUser($name, $login, $password, $email, $this->forceResetPassword);
-
-            $this->sendPasswordEmail($login, $email, $password);
+            if ($this->createUser($name, $login, $password, $email, $this->forceResetPassword)) {
+                $this->sendPasswordEmail($email, $login, $password, $name);
+            }
 
             $this->output->progressAdvance();
         }
@@ -89,9 +89,14 @@ class ImportUsersService implements ToCollection
             return $this->createUserByConnection($name, $user, $password, $email, $forceResetPassword);
         }
 
+        $userArray = [];
         foreach ($this->getConnections() as $connection) {
-            $this->createUserByConnection($name, $user, $password, $email, $forceResetPassword, $connection);
+            $userArray[] = $this->createUserByConnection($name, $user, $password, $email, $forceResetPassword, $connection);
         }
+
+        $userArray = array_filter($userArray);
+
+        return end($userArray);
     }
 
     /**
@@ -157,16 +162,18 @@ class ImportUsersService implements ToCollection
     /**
      * Envia um email informando a senha do usuário
      *
-     * @param User $user
+     * @param string $email
+     * @param string $username
      * @param string $password
+     * @param $name
      */
-    public function sendPasswordEmail($user, $password)
+    public function sendPasswordEmail($email, $username, $password, $name)
     {
         $url = [];
         if (!$this->multiTenant) {
             $url = config('app.url');
         }
 
-        Mail::send(new NewUserMail($user, $password, $url));
+        Mail::send(new NewUserMail($email, $username, $password, $name, $url));
     }
 }
