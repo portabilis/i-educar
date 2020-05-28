@@ -19,33 +19,46 @@ class NewUserMail extends Mailable
     /**
      * @var string
      */
-    public $password;
-
-    /**
-     * @var string
-     */
     public $url;
 
     /**
      * @var User
      */
-    private $user;
+    public $username;
+
+    /**
+     * @var string
+     */
+    public $password;
+
+    /**
+     * @var string
+     */
+    public $email;
+
+    /**
+     * @var string
+     */
+    public $name;
 
     /**
      * Create a new message instance.
      *
-     * @param User $user
-     * @param $password
-     * @param null $url
+     * @param string $email
+     * @param string $username
+     * @param string $password
+     * @param string $name
+     * @param string|null $url
      */
-    public function __construct($user, $password, $url = null)
+    public function __construct($email, $username, $password, $name, $url = null)
     {
-        $this->to($user->email);
+        $this->to($email);
         $this->subject('Bem-vindo ao i-Educar!');
 
-        $this->user = $user;
+        $this->username = $username;
         $this->password = $password;
         $this->url = $url;
+        $this->name = $name;
     }
 
     /**
