@@ -216,7 +216,7 @@ class indice extends clsListagem
 
     $this->largura = '100%';
 
-    $this->breadcrumb('Listagem de alocações', [
+    $this->breadcrumb('Registro de alocações do servidor', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
   }
