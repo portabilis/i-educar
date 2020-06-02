@@ -21,6 +21,7 @@ use App\Models\LegacySchoolingDegree;
 use App\Models\LegacyStudent;
 use App\Models\StudentInep;
 use App\Services\Educacenso\RegistroImportInterface;
+use App\Services\Educacenso\Version2019\Models\Registro30Model;
 use App\User;
 use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Modules\Educacenso\Model\Escolaridade;
@@ -87,7 +88,7 @@ class Registro30Import implements RegistroImportInterface
      */
     public static function getModel($arrayColumns)
     {
-        $registro = new Registro30();
+        $registro = new Registro30Model();
         $registro->hydrateModel($arrayColumns);
         return $registro;
     }
@@ -222,7 +223,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @param LegacyStudent $person
      */
-    private function createStudentInep($student)
+    protected function createStudentInep($student)
     {
         if (empty($this->model->inepPessoa)) {
             return;
@@ -442,7 +443,7 @@ class Registro30Import implements RegistroImportInterface
         return $legacyCountry ? $legacyCountry->getKey() : null;
     }
 
-    private function createRecursosProvaInep(LegacyStudent $student)
+    protected function createRecursosProvaInep(LegacyStudent $student)
     {
         $arrayRecursos = [];
 
@@ -510,7 +511,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @param LegacyStudent $student
      */
-    private function createCertidaoNascimento(LegacyStudent $student)
+    protected function createCertidaoNascimento(LegacyStudent $student)
     {
         if (empty($this->model->certidaoNascimento)) {
             return;
