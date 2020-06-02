@@ -2,9 +2,10 @@
 
 namespace App\Services\Educacenso\Version2020;
 
+use App\Models\Educacenso\Registro10;
 use App\Models\Educacenso\RegistroEducacenso;
 use App\Models\LegacySchool;
-use App\Models\SchoolInep;
+use App\Services\Educacenso\Version2020\Models\Registro10Model;
 use App\Services\Educacenso\Version2019\Registro10Import as Registro10Import2019;
 
 class Registro10Import extends Registro10Import2019
@@ -19,9 +20,9 @@ class Registro10Import extends Registro10Import2019
      */
     public function import(RegistroEducacenso $model, $year, $user)
     {
-        self::import($model, $year, $user);
+        parent::import($model, $year, $user);
 
-        $schoolInep = $this->getSchool();
+        $schoolInep = parent::getSchool();
 
         if (empty($schoolInep)) {
             return;
@@ -37,9 +38,14 @@ class Registro10Import extends Registro10Import2019
         $school->save();
     }
 
-    private function getSchool()
+    /**
+     * @param $arrayColumns
+     * @return Registro10|RegistroEducacenso
+     */
+    public static function getModel($arrayColumns)
     {
-        return SchoolInep::where('cod_escola_inep', $this->model->codigoInep)->first();
+        $registro = new Registro10Model();
+        $registro->hydrateModel($arrayColumns);
+        return $registro;
     }
-
 }
