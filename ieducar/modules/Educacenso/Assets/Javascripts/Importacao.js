@@ -1,5 +1,5 @@
 $j(document).ready(function(){
-
+  $j('#ano').val('2019')
 });
 
 function acao() {
