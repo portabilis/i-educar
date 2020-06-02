@@ -1226,14 +1226,25 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         // Na última etapa seta situação presença como aprovado ou reprovado.
         if ($etapa == $this->getOption('etapas') || $etapa === 'Rc') {
             $aprovado           = (
-                $presenca->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca() ||
-                $this->getRegraAvaliacaoTipoProgressao() == RegraAvaliacao_Model_TipoProgressao::CONTINUADA
+                $presenca->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca() || $this->regraNaoPermiteReprovarFalta()
             );
             $presenca->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
                 App_Model_MatriculaSituacao::REPROVADO;
         }
 
         return $presenca;
+    }
+
+    /**
+     * Retorna true caso a regra de avaliação não permita reprovarpor falta
+     * Progressão continuada ou Não-continuada somente média
+     *
+     * @return bool
+     */
+    private function regraNaoPermiteReprovarFalta()
+    {
+        return $this->getRegraAvaliacaoTipoProgressao() == RegraAvaliacao_Model_TipoProgressao::CONTINUADA ||
+            $this->getRegraAvaliacaoTipoProgressao() == RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_SOMENTE_MEDIA;
     }
 
     /**
