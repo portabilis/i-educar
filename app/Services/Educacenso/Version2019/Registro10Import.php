@@ -37,15 +37,15 @@ class Registro10Import implements RegistroImportInterface
     /**
      * @var Registro10
      */
-    private $model;
+    protected $model;
     /**
      * @var User
      */
-    private $user;
+    protected $user;
     /**
      * @var int
      */
-    private $year;
+    protected $year;
 
     /**
      * Faz a importação dos dados a partir da linha do arquivo

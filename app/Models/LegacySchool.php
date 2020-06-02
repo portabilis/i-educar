@@ -54,6 +54,8 @@ class LegacySchool extends Model
         'unidade_vinculada_outra_instituicao',
         'inep_escola_sede',
         'codigo_ies',
+        'qtd_vice_diretor',
+        'qtd_orientador_comunitario',
     ];
 
     /**
