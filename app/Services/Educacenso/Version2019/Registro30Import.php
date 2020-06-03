@@ -35,22 +35,22 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @var Registro30
      */
-    private $model;
+    protected $model;
 
     /**
      * @var User
      */
-    private $user;
+    protected $user;
 
     /**
      * @var int
      */
-    private $year;
+    protected $year;
 
     /**
      * @var LegacyInstitution
      */
-    private $institution;
+    protected $institution;
 
     /**
      * Faz a importação dos dados a partir da linha do arquivo
@@ -96,7 +96,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @return LegacyPerson
      */
-    private function getOrCreatePerson()
+    protected function getOrCreatePerson()
     {
         $person = $this->getPerson();
 
@@ -110,7 +110,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @return LegacyPerson|null
      */
-    private function getPerson()
+    protected function getPerson()
     {
         $inepNumber = $this->model->inepPessoa;
 
@@ -211,7 +211,7 @@ class Registro30Import implements RegistroImportInterface
      * @param LegacyPerson $person
      * @return LegacyStudent mixed
      */
-    private function getOrCreateStudent($person)
+    protected function getOrCreateStudent($person)
     {
         return LegacyStudent::firstOrCreate([
             'ref_idpes' => $person->getKey(),
@@ -244,7 +244,7 @@ class Registro30Import implements RegistroImportInterface
      * @param LegacyPerson $person
      * @return Employee
      */
-    private function getOrCreateEmployee($person)
+    protected function getOrCreateEmployee($person)
     {
         return Employee::firstOrCreate([
             'cod_servidor' => $person->getKey(),
@@ -278,7 +278,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @param LegacyPerson $person
      */
-    private function createRace($person)
+    protected function createRace($person)
     {
         if ($person->individual->race()->count()) {
             return;
@@ -311,7 +311,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @param LegacyPerson $person
      */
-    private function createDeficiencies($person)
+    protected function createDeficiencies($person)
     {
         if ($this->model->deficienciaCegueira) {
             $this->createDeficiency($person, Deficiencias::CEGUEIRA);
@@ -544,7 +544,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @param Employee $employee
      */
-    private function storeEmployeeData(Employee $employee)
+    protected function storeEmployeeData(Employee $employee)
     {
         $this->createEmployeeInep($employee);
         $this->createEscolaridade($employee);
