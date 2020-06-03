@@ -24,7 +24,6 @@ INSERT INTO public.menus VALUES (22, 7, 'Movimentações', NULL, NULL, NULL, 2, 
 INSERT INTO public.menus VALUES (23, 7, 'Relatórios', NULL, NULL, NULL, 3, 2, NULL, 999614, 57, true, NULL, NULL);
 INSERT INTO public.menus VALUES (24, 7, 'Documentos', NULL, NULL, NULL, 4, 2, NULL, 999831, 57, true, NULL, NULL);
 INSERT INTO public.menus VALUES (25, 1, 'Cadastros', NULL, NULL, NULL, 1, 2, NULL, 999930, 68, true, NULL, NULL);
-INSERT INTO public.menus VALUES (26, 1, 'Ferramentas', NULL, NULL, NULL, 1, 2, NULL, 999931, 68, true, NULL, NULL);
 INSERT INTO public.menus VALUES (27, 6, 'Cadastros', NULL, NULL, NULL, 1, 2, NULL, 20710, 69, true, NULL, NULL);
 INSERT INTO public.menus VALUES (28, 6, 'Movimentações', NULL, NULL, NULL, 2, 2, NULL, 20711, 69, true, NULL, NULL);
 INSERT INTO public.menus VALUES (29, 6, 'Relatórios', NULL, NULL, NULL, 3, 2, NULL, 20712, 69, true, NULL, NULL);
@@ -88,12 +87,6 @@ INSERT INTO public.menus VALUES (87, 25, 'Países', 'Países', '/intranet/public
 INSERT INTO public.menus VALUES (88, 25, 'Estados', 'Estados', '/intranet/public_uf_lst.php', NULL, 2, 3, 754, 754, 999930, true, NULL, NULL);
 INSERT INTO public.menus VALUES (89, 25, 'Municípios', 'Municípios', '/intranet/public_municipio_lst.php', NULL, 3, 3, 755, 755, 999930, true, NULL, NULL);
 INSERT INTO public.menus VALUES (90, 25, 'Distritos', 'Distritos', '/intranet/public_distrito_lst.php', NULL, 4, 3, 759, 759, 999930, true, NULL, NULL);
-INSERT INTO public.menus VALUES (91, 25, 'Setores', 'Setores', '/intranet/public_setor_lst.php', NULL, 5, 3, 760, 760, 999930, true, NULL, NULL);
-INSERT INTO public.menus VALUES (92, 25, 'Bairros', 'Bairros', '/intranet/public_bairro_lst.php', NULL, 6, 3, 756, 756, 999930, true, NULL, NULL);
-INSERT INTO public.menus VALUES (93, 25, 'Logradouros', 'Logradouros', '/intranet/public_logradouro_lst.php', NULL, 7, 3, 757, 757, 999930, true, NULL, NULL);
-INSERT INTO public.menus VALUES (94, 25, 'CEP', 'CEP', '/intranet/urbano_cep_logradouro_lst.php', NULL, 8, 3, 758, 758, 999930, true, NULL, NULL);
-INSERT INTO public.menus VALUES (95, 26, 'Unificação de bairros', 'Unificação de bairros', '/intranet/educar_unifica_bairro.php', NULL, 1, 3, 761, 761, 999931, true, NULL, NULL);
-INSERT INTO public.menus VALUES (96, 26, 'Unificação de logradouros', 'Unificação de logradouros', '/intranet/educar_unifica_logradouro.php', NULL, 2, 3, 762, 762, 999931, true, NULL, NULL);
 INSERT INTO public.menus VALUES (97, 30, '1ª fase - Matrícula inicial', 'Exportação do educacenso - 1ª fase', '/intranet/educar_exportacao_educacenso.php', NULL, 1, 3, 846, 846, 999932, true, NULL, NULL);
 INSERT INTO public.menus VALUES (98, 31, 'Importação educacenso', 'Importação educacenso', '/intranet/educar_importacao_educacenso.php', NULL, 0, 3, 9998849, 9998849, 9998848, true, NULL, NULL);
 INSERT INTO public.menus VALUES (99, 10, 'Unificações', NULL, NULL, NULL, 1, 3, NULL, 9998877, 9998876, true, NULL, NULL);
@@ -124,8 +117,8 @@ INSERT INTO public.menus VALUES (123, 84, 'Tipos de cor ou raça', 'Tipos de cor
 INSERT INTO public.menus VALUES (124, 84, 'Tipos de deficiência', 'Tipos de deficiência da pessoa', '/intranet/educar_deficiencia_lst.php', NULL, 0, 4, 631, 21170, 999934, true, NULL, NULL);
 INSERT INTO public.menus VALUES (125, 84, 'Tipos de religião', 'Tipos de religião da pessoa', '/intranet/educar_religiao_lst.php', NULL, 0, 4, 579, 21219, 999934, true, NULL, NULL);
 INSERT INTO public.menus VALUES (126, 99, 'Unificação de pessoas', 'Unificação de pessoas', '/intranet/educar_unifica_pessoa.php', NULL, 0, 4, 9998878, 9998878, 9998877, true, NULL, NULL);
-INSERT INTO public.menus VALUES (127, 81, 'Consulta de movimento geral', 'Consulta de movimento geral', '/intranet/educar_consulta_movimento_geral.php', NULL, 0, 4, 9998900, 9998900, 9998890, true, NULL, NULL);
-INSERT INTO public.menus VALUES (128, 81, 'Consulta de movimento mensal', 'Consulta de movimento mensal', '/intranet/educar_consulta_movimento_mensal.php', NULL, 0, 4, 9998910, 9998910, 9998890, true, NULL, NULL);
+INSERT INTO public.menus VALUES (127, 81, 'Consulta de movimento geral', 'Consulta de movimento geral', '/intranet/educar_consulta_movimento_geral.php', NULL, 2, 4, 9998900, 9998900, 9998890, true, NULL, NULL);
+INSERT INTO public.menus VALUES (128, 81, 'Consulta de movimento mensal', 'Consulta de movimento mensal', '/intranet/educar_consulta_movimento_mensal.php', NULL, 3, 4, 9998910, 9998910, 9998890, true, NULL, NULL);
 INSERT INTO public.menus VALUES (129, 113, 'Tipos de ensino', 'Tipos de ensino do curso', '/intranet/educar_tipo_ensino_lst.php', NULL, 0, 5, 558, 21222, 21140, true, NULL, NULL);
 INSERT INTO public.menus VALUES (130, 113, 'Tipos de habilitação', 'Tipos de habilitação do curso', '/intranet/educar_habilitacao_lst.php', NULL, 0, 5, 573, 21208, 21140, true, NULL, NULL);
 INSERT INTO public.menus VALUES (131, 113, 'Tipos de nível ensino', 'Tipos de nível ensino do curso', '/intranet/educar_nivel_ensino_lst.php', NULL, 0, 5, 571, 21224, 21140, true, NULL, NULL);
@@ -168,3 +161,6 @@ INSERT INTO public.menus VALUES (167, 3, 'Permitir lançamento de notas/faltas f
 INSERT INTO public.menus VALUES (168, 3, 'Permitir editar endereço no cadastro de pessoa física', NULL, NULL, NULL, 9999, 2, 999878, 999878, 55, true, NULL, NULL);
 INSERT INTO public.menus VALUES (169, 3, 'Histórico de enturmações da matrícula', NULL, NULL, NULL, 99, 1, 1001, NULL, NULL, true, NULL, NULL);
 INSERT INTO public.menus VALUES (170, 3, 'Desfazer unificação de alunos', NULL, NULL, NULL, 99, 1, 2001, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (230, 31, 'Histórico de importações', NULL, '/educacenso/importacao/historico', NULL, 99, 1, 2004, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (233, 20, 'Exportações', 'Exportações', NULL, NULL, 99, 1, 1020, NULL, NULL, true, NULL, NULL);
+INSERT INTO public.menus VALUES (234, 233, 'Exportação para o SEB', 'Exportação para o SEB', '/exportacao-para-o-seb', NULL, 99, 1, 1021, NULL, NULL, true, NULL, NULL);

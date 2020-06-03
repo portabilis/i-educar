@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW registrations AS
+CREATE OR REPLACE VIEW public.registrations AS
 SELECT
     cod_matricula AS id,
     ref_cod_aluno AS student_id,
