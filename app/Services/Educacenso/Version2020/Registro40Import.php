@@ -72,6 +72,10 @@ class Registro40Import extends Registro40Import2019
     private function getEmployee() : ?Employee
     {
         $inepNumber = $this->model->inepGestor;
+        if (empty($inepNumber)) {
+            return null;
+        }
+
         $employeeInep = EmployeeInep::where('cod_docente_inep', $inepNumber)->first();
 
         if (empty($employeeInep)) {

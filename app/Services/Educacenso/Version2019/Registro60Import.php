@@ -78,6 +78,10 @@ class Registro60Import implements RegistroImportInterface
      */
     private function getSchoolClass(): ?LegacySchoolClass
     {
+        if (empty($this->model->inepTurma)) {
+            return null;
+        }
+        
         return SchoolClassInep::where('cod_turma_inep', $this->model->inepTurma)->first()->schoolClass ?? null;
     }
 
