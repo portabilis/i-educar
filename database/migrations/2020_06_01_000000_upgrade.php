@@ -10,6 +10,7 @@ class Upgrade extends Migration
      */
     protected $files = [
         __DIR__ . '/../upgrade2.3.txt',
+        __DIR__ . '/../migrations/extras/upgrade2.3.txt',
         __DIR__ . '/../../ieducar/modules/Reports/database/upgrade2.3.txt',
     ];
 
@@ -20,18 +21,20 @@ class Upgrade extends Migration
      */
     public function up()
     {
+        DB::table('public.migrations')->truncate();
+
         $counter = 1;
 
         foreach ($this->files as $file) {
             if (file_exists($file) === false) {
                 continue;
             }
-            
+
             $migrations = file($file, FILE_SKIP_EMPTY_LINES);
 
             foreach ($migrations as $migration) {
                 DB::table('public.migrations')->insert([
-                    'migration' => $migration,
+                    'migration' => trim($migration),
                     'batch' => $counter++,
                 ]);
             }
