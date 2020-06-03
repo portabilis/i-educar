@@ -20,18 +20,20 @@ class Upgrade extends Migration
      */
     public function up()
     {
+        DB::table('public.migrations')->truncate();
+
         $counter = 1;
 
         foreach ($this->files as $file) {
             if (file_exists($file) === false) {
                 continue;
             }
-            
+
             $migrations = file($file, FILE_SKIP_EMPTY_LINES);
 
             foreach ($migrations as $migration) {
                 DB::table('public.migrations')->insert([
-                    'migration' => $migration,
+                    'migration' => trim($migration),
                     'batch' => $counter++,
                 ]);
             }
