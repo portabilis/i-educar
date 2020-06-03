@@ -1,14 +1,11 @@
 <?php
 
-use App\Support\Database\WhenDeleted;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class CreatePmieducarAlunoExcluidosTable extends Migration
 {
-    use WhenDeleted;
-
     /**
      * Run the migrations.
      *
