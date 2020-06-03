@@ -62,6 +62,7 @@ class clsPmieducarTurmaTipo extends Model
     public function cadastra()
     {
         if (is_numeric($this->ref_usuario_cad) && is_string($this->nm_tipo) && is_string($this->sgl_tipo) && is_numeric($this->ref_cod_instituicao)) {
+
             $db = new clsBanco();
 
             $campos = '';
@@ -74,6 +75,7 @@ class clsPmieducarTurmaTipo extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_tipo)) {
+                $this->nm_tipo = $db->escapeString($this->nm_tipo);
                 $campos .= "{$gruda}nm_tipo";
                 $valores .= "{$gruda}'{$this->nm_tipo}'";
                 $gruda = ', ';
@@ -123,6 +125,7 @@ class clsPmieducarTurmaTipo extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_tipo)) {
+                $this->nm_tipo = $db->escapeString($this->nm_tipo);
                 $set .= "{$gruda}nm_tipo = '{$this->nm_tipo}'";
                 $gruda = ', ';
             }
@@ -162,6 +165,8 @@ class clsPmieducarTurmaTipo extends Model
      */
     public function lista($int_cod_turma_tipo = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_tipo = null, $str_sgl_tipo = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -180,6 +185,7 @@ class clsPmieducarTurmaTipo extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_tipo)) {
+            $str_nm_tipo = $db->escapeString($str_nm_tipo);
             $filtros .= "{$whereAnd} nm_tipo LIKE '%{$str_nm_tipo}%'";
             $whereAnd = ' AND ';
         }
@@ -215,7 +221,6 @@ class clsPmieducarTurmaTipo extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

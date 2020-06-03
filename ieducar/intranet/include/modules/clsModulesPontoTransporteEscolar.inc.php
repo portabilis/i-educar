@@ -53,6 +53,7 @@ class clsModulesPontoTransporteEscolar extends Model
             $gruda = '';
 
             if (is_string($this->descricao)) {
+                $this->descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
                 $valores .= "{$gruda}'{$this->descricao}'";
                 $gruda = ', ';
@@ -83,6 +84,7 @@ class clsModulesPontoTransporteEscolar extends Model
             }
 
             if (is_string($this->complemento)) {
+                $this->complemento = $db->escapeString($this->complemento);
                 $campos .= "{$gruda}complemento";
                 $valores .= "{$gruda}'{$this->complemento}'";
                 $gruda = ', ';
@@ -129,6 +131,7 @@ class clsModulesPontoTransporteEscolar extends Model
             $gruda = '';
 
             if (is_string($this->descricao)) {
+                $this->descricao = $db->escapeString($this->descricao);
                 $set .= "{$gruda}descricao = '{$this->descricao}'";
                 $gruda = ', ';
             }
@@ -149,6 +152,7 @@ class clsModulesPontoTransporteEscolar extends Model
             }
 
             if (is_string($this->complemento)) {
+                $this->complemento = $db->escapeString($this->complemento);
                 $set .= "{$gruda}complemento = '{$this->complemento}'";
                 $gruda = ', ';
             }
@@ -188,6 +192,8 @@ class clsModulesPontoTransporteEscolar extends Model
      */
     public function lista($cod_ponto_transporte_escolar = null, $descricao = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista},
 
               (SELECT l.nome FROM public.logradouro l WHERE l.idlog = ponto_transporte_escolar.idlog) as logradouro,
@@ -223,11 +229,11 @@ class clsModulesPontoTransporteEscolar extends Model
         }
 
         if (is_string($descricao)) {
+            $descricao = $db->escapeString($descricao);
             $filtros .= "{$whereAnd} translate(upper(descricao),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$descricao}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista)) + 2;
         $resultado = [];
 

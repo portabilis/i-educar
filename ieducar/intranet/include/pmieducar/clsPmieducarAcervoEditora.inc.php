@@ -117,6 +117,7 @@ class clsPmieducarAcervoEditora extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_editora)) {
+                $this->nm_editora = $db->escapeString($this->nm_editora);
                 $campos .= "{$gruda}nm_editora";
                 $valores .= "{$gruda}'{$this->nm_editora}'";
                 $gruda = ', ';
@@ -127,11 +128,13 @@ class clsPmieducarAcervoEditora extends Model
                 $gruda = ', ';
             }
             if (is_string($this->cidade)) {
+                $this->cidade = $db->escapeString($this->cidade);
                 $campos .= "{$gruda}cidade";
                 $valores .= "{$gruda}'{$this->cidade}'";
                 $gruda = ', ';
             }
             if (is_string($this->bairro)) {
+                $this->bairro = $db->escapeString($this->bairro);
                 $campos .= "{$gruda}bairro";
                 $valores .= "{$gruda}'{$this->bairro}'";
                 $gruda = ', ';
@@ -213,6 +216,7 @@ class clsPmieducarAcervoEditora extends Model
             }
 
             if (is_string($this->nm_editora)) {
+                $this->nm_editora = $db->escapeString($this->nm_editora);
                 $set .= "{$gruda}nm_editora = '{$this->nm_editora}'";
                 $gruda = ', ';
             }
@@ -221,10 +225,12 @@ class clsPmieducarAcervoEditora extends Model
                 $gruda = ', ';
             }
             if (is_string($this->cidade)) {
+                $this->cidade = $db->escapeString($this->cidade);
                 $set .= "{$gruda}cidade = '{$this->cidade}'";
                 $gruda = ', ';
             }
             if (is_string($this->bairro)) {
+                $this->bairro = $db->escapeString($this->bairro);
                 $set .= "{$gruda}bairro = '{$this->bairro}'";
                 $gruda = ', ';
             }
@@ -276,6 +282,8 @@ class clsPmieducarAcervoEditora extends Model
      */
     public function lista($int_cod_acervo_editora = null, $int_ref_usuario_cad = null, $int_ref_usuario_exc = null, $str_ref_idtlog = null, $str_ref_sigla_uf = null, $str_nm_editora = null, $int_cep = null, $str_cidade = null, $str_bairro = null, $str_logradouro = null, $int_numero = null, $int_telefone = null, $int_ddd_telefone = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_biblioteca = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -302,6 +310,7 @@ class clsPmieducarAcervoEditora extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_editora)) {
+            $str_nm_editora = $db->escapeString($str_nm_editora);
             $filtros .= "{$whereAnd} nm_editora LIKE '%{$str_nm_editora}%'";
             $whereAnd = ' AND ';
         }
@@ -310,6 +319,7 @@ class clsPmieducarAcervoEditora extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_cidade)) {
+            $str_cidade = $db->escapeString($str_cidade);
             $filtros .= "{$whereAnd} cidade LIKE '%{$str_cidade}%'";
             $whereAnd = ' AND ';
         }
@@ -365,7 +375,6 @@ class clsPmieducarAcervoEditora extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

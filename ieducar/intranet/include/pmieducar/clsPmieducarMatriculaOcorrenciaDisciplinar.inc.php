@@ -87,6 +87,7 @@ class clsPmieducarMatriculaOcorrenciaDisciplinar extends Model
                 $gruda = ', ';
             }
             if (is_string($this->observacao)) {
+                $this->observacao = $db->escapeString($this->observacao);
                 $campos .= "{$gruda}observacao";
                 $valores .= "{$gruda}'{$this->observacao}'";
                 $gruda = ', ';
@@ -145,6 +146,7 @@ class clsPmieducarMatriculaOcorrenciaDisciplinar extends Model
                 $gruda = ', ';
             }
             if (is_string($this->observacao)) {
+                $this->observacao = $db->escapeString($this->observacao);
                 $set .= "{$gruda}observacao = '{$this->observacao}'";
                 $gruda = ', ';
             }

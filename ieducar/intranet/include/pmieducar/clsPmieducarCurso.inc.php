@@ -183,6 +183,7 @@ class clsPmieducarCurso extends Model
             }
 
             if (is_string($this->nm_curso)) {
+                $this->nm_curso = $db->escapeString($this->nm_curso);
                 $campos .= "{$gruda}nm_curso";
                 $valores .= "{$gruda}'{$this->nm_curso}'";
                 $gruda = ', ';
@@ -302,6 +303,7 @@ class clsPmieducarCurso extends Model
             }
 
             if (is_string($this->nm_curso)) {
+                $this->nm_curso = $db->escapeString($this->nm_curso);
                 $set .= "{$gruda}nm_curso = '{$this->nm_curso}'";
                 $gruda = ', ';
             }
@@ -427,6 +429,8 @@ class clsPmieducarCurso extends Model
         $int_hora_falta = null,
         $bool_avaliacao_globalizada = null
     ) {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -458,6 +462,7 @@ class clsPmieducarCurso extends Model
         }
 
         if (is_string($str_nm_curso)) {
+            $str_nm_curso = $db->escapeString($str_nm_curso);
             $filtros .= "{$whereAnd} translate(upper(nm_curso),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_curso}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
         }
@@ -540,7 +545,6 @@ class clsPmieducarCurso extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

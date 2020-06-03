@@ -132,6 +132,7 @@ class clsPmieducarBiblioteca extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_biblioteca)) {
+                $this->nm_biblioteca = $db->escapeString($this->nm_biblioteca);
                 $campos .= "{$gruda}nm_biblioteca";
                 $valores .= "{$gruda}'{$this->nm_biblioteca}'";
                 $gruda = ', ';
@@ -208,6 +209,7 @@ class clsPmieducarBiblioteca extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_biblioteca)) {
+                $this->nm_biblioteca = $db->escapeString($this->nm_biblioteca);
                 $set .= "{$gruda}nm_biblioteca = '{$this->nm_biblioteca}'";
                 $gruda = ', ';
             }
@@ -283,6 +285,8 @@ class clsPmieducarBiblioteca extends Model
      */
     public function lista($int_cod_biblioteca = null, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $str_nm_biblioteca = null, $int_valor_multa = null, $int_max_emprestimo = null, $int_valor_maximo_multa = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_requisita_senha = null, $int_ativo = null, $int_dias_espera = null, $in_biblioteca = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -307,6 +311,7 @@ class clsPmieducarBiblioteca extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_biblioteca)) {
+            $str_nm_biblioteca = $db->escapeString($str_nm_biblioteca);
             $filtros .= "{$whereAnd} nm_biblioteca LIKE '%{$str_nm_biblioteca}%'";
             $whereAnd = ' AND ';
         }
@@ -359,7 +364,6 @@ class clsPmieducarBiblioteca extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

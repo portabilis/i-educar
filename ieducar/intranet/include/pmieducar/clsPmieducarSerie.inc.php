@@ -202,6 +202,7 @@ class clsPmieducarSerie extends Model
             }
 
             if (is_string($this->nm_serie)) {
+                $this->nm_serie = $db->escapeString($this->nm_serie);
                 $campos[] = 'nm_serie';
                 $valores[] = "'{$this->nm_serie}'";
             }
@@ -321,6 +322,7 @@ class clsPmieducarSerie extends Model
             }
 
             if (is_string($this->nm_serie)) {
+                $this->nm_serie = $db->escapeString($this->nm_serie);
                 $set[] = "nm_serie = '{$this->nm_serie}'";
             }
 
@@ -439,6 +441,7 @@ class clsPmieducarSerie extends Model
         $int_idade_ideal = null,
         $ano = null
     ) {
+        $db = new clsBanco();
         $sql = "SELECT {$this->_campos_lista}, c.ref_cod_instituicao FROM {$this->_tabela} s, {$this->_schema}curso c";
 
         $filtros = [' WHERE s.ref_cod_curso = c.cod_curso'];
@@ -460,6 +463,7 @@ class clsPmieducarSerie extends Model
         }
 
         if (is_string($str_nm_serie)) {
+            $str_nm_serie = $db->escapeString($str_nm_serie);
             $filtros[] = "translate(upper(s.nm_serie),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_serie}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
         }
 
@@ -541,7 +545,6 @@ class clsPmieducarSerie extends Model
                                           AND {$ano} = ANY(es.anos_letivos) ";
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
         $filtros = join(' AND ', $filtros);

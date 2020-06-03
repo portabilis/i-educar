@@ -79,11 +79,13 @@ class clsPmieducarExemplarTipo extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_tipo)) {
+                $this->nm_tipo = $db->escapeString($this->nm_tipo);
                 $campos .= "{$gruda}nm_tipo";
                 $valores .= "{$gruda}'{$this->nm_tipo}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
+                $this->descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
                 $valores .= "{$gruda}'{$this->descricao}'";
                 $gruda = ', ';
@@ -127,10 +129,12 @@ class clsPmieducarExemplarTipo extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_tipo)) {
+                $this->nm_tipo = $db->escapeString($this->nm_tipo);
                 $set .= "{$gruda}nm_tipo = '{$this->nm_tipo}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
+                $this->descricao = $db->escapeString($this->descricao);
                 $set .= "{$gruda}descricao = '{$this->descricao}'";
                 $gruda = ', ';
             }
@@ -162,6 +166,8 @@ class clsPmieducarExemplarTipo extends Model
      */
     public function lista($int_cod_exemplar_tipo = null, $int_ref_cod_biblioteca = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_tipo = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista}, b.ref_cod_instituicao, b.ref_cod_escola FROM {$this->_tabela} et, {$this->_schema}biblioteca b";
 
         $whereAnd = ' AND ';
@@ -184,10 +190,12 @@ class clsPmieducarExemplarTipo extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_tipo)) {
+            $str_nm_tipo = $db->escapeString($str_nm_tipo);
             $filtros .= "{$whereAnd} et.nm_tipo LIKE '%{$str_nm_tipo}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_descricao)) {
+            $str_descricao = $db->escapeString($str_descricao);
             $filtros .= "{$whereAnd} et.descricao LIKE '%{$str_descricao}%'";
             $whereAnd = ' AND ';
         }
@@ -223,7 +231,6 @@ class clsPmieducarExemplarTipo extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

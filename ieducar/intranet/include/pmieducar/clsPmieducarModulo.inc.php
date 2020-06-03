@@ -113,6 +113,8 @@ class clsPmieducarModulo extends Model
             && is_numeric($this->num_etapas)
         ) {
             $db = new clsBanco();
+            $str_nm_tipo = $db->escapeString($this->nm_tipo);
+            $str_desc = $db->escapeString($this->descricao);
 
             $campos = [];
             $valores = [];
@@ -122,14 +124,14 @@ class clsPmieducarModulo extends Model
                 $valores[] = "'{$this->ref_usuario_cad}'";
             }
 
-            if (is_string($this->nm_tipo)) {
+            if (is_string($str_nm_tipo)) {
                 $campos[] = 'nm_tipo';
-                $valores[] = "'{$this->nm_tipo}'";
+                $valores[] = "'{$str_nm_tipo}'";
             }
 
-            if (is_string($this->descricao)) {
+            if (is_string($str_desc)) {
                 $campos[] = 'descricao';
-                $valores[] = "'{$this->descricao}'";
+                $valores[] = "'{$str_desc}'";
             }
             if (is_numeric($this->num_meses)) {
                 $campos[] = 'num_meses';
@@ -177,6 +179,9 @@ class clsPmieducarModulo extends Model
     {
         if (is_numeric($this->cod_modulo) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $str_nm_tipo = $db->escapeString($this->nm_tipo);
+            $str_desc = $db->escapeString($this->descricao);
+
             $set = [];
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -187,12 +192,12 @@ class clsPmieducarModulo extends Model
                 $set[] = "ref_usuario_cad = '{$this->ref_usuario_cad}'";
             }
 
-            if (is_string($this->nm_tipo)) {
-                $set[] = "nm_tipo = '{$this->nm_tipo}'";
+            if (is_string($str_nm_tipo)) {
+                $set[] = "nm_tipo = '{$str_nm_tipo}'";
             }
 
-            if (is_string($this->descricao)) {
-                $set[] = "descricao = '{$this->descricao}'";
+            if (is_string($str_desc)) {
+                $set[] = "descricao = '{$str_desc}'";
             }
 
             if (is_numeric($this->num_meses)) {
@@ -260,6 +265,8 @@ class clsPmieducarModulo extends Model
         $int_ref_cod_instituicao = null,
         $num_etapas = null
     ) {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} WHERE ";
         $filtros = [];
 
@@ -276,7 +283,8 @@ class clsPmieducarModulo extends Model
         }
 
         if (is_string($str_nm_tipo)) {
-            $filtros[] = "nm_tipo LIKE '%{$str_nm_tipo}%'";
+            $nm_tipo_str = $db->escapeString($str_nm_tipo);
+            $filtros[] = "nm_tipo LIKE '%{$nm_tipo_str}%'";
         }
 
         if (is_string($str_descricao)) {
@@ -325,7 +333,6 @@ class clsPmieducarModulo extends Model
             return false;
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
         $filtros = join(' AND ', $filtros);

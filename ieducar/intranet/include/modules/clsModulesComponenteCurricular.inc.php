@@ -34,6 +34,8 @@ class clsModulesComponenteCurricular extends Model
      */
     public function lista($instituicao_id = null, $nome = null, $abreviatura = null, $tipo_base = null, $area_conhecimento_id = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista}, ac.nome as area_conhecimento
               FROM {$this->_tabela} cc
               INNER JOIN modules.area_conhecimento ac ON cc.area_conhecimento_id = ac.id ";
@@ -46,10 +48,12 @@ class clsModulesComponenteCurricular extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($nome)) {
+            $nome = $db->escapeString($nome);
             $filtros .= "{$whereAnd} translate(upper(cc.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
         }
         if (is_string($abreviatura)) {
+            $abreviatura = $db->escapeString($abreviatura);
             $filtros .= "{$whereAnd} cc.abreviatura LIKE '%{$abreviatura}%'";
             $whereAnd = ' AND ';
         }
@@ -66,7 +70,6 @@ class clsModulesComponenteCurricular extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

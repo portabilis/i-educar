@@ -57,6 +57,7 @@ class clsJuridica
             $campos = '';
             $valores = '';
             if ($this->fantasia) {
+                $this->fantasia = $db->escapeString($this->fantasia);
                 $campos .= ', fantasia';
                 $valores .= ", '$this->fantasia'";
             }
@@ -90,9 +91,12 @@ class clsJuridica
      */
     public function edita()
     {
+        $db = new clsBanco();
+
         if (is_numeric($this->idpes) && is_numeric($this->idpes_rev)) {
             $set = [];
-            if (is_string($this->fantasia)) {
+            if (is_string($this->fantasia)){
+                $this->fantasia = $db->escapeString($this->fantasia);
                 $set[] = " fantasia = '$this->fantasia' ";
             }
 
@@ -120,7 +124,6 @@ class clsJuridica
 
             if ($set) {
                 $campos = implode(', ', $set);
-                $db = new clsBanco();
                 $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->schema}.{$this->tabela} SET $campos WHERE idpes = '$this->idpes' ");
 

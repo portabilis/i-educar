@@ -72,6 +72,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
             }
 
             if (is_string($this->observacao)) {
+                $this->observacao = $db->escapeString($this->observacao);
                 $campos .= "{$gruda}observacao";
                 $valores .= "{$gruda}'{$this->observacao}'";
                 $gruda = ', ';
@@ -115,6 +116,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
             }
 
             if (is_string($this->observacao)) {
+                $this->observacao = $db->escapeString($this->observacao);
                 $set .= "{$gruda}observacao = '{$this->observacao}'";
                 $gruda = ', ';
             }
@@ -143,6 +145,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
         $nm_idpes = null,
         $nm_resp_idpes = null
     ) {
+        $db = new Clsbanco;
         $sql = "SELECT {$this->_campos_lista}, (
           SELECT
             nome
@@ -178,6 +181,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
         }
 
         if (is_string($nm_idpes)) {
+            $nm_idpes = $db->escapeString($nm_idpes);
             $filtros .= "
         {$whereAnd} exists (
           SELECT
@@ -193,6 +197,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
         }
 
         if (is_string($nm_resp_idpes)) {
+            $nm_resp_idpes = $db->escapeString($nm_resp_idpes);
             $filtros .= "
         {$whereAnd} exists (
           SELECT

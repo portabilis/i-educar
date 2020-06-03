@@ -59,6 +59,7 @@ class clsPmiEducarAbandonoTipo extends Model
     {
         if (is_numeric($this->ref_usuario_cad) && is_string($this->nome) && is_numeric($this->ref_cod_instituicao)) {
             $db = new clsBanco();
+            $nome_str = $db->escapeString($this->nome);
 
             $campos = '';
             $valores = '';
@@ -69,9 +70,9 @@ class clsPmiEducarAbandonoTipo extends Model
                 $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
                 $gruda = ', ';
             }
-            if (is_string($this->nome)) {
+            if (is_string($nome_str)) {
                 $campos .= "{$gruda}nome";
-                $valores .= "{$gruda}'{$this->nome}'";
+                $valores .= "{$gruda}'{$nome_str}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -103,6 +104,7 @@ class clsPmiEducarAbandonoTipo extends Model
     {
         if (is_numeric($this->cod_abandono_tipo) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $nome_str = $db->escapeString($this->nome);
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -113,8 +115,8 @@ class clsPmiEducarAbandonoTipo extends Model
                 $set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
                 $gruda = ', ';
             }
-            if (is_string($this->nome)) {
-                $set .= "{$gruda}nome = '{$this->nome}'";
+            if (is_string($nome_str)) {
+                $set .= "{$gruda}nome = '{$nome_str}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -149,6 +151,7 @@ class clsPmiEducarAbandonoTipo extends Model
      */
     public function lista($int_cod_abandono_tipo = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nome = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null)
     {
+        $db = new clsBanco();
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} tt";
 
         $whereAnd = ' WHERE ';
@@ -167,7 +170,8 @@ class clsPmiEducarAbandonoTipo extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nome)) {
-            $filtros .= "{$whereAnd} tt.nome LIKE '%{$str_nome}%'";
+            $nome_str = $db->escapeString($str_nome);
+            $filtros .= "{$whereAnd} tt.nome LIKE '%{$nome_str}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_cadastro_ini)) {
@@ -198,7 +202,6 @@ class clsPmiEducarAbandonoTipo extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

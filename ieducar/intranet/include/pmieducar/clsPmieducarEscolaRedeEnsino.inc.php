@@ -59,6 +59,7 @@ class clsPmieducarEscolaRedeEnsino extends Model
     {
         if (is_numeric($this->ref_usuario_cad) && is_string($this->nm_rede) && is_numeric($this->ref_cod_instituicao)) {
             $db = new clsBanco();
+            $nm_rede_str = $db->escapeString($this->nm_rede);
 
             $campos = '';
             $valores = '';
@@ -69,9 +70,9 @@ class clsPmieducarEscolaRedeEnsino extends Model
                 $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
                 $gruda = ', ';
             }
-            if (is_string($this->nm_rede)) {
+            if (is_string($nm_rede_str)) {
                 $campos .= "{$gruda}nm_rede";
-                $valores .= "{$gruda}'{$this->nm_rede}'";
+                $valores .= "{$gruda}'{$nm_rede_str}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -103,6 +104,7 @@ class clsPmieducarEscolaRedeEnsino extends Model
     {
         if (is_numeric($this->cod_escola_rede_ensino) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $nm_rede_str = $db->escapeString($this->nm_rede);
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -113,8 +115,8 @@ class clsPmieducarEscolaRedeEnsino extends Model
                 $set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
                 $gruda = ', ';
             }
-            if (is_string($this->nm_rede)) {
-                $set .= "{$gruda}nm_rede = '{$this->nm_rede}'";
+            if (is_string($nm_rede_str)) {
+                $set .= "{$gruda}nm_rede = '{$nm_rede_str}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -149,6 +151,8 @@ class clsPmieducarEscolaRedeEnsino extends Model
      */
     public function lista($int_cod_escola_rede_ensino = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_rede = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -167,7 +171,8 @@ class clsPmieducarEscolaRedeEnsino extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_rede)) {
-            $filtros .= "{$whereAnd} nm_rede LIKE '%{$str_nm_rede}%'";
+            $nm_rede_str = $db->escapeString($str_nm_rede);
+            $filtros .= "{$whereAnd} nm_rede LIKE '%{$nm_rede_str}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_cadastro_ini)) {
@@ -198,7 +203,6 @@ class clsPmieducarEscolaRedeEnsino extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

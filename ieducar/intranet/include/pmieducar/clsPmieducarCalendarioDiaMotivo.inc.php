@@ -189,6 +189,8 @@ class clsPmieducarCalendarioDiaMotivo extends Model
      */
     public function lista($int_cod_calendario_dia_motivo = null, $int_ref_cod_escola = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_sigla = null, $str_descricao = null, $str_tipo = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $str_nm_motivo = null, $int_ref_cod_instituicao = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista}, e.ref_cod_instituicao FROM {$this->_tabela } cdm, {$this->_schema}escola e";
 
         $filtros = ' WHERE cdm.ref_cod_escola = e.cod_escola';
@@ -252,7 +254,8 @@ class clsPmieducarCalendarioDiaMotivo extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_motivo)) {
-            $filtros .= "{$whereAnd} cdm.nm_motivo LIKE '%{$str_nm_motivo}%'";
+            $nm_motivo_str = $db->escapeString($str_nm_motivo);
+            $filtros .= "{$whereAnd} cdm.nm_motivo LIKE '%{$nm_motivo_str}%'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_cod_instituicao)) {
@@ -260,7 +263,7 @@ class clsPmieducarCalendarioDiaMotivo extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
+
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

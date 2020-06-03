@@ -74,11 +74,13 @@ class clsPmieducarAcervoAssunto extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_assunto)) {
+                $this->nm_assunto = $db->escapeString($this->nm_assunto);
                 $campos .= "{$gruda}nm_assunto";
                 $valores .= "{$gruda}'{$this->nm_assunto}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
+                $this->descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
                 $valores .= "{$gruda}'{$this->descricao}'";
                 $gruda = ', ';
@@ -123,10 +125,12 @@ class clsPmieducarAcervoAssunto extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_assunto)) {
+                $this->nm_assunto = $db->escapeString($this->nm_assunto);
                 $set .= "{$gruda}nm_assunto = '{$this->nm_assunto}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
+                $this->descricao = $db->escapeString($this->descricao);
                 $set .= "{$gruda}descricao = '{$this->descricao}'";
                 $gruda = ', ';
             }
@@ -162,6 +166,8 @@ class clsPmieducarAcervoAssunto extends Model
      */
     public function lista($int_cod_acervo_assunto = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_assunto = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_biblioteca = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -180,10 +186,12 @@ class clsPmieducarAcervoAssunto extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_assunto)) {
+            $str_nm_assunto = $db->escapeString($str_nm_assunto);
             $filtros .= "{$whereAnd} nm_assunto LIKE '%{$str_nm_assunto}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_descricao)) {
+            $str_descricao = $db->escapeString($str_descricao);
             $filtros .= "{$whereAnd} descricao LIKE '%{$str_descricao}%'";
             $whereAnd = ' AND ';
         }
@@ -219,7 +227,6 @@ class clsPmieducarAcervoAssunto extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

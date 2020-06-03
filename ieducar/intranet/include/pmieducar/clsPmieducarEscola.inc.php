@@ -327,6 +327,7 @@ class clsPmieducarEscola extends Model
             }
 
             if (is_string($this->sigla)) {
+                $this->sigla = $db->escapeString($this->sigla);
                 $campos .= "{$gruda}sigla";
                 $valores .= "{$gruda}'{$this->sigla}'";
                 $gruda = ', ';
@@ -1309,6 +1310,7 @@ class clsPmieducarEscola extends Model
             }
 
             if (is_string($this->sigla)) {
+                $this->sigla = $db->escapeString($this->sigla);
                 $set .= "{$gruda}sigla = '{$this->sigla}'";
                 $gruda = ', ';
             }

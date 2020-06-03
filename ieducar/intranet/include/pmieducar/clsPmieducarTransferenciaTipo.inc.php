@@ -63,6 +63,9 @@ class clsPmieducarTransferenciaTipo extends Model
     {
         if (is_numeric($this->ref_usuario_cad) && is_string($this->nm_tipo) && is_numeric($this->ref_cod_instituicao)) {
             $db = new clsBanco();
+            $nm_tipo_str = $db->escapeString($this->nm_tipo);
+            $desc_str = $db->escapeString($this->desc_tipo);
+
 
             $campos = '';
             $valores = '';
@@ -73,14 +76,14 @@ class clsPmieducarTransferenciaTipo extends Model
                 $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
                 $gruda = ', ';
             }
-            if (is_string($this->nm_tipo)) {
+            if (is_string($nm_tipo_str)) {
                 $campos .= "{$gruda}nm_tipo";
-                $valores .= "{$gruda}'{$this->nm_tipo}'";
+                $valores .= "{$gruda}'{$nm_tipo_str}'";
                 $gruda = ', ';
             }
-            if (is_string($this->desc_tipo)) {
+            if (is_string($desc_str)) {
                 $campos .= "{$gruda}desc_tipo";
-                $valores .= "{$gruda}'{$this->desc_tipo}'";
+                $valores .= "{$gruda}'{$desc_str}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -112,6 +115,9 @@ class clsPmieducarTransferenciaTipo extends Model
     {
         if (is_numeric($this->cod_transferencia_tipo) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $nm_tipo_str = $db->escapeString($this->nm_tipo);
+            $desc_str = $db->escapeString($this->desc_tipo);
+
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -122,12 +128,12 @@ class clsPmieducarTransferenciaTipo extends Model
                 $set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
                 $gruda = ', ';
             }
-            if (is_string($this->nm_tipo)) {
-                $set .= "{$gruda}nm_tipo = '{$this->nm_tipo}'";
+            if (is_string($nm_tipo_str)) {
+                $set .= "{$gruda}nm_tipo = '{$nm_tipo_str}'";
                 $gruda = ', ';
             }
-            if (is_string($this->desc_tipo)) {
-                $set .= "{$gruda}desc_tipo = '{$this->desc_tipo}'";
+            if (is_string($desc_str)) {
+                $set .= "{$gruda}desc_tipo = '{$desc_str}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -162,6 +168,7 @@ class clsPmieducarTransferenciaTipo extends Model
      */
     public function lista($int_cod_transferencia_tipo = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_tipo = null, $str_desc_tipo = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null)
     {
+        $db = new clsBanco();
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} tt";
 
         $whereAnd = ' WHERE ';
@@ -180,7 +187,8 @@ class clsPmieducarTransferenciaTipo extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_tipo)) {
-            $filtros .= "{$whereAnd} tt.nm_tipo LIKE '%{$str_nm_tipo}%'";
+            $nm_tipo_str = $db->escapeString($str_nm_tipo);
+            $filtros .= "{$whereAnd} tt.nm_tipo LIKE '%{$nm_tipo_str}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_desc_tipo)) {
@@ -215,7 +223,6 @@ class clsPmieducarTransferenciaTipo extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

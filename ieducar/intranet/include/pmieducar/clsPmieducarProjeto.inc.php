@@ -38,19 +38,21 @@ class clsPmieducarProjeto extends Model
     {
         if (is_string($this->nome)) {
             $db = new clsBanco();
+            $nome_str = $db->escapeString($this->nome);
+            $observacao_str = $db->escapeString($this->observacao);
 
             $campos = '';
             $valores = '';
             $gruda = '';
 
-            if (is_string($this->nome)) {
+            if (is_string($nome_str)) {
                 $campos .= "{$gruda}nome";
-                $valores .= "{$gruda}'{$this->nome}'";
+                $valores .= "{$gruda}'{$nome_str}'";
                 $gruda = ', ';
             }
-            if (is_string($this->observacao)) {
+            if (is_string($observacao_str)) {
                 $campos .= "{$gruda}observacao";
-                $valores .= "{$gruda}'{$this->observacao}'";
+                $valores .= "{$gruda}'{$observacao_str}'";
                 $gruda = ', ';
             }
 
@@ -71,14 +73,16 @@ class clsPmieducarProjeto extends Model
     {
         if (is_numeric($this->cod_projeto) && is_string($this->nome)) {
             $db = new clsBanco();
+            $nome_str = $db->escapeString($this->nome);
+            $observacao_str = $db->escapeString($this->observacao);
             $set = '';
 
-            if (is_string($this->nome)) {
-                $set .= "{$gruda}nome = '{$this->nome}'";
+            if (is_string($nome_str)) {
+                $set .= "{$gruda}nome = '{$nome_str}'";
                 $gruda = ', ';
             }
-            if (is_string($this->observacao)) {
-                $set .= "{$gruda}observacao = '{$this->observacao}'";
+            if (is_string($observacao_str)) {
+                $set .= "{$gruda}observacao = '{$observacao_str}'";
                 $gruda = ', ';
             }
 
@@ -99,6 +103,7 @@ class clsPmieducarProjeto extends Model
      */
     public function lista($cod_projeto = null, $nome = null)
     {
+        $db = new clsBanco();
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
 
         $filtros = '';
@@ -110,11 +115,11 @@ class clsPmieducarProjeto extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($nome)) {
-            $filtros .= "{$whereAnd} nome ILIKE '%{$nome}%'";
+            $nome_str = $db->escapeString($nome);
+            $filtros .= "{$whereAnd} nome ILIKE '%{$nome_str}%'";
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

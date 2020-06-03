@@ -54,9 +54,9 @@ class clsModulesVeiculo extends Model
 
         $this->pessoa_logada = Session::get('id_pessoa');
 
-        $this->_campos_lista = $this->_todos_campos = ' cod_veiculo, descricao, placa, renavam, chassi, marca, ano_fabricacao, 
-       ano_modelo, passageiros, malha, ref_cod_tipo_veiculo, exclusivo_transporte_escolar, 
-       adaptado_necessidades_especiais, ativo, descricao_inativo, ref_cod_empresa_transporte_escolar, 
+        $this->_campos_lista = $this->_todos_campos = ' cod_veiculo, descricao, placa, renavam, chassi, marca, ano_fabricacao,
+       ano_modelo, passageiros, malha, ref_cod_tipo_veiculo, exclusivo_transporte_escolar,
+       adaptado_necessidades_especiais, ativo, descricao_inativo, ref_cod_empresa_transporte_escolar,
        ref_cod_motorista, observacao';
 
         if (is_numeric($cod_veiculo)) {
@@ -151,6 +151,7 @@ class clsModulesVeiculo extends Model
             }
 
             if (is_string($this->descricao)) {
+                $this->descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
                 $valores .= "{$gruda}'{$this->descricao}'";
                 $gruda = ', ';
@@ -284,6 +285,7 @@ class clsModulesVeiculo extends Model
             }
 
             if (is_string($this->descricao)) {
+                $this->descricao = $db->escapeString($this->descricao);
                 $set .= "{$gruda}descricao = '{$this->descricao}'";
                 $gruda = ', ';
             }
@@ -394,6 +396,8 @@ class clsModulesVeiculo extends Model
         $ativo = null,
         $ref_cod_motorista = null
     ) {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista}, (
           SELECT
             nome
@@ -412,6 +416,7 @@ class clsModulesVeiculo extends Model
         }
 
         if (is_string($descricao)) {
+            $descricao = $db->escapeString($descricao);
             $filtros .= "
         {$whereAnd} translate(upper(descricao),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$descricao}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
 
@@ -456,7 +461,6 @@ class clsModulesVeiculo extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista)) + 2;
         $resultado = [];
 

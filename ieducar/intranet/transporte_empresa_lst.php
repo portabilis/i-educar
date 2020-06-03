@@ -131,7 +131,7 @@ class indice extends clsListagem
 
         if($obj_permissao->permissao_cadastra(21235, $this->pessoa_logada,7,null,true))
         {
-            $this->acao = "go(\"../module/TransporteEscolar/Empresa\")";
+            $this->acao = "go(\"../module/TransporteEscolar/    \")";
             $this->nome_acao = "Novo";
         }
 

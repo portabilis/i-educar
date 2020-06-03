@@ -31,17 +31,19 @@ class clsPmieducarCategoriaObra extends Model
 
     public function lista($descricao = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
         $whereAnd = ' WHERE ';
 
         if (is_string($descricao)) {
+            $descricao = $db->escapeString($descricao);
             $filtros .= "{$whereAnd} descricao LIKE '%{$descricao}%'";
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -93,11 +95,13 @@ class clsPmieducarCategoriaObra extends Model
             $gruda = '';
 
             if (is_string($this->descricao)) {
+                $this->descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
                 $valores .= "{$gruda}'{$this->descricao}'";
                 $gruda = ', ';
             }
             if (is_string($this->observacoes)) {
+                $this->observacoes = $db->escapeString($this->observacoes);
                 $campos .= "{$gruda}observacoes";
                 $valores .= "{$gruda}'{$this->observacoes}'";
             }
@@ -116,10 +120,12 @@ class clsPmieducarCategoriaObra extends Model
             $db = new clsBanco();
             $set = '';
             if (is_string($this->descricao)) {
+                $this->descricao = $db->escapeString($this->descricao);
                 $set .= "{$gruda}descricao = '{$this->descricao}'";
                 $gruda = ', ';
             }
             if (is_string($this->observacoes)) {
+                $this->observacoes = $db->escapeString($this->observacoes);
                 $set .= "{$gruda}observacoes = '{$this->observacoes}'";
                 $gruda = ', ';
             }
@@ -138,7 +144,7 @@ class clsPmieducarCategoriaObra extends Model
         if (is_numeric($this->id)) {
             $db = new clsBanco();
             $getVinculoObra = $db->Consulta("SELECT *
-                                               FROM relacao_categoria_acervo 
+                                               FROM relacao_categoria_acervo
                                               WHERE categoria_id = {$this->id}");
             if (pg_num_rows($getVinculoObra) > 0) {
                 return false;

@@ -111,6 +111,7 @@ class clsModulesPessoaTransporte extends Model
             }
 
             if (is_string($this->observacao)) {
+                $this->observacao = $db->escapeString($this->observacao);
                 $campos .= "{$gruda}observacao";
                 $valores .= "{$gruda}'{$this->observacao}'";
                 $gruda = ', ';
@@ -176,6 +177,7 @@ class clsModulesPessoaTransporte extends Model
             }
 
             if (is_string($this->observacao)) {
+                $this->observacao = $db->escapeString($this->observacao);
                 $set .= "{$gruda}observacao = '{$this->observacao}'";
                 $gruda = ', ';
             }
@@ -213,6 +215,8 @@ class clsModulesPessoaTransporte extends Model
         $nome_destino = null,
         $ano_rota = null
     ) {
+        $db = new clsBanco();
+
         $sql = 'SELECT pt.cod_pessoa_transporte,
                    pt.ref_cod_rota_transporte_escolar,
                    pt.ref_idpes,
@@ -239,7 +243,7 @@ class clsModulesPessoaTransporte extends Model
       LEFT JOIN cadastro.pessoa pd2
         ON (
           pd2.idpes = rte.ref_idpes_destino AND
-          pt.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar    
+          pt.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar
         )
     ";
 
@@ -275,12 +279,14 @@ class clsModulesPessoaTransporte extends Model
         }
 
         if (is_string($nome_pessoa)) {
+            $nome_pessoa = $db->escapeString($nome_pessoa);
             $filtros .= "
         {$whereAnd} translate(upper(p.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome_pessoa}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
         }
 
         if (is_string($nome_destino)) {
+            $nome_destino = $db->escapeString($nome_destino);
             $filtros .= "
         {$whereAnd} (translate(upper(pd.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome_destino}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) OR (translate(upper(pd2.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome_destino}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) ";
             $whereAnd = ' AND ';
@@ -291,7 +297,6 @@ class clsModulesPessoaTransporte extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista)) + 2;
         $resultado = [];
 
@@ -356,7 +361,7 @@ class clsModulesPessoaTransporte extends Model
                 ref_cod_rota_transporte_escolar = cod_rota_transporte_escolar
              ) AS nome_rota, (
               SELECT
-                descricao 
+                descricao
               FROM
                 modules.ponto_transporte_escolar
               WHERE

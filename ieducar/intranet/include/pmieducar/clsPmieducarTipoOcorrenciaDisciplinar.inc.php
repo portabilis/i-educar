@@ -67,6 +67,8 @@ class clsPmieducarTipoOcorrenciaDisciplinar extends Model
     {
         if (is_numeric($this->ref_usuario_cad) && is_string($this->nm_tipo) && is_numeric($this->ref_cod_instituicao)) {
             $db = new clsBanco();
+            $nm_tipo_str = $db->escapeString($this->nm_tipo);
+            $descricao_str = $db->escapeString($this->descricao);
 
             $campos = '';
             $valores = '';
@@ -77,14 +79,14 @@ class clsPmieducarTipoOcorrenciaDisciplinar extends Model
                 $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
                 $gruda = ', ';
             }
-            if (is_string($this->nm_tipo)) {
+            if (is_string($nm_tipo_str)) {
                 $campos .= "{$gruda}nm_tipo";
-                $valores .= "{$gruda}'{$this->nm_tipo}'";
+                $valores .= "{$gruda}'{$nm_tipo_str}'";
                 $gruda = ', ';
             }
-            if (is_string($this->descricao)) {
+            if (is_string($descricao_str)) {
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao_str}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->max_ocorrencias)) {
@@ -121,6 +123,9 @@ class clsPmieducarTipoOcorrenciaDisciplinar extends Model
     {
         if (is_numeric($this->cod_tipo_ocorrencia_disciplinar) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+            $nm_tipo_str = $db->escapeString($this->nm_tipo);
+            $descricao_str = $db->escapeString($this->descricao);
+
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -131,12 +136,12 @@ class clsPmieducarTipoOcorrenciaDisciplinar extends Model
                 $set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
                 $gruda = ', ';
             }
-            if (is_string($this->nm_tipo)) {
-                $set .= "{$gruda}nm_tipo = '{$this->nm_tipo}'";
+            if (is_string($nm_tipo_str)) {
+                $set .= "{$gruda}nm_tipo = '{$nm_tipo_str}'";
                 $gruda = ', ';
             }
-            if (is_string($this->descricao)) {
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+            if (is_string($descricao_str)) {
+                $set .= "{$gruda}descricao = '{$descricao_str}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->max_ocorrencias)) {
@@ -178,6 +183,7 @@ class clsPmieducarTipoOcorrenciaDisciplinar extends Model
      */
     public function lista($int_cod_tipo_ocorrencia_disciplinar = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_tipo = null, $str_descricao = null, $int_max_ocorrencias = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null)
     {
+        $db = new clsBanco();
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -196,7 +202,8 @@ class clsPmieducarTipoOcorrenciaDisciplinar extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_tipo)) {
-            $filtros .= "{$whereAnd} nm_tipo LIKE '%{$str_nm_tipo}%'";
+            $nm_tipo_str = $db->escapeString($str_nm_tipo);
+            $filtros .= "{$whereAnd} nm_tipo LIKE '%{$nm_tipo_str}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_descricao)) {
@@ -235,7 +242,6 @@ class clsPmieducarTipoOcorrenciaDisciplinar extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

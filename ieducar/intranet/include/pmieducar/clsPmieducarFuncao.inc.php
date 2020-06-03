@@ -78,11 +78,13 @@ class clsPmieducarFuncao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_funcao)) {
+                $this->nm_funcao = $db->escapeString($this->nm_funcao);
                 $campos .= "{$gruda}nm_funcao";
                 $valores .= "{$gruda}'{$this->nm_funcao}'";
                 $gruda = ', ';
             }
             if (is_string($this->abreviatura)) {
+                $this->abreviatura = $db->escapeString($this->abreviatura);
                 $campos .= "{$gruda}abreviatura";
                 $valores .= "{$gruda}'{$this->abreviatura}'";
                 $gruda = ', ';
@@ -132,10 +134,12 @@ class clsPmieducarFuncao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_funcao)) {
+                $this->nm_funcao = $db->escapeString($this->nm_funcao);
                 $set .= "{$gruda}nm_funcao = '{$this->nm_funcao}'";
                 $gruda = ', ';
             }
             if (is_string($this->abreviatura)) {
+                $this->abreviatura = $db->escapeString($this->abreviatura);
                 $set .= "{$gruda}abreviatura = '{$this->abreviatura}'";
                 $gruda = ', ';
             }
@@ -175,6 +179,8 @@ class clsPmieducarFuncao extends Model
      */
     public function lista($int_cod_funcao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_funcao = null, $str_abreviatura = null, $int_professor = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null, $int_ref_cod_curso = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -193,10 +199,12 @@ class clsPmieducarFuncao extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_funcao)) {
+            $str_nm_funcao = $db->escapeString($str_nm_funcao);
             $filtros .= "{$whereAnd} nm_funcao LIKE '%{$str_nm_funcao}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_abreviatura)) {
+            $str_abreviatura = $db->escapeString($str_abreviatura);
             $filtros .= "{$whereAnd} abreviatura LIKE '%{$str_abreviatura}%'";
             $whereAnd = ' AND ';
         }
@@ -232,7 +240,6 @@ class clsPmieducarFuncao extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
