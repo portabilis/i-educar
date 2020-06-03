@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Country;
+use App\Models\State;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -232,32 +235,19 @@ class indice extends clsCadastro
         // text
         $this->campoTexto('escola_cidade', 'Cidade da Escola', $this->escola_cidade, 30, 255, true);
 
-        $det_uf[] = [];
+        $countryId = null;
+
         if ($this->escola_uf) {
-            //busca pais do estado
-            $obj_uf = new clsUf($this->escola_uf);
-            $det_uf = $obj_uf->detalhe();
+            $state = State::findByAbbreviation($this->escola_uf);
+
+            $countryId = $state->country_id;
         }
 
-        $lista_pais_origem = ['45' => 'País da escola'];
-        $obj_pais = new clsPais();
-        $obj_pais_lista = $obj_pais->lista(null, null, null, '', '', 'nome asc');
-        if ($obj_pais_lista) {
-            foreach ($obj_pais_lista as $key => $pais) {
-                $lista_pais_origem[$pais['idpais']] = $pais['nome'];
-            }
-        }
-        $this->campoLista('idpais', 'Pa&iacute;s da Escola', $lista_pais_origem, $det_uf['int_idpais']);
+        $lista_pais_origem = ['' => 'Selecione um país'] + Country::query()->orderBy('name')->pluck('name', 'id')->toArray();
 
-        $obj_uf = new clsUf();
-        $lista_uf = $obj_uf->lista(false, false, $det_uf['int_idpais'], false, false, 'sigla_uf');
-        $lista_estado = ['SC' => 'Selecione um pa&iacute;s'];
+        $this->campoLista('idpais', 'Pa&iacute;s da Escola', $lista_pais_origem, $countryId ?? 45);
 
-        if ($lista_uf) {
-            foreach ($lista_uf as $uf) {
-                $lista_estado[$uf['sigla_uf']] = $uf['sigla_uf'];
-            }
-        }
+        $lista_estado = ['' => 'Selecione um estado'] + State::getListKeyAbbreviation()->toArray();
 
         $this->campoLista('escola_uf', 'Estado da Escola', $lista_estado, $this->escola_uf);
         $this->campoTexto('nm_curso', 'Curso', $this->nm_curso, 30, 255, false, false, false, _cl('historico.cadastro.curso_detalhe'));

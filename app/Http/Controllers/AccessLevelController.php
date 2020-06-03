@@ -81,7 +81,7 @@ class AccessLevelController extends Controller
     {
         $this->menu(554)->breadcrumb('Editar tipo de usuário');
 
-        $processes = $userType->load('menus')->getProcesses();
+        $processes = $userType->load('menus')->getProcesses()->toArray();
 
         /** @var User $user */
         $user = $request->user();
@@ -94,6 +94,14 @@ class AccessLevelController extends Controller
                 'processes' => $menu->processes($menu->title, $userProcesses),
             ]);
         });
+
+        foreach ($userProcesses as $process => $status) {
+            if (isset($processes[$process])) {
+                continue;
+            }
+
+            $processes[$process] = 0;
+        }
 
         return view('accesslevel.index', [
             'menus' => $menus,

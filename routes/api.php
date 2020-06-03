@@ -14,3 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('version', 'Api\\VersionController@version');
+
+Route::get('/postal-code/{postalCode}', 'Api\PostalCodeController@search');

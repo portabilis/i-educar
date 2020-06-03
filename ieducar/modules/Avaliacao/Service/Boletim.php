@@ -752,7 +752,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $mediasComponentes = $this->_loadMedias()->getMediasComponentes();
 
         // Mantém apenas lançamentos para componentes da matrícula
-        $componentesMatricula = App_Model_IedFinder::getComponentesPorMatricula($matriculaId, null, null, null, $this->getOption('etapaAtual'), $this->getOption('ref_cod_turma'));
+        $componentesMatricula = App_Model_IedFinder::getComponentesPorMatricula($matriculaId, null, null, null, $this->getOption('etapaAtual'), $this->getOption('ref_cod_turma'), null, true, true);
         $mediasComponentes = array_intersect_key($mediasComponentes, $componentesMatricula);
 
         $mediasComponenentesTotal = $mediasComponentes;
@@ -1665,6 +1665,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      */
     public function addFalta(Avaliacao_Model_FaltaAbstract $falta)
     {
+        $this->setCurrentComponenteCurricular($this->_componenteCurricularId);
         $key = 'f_' . spl_object_hash($falta);
         $falta = $this->_addValidators($falta);
         $falta = $this->_updateEtapa($falta);
@@ -2350,6 +2351,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $falta->id = $this->_getFaltaIdEtapa($falta);
             $this->getFaltaAbstractDataMapper()->save($falta);
         }
+
+        // Atualiza as médias
+        $this->_updateNotaComponenteMedia();
 
         return $this;
     }

@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Place;
+use iEducar\Modules\Addressing\LegacyAddressingFields;
+
 require_once 'include/modules/clsModulesPessoaTransporte.inc.php';
 require_once 'include/modules/clsModulesItinerarioTransporteEscolar.inc.php';
 require_once 'include/modules/clsModulesPontoTransporteEscolar.inc.php';
@@ -10,6 +13,8 @@ require_once 'Portabilis/Date/Utils.php';
 
 class PontoController extends ApiCoreController
 {
+    use LegacyAddressingFields;
+
     protected $_processoAp = 578; //verificar
     protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA; // verificar
 
@@ -18,32 +23,45 @@ class PontoController extends ApiCoreController
         $ponto = new clsModulesPontoTransporteEscolar();
         $ponto->cod_ponto_transporte_escolar = $id;
 
+        $detalhe = $ponto->detalhe();
+
+        if ($detalhe) {
+            $place = Place::query()->find($detalhe['idlog']);
+        }
+
         // após cadastro não muda mais id pessoa
         $ponto->descricao = Portabilis_String_Utils::toLatin1($this->getRequest()->desc);
 
         $ponto->latitude = $this->getRequest()->latitude;
         $ponto->longitude = $this->getRequest()->longitude;
-        $cep = idFederal2Int($this->getRequest()->cep_);
-        $objCepLogradouro = new ClsCepLogradouro($cep, $this->getRequest()->logradouro_id);
+        $cep = idFederal2Int($this->getRequest()->postal_code);
 
-        if (!$objCepLogradouro->existe()) {
-            $objCepLogradouro->cadastra();
+        $this->address = $this->getRequest()->address;
+        $this->number = $this->getRequest()->number;
+        $this->complement = $this->getRequest()->complement;
+        $this->neighborhood = $this->getRequest()->neighborhood;
+        $this->postal_code = $this->getRequest()->postal_code;
+        $this->city_id = $this->getRequest()->city_id;
+
+        if (empty($place)) {
+            $place = new Place();
         }
 
-        $objCepLogradouroBairro = new ClsCepLogradouroBairro();
-        $objCepLogradouroBairro->cep = $cep;
-        $objCepLogradouroBairro->idbai = $this->getRequest()->bairro_id;
-        $objCepLogradouroBairro->idlog = $this->getRequest()->logradouro_id;
-
-        if (! $objCepLogradouroBairro->existe()) {
-            $objCepLogradouroBairro->cadastra();
-        }
+        $place->fill([
+            'address' => $this->address,
+            'number' => $this->number ?: null,
+            'complement' => $this->complement,
+            'neighborhood' => $this->neighborhood,
+            'city_id' => $this->city_id,
+            'postal_code' => idFederal2int($this->postal_code),
+        ]);
+        $place->save();
 
         $ponto->cep = $cep;
-        $ponto->idbai = $this->getRequest()->bairro_id;
-        $ponto->idlog = $this->getRequest()->logradouro_id;
-        $ponto->numero = $this->getRequest()->numero;
-        $ponto->complemento = Portabilis_String_Utils::toLatin1($this->getRequest()->complemento);
+        $ponto->idbai = $place->getKey();
+        $ponto->idlog = $place->getKey();
+        $ponto->numero = $this->number;
+        $ponto->complemento = $this->complement;
 
         return (is_null($id) ? $ponto->cadastra() : $ponto->edita());
     }
@@ -197,59 +215,9 @@ class PontoController extends ApiCoreController
         return ['id' => $id];
     }
 
-    protected function canCreateBairro()
-    {
-        return !empty($this->getRequest()->bairro) && !empty($this->getRequest()->zona_localizacao);
-    }
-
-    protected function canCreateLogradouro()
-    {
-        return !empty($this->getRequest()->logradouro) && !empty($this->getRequest()->idtlog);
-    }
-
-    protected function createBairro()
-    {
-        $objBairro = new clsBairro(null, $this->getRequest()->municipio_id, null, Portabilis_String_Utils::toLatin1($this->getRequest()->bairro), $this->currentUserId());
-        $objBairro->zona_localizacao = $this->getRequest()->zona_localizacao;
-        $objBairro->iddis = $this->getRequest()->distrito_id;
-
-        return $objBairro->cadastra();
-    }
-
-    protected function createLogradouro()
-    {
-        $objLogradouro = new clsLogradouro(
-            null,
-            $this->getRequest()->idtlog,
-            Portabilis_String_Utils::toLatin1($this->getRequest()->logradouro),
-            $this->getRequest()->municipio_id,
-            null,
-            'S',
-            $this->currentUserId()
-        );
-
-        return $objLogradouro->cadastra();
-    }
-
     protected function normalizaEndereco()
     {
-        if ($this->getRequest()->cep_ && is_numeric($this->getRequest()->municipio_id) && is_numeric($this->getRequest()->distrito_id)) {
-            if (!is_numeric($this->getRequest()->bairro_id)) {
-                if ($this->canCreateBairro()) {
-                    $this->getRequest()->bairro_id = $this->createBairro();
-                } else {
-                    return;
-                }
-            }
-
-            if (!is_numeric($this->getRequest()->logradouro_id)) {
-                if ($this->canCreateLogradouro()) {
-                    $this->getRequest()->logradouro_id = $this->createLogradouro();
-                } else {
-                    return;
-                }
-            }
-        }
+        // TODO Addressing
     }
 
     public function Gerar()

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClassStage;
 use App\Models\LegacySchoolStage;
 
@@ -384,6 +385,9 @@ class PromocaoApiController extends ApiCoreController
             }
 
             if ($this->matriculaId() != 0 && is_numeric($this->matriculaId())) {
+                $registration = LegacyRegistration::find($this->matriculaId());
+                $_GET['etapa'] = $this->maiorEtapaUtilizada($registration);
+
                 $situacaoAnterior = $this->loadSituacaoArmazenadaMatricula($this->matriculaId());
 
                 $this->lancarFaltasNaoLancadas($this->matriculaId());
@@ -476,5 +480,15 @@ class PromocaoApiController extends ApiCoreController
     private function regraNaoUsaNota($tipoNota)
     {
         return $tipoNota == RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
+    }
+
+    private function maiorEtapaUtilizada($registration)
+    {
+        $where = [
+            'ref_ref_cod_escola' => $registration->ref_ref_cod_escola,
+            'ref_ano' => $registration->ano,
+        ];
+
+        return LegacySchoolStage::query()->where($where)->count();
     }
 }

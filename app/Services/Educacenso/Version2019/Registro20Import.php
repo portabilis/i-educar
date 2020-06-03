@@ -21,6 +21,7 @@ use App\Models\LegacySchoolGradeDiscipline;
 use App\Models\SchoolClassInep;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\RegistroImportInterface;
+use App\Services\SchoolClass\PeriodService;
 use App\User;
 use Exception;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
@@ -83,6 +84,9 @@ class Registro20Import implements RegistroImportInterface
         $course = $this->getOrCreateCourse($school);
         $level = $this->getOrCreateLevel($school, $course);
 
+        $horaInicial = sprintf("%02d:%02d:00", intval($model->horaInicial), intval($model->horaInicialMinuto));
+        $horaFinal = sprintf("%02d:%02d:00", intval($model->horaFinal), intval($model->horaFinalMinuto));
+
         $schoolClass = LegacySchoolClass::create(
             [
                 'ref_ref_cod_escola' => $school->getKey(),
@@ -92,8 +96,8 @@ class Registro20Import implements RegistroImportInterface
                 'ref_usuario_cad' => $this->user->getKey(),
                 'nm_turma' => $model->nomeTurma,
                 'tipo_mediacao_didatico_pedagogico' => $model->tipoMediacaoDidaticoPedagogico,
-                'hora_inicial' => sprintf("%02d:%02d:00", intval($model->horaInicial), intval($model->horaInicialMinuto)),
-                'hora_final' => sprintf("%02d:%02d:00", intval($model->horaFinal), intval($model->horaFinalMinuto)),
+                'hora_inicial' => $horaInicial,
+                'hora_final' => $horaFinal,
                 'dias_semana' => $this->getArrayDaysWeek(),
                 'tipo_atendimento' => $this->getTipoAtendimento(),
                 'atividades_complementares' => $this->getArrayAtividadesComplementares(),
@@ -108,6 +112,7 @@ class Registro20Import implements RegistroImportInterface
                 'sgl_turma' => '',
                 'data_cadastro' => now(),
                 'ref_cod_instituicao' => $this->institution->id,
+                'turma_turno_id' => $this->getTurno($horaInicial, $horaFinal),
             ]
         );
 
@@ -976,5 +981,23 @@ class Registro20Import implements RegistroImportInterface
             'padrao_ano_escolar' => 1,
             'multi_seriado' => 1,
         ]);
+    }
+
+    /**
+     * Retorna o turno da turma se houver horário de início e término
+     *
+     * @param $horaInicial
+     * @param $horaFinal
+     * @return string|null
+     * @throws Exception
+     */
+    private function getTurno($horaInicial, $horaFinal)
+    {
+        if (empty($horaInicial) || empty($horaFinal)) {
+            return null;
+        }
+
+        $service = new PeriodService();
+        return $service->getPeriodByTime($horaInicial, $horaFinal);
     }
 }

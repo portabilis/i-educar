@@ -1,6 +1,7 @@
 <?php
 
 use App\Menu;
+use App\Models\State;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -140,52 +141,31 @@ class indice extends clsCadastro
         $this->campoTexto('nm_instituicao', 'Nome da Instituição', $this->nm_instituicao, 30, 255, true);
         $this->campoCep('cep', 'CEP', int2CEP($this->cep), true, '-', false, false);
         $this->campoTexto('logradouro', 'Logradouro', $this->logradouro, 30, 255, true);
+        $this->campoNumero('numero', 'Número', $this->numero, 6, 6);
+        $this->campoTexto('complemento', 'Complemento', $this->complemento, 30, 50, false);
         $this->campoTexto('bairro', 'Bairro', $this->bairro, 30, 40, true);
         $this->campoTexto('cidade', 'Cidade', $this->cidade, 30, 60, true);
 
         // foreign keys
-        $opcoes = ['' => 'Selecione'];
-
-        $objTemp = new clsTipoLogradouro();
-        $lista = $objTemp->lista();
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes["{$registro['idtlog']}"] = "{$registro['descricao']}";
-            }
-        }
-
-        $this->campoLista('ref_idtlog', 'Tipo do Logradouro', $opcoes, $this->ref_idtlog, '', false, '', '', false, true);
-
-        // foreign keys
-        $opcoes = ['' => 'Selecione'];
-
-        $objTemp = new clsUf();
-        $lista = $objTemp->lista();
-        if (is_array($lista) && count($lista)) {
-            asort($lista);
-            foreach ($lista as $registro) {
-                $opcoes["{$registro['sigla_uf']}"] = "{$registro['sigla_uf']}";
-            }
-        }
+        $opcoes = ['' => 'Selecione'] + State::getListKeyAbbreviation()->toArray();
 
         $this->campoLista('ref_sigla_uf', 'UF', $opcoes, $this->ref_sigla_uf, '', false, '', '', false, true);
 
-        $this->campoNumero('numero', 'Número', $this->numero, 6, 6);
-        $this->campoTexto('complemento', 'Complemento', $this->complemento, 30, 50, false);
         $this->campoTexto('nm_responsavel', 'Nome do Responsável', $this->nm_responsavel, 30, 255, true);
         $this->campoNumero('ddd_telefone', 'DDD Telefone', $this->ddd_telefone, 2, 2);
         $this->campoNumero('telefone', 'Telefone', $this->telefone, 11, 11);
 
-        ///$hiddenInputOptions = array('options' => array('value' => $this->coordenador_transporte));
-        //$helperOptions      = array('objectName' => 'gestor', 'hiddenInputOptions' => $hiddenInputOptions);
-        $options = ['label' => 'Coordenador(a) de transporte',
+        $options = [
+            'label' => 'Coordenador(a) de transporte',
             'size' => 50,
             'value' => $this->coordenador_transporte,
-            'required' => false];
+            'required' => false
+        ];
 
-        $this->inputsHelper()->simpleSearchPessoa('coordenador_transporte', $options, $helperOptions);
+        $this->inputsHelper()->simpleSearchPessoa('coordenador_transporte', $options);
 
         $opcoes = [];
+
         if (!empty($this->ref_sigla_uf)) {
             $opcoes = [null => 'Selecione'];
             $orgaoRegional = new Educacenso_Model_OrgaoRegionalDataMapper();

@@ -326,7 +326,7 @@ class EnrollmentService
 
         $dateDeparted = $previousEnrollment->date_departed;
 
-        if ($this->withoutRelocationDateOrDateIsBefore($previousEnrollment, $dateDeparted)) {
+        if ($this->withoutRelocationDateOrDateIsAfter($previousEnrollment, $dateDeparted)) {
             return $previousEnrollment;
         }
     }
@@ -378,6 +378,21 @@ class EnrollmentService
     }
 
     /**
+     * Compara data de saída da enturmação com data base para definir a
+     * reordenação, ou não, dos sequenciais
+     *
+     * @param LegacyEnrollment $enrollment
+     */
+    public function reorderSchoolClassAccordingToRelocationDate(LegacyEnrollment $enrollment)
+    {
+        $relocationDate = $enrollment->schoolClass->school->institution->relocation_date;
+
+        if(!$relocationDate || $enrollment->data_exclusao < $relocationDate) {
+            $this->reorderSchoolClass($enrollment);
+        }
+    }
+
+    /**
      * Verifica se a instituição não usa database
      * ou se a data informada é antes da database
      *
@@ -385,14 +400,10 @@ class EnrollmentService
      * @param DateTime $date
      * @return bool
      */
-    private function withoutRelocationDateOrDateIsBefore($enrollment, $date)
+    private function withoutRelocationDateOrDateIsAfter($enrollment, $date)
     {
         $relocationDate = $enrollment->schoolClass->school->institution->relocation_date;
 
-        if (!$relocationDate || $date < $relocationDate) {
-            return true;
-        }
-
-        return false;
+        return !$relocationDate || $date >= $relocationDate;
     }
 }

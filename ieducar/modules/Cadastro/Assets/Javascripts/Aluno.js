@@ -504,6 +504,7 @@ resourceOptions.handleGet = function (dataResponse) {
     $j('#religiao_id').val(dataResponse.religiao_id);
     $j('#tipo_transporte').val(dataResponse.tipo_transporte);
     $j('#alfabetizado').attr('checked', dataResponse.alfabetizado);
+    document.getElementById('emancipado').checked = dataResponse.emancipado;
     $j('#autorizado_um').val(dataResponse.autorizado_um);
     $j('#parentesco_um').val(dataResponse.parentesco_um);
     $j('#autorizado_dois').val(dataResponse.autorizado_dois);
@@ -1805,8 +1806,8 @@ function canShowParentsFields() {
             telefone_mov = $j("#telefone_cel"),
             ddd_telefone_1 = $j("#ddd_telefone_fixo"),
             ddd_telefone_mov = $j("#ddd_telefone_cel"),
-            complemento = $j("#complemento"),
-            numero = $j("#numero"),
+            complemento = $j("#complement"),
+            numero = $j("#number"),
             letra = $j("#letra"),
             apartamento = $j("#apartamento"),
             bloco = $j("#bloco"),
@@ -1815,26 +1816,21 @@ function canShowParentsFields() {
 
         municipio.show().toggleClass('geral text').attr('display', 'block').appendTo('#dialog-form-pessoa-aluno tr td:first-child fieldset');
 
-        $j('<label>').html('CEP').attr('for', 'cep_').insertBefore($j('#cep_'));
-        $j('#cep_').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
-        $j('<label>').html('Munic&iacute;pio').attr('for', 'municipio_municipio').insertBefore($j('#municipio_municipio'));
-        $j('#municipio_municipio').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
-        $j('<label>').html('Distrito').attr('for', 'distrito_distrito').insertBefore($j('#distrito_distrito'));
-        $j('#distrito_distrito').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
-        $j('<label>').html('Logradouro').attr('for', 'logradouro_logradouro').insertBefore($j('#logradouro_logradouro'));
-        $j('#logradouro_logradouro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
-        $j('<label>').html('Tipo de logradouro').attr('for', 'idtlog').insertBefore($j('#idtlog'));
-        $j('#idtlog').toggleClass('geral text');
-        $j('<label>').html('Logradouro').attr('for', 'logradouro').insertBefore($j('#logradouro'));
-        $j('#logradouro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
-        $j('<label>').html('Bairro').attr('for', 'bairro_bairro').insertBefore($j('#bairro_bairro'));
-        $j('#bairro_bairro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+        $j('<label>').html('CEP').attr('for', 'postal_code').insertBefore($j('#postal_code'));
+        $j('#postal_code').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+        $j('<label>').html('Endereço').attr('for', 'address').insertBefore($j('#address'));
+        $j('#address').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+        $j('<label>').html('Número').attr('for', 'number').insertBefore($j('#number'));
+        $j('#number').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+        $j('<label>').html('Complemento').attr('for', 'complement').insertBefore($j('#complement'));
+        $j('#complement').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+        $j('<label>').html('Bairro').attr('for', 'neighborhood').insertBefore($j('#neighborhood'));
+        $j('#neighborhood').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+        $j('<label>').html('Município').attr('for', 'city_city').insertBefore($j('#city_city'));
+        $j('#city_city').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+
         $j('<label>').html('País de residência').attr('for', 'pais_residencia').insertBefore($j('#pais_residencia'));
         $j('#pais_residencia').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
-        $j('<label>').html('Zona de localiza&ccedil;&atilde;o').attr('for', 'zona_localizacao').insertBefore($j('#zona_localizacao'));
-        $j('#zona_localizacao').toggleClass('geral text');
-        $j('<label>').html('Bairro').attr('for', 'bairro').insertBefore($j('#bairro'));
-        $j('#bairro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
 
         let $label = $j('<label>').html('Zona de residência').attr('for', 'zona_localizacao_censo').insertBefore($j('#zona_localizacao_censo'));
         if ($j('#zona_localizacao_censo').hasClass('obrigatorio')) {
@@ -1874,21 +1870,8 @@ function canShowParentsFields() {
         }
         $j('#tipo_nacionalidade').change(checkTipoNacionalidade);
 
-        $j('<label>').html('Complemento').attr('for', 'complemento').insertBefore($j('#complemento'));
-        $j('#complemento').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
-        $j('<label>').html('N&uacute;mero').attr('for', 'numero').insertBefore($j('#numero'));
-        $j('#numero').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(3) fieldset table').find('td').removeClass();
-        $j('<label>').html('Letra').attr('for', 'letra').insertBefore($j('#letra'));
-        $j('#letra').toggleClass('geral text');
-        $j('<label>').html('N&ordm; de apartamento').attr('for', 'apartamento').insertBefore($j('#apartamento'));
-        $j('#apartamento').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(3) fieldset table').find('td').removeClass();
-        $j('<label>').html('Bloco').attr('for', 'bloco').insertBefore($j('#bloco'));
-        $j('#bloco').toggleClass('geral text');
-        $j('<label>').html('Andar').attr('for', 'andar').insertBefore($j('#andar'));
-        $j('#andar').toggleClass('geral text');
-
         $j('#dialog-form-pessoa-aluno').find(':input').css('display', 'block');
-        $j('#cep_').css('display', 'inline');
+        $j('#postal_code').css('display', 'inline');
         $j('#ddd_telefone_fixo').css('display', 'inline');
         $j('#telefone_fixo').css('display', 'inline');
         $j('#ddd_telefone_cel').css('display', 'inline');
@@ -1919,7 +1902,7 @@ function canShowParentsFields() {
                       bValid = bValid && checkSimpleSearch(municipio, municipio_id, "munic\u00edpio");
                     }
 
-                    bValid = bValid && ($j('#cep_').val() == '' ? true : validateEndereco());
+                    bValid = bValid && ($j('#postal_code').val() == '' ? true : validateEndereco());
 
                     if (!validaObrigatoriedadeTelefone()) {
                         bValid = false;
@@ -1939,7 +1922,7 @@ function canShowParentsFields() {
                     }
 
                     if (bValid) {
-                        postPessoa($j(this), $j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val() || 'NULL', (editar_pessoa ? $j('#pessoa_id').val() : null), null, ddd_telefone_1.val(), telefone_1.val(), ddd_telefone_mov.val(), telefone_mov.val(), undefined,
+                        postPessoa($j(this), $j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val(), (editar_pessoa ? $j('#pessoa_id').val() : null), null, ddd_telefone_1.val(), telefone_1.val(), ddd_telefone_mov.val(), telefone_mov.val(), undefined,
                           $j('#tipo_nacionalidade').val(), $j('#pais_origem_id').val(), $j('#cor_raca').val(), $j('#zona_localizacao_censo').val(), $j('#localizacao_diferenciada').val(), nome_social.val(), $j('#pais_residencia').val());
                     }
                 },
@@ -2038,9 +2021,7 @@ function canShowParentsFields() {
         $j("#cadastrar-pessoa-link").click(function () {
             $j('#link_cadastro_detalhado').attr('href', '/intranet/atendidos_cad.php');
             $j("#dialog-form-pessoa-aluno").dialog("open");
-            $j('#cep_').val('');
-            clearEnderecoFields();
-            hideEnderecoFields();
+            $j('#postal_code').val('');
             permiteEditarEndereco();
             checkTipoNacionalidade();
 
@@ -2056,7 +2037,6 @@ function canShowParentsFields() {
 
         $j("#editar-pessoa-link").click(function () {
             $j('#link_cadastro_detalhado').attr('href', '/intranet/atendidos_cad.php?cod_pessoa_fj=' + person_details.id);
-            clearEnderecoFields();
 
             name.val(person_details.nome);
             nome_social.val(person_details.nome_social);
@@ -2081,54 +2061,25 @@ function canShowParentsFields() {
               $j('#pais_origem_nome').val('');
             }
 
-            $j('#cep_').val(person_details.cep);
+            $j('#postal_code').val(person_details.cep);
             $j('#ddd_telefone_fixo').val(person_details.ddd_fone_fixo);
             $j('#telefone_fixo').val(person_details.fone_fixo);
             $j('#ddd_telefone_cel').val(person_details.ddd_fone_mov);
             $j('#telefone_cel').val(person_details.fone_mov);
-            $j('#distrito_id').val(person_details.iddis);
             $j('#pais_residencia').val(person_details.pais_residencia);
 
-            if ($j('#cep_').val()) {
-                $j('#municipio_municipio').removeAttr('disabled');
-                $j('#distrito_distrito').removeAttr('disabled');
-                $j('#bairro_bairro').removeAttr('disabled');
-                $j('#logradouro_logradouro').removeAttr('disabled');
-                $j('#bairro').removeAttr('disabled');
+            if ($j('#postal_code').val()) {
+                $j('#city_city').removeAttr('disabled');
+                $j('#neighborhood').removeAttr('disabled');
+                $j('#address').removeAttr('disabled');
                 $j('#zona_localizacao').removeAttr('disabled');
-                $j('#idtlog').removeAttr('disabled');
-                $j('#logradouro').removeAttr('disabled');
-                $j('#complemento').val(person_details.complemento);
-                $j('#numero').val(person_details.numero);
-                $j('#letra').val(person_details.letra);
-                $j('#apartamento').val(person_details.apartamento);
-                $j('#bloco').val(person_details.bloco);
-                $j('#andar').val(person_details.andar);
-
-                $j('#municipio_id').val(person_details.idmun);
-
-                $j('#municipio_municipio').val(person_details.idmun + ' - ' + person_details.municipio + ' (' + person_details.sigla_uf + ')');
-                $j('#distrito_distrito').val(person_details.iddis + ' - ' + person_details.distrito);
-
-                if (person_details.idbai && person_details.idlog) {
-                    var params = $j('#id').val();
-                    $j.get('/module/Api/aluno?&oper=get&resource=get-nome-bairro&id=' + params, function (data) {
-                        $j('#bairro_bairro').empty();
-                        $j('#bairro_bairro').val(data[0]['nome'] + ' / Zona ' + (person_details.zona_localizacao == "1" ? "Urbana" : "Rural"));
-                    });
-
-                    $j('#bairro_id').val(person_details.idbai);
-                    $j('#logradouro_id').val(person_details.idlog);
-                    $j('#logradouro_logradouro').val($j("#idtlog option[value='" + person_details.idtlog + "']").text() + ' ' + person_details.logradouro);
-                } else {
-                    $j('#bairro').val(person_details.bairro);
-                    $j('#logradouro').val(person_details.logradouro);
-                    $j('#idtlog').val(person_details.idtlog);
-                    $j('#zona_localizacao').val(person_details.zona_localizacao);
-                }
+                $j('#address').val(person_details.address);
+                $j('#number').val(person_details.number);
+                $j('#complement').val(person_details.complement);
+                $j('#neighborhood').val(person_details.neighborhood);
+                $j('#city_id').val(person_details.city_id);
+                $j('#city_city').val(person_details.city_id + ' - ' + person_details.city_name + ' (' + person_details.state_abbreviation + ')');
             }
-
-            hideEnderecoFields();
 
             $j("#dialog-form-pessoa-aluno").dialog("open");
 
@@ -2240,7 +2191,6 @@ function canShowParentsFields() {
             estadocivilParent.val(window[parentType + '_details'].estadocivil);
             sexoParent.val(window[parentType + '_details'].sexo);
             datanascParent.val(window[parentType + '_details'].data_nascimento);
-            // console.log(window[parentType+'_details'].falecido);
             falecidoParent.prop('checked', (window[parentType + '_details'].falecido));
 
             if (parentType == 'responsavel') {
@@ -2448,26 +2398,15 @@ function canShowParentsFields() {
 
     function postEnderecoPessoa(pessoa_id) {
 
-        if (checkCepFields($j('#cep_').val())) {
+        if (checkCepFields($j('#postal_code').val())) {
             var data = {
-                pessoa_id: pessoa_id,
-                cep: $j('#cep_').val(),
-                municipio_id: $j('#municipio_id').val(),
-                distrito_id: $j('#distrito_id').val(),
-                bairro: $j('#bairro').val(),
-                bairro_id: $j('#bairro_id').val(),
-                zona_localizacao: $j('#zona_localizacao').val(),
-                logradouro: $j('#logradouro').val(),
-                idtlog: $j('#idtlog').val(),
-                logradouro_id: $j('#logradouro_id').val(),
-                apartamento: $j('#apartamento').val(),
-                complemento: $j('#complemento').val(),
-                numero: $j('#numero').val(),
-                letra: $j('#letra').val(),
-                bloco: $j('#bloco').val(),
-                andar: $j('#andar').val()
-                // telefone_1         : $j('#telefone_1').val()
-                // telefone_mov       : $j('#telefone_mov').val()
+                person_id: pessoa_id,
+                postal_code: $j('#postal_code').val(),
+                address: $j('#address').val(),
+                number: $j('#number').val(),
+                complement: $j('#complement').val(),
+                neighborhood: $j('#neighborhood').val(),
+                city_id: $j('#city_id').val(),
             };
 
             var options = {

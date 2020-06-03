@@ -828,6 +828,7 @@ class clsPmieducarServidor extends Model
                   AND qhh.hora_inicial <= '18:00'
                   AND qhh.dia_semana <> '$int_dia_semana'
                   AND qhh.ref_servidor = a.ref_cod_servidor
+                  AND quadro_horario.ano = $ano_alocacao
                   GROUP BY qhh.ref_servidor ),'00:00') + '$str_hr_ves' +  COALESCE(
                   (SELECT SUM( qhha.hora_final - qhha.hora_inicial )
                     FROM pmieducar.quadro_horario_horarios_aux qhha
@@ -840,6 +841,7 @@ class clsPmieducarServidor extends Model
                     AND qhha.ref_servidor = a.ref_cod_servidor
                     AND qhha.hora_inicial >= '12:00'
                     AND qhha.hora_inicial <= '18:00'
+                    AND quadro_horario.ano = $ano_alocacao
                     AND identificador = '$int_identificador'
                     GROUP BY qhha.ref_servidor),'00:00') ) OR s.multi_seriado ) ";
                     } else {

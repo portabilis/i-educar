@@ -26,8 +26,8 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'idpes'
         ],
         [
-            'tabela' => 'cadastro.endereco_pessoa',
-            'coluna' => 'idpes'
+            'tabela' => 'public.person_has_place',
+            'coluna' => 'person_id'
         ],
         [
             'tabela' => 'cadastro.fone_pessoa',
@@ -97,14 +97,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'idpes_cad'
         ],
         [
-            'tabela' => 'cadastro.endereco_pessoa',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'cadastro.endereco_pessoa',
-            'coluna' => 'idpes_cad'
-        ],
-        [
             'tabela' => 'cadastro.raca',
             'coluna' => 'idpes_exc'
         ],
@@ -157,30 +149,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
             'coluna' => 'ref_idpes'
         ],
         [
-            'tabela' => 'public.distrito',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'public.distrito',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'urbano.cep_logradouro',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'urbano.cep_logradouro',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'urbano.cep_logradouro_bairro',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'urbano.cep_logradouro_bairro',
-            'coluna' => 'idpes_cad'
-        ],
-        [
             'tabela' => 'cadastro.documento',
             'coluna' => 'idpes_rev'
         ],
@@ -211,30 +179,6 @@ class App_Unificacao_Pessoa extends App_Unificacao_Base
         [
             'tabela' => 'cadastro.pessoa',
             'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'public.bairro',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'public.bairro',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'public.logradouro',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'public.logradouro',
-            'coluna' => 'idpes_cad'
-        ],
-        [
-            'tabela' => 'public.municipio',
-            'coluna' => 'idpes_rev'
-        ],
-        [
-            'tabela' => 'public.municipio',
-            'coluna' => 'idpes_cad'
         ],
         [
             'tabela' => 'pmieducar.candidato_reserva_vaga',
