@@ -23,6 +23,10 @@ class Upgrade extends Migration
         $counter = 1;
 
         foreach ($this->files as $file) {
+            if (file_exists($file) === false) {
+                continue;
+            }
+            
             $migrations = file($file, FILE_SKIP_EMPTY_LINES);
 
             foreach ($migrations as $migration) {
