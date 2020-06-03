@@ -10,6 +10,7 @@ class Upgrade extends Migration
      */
     protected $files = [
         __DIR__ . '/../upgrade2.3.txt',
+        __DIR__ . '/../migrations/extras/upgrade2.3.txt',
         __DIR__ . '/../../ieducar/modules/Reports/database/upgrade2.3.txt',
     ];
 
