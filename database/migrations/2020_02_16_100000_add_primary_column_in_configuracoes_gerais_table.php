@@ -13,7 +13,7 @@ class AddPrimaryColumnInConfiguracoesGeraisTable extends Migration
      */
     public function up()
     {
-        Schema::table('configuracoes_gerais', function (Blueprint $table) {
+        Schema::table('pmieducar.configuracoes_gerais', function (Blueprint $table) {
             $table->primary('ref_cod_instituicao');
         });
     }
@@ -25,7 +25,7 @@ class AddPrimaryColumnInConfiguracoesGeraisTable extends Migration
      */
     public function down()
     {
-        Schema::table('configuracoes_gerais', function (Blueprint $table) {
+        Schema::table('pmieducar.configuracoes_gerais', function (Blueprint $table) {
             $table->dropPrimary('ref_cod_instituicao');
         });
     }
