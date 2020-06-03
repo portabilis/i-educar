@@ -14,6 +14,7 @@ use App\Support\Database\Connections;
 use App\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -138,7 +139,7 @@ class ImportUsersService implements ToCollection
         $employee = LegacyEmployee::create([
             'ref_cod_pessoa_fj' => $individual->getKey(),
             'matricula' => $user,
-            'senha' => $password,
+            'senha' => Hash::make($password),
             'ativo' => 1,
             'force_reset_password' => $forceResetPassword,
             'email' => $email,
