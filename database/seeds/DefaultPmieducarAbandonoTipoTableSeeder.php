@@ -12,8 +12,16 @@ class DefaultPmieducarAbandonoTipoTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::unprepared(
-            file_get_contents(__DIR__ . '/../sqls/inserts/pmieducar.abandono_tipo.sql')
-        );
+        DB::table('pmieducar.abandono_tipo')->insert([
+            'cod_abandono_tipo' => 1,
+            'ref_cod_instituicao' => 1,
+            'nome' => 'Desistência',
+        ]);
+
+        DB::table('pmieducar.abandono_tipo')->insert([
+            'cod_abandono_tipo' => 2,
+            'ref_cod_instituicao' => 1,
+            'nome' => 'Falecimento',
+        ]);
     }
 }
