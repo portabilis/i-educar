@@ -498,7 +498,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     protected function getPercentualFrequencia()
     {
         if ($this->getRequest()->percentual_frequencia == 'buscar-boletim') {
-            $percentual = round($this->getService()->getSituacaoFaltas()->porcentagemPresenca, 2);
+            $percentual = round($this->getService()->getSituacaoFaltas(true)->porcentagemPresenca, 2);
         } else {
             $percentual = $this->getRequest()->percentual_frequencia;
         }

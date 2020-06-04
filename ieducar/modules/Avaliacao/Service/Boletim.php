@@ -1065,12 +1065,15 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      *
      * Esses valores são calculados SOMENTE através das faltas já lançadas.
      *
+     * @param bool $ignorarSeriesCiclo Se true, vai pegar sempre somente a serie atual para o calculo, mesmo que a regra
+     * use a progressao do regime ciclico
      * @return stdClass
      *
+     * @throws Exception
      * @todo Verificação de situação geral nos moldes dos componentes curriculares
      *   para falta por componente (se 0 ou diferente de componentes matrícula)
      */
-    public function getSituacaoFaltas()
+    public function getSituacaoFaltas($ignorarSeriesCiclo = false)
     {
         $presenca                           = new stdClass();
         $presenca->totalFaltas              = 0;
@@ -1104,7 +1107,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         // Carrega faltas lançadas (persistidas)
         // O parametro true força o carregamento de faltas do regime ciclico (faltas de todas as series do curso), caso a regra de avaliaçao tenha essa configuraçao
-        $this->_loadFalta($this->isCyclicRegime());
+        $this->_loadFalta(($this->isCyclicRegime() && !$ignorarSeriesCiclo));
 
         $tipoFaltaGeral         = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::GERAL;
         $tipoFaltaPorComponente = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
