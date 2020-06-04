@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 require_once 'include/clsBanco.inc.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
@@ -61,7 +62,9 @@ class clsPessoa_
 
             $db = new clsBanco();
 
-            $db->Consulta("INSERT INTO {$this->schema_cadastro}.{$this->tabela_pessoa} (nome, data_cad,tipo,situacao,origem_gravacao, operacao $campos) VALUES ('$this->nome', NOW(), '$this->tipo', 'P', 'U', 'I' $valores)");
+            $slug = Str::lower(Str::slug($this->nome, ' '));
+
+            $db->Consulta("INSERT INTO {$this->schema_cadastro}.{$this->tabela_pessoa} (nome, slug, data_cad,tipo,situacao,origem_gravacao, operacao $campos) VALUES ('$this->nome', '{$slug}', NOW(), '$this->tipo', 'P', 'U', 'I' $valores)");
             $this->idpes = $db->InsertId("{$this->schema_cadastro}.seq_pessoa");
             if ($this->idpes) {
                 $detalhe = $this->detalhe();
@@ -90,7 +93,10 @@ class clsPessoa_
             if ($this->nome || $this->nome === '') {
                 $this->nome = $this->cleanUpName($this->nome);
                 $this->nome = str_replace('\'', '\'\'', $this->nome);
-                $set .= "$gruda nome = '$this->nome' ";
+
+                $slug = Str::lower(Str::slug($this->nome, ' '));
+
+                $set .= "$gruda nome = '$this->nome', slug = '{$slug}' ";
                 $gruda = ', ';
             }
 

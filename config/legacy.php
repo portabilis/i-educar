@@ -140,6 +140,7 @@ return [
             'nao_apresentar_campo_alfabetizado' => '0',
             'codigo_sistema' => 'Código sistema',
             'mostrar_codigo_sistema' => '1',
+            'obrigar_recursos_tecnologicos' => '0'
         ],
         'faltas_notas' => [
             'mostrar_botao_replicar' => '1',

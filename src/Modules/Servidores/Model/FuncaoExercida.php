@@ -22,7 +22,7 @@ class FuncaoExercida
             self::INTERPRETE_LIBRAS => 'Tradutor Intérprete de LIBRAS',
             self::DOCENTE_TITULAR_EAD => 'Docente titular - Coordenador de tutoria (de módulo ou disciplina) - EAD',
             self::DOCENTE_TUTOR_EAD => 'Docente tutor - Auxiliar (de módulo ou disciplina) - EAD',
-            self::GUIA_INTERPRETE_LIBRAS => 'Guia-Intérprete de Libras',
+            self::GUIA_INTERPRETE_LIBRAS => 'Guia-Intérprete',
             self::APOIO_ALUNOS_DEFICIENCIA => 'Profissional de apoio escolar para aluno(a)s com deficiência (Lei 13.146/2015)',
         ];
     }

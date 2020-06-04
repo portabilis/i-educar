@@ -298,9 +298,13 @@ class indice extends clsDetalhe
 
         if ($registro['nome_aluno']) {
             if ($caminhoFoto != null and $caminhoFoto != '') {
+                $url = $this->urlPresigner()->getPresignedUrl($caminhoFoto);
+
                 $this->addDetalhe([
                     'Nome Aluno',
-                    $registro['nome_aluno'] . '<p><img height="117" src="' . $this->urlPresigner()->getPresignedUrl($caminhoFoto) . '"/></p>'
+                    $registro['nome_aluno'] . '<p><img id="student-picture" height="117" src="' . $url . '"/></p>'
+                        . '<div><a class="rotate-picture" data-angle="90" href="javascript:void(0)"><i class="fa fa-rotate-left"></i> Girar para esquerda</a></div>'
+                        . '<div><a class="rotate-picture" data-angle="-90" href="javascript:void(0)"><i class="fa fa-rotate-right"></i> Girar para direita</a></div>'
                 ]);
             } else {
                 $this->addDetalhe(['Nome Aluno', $registro['nome_aluno']]);
@@ -848,15 +852,18 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Possui empregada doméstica', $reg['empregada_domestica']]);
             $this->addDetalhe(['Possui automóvel', $reg['automovel']]);
             $this->addDetalhe(['Possui motocicleta', $reg['motocicleta']]);
-            $this->addDetalhe(['Possui computador', $reg['computador']]);
             $this->addDetalhe(['Possui geladeira', $reg['geladeira']]);
             $this->addDetalhe(['Possui fogão', $reg['fogao']]);
             $this->addDetalhe(['Possui máquina de lavar', $reg['maquina_lavar']]);
             $this->addDetalhe(['Possui microondas', $reg['microondas']]);
             $this->addDetalhe(['Possui vídeo/dvd', $reg['video_dvd']]);
             $this->addDetalhe(['Possui televisão', $reg['televisao']]);
-            $this->addDetalhe(['Possui celular', $reg['celular']]);
             $this->addDetalhe(['Possui telefone', $reg['telefone']]);
+
+            $recursosTecnlogicos = json_decode($reg['recursos_tecnologicos']);
+            $recursosTecnlogicos = implode(", ", $recursosTecnlogicos);
+            $this->addDetalhe(['Possui acesso à recursos técnologicos?', $recursosTecnlogicos]);
+
             $this->addDetalhe(['Quantidade de pessoas', $reg['quant_pessoas']]);
             $this->addDetalhe(['Renda familiar', 'R$ ' . $reg['renda']]);
             $this->addDetalhe(['Possui água encanada', $reg['agua_encanada']]);

@@ -731,7 +731,7 @@ class indice extends clsCadastro
         ]);
 
         $this->inputsHelper()->select('localizacao_diferenciada', [
-            'label' => 'Localização diferenciada',
+            'label' => 'Localização diferenciada de residência',
             'value' => $this->localizacao_diferenciada,
             'resources' => SelectOptions::localizacoesDiferenciadasPessoa(),
             'required' => false,

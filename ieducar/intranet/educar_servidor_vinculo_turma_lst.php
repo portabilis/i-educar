@@ -199,7 +199,7 @@ class indice extends clsListagem
 
     $this->largura = '100%';
 
-    $this->breadcrumb('Vincular servidor à turmas', [
+    $this->breadcrumb('Registro de vínculos do professor', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
   }

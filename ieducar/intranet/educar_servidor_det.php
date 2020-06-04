@@ -37,6 +37,8 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'Educacenso/Model/DocenteDataMapper.php';
 
+use App\Models\Employee;
+
 /**
  * clsIndexBase class.
  *
@@ -237,10 +239,10 @@ class indice extends clsDetalhe
 
       $tab_disc = NULL;
 
-      $obj_disciplina_servidor = new clsPmieducarServidorDisciplina();
-      $lst_disciplina_servidor = $obj_disciplina_servidor->lista(null, $this->ref_cod_instituicao, $this->cod_servidor);
+      $employee = Employee::findOrFail($this->cod_servidor);
+      $disciplines = $employee->disciplines;
 
-      if ($lst_disciplina_servidor) {
+      if ($disciplines) {
         $tab_disc .= "<table cellspacing='0' cellpadding='0' width='200' border='0'";
 
         $class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
@@ -250,12 +252,10 @@ class indice extends clsDetalhe
           </tr>";
 
         $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-        foreach ($lst_disciplina_servidor as $disciplina) {
-          $componente = $componenteMapper->find($disciplina['ref_cod_disciplina']);
-
+        foreach ($disciplines as $discipline) {
           $tab_disc .= "
             <tr class='$class2' align='center'>
-              <td align='left'>{$componente->nome}</td>
+              <td align='left'>{$discipline->name}</td>
             </tr>";
 
           $class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
@@ -518,7 +518,7 @@ class indice extends clsDetalhe
     $this->url_cancelar = 'educar_servidor_lst.php';
     $this->largura = '100%';
 
-    $this->breadcrumb('Detalhe do servidor', [
+    $this->breadcrumb('Funções do servidor', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
   }

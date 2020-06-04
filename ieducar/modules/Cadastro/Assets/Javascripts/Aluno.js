@@ -235,8 +235,28 @@ var newSubmitForm = function (event) {
         }
     }
 
+    if (!validaObrigatoriedadeRecursosTecnologicos()) {
+        return false;
+    }
+
     submitFormExterno();
 };
+
+function validaObrigatoriedadeRecursosTecnologicos() {
+    let obrigarRecursosTecnologicos = $j('#obrigar_recursos_tecnologicos').val() == '1';
+    let recursosTecnologicos = $j('#recursos_tecnologicos__').val();
+
+    if (Array.isArray(recursosTecnologicos)) {
+        recursosTecnologicos = recursosTecnologicos.toString();
+    }
+
+    if (obrigarRecursosTecnologicos && !recursosTecnologicos) {
+        messageUtils.error("É necessário informar o campo: <strong>Possui acesso à recursos tecnológicos?</strong> da aba: <strong>Moradia</strong>.");
+        return false;
+    }
+
+    return true;
+}
 
 var $loadingDocumento = $j('<img>')
     .attr('src', 'imagens/indicator.gif')
@@ -728,11 +748,6 @@ resourceOptions.handleGet = function (dataResponse) {
         $j('#motocicleta').val('on');
     }
 
-    if (dataResponse.computador == 'S') {
-        $j('#computador').attr('checked', true);
-        $j('#computador').val('on');
-    }
-
     if (dataResponse.geladeira == 'S') {
         $j('#geladeira').attr('checked', true);
         $j('#geladeira').val('on');
@@ -776,11 +791,6 @@ resourceOptions.handleGet = function (dataResponse) {
     if (dataResponse.ddd_celular == 'S') {
         $j('#ddd_celular').attr('checked', true);
         $j('#ddd_celular').val('on');
-    }
-
-    if (dataResponse.celular == 'S') {
-        $j('#celular').attr('checked', true);
-        $j('#celular').val('on');
     }
 
     if (dataResponse.agua_encanada == 'S') {
@@ -838,6 +848,13 @@ resourceOptions.handleGet = function (dataResponse) {
     $j('#moradia').val(dataResponse.moradia).change();
     $j('#material').val(dataResponse.material).change();
     $j('#moradia_situacao').val(dataResponse.moradia_situacao).change();
+
+    if (dataResponse.recursos_tecnologicos) {
+        var recursosTecnologicos = JSON.parse(dataResponse.recursos_tecnologicos);
+        $j('#recursos_tecnologicos__').val(recursosTecnologicos);
+        $j('#recursos_tecnologicos__').trigger("chosen:updated");
+    }
+
     $j('#justificativa_falta_documentacao').val(dataResponse.justificativa_falta_documentacao).change();
 
     // Transporte escolar
@@ -1172,19 +1189,12 @@ var checkTipoCertidaoCivil = function () {
 
 function disableJustificativaFields() {
     $jField = $j('#justificativa_falta_documentacao');
-    $jField.makeUnrequired();
     $jField.attr('disabled', 'disabled');
 }
 
 function enableJustificativaFields() {
     $jField = $j('#justificativa_falta_documentacao');
     $jField.removeAttr('disabled');
-
-    if ($j('#obrigar_campos_censo').val() == '1') {
-      $jField.makeRequired();
-    } else {
-      $jField.makeUnrequired();
-    }
 }
 
 var handleGetPersonParentDetails = function (dataResponse, parentType) {
@@ -1708,7 +1718,8 @@ function canShowParentsFields() {
                         <option id="estado-civil-pessoa-aluno_3" value="3">Divorciado(a)</option>
                         <option id="estado-civil-pessoa-aluno_4" value="4">Separado(a)</option>
                         <option id="estado-civil-pessoa-aluno_1" value="1">Solteiro(a)</option>
-                        <option id="estado-civil-pessoa-aluno_5" value="5">Vi&uacute;vo(a)</option>
+                        <option id="estado-civil-pessoa-aluno_5" value="5">Viúvo(a)</option>
+                        <option id="estado-civil-pessoa-aluno_7" value="7">Não informado</option>
                       </select>
                       <label for="data-nasc-pessoa-aluno"> Data de nascimento<span class="campo_obrigatorio">*</span> </label>
                       <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-aluno" id="data-nasc-pessoa-aluno" value="" size="11" maxlength="10">
@@ -1838,7 +1849,7 @@ function canShowParentsFields() {
         }
         $j('#zona_localizacao_censo').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
 
-        $j('<label>').html('Localização diferenciada').attr('for', 'localizacao_diferenciada').insertBefore($j('#localizacao_diferenciada'));
+        $j('<label>').html('Localização diferenciada de residência').attr('for', 'localizacao_diferenciada').insertBefore($j('#localizacao_diferenciada'));
         $j('#localizacao_diferenciada').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
 
         $label = $j('<label>').html('Raça').attr('for', 'cor_raca').attr('style', 'display:block;').insertBefore($j('#cor_raca'));
@@ -1950,7 +1961,7 @@ function canShowParentsFields() {
             }
         });
 
-        $j('body').append('<div id="dialog-form-pessoa-parent"><form><h2></h2><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="49" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> <div id="falecido-modal"> <label>Falecido?</label><input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </div></fieldset><p><a id="link_cadastro_detalhado_parent" target="_blank">Cadastro detalhado</a></p></form></div>');
+        $j('body').append('<div id="dialog-form-pessoa-parent"><form><h2></h2><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="49" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option><option id="estado-civil-pessoa-parent_7" value="7">Não informado</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> <div id="falecido-modal"> <label>Falecido?</label><input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </div></fieldset><p><a id="link_cadastro_detalhado_parent" target="_blank">Cadastro detalhado</a></p></form></div>');
 
         $j('#dialog-form-pessoa-parent').find(':input').css('display', 'block');
 

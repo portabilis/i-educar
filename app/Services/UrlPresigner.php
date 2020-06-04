@@ -9,6 +9,8 @@ class UrlPresigner
     public function getPresignedUrl(string $url) : string
     {
         switch (config('filesystems.cloud')) {
+            case 'local':
+                return $url;
             case 's3':
                 return (new S3UrlPresigner())->getPresignedUrl($url);
             default:

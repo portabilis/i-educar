@@ -884,7 +884,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_EXAME;
 
                 if ($this->hasRegraAvaliacaoReprovacaoAutomatica()) {
-                    if (!is_numeric($this->preverNotaRecuperacao($id))) {
+                    $previsaoRecuperacao = $this->preverNotaRecuperacao($id);
+                    if (is_numeric($previsaoRecuperacao) && ($previsaoRecuperacao == '+' . $this->getRegraAvaliacaoNotaMaximaExameFinal())) {
                         $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
                         if ($this->exibeSituacao($id)) {
                             $qtdComponenteReprovado++;
@@ -2339,9 +2340,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * Insere ou atualiza as faltas no boletim.
      *
+     * @param bool $updateAverage
      * @return Avaliacao_Service_Boletim Provê interface fluída
+     * @throws CoreExt_DataMapper_Exception
      */
-    public function saveFaltas()
+    public function saveFaltas($updateAverage = false)
     {
         $faltaAluno = $this->_getFaltaAluno();
         $faltas = $this->getFaltas();
@@ -2352,8 +2355,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $this->getFaltaAbstractDataMapper()->save($falta);
         }
 
-        // Atualiza as médias
-        $this->_updateNotaComponenteMedia();
+        if ($this->getRegraAvaliacaoTipoNota() == RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+            return $this;
+        }
+
+        if ($updateAverage) {
+            // Atualiza as médias
+            $this->_updateNotaComponenteMedia();
+        }
 
         return $this;
     }

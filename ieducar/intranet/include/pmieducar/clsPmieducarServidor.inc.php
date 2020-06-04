@@ -829,6 +829,16 @@ class clsPmieducarServidor extends Model
                   AND qhh.dia_semana <> '$int_dia_semana'
                   AND qhh.ref_servidor = a.ref_cod_servidor
                   AND quadro_horario.ano = $ano_alocacao
+                  AND qhh.sequencial = (
+                    SELECT s_qhh.sequencial
+                    FROM pmieducar.quadro_horario_horarios s_qhh
+                    WHERE s_qhh.dia_semana = qhh.dia_semana
+                    AND s_qhh.hora_inicial = qhh.hora_inicial
+                    AND s_qhh.ref_cod_quadro_horario = quadro_horario.cod_quadro_horario
+                    AND s_qhh.hora_final = qhh.hora_final
+                    ORDER BY s_qhh.sequencial DESC
+                    LIMIT 1
+                  )
                   GROUP BY qhh.ref_servidor ),'00:00') + '$str_hr_ves' +  COALESCE(
                   (SELECT SUM( qhha.hora_final - qhha.hora_inicial )
                     FROM pmieducar.quadro_horario_horarios_aux qhha

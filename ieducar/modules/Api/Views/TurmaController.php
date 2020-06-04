@@ -83,6 +83,7 @@ class TurmaController extends ApiCoreController
             SELECT
                 cod_matricula,
                 sequencial_fechamento,
+                sequencial,
                 relatorio.get_texto_sem_caracter_especial(pessoa.nome) AS aluno,
                 data_enturmacao,
                 CASE WHEN dependencia THEN to_char(data_enturmacao,'mmdd')::int ELSE 0 END as ord_dependencia,
@@ -112,6 +113,7 @@ class TurmaController extends ApiCoreController
         $attrs = [
             'cod_matricula',
             'sequencial_fechamento',
+            'sequencial',
             'aluno',
             'data_enturmacao',
             'ord_dependencia',
@@ -124,15 +126,17 @@ class TurmaController extends ApiCoreController
                 $codTurma,
                 $aluno['cod_matricula'],
                 $aluno['sequencial_fechamento'],
+                $aluno['sequencial'],
                 $key + 1
             ];
 
             $sql = "
                 UPDATE pmieducar.matricula_turma
-                SET sequencial_fechamento = $4
+                SET sequencial_fechamento = $5
                 WHERE matricula_turma.ref_cod_turma = $1
                 AND matricula_turma.ref_cod_matricula = $2
                 AND sequencial_fechamento = $3
+                AND sequencial = $4
             ";
 
             $this->fetchPreparedQuery($sql, $parametros);
@@ -234,10 +238,10 @@ class TurmaController extends ApiCoreController
                 FROM pmieducar.turma t
                 INNER JOIN pmieducar.escola e
                     ON e.cod_escola = t.ref_ref_cod_escola
-                INNER JOIN modules.regra_avaliacao_serie_ano rasa ON true
+                LEFT JOIN modules.regra_avaliacao_serie_ano rasa ON true
                     AND rasa.serie_id = t.ref_ref_cod_serie
                     AND rasa.ano_letivo = $2
-                INNER JOIN modules.regra_avaliacao ra
+                LEFT JOIN modules.regra_avaliacao ra
                     ON ra.id = (case when e.utiliza_regra_diferenciada then rasa.regra_avaliacao_diferenciada_id else rasa.regra_avaliacao_id end)
                 WHERE t.ref_cod_instituicao = $1
                     AND t.ano = $2
