@@ -414,12 +414,6 @@ class clsPmieducarAluno extends Model
                 $gruda = ', ';
             }
 
-            if (isset($this->emancipado)) {
-                $condicaoBd = $this->emancipado ? 'TRUE' : 'FALSE';
-                $set .= "{$gruda}emancipado = {$condicaoBd}";
-                $gruda = ', ';
-            }
-
             if (is_string($this->tipo_responsavel) && sizeof($this->tipo_responsavel) <= 1) {
                 $set .= "{$gruda}tipo_responsavel = '{$this->tipo_responsavel}'";
                 $gruda = ', ';
