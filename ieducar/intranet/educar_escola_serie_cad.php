@@ -340,8 +340,6 @@ class indice extends clsCadastro
                         $conteudo .= "  <label style='display: block; float: left; width: 100px;'>Etapas utilizadas: <input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapas_utilizadas}' size='5' maxlength='7'></label>";
                     }
 
-                    $conteudo .= '</div>';
-
                     if ($row == 1) {
                         $conteudo .= '<label style="display: block; float: left; width: 250px">&nbsp;</label>
                                      <span style="display: block; float: left; width: 100px">&nbsp;</span>
@@ -356,9 +354,13 @@ class indice extends clsCadastro
                                         <a class="clone-values"
                                             onclick="cloneValues(' . $registro->id . ',\'anos_letivos\')">
                                         <i class="fa fa-clone" aria-hidden="true"></i>
+                                        </a>
                                      </label>';
                     }
                     $row++;
+
+                    $conteudo .= '</div>';
+
                     $conteudo .= '<br style="clear: left" />';
 
                     $cargaHoraria = '';
