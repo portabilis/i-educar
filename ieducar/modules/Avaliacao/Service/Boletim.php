@@ -1083,8 +1083,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $presenca->porcentagemPresencaRegra = $this->getRegraAvaliacaoPorcentagemPresenca();
 
         $presenca->tipoFalta                = $this->getRegraAvaliacaoTipoPresenca();
-        $presenca->cargaHoraria             = $this->getCargaHoraria($this->getOption('matricula'));
-        $presenca->diasLetivos              = $this->getDiasLetivosHoraria($this->getOption('matricula'));
+        $presenca->cargaHoraria             = $this->getCargaHoraria($this->getOption('matricula'), $ignorarSeriesCiclo);
+        $presenca->diasLetivos              = $this->getDiasLetivos($this->getOption('matricula'), $ignorarSeriesCiclo);
 
         $presenca->cursoHoraFalta           = $this->getOption('cursoHoraFalta');
         $presenca->componentesCurriculares  = [];
@@ -1114,7 +1114,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         if ($tipoFaltaGeral) {
             $faltas = $this->getFaltasGerais();
-            if ($this->isCyclicRegime()) {
+            if (($this->isCyclicRegime() && !$ignorarSeriesCiclo)) {
                 $faltas = $this->getFaltasGeraisCiclo();
             }
 
@@ -1129,7 +1129,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         } elseif ($tipoFaltaPorComponente) {
             $faltas = $this->getFaltasComponentes();
 
-            if ($this->isCyclicRegime()) {
+            if (($this->isCyclicRegime() && !$ignorarSeriesCiclo)) {
                 $faltas = $this->getFaltasComponentesCiclo();
                 $componentes = $this->getComponentesRegimeCiclico($enrollmentId);
             }
@@ -1151,7 +1151,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $componenteEtapa = array_pop($falta);
 
                 $id = $componenteEtapa->get('componenteCurricular');
-                if ($this->isCyclicRegime()) {
+                if (($this->isCyclicRegime() && !$ignorarSeriesCiclo)) {
                     $studentAbsence = LegacyStudentAbsence::find($componenteEtapa->get('faltaAluno'));
                     $id = $componenteEtapa->get('componenteCurricular') . '||' . $studentAbsence->matricula_id;
                 }
@@ -3287,9 +3287,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         return $amountReproved <= $this->getRegraAvaliacaoQtdDisciplinasDependencia();
     }
 
-    private function getCargaHoraria($registration)
+    private function getCargaHoraria($registration, $ignorarSeriesCiclo)
     {
-        if (!$this->isCyclicRegime()) {
+        if (!$this->isCyclicRegime() || $ignorarSeriesCiclo) {
             return $this->getOption('serieCargaHoraria');
         }
 
@@ -3304,9 +3304,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         return $cargaHoraria;
     }
 
-    private function getDiasLetivosHoraria($registration)
+    private function getDiasLetivos($registration, $ignorarSeriesCiclo)
     {
-        if (!$this->isCyclicRegime()) {
+        if (!$this->isCyclicRegime() || $ignorarSeriesCiclo) {
             return $this->getOption('serieDiasLetivos');
         }
 
