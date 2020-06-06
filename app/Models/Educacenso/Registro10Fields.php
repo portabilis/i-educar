@@ -602,6 +602,16 @@ class Registro10Fields implements RegistroEducacenso
     public $qtdFonoaudiologo;
 
     /**
+     * @var int
+     */
+    public $qtdViceDiretor;
+
+    /**
+     * @var int
+     */
+    public $qtdOrientadorComunitario;
+
+    /**
      * @var array
      */
     public $orgaosColegiados;

@@ -1756,6 +1756,7 @@ class DiarioApiController extends ApiCoreController
         }
 
         $rule['definir_componente_por_etapa'] = $evaluationRule->definir_componente_etapa == 1;
+        $rule['formula_recuperacao_final'] = $evaluationRule->formula_recuperacao_id;
 
         return $rule;
     }

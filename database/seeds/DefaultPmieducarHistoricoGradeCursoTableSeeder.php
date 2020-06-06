@@ -12,8 +12,22 @@ class DefaultPmieducarHistoricoGradeCursoTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::unprepared(
-            file_get_contents(__DIR__ . '/../sqls/inserts/pmieducar.historico_grade_curso.sql')
-        );
+        DB::table('pmieducar.historico_grade_curso')->insert([
+            'id' => 1,
+            'descricao_etapa' => 'Série',
+            'created_at' => now(),
+        ]);
+
+        DB::table('pmieducar.historico_grade_curso')->insert([
+            'id' => 2,
+            'descricao_etapa' => 'Ano',
+            'created_at' => now(),
+        ]);
+
+        DB::table('pmieducar.historico_grade_curso')->insert([
+            'id' => 3,
+            'descricao_etapa' => 'EJA',
+            'created_at' => now(),
+        ]);
     }
 }

@@ -1564,8 +1564,9 @@ function updateComponenteCurricularHeaders($targetElement, $tagElement) {
   hProgressaoManualCiclo = regras.filter(function(regra){return regra.progressao_manual_ciclo; }).length == regras.length;
   hProgressaoContinuada = regras.filter(function(regra){return regra.progressao_continuada; }).length == regras.length;
   hAlgumaProgressaoManual = regras.filter(function(regra){return regra.progressao_manual; }).length;
+
   hAlgumaProgressaoManualCiclo = regras.filter(function(regra){return regra.progressao_manual_ciclo; }).length;
-  formulaCalculoMediaRecuperacao = regras.filter(function(regra){return regra.calcula_media_rec_paralela; }).length > 0;
+  formulaCalculoMediaRecuperacao = regras.filter(function(regra){return regra.formula_recuperacao_final; }).length > 0;
 
   $tagElement.clone().addClass('center').html(safeUtf8Decode('Situação')).appendTo($targetElement);
 

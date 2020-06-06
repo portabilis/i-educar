@@ -12,8 +12,18 @@ class DefaultPmieducarInstituicaoTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::unprepared(
-            file_get_contents(__DIR__ . '/../sqls/inserts/pmieducar.instituicao.sql')
-        );
+        DB::table('pmieducar.instituicao')->insert([
+            'cod_instituicao' => 1,
+            'ref_usuario_cad' => 1,
+            'ref_idtlog' => 'RUA',
+            'ref_sigla_uf' => 'SC',
+            'cep' => 88820000,
+            'cidade' => 'Modelópolis',
+            'bairro' => 'Centro',
+            'logradouro' => 'Rua João Paulo Segundo',
+            'nm_responsavel' => 'Secretaria de Educação e Cultura',
+            'data_cadastro' => now(),
+            'nm_instituicao' => 'Prefeitura Municipal de Modelópolis',
+        ]);
     }
 }

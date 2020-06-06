@@ -57,6 +57,14 @@ class LegacyStudentAbsence extends Model
     }
 
     /**
+     * @return HasMany
+     */
+    public function generalAbsences()
+    {
+        return $this->hasMany(LegacyGeneralAbsence::class, 'falta_aluno_id');
+    }
+
+    /**
      * @return bool
      */
     public function isByDiscipline()

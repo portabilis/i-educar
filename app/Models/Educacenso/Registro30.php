@@ -350,4 +350,21 @@ class Registro30 implements RegistroEducacenso
 
         return count(array_keys($arrayDeficienciasMultiplas, 1)) > 1 ? 1 : 0;
     }
+
+    /**
+     * @return array
+     */
+    public function cursosDeFormacaoSuperiorExtintos()
+    {
+        return [
+            '145F14' => 'Letras - Língua Estrangeira - Licenciatura',
+            '145F17' => 'Letras - Língua Portuguesa e Estrangeira - Licenciatura',
+            '220L03' => 'Letras - Língua Portuguesa e Estrangeira - Bacharelado',
+            '222L01' => 'Letras - Língua Estrangeira - Bacharelado',
+            '443C01' => 'Ciência da Terra - Licenciatura',
+            '999990' => 'Outro curso de formação superior - Licenciatura',
+            '999991' => 'Outro curso de formação superior - Bacharelado',
+            '999992' => 'Outro curso de formação superior - Tecnológico',
+        ];
+    }
 }
