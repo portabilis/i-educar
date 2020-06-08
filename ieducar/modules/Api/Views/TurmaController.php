@@ -238,10 +238,10 @@ class TurmaController extends ApiCoreController
                 FROM pmieducar.turma t
                 INNER JOIN pmieducar.escola e
                     ON e.cod_escola = t.ref_ref_cod_escola
-                INNER JOIN modules.regra_avaliacao_serie_ano rasa ON true
+                LEFT JOIN modules.regra_avaliacao_serie_ano rasa ON true
                     AND rasa.serie_id = t.ref_ref_cod_serie
                     AND rasa.ano_letivo = $2
-                INNER JOIN modules.regra_avaliacao ra
+                LEFT JOIN modules.regra_avaliacao ra
                     ON ra.id = (case when e.utiliza_regra_diferenciada then rasa.regra_avaliacao_diferenciada_id else rasa.regra_avaliacao_id end)
                 WHERE t.ref_cod_instituicao = $1
                     AND t.ano = $2

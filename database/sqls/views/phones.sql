@@ -1,4 +1,4 @@
-create or replace view phones as
+create or replace view public.phones as
 select
 	idpes || '-' || tipo as "id",
 	idpes as "person_id",
