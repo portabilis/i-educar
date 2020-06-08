@@ -12,8 +12,24 @@ class DefaultPmieducarTipoAutorTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::unprepared(
-            file_get_contents(__DIR__ . '/../sqls/inserts/pmieducar.tipo_autor.sql')
-        );
+        DB::table('pmieducar.tipo_autor')->insert([
+            'codigo' => 1,
+            'tipo_autor' => 'Autor',
+        ]);
+
+        DB::table('pmieducar.tipo_autor')->insert([
+            'codigo' => 2,
+            'tipo_autor' => 'Evento',
+        ]);
+
+        DB::table('pmieducar.tipo_autor')->insert([
+            'codigo' => 3,
+            'tipo_autor' => 'Entidade coletiva',
+        ]);
+
+        DB::table('pmieducar.tipo_autor')->insert([
+            'codigo' => 4,
+            'tipo_autor' => 'Anônimo',
+        ]);
     }
 }

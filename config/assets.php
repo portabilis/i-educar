@@ -13,7 +13,7 @@ return [
     | Example: http://website.domain/path/to/asset.css?v=0.0.1
     |
     */
-    
+
     'version' => '0.0.55',
 
     /*

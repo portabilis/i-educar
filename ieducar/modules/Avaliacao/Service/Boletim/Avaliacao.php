@@ -80,6 +80,20 @@ trait Avaliacao_Service_Boletim_Avaliacao
     protected $_pareceresGerais = [];
 
     /**
+     * Faltas do aluno nos componentes cursados em todas as series do curso.
+     *
+     * @var array
+     */
+    protected $_faltasComponentesCiclo = [];
+
+    /**
+     * Faltas do aluno no geral em todas as series do curso..
+     *
+     * @var array
+     */
+    protected $_faltasGeraisCiclo = [];
+
+    /**
      * Retorna as instâncias de Avaliacao_Model_NotaComponente do aluno.
      *
      * @return array
@@ -303,6 +317,49 @@ trait Avaliacao_Service_Boletim_Avaliacao
     public function setPareceresGerais(array $pareceresGerais)
     {
         $this->_pareceresGerais = $pareceresGerais;
+
+        return $this;
+    }
+
+    /**
+     * Retorna as instâncias de Avaliacao_Model_FaltaGeral do aluno.
+     *
+     * @return array
+     */
+    public function getFaltasGeraisCiclo()
+    {
+        return $this->_faltasGeraisCiclo;
+    }
+
+    /**
+     * @param array $faltasGeraisCiclo
+     * @return $this
+     */
+    public function setFaltasGeraisCiclo(array $faltasGeraisCiclo)
+    {
+        $this->_faltasGeraisCiclo = $faltasGeraisCiclo;
+
+        return $this;
+    }
+
+    /**
+     * Retorna as instâncias de Avaliacao_Model_FaltaGeral do aluno.
+     *
+     * @return array
+     */
+    public function getFaltasComponentesCiclo()
+    {
+        return $this->_faltasComponentesCiclo;
+    }
+
+
+    /**
+     * @param array $faltasComponentesCiclo
+     * @return $this
+     */
+    public function setFaltasComponentesCiclo(array $faltasComponentesCiclo)
+    {
+        $this->_faltasComponentesCiclo = $faltasComponentesCiclo;
 
         return $this;
     }
