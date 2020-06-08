@@ -48,6 +48,22 @@ class LegacyStudentAbsence extends Model
         return $this->hasMany(LegacyGeneralAbsence::class, 'falta_aluno_id');
     }
 
+        /**
+     * @return HasMany
+     */
+    public function absencesByDiscipline()
+    {
+        return $this->hasMany(LegacyDisciplineAbsence::class, 'falta_aluno_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function generalAbsences()
+    {
+        return $this->hasMany(LegacyGeneralAbsence::class, 'falta_aluno_id');
+    }
+
     /**
      * @return bool
      */

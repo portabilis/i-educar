@@ -1069,7 +1069,7 @@ class DiarioApiController extends ApiCoreController
     protected function trySaveServiceBoletimFaltas()
     {
         try {
-            $this->serviceBoletim()->saveFaltas();
+            $this->serviceBoletim()->saveFaltas(true);
             $this->serviceBoletim()->promover();
         } catch (CoreExt_Service_Exception $e) {
         }
@@ -1755,6 +1755,7 @@ class DiarioApiController extends ApiCoreController
         }
 
         $rule['definir_componente_por_etapa'] = $evaluationRule->definir_componente_etapa == 1;
+        $rule['formula_recuperacao_final'] = $evaluationRule->formula_recuperacao_id;
 
         return $rule;
     }

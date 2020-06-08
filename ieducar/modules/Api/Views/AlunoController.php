@@ -235,7 +235,8 @@ class AlunoController extends ApiCoreController
             $this->validateDeficiencies() &&
             $this->validateBirthCertificate() &&
             $this->validateNis() &&
-            $this->validateInepExam()
+            $this->validateInepExam() &&
+            $this->validateTechnologicalResources()
         );
     }
 
@@ -246,7 +247,8 @@ class AlunoController extends ApiCoreController
             $this->validateDeficiencies()&&
             $this->validateBirthCertificate()&&
             $this->validateNis()&&
-            $this->validateInepExam()
+            $this->validateInepExam()&&
+            $this->validateTechnologicalResources()
         );
     }
 
@@ -303,6 +305,21 @@ class AlunoController extends ApiCoreController
 
         $this->messenger->append($validator->getMessage());
         return false;
+    }
+
+        /**
+     * @return bool
+     */
+    private function validateTechnologicalResources()
+    {
+        $technologicalResources = array_filter((array)$this->getRequest()->recursos_tecnologicos__);
+
+        if (in_array('Nenhum', $technologicalResources) && count($technologicalResources) > 1) {
+            $this->messenger->append('Não é possível informar mais de uma opção no campo: <strong>Possui acesso à recursos tecnológicos?</strong>, quando a opção: <b>Nenhum</b> estiver selecionada.');
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -485,15 +502,17 @@ class AlunoController extends ApiCoreController
         $obj->empregada_domestica = ($this->getRequest()->empregada_domestica == 'on' ? 'S' : 'N');
         $obj->automovel = ($this->getRequest()->automovel == 'on' ? 'S' : 'N');
         $obj->motocicleta = ($this->getRequest()->motocicleta == 'on' ? 'S' : 'N');
-        $obj->computador = ($this->getRequest()->computador == 'on' ? 'S' : 'N');
         $obj->geladeira = ($this->getRequest()->geladeira == 'on' ? 'S' : 'N');
         $obj->fogao = ($this->getRequest()->fogao == 'on' ? 'S' : 'N');
         $obj->maquina_lavar = ($this->getRequest()->maquina_lavar == 'on' ? 'S' : 'N');
         $obj->microondas = ($this->getRequest()->microondas == 'on' ? 'S' : 'N');
         $obj->video_dvd = ($this->getRequest()->video_dvd == 'on' ? 'S' : 'N');
         $obj->televisao = ($this->getRequest()->televisao == 'on' ? 'S' : 'N');
-        $obj->celular = ($this->getRequest()->celular == 'on' ? 'S' : 'N');
         $obj->telefone = ($this->getRequest()->telefone == 'on' ? 'S' : 'N');
+
+        $recursosTeconologicos = array_filter((array)$this->getRequest()->recursos_tecnologicos__);
+        $obj->recursos_tecnologicos = json_encode(array_values($recursosTeconologicos));
+
         $obj->quant_pessoas = $this->getRequest()->quant_pessoas;
         $obj->renda = floatval(preg_replace("/[^0-9\.]/", '', str_replace(',', '.', $this->getRequest()->renda)));
         $obj->agua_encanada = ($this->getRequest()->agua_encanada == 'on' ? 'S' : 'N');
@@ -1001,7 +1020,7 @@ class AlunoController extends ApiCoreController
                                 else 1=1
                             end
                     )
-                    and translate(upper(coalesce(fisica.nome_social, \'\') || pessoa.nome),\'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',\'AAAAAAEEEEIIIIOOOOOUUUUCYN\') like translate(upper(\'%\'|| $1 ||\'%\'),\'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ\',\'AAAAAAEEEEIIIIOOOOOUUUUCYN\')
+                    and pessoa.slug ilike \'%\'|| $1 ||\'%\'
                     and matricula.aprovado in (1, 2, 3, 4, 7, 8, 9)
                 limit 15
             ) as alunos
@@ -1239,6 +1258,8 @@ class AlunoController extends ApiCoreController
 
             $modified = $this->getRequest()->modified;
             $escola = $this->getRequest()->escola;
+            $ano = $this->getRequest()->ano ?? null;
+            $cursando = $this->getRequest()->apenas_cursando ?? null;
 
             if (is_array($escola)) {
                 $escola = implode(', ', $escola);
@@ -1247,12 +1268,23 @@ class AlunoController extends ApiCoreController
             $params = [];
 
             $where = '';
+            $whereAno = '';
+            $whereCursando = '';
             $whereDeleteds = '';
 
             if ($modified) {
                 $params[] = $modified;
                 $where = 'AND greatest(p.data_rev::timestamp(0), f.data_rev::timestamp(0), a.updated_at, ff.updated_at) >= $1';
                 $whereDeleteds = 'AND aluno_excluidos.deleted_at >= $1';
+            }
+
+            if ($ano) {
+                $ano = intval($ano);
+                $whereAno = " AND ano = {$ano}";
+            }
+
+            if ($cursando) {
+                $whereCursando = " AND aprovado = 3";
             }
 
             $sql = "
@@ -1275,7 +1307,12 @@ class AlunoController extends ApiCoreController
                 LEFT JOIN cadastro.fisica_foto ff ON p.idpes = ff.idpes
                 WHERE TRUE
                 and exists (
-                    select * from pmieducar.matricula where ref_ref_cod_escola in ({$escola}) and ref_cod_aluno = a.cod_aluno
+                    select * 
+                    from pmieducar.matricula
+                    where ref_ref_cod_escola in ({$escola}) 
+                    and ref_cod_aluno = a.cod_aluno
+                    $whereAno
+                    $whereCursando
                 )
                 {$where}
 
@@ -1294,7 +1331,12 @@ class AlunoController extends ApiCoreController
                 LEFT JOIN cadastro.fisica_foto ff ON p.idpes = ff.idpes
                 WHERE TRUE
                 and exists (
-                    select * from pmieducar.matricula where ref_ref_cod_escola in ({$escola}) and ref_cod_aluno = aluno_excluidos.cod_aluno
+                    select * 
+                    from pmieducar.matricula 
+                    where ref_ref_cod_escola in ({$escola}) 
+                    and ref_cod_aluno = aluno_excluidos.cod_aluno
+                    $whereAno
+                    $whereCursando
                 )
                 {$whereDeleteds}
 

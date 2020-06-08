@@ -71,4 +71,12 @@ class EducacensoImportJob implements ShouldQueue
 
         DB::commit();
     }
+
+    public function tags()
+    {
+        return [
+            $this->databaseConnection,
+            'educacenso-import'
+        ];
+    }
 }

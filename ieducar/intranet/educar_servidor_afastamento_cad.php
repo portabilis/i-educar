@@ -137,7 +137,7 @@ class indice extends clsCadastro {
 
     $this->nome_url_cancelar = "Cancelar";
 
-    $this->breadcrumb('Afastar servidor', [
+    $this->breadcrumb('Registro de afastamento do servidor', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
 

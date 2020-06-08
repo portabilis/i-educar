@@ -46,7 +46,7 @@
     "71007" : "71007 - Promoção da Saúde",
     "10103" : "10103 - Iniciação Científica",
     "13301" : "13301 - Educação Ambiental e Desenvolvimento Sustentável",
-    "13108" : "13108 - Economia Solidária e Criativa/Educação Econômica (Educação Financeira e Fiscal)",
+    "13104" : "1310 - Conservação do solo e composteira: canteiros sustentáveis (horta) e/ou jardinagem escolar",
     "14101" : "14101 - Fotografia",
     "14102" : "14102 - História em Quadrinhos",
     "14103" : "14103 - Jornal Escolar",
@@ -56,5 +56,13 @@
     "14202" : "14202 - Tecnologicas Educacionais",
     "14203" : "14203 - Ambientes de Redes Sociais",
     "14999" : "14999 - Outra Categoria de Comunicação, Uso de Mídias e Cultura Digital e Tecnológica",
-    "15101" : "15101 - Memória e História das Comunidades Tradicionais"
+    "15101" : "15101 - Memória e História das Comunidades Tradicionais",
+    "15201" : "15201 - Memória e História das Cultura Afro-Brasileira e Africana",
+    "15301" : "15301 - Memória e História das Culturas e Indígenas",
+    "17101" : "17101 - Educação para o Consumo Sustentável",
+    "17102" : "17102 - Economia Solidária e Criativa",
+    "17201" : "17201 - Educação Financeira",
+    "17202" : "17202 - Economia",
+    "17301" : "17301 - Controle social do gasto público",
+    "17302" : "17302 - Educação Tributária"
 }

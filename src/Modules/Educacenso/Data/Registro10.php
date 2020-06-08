@@ -142,9 +142,9 @@ class Registro10 extends AbstractRegistro
             $data->equipamentosAcessoInternetComputadorMesa() ?: 0 , // 107
             $data->equipamentosAcessoInternetDispositivosPessoais() ?: 0 , // 108
             $data->usoInternetNaoPossui() ? null : ($data->acessoInternet ?: 0), // 109
-            $data->possuiComputadores() ? ($data->redeLocalACabo() ?: 0) : null, // 110
-            $data->possuiComputadores() ? ($data->redeLocalWireless() ?: 0) : null, // 111
-            $data->possuiComputadores() ? ($data->redeLocalNenhuma() ?: 0) : null, // 112
+            ($data->possuiComputadores() || $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalACabo() ?: 0) : null, // 110
+            ($data->possuiComputadores() || $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalWireless() ?: 0) : null, // 111
+            ($data->possuiComputadores() || $data->possuiComputadoresDeMesaTabletsEPortateis()) ? ($data->redeLocalNenhuma() ?: 0) : null, // 112
             $data->qtdAuxiliarAdministrativo ?: null, // 113
             $data->qtdAuxiliarServicosGerais ?: null, // 114
             $data->qtdBibliotecarios ?: null, // 115
@@ -158,47 +158,49 @@ class Registro10 extends AbstractRegistro
             $data->qtdSecretarioEscolar ?: null, // 123
             $data->qtdSegurancas ?: null, // 124
             $data->qtdTecnicos ?: null, // 125
-            $data->alimentacaoEscolarAlunos, // 126
-            $data->organizacaoEnsinoSerieAno() ?: 0, // 127
-            $data->organizacaoEnsinoPeriodosSemestrais() ?: 0, // 128
-            $data->organizacaoEnsinoCliclosEnsinoFundamental() ?: 0, // 129
-            $data->organizacaoEnsinoGruposNaoSeriados() ?: 0, // 130
-            $data->organizacaoEnsinoModulos() ?: 0, // 131
-            $data->organizacaoEnsinoAlternanciaRegular() ?: 0, // 132
-            $data->instrumentosPedagogicosAcervoMultimidia() ?: 0, // 133
-            $data->instrumentosPedagogicosBrinquedrosEducacaoInfantil() ?: 0, // 134
-            $data->instrumentosPedagogicosMateriaisCientificos() ?: 0, // 135
-            $data->instrumentosPedagogicosAmplificacaoDifusaoSom() ?: 0, // 136
-            $data->instrumentosPedagogicosInstrumentosMusicais() ?: 0, // 137
-            $data->instrumentosPedagogicosJogosEducativos() ?: 0, // 138
-            $data->instrumentosPedagogicosMateriaisAtividadesCulturais() ?: 0, // 139
-            $data->instrumentosPedagogicosMateriaisPraticaDesportiva() ?: 0, // 140
-            $data->instrumentosPedagogicosMateriaisEducacaoIndigena() ?: 0, // 141
-            $data->instrumentosPedagogicosMateriaisRelacoesEtnicosRaciais() ?: 0, // 142
-            $data->instrumentosPedagogicosMateriaisEducacaoCampo() ?: 0, // 143
-            $data->educacaoIndigena, // 144
-            $data->educacaoIndigena ? ($data->linguaMinistradaIndigena() ?: 0) : null, // 145
-            $data->educacaoIndigena ? ($data->linguaMinistradaPortugues() ?: 0) : null, // 146
-            $data->educacaoIndigena && $data->linguaMinistradaIndigena() ? ($data->codigoLinguaIndigena[0] ?? null) : null, // 147
-            $data->educacaoIndigena && $data->linguaMinistradaIndigena() ? ($data->codigoLinguaIndigena[1] ?? null) : null, // 148
-            $data->educacaoIndigena && $data->linguaMinistradaIndigena() ? ($data->codigoLinguaIndigena[2] ?? null) : null, // 149
-            $data->exameSelecaoIngresso ?: 0, // 150
-            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasAutodeclaracaoPpi() ?: 0) : null, // 151
-            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasCondicaoRenda() ?: 0) : null, // 152
-            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasEscolaPublica() ?: 0) : null, // 153
-            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasPcd() ?: 0) : null, // 154
-            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasOutros() ?: 0) : null, // 155
-            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasNaoPossui() ?: 0) : null, // 156
-            empty($data->url) ? 0 : 1, // 157
-            $data->compartilhaEspacosAtividadesIntegracao ?: 0, // 158
-            $data->usaEspacosEquipamentosAtividadesRegulares ?: 0, // 159
-            $data->orgaosColegiadosAssociacaoPais() ?: null, // 160
-            $data->orgaosColegiadosAssociacaoPaisEMestres() ?: null, // 161
-            $data->orgaosColegiadosConselhoEscolar() ?: null, // 162
-            $data->orgaosColegiadosGremioEstudantil() ?: null, // 163
-            $data->orgaosColegiadosOutros() ?: null, // 164
-            $data->orgaosColegiadosNenhum() ?: null, // 165
-            $data->projetoPoliticoPedagogico ?: 0, // 166
+            $data->qtdViceDiretor ?: null, // 126
+            $data->qtdOrientadorComunitario ?: null, // 127
+            $data->alimentacaoEscolarAlunos, // 128
+            $data->organizacaoEnsinoSerieAno() ?: 0, // 129
+            $data->organizacaoEnsinoPeriodosSemestrais() ?: 0, // 130
+            $data->organizacaoEnsinoCliclosEnsinoFundamental() ?: 0, // 131
+            $data->organizacaoEnsinoGruposNaoSeriados() ?: 0, // 132
+            $data->organizacaoEnsinoModulos() ?: 0, // 133
+            $data->organizacaoEnsinoAlternanciaRegular() ?: 0, // 134
+            $data->instrumentosPedagogicosAcervoMultimidia() ?: 0, // 135
+            $data->instrumentosPedagogicosBrinquedrosEducacaoInfantil() ?: 0, // 136
+            $data->instrumentosPedagogicosMateriaisCientificos() ?: 0, // 137
+            $data->instrumentosPedagogicosAmplificacaoDifusaoSom() ?: 0, // 138
+            $data->instrumentosPedagogicosInstrumentosMusicais() ?: 0, // 139
+            $data->instrumentosPedagogicosJogosEducativos() ?: 0, // 140
+            $data->instrumentosPedagogicosMateriaisAtividadesCulturais() ?: 0, // 141
+            $data->instrumentosPedagogicosMateriaisPraticaDesportiva() ?: 0, // 142
+            $data->instrumentosPedagogicosMateriaisEducacaoIndigena() ?: 0, // 143
+            $data->instrumentosPedagogicosMateriaisRelacoesEtnicosRaciais() ?: 0, // 144
+            $data->instrumentosPedagogicosMateriaisEducacaoCampo() ?: 0, // 145
+            $data->educacaoIndigena, // 146
+            $data->educacaoIndigena ? ($data->linguaMinistradaIndigena() ?: 0) : null, // 147
+            $data->educacaoIndigena ? ($data->linguaMinistradaPortugues() ?: 0) : null, // 148
+            $data->educacaoIndigena && $data->linguaMinistradaIndigena() ? ($data->codigoLinguaIndigena[0] ?? null) : null, // 149
+            $data->educacaoIndigena && $data->linguaMinistradaIndigena() ? ($data->codigoLinguaIndigena[1] ?? null) : null, // 150
+            $data->educacaoIndigena && $data->linguaMinistradaIndigena() ? ($data->codigoLinguaIndigena[2] ?? null) : null, // 151
+            $data->exameSelecaoIngresso ?: 0, // 152
+            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasAutodeclaracaoPpi() ?: 0) : null, // 153
+            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasCondicaoRenda() ?: 0) : null, // 154
+            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasEscolaPublica() ?: 0) : null, // 155
+            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasPcd() ?: 0) : null, // 156
+            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasOutros() ?: 0) : null, // 157
+            $data->exameSelecaoIngresso ? ($data->reservaVagasCotasNaoPossui() ?: 0) : null, // 158
+            empty($data->url) ? 0 : 1, // 159
+            $data->compartilhaEspacosAtividadesIntegracao ?: 0, // 160
+            $data->usaEspacosEquipamentosAtividadesRegulares ?: 0, // 161
+            $data->orgaosColegiadosAssociacaoPais() ?: 0, // 162
+            $data->orgaosColegiadosAssociacaoPaisEMestres() ?: 0, // 163
+            $data->orgaosColegiadosConselhoEscolar() ?: 0, // 164
+            $data->orgaosColegiadosGremioEstudantil() ?: 0, // 165
+            $data->orgaosColegiadosOutros() ?: 0, // 166
+            $data->orgaosColegiadosNenhum() ?: 0, // 167
+            $data->projetoPoliticoPedagogico ?: 0, // 168
         ];
 
         return $exportData;
@@ -210,7 +212,7 @@ class Registro10 extends AbstractRegistro
         $data->tratamentoLixo = Portabilis_Utils_Database::pgArrayToArray($data->tratamentoLixo);
         $data->recursosAcessibilidade = Portabilis_Utils_Database::pgArrayToArray($data->recursosAcessibilidade);
         $data->usoInternet = Portabilis_Utils_Database::pgArrayToArray($data->usoInternet);
-        $data->equipamentos_acesso_internet = Portabilis_Utils_Database::pgArrayToArray($data->equipamentos_acesso_internet);
+        $data->equipamentosAcessoInternet = Portabilis_Utils_Database::pgArrayToArray($data->equipamentosAcessoInternet);
         $data->equipamentos = Portabilis_Utils_Database::pgArrayToArray($data->equipamentos);
         $data->redeLocal = Portabilis_Utils_Database::pgArrayToArray($data->redeLocal);
         $data->orgaosColegiados = Portabilis_Utils_Database::pgArrayToArray($data->orgaosColegiados);

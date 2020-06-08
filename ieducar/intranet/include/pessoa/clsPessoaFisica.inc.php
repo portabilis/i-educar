@@ -57,76 +57,6 @@ class clsPessoaFisica extends clsPessoaFj
         $this->cpf = $numeric_cpf;
     }
 
-    public function lista_simples(
-        $str_nome = false,
-        $numeric_cpf = false,
-        $inicio_limite = false,
-        $qtd_registros = false,
-        $str_orderBy = false,
-        $int_ref_cod_sistema = false
-    ) {
-        $whereAnd = '';
-        $where = '';
-
-        if (is_string($str_nome) && $str_nome != '') {
-            $str_nome = str_replace(' ', '%', $str_nome);
-            $str_nome = pg_escape_string($str_nome);
-
-            $where .= "{$whereAnd} translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_string($numeric_cpf)) {
-            $where .= "{$whereAnd} cpf ILIKE '%{$numeric_cpf}%' ";
-        }
-
-        if (is_numeric($int_ref_cod_sistema)) {
-            $where .= "{$whereAnd} (ref_cod_sistema = '{$int_ref_cod_sistema}' OR cpf is not null  )";
-        }
-
-        if ($inicio_limite !== false && $qtd_registros) {
-            $limite = "LIMIT $qtd_registros OFFSET $inicio_limite ";
-        }
-
-        $orderBy = ' ORDER BY ';
-
-        if ($str_orderBy) {
-            $orderBy .= $str_orderBy . ' ';
-        } else {
-            $orderBy .= 'nome ';
-        }
-
-        if ($where) {
-            $where = 'WHERE ' . $where;
-        }
-
-        $db = new clsBanco($this->banco);
-
-        $total = $db->UnicoCampo('SELECT COUNT(0) FROM cadastro.fisica ' . $where);
-
-        $db->Consulta(sprintf(
-            'SELECT idpes, nome, cpf FROM cadastro.v_pessoa_fisica %s %s %s ',
-            $where,
-            $orderBy,
-            $limite
-        ));
-
-        $resultado = [];
-
-        while ($db->ProximoRegistro()) {
-            $tupla = $db->Tupla();
-            $tupla['nome'] = transforma_minusculo($tupla['nome']);
-            $tupla['total'] = $total;
-            $resultado[] = $tupla;
-        }
-
-        if (count($resultado) > 0) {
-            return $resultado;
-        }
-
-        return false;
-    }
-
     public function lista(
         $str_nome = false,
         $numeric_cpf = false,
@@ -141,15 +71,15 @@ class clsPessoaFisica extends clsPessoaFj
         $where = '';
 
         if (is_string($str_nome) && $str_nome != '') {
-            $str_nome = addslashes($str_nome);
+            $str_nome = pg_escape_string($str_nome);
             $str_nome = str_replace(' ', '%', $str_nome);
 
-            $where .= "{$whereAnd} translate(upper(coalesce(nome_social, '') || nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $where .= "{$whereAnd} slug ILIKE '%{$str_nome}%'";
             $whereAnd = ' AND ';
         }
 
         if (is_string($numeric_cpf)) {
-            $numeric_cpf = addslashes($numeric_cpf);
+            $numeric_cpf = pg_escape_string($numeric_cpf);
 
             $where .= "{$whereAnd} cpf::varchar ILIKE E'%{$numeric_cpf}%' ";
             $whereAnd = ' AND ';
@@ -211,7 +141,6 @@ class clsPessoaFisica extends clsPessoaFj
 
         while ($db->ProximoRegistro()) {
             $tupla = $db->Tupla();
-            $tupla['nome'] = transforma_minusculo($tupla['nome']);
             $tupla['total'] = $total;
 
             $dba->Consulta(sprintf(

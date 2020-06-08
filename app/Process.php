@@ -12,6 +12,7 @@ class Process
     const MENU_TRANSPORT = 69;
     const MENU_LIBRARY = 57;
     const MENU_CONFIGURATIONS = 25;
+    const SCHEDULE = 59;
 
     const CONSULTAS = 9998890;
 
@@ -30,6 +31,8 @@ class Process
     const ALLOW_VACANCY_RESERVATION_REPORT_WITHOUT_SCHOOL = 2003;
     const EDUCACENSO_IMPORT_HISTORY = 2004;
     const UPDATE_REGISTRATION_STATUS = 2005;
+    const NOTIFY_TRANSFER = 2006;
     const MENU_SCHOOL_TOOLS_EXPORTS = 1020;
     const SEB_EXPORT = 1021;
+    const DATA_EXPORT = 1022;
 }
