@@ -167,7 +167,7 @@ return [
                 'theme' => 'white',
             ],
         ],
-        'uppercase_names' => false,
+        'uppercase_names' => 0,
     ],
 
     'modules' => [
