@@ -167,8 +167,7 @@ class indice extends clsCadastro
         $this->fexcluir = $obj_permissoes->permissao_excluir(
             43,
             $this->pessoa_logada,
-            7,
-            'atendidos_lst.php'
+            7
         );
 
         $this->nome_url_cancelar = 'Cancelar';
