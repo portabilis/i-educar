@@ -36,7 +36,7 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        $this->titulo = "Funcao - Detalhe";
+        $this->titulo = "Função - Detalhe";
 
 
         $this->cod_funcao=$_GET["cod_funcao"];

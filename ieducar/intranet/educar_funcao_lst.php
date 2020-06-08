@@ -58,7 +58,7 @@ class indice extends clsListagem
 
     function Gerar()
     {
-        $this->titulo = "Funcao - Listagem";
+        $this->titulo = "Função - Listagem";
 
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;

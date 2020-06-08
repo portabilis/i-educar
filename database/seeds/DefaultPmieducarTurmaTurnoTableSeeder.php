@@ -12,8 +12,9 @@ class DefaultPmieducarTurmaTurnoTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::unprepared(
-            file_get_contents(__DIR__ . '/../sqls/inserts/pmieducar.turma_turno.sql')
-        );
+        DB::table('pmieducar.turma_turno')->insert(['id' => 1, 'nome' => 'Matutino']);
+        DB::table('pmieducar.turma_turno')->insert(['id' => 2, 'nome' => 'Vespertino']);
+        DB::table('pmieducar.turma_turno')->insert(['id' => 3, 'nome' => 'Noturno']);
+        DB::table('pmieducar.turma_turno')->insert(['id' => 4, 'nome' => 'Integral']);
     }
 }
