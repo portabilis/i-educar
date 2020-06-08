@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Str;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
@@ -49,6 +50,10 @@ class LegacyPerson extends EloquentBaseModel implements Transformable
             $model->situacao = 'I';
             $model->origem_gravacao = 'M';
             $model->operacao = 'I';
+
+            if (config('legacy.app.uppercase_names')) {
+                $model->nome =  Str::upper($model->nome);
+            }
         });
     }
 

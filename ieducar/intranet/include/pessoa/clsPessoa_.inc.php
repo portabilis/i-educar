@@ -247,6 +247,10 @@ class clsPessoa_
     {
         $name = preg_replace('/\s+/', ' ', $name);
 
+        if (config('legacy.app.uppercase_names')) {
+            $name = Str::upper($name);
+        }
+
         return trim($name);
     }
 }
