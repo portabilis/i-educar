@@ -60,7 +60,6 @@ class clsPmieducarTipoRegime extends Model
     {
         if (is_numeric($this->ref_usuario_cad) && is_string($this->nm_tipo) && is_numeric($this->ref_cod_instituicao)) {
             $db = new clsBanco();
-            $nm_tipo_string = $db->escapeString($this->nm_tipo);
 
             $campos = '';
             $valores = '';
@@ -71,9 +70,10 @@ class clsPmieducarTipoRegime extends Model
                 $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
                 $gruda = ', ';
             }
-            if (is_string($nm_tipo_string)) {
+            if (is_string($this->nm_tipo)) {
+                $this->nm_tipo = $db->escapeString($this->nm_tipo);
                 $campos .= "{$gruda}nm_tipo";
-                $valores .= "{$gruda}'{$nm_tipo_string}'";
+                $valores .= "{$gruda}'{$this->nm_tipo}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -105,7 +105,6 @@ class clsPmieducarTipoRegime extends Model
     {
         if (is_numeric($this->cod_tipo_regime) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
-            $nm_tipo_string = $db->escapeString($this->nm_tipo);
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -116,8 +115,9 @@ class clsPmieducarTipoRegime extends Model
                 $set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
                 $gruda = ', ';
             }
-            if (is_string($nm_tipo_string)) {
-                $set .= "{$gruda}nm_tipo = '{$nm_tipo_string}'";
+            if (is_string($this->nm_tipo)) {
+                $this->nm_tipo = $db->escapeString($this->nm_tipo);
+                $set .= "{$gruda}nm_tipo = '{$this->nm_tipo}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -172,8 +172,8 @@ class clsPmieducarTipoRegime extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_tipo)) {
-            $nm_tipo_str = $db->escapeString($str_nm_tipo);
-            $filtros .= "{$whereAnd} nm_tipo LIKE '%{$nm_tipo_str}%'";
+            $str_nm_tipo = $db->escapeString($str_nm_tipo);
+            $filtros .= "{$whereAnd} nm_tipo LIKE '%{$str_nm_tipo}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_cadastro_ini)) {

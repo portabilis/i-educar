@@ -71,9 +71,6 @@ class clsPmieducarInfraPredio extends Model
     {
         if (is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_escola) && is_string($this->nm_predio) && is_string($this->endereco)) {
             $db = new clsBanco();
-            $str_nm_predio = $db->escapeString($this->nm_predio);
-            $str_desc_predio = $db->escapeString($this->desc_predio);
-            $endereco_str = $db->escapeString($this->endereco);
 
             $campos = '';
             $valores = '';
@@ -89,19 +86,22 @@ class clsPmieducarInfraPredio extends Model
                 $valores .= "{$gruda}'{$this->ref_cod_escola}'";
                 $gruda = ', ';
             }
-            if (is_string($str_nm_predio)) {
+            if (is_string($this->nm_predio)) {
+                $this->nm_predio = $db->escapeString($this->nm_predio);
                 $campos .= "{$gruda}nm_predio";
-                $valores .= "{$gruda}'{$str_nm_predio}'";
+                $valores .= "{$gruda}'{$this->nm_predio}'";
                 $gruda = ', ';
             }
-            if (is_string($str_desc_predio)) {
+            if (is_string($this->desc_predio)) {
+                $this->desc_predio = $db->escapeString($this->desc_predio);
                 $campos .= "{$gruda}desc_predio";
-                $valores .= "{$gruda}'{$str_desc_predio}'";
+                $valores .= "{$gruda}'{$this->desc_predio}'";
                 $gruda = ', ';
             }
-            if (is_string($endereco_str)) {
+            if (is_string($this->endereco)) {
+                $this->endereco = $db->escapeString($this->endereco);
                 $campos .= "{$gruda}endereco";
-                $valores .= "{$gruda}'{$endereco_str}'";
+                $valores .= "{$gruda}'{$this->endereco}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -133,9 +133,6 @@ class clsPmieducarInfraPredio extends Model
     {
         if (is_numeric($this->cod_infra_predio) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
-            $str_nm_predio = $db->escapeString($this->nm_predio);
-            $str_desc_predio = $db->escapeString($this->desc_predio);
-            $endereco_str = $db->escapeString($this->endereco);
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -150,16 +147,19 @@ class clsPmieducarInfraPredio extends Model
                 $set .= "{$gruda}ref_cod_escola = '{$this->ref_cod_escola}'";
                 $gruda = ', ';
             }
-            if (is_string($str_nm_predio)) {
-                $set .= "{$gruda}nm_predio = '{$str_nm_predio}'";
+            if (is_string($this->nm_predio)) {
+                $this->nm_predio = $db->escapeString($this->nm_predio);
+                $set .= "{$gruda}nm_predio = '{$this->nm_predio}'";
                 $gruda = ', ';
             }
-            if (is_string($str_desc_predio)) {
-                $set .= "{$gruda}desc_predio = '{$str_desc_predio}'";
+            if (is_string($this->desc_predio)) {
+                $this->desc_predio = $db->escapeString($this->desc_predio);
+                $set .= "{$gruda}desc_predio = '{$this->desc_predio}'";
                 $gruda = ', ';
             }
-            if (is_string($endereco_str)) {
-                $set .= "{$gruda}endereco = '{$endereco_str}'";
+            if (is_string($this->endereco)) {
+                $this->endereco = $db->escapeString($this->endereco);
+                $set .= "{$gruda}endereco = '{$this->endereco}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -216,8 +216,8 @@ class clsPmieducarInfraPredio extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_predio)) {
-            $nm_predio_str = $db->escapeString($str_nm_predio);
-            $filtros .= "{$whereAnd} predio.nm_predio LIKE '%{$nm_predio_str}%'";
+            $str_nm_predio = $db->escapeString($str_nm_predio);
+            $filtros .= "{$whereAnd} predio.nm_predio LIKE '%{$str_nm_predio}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_desc_predio)) {

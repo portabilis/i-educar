@@ -289,9 +289,9 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_um) && $this->parentesco_um != 'NULL') {
-                $parentesco_um_str = $db->escapeString($this->parentesco_um);
+                $this->parentesco_um = $db->escapeString($this->parentesco_um);
                 $campos .= "{$gruda}parentesco_um";
-                $valores .= "{$gruda}'{$parentesco_um_str}'";
+                $valores .= "{$gruda}'{$this->parentesco_um}'";
                 $gruda = ', ';
             }
 
@@ -302,9 +302,9 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_dois) && $this->parentesco_dois != 'NULL') {
-                $parentesco_dois_str = $db->escapeString($this->parentesco_dois);
+                $this->parentesco_dois = $db->escapeString($this->parentesco_dois);
                 $campos .= "{$gruda}parentesco_dois";
-                $valores .= "{$gruda}'{$parentesco_dois_str}'";
+                $valores .= "{$gruda}'{$this->parentesco_dois}'";
                 $gruda = ', ';
             }
 
@@ -315,9 +315,9 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_tres) && $this->parentesco_tres != 'NULL') {
-                $parentesco_tres_str = $db->escapeString($this->parentesco_tres);
+                $this->parentesco_tres = $db->escapeString($this->parentesco_tres);
                 $campos .= "{$gruda}parentesco_tres";
-                $valores .= "{$gruda}'{$parentesco_tres_str}'";
+                $valores .= "{$gruda}'{$this->parentesco_tres}'";
                 $gruda = ', ';
             }
 
@@ -328,9 +328,9 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_quatro) && $this->parentesco_quatro != 'NULL') {
-                $parentesco_quatro_str = $db->escapeString($this->parentesco_quatro);
+                $this->parentesco_quatro = $db->escapeString($this->parentesco_quatro);
                 $campos .= "{$gruda}parentesco_quatro";
-                $valores .= "{$gruda}'{$parentesco_quatro_str}'";
+                $valores .= "{$gruda}'{$this->parentesco_quatro}'";
                 $gruda = ', ';
             }
 
@@ -341,9 +341,9 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_cinco) && $this->parentesco_cinco != 'NULL') {
-                $parentesco_cinco_str = $db->escapeString($this->parentesco_cinco);
+                $this->parentesco_cinco = $db->escapeString($this->parentesco_cinco);
                 $campos .= "{$gruda}parentesco_cinco";
-                $valores .= "{$gruda}'{$parentesco_cinco_str}'";
+                $valores .= "{$gruda}'{$this->parentesco_cinco}'";
                 $gruda = ', ';
             }
 
@@ -618,6 +618,8 @@ class clsPmieducarAluno extends Model
 
         $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social';
 
+        $db = new clsBanco();
+
         $sql = "
             SELECT
                 {$this->_campos_lista}
@@ -690,6 +692,7 @@ class clsPmieducarAluno extends Model
         }
 
         if (is_string($str_nome_aluno)) {
+            $str_nome_aluno = $db->escapeString($str_nome_aluno);
             $filtros .= "{$whereAnd} pessoa.slug ILIKE '%{$str_nome_aluno}%'";
             $whereAnd = ' AND ';
         }
@@ -763,7 +766,6 @@ class clsPmieducarAluno extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

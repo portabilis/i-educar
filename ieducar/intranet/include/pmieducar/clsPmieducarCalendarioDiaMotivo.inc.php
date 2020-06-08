@@ -88,11 +88,13 @@ class clsPmieducarCalendarioDiaMotivo extends Model
                 $gruda = ', ';
             }
             if (is_string($this->sigla)) {
+                $this->sigla = $db->escapeString($this->sigla);
                 $campos .= "{$gruda}sigla";
                 $valores .= "{$gruda}'{$this->sigla}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
+                $this->descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
                 $valores .= "{$gruda}'{$this->descricao}'";
                 $gruda = ', ';
@@ -146,10 +148,12 @@ class clsPmieducarCalendarioDiaMotivo extends Model
                 $gruda = ', ';
             }
             if (is_string($this->sigla)) {
+                $this->sigla = $db->escapeString($this->sigla);
                 $set .= "{$gruda}sigla = '{$this->sigla}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
+                $this->descricao = $db->escapeString($this->descricao);
                 $set .= "{$gruda}descricao = '{$this->descricao}'";
                 $gruda = ', ';
             }
@@ -254,8 +258,8 @@ class clsPmieducarCalendarioDiaMotivo extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_motivo)) {
-            $nm_motivo_str = $db->escapeString($str_nm_motivo);
-            $filtros .= "{$whereAnd} cdm.nm_motivo LIKE '%{$nm_motivo_str}%'";
+            $str_nm_motivo = $db->escapeString($str_nm_motivo);
+            $filtros .= "{$whereAnd} cdm.nm_motivo LIKE '%{$str_nm_motivo}%'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_cod_instituicao)) {

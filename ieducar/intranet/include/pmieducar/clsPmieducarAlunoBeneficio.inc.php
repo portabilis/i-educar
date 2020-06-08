@@ -59,8 +59,6 @@ class clsPmieducarAlunoBeneficio extends Model
     {
         if (is_numeric($this->ref_usuario_cad) && is_string($this->nm_beneficio)) {
             $db = new clsBanco();
-            $nm_beneficio_str = $db->escapeString($this->nm_beneficio);
-            $desc_beneficio_str = $db->escapeString($this->desc_beneficio);
 
 
             $campos = '';
@@ -72,14 +70,16 @@ class clsPmieducarAlunoBeneficio extends Model
                 $valores .= "{$gruda}'{$this->ref_usuario_cad}'";
                 $gruda = ', ';
             }
-            if (is_string($nm_beneficio_str)) {
+            if (is_string($this->nm_beneficio)) {
+                $this->nm_beneficio = $db->escapeString($this->nm_beneficio);
                 $campos .= "{$gruda}nm_beneficio";
-                $valores .= "{$gruda}'{$nm_beneficio_str}'";
+                $valores .= "{$gruda}'{$this->nm_beneficio}'";
                 $gruda = ', ';
             }
-            if (is_string($desc_beneficio_str)) {
+            if (is_string($this->desc_beneficio)) {
+                $this->desc_beneficio = $db->escapeString($this->desc_beneficio);
                 $campos .= "{$gruda}desc_beneficio";
-                $valores .= "{$gruda}'{$desc_beneficio_str}'";
+                $valores .= "{$gruda}'{$this->desc_beneficio}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -106,8 +106,6 @@ class clsPmieducarAlunoBeneficio extends Model
     {
         if (is_numeric($this->cod_aluno_beneficio) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
-            $nm_beneficio_str = $db->escapeString($this->nm_beneficio);
-            $desc_beneficio_str = $db->escapeString($this->desc_beneficio);
 
             $set = '';
 
@@ -119,12 +117,14 @@ class clsPmieducarAlunoBeneficio extends Model
                 $set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
                 $gruda = ', ';
             }
-            if (is_string($nm_beneficio_str)) {
-                $set .= "{$gruda}nm_beneficio = '{$nm_beneficio_str}'";
+            if (is_string($this->nm_beneficio)) {
+                $this->nm_beneficio = $db->escapeString($this->nm_beneficio);
+                $set .= "{$gruda}nm_beneficio = '{$this->nm_beneficio}'";
                 $gruda = ', ';
             }
-            if (is_string($desc_beneficio_str)) {
-                $set .= "{$gruda}desc_beneficio = '{$desc_beneficio_str}'";
+            if (is_string($this->desc_beneficio)) {
+                $this->desc_beneficio = $db->escapeString($this->desc_beneficio);
+                $set .= "{$gruda}desc_beneficio = '{$this->desc_beneficio}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -190,8 +190,8 @@ class clsPmieducarAlunoBeneficio extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_beneficio)) {
-            $nm_beneficio_string = $db->escapeString($str_nm_beneficio);
-            $filtros .= "{$whereAnd} nm_beneficio LIKE '%{$nm_beneficio_string}%'";
+            $str_nm_beneficio = $db->escapeString($str_nm_beneficio);
+            $filtros .= "{$whereAnd} nm_beneficio LIKE '%{$str_nm_beneficio}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_desc_beneficio)) {
