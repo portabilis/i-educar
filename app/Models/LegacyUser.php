@@ -35,7 +35,14 @@ class LegacyUser extends EloquentBaseModel implements Transformable
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'cod_usuario',
+        'ref_cod_instituicao',
+        'ref_funcionario_cad',
+        'ref_cod_tipo_usuario',
+        'data_cadastro',
+        'ativo',
+    ];
 
     /**
      * @return int
