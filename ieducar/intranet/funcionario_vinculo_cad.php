@@ -25,7 +25,7 @@ class indice extends clsCadastro
     {
         parent::__construct();
 
-        $this->db = new clsBanco;
+        $this->db = new clsBanco();
     }
 
     public function Inicializar()
@@ -69,7 +69,7 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        $db = new Clsbanco;
+        $db = new Clsbanco();
         if ($this->duplicado($this->nm_vinculo, $this->abreviatura)) {
             $this->mensagem = 'Já existe um registro com este nome ou abreviatura.';
 
@@ -86,7 +86,7 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-        $db = new Clsbanco;
+        $db = new Clsbanco();
         if ($this->duplicado($this->nm_vinculo, $this->abreviatura, $this->cod_vinculo)) {
             $this->mensagem = 'Já existe um registro com este nome ou abreviatura.';
 
@@ -120,7 +120,7 @@ class indice extends clsCadastro
 
     protected function duplicado($nmVinculo, $abreviatura, $id = null)
     {
-        $db = new Clsbanco;
+        $db = new Clsbanco();
         $nmVinculo = $db->escapeString($nmVinculo);
         $abreviatura = $db->escapeString($abreviatura);
         $sql = "SELECT COUNT(*) FROM portal.funcionario_vinculo WHERE TRUE AND nm_vinculo ILIKE '{$nmVinculo}' OR abreviatura ILIKE '{$abreviatura}'";
