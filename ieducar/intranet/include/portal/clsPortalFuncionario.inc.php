@@ -122,8 +122,8 @@ class clsPortalFuncionario extends Model
             $this->matricula_interna = $matricula_interna;
         }
 
-        if (is_numeric($forceResetPassword)) {
-            $this->forceResetPassword = 'true';
+        if ($forceResetPassword) {
+            $this->forceResetPassword = $forceResetPassword;
         }
     }
 
@@ -256,8 +256,10 @@ class clsPortalFuncionario extends Model
                 $gruda = ', ';
             }
 
-            $campos .= "{$gruda}force_reset_password";
-            $valores .= "{$gruda} {$this->forceResetPassword}";
+            if ($this->forceResetPassword) {
+                $campos .= "{$gruda}force_reset_password";
+                $valores .= "{$gruda} true";
+            }
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
