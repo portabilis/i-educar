@@ -26,7 +26,12 @@ Route::any('intranet/filaunica/educar_consulta.php', 'LegacyController@intranet'
 Route::any('intranet/suspenso.php', 'LegacyController@intranet')
     ->defaults('uri', 'suspenso.php');
 
-Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth']], function () {
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('alterar-senha', 'PasswordController@change')->name('change-password');
+    Route::post('alterar-senha', 'PasswordController@change')->name('post-change-password');
+});
+
+Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth', 'ieducar.checkresetpassword']], function () {
     Route::get('/intranet/educar_matricula_turma_lst.php', 'LegacyController@intranet')
         ->defaults('uri', 'educar_matricula_turma_lst.php')
         ->name('enrollments.index');

@@ -34,6 +34,7 @@ class indice extends clsCadastro
     public $matricula_interna;
     public $data_expiracao;
     public $escola;
+    public $force_reset_password;
 
     public function Inicializar()
     {
@@ -138,6 +139,11 @@ class indice extends clsCadastro
 
         $this->campoTexto('matricula', 'Matrícula', $this->matricula, 12, 12, true);
         $this->campoSenha('_senha', 'Senha', null, $cadastrando, empty($cadastrando) ? 'Preencha apenas se desejar alterar a senha' : '');
+
+        if (empty($this->_senha)) {
+            $this->inputsHelper()->checkbox('force_reset_password', ['label' => 'Forçar alteração de senha no primeiro acesso', $this->force_reset_password]);
+        }
+
         $this->campoEmail('email', 'E-mail usuário', $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
         $this->campoTexto('matricula_interna', 'Matrícula interna', $this->matricula_interna, 30, 30, false, false, false, 'Utilizado somente para registro, caso a instituição deseje que a matrícula interna deste funcionário seja registrada no sistema.');
         $this->campoData('data_expiracao', 'Data de expiração', $this->data_expiracao);
@@ -236,7 +242,7 @@ class indice extends clsCadastro
 
         $senha = Hash::make($this->_senha);
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, 0, null, 0, 1, $this->email, $this->matricula_interna);
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, 0, null, 0, 1, $this->email, $this->matricula_interna, !is_null($this->force_reset_password));
 
         if ($obj_funcionario->cadastra()) {
             $funcionario = $obj_funcionario->detalhe();

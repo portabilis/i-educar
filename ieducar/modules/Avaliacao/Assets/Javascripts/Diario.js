@@ -1127,7 +1127,7 @@ function handleSearch($resultTable, dataResponse) {
     if (! componenteCurricularSelected && value.componentes_curriculares)
       updateComponenteCurriculares($resultTable, value.matricula_id, value.componentes_curriculares, value.regra);
 
-    if((value.regra.quantidade_etapas == $j('#etapa').val() ) && value.regra.progressao_manual && !componenteCurricularSelected){
+    if((value.regra.quantidade_etapas == $j('#etapa').val() ) && (value.regra.progressao_manual || value.regra.progressao_manual_ciclo) && !componenteCurricularSelected){
       situacaoFinalField(dataResponse.matricula_id, dataResponse.situacao).appendTo($resultTable);
     }
 
@@ -1409,6 +1409,7 @@ function updateComponenteCurricular($targetElement, matriculaId, cc, regra) {
   var usaNotaGeralPorEtapa = regra.nota_geral_por_etapa == 'SIM';
   var habilitaCampoEtapaEspecifica = regra.tipo_recuperacao_paralela == 'etapas_especificas' && regra.habilita_campo_etapa_especifica;
   var progressaoManual = regra.progressao_manual;
+  var progressaoManualCiclo = regra.progressao_manual_ciclo;
   var progressaoContinuada = regra.progressao_continuada;
   var mediaRecuperacaoParalela = regra.media_recuperacao_paralela;
   var ultimaEtapa = regra.quantidade_etapas == $j('#etapa').val();
@@ -1500,7 +1501,7 @@ function updateComponenteCurricular($targetElement, matriculaId, cc, regra) {
       $emptyTd.clone().appendTo($targetElement);
     }
 
-    if(progressaoManual){
+    if(progressaoManual || progressaoManualCiclo){
       if(regra.tipo_nota == 'numerica'){
         var $fieldMedia = mediaField(matriculaId, cc.id, cc.media_arredondada, getNotaGeralMaxLength(regra), cc.tipo_nota, regra);
       }else{
@@ -1508,7 +1509,7 @@ function updateComponenteCurricular($targetElement, matriculaId, cc, regra) {
       }
 
       $fieldMedia.appendTo($targetElement);
-    }else if(hAlgumaProgressaoManual){
+    }else if(hAlgumaProgressaoManual || hAlgumaProgressaoManualCiclo){
       $emptyTd.clone().appendTo($targetElement);
     }
   }else if((hUseNota && (hUltimaEtapa || (hDefinirComponentesEtapa && !hProgressaoContinuada)))){
@@ -1516,7 +1517,7 @@ function updateComponenteCurricular($targetElement, matriculaId, cc, regra) {
     if(!hDefinirComponentesEtapa){
       $emptyTd.clone().appendTo($targetElement);
     }
-    if(hAlgumaProgressaoManual){
+    if(hAlgumaProgressaoManual || hAlgumaProgressaoManualCiclo){
       $emptyTd.clone().appendTo($targetElement);
     }
   }
@@ -1544,8 +1545,10 @@ var hUseParecer;
 var hUltimaEtapa;
 var hDefinirComponentesEtapa;
 var hProgressaoManual;
+var hProgressaoManualCiclo;
 var hProgressaoContinuada;
 var hAlgumaProgressaoManual;
+var hAlgumaProgressaoManualCiclo;
 var formulaCalculoMediaRecuperacao;
 
 function updateComponenteCurricularHeaders($targetElement, $tagElement) {
@@ -1558,8 +1561,11 @@ function updateComponenteCurricularHeaders($targetElement, $tagElement) {
   hUltimaEtapa             = regras[0]['quantidade_etapas'] == $j('#etapa').val();
   hDefinirComponentesEtapa = regras.filter(function(regra){return regra.definir_componente_por_etapa; }).length > 0;
   hProgressaoManual = regras.filter(function(regra){return regra.progressao_manual; }).length == regras.length;
+  hProgressaoManualCiclo = regras.filter(function(regra){return regra.progressao_manual_ciclo; }).length == regras.length;
   hProgressaoContinuada = regras.filter(function(regra){return regra.progressao_continuada; }).length == regras.length;
   hAlgumaProgressaoManual = regras.filter(function(regra){return regra.progressao_manual; }).length;
+
+  hAlgumaProgressaoManualCiclo = regras.filter(function(regra){return regra.progressao_manual_ciclo; }).length;
   formulaCalculoMediaRecuperacao = regras.filter(function(regra){return regra.formula_recuperacao_final; }).length > 0;
 
   $tagElement.clone().addClass('center').html(safeUtf8Decode('Situação')).appendTo($targetElement);
@@ -1581,7 +1587,7 @@ function updateComponenteCurricularHeaders($targetElement, $tagElement) {
           $tagElement.clone().addClass('center').html(safeUtf8Decode('Nota necessária no ' + nomenclatura_exame)).appendTo($targetElement);
         }
       }
-      if(hAlgumaProgressaoManual){
+      if(hAlgumaProgressaoManual || hAlgumaProgressaoManualCiclo){
         $tagElement.clone().addClass('center').html(safeUtf8Decode('Média final')).appendTo($targetElement);
       }
     }

@@ -290,6 +290,7 @@ class indice extends clsCadastro
                 $conteudo .= '</div>';
                 $conteudo .= '<br style="clear: left" />';
 
+                $row = 1;
                 foreach ($lista as $registro) {
                     $checked = '';
                     $checkedEtapaEspecifica = '';
@@ -318,15 +319,15 @@ class indice extends clsCadastro
                     $etapas_utilizadas = $this->escola_serie_disciplina_etapa_utilizada[$registro->id];
 
                     $conteudo .= '<div style="margin-bottom: 10px; float: left">';
-                    $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
+                    $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" class='check_{$registro->id}' id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
                     $conteudo .= "  <span style='display: block; float: left; width: 100px'>{$registro->abreviatura}</span>";
-                    $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></label>";
+                    $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' class='carga_horaria' id='carga_horaria_{$registro->id}' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7' data-id='$registro->id'></label>";
                     $conteudo .= "  <label style='display: block; float: left;  width: 180px;'><input type='checkbox' id='usar_componente[]' name='usar_componente[$registro->id]' value='1' " . ($usarComponente == true ? $checked : '') . ">($cargaComponente h)</label>";
 
                     $conteudo .= "
                             <select name='componente_anos_letivos[{$registro->id}][]'
                                 style='width: 150px;'
-                                multiple='multiple'> ";
+                                multiple='multiple' class='anos_letivos' id='anos_letivos_{$registro->id}' data-id='$registro->id'> ";
 
                     foreach ($this->anos_letivos as $anoLetivo) {
                         $seletected = in_array($anoLetivo, $anosLetivosComponente) ? 'selected=selected' : '';
@@ -339,7 +340,27 @@ class indice extends clsCadastro
                         $conteudo .= "  <label style='display: block; float: left; width: 100px;'>Etapas utilizadas: <input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapas_utilizadas}' size='5' maxlength='7'></label>";
                     }
 
+                    if ($row == 1) {
+                        $conteudo .= '<label style="display: block; float: left; width: 250px">&nbsp;</label>
+                                     <span style="display: block; float: left; width: 100px">&nbsp;</span>
+                                     <label style="display: block; float: left; width: 100px;">
+                                        <a class="clone-values"
+                                            onclick="cloneValues(' . $registro->id . ',\'carga_horaria\')">
+                                            <i class="fa fa-clone" aria-hidden="true"></i>
+                                        </a>
+                                     </label>
+                                     <label style="display: block; float: left;  width: 180px;">&nbsp</label>
+                                     <label style="display: block; float: left; width: 231px">
+                                        <a class="clone-values"
+                                            onclick="cloneValues(' . $registro->id . ',\'anos_letivos\')">
+                                        <i class="fa fa-clone" aria-hidden="true"></i>
+                                        </a>
+                                     </label>';
+                    }
+                    $row++;
+
                     $conteudo .= '</div>';
+
                     $conteudo .= '<br style="clear: left" />';
 
                     $cargaHoraria = '';
