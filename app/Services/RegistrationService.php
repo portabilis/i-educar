@@ -200,10 +200,15 @@ class RegistrationService
      *
      * @param LegacyRegistration $registration
      * @param DateTime $date
+     * @param DateTime $oldData
      */
-    public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date)
+    public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date, DateTime $oldData)
     {
         foreach ($registration->enrollments as $enrollment) {
+            if ($enrollment->data_enturmacao != $oldData->format('Y-d-m')) {
+                continue;
+            }
+
             $auditoria = new clsModulesAuditoriaGeral('update_enrollment_date', $enrollment->getKey());
             $auditoria->usuario_id = $this->user->getKey();
             $auditoria->alteracao(

@@ -61,11 +61,20 @@ class UpdateRegistrationDateController extends Controller
             $query->where('ref_ref_cod_serie', $request->get('ref_cod_serie'));
         }
 
+        $oldData = \DateTime::createFromFormat('d/m/Y', $request->get('data_antiga'));
+        if ($request->get('data_antiga')) {
+            $query->where('data_matricula', $oldData);
+        }
+
         if ($request->get('situacao')) {
             $query->where('aprovado', $request->get('situacao'));
         }
 
         $registrations = $query->get();
+
+        if (count($registrations) == 0) {
+            return redirect()->route('update-registration-date.index')->with('error', 'Nenhuma matrícula encontrada com os filtros selecionados');
+        }
 
         DB::beginTransaction();
 
@@ -73,10 +82,10 @@ class UpdateRegistrationDateController extends Controller
 
         foreach ($registrations as $registration) {
             $registrationService->updateRegistrationDate($registration, $newDate);
-            $registrationService->updateEnrollmentsDate($registration, $newDate);
+            $registrationService->updateEnrollmentsDate($registration, $newDate, $oldData);
         }
 
-        //DB::commit();
+        DB::commit();
 
         return redirect()->route('update-registration-date.index')->with('success', count($registrations) . ' matrículas atualizadas com sucesso.');
     }

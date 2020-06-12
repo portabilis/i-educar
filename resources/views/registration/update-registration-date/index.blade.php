@@ -121,6 +121,17 @@
 
             <tr id="tr_nm_data" class="field-transfer">
                 <td class="formlttd" valign="top">
+                    <span class="form">Data antiga</span>
+                </td>
+                <td class="formlttd" valign="top">
+                   <span class="form">
+                       <input onkeypress="formataData(this, event);" type="text" name="data_antiga" value="{{ old('data_antiga', Request::get('data_antiga')) }}" id="data_antiga" size="9" maxlength="10" placeholder="dd/mm/aaaa">
+                    </span>
+                </td>
+            </tr>
+
+            <tr id="tr_nm_data" class="field-transfer">
+                <td class="formlttd" valign="top">
                     <span class="form">Nova Data</span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
