@@ -187,7 +187,7 @@ class indice extends clsCadastro
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' servidor', [
+        $this->breadcrumb("Funções do servidor", [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
 

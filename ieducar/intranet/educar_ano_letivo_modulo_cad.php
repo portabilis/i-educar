@@ -695,6 +695,16 @@ class indice extends clsCadastro
             throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.');
         }
 
+        // Caso não exista token e URL de integração com o i-Diário, não irá
+        // validar se há lançamentos nas etapas removidas
+
+        $checkReleases = config('legacy.config.url_novo_educacao')
+            && config('legacy.config.token_novo_educacao');
+
+        if (!$checkReleases) {
+            return true;
+        }
+
         $iDiarioService = app(iDiarioService::class);
 
         foreach ($etapas as $etapa) {

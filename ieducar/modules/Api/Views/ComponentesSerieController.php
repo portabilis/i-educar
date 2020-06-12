@@ -1,7 +1,11 @@
 <?php
 
+use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;
+use App\Models\LegacyGrade;
 use App\Models\LegacySchoolGradeDiscipline;
+use App\Services\CheckPostedDataService;
+use App\Services\iDiarioService;
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
@@ -57,8 +61,13 @@ class ComponentesSerieController extends ApiCoreController
     protected function validaAtualizacao($serieId, $updateInfo)
     {
         $erros = [];
+        $iDiarioService = $this->getIdiarioService();
 
         if ($updateInfo['delete']) {
+            $schoolClass = LegacyGrade::find($serieId)->schoolClass->pluck('cod_turma');
+
+            $service = new CheckPostedDataService;
+
             foreach ($updateInfo['delete'] as $componenteId) {
                 $info = Portabilis_Utils_Database::fetchPreparedQuery('
                     SELECT COUNT(cct.*), cc.nome
@@ -81,57 +90,40 @@ class ComponentesSerieController extends ApiCoreController
 
                 //...
 
-                $info = Portabilis_Utils_Database::fetchPreparedQuery('
-                    SELECT COUNT(ncc.*), cc.nome
-                    FROM modules.nota_componente_curricular ncc
-                    INNER JOIN modules.nota_aluno na on na.id = ncc.nota_aluno_id
-                    INNER JOIN pmieducar.matricula m on m.cod_matricula = na.matricula_id
-                    INNER JOIN modules.componente_curricular cc on cc.id = ncc.componente_curricular_id
-                    WHERE TRUE
-                        AND ncc.componente_curricular_id = $1
-                        AND m.ref_ref_cod_serie = $2
-                    GROUP BY cc.nome
-                ', ['params' => [
-                    $componenteId,
-                    $serieId
-                ]]);
+                $hasDataPosted = $service->hasDataPostedInGrade($componenteId, $serieId, null);
 
-                $count = (int) $info[0]['count'] ?? 0;
+                if ($hasDataPosted) {
+                    $discipline = LegacyDiscipline::find($componenteId);
+                    $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série.', $discipline->nome);
+                }
 
-                if ($count > 0) {
-                    $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas lançadas para este componente nesta série.', $info[0]['nome']);
+                if ($iDiarioService && $schoolClass->count() && $iDiarioService->getClassroomsActivityByDiscipline($schoolClass->toArray(), $componenteId)) {
+                    $discipline = LegacyDiscipline::find($componenteId);
+                    $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série no iDiário.', $discipline->nome);
                 }
             }
         }
 
         if ($updateInfo['update']) {
+            $service = new CheckPostedDataService;
+
             foreach ($updateInfo['update'] as $update) {
                 if (empty($update['anos_letivos_removidos'])) {
                     continue;
                 }
 
                 foreach ($update['anos_letivos_removidos'] as $ano) {
-                    $info = Portabilis_Utils_Database::fetchPreparedQuery('
-                        SELECT COUNT(ncc.*), cc.nome
-                        FROM modules.nota_componente_curricular ncc
-                        INNER JOIN modules.nota_aluno na on na.id = ncc.nota_aluno_id
-                        INNER JOIN pmieducar.matricula m on m.cod_matricula = na.matricula_id
-                        INNER JOIN modules.componente_curricular cc on cc.id = ncc.componente_curricular_id
-                        WHERE TRUE
-                            AND ncc.componente_curricular_id = $1
-                            AND m.ref_ref_cod_serie = $2
-                            AND m.ano = $3
-                        GROUP BY cc.nome
-                    ', ['params' => [
-                        $update['id'],
-                        $serieId,
-                        $ano
-                    ]]);
+                    $hasDataPosted = $service->hasDataPostedInGrade($update['id'], $serieId, $ano);
 
-                    $count = (int) $info[0]['count'] ?? 0;
+                    if ($hasDataPosted) {
+                        $discipline = LegacyDiscipline::find($update['id']);
+                        $erros[] = sprintf('Não é possível desvincular o ano %d de "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série e ano.', $ano, $discipline->nome);
+                    }
 
-                    if ($count > 0) {
-                        $erros[] = sprintf('Não é possível desvincular o ano %d de "%s" pois já existem notas lançadas para este componente nesta série e ano.', $ano, $info[0]['nome']);
+                    $schoolClass = LegacyGrade::find($serieId)->schoolClass()->where('ano', $ano)->pluck('cod_turma');
+                    if ($iDiarioService && $schoolClass->count() && $iDiarioService->getClassroomsActivityByDiscipline($schoolClass->toArray(), $update['id'])) {
+                        $discipline = LegacyDiscipline::find($update['id']);
+                        $erros[] = sprintf('Não é possível desvincular o ano %d de "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série e ano no iDiário', $ano, $discipline->nome);
                     }
                 }
             }
@@ -428,5 +420,19 @@ SQL;
         }
 
         return $arrayComponentes;
+    }
+
+    /**
+     * Retorna instância do iDiarioService
+     *
+     * @return iDiarioService|null
+     */
+    private function getIdiarioService()
+    {
+        if (iDiarioService::hasIdiarioConfigurations()) {
+            return app(iDiarioService::class);
+        }
+
+        return null;
     }
 }

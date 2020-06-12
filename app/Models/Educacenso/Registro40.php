@@ -31,6 +31,8 @@ class Registro40 implements RegistroEducacenso, ItemOfRegistro30
 
     public $dependenciaAdministrativa;
 
+    public $situacaoFuncionamento;
+
     public function hydrateModel(array $arrayColumns) : void
     {
         array_unshift($arrayColumns, null);

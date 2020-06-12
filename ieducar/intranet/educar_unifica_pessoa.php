@@ -1,5 +1,10 @@
 <?php
 
+use App\Models\Individual;
+use App\Models\LogUnification;
+use iEducar\Modules\Unification\PersonLogUnification;
+use Illuminate\Support\Facades\DB;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -35,8 +40,6 @@ class indice extends clsCadastro
   {
     $retorno = 'Novo';
 
-
-
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(9998878, $this->pessoa_logada, 7,
       'index.php');
@@ -46,6 +49,7 @@ class indice extends clsCadastro
 
   function Gerar()
   {
+      $this->acao_enviar = 'showConfirmationMessage()';
       $this->inputsHelper()->dynamic('ano', array('required' => false, 'max_length' => 4));
       $this->inputsHelper()->simpleSearchPessoa(null,array('label' => 'Pessoa principal' ));
       $this->campoTabelaInicio("tabela_pessoas","",array("Pessoa duplicada"),$this->tabela_pessoas);
@@ -83,7 +87,9 @@ class indice extends clsCadastro
         return false;
     }
 
-    $unificador = new App_Unificacao_Pessoa($codPessoaPrincipal, $codPessoas, $this->pessoa_logada, new clsBanco(), FALSE);
+    $unificationId = $this->createLog($codPessoaPrincipal, $codPessoas, $this->pessoa_logada);
+    $unificador = new App_Unificacao_Pessoa($codPessoaPrincipal, $codPessoas, $this->pessoa_logada, new clsBanco(), $unificationId);
+
     try {
         $unificador->unifica();
     } catch (CoreExt_Exception $exception) {
@@ -93,6 +99,36 @@ class indice extends clsCadastro
 
     $this->mensagem = "<span>Pessoas unificadas com sucesso.</span>";
     return true;
+  }
+
+  private function createLog($mainId, $duplicatesId, $createdBy)
+  {
+    $log = new LogUnification();
+    $log->type = PersonLogUnification::getType();
+    $log->main_id = $mainId;
+    $log->duplicates_id = json_encode($duplicatesId);
+    $log->created_by = $createdBy;
+    $log->updated_by = $createdBy;
+    $log->duplicates_name = json_encode($this->getNamesOfUnifiedPeople($duplicatesId));
+    $log->save();
+    return $log->id;
+  }
+
+  /**
+   * Retorna os nomes das pessoas unificadas
+   *
+   * @param integer[] $duplicatesId
+   * @return string[]
+  */
+  private function getNamesOfUnifiedPeople($duplicatesId)
+  {
+      $names = [];
+
+      foreach ($duplicatesId as $personId){
+          $names[] = Individual::findOrFail($personId)->real_name;
+      }
+
+      return $names;
   }
 }
 
@@ -149,5 +185,47 @@ $pagina->MakeAll();
 
 $j('#btn_enviar').val('Unificar');
 
+  function showConfirmationMessage() {
+      makeDialog({
+          content: 'O processo de unificação de pessoas não poderá ser desfeito. Deseja continuar?',
+          title: 'Atenção!',
+          maxWidth: 860,
+          width: 860,
+          close: function () {
+              $j('#dialog-container').dialog('destroy');
+          },
+          buttons: [{
+              text: 'Confirmar',
+              click: function () {
+                  acao();
+                  $j('#dialog-container').dialog('destroy');
+              }
+          }, {
+              text: 'Cancelar',
+              click: function () {
+                  $j('#dialog-container').dialog('destroy');
+              }
+          }]
+      });
+  }
 
+  function makeDialog(params) {
+      var container = $j('#dialog-container');
+
+      if (container.length < 1) {
+          $j('body').append('<div id="dialog-container" style="width: 500px;"></div>');
+          container = $j('#dialog-container');
+      }
+
+      if (container.hasClass('ui-dialog-content')) {
+          container.dialog('destroy');
+      }
+
+      container.empty();
+      container.html(params.content);
+
+      delete params['content'];
+
+      container.dialog(params);
+  }
 </script>

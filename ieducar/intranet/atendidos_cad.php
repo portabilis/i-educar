@@ -167,8 +167,7 @@ class indice extends clsCadastro
         $this->fexcluir = $obj_permissoes->permissao_excluir(
             43,
             $this->pessoa_logada,
-            7,
-            'atendidos_lst.php'
+            7
         );
 
         $this->nome_url_cancelar = 'Cancelar';
@@ -731,7 +730,7 @@ class indice extends clsCadastro
         ]);
 
         $this->inputsHelper()->select('localizacao_diferenciada', [
-            'label' => 'Localização diferenciada',
+            'label' => 'Localização diferenciada de residência',
             'value' => $this->localizacao_diferenciada,
             'resources' => SelectOptions::localizacoesDiferenciadasPessoa(),
             'required' => false,

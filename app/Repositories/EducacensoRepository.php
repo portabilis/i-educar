@@ -37,7 +37,7 @@ class EducacensoRepository
             j.fantasia AS nome,
             ep.cep AS cep,
             municipio.cod_ibge AS "codigoIbgeMunicipio",
-            distrito.cod_ibge AS "codigoIbgeDistrito",
+            districts.ibge_code AS "codigoIbgeDistrito",
             l.idtlog || l.nome AS logradouro,
             ep.numero AS numero,
             ep.complemento AS complemento,
@@ -52,7 +52,7 @@ class EducacensoRepository
             (SELECT COALESCE(
               (SELECT min(fone_pessoa.fone)
                     FROM cadastro.fone_pessoa
-                    WHERE j.idpes = fone_pessoa.idpes),
+                    WHERE j.idpes = fone_pessoa.idpes AND fone_pessoa.tipo = 1),
               (SELECT min(telefone)
                 FROM pmieducar.escola_complemento
                 WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS telefone,
@@ -95,7 +95,7 @@ class EducacensoRepository
             e.esfera_administrativa AS "esferaAdministrativa",
             e.cod_escola AS "idEscola",
             municipio.idmun AS "idMunicipio",
-            distrito.iddis AS "idDistrito",
+            districts.id AS "idDistrito",
             i.cod_instituicao AS "idInstituicao",
             uf.sigla_uf AS "siglaUf",
             (SELECT EXTRACT(YEAR FROM min(ano_letivo_modulo.data_inicio))
@@ -114,7 +114,7 @@ class EducacensoRepository
             LEFT JOIN public.bairro ON (bairro.idbai = ep.idbai)
             LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
             LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
-            LEFT JOIN public.distrito ON (distrito.idmun = bairro.idmun)
+            LEFT JOIN public.districts ON (districts.id = e.iddis)
 
             LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
             LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
@@ -236,7 +236,9 @@ SQL;
                 escola.compartilha_espacos_atividades_integracao AS "compartilhaEspacosAtividadesIntegracao",
                 escola.usa_espacos_equipamentos_atividades_regulares AS "usaEspacosEquipamentosAtividadesRegulares",
                 pessoa.url AS "url",
-                escola.projeto_politico_pedagogico AS "projetoPoliticoPedagogico"
+                escola.projeto_politico_pedagogico AS "projetoPoliticoPedagogico",
+                escola.qtd_vice_diretor AS "qtdViceDiretor",
+                escola.qtd_orientador_comunitario AS "qtdOrientadorComunitario"
             FROM pmieducar.escola
             INNER JOIN cadastro.juridica ON juridica.idpes = escola.ref_idpes
             INNER JOIN cadastro.pessoa ON pessoa.idpes = escola.ref_idpes
@@ -264,9 +266,9 @@ SQL;
                educacenso_cod_docente.cod_docente_inep AS "inepGestor",
                school_managers.role_id AS cargo,
                school_managers.access_criteria_id AS "criterioAcesso",
-               school_managers.access_criteria_description AS "especificacaoCriterioAcesso",
                school_managers.link_type_id AS "tipoVinculo",
-               escola.dependencia_administrativa AS "dependenciaAdministrativa"
+               escola.dependencia_administrativa AS "dependenciaAdministrativa",
+               escola.situacao_funcionamento AS "situacaoFuncionamento"
           FROM school_managers
           JOIN pmieducar.escola ON escola.cod_escola = school_managers.school_id
      LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
@@ -575,7 +577,9 @@ SQL;
                     matricula_turma.tipo_atendimento "tipoAtendimentoMatricula",
                     turma.tipo_mediacao_didatico_pedagogico "tipoMediacaoTurma",
                     aluno.veiculo_transporte_escolar "veiculoTransporteEscolar",
-                    curso.modalidade_curso as "modalidadeCurso"
+                    curso.modalidade_curso as "modalidadeCurso",
+                    turma.local_funcionamento_diferenciado AS "localFuncionamentoDiferenciadoTurma",
+                    fisica.pais_residencia AS "paisResidenciaAluno"
                      FROM pmieducar.aluno
                      JOIN pmieducar.matricula ON matricula.ref_cod_aluno = aluno.cod_aluno
                      JOIN pmieducar.escola ON escola.cod_escola = matricula.ref_ref_cod_escola
@@ -584,6 +588,7 @@ SQL;
                      JOIN pmieducar.turma ON turma.cod_turma = matricula_turma.ref_cod_turma
                      JOIN pmieducar.curso ON curso.cod_curso = turma.ref_cod_curso
                      JOIN cadastro.pessoa ON pessoa.idpes = aluno.ref_idpes
+                     JOIN cadastro.fisica ON fisica.idpes = pessoa.idpes
                 LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
                 LEFT JOIN modules.educacenso_cod_turma ON educacenso_cod_turma.cod_turma = turma.cod_turma
                 LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = aluno.cod_aluno
@@ -798,8 +803,7 @@ SQL;
                 (ARRAY[9] <@ aluno.recursos_prova_inep)::INT "recursoBraile",
                 (ARRAY[14] <@ aluno.recursos_prova_inep)::INT "recursoNenhum",
                 fisica.nis_pis_pasep AS "nis",
-                documento.certidao_nascimento AS "certidaoNascimento",
-                aluno.justificativa_falta_documentacao AS "justificativaFaltaDocumentacao"
+                documento.certidao_nascimento AS "certidaoNascimento"
             FROM pmieducar.aluno
                  JOIN cadastro.fisica ON fisica.idpes = aluno.ref_idpes
             LEFT JOIN cadastro.documento ON documento.idpes = fisica.idpes

@@ -3,7 +3,7 @@
     "description": "Software livre de gestão escolar",
     "type": "project",
     "license": "GPL-2.0-or-later",
-    "version": "2.3.0",
+    "version": "2.3.1",
     "keywords": [
         "Portabilis",
         "i-Educar"
@@ -26,11 +26,13 @@
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^6.3",
         "honeybadger-io/honeybadger-laravel": "^1.4",
+        "intervention/image": "^2.5",
         "laravel/framework": "5.8.*",
         "laravel/horizon": "^3.4",
         "laravel/tinker": "^1.0",
         "league/flysystem-aws-s3-v3": "~1.0",
         "league/flysystem-cached-adapter": "~1.0",
+        "league/flysystem-sftp": "^1.0",
         "maatwebsite/excel": "^3.1",
         "phpoffice/phpspreadsheet": "^1.6",
         "predis/predis": "^1.1",
@@ -98,18 +100,21 @@
         "check-style": "vendor/bin/php-cs-fixer --diff --dry-run --verbose fix",
         "fix-style": "vendor/bin/php-cs-fixer fix",
         "set-permissions": "find bootstrap/cache -type d -exec chmod 777 {} + && find storage -type d -exec chmod 777 {} +",
+        "npm": "npm install",
         "new-install": [
             "@composer install",
             "@set-permissions",
             "@php artisan key:generate --ansi",
             "@php artisan legacy:link --ansi",
-            "@php artisan migrate --seed --force --ansi"
+            "@php artisan migrate --seed --force --ansi",
+            "@npm"
         ],
         "update-install": [
             "@composer install",
             "@set-permissions",
             "@php artisan legacy:link --ansi",
-            "@php artisan migrate --force --ansi"
+            "@php artisan migrate --force --ansi",
+            "@npm"
         ],
         "post-install-cmd": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

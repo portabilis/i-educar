@@ -16,7 +16,7 @@ class DifferentiatedLocationValidatorTest extends TestCase
         $validator = new DifferentiatedLocationValidator($differentiatedLocation, $locationZone);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Localização diferenciada não pode ser preenchido com <b>Área de assentamento</b> quando o campo: Zona de residência for <b>Urbana</b>.', $validator->getMessage());
+        $this->assertContains('O campo: Localização diferenciada de residência não pode ser preenchido com <b>Área de assentamento</b> quando o campo: Zona de residência for <b>Urbana</b>.', $validator->getMessage());
     }
 
     public function testDifferentiatedLocationIsAreaAssentamentoAndLocationZoneIsNull()

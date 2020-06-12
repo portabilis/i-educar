@@ -213,7 +213,8 @@ class Portabilis_Business_Professor
             $sql = '
                 SELECT 
                     cod_turma as id, 
-                    nm_turma as nome 
+		    nm_turma as nome,
+ 	            turma.ano
                 from pmieducar.turma 
                 where ref_ref_cod_escola = $1
                 and (

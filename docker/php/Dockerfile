@@ -80,3 +80,5 @@ RUN echo "extension=/usr/local/lib/php/extensions/no-debug-non-zts-20180731/pdfl
 RUN docker-php-ext-install pcntl
 
 RUN apt-get install openjdk-8-jdk -y
+
+RUN apt-get install npm -y

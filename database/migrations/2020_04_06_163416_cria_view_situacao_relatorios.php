@@ -1,12 +1,12 @@
 <?php
 
 use App\Support\Database\AsView;
+
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRelatorioViewDadosEscolaView extends Migration
+class CriaViewSituacaoRelatorios extends Migration
 {
     use AsView;
-
     /**
      * Run the migrations.
      *
@@ -14,8 +14,7 @@ class CreateRelatorioViewDadosEscolaView extends Migration
      */
     public function up()
     {
-        $this->dropView('relatorio.view_dados_escola');
-        $this->createView('relatorio.view_dados_escola');
+        $this->createView('relatorio.view_situacao_relatorios', '2020-04-06');
     }
 
     /**
@@ -25,6 +24,6 @@ class CreateRelatorioViewDadosEscolaView extends Migration
      */
     public function down()
     {
-        $this->dropView('relatorio.view_dados_escola');
+        $this->dropView('relatorio.view_situacao_relatorios');
     }
 }

@@ -5,6 +5,8 @@ namespace App\Services\Educacenso;
 use App\Jobs\EducacensoImportJob;
 use App\Models\EducacensoImport;
 use App\User;
+use Illuminate\Contracts\Bus\Dispatcher;
+use Illuminate\Foundation\Bus\PendingDispatch;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 
@@ -19,6 +21,11 @@ class HandleFileService
      * @var User
      */
     private $user;
+
+    /**
+     * @var EducacensoImportJob[]
+     */
+    private $jobs;
 
     /**
      * @param ImportService $yearImportService
@@ -42,6 +49,8 @@ class HandleFileService
         foreach ($schools as $school) {
             $this->createImportProcess($school);
         }
+
+        $this->dispatchJobs();
     }
 
     /**
@@ -61,6 +70,16 @@ class HandleFileService
 
         $school = array_map('utf8_encode', $school);
 
-        EducacensoImportJob::dispatch($import, $school, DB::getDefaultConnection());
+        $this->jobs[] = new EducacensoImportJob($import, $school, DB::getDefaultConnection());
+    }
+
+    private function dispatchJobs()
+    {
+        $firstJob = $this->jobs[0];
+        unset($this->jobs[0]);
+
+        $firstJob->chain($this->jobs);
+
+        app(Dispatcher::class)->dispatch($firstJob);
     }
 }

@@ -2,8 +2,11 @@
 /database/data
 /database/migrations/extras
 /public/modules
+/docker/jasper/
 /vendor
 /ieducar-*
+laravel-echo-server.json
+
 ieducar-*.tar.gz
 .env
 .env.host

@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\SchoolClass\DisciplinesValidationException;
 use App\Services\iDiarioService;
 use App\Services\SchoolClassService;
 use App\Services\SchoolClass\ExemptedDisciplineLinksRemover;
@@ -10,6 +11,7 @@ use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use RuntimeException;
 use Throwable;
 
@@ -659,7 +661,7 @@ class indice extends clsCadastro
         $resources = App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums();
         $resources = array_replace([null => 'Selecione'], $resources);
 
-        $options = ['label' => 'Local de funcionamento diferenciado', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => false, 'size' => 70,];
+        $options = ['label' => 'Local de funcionamento diferenciado da turma', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => false, 'size' => 70,];
         $this->inputsHelper()->select('local_funcionamento_diferenciado', $options);
 
         $options = ['label' => Portabilis_String_Utils::toLatin1('Não informar esta turma no Censo escolar'),
@@ -988,12 +990,13 @@ class indice extends clsCadastro
             $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
         }
 
+        DB::beginTransaction();
         $editou = $objTurma->edita();
 
         if (!$editou) {
             $this->mensagem = 'Edição não realizada.';
 
-
+            DB::rollBack();
             return false;
         }
 
@@ -1004,21 +1007,31 @@ class indice extends clsCadastro
         $auditoria = new clsModulesAuditoriaGeral('turma', $this->pessoa_logada, $this->cod_turma);
         $auditoria->alteracao($turmaDetalhe, $objTurma->detalhe());
 
-        $this->atualizaComponentesCurriculares(
-            $turmaDetalhe['ref_ref_cod_serie'],
-            $turmaDetalhe['ref_ref_cod_escola'],
-            $this->cod_turma,
-            $this->disciplinas,
-            $this->carga_horaria,
-            $this->usar_componente,
-            $this->docente_vinculado
-        );
+        try {
+            $this->atualizaComponentesCurriculares(
+                $turmaDetalhe['ref_ref_cod_serie'],
+                $turmaDetalhe['ref_ref_cod_escola'],
+                $this->cod_turma,
+                $this->disciplinas,
+                $this->carga_horaria,
+                $this->usar_componente,
+                $this->docente_vinculado
+            );
+        } catch (DisciplinesValidationException $e) {
+            $this->mensagem = $e->getMessage();
+
+            DB::rollBack();
+            return false;
+        }
 
         $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
         if (!$this->atualizaModulos()) {
+            DB::rollBack();
             return false;
         }
+
+        DB::commit();
 
         $this->mensagem = 'Edição efetuada com sucesso.';
 
@@ -1168,8 +1181,8 @@ class indice extends clsCadastro
             return false;
         }
 
-        if ($this->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA && !in_array($this->etapa_educacenso, [30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67, 68])) {
-            $this->mensagem = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67 ou 68';
+        if ($this->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA && !in_array($this->etapa_educacenso, [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67, 68])) {
+            $this->mensagem = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67 ou 68';
             return false;
         }
 
@@ -1497,7 +1510,9 @@ class indice extends clsCadastro
             ];
         }
 
-        $mapper->bulkUpdate($codSerie, $codEscola, $codTurma, $componentesTurma);
+        $idiarioService = $this->getIdiarioService();
+
+        $mapper->bulkUpdate($codSerie, $codEscola, $codTurma, $componentesTurma, $idiarioService);
     }
 
     public function cadastraInepTurma($cod_turma, $codigo_inep_educacenso)
@@ -1631,6 +1646,20 @@ class indice extends clsCadastro
         }
 
         return json_encode($retorno);
+    }
+
+    /**
+     * Retorna instância do iDiarioService
+     *
+     * @return iDiarioService|null
+     */
+    private function getIdiarioService()
+    {
+        if (iDiarioService::hasIdiarioConfigurations()) {
+            return app(iDiarioService::class);
+        }
+
+        return null;
     }
 }
 

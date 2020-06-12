@@ -24,6 +24,7 @@ use iEducar\Modules\Educacenso\ExportRule\CargoGestor;
 use iEducar\Modules\Educacenso\ExportRule\ComponentesCurriculares;
 use iEducar\Modules\Educacenso\ExportRule\CriterioAcessoGestor;
 use iEducar\Modules\Educacenso\ExportRule\DependenciaAdministrativa;
+use iEducar\Modules\Educacenso\ExportRule\EsferaAdministrativa;
 use iEducar\Modules\Educacenso\ExportRule\PoderPublicoResponsavelTransporte;
 use iEducar\Modules\Educacenso\ExportRule\RecebeEscolarizacaoOutroEspaco;
 use iEducar\Modules\Educacenso\ExportRule\RegrasEspecificasRegistro30;
@@ -144,11 +145,16 @@ class EducacensoExportController extends ApiCoreController
         $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
         $continuaExportacao = true;
         $export = $this->exportaDadosRegistro00($escolaId, $ano, $continuaExportacao);
+
         if ($continuaExportacao) {
             $export .= $this->exportaDadosRegistro10($escolaId, $ano);
             $export .= $this->exportaDadosRegistro20($escolaId, $ano);
-            $export .= $this->exportaDadosRegistro30($escolaId, $ano);
-            $export .= $this->exportaDadosRegistro40($escolaId);
+        }
+
+        $export .= $this->exportaDadosRegistro30($escolaId, $ano);
+        $export .= $this->exportaDadosRegistro40($escolaId);
+
+        if ($continuaExportacao) {
             $export .= $this->exportaDadosRegistro50($escolaId, $ano);
             $export .= $this->exportaDadosRegistro60($escolaId, $ano);
         }
@@ -279,6 +285,7 @@ class EducacensoExportController extends ApiCoreController
         $escola = SituacaoFuncionamento::handle($escola);
         $escola = DependenciaAdministrativa::handle($escola);
         $escola = Regulamentacao::handle($escola);
+        $escola = EsferaAdministrativa::handle($escola);
 
         $continuaExportacao = !in_array($escola->situacaoFuncionamento, [2, 3]);
 
@@ -428,7 +435,6 @@ class EducacensoExportController extends ApiCoreController
                 $pessoa->recursoNenhum,
                 $pessoa->nis,
                 $pessoa->certidaoNascimento,
-                $pessoa->justificativaFaltaDocumentacao,
                 $pessoa->paisResidencia,
                 $pessoa->cep,
                 $pessoa->municipioResidencia,
@@ -500,7 +506,6 @@ class EducacensoExportController extends ApiCoreController
                 $gestor->inepGestor,
                 $gestor->cargo,
                 $gestor->criterioAcesso,
-                $gestor->especificacaoCriterioAcesso,
                 $gestor->tipoVinculo
             ];
 

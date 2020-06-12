@@ -175,7 +175,7 @@ $j(function() {
     let createNotActiveModal = () => {
         $j("body").append(`
 <div id="not_active_modal" class="modal" style="display:none;">
-   <p>Essa escola encontra-se paralisada ou extinta, portanto somente os dados do registro 00 serão analisados e exportados.</p>
+   <p>Essa escola encontra-se paralisada ou extinta, portanto somente os dados dos registros 00, 30 e 40 serão analisados e exportados.</p>
 </div>
         `);
     }
