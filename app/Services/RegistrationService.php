@@ -77,7 +77,8 @@ class RegistrationService
     public function updateStatus(LegacyRegistration $registration, $data)
     {
         $status = $data['nova_situacao'];
-        $auditoria = new clsModulesAuditoriaGeral('update_registration_status', $this->user->getKey());
+        $auditoria = new clsModulesAuditoriaGeral('update_registration_status', $registration->getKey());
+        $auditoria->usuario_id = $this->user->getKey();
         $auditoria->alteracao(
             ['aprovado' => $registration->aprovado],
             ['aprovado' => $status]
