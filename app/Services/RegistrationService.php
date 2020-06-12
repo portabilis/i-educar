@@ -175,4 +175,44 @@ class RegistrationService
             'data_transferencia' => DateTime::createFromFormat('d/m/Y', $date),
         ]);
     }
+
+    /**
+     * Atualiza a data de entrada de uma matrícula
+     *
+     * @param LegacyRegistration $registration
+     * @param DateTime $date
+     */
+    public function updateRegistrationDate(LegacyRegistration $registration, DateTime $date)
+    {
+        $auditoria = new clsModulesAuditoriaGeral('update_registration_date', $registration->getKey());
+        $auditoria->usuario_id = $this->user->getKey();
+        $auditoria->alteracao(
+            ['data_matricula' => $registration->data_matricula],
+            ['data_matricula' => $date]
+        );
+
+        $registration->data_matricula = $date;
+        $registration->save();
+    }
+
+    /**
+     * Atualiza a date de enturmação de todas as enturmações de uma matrícula
+     *
+     * @param LegacyRegistration $registration
+     * @param DateTime $date
+     */
+    public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date)
+    {
+        foreach ($registration->enrollments as $enrollment) {
+            $auditoria = new clsModulesAuditoriaGeral('update_enrollment_date', $enrollment->getKey());
+            $auditoria->usuario_id = $this->user->getKey();
+            $auditoria->alteracao(
+                ['data_enturmacao' => $enrollment->data_enturmacao],
+                ['data_enturmacao' => $date]
+            );
+
+            $enrollment->data_enturmacao = $date;
+            $enrollment->save();
+        }
+    }
 }
