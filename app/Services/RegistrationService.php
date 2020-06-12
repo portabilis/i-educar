@@ -185,6 +185,7 @@ class RegistrationService
      */
     public function updateRegistrationDate(LegacyRegistration $registration, DateTime $date)
     {
+        $date = $date->format('Y-m-d');
         $auditoria = new clsModulesAuditoriaGeral('update_registration_date', $registration->getKey());
         $auditoria->usuario_id = $this->user->getKey();
         $auditoria->alteracao(
@@ -206,6 +207,8 @@ class RegistrationService
      */
     public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date, $oldData, $relocated)
     {
+        $date = $date->format('Y-m-d');
+
         foreach ($registration->enrollments as $enrollment) {
             if ($oldData && $enrollment->data_enturmacao != $oldData->format('Y-d-m')) {
                 continue;

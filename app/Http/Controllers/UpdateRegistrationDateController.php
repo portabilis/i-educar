@@ -63,7 +63,7 @@ class UpdateRegistrationDateController extends Controller
 
         $oldData = \DateTime::createFromFormat('d/m/Y', $request->get('data_antiga'));
         if ($request->get('data_antiga')) {
-            $query->where('data_matricula', $oldData);
+            $query->where('data_matricula', $oldData->format('Y-m-d'));
         }
 
         if ($request->get('situacao')) {
@@ -74,6 +74,10 @@ class UpdateRegistrationDateController extends Controller
 
         if (count($registrations) == 0) {
             return redirect()->route('update-registration-date.index')->with('error', 'Nenhuma matrícula encontrada com os filtros selecionados');
+        }
+
+        if (empty($request->get('confirmation'))) {
+            return redirect()->route('update-registration-date.index')->withInput()->with('show-confirmation', ['count' => count($registrations)]);
         }
 
         DB::beginTransaction();

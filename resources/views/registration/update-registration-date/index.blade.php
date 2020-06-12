@@ -161,9 +161,41 @@
         </div>
 
     </form>
+    @if(Session::has('show-confirmation'))
+        <div id="modal-confirmation">
+           <p>Serão atualizadas <b>{{Session::get('show-confirmation')['count']}}</b> matrículas</p>
+            <p>Deseja continuar?</p>
+        </div>
+    @endif
 @endsection
 
 @prepend('scripts')
+    <script>
+        $j("#modal-confirmation").dialog({
+            autoOpen: false,
+            closeOnEscape: false,
+            draggable: false,
+            width: 560,
+            modal: true,
+            resizable: false,
+            title: 'Confirmação',
+            buttons: {
+                "Salvar": function () {
+                    $j('#formcadastro').append(
+                        "<input type='text' name='confirmation' value='1'>"
+                    ).submit();
+                    $j(this).dialog("close");
+                },
+                "Cancelar": function () {
+                    $j(this).dialog("close");
+                }
+            },
+            close: function () {
+
+            },
+        });
+        $j("#modal-confirmation").dialog("open");
+    </script>
     <script type="text/javascript"
             src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
     <script type="text/javascript"
