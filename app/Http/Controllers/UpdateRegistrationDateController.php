@@ -36,7 +36,7 @@ class UpdateRegistrationDateController extends Controller
      */
     public function updateStatus(UpdateRegistrationDateRequest $request, RegistrationService $registrationService)
     {
-        $query = LegacyRegistration::query();
+        $query = LegacyRegistration::active();
 
         if ($request->get('ano')) {
             $query->where('ano', $request->get('ano'));
