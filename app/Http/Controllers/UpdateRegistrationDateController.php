@@ -82,7 +82,7 @@ class UpdateRegistrationDateController extends Controller
 
         foreach ($registrations as $registration) {
             $registrationService->updateRegistrationDate($registration, $newDate);
-            $registrationService->updateEnrollmentsDate($registration, $newDate, $oldData);
+            $registrationService->updateEnrollmentsDate($registration, $newDate, $oldData, !empty($request->get('remanejadas')));
         }
 
         DB::commit();

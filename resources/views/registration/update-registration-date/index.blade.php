@@ -142,6 +142,17 @@
                 </td>
             </tr>
 
+            <tr id="tr_nm_data" class="field-transfer">
+                <td class="formlttd" valign="top">
+                    <span class="form">Aplicar também em enturmações remanejadas</span>
+                </td>
+                <td class="formlttd" valign="top">
+                   <span class="form">
+                       <input type="checkbox" name="remanejadas" @if(old('remanejadas', Request::get('remanejadas'))) checked="checked" @endif id="remanejadas">
+                    </span>
+                </td>
+            </tr>
+
             </tbody>
         </table>
 

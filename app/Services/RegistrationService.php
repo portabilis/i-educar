@@ -200,12 +200,17 @@ class RegistrationService
      *
      * @param LegacyRegistration $registration
      * @param DateTime $date
-     * @param DateTime $oldData
+     * @param DateTime|null $oldData
+     * @param boolean $relocated
      */
-    public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date, DateTime $oldData)
+    public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date, $oldData, $relocated)
     {
         foreach ($registration->enrollments as $enrollment) {
-            if ($enrollment->data_enturmacao != $oldData->format('Y-d-m')) {
+            if ($oldData && $enrollment->data_enturmacao != $oldData->format('Y-d-m')) {
+                continue;
+            }
+
+            if (!$relocated && $enrollment->remanejado) {
                 continue;
             }
 
