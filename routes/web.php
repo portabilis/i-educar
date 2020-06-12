@@ -119,6 +119,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/exportacoes', 'ExportController@index')->name('export.index');
     Route::get('/exportacoes/novo', 'ExportController@form')->name('export.form');
     Route::post('/exportacoes/exportar', 'ExportController@export')->name('export.export');
+
+    Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->name('update-registration-date.index');
+    Route::post('/atualiza-data-entrada', 'UpdateRegistrationDateController@updateStatus')->name('update-registration-date.update-date');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
