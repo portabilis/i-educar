@@ -61,7 +61,7 @@ class UpdateRegistrationDateController extends Controller
             $query->where('ref_ref_cod_serie', $request->get('ref_cod_serie'));
         }
 
-        $oldData = \DateTime::createFromFormat('d/m/Y', $request->get('data_antiga'));
+        $oldData = $request->get('data_antiga') ? \DateTime::createFromFormat('d/m/Y', $request->get('data_antiga')) : null;
         if ($request->get('data_antiga')) {
             $query->where('data_matricula', $oldData->format('Y-m-d'));
         }

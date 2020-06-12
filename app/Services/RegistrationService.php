@@ -210,7 +210,7 @@ class RegistrationService
         $date = $date->format('Y-m-d');
 
         foreach ($registration->enrollments as $enrollment) {
-            if ($oldData && $enrollment->data_enturmacao != $oldData->format('Y-d-m')) {
+            if ($oldData && $enrollment->data_enturmacao->format('Y-m-d') != $oldData->format('Y-m-d')) {
                 continue;
             }
 
