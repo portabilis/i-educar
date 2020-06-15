@@ -227,7 +227,7 @@ var newSubmitForm = function (event) {
 
     $tipoTransporte = $j('#tipo_transporte');
 
-    if ($tipoTransporte.val() != 'Não utiliza') {
+    if ($tipoTransporte.val() != 'nenhum') {
         veiculoTransporte = $j('#veiculo_transporte_escolar').val();
         if (obrigarCamposCenso && (veiculoTransporte == '' || veiculoTransporte == null)) {
             messageUtils.error('O campo Veículo utilizado deve ser preenchido');
