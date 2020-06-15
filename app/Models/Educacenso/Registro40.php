@@ -33,21 +33,6 @@ class Registro40 implements RegistroEducacenso, ItemOfRegistro30
 
     public $situacaoFuncionamento;
 
-    public function hydrateModel(array $arrayColumns) : void
-    {
-        array_unshift($arrayColumns, null);
-        unset($arrayColumns[0]);
-
-        $this->registro = $arrayColumns[1];
-        $this->inepEscola = $arrayColumns[2];
-        $this->codigoPessoa = $arrayColumns[3];
-        $this->inepGestor = $arrayColumns[4];
-        $this->cargo = $arrayColumns[5];
-        $this->criterioAcesso = $arrayColumns[6];
-        $this->especificacaoCriterioAcesso = $arrayColumns[7];
-        $this->tipoVinculo = $arrayColumns[8];
-    }
-
     public function isDependenciaAdministrativaPublica()
     {
         return $this->dependenciaAdministrativa == DependenciaAdministrativaEscola::MUNICIPAL ||
