@@ -4,6 +4,7 @@ namespace App\Services\Educacenso\Version2019;
 
 use App\Services\Educacenso\ImportService as GeneralImportService;
 use App\Services\Educacenso\RegistroImportInterface;
+use iEducar\Modules\Educacenso\Migrations\UpdateEducacensoInstitutionToLayout2020;
 use Illuminate\Http\UploadedFile;
 
 class ImportService extends GeneralImportService
@@ -69,6 +70,6 @@ class ImportService extends GeneralImportService
 
     public function adaptData()
     {
-        
+        UpdateEducacensoInstitutionToLayout2020::execute();
     }
 }
