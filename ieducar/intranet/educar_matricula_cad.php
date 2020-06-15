@@ -1536,6 +1536,8 @@ class indice extends clsCadastro
             $this->availableTimeService = new AvailableTimeService();
         }
 
+        $this->availableTimeService->onlySchoolClassesInformedOnCensus();
+
         return $this->availableTimeService;
     }
 }

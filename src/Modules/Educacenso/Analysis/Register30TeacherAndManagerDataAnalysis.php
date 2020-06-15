@@ -94,6 +94,19 @@ class Register30TeacherAndManagerDataAnalysis implements AnalysisInterface
                 ];
             }
 
+            $cursosExtintos =  $data->cursosDeFormacaoSuperiorExtintos();
+
+            foreach ($data->formacaoCurso as $curso) {
+                if (array_key_exists($curso, $cursosExtintos)) {
+                    $this->messages[] = [
+                        'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Verificamos que a pessoa {$data->nomePessoa} está vinculada ao curso de formação superior {$cursosExtintos[$curso]}, este curso não existe mais na tabela do Censo Escolar de 2020 e, portanto, deve ser ajustado. Em caso de dúvidas consulte a tabela que disponibilizamos <a href='https://docs.google.com/spreadsheets/d/1qG_nbA5dst9LlY_TEEiDb7IvF5LR_QXDVvL-1WH3Uek/edit#gid=2055500685' target='_blank'>aqui</a>.",
+                        'path' => '(Servidores > Cadastros > Servidores > Editar > Aba: Dados adicionais > Seção: Curso(s) Superior(es) Concluído(s))',
+                        'linkPath' => "educar_servidor_cad.php?cod_servidor={$data->codigoPessoa}&ref_cod_instituicao={$data->codigoInstituicao}",
+                        'fail' => true
+                    ];
+                }
+            }
+
             $anoAtual = date('Y');
 
             foreach ($data->formacaoAnoConclusao as $anoConclusao) {

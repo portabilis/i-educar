@@ -91,6 +91,7 @@ class indice extends clsCadastro
         }
 
         $availableTimeService = new AvailableTimeService();
+        $availableTimeService->onlySchoolClassesInformedOnCensus();
 
         $registration = LegacyRegistration::find($matriculaId);
 

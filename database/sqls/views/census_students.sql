@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW census_students AS
+CREATE OR REPLACE VIEW public.census_students AS
 SELECT
     cod_aluno AS id,
     cod_aluno AS student_id,

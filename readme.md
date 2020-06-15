@@ -1,5 +1,5 @@
 [![Latest Release](https://img.shields.io/github/release/portabilis/i-educar.svg?label=latest%20release)](https://github.com/portabilis/i-educar/releases)
-[![Build Status](https://travis-ci.com/portabilis/i-educar.svg?branch=2.2)](https://travis-ci.com/portabilis/i-educar)
+[![Build Status](https://travis-ci.com/portabilis/i-educar.svg?branch=2.3)](https://travis-ci.com/portabilis/i-educar)
 
 # i-Educar
 
@@ -80,7 +80,7 @@ facilitar o desenvolvimento.
 
 #### Servidor
 
-- [PHP](http://php.net/) versão 7.2 ou maior
+- [PHP](http://php.net/) versão 7.3 ou maior
 - [Postgres](https://www.postgresql.org/) versão 9.5 ou superior
 - [Nginx](https://www.nginx.com/)
 
@@ -242,6 +242,7 @@ e siga as instruções de instalação.
 
 #### Upgrade
 
+- [Upgrade para 2.3 da 2.2](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.3-da-2.2).
 - [Upgrade para 2.2 da 2.1](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.2-da-2.1).
 - [Upgrade para 2.1 da 2.0](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.1-da-2.0).
 

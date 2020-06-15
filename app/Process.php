@@ -35,4 +35,5 @@ class Process
     const MENU_SCHOOL_TOOLS_EXPORTS = 1020;
     const SEB_EXPORT = 1021;
     const DATA_EXPORT = 1022;
+    const UPDATE_REGISTRATION_DATE = 1023;
 }

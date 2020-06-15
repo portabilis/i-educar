@@ -26,7 +26,12 @@ Route::any('intranet/filaunica/educar_consulta.php', 'LegacyController@intranet'
 Route::any('intranet/suspenso.php', 'LegacyController@intranet')
     ->defaults('uri', 'suspenso.php');
 
-Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth']], function () {
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('alterar-senha', 'PasswordController@change')->name('change-password');
+    Route::post('alterar-senha', 'PasswordController@change')->name('post-change-password');
+});
+
+Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.xssbypass', 'ieducar.suspended', 'auth', 'ieducar.checkresetpassword']], function () {
     Route::get('/intranet/educar_matricula_turma_lst.php', 'LegacyController@intranet')
         ->defaults('uri', 'educar_matricula_turma_lst.php')
         ->name('enrollments.index');
@@ -114,6 +119,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/exportacoes', 'ExportController@index')->name('export.index');
     Route::get('/exportacoes/novo', 'ExportController@form')->name('export.form');
     Route::post('/exportacoes/exportar', 'ExportController@export')->name('export.export');
+
+    Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->name('update-registration-date.index');
+    Route::post('/atualiza-data-entrada', 'UpdateRegistrationDateController@updateStatus')->name('update-registration-date.update-date');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {

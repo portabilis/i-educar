@@ -320,3 +320,18 @@ $j('#ano_letivo').change(function() {
 
   window.location.href = url.toString();
 });
+
+function cloneValues(componente_id, classe){
+  var valor = $j('#' + classe + '_' + componente_id).val();
+
+  $j('.' + classe).each(function() {
+    var id = $j(this).data('id')
+
+    if ($j('.check_' + id).is(':checked')) {
+      $j(this).val(valor);
+      if (classe == 'anos_letivos') {
+        $j(this).trigger('chosen:updated');
+      }
+    }
+  }, this);
+}
