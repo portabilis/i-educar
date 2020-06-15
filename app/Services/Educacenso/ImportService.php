@@ -89,4 +89,12 @@ abstract class ImportService
      * @param UploadedFile $file
      */
     abstract public function validateFile(UploadedFile $file);
+
+    /**
+     *
+     * Trata os dados após a importação, caso seja necessário ajustar para eventuais mudanças de um
+     * ano para o outro
+     *
+     */
+    abstract public function adaptData();
 }
