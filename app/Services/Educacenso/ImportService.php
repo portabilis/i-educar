@@ -82,11 +82,4 @@ abstract class ImportService
      * @return string
      */
     abstract public function getSchoolNameByFile($school);
-
-    /**
-     * Verifica se o arquivo está de acordo com as regras do ano
-     *
-     * @param UploadedFile $file
-     */
-    abstract public function validateFile(UploadedFile $file);
 }

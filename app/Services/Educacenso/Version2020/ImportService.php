@@ -36,17 +36,6 @@ class ImportService extends GeneralImportService
     }
 
     /**
-     * Verifica se o arquivo está de acordo com as regras do ano
-     *
-     * todo: Implementar validação do arquivo
-     * @param UploadedFile $file
-     */
-    public function validateFile(UploadedFile $file)
-    {
-
-    }
-
-    /**
      * Retorna a classe responsável por importar o registro da linha
      *
      * @param $lineId

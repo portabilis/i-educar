@@ -4,7 +4,6 @@ namespace App\Services\Educacenso\Version2019;
 
 use App\Services\Educacenso\ImportService as GeneralImportService;
 use App\Services\Educacenso\RegistroImportInterface;
-use Illuminate\Http\UploadedFile;
 
 class ImportService extends GeneralImportService
 {
@@ -29,17 +28,6 @@ class ImportService extends GeneralImportService
         $columns = explode(self::DELIMITER, $school[0]);
 
         return $columns[5];
-    }
-
-    /**
-     * Verifica se o arquivo está de acordo com as regras do ano
-     *
-     * todo: Implementar validação do arquivo
-     * @param UploadedFile $file
-     */
-    public function validateFile(UploadedFile $file)
-    {
-
     }
 
     /**
