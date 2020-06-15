@@ -229,14 +229,6 @@ class Registro10 extends Registro10Fields
     /**
      * @return bool
      */
-    public function preenchimentoCorretoBanheiro()
-    {
-        return in_array(Banheiros::BANHEIRO, $this->banheiros) && count($this->banheiros) > 0;
-    }
-
-    /**
-     * @return bool
-     */
     public function salasGeraisSalaDiretoria()
     {
         return in_array(SalasGerais::SALA_DIRETORIA, $this->salasGerais);
@@ -307,11 +299,13 @@ class Registro10 extends Registro10Fields
     }
 
     /**
+     * Sempre retona true quando alguma opção de banheiro for preenchida
+     * 
      * @return bool
      */
     public function banheirosBanheiro()
     {
-        return in_array(Banheiros::BANHEIRO, $this->banheiros);
+        return count($this->banheiros) > 0;
     }
 
     /**

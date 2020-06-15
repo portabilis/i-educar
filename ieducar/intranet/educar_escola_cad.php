@@ -2233,7 +2233,6 @@ class indice extends clsCadastro
                 $this->inepEscolaSedeDiferenteDaEscolaPrincipal() &&
                 $this->validateCensusManagerRules() &&
                 $this->validaEscolaCompartilhaPredio() &&
-                $this->validaBanheiros() &&
                 $this->validaSalasUtilizadasDentroEscola() &&
                 $this->validaSalasUtilizadasForaEscola() &&
                 $this->validaSalasClimatizadas() &&
@@ -2663,16 +2662,6 @@ class indice extends clsCadastro
 
         if (count($arrayCampos) == 0) {
             $this->mensagem = 'Preencha pelo menos um dos campos de Salas gerais à Áreas externas';
-            return false;
-        }
-
-        return true;
-    }
-
-    protected function validaBanheiros()
-    {
-        if (!in_array(1, $this->banheiros) && count($this->banheiros) > 0) {
-            $this->mensagem = "O campo: <b>Banheiros</b> deve ser preenchido também com a opçao <b>Banheiro</b> quando outras opções forem selecionadas";
             return false;
         }
 
