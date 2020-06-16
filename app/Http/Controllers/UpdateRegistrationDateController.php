@@ -61,9 +61,9 @@ class UpdateRegistrationDateController extends Controller
             $query->where('ref_ref_cod_serie', $request->get('ref_cod_serie'));
         }
 
-        $oldData = $request->get('data_antiga') ? \DateTime::createFromFormat('d/m/Y', $request->get('data_antiga')) : null;
-        if ($request->get('data_antiga')) {
-            $query->where('data_matricula', $oldData->format('Y-m-d'));
+        $oldDataRegistration = $request->get('data_entrada_antiga') ? \DateTime::createFromFormat('d/m/Y', $request->get('data_entrada_antiga')) : null;
+        if ($request->get('data_entrada_antiga')) {
+            $query->where('data_matricula', $oldDataRegistration->format('Y-m-d'));
         }
 
         if ($request->get('situacao')) {
@@ -82,11 +82,16 @@ class UpdateRegistrationDateController extends Controller
 
         DB::beginTransaction();
 
-        $newDate = \DateTime::createFromFormat('d/m/Y', $request->get('nova_data'));
+        $newDateRegistration = \DateTime::createFromFormat('d/m/Y', $request->get('nova_data_entrada'));
+        $newDateEnrollment = \DateTime::createFromFormat('d/m/Y', $request->get('nova_data_enturmacao'));
+        $oldDataEnrollment = $request->get('data_enturmacao_antiga') ? \DateTime::createFromFormat('d/m/Y', $request->get('data_enturmacao_antiga')) : null;
 
         foreach ($registrations as $registration) {
-            $registrationService->updateRegistrationDate($registration, $newDate);
-            $registrationService->updateEnrollmentsDate($registration, $newDate, $oldData, !empty($request->get('remanejadas')));
+            $registrationService->updateRegistrationDate($registration, $newDateRegistration);
+
+            if ($newDateEnrollment) {
+                $registrationService->updateEnrollmentsDate($registration, $newDateEnrollment, $oldDataEnrollment, !empty($request->get('remanejadas')));
+            }
         }
 
         DB::commit();

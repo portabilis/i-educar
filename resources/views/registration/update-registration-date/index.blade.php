@@ -121,23 +121,44 @@
 
             <tr id="tr_nm_data" class="field-transfer">
                 <td class="formlttd" valign="top">
-                    <span class="form">Data antiga</span>
+                    <span class="form">Data de entrada antiga</span>
                 </td>
                 <td class="formlttd" valign="top">
                    <span class="form">
-                       <input onkeypress="formataData(this, event);" type="text" name="data_antiga" value="{{ old('data_antiga', Request::get('data_antiga')) }}" id="data_antiga" size="9" maxlength="10" placeholder="dd/mm/aaaa">
+                       <input onkeypress="formataData(this, event);" type="text" name="data_entrada_antiga" value="{{ old('data_entrada_antiga', Request::get('data_entrada_antiga')) }}" id="data_entrada_antiga" size="9" maxlength="10" placeholder="dd/mm/aaaa">
+                    </span>
+                </td>
+            </tr>
+            <tr id="tr_nm_data" class="field-transfer">
+                <td class="formlttd" valign="top">
+                    <span class="form">Data de enturmação antiga</span>
+                </td>
+                <td class="formlttd" valign="top">
+                   <span class="form">
+                       <input onkeypress="formataData(this, event);" type="text" name="data_enturmacao_antiga" value="{{ old('data_enturmacao_antiga', Request::get('data_enturmacao_antiga')) }}" id="data_enturmacao_antiga" size="9" maxlength="10" placeholder="dd/mm/aaaa">
                     </span>
                 </td>
             </tr>
 
             <tr id="tr_nm_data" class="field-transfer">
                 <td class="formlttd" valign="top">
-                    <span class="form">Nova Data</span>
+                    <span class="form">Nova data de entrada</span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
                    <span class="form">
-                       <input onkeypress="formataData(this, event);" class="obrigatorio" type="text" name="nova_data" value="{{ old('nova_data', Request::get('nova_data')) }}" id="nova_data" size="9" maxlength="10" placeholder="dd/mm/aaaa">
+                       <input onkeypress="formataData(this, event);" class="obrigatorio" type="text" name="nova_data_entrada" value="{{ old('nova_data_entrada', Request::get('nova_data_entrada')) }}" id="nova_data_entrada" size="9" maxlength="10" placeholder="dd/mm/aaaa">
+                    </span>
+                </td>
+            </tr>
+
+            <tr id="tr_nm_data" class="field-transfer">
+                <td class="formlttd" valign="top">
+                    <span class="form">Nova data de enturmação</span>
+                </td>
+                <td class="formlttd" valign="top">
+                   <span class="form">
+                       <input onkeypress="formataData(this, event);" type="text" name="nova_data_enturmacao" value="{{ old('nova_data_enturmacao', Request::get('nova_data_enturmacao')) }}" id="nova_data_enturmacao" size="9" maxlength="10" placeholder="dd/mm/aaaa">
                     </span>
                 </td>
             </tr>
