@@ -182,6 +182,32 @@
         </div>
 
     </form>
+
+    @if(Session::has('registrations'))
+        <h3>Matrículas alteradas</h3>
+        <br>
+        <table class="table-default">
+            <thead>
+            <tr>
+                <th width="100">Matrícula</th>
+                <th>Nome</th>
+                <th>Data de matrícula</th>
+                <th>Data de enturmação</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach(Session::get('registrations') as $registration)
+                <tr class="form-success">
+                    <td>{{ $registration->cod_matricula }}</td>
+                    <td>{{ $registration->student->person->name }}</td>
+                    <td>{{ $registration->data_matricula->format('d/m/Y') }}</td>
+                    <td>{{ $registration->lastEnrollment->data_enturmacao->format('d/m/Y') }}</td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    @endif
+
     @if(Session::has('show-confirmation'))
         <div id="modal-confirmation">
            <p>Serão atualizadas <b>{{Session::get('show-confirmation')['count']}}</b> matrículas</p>
