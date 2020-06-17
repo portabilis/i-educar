@@ -1340,7 +1340,7 @@ class indice extends clsCadastro
             $options = [
                 'label' => 'Órgãos colegiados em funcionamento na escola',
                 'size' => 50,
-                'required' => false,
+                'required' => $obrigarCamposCenso,
                 'options' => [
                     'values' => $this->orgaos_colegiados,
                     'all_values' => OrgaosColegiados::getDescriptiveValues()
