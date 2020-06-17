@@ -31,7 +31,7 @@ class ReCaptchaV3 implements Rule
                 ],
             ]);
 
-            return $this->getScore($response) >= 1;
+            return $this->getScore($response) >= config('legacy.app.recaptcha_v3.minimum_score');
         } catch (BadResponseException $e) {
             return false;
         } catch (Throwable $e) {

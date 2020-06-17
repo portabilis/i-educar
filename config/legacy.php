@@ -170,6 +170,7 @@ return [
         'recaptcha_v3' => [
             'public_key' => '',
             'private_key' => '',
+            'minimum_score' => 0.5,
         ],
     ],
 
