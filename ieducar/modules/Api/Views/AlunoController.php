@@ -1898,7 +1898,11 @@ class AlunoController extends ApiCoreController
 
     protected function isUsuarioAdmin()
     {
-        return Auth::user()->isAdmin();
+        if (Auth::user()) {
+            return Auth::user()->isAdmin();
+        }
+
+        return false;
     }
 
     protected function canGetAlunosMatriculados()
