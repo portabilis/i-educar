@@ -22,31 +22,30 @@
 
     </form>
 
-    <meta name="grecaptcha-key" content="{{config('legacy.app.recaptcha_v3.public_key')}}">
-    <script src="https://www.google.com/recaptcha/api.js?render={{config('legacy.app.recaptcha_v3.public_key')}}"></script>
+    @if (config('legacy.app.recaptcha_v3.public_key') && config('legacy.app.recaptcha_v3.private_key'))
+        <script src="https://www.google.com/recaptcha/api.js?render={{config('legacy.app.recaptcha_v3.public_key')}}"></script>
+        <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery/jquery-1.8.3.min.js") }} "></script>
 
-    <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery/jquery-1.8.3.min.js") }} "></script>
+        <script>
+            let grecaptchaKey = "{{config('legacy.app.recaptcha_v3.public_key')}}";
+            let form = $('#form-login');
 
-    <script>
-        let grecaptchaKeyMeta = document.querySelector("meta[name='grecaptcha-key']");
-        let grecaptchaKey = grecaptchaKeyMeta.getAttribute("content");
-        let form = $('#form-login');
+            grecaptcha.ready(function() {
+                form.submit(function(e) {
+                    e.preventDefault();
+                    grecaptcha.execute(grecaptchaKey, {action: 'submit'})
+                        .then((token) => {
+                            input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'grecaptcha';
+                            input.value = token;
 
-        grecaptcha.ready(function() {
-            form.submit(function(e) {
-                e.preventDefault();
-                grecaptcha.execute(grecaptchaKey, {action: 'submit'})
-                    .then((token) => {
-                        input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = 'grecaptcha';
-                        input.value = token;
+                            form.append(input);
 
-                        form.append(input);
-
-                        $(this).unbind('submit').submit();
-                    });
+                            $(this).unbind('submit').submit();
+                        });
+                });
             });
-        });
-    </script>
+        </script>
+    @endif
 @endsection

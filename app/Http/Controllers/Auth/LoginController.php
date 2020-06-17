@@ -66,7 +66,7 @@ class LoginController extends Controller
         $request->validate([
             $this->username() => 'required|string',
             'password' => 'required|string',
-            'grecaptcha' => ['required', new ReCaptchaV3],
+            'grecaptcha' => [new ReCaptchaV3],
         ]);
     }
 }
