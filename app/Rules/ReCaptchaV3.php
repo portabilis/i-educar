@@ -27,7 +27,7 @@ class ReCaptchaV3 implements Rule
                 'query' => [
                     'secret' => config('legacy.app.recaptcha_v3.private_key'),
                     'response' => $value,
-                    'remoteip' => null,//request()->ip(),
+                    'remoteip' => request()->ip(),
                 ],
             ]);
 
