@@ -5,6 +5,7 @@ namespace iEducar\Modules\Educacenso\ExportRule;
 
 use App\Models\Educacenso\Registro30;
 use App\Models\Educacenso\RegistroEducacenso;
+use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Modules\Educacenso\Model\Escolaridade;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
@@ -71,6 +72,25 @@ class RegrasGeraisRegistro30 implements EducacensoExportRule
             $registro30->posGraduacaoDoutorado = null;
             $registro30->posGraduacaoMestrado = null;
             $registro30->posGraduacaoNaoPossui = null;
+        }
+
+        // Remove "Altas Habilidades"
+        $arrayDeficiencias = $registro30->arrayDeficiencias;
+        $altasHabilidadesKey = array_search(Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO, $registro30->arrayDeficiencias);
+        unset($arrayDeficiencias[$altasHabilidadesKey]);
+        if (empty($arrayDeficiencias)) {
+            $registro30->recursoLedor = null;
+            $registro30->recursoTranscricao = null;
+            $registro30->recursoGuia = null;
+            $registro30->recursoTradutor = null;
+            $registro30->recursoLeituraLabial = null;
+            $registro30->recursoProvaAmpliada = null;
+            $registro30->recursoProvaSuperampliada = null;
+            $registro30->recursoAudio = null;
+            $registro30->recursoLinguaPortuguesaSegundaLingua = null;
+            $registro30->recursoVideoLibras = null;
+            $registro30->recursoBraile = null;
+            $registro30->recursoNenhum = null;
         }
 
         return $registro30;
