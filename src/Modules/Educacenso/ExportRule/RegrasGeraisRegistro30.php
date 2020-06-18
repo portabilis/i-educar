@@ -77,7 +77,11 @@ class RegrasGeraisRegistro30 implements EducacensoExportRule
         // Remove "Altas Habilidades"
         $arrayDeficiencias = $registro30->arrayDeficiencias;
         $altasHabilidadesKey = array_search(Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO, $registro30->arrayDeficiencias);
-        unset($arrayDeficiencias[$altasHabilidadesKey]);
+
+        if ($altasHabilidadesKey !== false) {
+            unset($arrayDeficiencias[$altasHabilidadesKey]);
+        }
+        
         if (empty($arrayDeficiencias)) {
             $registro30->recursoLedor = null;
             $registro30->recursoTranscricao = null;
