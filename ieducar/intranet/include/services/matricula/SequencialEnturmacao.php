@@ -402,12 +402,12 @@ class SequencialEnturmacao
         $year = substr($date, 0, 4);
         $day = substr($date, 8, 10);
 
-        if (($year % 4 == 0 && $year % 100 != 0) || $year % 400 == 0){
+        if (($year % 4 == 0 && $year % 100 != 0) || $year % 400 == 0) {
             return $date;
-        }elseif ($day == '29'){
-                    $last_char = "8";
-                    $date = substr($date, 0, -1) . $last_char;
-                }
+        } elseif ($day == '29') {
+            $last_char = '8';
+            $date = substr($date, 0, -1) . $last_char;
+        }
         return $date;
     }
 
