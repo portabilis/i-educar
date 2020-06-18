@@ -399,16 +399,14 @@ class SequencialEnturmacao
             $date = substr($this->dataEnturmacao, 0, 4) . $date->format('-m-d');
         }
 
-        $year = substr($date, 0, 4);
-        $day = substr($date, 8, 10);
+        $newDate = new DateTime($date);
+        $day = $newDate->format('d');
 
-        if (($year % 4 == 0 && $year % 100 != 0) || $year % 400 == 0) {
-            return $date;
-        } elseif ($day == '29') {
-            $last_char = '8';
-            $date = substr($date, 0, -1) . $last_char;
+        if (date('L', $newDate->getTimestamp()) == 0 && $day == '29') {
+            return $newDate->modify('-1 day')->format('Y-m-d');
         }
-        return $date;
+
+        return $newDate->format('Y-m-d');
     }
 
     public function existeMatriculaTurma()
