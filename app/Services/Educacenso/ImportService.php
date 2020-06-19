@@ -82,4 +82,12 @@ abstract class ImportService
      * @return string
      */
     abstract public function getSchoolNameByFile($school);
+
+    /**
+     *
+     * Trata os dados após a importação, caso seja necessário ajustar para eventuais mudanças de um
+     * ano para o outro
+     *
+     */
+    abstract public function adaptData();
 }
