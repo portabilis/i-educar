@@ -118,6 +118,11 @@ class Registro40Import implements RegistroImportInterface
      */
     protected function getSchool() : ?LegacySchool
     {
-        return SchoolInep::where('cod_escola_inep', $this->model->inepEscola)->first()->school ?? null;
+        $schoolInep = SchoolInep::where('cod_escola_inep', $this->model->inepEscola)->first();
+        if ($schoolInep) {
+            return $schoolInep->school;
+        }
+        
+        return null;
     }
 }
