@@ -234,22 +234,6 @@ class clsPessoa_
             $db->Consulta("SELECT idpes, nome, idpes_cad, data_cad, url, tipo, idpes_rev, data_rev, situacao, origem_gravacao, email FROM cadastro.pessoa WHERE idpes = $this->idpes ");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
-                $nome = mb_strtolower($tupla['nome']);
-                $arrayNome = explode(' ', $nome);
-                $arrNovoNome = [];
-                foreach ($arrayNome as $parte) {
-                    if ($parte != 'de' && $parte != 'da' && $parte != 'dos' && $parte != 'do' && $parte != 'das' && $parte != 'e') {
-                        if ($parte != 's.a' && $parte != 'ltda') {
-                            $arrNovoNome[] = mb_strtoupper(mb_substr($parte, 0, 1)) . mb_substr($parte, 1);
-                        } else {
-                            $arrNovoNome[] = mb_strtoupper($parte);
-                        }
-                    } else {
-                        $arrNovoNome[] = $parte;
-                    }
-                }
-                $nome = implode(' ', $arrNovoNome);
-                $tupla['nome'] = $nome;
                 list($this->idpes, $this->nome, $this->idpes_cad, $this->data_cad, $this->url, $this->tipo, $this->idpes_rev, $this->data_rev, $this->situacao, $this->origem_gravacao, $this->email) = $tupla;
 
                 return $tupla;
@@ -262,6 +246,10 @@ class clsPessoa_
     protected function cleanUpName($name)
     {
         $name = preg_replace('/\s+/', ' ', $name);
+
+        if (config('legacy.app.uppercase_names')) {
+            $name = Str::upper($name);
+        }
 
         return trim($name);
     }
