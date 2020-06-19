@@ -2529,7 +2529,11 @@ if ($j('#transporte_rota').length > 0) {
         $j('#veiculo_transporte_escolar').makeUnrequired();
         if ($tipoTransporte.val() == 'nenhum') {
             document.getElementById('veiculo_transporte_escolar').disabled = true;
-        } else if ($tipoTransporte.val() == 'municipal' || $tipoTransporte.val() == 'estadual') {
+            $j('#transporte_rota').closest('tr').hide();
+            $j('#transporte_ponto').closest('tr').hide();
+            $j('#pessoaj_transporte_destino').closest('tr').hide();
+            $j('#transporte_observacao').closest('tr').hide();
+        }else if ($tipoTransporte.val() == 'municipal' || $tipoTransporte.val() == 'estadual' && $tipoTransporte.val() != 'nenhum') {
             if (obrigarCamposCenso) {
               $j('#veiculo_transporte_escolar').makeRequired();
             }
@@ -2539,7 +2543,7 @@ if ($j('#transporte_rota').length > 0) {
             $j('#pessoaj_transporte_destino').closest('tr').show();
             $j('#transporte_observacao').closest('tr').show();
         } else {
-            document.getElementById('veiculo_transporte_escolar').disabled = false;
+            document.getElementById('veiculo_transporte_escolar').disabled = true;
             $j('#transporte_rota').closest('tr').hide();
             $j('#transporte_ponto').closest('tr').hide();
             $j('#pessoaj_transporte_destino').closest('tr').hide();
