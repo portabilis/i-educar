@@ -3,6 +3,7 @@
 use App\Models\LegacyDeficiency;
 use App\Models\Individual;
 use App\Models\LogUnification;
+use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
@@ -2066,6 +2067,8 @@ class AlunoController extends ApiCoreController
             $this->appendResponse($this->getNomeBairro());
         } elseif ($this->isRequestFor('get', 'unificacao-alunos')) {
             $this->appendResponse($this->getUnificacoes());
+        } elseif ($this->isRequestFor('get', 'deve-habilitar-campo-recursos-prova-inep')) {
+            $this->appendResponse($this->deveHabilitarCampoRecursosProvaInep());
         } else {
             $this->notImplementedOperationError();
         }
@@ -2081,5 +2084,22 @@ class AlunoController extends ApiCoreController
         }
 
         return $arrayEducacensoDeficiencies;
+    }
+
+    private function deveHabilitarCampoRecursosProvaInep()
+    {
+        // Pega os códigos das deficiências do censo
+        $deficiencias = $this->replaceByEducacensoDeficiencies(array_filter(explode(',', $this->getRequest()->deficiencias)));
+
+        // Remove "Altas Habilidades"
+        $altasHabilidadesKey = array_search(Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO, $deficiencias);
+
+        if ($altasHabilidadesKey !== false) {
+            unset($deficiencias[$altasHabilidadesKey]);
+        }
+
+        return [
+            'result' => !empty($deficiencias),
+        ];
     }
 }
