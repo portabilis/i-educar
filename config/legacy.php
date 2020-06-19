@@ -172,6 +172,7 @@ return [
             'private_key' => '',
             'minimum_score' => 0.5,
         ],
+        'uppercase_names' => 0,
     ],
 
     'modules' => [

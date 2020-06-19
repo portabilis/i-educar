@@ -51,6 +51,10 @@ class LegacyPerson extends EloquentBaseModel implements Transformable
             $model->origem_gravacao = 'M';
             $model->operacao = 'I';
             $model->slug = Str::lower(Str::slug($model->nome, ' '));
+
+            if (config('legacy.app.uppercase_names')) {
+                $model->nome =  Str::upper($model->nome);
+            }
         });
     }
 
