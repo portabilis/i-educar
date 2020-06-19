@@ -80,8 +80,8 @@ facilitar o desenvolvimento.
 
 #### Servidor
 
-- [PHP](http://php.net/) versão 7.3 ou maior
-- [Postgres](https://www.postgresql.org/) versão 9.5 ou superior
+- [PHP](http://php.net/) versão 7.3 ou superior
+- [Postgres](https://www.postgresql.org/) versão 9.5 (exata)
 - [Nginx](https://www.nginx.com/)
 
 As seguintes extensões do PHP são necessárias:

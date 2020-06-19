@@ -484,15 +484,6 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        if (!$escola->preenchimentoCorretoBanheiro()) {
-            $mensagem[] = [
-                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} possui valor inválido. Verificamos que o campo Banheiros foi preenchido incorretamente.",
-                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dependências > Campo: Banheiros)',
-                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
-                'fail' => true
-            ];
-        }
-
         if (!$escola->existeRecursosAcessibilidade()) {
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se alguma opção dos recursos de acessibilidade que a escola possui foi informada.",
@@ -614,6 +605,15 @@ class EducacensoAnaliseController extends ApiCoreController
             $mensagem[] = [
                 'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verificamos que o campo: Forma(s) de organização do ensino não foi informado.",
                 'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Forma(s) de organização do ensino)',
+                'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
+                'fail' => true
+            ];
+        }
+
+        if (empty($escola->orgaosColegiados)) {
+            $mensagem[] = [
+                'text' => "Dados para formular o registro 10 da escola {$escola->nomeEscola} não encontrados. Verifique se os órgãos colegiados em funcionamento na escola foram informados.",
+                'path' => '(Escola > Cadastros > Escolas > Editar > Aba: Dados do ensino > Campo: Órgãos colegiados em funcionamento na escola',
                 'linkPath' => "/intranet/educar_escola_cad.php?cod_escola={$escola->codEscola}",
                 'fail' => true
             ];
