@@ -84,13 +84,6 @@ abstract class ImportService
     abstract public function getSchoolNameByFile($school);
 
     /**
-     * Verifica se o arquivo está de acordo com as regras do ano
-     *
-     * @param UploadedFile $file
-     */
-    abstract public function validateFile(UploadedFile $file);
-
-    /**
      *
      * Trata os dados após a importação, caso seja necessário ajustar para eventuais mudanças de um
      * ano para o outro
