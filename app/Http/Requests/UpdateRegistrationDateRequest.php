@@ -20,7 +20,7 @@ class UpdateRegistrationDateRequest extends FormRequest
                 'date_format:Y',
             ],
             'ref_cod_instituicao' => 'required',
-            'nova_data' => 'required|date_format:d/m/Y',
+            'nova_data_entrada' => 'required|date_format:d/m/Y',
         ];
     }
 
@@ -33,8 +33,8 @@ class UpdateRegistrationDateRequest extends FormRequest
             'ano.required' => 'O ano é obrigatório.',
             'ano.date_format' => 'O campo Ano deve ser um ano válido.',
             'ref_cod_instituicao.required' => 'A instituição é obrigatória.',
-            'nova_data.required' => 'A nova data é obrigatória.',
-            'nova_data.date_format' => 'A nova data é inválida.',
+            'nova_data_entrada.required' => 'A nova data é obrigatória.',
+            'nova_data_entrada.date_format' => 'A nova data é inválida.',
         ];
     }
 }

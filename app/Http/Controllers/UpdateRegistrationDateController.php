@@ -38,6 +38,39 @@ class UpdateRegistrationDateController extends Controller
     {
         $query = LegacyRegistration::active();
 
+        $registrations = $this->addFilters($request, $query);
+
+        if (count($registrations) == 0) {
+            return redirect()->route('update-registration-date.index')->with('error', 'Nenhuma matrícula encontrada com os filtros selecionados');
+        }
+
+        if (empty($request->get('confirmation'))) {
+            return redirect()->route('update-registration-date.index')->withInput()->with('show-confirmation', ['count' => count($registrations)]);
+        }
+
+        DB::beginTransaction();
+
+        $newDateRegistration = \DateTime::createFromFormat('d/m/Y', $request->get('nova_data_entrada'));
+        $newDateEnrollment = \DateTime::createFromFormat('d/m/Y', $request->get('nova_data_enturmacao'));
+
+        $result = [];
+        foreach ($registrations as $registration) {
+            $result[] = $registrationService->updateRegistrationDate($registration, $newDateRegistration);
+
+            if ($newDateEnrollment) {
+                $registrationService->updateEnrollmentsDate($registration, $newDateEnrollment, !empty($request->get('remanejadas')));
+            }
+        }
+
+        DB::commit();
+
+        return redirect()->route('update-registration-date.index')
+            ->with('success', count($registrations) . ' matrículas atualizadas com sucesso.')
+            ->with('registrations', $result);
+    }
+
+    private function addFilters(UpdateRegistrationDateRequest $request, $query)
+    {
         if ($request->get('ano')) {
             $query->where('ano', $request->get('ano'));
         }
@@ -61,36 +94,22 @@ class UpdateRegistrationDateController extends Controller
             $query->where('ref_ref_cod_serie', $request->get('ref_cod_serie'));
         }
 
-        $oldData = $request->get('data_antiga') ? \DateTime::createFromFormat('d/m/Y', $request->get('data_antiga')) : null;
-        if ($request->get('data_antiga')) {
-            $query->where('data_matricula', $oldData->format('Y-m-d'));
+        $oldDataRegistration = $request->get('data_entrada_antiga') ? \DateTime::createFromFormat('d/m/Y', $request->get('data_entrada_antiga')) : null;
+        if ($request->get('data_entrada_antiga')) {
+            $query->where('data_matricula', $oldDataRegistration->format('Y-m-d'));
+        }
+
+        if ($request->get('data_enturmacao_antiga')) {
+            $oldDataEnrollment = \DateTime::createFromFormat('d/m/Y', $request->get('data_enturmacao_antiga'));
+            $query->whereHas('lastEnrollment', function ($enrollmentQuery) use ($oldDataEnrollment) {
+                $enrollmentQuery->where('data_enturmacao', $oldDataEnrollment);
+            });
         }
 
         if ($request->get('situacao')) {
             $query->where('aprovado', $request->get('situacao'));
         }
 
-        $registrations = $query->get();
-
-        if (count($registrations) == 0) {
-            return redirect()->route('update-registration-date.index')->with('error', 'Nenhuma matrícula encontrada com os filtros selecionados');
-        }
-
-        if (empty($request->get('confirmation'))) {
-            return redirect()->route('update-registration-date.index')->withInput()->with('show-confirmation', ['count' => count($registrations)]);
-        }
-
-        DB::beginTransaction();
-
-        $newDate = \DateTime::createFromFormat('d/m/Y', $request->get('nova_data'));
-
-        foreach ($registrations as $registration) {
-            $registrationService->updateRegistrationDate($registration, $newDate);
-            $registrationService->updateEnrollmentsDate($registration, $newDate, $oldData, !empty($request->get('remanejadas')));
-        }
-
-        DB::commit();
-
-        return redirect()->route('update-registration-date.index')->with('success', count($registrations) . ' matrículas atualizadas com sucesso.');
+        return $query->get();
     }
 }
