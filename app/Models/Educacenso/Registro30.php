@@ -3,6 +3,8 @@
 namespace App\Models\Educacenso;
 
 
+use iEducar\Modules\Educacenso\Model\Deficiencias;
+
 class Registro30 implements RegistroEducacenso
 {
     CONST TIPO_MANAGER = 'manager';
@@ -263,5 +265,22 @@ class Registro30 implements RegistroEducacenso
             '999991' => 'Outro curso de formação superior - Bacharelado',
             '999992' => 'Outro curso de formação superior - Tecnológico',
         ];
+    }
+
+    /**
+     * Remove "Altas habilidades/Superdotação" do array de deficiências informado
+     *
+     * @param $arrayDeficiencias
+     * @return string
+     */
+    public static function removeAltasHabilidadesArrayDeficiencias($arrayDeficiencias)
+    {
+        $altasHabilidadesKey = array_search(Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO, $arrayDeficiencias);
+
+        if ($altasHabilidadesKey !== false) {
+            unset($arrayDeficiencias[$altasHabilidadesKey]);
+        }
+
+        return $arrayDeficiencias;
     }
 }
