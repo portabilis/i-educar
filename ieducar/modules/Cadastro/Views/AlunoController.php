@@ -858,7 +858,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-        if ($this->getClsPermissoes()->permissao_cadastra(21240, $this->getOption('id_usuario'), 7)) {
             // Cria lista de rotas
             $obj_rota = new clsModulesRotaTransporteEscolar();
             $obj_rota->setOrderBy(' descricao asc ');
@@ -883,7 +882,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             // Transporte observacoes
             $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('transporte_observacao')), 'required' => false, 'size' => 50, 'max_length' => 255);
             $this->inputsHelper()->textArea('transporte_observacao', $options);
-        }
 
         // religião
         $this->inputsHelper()->religiao(array('required' => false, 'label' => Portabilis_String_Utils::toLatin1('Religião')));
