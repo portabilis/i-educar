@@ -39,7 +39,11 @@ class Register30StudentDataAnalysis implements AnalysisInterface
     {
         $data = $this->data;
 
-        $arrayDeficiencias = array_filter(Portabilis_Utils_Database::pgArrayToArray($data->arrayDeficiencias));
+        $arrayDeficiencias = $this->data::removeAltasHabilidadesArrayDeficiencias(
+            array_filter(
+                Portabilis_Utils_Database::pgArrayToArray($data->arrayDeficiencias)
+            )
+        );
         $arrayRecursos = array_filter(Portabilis_Utils_Database::pgArrayToArray($data->recursosProvaInep));
 
         if (!$arrayDeficiencias && ($data->dadosAluno->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE || $data->dadosAluno->modalidadeCurso == ModalidadeCurso::EDUCACAO_ESPECIAL)) {
