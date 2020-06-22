@@ -62,7 +62,8 @@ class EnrollmentService
      */
     private function getAvailableTimeService()
     {
-        return new AvailableTimeService();
+        $availableTimeService = new AvailableTimeService();
+        return $availableTimeService->onlySchoolClassesInformedOnCensus();
     }
 
     /**

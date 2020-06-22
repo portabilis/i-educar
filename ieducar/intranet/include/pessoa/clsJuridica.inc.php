@@ -33,8 +33,12 @@ class clsJuridica
             $this->idpes = $idpes;
         }
 
-        $this->cnpj = $cnpj;
+        if (config('legacy.app.uppercase_names')) {
+            $fantasia = Str::upper($fantasia);
+        }
+
         $this->fantasia = $fantasia;
+        $this->cnpj = $cnpj;
         $this->insc_estadual = $insc_estadual;
         $this->capital_social = $capital_social;
         $this->idpes_cad = $idpes_cad ? $idpes_cad : Session::get('id_pessoa');

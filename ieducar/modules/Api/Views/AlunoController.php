@@ -8,6 +8,7 @@ use iEducar\Modules\Educacenso\Validator\InepExamValidator;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
 use iEducar\Modules\Educacenso\Validator\NisValidator;
 use iEducar\Modules\People\CertificateType;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
@@ -1307,9 +1308,9 @@ class AlunoController extends ApiCoreController
                 LEFT JOIN cadastro.fisica_foto ff ON p.idpes = ff.idpes
                 WHERE TRUE
                 and exists (
-                    select * 
+                    select *
                     from pmieducar.matricula
-                    where ref_ref_cod_escola in ({$escola}) 
+                    where ref_ref_cod_escola in ({$escola})
                     and ref_cod_aluno = a.cod_aluno
                     $whereAno
                     $whereCursando
@@ -1331,9 +1332,9 @@ class AlunoController extends ApiCoreController
                 LEFT JOIN cadastro.fisica_foto ff ON p.idpes = ff.idpes
                 WHERE TRUE
                 and exists (
-                    select * 
-                    from pmieducar.matricula 
-                    where ref_ref_cod_escola in ({$escola}) 
+                    select *
+                    from pmieducar.matricula
+                    where ref_ref_cod_escola in ({$escola})
                     and ref_cod_aluno = aluno_excluidos.cod_aluno
                     $whereAno
                     $whereCursando
@@ -1897,11 +1898,11 @@ class AlunoController extends ApiCoreController
 
     protected function isUsuarioAdmin()
     {
-        $this->pessoa_logada = Session::get('id_pessoa');
+        if (Auth::user()) {
+            return Auth::user()->isAdmin();
+        }
 
-        $isAdmin = $this->pessoa_logada == 1;
-
-        return $isAdmin;
+        return false;
     }
 
     protected function canGetAlunosMatriculados()
