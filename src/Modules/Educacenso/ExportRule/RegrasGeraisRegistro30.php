@@ -9,6 +9,7 @@ use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Modules\Educacenso\Model\Escolaridade;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
+use Portabilis_Utils_Database;
 
 class RegrasGeraisRegistro30 implements EducacensoExportRule
 {
@@ -75,13 +76,13 @@ class RegrasGeraisRegistro30 implements EducacensoExportRule
         }
 
         // Remove "Altas Habilidades"
-        $arrayDeficiencias = $registro30->arrayDeficiencias;
+        $arrayDeficiencias = Portabilis_Utils_Database::pgArrayToArray($registro30->arrayDeficiencias);
         $altasHabilidadesKey = array_search(Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO, $registro30->arrayDeficiencias);
 
         if ($altasHabilidadesKey !== false) {
             unset($arrayDeficiencias[$altasHabilidadesKey]);
         }
-        
+
         if (empty($arrayDeficiencias)) {
             $registro30->recursoLedor = null;
             $registro30->recursoTranscricao = null;
