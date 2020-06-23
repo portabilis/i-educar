@@ -8,7 +8,6 @@ use App\Models\LegacySchoolClass;
 use App\Models\LegacyTransferRequest;
 use App\User;
 use App_Model_MatriculaSituacao;
-use clsModulesAuditoriaGeral;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -77,12 +76,6 @@ class RegistrationService
     public function updateStatus(LegacyRegistration $registration, $data)
     {
         $status = $data['nova_situacao'];
-        $auditoria = new clsModulesAuditoriaGeral('update_registration_status', $registration->getKey());
-        $auditoria->usuario_id = $this->user->getKey();
-        $auditoria->alteracao(
-            ['aprovado' => $registration->aprovado],
-            ['aprovado' => $status]
-        );
 
         $registration->aprovado = $status;
         $registration->save();
@@ -186,12 +179,6 @@ class RegistrationService
     public function updateRegistrationDate(LegacyRegistration $registration, DateTime $date)
     {
         $date = $date->format('Y-m-d');
-        $auditoria = new clsModulesAuditoriaGeral('update_registration_date', $registration->getKey());
-        $auditoria->usuario_id = $this->user->getKey();
-        $auditoria->alteracao(
-            ['data_matricula' => $registration->data_matricula],
-            ['data_matricula' => $date]
-        );
 
         $registration->data_matricula = $date;
         $registration->save();
@@ -217,13 +204,6 @@ class RegistrationService
             if (!$relocated && $enrollment->remanejado) {
                 continue;
             }
-
-            $auditoria = new clsModulesAuditoriaGeral('update_enrollment_date', $enrollment->getKey());
-            $auditoria->usuario_id = $this->user->getKey();
-            $auditoria->alteracao(
-                ['data_enturmacao' => $enrollment->data_enturmacao],
-                ['data_enturmacao' => $date]
-            );
 
             $enrollment->data_enturmacao = $date;
             $enrollment->save();
