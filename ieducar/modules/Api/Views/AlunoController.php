@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Educacenso\Registro30;
 use App\Models\LegacyDeficiency;
 use App\Models\Individual;
 use App\Models\LogUnification;
@@ -2092,11 +2093,7 @@ class AlunoController extends ApiCoreController
         $deficiencias = $this->replaceByEducacensoDeficiencies(array_filter(explode(',', $this->getRequest()->deficiencias)));
 
         // Remove "Altas Habilidades"
-        $altasHabilidadesKey = array_search(Deficiencias::ALTAS_HABILIDADES_SUPERDOTACAO, $deficiencias);
-
-        if ($altasHabilidadesKey !== false) {
-            unset($deficiencias[$altasHabilidadesKey]);
-        }
+        $deficiencias = Registro30::removeAltasHabilidadesArrayDeficiencias($deficiencias);
 
         return [
             'result' => !empty($deficiencias),
