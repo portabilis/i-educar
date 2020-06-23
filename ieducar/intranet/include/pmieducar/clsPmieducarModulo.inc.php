@@ -123,15 +123,15 @@ class clsPmieducarModulo extends Model
             }
 
             if (is_string($this->nm_tipo)) {
-                $this->nm_tipo = $db->escapeString($this->nm_tipo);
+                $nm_tipo = $db->escapeString($this->nm_tipo);
                 $campos[] = 'nm_tipo';
-                $valores[] = "'{$this->nm_tipo}'";
+                $valores[] = "'{$nm_tipo}'";
             }
 
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
+                $descricao = $db->escapeString($this->descricao);
                 $campos[] = 'descricao';
-                $valores[] = "'{$this->descricao}'";
+                $valores[] = "'{$descricao}'";
             }
             if (is_numeric($this->num_meses)) {
                 $campos[] = 'num_meses';
@@ -191,13 +191,13 @@ class clsPmieducarModulo extends Model
             }
 
             if (is_string($this->nm_tipo)) {
-                $this->nm_tipo = $db->escapeString($this->nm_tipo);
-                $set[] = "nm_tipo = '{$this->nm_tipo}'";
+                $nm_tipo = $db->escapeString($this->nm_tipo);
+                $set[] = "nm_tipo = '{$nm_tipo}'";
             }
 
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
-                $set[] = "descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set[] = "descricao = '{$descricao}'";
             }
 
             if (is_numeric($this->num_meses)) {
@@ -283,8 +283,8 @@ class clsPmieducarModulo extends Model
         }
 
         if (is_string($str_nm_tipo)) {
-            $str_nm_tipo = $db->escapeString($str_nm_tipo);
-            $filtros[] = "nm_tipo LIKE '%{$str_nm_tipo}%'";
+            $nm_tipo = $db->escapeString($str_nm_tipo);
+            $filtros[] = "nm_tipo LIKE '%{$nm_tipo}%'";
         }
 
         if (is_string($str_descricao)) {

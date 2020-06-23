@@ -132,9 +132,9 @@ class clsPmieducarBiblioteca extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_biblioteca)) {
-                $this->nm_biblioteca = $db->escapeString($this->nm_biblioteca);
+                $nm_biblioteca = $db->escapeString($this->nm_biblioteca);
                 $campos .= "{$gruda}nm_biblioteca";
-                $valores .= "{$gruda}'{$this->nm_biblioteca}'";
+                $valores .= "{$gruda}'{$nm_biblioteca}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->valor_multa)) {
@@ -209,8 +209,8 @@ class clsPmieducarBiblioteca extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_biblioteca)) {
-                $this->nm_biblioteca = $db->escapeString($this->nm_biblioteca);
-                $set .= "{$gruda}nm_biblioteca = '{$this->nm_biblioteca}'";
+                $nm_biblioteca = $db->escapeString($this->nm_biblioteca);
+                $set .= "{$gruda}nm_biblioteca = '{$nm_biblioteca}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->valor_multa)) {
@@ -311,8 +311,8 @@ class clsPmieducarBiblioteca extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_biblioteca)) {
-            $str_nm_biblioteca = $db->escapeString($str_nm_biblioteca);
-            $filtros .= "{$whereAnd} nm_biblioteca LIKE '%{$str_nm_biblioteca}%'";
+            $str_nome_biblioteca = $db->escapeString($str_nm_biblioteca);
+            $filtros .= "{$whereAnd} nm_biblioteca LIKE '%{$str_nome_biblioteca}%'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_valor_multa)) {

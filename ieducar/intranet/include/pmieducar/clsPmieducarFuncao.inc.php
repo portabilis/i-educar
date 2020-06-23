@@ -78,15 +78,15 @@ class clsPmieducarFuncao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_funcao)) {
-                $this->nm_funcao = $db->escapeString($this->nm_funcao);
+                $nm_funcao = $db->escapeString($this->nm_funcao);
                 $campos .= "{$gruda}nm_funcao";
-                $valores .= "{$gruda}'{$this->nm_funcao}'";
+                $valores .= "{$gruda}'{$nm_funcao}'";
                 $gruda = ', ';
             }
             if (is_string($this->abreviatura)) {
-                $this->abreviatura = $db->escapeString($this->abreviatura);
+                $abreviatura = $db->escapeString($this->abreviatura);
                 $campos .= "{$gruda}abreviatura";
-                $valores .= "{$gruda}'{$this->abreviatura}'";
+                $valores .= "{$gruda}'{$abreviatura}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->professor)) {
@@ -134,13 +134,13 @@ class clsPmieducarFuncao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_funcao)) {
-                $this->nm_funcao = $db->escapeString($this->nm_funcao);
-                $set .= "{$gruda}nm_funcao = '{$this->nm_funcao}'";
+                $nm_funcao = $db->escapeString($this->nm_funcao);
+                $set .= "{$gruda}nm_funcao = '{$nm_funcao}'";
                 $gruda = ', ';
             }
             if (is_string($this->abreviatura)) {
-                $this->abreviatura = $db->escapeString($this->abreviatura);
-                $set .= "{$gruda}abreviatura = '{$this->abreviatura}'";
+                $abreviatura = $db->escapeString($this->abreviatura);
+                $set .= "{$gruda}abreviatura = '{$abreviatura}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->professor)) {
@@ -199,13 +199,13 @@ class clsPmieducarFuncao extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_funcao)) {
-            $str_nm_funcao = $db->escapeString($str_nm_funcao);
-            $filtros .= "{$whereAnd} nm_funcao LIKE '%{$str_nm_funcao}%'";
+            $nm_funcao = $db->escapeString($str_nm_funcao);
+            $filtros .= "{$whereAnd} nm_funcao LIKE '%{$nm_funcao}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_abreviatura)) {
-            $str_abreviatura = $db->escapeString($str_abreviatura);
-            $filtros .= "{$whereAnd} abreviatura LIKE '%{$str_abreviatura}%'";
+            $abreviatura = $db->escapeString($str_abreviatura);
+            $filtros .= "{$whereAnd} abreviatura LIKE '%{$abreviatura}%'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_professor)) {

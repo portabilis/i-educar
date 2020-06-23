@@ -74,15 +74,15 @@ class clsPmieducarAcervoAutor extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_autor)) {
-                $this->nm_autor = $db->escapeString($this->nm_autor);
+                $nm_autor = $db->escapeString($this->nm_autor);
                 $campos .= "{$gruda}nm_autor";
-                $valores .= "{$gruda}'{$this->nm_autor}'";
+                $valores .= "{$gruda}'{$nm_autor}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -125,13 +125,13 @@ class clsPmieducarAcervoAutor extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_autor)) {
-                $this->nm_autor = $db->escapeString($this->nm_autor);
-                $set .= "{$gruda}nm_autor = '{$this->nm_autor}'";
+                $nm_autor = $db->escapeString($this->nm_autor);
+                $set .= "{$gruda}nm_autor = '{$nm_autor}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -186,9 +186,8 @@ class clsPmieducarAcervoAutor extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_autor)) {
-            $str_nm_autor = addslashes($str_nm_autor);
-            $str_nm_autor = $db->escapeString($str_nm_autor);
-            $filtros .= "{$whereAnd} nm_autor ILIKE ('%{$str_nm_autor}%')";
+            $str_nome_autor = $db->escapeString($str_nm_autor);
+            $filtros .= "{$whereAnd} nm_autor ILIKE ('%{$str_nome_autor}%')";
             $whereAnd = ' AND ';
         }
         if (is_string($str_descricao)) {

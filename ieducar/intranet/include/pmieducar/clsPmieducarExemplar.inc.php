@@ -551,8 +551,8 @@ class clsPmieducarExemplar extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_titulo_livro)) {
-            $str_titulo_livro = $db->escapeString($str_titulo_livro);
-            $filtros .= "{$whereAnd} (a.titulo) LIKE ('%{$str_titulo_livro}%')";
+            $titulo_livro = $db->escapeString($str_titulo_livro);
+            $filtros .= "{$whereAnd} (a.titulo) LIKE ('%{$titulo_livro}%')";
             $whereAnd = ' AND ';
         }
 

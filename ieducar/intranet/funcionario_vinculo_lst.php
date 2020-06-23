@@ -31,8 +31,8 @@ class indice extends clsListagem
         $where_and = '';
 
         if (!empty($nome_)) {
-            $nome_ = $db->escapeString($nome_);
-            $where .= $where_and." nm_vinculo LIKE '%$nome_%' ";
+            $name = $db->escapeString($nome_);
+            $where .= $where_and." nm_vinculo LIKE '%{$name}%' ";
             $where_and = ' AND';
         }
 

@@ -87,21 +87,21 @@ class clsPmieducarInfraPredio extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_predio)) {
-                $this->nm_predio = $db->escapeString($this->nm_predio);
+                $nm_predio = $db->escapeString($this->nm_predio);
                 $campos .= "{$gruda}nm_predio";
-                $valores .= "{$gruda}'{$this->nm_predio}'";
+                $valores .= "{$gruda}'{$nm_predio}'";
                 $gruda = ', ';
             }
             if (is_string($this->desc_predio)) {
-                $this->desc_predio = $db->escapeString($this->desc_predio);
+                $desc_predio = $db->escapeString($this->desc_predio);
                 $campos .= "{$gruda}desc_predio";
-                $valores .= "{$gruda}'{$this->desc_predio}'";
+                $valores .= "{$gruda}'{$desc_predio}'";
                 $gruda = ', ';
             }
             if (is_string($this->endereco)) {
-                $this->endereco = $db->escapeString($this->endereco);
+                $endereco = $db->escapeString($this->endereco);
                 $campos .= "{$gruda}endereco";
-                $valores .= "{$gruda}'{$this->endereco}'";
+                $valores .= "{$gruda}'{$endereco}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -148,18 +148,18 @@ class clsPmieducarInfraPredio extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_predio)) {
-                $this->nm_predio = $db->escapeString($this->nm_predio);
-                $set .= "{$gruda}nm_predio = '{$this->nm_predio}'";
+                $nm_predio = $db->escapeString($this->nm_predio);
+                $set .= "{$gruda}nm_predio = '{$nm_predio}'";
                 $gruda = ', ';
             }
             if (is_string($this->desc_predio)) {
-                $this->desc_predio = $db->escapeString($this->desc_predio);
-                $set .= "{$gruda}desc_predio = '{$this->desc_predio}'";
+                $desc_predio = $db->escapeString($this->desc_predio);
+                $set .= "{$gruda}desc_predio = '{$desc_predio}'";
                 $gruda = ', ';
             }
             if (is_string($this->endereco)) {
-                $this->endereco = $db->escapeString($this->endereco);
-                $set .= "{$gruda}endereco = '{$this->endereco}'";
+                $endereco = $db->escapeString($this->endereco);
+                $set .= "{$gruda}endereco = '{$endereco}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -216,8 +216,8 @@ class clsPmieducarInfraPredio extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_predio)) {
-            $str_nm_predio = $db->escapeString($str_nm_predio);
-            $filtros .= "{$whereAnd} predio.nm_predio LIKE '%{$str_nm_predio}%'";
+            $nm_predio = $db->escapeString($str_nm_predio);
+            $filtros .= "{$whereAnd} predio.nm_predio LIKE '%{$nm_predio}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_desc_predio)) {

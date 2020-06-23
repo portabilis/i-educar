@@ -90,15 +90,15 @@ class clsPmieducarMotivoAfastamento extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_motivo)) {
-                $this->nm_motivo = $db->escapeString($this->nm_motivo);
+                $nm_motivo = $db->escapeString($this->nm_motivo);
                 $campos .= "{$gruda}nm_motivo";
-                $valores .= "{$gruda}'{$this->nm_motivo}'";
+                $valores .= "{$gruda}'{$nm_motivo}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -147,14 +147,14 @@ class clsPmieducarMotivoAfastamento extends Model
             }
 
             if (is_string($this->nm_motivo)) {
-                $this->nm_motivo = $db->escapeString($this->nm_motivo);
-                $set .= "{$gruda}nm_motivo = '{$this->nm_motivo}'";
+                $nm_motivo = $db->escapeString($this->nm_motivo);
+                $set .= "{$gruda}nm_motivo = '{$nm_motivo}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
 
@@ -214,8 +214,8 @@ class clsPmieducarMotivoAfastamento extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_motivo)) {
-            $str_nm_motivo = $db->escapeString($str_nm_motivo);
-            $filtros .= "{$whereAnd} nm_motivo LIKE '%{$str_nm_motivo}%'";
+            $nm_motivo = $db->escapeString($str_nm_motivo);
+            $filtros .= "{$whereAnd} nm_motivo LIKE '%{$nm_motivo}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_descricao)) {

@@ -117,9 +117,9 @@ class clsPmieducarAcervoEditora extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_editora)) {
-                $this->nm_editora = $db->escapeString($this->nm_editora);
+                $nm_editora = $db->escapeString($this->nm_editora);
                 $campos .= "{$gruda}nm_editora";
-                $valores .= "{$gruda}'{$this->nm_editora}'";
+                $valores .= "{$gruda}'{$nm_editora}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->cep)) {
@@ -128,15 +128,15 @@ class clsPmieducarAcervoEditora extends Model
                 $gruda = ', ';
             }
             if (is_string($this->cidade)) {
-                $this->cidade = $db->escapeString($this->cidade);
+                $cidade = $db->escapeString($this->cidade);
                 $campos .= "{$gruda}cidade";
-                $valores .= "{$gruda}'{$this->cidade}'";
+                $valores .= "{$gruda}'{$cidade}'";
                 $gruda = ', ';
             }
             if (is_string($this->bairro)) {
-                $this->bairro = $db->escapeString($this->bairro);
+                $bairro = $db->escapeString($this->bairro);
                 $campos .= "{$gruda}bairro";
-                $valores .= "{$gruda}'{$this->bairro}'";
+                $valores .= "{$gruda}'{$bairro}'";
                 $gruda = ', ';
             }
             if (is_string($this->logradouro)) {
@@ -216,8 +216,8 @@ class clsPmieducarAcervoEditora extends Model
             }
 
             if (is_string($this->nm_editora)) {
-                $this->nm_editora = $db->escapeString($this->nm_editora);
-                $set .= "{$gruda}nm_editora = '{$this->nm_editora}'";
+                $nm_editora = $db->escapeString($this->nm_editora);
+                $set .= "{$gruda}nm_editora = '{$nm_editora}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->cep)) {
@@ -225,13 +225,13 @@ class clsPmieducarAcervoEditora extends Model
                 $gruda = ', ';
             }
             if (is_string($this->cidade)) {
-                $this->cidade = $db->escapeString($this->cidade);
-                $set .= "{$gruda}cidade = '{$this->cidade}'";
+                $cidade = $db->escapeString($this->cidade);
+                $set .= "{$gruda}cidade = '{$cidade}'";
                 $gruda = ', ';
             }
             if (is_string($this->bairro)) {
-                $this->bairro = $db->escapeString($this->bairro);
-                $set .= "{$gruda}bairro = '{$this->bairro}'";
+                $bairro = $db->escapeString($this->bairro);
+                $set .= "{$gruda}bairro = '{$bairro}'";
                 $gruda = ', ';
             }
             if (is_string($this->logradouro)) {
@@ -310,8 +310,8 @@ class clsPmieducarAcervoEditora extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_editora)) {
-            $str_nm_editora = $db->escapeString($str_nm_editora);
-            $filtros .= "{$whereAnd} nm_editora LIKE '%{$str_nm_editora}%'";
+            $str_nome_editora = $db->escapeString($str_nm_editora);
+            $filtros .= "{$whereAnd} nm_editora LIKE '%{$str_nome_editora}%'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_cep)) {
@@ -319,8 +319,8 @@ class clsPmieducarAcervoEditora extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_cidade)) {
-            $str_cidade = $db->escapeString($str_cidade);
-            $filtros .= "{$whereAnd} cidade LIKE '%{$str_cidade}%'";
+            $cidade = $db->escapeString($str_cidade);
+            $filtros .= "{$whereAnd} cidade LIKE '%{$cidade}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_bairro)) {

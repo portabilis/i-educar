@@ -211,9 +211,9 @@ class clsPmieducarTurma extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_turma)) {
-                $this->nm_turma = $db->escapeString($this->nm_turma);
+                $nm_turma = $db->escapeString($this->nm_turma);
                 $campos .= "{$gruda}nm_turma";
-                $valores .= "{$gruda}'{$this->nm_turma}'";
+                $valores .= "{$gruda}'{$nm_turma}'";
                 $gruda = ', ';
             }
             if (is_string($this->sgl_turma)) {
@@ -545,8 +545,8 @@ class clsPmieducarTurma extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_turma)) {
-                $this->nm_turma = $db->escapeString($this->nm_turma);
-                $set .= "{$gruda}nm_turma = '{$this->nm_turma}'";
+                $nm_turma = $db->escapeString($this->nm_turma);
+                $set .= "{$gruda}nm_turma = '{$nm_turma}'";
                 $gruda = ', ';
             }
             if (is_string($this->sgl_turma)) {
@@ -1233,8 +1233,8 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_turma)) {
-            $str_nm_turma = $db->escapeString($str_nm_turma);
-            $filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $nm_turma = $db->escapeString($str_nm_turma);
+            $filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
         }
         if (is_string($str_sgl_turma)) {
@@ -1456,8 +1456,8 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_turma)) {
-            $str_nm_turma = $db->escapeString($str_nm_turma);
-            $filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $nm_turma = $db->escapeString($str_nm_turma);
+            $filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
         }
         if (is_string($str_sgl_turma)) {

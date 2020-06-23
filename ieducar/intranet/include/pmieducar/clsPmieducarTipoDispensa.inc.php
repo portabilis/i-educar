@@ -75,15 +75,15 @@ class clsPmieducarTipoDispensa extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_tipo)) {
-                $this->nm_tipo = $db->escapeString($this->nm_tipo);
+                $nm_tipo = $db->escapeString($this->nm_tipo);
                 $campos .= "{$gruda}nm_tipo";
-                $valores .= "{$gruda}'{$this->nm_tipo}'";
+                $valores .= "{$gruda}'{$nm_tipo}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -126,13 +126,13 @@ class clsPmieducarTipoDispensa extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_tipo)) {
-                $this->nm_tipo = $db->escapeString($this->nm_tipo);
-                $set .= "{$gruda}nm_tipo = '{$this->nm_tipo}'";
+                $nm_tipo = $db->escapeString($this->nm_tipo);
+                $set .= "{$gruda}nm_tipo = '{$nm_tipo}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -187,8 +187,8 @@ class clsPmieducarTipoDispensa extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_tipo)) {
-            $str_nm_tipo = $db->escapeString($str_nm_tipo);
-            $filtros .= "{$whereAnd} td.nm_tipo LIKE '%{$str_nm_tipo}%'";
+            $nm_tipo = $db->escapeString($str_nm_tipo);
+            $filtros .= "{$whereAnd} td.nm_tipo LIKE '%{$nm_tipo}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_descricao)) {

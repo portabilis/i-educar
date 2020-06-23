@@ -71,15 +71,15 @@ class clsPmieducarAlunoBeneficio extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_beneficio)) {
-                $this->nm_beneficio = $db->escapeString($this->nm_beneficio);
+                $nm_beneficio = $db->escapeString($this->nm_beneficio);
                 $campos .= "{$gruda}nm_beneficio";
-                $valores .= "{$gruda}'{$this->nm_beneficio}'";
+                $valores .= "{$gruda}'{$nm_beneficio}'";
                 $gruda = ', ';
             }
             if (is_string($this->desc_beneficio)) {
-                $this->desc_beneficio = $db->escapeString($this->desc_beneficio);
+                $desc_beneficio = $db->escapeString($this->desc_beneficio);
                 $campos .= "{$gruda}desc_beneficio";
-                $valores .= "{$gruda}'{$this->desc_beneficio}'";
+                $valores .= "{$gruda}'{$desc_beneficio}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -118,13 +118,13 @@ class clsPmieducarAlunoBeneficio extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_beneficio)) {
-                $this->nm_beneficio = $db->escapeString($this->nm_beneficio);
-                $set .= "{$gruda}nm_beneficio = '{$this->nm_beneficio}'";
+                $nm_beneficio = $db->escapeString($this->nm_beneficio);
+                $set .= "{$gruda}nm_beneficio = '{$nm_beneficio}'";
                 $gruda = ', ';
             }
             if (is_string($this->desc_beneficio)) {
-                $this->desc_beneficio = $db->escapeString($this->desc_beneficio);
-                $set .= "{$gruda}desc_beneficio = '{$this->desc_beneficio}'";
+                $desc_beneficio = $db->escapeString($this->desc_beneficio);
+                $set .= "{$gruda}desc_beneficio = '{$desc_beneficio}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -190,8 +190,8 @@ class clsPmieducarAlunoBeneficio extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_beneficio)) {
-            $str_nm_beneficio = $db->escapeString($str_nm_beneficio);
-            $filtros .= "{$whereAnd} nm_beneficio LIKE '%{$str_nm_beneficio}%'";
+            $str_nome_beneficio = $db->escapeString($str_nm_beneficio);
+            $filtros .= "{$whereAnd} nm_beneficio LIKE '%{$str_nome_beneficio}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_desc_beneficio)) {

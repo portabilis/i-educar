@@ -44,15 +44,15 @@ class clsPmieducarProjeto extends Model
             $gruda = '';
 
             if (is_string($this->nome)) {
-                $this->nome = $db->escapeString($this->nome);
+                $nome = $db->escapeString($this->nome);
                 $campos .= "{$gruda}nome";
-                $valores .= "{$gruda}'{$this->nome}'";
+                $valores .= "{$gruda}'{$nome}'";
                 $gruda = ', ';
             }
             if (is_string($this->observacao)) {
-                $this->observacao = $db->escapeString($this->observacao);
+                $observacao = $db->escapeString($this->observacao);
                 $campos .= "{$gruda}observacao";
-                $valores .= "{$gruda}'{$this->observacao}'";
+                $valores .= "{$gruda}'{$observacao}'";
                 $gruda = ', ';
             }
 
@@ -76,13 +76,13 @@ class clsPmieducarProjeto extends Model
             $set = '';
 
             if (is_string($this->nome)) {
-                $this->nome = $db->escapeString($this->nome);
-                $set .= "{$gruda}nome = '{$this->nome}'";
+                $nome = $db->escapeString($this->nome);
+                $set .= "{$gruda}nome = '{$nome}'";
                 $gruda = ', ';
             }
             if (is_string($this->observacao)) {
-                $this->observacao = $db->escapeString($this->observacao);
-                $set .= "{$gruda}observacao = '{$this->observacao}'";
+                $observacao = $db->escapeString($this->observacao);
+                $set .= "{$gruda}observacao = '{$observacao}'";
                 $gruda = ', ';
             }
 
@@ -115,8 +115,8 @@ class clsPmieducarProjeto extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($nome)) {
-            $nome = $db->escapeString($nome);
-            $filtros .= "{$whereAnd} nome ILIKE '%{$nome}%'";
+            $nome_str = $db->escapeString($nome);
+            $filtros .= "{$whereAnd} nome ILIKE '%{$nome_str}%'";
             $whereAnd = ' AND ';
         }
 

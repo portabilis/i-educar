@@ -53,9 +53,9 @@ class clsModulesPontoTransporteEscolar extends Model
             $gruda = '';
 
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
 
@@ -84,9 +84,9 @@ class clsModulesPontoTransporteEscolar extends Model
             }
 
             if (is_string($this->complemento)) {
-                $this->complemento = $db->escapeString($this->complemento);
+                $complemento = $db->escapeString($this->complemento);
                 $campos .= "{$gruda}complemento";
-                $valores .= "{$gruda}'{$this->complemento}'";
+                $valores .= "{$gruda}'{$complemento}'";
                 $gruda = ', ';
             }
 
@@ -131,8 +131,8 @@ class clsModulesPontoTransporteEscolar extends Model
             $gruda = '';
 
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
 
@@ -152,8 +152,8 @@ class clsModulesPontoTransporteEscolar extends Model
             }
 
             if (is_string($this->complemento)) {
-                $this->complemento = $db->escapeString($this->complemento);
-                $set .= "{$gruda}complemento = '{$this->complemento}'";
+                $complemento = $db->escapeString($this->complemento);
+                $set .= "{$gruda}complemento = '{$complemento}'";
                 $gruda = ', ';
             }
 
@@ -229,8 +229,8 @@ class clsModulesPontoTransporteEscolar extends Model
         }
 
         if (is_string($descricao)) {
-            $descricao = $db->escapeString($descricao);
-            $filtros .= "{$whereAnd} translate(upper(descricao),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$descricao}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $desc = $db->escapeString($descricao);
+            $filtros .= "{$whereAnd} translate(upper(descricao),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$desc}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
         }
 

@@ -92,9 +92,9 @@ class clsPmieducarTipoEnsino extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_tipo)) {
-                $this->nm_tipo = $db->escapeString($this->nm_tipo);
+                $nm_tipo = $db->escapeString($this->nm_tipo);
                 $campos .= "{$gruda}nm_tipo";
-                $valores .= "{$gruda}'{$this->nm_tipo}'";
+                $valores .= "{$gruda}'{$nm_tipo}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -145,8 +145,8 @@ class clsPmieducarTipoEnsino extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_tipo)) {
-                $this->nm_tipo = $db->escapeString($this->nm_tipo);
-                $set .= "{$gruda}nm_tipo = '{$this->nm_tipo}'";
+                $nm_tipo = $db->escapeString($this->nm_tipo);
+                $set .= "{$gruda}nm_tipo = '{$nm_tipo}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -206,8 +206,8 @@ class clsPmieducarTipoEnsino extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_tipo)) {
-            $str_nm_tipo = $db->escapeString($str_nm_tipo);
-            $filtros .= "{$whereAnd} nm_tipo LIKE '%{$str_nm_tipo}%'";
+            $nm_tipo = $db->escapeString($str_nm_tipo);
+            $filtros .= "{$whereAnd} nm_tipo LIKE '%{$nm_tipo}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_cadastro_ini)) {

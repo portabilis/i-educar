@@ -70,9 +70,9 @@ class clsPmieducarEscolaLocalizacao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_localizacao)) {
-                $this->nm_localizacao = $db->escapeString($this->nm_localizacao);
+                $nm_localizacao = $db->escapeString($this->nm_localizacao);
                 $campos .= "{$gruda}nm_localizacao";
-                $valores .= "{$gruda}'{$this->nm_localizacao}'";
+                $valores .= "{$gruda}'{$nm_localizacao}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -116,8 +116,8 @@ class clsPmieducarEscolaLocalizacao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_localizacao)) {
-                $this->nm_localizacao = $db->escapeString($this->nm_localizacao);
-                $set .= "{$gruda}nm_localizacao = '{$this->nm_localizacao}'";
+                $nm_localizacao = $db->escapeString($this->nm_localizacao);
+                $set .= "{$gruda}nm_localizacao = '{$nm_localizacao}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -172,8 +172,8 @@ class clsPmieducarEscolaLocalizacao extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_localizacao)) {
-            $str_nm_localizacao = $db->escapeString($str_nm_localizacao);
-            $filtros .= "{$whereAnd} nm_localizacao LIKE '%{$str_nm_localizacao}%'";
+            $str_nome_localizacao = $db->escapeString($str_nm_localizacao);
+            $filtros .= "{$whereAnd} nm_localizacao LIKE '%{$str_nome_localizacao}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_cadastro_ini)) {

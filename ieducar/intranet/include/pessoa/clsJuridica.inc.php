@@ -57,13 +57,13 @@ class clsJuridica
             $campos = '';
             $valores = '';
             if ($this->fantasia) {
-                $this->fantasia = $db->escapeString($this->fantasia);
+                $fantasia = $db->escapeString($this->fantasia);
                 $campos .= ', fantasia';
-                $valores .= ", '$this->fantasia'";
+                $valores .= ", '{$fantasia}'";
             }
             if (is_numeric($this->insc_estadual)) {
                 $campos .= ', insc_estadual';
-                $valores .= ", '$this->insc_estadual' ";
+                $valores .= ", '{$this->insc_estadual}' ";
             }
             if (is_string($this->capital_social)) {
                 $campos .= ', capital_social';
@@ -96,13 +96,13 @@ class clsJuridica
         if (is_numeric($this->idpes) && is_numeric($this->idpes_rev)) {
             $set = [];
             if (is_string($this->fantasia)){
-                $this->fantasia = $db->escapeString($this->fantasia);
-                $set[] = " fantasia = '$this->fantasia' ";
+                $fantasia = $db->escapeString($this->fantasia);
+                $set[] = " fantasia = '{$fantasia}' ";
             }
 
             if (is_numeric($this->insc_estadual)) {
                 if ($this->insc_estadual) {
-                    $set[] = " insc_estadual = '$this->insc_estadual' ";
+                    $set[] = " insc_estadual = '{$this->insc_estadual}' ";
                 } else {
                     $set[] = ' insc_estadual = NULL ';
                 }
@@ -111,15 +111,15 @@ class clsJuridica
             }
 
             if (is_string($this->capital_social)) {
-                $set[] = " capital_social = '$this->capital_social' ";
+                $set[] = " capital_social = '{$this->capital_social}' ";
             }
 
             if ($this->idpes_rev) {
-                $set[] = " idpes_rev = '$this->idpes_rev' ";
+                $set[] = " idpes_rev = '{$this->idpes_rev}' ";
             }
 
             if (is_numeric($this->cnpj)) {
-                $set[] = " cnpj = '$this->cnpj' ";
+                $set[] = " cnpj = '{$this->cnpj}' ";
             }
 
             if ($set) {

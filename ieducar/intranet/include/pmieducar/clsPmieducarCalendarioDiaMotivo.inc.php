@@ -88,15 +88,15 @@ class clsPmieducarCalendarioDiaMotivo extends Model
                 $gruda = ', ';
             }
             if (is_string($this->sigla)) {
-                $this->sigla = $db->escapeString($this->sigla);
+                $sigla = $db->escapeString($this->sigla);
                 $campos .= "{$gruda}sigla";
-                $valores .= "{$gruda}'{$this->sigla}'";
+                $valores .= "{$gruda}'{$sigla}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
             if (is_string($this->tipo)) {
@@ -148,13 +148,13 @@ class clsPmieducarCalendarioDiaMotivo extends Model
                 $gruda = ', ';
             }
             if (is_string($this->sigla)) {
-                $this->sigla = $db->escapeString($this->sigla);
-                $set .= "{$gruda}sigla = '{$this->sigla}'";
+                $sigla = $db->escapeString($this->sigla);
+                $set .= "{$gruda}sigla = '{$sigla}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
             if (is_string($this->tipo)) {
@@ -258,8 +258,8 @@ class clsPmieducarCalendarioDiaMotivo extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_motivo)) {
-            $str_nm_motivo = $db->escapeString($str_nm_motivo);
-            $filtros .= "{$whereAnd} cdm.nm_motivo LIKE '%{$str_nm_motivo}%'";
+            $str_nome_motivo = $db->escapeString($str_nm_motivo);
+            $filtros .= "{$whereAnd} cdm.nm_motivo LIKE '%{$str_nome_motivo}%'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_cod_instituicao)) {

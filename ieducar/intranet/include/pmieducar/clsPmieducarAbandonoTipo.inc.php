@@ -1,3 +1,4 @@
+
 <?php
 
 use iEducar\Legacy\Model;
@@ -70,9 +71,9 @@ class clsPmiEducarAbandonoTipo extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nome)) {
-                $this->nome = $db->escapeString($this->nome);
+                $nome = $db->escapeString($this->nome);
                 $campos .= "{$gruda}nome";
-                $valores .= "{$gruda}'{$this->nome}'";
+                $valores .= "{$gruda}'{$nome}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -115,8 +116,8 @@ class clsPmiEducarAbandonoTipo extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nome)) {
-                $this->nome = $db->escapeString($this->nome);
-                $set .= "{$gruda}nome = '{$this->nome}'";
+                $nome = $db->escapeString($this->nome);
+                $set .= "{$gruda}nome = '{$nome}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -170,8 +171,8 @@ class clsPmiEducarAbandonoTipo extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nome)) {
-            $str_nome = $db->escapeString($str_nome);
-            $filtros .= "{$whereAnd} tt.nome LIKE '%{$str_nome}%'";
+            $str_nm = $db->escapeString($str_nome);
+            $filtros .= "{$whereAnd} tt.nome LIKE '%{$str_nm}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_cadastro_ini)) {

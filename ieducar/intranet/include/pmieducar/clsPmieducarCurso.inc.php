@@ -183,9 +183,9 @@ class clsPmieducarCurso extends Model
             }
 
             if (is_string($this->nm_curso)) {
-                $this->nm_curso = $db->escapeString($this->nm_curso);
+                $nm_curso = $db->escapeString($this->nm_curso);
                 $campos .= "{$gruda}nm_curso";
-                $valores .= "{$gruda}'{$this->nm_curso}'";
+                $valores .= "{$gruda}'{$nm_curso}'";
                 $gruda = ', ';
             }
 
@@ -303,8 +303,8 @@ class clsPmieducarCurso extends Model
             }
 
             if (is_string($this->nm_curso)) {
-                $this->nm_curso = $db->escapeString($this->nm_curso);
-                $set .= "{$gruda}nm_curso = '{$this->nm_curso}'";
+                $nm_curso = $db->escapeString($this->nm_curso);
+                $set .= "{$gruda}nm_curso = '{$nm_curso}'";
                 $gruda = ', ';
             }
 
@@ -462,8 +462,8 @@ class clsPmieducarCurso extends Model
         }
 
         if (is_string($str_nm_curso)) {
-            $str_nm_curso = $db->escapeString($str_nm_curso);
-            $filtros .= "{$whereAnd} translate(upper(nm_curso),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_curso}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $str_nome_curso = $db->escapeString($str_nm_curso);
+            $filtros .= "{$whereAnd} translate(upper(nm_curso),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_curso}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
         }
 

@@ -70,9 +70,9 @@ class clsPmieducarAcervoIdioma extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_idioma)) {
-                $this->nm_idioma = $db->escapeString($this->nm_idioma);
+                $nm_idioma = $db->escapeString($this->nm_idioma);
                 $campos .= "{$gruda}nm_idioma";
-                $valores .= "{$gruda}'{$this->nm_idioma}'";
+                $valores .= "{$gruda}'{$nm_idioma}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->ref_cod_biblioteca)) {
@@ -115,8 +115,8 @@ class clsPmieducarAcervoIdioma extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_idioma)) {
-                $this->nm_idioma = $db->escapeString($this->nm_idioma);
-                $set .= "{$gruda}nm_idioma = '{$this->nm_idioma}'";
+                $nm_idioma = $db->escapeString($this->nm_idioma);
+                $set .= "{$gruda}nm_idioma = '{$nm_idioma}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -171,8 +171,8 @@ class clsPmieducarAcervoIdioma extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_idioma)) {
-            $str_nm_idioma = $db->escapeString($str_nm_idioma);
-            $filtros .= "{$whereAnd} nm_idioma LIKE '%{$str_nm_idioma}%'";
+            $str_nome_idioma = $db->escapeString($str_nm_idioma);
+            $filtros .= "{$whereAnd} nm_idioma LIKE '%{$str_nome_idioma}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_cadastro_ini)) {

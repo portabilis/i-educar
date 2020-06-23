@@ -66,9 +66,9 @@ class clsPmieducarReligiao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_religiao)) {
-                $this->nm_religiao = $db->escapeString($this->nm_religiao);
+                $nm_religiao = $db->escapeString($this->nm_religiao);
                 $campos .= "{$gruda}nm_religiao";
-                $valores .= "{$gruda}'{$this->nm_religiao}'";
+                $valores .= "{$gruda}'{$nm_religiao}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -106,8 +106,8 @@ class clsPmieducarReligiao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_religiao)) {
-                $this->nm_religiao = $db->escapeString($this->nm_religiao);
-                $set .= "{$gruda}nm_religiao = '{$this->nm_religiao}'";
+                $nm_religiao = $db->escapeString($this->nm_religiao);
+                $set .= "{$gruda}nm_religiao = '{$nm_religiao}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -158,8 +158,8 @@ class clsPmieducarReligiao extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_religiao)) {
-            $str_nm_religiao = $db->escapeString($str_nm_religiao);
-            $filtros .= "{$whereAnd} nm_religiao LIKE '%{$str_nm_religiao}%'";
+            $nm_religiao = $db->escapeString($str_nm_religiao);
+            $filtros .= "{$whereAnd} nm_religiao LIKE '%{$nm_religiao}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_cadastro_ini)) {

@@ -39,8 +39,8 @@ class clsPmieducarCategoriaObra extends Model
         $whereAnd = ' WHERE ';
 
         if (is_string($descricao)) {
-            $descricao = $db->escapeString($descricao);
-            $filtros .= "{$whereAnd} descricao LIKE '%{$descricao}%'";
+            $desc = $db->escapeString($descricao);
+            $filtros .= "{$whereAnd} descricao LIKE '%{$desc}%'";
             $whereAnd = ' AND ';
         }
 
@@ -95,15 +95,15 @@ class clsPmieducarCategoriaObra extends Model
             $gruda = '';
 
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
             if (is_string($this->observacoes)) {
-                $this->observacoes = $db->escapeString($this->observacoes);
+                $observacoes = $db->escapeString($this->observacoes);
                 $campos .= "{$gruda}observacoes";
-                $valores .= "{$gruda}'{$this->observacoes}'";
+                $valores .= "{$gruda}'{$observacoes}'";
             }
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
@@ -120,13 +120,13 @@ class clsPmieducarCategoriaObra extends Model
             $db = new clsBanco();
             $set = '';
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
             if (is_string($this->observacoes)) {
-                $this->observacoes = $db->escapeString($this->observacoes);
-                $set .= "{$gruda}observacoes = '{$this->observacoes}'";
+                $observacoes = $db->escapeString($this->observacoes);
+                $set .= "{$gruda}observacoes = '{$observacoes}'";
                 $gruda = ', ';
             }
             if ($set) {

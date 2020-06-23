@@ -48,17 +48,13 @@ class clsModulesComponenteCurricular extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($nome)) {
-            $nome = $db->escapeString($nome);
-            $filtros .= "{$whereAnd} translate(upper(cc.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $name = $db->escapeString($nome);
+            $filtros .= "{$whereAnd} translate(upper(cc.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$name}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
         }
         if (is_string($abreviatura)) {
-            $abreviatura = $db->escapeString($abreviatura);
-            $filtros .= "{$whereAnd} cc.abreviatura LIKE '%{$abreviatura}%'";
-            $whereAnd = ' AND ';
-        }
-        if (is_string($nome)) {
-            $filtros .= "{$whereAnd} translate(upper(cc.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $abrevia = $db->escapeString($abreviatura);
+            $filtros .= "{$whereAnd} cc.abreviatura LIKE '%{$abrevia}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($tipo_base)) {
@@ -109,6 +105,7 @@ class clsModulesComponenteCurricular extends Model
         $filtros = '';
 
         $whereAnd = ' WHERE ';
+
 
         if (is_numeric($instituicao_id)) {
             $filtros .= "{$whereAnd} cc.instituicao_id = '{$instituicao_id}'";

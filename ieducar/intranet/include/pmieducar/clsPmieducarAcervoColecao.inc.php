@@ -86,15 +86,15 @@ class clsPmieducarAcervoColecao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_colecao)) {
-                $this->nm_colecao = $db->escapeString($this->nm_colecao);
+                $nm_colecao = $db->escapeString($this->nm_colecao);
                 $campos .= "{$gruda}nm_colecao";
-                $valores .= "{$gruda}'{$this->nm_colecao}'";
+                $valores .= "{$gruda}'{$nm_colecao}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -132,13 +132,13 @@ class clsPmieducarAcervoColecao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_colecao)) {
-                $this->nm_colecao = $db->escapeString($this->nm_colecao);
-                $set .= "{$gruda}nm_colecao = '{$this->nm_colecao}'";
+                $nm_colecao = $db->escapeString($this->nm_colecao);
+                $set .= "{$gruda}nm_colecao = '{$nm_colecao}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -193,8 +193,8 @@ class clsPmieducarAcervoColecao extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_colecao)) {
-            $str_nm_colecao = $db->escapeString($str_nm_colecao);
-            $filtros .= "{$whereAnd} nm_colecao LIKE '%{$str_nm_colecao}%'";
+            $str_nome_colecao = $db->escapeString($str_nm_colecao);
+            $filtros .= "{$whereAnd} nm_colecao LIKE '%{$str_nome_colecao}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_descricao)) {

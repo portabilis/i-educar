@@ -74,15 +74,15 @@ class clsPmieducarFonte extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_fonte)) {
-                $this->nm_fonte = $db->escapeString($this->nm_fonte);
+                $nm_fonte = $db->escapeString($this->nm_fonte);
                 $campos .= "{$gruda}nm_fonte";
-                $valores .= "{$gruda}'{$this->nm_fonte}'";
+                $valores .= "{$gruda}'{$nm_fonte}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->ref_cod_biblioteca)) {
@@ -125,13 +125,13 @@ class clsPmieducarFonte extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_fonte)) {
-                $this->nm_fonte = $db->escapeString($this->nm_fonte);
-                $set .= "{$gruda}nm_fonte = '{$this->nm_fonte}'";
+                $nm_fonte = $db->escapeString($this->nm_fonte);
+                $set .= "{$gruda}nm_fonte = '{$nm_fonte}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -186,8 +186,8 @@ class clsPmieducarFonte extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_fonte)) {
-            $str_nm_fonte = $db->escapeString($str_nm_fonte);
-            $filtros .= "{$whereAnd} nm_fonte LIKE '%{$str_nm_fonte}%'";
+            $nm_fonte = $db->escapeString($str_nm_fonte);
+            $filtros .= "{$whereAnd} nm_fonte LIKE '%{$nm_fonte}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_descricao)) {

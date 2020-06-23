@@ -37,8 +37,7 @@ class clsModulesMotorista extends Model
 
         $this->pessoa_logada = Session::get('id_pessoa');
 
-        $this->_campos_lista = $this->_todos_campos = ' cod_motorista, ref_idpes, cnh, tipo_cnh, dt_habilitacao, vencimento_cnh, ref_cod_empresa_transporte_escolar,
-       observacao';
+        $this->_campos_lista = $this->_todos_campos = ' cod_motorista, ref_idpes, cnh, tipo_cnh, dt_habilitacao, vencimento_cnh, ref_cod_empresa_transporte_escolar, observacao';
 
         if (is_numeric($cod_motorista)) {
             $this->cod_motorista = $cod_motorista;
@@ -130,9 +129,9 @@ class clsModulesMotorista extends Model
             }
 
             if (is_string($this->observacao)) {
-                $this->observacao = $db->escapeString($this->observacao);
+                $observacao = $db->escapeString($this->observacao);
                 $campos .= "{$gruda}observacao";
-                $valores .= "{$gruda}'{$this->observacao}'";
+                $valores .= "{$gruda}'{$observacao}'";
                 $gruda = ', ';
             }
 
@@ -199,8 +198,8 @@ class clsModulesMotorista extends Model
             }
 
             if (is_string($this->observacao)) {
-                $this->observacao = $db->escapeString($this->observacao);
-                $set .= "{$gruda}observacao = '{$this->observacao}'";
+                $observacao = $db->escapeString($this->observacao);
+                $set .= "{$gruda}observacao = '{$observacao}'";
                 $gruda = ', ';
             }
 
@@ -254,9 +253,9 @@ class clsModulesMotorista extends Model
         }
 
         if (is_string($nome_motorista)) {
-            $nome_motorista = $db->escapeString($nome_motorista);
+            $nm_motorista = $db->escapeString($nome_motorista);
             $filtros .= "
-        {$whereAnd} translate(upper((SELECT nome FROM cadastro.pessoa WHERE idpes = ref_idpes)),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome_motorista}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+        {$whereAnd} translate(upper((SELECT nome FROM cadastro.pessoa WHERE idpes = ref_idpes)),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nm_motorista}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
 
             $whereAnd = ' AND ';
         }

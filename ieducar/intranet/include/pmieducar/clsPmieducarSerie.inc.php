@@ -202,9 +202,9 @@ class clsPmieducarSerie extends Model
             }
 
             if (is_string($this->nm_serie)) {
-                $this->nm_serie = $db->escapeString($this->nm_serie);
+                $nm_serie = $db->escapeString($this->nm_serie);
                 $campos[] = 'nm_serie';
-                $valores[] = "'{$this->nm_serie}'";
+                $valores[] = "'{$nm_serie}'";
             }
 
             if (is_numeric($this->etapa_curso)) {
@@ -322,8 +322,8 @@ class clsPmieducarSerie extends Model
             }
 
             if (is_string($this->nm_serie)) {
-                $this->nm_serie = $db->escapeString($this->nm_serie);
-                $set[] = "nm_serie = '{$this->nm_serie}'";
+                $nm_serie = $db->escapeString($this->nm_serie);
+                $set[] = "nm_serie = '{$nm_serie}'";
             }
 
             if (is_numeric($this->etapa_curso)) {
@@ -463,8 +463,8 @@ class clsPmieducarSerie extends Model
         }
 
         if (is_string($str_nm_serie)) {
-            $str_nm_serie = $db->escapeString($str_nm_serie);
-            $filtros[] = "translate(upper(s.nm_serie),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_serie}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $nm_serie = $db->escapeString($str_nm_serie);
+            $filtros[] = "translate(upper(s.nm_serie),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nm_serie}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
         }
 
         if (is_numeric($int_etapa_curso)) {

@@ -74,9 +74,9 @@ class clsPmieducarInfraComodoFuncao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_funcao)) {
-                $this->nm_funcao = $db->escapeString($this->nm_funcao);
+                $nm_funcao = $db->escapeString($this->nm_funcao);
                 $campos .= "{$gruda}nm_funcao";
-                $valores .= "{$gruda}'{$this->nm_funcao}'";
+                $valores .= "{$gruda}'{$nm_funcao}'";
                 $gruda = ', ';
             }
             if (is_string($this->desc_funcao)) {
@@ -124,8 +124,8 @@ class clsPmieducarInfraComodoFuncao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_funcao)) {
-                $this->nm_funcao = $db->escapeString($this->nm_funcao);
-                $set .= "{$gruda}nm_funcao = '{$this->nm_funcao}'";
+                $nm_funcao = $db->escapeString($this->nm_funcao);
+                $set .= "{$gruda}nm_funcao = '{$nm_funcao}'";
                 $gruda = ', ';
             }
             if (is_string($this->desc_funcao)) {
@@ -183,8 +183,8 @@ class clsPmieducarInfraComodoFuncao extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_funcao)) {
-            $str_nm_funcao = $db->escapeString($str_nm_funcao);
-            $filtros .= "{$whereAnd} icf.nm_funcao LIKE '%{$str_nm_funcao}%'";
+            $nm_funcao = $db->escapeString($str_nm_funcao);
+            $filtros .= "{$whereAnd} icf.nm_funcao LIKE '%{$nm_funcao}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_desc_funcao)) {

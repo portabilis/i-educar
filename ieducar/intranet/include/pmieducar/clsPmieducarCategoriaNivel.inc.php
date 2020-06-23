@@ -66,9 +66,9 @@ class clsPmieducarCategoriaNivel extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_categoria_nivel)) {
-                $this->nm_categoria_nivel = $db->escapeString($this->nm_categoria_nivel);
+                $nm_categoria_nivel = $db->escapeString($this->nm_categoria_nivel);
                 $campos .= "{$gruda}nm_categoria_nivel";
-                $valores .= "{$gruda}'{$this->nm_categoria_nivel}'";
+                $valores .= "{$gruda}'{$nm_categoria_nivel}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -106,8 +106,8 @@ class clsPmieducarCategoriaNivel extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_categoria_nivel)) {
-                $this->nm_categoria_nivel = $db->escapeString($this->nm_categoria_nivel);
-                $set .= "{$gruda}nm_categoria_nivel = '{$this->nm_categoria_nivel}'";
+                $nm_categoria_nivel = $db->escapeString($this->nm_categoria_nivel);
+                $set .= "{$gruda}nm_categoria_nivel = '{$nm_categoria_nivel}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -168,8 +168,8 @@ class clsPmieducarCategoriaNivel extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_categoria_nivel)) {
-            $str_nm_categoria_nivel = $db->escapeString($str_nm_categoria_nivel);
-            $filtros .= "{$whereAnd} nm_categoria_nivel LIKE '%{$str_nm_categoria_nivel}%'";
+            $str_nome_categoria_nivel = $db->escapeString($str_nm_categoria_nivel);
+            $filtros .= "{$whereAnd} nm_categoria_nivel LIKE '%{$str_nome_categoria_nivel}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_cadastro_ini)) {

@@ -327,9 +327,9 @@ class clsPmieducarEscola extends Model
             }
 
             if (is_string($this->sigla)) {
-                $this->sigla = $db->escapeString($this->sigla);
+                $sigla = $db->escapeString($this->sigla);
                 $campos .= "{$gruda}sigla";
-                $valores .= "{$gruda}'{$this->sigla}'";
+                $valores .= "{$gruda}'{$sigla}'";
                 $gruda = ', ';
             }
 
@@ -1310,8 +1310,8 @@ class clsPmieducarEscola extends Model
             }
 
             if (is_string($this->sigla)) {
-                $this->sigla = $db->escapeString($this->sigla);
-                $set .= "{$gruda}sigla = '{$this->sigla}'";
+                $sigla = $db->escapeString($this->sigla);
+                $set .= "{$gruda}sigla = '{$sigla}'";
                 $gruda = ', ';
             }
 
@@ -2377,6 +2377,8 @@ class clsPmieducarEscola extends Model
         $escola_sem_avaliacao = null,
         $cod_usuario = null
     ) {
+        $db = new clsBanco();
+
         $sql = "
           SELECT * FROM
           (
@@ -2470,8 +2472,8 @@ class clsPmieducarEscola extends Model
         }
 
         if (is_string($str_nome)) {
-            $str_nome = pg_escape_string($str_nome);
-            $filtros .= "{$whereAnd} translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $str_nm = $db->escapeString($str_nome);
+            $filtros .= "{$whereAnd} translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
         }
 
@@ -2503,7 +2505,6 @@ class clsPmieducarEscola extends Model
             }
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();

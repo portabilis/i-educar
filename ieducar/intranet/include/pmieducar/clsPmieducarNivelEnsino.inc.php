@@ -74,15 +74,15 @@ class clsPmieducarNivelEnsino extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_nivel)) {
-                $this->nm_nivel = $db->escapeString($this->nm_nivel);
+                $nm_nivel = $db->escapeString($this->nm_nivel);
                 $campos .= "{$gruda}nm_nivel";
-                $valores .= "{$gruda}'{$this->nm_nivel}'";
+                $valores .= "{$gruda}'{$nm_nivel}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -125,13 +125,13 @@ class clsPmieducarNivelEnsino extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_nivel)) {
-                $this->nm_nivel = $db->escapeString($this->nm_nivel);
-                $set .= "{$gruda}nm_nivel = '{$this->nm_nivel}'";
+                $nm_nivel = $db->escapeString($this->nm_nivel);
+                $set .= "{$gruda}nm_nivel = '{$nm_nivel}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $this->descricao = $db->escapeString($this->descricao);
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -186,8 +186,8 @@ class clsPmieducarNivelEnsino extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_nivel)) {
-            $str_nm_nivel = $db->escapeString($str_nm_nivel);
-            $filtros .= "{$whereAnd} nm_nivel LIKE '%{$str_nm_nivel}%'";
+            $nm_nivel = $db->escapeString($str_nm_nivel);
+            $filtros .= "{$whereAnd} nm_nivel LIKE '%{$nm_nivel}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_descricao)) {
