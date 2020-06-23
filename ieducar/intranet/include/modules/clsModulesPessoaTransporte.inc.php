@@ -280,15 +280,13 @@ class clsModulesPessoaTransporte extends Model
 
         if (is_string($nome_pessoa)) {
             $nm_pessoa = $db->escapeString($nome_pessoa);
-            $filtros .= "
-        {$whereAnd} translate(upper(p.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nm_pessoa}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $filtros .= "{$whereAnd} unaccent(p.nome) ILIKE unaccent('%{$nm_pessoa}%')";
             $whereAnd = ' AND ';
         }
 
         if (is_string($nome_destino)) {
             $nm_destino = $db->escapeString($nome_destino);
-            $filtros .= "
-        {$whereAnd} (translate(upper(pd.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nm_destino}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) OR (translate(upper(pd2.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome_destino}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) ";
+            $filtros .= "{$whereAnd} unaccent(pd.nome) ILIKE unaccent('%{$nm_destino}%') OR unaccent(pd2.nome) ILIKE unaccent('%{$nm_destino}%')";
             $whereAnd = ' AND ';
         }
 

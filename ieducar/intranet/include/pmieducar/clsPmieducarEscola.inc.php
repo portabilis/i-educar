@@ -2473,7 +2473,7 @@ class clsPmieducarEscola extends Model
 
         if (is_string($str_nome)) {
             $str_nm = $db->escapeString($str_nome);
-            $filtros .= "{$whereAnd} translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $filtros .= "{$whereAnd} unaccent(nome) ILIKE unaccent('%{$str_nm}%')";
             $whereAnd = ' AND ';
         }
 

@@ -190,7 +190,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
             cadastro.pessoa
           WHERE
             cadastro.pessoa.idpes = ref_idpes
-            AND translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome_idpes}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
+            AND unaccent(nome) ILIKE unaccent('%{$nome_idpes}%')
         )";
 
             $whereAnd = ' AND ';
@@ -198,17 +198,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
 
         if (is_string($nm_resp_idpes)) {
             $nome_resp_idpes = $db->escapeString($nm_resp_idpes);
-            $filtros .= "
-        {$whereAnd} exists (
-          SELECT
-            1
-          FROM
-            cadastro.pessoa
-          WHERE
-            cadastro.pessoa.idpes = ref_resp_idpes
-            AND translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome_resp_idpes}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
-        )";
-
+            $filtros .= "{$whereAnd} exists(SELECT 1 FROM cadastro.pessoa WHERE unaccent(nome) ILIKE unaccent('%{$nome_resp_idpes}%'))";
             $whereAnd = ' AND ';
         }
 

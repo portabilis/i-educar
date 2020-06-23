@@ -1234,7 +1234,7 @@ class clsPmieducarTurma extends Model
         }
         if (is_string($str_nm_turma)) {
             $nm_turma = $db->escapeString($str_nm_turma);
-            $filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $filtros .= "{$whereAnd} exists(select nm_turma from pmieducar.turma where unaccent(nm_turma) ILIKE unaccent('%{$nm_turma}%'))";
             $whereAnd = ' AND ';
         }
         if (is_string($str_sgl_turma)) {
@@ -1457,7 +1457,7 @@ class clsPmieducarTurma extends Model
         }
         if (is_string($str_nm_turma)) {
             $nm_turma = $db->escapeString($str_nm_turma);
-            $filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $filtros .= "{$whereAnd} exists(select nm_turma from pmieducar.turma where unaccent(nm_turma) ILIKE unaccent('%{$nm_turma}%'))";
             $whereAnd = ' AND ';
         }
         if (is_string($str_sgl_turma)) {
@@ -1662,7 +1662,7 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_turma)) {
-            $filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $filtros .= "{$whereAnd} exists(select nm_turma from pmieducar.turma where unaccent(nm_turma) ILIKE unaccent('%{$str_nm_turma}%'))";
             $whereAnd = ' AND ';
         }
         if (is_string($str_sgl_turma)) {

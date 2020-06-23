@@ -49,7 +49,7 @@ class clsModulesComponenteCurricular extends Model
         }
         if (is_string($nome)) {
             $name = $db->escapeString($nome);
-            $filtros .= "{$whereAnd} translate(upper(cc.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$name}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $filtros .= "{$whereAnd} unaccent(cc.nome) ILIKE unaccent('%{$name}%')";
             $whereAnd = ' AND ';
         }
         if (is_string($abreviatura)) {
