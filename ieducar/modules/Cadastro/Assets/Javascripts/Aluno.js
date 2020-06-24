@@ -185,62 +185,79 @@ function certidaoCasamentoInvalida() {
 }
 
 var newSubmitForm = function (event) {
-    if (obrigarDocumentoPessoa && !possuiDocumentoObrigatorio()) {
-        messageUtils.error('É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil.');
-        return false;
+  if ($j('#deficiencias').val().length > 1) {
+    let laudos = $j('#url_laudo_medico').val();
+    let temLaudos = false;
+
+    if (laudos.length > 0) {
+      temLaudos = JSON.parse(laudos).length > 0;
     }
 
-    var codigoInep = $j('#aluno_inep_id').val();
+    var additionalVars = {
+      deficiencias: $j('#deficiencias').val(),
+    };
 
-    if (codigoInep && codigoInep.length != 12) {
-        return codigoInepInvalido();
-    }
-
-    if ($j('#deficiencias').val().length > 1) {
-
-        let laudos = $j('#url_laudo_medico').val();
-        let temLaudos = false;
-
-        if (laudos.length > 0) {
-          temLaudos = JSON.parse(laudos).length > 0;
+    var options = {
+      url: getResourceUrlBuilder.buildUrl('/module/Api/aluno', 'deve-obrigar-laudo-medico', additionalVars),
+      dataType: 'json',
+      data: {},
+      success: function (response) {
+        if (response.result && $j('#url_laudo_medico_obrigatorio').length > 0 && !temLaudos) {
+          return laudoMedicoObrigatorio();
+        } else {
+          return formularioValido();
         }
-
-        if ($j('#url_laudo_medico_obrigatorio').length > 0 && !temLaudos) {
-            return laudoMedicoObrigatorio();
-        }
-    }
-
-    var tipoCertidaoNascimento = ($j('#tipo_certidao_civil').val() == 'certidao_nascimento_novo_formato');
-    var tipoCertidaoCasamento = ($j('#tipo_certidao_civil').val() == 'certidao_casamento_novo_formato');
-
-    if (tipoCertidaoNascimento && $j('#certidao_nascimento').val().length < 32) {
-        return certidaoNascimentoInvalida();
-    } else if (tipoCertidaoCasamento && $j('#certidao_casamento').val().length < 32) {
-        return certidaoCasamentoInvalida();
-    }
-
-    // Valida se o tamanho do campo aluno_estado_id é igual à 13
-    if ($j('#aluno_estado_id').val() !== '' && ! (($j('#aluno_estado_id').val().length === 13) || ($j('#aluno_estado_id').val().length === 11))) {
-        messageUtils.error('O campo Código rede estadual (RA) deve conter exatos 13 ou 11 dígitos.');
-        return false;
-    }
-
-    $tipoTransporte = $j('#tipo_transporte');
-
-    if ($tipoTransporte.val() != 'nenhum') {
-        veiculoTransporte = $j('#veiculo_transporte_escolar').val();
-        if (obrigarCamposCenso && (veiculoTransporte == '' || veiculoTransporte == null)) {
-            messageUtils.error('O campo Veículo utilizado deve ser preenchido');
-            return false;
-        }
-    }
-
-    if (!validaObrigatoriedadeRecursosTecnologicos()) {
-        return false;
-    }
-
-    submitFormExterno();
+      }
+    };
+    getResource(options);
+  } else {
+    return formularioValido();
+  }
 };
+
+function formularioValido() {
+  if (obrigarDocumentoPessoa && !possuiDocumentoObrigatorio()) {
+    messageUtils.error('É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil.');
+    return false;
+  }
+
+  var codigoInep = $j('#aluno_inep_id').val();
+
+  if (codigoInep && codigoInep.length != 12) {
+    return codigoInepInvalido();
+  }
+
+  var tipoCertidaoNascimento = ($j('#tipo_certidao_civil').val() == 'certidao_nascimento_novo_formato');
+  var tipoCertidaoCasamento = ($j('#tipo_certidao_civil').val() == 'certidao_casamento_novo_formato');
+
+  if (tipoCertidaoNascimento && $j('#certidao_nascimento').val().length < 32) {
+    return certidaoNascimentoInvalida();
+  } else if (tipoCertidaoCasamento && $j('#certidao_casamento').val().length < 32) {
+    return certidaoCasamentoInvalida();
+  }
+
+  // Valida se o tamanho do campo aluno_estado_id é igual à 13
+  if ($j('#aluno_estado_id').val() !== '' && ! (($j('#aluno_estado_id').val().length === 13) || ($j('#aluno_estado_id').val().length === 11))) {
+    messageUtils.error('O campo Código rede estadual (RA) deve conter exatos 13 ou 11 dígitos.');
+    return false;
+  }
+
+  $tipoTransporte = $j('#tipo_transporte');
+
+  if ($tipoTransporte.val() != 'nenhum') {
+    veiculoTransporte = $j('#veiculo_transporte_escolar').val();
+    if (obrigarCamposCenso && (veiculoTransporte == '' || veiculoTransporte == null)) {
+      messageUtils.error('O campo Veículo utilizado deve ser preenchido');
+      return false;
+    }
+  }
+
+  if (!validaObrigatoriedadeRecursosTecnologicos()) {
+    return false;
+  }
+
+  submitFormExterno();
+}
 
 function validaObrigatoriedadeRecursosTecnologicos() {
     let obrigarRecursosTecnologicos = $j('#obrigar_recursos_tecnologicos').val() == '1';
