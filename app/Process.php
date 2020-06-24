@@ -36,5 +36,5 @@ class Process
     const SEB_EXPORT = 1021;
     const DATA_EXPORT = 1022;
     const UPDATE_REGISTRATION_DATE = 1023;
-    const RELEASE_LOCK = 999848;
+    const RELEASE_PERIOD = 999848;
 }

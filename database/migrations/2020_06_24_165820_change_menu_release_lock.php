@@ -14,7 +14,7 @@ class ChangeMenuReleaseLock extends Migration
     public function up()
     {
         DB::table('menus')
-            ->where('process', Process::RELEASE_LOCK)
+            ->where('process', Process::RELEASE_PERIOD)
             ->update([
                 'title' => 'Período de lançamento de notas e faltas por etapa',
                 'description' => 'Período de lançamento de notas e faltas por etapa',
