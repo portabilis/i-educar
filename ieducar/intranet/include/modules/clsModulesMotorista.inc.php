@@ -255,7 +255,7 @@ class clsModulesMotorista extends Model
         if (is_string($nome_motorista)) {
             $nm_motorista = $db->escapeString($nome_motorista);
             $filtros .= "
-        {$whereAnd} exists(SELECT * FROM cadastro.pessoa WHERE unaccent(nome) ILIKE unaccent('%{$nm_motorista}%'))";
+        {$whereAnd} exists(SELECT 1 FROM cadastro.pessoa WHERE unaccent(nome) ILIKE unaccent('%{$nm_motorista}%'))";
 
             $whereAnd = ' AND ';
         }

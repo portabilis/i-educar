@@ -464,7 +464,7 @@ class clsPmieducarSerie extends Model
 
         if (is_string($str_nm_serie)) {
             $nm_serie = $db->escapeString($str_nm_serie);
-            $filtros[] = "exists(select nm_serie from pmieducar.serie where unaccent(nm_serie) ILIKE unaccent('%{$nm_serie}%'))";
+            $filtros[] = "exists(select 1 from pmieducar.serie where unaccent(nm_serie) ILIKE unaccent('%{$nm_serie}%'))";
         }
 
         if (is_numeric($int_etapa_curso)) {
