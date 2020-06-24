@@ -8,17 +8,18 @@ class clsCadastroDeficiencia extends Model
     public $nm_deficiencia;
     public $deficiencia_educacenso;
     public $desconsidera_regra_diferenciada;
+    public $exigir_laudo_medico;
 
     /**
      * Construtor.
      */
-    public function __construct($cod_deficiencia = null, $nm_deficiencia = null, $deficiencia_educacenso = null, $desconsidera_regra_diferenciada = null)
+    public function __construct($cod_deficiencia = null, $nm_deficiencia = null, $deficiencia_educacenso = null, $desconsidera_regra_diferenciada = null, $exigir_laudo_medico = null)
     {
         $db = new clsBanco();
         $this->_schema = 'cadastro.';
         $this->_tabela = "{$this->_schema}deficiencia";
 
-        $this->_campos_lista = $this->_todos_campos = 'cod_deficiencia, nm_deficiencia, deficiencia_educacenso, desconsidera_regra_diferenciada ';
+        $this->_campos_lista = $this->_todos_campos = 'cod_deficiencia, nm_deficiencia, deficiencia_educacenso, desconsidera_regra_diferenciada, exigir_laudo_medico ';
 
         if (is_numeric($cod_deficiencia)) {
             $this->cod_deficiencia = $cod_deficiencia;
@@ -34,6 +35,10 @@ class clsCadastroDeficiencia extends Model
 
         if (is_bool($desconsidera_regra_diferenciada)) {
             $this->desconsidera_regra_diferenciada = $desconsidera_regra_diferenciada;
+        }
+
+        if (is_bool($exigir_laudo_medico)) {
+            $this->exigir_laudo_medico = $exigir_laudo_medico;
         }
     }
 
@@ -76,6 +81,13 @@ class clsCadastroDeficiencia extends Model
                 $gruda = ', ';
             }
 
+            if (is_bool($this->exigir_laudo_medico)) {
+                $exigir_laudo_medico = $this->exigir_laudo_medico ? 'true' : 'false';
+                $campos .= "{$gruda}exigir_laudo_medico";
+                $valores .= "{$gruda}'{$exigir_laudo_medico}'";
+                $gruda = ', ';
+            }
+
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
             return $db->InsertId("{$this->_tabela}_cod_deficiencia_seq");
@@ -108,6 +120,12 @@ class clsCadastroDeficiencia extends Model
             if (is_bool($this->desconsidera_regra_diferenciada)) {
                 $desconsidera_regra_diferenciada = $this->desconsidera_regra_diferenciada ? 'true' : 'false';
                 $set .= "{$gruda}desconsidera_regra_diferenciada = '{$desconsidera_regra_diferenciada}'";
+                $gruda = ', ';
+            }
+
+            if (is_bool($this->exigir_laudo_medico)) {
+                $exigir_laudo_medico = $this->exigir_laudo_medico ? 'true' : 'false';
+                $set .= "{$gruda}exigir_laudo_medico = '{$exigir_laudo_medico}'";
                 $gruda = ', ';
             }
 
