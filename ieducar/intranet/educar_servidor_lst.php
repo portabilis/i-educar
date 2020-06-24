@@ -164,7 +164,7 @@ class indice extends clsListagem
 
         $this->largura = '100%';
 
-        $this->breadcrumb('Servidores', [
+        $this->breadcrumb('Funções do servidor', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
     }

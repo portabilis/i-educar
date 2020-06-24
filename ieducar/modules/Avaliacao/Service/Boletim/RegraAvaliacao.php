@@ -270,4 +270,14 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     {
         return boolval($this->getRegraAvaliacao()->get('aprovaMediaDisciplina'));
     }
+
+    /**
+     * Indica se a regra de avaliação usa a progressão do regime cíclico
+     *
+     * @return bool
+     */
+    public function isCyclicRegime()
+    {
+        return $this->getRegraAvaliacaoTipoProgressao() == RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL_CICLO;
+    }
 }

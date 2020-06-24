@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class LegacyOrganization extends Model
 {
@@ -39,4 +40,18 @@ class LegacyOrganization extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+    * @inheritDoc
+    */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (config('legacy.app.uppercase_names')) {
+                $model->fantasia =  Str::upper($model->fantasia);
+            }
+        });
+    }
 }

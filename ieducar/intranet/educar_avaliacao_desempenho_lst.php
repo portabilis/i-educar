@@ -57,7 +57,7 @@ class indice extends clsListagem
 
     function Gerar()
     {
-        $this->titulo = "Avalia&ccedil;&atilde;o Desempenho - Listagem";
+        $this->titulo = "Avaliação Desempenho - Listagem";
 
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
@@ -144,7 +144,7 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-        $this->breadcrumb('Detalhe da avaliação de desempenho', [
+        $this->breadcrumb('Registro da avaliação de desempenho do servidor', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
     }
