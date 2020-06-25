@@ -32,15 +32,36 @@
                     @include('form.select-institution')
                 </td>
             </tr>
-
-            <tr id="tr_nm_instituicao">
-                <td class="formlttd" valign="top">
+            <tr>
+                <td class="formmdtd" valign="top">
                     <span class="form">Escola</span>
                     <span class="campo_obrigatorio">*</span>
                 </td>
-                <td class="formlttd" valign="top">
+                <td class="formmdtd" valign="top">
                     @include('form.select-school-multiple')
                     <a href="javascript:void(0)" id="link-select-all">Selecionar todas</a>
+                </td>
+            </tr>
+            <tr>
+                <td class="formlttd" valign="top">
+                    <span class="form">Tipo de etapa</span>
+                    <span class="campo_obrigatorio">*</span>
+                </td>
+                <td class="formlttd" valign="top">
+                    @include('form.stage-type')
+                </td>
+            </tr>
+            <tr>
+                <td class="formmdtd" valign="top">
+                    <span class="form">Etapa</span>
+                    <span class="campo_obrigatorio">*</span>
+                </td>
+                <td class="formmdtd" valign="top">
+                    <span class="form">
+                        <select class="geral" name="stage" id="stage" style="width: 308px;">
+                            <option value="">Selecione uma etapa</option>
+                        </select>
+                    </span>
                 </td>
             </tr>
 
@@ -56,36 +77,41 @@
                     </span>
                 </td>
             </tr>
-            <tr id="tr_nm_data" class="field-transfer">
-                <td class="formlttd" valign="top">
-                    <span class="form">Data de enturmação antiga</span>
-                </td>
-                <td class="formlttd" valign="top">
-                   <span class="form">
-                       <input onkeypress="formataData(this, event);" type="text" name="data_enturmacao_antiga"
-                              value="{{ old('data_enturmacao_antiga', Request::get('data_enturmacao_antiga')) }}"
-                              id="data_enturmacao_antiga" size="9" maxlength="10" placeholder="dd/mm/aaaa">
-                    </span>
-                </td>
-            </tr>
-
             </tbody>
         </table>
-
         <div style="text-align: center">
             <button class="btn-green" type="submit">Salvar</button>
         </div>
-
     </form>
 @endsection
 
 @prepend('scripts')
     <script type='text/javascript'>
         (function ($) {
-            $j('#link-select-all').click(function () {
-                $j('#escola option').prop('selected', true); // Selects all options
-                $j('#escola').trigger('chosen:updated');
+            $('#link-select-all').click(function () {
+                $('#escola option').prop('selected', true); // Selects all options
+                $('#escola').trigger('chosen:updated');
             });
+
+            let stageTypes = JSON.parse('{!! $stageTypes !!}')
+
+            $('#stage_type').change(function () {
+                stageSelect = $('#stage');
+                stageSelect.find('option').not(':first').remove();
+
+                stageType = stageTypes[$(this).val()];
+
+                if (typeof stageType === 'undefined') {
+                    return;
+                }
+
+                for (i = 1; i <= parseInt(stageType.num_etapas); i++) {
+                    stageSelect.append($('<option>', {
+                        value: i,
+                        text: i + 'º ' + stageType.nm_tipo
+                    }));
+                }
+            })
         })(jQuery);
     </script>
     <script type="text/javascript"

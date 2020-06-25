@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LegacyStageType;
 use App\Process;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -20,7 +21,7 @@ class ReleasePeriodController extends Controller
 
         $this->menu(Process::RELEASE_PERIOD);
 
-        return view('release-period.index', ['user' => $request->user()]);
+        return view('release-period.index', ['stageTypes' => LegacyStageType::active()->get()->keyBy('cod_modulo')->toJson()]);
     }
 
     public function create(Request $request)
