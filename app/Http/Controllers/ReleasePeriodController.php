@@ -15,7 +15,7 @@ class ReleasePeriodController extends Controller
     public function new(Request $request)
     {
         $this->breadcrumb('Período de lançamento de notas e faltas por etapa', [
-            url('intranet/educar_configuracoes_index.php') => 'Configurações',
+            url('intranet/educar_index.php') => 'Escola',
         ]);
 
         $this->menu(Process::RELEASE_PERIOD);
