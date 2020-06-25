@@ -47,7 +47,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Período de lançamento de notas e faltas por etapa');
     $this->processoAp = 999848;
   }
 }
@@ -70,7 +70,7 @@ class indice extends clsDetalhe
 
   function Gerar()
   {
-    $this->titulo = 'Bloqueio de lan&ccedil;amento de notas e faltas por etapa - Detalhe';
+    $this->titulo = 'Período de lançamento de notas e faltas por etapa - Detalhe';
     $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg',
       'Intranet');
 
@@ -129,7 +129,7 @@ class indice extends clsDetalhe
     $this->url_cancelar = 'educar_bloqueio_lancamento_faltas_notas_lst.php';
     $this->largura      = '100%';
 
-    $this->breadcrumb('Detalhe de bloqueio de lançamento de notas e faltas por etapa', [
+    $this->breadcrumb('Detalhe de período de lançamento de notas e faltas por etapa', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
   }

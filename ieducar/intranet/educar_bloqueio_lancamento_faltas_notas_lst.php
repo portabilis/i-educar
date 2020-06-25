@@ -49,7 +49,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Período de lançamento de notas e faltas por etapa');
     $this->processoAp = 999848;
   }
 }
@@ -83,7 +83,7 @@ class indice extends clsListagem
     // Helper para url
     $urlHelper = CoreExt_View_Helper_UrlHelper::getInstance();
 
-    $this->titulo = 'Bloqueio de lan&ccedil;amento de notas e faltas por etapa - Listagem';
+    $this->titulo = 'Período de lançamento de notas e faltas por etapa - Listagem';
 
     // passa todos os valores obtidos no GET para atributos do objeto
     foreach ($_GET as $var => $val) {
@@ -161,13 +161,13 @@ class indice extends clsListagem
     $obj_permissoes = new clsPermissoes();
 
     if ($obj_permissoes->permissao_cadastra(999848, $this->pessoa_logada, 7)) {
-      $this->array_botao_url[] = 'educar_bloqueio_lancamento_faltas_notas_cad.php';
+      $this->array_botao_url[] = '/periodo-lancamento/novo';
       $this->array_botao[]     = 'Novo';
     }
 
     $this->largura = '100%';
 
-    $this->breadcrumb('Listagem de bloqueio de lan&ccedil;amento de notas e faltas por etapa', [
+    $this->breadcrumb('Listagem de período de lançamento de notas e faltas por etapa', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
   }
