@@ -16,6 +16,7 @@ class CreateReleasePeriodTable extends Migration
         Schema::create('release_period', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('year');
+            $table->integer('stage_type_id');
             $table->integer('stage');
             $table->timestamps();
         });

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSchoolsReleasePeriodTable extends Migration
+class CreateReleasePeriodSchoolsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateSchoolsReleasePeriodTable extends Migration
      */
     public function up()
     {
-        Schema::create('schools_release_period', function (Blueprint $table) {
+        Schema::create('release_period_schools', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('school_id');
             $table->integer('release_period_id');
@@ -29,6 +29,6 @@ class CreateSchoolsReleasePeriodTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('schools_release_period');
+        Schema::dropIfExists('release_period_schools');
     }
 }

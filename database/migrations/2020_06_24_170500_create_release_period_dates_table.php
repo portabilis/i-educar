@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDatesReleasePeriodTable extends Migration
+class CreateReleasePeriodDatesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateDatesReleasePeriodTable extends Migration
      */
     public function up()
     {
-        Schema::create('dates_release_period', function (Blueprint $table) {
+        Schema::create('release_period_dates', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->date('start_data');
             $table->date('end_data');
@@ -30,6 +30,6 @@ class CreateDatesReleasePeriodTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dates_release_period');
+        Schema::dropIfExists('release_period_dates');
     }
 }
