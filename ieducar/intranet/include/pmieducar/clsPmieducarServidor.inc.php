@@ -692,7 +692,7 @@ class clsPmieducarServidor extends Model
         // Busca tipo LIKE pelo nome do servidor
         if (is_string($str_nome_servidor)) {
             $nome_servidor = $db->escapeString($str_nome_servidor);
-            $filtros .= "{$whereAnd} exists(SELECT 1 FROM cadastro.pessoa WHERE unaccent(nome) ILIKE unaccent('%{$nome_servidor}%'))";
+            $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM cadastro.pessoa WHERE idpes = cod_servidor and unaccent(nome) ILIKE unaccent('%{$nome_servidor}%'))";
             $whereAnd = ' AND ';
         }
         // Seleciona apenas servidores que tenham a carga atual maior ou igual ao

@@ -57,6 +57,7 @@ class indice extends clsListagem
         }
 
         $objPessoa = new clsPessoaJuridica();
+        $db = new clsBanco();
 
         if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
             $objPessoa->codUsuario = $this->pessoa_logada;
@@ -69,8 +70,8 @@ class indice extends clsListagem
             {
                 $total = $empresa['total'];
                 $cod_empresa = $empresa['idpes'];
-                $razao_social = $empresa['nome'];
-                $nome_fantasia = $empresa['fantasia'];
+                $razao_social = $db->escapeString($empresa['nome']);
+                $nome_fantasia = $db->escapeString($empresa['fantasia']);
                 $this->addLinhas( array( "<a href='empresas_det.php?cod_empresa={$cod_empresa}'><img src='imagens/noticia.jpg' border=0>$razao_social</a>", "<a href='empresas_det.php?cod_empresa={$cod_empresa}'>{$nome_fantasia}</a>" ) );
             }
         }

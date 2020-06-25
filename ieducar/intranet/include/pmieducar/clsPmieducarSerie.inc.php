@@ -249,8 +249,9 @@ class clsPmieducarSerie extends Model
             $valores[] = '\'1\'';
 
             if (is_string($this->observacao_historico)) {
+                $observacao_historico = $db->escapeString($this->observacao_historico);
                 $campos[] = 'observacao_historico';
-                $valores[] = "'{$this->observacao_historico}'";
+                $valores[] = "'{$observacao_historico}'";
             }
 
             if (is_numeric($this->dias_letivos)) {
@@ -371,7 +372,8 @@ class clsPmieducarSerie extends Model
             }
 
             if (is_string($this->observacao_historico)) {
-                $set[] = "observacao_historico = '{$this->observacao_historico}'";
+                $observacao_historico = $db->escapeString($this->observacao_historico);
+                $set[] = "observacao_historico = '{$observacao_historico}'";
             }
 
             if (is_numeric($this->dias_letivos)) {
@@ -464,7 +466,7 @@ class clsPmieducarSerie extends Model
 
         if (is_string($str_nm_serie)) {
             $nm_serie = $db->escapeString($str_nm_serie);
-            $filtros[] = "exists(select 1 from pmieducar.serie where unaccent(nm_serie) ILIKE unaccent('%{$nm_serie}%'))";
+            $filtros[] = "EXISTS (SELECT 1 FROM pmieducar.serie WHERE unaccent(s.nm_serie) ILIKE unaccent('%{$nm_serie}%'))";
         }
 
         if (is_numeric($int_etapa_curso)) {

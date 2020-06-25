@@ -190,8 +190,9 @@ class clsPmieducarCurso extends Model
             }
 
             if (is_string($this->sgl_curso)) {
+                $sgl_curso = $db->escapeString($this->sgl_curso);
                 $campos .= "{$gruda}sgl_curso";
-                $valores .= "{$gruda}'{$this->sgl_curso}'";
+                $valores .= "{$gruda}'{$sgl_curso}'";
                 $gruda = ', ';
             }
 
@@ -208,20 +209,23 @@ class clsPmieducarCurso extends Model
             }
 
             if (is_string($this->ato_poder_publico)) {
+                $ato_poder_publico = $db->escapeString($this->ato_poder_publico);
                 $campos .= "{$gruda}ato_poder_publico";
-                $valores .= "{$gruda}'{$this->ato_poder_publico}'";
+                $valores .= "{$gruda}'{$ato_poder_publico}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->objetivo_curso)) {
+                $objetivo_curso = $db->escapeString($this->objetivo_curso);
                 $campos .= "{$gruda}objetivo_curso";
-                $valores .= "{$gruda}'{$this->objetivo_curso}'";
+                $valores .= "{$gruda}'{$objetivo_curso}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->publico_alvo)) {
+                $publico_alvo = $db->escapeString($this->publico_alvo);
                 $campos .= "{$gruda}publico_alvo";
-                $valores .= "{$gruda}'{$this->publico_alvo}'";
+                $valores .= "{$gruda}'{$publico_alvo}'";
                 $gruda = ', ';
             }
 
@@ -309,7 +313,8 @@ class clsPmieducarCurso extends Model
             }
 
             if (is_string($this->sgl_curso)) {
-                $set .= "{$gruda}sgl_curso = '{$this->sgl_curso}'";
+                $sgl_curso = $db->escapeString($this->sgl_curso);
+                $set .= "{$gruda}sgl_curso = '{$sgl_curso}'";
                 $gruda = ', ';
             }
 
@@ -324,17 +329,20 @@ class clsPmieducarCurso extends Model
             }
 
             if (is_string($this->ato_poder_publico)) {
-                $set .= "{$gruda}ato_poder_publico = '{$this->ato_poder_publico}'";
+                $ato_poder_publico = $db->escapeString($this->ato_poder_publico);
+                $set .= "{$gruda}ato_poder_publico = '{$ato_poder_publico}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->objetivo_curso)) {
-                $set .= "{$gruda}objetivo_curso = '{$this->objetivo_curso}'";
+                $objetivo_curso = $db->escapeString($this->objetivo_curso);
+                $set .= "{$gruda}objetivo_curso = '{$objetivo_curso}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->publico_alvo)) {
-                $set .= "{$gruda}publico_alvo = '{$this->publico_alvo}'";
+                $publico_alvo = $db->escapeString($this->publico_alvo);
+                $set .= "{$gruda}publico_alvo = '{$publico_alvo}'";
                 $gruda = ', ';
             }
 

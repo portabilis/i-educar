@@ -248,8 +248,9 @@ class clsModulesVeiculo extends Model
             }
 
             if (is_string($this->observacao)) {
+                $observacao = $db->escapeString($this->observacao);
                 $campos .= "{$gruda}observacao";
-                $valores .= "{$gruda}'{$this->observacao}'";
+                $valores .= "{$gruda}'{$observacao}'";
                 $gruda = ', ';
             }
 
@@ -364,7 +365,8 @@ class clsModulesVeiculo extends Model
             }
 
             if (is_string($this->observacao)) {
-                $set .= "{$gruda}observacao = '{$this->observacao}'";
+                $observacao = $db->escapeString($this->observacao);
+                $set .= "{$gruda}observacao = '{$observacao}'";
                 $gruda = ', ';
             }
             if ($set) {

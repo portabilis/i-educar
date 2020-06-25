@@ -217,8 +217,9 @@ class clsPmieducarTurma extends Model
                 $gruda = ', ';
             }
             if (is_string($this->sgl_turma)) {
+                $sgl_turma = $db->escapeString($this->sgl_turma);
                 $campos .= "{$gruda}sgl_turma";
-                $valores .= "{$gruda}'{$this->sgl_turma}'";
+                $valores .= "{$gruda}'{$sgl_turma}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->max_aluno)) {
@@ -550,7 +551,8 @@ class clsPmieducarTurma extends Model
                 $gruda = ', ';
             }
             if (is_string($this->sgl_turma)) {
-                $set .= "{$gruda}sgl_turma = '{$this->sgl_turma}'";
+                $sgl_turma = $db->escapeString($this->sgl_turma);
+                $set .= "{$gruda}sgl_turma = '{$sgl_turma}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->max_aluno)) {
@@ -1457,7 +1459,7 @@ class clsPmieducarTurma extends Model
         }
         if (is_string($str_nm_turma)) {
             $nm_turma = $db->escapeString($str_nm_turma);
-            $filtros .= "{$whereAnd} exists(select nm_turma from pmieducar.turma where unaccent(nm_turma) ILIKE unaccent('%{$nm_turma}%'))";
+            $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM pmieducar.turma WHERE unaccent(t.nm_turma) ILIKE unaccent('%{$nm_turma}%'))";
             $whereAnd = ' AND ';
         }
         if (is_string($str_sgl_turma)) {

@@ -80,8 +80,9 @@ class clsPmieducarInfraComodoFuncao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->desc_funcao)) {
+                $desc_funcao = $db->escapeString($this->desc_funcao);
                 $campos .= "{$gruda}desc_funcao";
-                $valores .= "{$gruda}'{$this->desc_funcao}'";
+                $valores .= "{$gruda}'{$desc_funcao}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->ref_cod_escola)) {
@@ -129,7 +130,8 @@ class clsPmieducarInfraComodoFuncao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->desc_funcao)) {
-                $set .= "{$gruda}desc_funcao = '{$this->desc_funcao}'";
+                $desc_funcao = $db->escapeString($this->desc_funcao);
+                $set .= "{$gruda}desc_funcao = '{$desc_funcao}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {

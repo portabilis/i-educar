@@ -81,8 +81,9 @@ class clsPmieducarTurmaTipo extends Model
                 $gruda = ', ';
             }
             if (is_string($this->sgl_tipo)) {
+                $sigla = $db->escapeString($this->sgl_tipo);
                 $campos .= "{$gruda}sgl_tipo";
-                $valores .= "{$gruda}'{$this->sgl_tipo}'";
+                $valores .= "{$gruda}'{$sigla}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -130,7 +131,8 @@ class clsPmieducarTurmaTipo extends Model
                 $gruda = ', ';
             }
             if (is_string($this->sgl_tipo)) {
-                $set .= "{$gruda}sgl_tipo = '{$this->sgl_tipo}'";
+                $sigla = $db->escapeString($this->sgl_tipo);
+                $set .= "{$gruda}sgl_tipo = '{$sigla}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {

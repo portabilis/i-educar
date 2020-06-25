@@ -111,8 +111,9 @@ class clsPmieducarCalendarioDiaMotivo extends Model
             $valores .= "{$gruda}'1'";
             $gruda = ', ';
             if (is_string($this->nm_motivo)) {
+                $motivo = $db->escapeString($this->nm_motivo);
                 $campos .= "{$gruda}nm_motivo";
-                $valores .= "{$gruda}'{$this->nm_motivo}'";
+                $valores .= "{$gruda}'{$motivo}'";
                 $gruda = ', ';
             }
 
@@ -172,7 +173,8 @@ class clsPmieducarCalendarioDiaMotivo extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_motivo)) {
-                $set .= "{$gruda}nm_motivo = '{$this->nm_motivo}'";
+                $motivo = $db->escapeString($this->nm_motivo);
+                $set .= "{$gruda}nm_motivo = '{$motivo}'";
                 $gruda = ', ';
             }
 

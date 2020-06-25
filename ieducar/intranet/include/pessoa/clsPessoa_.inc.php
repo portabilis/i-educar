@@ -42,8 +42,10 @@ class clsPessoa_
 
     public function cadastra()
     {
+        $db = new clsBanco();
+
         if ($this->nome && $this->tipo) {
-            $this->nome = $this->cleanUpName($this->nome);
+            $this->nome = $db->escapeString(($this->nome));
             $this->nome = str_replace('\'', '\'\'', $this->nome);
             $campos = '';
             $valores = '';
