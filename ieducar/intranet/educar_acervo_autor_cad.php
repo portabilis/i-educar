@@ -136,9 +136,6 @@ class indice extends clsCadastro
     function Editar()
     {
 
-
-        $this->nm_autor = addslashes($this->nm_autor);
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 594, $this->pessoa_logada, 11,  "educar_acervo_autor_lst.php" );
 
