@@ -13,7 +13,7 @@ class CreateReleasePeriodTable extends Migration
      */
     public function up()
     {
-        Schema::create('release_period', function (Blueprint $table) {
+        Schema::create('release_periods', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('year');
             $table->integer('stage_type_id');
@@ -29,6 +29,6 @@ class CreateReleasePeriodTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('release_period');
+        Schema::dropIfExists('release_periods');
     }
 }
