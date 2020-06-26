@@ -125,6 +125,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::get('/periodo-lancamento/novo', 'ReleasePeriodController@new')->name('periodo-lancamento.new');
     Route::post('/periodo-lancamento/novo', 'ReleasePeriodController@create')->name('periodo-lancamento.create');
+    Route::post('/periodo-lancamento', 'ReleasePeriodController@index')->name('periodo-lancamento.index');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {

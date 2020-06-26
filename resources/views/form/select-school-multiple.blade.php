@@ -31,7 +31,7 @@
         <script>
             (function($){
                 $(document).ready(function() {
-                    $j('#escola').val({{old('escola', Request::get('escola'))}})
+                   
                 });
             })(jQuery);
         </script>

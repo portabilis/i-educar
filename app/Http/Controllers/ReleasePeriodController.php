@@ -2,18 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReleasePeriodRequest;
 use App\Models\LegacyStageType;
+use App\Models\ReleasePeriod;
+use App\Models\ReleasePeriodDate;
 use App\Process;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class ReleasePeriodController extends Controller
 {
+    public function index()
+    {
+        return view('release-period.index');
+    }
+
     /**
-     * @param Request $request
      * @return View
      */
-    public function new(Request $request)
+    public function new()
     {
         $this->breadcrumb('Período de lançamento de notas e faltas por etapa', [
             url('intranet/educar_index.php') => 'Escola',
@@ -21,11 +28,58 @@ class ReleasePeriodController extends Controller
 
         $this->menu(Process::RELEASE_PERIOD);
 
-        return view('release-period.index', ['stageTypes' => LegacyStageType::active()->get()->keyBy('cod_modulo')->toJson()]);
+        return view('release-period.new', ['stageTypes' => LegacyStageType::active()->get()->keyBy('cod_modulo')->toJson()]);
     }
 
-    public function create(Request $request)
+    /**
+     * @param ReleasePeriodRequest $request
+     */
+    public function create(ReleasePeriodRequest $request)
     {
+        DB::beginTransaction();
 
+        /** @var ReleasePeriod $releasePeriod */
+        $releasePeriod = ReleasePeriod::create([
+            'year' => $request->get('ano'),
+            'stage_type_id' => $request->get('stage_type'),
+            'stage' => $request->get('stage'),
+        ]);
+
+        $this->createReleasePeriodSchools($releasePeriod, $request->get('escola'));
+        $this->createReleasePeriodDates($releasePeriod, $request->get('start_date'), $request->get('end_date'));
+
+        DB::commit();
+
+        return redirect()
+            ->route('release-period.index')
+            ->with('success', 'Período cadastrado com sucesso.');
+    }
+
+    /**
+     * @param ReleasePeriod $releasePeriod
+     * @param $schools
+     */
+    private function createReleasePeriodSchools(ReleasePeriod $releasePeriod, $schools)
+    {
+        foreach ($schools as $school) {
+            $releasePeriod->schools()->attach($school[0]);
+        }
+    }
+
+    /**
+     * @param ReleasePeriod $releasePeriod
+     * @param $startDateArray
+     * @param $endDateArray
+     */
+    private function createReleasePeriodDates(ReleasePeriod $releasePeriod, $startDateArray, $endDateArray)
+    {
+        foreach ($startDateArray as $key => $startDate) {
+            $endDate = $endDateArray[$key];
+            ReleasePeriodDate::create([
+                'release_period_id' => $releasePeriod->getKey(),
+                'start_date' => \DateTime::createFromFormat('d/m/Y', $startDate),
+                'end_date' => \DateTime::createFromFormat('d/m/Y', $endDate),
+            ]);
+        }
     }
 }
