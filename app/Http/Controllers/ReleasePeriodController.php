@@ -7,14 +7,35 @@ use App\Models\LegacyStageType;
 use App\Models\ReleasePeriod;
 use App\Models\ReleasePeriodDate;
 use App\Process;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class ReleasePeriodController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('release-period.index');
+        $this->breadcrumb('Período de lançamento de notas e faltas por etapa', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
+
+        $this->menu(Process::RELEASE_PERIOD);
+
+        $query = ReleasePeriod::query();
+
+        $ano = $request->get('ano');
+        $query->when($ano, function ($query) use ($ano) {
+            $query->where('year', $ano);
+        });
+
+        $school = $request->get('ref_cod_escola');
+        $query->when($school, function ($query) use ($school) {
+            $query->whereHas('schools', function ($schoolsQuery) use ($school) {
+                $schoolsQuery->where('cod_escola', $school);
+            });
+        });
+
+        return view('release-period.index', ['releasePeriods' => $query->paginate(20)]);
     }
 
     /**
@@ -81,5 +102,13 @@ class ReleasePeriodController extends Controller
                 'end_date' => \DateTime::createFromFormat('d/m/Y', $endDate),
             ]);
         }
+    }
+
+    /**
+     * @param ReleasePeriod $releasePeriod
+     */
+    public function show(ReleasePeriod $releasePeriod)
+    {
+        
     }
 }

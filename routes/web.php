@@ -123,9 +123,10 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->name('update-registration-date.index');
     Route::post('/atualiza-data-entrada', 'UpdateRegistrationDateController@updateStatus')->name('update-registration-date.update-date');
 
-    Route::get('/periodo-lancamento/novo', 'ReleasePeriodController@new')->name('periodo-lancamento.new');
-    Route::post('/periodo-lancamento/novo', 'ReleasePeriodController@create')->name('periodo-lancamento.create');
-    Route::post('/periodo-lancamento', 'ReleasePeriodController@index')->name('periodo-lancamento.index');
+    Route::get('/periodo-lancamento/novo', 'ReleasePeriodController@new')->name('release-period.new');
+    Route::post('/periodo-lancamento/novo', 'ReleasePeriodController@create')->name('release-period.create');
+    Route::get('/periodo-lancamento', 'ReleasePeriodController@index')->name('release-period.index');
+    Route::get('/periodo-lancamento/{id}', 'ReleasePeriodController@show')->name('release-period.show');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
