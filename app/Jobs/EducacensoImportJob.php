@@ -60,6 +60,7 @@ class EducacensoImportJob implements ShouldQueue
         try {
             $importService = ImportServiceFactory::createImportService($this->educacensoImport->year);
             $importService->import($this->importArray, $this->educacensoImport->user);
+            $importService->adaptData();
         } catch (Throwable $e) {
             DB::rollBack();
             throw $e;

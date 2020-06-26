@@ -168,7 +168,7 @@ class indice extends clsDetalhe
             null,
             null,
             null,
-            1
+            null
         );
 
         $existeTurma = false;
@@ -187,6 +187,10 @@ class indice extends clsDetalhe
 
             if (in_array($turma['etapa_educacenso'], App_Model_Educacenso::etapas_multisseriadas())) {
                 $existeTurmaMulti = true;
+            }
+
+            if ($enturmacao['ativo'] == 0) {
+                continue;
             }
 
             if ($turma['turma_turno_id'] == clsPmieducarTurma::TURNO_INTEGRAL) {

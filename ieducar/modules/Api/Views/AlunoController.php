@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\Educacenso\Registro30;
 use App\Models\LegacyDeficiency;
 use App\Models\Individual;
 use App\Models\LogUnification;
+use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
@@ -2066,6 +2068,10 @@ class AlunoController extends ApiCoreController
             $this->appendResponse($this->getNomeBairro());
         } elseif ($this->isRequestFor('get', 'unificacao-alunos')) {
             $this->appendResponse($this->getUnificacoes());
+        } elseif ($this->isRequestFor('get', 'deve-habilitar-campo-recursos-prova-inep')) {
+            $this->appendResponse($this->deveHabilitarCampoRecursosProvaInep());
+        } elseif ($this->isRequestFor('get', 'deve-obrigar-laudo-medico')) {
+            $this->appendResponse($this->deveObrigarLaudoMedico());
         } else {
             $this->notImplementedOperationError();
         }
@@ -2081,5 +2087,29 @@ class AlunoController extends ApiCoreController
         }
 
         return $arrayEducacensoDeficiencies;
+    }
+
+    private function deveHabilitarCampoRecursosProvaInep()
+    {
+        // Pega os códigos das deficiências do censo
+        $deficiencias = $this->replaceByEducacensoDeficiencies(array_filter(explode(',', $this->getRequest()->deficiencias)));
+
+        // Remove "Altas Habilidades"
+        $deficiencias = Registro30::removeAltasHabilidadesArrayDeficiencias($deficiencias);
+
+        return [
+            'result' => !empty($deficiencias),
+        ];
+    }
+
+    private function deveObrigarLaudoMedico()
+    {
+        $deficiencias = array_filter(explode(',', $this->getRequest()->deficiencias));
+
+        return [
+            'result' => LegacyDeficiency::whereIn('cod_deficiencia', $deficiencias)
+                ->where('exigir_laudo_medico', true)
+                ->exists()
+        ];
     }
 }

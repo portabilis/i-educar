@@ -7,6 +7,7 @@ use App\Models\Educacenso\RegistroEducacenso;
 use App\Models\LegacySchool;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\RegistroImportInterface;
+use App\Services\Educacenso\Version2019\Models\Registro10Model;
 use App\User;
 use iEducar\Modules\Educacenso\Model\AbastecimentoAgua;
 use iEducar\Modules\Educacenso\Model\AreasExternas;
@@ -37,15 +38,15 @@ class Registro10Import implements RegistroImportInterface
     /**
      * @var Registro10
      */
-    private $model;
+    protected $model;
     /**
      * @var User
      */
-    private $user;
+    protected $user;
     /**
      * @var int
      */
-    private $year;
+    protected $year;
 
     /**
      * Faz a importação dos dados a partir da linha do arquivo
@@ -147,12 +148,12 @@ class Registro10Import implements RegistroImportInterface
      */
     public static function getModel($arrayColumns)
     {
-        $registro = new Registro10();
+        $registro = new Registro10Model();
         $registro->hydrateModel($arrayColumns);
         return $registro;
     }
 
-    private function getSchool()
+    protected function getSchool()
     {
         return SchoolInep::where('cod_escola_inep', $this->model->codigoInep)->first();
     }
