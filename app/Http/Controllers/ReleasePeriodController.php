@@ -109,6 +109,12 @@ class ReleasePeriodController extends Controller
      */
     public function show(ReleasePeriod $releasePeriod)
     {
-        
+        $this->breadcrumb('Período de lançamento de notas e faltas por etapa', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
+
+        $this->menu(Process::RELEASE_PERIOD);
+
+        return view('release-period.show', ['releasePeriod' => $releasePeriod]);
     }
 }
