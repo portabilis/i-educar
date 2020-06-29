@@ -7,7 +7,6 @@ use App\Models\Educacenso\RegistroEducacenso;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Validator\BirthCertificateValidator;
-use iEducar\Modules\Educacenso\Validator\ExisteEnturmacoesEjaOuEducacaoProfissionalValidator;
 use iEducar\Modules\Educacenso\Validator\InepExamValidator;
 use Illuminate\Support\Facades\DB;
 use Portabilis_Utils_Database;
@@ -40,7 +39,9 @@ class Register30StudentDataAnalysis implements AnalysisInterface
     {
         $data = $this->data;
 
-        $arrayDeficiencias = array_filter(Portabilis_Utils_Database::pgArrayToArray($data->arrayDeficiencias));
+        $arrayDeficiencias = array_filter(
+            Portabilis_Utils_Database::pgArrayToArray($data->arrayDeficiencias)
+        );
         $arrayRecursos = array_filter(Portabilis_Utils_Database::pgArrayToArray($data->recursosProvaInep));
 
         if (!$arrayDeficiencias && ($data->dadosAluno->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE || $data->dadosAluno->modalidadeCurso == ModalidadeCurso::EDUCACAO_ESPECIAL)) {
@@ -52,6 +53,7 @@ class Register30StudentDataAnalysis implements AnalysisInterface
             ];
         }
 
+        $arrayDeficiencias = $this->data::removeAltasHabilidadesArrayDeficiencias($arrayDeficiencias);
         if (empty($arrayRecursos) && $arrayDeficiencias) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o(a) aluno(a)  {$data->nomePessoa} possui deficiência, portanto é necessário informar qual o recurso para a realização de provas o(a) mesmo(a) necessita ou já recebe.",
@@ -67,18 +69,6 @@ class Register30StudentDataAnalysis implements AnalysisInterface
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} possui valor inválido. Verificamos que o(s) recurso(s) necessário(s) para realização de provas foi preenchido incorretamente para o(a) aluno(a) {$data->nomePessoa}.",
                 'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados pessoais > Campo: Recursos necessários para realização de provas)',
                 'linkPath' => "/module/Cadastro/aluno?id={$data->codigoAluno}",
-                'fail' => true
-            ];
-        }
-
-        $precisaInformarCPF = new ExisteEnturmacoesEjaOuEducacaoProfissionalValidator($data->codigoEscola, $data->codigoAluno, $this->year);
-        $precisaInformarCPF = $precisaInformarCPF->isValid();
-
-        if (!$data->cpf && $precisaInformarCPF) {
-            $this->messages[] = [
-                'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o(a) aluno(a) {$data->nomePessoa} está vinculado à uma turma de EJA ou Educação Profissional, portanto é necessário informar o campo: CPF.",
-                'path' => '(Pessoas > Cadastros > Pessoas físicas > Cadastrar > Editar > Campo: CPF)',
-                'linkPath' => "/intranet/atendidos_cad.php?cod_pessoa_fj={$data->codigoPessoa}",
                 'fail' => true
             ];
         }

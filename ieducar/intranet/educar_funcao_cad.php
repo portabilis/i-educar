@@ -100,7 +100,6 @@ class indice extends clsCadastro
     function Novo()
     {
 
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 634, $this->pessoa_logada, 3,  "educar_funcao_lst.php" );
 
@@ -131,7 +130,6 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
 
         $funcao = new clsPmieducarFuncao($this->cod_funcao);
         $funcaoAntes = $funcao->detalhe();

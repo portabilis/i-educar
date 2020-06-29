@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 require_once 'include/clsBanco.inc.php';
 require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
@@ -61,7 +62,9 @@ class clsPessoa_
 
             $db = new clsBanco();
 
-            $db->Consulta("INSERT INTO {$this->schema_cadastro}.{$this->tabela_pessoa} (nome, data_cad,tipo,situacao,origem_gravacao, operacao $campos) VALUES ('$this->nome', NOW(), '$this->tipo', 'P', 'U', 'I' $valores)");
+            $slug = Str::lower(Str::slug($this->nome, ' '));
+
+            $db->Consulta("INSERT INTO {$this->schema_cadastro}.{$this->tabela_pessoa} (nome, slug, data_cad,tipo,situacao,origem_gravacao, operacao $campos) VALUES ('$this->nome', '{$slug}', NOW(), '$this->tipo', 'P', 'U', 'I' $valores)");
             $this->idpes = $db->InsertId("{$this->schema_cadastro}.seq_pessoa");
             if ($this->idpes) {
                 $detalhe = $this->detalhe();
@@ -90,7 +93,10 @@ class clsPessoa_
             if ($this->nome || $this->nome === '') {
                 $this->nome = $this->cleanUpName($this->nome);
                 $this->nome = str_replace('\'', '\'\'', $this->nome);
-                $set .= "$gruda nome = '$this->nome' ";
+
+                $slug = Str::lower(Str::slug($this->nome, ' '));
+
+                $set .= "$gruda nome = '$this->nome', slug = '{$slug}' ";
                 $gruda = ', ';
             }
 
@@ -228,22 +234,6 @@ class clsPessoa_
             $db->Consulta("SELECT idpes, nome, idpes_cad, data_cad, url, tipo, idpes_rev, data_rev, situacao, origem_gravacao, email FROM cadastro.pessoa WHERE idpes = $this->idpes ");
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
-                $nome = mb_strtolower($tupla['nome']);
-                $arrayNome = explode(' ', $nome);
-                $arrNovoNome = [];
-                foreach ($arrayNome as $parte) {
-                    if ($parte != 'de' && $parte != 'da' && $parte != 'dos' && $parte != 'do' && $parte != 'das' && $parte != 'e') {
-                        if ($parte != 's.a' && $parte != 'ltda') {
-                            $arrNovoNome[] = mb_strtoupper(mb_substr($parte, 0, 1)) . mb_substr($parte, 1);
-                        } else {
-                            $arrNovoNome[] = mb_strtoupper($parte);
-                        }
-                    } else {
-                        $arrNovoNome[] = $parte;
-                    }
-                }
-                $nome = implode(' ', $arrNovoNome);
-                $tupla['nome'] = $nome;
                 list($this->idpes, $this->nome, $this->idpes_cad, $this->data_cad, $this->url, $this->tipo, $this->idpes_rev, $this->data_rev, $this->situacao, $this->origem_gravacao, $this->email) = $tupla;
 
                 return $tupla;
@@ -256,6 +246,10 @@ class clsPessoa_
     protected function cleanUpName($name)
     {
         $name = preg_replace('/\s+/', ' ', $name);
+
+        if (config('legacy.app.uppercase_names')) {
+            $name = Str::upper($name);
+        }
 
         return trim($name);
     }

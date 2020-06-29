@@ -10,7 +10,7 @@ class MoveDataScoreExam implements MoveDisciplineDataInterface
 {
     public function moveData($disciplineFrom, $disciplineTo, $year, $gradeId)
     {
-        LegacyScoreExam::query()
+        return LegacyScoreExam::query()
             ->where('ref_cod_componente_curricular', $disciplineFrom)
             ->whereHas('registration', function (Builder $registrationQuery) use ($gradeId, $year) {
                 $registrationQuery->where('ano', $year);

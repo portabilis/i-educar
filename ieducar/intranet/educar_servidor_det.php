@@ -518,7 +518,7 @@ class indice extends clsDetalhe
     $this->url_cancelar = 'educar_servidor_lst.php';
     $this->largura = '100%';
 
-    $this->breadcrumb('Detalhe do servidor', [
+    $this->breadcrumb('Funções do servidor', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
   }

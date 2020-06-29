@@ -8,6 +8,7 @@ use App\Models\Educacenso\RegistroEducacenso;
 use iEducar\Modules\Educacenso\Model\Escolaridade;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
+use Portabilis_Utils_Database;
 
 class RegrasGeraisRegistro30 implements EducacensoExportRule
 {
@@ -71,6 +72,24 @@ class RegrasGeraisRegistro30 implements EducacensoExportRule
             $registro30->posGraduacaoDoutorado = null;
             $registro30->posGraduacaoMestrado = null;
             $registro30->posGraduacaoNaoPossui = null;
+        }
+
+        // Remove "Altas Habilidades"
+        $arrayDeficiencias = $registro30::removeAltasHabilidadesArrayDeficiencias(Portabilis_Utils_Database::pgArrayToArray($registro30->arrayDeficiencias));
+
+        if (empty($arrayDeficiencias)) {
+            $registro30->recursoLedor = null;
+            $registro30->recursoTranscricao = null;
+            $registro30->recursoGuia = null;
+            $registro30->recursoTradutor = null;
+            $registro30->recursoLeituraLabial = null;
+            $registro30->recursoProvaAmpliada = null;
+            $registro30->recursoProvaSuperampliada = null;
+            $registro30->recursoAudio = null;
+            $registro30->recursoLinguaPortuguesaSegundaLingua = null;
+            $registro30->recursoVideoLibras = null;
+            $registro30->recursoBraile = null;
+            $registro30->recursoNenhum = null;
         }
 
         return $registro30;

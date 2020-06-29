@@ -12,8 +12,12 @@ class DefaultPmieducarTipoUsuarioTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::unprepared(
-            file_get_contents(__DIR__ . '/../sqls/inserts/pmieducar.tipo_usuario.sql')
-        );
+        DB::table('pmieducar.tipo_usuario')->insert([
+            'cod_tipo_usuario' => 1,
+            'nm_tipo' => 'Administrador',
+            'nivel' => 1,
+            'ref_funcionario_cad' => 1,
+            'data_cadastro' => now(),
+        ]);
     }
 }

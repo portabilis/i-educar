@@ -27,7 +27,7 @@ class LegacyEvaluationRule extends Model
     protected $primaryKey = 'id';
 
     /**
-     * @var array 
+     * @var array
      */
     protected $casts = [
         'media_recuperacao_paralela' => 'float',
@@ -101,5 +101,13 @@ class LegacyEvaluationRule extends Model
     {
         return $this->tipo_recuperacao_paralela == self::PARALLEL_REMEDIAL_PER_STAGE
             && $this->tipo_calculo_recuperacao_paralela == self::PARALLEL_REMEDIAL_SUM_SCORE;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGlobalScore()
+    {
+        return $this->nota_geral_por_etapa == 1;
     }
 }

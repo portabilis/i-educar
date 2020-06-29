@@ -32,9 +32,11 @@ if (token) {
 
 import Echo from 'laravel-echo'
 
-window.io = require('socket.io-client');
+if (window.useEcho) {
+  window.io = require('socket.io-client');
 
-window.Echo = new Echo({
-  broadcaster: 'socket.io',
-  host: window.location.hostname
-});
+  window.Echo = new Echo({
+    broadcaster: 'socket.io',
+    host: window.location.hostname
+  });
+}

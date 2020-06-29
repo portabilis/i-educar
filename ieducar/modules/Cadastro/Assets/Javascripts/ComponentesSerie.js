@@ -15,7 +15,6 @@ if(modoEdicao){
     $j('#ref_cod_serie').attr('disabled', 'true');
     getCursos();
     getSeries();
-    updateAreaConhecimento();
 }
 
 $j("#ref_cod_instituicao").change(function() {
@@ -129,7 +128,7 @@ function expandClose(id){
 function getCursos(){
     var url = getResourceUrlBuilder.buildUrl('/module/Api/Curso',
                                              'cursos',
-                                             { instituicao_id : instituicao_id }
+                                             { instituicao_id : instituicao_id, ativo : 1 }
     );
     var options = {
         url      : url,
@@ -199,6 +198,8 @@ function handleGetSeries(response){
         }
         comboSerie.append('<option value="' + series[i].id + '"' + selected + '>' + series[i].nome + '</option>');
     }
+
+    updateAreaConhecimento();
 }
 
 function carregaDadosComponentesSerie(){

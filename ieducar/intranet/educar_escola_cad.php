@@ -1340,7 +1340,7 @@ class indice extends clsCadastro
             $options = [
                 'label' => 'Órgãos colegiados em funcionamento na escola',
                 'size' => 50,
-                'required' => false,
+                'required' => $obrigarCamposCenso,
                 'options' => [
                     'values' => $this->orgaos_colegiados,
                     'all_values' => OrgaosColegiados::getDescriptiveValues()
@@ -1589,10 +1589,7 @@ class indice extends clsCadastro
                     $obj->educacao_indigena = $this->educacao_indigena;
                     $obj->lingua_ministrada = $this->lingua_ministrada;
                     $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-                    $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
-                    $obj->abre_final_semana = $this->abre_final_semana;
                     $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
-                    $obj->proposta_pedagogica = $this->proposta_pedagogica;
                     $obj->equipamentos = $equipamentos;
                     $obj->uso_internet = $uso_internet;
                     $obj->rede_local = $rede_local;
@@ -1738,10 +1735,7 @@ class indice extends clsCadastro
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
             $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-            $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
-            $obj->abre_final_semana = $this->abre_final_semana;
             $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
-            $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->equipamentos = $equipamentos;
             $obj->uso_internet = $uso_internet;
             $obj->rede_local = $rede_local;
@@ -1936,10 +1930,7 @@ class indice extends clsCadastro
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
             $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-            $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
-            $obj->abre_final_semana = $this->abre_final_semana;
             $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
-            $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->equipamentos = $equipamentos;
             $obj->uso_internet = $uso_internet;
             $obj->rede_local = $rede_local;
@@ -2031,10 +2022,7 @@ class indice extends clsCadastro
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
             $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-            $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
-            $obj->abre_final_semana = $this->abre_final_semana;
             $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
-            $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->equipamentos = $equipamentos;
             $obj->uso_internet = $uso_internet;
             $obj->rede_local = $rede_local;
@@ -2233,7 +2221,6 @@ class indice extends clsCadastro
                 $this->inepEscolaSedeDiferenteDaEscolaPrincipal() &&
                 $this->validateCensusManagerRules() &&
                 $this->validaEscolaCompartilhaPredio() &&
-                $this->validaBanheiros() &&
                 $this->validaSalasUtilizadasDentroEscola() &&
                 $this->validaSalasUtilizadasForaEscola() &&
                 $this->validaSalasClimatizadas() &&
@@ -2357,6 +2344,10 @@ class indice extends clsCadastro
 
     protected function validaTelefones($telefone1, $telefone2)
     {
+        if (empty($telefone1) && empty($telefone2)) {
+            return true;
+        }
+
         if ($telefone1 == $telefone2) {
             $this->mensagem = 'O campo: Telefone 2 não pode ter o mesmo valor do campo: Telefone 1';
             return false;
@@ -2659,16 +2650,6 @@ class indice extends clsCadastro
 
         if (count($arrayCampos) == 0) {
             $this->mensagem = 'Preencha pelo menos um dos campos de Salas gerais à Áreas externas';
-            return false;
-        }
-
-        return true;
-    }
-
-    protected function validaBanheiros()
-    {
-        if (!in_array(1, $this->banheiros) && count($this->banheiros) > 0) {
-            $this->mensagem = "O campo: <b>Banheiros</b> deve ser preenchido também com a opçao <b>Banheiro</b> quando outras opções forem selecionadas";
             return false;
         }
 

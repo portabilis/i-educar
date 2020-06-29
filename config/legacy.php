@@ -140,6 +140,7 @@ return [
             'nao_apresentar_campo_alfabetizado' => '0',
             'codigo_sistema' => 'Código sistema',
             'mostrar_codigo_sistema' => '1',
+            'obrigar_recursos_tecnologicos' => '0'
         ],
         'faltas_notas' => [
             'mostrar_botao_replicar' => '1',
@@ -166,6 +167,12 @@ return [
                 'theme' => 'white',
             ],
         ],
+        'recaptcha_v3' => [
+            'public_key' => '',
+            'private_key' => '',
+            'minimum_score' => 0.5,
+        ],
+        'uppercase_names' => 0,
     ],
 
     'modules' => [

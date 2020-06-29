@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Services\Discipline\MoveDisciplineDataService;
+use iEducar\Support\Output\CommandOutput;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +16,7 @@ class UpdateDisciplinesCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'update:disciplines {filename}';
+    protected $signature = 'update:disciplines {filename} {--copier=*}';
 
     /**
      * The console command description.
@@ -35,11 +36,25 @@ class UpdateDisciplinesCommand extends Command
     {
         $filename = $this->argument('filename');
 
-        $service = new MoveDisciplineDataService();
-        $service->setDefaultCopiers();
+        $output = new CommandOutput($this->output);
+        $service = new MoveDisciplineDataService($output);
+        $this->setCopiers($service);
 
         DB::beginTransaction();
         Excel::import($service, $filename);
         DB::commit();
+    }
+
+    private function setCopiers(MoveDisciplineDataService $service)
+    {
+        $copiers = $this->option('copier');
+        if (empty($copiers)) {
+            $service->setDefaultCopiers();
+            return;
+        }
+
+        foreach ($copiers as $copier) {
+            $service->setMoveDataService(new $copier);
+        }
     }
 }

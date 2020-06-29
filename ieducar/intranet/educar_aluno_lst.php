@@ -62,6 +62,8 @@ class indice extends clsListagem
     public $ref_cod_escola;
     public $ref_cod_curso;
     public $ref_cod_serie;
+    public $cpf_aluno;
+    public $rg_aluno;
 
     public function Gerar()
     {
@@ -83,6 +85,8 @@ class indice extends clsListagem
         $this->campoRA('aluno_estado_id', 'Código rede estadual do aluno (RA)', $this->aluno_estado_id, false);
         $this->campoTexto('nome_aluno', 'Nome do aluno', $this->nome_aluno, 50, 255, false);
         $this->campoData('data_nascimento', 'Data de Nascimento', $this->data_nascimento);
+        $this->campoCpf('cpf_aluno', 'CPF', $this->cpf_aluno);
+        $this->campoTexto('rg_aluno', 'RG', $this->rg_aluno);
         $this->campoTexto('nome_pai', 'Nome do Pai', $this->nome_pai, 50, 255);
         $this->campoTexto('nome_mae', 'Nome da Mãe', $this->nome_mae, 50, 255);
         $this->campoTexto('nome_responsavel', 'Nome do Responsável', $this->nome_responsavel, 50, 255);
@@ -170,14 +174,27 @@ class indice extends clsListagem
             $this->ref_cod_instituicao,
             $this->ref_cod_escola,
             $this->ref_cod_curso,
-            $this->ref_cod_serie
+            $this->ref_cod_serie,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            idFederal2int($this->cpf_aluno),
+            idFederal2int($this->rg_aluno)
         );
 
         $total = $aluno->_total;
 
         foreach ($alunos as $registro) {
-            $nomeAluno = strtoupper($registro['nome_aluno']);
-            $nomeSocial = strtoupper($registro['nome_social']);
+            $nomeAluno = $registro['nome_aluno'];
+            $nomeSocial = $registro['nome_social'];
 
             if ($nomeSocial) {
                 $nomeAluno = $nomeSocial . '<br> <i>Nome de registro: </i>' . $nomeAluno;

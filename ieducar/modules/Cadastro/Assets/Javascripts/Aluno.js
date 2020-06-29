@@ -185,58 +185,95 @@ function certidaoCasamentoInvalida() {
 }
 
 var newSubmitForm = function (event) {
-    if (obrigarDocumentoPessoa && !possuiDocumentoObrigatorio()) {
-        messageUtils.error('É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil.');
-        return false;
+  if ($j('#deficiencias').val().length > 1) {
+    let laudos = $j('#url_laudo_medico').val();
+    let temLaudos = false;
+
+    if (laudos.length > 0) {
+      temLaudos = JSON.parse(laudos).length > 0;
     }
 
-    var codigoInep = $j('#aluno_inep_id').val();
+    var additionalVars = {
+      deficiencias: $j('#deficiencias').val(),
+    };
 
-    if (codigoInep && codigoInep.length != 12) {
-        return codigoInepInvalido();
-    }
-
-    if ($j('#deficiencias').val().length > 1) {
-
-        let laudos = $j('#url_laudo_medico').val();
-        let temLaudos = false;
-
-        if (laudos.length > 0) {
-          temLaudos = JSON.parse(laudos).length > 0;
+    var options = {
+      url: getResourceUrlBuilder.buildUrl('/module/Api/aluno', 'deve-obrigar-laudo-medico', additionalVars),
+      dataType: 'json',
+      data: {},
+      success: function (response) {
+        if (response.result && $j('#url_laudo_medico_obrigatorio').length > 0 && !temLaudos) {
+          return laudoMedicoObrigatorio();
+        } else {
+          return formularioValido();
         }
-
-        if ($j('#url_laudo_medico_obrigatorio').length > 0 && !temLaudos) {
-            return laudoMedicoObrigatorio();
-        }
-    }
-
-    var tipoCertidaoNascimento = ($j('#tipo_certidao_civil').val() == 'certidao_nascimento_novo_formato');
-    var tipoCertidaoCasamento = ($j('#tipo_certidao_civil').val() == 'certidao_casamento_novo_formato');
-
-    if (tipoCertidaoNascimento && $j('#certidao_nascimento').val().length < 32) {
-        return certidaoNascimentoInvalida();
-    } else if (tipoCertidaoCasamento && $j('#certidao_casamento').val().length < 32) {
-        return certidaoCasamentoInvalida();
-    }
-
-    // Valida se o tamanho do campo aluno_estado_id é igual à 13
-    if ($j('#aluno_estado_id').val() !== '' && ! (($j('#aluno_estado_id').val().length === 13) || ($j('#aluno_estado_id').val().length === 11))) {
-        messageUtils.error('O campo Código rede estadual (RA) deve conter exatos 13 ou 11 dígitos.');
-        return false;
-    }
-
-    $tipoTransporte = $j('#tipo_transporte');
-
-    if ($tipoTransporte.val() == 'municipal' || $tipoTransporte.val() == 'estadual') {
-        veiculoTransporte = $j('#veiculo_transporte_escolar').val();
-        if (obrigarCamposCenso && (veiculoTransporte == '' || veiculoTransporte == null)) {
-            messageUtils.error('O campo Veículo utilizado deve ser preenchido');
-            return false;
-        }
-    }
-
-    submitFormExterno();
+      }
+    };
+    getResource(options);
+  } else {
+    return formularioValido();
+  }
 };
+
+function formularioValido() {
+  if (obrigarDocumentoPessoa && !possuiDocumentoObrigatorio()) {
+    messageUtils.error('É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil.');
+    return false;
+  }
+
+  var codigoInep = $j('#aluno_inep_id').val();
+
+  if (codigoInep && codigoInep.length != 12) {
+    return codigoInepInvalido();
+  }
+
+  var tipoCertidaoNascimento = ($j('#tipo_certidao_civil').val() == 'certidao_nascimento_novo_formato');
+  var tipoCertidaoCasamento = ($j('#tipo_certidao_civil').val() == 'certidao_casamento_novo_formato');
+
+  if (tipoCertidaoNascimento && $j('#certidao_nascimento').val().length < 32) {
+    return certidaoNascimentoInvalida();
+  } else if (tipoCertidaoCasamento && $j('#certidao_casamento').val().length < 32) {
+    return certidaoCasamentoInvalida();
+  }
+
+  // Valida se o tamanho do campo aluno_estado_id é igual à 13
+  if ($j('#aluno_estado_id').val() !== '' && ! (($j('#aluno_estado_id').val().length === 13) || ($j('#aluno_estado_id').val().length === 11))) {
+    messageUtils.error('O campo Código rede estadual (RA) deve conter exatos 13 ou 11 dígitos.');
+    return false;
+  }
+
+  $tipoTransporte = $j('#tipo_transporte');
+
+  if ($tipoTransporte.val() != 'nenhum') {
+    veiculoTransporte = $j('#veiculo_transporte_escolar').val();
+    if (obrigarCamposCenso && (veiculoTransporte == '' || veiculoTransporte == null)) {
+      messageUtils.error('O campo Veículo utilizado deve ser preenchido');
+      return false;
+    }
+  }
+
+  if (!validaObrigatoriedadeRecursosTecnologicos()) {
+    return false;
+  }
+
+  submitFormExterno();
+}
+
+function validaObrigatoriedadeRecursosTecnologicos() {
+    let obrigarRecursosTecnologicos = $j('#obrigar_recursos_tecnologicos').val() == '1';
+    let recursosTecnologicos = $j('#recursos_tecnologicos__').val();
+
+    if (Array.isArray(recursosTecnologicos)) {
+        recursosTecnologicos = recursosTecnologicos.toString();
+    }
+
+    if (obrigarRecursosTecnologicos && !recursosTecnologicos) {
+        messageUtils.error("É necessário informar o campo: <strong>Possui acesso à recursos tecnológicos?</strong> da aba: <strong>Moradia</strong>.");
+        return false;
+    }
+
+    return true;
+}
 
 var $loadingDocumento = $j('<img>')
     .attr('src', 'imagens/indicator.gif')
@@ -728,11 +765,6 @@ resourceOptions.handleGet = function (dataResponse) {
         $j('#motocicleta').val('on');
     }
 
-    if (dataResponse.computador == 'S') {
-        $j('#computador').attr('checked', true);
-        $j('#computador').val('on');
-    }
-
     if (dataResponse.geladeira == 'S') {
         $j('#geladeira').attr('checked', true);
         $j('#geladeira').val('on');
@@ -776,11 +808,6 @@ resourceOptions.handleGet = function (dataResponse) {
     if (dataResponse.ddd_celular == 'S') {
         $j('#ddd_celular').attr('checked', true);
         $j('#ddd_celular').val('on');
-    }
-
-    if (dataResponse.celular == 'S') {
-        $j('#celular').attr('checked', true);
-        $j('#celular').val('on');
     }
 
     if (dataResponse.agua_encanada == 'S') {
@@ -838,6 +865,13 @@ resourceOptions.handleGet = function (dataResponse) {
     $j('#moradia').val(dataResponse.moradia).change();
     $j('#material').val(dataResponse.material).change();
     $j('#moradia_situacao').val(dataResponse.moradia_situacao).change();
+
+    if (dataResponse.recursos_tecnologicos) {
+        var recursosTecnologicos = JSON.parse(dataResponse.recursos_tecnologicos);
+        $j('#recursos_tecnologicos__').val(recursosTecnologicos);
+        $j('#recursos_tecnologicos__').trigger("chosen:updated");
+    }
+
     $j('#justificativa_falta_documentacao').val(dataResponse.justificativa_falta_documentacao).change();
 
     // Transporte escolar
@@ -1051,12 +1085,25 @@ var handleGetPersonDetails = function (dataResponse) {
     function habilitaRecursosProvaInep() {
         var deficiencias = $j('#deficiencias').val();
 
-        $j('#recursos_prova_inep__').prop('disabled', false).trigger("chosen:updated");
+        var additionalVars = {
+          deficiencias: deficiencias,
+        };
 
-        // o MultipleSearch vem com uma opção vazia por padrão
-        if (deficiencias.length <= 1) {
-            $j('#recursos_prova_inep__').prop('disabled', true).val([]).trigger("chosen:updated");
-        }
+        var options = {
+          url: getResourceUrlBuilder.buildUrl('/module/Api/aluno', 'deve-habilitar-campo-recursos-prova-inep', additionalVars),
+          dataType: 'json',
+          data: {},
+          success: function (response) {
+            if (response.result) {
+              $j('#recursos_prova_inep__').prop('disabled', false).trigger("chosen:updated");
+            } else {
+              $j('#recursos_prova_inep__').prop('disabled', true).val([]).trigger("chosen:updated");
+            }
+          }
+        };
+        getResource(options);
+
+
     }
 
     habilitaRecursosProvaInep();
@@ -1701,7 +1748,8 @@ function canShowParentsFields() {
                         <option id="estado-civil-pessoa-aluno_3" value="3">Divorciado(a)</option>
                         <option id="estado-civil-pessoa-aluno_4" value="4">Separado(a)</option>
                         <option id="estado-civil-pessoa-aluno_1" value="1">Solteiro(a)</option>
-                        <option id="estado-civil-pessoa-aluno_5" value="5">Vi&uacute;vo(a)</option>
+                        <option id="estado-civil-pessoa-aluno_5" value="5">Viúvo(a)</option>
+                        <option id="estado-civil-pessoa-aluno_7" value="7">Não informado</option>
                       </select>
                       <label for="data-nasc-pessoa-aluno"> Data de nascimento<span class="campo_obrigatorio">*</span> </label>
                       <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-aluno" id="data-nasc-pessoa-aluno" value="" size="11" maxlength="10">
@@ -1943,7 +1991,7 @@ function canShowParentsFields() {
             }
         });
 
-        $j('body').append('<div id="dialog-form-pessoa-parent"><form><h2></h2><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="49" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> <div id="falecido-modal"> <label>Falecido?</label><input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </div></fieldset><p><a id="link_cadastro_detalhado_parent" target="_blank">Cadastro detalhado</a></p></form></div>');
+        $j('body').append('<div id="dialog-form-pessoa-parent"><form><h2></h2><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="49" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option><option id="estado-civil-pessoa-parent_7" value="7">Não informado</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> <div id="falecido-modal"> <label>Falecido?</label><input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </div></fieldset><p><a id="link_cadastro_detalhado_parent" target="_blank">Cadastro detalhado</a></p></form></div>');
 
         $j('#dialog-form-pessoa-parent').find(':input').css('display', 'block');
 
@@ -2511,7 +2559,11 @@ if ($j('#transporte_rota').length > 0) {
         $j('#veiculo_transporte_escolar').makeUnrequired();
         if ($tipoTransporte.val() == 'nenhum') {
             document.getElementById('veiculo_transporte_escolar').disabled = true;
-        } else if ($tipoTransporte.val() == 'municipal' || $tipoTransporte.val() == 'estadual') {
+            $j('#transporte_rota').closest('tr').hide();
+            $j('#transporte_ponto').closest('tr').hide();
+            $j('#pessoaj_transporte_destino').closest('tr').hide();
+            $j('#transporte_observacao').closest('tr').hide();
+        }else if ($tipoTransporte.val() == 'municipal' || $tipoTransporte.val() == 'estadual' && $tipoTransporte.val() != 'nenhum') {
             if (obrigarCamposCenso) {
               $j('#veiculo_transporte_escolar').makeRequired();
             }
@@ -2521,7 +2573,7 @@ if ($j('#transporte_rota').length > 0) {
             $j('#pessoaj_transporte_destino').closest('tr').show();
             $j('#transporte_observacao').closest('tr').show();
         } else {
-            document.getElementById('veiculo_transporte_escolar').disabled = false;
+            document.getElementById('veiculo_transporte_escolar').disabled = true;
             $j('#transporte_rota').closest('tr').hide();
             $j('#transporte_ponto').closest('tr').hide();
             $j('#pessoaj_transporte_destino').closest('tr').hide();

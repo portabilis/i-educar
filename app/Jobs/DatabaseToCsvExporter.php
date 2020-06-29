@@ -135,4 +135,12 @@ class DatabaseToCsvExporter implements ShouldQueue
         $this->export->url = $url;
         $this->export->save();
     }
+
+    public function tags()
+    {
+        return [
+            $this->export->getConnectionName(),
+            'csv-export'
+        ];
+    }
 }

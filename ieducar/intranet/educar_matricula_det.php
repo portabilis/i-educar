@@ -52,6 +52,17 @@ class indice extends clsDetalhe
 
     public $ativo;
 
+    public function getDescription($description)
+    {
+        if (empty($description)) {
+            return $description;
+        }
+
+        $lessDescription = substr($description, 0, strpos($description, ' ', 200)) . '...';
+
+        return "<div align='justify'> <span class='desc-red'>{$lessDescription}</span> <span class='descricao' style='display: none'>{$description}</span><a href='javascript:void(0)' class='ver-mais'>Mostrar mais</a><a href='javascript:void(0)' style='display: none' class='ver-menos'>Mostrar menos</a></div>";
+    }
+
     public function Gerar()
     {
         // carrega estilo para feedback messages, exibindo msgs da api.
@@ -157,7 +168,7 @@ class indice extends clsDetalhe
             null,
             null,
             null,
-            1
+            null
         );
 
         $existeTurma = false;
@@ -176,6 +187,10 @@ class indice extends clsDetalhe
 
             if (in_array($turma['etapa_educacenso'], App_Model_Educacenso::etapas_multisseriadas())) {
                 $existeTurmaMulti = true;
+            }
+
+            if ($enturmacao['ativo'] == 0) {
+                continue;
             }
 
             if ($turma['turma_turno_id'] == clsPmieducarTurma::TURNO_INTEGRAL) {
@@ -244,6 +259,10 @@ class indice extends clsDetalhe
 
             $this->addDetalhe(['Motivo do Abandono', $tipoAbandono['nome']]);
             $this->addDetalhe(['Observação', $observacaoAbandono]);
+        }
+
+        if ($registro[aprovado] == App_Model_MatriculaSituacao::RECLASSIFICADO){
+            $this->addDetalhe(['Descrição', $this->getDescription($registro['descricao_reclassificacao'])]);
         }
 
         $this->addDetalhe(['Formando', $registro['formando'] == 0 ? 'N&atilde;o' : 'Sim']);

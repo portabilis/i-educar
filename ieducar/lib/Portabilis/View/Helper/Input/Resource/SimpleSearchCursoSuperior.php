@@ -15,10 +15,11 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchCursoSuperior extends Po
                     case grau_academico
                         when 1 then \'Tecnológico\'
                         when 2 then \'Licenciatura\'
-                        when 3 then \'Bacharelado\' 
+                        when 3 then \'Bacharelado\'
+                        when 4 then \'Sequencial\'
                     end
                 ), \'\') as nome
-                from modules.educacenso_curso_superior 
+                from modules.educacenso_curso_superior
                 where id = $1
             ';
 

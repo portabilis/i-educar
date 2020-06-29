@@ -546,7 +546,6 @@ class indice extends clsCadastro
                 'cod_curso_profissional',
                 'tipo_mediacao_didatico_pedagogico',
                 'nao_informar_educacenso',
-                'turma_mais_educacao',
                 'local_funcionamento_diferenciado'
             ];
 
@@ -693,6 +692,16 @@ class indice extends clsCadastro
 
         if ($sum > 0) {
             throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.');
+        }
+
+        // Caso não exista token e URL de integração com o i-Diário, não irá
+        // validar se há lançamentos nas etapas removidas
+
+        $checkReleases = config('legacy.config.url_novo_educacao')
+            && config('legacy.config.token_novo_educacao');
+
+        if (!$checkReleases) {
+            return true;
         }
 
         $iDiarioService = app(iDiarioService::class);

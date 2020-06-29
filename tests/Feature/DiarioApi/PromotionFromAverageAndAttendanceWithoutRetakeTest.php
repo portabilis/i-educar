@@ -6,7 +6,7 @@ use App\Models\LegacyEnrollment;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
-class PromotionFromAverageAndAttendanceWithoutRetake extends TestCase
+class PromotionFromAverageAndAttendanceWithoutRetakeTest extends TestCase
 {
     use DiarioApiFakeDataTestTrait, DiarioApiRequestTestTrait, DatabaseTransactions;
 
@@ -164,7 +164,7 @@ class PromotionFromAverageAndAttendanceWithoutRetake extends TestCase
         $randomDiscipline = $schoolClass->disciplines->random()->id;
         $response = $this->deleteScore($this->enrollment, $randomDiscipline, 4);
         $this->assertEquals('Cursando', $response->situacao);
-    
+
         $this->assertEquals(3, $registration->refresh()->aprovado);
     }
 
@@ -206,7 +206,7 @@ class PromotionFromAverageAndAttendanceWithoutRetake extends TestCase
         $randomDiscipline = $schoolClass->disciplines->random()->id;
         $response = $this->deleteScore($this->enrollment, $randomDiscipline, 2);
         $this->assertTrue($response->any_error_msg);
-    
+
         $this->assertEquals(1, $registration->refresh()->aprovado);
     }
 
@@ -248,7 +248,7 @@ class PromotionFromAverageAndAttendanceWithoutRetake extends TestCase
         $randomDiscipline = $schoolClass->disciplines->random()->id;
         $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 4);
         $this->assertEquals('Cursando', $response->situacao);
-    
+
         $this->assertEquals(3, $registration->refresh()->aprovado);
     }
 
@@ -290,7 +290,7 @@ class PromotionFromAverageAndAttendanceWithoutRetake extends TestCase
         $randomDiscipline = $schoolClass->disciplines->random()->id;
         $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 2);
         $this->assertTrue($response->any_error_msg);
-    
+
         $this->assertEquals(1, $registration->refresh()->aprovado);
     }
 }

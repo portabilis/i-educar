@@ -33,6 +33,15 @@ class LegacyEmployee extends EloquentBaseModel implements Transformable
      */
     public $timestamps = false;
 
+    protected $fillable = [
+        'ref_cod_pessoa_fj',
+        'matricula',
+        'senha',
+        'ativo',
+        'force_reset_password',
+        'email',
+    ];
+
     /**
      * @return string
      */

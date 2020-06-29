@@ -1,8 +1,12 @@
 <?php
 
+use App\Models\LegacyGrade;
 use App\Process;
+use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
+use App\Services\CheckPostedDataService;
+use App\Models\LegacyDiscipline;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -286,6 +290,7 @@ class indice extends clsCadastro
                 $conteudo .= '</div>';
                 $conteudo .= '<br style="clear: left" />';
 
+                $row = 1;
                 foreach ($lista as $registro) {
                     $checked = '';
                     $checkedEtapaEspecifica = '';
@@ -314,15 +319,15 @@ class indice extends clsCadastro
                     $etapas_utilizadas = $this->escola_serie_disciplina_etapa_utilizada[$registro->id];
 
                     $conteudo .= '<div style="margin-bottom: 10px; float: left">';
-                    $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
+                    $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" class='check_{$registro->id}' id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
                     $conteudo .= "  <span style='display: block; float: left; width: 100px'>{$registro->abreviatura}</span>";
-                    $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></label>";
+                    $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' class='carga_horaria' id='carga_horaria_{$registro->id}' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7' data-id='$registro->id'></label>";
                     $conteudo .= "  <label style='display: block; float: left;  width: 180px;'><input type='checkbox' id='usar_componente[]' name='usar_componente[$registro->id]' value='1' " . ($usarComponente == true ? $checked : '') . ">($cargaComponente h)</label>";
 
                     $conteudo .= "
                             <select name='componente_anos_letivos[{$registro->id}][]'
                                 style='width: 150px;'
-                                multiple='multiple'> ";
+                                multiple='multiple' class='anos_letivos' id='anos_letivos_{$registro->id}' data-id='$registro->id'> ";
 
                     foreach ($this->anos_letivos as $anoLetivo) {
                         $seletected = in_array($anoLetivo, $anosLetivosComponente) ? 'selected=selected' : '';
@@ -335,7 +340,27 @@ class indice extends clsCadastro
                         $conteudo .= "  <label style='display: block; float: left; width: 100px;'>Etapas utilizadas: <input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapas_utilizadas}' size='5' maxlength='7'></label>";
                     }
 
+                    if ($row == 1) {
+                        $conteudo .= '<label style="display: block; float: left; width: 250px">&nbsp;</label>
+                                     <span style="display: block; float: left; width: 100px">&nbsp;</span>
+                                     <label style="display: block; float: left; width: 100px;">
+                                        <a class="clone-values"
+                                            onclick="cloneValues(' . $registro->id . ',\'carga_horaria\')">
+                                            <i class="fa fa-clone" aria-hidden="true"></i>
+                                        </a>
+                                     </label>
+                                     <label style="display: block; float: left;  width: 180px;">&nbsp</label>
+                                     <label style="display: block; float: left; width: 231px">
+                                        <a class="clone-values"
+                                            onclick="cloneValues(' . $registro->id . ',\'anos_letivos\')">
+                                        <i class="fa fa-clone" aria-hidden="true"></i>
+                                        </a>
+                                     </label>';
+                    }
+                    $row++;
+
                     $conteudo .= '</div>';
+
                     $conteudo .= '<br style="clear: left" />';
 
                     $cargaHoraria = '';
@@ -717,6 +742,7 @@ class indice extends clsCadastro
     private function validaAlteracoes($analise)
     {
         $erros = [];
+        $iDiarioService = $this->getIdiarioService();
 
         if ($analise['inserir']) {
             foreach ($analise['inserir'] as $insert) {
@@ -750,6 +776,11 @@ class indice extends clsCadastro
         }
 
         if ($analise['remover']) {
+            $service = new CheckPostedDataService;
+            $schoolClass = LegacyGrade::find($this->ref_cod_serie)->schoolClass()
+                ->where('ref_ref_cod_escola', $this->ref_cod_escola)
+                ->pluck('cod_turma');
+
             foreach ($analise['remover'] as $componenteId) {
                 $info = Portabilis_Utils_Database::fetchPreparedQuery('
                     SELECT COUNT(cct.*), cc.nome
@@ -772,58 +803,40 @@ class indice extends clsCadastro
                     $erros[] = sprintf('Não é possível desvincular "%s" pois existem turmas vinculadas a este componente.', $info[0]['nome']);
                 }
 
-                $info = Portabilis_Utils_Database::fetchPreparedQuery('
-                    SELECT COUNT(ncc.*), cc.nome
-                    FROM modules.nota_componente_curricular ncc
-                    INNER JOIN modules.nota_aluno na on na.id = ncc.nota_aluno_id
-                    INNER JOIN pmieducar.matricula m on m.cod_matricula = na.matricula_id
-                    INNER JOIN modules.componente_curricular cc on cc.id = ncc.componente_curricular_id
-                    WHERE TRUE
-                        AND ncc.componente_curricular_id = $1
-                        AND m.ref_ref_cod_serie = $2
-                        AND m.ref_ref_cod_escola = $3
-                    GROUP BY cc.nome
-                ', ['params' => [
-                    (int) $componenteId,
-                    $this->ref_cod_serie,
-                    $this->ref_cod_escola
-                ]]);
+                $hasDataPosted = $service->hasDataPostedInGrade((int)$componenteId, $this->ref_cod_serie, null, $this->ref_cod_escola);
 
-                $count = (int) $info[0]['count'] ?? 0;
+                if ($hasDataPosted) {
+                    $discipline = LegacyDiscipline::find((int)$componenteId);
+                    $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série e escola.', $discipline->nome);
+                }
 
-                if ($count > 0) {
-                    $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas lançadas para este componente nesta série e escola.', $info[0]['nome']);
+                if ($iDiarioService && $schoolClass->count() && $iDiarioService->getClassroomsActivityByDiscipline($schoolClass->toArray(), $componenteId)) {
+                    $discipline = LegacyDiscipline::find($componenteId);
+                    $erros[] = sprintf('Não é possível desvincular "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série e escola no iDiário', $discipline->nome);
                 }
             }
         }
 
         if ($analise['atualizar']) {
+            $service = new CheckPostedDataService;
             foreach ($analise['atualizar'] as $update) {
                 if (!empty($update['anos_letivos_remover'])) {
                     foreach ($update['anos_letivos_remover'] as $ano) {
-                        $info = Portabilis_Utils_Database::fetchPreparedQuery('
-                            SELECT COUNT(ncc.*), cc.nome
-                            FROM modules.nota_componente_curricular ncc
-                            INNER JOIN modules.nota_aluno na on na.id = ncc.nota_aluno_id
-                            INNER JOIN pmieducar.matricula m on m.cod_matricula = na.matricula_id
-                            INNER JOIN modules.componente_curricular cc on cc.id = ncc.componente_curricular_id
-                            WHERE TRUE
-                                AND ncc.componente_curricular_id = $1
-                                AND m.ref_ref_cod_serie = $2
-                                AND m.ano = $3
-                                AND m.ref_ref_cod_escola = $4
-                            GROUP BY cc.nome
-                        ', ['params' => [
-                            (int) $update['ref_cod_disciplina'],
-                            $this->ref_cod_serie,
-                            $ano,
-                            $this->ref_cod_escola
-                        ]]);
+                        $hasDataPosted = $service->hasDataPostedInGrade((int)$update['ref_cod_disciplina'], $this->ref_cod_serie, $ano, $this->ref_cod_escola);
 
-                        $count = (int) $info[0]['count'] ?? 0;
+                        if ($hasDataPosted) {
+                            $discipline = LegacyDiscipline::find((int)$update['ref_cod_disciplina']);
+                            $erros[] = sprintf('Não é possível desvincular o ano %d de "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série, ano e escola.', $ano, $discipline->nome);
+                        }
 
-                        if ($count > 0) {
-                            $erros[] = sprintf('Não é possível desvincular o ano %d de "%s" pois já existem notas lançadas para este componente nesta série, ano e escola.', $ano, $info[0]['nome']);
+                        $schoolClass = LegacyGrade::find($this->ref_cod_serie)->schoolClass()
+                            ->where('ref_ref_cod_escola', $this->ref_cod_escola)
+                            ->where('ano', $ano)
+                            ->pluck('cod_turma');
+
+                        if ($iDiarioService && $schoolClass->count() && $iDiarioService->getClassroomsActivityByDiscipline($schoolClass->toArray(), $update['ref_cod_disciplina'])) {
+                            $discipline = LegacyDiscipline::find($update['ref_cod_disciplina']);
+                            $erros[] = sprintf('Não é possível desvincular o ano %d de "%s" pois já existem notas, faltas e/ou pareceres lançados para este componente nesta série, ano e escola no iDiário', $ano, $discipline->nome);
                         }
                     }
                 }
@@ -865,6 +878,20 @@ class indice extends clsCadastro
         }
 
         return true;
+    }
+
+    /**
+     * Retorna instância do iDiarioService
+     *
+     * @return iDiarioService|null
+     */
+    private function getIdiarioService()
+    {
+        if (iDiarioService::hasIdiarioConfigurations()) {
+            return app(iDiarioService::class);
+        }
+
+        return null;
     }
 }
 

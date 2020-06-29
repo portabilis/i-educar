@@ -1688,6 +1688,7 @@ class DiarioApiController extends ApiCoreController
 
         $tpProgressao = $evaluationRule->tipo_progressao;
         $rule['progressao_manual'] = $tpProgressao == RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL;
+        $rule['progressao_manual_ciclo'] = $tpProgressao == RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL_CICLO;
         $rule['progressao_continuada'] = $tpProgressao == RegraAvaliacao_Model_TipoProgressao::CONTINUADA;
 
         $tpParecer = $evaluationRule->parecer_descritivo;
@@ -1755,6 +1756,7 @@ class DiarioApiController extends ApiCoreController
         }
 
         $rule['definir_componente_por_etapa'] = $evaluationRule->definir_componente_etapa == 1;
+        $rule['formula_recuperacao_final'] = $evaluationRule->formula_recuperacao_id;
 
         return $rule;
     }
