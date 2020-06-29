@@ -1162,8 +1162,8 @@ class clsPmieducarInstituicao extends Model
         }
 
         if (is_string($str_nm_instituicao)) {
-            $str_nm_instituicao = $db->escapeString($str_nm_instituicao);
-            $filtros .= "{$whereAnd} nm_instituicao LIKE '%{$str_nm_instituicao}%'";
+            $nm_instituicao = $db->escapeString($str_nm_instituicao);
+            $filtros .= "{$whereAnd} nm_instituicao ILIKE '%{$nm_instituicao}%'";
             $whereAnd = ' AND ';
         }
 
