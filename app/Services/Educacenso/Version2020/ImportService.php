@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Services\Educacenso\Version2019;
+namespace App\Services\Educacenso\Version2020;
 
 use App\Services\Educacenso\ImportService as GeneralImportService;
 use App\Services\Educacenso\RegistroImportInterface;
-use iEducar\Modules\Educacenso\Migrations\UpdateEducacensoInstitutionToLayout2020;
-use iEducar\Modules\Educacenso\Migrations\UpdateSchoolClassToLayout2020;
+use App\Services\Educacenso\Version2019\Registro00Import;
+use App\Services\Educacenso\Version2019\Registro20Import;
+use App\Services\Educacenso\Version2019\Registro50Import;
+use App\Services\Educacenso\Version2019\Registro60Import;
+use Illuminate\Http\UploadedFile;
 
 class ImportService extends GeneralImportService
 {
@@ -16,7 +19,7 @@ class ImportService extends GeneralImportService
      */
     public function getYear()
     {
-        return 2019;
+        return 2020;
     }
 
     /**
@@ -59,7 +62,6 @@ class ImportService extends GeneralImportService
 
     public function adaptData()
     {
-        UpdateEducacensoInstitutionToLayout2020::execute();
-        UpdateSchoolClassToLayout2020::execute();
+        return;
     }
 }

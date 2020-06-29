@@ -2,11 +2,11 @@
 
 namespace App\Services\Educacenso;
 
+use App\Exceptions\Educacenso\InvalidFileYear;
 use App\Jobs\EducacensoImportJob;
 use App\Models\EducacensoImport;
 use App\User;
 use Illuminate\Contracts\Bus\Dispatcher;
-use Illuminate\Foundation\Bus\PendingDispatch;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 
@@ -46,6 +46,8 @@ class HandleFileService
         $splitFileService = new SplitFileService($file);
         $schools = $splitFileService->getSplitedSchools();
 
+        $this->validateFile($schools->current());
+
         foreach ($schools as $school) {
             $this->createImportProcess($school);
         }
@@ -81,5 +83,17 @@ class HandleFileService
         $firstJob->chain($this->jobs);
 
         app(Dispatcher::class)->dispatch($firstJob);
+    }
+
+    private function validateFile($school)
+    {
+        $serviceYear = $this->yearImportService->getYear();
+        $line = explode($this->yearImportService::DELIMITER, $school[0]);
+
+        $fileYear = \DateTime::createFromFormat('d/m/Y', $line[3])->format('Y');
+
+        if ($serviceYear != $fileYear) {
+            throw new InvalidFileYear($fileYear, $serviceYear);
+        }
     }
 }

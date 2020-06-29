@@ -1589,10 +1589,7 @@ class indice extends clsCadastro
                     $obj->educacao_indigena = $this->educacao_indigena;
                     $obj->lingua_ministrada = $this->lingua_ministrada;
                     $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-                    $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
-                    $obj->abre_final_semana = $this->abre_final_semana;
                     $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
-                    $obj->proposta_pedagogica = $this->proposta_pedagogica;
                     $obj->equipamentos = $equipamentos;
                     $obj->uso_internet = $uso_internet;
                     $obj->rede_local = $rede_local;
@@ -1738,10 +1735,7 @@ class indice extends clsCadastro
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
             $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-            $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
-            $obj->abre_final_semana = $this->abre_final_semana;
             $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
-            $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->equipamentos = $equipamentos;
             $obj->uso_internet = $uso_internet;
             $obj->rede_local = $rede_local;
@@ -1936,10 +1930,7 @@ class indice extends clsCadastro
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
             $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-            $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
-            $obj->abre_final_semana = $this->abre_final_semana;
             $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
-            $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->equipamentos = $equipamentos;
             $obj->uso_internet = $uso_internet;
             $obj->rede_local = $rede_local;
@@ -2031,10 +2022,7 @@ class indice extends clsCadastro
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
             $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-            $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
-            $obj->abre_final_semana = $this->abre_final_semana;
             $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
-            $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->equipamentos = $equipamentos;
             $obj->uso_internet = $uso_internet;
             $obj->rede_local = $rede_local;
