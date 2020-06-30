@@ -18,7 +18,7 @@ class CreateReleasePeriodSchoolsTable extends Migration
             $table->integer('school_id');
             $table->integer('release_period_id');
 
-            $table->foreign('release_period_id')->references('id')->on('release_period');
+            $table->foreign('release_period_id')->references('id')->on('release_periods');
         });
     }
 
