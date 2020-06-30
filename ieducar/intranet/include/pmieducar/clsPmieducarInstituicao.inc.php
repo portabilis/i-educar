@@ -377,9 +377,9 @@ class clsPmieducarInstituicao extends Model
             }
 
             if (is_string($this->nm_instituicao)) {
-                $nm_instituicao = $db->escapeString($this->nm_instituicao);
+                $instituicao = $db->escapeString($this->nm_instituicao);
                 $campos .= "{$gruda}nm_instituicao";
-                $valores .= "{$gruda}'{$nm_instituicao}'";
+                $valores .= "{$gruda}'{$instituicao}'";
                 $gruda = ', ';
             }
 
@@ -774,8 +774,8 @@ class clsPmieducarInstituicao extends Model
             }
 
             if (is_string($this->nm_instituicao)) {
-                $nm_instituicao = $db->escapeString($this->nm_instituicao);
-                $set .= "{$gruda}nm_instituicao = '{$nm_instituicao}'";
+                $instituicao = $db->escapeString($this->nm_instituicao);
+                $set .= "{$gruda}nm_instituicao = '{$instituicao}'";
                 $gruda = ', ';
             }
 
