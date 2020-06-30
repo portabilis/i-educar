@@ -72,8 +72,9 @@ class clsModulesEmpresaTransporteEscolar extends Model
             }
 
             if (is_string($this->observacao)) {
+                $observacao = $db->escapeString($this->observacao);
                 $campos .= "{$gruda}observacao";
-                $valores .= "{$gruda}'{$this->observacao}'";
+                $valores .= "{$gruda}'{$observacao}'";
                 $gruda = ', ';
             }
 
@@ -115,7 +116,8 @@ class clsModulesEmpresaTransporteEscolar extends Model
             }
 
             if (is_string($this->observacao)) {
-                $set .= "{$gruda}observacao = '{$this->observacao}'";
+                $observacao = $db->escapeString($this->observacao);
+                $set .= "{$gruda}observacao = '{$observacao}'";
                 $gruda = ', ';
             }
             if ($set) {
@@ -143,6 +145,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
         $nm_idpes = null,
         $nm_resp_idpes = null
     ) {
+        $db = new clsBanco();
         $sql = "SELECT {$this->_campos_lista}, (
           SELECT
             nome
@@ -178,6 +181,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
         }
 
         if (is_string($nm_idpes)) {
+            $nome_idpes = $db->escapeString($nm_idpes);
             $filtros .= "
         {$whereAnd} exists (
           SELECT
@@ -186,24 +190,15 @@ class clsModulesEmpresaTransporteEscolar extends Model
             cadastro.pessoa
           WHERE
             cadastro.pessoa.idpes = ref_idpes
-            AND translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nm_idpes}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
+            AND unaccent(nome) ILIKE unaccent('%{$nome_idpes}%')
         )";
 
             $whereAnd = ' AND ';
         }
 
         if (is_string($nm_resp_idpes)) {
-            $filtros .= "
-        {$whereAnd} exists (
-          SELECT
-            1
-          FROM
-            cadastro.pessoa
-          WHERE
-            cadastro.pessoa.idpes = ref_resp_idpes
-            AND translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nm_resp_idpes}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
-        )";
-
+            $nome_resp_idpes = $db->escapeString($nm_resp_idpes);
+            $filtros .= "{$whereAnd} exists(SELECT 1 FROM cadastro.pessoa WHERE unaccent(nome) ILIKE unaccent('%{$nome_resp_idpes}%'))";
             $whereAnd = ' AND ';
         }
 

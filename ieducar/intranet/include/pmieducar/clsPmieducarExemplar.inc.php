@@ -476,6 +476,8 @@ class clsPmieducarExemplar extends Model
      */
     public function lista_com_acervos($int_cod_exemplar = null, $int_ref_cod_fonte = null, $int_ref_cod_motivo_baixa = null, $int_ref_cod_acervo = null, $int_ref_cod_situacao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_permite_emprestimo = null, $int_preco = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $date_data_aquisicao_ini = null, $date_data_aquisicao_fim = null, $int_ref_exemplar_tipo = null, $str_titulo_livro = null, $int_ref_cod_biblioteca = null, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $int_ref_cod_acervo_colecao = null, $int_ref_cod_acervo_editora = null, $tombo)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista}, a.ref_cod_biblioteca, a.titulo FROM {$this->_tabela} e, {$this->_schema}acervo a, {$this->_schema}biblioteca b";
 
         $whereAnd = ' AND';
@@ -549,7 +551,8 @@ class clsPmieducarExemplar extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_titulo_livro)) {
-            $filtros .= "{$whereAnd} (a.titulo) LIKE ('%{$str_titulo_livro}%')";
+            $titulo_livro = $db->escapeString($str_titulo_livro);
+            $filtros .= "{$whereAnd} (a.titulo) LIKE ('%{$titulo_livro}%')";
             $whereAnd = ' AND ';
         }
 
@@ -603,7 +606,6 @@ class clsPmieducarExemplar extends Model
          * FIM  - PESQUISAS EXTRAS
          */
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

@@ -177,8 +177,9 @@ class clsPmieducarHistoricoEscolar extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_serie)) {
+                $serie = $db->escapeString($this->nm_serie);
                 $campos .= "{$gruda}nm_serie";
-                $valores .= "{$gruda}'{$this->nm_serie}'";
+                $valores .= "{$gruda}'{$serie}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->ref_cod_instituicao)) {
@@ -225,27 +226,28 @@ class clsPmieducarHistoricoEscolar extends Model
                 $valores .= "{$gruda}null";
                 $gruda = ', ';
             }
-            $this->escola = addslashes($this->escola);
             if (is_string($this->escola)) {
+                $escola = $db->escapeString($this->escola);
                 $campos .= "{$gruda}escola";
-                $valores .= "{$gruda}E'{$this->escola}'";
+                $valores .= "{$gruda}E'{$escola}'";
                 $gruda = ', ';
             }
-            $this->escola_cidade = addslashes($this->escola_cidade);
             if (is_string($this->escola_cidade)) {
+                $escola_cidade = $db->escapeString($this->escola_cidade);
                 $campos .= "{$gruda}escola_cidade";
-                $valores .= "{$gruda}E'{$this->escola_cidade}'";
+                $valores .= "{$gruda}E'{$escola_cidade}'";
                 $gruda = ', ';
             }
             if (is_string($this->escola_uf)) {
+                $escola_uf = $db->escapeString($this->escola_uf);
                 $campos .= "{$gruda}escola_uf";
-                $valores .= "{$gruda}'{$this->escola_uf}'";
+                $valores .= "{$gruda}'{$escola_uf}'";
                 $gruda = ', ';
             }
-            $this->observacao = addslashes($this->observacao);
             if (is_string($this->observacao)) {
+                $observacao = $db->escapeString($this->observacao);
                 $campos .= "{$gruda}observacao";
-                $valores .= "{$gruda}E'{$this->observacao}'";
+                $valores .= "{$gruda}E'{$observacao}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->aprovado)) {
@@ -267,28 +269,28 @@ class clsPmieducarHistoricoEscolar extends Model
                 $valores .= "{$gruda}null";
                 $gruda = ', ';
             }
-            $this->registro = addslashes($this->registro);
             if (is_string($this->registro)) {
+                $registro = $db->escapeString($this->registro);
                 $campos .= "{$gruda}registro";
-                $valores .= "{$gruda}E'{$this->registro}'";
+                $valores .= "{$gruda}E'{$registro}'";
                 $gruda = ', ';
             }
-            $this->livro = addslashes($this->livro);
             if (is_string($this->livro)) {
+                $livro = $db->escapeString($this->livro);
                 $campos .= "{$gruda}livro";
-                $valores .= "{$gruda}E'{$this->livro}'";
+                $valores .= "{$gruda}E'{$livro}'";
                 $gruda = ', ';
             }
-            $this->folha = addslashes($this->folha);
             if (is_string($this->folha)) {
+                $folha = $db->escapeString($this->folha);
                 $campos .= "{$gruda}folha";
-                $valores .= "{$gruda}E'{$this->folha}'";
+                $valores .= "{$gruda}E'{$folha}'";
                 $gruda = ', ';
             }
-            $this->nm_curso = addslashes($this->nm_curso);
             if (is_string($this->nm_curso)) {
+                $nm_curso = $db->escapeString($this->nm_curso);
                 $campos .= "{$gruda}nm_curso";
-                $valores .= "{$gruda}E'{$this->nm_curso}'";
+                $valores .= "{$gruda}E'{$nm_curso}'";
                 $gruda = ', ';
             }
 
@@ -373,7 +375,8 @@ class clsPmieducarHistoricoEscolar extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_serie)) {
-                $set .= "{$gruda}nm_serie = '{$this->nm_serie}'";
+                $nm_serie = $db->escapeString($this->nm_serie);
+                $set .= "{$gruda}nm_serie = '{$nm_serie}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->ref_cod_instituicao)) {
@@ -410,23 +413,24 @@ class clsPmieducarHistoricoEscolar extends Model
                 $set .= "{$gruda}dias_letivos = NULL";
                 $gruda = ', ';
             }
-            $this->escola = addslashes($this->escola);
             if (is_string($this->escola)) {
-                $set .= "{$gruda}escola = E'{$this->escola}'";
+                $escola = $db->escapeString($this->escola);
+                $set .= "{$gruda}escola = E'{$escola}'";
                 $gruda = ', ';
             }
-            $this->escola_cidade = addslashes($this->escola_cidade);
             if (is_string($this->escola_cidade)) {
-                $set .= "{$gruda}escola_cidade = E'{$this->escola_cidade}'";
+                $escola_cidade = $db->escapeString($this->escola_cidade);
+                $set .= "{$gruda}escola_cidade = E'{$escola_cidade}'";
                 $gruda = ', ';
             }
             if (is_string($this->escola_uf)) {
-                $set .= "{$gruda}escola_uf = '{$this->escola_uf}'";
+                $escola_uf = $db->escapeString($this->escola_uf);
+                $set .= "{$gruda}escola_uf = '{$escola_uf}'";
                 $gruda = ', ';
             }
-            $this->observacao = addslashes($this->observacao);
             if (is_string($this->observacao)) {
-                $set .= "{$gruda}observacao = E'{$this->observacao}'";
+                $observacao = $db->escapeString($this->observacao);
+                $set .= "{$gruda}observacao = E'{$observacao}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->aprovado)) {
@@ -457,24 +461,24 @@ class clsPmieducarHistoricoEscolar extends Model
                 $set .= "{$gruda}faltas_globalizadas = NULL";
                 $gruda = ', ';
             }
-            $this->registro = addslashes($this->registro);
             if (is_string($this->registro)) {
-                $set .= "{$gruda}registro = E'{$this->registro}'";
+                $registro = $db->escapeString($this->registro);
+                $set .= "{$gruda}registro = E'{$registro}'";
                 $gruda = ', ';
             }
-            $this->livro = addslashes($this->livro);
             if (is_string($this->livro)) {
-                $set .= "{$gruda}livro = E'{$this->livro}'";
+                $livro = $db->escapeString($this->livro);
+                $set .= "{$gruda}livro = E'{$livro}'";
                 $gruda = ', ';
             }
-            $this->folha = addslashes($this->folha);
             if (is_string($this->folha)) {
-                $set .= "{$gruda}folha = E'{$this->folha}'";
+                $folha = $db->escapeString($this->folha);
+                $set .= "{$gruda}folha = E'{$folha}'";
                 $gruda = ', ';
             }
-            $this->nm_curso = addslashes($this->nm_curso);
             if (is_string($this->nm_curso)) {
-                $set .= "{$gruda}nm_curso = E'{$this->nm_curso}'";
+                $nm_curso = $db->escapeString($this->nm_curso);
+                $set .= "{$gruda}nm_curso = E'{$nm_curso}'";
                 $gruda = ', ';
             }
 

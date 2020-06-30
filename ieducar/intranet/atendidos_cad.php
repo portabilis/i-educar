@@ -1214,6 +1214,7 @@ class indice extends clsCadastro
 
     protected function createOrUpdatePessoaFisica($pessoaId)
     {
+        $db = new clsBanco();
         $fisica = new clsFisica();
         $fisica->idpes = $pessoaId;
         $fisica->data_nasc = Portabilis_Date_Utils::brToPgSQL($this->data_nasc);
@@ -1228,11 +1229,11 @@ class indice extends clsCadastro
         $fisica->idmun_nascimento = $_REQUEST['naturalidade_id'] ?: 'NULL';
         $fisica->sus = $this->sus;
         $fisica->nis_pis_pasep = $this->nis_pis_pasep ? $this->nis_pis_pasep : 'NULL';
-        $fisica->ocupacao = $this->ocupacao;
-        $fisica->empresa = $this->empresa;
+        $fisica->ocupacao = $db->escapeString($this->ocupacao);
+        $fisica->empresa = $db->escapeString($this->empresa);
         $fisica->ddd_telefone_empresa = $this->ddd_telefone_empresa;
         $fisica->telefone_empresa = $this->telefone_empresa;
-        $fisica->pessoa_contato = $this->pessoa_contato;
+        $fisica->pessoa_contato = $db->escapeString($this->pessoa_contato);
         $this->renda_mensal = str_replace('.', '', $this->renda_mensal);
         $this->renda_mensal = str_replace(',', '.', $this->renda_mensal);
         $fisica->renda_mensal = $this->renda_mensal;
