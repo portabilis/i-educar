@@ -65,28 +65,50 @@
                 </td>
             </tr>
 
-            <tr id="tr_nm_data" class="field-transfer">
-                <td class="formlttd" valign="top">
-                    <span class="form">Data de início</span>
-                </td>
-                <td class="formlttd" valign="top">
-                   <span class="form">
-                       <input onkeypress="formataData(this, event);" type="text" name="start_date[]"
-                              value="{{ old('data_entrada_antiga', Request::get('data_entrada_antiga')) }}"
-                              size="9" maxlength="10" placeholder="dd/mm/aaaa">
-                    </span>
-                </td>
-            </tr>
-            <tr id="tr_nm_data" class="field-transfer">
-                <td class="formlttd" valign="top">
-                    <span class="form">Data fim</span>
-                </td>
-                <td class="formlttd" valign="top">
-                   <span class="form">
-                       <input onkeypress="formataData(this, event);" type="text" name="end_date[]"
-                              value="{{ old('data_entrada_antiga', Request::get('data_entrada_antiga')) }}"
-                              size="9" maxlength="10" placeholder="dd/mm/aaaa">
-                    </span>
+            <tr>
+                <td id="tr_nm_data" valign="top" align="center" colspan="2">
+                    <table cellspacing="0" id="dates-table" class="tabela-adicao" cellpadding="2"
+                           style="margin:10px 0px 10px 0px;">
+                        <tbody>
+                        <tr align="center" id="tr_gestores_tit" style="font-weight:bold" class="formdktd">
+                            <td colspan="6">Datas</td>
+                        </tr>
+                        <tr align="center" style="font-weight:bold" id="tr_gestores_cab">
+                            <td class="formmdtd" align="center"><span class="form">Data inicial</span>
+                            </td>
+                            <td class="formmdtd" align="center"><span class="form">Data final</span>
+                            </td>
+                            <td class="formmdtd" align="center"><span class="form">Ação</span></td>
+                        </tr>
+                        <tr class="formmdtd dd tr-dates">
+                            <td class="formmdtd dd" valign="top">
+                                <input class="geral" onkeypress="formataData(this, event);" type="text"
+                                       name="start_date[]"
+                                       value="{{ old('data_entrada_antiga', Request::get('data_entrada_antiga')) }}"
+                                       size="9" maxlength="10" placeholder="dd/mm/aaaa">
+                            <td class="formmdtd dd" valign="top">
+                                <input class="geral" onkeypress="formataData(this, event);" type="text"
+                                       name="end_date[]"
+                                       value="{{ old('data_entrada_antiga', Request::get('data_entrada_antiga')) }}"
+                                       size="9" maxlength="10" placeholder="dd/mm/aaaa">
+                            </td>
+                            <td align="center">
+                                <a href="javascript:void(0)" style="outline: none;" >
+                                    <img src="/intranet/imagens/banco_imagens/excluirrr.png" border="0" alt="Excluir" class="btn-remove"></a>
+                            </td>
+                        </tr>
+                        <tr></tr>
+                        <tr id="adicionar_linha" style="background-color:#f5f9fd;">
+                            <td colspan="6" align="left" style="padding-top: 17px !important;">
+                                <a style="color: #47728f; text-decoration:none;" href="javascript:void(0)"
+                                   id="btn-add-row"><img
+                                        src="/intranet/imagens/nvp_bot_novo.png" border="0" alt="incluir"
+                                        style="float:left; margin:5px;">
+                                    <p style="padding:9px; margin:0;">ADICIONAR NOVO</p>
+                                </a>
+                        </tr>
+                        </tbody>
+                    </table>
                 </td>
             </tr>
             </tbody>
@@ -124,6 +146,19 @@
                     }));
                 }
             })
+
+            $('#btn-add-row').click(function () {
+                var $lastRow = $('.tr-dates:last');
+                var $newRow = $lastRow.clone();
+                $newRow.find(':text').val('');
+                $lastRow.after($newRow);
+            });
+
+            $('#dates-table').on('click', '.btn-remove', function () {
+                if ($('.tr-dates').length > 1) {
+                    $(this).closest('tr').remove();
+                }
+            });
         })(jQuery);
     </script>
     <script type="text/javascript"
