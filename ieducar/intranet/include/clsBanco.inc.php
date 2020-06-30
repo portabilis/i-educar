@@ -98,9 +98,6 @@ class clsBanco extends clsBancoSQL_
     }
     public function escapeString($string)
     {
-        if ($string == "'"){
-
-        }
         return pg_escape_string($string);
     }
 }
