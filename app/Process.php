@@ -37,4 +37,5 @@ class Process
     const DATA_EXPORT = 1022;
     const UPDATE_REGISTRATION_DATE = 1023;
     const RELEASE_PERIOD = 999848;
+    const POST_OUT_PERIOD = 999849;
 }
