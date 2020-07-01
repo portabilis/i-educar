@@ -18,6 +18,7 @@ class ChangeMenuReleaseLock extends Migration
             ->update([
                 'title' => 'Período de lançamento de notas e faltas por etapa',
                 'description' => 'Período de lançamento de notas e faltas por etapa',
+                'link' => '/periodo-lancamento',
             ]);
     }
 
@@ -33,6 +34,7 @@ class ChangeMenuReleaseLock extends Migration
             ->update([
                 'title' => 'Bloqueio de lançamento de notas e faltas',
                 'description' => 'Bloqueio de lançamento de notas e faltas',
+                'link' => '/intranet/educar_bloqueio_lancamento_faltas_notas_lst.php',
             ]);
     }
 }
