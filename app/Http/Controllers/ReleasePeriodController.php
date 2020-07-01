@@ -3,16 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ReleasePeriodRequest;
+use App\Models\LegacyInstitution;
 use App\Models\LegacyStageType;
 use App\Models\ReleasePeriod;
 use App\Models\ReleasePeriodDate;
 use App\Process;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class ReleasePeriodController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return View
+     */
     public function index(Request $request)
     {
         $this->breadcrumb('Período de lançamento de notas e faltas por etapa', [
@@ -39,6 +45,7 @@ class ReleasePeriodController extends Controller
     }
 
     /**
+     * @param ReleasePeriod $releasePeriod
      * @return View
      */
     public function form(ReleasePeriod $releasePeriod)
@@ -49,9 +56,11 @@ class ReleasePeriodController extends Controller
 
         $this->menu(Process::RELEASE_PERIOD);
 
+        $this->fillData($releasePeriod);
+
         return view('release-period.form', [
                 'stageTypes' => LegacyStageType::active()->get()->keyBy('cod_modulo')->toJson(),
-                'releasePeriod' => $releasePeriod
+                'releasePeriod' => $releasePeriod,
             ]
         );
     }
@@ -82,6 +91,71 @@ class ReleasePeriodController extends Controller
 
     /**
      * @param ReleasePeriod $releasePeriod
+     * @return View
+     */
+    public function show(ReleasePeriod $releasePeriod)
+    {
+        $this->breadcrumb('Período de lançamento de notas e faltas por etapa', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
+
+        $this->menu(Process::RELEASE_PERIOD);
+
+        return view('release-period.show', ['releasePeriod' => $releasePeriod]);
+    }
+
+    /**
+     * @param ReleasePeriod $releasePeriod
+     * @param ReleasePeriodRequest $request
+     * @return RedirectResponse
+     */
+    public function update(ReleasePeriod $releasePeriod, ReleasePeriodRequest $request)
+    {
+        DB::beginTransaction();
+
+        $releasePeriod->schools()->sync([]);
+        $releasePeriod->periodDates()->delete();
+
+        $releasePeriod->update([
+            'year' => $request->get('ano'),
+            'stage_type_id' => $request->get('stage_type'),
+            'stage' => $request->get('stage'),
+        ]);
+
+        $this->createReleasePeriodSchools($releasePeriod, $request->get('escola'));
+        $this->createReleasePeriodDates($releasePeriod, $request->get('start_date'), $request->get('end_date'));
+
+        DB::commit();
+
+        return redirect()
+            ->route('release-period.index')
+            ->with('success', 'Período atualizado com sucesso.');
+    }
+
+    /**
+     * Popula os campos
+     *
+     * @param ReleasePeriod $releasePeriod
+     */
+    private function fillData(ReleasePeriod $releasePeriod)
+    {
+        if (!$releasePeriod->exists) {
+            return;
+        }
+
+        $schools = $releasePeriod->schools->pluck('cod_escola')->toArray();
+
+        request()->request->add([
+            'ano' => $releasePeriod->year,
+            'ref_cod_instituicao' => app(LegacyInstitution::class)->getKey(),
+            'stage_type' => $releasePeriod->stage_type_id,
+            'stage' => $releasePeriod->stage,
+            'escola' => $schools,
+        ]);
+    }
+
+    /**
+     * @param ReleasePeriod $releasePeriod
      * @param $schools
      */
     private function createReleasePeriodSchools(ReleasePeriod $releasePeriod, $schools)
@@ -106,19 +180,5 @@ class ReleasePeriodController extends Controller
                 'end_date' => \DateTime::createFromFormat('d/m/Y', $endDate),
             ]);
         }
-    }
-
-    /**
-     * @param ReleasePeriod $releasePeriod
-     */
-    public function show(ReleasePeriod $releasePeriod)
-    {
-        $this->breadcrumb('Período de lançamento de notas e faltas por etapa', [
-            url('intranet/educar_index.php') => 'Escola',
-        ]);
-
-        $this->menu(Process::RELEASE_PERIOD);
-
-        return view('release-period.show', ['releasePeriod' => $releasePeriod]);
     }
 }

@@ -5,7 +5,9 @@
 @endpush
 
 @section('content')
-    <form id="formcadastro" action="" method="post">
+    <form id="formcadastro"
+          action="@if($releasePeriod->exists) {{ route('release-period.update', ['releasePeriod' => $releasePeriod->id]) }} @else {{ route('release-period.create') }}@endif"
+          method="post">
         <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
             <tbody>
             <tr>
@@ -80,24 +82,41 @@
                             </td>
                             <td class="formmdtd" align="center"><span class="form">Ação</span></td>
                         </tr>
-                        <tr class="formmdtd dd tr-dates">
-                            <td class="formmdtd dd" valign="top">
-                                <input class="geral" onkeypress="formataData(this, event);" type="text"
-                                       name="start_date[]"
-                                       value="{{ old('data_entrada_antiga', Request::get('data_entrada_antiga')) }}"
-                                       size="9" maxlength="10" placeholder="dd/mm/aaaa">
-                            <td class="formmdtd dd" valign="top">
-                                <input class="geral" onkeypress="formataData(this, event);" type="text"
-                                       name="end_date[]"
-                                       value="{{ old('data_entrada_antiga', Request::get('data_entrada_antiga')) }}"
-                                       size="9" maxlength="10" placeholder="dd/mm/aaaa">
-                            </td>
-                            <td align="center">
-                                <a href="javascript:void(0)" style="outline: none;">
-                                    <img src="/intranet/imagens/banco_imagens/excluirrr.png" border="0" alt="Excluir"
-                                         class="btn-remove"></a>
-                            </td>
-                        </tr>
+                        @if($releasePeriod->exists)
+                            @foreach($releasePeriod->periodDates as $date)
+                                <tr class="formmdtd dd tr-dates">
+                                    <td class="formmdtd dd" valign="top">
+                                        <input class="geral" onkeypress="formataData(this, event);" type="text" name="start_date[]"
+                                               value="{{ $date->start_date->format('d/m/Y') }}"
+                                               size="9" maxlength="10" placeholder="dd/mm/aaaa">
+                                    <td class="formmdtd dd" valign="top">
+                                        <input class="geral" onkeypress="formataData(this, event);" type="text" name="end_date[]"
+                                               value="{{ $date->end_date->format('d/m/Y') }}"
+                                               size="9" maxlength="10" placeholder="dd/mm/aaaa">
+                                    </td>
+                                    <td align="center">
+                                        <a href="javascript:void(0)" style="outline: none;">
+                                            <img src="/intranet/imagens/banco_imagens/excluirrr.png" border="0" alt="Excluir"
+                                                 class="btn-remove"></a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr class="formmdtd dd tr-dates">
+                                <td class="formmdtd dd" valign="top">
+                                    <input class="geral" onkeypress="formataData(this, event);" type="text" name="start_date[]"
+                                           size="9" maxlength="10" placeholder="dd/mm/aaaa">
+                                <td class="formmdtd dd" valign="top">
+                                    <input class="geral" onkeypress="formataData(this, event);" type="text" name="end_date[]"
+                                           size="9" maxlength="10" placeholder="dd/mm/aaaa">
+                                </td>
+                                <td align="center">
+                                    <a href="javascript:void(0)" style="outline: none;">
+                                        <img src="/intranet/imagens/banco_imagens/excluirrr.png" border="0" alt="Excluir"
+                                             class="btn-remove"></a>
+                                </td>
+                            </tr>
+                        @endif
                         <tr></tr>
                         <tr id="adicionar_linha" style="background-color:#f5f9fd;">
                             <td colspan="6" align="left" style="padding-top: 17px !important;">
@@ -152,6 +171,10 @@
                         text: i + 'º ' + stageType.nm_tipo
                     }));
                 }
+
+                @if(old('stage', Request::get('stage')))
+                    $('#stage').val('{{old('stage', Request::get('stage'))}}');
+                @endif
             })
 
             $('#btn-add-row').click(function () {
@@ -166,6 +189,12 @@
                     $(this).closest('tr').remove();
                 }
             });
+
+            @if($releasePeriod->exists)
+                $(document).ready(function () {
+
+                });
+            @endif
         })(jQuery);
     </script>
     <script type="text/javascript"

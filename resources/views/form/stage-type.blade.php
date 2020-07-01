@@ -13,6 +13,7 @@
             (function ($) {
                 $(document).ready(function () {
                     $j('#stage_type').val({{old('stage_type', Request::get('stage_type'))}})
+                    $('#stage_type').trigger('change');
                 });
             })(jQuery);
         </script>

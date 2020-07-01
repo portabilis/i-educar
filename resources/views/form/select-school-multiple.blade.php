@@ -31,7 +31,10 @@
         <script>
             (function($){
                 $(document).ready(function() {
-
+                    setTimeout(function() {
+                        $('#escola').val([{{implode(',',old('escola', Request::get('escola')))}}]);
+                        $('#escola').trigger('chosen:updated');
+                    }, 500);
                 });
             })(jQuery);
         </script>
