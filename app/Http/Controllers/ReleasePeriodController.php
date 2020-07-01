@@ -41,7 +41,7 @@ class ReleasePeriodController extends Controller
     /**
      * @return View
      */
-    public function new()
+    public function form(ReleasePeriod $releasePeriod)
     {
         $this->breadcrumb('Período de lançamento de notas e faltas por etapa', [
             url('intranet/educar_index.php') => 'Escola',
@@ -49,7 +49,11 @@ class ReleasePeriodController extends Controller
 
         $this->menu(Process::RELEASE_PERIOD);
 
-        return view('release-period.new', ['stageTypes' => LegacyStageType::active()->get()->keyBy('cod_modulo')->toJson()]);
+        return view('release-period.form', [
+                'stageTypes' => LegacyStageType::active()->get()->keyBy('cod_modulo')->toJson(),
+                'releasePeriod' => $releasePeriod
+            ]
+        );
     }
 
     /**

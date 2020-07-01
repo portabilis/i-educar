@@ -80,7 +80,7 @@
     </div>
 
     <div style="text-align: center">
-        <a href="{{url()->route('release-period.new')}}">
+        <a href="{{url()->route('release-period.form')}}">
             <button class="btn-green" type="button">Novo</button>
         </a>
     </div>

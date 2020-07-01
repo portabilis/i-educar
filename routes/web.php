@@ -123,7 +123,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->name('update-registration-date.index');
     Route::post('/atualiza-data-entrada', 'UpdateRegistrationDateController@updateStatus')->name('update-registration-date.update-date');
 
-    Route::get('/periodo-lancamento/novo', 'ReleasePeriodController@new')->name('release-period.new');
+    Route::get('/periodo-lancamento/fomulario/{releasePeriod?}', 'ReleasePeriodController@form')->name('release-period.form');
     Route::post('/periodo-lancamento/novo', 'ReleasePeriodController@create')->name('release-period.create');
     Route::get('/periodo-lancamento', 'ReleasePeriodController@index')->name('release-period.index');
     Route::get('/periodo-lancamento/{releasePeriod}', 'ReleasePeriodController@show')->name('release-period.show');

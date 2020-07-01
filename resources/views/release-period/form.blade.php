@@ -93,8 +93,9 @@
                                        size="9" maxlength="10" placeholder="dd/mm/aaaa">
                             </td>
                             <td align="center">
-                                <a href="javascript:void(0)" style="outline: none;" >
-                                    <img src="/intranet/imagens/banco_imagens/excluirrr.png" border="0" alt="Excluir" class="btn-remove"></a>
+                                <a href="javascript:void(0)" style="outline: none;">
+                                    <img src="/intranet/imagens/banco_imagens/excluirrr.png" border="0" alt="Excluir"
+                                         class="btn-remove"></a>
                             </td>
                         </tr>
                         <tr></tr>
@@ -113,8 +114,14 @@
             </tr>
             </tbody>
         </table>
+
+        <div class="separator"></div>
+
         <div style="text-align: center">
             <button class="btn-green" type="submit">Salvar</button>
+            <a href="{{ route('release-period.index') }}">
+                <button class="btn" type="button">Cancelar</button>
+            </a>
         </div>
     </form>
 @endsection
