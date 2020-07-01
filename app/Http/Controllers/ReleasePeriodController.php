@@ -133,6 +133,25 @@ class ReleasePeriodController extends Controller
     }
 
     /**
+     * @param ReleasePeriod $releasePeriod
+     * @return RedirectResponse
+     */
+    public function delete(ReleasePeriod $releasePeriod)
+    {
+        DB::beginTransaction();
+
+        $releasePeriod->schools()->sync([]);
+        $releasePeriod->periodDates()->delete();
+        $releasePeriod->delete();
+
+        DB::commit();
+
+        return redirect()
+            ->route('release-period.index')
+            ->with('success', 'Período excluído com sucesso.');
+    }
+
+    /**
      * Popula os campos
      *
      * @param ReleasePeriod $releasePeriod

@@ -141,6 +141,11 @@
             <a href="{{ route('release-period.index') }}">
                 <button class="btn" type="button">Cancelar</button>
             </a>
+            @if($releasePeriod->exists)
+                <a href="javascript:confirmDelete()">
+                    <button class="btn" type="button">Excluir</button>
+                </a>
+            @endif
         </div>
     </form>
 @endsection
@@ -196,6 +201,12 @@
                 });
             @endif
         })(jQuery);
+
+        function confirmDelete() {
+            if (confirm('Excluir registro?')) {
+                window.location.href = '{{ route('release-period.delete', ['releasePeriod' => $releasePeriod]) }}';
+            }
+        }
     </script>
     <script type="text/javascript"
             src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>

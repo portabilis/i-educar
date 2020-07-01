@@ -128,6 +128,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::post('/periodo-lancamento/atualizar/{releasePeriod}', 'ReleasePeriodController@update')->name('release-period.update');
     Route::get('/periodo-lancamento', 'ReleasePeriodController@index')->name('release-period.index');
     Route::get('/periodo-lancamento/{releasePeriod}', 'ReleasePeriodController@show')->name('release-period.show');
+    Route::get('/periodo-lancamento/excluir/{releasePeriod}', 'ReleasePeriodController@delete')->name('release-period.delete');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
