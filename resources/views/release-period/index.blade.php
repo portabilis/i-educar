@@ -15,7 +15,7 @@
                     </td>
                     <td class="formmdtd" align="center"><span class="form">Escola</span></td>
                 </tr>
-                <tr class="formmdtd dd tr-dates">
+                <tr class="formmdtd dd">
                     <td class="formmdtd dd" valign="top">
                         <input type="text" class="geral" name="ano" id="ano_busca" maxlength="4" value="{{old('ano', Request::get('ano', date('Y')))}}" size="4">
                     <td class="formmdtd dd" valign="top">

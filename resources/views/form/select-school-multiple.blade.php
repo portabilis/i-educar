@@ -34,7 +34,7 @@
                     setTimeout(function() {
                         $('#escola').val([{{implode(',',old('escola', Request::get('escola')))}}]);
                         $('#escola').trigger('chosen:updated');
-                    }, 500);
+                    }, 1000);
                 });
             })(jQuery);
         </script>
