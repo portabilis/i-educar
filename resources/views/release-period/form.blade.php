@@ -86,17 +86,20 @@
                             @foreach($releasePeriod->periodDates as $date)
                                 <tr class="formmdtd dd tr-dates">
                                     <td class="formmdtd dd" valign="top">
-                                        <input class="geral" onkeypress="formataData(this, event);" type="text" name="start_date[]"
+                                        <input class="geral" onkeypress="formataData(this, event);" type="text"
+                                               name="start_date[]"
                                                value="{{ $date->start_date->format('d/m/Y') }}"
                                                size="9" maxlength="10" placeholder="dd/mm/aaaa">
                                     <td class="formmdtd dd" valign="top">
-                                        <input class="geral" onkeypress="formataData(this, event);" type="text" name="end_date[]"
+                                        <input class="geral" onkeypress="formataData(this, event);" type="text"
+                                               name="end_date[]"
                                                value="{{ $date->end_date->format('d/m/Y') }}"
                                                size="9" maxlength="10" placeholder="dd/mm/aaaa">
                                     </td>
                                     <td align="center">
                                         <a href="javascript:void(0)" style="outline: none;">
-                                            <img src="/intranet/imagens/banco_imagens/excluirrr.png" border="0" alt="Excluir"
+                                            <img src="/intranet/imagens/banco_imagens/excluirrr.png" border="0"
+                                                 alt="Excluir"
                                                  class="btn-remove"></a>
                                     </td>
                                 </tr>
@@ -104,15 +107,18 @@
                         @else
                             <tr class="formmdtd dd tr-dates">
                                 <td class="formmdtd dd" valign="top">
-                                    <input class="geral" onkeypress="formataData(this, event);" type="text" name="start_date[]"
+                                    <input class="geral" onkeypress="formataData(this, event);" type="text"
+                                           name="start_date[]"
                                            size="9" maxlength="10" placeholder="dd/mm/aaaa">
                                 <td class="formmdtd dd" valign="top">
-                                    <input class="geral" onkeypress="formataData(this, event);" type="text" name="end_date[]"
+                                    <input class="geral" onkeypress="formataData(this, event);" type="text"
+                                           name="end_date[]"
                                            size="9" maxlength="10" placeholder="dd/mm/aaaa">
                                 </td>
                                 <td align="center">
                                     <a href="javascript:void(0)" style="outline: none;">
-                                        <img src="/intranet/imagens/banco_imagens/excluirrr.png" border="0" alt="Excluir"
+                                        <img src="/intranet/imagens/banco_imagens/excluirrr.png" border="0"
+                                             alt="Excluir"
                                              class="btn-remove"></a>
                                 </td>
                             </tr>
@@ -137,17 +143,22 @@
         <div class="separator"></div>
 
         <div style="text-align: center">
-            <button class="btn-green" type="submit">Salvar</button>
-            <a href="{{ route('release-period.index') }}">
-                <button class="btn" type="button">Cancelar</button>
-            </a>
+            <button class="btn" type="button" onclick="document.getElementById('formcadastro').reset();">Limpar campos</button>
+
             @if($releasePeriod->exists)
+                <button class="btn-green" type="submit">Editar</button>
                 <a href="javascript:confirmDelete()">
                     <button class="btn" type="button">Excluir</button>
                 </a>
+            @else
+                <button class="btn-green" type="submit">Criar novo</button>
             @endif
+
         </div>
     </form>
+
+    @include('release-period.index')
+
 @endsection
 
 @prepend('scripts')
@@ -178,7 +189,7 @@
                 }
 
                 @if(old('stage', Request::get('stage')))
-                    $('#stage').val('{{old('stage', Request::get('stage'))}}');
+                $('#stage').val('{{old('stage', Request::get('stage'))}}');
                 @endif
             })
 
@@ -196,9 +207,9 @@
             });
 
             @if($releasePeriod->exists)
-                $(document).ready(function () {
+            $(document).ready(function () {
 
-                });
+            });
             @endif
         })(jQuery);
 

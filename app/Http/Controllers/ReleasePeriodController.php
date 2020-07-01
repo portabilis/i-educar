@@ -8,6 +8,7 @@ use App\Models\LegacyStageType;
 use App\Models\ReleasePeriod;
 use App\Models\ReleasePeriodDate;
 use App\Process;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,21 +29,12 @@ class ReleasePeriodController extends Controller
 
         $this->menu(Process::RELEASE_PERIOD);
 
-        $query = ReleasePeriod::query();
-
-        $ano = $request->get('ano');
-        $query->when($ano, function ($query) use ($ano) {
-            $query->where('year', $ano);
-        });
-
-        $school = $request->get('ref_cod_escola');
-        $query->when($school, function ($query) use ($school) {
-            $query->whereHas('schools', function ($schoolsQuery) use ($school) {
-                $schoolsQuery->where('cod_escola', $school);
-            });
-        });
-
-        return view('release-period.index', ['releasePeriods' => $query->paginate(20)]);
+        return view('release-period.form', [
+                'stageTypes' => LegacyStageType::active()->get()->keyBy('cod_modulo')->toJson(),
+                'releasePeriod' => new ReleasePeriod(),
+                'data' => $this->applyFilters($request),
+            ]
+        );
     }
 
     /**
@@ -65,6 +57,7 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
         return view('release-period.form', [
                 'stageTypes' => LegacyStageType::active()->get()->keyBy('cod_modulo')->toJson(),
                 'releasePeriod' => $releasePeriod,
+                'data' => $this->applyFilters(request()),
             ]
         );
     }
@@ -203,5 +196,28 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
                 'end_date' => \DateTime::createFromFormat('d/m/Y', $endDate),
             ]);
         }
+    }
+
+    /**
+     * @param $request
+     * @return LengthAwarePaginator
+     */
+    private function applyFilters($request)
+    {
+        $query = ReleasePeriod::query();
+
+        $ano = $request->get('ano');
+        $query->when($ano, function ($query) use ($ano) {
+            $query->where('year', $ano);
+        });
+
+        $school = $request->get('ref_cod_escola');
+        $query->when($school, function ($query) use ($school) {
+            $query->whereHas('schools', function ($schoolsQuery) use ($school) {
+                $schoolsQuery->where('cod_escola', $school);
+            });
+        });
+
+        return $query->paginate(20);
     }
 }
