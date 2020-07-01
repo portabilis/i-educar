@@ -66,7 +66,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="4">Não foi encontrado nenhum log de unificação</td>
+                <td colspan="4">Não foi encontrado nenhum período de lançamento</td>
             </tr>
         @endforelse
 

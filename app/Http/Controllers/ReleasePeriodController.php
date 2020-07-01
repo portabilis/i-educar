@@ -11,6 +11,7 @@ use App\Process;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
 class ReleasePeriodController extends Controller
@@ -57,6 +58,9 @@ class ReleasePeriodController extends Controller
         $this->menu(Process::RELEASE_PERIOD);
 
         $this->fillData($releasePeriod);
+
+        Session::flash('notice', '<b>Atenção!</b> Este recurso foi atualizado e agora funciona diferente!
+Cadastre os períodos que deseja liberar o lançamento de notas e faltas por etapa, podendo criar mais de 1 período de lançamento em todas as etapas');
 
         return view('release-period.form', [
                 'stageTypes' => LegacyStageType::active()->get()->keyBy('cod_modulo')->toJson(),
