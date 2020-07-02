@@ -355,7 +355,7 @@ SQL;
 
     public function getDataForRecord50($year, $school)
     {
-        $this->getBuilderForRecord50($year, $school)
+        return $this->getBuilderForRecord50($year, $school)
             ->get()
             ->toArray();
     }
