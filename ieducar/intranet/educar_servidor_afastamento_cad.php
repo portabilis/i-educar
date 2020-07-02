@@ -1,5 +1,8 @@
 <?php
 
+use App\Services\FileService;
+use App\Models\EmployeeWithdrawal;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -27,6 +30,7 @@ class indice extends clsCadastro
     /**
      * Atributos de mapeamento dos campos de banco de dados
      */
+    public $id = null;
     public $ref_cod_servidor = null;
     public $sequencial = null;
     public $ref_cod_instituicao = null;
@@ -140,6 +144,8 @@ class indice extends clsCadastro
      */
     public function Gerar()
     {
+        $this->form_enctype = ' enctype=\'multipart/form-data\'';
+        $this->campoOculto('id', $this->id);
         $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
         $this->campoOculto('sequencial', $this->sequencial);
         $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
@@ -393,6 +399,10 @@ class indice extends clsCadastro
                 }
             }
         }
+
+        $fileService = new FileService;
+        $files = $fileService->getFiles(EmployeeWithdrawal::class, $this->id);
+        $this->addHtml(view('uploads.upload', ['files' => $files])->render());
     }
 
     public function Novo()
@@ -502,6 +512,15 @@ class indice extends clsCadastro
             return false;
         }
 
+        $fileService = new FileService;
+
+        if ($this->file_url) {
+            $newFiles = json_decode($this->file_url);
+            foreach ($newFiles as $file) {
+                $fileService->saveFile($file->url, 'file', EmployeeWithdrawal::class , $cadastrou);
+            }
+        }
+
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
         $this->simpleRedirect("educar_servidor_det.php?cod_servidor={$this->ref_cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
     }
@@ -587,6 +606,20 @@ class indice extends clsCadastro
                         }
                     }
                 }
+            }
+
+            $fileService = new FileService;
+
+            if ($this->file_url) {
+                $newFiles = json_decode($this->file_url);
+                foreach ($newFiles as $file) {
+                    $fileService->saveFile($file->url, 'file', EmployeeWithdrawal::class , $this->id);
+                }
+            }
+
+            if ($this->file_url_deleted) {
+                $deletedFiles = explode(',', $this->file_url_deleted);
+                $fileService->deleteFiles($deletedFiles);
             }
 
             $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
