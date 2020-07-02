@@ -120,11 +120,11 @@ function uploadFiles(files) {
 
         var data = new FormData();
         $j.each(files, function (key, value) {
-            data.append(key, value);
+            data.append('file', value);
         });
 
         $j.ajax({
-            url: '/intranet/upload.php?files',
+            url: '/upload?file=',
             type: 'POST',
             data: data,
             cache: false,
@@ -142,9 +142,12 @@ function uploadFiles(files) {
                 }
 
             },
-            error: function () {
+            error: function (dataResponse) {
+                errorMessage = $j.parseJSON(dataResponse.responseText).errors.file;
                 $j('#file').val("").addClass('error');
-                messageUtils.error('Não foi possível enviar o arquivo');
+                errorMessage.each(function(message) {
+                    messageUtils.error(message);
+                });
             },
             complete: function () {
                 $j('#file').removeAttr('disabled');

@@ -11,9 +11,7 @@ class FileService
 {
     public function createFile(UploadedFile $uploadFile, $typeFileRelation, $relationId)
     {
-        $tenant = config('legacy.app.database.dbname');
-        Storage::put($tenant, $uploadFile);
-        $url = Storage::url($uploadFile->hashName($tenant));
+        $url = $this->upload($uploadFile);
 
         $this->saveFile($url, $uploadFile->getType(), $typeFileRelation, $relationId);
     }
@@ -49,13 +47,35 @@ class FileService
         return $files;
     }
 
-    public function deleteFiles($deleteFiles)
+    public function deleteFiles($deletedFiles)
     {
+        $this->deleteFilesFromStorage($deletedFiles);
         $filesRelations = FileRelation::query()
-            ->whereIn('file_id', $deleteFiles)
+            ->whereIn('file_id', $deletedFiles)
             ->pluck('id')
             ->toArray();
         FileRelation::destroy($filesRelations);
-        File::destroy($deleteFiles);
+        File::destroy($deletedFiles);
+    }
+
+    public function deleteFilesFromStorage($deletedFiles)
+    {
+        $urls = File::query()
+            ->whereIn('id', $deletedFiles)
+            ->pluck('url')
+            ->toArray();
+
+        foreach ($urls as $url) {
+            $url = implode('/', array_slice(explode('/', $url), 3));
+            Storage::delete($url);
+        }
+    }
+
+    public function upload($uploadFile)
+    {
+        $tenant = config('legacy.app.database.dbname');
+        Storage::put($tenant, $uploadFile);
+
+        return Storage::url($uploadFile->hashName($tenant));
     }
 }
