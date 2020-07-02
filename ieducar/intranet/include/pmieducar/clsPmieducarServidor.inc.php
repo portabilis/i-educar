@@ -410,6 +410,7 @@ class clsPmieducarServidor extends Model
             $this->_campos_lista2 = $this->_todos_campos2;
             $this->setOrderby(' 1 ');
         }
+        $db = new clsBanco();
         $sql = "SELECT {$this->_campos_lista2} FROM {$this->_schema}servidor s{$tabela_compl}";
         if (is_numeric($int_cod_servidor)) {
             $filtros .= "{$whereAnd} s.cod_servidor = '{$int_cod_servidor}'";
@@ -459,10 +460,8 @@ class clsPmieducarServidor extends Model
 
         // Busca tipo LIKE pelo nome do servidor
         if (is_string($str_nome_servidor)) {
-            $filtros .= "{$whereAnd} EXISTS (SELECT 1
-  FROM cadastro.pessoa p
-  WHERE cod_servidor = p.idpes
-  AND translate(upper(p.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_servidor}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN'))";
+            $nome_servidor = $db->escapeString($str_nome_servidor);
+            $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM cadastro.pessoa WHERE idpes = cod_servidor and unaccent(nome) ILIKE unaccent('%{$nome_servidor}%'))";
             $whereAnd = ' AND ';
         }
         // Seleciona apenas servidores que tenham a carga atual maior ou igual ao
@@ -776,7 +775,6 @@ class clsPmieducarServidor extends Model
         }
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
-        $db = new clsBanco();
         $sql = "SELECT distinct {$this->_campos_lista2} FROM {$this->_schema}servidor s{$tabela_compl} {$filtros}" . $this->getOrderby() . $this->getLimite();
 
         $this->_total = $db->CampoUnico("SELECT distinct COUNT(0) FROM {$this->_schema}servidor s{$tabela_compl} {$filtros}");

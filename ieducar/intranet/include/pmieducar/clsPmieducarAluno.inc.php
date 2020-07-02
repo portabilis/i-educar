@@ -289,8 +289,9 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_um) && $this->parentesco_um != 'NULL') {
+                $parentesco_um = $db->escapeString($this->parentesco_um);
                 $campos .= "{$gruda}parentesco_um";
-                $valores .= "{$gruda}'{$this->parentesco_um}'";
+                $valores .= "{$gruda}'{$parentesco_um}'";
                 $gruda = ', ';
             }
 
@@ -301,8 +302,9 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_dois) && $this->parentesco_dois != 'NULL') {
+                $parentesco_dois = $db->escapeString($this->parentesco_dois);
                 $campos .= "{$gruda}parentesco_dois";
-                $valores .= "{$gruda}'{$this->parentesco_dois}'";
+                $valores .= "{$gruda}'{$parentesco_dois}'";
                 $gruda = ', ';
             }
 
@@ -313,8 +315,9 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_tres) && $this->parentesco_tres != 'NULL') {
+                $parentesco_tres = $db->escapeString($this->parentesco_tres);
                 $campos .= "{$gruda}parentesco_tres";
-                $valores .= "{$gruda}'{$this->parentesco_tres}'";
+                $valores .= "{$gruda}'{$parentesco_tres}'";
                 $gruda = ', ';
             }
 
@@ -325,8 +328,9 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_quatro) && $this->parentesco_quatro != 'NULL') {
+                $parentesco_quatro = $db->escapeString($this->parentesco_quatro);
                 $campos .= "{$gruda}parentesco_quatro";
-                $valores .= "{$gruda}'{$this->parentesco_quatro}'";
+                $valores .= "{$gruda}'{$parentesco_quatro}'";
                 $gruda = ', ';
             }
 
@@ -337,8 +341,9 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_cinco) && $this->parentesco_cinco != 'NULL') {
+                $parentesco_cinco = $db->escapeString($this->parentesco_cinco);
                 $campos .= "{$gruda}parentesco_cinco";
-                $valores .= "{$gruda}'{$this->parentesco_cinco}'";
+                $valores .= "{$gruda}'{$parentesco_cinco}'";
                 $gruda = ', ';
             }
 
@@ -481,7 +486,8 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_um) && $this->parentesco_um != 'NULL') {
-                $set .= "{$gruda}parentesco_um = '{$this->parentesco_um}'";
+                $parentesco_um = $db->escapeString($this->parentesco_um);
+                $set .= "{$gruda}parentesco_um = '{$parentesco_um}'";
                 $gruda = ', ';
             } elseif ($this->parentesco_um == 'NULL') {
                 $set .= "{$gruda}parentesco_um = NULL";
@@ -498,7 +504,8 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_dois) && $this->parentesco_dois != 'NULL') {
-                $set .= "{$gruda}parentesco_dois = '{$this->parentesco_dois}'";
+                $parentesco_dois = $db->escapeString($this->parentesco_dois);
+                $set .= "{$gruda}parentesco_dois = '{$parentesco_dois}'";
                 $gruda = ', ';
             } elseif ($this->parentesco_dois == 'NULL') {
                 $set .= "{$gruda}parentesco_dois = NULL";
@@ -515,7 +522,8 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_tres) && $this->parentesco_tres != 'NULL') {
-                $set .= "{$gruda}parentesco_tres = '{$this->parentesco_tres}'";
+                $parentesco_tres = $db->escapeString($this->parentesco_tres);
+                $set .= "{$gruda}parentesco_tres = '{$parentesco_tres}'";
                 $gruda = ', ';
             } elseif ($this->parentesco_tres == 'NULL') {
                 $set .= "{$gruda}parentesco_tres = NULL";
@@ -532,7 +540,8 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_quatro) && $this->parentesco_quatro != 'NULL') {
-                $set .= "{$gruda}parentesco_quatro = '{$this->parentesco_quatro}'";
+                $parentesco_quatro = $db->escapeString($this->parentesco_quatro);
+                $set .= "{$gruda}parentesco_quatro = '{$parentesco_quatro}'";
                 $gruda = ', ';
             } elseif ($this->parentesco_quatro == 'NULL') {
                 $set .= "{$gruda}parentesco_quatro = NULL";
@@ -549,7 +558,8 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_cinco) && $this->parentesco_cinco != 'NULL') {
-                $set .= "{$gruda}parentesco_cinco = '{$this->parentesco_cinco}'";
+                $parentesco_cinco = $db->escapeString($this->parentesco_cinco);
+                $set .= "{$gruda}parentesco_cinco = '{$parentesco_cinco}'";
                 $gruda = ', ';
             } elseif ($this->parentesco_cinco == 'NULL') {
                 $set .= "{$gruda}parentesco_cinco = NULL";
@@ -607,6 +617,8 @@ class clsPmieducarAluno extends Model
         $this->resetCamposLista();
 
         $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social';
+
+        $db = new clsBanco();
 
         $sql = "
             SELECT
@@ -680,7 +692,8 @@ class clsPmieducarAluno extends Model
         }
 
         if (is_string($str_nome_aluno)) {
-            $filtros .= "{$whereAnd} pessoa.slug ILIKE '%{$str_nome_aluno}%'";
+            $str_nm_aluno = $db->escapeString($str_nome_aluno);
+            $filtros .= "{$whereAnd} pessoa.slug ILIKE '%{$str_nm_aluno}%'";
             $whereAnd = ' AND ';
         }
 
@@ -753,7 +766,6 @@ class clsPmieducarAluno extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -857,6 +869,7 @@ class clsPmieducarAluno extends Model
         } else {
             $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         }
+        $db = new clsBanco();
 
         $joins = '
              LEFT JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes
@@ -934,9 +947,8 @@ class clsPmieducarAluno extends Model
         }
 
         if (is_string($str_nome_aluno)) {
-            $str_nome_aluno = pg_escape_string($str_nome_aluno);
-
-            $filtros .= "{$whereAnd}  unaccent(coalesce(fisica.nome_social, '') || pessoa.nome) LIKE unaccent('%{$str_nome_aluno}%')";
+            $str_nm_aluno = $db->escapeString($str_nome_aluno);
+            $filtros .= "{$whereAnd}  unaccent(coalesce(fisica.nome_social, '') || pessoa.nome) LIKE unaccent('%{$str_nm_aluno}%')";
 
             $whereAnd = ' AND ';
         }
@@ -1062,26 +1074,23 @@ class clsPmieducarAluno extends Model
             $and_where = '';
 
             if (!empty($str_nm_pai2)) {
-                $str_nm_pai2 = addslashes($str_nm_pai2);
-
+                $str_nome_pai2 = $db->escapeString($str_nm_pai2);
                 $complemento_sql .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_pai ON (pessoa_pai.idpes = f.idpes_pai)';
-                $complemento_where .= "{$and_where} (pessoa_pai.slug ILIKE '%{$str_nm_pai2}%')";
+                $complemento_where .= "{$and_where} (pessoa_pai.slug ILIKE '%{$str_nome_pai2}%')";
                 $and_where = ' AND ';
             }
 
             if (!empty($str_nm_mae2)) {
-                $str_nm_mae2 = addslashes($str_nm_mae2);
-
+                $str_nome_mae2 = $db->escapeString($str_nm_mae2);
                 $complemento_sql .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_mae ON (pessoa_mae.idpes = f.idpes_mae)';
-                $complemento_where .= "{$and_where} (pessoa_mae.slug ILIKE '%{$str_nm_mae2}%')";
+                $complemento_where .= "{$and_where} (pessoa_mae.slug ILIKE '%{$str_nome_mae2}%')";
                 $and_where = ' AND ';
             }
 
             if (!empty($str_nm_responsavel2)) {
-                $str_nm_responsavel2 = addslashes($str_nm_responsavel2);
-
+                $str_nome_responsavel2 = $db->escapeString($str_nm_responsavel2);
                 $complemento_sql .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_responsavel ON (pessoa_responsavel.idpes = f.idpes_responsavel)';
-                $complemento_where .= "{$and_where} (pessoa_responsavel.slug ILIKE '%{$str_nm_responsavel2}%')";
+                $complemento_where .= "{$and_where} (pessoa_responsavel.slug ILIKE '%{$str_nome_responsavel2}%')";
                 $and_where = ' AND ';
             }
 
@@ -1096,7 +1105,6 @@ class clsPmieducarAluno extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

@@ -59,8 +59,9 @@ class clsCadastroEscolaridade extends Model
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->escolaridade)) {
@@ -89,7 +90,8 @@ class clsCadastroEscolaridade extends Model
             $set = '';
 
             if (is_string($this->descricao)) {
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->escolaridade)) {
@@ -114,6 +116,8 @@ class clsCadastroEscolaridade extends Model
      */
     public function lista($int_idesco = null, $str_descricao = null, $escolaridade = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -128,11 +132,11 @@ class clsCadastroEscolaridade extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_descricao)) {
-            $filtros .= "{$whereAnd} descricao ILIKE '%{$str_descricao}%'";
+            $str_desc = $db->escapeString($str_descricao);
+            $filtros .= "{$whereAnd} descricao ILIKE '%{$str_desc}%'";
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

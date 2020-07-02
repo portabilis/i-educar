@@ -61,12 +61,13 @@ class clsJuridica
             $campos = '';
             $valores = '';
             if ($this->fantasia) {
+                $fantasia = $db->escapeString($this->fantasia);
                 $campos .= ', fantasia';
-                $valores .= ", '$this->fantasia'";
+                $valores .= ", '{$fantasia}'";
             }
             if (is_numeric($this->insc_estadual)) {
                 $campos .= ', insc_estadual';
-                $valores .= ", '$this->insc_estadual' ";
+                $valores .= ", '{$this->insc_estadual}' ";
             }
             if (is_string($this->capital_social)) {
                 $campos .= ', capital_social';
@@ -94,15 +95,18 @@ class clsJuridica
      */
     public function edita()
     {
+        $db = new clsBanco();
+
         if (is_numeric($this->idpes) && is_numeric($this->idpes_rev)) {
             $set = [];
-            if (is_string($this->fantasia)) {
-                $set[] = " fantasia = '$this->fantasia' ";
+            if (is_string($this->fantasia)){
+                $fantasia = $db->escapeString($this->fantasia);
+                $set[] = " fantasia = '{$fantasia}' ";
             }
 
             if (is_numeric($this->insc_estadual)) {
                 if ($this->insc_estadual) {
-                    $set[] = " insc_estadual = '$this->insc_estadual' ";
+                    $set[] = " insc_estadual = '{$this->insc_estadual}' ";
                 } else {
                     $set[] = ' insc_estadual = NULL ';
                 }
@@ -111,20 +115,19 @@ class clsJuridica
             }
 
             if (is_string($this->capital_social)) {
-                $set[] = " capital_social = '$this->capital_social' ";
+                $set[] = " capital_social = '{$this->capital_social}' ";
             }
 
             if ($this->idpes_rev) {
-                $set[] = " idpes_rev = '$this->idpes_rev' ";
+                $set[] = " idpes_rev = '{$this->idpes_rev}' ";
             }
 
             if (is_numeric($this->cnpj)) {
-                $set[] = " cnpj = '$this->cnpj' ";
+                $set[] = " cnpj = '{$this->cnpj}' ";
             }
 
             if ($set) {
                 $campos = implode(', ', $set);
-                $db = new clsBanco();
                 $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->schema}.{$this->tabela} SET $campos WHERE idpes = '$this->idpes' ");
 
@@ -165,9 +168,11 @@ class clsJuridica
      */
     public function lista($str_fantasia = false, $str_insc_estadual = false, $int_cnpj = false, $str_ordenacao = false, $int_limite_ini = false, $int_limite_qtd = false, $arrayint_idisin = false, $arrayint_idnotin = false, $int_idpes = false)
     {
+        $db = new clsBanco;
         $whereAnd = 'WHERE ';
         $join = '';
         if (is_string($str_fantasia)) {
+            $str_fantasia = $db->escapeString($str_fantasia);
             $where .= "{$whereAnd} (fcn_upper_nrm(fantasia) LIKE fcn_upper_nrm('%$str_fantasia%') OR fcn_upper_nrm(nome) LIKE fcn_upper_nrm('%$str_fantasia%'))";
             $whereAnd = ' AND ';
         }

@@ -74,13 +74,15 @@ class clsPmieducarTransferenciaTipo extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_tipo)) {
+                $nm_tipo = $db->escapeString($this->nm_tipo);
                 $campos .= "{$gruda}nm_tipo";
-                $valores .= "{$gruda}'{$this->nm_tipo}'";
+                $valores .= "{$gruda}'{$nm_tipo}'";
                 $gruda = ', ';
             }
             if (is_string($this->desc_tipo)) {
+                $desc_tipo = $db->escapeString($this->desc_tipo);
                 $campos .= "{$gruda}desc_tipo";
-                $valores .= "{$gruda}'{$this->desc_tipo}'";
+                $valores .= "{$gruda}'{$desc_tipo}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -112,6 +114,7 @@ class clsPmieducarTransferenciaTipo extends Model
     {
         if (is_numeric($this->cod_transferencia_tipo) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -123,11 +126,13 @@ class clsPmieducarTransferenciaTipo extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_tipo)) {
-                $set .= "{$gruda}nm_tipo = '{$this->nm_tipo}'";
+                $nm_tipo = $db->escapeString($this->nm_tipo);
+                $set .= "{$gruda}nm_tipo = '{$nm_tipo}'";
                 $gruda = ', ';
             }
             if (is_string($this->desc_tipo)) {
-                $set .= "{$gruda}desc_tipo = '{$this->desc_tipo}'";
+                $desc_tipo = $db->escapeString($this->desc_tipo);
+                $set .= "{$gruda}desc_tipo = '{$desc_tipo}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -162,6 +167,7 @@ class clsPmieducarTransferenciaTipo extends Model
      */
     public function lista($int_cod_transferencia_tipo = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_tipo = null, $str_desc_tipo = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null)
     {
+        $db = new clsBanco();
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} tt";
 
         $whereAnd = ' WHERE ';
@@ -180,7 +186,8 @@ class clsPmieducarTransferenciaTipo extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_tipo)) {
-            $filtros .= "{$whereAnd} tt.nm_tipo LIKE '%{$str_nm_tipo}%'";
+            $nm_tipo = $db->escapeString($str_nm_tipo);
+            $filtros .= "{$whereAnd} tt.nm_tipo LIKE '%{$nm_tipo}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_desc_tipo)) {
@@ -215,7 +222,6 @@ class clsPmieducarTransferenciaTipo extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

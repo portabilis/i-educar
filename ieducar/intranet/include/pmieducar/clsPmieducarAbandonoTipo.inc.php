@@ -70,8 +70,9 @@ class clsPmiEducarAbandonoTipo extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nome)) {
+                $nome = $db->escapeString($this->nome);
                 $campos .= "{$gruda}nome";
-                $valores .= "{$gruda}'{$this->nome}'";
+                $valores .= "{$gruda}'{$nome}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -114,7 +115,8 @@ class clsPmiEducarAbandonoTipo extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nome)) {
-                $set .= "{$gruda}nome = '{$this->nome}'";
+                $nome = $db->escapeString($this->nome);
+                $set .= "{$gruda}nome = '{$nome}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -149,6 +151,7 @@ class clsPmiEducarAbandonoTipo extends Model
      */
     public function lista($int_cod_abandono_tipo = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nome = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null)
     {
+        $db = new clsBanco();
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} tt";
 
         $whereAnd = ' WHERE ';
@@ -167,7 +170,8 @@ class clsPmiEducarAbandonoTipo extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nome)) {
-            $filtros .= "{$whereAnd} tt.nome LIKE '%{$str_nome}%'";
+            $str_nm = $db->escapeString($str_nome);
+            $filtros .= "{$whereAnd} tt.nome LIKE '%{$str_nm}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_cadastro_ini)) {
@@ -198,7 +202,6 @@ class clsPmiEducarAbandonoTipo extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
