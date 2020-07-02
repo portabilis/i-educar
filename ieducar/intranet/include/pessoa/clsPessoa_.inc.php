@@ -45,8 +45,7 @@ class clsPessoa_
         $db = new clsBanco();
 
         if ($this->nome && $this->tipo) {
-            $this->nome = $db->escapeString(($this->nome));
-            $this->nome = str_replace('\'', '\'\'', $this->nome);
+            $this->nome = $this->cleanUpName($this->nome);
             $campos = '';
             $valores = '';
             if ($this->url) {
@@ -248,10 +247,11 @@ class clsPessoa_
     protected function cleanUpName($name)
     {
         $name = preg_replace('/\s+/', ' ', $name);
-
         if (config('legacy.app.uppercase_names')) {
             $name = Str::upper($name);
         }
+
+        $name = pg_escape_string($name);
 
         return trim($name);
     }
