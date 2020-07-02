@@ -9,10 +9,13 @@ use Exception;
 class ReleasePeriodService
 {
     /**
-     * @param $schoolId
-     * @param $classRoomId
-     * @param $stage
-     * @param $year
+     * Verifica se podem ser postadas notas e faltas
+     *
+     * @param integer $schoolId
+     * @param integer $classRoomId
+     * @param integer $stage
+     * @param integer $year
+     * @return bool
      * @throws Exception
      */
     public function canPostNow($schoolId, $classRoomId, $stage, $year)
