@@ -73,7 +73,7 @@
         </tr>
     @empty
         <tr>
-            <td colspan="4">Não foi encontrado nenhum período de lançamento</td>
+            <td colspan="3">Não foi encontrado nenhum período de lançamento</td>
         </tr>
     @endforelse
 
