@@ -83,7 +83,15 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
         $this->createReleasePeriodSchools($releasePeriod, $request->get('escola'));
         $this->createReleasePeriodDates($releasePeriod, $request->get('start_date'), $request->get('end_date'));
 
-        DB::commit();
+        try {
+            DB::commit();
+        catch (Throwable $throwable) {
+            DB::rollBack();
+            
+            return redirect()
+                ->route('release-period.index')
+                ->with('error', 'Não foi possível cadastrar o período.');
+        }
 
         return redirect()
             ->route('release-period.index')
