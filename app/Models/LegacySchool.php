@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 /**
  * LegacySchool
  *
+ * @property string $name
+ *
  * @property LegacyInstitution $institution
  */
 class LegacySchool extends Model
@@ -72,6 +74,14 @@ class LegacySchool extends Model
     }
 
     /**
+     * @return string
+     */
+    public function getNameAttribute()
+    {
+        return $this->person->nome;
+    }
+
+    /**
      * Relacionamento com a instituição.
      *
      * @return BelongsTo
@@ -108,11 +118,6 @@ class LegacySchool extends Model
     public function organization()
     {
         return $this->belongsTo(LegacyOrganization::class, 'ref_idpes');
-    }
-
-    public function getNameAttribute()
-    {
-        return DB::selectOne('SELECT relatorio.get_nome_escola(:escola) AS nome', ['escola' => $this->id])->nome;
     }
 
     /**

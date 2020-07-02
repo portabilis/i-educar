@@ -2,8 +2,12 @@
 
 namespace iEducar\Modules\Educacenso\Model;
 
+use iEducar\Support\DescriptionValue;
+
 class TipoAtendimentoTurma
 {
+    use DescriptionValue;
+
     const ESCOLARIZACAO = 0;
     const CLASSE_HOSPITALAR = 1;
     const ATIVIDADE_COMPLEMENTAR = 4;
