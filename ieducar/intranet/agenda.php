@@ -157,12 +157,7 @@ class indice extends clsCadastro
             INICIO DA PAGINA
         */
         $conteudo = "";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Agenda"
-    ));
-    $this->locale = $localizacao->montar();
+        $this->breadcrumb('Agenda');
 
 
     if ($this->locale){
@@ -554,4 +549,4 @@ $miolo = new indice();
 $pagina->addForm( $miolo );
 
 $pagina->MakeAll();
-?>
+
