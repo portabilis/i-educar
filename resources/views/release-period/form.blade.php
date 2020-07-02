@@ -205,12 +205,6 @@
                     $(this).closest('tr').remove();
                 }
             });
-
-            @if($releasePeriod->exists)
-            $(document).ready(function () {
-
-            });
-            @endif
         })(jQuery);
 
         function confirmDelete() {
