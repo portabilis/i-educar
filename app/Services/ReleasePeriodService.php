@@ -42,8 +42,8 @@ class ReleasePeriodService
         }
 
         $period = $releasePeriod->periodDates()
-            ->where('start_date', '<=', 'NOW()')
-            ->where('end_date', '>=', 'NOW()')
+            ->where('start_date', '<=', now())
+            ->where('end_date', '>=', now())
             ->exists();
 
         if ($period) {
