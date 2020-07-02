@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
+use Throwable;
 
 class ReleasePeriodController extends Controller
 {
@@ -85,9 +86,9 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
 
         try {
             DB::commit();
-        catch (Throwable $throwable) {
+        } catch (Throwable $throwable) {
             DB::rollBack();
-            
+
             return redirect()
                 ->route('release-period.index')
                 ->with('error', 'Não foi possível cadastrar o período.');
@@ -134,11 +135,15 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
         $this->createReleasePeriodSchools($releasePeriod, $request->get('escola'));
         $this->createReleasePeriodDates($releasePeriod, $request->get('start_date'), $request->get('end_date'));
 
-        DB::commit();
+        try {
+            DB::commit();
+        } catch (Throwable $throwable) {
+            DB::rollBack();
 
-        return redirect()
-            ->route('release-period.index')
-            ->with('success', 'Período atualizado com sucesso.');
+            return redirect()
+                ->route('release-period.index')
+                ->with('success', 'Período atualizado com sucesso.');
+        }
     }
 
     /**
@@ -153,11 +158,15 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
         $releasePeriod->periodDates()->delete();
         $releasePeriod->delete();
 
-        DB::commit();
+        try {
+            DB::commit();
+        } catch (Throwable $throwable) {
+            DB::rollBack();
 
-        return redirect()
-            ->route('release-period.index')
-            ->with('success', 'Período excluído com sucesso.');
+            return redirect()
+                ->route('release-period.index')
+                ->with('success', 'Período excluído com sucesso.');
+        }
     }
 
     /**
