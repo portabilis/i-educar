@@ -17,6 +17,9 @@ use Illuminate\View\View;
 
 class ReleasePeriodController extends Controller
 {
+    const INFO_MESSAGE = '<b>Atenção!</b> Este recurso foi atualizado e agora funciona diferente!
+Cadastre os períodos que deseja liberar o lançamento de notas e faltas por etapa, podendo criar mais de 1 período de lançamento em todas as etapas';
+
     /**
      * @param Request $request
      * @return View
@@ -28,6 +31,8 @@ class ReleasePeriodController extends Controller
         ]);
 
         $this->menu(Process::RELEASE_PERIOD);
+
+        Session::flash('notice', self::INFO_MESSAGE);
 
         return view('release-period.form', [
                 'stageTypes' => LegacyStageType::active()->get()->keyBy('cod_modulo')->toJson(),
@@ -51,8 +56,7 @@ class ReleasePeriodController extends Controller
 
         $this->fillData($releasePeriod);
 
-        Session::flash('notice', '<b>Atenção!</b> Este recurso foi atualizado e agora funciona diferente!
-Cadastre os períodos que deseja liberar o lançamento de notas e faltas por etapa, podendo criar mais de 1 período de lançamento em todas as etapas');
+        Session::flash('notice', self::INFO_MESSAGE);
 
         return view('release-period.form', [
                 'stageTypes' => LegacyStageType::active()->get()->keyBy('cod_modulo')->toJson(),
