@@ -1,4 +1,3 @@
-
 <?php
 
 use iEducar\Legacy\Model;
