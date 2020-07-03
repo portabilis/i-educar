@@ -1,4 +1,4 @@
-<tr id="tr_documento">
+<tr id="tr_file">
     <td class="formmdtd" valign="top"><span class="form">Arquivos</span></td>
     <td class="formmdtd" valign="top">
         <span class="form">
@@ -6,7 +6,7 @@
                 @foreach($files as $file)
                     <div>
                         <span id="file_info{{$file->id}}">
-                            Arquivo 1 adicionado em {{$file->created_at->format('d/m/Y H:i')}}:
+                            Arquivo 1 adicionado em {{$file->created_at->format('d/m/Y')}}:
                             <a class="decorated" id="link_delete_file_{{$file->id}}" style="cursor: pointer; margin-left: 10px;">Excluir</a>
                             <a class="decorated" id="link_view_file_{{$file->id}}" target="_blank" href="{{$file->url}}" style="cursor: pointer; margin-left: 10px;">Visualizar</a>
                         </span>
@@ -38,12 +38,12 @@ var $arrayUrlFile = [];
 var $arrayDataFile = [];
 var $arrayDeletedFiles = [];
 
-function excluirFile(event) {
+function deleteFile(event) {
     $arrayUrlFile.splice(event.data.i - 1,1);
     $j('#file').val('').removeClass('success');
     messageUtils.notice('Arquivo excluído com sucesso!');
     $j('#file' + event.data.i).hide();
-    montaUrlFile();
+    makeUrlFile();
 }
 
 function addFile(url, data) {
@@ -68,7 +68,7 @@ function addFile(url, data) {
         .attr('id', 'link_remove_file_' + $id)
         .css('cursor', 'pointer')
         .css('margin-left', '10px')
-        .click({i: $id}, excluirFile))
+        .click({i: $id}, deleteFile))
         .append($j('<a>')
         .html('Visualizar')
         .addClass('decorated')
@@ -79,10 +79,10 @@ function addFile(url, data) {
         .css('margin-left', '10px'))
     ).insertBefore($j('#file'));
 
-    montaUrlFile();
+    makeUrlFile();
 }
 
-function montaUrlFile() {
+function makeUrlFile() {
     var url = '';
 
     for (var i = 0; i < $arrayUrlFile.length; i++) {
