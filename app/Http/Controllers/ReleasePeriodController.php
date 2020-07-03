@@ -169,7 +169,7 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
 
             return redirect()
                 ->route('release-period.index')
-                ->with('error', 'Não foi excluir atualizar o período.');
+                ->with('error', 'Não foi possível excluir o período.');
         }
 
         return redirect()
