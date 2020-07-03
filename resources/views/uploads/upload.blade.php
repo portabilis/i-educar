@@ -17,7 +17,7 @@
             <label id="file" for="file"><span></span> <strong>Escolha um arquivo</strong></label>&nbsp;<br>
             <img src="imagens/indicator.gif" style="margin-top: 3px; display: none;">
             <span id="span-documento" style="font-style: italic; font-size: 10px;">
-                São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 250KB
+                São aceitos arquivos nos formatos jpg, png, pdf. Tamanho máximo: 500KB
             </span>
             <input type="hidden" name="file_url" id="file_url"/>
             <input type="hidden" name="file_url_deleted" id="file_url_deleted"/>
