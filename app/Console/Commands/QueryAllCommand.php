@@ -16,7 +16,7 @@ class QueryAllCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'query:all';
+    protected $signature = 'query:all {--no-database=*}';
 
     /**
      * The console command description.
@@ -36,7 +36,13 @@ class QueryAllCommand extends Command
         $data = [];
         $file = file_get_contents(storage_path('query.sql'));
 
+        $excludedDatabases = $this->option('no-database');
+
         foreach ($this->getConnections() as $connection) {
+            if (in_array($connection, $excludedDatabases)) {
+                continue;
+            }
+
             try {
                 $data = (array) DB::connection($connection)->selectOne($file);
             } catch (Exception $exception) {

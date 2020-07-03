@@ -123,13 +123,15 @@ class clsPmieducarModulo extends Model
             }
 
             if (is_string($this->nm_tipo)) {
+                $nm_tipo = $db->escapeString($this->nm_tipo);
                 $campos[] = 'nm_tipo';
-                $valores[] = "'{$this->nm_tipo}'";
+                $valores[] = "'{$nm_tipo}'";
             }
 
             if (is_string($this->descricao)) {
+                $descricao = $db->escapeString($this->descricao);
                 $campos[] = 'descricao';
-                $valores[] = "'{$this->descricao}'";
+                $valores[] = "'{$descricao}'";
             }
             if (is_numeric($this->num_meses)) {
                 $campos[] = 'num_meses';
@@ -177,6 +179,7 @@ class clsPmieducarModulo extends Model
     {
         if (is_numeric($this->cod_modulo) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+
             $set = [];
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -188,11 +191,13 @@ class clsPmieducarModulo extends Model
             }
 
             if (is_string($this->nm_tipo)) {
-                $set[] = "nm_tipo = '{$this->nm_tipo}'";
+                $nm_tipo = $db->escapeString($this->nm_tipo);
+                $set[] = "nm_tipo = '{$nm_tipo}'";
             }
 
             if (is_string($this->descricao)) {
-                $set[] = "descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set[] = "descricao = '{$descricao}'";
             }
 
             if (is_numeric($this->num_meses)) {
@@ -260,6 +265,8 @@ class clsPmieducarModulo extends Model
         $int_ref_cod_instituicao = null,
         $num_etapas = null
     ) {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} WHERE ";
         $filtros = [];
 
@@ -276,7 +283,8 @@ class clsPmieducarModulo extends Model
         }
 
         if (is_string($str_nm_tipo)) {
-            $filtros[] = "nm_tipo LIKE '%{$str_nm_tipo}%'";
+            $nm_tipo = $db->escapeString($str_nm_tipo);
+            $filtros[] = "nm_tipo LIKE '%{$nm_tipo}%'";
         }
 
         if (is_string($str_descricao)) {
@@ -325,7 +333,6 @@ class clsPmieducarModulo extends Model
             return false;
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
         $filtros = join(' AND ', $filtros);

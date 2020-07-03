@@ -106,7 +106,7 @@ class indice extends clsCadastro
     function Novo()
     {
 
-
+        $db = new clsBanco();
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}" );
 

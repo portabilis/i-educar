@@ -69,11 +69,10 @@ class clsPessoaFisica extends clsPessoaFj
     ) {
         $whereAnd = '';
         $where = '';
+        $db = new clsBanco();
 
         if (is_string($str_nome) && $str_nome != '') {
-            $str_nome = pg_escape_string($str_nome);
-            $str_nome = str_replace(' ', '%', $str_nome);
-
+            $str_nome = $db->escapeString($str_nome);
             $where .= "{$whereAnd} slug ILIKE '%{$str_nome}%'";
             $whereAnd = ' AND ';
         }
@@ -117,7 +116,6 @@ class clsPessoaFisica extends clsPessoaFj
             $orderBy .= 'COALESCE(nome_social, nome) ';
         }
 
-        $db = new clsBanco();
         $dba = new clsBanco();
 
         if ($where) {
