@@ -41,15 +41,9 @@ class ReleasePeriodService
             return true;
         }
 
-        $period = $releasePeriod->periodDates()
+        return $releasePeriod->periodDates()
             ->where('start_date', '<=', now())
             ->where('end_date', '>=', now())
             ->exists();
-
-        if ($period) {
-            return true;
-        }
-
-        return false;
     }
 }
