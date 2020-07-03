@@ -142,8 +142,12 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
 
             return redirect()
                 ->route('release-period.index')
-                ->with('success', 'Período atualizado com sucesso.');
+                ->with('error', 'Não foi possível atualizar o período.');
         }
+
+        return redirect()
+            ->route('release-period.index')
+            ->with('success', 'Período atualizado com sucesso.');
     }
 
     /**
@@ -165,8 +169,12 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
 
             return redirect()
                 ->route('release-period.index')
-                ->with('success', 'Período excluído com sucesso.');
+                ->with('error', 'Não foi excluir atualizar o período.');
         }
+
+        return redirect()
+            ->route('release-period.index')
+            ->with('success', 'Período excluído com sucesso.');
     }
 
     /**
