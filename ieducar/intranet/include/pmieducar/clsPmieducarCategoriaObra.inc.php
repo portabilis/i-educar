@@ -31,17 +31,19 @@ class clsPmieducarCategoriaObra extends Model
 
     public function lista($descricao = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
         $whereAnd = ' WHERE ';
 
         if (is_string($descricao)) {
-            $filtros .= "{$whereAnd} descricao LIKE '%{$descricao}%'";
+            $desc = $db->escapeString($descricao);
+            $filtros .= "{$whereAnd} descricao LIKE '%{$desc}%'";
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -93,13 +95,15 @@ class clsPmieducarCategoriaObra extends Model
             $gruda = '';
 
             if (is_string($this->descricao)) {
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
             if (is_string($this->observacoes)) {
+                $observacoes = $db->escapeString($this->observacoes);
                 $campos .= "{$gruda}observacoes";
-                $valores .= "{$gruda}'{$this->observacoes}'";
+                $valores .= "{$gruda}'{$observacoes}'";
             }
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
@@ -116,11 +120,13 @@ class clsPmieducarCategoriaObra extends Model
             $db = new clsBanco();
             $set = '';
             if (is_string($this->descricao)) {
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
             if (is_string($this->observacoes)) {
-                $set .= "{$gruda}observacoes = '{$this->observacoes}'";
+                $observacoes = $db->escapeString($this->observacoes);
+                $set .= "{$gruda}observacoes = '{$observacoes}'";
                 $gruda = ', ';
             }
             if ($set) {
@@ -138,7 +144,7 @@ class clsPmieducarCategoriaObra extends Model
         if (is_numeric($this->id)) {
             $db = new clsBanco();
             $getVinculoObra = $db->Consulta("SELECT *
-                                               FROM relacao_categoria_acervo 
+                                               FROM relacao_categoria_acervo
                                               WHERE categoria_id = {$this->id}");
             if (pg_num_rows($getVinculoObra) > 0) {
                 return false;

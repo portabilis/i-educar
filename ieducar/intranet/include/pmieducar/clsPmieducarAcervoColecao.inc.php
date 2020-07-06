@@ -86,13 +86,15 @@ class clsPmieducarAcervoColecao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_colecao)) {
+                $nm_colecao = $db->escapeString($this->nm_colecao);
                 $campos .= "{$gruda}nm_colecao";
-                $valores .= "{$gruda}'{$this->nm_colecao}'";
+                $valores .= "{$gruda}'{$nm_colecao}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -130,11 +132,13 @@ class clsPmieducarAcervoColecao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_colecao)) {
-                $set .= "{$gruda}nm_colecao = '{$this->nm_colecao}'";
+                $nm_colecao = $db->escapeString($this->nm_colecao);
+                $set .= "{$gruda}nm_colecao = '{$nm_colecao}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -169,6 +173,8 @@ class clsPmieducarAcervoColecao extends Model
      */
     public function lista($int_cod_acervo_colecao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_colecao = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_biblioteca = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -187,7 +193,8 @@ class clsPmieducarAcervoColecao extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_colecao)) {
-            $filtros .= "{$whereAnd} nm_colecao LIKE '%{$str_nm_colecao}%'";
+            $str_nome_colecao = $db->escapeString($str_nm_colecao);
+            $filtros .= "{$whereAnd} nm_colecao LIKE '%{$str_nome_colecao}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_descricao)) {
@@ -226,7 +233,6 @@ class clsPmieducarAcervoColecao extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

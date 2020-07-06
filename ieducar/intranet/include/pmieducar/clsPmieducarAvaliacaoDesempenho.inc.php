@@ -86,8 +86,9 @@ class clsPmieducarAvaliacaoDesempenho extends Model
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -97,8 +98,9 @@ class clsPmieducarAvaliacaoDesempenho extends Model
             $valores .= "{$gruda}'1'";
             $gruda = ', ';
             if (is_string($this->titulo_avaliacao)) {
+                $titulo = $db->escapeString($this->titulo_avaliacao);
                 $campos .= "{$gruda}titulo_avaliacao";
-                $valores .= "{$gruda}'{$this->titulo_avaliacao}'";
+                $valores .= "{$gruda}'{$titulo}'";
                 $gruda = ', ';
             }
 
@@ -132,7 +134,8 @@ class clsPmieducarAvaliacaoDesempenho extends Model
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -146,7 +149,8 @@ class clsPmieducarAvaliacaoDesempenho extends Model
                 $gruda = ', ';
             }
             if (is_string($this->titulo_avaliacao)) {
-                $set .= "{$gruda}titulo_avaliacao = '{$this->titulo_avaliacao}'";
+                $titulo = $db->escapeString($this->titulo_avaliacao);
+                $set .= "{$gruda}titulo_avaliacao = '{$titulo}'";
                 $gruda = ', ';
             }
 
@@ -167,6 +171,7 @@ class clsPmieducarAvaliacaoDesempenho extends Model
      */
     public function lista($int_sequencial = null, $int_ref_cod_servidor = null, $int_ref_ref_cod_instituicao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $str_titulo_avaliacao = null)
     {
+        $db = new clsBanco();
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -220,11 +225,11 @@ class clsPmieducarAvaliacaoDesempenho extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_titulo_avaliacao)) {
-            $filtros .= "{$whereAnd} titulo_avaliacao LIKE '%{$str_titulo_avaliacao}%'";
+            $titulo_avaliacao = $db->escapeString($str_titulo_avaliacao);
+            $filtros .= "{$whereAnd} titulo_avaliacao LIKE '%{$titulo_avaliacao}%'";
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

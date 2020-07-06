@@ -5,6 +5,7 @@ namespace App\Models;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string   $city            Noda da cidade da instituição
  * @property string   $state           Sigla do estado da instituição
  * @property DateTime $relocation_date Data base para remanejamento
+ * @property DateTime $educacenso_date Data de corte do Educacenso
  */
 class LegacyInstitution extends Model
 {
@@ -39,7 +41,7 @@ class LegacyInstitution extends Model
      * @var array
      */
     protected $dates = [
-        'data_base_remanejamento'
+        'data_base_remanejamento', 'data_educacenso',
     ];
 
     /**
@@ -98,6 +100,14 @@ class LegacyInstitution extends Model
     }
 
     /**
+     * @return DateTime
+     */
+    public function getEducacensoDateAttribute()
+    {
+        return $this->data_educacenso;
+    }
+
+    /**
      * Indica se os campos do Censo são obrigatórios.
      *
      * @return bool
@@ -118,5 +128,13 @@ class LegacyInstitution extends Model
     public function getAllowRegistrationOutAcademicYearAttribute()
     {
         return boolval($this->permitir_matricula_fora_periodo_letivo);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function schools()
+    {
+        return $this->hasMany(LegacySchool::class, 'ref_cod_instituicao', 'cod_instituicao');
     }
 }

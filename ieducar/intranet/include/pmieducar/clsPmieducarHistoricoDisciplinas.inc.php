@@ -122,8 +122,9 @@ class clsPmieducarHistoricoDisciplinas extends Model
             }
 
             if (is_string($this->nm_disciplina)) {
+                $disciplina = $db->escapeString($this->nm_disciplina);
                 $campos .= "{$gruda}nm_disciplina";
-                $valores .= "{$gruda}'{$this->nm_disciplina}'";
+                $valores .= "{$gruda}'{$disciplina}'";
                 $gruda = ', ';
             }
 
@@ -188,7 +189,8 @@ class clsPmieducarHistoricoDisciplinas extends Model
             $gruda = '';
 
             if (is_string($this->nm_disciplina)) {
-                $set .= "{$gruda}nm_disciplina = '{$this->nm_disciplina}'";
+                $disciplina = $db->escapeString($this->nm_disciplina);
+                $set .= "{$gruda}nm_disciplina = '{$disciplina}'";
                 $gruda = ', ';
             }
 

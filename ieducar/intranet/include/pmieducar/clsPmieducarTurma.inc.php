@@ -193,13 +193,15 @@ class clsPmieducarTurma extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_turma)) {
+                $nm_turma = $db->escapeString($this->nm_turma);
                 $campos .= "{$gruda}nm_turma";
-                $valores .= "{$gruda}'{$this->nm_turma}'";
+                $valores .= "{$gruda}'{$nm_turma}'";
                 $gruda = ', ';
             }
             if (is_string($this->sgl_turma)) {
+                $sgl_turma = $db->escapeString($this->sgl_turma);
                 $campos .= "{$gruda}sgl_turma";
-                $valores .= "{$gruda}'{$this->sgl_turma}'";
+                $valores .= "{$gruda}'{$sgl_turma}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->max_aluno)) {
@@ -418,11 +420,13 @@ class clsPmieducarTurma extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_turma)) {
-                $set .= "{$gruda}nm_turma = '{$this->nm_turma}'";
+                $nm_turma = $db->escapeString($this->nm_turma);
+                $set .= "{$gruda}nm_turma = '{$nm_turma}'";
                 $gruda = ', ';
             }
             if (is_string($this->sgl_turma)) {
-                $set .= "{$gruda}sgl_turma = '{$this->sgl_turma}'";
+                $sgl_turma = $db->escapeString($this->sgl_turma);
+                $set .= "{$gruda}sgl_turma = '{$sgl_turma}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->max_aluno)) {
@@ -957,6 +961,8 @@ class clsPmieducarTurma extends Model
      */
     public function lista($int_cod_turma = null, z $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $bool_verifica_serie_multiseriada = false, $bool_tem_alunos_aguardando_nota = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $somenteAnoLetivoEmAndamento = false)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} t";
         $filtros = '';
 
@@ -992,7 +998,8 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_turma)) {
-            $filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $nm_turma = $db->escapeString($str_nm_turma);
+            $filtros .= "{$whereAnd} exists(select 1 from pmieducar.turma where unaccent(nm_turma) ILIKE unaccent('%{$nm_turma}%'))";
             $whereAnd = ' AND ';
         }
         if (is_string($str_sgl_turma)) {
@@ -1141,7 +1148,6 @@ class clsPmieducarTurma extends Model
             $filtros .= "{$whereAnd} COALESCE(t.nao_informar_educacenso,0) <> 1";
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -1177,6 +1183,8 @@ class clsPmieducarTurma extends Model
      */
     public function lista2($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista},c.nm_curso,s.nm_serie,i.nm_instituicao FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c, {$this->_schema}instituicao i ";
         $filtros = '';
 
@@ -1213,7 +1221,8 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_turma)) {
-            $filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $nm_turma = $db->escapeString($str_nm_turma);
+            $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM pmieducar.turma WHERE unaccent(t.nm_turma) ILIKE unaccent('%{$nm_turma}%'))";
             $whereAnd = ' AND ';
         }
         if (is_string($str_sgl_turma)) {
@@ -1345,7 +1354,6 @@ class clsPmieducarTurma extends Model
             $filtros .= "{$whereAnd} t.ano = '{$ano}'";
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -1419,7 +1427,7 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_turma)) {
-            $filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $filtros .= "{$whereAnd} exists(select 1 from pmieducar.turma where unaccent(nm_turma) ILIKE unaccent('%{$str_nm_turma}%'))";
             $whereAnd = ' AND ';
         }
         if (is_string($str_sgl_turma)) {

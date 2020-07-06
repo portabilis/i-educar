@@ -1,9 +1,13 @@
 <?php
 
+use iEducar\Support\DescriptionValue;
+
 require_once 'CoreExt/Enum.php';
 
 class ComponenteCurricular_Model_CodigoEducacenso extends CoreExt_Enum
 {
+    use DescriptionValue;
+
     protected $_data = [
         null => 'Selecione',
         1 => 'Química',
@@ -34,13 +38,27 @@ class ComponenteCurricular_Model_CodigoEducacenso extends CoreExt_Enum
         99 => 'Outras áreas do conhecimento'
     ];
 
+    /**
+     * @return array
+     */
     public function getData()
     {
         return $this->_data;
     }
 
+    /**
+     * @return $this
+     */
     public static function getInstance()
     {
         return self::_getInstance(__CLASS__);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getDescriptiveValues()
+    {
+        return self::getInstance()->getData();
     }
 }

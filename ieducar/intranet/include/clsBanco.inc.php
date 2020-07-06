@@ -96,4 +96,8 @@ class clsBanco extends clsBancoSQL_
     {
         return ($val == true ? 't' : 'f');
     }
+    public function escapeString($string)
+    {
+        return pg_escape_string($string);
+    }
 }

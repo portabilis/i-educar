@@ -66,8 +66,9 @@ class clsPmieducarReligiao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_religiao)) {
+                $nm_religiao = $db->escapeString($this->nm_religiao);
                 $campos .= "{$gruda}nm_religiao";
-                $valores .= "{$gruda}'{$this->nm_religiao}'";
+                $valores .= "{$gruda}'{$nm_religiao}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -105,7 +106,8 @@ class clsPmieducarReligiao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_religiao)) {
-                $set .= "{$gruda}nm_religiao = '{$this->nm_religiao}'";
+                $nm_religiao = $db->escapeString($this->nm_religiao);
+                $set .= "{$gruda}nm_religiao = '{$nm_religiao}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -136,6 +138,8 @@ class clsPmieducarReligiao extends Model
      */
     public function lista($int_cod_religiao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_religiao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -154,7 +158,8 @@ class clsPmieducarReligiao extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_religiao)) {
-            $filtros .= "{$whereAnd} nm_religiao LIKE '%{$str_nm_religiao}%'";
+            $nm_religiao = $db->escapeString($str_nm_religiao);
+            $filtros .= "{$whereAnd} nm_religiao LIKE '%{$nm_religiao}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_cadastro_ini)) {
@@ -181,7 +186,6 @@ class clsPmieducarReligiao extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

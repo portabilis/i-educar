@@ -183,14 +183,16 @@ class clsPmieducarCurso extends Model
             }
 
             if (is_string($this->nm_curso)) {
+                $nm_curso = $db->escapeString($this->nm_curso);
                 $campos .= "{$gruda}nm_curso";
-                $valores .= "{$gruda}'{$this->nm_curso}'";
+                $valores .= "{$gruda}'{$nm_curso}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->sgl_curso)) {
+                $sgl_curso = $db->escapeString($this->sgl_curso);
                 $campos .= "{$gruda}sgl_curso";
-                $valores .= "{$gruda}'{$this->sgl_curso}'";
+                $valores .= "{$gruda}'{$sgl_curso}'";
                 $gruda = ', ';
             }
 
@@ -207,20 +209,23 @@ class clsPmieducarCurso extends Model
             }
 
             if (is_string($this->ato_poder_publico)) {
+                $ato_poder_publico = $db->escapeString($this->ato_poder_publico);
                 $campos .= "{$gruda}ato_poder_publico";
-                $valores .= "{$gruda}'{$this->ato_poder_publico}'";
+                $valores .= "{$gruda}'{$ato_poder_publico}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->objetivo_curso)) {
+                $objetivo_curso = $db->escapeString($this->objetivo_curso);
                 $campos .= "{$gruda}objetivo_curso";
-                $valores .= "{$gruda}'{$this->objetivo_curso}'";
+                $valores .= "{$gruda}'{$objetivo_curso}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->publico_alvo)) {
+                $publico_alvo = $db->escapeString($this->publico_alvo);
                 $campos .= "{$gruda}publico_alvo";
-                $valores .= "{$gruda}'{$this->publico_alvo}'";
+                $valores .= "{$gruda}'{$publico_alvo}'";
                 $gruda = ', ';
             }
 
@@ -302,12 +307,14 @@ class clsPmieducarCurso extends Model
             }
 
             if (is_string($this->nm_curso)) {
-                $set .= "{$gruda}nm_curso = '{$this->nm_curso}'";
+                $nm_curso = $db->escapeString($this->nm_curso);
+                $set .= "{$gruda}nm_curso = '{$nm_curso}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->sgl_curso)) {
-                $set .= "{$gruda}sgl_curso = '{$this->sgl_curso}'";
+                $sgl_curso = $db->escapeString($this->sgl_curso);
+                $set .= "{$gruda}sgl_curso = '{$sgl_curso}'";
                 $gruda = ', ';
             }
 
@@ -322,17 +329,20 @@ class clsPmieducarCurso extends Model
             }
 
             if (is_string($this->ato_poder_publico)) {
-                $set .= "{$gruda}ato_poder_publico = '{$this->ato_poder_publico}'";
+                $ato_poder_publico = $db->escapeString($this->ato_poder_publico);
+                $set .= "{$gruda}ato_poder_publico = '{$ato_poder_publico}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->objetivo_curso)) {
-                $set .= "{$gruda}objetivo_curso = '{$this->objetivo_curso}'";
+                $objetivo_curso = $db->escapeString($this->objetivo_curso);
+                $set .= "{$gruda}objetivo_curso = '{$objetivo_curso}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->publico_alvo)) {
-                $set .= "{$gruda}publico_alvo = '{$this->publico_alvo}'";
+                $publico_alvo = $db->escapeString($this->publico_alvo);
+                $set .= "{$gruda}publico_alvo = '{$publico_alvo}'";
                 $gruda = ', ';
             }
 
@@ -427,6 +437,8 @@ class clsPmieducarCurso extends Model
         $int_hora_falta = null,
         $bool_avaliacao_globalizada = null
     ) {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -458,7 +470,8 @@ class clsPmieducarCurso extends Model
         }
 
         if (is_string($str_nm_curso)) {
-            $filtros .= "{$whereAnd} translate(upper(nm_curso),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_curso}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $str_nome_curso = $db->escapeString($str_nm_curso);
+            $filtros .= "{$whereAnd} translate(upper(nm_curso),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_curso}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
         }
 
@@ -540,7 +553,6 @@ class clsPmieducarCurso extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

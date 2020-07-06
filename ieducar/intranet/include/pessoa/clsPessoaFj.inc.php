@@ -67,7 +67,7 @@ class clsPessoaFj extends Model
         $objPessoa = new clsPessoa_();
 
         $listaPessoa = $objPessoa->lista(
-            $str_nome,
+            $str_nome = pg_escape_string($str_nome),
             $inicio_limite,
             $qtd_registros,
             $str_orderBy,
