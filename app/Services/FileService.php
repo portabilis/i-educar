@@ -51,7 +51,6 @@ class FileService
             DB::commit();
         } catch (Throwable $e) {
             DB::rollBack();
-            dd($e);
         }
     }
 
