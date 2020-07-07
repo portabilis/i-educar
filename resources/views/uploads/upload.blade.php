@@ -6,7 +6,7 @@
                 @foreach($files as $file)
                     <div>
                         <span id="file_info{{$file->id}}">
-                            Arquivo 1 adicionado em {{$file->created_at->format('d/m/Y')}}:
+                            {{$file->original_name}} adicionado em {{$file->created_at->format('d/m/Y')}}:
                             <a class="decorated" id="link_delete_file_{{$file->id}}" style="cursor: pointer; margin-left: 10px;">Excluir</a>
                             <a class="decorated" id="link_view_file_{{$file->id}}" target="_blank" href="{{$file->url}}" style="cursor: pointer; margin-left: 10px;">Visualizar</a>
                         </span>
@@ -34,23 +34,21 @@ var $loadingFile = $j('<img>')
     .insertBefore($j('#span-file'));
 
 var $arrayFile = [];
-var $arrayUrlFile = [];
-var $arrayDataFile = [];
 var $arrayDeletedFiles = [];
 
 function deleteFile(event) {
-    $arrayUrlFile.splice(event.data.i - 1,1);
+    var removeId = this.id.replace(/\D/g, '') - 1;
+    var fileUrl = $j.parseJSON($j('#file_url').val());
+    fileUrl.splice(removeId, 1);
+    $j('#file_url').val(JSON.stringify(arrayPush));
     $j('#file').val('').removeClass('success');
     messageUtils.notice('Arquivo excluído com sucesso!');
     $j('#file' + event.data.i).hide();
-    makeUrlFile();
 }
 
-function addFile(url, data) {
+function addFile(url, originalName, extension, size, data) {
     $index = $arrayFile.length;
     $id = $index + 1;
-    $arrayUrlFile[$index] = url;
-    $arrayDataFile[$index] = data;
 
     var dataFile = '';
 
@@ -60,7 +58,7 @@ function addFile(url, data) {
 
     $arrayFile[$arrayFile.length] = $j('<div>')
         .append($j('<span>')
-        .html('Arquivo ' + $id + dataFile + ':')
+        .html(originalName + ' ' + dataFile + ':')
         .attr('id', 'file' + $id)
         .append($j('<a>')
         .html('Excluir')
@@ -79,31 +77,28 @@ function addFile(url, data) {
         .css('margin-left', '10px'))
     ).insertBefore($j('#file'));
 
-    makeUrlFile();
+    makeUrlFile(url, originalName, extension, size, data);
 }
 
-function makeUrlFile() {
-    var url = '';
-
-    for (var i = 0; i < $arrayUrlFile.length; i++) {
-        if ($arrayUrlFile[i]) {
-            var dataFile = '';
-            var urlFile = $arrayUrlFile[i];
-
-            if ($arrayDataFile[i]) {
-                dataFile = '"data" : "' + $arrayDataFile[i] + '",'
-            }
-            ;
-            url += '{' + dataFile + '"url" : "' + urlFile + '"},'
-        }
+function makeUrlFile(url, originalName, extension, size, data) {
+    var fileUrl = $j.parseJSON($j('#file_url').val());
+    var arrayPush = [];
+    if (fileUrl){
+        $j.each(fileUrl, function (key, file) {
+            arrayPush.push(file);
+        });
     }
 
-    //Remove a ultima vírgula
-    if (url.substring(url.length - 1, url.length) == ",") {
-        url = url.substring(0, url.length - 1);
-    }
+    var fileUrlNew = {
+        url : url,
+        originalName : originalName,
+        extension : extension,
+        size : size,
+        data : data
+    };
 
-    $j('#file_url').val('[' + url + ']');
+    arrayPush.push(fileUrlNew);
+    $j('#file_url').val(JSON.stringify(arrayPush));
 }
 
 function prepareUpload(event) {
@@ -138,7 +133,13 @@ function uploadFiles(files) {
                 } else {
                     messageUtils.success('Arquivo carregado com sucesso');
                     $j('#file').addClass('success');
-                    addFile(dataResponse.file_url, currentDate());
+                    addFile(
+                        dataResponse.file_url,
+                        dataResponse.file_original_name,
+                        dataResponse.file_extension,
+                        dataResponse.file_size,
+                        currentDate()
+                    );
                 }
 
             },

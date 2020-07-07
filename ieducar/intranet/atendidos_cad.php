@@ -755,7 +755,7 @@ class indice extends clsCadastro
         $this->inputTelefone('empresa', 'Telefone da empresa');
         $this->campoTexto('pessoa_contato', 'Pessoa de contato na empresa', $this->pessoa_contato, '50', '255', false);
 
-        $fileService = new FileService;
+        $fileService = new FileService(new UrlPresigner);
         $files = $fileService->getFiles(LegacyIndividual::class, $this->cod_pessoa_fj);
         $this->addHtml(view('uploads.upload', ['files' => $files])->render());
 
@@ -1414,12 +1414,19 @@ class indice extends clsCadastro
 
     private function saveFiles($idpes)
     {
-        $fileService = new FileService;
+        $fileService = new FileService(new UrlPresigner);
 
         if ($this->file_url) {
             $newFiles = json_decode($this->file_url);
             foreach ($newFiles as $file) {
-                $fileService->saveFile($file->url, 'file', LegacyIndividual::class, $idpes);
+                $fileService->saveFile(
+                    $file->url,
+                    $file->size,
+                    $file->originalName,
+                    $file->extension,
+                    LegacyIndividual::class,
+                    $idpes
+                );
             }
         }
 

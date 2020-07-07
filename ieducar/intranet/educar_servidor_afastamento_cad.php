@@ -2,6 +2,7 @@
 
 use App\Services\FileService;
 use App\Models\EmployeeWithdrawal;
+use App\Services\UrlPresigner;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -400,7 +401,7 @@ class indice extends clsCadastro
             }
         }
 
-        $fileService = new FileService;
+        $fileService = new FileService(new UrlPresigner);
         $files = $fileService->getFiles(EmployeeWithdrawal::class, $this->id);
         $this->addHtml(view('uploads.upload', ['files' => $files])->render());
     }
@@ -512,12 +513,19 @@ class indice extends clsCadastro
             return false;
         }
 
-        $fileService = new FileService;
+        $fileService = new FileService(new UrlPresigner);
 
         if ($this->file_url) {
             $newFiles = json_decode($this->file_url);
             foreach ($newFiles as $file) {
-                $fileService->saveFile($file->url, 'file', EmployeeWithdrawal::class , $cadastrou);
+                $fileService->saveFile(
+                    $file->url,
+                    $file->size,
+                    $file->originalName,
+                    $file->extension,
+                    EmployeeWithdrawal::class,
+                    $this->id
+                );
             }
         }
 
@@ -608,12 +616,19 @@ class indice extends clsCadastro
                 }
             }
 
-            $fileService = new FileService;
+            $fileService = new FileService(new UrlPresigner);
 
             if ($this->file_url) {
                 $newFiles = json_decode($this->file_url);
                 foreach ($newFiles as $file) {
-                    $fileService->saveFile($file->url, 'file', EmployeeWithdrawal::class , $this->id);
+                    $fileService->saveFile(
+                        $file->url,
+                        $file->size,
+                        $file->originalName,
+                        $file->extension,
+                        EmployeeWithdrawal::class,
+                        $this->id
+                    );
                 }
             }
 

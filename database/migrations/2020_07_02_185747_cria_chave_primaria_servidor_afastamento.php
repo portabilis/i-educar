@@ -26,7 +26,7 @@ class CriaChavePrimariaServidorAfastamento extends Migration
     public function down()
     {
         Schema::table('servidor_afastamento', function (Blueprint $table) {
-            $table->dropPrimary();
+            $table->dropColumn('id');
         });
     }
 }

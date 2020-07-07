@@ -5,29 +5,54 @@ namespace App\Services;
 use App\Models\File;
 use App\Models\FileRelation;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Throwable;
 
 class FileService
 {
+    private $urlPresigner;
+
+    public function __construct(UrlPresigner $urlPresigner)
+    {
+        $this->urlPresigner = $urlPresigner;
+    }
+
     public function createFile(UploadedFile $uploadFile, $typeFileRelation, $relationId)
     {
         $url = $this->upload($uploadFile);
 
-        $this->saveFile($url, $uploadFile->getType(), $typeFileRelation, $relationId);
+        $this->saveFile(
+            $url,
+            $uploadFile->getSize(),
+            $uploadFile->getClientOriginalName(),
+            $uploadFile->getClientOriginalExtension(),
+            $typeFileRelation,
+            $relationId
+        );
     }
 
-    public function saveFile($url, $type, $typeFileRelation, $relationId)
+    public function saveFile($url, $size, $originalName, $extension, $typeFileRelation, $relationId)
     {
-        $file = File::create([
-            'url' => $url,
-            'type' => $type,
-        ]);
-
-        FileRelation::create([
-            'type' => $typeFileRelation,
-            'relation_id' => $relationId,
-            'file_id' => $file->id,
-        ]);
+        DB::beginTransaction();
+        try {
+            $file = File::create([
+                'url' => $url,
+                'size' => $size,
+                'original_name' => $originalName,
+                'extension' => $extension,
+            ]);
+    
+            FileRelation::create([
+                'type' => $typeFileRelation,
+                'relation_id' => $relationId,
+                'file_id' => $file->id,
+            ]);
+            DB::commit();
+        } catch (Throwable $e) {
+            DB::rollBack();
+            dd($e);
+        }
     }
 
     public function getFiles($typeFileRelation, $relationId)
@@ -38,10 +63,8 @@ class FileService
                 ->where('relation_id', $relationId);
         })->get();
 
-        $urlPresigner = new UrlPresigner();
-
         foreach ($files as $file) {
-            $file->url = $urlPresigner->getPresignedUrl($file->url);
+            $file->url = $this->urlPresigner->getPresignedUrl($file->url);
         }
 
         return $files;
@@ -49,26 +72,32 @@ class FileService
 
     public function deleteFiles($deletedFiles)
     {
-        $this->deleteFilesFromStorage($deletedFiles);
-        $filesRelations = FileRelation::query()
-            ->whereIn('file_id', $deletedFiles)
-            ->pluck('id')
-            ->toArray();
-        FileRelation::destroy($filesRelations);
-        File::destroy($deletedFiles);
+        foreach ($deletedFiles as $deletedFile) {
+            DB::beginTransaction();
+            try {
+                $this->deleteFilesFromStorage($deletedFiles);
+                $filesRelation = FileRelation::query()
+                    ->where('file_id', $deletedFile)
+                    ->pluck('id')
+                    ->first();
+                FileRelation::destroy($filesRelation);
+                File::destroy($deletedFile);
+                DB::commit();
+            } catch(Throwable $e) {
+                DB::rollBack();
+            }
+        }
     }
 
-    public function deleteFilesFromStorage($deletedFiles)
+    public function deleteFilesFromStorage($deletedFile)
     {
-        $urls = File::query()
-            ->whereIn('id', $deletedFiles)
+        $url = File::query()
+            ->where('id', $deletedFile)
             ->pluck('url')
-            ->toArray();
+            ->first();
 
-        foreach ($urls as $url) {
-            $url = implode('/', array_slice(explode('/', $url), 3));
-            Storage::delete($url);
-        }
+        $url = implode('/', array_slice(explode('/', $url), 3));
+        Storage::delete($url);
     }
 
     public function upload($uploadFile)

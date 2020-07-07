@@ -15,7 +15,7 @@ class FileRequest extends FormRequest
     {
         return [
             'file' => [
-                'mimes:jpeg,pdf,png',
+                'mimes:jpeg,pdf,png,xls,doc',
                 'max:500'
             ],
         ];

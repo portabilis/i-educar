@@ -10,8 +10,9 @@ class FileController extends Controller
 {
     public function upload(FileRequest $request, FileService $fileService)
     {
+        $file = $request->file('file');
         try {
-            $url = $fileService->upload($request->file()['file']);
+            $url = $fileService->upload($file);
         } catch(Throwable $e) {
             return [
                 'error' => $e->getMessage()
@@ -19,7 +20,10 @@ class FileController extends Controller
         }
 
         return [
-            'file_url' => $url
+            'file_url' => $url,
+            'file_size' => $file->getSize(),
+            'file_extension' => $file->getClientOriginalExtension(),
+            'file_original_name' => $file->getClientOriginalName(),
         ];
     }
 }

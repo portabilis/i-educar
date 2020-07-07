@@ -30,7 +30,11 @@ class CriaIndiceUnicoServidorAfastamento extends Migration
     public function down()
     {
         Schema::table('servidor_afastamento', function (Blueprint $table) {
-            $table->dropUnique('servidor_afastamento_ref_cod_servidor_sequencial_ref_ref_cod_in');
+            $table->dropUnique([
+                'ref_cod_servidor',
+                'sequencial',
+                'ref_ref_cod_instituicao',
+            ]);
         });
     }
 }
