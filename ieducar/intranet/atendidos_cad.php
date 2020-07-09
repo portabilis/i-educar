@@ -385,7 +385,7 @@ class indice extends clsCadastro
         // Carteira do SUS
 
         $options = [
-            'required' => false,
+            'required' => config('legacy.app.fisica.exigir_cartao_sus'),
             'label' => 'Número da carteira do SUS',
             'placeholder' => '',
             'value' => $this->sus,
