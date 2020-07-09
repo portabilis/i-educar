@@ -8,47 +8,47 @@ select distinct
     ano_letivo_modulo.sequencial || 'º ' || modulo.nm_tipo as stage_number,
     ano_letivo_modulo.data_inicio as stage_start_date,
     ano_letivo_modulo.data_fim as stage_end_date,
-    'padrão' as stage_type,
+    'Padrão' as stage_type,
     (select true from modules.nota_componente_curricular
                           join modules.nota_aluno on nota_aluno.id = nota_componente_curricular.nota_aluno_id
                           join pmieducar.matricula on matricula.cod_matricula = nota_aluno.matricula_id
      where matricula.ref_ref_cod_escola = escola.cod_escola
-       and matricula.ano = 2020
+       and matricula.ano = ano_letivo_modulo.ref_ano
        and matricula.ativo = 1
      limit 1) as posted_scores,
     (select true from modules.falta_componente_curricular
                           join modules.falta_aluno on falta_aluno.id = falta_componente_curricular.falta_aluno_id
                           join pmieducar.matricula on matricula.cod_matricula = falta_aluno.matricula_id
      where matricula.ref_ref_cod_escola = escola.cod_escola
-       and matricula.ano = 2020
+       and matricula.ano = ano_letivo_modulo.ref_ano
        and matricula.ativo = 1
      limit 1) as posted_absences,
     (select true from modules.parecer_componente_curricular
                           join modules.parecer_aluno on parecer_aluno.id = parecer_componente_curricular.parecer_aluno_id
                           join pmieducar.matricula on matricula.cod_matricula = parecer_aluno.matricula_id
      where matricula.ref_ref_cod_escola = escola.cod_escola
-       and matricula.ano = 2020
+       and matricula.ano = ano_letivo_modulo.ref_ano
        and matricula.ativo = 1
      limit 1) as posted_descritive_opinions,
     (select true from modules.falta_geral
                           join modules.falta_aluno on falta_aluno.id = falta_geral.falta_aluno_id
                           join pmieducar.matricula on matricula.cod_matricula = falta_aluno.matricula_id
      where matricula.ref_ref_cod_escola = escola.cod_escola
-       and matricula.ano = 2020
+       and matricula.ano = ano_letivo_modulo.ref_ano
        and matricula.ativo = 1
      limit 1) as posted_general_absence,
     (select true from modules.nota_geral
                           join modules.nota_aluno on nota_aluno.id = nota_geral.nota_aluno_id
                           join pmieducar.matricula on matricula.cod_matricula = nota_aluno.matricula_id
      where matricula.ref_ref_cod_escola = escola.cod_escola
-       and matricula.ano = 2020
+       and matricula.ano = ano_letivo_modulo.ref_ano
        and matricula.ativo = 1
      limit 1) as posted_general_score,
     (select true from modules.parecer_geral
                           join modules.parecer_aluno on parecer_aluno.id = parecer_geral.parecer_aluno_id
                           join pmieducar.matricula on matricula.cod_matricula = parecer_aluno.matricula_id
      where matricula.ref_ref_cod_escola = escola.cod_escola
-       and matricula.ano = 2020
+       and matricula.ano = ano_letivo_modulo.ref_ano
        and matricula.ativo = 1
      limit 1) as posted_general_descritive_opinions
 from pmieducar.ano_letivo_modulo
