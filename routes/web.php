@@ -125,6 +125,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->name('update-registration-date.index');
     Route::post('/atualiza-data-entrada', 'UpdateRegistrationDateController@updateStatus')->name('update-registration-date.update-date');
+
+    Route::get('/configuracoes/configuracoes-de-sistema', 'SettingController@index')->name('settings.index');
+    Route::post('/configuracoes/configuracoes-de-sistema', 'SettingController@saveInputs')->name('settings.update');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
