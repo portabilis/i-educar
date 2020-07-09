@@ -17,6 +17,7 @@ select distinct
        and matricula.ano = turma.ano
        and matricula.ativo = 1
        and matricula_turma.ativo = 1
+       and nota_componente_curricular.etapa = turma_modulo.sequencial::VARCHAR
      limit 1) as posted_scores,
     (select true from modules.falta_componente_curricular
                           join modules.falta_aluno on falta_aluno.id = falta_componente_curricular.falta_aluno_id
@@ -26,6 +27,7 @@ select distinct
        and matricula.ano = turma.ano
        and matricula.ativo = 1
        and matricula_turma.ativo = 1
+       and falta_componente_curricular.etapa = turma_modulo.sequencial::VARCHAR
      limit 1) as posted_absences,
     (select true from modules.parecer_componente_curricular
                           join modules.parecer_aluno on parecer_aluno.id = parecer_componente_curricular.parecer_aluno_id
@@ -35,6 +37,7 @@ select distinct
        and matricula.ano = turma.ano
        and matricula.ativo = 1
        and matricula_turma.ativo = 1
+       and parecer_componente_curricular.etapa = turma_modulo.sequencial::VARCHAR
      limit 1) as posted_descritive_opinions,
     (select true from modules.falta_geral
                           join modules.falta_aluno on falta_aluno.id = falta_geral.falta_aluno_id
@@ -44,6 +47,7 @@ select distinct
        and matricula.ano = turma.ano
        and matricula.ativo = 1
        and matricula_turma.ativo = 1
+       and falta_geral.etapa = turma_modulo.sequencial::VARCHAR
      limit 1) as posted_general_absence,
     (select true from modules.nota_geral
                           join modules.nota_aluno on nota_aluno.id = nota_geral.nota_aluno_id
@@ -53,6 +57,7 @@ select distinct
        and matricula.ano = turma.ano
        and matricula.ativo = 1
        and matricula_turma.ativo = 1
+       and nota_geral.etapa = turma_modulo.sequencial::VARCHAR
      limit 1) as posted_general_score,
     (select true from modules.parecer_geral
                           join modules.parecer_aluno on parecer_aluno.id = parecer_geral.parecer_aluno_id
@@ -62,6 +67,7 @@ select distinct
        and matricula.ano = turma.ano
        and matricula.ativo = 1
        and matricula_turma.ativo = 1
+       and parecer_geral.etapa = turma_modulo.sequencial::VARCHAR
      limit 1) as posted_general_descritive_opinions
 from pmieducar.turma_modulo
          join pmieducar.turma on turma.cod_turma = turma_modulo.ref_cod_turma

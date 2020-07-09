@@ -15,6 +15,7 @@ select distinct
      where matricula.ref_ref_cod_escola = escola.cod_escola
        and matricula.ano = ano_letivo_modulo.ref_ano
        and matricula.ativo = 1
+       and nota_componente_curricular.etapa = ano_letivo_modulo.sequencial::VARCHAR
      limit 1) as posted_scores,
     (select true from modules.falta_componente_curricular
                           join modules.falta_aluno on falta_aluno.id = falta_componente_curricular.falta_aluno_id
@@ -22,6 +23,7 @@ select distinct
      where matricula.ref_ref_cod_escola = escola.cod_escola
        and matricula.ano = ano_letivo_modulo.ref_ano
        and matricula.ativo = 1
+       and falta_componente_curricular.etapa = ano_letivo_modulo.sequencial::VARCHAR
      limit 1) as posted_absences,
     (select true from modules.parecer_componente_curricular
                           join modules.parecer_aluno on parecer_aluno.id = parecer_componente_curricular.parecer_aluno_id
@@ -29,6 +31,7 @@ select distinct
      where matricula.ref_ref_cod_escola = escola.cod_escola
        and matricula.ano = ano_letivo_modulo.ref_ano
        and matricula.ativo = 1
+       and parecer_componente_curricular.etapa = ano_letivo_modulo.sequencial::VARCHAR
      limit 1) as posted_descritive_opinions,
     (select true from modules.falta_geral
                           join modules.falta_aluno on falta_aluno.id = falta_geral.falta_aluno_id
@@ -36,6 +39,7 @@ select distinct
      where matricula.ref_ref_cod_escola = escola.cod_escola
        and matricula.ano = ano_letivo_modulo.ref_ano
        and matricula.ativo = 1
+       and falta_geral.etapa = ano_letivo_modulo.sequencial::VARCHAR
      limit 1) as posted_general_absence,
     (select true from modules.nota_geral
                           join modules.nota_aluno on nota_aluno.id = nota_geral.nota_aluno_id
@@ -43,6 +47,7 @@ select distinct
      where matricula.ref_ref_cod_escola = escola.cod_escola
        and matricula.ano = ano_letivo_modulo.ref_ano
        and matricula.ativo = 1
+       and nota_geral.etapa = ano_letivo_modulo.sequencial::VARCHAR
      limit 1) as posted_general_score,
     (select true from modules.parecer_geral
                           join modules.parecer_aluno on parecer_aluno.id = parecer_geral.parecer_aluno_id
@@ -50,6 +55,7 @@ select distinct
      where matricula.ref_ref_cod_escola = escola.cod_escola
        and matricula.ano = ano_letivo_modulo.ref_ano
        and matricula.ativo = 1
+       and parecer_geral.etapa = ano_letivo_modulo.sequencial::VARCHAR
      limit 1) as posted_general_descritive_opinions
 from pmieducar.ano_letivo_modulo
          join pmieducar.escola on escola.cod_escola = ano_letivo_modulo.ref_ref_cod_escola
