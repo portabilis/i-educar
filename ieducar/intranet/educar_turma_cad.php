@@ -1852,11 +1852,14 @@ $pagina->MakeAll();
     function changeMultiSerie() {
         var campoCurso = document.getElementById('ref_cod_curso').value;
         var campoSerie = document.getElementById('ref_cod_serie').value;
+        var campoEscola = document.getElementById('ref_cod_escola').value;
+        var campoAno = document.getElementById('ano_letivo').value;
+        if (campoAno != '') {
+            var xml1 = new ajax(atualizaMultiSerie);
+            strURL = 'educar_sequencia_serie_xml.php?cur=' + campoCurso + '&ser_dif=' + campoSerie + '&escola=' + campoEscola + '&ano=' + campoAno;
 
-        var xml1 = new ajax(atualizaMultiSerie);
-        strURL = 'educar_sequencia_serie_xml.php?cur=' + campoCurso + '&ser_dif=' + campoSerie;
-
-        xml1.envia(strURL);
+            xml1.envia(strURL);
+        }
     }
 
     function atualizaMultiSerie(xml) {
@@ -1916,14 +1919,22 @@ $pagina->MakeAll();
         hideMultiSerie();
     }
 
+    document.getElementById('ano_letivo').onchange = function () {
+
+        changeMultiSerie();
+
+        hideMultiSerie();
+    }
+
     function hideMultiSerie() {
         setVisibility('tr_multiseriada', document.getElementById('ref_cod_serie').value != '' ? true : false);
 
         var multiBool = (document.getElementById('multiseriada').checked == true &&
-            document.getElementById('ref_cod_serie').value != '') ? true : false;
+            document.getElementById('ref_cod_serie').value != '' && document.getElementById('ano_letivo').value != '' ) ? true : false;
 
         setVisibility('ref_cod_serie_mult', multiBool);
         setVisibility('tr_ref_cod_serie_mult', multiBool);
+        setVisibility('tr_multiseriada', document.getElementById('ano_letivo').value != '' ? true : false);
     }
 
     function PadraoAnoEscolar(xml) {

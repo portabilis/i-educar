@@ -16,7 +16,7 @@ class QueryAllCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'query:all {--no-database=*}';
+    protected $signature = 'query:all {--no-database=*} {--file=}';
 
     /**
      * The console command description.
@@ -34,7 +34,7 @@ class QueryAllCommand extends Command
     {
         $array = [];
         $data = [];
-        $file = file_get_contents(storage_path('query.sql'));
+        $file = file_get_contents($this->getFile());
 
         $excludedDatabases = $this->option('no-database');
 
@@ -58,5 +58,10 @@ class QueryAllCommand extends Command
         array_unshift($header, 'connection');
 
         $this->table($header, $array);
+    }
+
+    private function getFile()
+    {
+        return $this->option('file') ?: storage_path('query.sql');
     }
 }
