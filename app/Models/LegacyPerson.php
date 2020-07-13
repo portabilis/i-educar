@@ -106,6 +106,14 @@ class LegacyPerson extends EloquentBaseModel implements Transformable
     }
 
     /**
+     * @return HasOne
+     */
+    public function employee()
+    {
+        return $this->hasOne(Employee::class, 'cod_servidor', 'idpes');
+    }
+
+    /**
      * @return BelongsToMany
      */
     public function considerableDeficiencies()

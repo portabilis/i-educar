@@ -142,6 +142,9 @@ return [
             'mostrar_codigo_sistema' => '1',
             'obrigar_recursos_tecnologicos' => '0'
         ],
+        'fisica' => [
+            'exigir_cartao_sus' => false,
+        ],
         'faltas_notas' => [
             'mostrar_botao_replicar' => '1',
         ],
@@ -168,9 +171,9 @@ return [
             ],
         ],
         'recaptcha_v3' => [
-            'public_key' => '',
-            'private_key' => '',
-            'minimum_score' => 0.5,
+            'public_key' => env('RECAPTCHA_V3_PUBLIC_KEY'),
+            'private_key' => env('RECAPTCHA_V3_PRIVATE_KEY'),
+            'minimum_score' => env('RECAPTCHA_V3_MINIMUM_SCORE', 0.5),
         ],
         'uppercase_names' => 0,
     ],

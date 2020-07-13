@@ -82,15 +82,15 @@ class clsPmieducarEscola extends Model
     public $quantidade_computadores_alunos_portateis = false;
     public $quantidade_computadores_alunos_tablets = false;
     public $lousas_digitais = false;
-    public $televisoes;
+    public $televisoes = false;
     public $videocassetes;
-    public $dvds;
+    public $dvds = false;
     public $antenas_parabolicas;
     public $copiadoras;
     public $retroprojetores;
     public $impressoras;
-    public $aparelhos_de_som;
-    public $projetores_digitais;
+    public $aparelhos_de_som = false;
+    public $projetores_digitais = false;
     public $faxs;
     public $maquinas_fotograficas;
     public $computadores;
@@ -1561,7 +1561,10 @@ class clsPmieducarEscola extends Model
             }
 
             if (is_numeric($this->televisoes)) {
-                $set .= "{$gruda}televisoes = '{$this->televisoes}'";
+                $set .= "{$gruda}televisoes = {$this->televisoes}";
+                $gruda = ', ';
+            } elseif ($this->televisoes !== false) {
+                $set .= "{$gruda}televisoes = NULL";
                 $gruda = ', ';
             }
 
@@ -1571,7 +1574,10 @@ class clsPmieducarEscola extends Model
             }
 
             if (is_numeric($this->dvds)) {
-                $set .= "{$gruda}dvds = '{$this->dvds}'";
+                $set .= "{$gruda}dvds = {$this->dvds}";
+                $gruda = ', ';
+            } elseif ($this->dvds !== false) {
+                $set .= "{$gruda}dvds = NULL";
                 $gruda = ', ';
             }
 
@@ -1596,12 +1602,18 @@ class clsPmieducarEscola extends Model
             }
 
             if (is_numeric($this->aparelhos_de_som)) {
-                $set .= "{$gruda}aparelhos_de_som = '{$this->aparelhos_de_som}'";
+                $set .= "{$gruda}aparelhos_de_som = {$this->aparelhos_de_som}";
+                $gruda = ', ';
+            } elseif ($this->aparelhos_de_som !== false) {
+                $set .= "{$gruda}aparelhos_de_som = NULL";
                 $gruda = ', ';
             }
 
             if (is_numeric($this->projetores_digitais)) {
-                $set .= "{$gruda}projetores_digitais = '{$this->projetores_digitais}'";
+                $set .= "{$gruda}projetores_digitais = {$this->projetores_digitais}";
+                $gruda = ', ';
+            } elseif ($this->projetores_digitais !== false) {
+                $set .= "{$gruda}projetores_digitais = NULL";
                 $gruda = ', ';
             }
 

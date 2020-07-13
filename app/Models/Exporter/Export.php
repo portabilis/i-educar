@@ -44,6 +44,7 @@ class Export extends Model
             1 => new Student(),
             2 => new Teacher(),
             3 => new SocialAssistance(),
+            4 => new Stage(),
         ];
     }
 
