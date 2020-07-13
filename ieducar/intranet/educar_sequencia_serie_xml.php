@@ -13,12 +13,14 @@
     {
         $db = new clsBanco();
         $consulta = "SELECT cod_serie, nm_serie
-                       FROM pmieducar.serie
-                      WHERE ref_cod_curso = ". $_GET["cur"] .
-                      " AND ativo = 1
-                      AND cod_serie <>" .
-                      $_GET['ser_dif'] .
-                      " ORDER BY nm_serie" ;
+                    FROM pmieducar.serie s
+                    INNER JOIN pmieducar.escola_serie es ON es.ref_cod_serie = s.cod_serie
+                   WHERE ref_cod_curso = ". $_GET["cur"] . "
+                    AND s.ativo = 1
+                    AND cod_serie <> ". $_GET["ser_dif"] . "
+                    AND es.ref_cod_escola = ". $_GET["escola"] . "
+                    AND ". $_GET["ano"] . " = ANY (es.anos_letivos)
+                    ORDER BY nm_serie";
         $db->Consulta( $consulta );
         while ( $db->ProximoRegistro() )
         {
