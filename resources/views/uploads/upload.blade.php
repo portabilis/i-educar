@@ -40,7 +40,7 @@ function deleteFile(event) {
     var removeId = this.id.replace(/\D/g, '') - 1;
     var fileUrl = $j.parseJSON($j('#file_url').val());
     fileUrl.splice(removeId, 1);
-    $j('#file_url').val(JSON.stringify(arrayPush));
+    $j('#file_url').val(JSON.stringify(fileUrl));
     $j('#file').val('').removeClass('success');
     messageUtils.notice('Arquivo excluído com sucesso!');
     $j('#file' + event.data.i).hide();

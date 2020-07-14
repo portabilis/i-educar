@@ -74,7 +74,7 @@ class FileService
         foreach ($deletedFiles as $deletedFile) {
             DB::beginTransaction();
             try {
-                $this->deleteFilesFromStorage($deletedFiles);
+                $this->deleteFilesFromStorage($deletedFile);
                 $filesRelation = FileRelation::query()
                     ->where('file_id', $deletedFile)
                     ->pluck('id')
