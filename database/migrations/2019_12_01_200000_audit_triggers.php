@@ -38,6 +38,7 @@ class AuditTriggers extends Migration
             'pmieducar.escola_serie_disciplina_excluidos',
             'pmieducar.matricula_turma_excluidos',
             'public.migrations',
+            'migrations',
         ]);
     }
 
