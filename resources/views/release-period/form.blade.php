@@ -209,7 +209,9 @@
 
         function confirmDelete() {
             if (confirm('Excluir registro?')) {
-                window.location.href = '{{ route('release-period.delete', ['releasePeriod' => $releasePeriod]) }}';
+                @if ($releasePeriod->exists)
+                    window.location.href = '{{ route('release-period.delete', ['releasePeriod' => $releasePeriod]) }}';
+                @endif
             }
         }
     </script>

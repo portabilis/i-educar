@@ -62,13 +62,13 @@
     @forelse($data as $releasePeriod)
         <tr>
             <td>
-                <a href="{{ route('release-period.show', ['unification' => $releasePeriod->id]) }}">{{ implode(', ', $releasePeriod->schools->pluck('name')->toArray())  }}</a>
+                <a href="{{ route('release-period.show', ['releasePeriod' => $releasePeriod->id]) }}">{{ implode(', ', $releasePeriod->schools->pluck('name')->toArray())  }}</a>
             </td>
             <td>
-                <a href="{{ route('release-period.show', ['unification' => $releasePeriod->id]) }}">{{ $releasePeriod->stage }}</a>
+                <a href="{{ route('release-period.show', ['releasePeriod' => $releasePeriod->id]) }}">{{ $releasePeriod->stage }}</a>
             </td>
             <td>
-                <a href="{{ route('release-period.show', ['unification' => $releasePeriod->id]) }}">{!! implode('<br>', $releasePeriod->getDatesArray()) !!}</a>
+                <a href="{{ route('release-period.show', ['releasePeriod' => $releasePeriod->id]) }}">{!! implode('<br>', $releasePeriod->getDatesArray()) !!}</a>
             </td>
         </tr>
     @empty
