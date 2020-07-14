@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services\Settings\Inputs;
+namespace App\Support\View\Settings\Inputs;
 
-class IntegerInput implements InputInterface
+class StringInput implements InputInterface
 {
     public function getInputView($id, $description, $key, $value)
     {
-        return view('settings.integer-input', [
+        return view('settings.string-input', [
             'id' => $id,
             'description' => $description,
             'key' => $key,

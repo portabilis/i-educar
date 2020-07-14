@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Settings\Inputs;
+namespace App\Support\View\Settings\Inputs;
 
 interface InputInterface
 {

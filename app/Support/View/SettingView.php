@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Services;
+namespace App\Support\View;
 
-use App\Services\Settings\Inputs\BooleanInput;
-use App\Services\Settings\Inputs\FloatInput;
-use App\Services\Settings\Inputs\IntegerInput;
-use App\Services\Settings\Inputs\StringInput;
+use App\Support\View\Settings\Inputs\BooleanInput;
+use App\Support\View\Settings\Inputs\FloatInput;
+use App\Support\View\Settings\Inputs\IntegerInput;
+use App\Support\View\Settings\Inputs\StringInput;
 use App\Setting;
 
-class SettingService
+class SettingView
 {
     public function makeInput($id, $description, $type, $key, $value)
     {

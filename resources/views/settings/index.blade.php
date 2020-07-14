@@ -1,4 +1,4 @@
-@inject('service', 'App\Services\SettingService')
+@inject('view', 'App\Support\View\SettingView')
 @extends('layout.default')
 
 @push('styles')
@@ -14,7 +14,7 @@
                 <td class="titulo-tabela-listagem" colspan="2" height="24"><b>Configurações iniciais</b></td>
             </tr>
             @foreach($fields as $field)
-                {!! $service->makeInput($field->id, $field->description, $field->type, $field->key, $field->value) !!}
+                {!! $view->makeInput($field->id, $field->description, $field->type, $field->key, $field->value) !!}
             @endforeach
             </tbody>
         </table>

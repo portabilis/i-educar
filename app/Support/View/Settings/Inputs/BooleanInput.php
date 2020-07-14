@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services\Settings\Inputs;
+namespace App\Support\View\Settings\Inputs;
 
-class StringInput implements InputInterface
+class BooleanInput implements InputInterface
 {
     public function getInputView($id, $description, $key, $value)
     {
-        return view('settings.string-input', [
+        return view('settings.boolean-input', [
             'id' => $id,
             'description' => $description,
             'key' => $key,

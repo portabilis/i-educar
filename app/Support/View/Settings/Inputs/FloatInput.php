@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services\Settings\Inputs;
+namespace App\Support\View\Settings\Inputs;
 
-class BooleanInput implements InputInterface
+class FloatInput implements InputInterface
 {
     public function getInputView($id, $description, $key, $value)
     {
-        return view('settings.boolean-input', [
+        return view('settings.float-input', [
             'id' => $id,
             'description' => $description,
             'key' => $key,

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services\Settings\Inputs;
+namespace App\Support\View\Settings\Inputs;
 
-class FloatInput implements InputInterface
+class IntegerInput implements InputInterface
 {
     public function getInputView($id, $description, $key, $value)
     {
-        return view('settings.float-input', [
+        return view('settings.integer-input', [
             'id' => $id,
             'description' => $description,
             'key' => $key,
