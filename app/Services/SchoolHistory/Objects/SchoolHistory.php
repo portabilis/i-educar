@@ -5,21 +5,28 @@ namespace App\Services\SchoolHistory\Objects;
 class SchoolHistory
 {
     private $studentId;
+    private $seriesYearsModel;
     public $disciplines;
 
-    public function __construct($studentId)
+    const GRADE_SERIE = 1;
+    const GRADE_ANO = 2;
+    const GRADE_EJA = 3;
+
+    public function __construct($studentId, $seriesYearsModel)
     {
         $this->studentId = $studentId;
+        $this->seriesYearsModel = $seriesYearsModel;
     }
 
     public function addDiscipline($data)
     {
         $discipline = $this->getDiscipline($data['nm_disciplina']);
-        $column = substr($data['nm_serie'], 0, 1);
+        $column = $this->getColumn($data['nm_serie'], $data['historico_grade_curso_id']);
 
-        if (!is_numeric($column)) {
+        if (!$column) {
             return;
         }
+
         $discipline->nm_disciplina = $data['nm_disciplina'];
         $discipline->addColumnYear($column, $data['ano']);
         $discipline->addColumnSchool($column, $data['escola']);
@@ -59,5 +66,20 @@ class SchoolHistory
         }
 
         return $lines;
+    }
+
+    public function getColumn($gradeName, $gradeType)
+    {
+        $column = substr($gradeName, 0, 1);
+
+        if (!is_numeric($column)) {
+            return;
+        }
+
+        if ($gradeType == SchoolHistory::GRADE_SERIE && $this->seriesYearsModel) {
+            return $column + 1;
+        }
+
+        return $column;
     }
 }
