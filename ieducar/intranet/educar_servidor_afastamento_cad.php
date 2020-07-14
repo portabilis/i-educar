@@ -524,7 +524,7 @@ class indice extends clsCadastro
                     $file->originalName,
                     $file->extension,
                     EmployeeWithdrawal::class,
-                    $this->id
+                    $cadastrou
                 );
             }
         }
