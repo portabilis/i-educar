@@ -38,6 +38,7 @@ require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'Educacenso/Model/DocenteDataMapper.php';
 
 use App\Models\Employee;
+use App\Models\EmployeeWithdrawal;
 
 /**
  * clsIndexBase class.
@@ -515,12 +516,19 @@ class indice extends clsDetalhe
       }
     }
 
+    $withdrawals = EmployeeWithdrawal::query()->where('ref_cod_servidor', $this->cod_servidor)->get();
+
+    if (count($withdrawals) > 0) {
+      $this->addHtml(view('employee-withdrawal.employee-withdrawal', ['withdrawals' => $withdrawals])->render());
+    }
+
     $this->url_cancelar = 'educar_servidor_lst.php';
     $this->largura = '100%';
 
     $this->breadcrumb('Funções do servidor', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
+    
   }
 }
 

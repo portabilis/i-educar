@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class EmployeeWithdrawal extends Model
 {
@@ -22,6 +23,14 @@ class EmployeeWithdrawal extends Model
         'data_saida',
         'ativo',
     ];
+
+    protected $dates = [
+        'data_cadastro',
+        'data_exclusao',
+        'data_retorno',
+        'data_saida',
+    ];
+
     /**
      * @return BelongsTo
      */
@@ -30,4 +39,19 @@ class EmployeeWithdrawal extends Model
         return $this->belongsTo(Employee::class, 'ref_cod_servidor', 'cod_servidor');
     }
 
+    /**
+     * @return BelongsTo
+     */
+    public function reason()
+    {
+        return $this->belongsTo(WithdrawalReason::class, 'ref_cod_motivo_afastamento', 'cod_motivo_afastamento');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function files()
+    {
+        return $this->belongsToMany(File::class, 'files_relations', 'relation_id', 'file_id');
+    }
 }
