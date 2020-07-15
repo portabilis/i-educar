@@ -507,7 +507,7 @@ class indice extends clsDetalhe
         $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}\");";
       } elseif (is_numeric($afastamento)) {
         $this->array_botao[] = 'Retornar Servidor';
-        $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}&sequencial={$afastamento}\");";
+        $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}&sequencial={$afastamento}&retornar_servidor=S\");";
       }
 
       if ($this->is_professor){

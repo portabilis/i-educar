@@ -8,6 +8,7 @@
                     <th>Data de saída</th>
                     <th>Data de retorno</th>
                     <th>Documentos</th>
+                    <th>Editar</th>
                 </tr>
                 @if(isset($withdrawals))
                     @foreach($withdrawals as $withdrawal)
@@ -21,6 +22,13 @@
                                     <li><a href="{{$file->url}}" target="_new">{{$file->original_name}}</a></li>
                                 </ul>
                             @endforeach
+                            </td>
+                            <td align="center">
+                                @if($withdrawal->ativo == 1)
+                                    <a href="educar_servidor_afastamento_cad.php?ref_cod_servidor={{$withdrawal->ref_cod_servidor}}&sequencial={{$withdrawal->sequencial}}&ref_cod_instituicao={{$withdrawal->ref_ref_cod_instituicao}}">Editar</a> 
+                                @else
+                                    <i class="fa fa-ban" aria-hidden="true"></i>
+                                @endif
                             </td>
                         </div>
                         </tr>

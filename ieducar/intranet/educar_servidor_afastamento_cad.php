@@ -73,9 +73,10 @@ class indice extends clsCadastro
         $retorno = 'Novo';
         $this->status = 'N';
 
-        $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
-        $this->ref_cod_servidor    = $_GET['ref_cod_servidor'];
-        $this->sequencial          = $_GET['sequencial'];
+        $this->ref_cod_instituicao = $this->getQueryString('ref_cod_instituicao');
+        $this->ref_cod_servidor = $this->getQueryString('ref_cod_servidor');
+        $this->sequencial = $this->getQueryString('sequencial');
+        $this->retornar_servidor = $this->getQueryString('retornar_servidor');
 
         $urlPermite = sprintf(
             'educar_servidor_det.php?cod_servidor=%s&ref_cod_instituicao=%s',
@@ -150,6 +151,7 @@ class indice extends clsCadastro
         $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
         $this->campoOculto('sequencial', $this->sequencial);
         $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
+        $this->campoOculto('retornar_servidor', $this->retornar_servidor);
 
         $opcoes = ['' => 'Selecione'];
 
@@ -164,7 +166,7 @@ class indice extends clsCadastro
             $opcoes = ['' => 'Nenhum motivo de afastamento cadastrado'];
         }
 
-        if ($this->status == 'N') {
+        if ($this->status == 'N' || $this->retornar_servidor != 'S') {
             $this->campoLista(
                 'ref_cod_motivo_afastamento',
                 'Motivo Afastamento',
@@ -187,7 +189,7 @@ class indice extends clsCadastro
 
         // Datas para registro
         // Se novo registro
-        if ($this->status == 'N') {
+        if ($this->status == 'N' || $this->retornar_servidor != 'S') {
             $this->campoData('data_saida', 'Data de Afastamento', $this->data_saida, true);
         }
         // Se edição, mostra a data de afastamento
@@ -196,7 +198,7 @@ class indice extends clsCadastro
         }
 
         // Se edição, mostra campo para entrar com data de retorno
-        if ($this->status == 'E') {
+        if ($this->retornar_servidor == 'S') {
             $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, false);
         }
 
@@ -401,9 +403,11 @@ class indice extends clsCadastro
             }
         }
 
-        $fileService = new FileService(new UrlPresigner);
-        $files = $fileService->getFiles(EmployeeWithdrawal::class, $this->id);
-        $this->addHtml(view('uploads.upload', ['files' => $files])->render());
+        if ($this->retornar_servidor != 'S') {
+            $fileService = new FileService(new UrlPresigner);
+            $files = $fileService->getFiles(EmployeeWithdrawal::class, $this->id);
+            $this->addHtml(view('uploads.upload', ['files' => $files])->render());
+        }
     }
 
     public function Novo()
@@ -554,7 +558,7 @@ class indice extends clsCadastro
             null,
             dataToBanco($this->data_retorno),
             unserialize($this->data_saida),
-            0,
+            (int)($this->retornar_servidor != 'S'),
             $this->ref_cod_instituicao
         );
 
