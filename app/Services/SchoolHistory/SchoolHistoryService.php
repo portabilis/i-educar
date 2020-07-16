@@ -15,7 +15,7 @@ class SchoolHistoryService
 
     public function addData($data)
     {
-        $this->schoolHistory->addDiscipline($data);
+        $this->schoolHistory->addDataGroupByDiscipline($data);
     }
 
     public function getSchoolHistory()
