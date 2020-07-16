@@ -2,21 +2,23 @@
 
 namespace App\Services\SchoolHistory\Objects;
 
+use App\Services\SchoolHistory\SchoolHistoryService;
 use DateTime;
 
 class SchoolHistory
 {
-    private $studentId;
+    private $service;
     private $seriesYearsModel;
+    private $certificationText;
     public $disciplines;
 
     const GRADE_SERIE = 1;
     const GRADE_ANO = 2;
     const GRADE_EJA = 3;
 
-    public function __construct($studentId, $seriesYearsModel)
+    public function __construct(SchoolHistoryService $service, $seriesYearsModel)
     {
-        $this->studentId = $studentId;
+        $this->service = $service;
         $this->seriesYearsModel = $seriesYearsModel;
     }
 
@@ -37,11 +39,12 @@ class SchoolHistory
         $discipline->cidade_nascimento_uf = $data['cidade_nascimento_uf'];
         $discipline->uf_nascimento = $data['uf_nascimento'];
         $discipline->cidade_nascimento = $data['cidade_nascimento'];
-        $discipline->data_nasc = $this->getFormattedDate($data['data_nasc']);
+        $discipline->data_nasc = (new DateTime($data['data_nasc']))->format('d/m/Y');
         $discipline->nome_do_pai = $data['nome_do_pai'];
         $discipline->nome_da_mae = $data['nome_da_mae'];
-        $discipline->obsevacao_all .= $this->getFormattedNotes($data['observacao']);
+        $discipline->obsevacao_all .= $data['observacao'] ?? $data['observacao'] . '<br>';
         $discipline->data_atual_extenso = $data['data_atual_extenso'];
+        $discipline->texto_certificacao = $this->certificationText;
 
         $discipline->addColumnYear($column, $data['ano']);
         $discipline->addColumnSchool($column, $data['escola']);
@@ -83,31 +86,19 @@ class SchoolHistory
         return $lines;
     }
 
-    public function getColumn($gradeName, $gradeType)
+    public function getColumn($levelName, $gradeType)
     {
-        $column = substr($gradeName, 0, 1);
-
-        if (!is_numeric($column)) {
+        if (!$this->service->isValidLevelName($levelName, $gradeType)) {
             return;
         }
 
-        if ($gradeType == SchoolHistory::GRADE_SERIE && $this->seriesYearsModel) {
+        $column = $this->service->getLevelByName($levelName);
+
+        if ($this->service->isEightYears($gradeType) && $this->seriesYearsModel) {
             return $column + 1;
         }
 
         return $column;
-    }
-
-    public function getFormattedDate($dataField)
-    {
-        return (new DateTime($dataField))->format('d/m/Y');
-    }
-
-    public function getFormattedNotes($note)
-    {
-        if ($note) {
-            return $note . ' <br> ';
-        }
     }
 
     public function getFormattedScore($score)
@@ -117,5 +108,10 @@ class SchoolHistory
         }
 
         return $score;
+    }
+
+    public function makeTextoCertificacao($data)
+    {
+        $this->certificationText = $this->service->getCertificationText($data);
     }
 }
