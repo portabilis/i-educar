@@ -5,7 +5,7 @@
             <table class="table-detail">
                 <tr>
                     <th>Motivo</th>
-                    <th>Data de saída</th>
+                    <th>Data de afastamento</th>
                     <th>Data de retorno</th>
                     <th>Documentos</th>
                     <th>Editar</th>
