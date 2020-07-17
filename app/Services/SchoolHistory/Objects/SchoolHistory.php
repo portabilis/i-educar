@@ -62,7 +62,7 @@ class SchoolHistory
         $discipline->addColumnAttendance($column, $data['frequencia']);
         $discipline->addColumnSchoolDays($column, $data['dias_letivos']);
         $discipline->addColumnGeneralAbsence($column, $data['faltas_globalizadas']);
-        $discipline->addColumnStatus($column, $data['aprovado']);
+        $discipline->addColumnStatus($column, $this->getStatus($data['aprovado']));
         $discipline->addColumnTransferred($column, $data['aprovado'] == 4);
         $discipline->addColumnScore($column, $this->getFormattedScore($data['nota']));
         $discipline->addColumnAbsence($column, $data['faltas']);
@@ -118,5 +118,23 @@ class SchoolHistory
     public function makeTextoCertificacao($data)
     {
         $this->certificationText = $this->service->getCertificationText($data);
+    }
+
+    public function getStatus($status)
+    {
+        $allStatus = [
+            1 => 'Apro',
+            12 => 'AprDep',
+            13 => 'AprCo',
+            2 => 'Repr',
+            3 => 'Curs',
+            4 => 'Tran',
+            5 => 'Recl',
+            6 => 'Aban',
+            14 => 'RpFt',
+            15 => 'Fal',
+        ];
+
+        return $allStatus[$status];
     }
 }
