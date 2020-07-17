@@ -58,6 +58,9 @@ class clsCadastro extends clsCampos
     public $onSubmit = 'acao()';
     public $form_enctype;
 
+    const NOVO = 'N';
+    const EDITAR = 'E';
+
     /**
      * @deprecated
      */

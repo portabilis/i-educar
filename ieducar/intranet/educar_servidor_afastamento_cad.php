@@ -3,6 +3,7 @@
 use App\Services\FileService;
 use App\Models\EmployeeWithdrawal;
 use App\Services\UrlPresigner;
+use App\Support\View\Employee\EmployeeReturn;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -63,10 +64,6 @@ class indice extends clsCadastro
         7  => 'S&aacute;bado'
     ];
 
-    const SIM = 'S';
-    const NOVO = 'N';
-    const EDITAR = 'E';
-
     /**
      * Implementação do método clsCadastro::Inicializar()
      *
@@ -75,7 +72,7 @@ class indice extends clsCadastro
     public function Inicializar()
     {
         $retorno = 'Novo';
-        $this->status = indice::NOVO;
+        $this->status = clsCadastro::NOVO;
 
         $this->ref_cod_instituicao = $this->getQueryString('ref_cod_instituicao');
         $this->ref_cod_servidor = $this->getQueryString('ref_cod_servidor');
@@ -124,7 +121,7 @@ class indice extends clsCadastro
                 }
 
                 $retorno = 'Editar';
-                $this->status = indice::EDITAR;
+                $this->status = clsCadastro::EDITAR;
             }
         }
 
@@ -170,14 +167,14 @@ class indice extends clsCadastro
             $opcoes = ['' => 'Nenhum motivo de afastamento cadastrado'];
         }
 
-        if ($this->status == indice::NOVO || $this->retornar_servidor != indice::SIM) {
+        if ($this->status == clsCadastro::NOVO || $this->retornar_servidor != EmployeeReturn::SIM) {
             $this->campoLista(
                 'ref_cod_motivo_afastamento',
                 'Motivo Afastamento',
                 $opcoes,
                 $this->ref_cod_motivo_afastamento
             );
-        } elseif ($this->status == indice::EDITAR) {
+        } elseif ($this->status == clsCadastro::EDITAR) {
             $this->campoLista(
                 'ref_cod_motivo_afastamento',
                 'Motivo Afastamento',
@@ -193,16 +190,16 @@ class indice extends clsCadastro
 
         // Datas para registro
         // Se novo registro
-        if ($this->status == indice::NOVO || $this->retornar_servidor != indice::SIM) {
+        if ($this->status == clsCadastro::NOVO || $this->retornar_servidor != EmployeeReturn::SIM) {
             $this->campoData('data_saida', 'Data de Afastamento', $this->data_saida, true);
         }
         // Se edição, mostra a data de afastamento
-        elseif ($this->status == indice::EDITAR) {
+        elseif ($this->status == clsCadastro::EDITAR) {
             $this->campoRotulo('data_saida', 'Data de Afastamento', $this->data_saida);
         }
 
         // Se edição, mostra campo para entrar com data de retorno
-        if ($this->retornar_servidor == indice::SIM) {
+        if ($this->retornar_servidor == EmployeeReturn::SIM) {
             $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, false);
         }
 
@@ -309,7 +306,7 @@ class indice extends clsCadastro
                             $obj_subst = new clsPessoa_($alocacao['ref_cod_substituto']);
                             $det_subst = $obj_subst->detalhe();
 
-                            if ($this->status == indice::NOVO) {
+                            if ($this->status == clsCadastro::NOVO) {
                                 $this->campoTextoInv(
                                     "dia_semana_{$key}_",
                                     '',
@@ -407,7 +404,7 @@ class indice extends clsCadastro
             }
         }
 
-        if ($this->retornar_servidor != indice::SIM) {
+        if ($this->retornar_servidor != EmployeeReturn::SIM) {
             $fileService = new FileService(new UrlPresigner);
             $files = $fileService->getFiles(EmployeeWithdrawal::class, $this->id);
             $this->addHtml(view('uploads.upload', ['files' => $files])->render());
@@ -561,8 +558,8 @@ class indice extends clsCadastro
             null,
             null,
             dataToBanco($this->data_retorno),
-            (int)($this->retornar_servidor != indice::SIM) ?? dataToBanco($this->data_saida),
-            (int)($this->retornar_servidor != indice::SIM),
+            (int)($this->retornar_servidor != EmployeeReturn::SIM) ?? dataToBanco($this->data_saida),
+            (int)($this->retornar_servidor != EmployeeReturn::SIM),
             $this->ref_cod_instituicao
         );
 
