@@ -39,6 +39,7 @@ require_once 'Educacenso/Model/DocenteDataMapper.php';
 
 use App\Models\Employee;
 use App\Models\EmployeeWithdrawal;
+use App\Support\View\Employee\EmployeeReturn;
 
 /**
  * clsIndexBase class.
@@ -85,8 +86,6 @@ class indice extends clsDetalhe
   var $ref_cod_instituicao = null;
   var $alocacao_array = array();
   var $is_professor = FALSE;
-
-  const SIM = 'S';
 
   /**
    * Implementação do método Gerar()
@@ -509,7 +508,7 @@ class indice extends clsDetalhe
         $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}\");";
       } elseif (is_numeric($afastamento)) {
         $this->array_botao[] = 'Retornar Servidor';
-        $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}&sequencial={$afastamento}&retornar_servidor=" . indice::SIM . "\");";
+        $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}&sequencial={$afastamento}&retornar_servidor=" . EmployeeReturn::SIM . "\");";
       }
 
       if ($this->is_professor){
