@@ -43,13 +43,18 @@ class SchoolHistory
         $discipline->nome_do_pai = $data['nome_do_pai'];
         $discipline->nome_da_mae = $data['nome_da_mae'];
         $discipline->obsevacao_all .= $data['observacao'] ?? $data['observacao'] . '<br>';
-        $discipline->data_atual_extenso = $data['data_atual_extenso'];
-        $discipline->texto_certificacao = $this->certificationText;
+        $discipline->data_atual = $data['data_atual_extenso'];
+        $discipline->nome_serie_aux = $this->certificationText;
+        $discipline->municipio = $data['municipio'];
 
+        $discipline->addLastCourseName($data['nome_curso']);
         $discipline->addColumnYear($column, $data['ano']);
         $discipline->addColumnSchool($column, $data['escola']);
         $discipline->addColumnSchoolTown($column, $data['escola_cidade']);
         $discipline->addColumnSchoolFS($column, $data['escola_uf']);
+        $discipline->addLastRecord($data['registro']);
+        $discipline->addLastBook($data['livro']);
+        $discipline->addLastSchoolSheet($data['folha']);
         $discipline->addColumnRecord($column, $data['registro']);
         $discipline->addColumnBook($column, $data['livro']);
         $discipline->addColumnSchoolSheet($column, $data['folha']);

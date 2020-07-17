@@ -4,6 +4,11 @@ namespace App\Services\SchoolHistory\Objects;
 
 class DisciplineGroup
 {
+    public function addLastCourseName($nome_curso)
+    {
+        $this->nome_curso = $nome_curso;
+    }
+
     public function addColumnYear($column, $year)
     {
         $this->{"ano_{$column}serie"} = $year;
@@ -22,6 +27,21 @@ class DisciplineGroup
     public function addColumnSchoolFS($column, $schoolFS)
     {
         $this->{"escola_uf_{$column}serie"} = $schoolFS;
+    }
+
+    public function addLastRecord($record)
+    {
+        $this->nm_termo = $record;
+    }
+
+    public function addLastBook($book)
+    {
+        $this->nm_livro = $book;
+    }
+
+    public function addLastSchoolSheet($sheet)
+    {
+        $this->nm_folha = $sheet;
     }
 
     public function addColumnRecord($column, $record)
