@@ -557,7 +557,7 @@ class indice extends clsCadastro
             null,
             null,
             dataToBanco($this->data_retorno),
-            unserialize($this->data_saida),
+            dataToBanco($this->data_saida),
             (int)($this->retornar_servidor != 'S'),
             $this->ref_cod_instituicao
         );
