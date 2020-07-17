@@ -95,7 +95,15 @@ class FileService
             ->pluck('url')
             ->first();
 
-        $url = implode('/', array_slice(explode('/', $url), 3));
+        switch (config('filesystems.default')) {
+            case 'local':
+                $url = config('legacy.app.database.dbname') . '/' . implode('/', array_slice(explode('/', $url), 5));
+                break;
+            case 's3':
+                $url = implode('/', array_slice(explode('/', $url), 3));
+                break;
+        }
+
         Storage::delete($url);
     }
 
