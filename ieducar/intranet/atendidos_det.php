@@ -162,7 +162,7 @@ class indice extends clsDetalhe
         }
 
         $fileService = new FileService(new UrlPresigner);
-        $files = $fileService->getFiles(LegacyIndividual::class, $cod_pessoa);
+        $files = $fileService->getFiles(LegacyIndividual::find($cod_pessoa));
 
         if (count($files) > 0) {
             $this->addHtml(view('uploads.upload-details', ['files' => $files])->render());

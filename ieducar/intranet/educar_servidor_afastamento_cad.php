@@ -406,7 +406,7 @@ class indice extends clsCadastro
 
         if ($this->retornar_servidor != EmployeeReturn::SIM) {
             $fileService = new FileService(new UrlPresigner);
-            $files = $fileService->getFiles(EmployeeWithdrawal::class, $this->id);
+            $files = $fileService->getFiles(EmployeeWithdrawal::find($this->id));
             $this->addHtml(view('uploads.upload', ['files' => $files])->render());
         }
     }

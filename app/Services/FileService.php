@@ -54,13 +54,9 @@ class FileService
         }
     }
 
-    public function getFiles($typeFileRelation, $relationId)
+    public function getFiles($relation)
     {
-        $files = File::query()->whereHas('relations', function($queryRelation) use ($typeFileRelation, $relationId) {
-            $queryRelation
-                ->where('type', $typeFileRelation)
-                ->where('relation_id', $relationId);
-        })->get();
+        $files = $relation->files;
 
         foreach ($files as $file) {
             $file->url = $this->urlPresigner->getPresignedUrl($file->url);
