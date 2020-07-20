@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class EmployeeWithdrawal extends Model
 {
+    use HasFiles;
+
     protected $table = 'pmieducar.servidor_afastamento';
 
     protected $fillable = [
@@ -45,13 +47,5 @@ class EmployeeWithdrawal extends Model
     public function reason()
     {
         return $this->belongsTo(WithdrawalReason::class, 'ref_cod_motivo_afastamento', 'cod_motivo_afastamento');
-    }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function files()
-    {
-        return $this->belongsToMany(File::class, 'files_relations', 'relation_id', 'file_id');
     }
 }
