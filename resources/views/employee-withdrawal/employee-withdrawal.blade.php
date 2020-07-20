@@ -1,3 +1,4 @@
+@inject('service', 'App\Services\UrlPresigner')
 <tr id="tr_historico_afastamento">
     <td class="formmdtd" valign="top"><span class="form">Histórico de afastamentos</span></td>
     <td class="formmdtd" valign="top">
@@ -19,7 +20,7 @@
                             <td>
                             @foreach($withdrawal->files as $file)
                                 <ul>
-                                    <li><a href="{{$file->url}}" target="_new">{{$file->original_name}}</a></li>
+                                    <li><a href="{{$service->getPresignedUrl($file->url)}}" target="_new">{{$file->original_name}}</a></li>
                                 </ul>
                             @endforeach
                             </td>
