@@ -559,7 +559,7 @@ class indice extends clsCadastro
             null,
             dataToBanco($this->data_retorno),
             (int)($this->retornar_servidor == EmployeeReturn::SIM) ?: dataToBanco($this->data_saida),
-            (int)($this->retornar_servidor != EmployeeReturn::SIM),
+            (int)($this->retornar_servidor == EmployeeReturn::SIM) ? 0 : null,
             $this->ref_cod_instituicao
         );
 
