@@ -23,7 +23,7 @@ class DropTableEducacensoEtapaTurma extends Migration
      */
     public function down()
     {
-        Schema::create('public.educacenso_etapa_turma', function (Blueprint $table) {
+        Schema::create('public.etapa_educacenso', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
         });

@@ -17,7 +17,7 @@ select
     t.cod_turma as school_class_id,
     t.tipo_atendimento as attendance_type,
     ece.cod_escola_inep as school_inep,
-    eec.id as school_class_stage,
+    t.etapa_educacenso as school_class_stage,
     coalesce(tm.nome, tt.nome) as period
 from public.exporter_person p
          inner join pmieducar.aluno a
@@ -42,8 +42,6 @@ from public.exporter_person p
                         and vs.sequencial = mt.sequencial
          left join modules.educacenso_cod_escola ece
                    on e.cod_escola = ece.cod_escola
-         left join public.etapa_educacenso eec
-                   on eec.id = t.etapa_educacenso
          left join pmieducar.turma_turno tt
                    on tt.id = t.turma_turno_id
          left join pmieducar.turma_turno tm
