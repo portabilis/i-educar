@@ -162,6 +162,13 @@
 @endsection
 
 @prepend('scripts')
+    <style>
+        .chosen-choices{
+            max-height:200px !important;
+            overflow: auto !important;;
+        }
+    </style>
+
     <script type='text/javascript'>
         (function ($) {
             $('#link-select-all').click(function () {
