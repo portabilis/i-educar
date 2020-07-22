@@ -30,6 +30,11 @@ class ReleasePeriod extends Model
         return $this->hasMany(ReleasePeriodDate::class);
     }
 
+    public function stageType()
+    {
+        return $this->belongsTo(LegacyStageType::class, 'stage_type_id');
+    }
+
     public function getDatesArray()
     {
         $dates = $this->periodDates;
