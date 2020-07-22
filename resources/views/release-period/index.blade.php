@@ -51,7 +51,9 @@
 <div>
     <table width="100%">
         <tr>
-            <td>Nenhum período de liberação selecionado</td>
+            <td>
+                <span id="text-count-delete">Nenhum período de liberação selecionado</span>
+            </td>
             <td style="text-align: right">
                 <button class="btn" type="submit">Excluir selecionados</button>
             </td>
@@ -61,6 +63,7 @@
 <table class="table-default">
 
     <tr class="table-header">
+        <th><input type="checkbox" id="check-delete-all"></th>
         <th>Escolas</th>
         <th>Ano</th>
         <th>Etapa</th>
@@ -70,11 +73,12 @@
     <tbody>
     @forelse($data as $releasePeriod)
         <tr>
+            <td><input type="checkbox" name="check-delete" data-id="{{ $releasePeriod->id }}"></td>
             <td>
                 <a href="{{ route('release-period.show', ['releasePeriod' => $releasePeriod->id]) }}">{{ implode(', ', $releasePeriod->schools->pluck('name')->toArray())  }}</a>
             </td>
             <td>
-                <a href="{{ route('release-period.show', ['releasePeriod' => $releasePeriod->id]) }}">{{ $releasePeriod->year  }}</a>
+                <a href="{{ route('release-period.show', ['releasePeriod' => $releasePeriod->id]) }}">{{ $releasePeriod->year }}</a>
             </td>
             <td>
                 <a href="{{ route('release-period.show', ['releasePeriod' => $releasePeriod->id]) }}">{{ $releasePeriod->stage }}º {{ $releasePeriod->stageType->nm_tipo }}</a>
@@ -110,6 +114,30 @@
 </div>
 
 @prepend('scripts')
+    <script>
+        (function ($) {
+            $("#check-delete-all").click(function(){
+                $('input:checkbox[name="check-delete"]').not(this).prop('checked', this.checked);
+                updateCount();
+            });
+
+
+            $('input:checkbox[name="check-delete"]').click(function () {
+                updateCount()
+            });
+        })(jQuery);
+
+        function updateCount() {
+            var count = $j('input:checkbox[name="check-delete"]:checked').length
+
+            if (!count) {
+                $j('#text-count-delete').html('Nenhum período de liberação selecionado')
+                return
+            }
+
+            $j('#text-count-delete').html(count + ' período(s) de liberação selecionado(s)')
+        }
+    </script>
     <style>
         .table-header th {
             font-weight: bold !important;
