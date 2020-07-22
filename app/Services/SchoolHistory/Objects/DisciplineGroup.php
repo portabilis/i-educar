@@ -66,7 +66,7 @@ class DisciplineGroup
 
     public function addColumnAttendance($column, $attendance)
     {
-        $this->{"frequencia{$column}"} = $attendance;
+        $this->{"freq{$column}"} = $attendance;
     }
 
     public function addColumnSchoolDays($column, $schoolDays)
@@ -101,7 +101,7 @@ class DisciplineGroup
 
     public function addColumnDisciplineWorkload($column, $disciplineWorkload)
     {
-        $this->{"carga_horaria_disciplina{$column}"} = $disciplineWorkload;
+        $this->{"chd{$column}"} = $disciplineWorkload;
     }
 
     public function addColumnDependencyDiscipline($column, $dependencyDiscipline)
