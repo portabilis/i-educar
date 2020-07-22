@@ -100,6 +100,15 @@ class SchoolHistory
         return $lines;
     }
 
+    public function makeBlankSpaceObservations($templateName)
+    {
+        foreach ($this->disciplines as $key => $student) {
+            $studentKey = array_key_last($student);
+            $numberOfDisciplines = count($student);
+            $this->disciplines[$key][$studentKey]->espaco_branco = $this->service->getBlankSpace($templateName, $numberOfDisciplines, 12);
+        }
+    }
+
     public function getColumn($levelName, $gradeType)
     {
         if (!$this->service->isValidLevelName($levelName, $gradeType)) {

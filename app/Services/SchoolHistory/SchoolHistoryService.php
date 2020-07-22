@@ -84,4 +84,33 @@ class SchoolHistoryService
     {
         return substr($levelName, 0, 1);
     }
+
+    private function getUsedSpaceByTemplate($templateName)
+    {
+        $usedSpaceByTemplate = [
+            'portabilis_historico_escolar_9anos' => 363,
+            'portabilis_historico_escolar' => 395,
+            'portabilis_historico_escolar_series_anos' => 330,
+        ];
+
+        return $usedSpaceByTemplate[$templateName];
+    }
+
+    /**
+     * Calcula e retorna quantidade de linhas necessários para que o campo
+     * de observações preencha o restante da página em branco
+     * 
+     * @param $usedSpace soma das alturas das bands fixas do histórico
+     * @param $numberOfDisciplines número de disciplinas geradas no histórico
+     * @param $lineHeight altura da linha
+     *
+     * @return string
+     */
+    public function getBlankSpace($templateName, $numberOfDisciplines, $lineHeight)
+    {
+        $usedSpace = $this->getUsedSpaceByTemplate($templateName);
+        $numberOfBlankLines = (($usedSpace - ($numberOfDisciplines * $lineHeight)) / $lineHeight);
+
+        return str_repeat('<br>', (int)$numberOfBlankLines);
+    }
 }
