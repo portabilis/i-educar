@@ -109,6 +109,14 @@ class SchoolHistory
         }
     }
 
+    public function makeAllObservations()
+    {
+        foreach ($this->disciplines as $key => $student) {
+            $studentKey = array_key_last($student);
+            $this->disciplines[$key][$studentKey]->observacao_all = $this->service->getAllObservationsByStudent($key);
+        }
+    }
+
     public function getColumn($levelName, $gradeType)
     {
         if (!$this->service->isValidLevelName($levelName, $gradeType)) {

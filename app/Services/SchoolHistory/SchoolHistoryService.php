@@ -2,6 +2,7 @@
 
 namespace App\Services\SchoolHistory;
 
+use App\Models\LegacySchoolHistory;
 use App\Services\SchoolHistory\Objects\SchoolHistory;
 
 class SchoolHistoryService
@@ -112,5 +113,19 @@ class SchoolHistoryService
         $numberOfBlankLines = (($usedSpace - ($numberOfDisciplines * $lineHeight)) / $lineHeight);
 
         return str_repeat('<br>', (int)$numberOfBlankLines);
+    }
+
+    public function getAllObservationsByStudent($studentId)
+    {
+        $schoolHistory = LegacySchoolHistory::query()
+            ->where('ref_cod_aluno', $studentId)
+            ->where('ativo', 1)
+            ->whereNotNull('observacao')
+            ->where('observacao', '<>', '')
+            ->orderBy('ano')
+            ->pluck('observacao')
+            ->toArray();
+
+        return implode('<br>', $schoolHistory);
     }
 }
