@@ -37,7 +37,7 @@
                         <input type="text" class="geral" name="ano" id="ano_busca" maxlength="4" value="{{old('ano', Request::get('ano', date('Y')))}}" size="4">
                     </td>
                     <td class="formmdtd dd" valign="top">
-                        <input type="text" class="geral" name="stage" id="stage_busca"  value="{{old('stage', Request::get('stage', date('Y')))}}" size="4">
+                        <input type="text" class="geral" name="stage" id="stage_busca"  value="{{old('stage', Request::get('stage'))}}" size="2">
                     </td>
                     <td class="formmdtd dd" valign="top">
                         <button class="btn-green" type="submit">Filtrar</button>
@@ -55,7 +55,7 @@
                 <span id="text-count-delete">Nenhum período de liberação selecionado</span>
             </td>
             <td style="text-align: right">
-                <button class="btn" type="submit">Excluir selecionados</button>
+                <button class="btn" type="submit" onclick="confirmDeleteMultiple()">Excluir selecionados</button>
             </td>
         </tr>
     </table>
@@ -75,7 +75,9 @@
         <tr>
             <td><input type="checkbox" name="check-delete" data-id="{{ $releasePeriod->id }}"></td>
             <td>
-                <a href="{{ route('release-period.show', ['releasePeriod' => $releasePeriod->id]) }}">{{ implode(', ', $releasePeriod->schools->pluck('name')->toArray())  }}</a>
+                <a href="{{ route('release-period.show', ['releasePeriod' => $releasePeriod->id]) }}">
+                    {{ $releasePeriod->schools()->limit(3)->get()->pluck('name')->implode(', ')  }}@if($releasePeriod->schools->count() > 3)...@endif
+                </a>
             </td>
             <td>
                 <a href="{{ route('release-period.show', ['releasePeriod' => $releasePeriod->id]) }}">{{ $releasePeriod->year }}</a>
@@ -136,6 +138,17 @@
             }
 
             $j('#text-count-delete').html(count + ' período(s) de liberação selecionado(s)')
+        }
+
+        function confirmDeleteMultiple() {
+            if (confirm('Excluir os registros selecionados?')) {
+                var ids = []
+                $j('input:checkbox[name="check-delete"]:checked').each(function(key, field) {
+                    ids.push($j(field).data('id'));
+                });
+
+                window.location.href = '{{ route('release-period.delete') }}?' + $j.param({periods:ids});
+            }
         }
     </script>
     <style>

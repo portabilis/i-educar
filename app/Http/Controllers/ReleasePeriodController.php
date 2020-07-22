@@ -154,13 +154,16 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
      * @param ReleasePeriod $releasePeriod
      * @return RedirectResponse
      */
-    public function delete(ReleasePeriod $releasePeriod)
+    public function delete(Request $request)
     {
         DB::beginTransaction();
 
-        $releasePeriod->schools()->sync([]);
-        $releasePeriod->periodDates()->delete();
-        $releasePeriod->delete();
+        foreach($request->get('periods') as $periodId) {
+            $releasePeriod = ReleasePeriod::find($periodId);
+            $releasePeriod->schools()->sync([]);
+            $releasePeriod->periodDates()->delete();
+            $releasePeriod->delete();
+        }
 
         try {
             DB::commit();
@@ -174,8 +177,9 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
 
         return redirect()
             ->route('release-period.index')
-            ->with('success', 'Período excluído com sucesso.');
+            ->with('success', 'Período(s) excluído(s) com sucesso.');
     }
+
 
     /**
      * Popula os campos
@@ -245,6 +249,11 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
             $query->whereHas('schools', function ($schoolsQuery) use ($school) {
                 $schoolsQuery->where('cod_escola', $school);
             });
+        });
+
+        $stage = $request->get('stage');
+        $query->when($stage, function ($query) use ($stage) {
+            $query->where('stage', $stage);
         });
 
         return $query->paginate(20);
