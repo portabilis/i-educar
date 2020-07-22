@@ -24,7 +24,7 @@ class SchoolHistory
 
     public function addDataGroupByDiscipline($data)
     {
-        $discipline = $this->getDiscipline($data['nm_disciplina']);
+        $discipline = $this->getDiscipline($data['cod_aluno'], $data['nm_disciplina']);
         $column = $this->getColumn($data['nm_serie'], $data['historico_grade_curso_id']);
 
         if (!$column) {
@@ -68,22 +68,32 @@ class SchoolHistory
         $discipline->addColumnDisciplineWorkload($column, $data['carga_horaria_disciplina']);
         $discipline->addColumnDependencyDiscipline($column, $data['disciplina_dependencia']);
 
-        $this->disciplines[$data['nm_disciplina']] = $discipline;
+        $this->disciplines[$data['cod_aluno']][$data['nm_disciplina']] = $discipline;
     }
 
-    public function getDiscipline($disciplineName)
+    public function getDiscipline($studentId, $disciplineName)
     {
-        if (!$this->disciplines[$disciplineName]) {
-            $this->disciplines[$disciplineName] = new DisciplineGroup;
+        if (!$this->disciplines[$studentId][$disciplineName]) {
+            $this->disciplines[$studentId][$disciplineName] = new DisciplineGroup;
         }
 
-        return $this->disciplines[$disciplineName];
+        return $this->disciplines[$studentId][$disciplineName];
     }
 
     public function getLines()
     {
         $lines = [];
-        foreach ($this->disciplines as $discipline) {
+        foreach ($this->disciplines as $student) {
+            $lines = array_merge($lines, $this->getDisciplinesByStudent($student));
+        }
+
+        return $lines;
+    }
+
+    private function getDisciplinesByStudent($student)
+    {
+        $lines = [];
+        foreach ($student as $discipline) {
             $lines[] = (array)$discipline;
         }
 
