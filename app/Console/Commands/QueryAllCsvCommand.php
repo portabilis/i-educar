@@ -66,6 +66,8 @@ class QueryAllCsvCommand extends Command
                 fputcsv($file, array_merge([$connection], (array) $line));
             }
         }
+
+        fclose($file);
     }
 
     public function getFileOutput()
