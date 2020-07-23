@@ -47,10 +47,10 @@ class QueryAllCsvCommand extends Command
             } catch (Exception $exception) {
                 continue;
             }
+        }
 
-            if (isset($data[$connection][0])) {
-                $header = array_keys((array) $data[$connection][0]);
-            }
+        if (isset($data[$connection][0])) {
+            $header = array_keys((array) $data[$connection][0]);
         }
 
         $this->makeCsv($header, $data);
