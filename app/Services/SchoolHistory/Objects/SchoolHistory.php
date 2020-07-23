@@ -2,6 +2,7 @@
 
 namespace App\Services\SchoolHistory\Objects;
 
+use App\Services\SchoolHistory\SchoolHistoryFooter;
 use App\Services\SchoolHistory\SchoolHistoryService;
 use DateTime;
 
@@ -115,6 +116,12 @@ class SchoolHistory
             $studentKey = array_key_last($student);
             $this->disciplines[$key][$studentKey]->observacao_all = $this->service->getAllObservationsByStudent($key);
         }
+    }
+
+    public function makeFooterData()
+    {
+        $schoolHistoryFooter = new SchoolHistoryFooter($this->disciplines);
+        $this->disciplines = $schoolHistoryFooter->insertFooterDataInLastStudentDiscipline();
     }
 
     public function getColumn($levelName, $gradeType)
