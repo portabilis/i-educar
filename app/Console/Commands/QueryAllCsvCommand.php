@@ -72,7 +72,7 @@ class QueryAllCsvCommand extends Command
 
     public function getFileOutput()
     {
-        return $this->option('file') ?: storage_path('result.csv');
+        return $this->option('output') ?: storage_path('result.csv');
     }
 
     private function getFile()
