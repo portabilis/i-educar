@@ -147,6 +147,9 @@
 
             @if($releasePeriod->exists)
                 <button class="btn-green" type="submit">Editar</button>
+                <a href="{{route('release-period.index')}}">
+                    <button class="btn" type="button">Cancelar</button>
+                </a>
                 <a href="javascript:confirmDelete()">
                     <button class="btn" type="button">Excluir</button>
                 </a>
