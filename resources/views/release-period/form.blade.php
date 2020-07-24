@@ -143,7 +143,7 @@
         <div class="separator"></div>
 
         <div style="text-align: center">
-            <button class="btn" type="button" onclick="document.getElementById('formcadastro').reset();">Limpar campos</button>
+            <button class="btn" type="button" onclick="resetForm()">Limpar campos</button>
 
             @if($releasePeriod->exists)
                 <button class="btn-green" type="submit">Editar</button>
@@ -214,11 +214,14 @@
             });
         })(jQuery);
 
+        function resetForm() {
+            document.getElementById('formcadastro').reset();
+            $j('#escola').trigger('chosen:updated');
+        }
+
         function confirmDelete() {
             if (confirm('Excluir registro?')) {
-                @if ($releasePeriod->exists)
-                    window.location.href = '{{ route('release-period.delete', ['periods' => [$releasePeriod->id]]) }}';
-                @endif
+                window.location.href = '{{ route('release-period.delete', ['periods' => [$releasePeriod->id]]) }}';
             }
         }
     </script>
