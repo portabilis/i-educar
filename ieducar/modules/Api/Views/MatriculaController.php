@@ -2,6 +2,7 @@
 
 use App\Models\LegacyRegistration;
 use Illuminate\Support\Str;
+use App\Models\LegacyEnrollment;
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
@@ -630,6 +631,10 @@ class MatriculaController extends ApiCoreController
             $matricula->data_cancel = $data_saida;
 
             if ($matricula->edita()) {
+                $enrollment = LegacyRegistration::find($matricula_id);
+                $lastenrollment = $enrollment->lastEnrollment;
+                $lastenrollment->data_exclusao = $data_saida;
+                $lastenrollment->save();
                 return $this->messenger->append('Data de saida atualizada com sucesso.', 'success');
             }
         }
