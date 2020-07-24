@@ -27,12 +27,18 @@
             src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/MultipleSearchEscola.js") }}"></script>
 @endpush
 @if(old('escola', Request::get('escola')))
+    @php
+        $schools = collect(old('escola', Request::get('escola')))->map(function ($value) {
+            return $value[0];
+        });
+    @endphp
+
     @push('scripts')
         <script>
             (function($){
                 $(document).ready(function() {
                     setTimeout(function() {
-                        $('#escola').val([{{implode(',',old('escola', Request::get('escola')))}}]);
+                        $('#escola').val([{{$schools->implode(',')}}]);
                         $('#escola').trigger('chosen:updated');
                     }, 1000);
                 });
