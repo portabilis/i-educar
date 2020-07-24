@@ -2,7 +2,6 @@
 
 use App\Models\LegacyRegistration;
 use Illuminate\Support\Str;
-use App\Models\LegacyEnrollment;
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
