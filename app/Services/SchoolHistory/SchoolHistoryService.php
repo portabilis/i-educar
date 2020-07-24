@@ -3,6 +3,7 @@
 namespace App\Services\SchoolHistory;
 
 use App\Models\LegacySchoolHistory;
+use App\Models\LegacyStudentBenefit;
 use App\Services\SchoolHistory\Objects\SchoolHistory;
 
 class SchoolHistoryService
@@ -127,5 +128,27 @@ class SchoolHistoryService
             ->toArray();
 
         return implode('<br>', $schoolHistory);
+    }
+
+    private function hasBolsaFamilia($studentId)
+    {
+        $studentBenefit = LegacyStudentBenefit::query()
+            ->where('aluno_id', $studentId)
+            ->whereHas('benefit', function ($benefitQuery) {
+                $benefitQuery->whereRaw("TRIM(UNACCENT(aluno_beneficio.nm_beneficio)) ILIKE 'BOLSA FAMILIA'");
+            })
+            ->get()
+            ->toArray();
+
+        return count($studentBenefit) > 0;
+    }
+
+    public function getBolsaFamiliaText($studentId)
+    {
+        if ($this->hasBolsaFamilia($studentId)) {
+            return '<b>Beneficiário do PBF:</b> Sim';
+        }
+
+        return '<b>Beneficiário do PBF:</b> Não';
     }
 }

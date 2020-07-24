@@ -118,6 +118,14 @@ class SchoolHistory
         }
     }
 
+    public function makeBolsaFamilia()
+    {
+        foreach ($this->disciplines as $key => $student) {
+            $studentKey = array_key_last($student);
+            $this->disciplines[$key][$studentKey]->obs_bolsa_familia = $this->service->getBolsaFamiliaText($key);
+        }
+    }
+
     public function makeFooterData()
     {
         $schoolHistoryFooter = new SchoolHistoryFooter($this->disciplines);
