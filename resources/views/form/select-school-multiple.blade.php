@@ -28,9 +28,13 @@
 @endpush
 @if(old('escola', Request::get('escola')))
     @php
-        $schools = collect(old('escola', Request::get('escola')))->map(function ($value) {
-            return $value[0];
-        });
+        $schools = collect(old('escola', Request::get('escola')));
+
+        if (is_array($schools[0])){
+            $schools = $schools->map(function ($value) {
+                return $value[0];
+            });
+        }
     @endphp
 
     @push('scripts')
