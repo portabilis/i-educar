@@ -574,6 +574,7 @@ function postParecer($parecerFieldElement) {
     etapa                    : getEtapaParecer(regra),
     ano_escolar              : $j('#ano').val(),
     escola_id                : $j('#ref_cod_escola').val(),
+    turma_id                 : $j('#ref_cod_turma').val(),
     oper: "post",
     resource: "parecer",
     att_value : $parecerFieldElement.val()
