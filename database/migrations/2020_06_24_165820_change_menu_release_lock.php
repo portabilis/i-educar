@@ -30,7 +30,7 @@ class ChangeMenuReleaseLock extends Migration
     public function down()
     {
         DB::table('menus')
-            ->where('process', Process::RELEASE_LOCK)
+            ->where('process', Process::RELEASE_PERIOD)
             ->update([
                 'title' => 'Bloqueio de lançamento de notas e faltas',
                 'description' => 'Bloqueio de lançamento de notas e faltas',
