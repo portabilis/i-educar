@@ -2,13 +2,12 @@
 
 namespace App\Console\Commands;
 
-use App\Menu;
 use App\Support\Database\Connections;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class QueryAllCommand extends Command
+class QueryAllCsvCommand extends Command
 {
     use Connections;
     /**
@@ -16,7 +15,7 @@ class QueryAllCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'query:all {--no-database=*} {--file=}';
+    protected $signature = 'query:all-csv {--no-database=*} {--file=} {--output=}';
 
     /**
      * The console command description.
@@ -44,20 +43,36 @@ class QueryAllCommand extends Command
             }
 
             try {
-                $data = (array) DB::connection($connection)->selectOne($file);
+                $data[$connection] = DB::connection($connection)->select($file);
             } catch (Exception $exception) {
                 continue;
             }
+        }
 
-            if (isset($data)) {
-                $array[] = array_merge([$connection], $data);
+        if (isset($data[$connection][0])) {
+            $header = array_keys((array) $data[$connection][0]);
+        }
+
+        $this->makeCsv($header, $data);
+    }
+
+    public function makeCsv($header, $data)
+    {
+        $file = fopen($this->getFileOutput(), 'w');
+        fputcsv($file, $header);
+
+        foreach ($data as $connection => $lines) {
+            foreach ($lines as $line) {
+                fputcsv($file, array_merge([$connection], (array) $line));
             }
         }
 
-        $header = array_keys($data);
-        array_unshift($header, 'connection');
+        fclose($file);
+    }
 
-        $this->table($header, $array);
+    public function getFileOutput()
+    {
+        return $this->option('output') ?: storage_path('result.csv');
     }
 
     private function getFile()

@@ -128,6 +128,8 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::get('/configuracoes/configuracoes-de-sistema', 'SettingController@index')->name('settings.index');
     Route::post('/configuracoes/configuracoes-de-sistema', 'SettingController@saveInputs')->name('settings.update');
+
+    Route::post('/upload', 'FileController@upload')->name('file-upload');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {

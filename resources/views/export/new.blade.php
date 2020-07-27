@@ -145,6 +145,10 @@
       jQuery('.fields').prop('checked', true);
       jQuery('#situacao_matricula').val(3);
     }
+
+      if (jQuery('#status').val() == 4) {
+          jQuery('.fields').prop('checked', true);
+      }
   });
   </script>
 
