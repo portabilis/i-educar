@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Process;
 use App\Setting;
-use Dotenv\Regex\Success;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class SettingController extends Controller
@@ -21,7 +21,15 @@ class SettingController extends Controller
         ]);
 
         $this->menu(Process::SETTINGS);
-        
+
+        /** @var User $user */
+        $user = Auth::user();
+
+        if(!$user->isAdmin()) {
+            return redirect('/intranet/educar_configuracoes_index.php');
+            // header('Location: /intranet/educar_configuracoes_index.php');
+        }
+
         $fields = $this->getSettingsFields();
         return view('settings.index', ['fields' => $fields]);
     }
