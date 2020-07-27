@@ -157,10 +157,4 @@
             background-color: #f5f9fd;
         }
     </style>
-    <script type="text/javascript"
-            src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
-    <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/DynamicInput.js") }}"></script>
-    <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Escola.js") }}"></script>
 @endprepend
