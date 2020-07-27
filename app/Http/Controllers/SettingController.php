@@ -27,7 +27,6 @@ class SettingController extends Controller
 
         if(!$user->isAdmin()) {
             return redirect('/intranet/educar_configuracoes_index.php');
-            // header('Location: /intranet/educar_configuracoes_index.php');
         }
 
         $fields = $this->getSettingsFields();
