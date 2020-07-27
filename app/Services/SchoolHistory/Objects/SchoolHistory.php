@@ -11,6 +11,7 @@ class SchoolHistory
     private $service;
     private $seriesYearsModel;
     private $certificationText;
+    private $formatScoresGreaterThanTen;
     public $disciplines;
 
     const GRADE_SERIE = 1;
@@ -21,6 +22,11 @@ class SchoolHistory
     {
         $this->service = $service;
         $this->seriesYearsModel = $seriesYearsModel;
+    }
+
+    public function setFormatScoresGreaterThanTen($formatScoresGreaterThanTen)
+    {
+        $this->formatScoresGreaterThanTen = $formatScoresGreaterThanTen;
     }
 
     public function addDataGroupByDiscipline($data)
@@ -150,7 +156,11 @@ class SchoolHistory
     public function getFormattedScore($score)
     {
         if (is_numeric($score)) {
-            return str_replace(".", ",", $score);
+            $score = str_replace(".", ",", $score);
+        }
+
+        if ($this->formatScoresGreaterThanTen && $score > 10) {
+            $score = '*' . $score;
         }
 
         return $score;
