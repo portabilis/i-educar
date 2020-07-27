@@ -88,8 +88,9 @@ class clsModulesRotaTransporteEscolar extends Model
             }
 
             if (is_string($this->descricao)) {
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
 
@@ -161,7 +162,8 @@ class clsModulesRotaTransporteEscolar extends Model
             }
 
             if (is_string($this->descricao)) {
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
 
@@ -221,6 +223,8 @@ class clsModulesRotaTransporteEscolar extends Model
         $nome_empresa = null,
         $tercerizado = null
     ) {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista}, (
           SELECT
             nome
@@ -246,7 +250,8 @@ class clsModulesRotaTransporteEscolar extends Model
         }
 
         if (is_string($descricao)) {
-            $filtros .= "{$whereAnd} translate(upper(descricao),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$descricao}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $desc= $db->escapeString($descricao);
+            $filtros .= "{$whereAnd} translate(upper(descricao),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$desc}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
         }
 
@@ -286,7 +291,7 @@ class clsModulesRotaTransporteEscolar extends Model
           FROM
             cadastro.pessoa, modules.empresa_transporte_escolar
           WHERE
-            idpes = ref_idpes and cod_empresa_transporte_escolar = ref_cod_empresa_transporte_escolar 
+            idpes = ref_idpes and cod_empresa_transporte_escolar = ref_cod_empresa_transporte_escolar
             AND (LOWER(nome)) LIKE (LOWER('%{$nome_empresa}%'))
         )";
 
@@ -298,7 +303,6 @@ class clsModulesRotaTransporteEscolar extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista)) + 2;
         $resultado = [];
 

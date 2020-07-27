@@ -96,6 +96,7 @@ class indice extends clsCadastro
         $this->ref_cod_aluno = $this->getQueryString('ref_cod_aluno');
         $this->ref_cod_candidato_reserva_vaga = $this->getQueryString('ref_cod_candidato_reserva_vaga');
         $this->ref_cod_candidato_fila_unica = $this->getQueryString('cod_candidato_fila_unica');
+        $this->ano = $this->getQueryString('ano');
 
         $retorno = $this->ref_cod_turma_copiar_enturmacoes ? 'Enturmar' : 'Novo';
         $obj_aluno = new clsPmieducarAluno($this->ref_cod_aluno);
@@ -1535,6 +1536,8 @@ class indice extends clsCadastro
         if (empty($this->availableTimeService)) {
             $this->availableTimeService = new AvailableTimeService();
         }
+
+        $this->availableTimeService->onlySchoolClassesInformedOnCensus();
 
         return $this->availableTimeService;
     }

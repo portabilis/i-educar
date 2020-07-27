@@ -270,8 +270,9 @@ class clsPmieducarMatricula extends Model
             }
 
             if (is_string($this->descricao_reclassificacao)) {
+                $descricao_recla = $db->escapeString($this->descricao_reclassificacao);
                 $campos .= "{$gruda}descricao_reclassificacao";
-                $valores .= "{$gruda}'{$this->descricao_reclassificacao}'";
+                $valores .= "{$gruda}'{$descricao_recla}'";
                 $gruda = ', ';
             }
 
@@ -429,7 +430,8 @@ class clsPmieducarMatricula extends Model
             }
 
             if (is_string($this->descricao_reclassificacao)) {
-                $set .= "{$gruda}descricao_reclassificacao = '{$this->descricao_reclassificacao}'";
+                $descricao_recla = $db->escapeString($this->descricao_reclassificacao);
+                $set .= "{$gruda}descricao_reclassificacao = '{$descricao_recla}'";
                 $gruda = ', ';
             }
 
@@ -1298,6 +1300,8 @@ class clsPmieducarMatricula extends Model
         if (is_numeric($this->cod_matricula)) {
             if (trim($obs) == '') {
                 $obs = 'Não informado';
+            }elseif (is_string($obs)){
+                $obs = pg_escape_string($obs);
             }
 
             $db = new clsBanco();
@@ -1320,6 +1324,8 @@ class clsPmieducarMatricula extends Model
         if (is_numeric($this->cod_matricula)) {
             if (trim($observacao) == '' || is_null($observacao)) {
                 $observacao = 'Não informado';
+            }else {
+                $observacao = pg_escape_string($observacao);
             }
 
             $db = new clsBanco();
@@ -1675,7 +1681,7 @@ class clsPmieducarMatricula extends Model
             select
                 CASE WHEN curso.padrao_ano_escolar = 1
                     THEN ano_letivo_modulo.data_inicio
-                ELSE 
+                ELSE
                     turma_modulo.data_inicio
                 END as data
             from
@@ -1707,7 +1713,7 @@ class clsPmieducarMatricula extends Model
             select
                 CASE WHEN curso.padrao_ano_escolar = 1
                     THEN ano_letivo_modulo.data_fim
-                ELSE 
+                ELSE
                     turma_modulo.data_fim
                 END as data
             from

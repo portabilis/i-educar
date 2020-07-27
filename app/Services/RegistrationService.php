@@ -182,6 +182,8 @@ class RegistrationService
 
         $registration->data_matricula = $date;
         $registration->save();
+
+        return $registration;
     }
 
     /**
@@ -189,24 +191,19 @@ class RegistrationService
      *
      * @param LegacyRegistration $registration
      * @param DateTime $date
-     * @param DateTime|null $oldData
      * @param boolean $relocated
      */
-    public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date, $oldData, $relocated)
+    public function updateEnrollmentsDate(LegacyRegistration $registration, DateTime $date, $relocated)
     {
         $date = $date->format('Y-m-d');
 
-        foreach ($registration->enrollments as $enrollment) {
-            if ($oldData && $enrollment->data_enturmacao->format('Y-m-d') != $oldData->format('Y-m-d')) {
-                continue;
-            }
+        $enrollment = $registration->lastEnrollment;
 
-            if (!$relocated && $enrollment->remanejado) {
-                continue;
-            }
-
-            $enrollment->data_enturmacao = $date;
-            $enrollment->save();
+        if (!$relocated && $enrollment->remanejado) {
+            return;
         }
+
+        $enrollment->data_enturmacao = $date;
+        $enrollment->save();
     }
 }

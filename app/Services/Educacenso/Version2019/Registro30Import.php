@@ -21,6 +21,7 @@ use App\Models\LegacySchoolingDegree;
 use App\Models\LegacyStudent;
 use App\Models\StudentInep;
 use App\Services\Educacenso\RegistroImportInterface;
+use App\Services\Educacenso\Version2019\Models\Registro30Model;
 use App\User;
 use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Modules\Educacenso\Model\Escolaridade;
@@ -34,22 +35,22 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @var Registro30
      */
-    private $model;
+    protected $model;
 
     /**
      * @var User
      */
-    private $user;
+    protected $user;
 
     /**
      * @var int
      */
-    private $year;
+    protected $year;
 
     /**
      * @var LegacyInstitution
      */
-    private $institution;
+    protected $institution;
 
     /**
      * Faz a importação dos dados a partir da linha do arquivo
@@ -87,7 +88,7 @@ class Registro30Import implements RegistroImportInterface
      */
     public static function getModel($arrayColumns)
     {
-        $registro = new Registro30();
+        $registro = new Registro30Model();
         $registro->hydrateModel($arrayColumns);
         return $registro;
     }
@@ -95,7 +96,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @return LegacyPerson
      */
-    private function getOrCreatePerson()
+    protected function getOrCreatePerson()
     {
         $person = $this->getPerson();
 
@@ -109,7 +110,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @return LegacyPerson|null
      */
-    private function getPerson()
+    protected function getPerson()
     {
         $inepNumber = $this->model->inepPessoa;
 
@@ -210,7 +211,7 @@ class Registro30Import implements RegistroImportInterface
      * @param LegacyPerson $person
      * @return LegacyStudent mixed
      */
-    private function getOrCreateStudent($person)
+    protected function getOrCreateStudent($person)
     {
         return LegacyStudent::firstOrCreate([
             'ref_idpes' => $person->getKey(),
@@ -222,7 +223,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @param LegacyStudent $person
      */
-    private function createStudentInep($student)
+    protected function createStudentInep($student)
     {
         if (empty($this->model->inepPessoa)) {
             return;
@@ -243,7 +244,7 @@ class Registro30Import implements RegistroImportInterface
      * @param LegacyPerson $person
      * @return Employee
      */
-    private function getOrCreateEmployee($person)
+    protected function getOrCreateEmployee($person)
     {
         return Employee::firstOrCreate([
             'cod_servidor' => $person->getKey(),
@@ -277,7 +278,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @param LegacyPerson $person
      */
-    private function createRace($person)
+    protected function createRace($person)
     {
         if ($person->individual->race()->count()) {
             return;
@@ -310,7 +311,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @param LegacyPerson $person
      */
-    private function createDeficiencies($person)
+    protected function createDeficiencies($person)
     {
         if ($this->model->deficienciaCegueira) {
             $this->createDeficiency($person, Deficiencias::CEGUEIRA);
@@ -442,7 +443,7 @@ class Registro30Import implements RegistroImportInterface
         return $legacyCountry ? $legacyCountry->getKey() : null;
     }
 
-    private function createRecursosProvaInep(LegacyStudent $student)
+    protected function createRecursosProvaInep(LegacyStudent $student)
     {
         $arrayRecursos = [];
 
@@ -510,7 +511,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @param LegacyStudent $student
      */
-    private function createCertidaoNascimento(LegacyStudent $student)
+    protected function createCertidaoNascimento(LegacyStudent $student)
     {
         if (empty($this->model->certidaoNascimento)) {
             return;
@@ -543,7 +544,7 @@ class Registro30Import implements RegistroImportInterface
     /**
      * @param Employee $employee
      */
-    private function storeEmployeeData(Employee $employee)
+    protected function storeEmployeeData(Employee $employee)
     {
         $this->createEmployeeInep($employee);
         $this->createEscolaridade($employee);

@@ -88,7 +88,7 @@ class indice extends clsCadastro
 
         // text
         $this->campoTexto( "nm_funcao", "Func&atilde;o", $this->nm_funcao, 30, 255, true );
-        $this->campoTexto( "abreviatura", "Abreviatura", $this->abreviatura, 30, 255, true );
+        $this->campoTexto( "abreviatura", "Abreviatura", $this->abreviatura, 30, 30, true );
         $opcoes = array('' => 'Selecione',
                         'S' => 'Sim',
                         'N' => 'N&atilde;o'

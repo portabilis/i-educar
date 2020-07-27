@@ -86,8 +86,9 @@ class clsPmieducarSituacao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_situacao)) {
+                $nm_situacao = $db->escapeString($this->nm_situacao);
                 $campos .= "{$gruda}nm_situacao";
-                $valores .= "{$gruda}'{$this->nm_situacao}'";
+                $valores .= "{$gruda}'{$nm_situacao}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->permite_emprestimo)) {
@@ -96,8 +97,9 @@ class clsPmieducarSituacao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->situacao_padrao)) {
@@ -150,7 +152,8 @@ class clsPmieducarSituacao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_situacao)) {
-                $set .= "{$gruda}nm_situacao = '{$this->nm_situacao}'";
+                $nm_situacao = $db->escapeString($this->nm_situacao);
+                $set .= "{$gruda}nm_situacao = '{$nm_situacao}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->permite_emprestimo)) {
@@ -158,7 +161,8 @@ class clsPmieducarSituacao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->situacao_padrao)) {
@@ -201,6 +205,8 @@ class clsPmieducarSituacao extends Model
      */
     public function lista($int_cod_situacao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_situacao = null, $int_permite_emprestimo = null, $str_descricao = null, $int_situacao_padrao = null, $int_situacao_emprestada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_biblioteca = null, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista}, b.ref_cod_instituicao, b.ref_cod_escola FROM {$this->_tabela} s, {$this->_schema}biblioteca b";
 
         $whereAnd = ' AND ';
@@ -219,7 +225,8 @@ class clsPmieducarSituacao extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_situacao)) {
-            $filtros .= "{$whereAnd} s.nm_situacao LIKE '%{$str_nm_situacao}%'";
+            $nm_situacao = $db->escapeString($str_nm_situacao);
+            $filtros .= "{$whereAnd} s.nm_situacao LIKE '%{$nm_situacao}%'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_permite_emprestimo)) {
@@ -274,7 +281,6 @@ class clsPmieducarSituacao extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

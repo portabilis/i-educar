@@ -60,6 +60,7 @@ class clsPmieducarAlunoBeneficio extends Model
         if (is_numeric($this->ref_usuario_cad) && is_string($this->nm_beneficio)) {
             $db = new clsBanco();
 
+
             $campos = '';
             $valores = '';
             $gruda = '';
@@ -70,13 +71,15 @@ class clsPmieducarAlunoBeneficio extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_beneficio)) {
+                $nm_beneficio = $db->escapeString($this->nm_beneficio);
                 $campos .= "{$gruda}nm_beneficio";
-                $valores .= "{$gruda}'{$this->nm_beneficio}'";
+                $valores .= "{$gruda}'{$nm_beneficio}'";
                 $gruda = ', ';
             }
             if (is_string($this->desc_beneficio)) {
+                $desc_beneficio = $db->escapeString($this->desc_beneficio);
                 $campos .= "{$gruda}desc_beneficio";
-                $valores .= "{$gruda}'{$this->desc_beneficio}'";
+                $valores .= "{$gruda}'{$desc_beneficio}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -103,6 +106,7 @@ class clsPmieducarAlunoBeneficio extends Model
     {
         if (is_numeric($this->cod_aluno_beneficio) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -114,11 +118,13 @@ class clsPmieducarAlunoBeneficio extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_beneficio)) {
-                $set .= "{$gruda}nm_beneficio = '{$this->nm_beneficio}'";
+                $nm_beneficio = $db->escapeString($this->nm_beneficio);
+                $set .= "{$gruda}nm_beneficio = '{$nm_beneficio}'";
                 $gruda = ', ';
             }
             if (is_string($this->desc_beneficio)) {
-                $set .= "{$gruda}desc_beneficio = '{$this->desc_beneficio}'";
+                $desc_beneficio = $db->escapeString($this->desc_beneficio);
+                $set .= "{$gruda}desc_beneficio = '{$desc_beneficio}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -160,6 +166,8 @@ class clsPmieducarAlunoBeneficio extends Model
         $int_ativo = null,
         $int_codigo_aluno = null
     ) {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         if ($int_codigo_aluno) {
             $sql .= ' INNER JOIN pmieducar.aluno_aluno_beneficio ON (aluno_aluno_beneficio.aluno_beneficio_id = aluno_beneficio.cod_aluno_beneficio) ';
@@ -182,7 +190,8 @@ class clsPmieducarAlunoBeneficio extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_beneficio)) {
-            $filtros .= "{$whereAnd} nm_beneficio LIKE '%{$str_nm_beneficio}%'";
+            $str_nome_beneficio = $db->escapeString($str_nm_beneficio);
+            $filtros .= "{$whereAnd} nm_beneficio LIKE '%{$str_nome_beneficio}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_desc_beneficio)) {
@@ -217,7 +226,6 @@ class clsPmieducarAlunoBeneficio extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

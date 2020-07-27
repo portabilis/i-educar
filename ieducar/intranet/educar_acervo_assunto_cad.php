@@ -100,7 +100,7 @@ class indice extends clsCadastro
       $obj->cod_acervo_assunto = $this->cod_acervo_assunto;
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 
-            $this->simpleRedirect('educar_abandono_tipo_lst.php');
+            $this->simpleRedirect('educar_acervo_assunto_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -119,7 +119,7 @@ class indice extends clsCadastro
         {
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 
-            $this->simpleRedirect('educar_abandono_tipo_lst.php');
+            $this->simpleRedirect('educar_acervo_assunto_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";

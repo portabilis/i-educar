@@ -27,8 +27,8 @@ class ChangeMediaToDecimal extends Migration
     public function down()
     {
         Schema::table('modules.regra_avaliacao', function (Blueprint $table) {
-            $table->numeric('media', 5, 3)->change();
-            $table->numeric('media_recuperacao', 5, 3)->change();
+            $table->decimal('media', 5, 3)->change();
+            $table->decimal('media_recuperacao', 5, 3)->change();
         });
     }
 }

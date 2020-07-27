@@ -109,8 +109,6 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        $this->nm_autor = addslashes($this->nm_autor);
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 594, $this->pessoa_logada, 11,  "educar_acervo_autor_lst.php" );
 
@@ -121,7 +119,7 @@ class indice extends clsCadastro
       $obj->cod_acervo_autor = $this->cod_acervo_autor;
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 
-            $this->simpleRedirect('educar_acervo_assunto_lst.php');
+            $this->simpleRedirect('educar_acervo_autor_lst.php');
         }
 
         $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
@@ -131,8 +129,6 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        $this->nm_autor = addslashes($this->nm_autor);
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 594, $this->pessoa_logada, 11,  "educar_acervo_autor_lst.php" );
 
@@ -143,7 +139,7 @@ class indice extends clsCadastro
       $obj->cod_acervo_autor = $this->cod_acervo_autor;
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 
-            $this->simpleRedirect('educar_acervo_assunto_lst.php');
+            $this->simpleRedirect('educar_acervo_autor_lst.php');
         }
 
         $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";

@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use App\Http\Controllers\LegacyController;
+use App_Model_Exception;
 use Exception;
 use iEducar\Modules\ErrorTracking\Tracker;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -17,7 +18,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
+        App_Model_Exception::class,
     ];
 
     /**
@@ -57,7 +58,7 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param Request $request
+     * @param Request   $request
      * @param Exception $exception
      *
      * @return Response
@@ -82,7 +83,7 @@ class Handler extends ExceptionHandler
     }
 
     /**
-     * Returns current controller
+     * Return current controller
      *
      * @return array|mixed
      */
@@ -102,7 +103,7 @@ class Handler extends ExceptionHandler
     }
 
     /**
-     * Returns current action
+     * Return current action.
      *
      * @return array|mixed
      */
@@ -115,6 +116,11 @@ class Handler extends ExceptionHandler
         return explode('@', $this->getActionName())[1];
     }
 
+    /**
+     * Return current action name.
+     *
+     * @return string
+     */
     private function getActionName()
     {
         $controller = app('request')->route()->getAction();

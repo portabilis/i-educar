@@ -41,24 +41,6 @@ class clsPmieducarTurma extends Model
     public $visivel;
     public $data_fechamento;
     public $tipo_atendimento = false;
-    public $turma_mais_educacao;
-    public $atividade_complementar_1;
-    public $atividade_complementar_2;
-    public $atividade_complementar_3;
-    public $atividade_complementar_4;
-    public $atividade_complementar_5;
-    public $atividade_complementar_6;
-    public $aee_braille;
-    public $aee_recurso_optico;
-    public $aee_estrategia_desenvolvimento;
-    public $aee_tecnica_mobilidade;
-    public $aee_libras;
-    public $aee_caa;
-    public $aee_curricular;
-    public $aee_soroban;
-    public $aee_informatica;
-    public $aee_lingua_escrita;
-    public $aee_autonomia;
     public $cod_curso_profissional;
     public $etapa_educacenso;
     public $ref_cod_disciplina_dispensada;
@@ -83,7 +65,7 @@ class clsPmieducarTurma extends Model
         $this->_tabela = "{$this->_schema}turma";
 
         $this->_campos_lista = $this->_todos_campos = 't.cod_turma, t.ref_usuario_exc, t.ref_usuario_cad, t.ref_ref_cod_serie, t.ref_ref_cod_escola, t.ref_cod_infra_predio_comodo, t.nm_turma, t.sgl_turma, t.max_aluno, t.multiseriada, t.data_cadastro, t.data_exclusao, t.ativo, t.ref_cod_turma_tipo, t.hora_inicial, t.hora_final, t.hora_inicio_intervalo, t.hora_fim_intervalo, t.ref_cod_regente, t.ref_cod_instituicao_regente,t.ref_cod_instituicao, t.ref_cod_curso, t.ref_ref_cod_serie_mult, t.ref_ref_cod_escola_mult, t.visivel, t.turma_turno_id, t.tipo_boletim, t.tipo_boletim_diferenciado, t.ano,
-        t.tipo_atendimento, t.turma_mais_educacao, t.atividade_complementar_1, t.atividade_complementar_2, t.atividade_complementar_3, t.atividade_complementar_4, t.atividade_complementar_5, t.atividade_complementar_6, t.aee_braille, t.aee_recurso_optico, t.aee_estrategia_desenvolvimento, t.aee_tecnica_mobilidade, t.aee_libras, t.aee_caa, t.aee_curricular, t.aee_soroban, t.aee_informatica, t.aee_lingua_escrita, t.aee_autonomia, t.cod_curso_profissional, t.etapa_educacenso, t.ref_cod_disciplina_dispensada, t.parecer_1_etapa, t.parecer_2_etapa,
+        t.tipo_atendimento, t.cod_curso_profissional, t.etapa_educacenso, t.ref_cod_disciplina_dispensada, t.parecer_1_etapa, t.parecer_2_etapa,
         t.parecer_3_etapa, t.parecer_4_etapa, t.nao_informar_educacenso, t.tipo_mediacao_didatico_pedagogico, t.dias_semana, t.atividades_complementares, t.atividades_aee, t.local_funcionamento_diferenciado ';
 
         if (is_numeric($ref_cod_turma_tipo)) {
@@ -211,13 +193,15 @@ class clsPmieducarTurma extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_turma)) {
+                $nm_turma = $db->escapeString($this->nm_turma);
                 $campos .= "{$gruda}nm_turma";
-                $valores .= "{$gruda}'{$this->nm_turma}'";
+                $valores .= "{$gruda}'{$nm_turma}'";
                 $gruda = ', ';
             }
             if (is_string($this->sgl_turma)) {
+                $sgl_turma = $db->escapeString($this->sgl_turma);
                 $campos .= "{$gruda}sgl_turma";
-                $valores .= "{$gruda}'{$this->sgl_turma}'";
+                $valores .= "{$gruda}'{$sgl_turma}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->max_aluno)) {
@@ -335,114 +319,6 @@ class clsPmieducarTurma extends Model
                 $gruda = ', ';
             }
 
-            if (is_numeric($this->turma_mais_educacao)) {
-                $campos .= "{$gruda}turma_mais_educacao";
-                $valores .= "{$gruda}'{$this->turma_mais_educacao}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->atividade_complementar_1)) {
-                $campos .= "{$gruda}atividade_complementar_1";
-                $valores .= "{$gruda}'{$this->atividade_complementar_1}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->atividade_complementar_2)) {
-                $campos .= "{$gruda}atividade_complementar_2";
-                $valores .= "{$gruda}'{$this->atividade_complementar_2}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->atividade_complementar_3)) {
-                $campos .= "{$gruda}atividade_complementar_3";
-                $valores .= "{$gruda}'{$this->atividade_complementar_3}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->atividade_complementar_4)) {
-                $campos .= "{$gruda}atividade_complementar_4";
-                $valores .= "{$gruda}'{$this->atividade_complementar_4}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->atividade_complementar_5)) {
-                $campos .= "{$gruda}atividade_complementar_5";
-                $valores .= "{$gruda}'{$this->atividade_complementar_5}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->atividade_complementar_6)) {
-                $campos .= "{$gruda}atividade_complementar_6";
-                $valores .= "{$gruda}'{$this->atividade_complementar_6}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_braille)) {
-                $campos .= "{$gruda}aee_braille";
-                $valores .= "{$gruda}'{$this->aee_braille}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_recurso_optico)) {
-                $campos .= "{$gruda}aee_recurso_optico";
-                $valores .= "{$gruda}'{$this->aee_recurso_optico}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_estrategia_desenvolvimento)) {
-                $campos .= "{$gruda}aee_estrategia_desenvolvimento";
-                $valores .= "{$gruda}'{$this->aee_estrategia_desenvolvimento}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_tecnica_mobilidade)) {
-                $campos .= "{$gruda}aee_tecnica_mobilidade";
-                $valores .= "{$gruda}'{$this->aee_tecnica_mobilidade}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_libras)) {
-                $campos .= "{$gruda}aee_libras";
-                $valores .= "{$gruda}'{$this->aee_libras}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_caa)) {
-                $campos .= "{$gruda}aee_caa";
-                $valores .= "{$gruda}'{$this->aee_caa}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_curricular)) {
-                $campos .= "{$gruda}aee_curricular";
-                $valores .= "{$gruda}'{$this->aee_curricular}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_soroban)) {
-                $campos .= "{$gruda}aee_soroban";
-                $valores .= "{$gruda}'{$this->aee_soroban}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_informatica)) {
-                $campos .= "{$gruda}aee_informatica";
-                $valores .= "{$gruda}'{$this->aee_informatica}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_lingua_escrita)) {
-                $campos .= "{$gruda}aee_lingua_escrita";
-                $valores .= "{$gruda}'{$this->aee_lingua_escrita}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_autonomia)) {
-                $campos .= "{$gruda}aee_autonomia";
-                $valores .= "{$gruda}'{$this->aee_autonomia}'";
-                $gruda = ', ';
-            }
-
             if (is_numeric($this->cod_curso_profissional)) {
                 $campos .= "{$gruda}cod_curso_profissional";
                 $valores .= "{$gruda}'{$this->cod_curso_profissional}'";
@@ -544,11 +420,13 @@ class clsPmieducarTurma extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_turma)) {
-                $set .= "{$gruda}nm_turma = '{$this->nm_turma}'";
+                $nm_turma = $db->escapeString($this->nm_turma);
+                $set .= "{$gruda}nm_turma = '{$nm_turma}'";
                 $gruda = ', ';
             }
             if (is_string($this->sgl_turma)) {
-                $set .= "{$gruda}sgl_turma = '{$this->sgl_turma}'";
+                $sgl_turma = $db->escapeString($this->sgl_turma);
+                $set .= "{$gruda}sgl_turma = '{$sgl_turma}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->max_aluno)) {
@@ -681,117 +559,6 @@ class clsPmieducarTurma extends Model
                 $gruda = ', ';
             } elseif ($this->tipo_atendimento !== false) {
                 $set .= "{$gruda}tipo_atendimento = NULL";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->turma_mais_educacao)) {
-                $set .= "{$gruda}turma_mais_educacao = '{$this->turma_mais_educacao}'";
-                $gruda = ', ';
-            } else {
-                $set .= "{$gruda}turma_mais_educacao = NULL";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->atividade_complementar_1)) {
-                $set .= "{$gruda}atividade_complementar_1 = '{$this->atividade_complementar_1}'";
-                $gruda = ', ';
-            } elseif (trim($this->atividade_complementar_1) == '') {
-                $set .= "{$gruda}atividade_complementar_1 = NULL";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->atividade_complementar_2)) {
-                $set .= "{$gruda}atividade_complementar_2 = '{$this->atividade_complementar_2}'";
-                $gruda = ', ';
-            } elseif (trim($this->atividade_complementar_2) == '') {
-                $set .= "{$gruda}atividade_complementar_2 = NULL";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->atividade_complementar_3)) {
-                $set .= "{$gruda}atividade_complementar_3 = '{$this->atividade_complementar_3}'";
-                $gruda = ', ';
-            } elseif (trim($this->atividade_complementar_3) == '') {
-                $set .= "{$gruda}atividade_complementar_3 = NULL";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->atividade_complementar_4)) {
-                $set .= "{$gruda}atividade_complementar_4 = '{$this->atividade_complementar_4}'";
-                $gruda = ', ';
-            } elseif (trim($this->atividade_complementar_4) == '') {
-                $set .= "{$gruda}atividade_complementar_4 = NULL";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->atividade_complementar_5)) {
-                $set .= "{$gruda}atividade_complementar_5 = '{$this->atividade_complementar_5}'";
-                $gruda = ', ';
-            } elseif (trim($this->atividade_complementar_5) == '') {
-                $set .= "{$gruda}atividade_complementar_5 = NULL";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->atividade_complementar_6)) {
-                $set .= "{$gruda}atividade_complementar_6 = '{$this->atividade_complementar_6}'";
-                $gruda = ', ';
-            } elseif (trim($this->atividade_complementar_6) == '') {
-                $set .= "{$gruda}atividade_complementar_6 = NULL";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_braille)) {
-                $set .= "{$gruda}aee_braille = '{$this->aee_braille}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_recurso_optico)) {
-                $set .= "{$gruda}aee_recurso_optico = '{$this->aee_recurso_optico}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_estrategia_desenvolvimento)) {
-                $set .= "{$gruda}aee_estrategia_desenvolvimento = '{$this->aee_estrategia_desenvolvimento}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_tecnica_mobilidade)) {
-                $set .= "{$gruda}aee_tecnica_mobilidade = '{$this->aee_tecnica_mobilidade}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_libras)) {
-                $set .= "{$gruda}aee_libras = '{$this->aee_libras}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_caa)) {
-                $set .= "{$gruda}aee_caa = '{$this->aee_caa}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_curricular)) {
-                $set .= "{$gruda}aee_curricular = '{$this->aee_curricular}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_soroban)) {
-                $set .= "{$gruda}aee_soroban = '{$this->aee_soroban}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_informatica)) {
-                $set .= "{$gruda}aee_informatica = '{$this->aee_informatica}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_lingua_escrita)) {
-                $set .= "{$gruda}aee_lingua_escrita = '{$this->aee_lingua_escrita}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->aee_autonomia)) {
-                $set .= "{$gruda}aee_autonomia = '{$this->aee_autonomia}'";
                 $gruda = ', ';
             }
 
@@ -1194,6 +961,8 @@ class clsPmieducarTurma extends Model
      */
     public function lista($int_cod_turma = null, z $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $bool_verifica_serie_multiseriada = false, $bool_tem_alunos_aguardando_nota = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null, $somenteAnoLetivoEmAndamento = false)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} t";
         $filtros = '';
 
@@ -1229,7 +998,8 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_turma)) {
-            $filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $nm_turma = $db->escapeString($str_nm_turma);
+            $filtros .= "{$whereAnd} exists(select 1 from pmieducar.turma where unaccent(nm_turma) ILIKE unaccent('%{$nm_turma}%'))";
             $whereAnd = ' AND ';
         }
         if (is_string($str_sgl_turma)) {
@@ -1378,7 +1148,6 @@ class clsPmieducarTurma extends Model
             $filtros .= "{$whereAnd} COALESCE(t.nao_informar_educacenso,0) <> 1";
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -1414,6 +1183,8 @@ class clsPmieducarTurma extends Model
      */
     public function lista2($int_cod_turma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_ref_cod_serie = null, $int_ref_ref_cod_escola = null, $int_ref_cod_infra_predio_comodo = null, $str_nm_turma = null, $str_sgl_turma = null, $int_max_aluno = null, $int_multiseriada = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_turma_tipo = null, $time_hora_inicial_ini = null, $time_hora_inicial_fim = null, $time_hora_final_ini = null, $time_hora_final_fim = null, $time_hora_inicio_intervalo_ini = null, $time_hora_inicio_intervalo_fim = null, $time_hora_fim_intervalo_ini = null, $time_hora_fim_intervalo_fim = null, $int_ref_cod_curso = null, $int_ref_cod_instituicao = null, $int_ref_cod_regente = null, $int_ref_cod_instituicao_regente = null, $int_ref_ref_cod_escola_mult = null, $int_ref_ref_cod_serie_mult = null, $int_qtd_min_alunos_matriculados = null, $visivel = null, $turma_turno_id = null, $tipo_boletim = null, $ano = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista},c.nm_curso,s.nm_serie,i.nm_instituicao FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c, {$this->_schema}instituicao i ";
         $filtros = '';
 
@@ -1450,7 +1221,8 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_turma)) {
-            $filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $nm_turma = $db->escapeString($str_nm_turma);
+            $filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM pmieducar.turma WHERE unaccent(t.nm_turma) ILIKE unaccent('%{$nm_turma}%'))";
             $whereAnd = ' AND ';
         }
         if (is_string($str_sgl_turma)) {
@@ -1582,7 +1354,6 @@ class clsPmieducarTurma extends Model
             $filtros .= "{$whereAnd} t.ano = '{$ano}'";
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -1656,7 +1427,7 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_turma)) {
-            $filtros .= "{$whereAnd} translate(upper(t.nm_turma),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_turma}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $filtros .= "{$whereAnd} exists(select 1 from pmieducar.turma where unaccent(nm_turma) ILIKE unaccent('%{$str_nm_turma}%'))";
             $whereAnd = ' AND ';
         }
         if (is_string($str_sgl_turma)) {

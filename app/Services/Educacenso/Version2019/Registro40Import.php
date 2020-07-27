@@ -12,6 +12,7 @@ use App\Models\LegacyStudent;
 use App\Models\SchoolInep;
 use App\Models\SchoolManager;
 use App\Services\Educacenso\RegistroImportInterface;
+use App\Services\Educacenso\Version2019\Models\Registro40Model;
 use App\User;
 
 class Registro40Import implements RegistroImportInterface
@@ -59,7 +60,7 @@ class Registro40Import implements RegistroImportInterface
      */
     public static function getModel($arrayColumns)
     {
-        $registro = new Registro40();
+        $registro = new Registro40Model();
         $registro->hydrateModel($arrayColumns);
         return $registro;
     }
@@ -107,7 +108,7 @@ class Registro40Import implements RegistroImportInterface
         $manager->saveOrFail();
     }
 
-    private function existsChiefSchoolManager(LegacySchool $school) : bool
+    protected function existsChiefSchoolManager(LegacySchool $school) : bool
     {
         return $school->schoolManagers()->where('chief', true)->exists();
     }
@@ -115,8 +116,13 @@ class Registro40Import implements RegistroImportInterface
     /**
      * @return LegacySchool
      */
-    private function getSchool() : ?LegacySchool
+    protected function getSchool() : ?LegacySchool
     {
-        return SchoolInep::where('cod_escola_inep', $this->model->inepEscola)->first()->school ?? null;
+        $schoolInep = SchoolInep::where('cod_escola_inep', $this->model->inepEscola)->first();
+        if ($schoolInep) {
+            return $schoolInep->school;
+        }
+        
+        return null;
     }
 }

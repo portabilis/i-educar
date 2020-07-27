@@ -287,6 +287,7 @@ class EducacensoExportController extends ApiCoreController
         $escola = Regulamentacao::handle($escola);
         $escola = EsferaAdministrativa::handle($escola);
 
+        $escola->conveniadaPoderPublico = null;
         $continuaExportacao = !in_array($escola->situacaoFuncionamento, [2, 3]);
 
         $data = [
