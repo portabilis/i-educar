@@ -142,6 +142,9 @@ return [
             'mostrar_codigo_sistema' => '1',
             'obrigar_recursos_tecnologicos' => '0'
         ],
+        'fisica' => [
+            'exigir_cartao_sus' => false,
+        ],
         'faltas_notas' => [
             'mostrar_botao_replicar' => '1',
         ],

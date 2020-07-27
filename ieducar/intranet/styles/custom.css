@@ -1424,6 +1424,11 @@ input.btn_small {
     display: inline-block !important;
 }
 
+.inputfile-buttom:disabled + label {
+  background-color: #e9f0f8;
+  cursor: not-allowed;
+}
+
 @media screen and (max-width: 50em) {
   .inputfile-buttom + label strong {
     display: block;
