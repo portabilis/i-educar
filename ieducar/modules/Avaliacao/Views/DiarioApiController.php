@@ -291,10 +291,7 @@ class DiarioApiController extends ApiCoreController
 
     protected function validatesPeriodoLancamentoFaltasNotas($showMessage = true)
     {
-        /** @var \App\User $user */
-        $user = $this->user();
-
-        if ($user->can(Process::POST_OUT_PERIOD)) {
+        if ($this->user()->can('modify', Process::POST_OUT_PERIOD)) {
             return true;
         }
 
