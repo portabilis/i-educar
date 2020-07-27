@@ -31,12 +31,13 @@ class SchoolHistory
 
     public function addDataGroupByDiscipline($data)
     {
-        $discipline = $this->getDiscipline($data['cod_aluno'], $data['nm_disciplina']);
         $column = $this->getColumn($data['nm_serie'], $data['historico_grade_curso_id']);
 
         if (!$column) {
             return;
         }
+
+        $discipline = $this->getDiscipline($data['cod_aluno'], $data['nm_disciplina']);
 
         $discipline->nm_disciplina = $data['nm_disciplina'];
         $discipline->cod_aluno = $data['cod_aluno'];
