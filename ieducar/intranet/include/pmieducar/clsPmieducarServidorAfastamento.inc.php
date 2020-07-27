@@ -24,7 +24,7 @@ class clsPmieducarServidorAfastamento extends Model
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}servidor_afastamento";
 
-        $this->_campos_lista = $this->_todos_campos = 'ref_cod_servidor, sequencial, ref_cod_motivo_afastamento, ref_usuario_exc, ref_usuario_cad, data_cadastro, data_exclusao, data_retorno, data_saida, ativo';
+        $this->_campos_lista = $this->_todos_campos = 'ref_cod_servidor, sequencial, ref_cod_motivo_afastamento, ref_usuario_exc, ref_usuario_cad, data_cadastro, data_exclusao, data_retorno, data_saida, ativo, id';
 
         if (is_numeric($ref_cod_motivo_afastamento)) {
                     $this->ref_cod_motivo_afastamento = $ref_cod_motivo_afastamento;
@@ -124,7 +124,7 @@ class clsPmieducarServidorAfastamento extends Model
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
-            return true;
+            return $db->InsertId('pmieducar.servidor_afastamento_id_seq');
         }
 
         return false;

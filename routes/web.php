@@ -125,6 +125,7 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->name('update-registration-date.index');
     Route::post('/atualiza-data-entrada', 'UpdateRegistrationDateController@updateStatus')->name('update-registration-date.update-date');
+    Route::post('/upload', 'FileController@upload')->name('file-upload');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
