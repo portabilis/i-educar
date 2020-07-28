@@ -2,6 +2,7 @@
 
 namespace App\Services\SchoolHistory\Objects;
 
+use App\Models\SchoolHistoryStatus;
 use App\Services\SchoolHistory\SchoolHistoryFooter;
 use App\Services\SchoolHistory\SchoolHistoryService;
 use DateTime;
@@ -174,18 +175,7 @@ class SchoolHistory
 
     public function getStatus($status)
     {
-        $allStatus = [
-            1 => 'Apro',
-            12 => 'AprDep',
-            13 => 'AprCo',
-            2 => 'Repr',
-            3 => 'Curs',
-            4 => 'Tran',
-            5 => 'Recl',
-            6 => 'Aban',
-            14 => 'RpFt',
-            15 => 'Fal',
-        ];
+        $allStatus = (new SchoolHistoryStatus)->getDescriptiveValues();
 
         return $allStatus[$status];
     }

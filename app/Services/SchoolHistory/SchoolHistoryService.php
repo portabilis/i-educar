@@ -4,22 +4,25 @@ namespace App\Services\SchoolHistory;
 
 use App\Models\LegacySchoolHistory;
 use App\Models\LegacyStudentBenefit;
+use App\Models\SchoolHistoryStatus;
 use App\Services\SchoolHistory\Objects\SchoolHistory;
 
 class SchoolHistoryService
 {
     public function isEightYears($gradeType)
     {
-        if ($gradeType == SchoolHistory::GRADE_SERIE) {
-            return true;
-        }
-
-        return false;
+        return $gradeType == SchoolHistory::GRADE_SERIE;
     }
 
     public function getCertificationText($data)
     {
-        $consideredStatus = [1, 12, 13, 3];
+        $consideredStatus = [
+            SchoolHistoryStatus::APPROVED,
+            SchoolHistoryStatus::APPROVED_WITH_DEPENDENCY,
+            SchoolHistoryStatus::APPROVED_BY_BOARD,
+            SchoolHistoryStatus::ONGOING,
+        ];
+
         $year = 0;
         $level = 0;
         $certificationText = '';
@@ -44,7 +47,7 @@ class SchoolHistoryService
             $year = $history['ano'];
             $level = $history['nm_serie'];
 
-            $certificationText = $history['aprovado'] == 3 ? 'está cursando ' : 'concluiu ';
+            $certificationText = $history['aprovado'] == SchoolHistoryStatus::ONGOING ? 'está cursando ' : 'concluiu ';
 
             if ($this->isConclusiveLevelByGrade($history['nm_serie'], $history['historico_grade_curso_id'])) {
                 $certificationText .= 'o ENSINO FUNDAMENTAL';
@@ -75,11 +78,7 @@ class SchoolHistoryService
 
     public function isValidLevelName($levelName)
     {
-        if (is_numeric($this->getLevelByName($levelName))) {
-            return true;
-        }
-
-        return false;
+        return is_numeric($this->getLevelByName($levelName));
     }
 
     public function getLevelByName($levelName)
@@ -95,7 +94,7 @@ class SchoolHistoryService
             'portabilis_historico_escolar_series_anos' => 330,
         ];
 
-        return $usedSpaceByTemplate[$templateName];
+        return $usedSpaceByTemplate[$templateName] ?? null;
     }
 
     /**
