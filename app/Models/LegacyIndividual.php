@@ -16,6 +16,7 @@ use Prettus\Repository\Traits\TransformableTrait;
 class LegacyIndividual extends EloquentBaseModel implements Transformable
 {
     use TransformableTrait;
+    use HasFiles;
 
     /**
      * @var string

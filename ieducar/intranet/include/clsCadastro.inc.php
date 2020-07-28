@@ -58,6 +58,9 @@ class clsCadastro extends clsCampos
     public $onSubmit = 'acao()';
     public $form_enctype;
 
+    const NOVO = 'N';
+    const EDITAR = 'E';
+
     /**
      * @deprecated
      */
@@ -345,7 +348,7 @@ class clsCadastro extends clsCampos
                             $retorno .= " alert( 'Preencha o campo \'{$nome_campos[$ct_campo]}\' corretamente!' ); \n  return false; }";
                             $retorno .= "else { if(! DvCnpjOk( $campo) ) return false; }  }";
                             $retorno .= "else{ if(! DvCpfOk( $campo) ) return false; }";
-                        } elseif ($componente_campo[0] != 'oculto') {
+                        } elseif ($componente_campo[0] != 'oculto' && $nomeCampo != 'html') {
                             $campo = "document.getElementById(\"{$nomeCampo}[\"+id_campo+\"]\")";
                             $fim_for = '';
                             if ($validador[0] == '*') {
@@ -445,7 +448,7 @@ class clsCadastro extends clsCampos
                         $retorno .= " alert( 'Preencha o campo \'$componente[1]\' corretamente!' ); \n  return false; }";
                         $retorno .= "else { if(! DvCnpjOk( document.getElementById('$nome')) ) return false; }  }";
                         $retorno .= "else{ if(! DvCpfOk( document.getElementById('$nome')) ) return false; }";
-                    } else {
+                    } elseif ($nome != 'html') {
                         //substituito referencia a elementos por padrï¿½o W3C document.getElementById()
                         //quando se referenciava um nome de elemento como um array ex: cadastro[aluno]
                         //nao funcionava na referencia por nome

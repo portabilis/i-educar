@@ -9,6 +9,8 @@ require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
 
 require_once 'App/Model/ZonaLocalizacao.php';
 
+use App\Models\LegacyIndividual;
+use App\Services\FileService;
 use App\Services\UrlPresigner;
 
 class clsIndex extends clsBase
@@ -157,6 +159,13 @@ class indice extends clsDetalhe
 
         if ($detalhe['sexo']) {
             $this->addDetalhe(['Sexo', $detalhe['sexo'] == 'M' ? 'Masculino' : 'Feminino']);
+        }
+
+        $fileService = new FileService(new UrlPresigner);
+        $files = $fileService->getFiles(LegacyIndividual::find($cod_pessoa));
+
+        if (count($files) > 0) {
+            $this->addHtml(view('uploads.upload-details', ['files' => $files])->render());
         }
 
         $obj_permissao = new clsPermissoes();
