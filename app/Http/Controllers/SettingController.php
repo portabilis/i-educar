@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Process;
 use App\Setting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class SettingController extends Controller
@@ -22,10 +21,7 @@ class SettingController extends Controller
 
         $this->menu(Process::SETTINGS);
 
-        /** @var User $user */
-        $user = Auth::user();
-
-        if(!$user->isAdmin()) {
+        if(!$request->user()->isAdmin()) {
             return redirect('/intranet/educar_configuracoes_index.php');
         }
 
