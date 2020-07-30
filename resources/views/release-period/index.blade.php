@@ -52,18 +52,20 @@
     <table width="100%">
         <tr>
             <td>
-                <span id="text-count-delete">Nenhum período de liberação selecionado</span>
+                @if($canRemove)<span id="text-count-delete">Nenhum período de liberação selecionado</span>@endif
             </td>
-            <td style="text-align: right">
-                <button class="btn" type="submit" onclick="confirmDeleteMultiple()">Excluir selecionados</button>
-            </td>
+            @if($canRemove)
+                <td style="text-align: right">
+                    <button class="btn" type="submit" onclick="confirmDeleteMultiple()">Excluir selecionados</button>
+                </td>
+            @endif
         </tr>
     </table>
 </div>
 <table class="table-default">
 
     <tr class="table-header">
-        <th><input type="checkbox" id="check-delete-all"></th>
+        @if($canRemove)<th><input type="checkbox" id="check-delete-all"></th>@endif
         <th>Escolas</th>
         <th>Ano</th>
         <th>Etapa</th>
@@ -73,7 +75,7 @@
     <tbody>
     @forelse($data as $releasePeriod)
         <tr>
-            <td><input type="checkbox" name="check-delete" data-id="{{ $releasePeriod->id }}"></td>
+            @if($canRemove)<td><input type="checkbox" name="check-delete" data-id="{{ $releasePeriod->id }}"></td>@endif
             <td>
                 <a href="{{ route('release-period.show', ['releasePeriod' => $releasePeriod->id]) }}">
                     {{ $releasePeriod->schools()->limit(3)->get()->pluck('name')->implode(', ')  }}@if($releasePeriod->schools->count() > 3)...@endif
@@ -102,7 +104,7 @@
         </tr>
     @empty
         <tr>
-            <td colspan="3">Não foi encontrado nenhum período de lançamento</td>
+            <td colspan="6">Não foi encontrado nenhum período de lançamento</td>
         </tr>
     @endforelse
 
@@ -147,7 +149,9 @@
                     ids.push($j(field).data('id'));
                 });
 
-                window.location.href = '{{ route('release-period.delete') }}?' + $j.param({periods:ids});
+                if (ids.length) {
+                    window.location.href = '{{ route('release-period.delete') }}?' + $j.param({periods:ids});
+                }
             }
         }
     </script>

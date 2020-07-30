@@ -146,15 +146,21 @@
             <button class="btn" type="button" onclick="resetForm()">Limpar campos</button>
 
             @if($releasePeriod->exists)
-                <button class="btn-green" type="submit">Editar</button>
+                @if($canModify)
+                    <button class="btn-green" type="submit">Editar</button>
+                @endif
                 <a href="{{route('release-period.index')}}">
                     <button class="btn" type="button">Cancelar</button>
                 </a>
-                <a href="javascript:confirmDelete()">
-                    <button class="btn" type="button">Excluir</button>
-                </a>
+                @if($canRemove)
+                    <a href="javascript:confirmDelete()">
+                        <button class="btn" type="button">Excluir</button>
+                    </a>
+                @endif
             @else
-                <button class="btn-green" type="submit">Criar novo</button>
+                @if($canModify)
+                    <button class="btn-green" type="submit">Criar novo</button>
+                @endif
             @endif
 
         </div>
