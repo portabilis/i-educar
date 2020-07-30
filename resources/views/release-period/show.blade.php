@@ -36,12 +36,14 @@
     <div class="separator"></div>
 
     <div style="text-align: center">
-        <a href="{{url()->route('release-period.form')}}">
-            <button class="btn-green" type="button">Novo</button>
-        </a>
-        <a href="{{ route('release-period.form', ['releasePeriod' => $releasePeriod->getKey()]) }}">
-            <button class="btn" type="button">Editar</button>
-        </a>
+        @if($canModify)
+            <a href="{{url()->route('release-period.form')}}">
+                <button class="btn-green" type="button">Novo</button>
+            </a>
+            <a href="{{ route('release-period.form', ['releasePeriod' => $releasePeriod->getKey()]) }}">
+                <button class="btn" type="button">Editar</button>
+            </a>
+        @endif
         <a href="{{ route('release-period.index') }}">
             <button class="btn" type="button">Voltar</button>
         </a>
