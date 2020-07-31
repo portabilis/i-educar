@@ -11,6 +11,7 @@ use iEducar\Modules\Educacenso\Validator\NisValidator;
 use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
 use iEducar\Support\View\SelectOptions;
+use App\Services\FileService;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -178,6 +179,7 @@ class indice extends clsCadastro
 
     public function Gerar()
     {
+        $this->form_enctype = ' enctype=\'multipart/form-data\'';
         $camposObrigatorios = !config('legacy.app.remove_obrigatorios_cadastro_pessoa') == 1;
         $obrigarCamposCenso = $this->validarCamposObrigatoriosCenso();
         $this->campoOculto('obrigar_campos_censo', (int) $obrigarCamposCenso);
@@ -236,9 +238,9 @@ class indice extends clsCadastro
         if ($foto) {
             $this->campoRotulo('fotoAtual_', 'Foto atual', '<img height="117" src="' . (new UrlPresigner())->getPresignedUrl($foto) . '"/>');
             $this->inputsHelper()->checkbox('file_delete', ['label' => 'Excluir a foto']);
-            $this->campoArquivo('file', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
+            $this->campoArquivo('photo', 'Trocar foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
         } else {
-            $this->campoArquivo('file', 'Foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
+            $this->campoArquivo('photo', 'Foto', $this->arquivoFoto, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Recomenda-se imagens nos formatos jpeg, jpg, png e gif. Tamanho máximo: 150KB</span>');
         }
 
         // ao cadastrar pessoa do pai ou mãe apartir do cadastro de outra pessoa,
@@ -385,7 +387,7 @@ class indice extends clsCadastro
         // Carteira do SUS
 
         $options = [
-            'required' => false,
+            'required' => config('legacy.app.fisica.exigir_cartao_sus'),
             'label' => 'Número da carteira do SUS',
             'placeholder' => '',
             'value' => $this->sus,
@@ -753,6 +755,10 @@ class indice extends clsCadastro
         $this->inputTelefone('empresa', 'Telefone da empresa');
         $this->campoTexto('pessoa_contato', 'Pessoa de contato na empresa', $this->pessoa_contato, '50', '255', false);
 
+        $fileService = new FileService(new UrlPresigner);
+        $files = $fileService->getFiles(LegacyIndividual::find($this->cod_pessoa_fj));
+        $this->addHtml(view('uploads.upload', ['files' => $files])->render());
+
         // after change pessoa pai / mae
 
         if ($parentType) {
@@ -1021,6 +1027,7 @@ class indice extends clsCadastro
         $this->createOrUpdateTelefones($pessoaId);
         $this->saveAddress($pessoaId);
         $this->afterChangePessoa($pessoaId);
+        $this->saveFiles($pessoaId);
 
         return true;
     }
@@ -1088,7 +1095,7 @@ class indice extends clsCadastro
     // Retorna true caso a foto seja válida
     protected function validatePhoto()
     {
-        $this->arquivoFoto = $_FILES['file'];
+        $this->arquivoFoto = $_FILES['photo'];
         if (!empty($this->arquivoFoto['name'])) {
             $this->arquivoFoto['name'] = mb_strtolower($this->arquivoFoto['name'], 'UTF-8');
             $this->objPhoto = new PictureController($this->arquivoFoto);
@@ -1214,6 +1221,7 @@ class indice extends clsCadastro
 
     protected function createOrUpdatePessoaFisica($pessoaId)
     {
+        $db = new clsBanco();
         $fisica = new clsFisica();
         $fisica->idpes = $pessoaId;
         $fisica->data_nasc = Portabilis_Date_Utils::brToPgSQL($this->data_nasc);
@@ -1228,11 +1236,11 @@ class indice extends clsCadastro
         $fisica->idmun_nascimento = $_REQUEST['naturalidade_id'] ?: 'NULL';
         $fisica->sus = $this->sus;
         $fisica->nis_pis_pasep = $this->nis_pis_pasep ? $this->nis_pis_pasep : 'NULL';
-        $fisica->ocupacao = $this->ocupacao;
-        $fisica->empresa = $this->empresa;
+        $fisica->ocupacao = $db->escapeString($this->ocupacao);
+        $fisica->empresa = $db->escapeString($this->empresa);
         $fisica->ddd_telefone_empresa = $this->ddd_telefone_empresa;
         $fisica->telefone_empresa = $this->telefone_empresa;
-        $fisica->pessoa_contato = $this->pessoa_contato;
+        $fisica->pessoa_contato = $db->escapeString($this->pessoa_contato);
         $this->renda_mensal = str_replace('.', '', $this->renda_mensal);
         $this->renda_mensal = str_replace(',', '.', $this->renda_mensal);
         $fisica->renda_mensal = $this->renda_mensal;
@@ -1403,6 +1411,30 @@ class indice extends clsCadastro
         ];
 
         $this->inputsHelper()->integer("telefone_{$type}", $options);
+    }
+
+    private function saveFiles($idpes)
+    {
+        $fileService = new FileService(new UrlPresigner);
+
+        if ($this->file_url) {
+            $newFiles = json_decode($this->file_url);
+            foreach ($newFiles as $file) {
+                $fileService->saveFile(
+                    $file->url,
+                    $file->size,
+                    $file->originalName,
+                    $file->extension,
+                    LegacyIndividual::class,
+                    $idpes
+                );
+            }
+        }
+
+        if ($this->file_url_deleted) {
+            $deletedFiles = explode(',', $this->file_url_deleted);
+            $fileService->deleteFiles($deletedFiles);
+        }
     }
 }
 

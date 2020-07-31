@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\DatabaseToCsvExporter;
 use App\Models\Exporter\Export;
 use App\Models\Exporter\SocialAssistance;
+use App\Models\Exporter\Stage;
 use App\Models\Exporter\Student;
 use App\Models\Exporter\Teacher;
 use App\Process;
@@ -110,6 +111,10 @@ class ExportController extends Controller
             $data = $this->filterStudents($request, $data, 'exporter_social_assistance');
         }
 
+        if ($model === Stage::class) {
+            $data = $this->filterStages($request, $data);
+        }
+
         return $data;
     }
 
@@ -183,6 +188,41 @@ class ExportController extends Controller
         } elseif ($request->user()->isSchooling()) {
             $data['filters'][] = [
                 'column' => 'exporter_teacher.school_id',
+                'operator' => 'in',
+                'value' => $request->user()->schools->pluck('cod_escola')->all(),
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param Request $request
+     * @param array   $data
+     *
+     * @return array
+     */
+    public function filterStages(Request $request, $data)
+    {
+        $data['filename'] = 'calendario.csv';
+
+        if ($year = $request->input('ano')) {
+            $data['filters'][] = [
+                'column' => 'exporter_stages.year',
+                'operator' => '=',
+                'value' => intval($year),
+            ];
+        }
+
+        if ($request->input('ref_cod_escola')) {
+            $data['filters'][] = [
+                'column' => 'exporter_stages.school_id',
+                'operator' => 'in',
+                'value' => [$request->input('ref_cod_escola')]
+            ];
+        } elseif ($request->user()->isSchooling()) {
+            $data['filters'][] = [
+                'column' => 'exporter_stages.school_id',
                 'operator' => 'in',
                 'value' => $request->user()->schools->pluck('cod_escola')->all(),
             ];

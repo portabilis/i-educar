@@ -42,6 +42,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/enrollment-history/{id}', 'EnrollmentHistoryController@show')
         ->name('enrollments.enrollment-history');
 
+    Route::get('/educacenso/consulta', 'EducacensoController@consult')
+        ->name('educacenso.consult');
+
     Route::get('/enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@indexEnroll')
         ->name('enrollments.batch.enroll.index');
     Route::post('/enturmacao-em-lote/{schoolClass}', 'BatchEnrollmentController@enroll')
@@ -129,6 +132,8 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::post('/periodo-lancamento/atualizar/{releasePeriod}', 'ReleasePeriodController@update')->name('release-period.update');
     Route::get('/periodo-lancamento', 'ReleasePeriodController@index')->name('release-period.index');
     Route::get('/periodo-lancamento/{releasePeriod}', 'ReleasePeriodController@show')->name('release-period.show');
+
+    Route::post('/upload', 'FileController@upload')->name('file-upload');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {

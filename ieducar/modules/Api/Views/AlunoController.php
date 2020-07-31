@@ -2070,6 +2070,8 @@ class AlunoController extends ApiCoreController
             $this->appendResponse($this->getUnificacoes());
         } elseif ($this->isRequestFor('get', 'deve-habilitar-campo-recursos-prova-inep')) {
             $this->appendResponse($this->deveHabilitarCampoRecursosProvaInep());
+        } elseif ($this->isRequestFor('get', 'deve-obrigar-laudo-medico')) {
+            $this->appendResponse($this->deveObrigarLaudoMedico());
         } else {
             $this->notImplementedOperationError();
         }
@@ -2097,6 +2099,17 @@ class AlunoController extends ApiCoreController
 
         return [
             'result' => !empty($deficiencias),
+        ];
+    }
+
+    private function deveObrigarLaudoMedico()
+    {
+        $deficiencias = array_filter(explode(',', $this->getRequest()->deficiencias));
+
+        return [
+            'result' => LegacyDeficiency::whereIn('cod_deficiencia', $deficiencias)
+                ->where('exigir_laudo_medico', true)
+                ->exists()
         ];
     }
 }

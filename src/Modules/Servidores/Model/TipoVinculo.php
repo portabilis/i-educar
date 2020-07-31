@@ -2,8 +2,12 @@
 
 namespace iEducar\Modules\Servidores\Model;
 
+use iEducar\Support\DescriptionValue;
+
 class TipoVinculo
 {
+    use DescriptionValue;
+
     const EFETIVO = 1;
     const TEMPORARIO = 2;
     const TERCEIRIZADO = 3;
@@ -18,5 +22,4 @@ class TipoVinculo
             self::CLT => 'Contrato CLT',
         ];
     }
-
 }

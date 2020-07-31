@@ -7,7 +7,7 @@ function startListenChannel(notificationsChannel) {
     let dateString = dateObj.toLocaleString('pt-BR');
 
     $j('.dropdown-content-notifications .notifications-bar').after(`
-      <a href="` + notification.link + `" onclick="markAsRead(this)" data-id="` + notification.id + `" class="` +className+ `">
+      <a href="` + notification.link + `" onclick="markAsRead(this)" data-id="` + notification.id + `" class="` +className+ `" target="_blank">
         <p>` + notification.text  + `</p>
         <p class="date-notification"> ` + dateString + `</p>
       </a>`);
@@ -44,7 +44,7 @@ function getNotifications() {
       let dateString = dateObj.toLocaleString('pt-BR');
 
       $j('.dropdown-content-notifications').append(`
-        <a href="` + value.link + `" onclick="markAsRead(this)" data-id="` + value.id + `" class="` +className+ `">
+        <a href="` + value.link + `" onclick="markAsRead(this)" data-id="` + value.id + `" class="` +className+ `" target="_blank">
           <p>` + value.text  + `</p>
           <p class="date-notification"> ` + dateString + `</p>
         </a>`);

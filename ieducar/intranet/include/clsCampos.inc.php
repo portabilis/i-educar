@@ -292,6 +292,11 @@ class clsCampos extends Core_Controller_Page_Abstract
         }
     }
 
+    public function addHtml($html)
+    {
+        $this->campos['html'] = $html;
+    }
+
     public function campoData(
         $nome,
         $campo,
@@ -1120,6 +1125,8 @@ class clsCampos extends Core_Controller_Page_Abstract
                         $retorno .= "<td class='$classe2 {$nome}' $center id='td_{$nome}[{$key2}]' valign='top'>\n";
 
                         switch (strtolower($campo_[0])) {
+                            case 'html':
+                                $retorno .= $componente;
                             case 'texto':
                                 $retorno .= $this->getCampoTexto("{$nome}[{$key2}]", "{$nome}[{$key2}]", $valor[$key], $campo_[4], $campo_[5], $evento, $campo_[10], '', $class, $campo_[7]);
                                 break;
@@ -1232,7 +1239,9 @@ class clsCampos extends Core_Controller_Page_Abstract
                 $class = 'geral';
                 $obrigatorio = '';
             }
-
+            if ($nome == 'html') {
+                $retorno .= $componente;
+            } else
             // Separador: insere uma linha preta
             if ($componente[0] == 'linha_preta') {
                 $retorno .= "<tr><td  style='padding:0px;background-color:{$componente['cor']};' colspan='2' height='{$componente['altura']}'></td></tr>";
@@ -1261,7 +1270,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                 $classe = $md ? 'formmdtd' : 'formlttd';
 
-                if ($campo_tabela && false) {
+               if ($campo_tabela && false) {
                     if ($componente[10] && ($componente[0] == 'textoDuploInv'
                             || $componente[0] == 'textoInv')) {
                         $name = " name='tr_{$componente[10]}'  ";
@@ -1310,6 +1319,10 @@ class clsCampos extends Core_Controller_Page_Abstract
                 }
 
                 switch ($tipo) {
+                    case 'html':
+                        $retorno .= $componente;
+                        break;
+
                     case 'rotuloDuplo':
                         $foiDuplo = true;
                         // no break

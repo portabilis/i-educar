@@ -2,8 +2,12 @@
 
 namespace iEducar\Modules\Servidores\Model;
 
+use iEducar\Support\DescriptionValue;
+
 class FuncaoExercida
 {
+    use DescriptionValue;
+
     const DOCENTE = 1;
     const AUXILIAR_EDUCACIONAL = 2;
     const MONITOR_ATIVIDADE_COMPLEMENTAR = 3;
@@ -26,5 +30,4 @@ class FuncaoExercida
             self::APOIO_ALUNOS_DEFICIENCIA => 'Profissional de apoio escolar para aluno(a)s com deficiência (Lei 13.146/2015)',
         ];
     }
-
 }

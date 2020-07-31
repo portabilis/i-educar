@@ -377,8 +377,9 @@ class clsPmieducarInstituicao extends Model
             }
 
             if (is_string($this->nm_instituicao)) {
+                $instituicao = $db->escapeString($this->nm_instituicao);
                 $campos .= "{$gruda}nm_instituicao";
-                $valores .= "{$gruda}'{$this->nm_instituicao}'";
+                $valores .= "{$gruda}'{$instituicao}'";
                 $gruda = ', ';
             }
 
@@ -773,7 +774,8 @@ class clsPmieducarInstituicao extends Model
             }
 
             if (is_string($this->nm_instituicao)) {
-                $set .= "{$gruda}nm_instituicao = '{$this->nm_instituicao}'";
+                $instituicao = $db->escapeString($this->nm_instituicao);
+                $set .= "{$gruda}nm_instituicao = '{$instituicao}'";
                 $gruda = ', ';
             }
 
@@ -1090,6 +1092,7 @@ class clsPmieducarInstituicao extends Model
         $int_ativo = null,
         $str_nm_instituicao = null
     ) {
+        $db = new clsBanco();
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -1159,11 +1162,11 @@ class clsPmieducarInstituicao extends Model
         }
 
         if (is_string($str_nm_instituicao)) {
-            $filtros .= "{$whereAnd} nm_instituicao LIKE '%{$str_nm_instituicao}%'";
+            $nm_instituicao = $db->escapeString($str_nm_instituicao);
+            $filtros .= "{$whereAnd} nm_instituicao ILIKE '%{$nm_instituicao}%'";
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

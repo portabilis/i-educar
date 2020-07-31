@@ -22,6 +22,6 @@ class LegacyDeficiency extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'nm_deficiencia', 'deficiencia_educacenso', 'desconsidera_regra_diferenciada'
+        'nm_deficiencia', 'deficiencia_educacenso', 'desconsidera_regra_diferenciada', 'exigir_laudo_medico',
     ];
 }

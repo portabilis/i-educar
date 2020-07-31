@@ -968,7 +968,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->text('fator_rh', $options);
 
         // sus
-        $options = array('label' => $this->_getLabel('sus'), 'size' => 20, 'max_length' => 20, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('sus'), 'size' => 20, 'max_length' => 20, 'required' => config('legacy.app.fisica.exigir_cartao_sus'), 'placeholder' => '');
         $this->inputsHelper()->text('sus', $options);
 
         // alergia_medicamento

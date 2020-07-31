@@ -341,13 +341,15 @@ class clsFisica
             }
 
             if (is_string($this->ocupacao)) {
+                $ocupacao = $db->escapeString($this->ocupacao);
                 $campos .=  ', ocupacao';
-                $valores .= ", '$this->ocupacao'";
+                $valores .= ", '{$ocupacao}'";
             }
 
             if (is_string($this->empresa)) {
+                $empresa = $db->escapeString($this->empresa);
                 $campos  .= ', empresa';
-                $valores .= ", '$this->empresa'";
+                $valores .= ", '{$empresa}'";
             }
 
             if (is_numeric($this->ddd_telefone_empresa)) {
@@ -361,8 +363,9 @@ class clsFisica
             }
 
             if (is_string($this->pessoa_contato)) {
+                $pessoa_contato = $db->escapeString($this->pessoa_contato);
                 $campos .=  ', pessoa_contato';
-                $valores .= ", '$this->pessoa_contato'";
+                $valores .= ", '{$pessoa_contato}'";
             }
 
             if (is_numeric($this->renda_mensal)) {
@@ -430,9 +433,9 @@ class clsFisica
                 $person = LegacyPerson::query()->find($this->idpes);
                 $person->slug = "{$slug} {$person->slug}";
                 $person->save();
-
+                $person = $db->escapeString($this->nome_social);
                 $campos  .= ', nome_social';
-                $valores .= ", '$this->nome_social'";
+                $valores .= ", '{$person}'";
             } else {
                 $person = LegacyPerson::query()->find($this->idpes);
                 $person->slug = Str::lower(Str::slug($person->nome, ' '));
