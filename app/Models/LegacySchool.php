@@ -156,4 +156,9 @@ class LegacySchool extends Model
     {
         return $this->hasMany('App\\Models\\SchoolManager', 'school_id');
     }
+
+    public function stages()
+    {
+        return $this->hasMany(LegacySchoolStage::class, 'ref_ref_cod_escola');
+    }
 }
