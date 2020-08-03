@@ -38,4 +38,6 @@ class Process
     const UPDATE_REGISTRATION_DATE = 1023;
     const CONFIG = 999909;
     const SETTINGS = 3000;
+    const RELEASE_PERIOD = 999848;
+    const POST_OUT_PERIOD = 999849;
 }

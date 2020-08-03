@@ -58,7 +58,7 @@ class ExemptionListController extends Controller
 
         $query->orderBy('data_cadastro', 'desc');
 
-        $exemptions = $query->paginate(20)->appends(Input::except('page'));
+        $exemptions = $query->paginate(20)->appends($request->except('page'));
 
         return view('exemption.index', compact('exemptions'));
     }
