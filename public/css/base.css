@@ -335,6 +335,11 @@ a:hover {
   color: #999 !important;
 }
 
+.beta-badge {
+  position: absolute;
+  margin-left: 10px;
+}
+
 .quick-search {
   margin-bottom: 10px;
 }

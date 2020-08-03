@@ -15,6 +15,8 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    protected $beta = false;
+
     /**
      * Set the breadcrumbs of the action
      *
@@ -25,14 +27,19 @@ class Controller extends BaseController
      */
     public function breadcrumb($currentPage, $pages = [])
     {
-        app(Breadcrumb::class)->current($currentPage, $pages);
+        $breadcrumb = app(Breadcrumb::class)
+            ->current($currentPage, $pages);
+
+        if ($this->beta) {
+            $breadcrumb->addBetaFlag();
+        }
 
         return $this;
     }
 
     /**
      * Share with view, title, mainmenu and menu links.
-     * 
+     *
      * @param int $process
      *
      * @return $this
