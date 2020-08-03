@@ -83,6 +83,7 @@ class MigrateAudit extends Migration
                                 WHEN rotina = 'nota_aluno' THEN 'modules.nota_aluno'
                                 WHEN rotina = 'pessoa' THEN 'cadastro.pessoa'
                                 WHEN rotina = 'turma' THEN 'pmieducar.turma'
+                                WHEN rotina = 'tipo_ocorrencia_disciplinar' THEN 'pmieducar.tipo_ocorrencia_disciplinar'
                                 ELSE ''
                         END;
 
