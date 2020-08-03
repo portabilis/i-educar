@@ -52,11 +52,10 @@ trait JsonDataSource
 
         $sql = "
 
-            SELECT 
+            SELECT
                 public.fcn_upper(instituicao.nm_instituicao) AS nm_instituicao,
                 public.fcn_upper(instituicao.nm_responsavel) AS nm_responsavel,
                 (CASE WHEN {$notSchool} THEN 'SECRETARIA DE EDUCAÇÃO' ELSE fcn_upper(view_dados_escola.nome) END) AS nm_escola,
-                (CASE WHEN {$notSchool} THEN instituicao.logradouro ELSE view_dados_escola.logradouro END),
                 (CASE WHEN {$notSchool} THEN instituicao.bairro ELSE view_dados_escola.bairro END),
                 (CASE WHEN {$notSchool} THEN instituicao.ddd_telefone ELSE view_dados_escola.telefone_ddd END) AS fone_ddd,
                 (CASE WHEN {$notSchool} THEN 0 ELSE view_dados_escola.celular_ddd END) AS cel_ddd,
@@ -69,28 +68,28 @@ trait JsonDataSource
                 a.number AS numero,
                 a.postal_code AS cep,
                 view_dados_escola.inep
-            FROM 
+            FROM
                 pmieducar.instituicao
             INNER JOIN pmieducar.escola ON TRUE
                 AND (instituicao.cod_instituicao = escola.ref_cod_instituicao)
-            INNER JOIN relatorio.view_dados_escola ON TRUE 
+            INNER JOIN relatorio.view_dados_escola ON TRUE
                 AND (escola.cod_escola = view_dados_escola.cod_escola)
             LEFT JOIN person_has_place php ON TRUE
                 AND php.person_id = escola.ref_idpes AND php.type = 1
-            LEFT JOIN addresses a ON TRUE 
+            LEFT JOIN addresses a ON TRUE
                 AND a.id = php.place_id
-            WHERE TRUE 
+            WHERE TRUE
                 AND instituicao.cod_instituicao = {$instituicao}
-                AND 
+                AND
                 (
-                    CASE WHEN {$notSchool} THEN 
-                        TRUE 
-                    ELSE 
-                        view_dados_escola.cod_escola = {$escola} 
+                    CASE WHEN {$notSchool} THEN
+                        TRUE
+                    ELSE
+                        view_dados_escola.cod_escola = {$escola}
                     END
                 )
             LIMIT 1
-     
+
         ";
 
         return $sql;
