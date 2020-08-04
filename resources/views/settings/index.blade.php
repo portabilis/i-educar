@@ -20,7 +20,7 @@
                     </td>
                 </tr>
                 @foreach($category->settings as $field)
-                    {!! $settingView->makeInput($field->id, $field->description, $field->type, $field->key, $field->value) !!}
+                    {!! $settingView->makeInput($field->id, $field->description, $field->type, $field->key, $field->value, $category->enabled) !!}
                 @endforeach
             @endforeach
             </tbody>
