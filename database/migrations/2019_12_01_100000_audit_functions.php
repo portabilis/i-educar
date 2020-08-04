@@ -26,12 +26,12 @@ class AuditFunctions extends Migration
     {
         return <<<SQL
 create function audit_context()
-returns json as 
+returns json as
 \$function$
-begin 
-	begin 
+begin
+	begin
 		return current_setting('audit.context');
-	exception when others then 
+	exception when others then
 		return json_build_object('user_id', 0, 'user_name', session_user);
 	end;
 end;
@@ -49,12 +49,12 @@ SQL;
     {
         return <<<SQL
 create function audit_enabled()
-returns boolean as 
+returns boolean as
 \$function$
-begin 
-	begin 
+begin
+	begin
 		return current_setting('audit.enabled');
-	exception when others then 
+	exception when others then
 		return true;
 	end;
 end;
@@ -71,30 +71,30 @@ SQL;
     private function getSqlForAuditFunction()
     {
         return <<<SQL
-create function public.audit() 
+create function public.audit()
 returns trigger as
 \$function$
-begin 
-	if (audit_enabled() = false) then 
+begin
+	if (audit_enabled() = false) then
 		return null;
 	end if;
 
-	if (TG_OP = 'DELETE') then 
-		insert into audit ("date", "schema", "table", "context", "before", "after")
+	if (TG_OP = 'DELETE') then
+		insert into ieducar_audit ("date", "schema", "table", "context", "before", "after")
 		values (now(), TG_TABLE_SCHEMA::text, TG_TABLE_NAME::text, audit_context(), to_json(old.*), null);
 
 		return old;
 	end if;
 
-	if (TG_OP = 'UPDATE') then 
-		insert into audit ("date", "schema", "table", "context", "before", "after")
+	if (TG_OP = 'UPDATE') then
+		insert into ieducar_audit ("date", "schema", "table", "context", "before", "after")
 		values (now(), TG_TABLE_SCHEMA::text, TG_TABLE_NAME::text, audit_context(), to_json(old.*), to_json(new.*));
 
 		return old;
 	end if;
 
-	if (TG_OP = 'INSERT') then 
-		insert into audit ("date", "schema", "table", "context", "before", "after")
+	if (TG_OP = 'INSERT') then
+		insert into ieducar_audit ("date", "schema", "table", "context", "before", "after")
 		values (now(), TG_TABLE_SCHEMA::text, TG_TABLE_NAME::text, audit_context(), null, to_json(new.*));
 
 		return old;

@@ -20,8 +20,8 @@ class AuditTriggers extends Migration
     public function getSkippedTables()
     {
         return config('audit.skip', [
-            'audit',
-            'public.audit',
+            'ieducar_audit',
+            'public.ieducar_audit',
             'modules.auditoria',
             'modules.auditoria_geral',
             'portal.acesso',
