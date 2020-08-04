@@ -1,5 +1,5 @@
 <tr>
-    <td><span class="form">{{$key}}</span></td>
+    <td><span class="form">@if($description != '') {{$description}} @else {{$key}} @endif</span></td>
     <td>
         <input type="hidden" name="{{$id}}" value="0">
         <input name="{{$id}}" type="checkbox" @if($value == 1) checked @endif value="1" />

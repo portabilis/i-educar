@@ -1,5 +1,5 @@
 <tr>
-    <td><span class="form">{{$key}}</span></td>
+    <td><span class="form">@if($description != '') {{$description}} @else {{$key}} @endif</span></td>
     <td>
         <input name="{{$id}}" type="number" step="0.01" value="{{$value}}"/>
     </td>
