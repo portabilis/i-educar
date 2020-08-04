@@ -5,10 +5,13 @@ use App\Models\LegacyInstitution;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyRemedialRule;
 use App\Models\LegacySchoolClass;
+use App\Process;
+use App\Services\ReleasePeriodService;
 use Cocur\Slugify\Slugify;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -288,21 +291,17 @@ class DiarioApiController extends ApiCoreController
 
     protected function validatesPeriodoLancamentoFaltasNotas($showMessage = true)
     {
+        if ($this->user()->can('modify', Process::POST_OUT_PERIOD)) {
+            return true;
+        }
 
-        $bloqueioLancamentoFaltasNotas = new clsPmieducarBloqueioLancamentoFaltasNotas(null,
-            $this->getRequest()->ano_escolar,
+        $service = new ReleasePeriodService();
+        if ($service->canPostNow(
             $this->getRequest()->escola_id,
-            $this->getRequest()->etapa);
-
-        $bloquearLancamento = $bloqueioLancamentoFaltasNotas->verificaPeriodo();
-
-        $user = $this->getSession()->id_pessoa;
-        $processoAp = 999849;
-        $obj_permissao = new clsPermissoes();
-
-        $permissaoLancamento = $obj_permissao->permissao_cadastra($processoAp, $user, 7);
-
-        if ($bloquearLancamento || $permissaoLancamento) {
+            $this->getRequest()->turma_id,
+            $this->getRequest()->etapa,
+            $this->getRequest()->ano_escolar)
+        ) {
             return true;
         }
 

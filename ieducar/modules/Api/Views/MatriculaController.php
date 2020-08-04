@@ -630,6 +630,10 @@ class MatriculaController extends ApiCoreController
             $matricula->data_cancel = $data_saida;
 
             if ($matricula->edita()) {
+                $enrollment = LegacyRegistration::find($matricula_id);
+                $lastenrollment = $enrollment->lastEnrollment;
+                $lastenrollment->data_exclusao = $data_saida;
+                $lastenrollment->save();
                 return $this->messenger->append('Data de saida atualizada com sucesso.', 'success');
             }
         }
