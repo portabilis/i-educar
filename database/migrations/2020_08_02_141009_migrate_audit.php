@@ -131,7 +131,7 @@ class MigrateAudit extends Migration
 
                 INSERT INTO public.audit (context, before, after, schema, "table", date)
                 SELECT
-                    cast ('{"user_id":'|| usuario_id ||',"user_name":"' || pessoa.nome || '","origin":""}' AS json),
+                    cast ('{"user_id":'|| usuario_id ||',"user_name":"' || pessoa.nome || '","origin":"legacy"}' AS json),
                     auditoria_geral.valor_antigo,
                     auditoria_geral.valor_novo,
                     (SELECT table_schema FROM public.get_table(auditoria_geral.rotina)),
