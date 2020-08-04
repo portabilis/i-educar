@@ -10,9 +10,7 @@ class Avaliacao_Model_NotaComponenteDataMapper extends CoreExt_DataMapper
     protected $_tableSchema = 'modules';
 
     protected $_primaryKey = [
-        'notaAluno' => 'nota_aluno_id',
-        'componenteCurricular' => 'componente_curricular_id',
-        'etapa' => 'etapa',
+        'id' => 'id',
     ];
 
     protected $_attributeMap = [

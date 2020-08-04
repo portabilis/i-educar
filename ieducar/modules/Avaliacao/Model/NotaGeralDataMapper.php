@@ -18,6 +18,6 @@ class Avaliacao_Model_NotaGeralDataMapper extends CoreExt_DataMapper
     ];
 
     protected $_primaryKey = [
-        'notaAluno' => 'nota_aluno_id'
+        'id' => 'id',
     ];
 }
