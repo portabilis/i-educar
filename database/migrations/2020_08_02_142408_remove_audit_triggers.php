@@ -17,17 +17,17 @@ class RemoveAuditTriggers extends Migration
         );
 
         DB::unprepared(<<<'SQL'
-                DROP FUNCTION modules.audita_falta_componente_curricular();
-                DROP FUNCTION modules.audita_falta_geral();
-                DROP FUNCTION modules.audita_media_geral();
-                DROP FUNCTION modules.audita_nota_componente_curricular();
-                DROP FUNCTION modules.audita_nota_componente_curricular_media();
-                DROP FUNCTION modules.audita_nota_exame();
-                DROP FUNCTION modules.audita_nota_geral();
-                DROP FUNCTION modules.audita_parecer_componente_curricular();
-                DROP FUNCTION modules.audita_parecer_geral();
-                DROP FUNCTION pmieducar.audita_matricula();
-                DROP FUNCTION pmieducar.audita_matricula_turma();
+                DROP FUNCTION IF EXISTS modules.audita_falta_componente_curricular();
+                DROP FUNCTION IF EXISTS modules.audita_falta_geral();
+                DROP FUNCTION IF EXISTS modules.audita_media_geral();
+                DROP FUNCTION IF EXISTS modules.audita_nota_componente_curricular();
+                DROP FUNCTION IF EXISTS modules.audita_nota_componente_curricular_media();
+                DROP FUNCTION IF EXISTS modules.audita_nota_exame();
+                DROP FUNCTION IF EXISTS modules.audita_nota_geral();
+                DROP FUNCTION IF EXISTS modules.audita_parecer_componente_curricular();
+                DROP FUNCTION IF EXISTS modules.audita_parecer_geral();
+                DROP FUNCTION IF EXISTS pmieducar.audita_matricula();
+                DROP FUNCTION IF EXISTS pmieducar.audita_matricula_turma();
 SQL);
     }
 
