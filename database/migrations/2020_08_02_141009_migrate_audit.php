@@ -129,7 +129,7 @@ class MigrateAudit extends Migration
                 $$
                 LANGUAGE 'plpgsql';
 
-                INSERT INTO public.audit (context, before, after, schema, "table", date)
+                INSERT INTO public.ieducar_audit (context, before, after, schema, "table", date)
                 SELECT
                     cast ('{"user_id":'|| usuario_id ||',"user_name":"' || pessoa.nome || '","origin":"legacy"}' AS json),
                     auditoria_geral.valor_antigo,
