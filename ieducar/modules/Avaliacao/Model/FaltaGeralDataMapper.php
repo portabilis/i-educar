@@ -9,14 +9,12 @@ class Avaliacao_Model_FaltaGeralDataMapper extends Avaliacao_Model_FaltaAbstract
     protected $_tableName = 'falta_geral';
 
     protected $_attributeMap = [
-        'id' => 'id',
         'faltaAluno' => 'falta_aluno_id',
         'quantidade' => 'quantidade',
         'etapa' => 'etapa'
     ];
 
     protected $_primaryKey = [
-        'faltaAluno' => 'falta_aluno_id',
-        'etapa' => 'etapa'
+        'id' => 'id',
     ];
 }

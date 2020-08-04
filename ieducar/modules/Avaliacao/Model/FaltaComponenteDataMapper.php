@@ -9,7 +9,6 @@ class Avaliacao_Model_FaltaComponenteDataMapper extends Avaliacao_Model_FaltaAbs
     protected $_tableName = 'falta_componente_curricular';
 
     protected $_attributeMap = [
-        'id' => 'id',
         'faltaAluno' => 'falta_aluno_id',
         'componenteCurricular' => 'componente_curricular_id',
         'quantidade' => 'quantidade',
@@ -17,8 +16,6 @@ class Avaliacao_Model_FaltaComponenteDataMapper extends Avaliacao_Model_FaltaAbs
     ];
 
     protected $_primaryKey = [
-        'faltaAluno' => 'falta_aluno_id',
-        'componenteCurricular' => 'componente_curricular_id',
-        'etapa' => 'etapa'
+        'id' => 'id',
     ];
 }
