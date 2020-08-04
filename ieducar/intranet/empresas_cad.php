@@ -215,78 +215,108 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        if (!$this->validaDadosTelefones()) {
-            // variável buscar_empresa é usada para definir os campos que aparecem na tela, quando false apresenta apenas o campo de CNPJ
-            // por tanto é preciso setar para true para que a mensagem de erro seja apresentada com os demais campos normalmente.
-            $this->busca_empresa = true;
-            return false;
-        }
+        $this->cnpj = idFederal2int(urldecode($this->cnpj));
+        $objJuridica = new clsJuridica(false, $this->cnpj);
+        $detalhJuridica = $objJuridica->detalhe();
+        if (!$detalhJuridica) {
+            if (!$this->validaDadosTelefones()) {
+                // variável buscar_empresa é usada para definir os campos que aparecem na tela, quando false apresenta apenas o campo de CNPJ
+                // por tanto é preciso setar para true para que a mensagem de erro seja apresentada com os demais campos normalmente.
+                $this->busca_empresa = true;
 
-        $this->cnpj = idFederal2int($this->cnpj);
-        $this->insc_est = idFederal2int($this->insc_est);
+                return false;
+            }
 
-        $objPessoa = new clsPessoa_($this->cod_pessoa_fj, $this->razao_social, $this->idpes_cad, $this->url, "J", false,
-            false, $this->email);
-        $objPessoa->edita();
+            $this->cnpj = idFederal2int($this->cnpj);
+            $this->insc_est = idFederal2int($this->insc_est);
 
-        $objJuridica = new clsJuridica($this->cod_pessoa_fj, $this->cnpj, $this->fantasia, $this->insc_est,
-            $this->capital_social);
-        $objJuridica->edita();
+            $objPessoa = new clsPessoa_(
+                $this->cod_pessoa_fj,
+                $this->razao_social,
+                $this->idpes_cad,
+                $this->url,
+                'J',
+                false,
+                false,
+                $this->email
+            );
+            $objPessoa->edita();
 
-        if ($this->telefone_1) {
-            $this->telefone_1 = str_replace("-", "", $this->telefone_1);
-            $this->telefone_1 = trim($this->telefone_1);
-            if (is_numeric($this->telefone_1) && (strlen($this->telefone_1) < 12)) {
-                $objTelefone = new clsPessoaTelefone($this->cod_pessoa_fj, 1, $this->telefone_1, $this->ddd_telefone_1);
-                if ($objTelefone->detalhe()) {
-                    $objTelefone->edita();
-                } else {
-                    $objTelefone->cadastra();
+            $objJuridica = new clsJuridica(
+                $this->cod_pessoa_fj,
+                $this->cnpj,
+                $this->fantasia,
+                $this->insc_est,
+                $this->capital_social
+            );
+            $objJuridica->edita();
+
+            if ($this->telefone_1) {
+                $this->telefone_1 = str_replace('-', '', $this->telefone_1);
+                $this->telefone_1 = trim($this->telefone_1);
+                if (is_numeric($this->telefone_1) && (strlen($this->telefone_1) < 12)) {
+                    $objTelefone = new clsPessoaTelefone($this->cod_pessoa_fj, 1, $this->telefone_1, $this->ddd_telefone_1);
+                    if ($objTelefone->detalhe()) {
+                        $objTelefone->edita();
+                    } else {
+                        $objTelefone->cadastra();
+                    }
                 }
             }
-        }
-        if ($this->telefone_2) {
-            $this->telefone_2 = str_replace("-", "", $this->telefone_2);
-            $this->telefone_2 = trim($this->telefone_2);
-            if (is_numeric($this->telefone_2) && (strlen($this->telefone_2) < 12)) {
-                $objTelefone = new clsPessoaTelefone($this->cod_pessoa_fj, 2, $this->telefone_2, $this->ddd_telefone_2);
-                if ($objTelefone->detalhe()) {
-                    $objTelefone->edita();
-                } else {
-                    $objTelefone->cadastra();
+            if ($this->telefone_2) {
+                $this->telefone_2 = str_replace('-', '', $this->telefone_2);
+                $this->telefone_2 = trim($this->telefone_2);
+                if (is_numeric($this->telefone_2) && (strlen($this->telefone_2) < 12)) {
+                    $objTelefone = new clsPessoaTelefone($this->cod_pessoa_fj, 2, $this->telefone_2, $this->ddd_telefone_2);
+                    if ($objTelefone->detalhe()) {
+                        $objTelefone->edita();
+                    } else {
+                        $objTelefone->cadastra();
+                    }
                 }
             }
-        }
-        if ($this->telefone_mov) {
-            $this->telefone_mov = str_replace("-", "", $this->telefone_mov);
-            $this->telefone_mov = trim($this->telefone_mov);
-            if (is_numeric($this->telefone_mov) && (strlen($this->telefone_mov) < 12)) {
-                $objTelefone = new clsPessoaTelefone($this->cod_pessoa_fj, 3, $this->telefone_mov,
-                    $this->ddd_telefone_mov);
-                if ($objTelefone->detalhe()) {
-                    $objTelefone->edita();
-                } else {
-                    $objTelefone->cadastra();
+            if ($this->telefone_mov) {
+                $this->telefone_mov = str_replace('-', '', $this->telefone_mov);
+                $this->telefone_mov = trim($this->telefone_mov);
+                if (is_numeric($this->telefone_mov) && (strlen($this->telefone_mov) < 12)) {
+                    $objTelefone = new clsPessoaTelefone(
+                        $this->cod_pessoa_fj,
+                        3,
+                        $this->telefone_mov,
+                        $this->ddd_telefone_mov
+                    );
+                    if ($objTelefone->detalhe()) {
+                        $objTelefone->edita();
+                    } else {
+                        $objTelefone->cadastra();
+                    }
                 }
             }
-        }
-        if ($this->telefone_fax) {
-            $this->telefone_fax = str_replace("-", "", $this->telefone_fax);
-            $this->telefone_fax = trim($this->telefone_fax);
-            if (is_numeric($this->telefone_fax) && (strlen($this->telefone_fax) < 12)) {
-                $objTelefone = new clsPessoaTelefone($this->cod_pessoa_fj, 4, $this->telefone_fax,
-                    $this->ddd_telefone_fax);
-                if ($objTelefone->detalhe()) {
-                    $objTelefone->edita();
-                } else {
-                    $objTelefone->cadastra();
+            if ($this->telefone_fax) {
+                $this->telefone_fax = str_replace('-', '', $this->telefone_fax);
+                $this->telefone_fax = trim($this->telefone_fax);
+                if (is_numeric($this->telefone_fax) && (strlen($this->telefone_fax) < 12)) {
+                    $objTelefone = new clsPessoaTelefone(
+                        $this->cod_pessoa_fj,
+                        4,
+                        $this->telefone_fax,
+                        $this->ddd_telefone_fax
+                    );
+                    if ($objTelefone->detalhe()) {
+                        $objTelefone->edita();
+                    } else {
+                        $objTelefone->cadastra();
+                    }
                 }
             }
-        }
 
-        $this->saveAddress($this->cod_pessoa_fj);
+            $this->saveAddress($this->cod_pessoa_fj);
 
-        $this->simpleRedirect('empresas_lst.php');
+            $this->simpleRedirect('empresas_lst.php');
+        }
+        $this->mensagem = 'Ja existe uma empresa cadastrada com este CNPJ. ';
+
+        return false;
     }
 
     function Excluir()
