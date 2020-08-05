@@ -10,9 +10,9 @@ use App\Setting;
 
 class SettingView
 {
-    public function makeInput($id, $description, $type, $key, $value, $enebled)
+    public function makeInput($id, $description, $type, $key, $value, $enabled)
     {
-        return $this->getInput($type)->getInputView($id, $description, $key, $value, $enebled);
+        return $this->getInput($type)->getInputView($id, $description, $key, $value, $enabled);
     }
 
     private function getInput($type)
