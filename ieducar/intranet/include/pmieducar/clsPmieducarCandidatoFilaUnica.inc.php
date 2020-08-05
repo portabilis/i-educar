@@ -803,6 +803,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
                           SET situacao = {$situacao},
                               motivo = '{$motivo}',
                               data_situacao = NOW(),
+                              ref_cod_matricula = null,
                               data_solicitacao = '{$data}',
                               hora_solicitacao = NOW(),
                               historico = '{$historico}'
