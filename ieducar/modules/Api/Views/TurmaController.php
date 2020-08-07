@@ -213,7 +213,7 @@ class TurmaController extends ApiCoreController
 
             if ($modified) {
                 $params[] = $modified;
-                $modified = 'AND t.updated_at >= $3';
+                $modified = 'AND (t.updated_at >= $3 OR rasa.updated_at >= $3 OR ra.updated_at >= $3)';
             }
 
             $sql = "

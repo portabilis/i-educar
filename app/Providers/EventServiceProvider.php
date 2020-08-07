@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Events\TransferEvent;
 use App\Listeners\AuthenticatedUser;
+use App\Listeners\ConfigureAuthenticatedUserForAudit;
 use App\Listeners\TransferNotificationListener;
 use App\Models\SchoolManager;
 use App\Observers\SchoolManagerObserver;
@@ -37,7 +38,8 @@ class EventServiceProvider extends ServiceProvider
             NotificationWhenResetPassword::class,
         ],
         Authenticated::class => [
-            AuthenticatedUser::class
+            AuthenticatedUser::class,
+            ConfigureAuthenticatedUserForAudit::class,
         ],
         RegistrationEvent::class => [
             CopyTransferDataListener::class,

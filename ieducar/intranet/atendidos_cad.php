@@ -756,7 +756,7 @@ class indice extends clsCadastro
         $this->campoTexto('pessoa_contato', 'Pessoa de contato na empresa', $this->pessoa_contato, '50', '255', false);
 
         $fileService = new FileService(new UrlPresigner);
-        $files = $fileService->getFiles(LegacyIndividual::find($this->cod_pessoa_fj));
+        $files = $this->cod_pessoa_fj ? $fileService->getFiles(LegacyIndividual::find($this->cod_pessoa_fj)) : [];
         $this->addHtml(view('uploads.upload', ['files' => $files])->render());
 
         // after change pessoa pai / mae
