@@ -708,7 +708,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->cod_canddidato_fila_unica) && is_numeric($this->ref_cod_pessoa_exc)) {
+        if (is_numeric($this->cod_candidato_fila_unica) && is_numeric($this->ref_cod_pessoa_exc)) {
             $this->ativo = 0;
 
             return $this->edita();
@@ -776,6 +776,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
             $db->Consulta("UPDATE pmieducar.candidato_fila_unica
                               SET ref_cod_matricula = '{$ref_cod_matricula}',
                                   situacao = 'A',
+                                  motivo = null,
                                   data_situacao = NOW(),
                                   historico = '{$historico}'
                             WHERE cod_candidato_fila_unica = '{$this->cod_candidato_fila_unica}'");
@@ -794,7 +795,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
         }
 
         $situacao = $situacao ?: 'NULL';
-        $motivo = str_replace("\'", "''", $motivo) ?: 'NULL';
+        $motivo = str_replace("\'", "''", $motivo) ?: null;
         $historico = $this->montaHistorico();
         $data = $data ?: 'NOW()';
 
