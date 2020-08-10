@@ -412,6 +412,6 @@ class LegacySchoolClass extends Model
      */
     public function period()
     {
-        return $this->belongsTo(LegacyPeriod::class, 'turma_turno_id')->withDefault();
+        return $this->belongsTo(LegacyPeriod::class, 'turma_turno_id');
     }
 }
