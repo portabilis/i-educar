@@ -134,6 +134,7 @@ return [
         ],
         'matricula' => [
             'dependencia' => '1',
+            'multiplas_matriculas' => '0',
         ],
         'alunos' => [
             'laudo_medico_obrigatorio' => '1',
