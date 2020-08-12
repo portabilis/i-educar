@@ -54,6 +54,7 @@ class SchoolHistory
         $discipline->data_atual = $data['data_atual_extenso'];
         $discipline->nome_serie_aux = $this->certificationText;
         $discipline->municipio = $data['municipio'];
+        $discipline->ato_poder_publico = $data['ato_poder_publico'];
         $discipline->ato_autorizativo = $data['ato_autorizativo'];
 
         $discipline->addLastCourseName($data['nome_curso']);
