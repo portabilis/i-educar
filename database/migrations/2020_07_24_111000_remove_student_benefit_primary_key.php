@@ -12,7 +12,7 @@ class RemoveStudentBenefitPrimaryKey extends Migration
      */
     public function up()
     {
-        DB::unprepared('ALTER TABLE pmieducar.aluno_aluno_beneficio DROP IF EXISTS CONSTRAINT aluno_aluno_beneficio_pk;');
+        DB::unprepared('ALTER TABLE pmieducar.aluno_aluno_beneficio DROP CONSTRAINT IF EXISTS aluno_aluno_beneficio_pk;');
     }
 
     /**
