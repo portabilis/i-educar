@@ -118,6 +118,18 @@ class MigrateAudit extends Migration
                                 WHEN rotina = 'candidato_fila_unica' THEN 'pmieducar.candidato_fila_unica'
                                 WHEN rotina = 'regra_avaliacao_recuperacao' THEN 'modules.regra_avaliacao_recuperacao'
                                 WHEN rotina = 'parecer_componente_curricular' THEN 'modules.parecer_componente_curricular'
+                                WHEN rotina = 'TRIGGER_PARECER_COMPONENTE_CURRICULAR' THEN 'modules.parecer_componente_curricular'
+                                WHEN rotina = 'calendario_ano_letivo' THEN 'pmieducar.calendario_ano_letivo'
+                                WHEN rotina = 'Endereçamento de Municipio' THEN 'public.municipio'
+                                WHEN rotina = 'Endereçamento de Bairro' THEN 'public.bairro'
+                                WHEN rotina = 'Endereçamento de CEP' THEN 'urbano.cep_logradouro'
+                                WHEN rotina = 'Endereçamento de Estado' THEN 'public.uf'
+                                WHEN rotina = 'infra_predio_comodo' THEN 'pmieducar.infra_predio_comodo'
+                                WHEN rotina = 'calendario_anotacao' THEN 'pmieducar.calendario_anotacao'
+                                WHEN rotina = 'deficiencia' THEN 'cadastro.deficiencia'
+                                WHEN rotina = 'turma_modulo' THEN 'pmieducar.turma_modulo'
+                                WHEN rotina = 'abandono_tipo' THEN 'pmieducar.abandono_tipo'
+                                WHEN rotina = 'config_movimento_geral' THEN 'modules.config_movimento_geral'
                                 ELSE ''
                         END;
 
