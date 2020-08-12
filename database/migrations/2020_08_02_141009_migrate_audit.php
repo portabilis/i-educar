@@ -117,6 +117,7 @@ class MigrateAudit extends Migration
                                 WHEN rotina = 'candidato_reserva_vaga' THEN 'pmieducar.candidato_reserva_vaga'
                                 WHEN rotina = 'candidato_fila_unica' THEN 'pmieducar.candidato_fila_unica'
                                 WHEN rotina = 'regra_avaliacao_recuperacao' THEN 'modules.regra_avaliacao_recuperacao'
+                                WHEN rotina = 'parecer_componente_curricular' THEN 'modules.parecer_componente_curricular'
                                 ELSE ''
                         END;
 
