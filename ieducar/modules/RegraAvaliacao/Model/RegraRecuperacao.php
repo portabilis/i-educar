@@ -65,8 +65,8 @@ class RegraAvaliacao_Model_RegraRecuperacao extends CoreExt_Entity
         return [
             'descricao' => new CoreExt_Validate_String(['min' => 1, 'max' => 25]),
             'etapasRecuperadas' => new CoreExt_Validate_String(['min' => 1, 'max' => 25]),
-            'media' => new CoreExt_Validate_Numeric(['min' => 0.001, 'max' => 9999.0]),
-            'notaMaxima' => new CoreExt_Validate_Numeric(['min' => 0.001, 'max' => 9999.0])
+            'media' => new CoreExt_Validate_Numeric(['min' => 0, 'max' => 10]),
+            'notaMaxima' => new CoreExt_Validate_Numeric(['min' => 0, 'max' => 10])
         ];
     }
 
