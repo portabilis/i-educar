@@ -4,7 +4,6 @@ use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsModulesPessoaTransporte extends Model
 {
@@ -129,8 +128,6 @@ class clsModulesPessoaTransporte extends Model
 
             if ($this->cod_pessoa_transporte) {
                 $detalhe = $this->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('pessoa_transporte', $this->pessoa_logada, $this->cod_pessoa_transporte);
-                $auditoria->inclusao($detalhe);
             }
 
             return $this->cod_pessoa_transporte;
@@ -190,8 +187,6 @@ class clsModulesPessoaTransporte extends Model
             if ($set) {
                 $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_pessoa_transporte = '{$this->cod_pessoa_transporte}'");
-                $auditoria = new clsModulesAuditoriaGeral('pessoa_transporte', $this->pessoa_logada, $this->cod_pessoa_transporte);
-                $auditoria->alteracao($detalheAntigo, $this->detalhe());
 
                 return true;
             }
@@ -419,9 +414,6 @@ class clsModulesPessoaTransporte extends Model
             $sql = "DELETE FROM {$this->_tabela} WHERE cod_pessoa_transporte = '{$this->cod_pessoa_transporte}'";
             $db = new clsBanco();
             $db->Consulta($sql);
-
-            $auditoria = new clsModulesAuditoriaGeral('pessoa_transporte', $this->pessoa_logada, $this->cod_pessoa_transporte);
-            $auditoria->exclusao($detalhe);
 
             return true;
         }

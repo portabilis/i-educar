@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Session;
 
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 require_once 'include/services/matricula/SequencialEnturmacao.php';
 require_once 'lib/App/Model/Educacenso.php';
 
@@ -181,8 +180,6 @@ class clsPmieducarMatriculaTurma extends Model
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
 
             $detalhe = $this->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral('matricula_turma', $this->pessoa_logada, $this->ref_cod_matricula);
-            $auditoria->inclusao($detalhe);
 
             return true;
         }
@@ -306,9 +303,6 @@ class clsPmieducarMatriculaTurma extends Model
             if ($set) {
                 $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_turma = '{$this->ref_cod_turma}' and sequencial = '$this->sequencial' ");
-
-                $auditoria = new clsModulesAuditoriaGeral('matricula_turma', $this->pessoa_logada, $this->ref_cod_matricula);
-                $auditoria->alteracao($detalheAntigo, $this->detalhe());
 
                 return true;
             }

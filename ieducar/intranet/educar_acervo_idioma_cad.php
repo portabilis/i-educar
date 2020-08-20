@@ -5,7 +5,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -91,20 +90,14 @@ class indice extends clsCadastro
 
     function Novo()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 590, $this->pessoa_logada, 11,  "educar_acervo_idioma_lst.php" );
-
 
         $obj = new clsPmieducarAcervoIdioma( $this->cod_acervo_idioma, $this->pessoa_logada, $this->pessoa_logada, $this->nm_idioma, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->ref_cod_biblioteca );
         $this->cod_acervo_idioma = $cadastrou = $obj->cadastra();
         if( $cadastrou )
         {
       $obj->cod_acervo_idioma = $this->cod_acervo_idioma;
-      $acervo_idioma = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("acervo_idioma", $this->pessoa_logada, $this->cod_acervo_idioma);
-      $auditoria->inclusao($acervo_idioma);
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
             $this->simpleRedirect('educar_acervo_idioma_lst.php');
         }
@@ -116,20 +109,13 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 590, $this->pessoa_logada, 11,  "educar_acervo_idioma_lst.php" );
 
-
         $obj = new clsPmieducarAcervoIdioma($this->cod_acervo_idioma, $this->pessoa_logada, $this->pessoa_logada, $this->nm_idioma, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->ref_cod_biblioteca);
-    $detalheAntigo = $obj->detalhe();
         $editou = $obj->edita();
         if( $editou )
         {
-      $detalheAtual = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("acervo_idioma", $this->pessoa_logada, $this->cod_acervo_idioma);
-      $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_acervo_idioma_lst.php');
         }
@@ -141,19 +127,13 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 590, $this->pessoa_logada, 11,  "educar_acervo_idioma_lst.php" );
 
-
         $obj = new clsPmieducarAcervoIdioma($this->cod_acervo_idioma, $this->pessoa_logada, $this->pessoa_logada, $this->nm_idioma, $this->data_cadastro, $this->data_exclusao, 0);
-        $detalhe = $obj->detalhe();
     $excluiu = $obj->excluir();
         if( $excluiu )
         {
-      $auditoria = new clsModulesAuditoriaGeral("acervo_idioma", $this->pessoa_logada, $this->cod_acervo_idioma);
-      $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_acervo_idioma_lst.php');
         }

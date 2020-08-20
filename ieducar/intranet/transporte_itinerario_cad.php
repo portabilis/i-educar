@@ -184,29 +184,17 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 21238, $this->pessoa_logada, 7,  "transporte_rota_det.php?cod_rota={$this->cod_rota}" );
 
         if ($this->ref_cod_ponto_transporte_escolar)
         {
-
             $obj  = new clsModulesItinerarioTransporteEscolar();
-            $codRotaInt = (int)$this->cod_rota;
-            $itinerario = $obj->lista(null, $codRotaInt);
 
             $excluiu = $obj->excluirTodos( $this->cod_rota );
 
             if ( $excluiu )
             {
-
-            foreach ($itinerario as $key => $campo) {
-                $auditoria = new clsModulesAuditoriaGeral("itinerario_transporte_escolar", $this->pessoa_logada, $campo['cod_itinerario_transporte_escolar']);
-                $auditoria->exclusao($campo);
-            }
-
                 $sequencial = 1;
                 foreach ( $this->ref_cod_ponto_transporte_escolar AS $key => $ponto )
                 {
@@ -220,13 +208,6 @@ class indice extends clsCadastro
                         return false;
                     }
                     $sequencial++;
-
-                    $itinerario = new clsModulesItinerarioTransporteEscolar($cadastrou1);
-                    $itinerario = $itinerario->detalhe();
-
-                    $auditoria = new clsModulesAuditoriaGeral("itinerario_transporte_escolar", $this->pessoa_logada, $cadastrou1);
-                    $auditoria->inclusao($itinerario);
-
                 }
             }
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
