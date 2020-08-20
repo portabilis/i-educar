@@ -29,7 +29,7 @@ class AreaConhecimentoController extends ApiCoreController
 
             $sql = "
                 (
-                    SELECT id, nome, ordenamento_ac, updated_at, null as deleted_at
+                    SELECT id, nome, ordenamento_ac, agrupar_descritores, updated_at, null as deleted_at
                     FROM modules.area_conhecimento
                     WHERE instituicao_id = $1
                     {$where}
@@ -37,7 +37,7 @@ class AreaConhecimentoController extends ApiCoreController
                 )
                 UNION ALL 
                 (
-                    SELECT id, nome, ordenamento_ac, updated_at, deleted_at
+                    SELECT id, nome, ordenamento_ac, agrupar_descritores, updated_at, deleted_at
                     FROM modules.area_conhecimento_excluidos
                     WHERE instituicao_id = $1
                     {$where}
@@ -47,7 +47,7 @@ class AreaConhecimentoController extends ApiCoreController
 
             $areas = $this->fetchPreparedQuery($sql, $params);
 
-            $attrs = ['id', 'nome', 'ordenamento_ac', 'updated_at', 'deleted_at'];
+            $attrs = ['id', 'nome', 'ordenamento_ac', 'agrupar_descritores', 'updated_at', 'deleted_at'];
             $areas = Portabilis_Array_Utils::filterSet($areas, $attrs);
 
             return [
