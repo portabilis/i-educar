@@ -4,7 +4,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -191,8 +190,6 @@ class indice extends clsCadastro
 
     function Novo()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 602, $this->pessoa_logada, 11,  "educar_situacao_lst.php" );
 
@@ -204,9 +201,6 @@ class indice extends clsCadastro
         if( $cadastrou )
         {
       $obj->cod_situacao = $this->cod_situacao;
-      $situacao = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("situacao", $this->pessoa_logada, $this->cod_situacao);
-      $auditoria->inclusao($situacao);
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
             $this->simpleRedirect('educar_situacao_lst.php');
         }
@@ -218,8 +212,6 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 602, $this->pessoa_logada, 11,  "educar_situacao_lst.php" );
 
@@ -227,13 +219,9 @@ class indice extends clsCadastro
     $this->situacao_emprestada = is_null($this->situacao_emprestada) ? 0 : 1;
 
         $obj = new clsPmieducarSituacao($this->cod_situacao, $this->pessoa_logada, null, $this->nm_situacao, $this->permite_emprestimo, $this->descricao, $this->situacao_padrao, $this->situacao_emprestada, null, null, 1, $this->ref_cod_biblioteca);
-    $detalheAntigo = $obj->detalhe();
         $editou = $obj->edita();
         if( $editou )
         {
-      $detalheAtual = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("situacao", $this->pessoa_logada, $this->cod_situacao);
-      $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_situacao_lst.php');
         }
@@ -245,19 +233,13 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 602, $this->pessoa_logada, 11,  "educar_situacao_lst.php" );
 
-
         $obj = new clsPmieducarSituacao($this->cod_situacao, $this->pessoa_logada, null,null,null,null,null,null,null,null, 0);
-    $detalhe = $obj->detalhe();
         $excluiu = $obj->excluir();
         if( $excluiu )
         {
-      $auditoria = new clsModulesAuditoriaGeral("situacao", $this->pessoa_logada, $this->cod_situacao);
-      $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_situacao_lst.php');
         }

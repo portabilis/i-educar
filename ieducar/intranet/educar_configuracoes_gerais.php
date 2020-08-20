@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Cache;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 require_once 'Portabilis/Utils/CustomLabel.php';
 
 class clsIndexBase extends clsBase
@@ -303,14 +302,9 @@ class indice extends clsCadastro
             'emitir_ato_criacao_credenciamento' => $emitir_ato_criacao_credenciamento,
         ]);
 
-        $detalheAntigo = $configuracoes->detalhe();
         $editou = $configuracoes->edita();
 
         if ($editou) {
-            $detalheAtual = $configuracoes->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral('configuracoes_gerais', $this->pessoa_logada, $ref_cod_instituicao ?: 'null');
-            $auditoria->alteracao($detalheAntigo, $detalheAtual);
-
             // Reseta o cache de configurações
             Cache::invalidateByTags(['configurations']);
 
