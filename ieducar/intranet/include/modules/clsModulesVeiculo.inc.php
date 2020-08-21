@@ -4,7 +4,6 @@ use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsModulesVeiculo extends Model
 {
@@ -259,8 +258,6 @@ class clsModulesVeiculo extends Model
 
             if ($this->cod_veiculo) {
                 $detalhe = $this->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('veiculo', $this->pessoa_logada, $this->cod_veiculo);
-                $auditoria->inclusao($detalhe);
             }
 
             return $this->cod_veiculo;
@@ -372,8 +369,6 @@ class clsModulesVeiculo extends Model
             if ($set) {
                 $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_veiculo = '{$this->cod_veiculo}'");
-                $auditoria = new clsModulesAuditoriaGeral('veiculo', $this->pessoa_logada, $this->cod_veiculo);
-                $auditoria->alteracao($detalheAntigo, $this->detalhe());
 
                 return true;
             }
@@ -554,9 +549,6 @@ class clsModulesVeiculo extends Model
             $sql = "DELETE FROM {$this->_tabela} WHERE cod_veiculo = '{$this->cod_veiculo}'";
             $db = new clsBanco();
             $db->Consulta($sql);
-
-            $auditoria = new clsModulesAuditoriaGeral('veiculo', $this->pessoa_logada, $this->cod_veiculo);
-            $auditoria->exclusao($detalhe);
 
             return true;
         }

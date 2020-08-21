@@ -10,7 +10,6 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/Geral.inc.php';
 require_once 'Portabilis/Date/Utils.php';
 require_once 'Portabilis/Currency/Utils.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 require_once 'Educacenso/Model/OrgaoRegionalDataMapper.php';
 
@@ -408,14 +407,8 @@ class indice extends clsCadastro
         $obj->ordenar_alunos_sequencial_enturmacao = !is_null($this->ordenar_alunos_sequencial_enturmacao);
         $obj->obrigar_telefone_pessoa = !is_null($this->obrigar_telefone_pessoa);
 
-        $detalheAntigo = $obj->detalhe();
-
         $editou = $obj->edita();
         if ($editou) {
-            $detalheAtual = $obj->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral('instituicao', $this->pessoa_logada, $this->cod_instituicao);
-            $auditoria->alteracao($detalheAntigo, $detalheAtual);
-
             if (is_null($this->altera_atestado_para_declaracao)) {
                 Menu::changeMenusToAttestation();
             } else {

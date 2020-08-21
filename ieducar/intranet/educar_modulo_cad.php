@@ -4,7 +4,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/geral.inc.php");
-require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -120,12 +119,6 @@ class indice extends clsCadastro
         $cadastrou = $obj->cadastra();
         if ($cadastrou)
         {
-            $modulo = new clsPmieducarModulo($cadastrou);
-            $modulo = $modulo->detalhe();
-
-            $auditoria = new clsModulesAuditoriaGeral("modulo", $this->pessoa_logada, $cadastrou);
-            $auditoria->inclusao($modulo);
-
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
             $this->simpleRedirect('educar_modulo_lst.php');
         }
@@ -137,11 +130,6 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
-        $moduloDetalhe = new clsPmieducarModulo($this->cod_modulo);
-        $moduloDetalheAntes = $moduloDetalhe->detalhe();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(584, $this->pessoa_logada, 3,  "educar_modulo_lst.php");
 
@@ -149,10 +137,6 @@ class indice extends clsCadastro
         $editou = $obj->edita();
         if ($editou)
         {
-            $moduloDetalheDepois = $moduloDetalhe->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral("modulo", $this->pessoa_logada, $this->cod_modulo);
-            $auditoria->alteracao($moduloDetalheAntes, $moduloDetalheDepois);
-
             $this->mensagem .= "Edição efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_modulo_lst.php');
         }
@@ -164,8 +148,6 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 584, $this->pessoa_logada, 3,  "educar_modulo_lst.php" );
 
@@ -182,9 +164,6 @@ class indice extends clsCadastro
         $excluiu = $obj->excluir();
         if ($excluiu)
         {
-            $auditoria = new clsModulesAuditoriaGeral("modulo", $this->pessoa_logada, $this->cod_modulo);
-            $auditoria->exclusao($modulo);
-
             $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_modulo_lst.php');
         }

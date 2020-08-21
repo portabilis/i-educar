@@ -145,8 +145,6 @@ class indice extends clsCadastro
 
   function Novo()
   {
-
-
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(641, $this->pessoa_logada, 7,
       "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}");
@@ -164,13 +162,6 @@ class indice extends clsCadastro
     $cadastrou = $obj->cadastra();
 
     if ($cadastrou) {
-
-      $quadroHorario = new clsPmieducarQuadroHorario($cadastrou);
-      $quadroHorario = $quadroHorario->detalhe();
-
-      $auditoria = new clsModulesAuditoriaGeral("quadro_horario", $this->pessoa_logada, $cadastrou);
-      $auditoria->inclusao($quadroHorario);
-
       $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
       $this->simpleRedirect("educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}&busca=S");
     }
@@ -185,8 +176,6 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-
-
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_excluir(641, $this->pessoa_logada, 7,
       "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}");
@@ -200,12 +189,7 @@ class indice extends clsCadastro
         $obj_quadro = new clsPmieducarQuadroHorario($this->cod_quadro_horario,
           $this->pessoa_logada);
 
-        $quadroHorario = $obj_quadro->detalhe();
-
         if ($obj_quadro->excluir()) {
-          $auditoria = new clsModulesAuditoriaGeral("quadro_horario", $this->pessoa_logada, $this->cod_quadro_horario);
-          $auditoria->exclusao($quadroHorario);
-
           $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
           $this->simpleRedirect("educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}");
         }

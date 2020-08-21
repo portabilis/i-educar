@@ -1229,10 +1229,7 @@ class clsPmieducarAluno extends Model
                     $det_fisica = $obj_fisica->detalhe();
 
                     $registro['nome_responsavel'] = $det_ref_idpes['nome'];
-
-                    if ($det_fisica['cpf']) {
-                        $registro['cpf_responsavel'] = int2CPF($det_fisica['cpf']);
-                    }
+                    $registro['cpf_responsavel'] = $det_fisica['cpf'] ? int2CPF($det_fisica['cpf']) : "Não informado";
                 }
             }
 
@@ -1251,10 +1248,7 @@ class clsPmieducarAluno extends Model
                     $det_fisica = $obj_fisica->detalhe();
 
                     $registro['nome_responsavel'] = $det_ref_idpes['nome'];
-
-                    if ($det_fisica['cpf']) {
-                        $registro['cpf_responsavel'] = int2CPF($det_fisica['cpf']);
-                    }
+                    $registro['cpf_responsavel'] = $det_fisica['cpf'] ? int2CPF($det_fisica['cpf']) : "Não informado";
                 }
             }
 
@@ -1273,10 +1267,7 @@ class clsPmieducarAluno extends Model
                     $det_fisica = $obj_fisica->detalhe();
 
                     $registro['nome_responsavel'] = $det_ref_idpes['nome'];
-
-                    if ($det_fisica['cpf']) {
-                        $registro['cpf_responsavel'] = int2CPF($det_fisica['cpf']);
-                    }
+                    $registro['cpf_responsavel'] = $det_fisica['cpf'] ? int2CPF($det_fisica['cpf']) : "Não informado";
                 }
             }
 
@@ -1288,16 +1279,17 @@ class clsPmieducarAluno extends Model
 
                 if ($det_fisica_aluno['idpes_mae'] && $det_fisica_aluno['idpes_pai']) {
                     $obj_mae = new clsPessoa_($det_fisica_aluno['idpes_mae']);
+                    $fisica_mae = (new clsFisica($det_fisica_aluno['idpes_mae']))->detalhe();
                     $det_mae = $obj_mae->detalhe();
 
                     $obj_pai = new clsPessoa_($det_fisica_aluno['idpes_pai']);
+                    $fisica_pai = (new clsFisica($det_fisica_aluno['idpes_pai']))->detalhe();
                     $det_pai = $obj_pai->detalhe();
 
                     $registro['nome_responsavel'] = $det_pai['nome'] . ', ' . $det_mae['nome'];
-
-                    if ($det_fisica['cpf']) {
-                        $registro['cpf_responsavel'] = int2CPF($det_fisica['cpf']);
-                    }
+                    $cpfPai = $fisica_pai['cpf'] ? int2CPF($fisica_pai['cpf']) : "Não informado";
+                    $cpfMae = $fisica_mae['cpf'] ? int2CPF($fisica_mae['cpf']) : "não informado";
+                    $registro['cpf_responsavel'] = $cpfPai . ', ' . $cpfMae;
                 }
             }
 

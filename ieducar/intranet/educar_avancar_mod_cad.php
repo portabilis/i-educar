@@ -353,24 +353,6 @@ class indice extends clsCadastro
             throw new Exception("Erro durante matrícula do aluno: $alunoId");
         }
 
-        $this->auditarMatriculas($escolaId, $cursoId, $serieId, $ano, $alunoId);
-
-        return true;
-    }
-
-    protected function auditarMatriculas($escolaId, $cursoId, $serieId, $ano, $alunoId)
-    {
-        $objMatricula = new clsPmieducarMatricula();
-        $matricula = $objMatricula->lista(null, null, $escolaId, $serieId, null, null, $alunoId, null, null, null, null, null, 1, $ano, null, null, null, null, null, null, null, null, null, null, $cursoId);
-
-        $matriculaId = $matricula[0]['cod_matricula'];
-        $objMatricula->cod_matricula = $matriculaId;
-
-        $detalhe = $objMatricula->detalhe();
-
-        $auditoria = new clsModulesAuditoriaGeral('matricula', $this->pessoa_logada, $matriculaId);
-        $auditoria->inclusao($detalhe);
-
         return true;
     }
 
