@@ -14,6 +14,7 @@ class ViewController extends Core_Controller_Page_ViewController
     protected $_tableMap = [
         'Nome' => 'nome',
         'Seção' => 'secao',
+        'Agrupa descritores' => 'agrupar_descritores',
     ];
 
     protected function _preRender()
@@ -29,5 +30,13 @@ class ViewController extends Core_Controller_Page_ViewController
         ]);
 
         $this->enviaLocalizacao($localizacao->montar());
+    }
+
+    public function getEntry()
+    {
+        $area = $this->getDataMapper()->find($this->getRequest()->id);
+        $area->agrupar_descritores = $area->agrupar_descritores ? 'Sim' : 'Não';
+
+        return $area;
     }
 }
