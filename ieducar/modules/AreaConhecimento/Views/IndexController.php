@@ -13,7 +13,8 @@ class IndexController extends Core_Controller_Page_ListController
 
     protected $_tableMap = [
         'Nome' => 'nome',
-        'Seção' => 'secao'
+        'Seção' => 'secao',
+        'Agrupa descritores' => 'agrupar_descritores'
     ];
 
     protected function _preRender()
@@ -29,5 +30,17 @@ class IndexController extends Core_Controller_Page_ListController
         ]);
 
         $this->enviaLocalizacao($localizacao->montar());
+    }
+
+    public function getEntries()
+    {
+        $areas = $this->getDataMapper()->findAll();
+
+        foreach ($areas as $key => $area) {
+            $descriptorsGroup = $area->agrupar_descritores ? 'Sim' : 'Não';
+            $areas[$key]->agrupar_descritores = $descriptorsGroup;
+        }
+
+        return $areas;
     }
 }
