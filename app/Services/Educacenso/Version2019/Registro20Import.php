@@ -329,7 +329,7 @@ class Registro20Import implements RegistroImportInterface
             throw new Exception('Não foi possível encontrar os dados do curso');
         }
 
-        $course = LegacyCourse::where('nm_curso', 'ilike', $courseData['curso'])->first();
+        $course = LegacyCourse::where('nm_curso', 'ilike', utf8_encode($courseData['curso']))->first();
 
         if (empty($course)) {
             $course = $this->createCourse($educationLevel, $educationType, $courseData);
@@ -509,21 +509,21 @@ class Registro20Import implements RegistroImportInterface
     {
         $arrayData = [
             1 => [
-                'curso' => "Educação infantil",
+                'curso' => "Educação Infantil",
                 'serie' => "Creche (0 a 3 anos)",
                 'etapa' => 1,
                 'etapas' => 3,
                 'nivel' => 'Infantil'
             ],
             2 => [
-                'curso' => "Educação infantil",
+                'curso' => "Educação Infantil",
                 'serie' => "Pré-escola (4 e 5 anos)",
                 'etapa' => 2,
                 'etapas' => 3,
                 'nivel' => 'Infantil'
             ],
             3 => [
-                'curso' => "Educação infantil",
+                'curso' => "Educação Infantil",
                 'serie' => "Unificada (0 a 5 anos)",
                 'etapa' => 3,
                 'etapas' => 3,
@@ -684,7 +684,7 @@ class Registro20Import implements RegistroImportInterface
                 'nivel' => 'Fundamental'
             ],
             56 => [
-                'curso' => "Educação infantil e Ensino Fundamental (8 e 9 anos)",
+                'curso' => "Educação Infantil e Ensino Fundamental (8 e 9 anos)",
                 'serie' => "Multietapa",
                 'etapa' => 1,
                 'etapas' => 1,
@@ -970,8 +970,8 @@ class Registro20Import implements RegistroImportInterface
             'ref_usuario_cad' => $this->user->id,
             'ref_cod_nivel_ensino' => $educationLevel->getKey(),
             'ref_cod_tipo_ensino' => $educationType->getKey(),
-            'nm_curso' => $courseData['curso'],
-            'sgl_curso' => substr($courseData['curso'], 0, 15),
+            'nm_curso' => utf8_encode($courseData['curso']),
+            'sgl_curso' => utf8_encode(substr($courseData['curso'], 0, 15)),
             'qtd_etapas' => $courseData['etapas'],
             'carga_horaria' => 800 * $courseData['etapas'],
             'data_cadastro' => now(),
