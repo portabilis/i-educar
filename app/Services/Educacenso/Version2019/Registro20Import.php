@@ -509,21 +509,21 @@ class Registro20Import implements RegistroImportInterface
     {
         $arrayData = [
             1 => [
-                'curso' => "Educação Infantil",
+                'curso' => "Educação infantil",
                 'serie' => "Creche (0 a 3 anos)",
                 'etapa' => 1,
                 'etapas' => 3,
                 'nivel' => 'Infantil'
             ],
             2 => [
-                'curso' => "Educação Infantil",
+                'curso' => "Educação infantil",
                 'serie' => "Pré-escola (4 e 5 anos)",
                 'etapa' => 2,
                 'etapas' => 3,
                 'nivel' => 'Infantil'
             ],
             3 => [
-                'curso' => "Educação Infantil",
+                'curso' => "Educação infantil",
                 'serie' => "Unificada (0 a 5 anos)",
                 'etapa' => 3,
                 'etapas' => 3,
@@ -684,7 +684,7 @@ class Registro20Import implements RegistroImportInterface
                 'nivel' => 'Fundamental'
             ],
             56 => [
-                'curso' => "Educação Infantil e Ensino Fundamental (8 e 9 anos)",
+                'curso' => "Educação infantil e Ensino Fundamental (8 e 9 anos)",
                 'serie' => "Multietapa",
                 'etapa' => 1,
                 'etapas' => 1,
