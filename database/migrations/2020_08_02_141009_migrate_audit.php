@@ -130,6 +130,17 @@ class MigrateAudit extends Migration
                                 WHEN rotina = 'turma_modulo' THEN 'pmieducar.turma_modulo'
                                 WHEN rotina = 'abandono_tipo' THEN 'pmieducar.abandono_tipo'
                                 WHEN rotina = 'config_movimento_geral' THEN 'modules.config_movimento_geral'
+                                WHEN rotina = 'Endereçamento de Logradouro' THEN 'public.logradouro'
+                                WHEN rotina = 'acervo' THEN 'pmieducar.acervo'
+                                WHEN rotina = 'calendario_dia' THEN 'pmieducar.calendario_dia'
+                                WHEN rotina = 'calendario_turma' THEN 'pmieducar.calendario_turma'
+                                WHEN rotina = 'cliente' THEN 'pmieducar.cliente'
+                                WHEN rotina = 'cliente_tipo' THEN 'pmieducar.cliente_tipo'
+                                WHEN rotina = 'motivo_suspensao' THEN 'pmieducar.motivo_suspensao'
+                                WHEN rotina = 'exemplar' THEN 'pmieducar.exemplar'
+                                WHEN rotina = 'reservas' THEN 'pmieducar.reservas'
+                                WHEN rotina = 'veiculo' THEN 'modules.veiculo'
+                                WHEN rotina = 'itinerario_transporte_escolar' THEN 'modules.itinerario_transporte_escolar'
                                 ELSE ''
                         END;
 
