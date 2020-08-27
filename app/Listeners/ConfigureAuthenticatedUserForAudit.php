@@ -43,9 +43,9 @@ class ConfigureAuthenticatedUserForAudit
 
         $context = json_encode([
             'user_id' => $id,
-            'user_name' => pg_escape_string($name),
+            'user_name' => $name,
             'origin' => $this->request->fullUrl(),
-        ]);
+        ], JSON_HEX_APOS|JSON_HEX_QUOT);
 
         $pdo->exec("SET \"audit.enabled\" = {$enabled};");
         $pdo->exec("SET \"audit.context\" = '{$context}';");
