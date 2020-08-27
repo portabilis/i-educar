@@ -51,7 +51,8 @@ class SchoolHistory
         $discipline->data_nasc = (new DateTime($data['data_nasc']))->format('d/m/Y');
         $discipline->nome_do_pai = $data['nome_do_pai'];
         $discipline->nome_da_mae = $data['nome_da_mae'];
-        $discipline->data_atual = $data['data_atual_extenso'];
+        $discipline->data_atual = $data['data_atual'];
+        $discipline->data_atual_extenso = $data['data_atual_extenso'];
         $discipline->nome_serie_aux = $this->certificationText;
         $discipline->municipio = $data['municipio'];
         $discipline->ato_poder_publico = $data['ato_poder_publico'];
