@@ -43,7 +43,7 @@ class ConfigureAuthenticatedUserForAudit
 
         $context = json_encode([
             'user_id' => $id,
-            'user_name' => $name,
+            'user_name' => pg_escape_string($name),
             'origin' => $this->request->fullUrl(),
         ]);
 
