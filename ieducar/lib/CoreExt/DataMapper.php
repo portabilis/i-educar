@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Facades\Session;
 
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
-
 abstract class CoreExt_DataMapper
 {
     /**
@@ -633,8 +631,6 @@ abstract class CoreExt_DataMapper
             if ($id) {
                 $tmpEntry = $this->find($id);
                 $info = $tmpEntry->toDataArray();
-                $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $id);
-                $auditoria->inclusao($info);
             }
         } elseif (!$instance->isNew()) {
             $pkSave = $this->buildKeyToFind($instance);
@@ -648,8 +644,6 @@ abstract class CoreExt_DataMapper
             $newInfo = $tmpEntry->toDataArray();
 
             $keys = array_keys($this->_primaryKey);
-            $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, $instance->get(array_shift($keys)));
-            $auditoria->alteracao($oldInfo, $newInfo);
         }
 
         return $return;
@@ -696,9 +690,6 @@ abstract class CoreExt_DataMapper
 
         if (count($info)) {
             $pessoa_logada = Session::get('id_pessoa');
-
-            $auditoria = new clsModulesAuditoriaGeral($this->_tableName, $pessoa_logada, array_shift(array_values($instance)));
-            $auditoria->exclusao($info);
         }
 
         return $return;
@@ -799,7 +790,7 @@ abstract class CoreExt_DataMapper
     {
         foreach ($data as $key => $value) {
             $index = array_search($key, $this->_attributeMap);
-            
+
             try {
                 if ($index !== false) {
                     $instance->$index = $value;

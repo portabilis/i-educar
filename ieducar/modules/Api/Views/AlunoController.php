@@ -28,7 +28,6 @@ require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/Date/Utils.php';
 require_once 'include/modules/clsModulesPessoaTransporte.inc.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 require_once 'Transporte/Model/Responsavel.php';
 
 class AlunoController extends ApiCoreController
@@ -670,13 +669,9 @@ class AlunoController extends ApiCoreController
         if (is_null($id)) {
             $id = $aluno->cadastra();
             $aluno->cod_aluno = $id;
-            $auditoria = new clsModulesAuditoriaGeral('aluno', $this->getSession()->id_pessoa, $id);
-            $auditoria->inclusao($aluno->detalhe());
         } else {
             $detalheAntigo = $aluno->detalhe();
             $id = $aluno->edita();
-            $auditoria = new clsModulesAuditoriaGeral('aluno', $this->getSession()->id_pessoa, $id);
-            $auditoria->alteracao($detalheAntigo, $aluno->detalhe());
         }
 
         return $id;
@@ -1747,8 +1742,6 @@ class AlunoController extends ApiCoreController
                 $detalheAluno = $aluno->detalhe();
 
                 if ($aluno->excluir()) {
-                    $auditoria = new clsModulesAuditoriaGeral('aluno', $this->getSession()->id_pessoa, $id);
-                    $auditoria->exclusao($detalheAluno);
                     $this->messenger->append('Cadastro removido com sucesso', 'success', false, 'error');
                 } else {
                     $this->messenger->append('Aparentemente o cadastro não pode ser removido, por favor, verifique.', 'error', false, 'error');

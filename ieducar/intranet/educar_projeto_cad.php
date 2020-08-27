@@ -4,7 +4,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/geral.inc.php");
-require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -86,18 +85,10 @@ class indice extends clsCadastro
 
     function Novo()
     {
-
-
         $obj = new clsPmieducarProjeto( null, $this->nome, $this->observacao);
         $cadastrou = $obj->cadastra();
         if( $cadastrou )
         {
-            $projeto = new clsPmieducarProjeto($cadastrou);
-            $projeto = $projeto->detalhe();
-
-            $auditoria = new clsModulesAuditoriaGeral("projeto", $this->pessoa_logada, $cadastrou);
-            $auditoria->inclusao($projeto);
-
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
             $this->simpleRedirect('educar_projeto_lst.php');
         }
@@ -109,19 +100,10 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
-        $projetoDetalhe = new clsPmieducarProjeto($this->cod_projeto);
-        $projetoDetalheAntes = $projetoDetalhe->detalhe();
-
         $obj = new clsPmieducarProjeto($this->cod_projeto, $this->nome, $this->observacao);
         $editou = $obj->edita();
         if( $editou )
         {
-            $projetoDetalheDepois = $projetoDetalhe->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral("projeto", $this->pessoa_logada, $this->cod_projeto);
-            $auditoria->alteracao($projetoDetalheAntes, $projetoDetalheDepois);
-
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_projeto_lst.php');
         }
@@ -133,16 +115,10 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-
-
         $obj = new clsPmieducarProjeto($this->cod_projeto);
-        $projeto = $obj->detalhe();
         $excluiu = $obj->excluir();
         if( $excluiu )
         {
-            $auditoria = new clsModulesAuditoriaGeral("projeto", $this->pessoa_logada, $this->cod_projeto);
-            $auditoria->exclusao($projeto);
-
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_projeto_lst.php');
         }

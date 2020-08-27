@@ -13,7 +13,7 @@ class CreateAuditTable extends Migration
      */
     public function up()
     {
-        Schema::create('audit', function (Blueprint $table) {
+        Schema::create('ieducar_audit', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->json('context')->nullable();
             $table->json('before')->nullable();
@@ -31,6 +31,6 @@ class CreateAuditTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('audit');
+        Schema::dropIfExists('ieducar_audit');
     }
 }
