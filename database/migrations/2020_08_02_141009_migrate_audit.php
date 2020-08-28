@@ -12,6 +12,12 @@ class MigrateAudit extends Migration
      */
     public function up()
     {
+        try {
+            DB::select('select 1 from modules.auditoria_geral LIMIT 1');
+        } catch (\Throwable $e) {
+            return;
+        }
+
         DB::unprepared(<<<'EOL'
                 CREATE OR REPLACE function public.get_table(rotina varchar)
                     RETURNS TABLE (
