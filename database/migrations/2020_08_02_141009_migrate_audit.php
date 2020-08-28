@@ -141,7 +141,8 @@ class MigrateAudit extends Migration
                                 WHEN rotina = 'reservas' THEN 'pmieducar.reservas'
                                 WHEN rotina = 'veiculo' THEN 'modules.veiculo'
                                 WHEN rotina = 'itinerario_transporte_escolar' THEN 'modules.itinerario_transporte_escolar'
-                                ELSE ''
+                                WHEN rotina = 'TRIGGER_NOTA_GERAL' THEN 'modules.nota_geral'
+                                ELSE 'legacy.legacy'
                         END;
 
                     IF name = '' THEN
