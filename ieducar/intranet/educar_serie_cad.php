@@ -52,6 +52,7 @@ class indice extends clsCadastro
     public $alerta_faixa_etaria;
     public $bloquear_matricula_faixa_etaria;
     public $exigir_inep;
+    public $importar_serie_pre_matricula;
 
     public function Inicializar()
     {
@@ -137,6 +138,7 @@ class indice extends clsCadastro
         $this->alerta_faixa_etaria = dbBool($this->alerta_faixa_etaria);
         $this->bloquear_matricula_faixa_etaria = dbBool($this->bloquear_matricula_faixa_etaria);
         $this->exigir_inep = dbBool($this->exigir_inep);
+        $this->importar_serie_pre_matricula = dbBool($this->importar_serie_pre_matricula);
 
         return $retorno;
     }
@@ -250,6 +252,7 @@ class indice extends clsCadastro
         $this->campoCheck('bloquear_matricula_faixa_etaria', 'Bloquear matrículas de alunos fora da faixa etária da série/ano', $this->bloquear_matricula_faixa_etaria);
 
         $this->campoCheck('exigir_inep', 'Exigir INEP para a matrícula?', $this->exigir_inep);
+        $this->campoCheck('importar_serie_pre_matricula', 'Importar os dados da série para o recurso de pré-matrícula online?', $this->importar_serie_pre_matricula);
     }
 
     public function Novo()
@@ -278,7 +281,8 @@ class indice extends clsCadastro
             !is_null($this->alerta_faixa_etaria),
             !is_null($this->bloquear_matricula_faixa_etaria),
             $this->idade_ideal,
-            !is_null($this->exigir_inep)
+            !is_null($this->exigir_inep),
+            !is_null($this->importar_serie_pre_matricula)
         );
 
         $this->cod_serie = $cadastrou = $obj->cadastra();
@@ -322,7 +326,8 @@ class indice extends clsCadastro
             !is_null($this->alerta_faixa_etaria),
             !is_null($this->bloquear_matricula_faixa_etaria),
             $this->idade_ideal,
-            !is_null($this->exigir_inep)
+            !is_null($this->exigir_inep),
+            !is_null($this->importar_serie_pre_matricula)
         );
 
         $editou = $obj->edita();
