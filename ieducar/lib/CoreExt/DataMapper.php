@@ -620,30 +620,11 @@ abstract class CoreExt_DataMapper
             }
         }
 
-        $pessoa_logada = Session::get('id_pessoa');
-
         if ($instance->isNew()) {
             $returning = ' RETURNING ' . implode(',', array_values($this->_primaryKey));
             $return = $this->_getDbAdapter()->Consulta($this->_getSaveStatment($instance) . $returning);
-            $result = $return->fetch(PDO::FETCH_BOTH);
-            $id = $result[0];
-
-            if ($id) {
-                $tmpEntry = $this->find($id);
-                $info = $tmpEntry->toDataArray();
-            }
         } elseif (!$instance->isNew()) {
-            $pkSave = $this->buildKeyToFind($instance);
-
-            $tmpEntry = $this->find($pkSave);
-            $oldInfo = $tmpEntry->toDataArray();
-
             $return = $this->_getDbAdapter()->Consulta($this->_getUpdateStatment($instance));
-
-            $tmpEntry = $this->find($pkSave);
-            $newInfo = $tmpEntry->toDataArray();
-
-            $keys = array_keys($this->_primaryKey);
         }
 
         return $return;
