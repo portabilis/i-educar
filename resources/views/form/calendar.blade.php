@@ -3,9 +3,9 @@
     <td class="formmdtd" valign="top">
         <span class="form">
             <input type="hidden" name="user" id="user" value="{{$user}}">
-            <select class="geral" name="calendars" id="calendars" style="width: 308px;" data-placeholder="Selecione os calendários" multiple>
+            <select class="geral" name="calendars[]" id="calendars" style="width: 308px;" data-placeholder="Selecione os calendários" multiple>
                 @foreach($calendars as $calendar)
-                    <option value="{{$calendar->start_date}}-{{$calendar->end_date}}">
+                    <option value="{{$calendar->start_date}} {{$calendar->end_date}}">
                         {{(new DateTime($calendar->start_date))->format('d/m/Y')}} - {{(new DateTime($calendar->end_date))->format('d/m/Y')}}
                     </option>
                 @endforeach
