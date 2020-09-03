@@ -12,27 +12,26 @@ class SchoolClassController extends Controller
 {
     public function getCalendars(Request $request, SchoolClassService $schoolClassService, CourseService $courseService)
     {
-        $courses = $this->getCourses($request, $courseService);
+        if (request()->get('ref_cod_turma')) {
+            return $schoolClassService->getCalendars([request()->get('ref_cod_turma')]);
+        }
 
         $schoolClass = LegacySchoolClass::query()
             ->where('ano', $request->get('ano'))
-            ->whereIn('ref_cod_curso', $courses)
+            ->whereHas('course', function ($courseQuery) {
+                $courseQuery->isEja();
+            })
+            ->when($request->get('ref_cod_escola'), function ($query) {
+                $query->where('ref_ref_cod_escola', request()->get('ref_cod_escola'));
+            })
+            ->when($request->get('ref_cod_serie'), function ($query) {
+                $query->where('ref_ref_cod_serie', request()->get('ref_cod_serie'));
+            })
+            ->when($request->get('ref_cod_curso'), function ($query) {
+                $query->where('ref_cod_curso', request()->get('ref_cod_curso'));
+            })
             ->get(['cod_turma'])->pluck('cod_turma')->all();
 
         return $schoolClassService->getCalendars($schoolClass);
-    }
-
-    private function getCourses(Request $request, CourseService $courseService)
-    {
-        $curso = $request->get('ref_cod_curso');
-        if ($curso) {
-            return [$curso];
-        }
-
-        $ano = $request->get('ano') ?: date('Y');
-        $escola = $request->get('ref_cod_escola');
-        $user = $request->get('user');
-
-        return $courseService->getCoursesByUserAndSchool($user, $escola, $ano);
     }
 }
