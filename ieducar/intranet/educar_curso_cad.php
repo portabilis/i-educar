@@ -48,6 +48,7 @@ class indice extends clsCadastro
 
     public $multi_seriado;
     public $modalidade_curso;
+    public $importar_curso_pre_matricula;
 
     public function Inicializar()
     {
@@ -444,6 +445,8 @@ class indice extends clsCadastro
         $options = ['label' => 'Etapas que o curso contêm', 'size' => 50, 'required' => false, 'options' => ['value' => null]];
 
         $this->inputsHelper()->multipleSearchEtapacurso('', $options, $helperOptions);
+
+        $this->campoCheck('importar_curso_pre_matricula', 'Importar os dados do curso para o recurso de pré-matrícula digital?', $this->importar_curso_pre_matricula);
     }
 
     public function Novo()
@@ -456,6 +459,7 @@ class indice extends clsCadastro
 
             $this->padrao_ano_escolar = is_null($this->padrao_ano_escolar) ? 0 : 1;
             $this->multi_seriado = is_null($this->multi_seriado) ? 0 : 1;
+            $this->importar_curso_pre_matricula = is_null($this->importar_curso_pre_matricula) ? 0 : 1;
 
             $obj = new clsPmieducarCurso(
 				null,
@@ -484,7 +488,8 @@ class indice extends clsCadastro
 				$this->padrao_ano_escolar,
 				$this->hora_falta,
 				null,
-				$this->multi_seriado
+				$this->multi_seriado,
+				$this->importar_curso_pre_matricula
       		);
             $obj->modalidade_curso = $this->modalidade_curso;
 
@@ -534,6 +539,7 @@ class indice extends clsCadastro
 
             $this->padrao_ano_escolar = is_null($this->padrao_ano_escolar) ? 0 : 1;
             $this->multi_seriado = is_null($this->multi_seriado) ? 0 : 1;
+            $this->importar_curso_pre_matricula = is_null($this->importar_curso_pre_matricula) ? 0 : 1;
 
             $obj = new clsPmieducarCurso(
 				$this->cod_curso,
@@ -562,7 +568,8 @@ class indice extends clsCadastro
 				$this->padrao_ano_escolar,
 				$this->hora_falta,
 				null,
-				$this->multi_seriado
+				$this->multi_seriado,
+				$this->importar_curso_pre_matricula
       		);
             $obj->modalidade_curso = $this->modalidade_curso;
 
