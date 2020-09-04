@@ -446,7 +446,7 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->multipleSearchEtapacurso('', $options, $helperOptions);
 
-        $this->campoCheck('importar_curso_pre_matricula', 'Importar os dados do curso para o recurso de pré-matrícula online?', $this->importar_curso_pre_matricula);
+        $this->campoCheck('importar_curso_pre_matricula', 'Importar os dados do curso para o recurso de pré-matrícula digital?', $this->importar_curso_pre_matricula);
     }
 
     public function Novo()
