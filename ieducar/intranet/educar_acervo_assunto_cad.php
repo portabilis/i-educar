@@ -7,7 +7,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -91,20 +90,14 @@ class indice extends clsCadastro
 
     function Novo()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 592, $this->pessoa_logada, 11,  "educar_acervo_assunto_lst.php" );
-
 
         $obj = new clsPmieducarAcervoAssunto( null, null, $this->pessoa_logada, $this->nm_assunto, $this->descricao, null, null, 1);#, $this->ref_cod_biblioteca );
         $this->cod_acervo_assunto = $cadastrou = $obj->cadastra();
         if( $cadastrou )
         {
       $obj->cod_acervo_assunto = $this->cod_acervo_assunto;
-      $acervo_assunto = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("acervo_assunto", $this->pessoa_logada, $this->cod_acervo_assunto);
-      $auditoria->inclusao($acervo_assunto);
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 
             $this->simpleRedirect('educar_acervo_assunto_lst.php');
@@ -117,20 +110,13 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 592, $this->pessoa_logada, 11,  "educar_acervo_assunto_lst.php" );
 
-
         $obj = new clsPmieducarAcervoAssunto($this->cod_acervo_assunto, $this->pessoa_logada, null, $this->nm_assunto, $this->descricao, null, null, 1);#, $this->ref_cod_biblioteca);
-    $detalheAntigo = $obj->detalhe();
         $editou = $obj->edita();
         if( $editou )
         {
-      $detalheAtual = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("acervo_assunto", $this->pessoa_logada, $this->cod_acervo_assunto);
-      $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
 
             $this->simpleRedirect('educar_acervo_assunto_lst.php');
@@ -143,20 +129,13 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 592, $this->pessoa_logada, 11,  "educar_acervo_assunto_lst.php" );
 
-
         $obj = new clsPmieducarAcervoAssunto($this->cod_acervo_assunto, $this->pessoa_logada, null, null, null, null, null, 0);
-    $detalhe = $obj->detalhe();
         $excluiu = $obj->excluir();
         if( $excluiu )
         {
-
-      $auditoria = new clsModulesAuditoriaGeral("acervo_assunto", $this->pessoa_logada, $this->cod_acervo_assunto);
-      $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
 
             $this->simpleRedirect('educar_abandono_tipo_lst.php');
