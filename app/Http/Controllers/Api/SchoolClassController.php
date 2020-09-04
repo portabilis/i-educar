@@ -4,13 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\LegacySchoolClass;
-use App\Services\CourseService;
 use App\Services\SchoolClassService;
 use Illuminate\Http\Request;
 
 class SchoolClassController extends Controller
 {
-    public function getCalendars(Request $request, SchoolClassService $schoolClassService, CourseService $courseService)
+    public function getCalendars(Request $request, SchoolClassService $schoolClassService)
     {
         if (request()->get('ref_cod_turma')) {
             return $schoolClassService->getCalendars([request()->get('ref_cod_turma')]);
