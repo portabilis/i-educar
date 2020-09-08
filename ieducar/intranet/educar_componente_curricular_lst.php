@@ -96,10 +96,13 @@ class indice extends clsListagem
         $this->inputsHelper()->select('tipo_base', $options);
 
         $objAreas = new AreaConhecimento_Model_AreaDataMapper();
-        $objAreas = $objAreas->findAll(['id', 'nome']);
+        $objAreas = $objAreas->findAll(['id', 'nome', 'agrupar_descritores']);
         $areas = [];
 
         foreach ($objAreas as $area) {
+            if ($area->agrupar_descritores) {
+                $area->nome .= ' (agrupador)';
+            }
             $areas[$area->id] = $area->nome;
         }
 

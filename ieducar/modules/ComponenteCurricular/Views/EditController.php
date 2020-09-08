@@ -125,8 +125,18 @@ class EditController extends Core_Controller_Page_EditController
         );
 
         // Área de conhecimento
-        $areas = $this->getDataMapper()->findAreaConhecimento();
-        $areas = CoreExt_Entity::entityFilterAttr($areas, 'id', 'nome');
+        $areasMapper = new AreaConhecimento_Model_AreaDataMapper();
+        $areasMapper = $areasMapper->findAll(['id', 'nome', 'agrupar_descritores']);
+        $areas = [];
+
+        foreach ($areasMapper as $area) {
+            if ($area->agrupar_descritores) {
+                $area->nome .= ' (agrupador)';
+            }
+            $areas[$area->id] = $area->nome;
+        }
+
+        $areas = Portabilis_Array_Utils::insertIn(null, 'Selecione', $areas);
 
         $this->campoLista(
             'area_conhecimento',
