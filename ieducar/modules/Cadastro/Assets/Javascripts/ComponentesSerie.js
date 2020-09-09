@@ -298,7 +298,6 @@ function updateAreaConhecimento(){
 
 function handleGetAreaConhecimentoSerie(response) {
     $j('#ref_cod_area_conhecimento').val('').trigger('liszt:updated');
-    console.log(response['options']);
     $j.each(response['options'], function(id,nome) {
         $j("#ref_cod_area_conhecimento").children("[value=" + id + "]").attr('selected', '');
         $j("#ref_cod_area_conhecimento").chosen().trigger("chosen:updated");
