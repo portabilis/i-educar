@@ -125,8 +125,7 @@ class EditController extends Core_Controller_Page_EditController
         );
 
         // Área de conhecimento
-        $areasMapper = new AreaConhecimento_Model_AreaDataMapper();
-        $areasMapper = $areasMapper->findAll(['id', 'nome', 'agrupar_descritores']);
+        $areasMapper = $this->getDataMapper()->getAreaDataMapper()->findAll(['nome', 'agrupar_descritores']);
         $areas = [];
 
         foreach ($areasMapper as $area) {
