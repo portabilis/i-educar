@@ -41,7 +41,7 @@ class PersonLogUnificationController extends Controller
     {
         $this->breadcrumb('Detalhe da unificação', [
             url('intranet/educar_index.php') => 'Escola',
-            route('person-log-unification.index') => 'Log de unificações de aluno',
+            route('person-log-unification.index') => 'Log de unificações de pessoa',
         ]);
 
         $this->menu(999847);
