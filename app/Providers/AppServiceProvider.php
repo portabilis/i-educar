@@ -104,6 +104,20 @@ class AppServiceProvider extends ServiceProvider
         Builder::macro('whereUnaccent', function ($column, $value) {
             $this->whereRaw('unaccent(' . $column . ') ilike unaccent(\'%\' || ? || \'%\')', [$value]);
         });
+
+        Builder::macro('search', function ($columns, $value) {
+            if (is_string($columns)) {
+                $columns = [$columns];
+            }
+
+            $operator = $this->getConnection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
+
+            $this->where(function () use ($columns, $operator, $value) {
+                foreach ($columns as $column) {
+                    $this->orWhere($column, $operator, "%{$value}%");
+                }
+            });
+        });
     }
 
     /**
