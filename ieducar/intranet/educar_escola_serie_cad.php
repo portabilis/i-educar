@@ -270,12 +270,12 @@ class indice extends clsCadastro
                 $conteudo .= '  <span style="display: block; float: left; width: 100px;">Nome abreviado</span>';
                 $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga horária</span>';
                 $conteudo .= '  <span style="display: block; float: left; width: 180px;" >Usar padrão do componente?</span>';
+
                 if ($this->definirComponentePorEtapa) {
                     $conteudo .= '  <span style="display: block; width: 280px; float: left; margin-left: 30px;">Usado em etapas específicas?(Exemplo: 1,2 / 1,3)</span>';
                 }
                 $conteudo .= '  <span style="display: block; float: left; width: 150px;">Anos letivos</span>';
 
-//                dd($lista);
                 $conteudo .= '</div>';
                 $conteudo .= '<br style="clear: left" />';
                 $conteudo .= '<div style="margin-bottom: 10px; float: left">';
@@ -292,6 +292,7 @@ class indice extends clsCadastro
                 if ($this->definirComponentePorEtapa) {
                     $conteudo .= '  <label style=\'display: block; float: left; width: 283px; margin-left: 27px;\'><input type=\'checkbox\' name=\'CheckTodos3\' onClick=\'marcarCheck(' . '"etapas_especificas[]"' . ');\';/>Marcar Todos</label>';
                 }
+
                 if ($lista) {
                     $conteudo .= '<label style="display: block; float: left; width: 231px">
                                         <a class="clone-values"
