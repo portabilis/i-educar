@@ -29,7 +29,14 @@ class AreaConhecimentoController extends ApiCoreController
 
             $sql = "
                 (
-                    SELECT id, nome, ordenamento_ac, updated_at, null as deleted_at
+                    SELECT
+                        id,
+                        nome,
+                        ordenamento_ac,
+                        agrupar_descritores,
+                        CASE WHEN agrupar_descritores THEN nome || ' (agrupador)' ELSE nome END AS nome_agrupador,
+                        updated_at,
+                        null as deleted_at
                     FROM modules.area_conhecimento
                     WHERE instituicao_id = $1
                     {$where}
@@ -37,7 +44,14 @@ class AreaConhecimentoController extends ApiCoreController
                 )
                 UNION ALL 
                 (
-                    SELECT id, nome, ordenamento_ac, updated_at, deleted_at
+                    SELECT
+                        id,
+                        nome,
+                        ordenamento_ac,
+                        agrupar_descritores,
+                        CASE WHEN agrupar_descritores THEN nome || ' (agrupador)' ELSE nome END AS nome_agrupador,
+                        updated_at,
+                        deleted_at
                     FROM modules.area_conhecimento_excluidos
                     WHERE instituicao_id = $1
                     {$where}
@@ -47,7 +61,7 @@ class AreaConhecimentoController extends ApiCoreController
 
             $areas = $this->fetchPreparedQuery($sql, $params);
 
-            $attrs = ['id', 'nome', 'ordenamento_ac', 'updated_at', 'deleted_at'];
+            $attrs = ['id', 'nome', 'ordenamento_ac', 'agrupar_descritores', 'nome_agrupador', 'updated_at', 'deleted_at'];
             $areas = Portabilis_Array_Utils::filterSet($areas, $attrs);
 
             return [
@@ -60,7 +74,9 @@ class AreaConhecimentoController extends ApiCoreController
     {
         $serieId = $this->getRequest()->serie_id;
 
-        $sql = 'SELECT ac.id as id, (ac.nome) as nome
+        $sql = 'SELECT ac.id as id,
+                    ac.nome AS nome,
+                    CASE WHEN agrupar_descritores THEN nome || \' (agrupador)\' ELSE nome END AS nome_agrupador
                   FROM modules.area_conhecimento ac
                  WHERE ac.id in(SELECT area_conhecimento.id
                                   FROM modules.area_conhecimento
@@ -79,7 +95,9 @@ class AreaConhecimentoController extends ApiCoreController
         $escolaId = $this->getRequest()->escola_id;
         $serieId = $this->getRequest()->serie_id;
 
-        $sql = 'SELECT ac.id AS id, (ac.nome) AS nome
+        $sql = 'SELECT ac.id AS id,
+                    ac.nome AS nome,
+                    CASE WHEN agrupar_descritores THEN nome || \' (agrupador)\' ELSE nome END AS nome_agrupador
                   FROM modules.area_conhecimento ac
                  WHERE ac.id in (SELECT area_conhecimento.id
                                    FROM modules.area_conhecimento
@@ -99,7 +117,9 @@ class AreaConhecimentoController extends ApiCoreController
     {
         $turmaId = $this->getRequest()->turma_id;
 
-        $sql = 'SELECT ac.id AS id, (ac.nome) AS nome
+        $sql = 'SELECT ac.id AS id,
+                    ac.nome AS nome,
+                    CASE WHEN agrupar_descritores THEN nome || \' (agrupador)\' ELSE nome END AS nome_agrupador
                   FROM modules.area_conhecimento ac
                  WHERE ac.id in ( SELECT distinct area_conhecimento_id
                                     FROM relatorio.view_componente_curricular
@@ -115,7 +135,7 @@ class AreaConhecimentoController extends ApiCoreController
     protected function getReturnRequest($areasConhecimento)
     {
         $options = [];
-        $options = Portabilis_Array_Utils::setAsIdValue($areasConhecimento, 'id', 'nome');
+        $options = Portabilis_Array_Utils::setAsIdValue($areasConhecimento, 'id', 'nome_agrupador');
 
         return ['options' => $options];
     }
