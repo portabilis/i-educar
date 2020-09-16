@@ -13,6 +13,9 @@ class MovimentoMensalQueryFactory extends QueryFactory
         'curso',
         'turma',
         'serie',
+        'modalidade',
+        'data_inicial_calendario',
+        'data_final_calendario',
     ];
 
     protected $defaults = [
@@ -20,6 +23,9 @@ class MovimentoMensalQueryFactory extends QueryFactory
         'curso' => 0,
         'turma' => 0,
         'serie' => 0,
+        'modalidade' => 1,
+        'data_inicial_calendario' => '0',
+        'data_final_calendario' => '0',
     ];
 
     protected $query = <<<'SQL'
@@ -73,7 +79,7 @@ class MovimentoMensalQueryFactory extends QueryFactory
                 dependencia not in (true) as sem_dependencia,
                 coalesce(enturmacao.data_enturmacao, matricula.data_matricula, matricula.data_cadastro) <= date(:data_inicial) as entrou_antes_inicio,
                 coalesce(enturmacao.data_enturmacao, matricula.data_matricula, matricula.data_cadastro) <= date(:data_final) as entrou_antes_fim,
-                (coalesce(enturmacao.data_enturmacao, matricula.data_cadastro) > date(:data_inicial) and coalesce(enturmacao.data_enturmacao, matricula.data_cadastro) < date(:data_final)) as entrou_durante,   
+                (coalesce(enturmacao.data_enturmacao, matricula.data_cadastro) > date(:data_inicial) and coalesce(enturmacao.data_enturmacao, matricula.data_cadastro) < date(:data_final)) as entrou_durante,
                 coalesce(enturmacao.data_exclusao, matricula.data_cancel) is null or coalesce(enturmacao.data_exclusao, matricula.data_cancel) >= date(:data_inicial) as saiu_depois_inicio,
                 coalesce(enturmacao.data_exclusao, matricula.data_cancel) is null or coalesce(enturmacao.data_exclusao, matricula.data_cancel) > date(:data_final) as saiu_depois_fim,
                 coalesce(enturmacao.data_exclusao, matricula.data_cancel) between date(:data_inicial) and date(:data_final) as saiu_durante,
@@ -93,6 +99,8 @@ class MovimentoMensalQueryFactory extends QueryFactory
                 and pessoa.idpes = aluno.ref_idpes
             inner join pmieducar.escola escola on true
                 and escola.cod_escola = matricula.ref_ref_cod_escola
+            inner join pmieducar.curso on true
+                and curso.cod_curso = turma.ref_cod_curso
             where true
                 and escola.ref_cod_instituicao = :instituicao
                 and matricula.ref_ref_cod_escola = :escola
@@ -122,6 +130,28 @@ class MovimentoMensalQueryFactory extends QueryFactory
                         serie.cod_serie = :serie
                     end
                 )
+                and (
+                        case :modalidade::INTEGER
+                            when 1 then
+                                true
+                            when 2 then
+                                coalesce(turma.tipo_atendimento, 0) = 0 -- Escolarização
+                            when 3 then
+                                turma.tipo_atendimento = 5 -- AEE
+                            when 4 then
+                                turma.tipo_atendimento = 4 -- Atividade complementar
+                            when 5 then
+                                (
+                                    curso.modalidade_curso = 3 -- EJA
+                                    and case when :data_inicial_calendario = '0' then
+                                        true
+                                    else
+                                        (SELECT min(data_inicio) FROM pmieducar.turma_modulo WHERE turma_modulo.ref_cod_turma = turma.cod_turma LIMIT 1)::VARCHAR IN (:data_inicial_calendario)
+                                        AND (SELECT max(data_fim) FROM pmieducar.turma_modulo WHERE turma_modulo.ref_cod_turma = turma.cod_turma LIMIT 1)::VARCHAR IN (:data_final_calendario)
+                                    end
+                                )
+                        end
+                    )
         ) as matriculas
         group by
             cod_serie,

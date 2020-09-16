@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -76,5 +78,14 @@ class LegacyCourse extends Model
     public function grades()
     {
         return $this->hasMany(LegacyGrade::class, 'ref_cod_curso');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeIsEja($query)
+    {
+        return $query->where('modalidade_curso', ModalidadeCurso::EJA);
     }
 }
