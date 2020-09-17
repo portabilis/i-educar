@@ -68,6 +68,8 @@ trait JsonDataSource
                 a.number AS numero,
                 a.postal_code AS cep,
                 view_dados_escola.inep
+                escola.ato_autorizativo,
+                escola.ato_criacao
             FROM
                 pmieducar.instituicao
             INNER JOIN pmieducar.escola ON TRUE
