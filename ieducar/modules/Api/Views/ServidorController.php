@@ -169,8 +169,10 @@ class ServidorController extends ApiCoreController
                                                  on ccae.ano_escolar_id = t.ref_ref_cod_serie
                                                      and ccae.componente_curricular_id = ptd.componente_curricular_id
                              where true
-                               {$where}
-                               and t.ref_ref_cod_escola in ({$escola})
+                             and pt.instituicao_id = $1
+                             and pt.ano = $2
+                             and t.ref_ref_cod_escola in ({$escola})
+                            {$where}
                          ) as tmp
                     group by tmp.id, tmp.servidor_id, tmp.turma_id, tmp.turno_id, tmp.permite_lancar_faltas_componente
                 )
