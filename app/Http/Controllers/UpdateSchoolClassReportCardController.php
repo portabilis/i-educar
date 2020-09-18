@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 require_once 'Reports/Tipos/TipoBoletim.php';
 
 use App\Http\Requests\UpdateSchoolClassReportCardRequest;
+use App\Models\LegacyGrade;
 use App\Models\LegacySchoolClass;
 use App\Process;
 use Illuminate\Http\Request;
@@ -74,7 +75,7 @@ class UpdateSchoolClassReportCardController extends Controller
             $schoolClass->save();
         }
 
-        //DB::commit();
+        DB::commit();
 
         return redirect()->route('update-school-class-report-card.index')
             ->with('success', count($classes) . ' turmas atualizadas com sucesso.')
@@ -96,11 +97,7 @@ class UpdateSchoolClassReportCardController extends Controller
         }
 
         if ($request->get('ref_cod_serie')) {
-            $query->where('ref_ref_cod_serie', $request->get('ref_cod_serie'));
-        }
-
-        if ($request->get('ref_cod_turma')) {
-            $query->whereIn('cod_turma', $request->get('ref_cod_turma'));
+            $query->whereIn('ref_ref_cod_serie', $request->get('ref_cod_serie'));
         }
 
         if ($request->get('old_report_card')) {

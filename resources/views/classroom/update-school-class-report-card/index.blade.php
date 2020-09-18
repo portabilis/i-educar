@@ -68,35 +68,7 @@
             <tr id="tr_nm_serie">
                 <td class="formmdtd" valign="top"><span class="form">Série</span></td>
                 <td class="formmdtd" valign="top">
-                    <span class="form">
-                        <select class="geral" name="ref_cod_serie" id="ref_cod_serie" style="width: 308px;">
-                            <option value="">Selecione uma série</option>
-                             @if (old('ref_cod_curso', Request::get('ref_cod_curso')) || ($user->isAdmin() || $user->isInstitutional()))
-                                @foreach(App_Model_IedFinder::getSeries(null, old('ref_cod_escola', Request::get('ref_cod_escola')), old('ref_cod_curso', Request::get('ref_cod_curso'))) as $id => $name)
-                                    <option value="{{$id}}">{{$name}}</option>
-                                @endforeach
-                             @endif
-                        </select>
-                    </span>
-
-                    @if(old('ref_cod_serie', Request::get('ref_cod_serie')))
-                        @push('scripts')
-                            <script>
-                                (function ($) {
-                                    $(document).ready(function () {
-                                        $j('#ref_cod_serie').val({{old('ref_cod_serie', Request::get('ref_cod_serie'))}})
-                                    });
-                                })(jQuery);
-                            </script>
-                        @endpush
-                    @endif
-
-                </td>
-            </tr>
-            <tr id="tr_nm_turma">
-                <td class="formlttd" valign="top"><span class="form">Turma</span></td>
-                <td class="formlttd" valign="top">
-                    @include('form.select-school-class')
+                    @include('form.select-grade-multiple')
                 </td>
             </tr>
 
