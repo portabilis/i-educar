@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 require_once 'Reports/Tipos/TipoBoletim.php';
 
 use App\Http\Requests\UpdateSchoolClassReportCardRequest;
-use App\Models\LegacyGrade;
 use App\Models\LegacySchoolClass;
 use App\Process;
 use Illuminate\Http\Request;
@@ -21,7 +20,7 @@ class UpdateSchoolClassReportCardController extends Controller
      */
     public function index(Request $request)
     {
-        $this->breadcrumb('Alterar tipo de boletim de turmas', [
+        $this->breadcrumb('Atualização de boletins em lote', [
             url('intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
 

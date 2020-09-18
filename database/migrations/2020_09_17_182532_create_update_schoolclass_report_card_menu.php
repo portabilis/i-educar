@@ -15,7 +15,7 @@ class CreateUpdateSchoolclassReportCardMenu extends Migration
     {
         Menu::query()->create([
             'parent_id' => Menu::query()->where('old', Process::CONFIGURATIONS_TOOLS)->firstOrFail()->getKey(),
-            'title' => 'Alterar do tipo de boletim de turmas',
+            'title' => 'Alteração tipo de boletim de turmas',
             'link' => '/alterar-tipo-boletim-turmas',
             'process' => Process::UPDATE_SCHOOL_CLASS_REPORT_CARD,
         ]);

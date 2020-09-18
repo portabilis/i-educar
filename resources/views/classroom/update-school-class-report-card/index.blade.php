@@ -9,7 +9,7 @@
         <table class="tablecadastro" width="100%" border="0" cellpadding="2" cellspacing="0">
             <tbody>
             <tr>
-                <td class="formdktd" colspan="2" height="24"><b>Alterar tipo de boletim em turmas</b></td>
+                <td class="formdktd" colspan="2" height="24"><b>Atualização de boletins em lote</b></td>
             </tr>
             <tr id="tr_nm_ano">
                 <td class="formmdtd" valign="top">
