@@ -40,10 +40,9 @@
                 }
 
                 var updateSeries = function(){
-                    alert('b')
                     resetSelect($serieField);
 
-                    if ($instituicaoField.val() && $escolaField.val() && $cursoField.val() && $cursoField.is(':enabled')) {
+                    if ($instituicaoField.val() && $cursoField.val() && $cursoField.is(':enabled')) {
                         $serieField.children().first().html('Aguarde carregando...');
 
                         var urlForGetSeries = getResourceUrlBuilder.buildUrl('/module/DynamicInput/serie', 'series', {
