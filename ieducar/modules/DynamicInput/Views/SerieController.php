@@ -9,8 +9,7 @@ class SerieController extends ApiCoreController
     protected function canGetSeries()
     {
         return $this->validatesId('instituicao') &&
-        $this->validatesId('curso') &&
-        $this->validatesId('escola');
+        $this->validatesId('curso');
     }
 
     protected function getSeries()
@@ -30,6 +29,8 @@ class SerieController extends ApiCoreController
                 $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'id', 'nome');
             } elseif ($escolaId && $cursoId && empty($resources)) {
                 $resources = App_Model_IedFinder::getSeries($instituicaoId = null, $escolaId, $cursoId, $ano);
+            } else {
+                $resources = App_Model_IedFinder::getSeries($instituicaoId = null, null, $cursoId, $ano);
             }
 
             $options = array();

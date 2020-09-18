@@ -564,7 +564,7 @@ class clsPmieducarSerie extends Model
                                          FROM pmieducar.escola_serie es
                                         WHERE s.cod_serie = es.ref_cod_serie
                                           AND es.ativo = 1
-                                          AND {$ano} = ANY(es.anos_letivos) ";
+                                          AND {$ano} = ANY(es.anos_letivos)) ";
         }
 
         $countCampos = count(explode(',', $this->_campos_lista));
