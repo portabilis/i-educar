@@ -1,12 +1,12 @@
 <?php
 
+use App\Models\LegacyDiscipline;
 use App\Models\LegacyGrade;
 use App\Process;
+use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
-use App\Services\CheckPostedDataService;
-use App\Models\LegacyDiscipline;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -270,20 +270,36 @@ class indice extends clsCadastro
                 $conteudo .= '  <span style="display: block; float: left; width: 100px;">Nome abreviado</span>';
                 $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga horária</span>';
                 $conteudo .= '  <span style="display: block; float: left; width: 180px;" >Usar padrão do componente?</span>';
-                $conteudo .= '  <span style="display: block; float: left; width: 150px;">Anos letivos</span>';
 
                 if ($this->definirComponentePorEtapa) {
-                    $conteudo .= '  <span style="display: block; float: left; margin-left: 30px;">Usado em etapas específicas?(Exemplo: 1,2 / 1,3)</span>';
+                    $conteudo .= '  <span style="display: block; width: 280px; float: left; margin-left: 30px;">Usado em etapas específicas?(Exemplo: 1,2 / 1,3)</span>';
                 }
+                $conteudo .= '  <span style="display: block; float: left; width: 150px;">Anos letivos</span>';
 
                 $conteudo .= '</div>';
                 $conteudo .= '<br style="clear: left" />';
                 $conteudo .= '<div style="margin-bottom: 10px; float: left">';
-                $conteudo .= '  <label style=\'display: block; float: left; width: 450px;\'><input type=\'checkbox\' name=\'CheckTodos\' onClick=\'marcarCheck(' . '"disciplinas[]"' . ');\'/>Marcar Todos</label>';
-                $conteudo .= '  <label style=\'display: block; float: left; width: 330px;\'><input type=\'checkbox\' name=\'CheckTodos2\' onClick=\'marcarCheck(' . '"usar_componente[]"' . ');\';/>Marcar Todos</label>';
+                $conteudo .= '  <label style=\'display: block; float: left; width: 250px;\'><input type=\'checkbox\' name=\'CheckTodos\' onClick=\'marcarCheck(' . '"disciplinas[]"' . ');\'/>Marcar Todos</label>';
+                $conteudo .= '<label style="display: block; float: left; width: 100px">&nbsp;</label>
+                                     <label style="display: block; float: left; width: 100px;">
+                                        <a class="clone-values"
+                                            onclick="cloneValues(' . array_key_first($lista). ',\'carga_horaria\')">
+                                            <i class="fa fa-clone" aria-hidden="true"></i>
+                                        </a>
+                                     </label>';
+                $conteudo .= '  <label style=\'display: block; float: left; width: 180px;\'><input type=\'checkbox\' name=\'CheckTodos2\' onClick=\'marcarCheck(' . '"usar_componente[]"' . ');\';/>Marcar Todos</label>';
 
                 if ($this->definirComponentePorEtapa) {
-                    $conteudo .= '  <label style=\'display: block; float: left; width: 100px; margin-left: 84px;\'><input type=\'checkbox\' name=\'CheckTodos3\' onClick=\'marcarCheck(' . '"etapas_especificas[]"' . ');\';/>Marcar Todos</label>';
+                    $conteudo .= '  <label style=\'display: block; float: left; width: 283px; margin-left: 27px;\'><input type=\'checkbox\' name=\'CheckTodos3\' onClick=\'marcarCheck(' . '"etapas_especificas[]"' . ');\';/>Marcar Todos</label>';
+                }
+
+                if ($lista) {
+                    $conteudo .= '<label style="display: block; float: left; width: 231px">
+                                        <a class="clone-values"
+                                            onclick="cloneValues(' . array_key_first($lista) . ',\'anos_letivos\')">
+                                        <i class="fa fa-clone" aria-hidden="true"></i>
+                                        </a>
+                                     </label>';
                 }
 
                 $conteudo .= '</div>';
@@ -335,27 +351,10 @@ class indice extends clsCadastro
                     $conteudo .= ' </select>';
 
                     if ($this->definirComponentePorEtapa) {
-                        $conteudo .= "  <input style='margin-left:140px; float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' " . $checkedEtapaEspecifica . '></label>';
-                        $conteudo .= "  <label style='display: block; float: left; width: 100px;'>Etapas utilizadas: <input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapas_utilizadas}' size='5' maxlength='7'></label>";
+                        $conteudo .= "  <input style='margin-left:30px; float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' " . $checkedEtapaEspecifica . '></label>';
+                        $conteudo .= "  <label style='display: block; float: left; width: 260px;'>Etapas utilizadas: <input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapas_utilizadas}' size='5' maxlength='7'></label>";
                     }
 
-                    if ($row == 1) {
-                        $conteudo .= '<label style="display: block; float: left; width: 250px">&nbsp;</label>
-                                     <span style="display: block; float: left; width: 100px">&nbsp;</span>
-                                     <label style="display: block; float: left; width: 100px;">
-                                        <a class="clone-values"
-                                            onclick="cloneValues(' . $registro->id . ',\'carga_horaria\')">
-                                            <i class="fa fa-clone" aria-hidden="true"></i>
-                                        </a>
-                                     </label>
-                                     <label style="display: block; float: left;  width: 180px;">&nbsp</label>
-                                     <label style="display: block; float: left; width: 231px">
-                                        <a class="clone-values"
-                                            onclick="cloneValues(' . $registro->id . ',\'anos_letivos\')">
-                                        <i class="fa fa-clone" aria-hidden="true"></i>
-                                        </a>
-                                     </label>';
-                    }
                     $row++;
 
                     $conteudo .= '</div>';
@@ -607,6 +606,7 @@ class indice extends clsCadastro
         if ($existeDependencia) {
             $this->mensagem = 'Não foi possível remover o componente. Existe registros de dependência neste componente.<br>';
             $this->simpleRedirect("educar_escola_serie_cad.php?ref_cod_escola={$this->ref_cod_escola_}&ref_cod_serie={$this->ref_cod_serie_}");
+
             return false;
         };
 
