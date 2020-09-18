@@ -166,7 +166,8 @@
         <table class="table-default">
             <thead>
             <tr>
-                <th width="100">Turma</th>
+                <th>Código da turma</th>
+                <th>Nome da turma</th>
                 <th>Tipo de boletim antigo</th>
                 <th>Tipo de boletim novo</th>
                 @if(isset(Session::get('classrooms')[0]['new_alternative_report']))
@@ -178,6 +179,7 @@
             <tbody>
             @foreach(Session::get('classrooms') as $classroom)
                 <tr class="form-success">
+                    <td>{{ $classroom['id'] }}</td>
                     <td>{{ $classroom['name'] }}</td>
                     <td>{{ $reportCards[$classroom['old_report']] }}</td>
                     <td>{{ $reportCards[$classroom['new_report']] }}</td>

@@ -57,6 +57,7 @@ class UpdateSchoolClassReportCardController extends Controller
 
         foreach ($classes as $key => $schoolClass) {
             $result[$key] = [
+                'id' => $schoolClass->getKey(),
                 'name' => $schoolClass->name,
                 'old_report' => $schoolClass->tipo_boletim,
                 'new_report' => $request->get('new_report_card'),
