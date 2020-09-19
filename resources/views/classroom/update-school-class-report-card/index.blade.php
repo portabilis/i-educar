@@ -172,11 +172,11 @@
             <tr>
                 <th>Código da turma</th>
                 <th>Nome da turma</th>
-                <th>Tipo de boletim antigo</th>
-                <th>Tipo de boletim novo</th>
+                <th>Modelo de boletim antigo</th>
+                <th>Novo modelo de boletim</th>
                 @if(isset(Session::get('classrooms')[0]['new_alternative_report']))
-                    <th>Tipo de boletim diferenciado antigo</th>
-                    <th>Tipo de boletim diferenciado novo</th>
+                    <th>Modelo de boletim antigo (diferenciado)</th>
+                    <th>Novo modelo de boletim (diferenciado)</th>
                 @endif
             </tr>
             </thead>
@@ -185,15 +185,15 @@
                 <tr class="form-success">
                     <td>{{ $classroom['id'] }}</td>
                     <td>{{ $classroom['name'] }}</td>
-                    <td>{{ $reportCards[$classroom['old_report']] }}</td>
-                    <td>{{ $reportCards[$classroom['new_report']] }}</td>
+                    <td>{!! $reportCards[$classroom['old_report']] !!}</td>
+                    <td>{!! $reportCards[$classroom['new_report']] !!}</td>
                     @if(isset($classroom['new_alternative_report']))
                         <td>
                             @isset($reportCards[$classroom['old_alternative_report']])
-                                {{ $reportCards[$classroom['old_alternative_report']] }}
+                                {!! $reportCards[$classroom['old_alternative_report']] !!}
                             @endisset
                         </td>
-                        <td>{{ $reportCards[$classroom['new_alternative_report']] }}</td>
+                        <td>{!! $reportCards[$classroom['new_alternative_report']] !!}</td>
                     @endif
                 </tr>
             @endforeach
