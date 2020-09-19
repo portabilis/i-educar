@@ -20,7 +20,7 @@ class UpdateSchoolClassReportCardController extends Controller
      */
     public function index(Request $request)
     {
-        if(!$request->user()->isAdmin() && !$request->user()->isInstitutional()) {
+        if (!$request->user()->isAdmin() && !$request->user()->isInstitutional()) {
             return redirect('/');
         }
 
@@ -63,11 +63,14 @@ class UpdateSchoolClassReportCardController extends Controller
             $result[$key] = [
                 'id' => $schoolClass->getKey(),
                 'name' => $schoolClass->name,
-                'old_report' => $schoolClass->tipo_boletim,
-                'new_report' => $request->get('new_report_card'),
             ];
 
-            $schoolClass->tipo_boletim = $request->get('new_report_card');
+            if ($request->get('new_report_card')) {
+                $result[$key]['old_report'] = $schoolClass->tipo_boletim;
+                $result[$key]['new_report'] = $request->get('new_report_card');
+
+                $schoolClass->tipo_boletim = $request->get('new_report_card');
+            }
 
             if ($request->get('new_alternative_report_card')) {
                 $result[$key]['old_alternative_report'] = $schoolClass->tipo_boletim_diferenciado;

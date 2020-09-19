@@ -176,12 +176,14 @@
             <tr>
                 <th>Código da turma</th>
                 <th>Nome da turma</th>
+                @isset(Session::get('classrooms')[0]['new_report'])
                 <th>Modelo de boletim antigo</th>
                 <th>Novo modelo de boletim</th>
-                @if(isset(Session::get('classrooms')[0]['new_alternative_report']))
+                @endisset
+                @isset(Session::get('classrooms')[0]['new_alternative_report'])
                     <th>Modelo de boletim antigo (diferenciado)</th>
                     <th>Novo modelo de boletim (diferenciado)</th>
-                @endif
+                @endisset
             </tr>
             </thead>
             <tbody>
@@ -189,8 +191,12 @@
                 <tr class="form-success">
                     <td>{{ $classroom['id'] }}</td>
                     <td>{{ $classroom['name'] }}</td>
-                    <td>{!! $reportCards[$classroom['old_report']] !!}</td>
-                    <td>{!! $reportCards[$classroom['new_report']] !!}</td>
+                    @if(isset($classroom['new_report']))
+                        @isset($reportCards[$classroom['old_report']])
+                            <td>{!! $reportCards[$classroom['old_report']] !!}</td>
+                        @endisset
+                        <td>{!! $reportCards[$classroom['new_report']] !!}</td>
+                    @endif
                     @if(isset($classroom['new_alternative_report']))
                         <td>
                             @isset($reportCards[$classroom['old_alternative_report']])
