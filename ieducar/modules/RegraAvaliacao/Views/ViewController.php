@@ -51,5 +51,7 @@ class ViewController extends Core_Controller_Page_ViewController
         $this->breadcrumb('Detalhes da regra de avaliação', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
+
+        $this->addBotao('Copiar',"/module/RegraAvaliacao/edit?id={$this->getRequest()->id}&copy=true" );
     }
 }
