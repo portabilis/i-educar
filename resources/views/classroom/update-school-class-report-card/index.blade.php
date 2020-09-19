@@ -73,7 +73,7 @@
             </tr>
 
             <tr id="tr_nm_tipo_boletim">
-                <td class="formlttd" valign="top"><span class="form">Tipo de boletim antigo</span></td>
+                <td class="formlttd" valign="top"><span class="form">Modelo de boletim antigo</span></td>
                 <td class="formlttd" valign="top">
                     <span class="form">
                         <select class="geral" name="old_report_card" id="old_report_card" style="width: 308px;">
@@ -98,8 +98,12 @@
             </tr>
 
             <tr id="tr_nm_tipo_boletim">
-                <td class="formlttd" valign="top"><span class="form">Tipo de boletim novo</span></td>
-                <td class="formlttd" valign="top">
+                <td class="formmdtd" valign="top">
+                    <span class="form">Novo modelo de boletim</span>
+                    <br>
+                    <sub style="vertical-align:top;">Deixe em branco para não alterar</sub>
+                </td>
+                <td class="formmdtd" valign="top">
                     <span class="form">
                         <select class="geral" name="new_report_card" id="new_report_card" style="width: 308px;">
                             <option value="">Selecione um tipo</option>
@@ -124,7 +128,7 @@
 
             <tr id="tr_nm_tipo_boletim">
                 <td class="formlttd" valign="top">
-                    <span class="form">Tipo de boletim diferenciado novo</span>
+                    <span class="form">Novo modelo de boletim (diferenciado)</span>
                     <br>
                     <sub style="vertical-align:top;">Deixe em branco para não alterar</sub>
                 </td>
