@@ -73,7 +73,11 @@
             </tr>
 
             <tr id="tr_nm_tipo_boletim">
-                <td class="formlttd" valign="top"><span class="form">Modelo de boletim antigo</span></td>
+                <td class="formlttd" valign="top">
+                    <span class="form">Modelo de boletim antigo</span>
+                    <br>
+                    <sub style="vertical-align:top;">Deixe em branco para atualizar em todas as turmas</sub>
+                </td>
                 <td class="formlttd" valign="top">
                     <span class="form">
                         <select class="geral" name="old_report_card" id="old_report_card" style="width: 308px;">
