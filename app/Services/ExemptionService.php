@@ -25,7 +25,7 @@ class ExemptionService
     /**
      * @var array
      */
-    private $disciplinasNaoExistentesNaSerieDaEscola;
+    public $disciplinasNaoExistentesNaSerieDaEscola;
 
     public function __construct(User $user)
     {
@@ -86,7 +86,7 @@ class ExemptionService
         );
     }
 
-    public function existeComponenteSerie($serieId, $escolaId, $disciplinaId)
+    private function existeComponenteSerie($serieId, $escolaId, $disciplinaId)
     {
         try {
             App_Model_IedFinder::getEscolaSerieDisciplina(
@@ -107,7 +107,7 @@ class ExemptionService
         return LegacyDiscipline::find($disciplinaId)->name;
     }
 
-    public function cadastraEtapasDaDispensa(LegacyDisciplineExemption $exemption)
+    private function cadastraEtapasDaDispensa(LegacyDisciplineExemption $exemption)
     {
         foreach ($exemption->stages as $stage) {
             $this->removeNotasDaDisciplinaNaEtapa(
@@ -125,7 +125,7 @@ class ExemptionService
         }
     }
 
-    public function removeNotasDaDisciplinaNaEtapa($matriculaId, $disciplinaId, $etapa)
+    private function removeNotasDaDisciplinaNaEtapa($matriculaId, $disciplinaId, $etapa)
     {
         $notaAlunoMapper = new Avaliacao_Model_NotaAlunoDataMapper();
         $notaAluno = $notaAlunoMapper->findAll([], ['matricula_id' => $matriculaId]);
@@ -147,7 +147,7 @@ class ExemptionService
         return true;
     }
 
-    public function removeFaltasDaDisciplinaNaEtapa($matriculaId, $disciplinaId, $etapa)
+    private function removeFaltasDaDisciplinaNaEtapa($matriculaId, $disciplinaId, $etapa)
     {
         $faltaAlunoMapper = new Avaliacao_Model_FaltaAlunoDataMapper();
         $faltaAluno = $faltaAlunoMapper->findAll([], ['matricula_id' => $matriculaId]);

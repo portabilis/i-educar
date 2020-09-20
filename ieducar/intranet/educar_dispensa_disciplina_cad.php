@@ -2,6 +2,7 @@
 
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolStage;
+use App\Services\ExemptionService;
 use App\Services\PromotionService;
 
 require_once 'include/clsBase.inc.php';
@@ -231,40 +232,17 @@ class indice extends clsCadastro
             return false;
         }
 
+        $exemptionService = new ExemptionService($this->user());
+
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, 'educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         $disciplinasNaoExistentesNaSerieDaEscola = [];
 
-        foreach ($this->componentecurricular as $disciplinaId) {
-            $this->ref_cod_disciplina = $disciplinaId;
-            $dadosDaDispensa = $this->obtemDadosDaDispensa();
-            $objetoDispensa = $this->montaObjetoDispensa($dadosDaDispensa);
+        $registration = LegacyRegistration::findOrFail($this->ref_cod_matricula);
 
-            if (!$this->existeComponenteSerie($dadosDaDispensa['ref_cod_serie'], $dadosDaDispensa['ref_cod_escola'], $disciplinaId)) {
-                $disciplinasNaoExistentesNaSerieDaEscola[] = $this->nomeDisciplina($disciplinaId);
-                continue;
-            }
+        $exemptionService->createExemptionByDisciplineArray($registration, $this->componentecurricular, $this->ref_cod_tipo_dispensa, $this->observacao);
 
-            if ($objetoDispensa->existe()) {
-                $dadosDaDispensa['cod_dispensa'] = $objetoDispensa->detalhe()['cod_dispensa'];
-                $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa();
-                $excluiDispensaEtapa = $objDispensaEtapa->excluirTodos($dadosDaDispensa['cod_dispensa']);
-                $objetoDispensa->edita();
-                $this->cadastraEtapasDaDispensa($dadosDaDispensa);
-                continue;
-            }
-
-            $codigoDispensa = $objetoDispensa->cadastra();
-            if (!$codigoDispensa) {
-                $this->mensagem = 'Cadastro não realizado.<br />';
-
-                return false;
-            }
-            $dadosDaDispensa['cod_dispensa'] = $codigoDispensa;
-            $this->cadastraEtapasDaDispensa($dadosDaDispensa);
-        }
-
-        if (count($disciplinasNaoExistentesNaSerieDaEscola) > 0) {
+        if (count($exemptionService->disciplinasNaoExistentesNaSerieDaEscola) > 0) {
             $disciplinas = implode(", ", $disciplinasNaoExistentesNaSerieDaEscola);
             $this->mensagem = "O(s) componente(s):<b>{$disciplinas}</b>. não está(ão) habilitado(s) na série da escola.";
             return false;
@@ -510,14 +488,7 @@ class indice extends clsCadastro
 
         return true;
     }
-
-    private function nomeDisciplina($disciplinaId){
-        $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-        $componenteCurricular = $mapper->find($disciplinaId)->nome;
-
-        return $componenteCurricular;
-    }
-
+    
     public function loadAssets()
     {
         $scripts = [
