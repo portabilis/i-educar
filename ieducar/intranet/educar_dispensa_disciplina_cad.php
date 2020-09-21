@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolStage;
 use App\Services\ExemptionService;
@@ -239,8 +240,7 @@ class indice extends clsCadastro
         $disciplinasNaoExistentesNaSerieDaEscola = [];
 
         $registration = LegacyRegistration::findOrFail($this->ref_cod_matricula);
-
-        $exemptionService->createExemptionByDisciplineArray($registration, $this->componentecurricular, $this->ref_cod_tipo_dispensa, $this->observacao);
+        $exemptionService->createExemptionByDisciplineArray($registration, $this->componentecurricular, $this->ref_cod_tipo_dispensa, $this->observacao, $this->etapa);
 
         if (count($exemptionService->disciplinasNaoExistentesNaSerieDaEscola) > 0) {
             $disciplinas = implode(", ", $disciplinasNaoExistentesNaSerieDaEscola);
@@ -248,7 +248,8 @@ class indice extends clsCadastro
             return false;
         }
 
-        $this->rodaPromocao();
+        $exemptionService->runsPromotion($registration);
+
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
         $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
 
@@ -263,13 +264,16 @@ class indice extends clsCadastro
         $objetoDispensa = $this->montaObjetoDispensa($dadosDaDispensa);
 
         $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa();
-        $excluiDispensaEtapa = $objDispensaEtapa->excluirTodos($dadosDaDispensa['cod_dispensa']);
+        $objDispensaEtapa->excluirTodos($dadosDaDispensa['cod_dispensa']);
 
-        $this->cadastraEtapasDaDispensa($dadosDaDispensa);
+        $exemptionService = new ExemptionService($this->user());
+        $exemption = LegacyDisciplineExemption::findOrFail($objetoDispensa->detalhe()['cod_dispensa']);
+        $exemptionService->cadastraEtapasDaDispensa($exemption, $this->etapa);
 
         $editou = $objetoDispensa->edita();
         if ($editou) {
-            $this->rodaPromocao();
+            $registration = LegacyRegistration::findOrFail($this->ref_cod_matricula);
+            $exemptionService->runsPromotion($registration);
             $this->mensagem .= 'Edição efetuada com sucesso.<br />';
             $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
@@ -288,11 +292,13 @@ class indice extends clsCadastro
         $objetoDispensa = $this->montaObjetoDispensa($dadosDaDispensa);
 
         $objDispensaEtapa    = new clsPmieducarDispensaDisciplinaEtapa();
-        $excluiDispensaEtapa = $objDispensaEtapa->excluirTodos($this->cod_dispensa);
+        $objDispensaEtapa->excluirTodos($this->cod_dispensa);
         $excluiu = $objetoDispensa->excluir();
 
         if ($excluiu) {
-            $this->rodaPromocao();
+            $exemptionService = new ExemptionService($this->user());
+            $registration = LegacyRegistration::findOrFail($this->ref_cod_matricula);
+            $exemptionService->runsPromotion($registration);
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
             $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
@@ -302,32 +308,7 @@ class indice extends clsCadastro
         return false;
     }
 
-    public function maiorEtapaUtilizada($registration)
-    {
-        $where = [
-            'ref_ref_cod_escola' => $registration->ref_ref_cod_escola,
-            'ref_ano' => $registration->ano,
-        ];
 
-        $totalEtapas['total'] = LegacySchoolStage::query()->where($where)->count();
-        $arrayEtapas = [];
-
-        for ($i = 1; $i <= $totalEtapas['total']; $i++)
-        {
-            $arrayEtapas[$i] = strval($i);
-        }
-
-        $arrayEtapas = array_diff($arrayEtapas, $this->etapa);
-        return max($arrayEtapas);
-    }
-
-    public function rodaPromocao()
-    {
-        $registration = LegacyRegistration::find($this->ref_cod_matricula);
-        $_GET['etapa'] = $this->maiorEtapaUtilizada($registration);
-        $promocao = new PromotionService($registration->lastEnrollment()->first());
-        $promocao->fakeRequest();
-    }
 
     public function montaEtapas()
     {
@@ -426,51 +407,7 @@ class indice extends clsCadastro
 
         return $objetoDispensa;
     }
-
-    public function removeNotasDaDisciplinaNaEtapa($matriculaId, $disciplinaId, $etapa)
-    {
-        $notaAlunoMapper = new Avaliacao_Model_NotaAlunoDataMapper();
-        $notaAluno = $notaAlunoMapper->findAll([], ['matricula_id' => $matriculaId]);
-        $notaAluno = $notaAluno[0]->id;
-        if (empty($notaAluno)) {
-            return false;
-        }
-        $notaComponenteCurricularMapper = new Avaliacao_Model_NotaComponenteDataMapper();
-        $notaComponenteCurricular = $notaComponenteCurricularMapper->findAll([], [
-            'nota_aluno_id' => $notaAluno,
-            'componente_curricular_id' => $disciplinaId,
-            'etapa' => $etapa
-        ]);
-        if (empty($notaComponenteCurricular)) {
-            return false;
-        }
-        $notaComponenteCurricularMapper->delete($notaComponenteCurricular[0]);
-
-        return true;
-    }
-
-    public function removeFaltasDaDisciplinaNaEtapa($matriculaId, $disciplinaId, $etapa)
-    {
-        $faltaAlunoMapper = new Avaliacao_Model_FaltaAlunoDataMapper();
-        $faltaAluno = $faltaAlunoMapper->findAll([], ['matricula_id' => $matriculaId]);
-        $faltaAluno = $faltaAluno[0]->id;
-        if (empty($faltaAluno)) {
-            return false;
-        }
-        $faltaComponenteCurricularMapper = new Avaliacao_Model_FaltaComponenteDataMapper();
-        $faltaComponenteCurricular = $faltaComponenteCurricularMapper->findAll([], [
-            'falta_aluno_id' => $faltaAluno,
-            'componente_curricular_id' => $disciplinaId,
-            'etapa' => $etapa
-        ]);
-        if (empty($faltaComponenteCurricular)) {
-            return false;
-        }
-        $faltaComponenteCurricularMapper->delete($faltaComponenteCurricular[0]);
-
-        return true;
-    }
-
+    
     public function loadAssets()
     {
         $scripts = [

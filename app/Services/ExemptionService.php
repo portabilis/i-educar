@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyRegistration;
+use App\Models\LegacySchoolStage;
 use App\User;
 use App_Model_IedFinder;
 use Avaliacao_Model_FaltaAlunoDataMapper;
@@ -32,14 +33,19 @@ class ExemptionService
         $this->user = $user;
     }
 
-    public function createExemptionByDisciplineArray(LegacyRegistration $registration, $disciplineArray, $exemptionTypeId, $description)
+    public function createExemptionByDisciplineArray(
+        LegacyRegistration $registration,
+        $disciplineArray,
+        $exemptionTypeId,
+        $description,
+        $stages)
     {
         foreach($disciplineArray as $discipline) {
-            $this->createExemption($registration, $discipline, $exemptionTypeId, $description);
+            $this->createExemption($registration, $discipline, $exemptionTypeId, $description, $stages);
         }
     }
 
-    public function createExemption(LegacyRegistration $registration, $disciplineId, $exemptionTypeId, $description)
+    public function createExemption(LegacyRegistration $registration, $disciplineId, $exemptionTypeId, $description, $stages)
     {
         $objetoDispensa = $this->handleExemptionObject($registration, $disciplineId, $exemptionTypeId, $description);
 
@@ -53,7 +59,7 @@ class ExemptionService
             $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa();
             $objDispensaEtapa->excluirTodos($exemption->getKey());
             $objetoDispensa->edita();
-            $this->cadastraEtapasDaDispensa($exemption);
+            $this->cadastraEtapasDaDispensa($exemption, $stages);
             return;
         }
 
@@ -64,7 +70,7 @@ class ExemptionService
 
         $exemption = LegacyDisciplineExemption::findOrFail($codigoDispensa);
 
-        $this->cadastraEtapasDaDispensa($exemption);
+        $this->cadastraEtapasDaDispensa($exemption, $stages);
     }
 
     public function updateExemptionByDisciplineArray(LegacyDisciplineExemption $disciplineExemption, $disciplineArray, $exemptionTypeId, $description)
@@ -119,20 +125,20 @@ class ExemptionService
         return LegacyDiscipline::find($disciplinaId)->name;
     }
 
-    public function cadastraEtapasDaDispensa(LegacyDisciplineExemption $exemption)
+    public function cadastraEtapasDaDispensa(LegacyDisciplineExemption $exemption, $stages)
     {
-        foreach ($exemption->stages as $stage) {
+        foreach ($stages as $stage) {
             $this->removeNotasDaDisciplinaNaEtapa(
                 $exemption->ref_cod_matricula,
                 $exemption->ref_cod_disciplina,
-                $stage->etapa
+                $stage
             );
             $this->removeFaltasDaDisciplinaNaEtapa(
                 $exemption->ref_cod_matricula,
                 $exemption->ref_cod_disciplina,
-                $stage->etapa
+                $stage
             );
-            $objetoEtapaDaDispensa = new clsPmieducarDispensaDisciplinaEtapa($exemption->getKey(), $stage->etapa);
+            $objetoEtapaDaDispensa = new clsPmieducarDispensaDisciplinaEtapa($exemption->getKey(), $stage);
             $objetoEtapaDaDispensa->cadastra();
         }
     }
@@ -179,5 +185,31 @@ class ExemptionService
         $faltaComponenteCurricularMapper->delete($faltaComponenteCurricular[0]);
 
         return true;
+    }
+
+    public function runsPromotion(LegacyRegistration $registration)
+    {
+        $_GET['etapa'] = $this->maiorEtapaUtilizada($registration);
+        $promocao = new PromotionService($registration->lastEnrollment()->first());
+        $promocao->fakeRequest();
+    }
+
+    public function maiorEtapaUtilizada($registration)
+    {
+        $where = [
+            'ref_ref_cod_escola' => $registration->ref_ref_cod_escola,
+            'ref_ano' => $registration->ano,
+        ];
+
+        $totalEtapas['total'] = LegacySchoolStage::query()->where($where)->count();
+        $arrayEtapas = [];
+
+        for ($i = 1; $i <= $totalEtapas['total']; $i++)
+        {
+            $arrayEtapas[$i] = strval($i);
+        }
+
+        $arrayEtapas = array_diff($arrayEtapas, $this->etapa);
+        return max($arrayEtapas);
     }
 }
