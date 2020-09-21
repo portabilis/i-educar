@@ -49,24 +49,36 @@ class ExemptionService
         }
 
         if ($objetoDispensa->existe()) {
-            $discipline = LegacyDisciplineExemption::findOrFail($objetoDispensa->detalhe()['cod_dispensa']);
+            $exemption = LegacyDisciplineExemption::findOrFail($objetoDispensa->detalhe()['cod_dispensa']);
             $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa();
-            $objDispensaEtapa->excluirTodos($discipline->getKey());
+            $objDispensaEtapa->excluirTodos($exemption->getKey());
             $objetoDispensa->edita();
-            $this->cadastraEtapasDaDispensa($discipline);
+            $this->cadastraEtapasDaDispensa($exemption);
             return;
         }
 
         $codigoDispensa = $objetoDispensa->cadastra();
         if (!$codigoDispensa) {
-            $this->mensagem = 'Cadastro não realizado.<br />';
-
-            return false;
+            throw new Exception();
         }
 
         $exemption = LegacyDisciplineExemption::findOrFail($codigoDispensa);
 
         $this->cadastraEtapasDaDispensa($exemption);
+    }
+
+    public function updateExemptionByDisciplineArray(LegacyDisciplineExemption $disciplineExemption, $disciplineArray, $exemptionTypeId, $description)
+    {
+        $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa();
+        $objDispensaEtapa->excluirTodos($disciplineExemption->getKey());
+
+        $objetoDispensa = $this->handleExemptionObject($disciplineExemption->ref_cod_matricula, $disciplineArray, $exemptionTypeId, $description);
+
+        $this->cadastraEtapasDaDispensa($disciplineExemption);
+
+        if (!$objetoDispensa->edita()) {
+            throw new Exception();
+        }
     }
 
     private function handleExemptionObject(LegacyRegistration $registration, $disciplineId, $exemptionTypeId, $description)
@@ -107,7 +119,7 @@ class ExemptionService
         return LegacyDiscipline::find($disciplinaId)->name;
     }
 
-    private function cadastraEtapasDaDispensa(LegacyDisciplineExemption $exemption)
+    public function cadastraEtapasDaDispensa(LegacyDisciplineExemption $exemption)
     {
         foreach ($exemption->stages as $stage) {
             $this->removeNotasDaDisciplinaNaEtapa(

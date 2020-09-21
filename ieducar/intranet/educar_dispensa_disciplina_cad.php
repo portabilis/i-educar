@@ -427,24 +427,6 @@ class indice extends clsCadastro
         return $objetoDispensa;
     }
 
-    public function cadastraEtapasDaDispensa($dadosDaDispensa)
-    {
-        foreach ($dadosDaDispensa['etapas'] as $etapa) {
-            $this->removeNotasDaDisciplinaNaEtapa(
-                $dadosDaDispensa['ref_cod_matricula'],
-                $dadosDaDispensa['ref_cod_disciplina'],
-                $etapa
-            );
-            $this->removeFaltasDaDisciplinaNaEtapa(
-                $dadosDaDispensa['ref_cod_matricula'],
-                $dadosDaDispensa['ref_cod_disciplina'],
-                $etapa
-            );
-            $objetoEtapaDaDispensa = new clsPmieducarDispensaDisciplinaEtapa($dadosDaDispensa['cod_dispensa'], $etapa);
-            $cadastra = $objetoEtapaDaDispensa->cadastra();
-        }
-    }
-
     public function removeNotasDaDisciplinaNaEtapa($matriculaId, $disciplinaId, $etapa)
     {
         $notaAlunoMapper = new Avaliacao_Model_NotaAlunoDataMapper();
@@ -488,7 +470,7 @@ class indice extends clsCadastro
 
         return true;
     }
-    
+
     public function loadAssets()
     {
         $scripts = [
