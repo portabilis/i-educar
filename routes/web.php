@@ -139,6 +139,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::get('/alterar-tipo-boletim-turmas', 'UpdateSchoolClassReportCardController@index')->name('update-school-class-report-card.index');
     Route::post('/alterar-tipo-boletim-turmas', 'UpdateSchoolClassReportCardController@update')->name('update-school-class-report-card.update-date');
+
+    Route::get('/dispensa-lote', 'BatchExemptionController@index')->name('batch-exemption.index');
+    Route::post('/dispensa-lote', 'BatchExemptionController@exempt')->name('batch-exemption.exempt');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
