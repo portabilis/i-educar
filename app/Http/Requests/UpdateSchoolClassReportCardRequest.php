@@ -20,7 +20,8 @@ class UpdateSchoolClassReportCardRequest extends FormRequest
                 'date_format:Y',
             ],
             'ref_cod_instituicao' => 'required',
-            'new_report_card' => 'required',
+            'new_report_card' => 'required_without:new_alternative_report_card',
+            'new_alternative_report_card' => 'required_without:new_report_card',
         ];
     }
 
@@ -33,7 +34,8 @@ class UpdateSchoolClassReportCardRequest extends FormRequest
             'ano.required' => 'O ano é obrigatório.',
             'ano.date_format' => 'O campo Ano deve ser um ano válido.',
             'ref_cod_instituicao.required' => 'A instituição é obrigatória.',
-            'new_report_card.required' => 'O novo tipo de boletim é obrigatório.',
+            'new_report_card.required_without' => 'O novo tipo de boletim é obrigatório.',
+            'new_alternative_report_card.required_without' => 'O novo tipo de boletim diferenciado é obrigatório.',
         ];
     }
 }
