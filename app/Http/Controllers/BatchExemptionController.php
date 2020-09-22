@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateSchoolClassReportCardRequest;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacyStageType;
 use App\Process;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +25,9 @@ class BatchExemptionController extends Controller
 
         $this->menu(Process::BATCH_EXEMPTION);
 
-        return view('exemption.batch');
+        return view('exemption.batch', [
+            'stageTypes' => LegacyStageType::active()->get()->keyBy('cod_modulo')->toJson(),
+        ]);
     }
 
     public function exempt(Request $request)

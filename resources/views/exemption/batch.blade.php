@@ -115,10 +115,10 @@
                     </span>
                 </td>
             </tr>
-
             <tr id="tr_nm_serie">
                 <td class="formlttd" valign="top">
                     <span class="form">Componentes curriculares</span>
+                    <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
                     @inject('service', 'App\Services\SchoolGradeDisciplineService')
@@ -134,8 +134,66 @@
                     </span>
                 </td>
             </tr>
+            <tr id="tr_nm_serie">
+                <td class="formmdtd" valign="top">
+                    <span class="form">Tipo de dispensa</span>
+                    <span class="campo_obrigatorio">*</span>
+                </td>
+                <td class="formmdtd" valign="top">
+                   <span class="form">
+                        <select class="geral" name="exemption_type" id="exemption_type" style="width: 308px;">
+                            <option value="">Selecione</option>
+                                @foreach(\App\Models\LegacyExemptionType::all() as $exemptionType)
+                                <option value="{{$exemptionType->getKey()}}"
+                                        @if(old('exemption_type', Request::get('exemption_type')) == $exemptionType->getKey()) selected @endif>{{$exemptionType->nm_tipo}}</option>
+                            @endforeach
+                        </select>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="formlttd" valign="top">
+                    <span class="form">Tipo de etapa</span>
+                    <span class="campo_obrigatorio">*</span>
+                </td>
+                <td class="formlttd" valign="top">
+                    @include('form.stage-type')
+                </td>
+            </tr>
+            <tr>
+                <td class="formmdtd" valign="top">
+                    <span class="form">Etapa</span>
+                    <span class="campo_obrigatorio">*</span>
+                </td>
+                <td class="formmdtd" valign="top">
+                        <span class="form">
+                            <select class="geral" name="stage" id="stage" style="width: 308px;" multiple="multiple"
+                                    data-placeholder="Selecione uma etapa">
 
-
+                            </select>
+                        </span>
+                </td>
+            </tr>
+            <tr id="tr_descricao">
+                <td class="formlttd">
+                    <span class="form">Observações</span>
+                </td>
+                <td class="formlttd">
+                            <span class="form">
+                                <textarea class="geral" name="observacoes" cols="37" rows="5"></textarea>
+                            </span>
+                </td>
+            </tr>
+            <tr id="tr_nm_data" class="field-transfer">
+                <td class="formmdtd" valign="top">
+                    <span class="form">Não remover frequências lançadas?</span>
+                </td>
+                <td class="formmdtd" valign="top">
+                           <span class="form">
+                               <input type="checkbox" name="manter_frequencias" @if(old('manter_frequencias', Request::get('manter_frequencias'))) checked="checked" @endif id="manter_frequencias">
+                            </span>
+                </td>
+            </tr>
             </tbody>
         </table>
 
@@ -199,6 +257,32 @@
 
     <script>
         (function ($) {
+            let stageTypes = JSON.parse('{!! $stageTypes !!}')
+
+            $('#stage_type').change(function () {
+                stageSelect = $('#stage');
+                stageSelect.find('option').remove();
+
+                stageType = stageTypes[$(this).val()];
+
+                if (typeof stageType === 'undefined') {
+                    return;
+                }
+
+                for (i = 1; i <= parseInt(stageType.num_etapas); i++) {
+                    stageSelect.append($('<option>', {
+                        value: i,
+                        text: i + 'º ' + stageType.nm_tipo
+                    }));
+                }
+
+                @if(old('stage', Request::get('stage')))
+                $('#stage').val('{{old('stage', Request::get('stage'))}}');
+                @endif
+
+                $j('#stage').trigger('chosen:updated');
+            })
+
             $(document).ready(function () {
                 if (typeof multipleSearchComponentecurricularOptions == 'undefined') {
                     multipleSearchComponentecurricularOptions = {}
@@ -207,11 +291,13 @@
                 multipleSearchComponentecurricularOptions.placeholder = safeUtf8Decode('Selecione os componentes');
                 multipleSearchComponentecurricularOptions = typeof multipleSearchComponentecurricularOptions == 'undefined' ? {} : multipleSearchComponentecurricularOptions;
                 multipleSearchHelper.setup('ref_cod_componente_curricular', '', 'multiple', 'multiple', multipleSearchComponentecurricularOptions);
+
+                $('#stage').chosen();
             });
         })(jQuery);
 
         $j('#ref_cod_serie, #ref_cod_turma').on('change', function () {
-            setTimeout(function() {
+            setTimeout(function () {
                 $j('#ref_cod_componente_curricular').trigger('chosen:updated');
             }, 1000);
         });
