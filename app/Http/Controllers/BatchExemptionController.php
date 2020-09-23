@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdateSchoolClassReportCardRequest;
 use App\Jobs\BatchExemptionJob;
 use App\Models\LegacyRegistration;
-use App\Models\LegacySchoolClass;
 use App\Models\LegacyStageType;
 use App\Process;
-use App\Services\Exemption\Exemption\BatchExemptionService;
+use App\Services\Exemption\BatchExemptionService;
 use App\Services\Exemption\ExemptionService;
 use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
-use Portabilis_Model_Report_TipoBoletim;
 
 class BatchExemptionController extends Controller
 {
@@ -45,15 +42,24 @@ class BatchExemptionController extends Controller
 
         $registrations = $this->addFilters($request, $query);
 
+        if (count($registrations) == 0) {
+            return redirect()->route('batch-exemption.index')->with('error', 'Nenhuma matrícula encontrada com os filtros selecionados');
+        }
+
         $exemptionService = new ExemptionService($request->user());
         $batchExemptionService = new BatchExemptionService($exemptionService);
 
         foreach($registrations as $registration) {
-            $batchExemptionService->addRegistration($registration, );
+            $batchExemptionService->addRegistration(
+                $registration,
+                $request->get('ref_cod_componente_curricular'),
+                $request->get('exemption_type'),
+                $request->get('observacoes'),
+                $request->get('stage'),
+            );
         }
 
-        $exemptionService->createExemptionByDisciplineArray($registration, $this->componentecurricular, $this->ref_cod_tipo_dispensa, $this->observacao, $this->etapa);
-        $job = new BatchExemptionJob($exemptionService, DB::getDefaultConnection());
+        $job = new BatchExemptionJob($batchExemptionService, DB::getDefaultConnection(), $request->user());
         app(Dispatcher::class)->dispatch($job);
     }
 
