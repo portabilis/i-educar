@@ -18,3 +18,5 @@ Route::get('version', 'Api\\VersionController@version');
 Route::get('/postal-code/{postalCode}', 'Api\PostalCodeController@search');
 
 Route::post('/students/{student}/rotate-picture', 'Api\StudentRotatePictureController@rotate');
+
+Route::get('/school-class/calendars', 'Api\SchoolClassController@getCalendars');

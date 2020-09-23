@@ -9,7 +9,8 @@ class AreaConhecimento_Model_Area extends CoreExt_Entity
         'instituicao' => null,
         'nome' => null,
         'secao' => null,
-        'ordenamento_ac' => null
+        'ordenamento_ac' => null,
+        'agrupar_descritores' => null,
     ];
 
     public function getDefaultValidatorCollection()

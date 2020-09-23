@@ -38,6 +38,11 @@ class EditController extends Core_Controller_Page_EditController
             'help' => 'Ordem respeitada no lançamento de notas/faltas.',
             'entity' => 'ordenamento_ac'
         ],
+        'agrupar_descritores' => [
+            'label' => 'Esta área funciona como agrupador de descritores?',
+            'help' => '',
+            'entity' => 'agrupar_descritores'
+        ],
     ];
 
     protected function _preRender()
@@ -112,6 +117,17 @@ class EditController extends Core_Controller_Page_EditController
             false,
             $this->_getHelp('ordenamento_ac')
         );
+
+        $this->campoCheck(
+            'agrupar_descritores',
+            $this->_getLabel('agrupar_descritores'),
+            $this->getEntity()->agrupar_descritores,
+            '',
+            false,
+            false,
+            false,
+            $this->_getHelp('agrupar_descritores')
+        );
     }
 
     protected function _save()
@@ -129,6 +145,12 @@ class EditController extends Core_Controller_Page_EditController
 
                 $data[$key] = $val;
             }
+        }
+
+        if (!isset($data['agrupar_descritores'])) {
+            $data['agrupar_descritores'] = false;
+        } else {
+            $data['agrupar_descritores'] = true;
         }
 
         // Verifica pela existência do field identity

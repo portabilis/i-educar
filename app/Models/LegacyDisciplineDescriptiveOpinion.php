@@ -35,4 +35,12 @@ class LegacyDisciplineDescriptiveOpinion extends Model
     {
         return $this->belongsTo(LegacyStudentDescriptiveOpinion::class, 'parecer_aluno_id');
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function discipline()
+    {
+        return $this->belongsTo(LegacyDiscipline::class, 'componente_curricular_id');
+    }
 }

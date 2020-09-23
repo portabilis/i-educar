@@ -414,4 +414,14 @@ class LegacySchoolClass extends Model
     {
         return $this->belongsTo(LegacyPeriod::class, 'turma_turno_id');
     }
+
+    /**
+     * @param Builder $query
+     *
+     * @return Builder
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('ativo', 1);
+    }
 }
