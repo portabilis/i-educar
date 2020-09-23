@@ -11,6 +11,7 @@ use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolStage;
+use App\Services\PromotionService;
 use App\User;
 use App_Model_IedFinder;
 use Avaliacao_Model_FaltaAlunoDataMapper;
