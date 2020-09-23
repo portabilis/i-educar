@@ -2,6 +2,11 @@
 
 namespace App\Services\Exemption;
 
+require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Model/NotaAlunoDataMapper.php';
+require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Model/NotaComponenteDataMapper.php';
+require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Model/FaltaAlunoDataMapper.php';
+require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Model/FaltaComponenteDataMapper.php';
+
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyRegistration;
@@ -73,20 +78,6 @@ class ExemptionService
         $this->cadastraEtapasDaDispensa($exemption, $stages);
     }
 
-    public function updateExemptionByDisciplineArray(LegacyDisciplineExemption $disciplineExemption, $disciplineArray, $exemptionTypeId, $description)
-    {
-        $objDispensaEtapa = new clsPmieducarDispensaDisciplinaEtapa();
-        $objDispensaEtapa->excluirTodos($disciplineExemption->getKey());
-
-        $objetoDispensa = $this->handleExemptionObject($disciplineExemption->ref_cod_matricula, $disciplineArray, $exemptionTypeId, $description);
-
-        $this->cadastraEtapasDaDispensa($disciplineExemption);
-
-        if (!$objetoDispensa->edita()) {
-            throw new Exception();
-        }
-    }
-
     private function handleExemptionObject(LegacyRegistration $registration, $disciplineId, $exemptionTypeId, $description)
     {
         return new clsPmieducarDispensaDisciplina(
@@ -147,10 +138,12 @@ class ExemptionService
     {
         $notaAlunoMapper = new Avaliacao_Model_NotaAlunoDataMapper();
         $notaAluno = $notaAlunoMapper->findAll([], ['matricula_id' => $matriculaId]);
-        $notaAluno = $notaAluno[0]->id;
+
         if (empty($notaAluno)) {
             return false;
         }
+
+        $notaAluno = $notaAluno[0]->id;
         $notaComponenteCurricularMapper = new Avaliacao_Model_NotaComponenteDataMapper();
         $notaComponenteCurricular = $notaComponenteCurricularMapper->findAll([], [
             'nota_aluno_id' => $notaAluno,
@@ -169,10 +162,11 @@ class ExemptionService
     {
         $faltaAlunoMapper = new Avaliacao_Model_FaltaAlunoDataMapper();
         $faltaAluno = $faltaAlunoMapper->findAll([], ['matricula_id' => $matriculaId]);
-        $faltaAluno = $faltaAluno[0]->id;
         if (empty($faltaAluno)) {
             return false;
         }
+
+        $faltaAluno = $faltaAluno[0]->id;
         $faltaComponenteCurricularMapper = new Avaliacao_Model_FaltaComponenteDataMapper();
         $faltaComponenteCurricular = $faltaComponenteCurricularMapper->findAll([], [
             'falta_aluno_id' => $faltaAluno,
