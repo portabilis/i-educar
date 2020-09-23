@@ -34,6 +34,11 @@ class ExemptionService
      */
     public $disciplinasNaoExistentesNaSerieDaEscola;
 
+    /**
+     * @var bool
+     */
+    public $isBatch = false;
+
     public function __construct(User $user)
     {
         $this->user = $user;
@@ -66,6 +71,8 @@ class ExemptionService
             $objDispensaEtapa->excluirTodos($exemption->getKey());
             $objetoDispensa->edita();
             $this->cadastraEtapasDaDispensa($exemption, $stages);
+            $exemption->batch = $this->isBatch;
+            $exemption->save();
             return;
         }
 
@@ -75,6 +82,8 @@ class ExemptionService
         }
 
         $exemption = LegacyDisciplineExemption::findOrFail($codigoDispensa);
+        $exemption->batch = $this->isBatch;
+        $exemption->save();
 
         $this->cadastraEtapasDaDispensa($exemption, $stages);
     }

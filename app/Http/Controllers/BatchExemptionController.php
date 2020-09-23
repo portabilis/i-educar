@@ -48,6 +48,7 @@ class BatchExemptionController extends Controller
         }
 
         $exemptionService = new ExemptionService($request->user());
+        $exemptionService->isBatch = true;
         $batchExemptionService = new BatchExemptionService($exemptionService);
 
         foreach($registrations as $registration) {
