@@ -423,6 +423,13 @@ function validateGraduations() {
     return result;
   }
 
+  var courseName = $j('input[id="employee_course[0]"]');
+
+  if (obrigarCamposCenso && courseName.val() === undefined) {
+    messageUtils.error('É necessário informar pelo menos um curso superior concluído');
+    return false;
+  }
+
   $j.each($j('input[id^="employee_course_id"]'), function (index, field) {
     var id = $j(field).attr('id');
     var idNum = id.match(/\[(\d+)\]/);
