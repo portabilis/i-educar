@@ -312,7 +312,7 @@ class EditController extends Core_Controller_Page_EditController
             '/modules/RegraAvaliacao/Assets/Javascripts/RegraAvaliacao.js'
         );
 
-        $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
+        $nomeMenu = ($this->getRequest()->id == null || $this->getRequest()->copy) ? 'Cadastrar' : 'Editar';
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos([
             $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
@@ -328,6 +328,10 @@ class EditController extends Core_Controller_Page_EditController
      */
     public function Gerar()
     {
+        if ($this->getRequest()->copy) {
+            $this->tipoacao = 'Novo';
+        }
+
         $this->campoOculto('id', $this->getEntity()->id);
 
         // Instituição
