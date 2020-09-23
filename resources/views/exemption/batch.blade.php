@@ -167,7 +167,7 @@
                 </td>
                 <td class="formmdtd" valign="top">
                         <span class="form">
-                            <select class="geral" name="stage" id="stage" style="width: 308px;" multiple="multiple"
+                            <select class="geral" name="stage[]" id="stage" style="width: 308px;" multiple="multiple"
                                     data-placeholder="Selecione uma etapa">
 
                             </select>
@@ -220,19 +220,10 @@
                 <tr class="form-success">
                     <td>{{ $registration->cod_matricula }}</td>
                     <td>{{ $registration->student->person->name }}</td>
-                    <td>{{ $registration->data_matricula->format('d/m/Y') }}</td>
-                    <td>{{ $registration->lastEnrollment->data_enturmacao->format('d/m/Y') }}</td>
                 </tr>
             @endforeach
             </tbody>
         </table>
-    @endif
-
-    @if(Session::has('show-confirmation'))
-        <div id="modal-confirmation">
-            <p>Serão atualizadas <b>{{Session::get('show-confirmation')['count']}}</b> matrículas</p>
-            <p>Deseja continuar?</p>
-        </div>
     @endif
 @endsection
 
@@ -301,31 +292,6 @@
                 $j('#ref_cod_componente_curricular').trigger('chosen:updated');
             }, 1000);
         });
-
-        $j("#modal-confirmation").dialog({
-            autoOpen: false,
-            closeOnEscape: false,
-            draggable: false,
-            width: 560,
-            modal: true,
-            resizable: false,
-            title: 'Confirmação',
-            buttons: {
-                "Salvar": function () {
-                    $j('#formcadastro').append(
-                        "<input type='text' name='confirmation' value='1'>"
-                    ).submit();
-                    $j(this).dialog("close");
-                },
-                "Cancelar": function () {
-                    $j(this).dialog("close");
-                }
-            },
-            close: function () {
-
-            },
-        });
-        $j("#modal-confirmation").dialog("open");
     </script>
     <script type="text/javascript"
             src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
