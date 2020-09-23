@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BatchExemptionRequest;
 use App\Jobs\BatchExemptionJob;
 use App\Models\LegacyRegistration;
 use App\Models\LegacyStageType;
@@ -36,7 +37,7 @@ class BatchExemptionController extends Controller
         ]);
     }
 
-    public function exempt(Request $request)
+    public function exempt(BatchExemptionRequest $request)
     {
         $query = LegacyRegistration::active();
 

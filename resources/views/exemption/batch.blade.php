@@ -267,8 +267,11 @@
                     }));
                 }
 
-                @if(old('stage', Request::get('stage')))
-                $('#stage').val('{{old('stage', Request::get('stage'))}}');
+                @php
+                  $stage = old('stage', Request::get('stage'));
+                @endphp
+                @if($stage)
+                    $('#stage').val('@if(is_array($stage)) {{implode(',', $stage)}} @else {{$stage}} @endif');
                 @endif
 
                 $j('#stage').trigger('chosen:updated');
