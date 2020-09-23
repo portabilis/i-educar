@@ -190,7 +190,7 @@
                 </td>
                 <td class="formmdtd" valign="top">
                            <span class="form">
-                               <input type="checkbox" name="manter_frequencias" @if(old('manter_frequencias', Request::get('manter_frequencias'))) checked="checked" @endif id="manter_frequencias">
+                               <input type="checkbox" value="1" name="manter_frequencias" @if(old('manter_frequencias', Request::get('manter_frequencias'))) checked="checked" @endif id="manter_frequencias">
                             </span>
                 </td>
             </tr>

@@ -271,7 +271,7 @@ class indice extends clsCadastro
         $editou = $objetoDispensa->edita();
         if ($editou) {
             $registration = LegacyRegistration::findOrFail($this->ref_cod_matricula);
-            $exemptionService->runsPromotion($registration);
+            $exemptionService->runsPromotion($registration, $this->etapa);
             $this->mensagem .= 'Edição efetuada com sucesso.<br />';
             $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }
@@ -296,7 +296,7 @@ class indice extends clsCadastro
         if ($excluiu) {
             $exemptionService = new ExemptionService($this->user());
             $registration = LegacyRegistration::findOrFail($this->ref_cod_matricula);
-            $exemptionService->runsPromotion($registration);
+            $exemptionService->runsPromotion($registration, $this->etapa);
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
             $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
         }

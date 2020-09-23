@@ -6,6 +6,7 @@ require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Model/NotaAlunoDataM
 require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Model/FaltaAlunoDataMapper.php';
 require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Model/FaltaComponenteDataMapper.php';
+require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Views/PromocaoApiController.php';
 
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;
@@ -35,9 +36,19 @@ class ExemptionService
     public $disciplinasNaoExistentesNaSerieDaEscola;
 
     /**
-     * @var bool
+     * @var false
      */
     public $isBatch = false;
+
+    /**
+     * @var false
+     */
+    public $keepAbsences = false;
+
+    /**
+     * @var false
+     */
+    public $keepScores = false;
 
     public function __construct(User $user)
     {
@@ -146,6 +157,10 @@ class ExemptionService
 
     private function removeNotasDaDisciplinaNaEtapa($matriculaId, $disciplinaId, $etapa)
     {
+        if ($this->keepScores) {
+            return false;
+        }
+
         $notaAlunoMapper = new Avaliacao_Model_NotaAlunoDataMapper();
         $notaAluno = $notaAlunoMapper->findAll([], ['matricula_id' => $matriculaId]);
 
@@ -170,6 +185,10 @@ class ExemptionService
 
     private function removeFaltasDaDisciplinaNaEtapa($matriculaId, $disciplinaId, $etapa)
     {
+        if ($this->keepAbsences) {
+            return false;
+        }
+
         $faltaAlunoMapper = new Avaliacao_Model_FaltaAlunoDataMapper();
         $faltaAluno = $faltaAlunoMapper->findAll([], ['matricula_id' => $matriculaId]);
         if (empty($faltaAluno)) {
@@ -191,14 +210,14 @@ class ExemptionService
         return true;
     }
 
-    public function runsPromotion(LegacyRegistration $registration)
+    public function runsPromotion(LegacyRegistration $registration, $stages)
     {
-        $_GET['etapa'] = $this->maiorEtapaUtilizada($registration);
+        $_GET['etapa'] = $this->maiorEtapaUtilizada($registration, $stages);
         $promocao = new PromotionService($registration->lastEnrollment()->first());
         $promocao->fakeRequest();
     }
 
-    public function maiorEtapaUtilizada($registration)
+    public function maiorEtapaUtilizada($registration, $stages)
     {
         $where = [
             'ref_ref_cod_escola' => $registration->ref_ref_cod_escola,
@@ -213,7 +232,7 @@ class ExemptionService
             $arrayEtapas[$i] = strval($i);
         }
 
-        $arrayEtapas = array_diff($arrayEtapas, $this->etapa);
+        $arrayEtapas = array_diff($arrayEtapas, $stages);
         return max($arrayEtapas);
     }
 }

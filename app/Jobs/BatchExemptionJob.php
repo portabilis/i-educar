@@ -53,7 +53,7 @@ class BatchExemptionJob implements ShouldQueue
      */
     public function handle()
     {
-        //DB::setDefaultConnection($this->databaseConnection);
+        DB::setDefaultConnection($this->databaseConnection);
         DB::beginTransaction();
 
         try {

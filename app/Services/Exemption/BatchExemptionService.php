@@ -52,7 +52,7 @@ class BatchExemptionService
                 $registration['stages'],
             );
 
-            $this->exemptionService->runsPromotion($registration);
+            $this->exemptionService->runsPromotion($registration['registration'], $registration['stages']);
         }
     }
 

@@ -49,6 +49,7 @@ class BatchExemptionController extends Controller
 
         $exemptionService = new ExemptionService($request->user());
         $exemptionService->isBatch = true;
+        $exemptionService->keepAbsences = (bool) $request->get('manter_frequencias', false);
         $batchExemptionService = new BatchExemptionService($exemptionService);
 
         foreach($registrations as $registration) {
