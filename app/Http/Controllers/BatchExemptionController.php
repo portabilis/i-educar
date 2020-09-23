@@ -99,6 +99,10 @@ class BatchExemptionController extends Controller
             $query->where('aprovado', $request->get('situacao'));
         }
 
+        $query->whereHas('enrollments', function($enrollmentQuery) {
+            $enrollmentQuery->where('ativo', 1);
+        });
+
         return $query->get();
     }
 }
