@@ -2,9 +2,7 @@
 
 use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyRegistration;
-use App\Models\LegacySchoolStage;
-use App\Services\ExemptionService;
-use App\Services\PromotionService;
+use App\Services\Exemption\ExemptionService;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -407,7 +405,7 @@ class indice extends clsCadastro
 
         return $objetoDispensa;
     }
-    
+
     public function loadAssets()
     {
         $scripts = [

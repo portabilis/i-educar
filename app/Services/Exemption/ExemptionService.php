@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Exemption;
 
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;
