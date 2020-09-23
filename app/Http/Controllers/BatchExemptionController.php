@@ -61,6 +61,10 @@ class BatchExemptionController extends Controller
 
         $job = new BatchExemptionJob($batchExemptionService, DB::getDefaultConnection(), $request->user());
         app(Dispatcher::class)->dispatch($job);
+
+        return redirect()
+            ->route('batch-exemption.index')
+            ->with('success', sprintf('Serão criadas dispensas para %s matrículas. Você será notificado no final do processo', count($registrations)));
     }
 
     private function addFilters(Request $request, $query)
