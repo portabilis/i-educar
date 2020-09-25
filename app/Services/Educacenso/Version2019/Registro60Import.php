@@ -138,7 +138,7 @@ class Registro60Import implements RegistroImportInterface
      */
     private function getOrCreateEnrollment(LegacySchoolClass $schoolClass, LegacyRegistration $registration)
     {
-        $maxSequencial = LegacyEnrollment::where('ref_cod_matricula', $registration->getKey())->max('sequencial') ?: 1;
+        $maxSequencial = LegacyEnrollment::where('ref_cod_matricula', $registration->getKey())->max('sequencial') ?: 0;
 
         return LegacyEnrollment::firstOrCreate(
             [
@@ -151,7 +151,7 @@ class Registro60Import implements RegistroImportInterface
                 'ativo' => 1,
                 'etapa_educacenso' => $this->model->etapaAluno,
                 'tipo_atendimento' => $this->getArrayTipoAtendimento(),
-                'sequencial' => $maxSequencial,
+                'sequencial' => $maxSequencial + 1,
                 'ref_usuario_cad' => $this->user->getKey(),
             ]
         );
