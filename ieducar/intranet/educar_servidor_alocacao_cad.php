@@ -143,8 +143,31 @@ class indice extends clsCadastro
         $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
 
         // Carga horária
+        $servidorAlocacao = new clsPmieducarServidorAlocacao(
+            $this->cod_servidor_alocacao,
+            $this->ref_ref_cod_instituicao,
+            null,
+            null,
+            null,
+            $this->ref_cod_servidor,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $data = date('Y'),
+            $this->data_admissao,
+            null,
+            null,
+            $this->data_saida,
+        );
+
         $carga = $this->carga_horaria_disponivel;
         $this->campoRotulo('carga_horaria_disponivel', 'Carga horária do servidor', $carga . ':00');
+        $cargadisponivel = $servidorAlocacao->getCargaHorariaAno();
+        $this->campoRotulo('carga_horaria_sem_alocacao', 'Carga horária disponível', substr($cargadisponivel, 0, -3));
 
         $this->inputsHelper()->integer('ano', ['value' => $this->ano, 'max_length' => 4]);
 
@@ -243,8 +266,8 @@ class indice extends clsCadastro
         );
 
         $carga_horaria_disponivel = $this->hhmmToMinutes($this->carga_horaria_disponivel);
-        $carga_horaria_alocada    = $this->hhmmToMinutes($this->carga_horaria_alocada);
-        $carga_horaria_alocada   += $this->hhmmToMinutes($servidorAlocacao->getCargaHorariaAno());
+        $carga_horaria_alocada = $this->hhmmToMinutes($this->carga_horaria_alocada);
+        $carga_horaria_alocada += $this->hhmmToMinutes($servidorAlocacao->getCargaHorariaAno());
 
         if ($carga_horaria_disponivel >= $carga_horaria_alocada) {
             $obj_novo = new clsPmieducarServidorAlocacao(

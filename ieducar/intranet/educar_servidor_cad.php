@@ -107,32 +107,27 @@ class indice extends clsCadastro
                 $db = new clsBanco();
 
                 // Carga horária alocada no ultimo ano de alocação
-                $sql = sprintf("
-                    SELECT
-                        carga_horaria
-                    FROM
-                        pmieducar.servidor_alocacao
-                    WHERE
-                        ref_cod_servidor = '%d' AND
-                        ativo            = 1
+                $sql = "SELECT
+                            SUM(extract(hours from carga_horaria::interval))
+                        FROM
+                            pmieducar.servidor_alocacao
+                        WHERE
+                            ref_cod_servidor = {$this->cod_servidor} AND
+                            ativo = 1
+                        AND data_saida > now() or data_saida is null and ref_cod_servidor = {$this->cod_servidor} and ativo = 1
                         AND ano = (
                             SELECT max(ano)
-                            FROM pmieducar.servidor_alocacao
-                            WHERE ref_cod_servidor = $this->cod_servidor
-                        )",
-                    $this->cod_servidor
-                );
+                                FROM pmieducar.servidor_alocacao
+                            WHERE ref_cod_servidor = {$this->cod_servidor}
+                        )";
 
                 $db->Consulta($sql);
-
-                $carga = 0;
                 while ($db->ProximoRegistro()) {
                     $cargaHoraria = $db->Tupla();
-                    $cargaHoraria = explode(':', $cargaHoraria['carga_horaria']);
-                    $carga += $cargaHoraria[0] * 60 + $cargaHoraria[1];
+                    $cargaHoraria = $cargaHoraria['sum'];
                 }
+                $this->total_horas_alocadas = $cargaHoraria;
 
-                $this->total_horas_alocadas = sprintf('%02d:%02d', $carga / 60, $carga % 60);
                 // Funções
                 $obj_funcoes = new clsPmieducarServidorFuncao();
                 $lst_funcoes = $obj_funcoes->lista($this->ref_cod_instituicao, $this->cod_servidor);
@@ -331,7 +326,7 @@ class indice extends clsCadastro
             $this->campoTextoInv(
                 'total_horas_alocadas_',
                 'Total de Horas Alocadadas',
-                $this->total_horas_alocadas,
+                $this->total_horas_alocadas . ':00',
                 9,
                 20
             );

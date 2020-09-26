@@ -808,10 +808,11 @@ class clsPmieducarServidorAlocacao extends Model
             $sql = "SELECT SUM(carga_horaria::interval)
                 FROM pmieducar.servidor_alocacao
                WHERE ref_cod_servidor = {$this->ref_cod_servidor}
-                 AND ano = {$this->ano}";
+                 AND ano = {$this->ano}
+                 AND data_saida is null";
 
             if ($this->cod_servidor_alocacao) {
-                $sql .= "AND cod_servidor_alocacao != {$this->cod_servidor_alocacao}";
+                $sql .= " AND cod_servidor_alocacao <> {$this->cod_servidor_alocacao}";
             }
 
             $db->Consulta($sql);
@@ -839,7 +840,8 @@ class clsPmieducarServidorAlocacao extends Model
                  AND ref_cod_servidor = {$this->ref_cod_servidor}
                  AND ano = {$this->ano}
                  AND periodo = {$this->periodo}
-                 AND ativo = 1";
+                 AND ativo = 1
+                 AND data_saida is null";
 
             if (is_numeric($this->cod_servidor_alocacao)) {
                 $sql .= " AND cod_servidor_alocacao <> {$this->cod_servidor_alocacao}";

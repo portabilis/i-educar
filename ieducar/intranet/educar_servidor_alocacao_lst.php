@@ -79,7 +79,6 @@ class indice extends clsListagem
   var $data_exclusao;
   var $ref_cod_escola;
   var $ref_cod_instituicao;
-  var $ano_letivo;
 
   function Gerar()
   {
@@ -103,6 +102,8 @@ class indice extends clsListagem
       'Ano',
       'Período',
       'Carga horária',
+      'Data admissão',
+      'Data saída',
       'Vínculo'
     ));
 
@@ -130,7 +131,7 @@ class indice extends clsListagem
       $obj_servidor_alocacao->codUsuario = $this->pessoa_logada;
     }
 
-    $obj_servidor_alocacao->setOrderby('ano ASC');
+    $obj_servidor_alocacao->setOrderby('ano ASC, data_saida, data_admissao');
     $obj_servidor_alocacao->setLimite($this->limite, $this->offset);
 
     $lista = $obj_servidor_alocacao->lista(
@@ -149,7 +150,13 @@ class indice extends clsListagem
       null,
       null,
       null,
-      $this->ano_letivo
+      $this->ano_letivo,
+      $this->data_admissao,
+      $this->hora_inicial,
+      $this->hora_final,
+      $this->hora_atividade,
+      $this->horas_excedentes,
+      $this->data_saida
     );
     $total = $obj_servidor_alocacao->_total;
 
@@ -187,13 +194,14 @@ class indice extends clsListagem
         //Vinculo
         $funcionarioVinculo = new clsPortalFuncionario();
         $funcionarioVinculo = $funcionarioVinculo->getNomeVinculo($registro['ref_cod_funcionario_vinculo']);
-
         $this->addLinhas(array(
           $url->l($escola['nome'], $path, $options),
           $url->l($funcao['nm_funcao'], $path, $options),
           $url->l($registro['ano'], $path, $options),
           $url->l($periodo[$registro['periodo']], $path, $options),
-          $url->l($registro['carga_horaria'], $path, $options),
+          $url->l($horas =  substr($registro['carga_horaria'], 0, - 3), $path, $options),
+          $url->l(Portabilis_Date_Utils::pgSQLToBr($registro['data_admissao']), $path, $options),
+          $url->l(Portabilis_Date_Utils::pgSQLToBr($registro['data_saida']), $path, $options),
           $url->l($funcionarioVinculo, $path, $options),
         ));
       }

@@ -132,7 +132,7 @@ class indice extends clsDetalhe
     $this->addDetalhe(array("Periodo", "{$periodo[$registro['periodo']]}"));
 
     //Carga horária
-    $this->addDetalhe(array("Carga horária", "{$registro['carga_horaria']}"));
+    $this->addDetalhe(array("Carga horária", substr($registro['carga_horaria'], 0, - 3)));
 
     //Função
     if ($this->ref_cod_servidor_funcao) {
