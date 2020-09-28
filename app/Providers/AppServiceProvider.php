@@ -11,8 +11,8 @@ use Exception;
 use iEducar\Modules\ErrorTracking\HoneyBadgerTracker;
 use iEducar\Modules\ErrorTracking\Tracker;
 use iEducar\Support\Navigation\Breadcrumb;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -112,9 +112,17 @@ class AppServiceProvider extends ServiceProvider
 
             $operator = $this->getConnection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
 
-            $this->where(function () use ($columns, $operator, $value) {
+            return $this->where(function ($builder) use ($columns, $operator, $value) {
                 foreach ($columns as $column) {
-                    $this->orWhere($column, $operator, "%{$value}%");
+                    if (Str::contains($column, '.')) {
+                        [$relation, $column] = explode('.', $column);
+
+                        $builder->orWhereHas($relation, function ($builder) use ($column, $operator, $value) {
+                            $builder->where($column, $operator, "%{$value}%");
+                        });
+                    } else {
+                        $builder->orWhere($column, $operator, "%{$value}%");
+                    }
                 }
             });
         });
