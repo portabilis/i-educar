@@ -114,7 +114,7 @@ class indice extends clsCadastro
                         WHERE
                             ref_cod_servidor = {$this->cod_servidor} AND
                             ativo = 1
-                        AND data_saida > now() or data_saida is null and ref_cod_servidor = {$this->cod_servidor} and ativo = 1
+                        AND (data_saida > now() or data_saida is null)
                         AND ano = (
                             SELECT max(ano)
                                 FROM pmieducar.servidor_alocacao

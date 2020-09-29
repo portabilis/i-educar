@@ -157,7 +157,7 @@ class indice extends clsCadastro
             null,
             null,
             null,
-            $data = date('Y'),
+            $this->ano ?: date('Y'),
             $this->data_admissao,
             null,
             null,
@@ -167,7 +167,7 @@ class indice extends clsCadastro
         $carga = $this->carga_horaria_disponivel;
         $this->campoRotulo('carga_horaria_disponivel', 'Carga horária do servidor', $carga . ':00');
         $cargadisponivel = $servidorAlocacao->getCargaHorariaAno();
-        $this->campoRotulo('carga_horaria_sem_alocacao', 'Carga horária disponível', substr($cargadisponivel, 0, -3));
+        $this->campoRotulo('carga_horaria_sem_alocacao', 'Carga horária alocada', substr($cargadisponivel, 0, -3));
 
         $this->inputsHelper()->integer('ano', ['value' => $this->ano, 'max_length' => 4]);
 
@@ -266,7 +266,9 @@ class indice extends clsCadastro
         );
 
         $carga_horaria_disponivel = $this->hhmmToMinutes($this->carga_horaria_disponivel);
-        $carga_horaria_alocada = $this->hhmmToMinutes($this->carga_horaria_alocada);
+        if ($dataSaida > now() || $dataSaida == null) {
+            $carga_horaria_alocada = $this->hhmmToMinutes($this->carga_horaria_alocada);
+        }
         $carga_horaria_alocada += $this->hhmmToMinutes($servidorAlocacao->getCargaHorariaAno());
 
         if ($carga_horaria_disponivel >= $carga_horaria_alocada) {

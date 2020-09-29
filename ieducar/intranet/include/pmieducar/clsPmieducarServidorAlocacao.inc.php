@@ -809,7 +809,7 @@ class clsPmieducarServidorAlocacao extends Model
                 FROM pmieducar.servidor_alocacao
                WHERE ref_cod_servidor = {$this->ref_cod_servidor}
                  AND ano = {$this->ano}
-                 AND data_saida is null";
+                 AND (data_saida > now() or data_saida is null)";
 
             if ($this->cod_servidor_alocacao) {
                 $sql .= " AND cod_servidor_alocacao <> {$this->cod_servidor_alocacao}";
@@ -841,7 +841,7 @@ class clsPmieducarServidorAlocacao extends Model
                  AND ano = {$this->ano}
                  AND periodo = {$this->periodo}
                  AND ativo = 1
-                 AND data_saida is null";
+                 AND (data_saida > now() or data_saida is null)";
 
             if (is_numeric($this->cod_servidor_alocacao)) {
                 $sql .= " AND cod_servidor_alocacao <> {$this->cod_servidor_alocacao}";
