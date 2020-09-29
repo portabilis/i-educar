@@ -247,7 +247,6 @@ class indice extends clsCadastro
             );
         }
 
-        // ----
         $this->inputsHelper()->integer(
             'cod_docente_inep',
             [
