@@ -79,6 +79,7 @@ class indice extends clsListagem
   var $data_exclusao;
   var $ref_cod_escola;
   var $ref_cod_instituicao;
+  var $ano_letivo;
 
   function Gerar()
   {
@@ -194,6 +195,7 @@ class indice extends clsListagem
         //Vinculo
         $funcionarioVinculo = new clsPortalFuncionario();
         $funcionarioVinculo = $funcionarioVinculo->getNomeVinculo($registro['ref_cod_funcionario_vinculo']);
+
         $this->addLinhas(array(
           $url->l($escola['nome'], $path, $options),
           $url->l($funcao['nm_funcao'], $path, $options),
