@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Educacenso;
 
 use App\Exceptions\Educacenso\ImportException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EducacensoImportRequest;
 use App\Models\EducacensoImport;
 use App\Process;
 use App\Services\Educacenso\HandleFileService;
@@ -14,7 +15,7 @@ use Illuminate\View\View;
 
 class ImportController extends Controller
 {
-    public function import(Request $request)
+    public function import(EducacensoImportRequest $request)
     {
         $file = $request->file('arquivo');
 

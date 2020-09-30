@@ -59,6 +59,15 @@ class indice extends clsCadastro
         ];
         $this->inputsHelper()->select('ano', $options);
 
+        $this->inputsHelper()->date(
+            'data_entrada_matricula',
+            [
+                'label' => 'Data de entrada das matrículas',
+                'required' => true,
+                'placeholder' => 'dd/mm/yyyy'
+            ]
+        );
+
         $this->campoArquivo('arquivo', 'Arquivo', $this->arquivo, 40, '<br/> <span style="font-style: italic; font-size= 10px;">* Somente arquivos com formato txt serão aceitos</span>');
 
         $this->nome_url_sucesso = 'Importar';
