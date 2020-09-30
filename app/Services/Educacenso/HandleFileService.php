@@ -72,7 +72,7 @@ class HandleFileService
 
         $school = array_map('utf8_encode', $school);
 
-        $this->jobs[] = new EducacensoImportJob($import, $school, DB::getDefaultConnection());
+        $this->jobs[] = new EducacensoImportJob($import, $school, DB::getDefaultConnection(), $this->yearImportService->registrationDate);
     }
 
     private function dispatchJobs()
