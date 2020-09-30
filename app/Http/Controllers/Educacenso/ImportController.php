@@ -9,6 +9,7 @@ use App\Models\EducacensoImport;
 use App\Process;
 use App\Services\Educacenso\HandleFileService;
 use App\Services\Educacenso\ImportServiceFactory;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -20,7 +21,9 @@ class ImportController extends Controller
         $file = $request->file('arquivo');
 
         try {
-            $yearImportService = ImportServiceFactory::createImportService($request->get('ano'));
+            $yearImportService = ImportServiceFactory::createImportService(
+                $request->get('ano'),
+                DateTime::createFromFormat('d/m/Y', $request->get('data_entrada_matricula')));
 
             $importFileService = new HandleFileService($yearImportService, Auth::user());
 
