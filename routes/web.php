@@ -1,5 +1,6 @@
 <?php
 
+use App\Process;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -126,8 +127,8 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->name('update-registration-date.index');
     Route::post('/atualiza-data-entrada', 'UpdateRegistrationDateController@updateStatus')->name('update-registration-date.update-date');
 
-    Route::get('/configuracoes/configuracoes-de-sistema', 'SettingController@index')->name('settings.index');
-    Route::post('/configuracoes/configuracoes-de-sistema', 'SettingController@saveInputs')->name('settings.update');
+    Route::get('/configuracoes/configuracoes-de-sistema', 'SettingController@index')->middleware('can:view:' . Process::SETTINGS)->name('settings.index');
+    Route::post('/configuracoes/configuracoes-de-sistema', 'SettingController@saveInputs')->middleware('can:modify:' . Process::SETTINGS)->name('settings.update');
     Route::get('/periodo-lancamento/excluir', 'ReleasePeriodController@delete')->name('release-period.delete');
     Route::get('/periodo-lancamento/fomulario/{releasePeriod?}', 'ReleasePeriodController@form')->name('release-period.form');
     Route::post('/periodo-lancamento/criar', 'ReleasePeriodController@create')->name('release-period.create');

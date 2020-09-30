@@ -21,10 +21,6 @@ class SettingController extends Controller
 
         $this->menu(Process::SETTINGS);
 
-        if(!$request->user()->isAdmin()) {
-            return redirect('/intranet/educar_configuracoes_index.php');
-        }
-
         $fields = $this->getSettingsFields();
         return view('settings.index', ['fields' => $fields]);
     }
