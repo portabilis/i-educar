@@ -18,6 +18,7 @@ class EducacensoImportRequest extends FormRequest
             'data_entrada_matricula' => [
                 'required',
                 new EducacensoImportRegistrationDate($this->get('ano')),
+                'date_format:d/m/Y'
             ],
             'arquivo' => 'required',
         ];
