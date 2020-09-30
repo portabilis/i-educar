@@ -116,14 +116,14 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->middleware('can:view:' . Process::UPDATE_REGISTRATION_DATE)->name('update-registration-date.index');
     Route::post('/atualiza-data-entrada', 'UpdateRegistrationDateController@updateStatus')->middleware('can:modify:' . Process::UPDATE_REGISTRATION_DATE)->name('update-registration-date.update-date');
 
-    Route::get('/configuracoes/configuracoes-de-sistema', 'SettingController@index')->middleware('can:view:' . Process::SETTINGS)->name('settings.index');
-    Route::post('/configuracoes/configuracoes-de-sistema', 'SettingController@saveInputs')->middleware('can:modify:' . Process::SETTINGS)->name('settings.update');
-    Route::get('/periodo-lancamento/excluir', 'ReleasePeriodController@delete')->middleware('can:remove:' . Process::RELEASE_PERIOD)->name('release-period.delete');
-    Route::get('/periodo-lancamento/fomulario/{releasePeriod?}', 'ReleasePeriodController@form')->middleware('can:view:' . Process::RELEASE_PERIOD)->name('release-period.form');
-    Route::post('/periodo-lancamento/criar', 'ReleasePeriodController@create')->middleware('can:modify:' . Process::RELEASE_PERIOD)->name('release-period.create');
-    Route::post('/periodo-lancamento/atualizar/{releasePeriod}', 'ReleasePeriodController@update')->middleware('can:modify:' . Process::RELEASE_PERIOD)->name('release-period.update');
-    Route::get('/periodo-lancamento', 'ReleasePeriodController@index')->middleware('can:view:' . Process::RELEASE_PERIOD)->name('release-period.index');
-    Route::get('/periodo-lancamento/{releasePeriod}', 'ReleasePeriodController@show')->middleware('can:view:' . Process::RELEASE_PERIOD)->name('release-period.show');
+    Route::get('/configuracoes/configuracoes-de-sistema', 'SettingController@index')->name('settings.index');
+    Route::post('/configuracoes/configuracoes-de-sistema', 'SettingController@saveInputs')->name('settings.update');
+    Route::get('/periodo-lancamento/excluir', 'ReleasePeriodController@delete')->name('release-period.delete');
+    Route::get('/periodo-lancamento/fomulario/{releasePeriod?}', 'ReleasePeriodController@form')->name('release-period.form');
+    Route::post('/periodo-lancamento/criar', 'ReleasePeriodController@create')->name('release-period.create');
+    Route::post('/periodo-lancamento/atualizar/{releasePeriod}', 'ReleasePeriodController@update')->name('release-period.update');
+    Route::get('/periodo-lancamento', 'ReleasePeriodController@index')->name('release-period.index');
+    Route::get('/periodo-lancamento/{releasePeriod}', 'ReleasePeriodController@show')->name('release-period.show');
 
     Route::post('/upload', 'FileController@upload')->name('file-upload');
 
