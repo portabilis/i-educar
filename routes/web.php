@@ -4,17 +4,6 @@ use App\Process;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Auth::routes(['register' => false]);
 
 Route::redirect('/', 'intranet/index.php');
@@ -99,15 +88,15 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::group(['namespace' => 'Educacenso', 'prefix' => 'educacenso'], function () {
         Route::get('validar/{validator}', 'ValidatorController@validation');
-        Route::post('importacao', 'ImportController@import');
-        Route::get('importacao/historico', 'ImportController@index')->name('educacenso.history');
+        Route::post('importacao', 'ImportController@import')->middleware('can:modify:' . Process::EDUCACENSO_IMPORT_HISTORY);
+        Route::get('importacao/historico', 'ImportController@index')->middleware('can:view:' . Process::EDUCACENSO_IMPORT_HISTORY)->name('educacenso.history');
     });
 
     Route::get('/consulta-dispensas', 'ExemptionListController@index')->name('exemption-list.index');
     Route::get('/backup-download', 'BackupController@download')->name('backup.download');
 
-    Route::get('/atualiza-situacao-matriculas', 'UpdateRegistrationStatusController@index')->name('update-registration-status.index');
-    Route::post('/atualiza-situacao-matriculas', 'UpdateRegistrationStatusController@updateStatus')->name('update-registration-status.update-status');
+    Route::get('/atualiza-situacao-matriculas', 'UpdateRegistrationStatusController@index')->middleware('can:view:' . Process::UPDATE_REGISTRATION_STATUS)->name('update-registration-status.index');
+    Route::post('/atualiza-situacao-matriculas', 'UpdateRegistrationStatusController@updateStatus')->middleware('can:modify:' . Process::UPDATE_REGISTRATION_STATUS)->name('update-registration-status.update-status');
 
     Route::get('/exportacao-para-o-seb', 'SebExportController@index')->name('seb-export.index');
     Route::post('/exportacao-para-o-seb', 'SebExportController@export')->name('seb-export.export');
@@ -120,26 +109,26 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::post('/notificacoes/marca-como-lida', 'NotificationController@markAsRead')->name('notifications.mark-as-read');
     Route::post('/notificacoes/marca-todas-como-lidas', 'NotificationController@markAllRead')->name('notifications.mark-all-read');
 
-    Route::get('/exportacoes', 'ExportController@index')->name('export.index');
-    Route::get('/exportacoes/novo', 'ExportController@form')->name('export.form');
-    Route::post('/exportacoes/exportar', 'ExportController@export')->name('export.export');
+    Route::get('/exportacoes', 'ExportController@index')->middleware('can:view:' . Process::DATA_EXPORT)->name('export.index');
+    Route::get('/exportacoes/novo', 'ExportController@form')->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.form');
+    Route::post('/exportacoes/exportar', 'ExportController@export')->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.export');
 
-    Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->name('update-registration-date.index');
-    Route::post('/atualiza-data-entrada', 'UpdateRegistrationDateController@updateStatus')->name('update-registration-date.update-date');
+    Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->middleware('can:view:' . Process::UPDATE_REGISTRATION_DATE)->name('update-registration-date.index');
+    Route::post('/atualiza-data-entrada', 'UpdateRegistrationDateController@updateStatus')->middleware('can:modify:' . Process::UPDATE_REGISTRATION_DATE)->name('update-registration-date.update-date');
 
     Route::get('/configuracoes/configuracoes-de-sistema', 'SettingController@index')->middleware('can:view:' . Process::SETTINGS)->name('settings.index');
     Route::post('/configuracoes/configuracoes-de-sistema', 'SettingController@saveInputs')->middleware('can:modify:' . Process::SETTINGS)->name('settings.update');
-    Route::get('/periodo-lancamento/excluir', 'ReleasePeriodController@delete')->name('release-period.delete');
-    Route::get('/periodo-lancamento/fomulario/{releasePeriod?}', 'ReleasePeriodController@form')->name('release-period.form');
-    Route::post('/periodo-lancamento/criar', 'ReleasePeriodController@create')->name('release-period.create');
-    Route::post('/periodo-lancamento/atualizar/{releasePeriod}', 'ReleasePeriodController@update')->name('release-period.update');
-    Route::get('/periodo-lancamento', 'ReleasePeriodController@index')->name('release-period.index');
-    Route::get('/periodo-lancamento/{releasePeriod}', 'ReleasePeriodController@show')->name('release-period.show');
+    Route::get('/periodo-lancamento/excluir', 'ReleasePeriodController@delete')->middleware('can:remove:' . Process::RELEASE_PERIOD)->name('release-period.delete');
+    Route::get('/periodo-lancamento/fomulario/{releasePeriod?}', 'ReleasePeriodController@form')->middleware('can:view:' . Process::RELEASE_PERIOD)->name('release-period.form');
+    Route::post('/periodo-lancamento/criar', 'ReleasePeriodController@create')->middleware('can:modify:' . Process::RELEASE_PERIOD)->name('release-period.create');
+    Route::post('/periodo-lancamento/atualizar/{releasePeriod}', 'ReleasePeriodController@update')->middleware('can:modify:' . Process::RELEASE_PERIOD)->name('release-period.update');
+    Route::get('/periodo-lancamento', 'ReleasePeriodController@index')->middleware('can:view:' . Process::RELEASE_PERIOD)->name('release-period.index');
+    Route::get('/periodo-lancamento/{releasePeriod}', 'ReleasePeriodController@show')->middleware('can:view:' . Process::RELEASE_PERIOD)->name('release-period.show');
 
     Route::post('/upload', 'FileController@upload')->name('file-upload');
 
-    Route::get('/alterar-tipo-boletim-turmas', 'UpdateSchoolClassReportCardController@index')->name('update-school-class-report-card.index');
-    Route::post('/alterar-tipo-boletim-turmas', 'UpdateSchoolClassReportCardController@update')->name('update-school-class-report-card.update-date');
+    Route::get('/alterar-tipo-boletim-turmas', 'UpdateSchoolClassReportCardController@index')->middleware('can:view:' . Process::UPDATE_SCHOOL_CLASS_REPORT_CARD)->name('update-school-class-report-card.index');
+    Route::post('/alterar-tipo-boletim-turmas', 'UpdateSchoolClassReportCardController@update')->middleware('can:modify:' . Process::UPDATE_SCHOOL_CLASS_REPORT_CARD)->name('update-school-class-report-card.update-date');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {

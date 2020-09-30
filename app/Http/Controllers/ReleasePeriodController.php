@@ -44,9 +44,6 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
                 'stageTypes' => LegacyStageType::active()->get()->keyBy('cod_modulo')->toJson(),
                 'releasePeriod' => new ReleasePeriod(),
                 'data' => $this->applyFilters($request),
-                'canView' => $request->user()->can('view', Process::RELEASE_PERIOD),
-                'canModify' => $request->user()->can('modify', Process::RELEASE_PERIOD),
-                'canRemove' => $request->user()->can('remove', Process::RELEASE_PERIOD),
             ]
         );
     }
@@ -71,9 +68,6 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
                 'stageTypes' => LegacyStageType::active()->get()->keyBy('cod_modulo')->toJson(),
                 'releasePeriod' => $releasePeriod,
                 'data' => $this->applyFilters(request()),
-                'canView' => request()->user()->can('view', Process::RELEASE_PERIOD),
-                'canModify' => request()->user()->can('modify', Process::RELEASE_PERIOD),
-                'canRemove' => request()->user()->can('remove', Process::RELEASE_PERIOD),
             ]
         );
     }
@@ -124,9 +118,6 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
 
         return view('release-period.show', [
             'releasePeriod' => $releasePeriod,
-            'canView' => request()->user()->can('view', Process::RELEASE_PERIOD),
-            'canModify' => request()->user()->can('modify', Process::RELEASE_PERIOD),
-            'canRemove' => request()->user()->can('remove', Process::RELEASE_PERIOD),
         ]);
     }
 

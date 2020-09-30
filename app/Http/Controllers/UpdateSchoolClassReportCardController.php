@@ -20,10 +20,6 @@ class UpdateSchoolClassReportCardController extends Controller
      */
     public function index(Request $request)
     {
-        if (!$request->user()->isAdmin() && !$request->user()->isInstitutional()) {
-            return redirect('/');
-        }
-
         $this->breadcrumb('Atualização de boletins em lote', [
             url('intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
