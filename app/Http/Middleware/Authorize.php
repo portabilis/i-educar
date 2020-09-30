@@ -29,7 +29,11 @@ class Authorize extends AuthorizeMiddleware
             [$ability, $arguments] = explode(':', $ability);
         }
 
-        $this->gate->authorize($ability, $arguments);
+        try {
+            $this->gate->authorize($ability, $arguments);
+        } catch (AuthorizationException $a) {
+            return back()->withErrors(['Error' => ['Você não tem permissão para acessar este recurso']]);
+        }
 
         return $next($request);
     }
