@@ -94,8 +94,8 @@ class EditController extends Core_Controller_Page_EditController
             'help' => ''
         ],
         'regraDiferenciada' => [
-            'label' => 'Regra diferenciada',
-            'help' => 'Regra para avaliação de alunos com deficiência'
+            'label' => 'Regra inclusiva',
+            'help' => 'Regra de avaliação inclusiva para alunos com deficiência'
         ],
         'notaMaximaGeral' => [
             'label' => 'Nota máxima geral',
