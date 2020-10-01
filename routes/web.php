@@ -127,8 +127,8 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::post('/upload', 'FileController@upload')->name('file-upload');
 
-    Route::get('/alterar-tipo-boletim-turmas', 'UpdateSchoolClassReportCardController@index')->middleware('can:view:' . Process::UPDATE_SCHOOL_CLASS_REPORT_CARD)->name('update-school-class-report-card.index');
-    Route::post('/alterar-tipo-boletim-turmas', 'UpdateSchoolClassReportCardController@update')->middleware('can:modify:' . Process::UPDATE_SCHOOL_CLASS_REPORT_CARD)->name('update-school-class-report-card.update-date');
+    Route::get('/alterar-tipo-boletim-turmas', 'UpdateSchoolClassReportCardController@index')->name('update-school-class-report-card.index');
+    Route::post('/alterar-tipo-boletim-turmas', 'UpdateSchoolClassReportCardController@update')->name('update-school-class-report-card.update-date');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {
