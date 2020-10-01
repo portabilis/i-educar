@@ -23,7 +23,7 @@ class SettingController extends Controller
         $this->menu(Process::SETTINGS);
 
         if (!$request->user()->isAdmin()) {
-            return redirect('/intranet/educar_configuracoes_index.php');
+            return back()->withErrors(['Error' => ['Você não tem permissão para acessar este recurso']]);
         }
 
         $fields = $this->getSettingsFields();
