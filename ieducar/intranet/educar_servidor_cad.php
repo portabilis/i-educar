@@ -568,11 +568,6 @@ JS;
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
 
-        if ($this->carga_horaria < $this->total_horas_alocadas) {
-            $this->mensagem = 'A Carga horária total deve ser maior ou igual a quantidade de horas alocadas para o servidor.<br>';
-            return false;
-        }
-
         if ($this->ref_cod_instituicao == $this->ref_cod_instituicao_original) {
             $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 

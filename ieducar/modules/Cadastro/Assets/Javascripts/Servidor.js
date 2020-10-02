@@ -32,7 +32,7 @@ function verificaDeficiencias() {
 }
 
 function submitForm() {
-  if (!validaServidor() || !validaPosGraduacao() || !validaCursoFormacaoContinuada() || !validationUtils.validatesFields(false) || !validateGraduations()) {
+  if (!validaServidor() || !validaPosGraduacao() || !validaCursoFormacaoContinuada() || !validationUtils.validatesFields(false) || !validateGraduations() || !validaCargaHoraria()) {
     return false;
   }
 
@@ -241,7 +241,6 @@ $j(document).ready(function() {
   // DADOS GERAIS
   $j('#tab1').click(
     function(){
-
       $j('.servidorTab-active').toggleClass('servidorTab-active servidorTab');
       $j('#tab1').toggleClass('servidorTab servidorTab-active')
       $j('.tablecadastro >tbody  > tr').each(function(index, row) {
@@ -477,3 +476,15 @@ function validateGraduations() {
 
   return result;
 }
+
+function validaCargaHoraria() {
+  if ($j('#carga_horaria').val() < $j('#total_horas_alocadas_').val()) {
+    messageUtils.error('A Carga horária total deve ser maior ou igual a quantidade de horas alocadas para o servidor.<br>');
+    return false;
+  }
+  return true;
+}
+
+$j('#carga_horaria').ready(function () {
+  validaCargaHoraria();
+});
