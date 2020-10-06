@@ -23,4 +23,14 @@ class EducacensoImportRequest extends FormRequest
             'arquivo' => 'required',
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'data_entrada_matricula.required' => 'O campo: Data de entrada das matrículas é obrigatório.',
+        ];
+    }
 }

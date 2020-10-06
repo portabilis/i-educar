@@ -35,6 +35,6 @@ class EducacensoImportRegistrationDate implements Rule
      */
     public function message()
     {
-        return 'O ano da data de entrada da matrícula não pode ser maior que o ano selecionado';
+        return 'O ano da data de entrada das matrículas não pode ser maior que o ano selecionado';
     }
 }
