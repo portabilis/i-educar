@@ -67,6 +67,7 @@ class HandleFileService
         $import->year = $this->yearImportService->getYear();
         $import->school = utf8_encode($this->yearImportService->getSchoolNameByFile($school));
         $import->user_id = $this->user->id;
+        $import->registration_date = $this->yearImportService->registrationDate;
         $import->finished = false;
         $import->save();
 
