@@ -1,5 +1,5 @@
 @inject('service', 'App\Services\UrlPresigner')
-<tr id="tr_funcao_Servidor">
+<tr id="tr_funcao_servidor">
     <td class="formmdtd" valign="top"><span class="form">Função:</span></td>
     <td class="formmdtd" valign="top">
         <span class="form">
@@ -10,13 +10,13 @@
                     <th>Cursos ministrados</th>
                     <th>Componentes curriculares</th>
                 </tr>
-                @if(isset($disciplines))
-                    @foreach($disciplines as $discipline)
+                @if(isset($serverrole))
+                    @foreach($serverrole as $role)
                         <tr>
-                            <td> {{$discipline->name}} </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{$role->nm_funcao}}</td>
+                            <td>{{$role->matricula}}</td>
+                            <td>{{$role->nm_curso}}</td>
+                            <td>{{$role->nome}}</td>
                         </tr>
                     @endforeach
                 @endif

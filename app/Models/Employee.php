@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
+use App\Functions;
+use App\ServerCourseMinister;
+use App\ServerFunction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\DB;
 
 class Employee extends Model
 {
@@ -93,4 +97,21 @@ class Employee extends Model
             'ref_cod_disciplina'
         )->withPivot('ref_ref_cod_instituicao', 'ref_cod_curso');
     }
+
+    public function serverFunction($cod_servidor)
+    {
+        $users = DB::table('pmieducar.servidor_funcao')
+                        ->select(DB::raw('nm_funcao, matricula, nm_curso, array_agg(nome) as nome'))
+                        ->join('pmieducar.servidor_curso_ministra', 'pmieducar.servidor_funcao.ref_cod_servidor', '=', 'pmieducar.servidor_curso_ministra.ref_cod_servidor')
+                        ->join('pmieducar.curso', 'pmieducar.curso.cod_curso', '=', 'pmieducar.servidor_curso_ministra.ref_cod_curso')
+                        ->join('pmieducar.funcao', 'pmieducar.funcao.cod_funcao', '=', 'pmieducar.servidor_funcao.ref_cod_funcao')
+                        ->join('pmieducar.servidor_disciplina', 'pmieducar.servidor_disciplina.ref_cod_servidor', '=', 'pmieducar.servidor_funcao.ref_cod_servidor')
+                        ->join('modules.componente_curricular', 'modules.componente_curricular.id', '=', 'pmieducar.servidor_disciplina.ref_cod_disciplina')
+                        ->where([['pmieducar.servidor_funcao.ref_cod_servidor', '=',  $cod_servidor], ['pmieducar.funcao.professor', '=', '1']])
+                        ->groupBy('nm_funcao', 'matricula', 'nm_curso')
+                        ->get();
+
+        return $users;
+    }
+
 }

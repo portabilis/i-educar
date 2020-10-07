@@ -1,44 +1,9 @@
 <?php
-// error_reporting(E_ALL);
-// ini_set("display_errors", 1);
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- *
- * @category  i-Educar
- *
- * @license   @@license@@
- *
- * @package   iEd_Pmieducar
- *
- * @since     Arquivo disponível desde a versão 1.0.0
- *
- * @version   $Id$
- */
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
-
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'Educacenso/Model/DocenteDataMapper.php';
 
@@ -46,21 +11,6 @@ use App\Models\Employee;
 use App\Models\EmployeeWithdrawal;
 use App\Support\View\Employee\EmployeeReturn;
 
-/**
- * clsIndexBase class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- *
- * @category  i-Educar
- *
- * @license   @@license@@
- *
- * @package   iEd_Pmieducar
- *
- * @since     Classe disponível desde a versão 1.0.0
- *
- * @version   @@package_version@@
- */
 class clsIndexBase extends clsBase
 {
     public function Formular()
@@ -70,21 +20,6 @@ class clsIndexBase extends clsBase
     }
 }
 
-/**
- * indice class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- *
- * @category  i-Educar
- *
- * @license   @@license@@
- *
- * @package   iEd_Pmieducar
- *
- * @since     Classe disponível desde a versão 1.0.0
- *
- * @version   @@package_version@@
- */
 class indice extends clsDetalhe
 {
     public $titulo;
@@ -234,118 +169,18 @@ class indice extends clsDetalhe
 
         $this->addDetalhe(
             [
-        'Multisseriado',
-        dbBool($registro['multi_seriado']) ? 'Sim' : 'Não'
-      ]
+                'Multisseriado',
+                dbBool($registro['multi_seriado']) ? 'Sim' : 'Não'
+            ]
         );
 
-//    $obj_funcao = new clsPmieducarServidorFuncao();
-//    $lst_funcao = $obj_funcao->lista($this->ref_cod_instituicao, $this->cod_servidor);
-//
-//    if ($lst_funcao) {
-//      $tabela .= "
-//        <table cellspacing='0' cellpadding='0' border='0'>
-//          <tr bgcolor='#ccdce6' align='center'>
-//            <td width='150'>Função</td>
-//            <td width='150'>Matrícula</td>
-//          </tr>";
-//
-//      $class = 'formlttd';
-//
-//      $tab_disc = NULL;
-//
-//      $employee = Employee::findOrFail($this->cod_servidor);
-//      $disciplines = $employee->disciplines;
-//
-//      if ($disciplines) {
-//        $tab_disc .= "<table cellspacing='0' cellpadding='0' width='200' border='0'";
-//
-//        $class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
-//        $tab_disc .= "
-//          <tr>
-//            <td bgcolor='#ccdce6' align='center'>Componentes Curriculares</td>
-//          </tr>";
-//
-//        $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-//        foreach ($disciplines as $discipline) {
-//          $tab_disc .= "
-//            <tr class='$class2' align='center'>
-//              <td align='left'>{$discipline->name}</td>
-//            </tr>";
-//
-//          $class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
-//        }
-//
-//        $tab_disc .= "</table>";
-//      }
-//
-//      $obj_servidor_curso = new clsPmieducarServidorCursoMinistra();
-//      $lst_servidor_curso = $obj_servidor_curso->lista(null, $this->ref_cod_instituicao, $this->cod_servidor);
-//
-//      if ($lst_servidor_curso) {
-//        $tab_curso .= "<table cellspacing='0' cellpadding='0' width='200' border='0'";
-//
-//        $class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
-//        $tab_curso .= "
-//          <tr>
-//            <td bgcolor='#ccdce6' align='center'>Cursos Ministrados</td>
-//          </tr>";
-//
-//        foreach ($lst_servidor_curso as $curso) {
-//          $obj_curso = new clsPmieducarCurso($curso['ref_cod_curso']);
-//          $det_curso = $obj_curso->detalhe();
-//
-//          $tab_curso .= "
-//            <tr class='$class2' align='center'>
-//              <td align='left'>{$det_curso['nm_curso']}</td>
-//            </tr>";
-//
-//          $class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
-//        }
-//
-//        $tab_curso .= "</table>";
-//      }
-//
-//      foreach ($lst_funcao as $funcao) {
-//        $obj_funcao = new clsPmieducarFuncao($funcao['ref_cod_funcao']);
-//        $det_funcao = $obj_funcao->detalhe();
-//
-//        $tabela .= "
-//          <tr class='$class' align='left'>
-//            <td><b>{$det_funcao['nm_funcao']}</b></td>
-//            <td align='center'>{$funcao['matricula']}</td>
-//          </tr>";
-//        if (!$this->is_professor){
-//            $this->is_professor = (bool) $det_funcao['professor'];
-//        }
-//
-//        $class = $class == "formlttd" ? "formmdtd" : "formlttd" ;
-//      }
-//
-//      if ($tab_curso) {
-//        $tabela .= "
-//          <tr class='$class' align='center'>
-//            <td style='padding:5px'>$tab_curso</td>
-//          </tr>";
-//      }
-//
-//      if ($tab_disc) {
-//        $tabela .= "
-//          <tr class='$class' align='center'>
-//            <td style='padding:5px'>$tab_disc</td>
-//          </tr>";
-//      }
-//
-//      $tabela .= "</table>";
+        $server = Employee::findorfail($this->cod_servidor);
+        $serverrole = $server->serverFunction($this->cod_servidor);
+        dd($serverrole);
 
-        $with = Employee::findOrFail($this->cod_servidor);
-        $disciplines = $with->disciplines;
-        $this->addHtml(view('server-role.server-role', ['disciplines' => $disciplines])->render());
-
-//        if (count($disciplines) > 0) {
-//        }
-//      $this->addDetalhe(array('Função', "<a href='javascript:trocaDisplay(\"det_f\");' >Mostrar detalhe</a><div id='det_f' name='det_f' style='display:none;'>". $this->addHtml(view('server-role.server-role', ['serverrole' => $disciplines])->render()) ."</div>"));
-//    }
+        if (count($serverrole) > 0) {
+            $this->addHtml(view('server-role.server-role', ['serverrole' => $serverrole])->render());
+        }
 
         $tabela = null;
 
