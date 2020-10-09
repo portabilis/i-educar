@@ -15,7 +15,7 @@ class Setting extends Model
      * @var array
      */
     protected $fillable = [
-        'key', 'value', 'type', 'description',
+        'key', 'value', 'type', 'description', 'setting_category_id',
     ];
 
     /**
@@ -44,5 +44,10 @@ class Setting extends Model
         }
 
         return $value;
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(SettingCategory::class, 'setting_category_id');
     }
 }
