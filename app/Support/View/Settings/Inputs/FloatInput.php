@@ -4,7 +4,7 @@ namespace App\Support\View\Settings\Inputs;
 
 class FloatInput implements InputInterface
 {
-    public function getInputView($id, $description, $key, $value, $enabled)
+    public function getInputView($id, $description, $key, $value, $enabled, $hint)
     {
         return view('settings.float-input', [
             'id' => $id,
@@ -12,6 +12,7 @@ class FloatInput implements InputInterface
             'key' => $key,
             'value' => $value,
             'enabled' => $enabled,
+            'hint' => $hint,
         ]);
     }
 }
