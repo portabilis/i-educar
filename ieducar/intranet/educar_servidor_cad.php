@@ -107,19 +107,21 @@ class indice extends clsCadastro
                 $db = new clsBanco();
 
                 // Carga horária alocada no ultimo ano de alocação
-                $sql = sprintf("
+                $sql = sprintf(
+                    '
                     SELECT
                         carga_horaria
                     FROM
                         pmieducar.servidor_alocacao
                     WHERE
-                        ref_cod_servidor = '%d' AND
+                        ref_cod_servidor = %d AND
                         ativo            = 1
                         AND ano = (
                             SELECT max(ano)
                             FROM pmieducar.servidor_alocacao
-                            WHERE ref_cod_servidor = $this->cod_servidor
-                        )",
+                            WHERE ref_cod_servidor = %d
+                        )',
+                    $this->cod_servidor,
                     $this->cod_servidor
                 );
 
@@ -187,7 +189,7 @@ class indice extends clsCadastro
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb("Funções do servidor", [
+        $this->breadcrumb('Funções do servidor', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
 
@@ -280,17 +282,17 @@ class indice extends clsCadastro
 
         $opcoes = ['' => 'Selecione'];
 
-            if (is_numeric($this->ref_cod_instituicao)) {
-                $objTemp = new clsPmieducarFuncao();
-                $objTemp->setOrderby('nm_funcao ASC');
-                $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
+        if (is_numeric($this->ref_cod_instituicao)) {
+            $objTemp = new clsPmieducarFuncao();
+            $objTemp->setOrderby('nm_funcao ASC');
+            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
 
-                if (is_array($lista) && count($lista)) {
-                    foreach ($lista as $registro) {
-                        $opcoes[$registro['cod_funcao'] . '-' . $registro['professor']] = $registro['nm_funcao'];
-                    }
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
+                    $opcoes[$registro['cod_funcao'] . '-' . $registro['professor']] = $registro['nm_funcao'];
                 }
             }
+        }
 
         $this->campoTabelaInicio(
             'funcao',
@@ -373,14 +375,14 @@ class indice extends clsCadastro
 
         $opcoes = ['' => 'Selecione'];
 
-            $objTemp = new clsCadastroEscolaridade();
-            $lista = $objTemp->lista();
+        $objTemp = new clsCadastroEscolaridade();
+        $lista = $objTemp->lista();
 
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['idesco']] = $registro['descricao'];
-                }
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $opcoes[$registro['idesco']] = $registro['descricao'];
             }
+        }
 
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 4)) {

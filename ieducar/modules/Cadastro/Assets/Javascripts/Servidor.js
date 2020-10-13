@@ -485,6 +485,6 @@ function validaCargaHoraria() {
   return true;
 }
 
-$j('#carga_horaria').ready(function () {
-  validaCargaHoraria();
+$j('#carga_horaria').change(function () {
+  validaCargaHoraria()
 });
