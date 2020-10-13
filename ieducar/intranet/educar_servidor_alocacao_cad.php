@@ -50,7 +50,6 @@ class indice extends clsCadastro
     {
         $retorno = 'Novo';
 
-
         $ref_cod_servidor        = $_GET['ref_cod_servidor'];
         $ref_ref_cod_instituicao = $_GET['ref_cod_instituicao'];
         $cod_servidor_alocacao   = $_GET['cod_servidor_alocacao'];
@@ -86,7 +85,10 @@ class indice extends clsCadastro
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
-            635, $this->pessoa_logada, 7, 'educar_servidor_lst.php'
+            635,
+            $this->pessoa_logada,
+            7,
+            'educar_servidor_lst.php'
         );
 
         if ($obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7)) {
@@ -94,7 +96,9 @@ class indice extends clsCadastro
         }
 
         $this->url_cancelar = sprintf(
-            'educar_servidor_alocacao_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d', $this->ref_cod_servidor, $this->ref_ref_cod_instituicao
+            'educar_servidor_alocacao_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
+            $this->ref_cod_servidor,
+            $this->ref_ref_cod_instituicao
         );
         $this->nome_url_cancelar = 'Cancelar';
 
@@ -143,8 +147,31 @@ class indice extends clsCadastro
         $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
 
         // Carga horária
+        $servidorAlocacao = new clsPmieducarServidorAlocacao(
+            $this->cod_servidor_alocacao,
+            $this->ref_ref_cod_instituicao,
+            null,
+            null,
+            null,
+            $this->ref_cod_servidor,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $this->ano ?: date('Y'),
+            $this->data_admissao,
+            null,
+            null,
+            $this->data_saida,
+        );
+
         $carga = $this->carga_horaria_disponivel;
         $this->campoRotulo('carga_horaria_disponivel', 'Carga horária do servidor', $carga . ':00');
+        $cargadisponivel = $servidorAlocacao->getCargaHorariaAno();
+        $this->campoRotulo('carga_horaria_sem_alocacao', 'Carga horária alocada', substr($cargadisponivel, 0, -3));
 
         $this->inputsHelper()->integer('ano', ['value' => $this->ano, 'max_length' => 4]);
 
@@ -202,7 +229,7 @@ class indice extends clsCadastro
 
         $this->campoLista('ref_cod_funcionario_vinculo', 'V&iacute;nculo', $opcoes, $this->ref_cod_funcionario_vinculo, null, false, '', '', false, false);
 
-        $this->campoRotulo('informacao_carga_horaria','<b>Informações sobre carga horária</b>');
+        $this->campoRotulo('informacao_carga_horaria', '<b>Informações sobre carga horária</b>');
         $this->campoHora('hora_inicial', 'Hora de início', $this->hora_inicial);
         $this->campoHora('hora_final', 'Hora de término', $this->hora_final);
         $this->campoHoraServidor('carga_horaria_alocada', 'Carga horária', $this->carga_horaria_alocada, true);
@@ -212,7 +239,6 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(
             635,
@@ -243,8 +269,10 @@ class indice extends clsCadastro
         );
 
         $carga_horaria_disponivel = $this->hhmmToMinutes($this->carga_horaria_disponivel);
-        $carga_horaria_alocada    = $this->hhmmToMinutes($this->carga_horaria_alocada);
-        $carga_horaria_alocada   += $this->hhmmToMinutes($servidorAlocacao->getCargaHorariaAno());
+        if ($dataSaida > now() || $dataSaida == null) {
+            $carga_horaria_alocada = $this->hhmmToMinutes($this->carga_horaria_alocada);
+        }
+        $carga_horaria_alocada += $this->hhmmToMinutes($servidorAlocacao->getCargaHorariaAnoSemAlocacaoAtual());
 
         if ($carga_horaria_disponivel >= $carga_horaria_alocada) {
             $obj_novo = new clsPmieducarServidorAlocacao(
@@ -301,7 +329,6 @@ class indice extends clsCadastro
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
         $this->simpleRedirect(sprintf('educar_servidor_alocacao_det.php?cod_servidor_alocacao=%d', $this->cod_servidor_alocacao));
-
     }
 
     public function Editar()
@@ -311,8 +338,6 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-
-
         if ($this->cod_servidor_alocacao) {
             $obj_tmp = new clsPmieducarServidorAlocacao($this->cod_servidor_alocacao, null, $this->pessoa_logada);
             $excluiu = $obj_tmp->excluir();
