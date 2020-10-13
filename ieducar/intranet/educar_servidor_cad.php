@@ -107,19 +107,23 @@ class indice extends clsCadastro
                 $db = new clsBanco();
 
                 // Carga horária alocada no ultimo ano de alocação
-                $sql = "SELECT
-                            SUM(extract(hours from carga_horaria::interval))
-                        FROM
-                            pmieducar.servidor_alocacao
-                        WHERE
-                            ref_cod_servidor = {$this->cod_servidor} AND
-                            ativo = 1
-                        AND (data_saida > now() or data_saida is null)
+                $sql = sprintf(
+                    '
+                    SELECT
+                        carga_horaria
+                    FROM
+                        pmieducar.servidor_alocacao
+                    WHERE
+                        ref_cod_servidor = %d AND
+                        ativo = 1
                         AND ano = (
                             SELECT max(ano)
-                                FROM pmieducar.servidor_alocacao
-                            WHERE ref_cod_servidor = {$this->cod_servidor}
-                        )";
+                            FROM pmieducar.servidor_alocacao
+                            WHERE ref_cod_servidor = %d
+                        )',
+                    $this->cod_servidor,
+                    $this->cod_servidor
+                );
 
                 $db->Consulta($sql);
                 while ($db->ProximoRegistro()) {
