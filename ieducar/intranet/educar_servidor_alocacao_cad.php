@@ -272,7 +272,7 @@ class indice extends clsCadastro
         if ($dataSaida > now() || $dataSaida == null) {
             $carga_horaria_alocada = $this->hhmmToMinutes($this->carga_horaria_alocada);
         }
-        $carga_horaria_alocada += $this->hhmmToMinutes($servidorAlocacao->getCargaHorariaAno());
+        $carga_horaria_alocada += $this->hhmmToMinutes($servidorAlocacao->getCargaHorariaAnoSemAlocacaoAtual());
 
         if ($carga_horaria_disponivel >= $carga_horaria_alocada) {
             $obj_novo = new clsPmieducarServidorAlocacao(

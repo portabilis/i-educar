@@ -800,7 +800,7 @@ class clsPmieducarServidorAlocacao extends Model
      *
      * @throws Exception
      */
-    public function getCargaHorariaAno()
+    public function getCargaHorariaAnoSemAlocacaoAtual()
     {
         if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ano)) {
             $db = new clsBanco();
@@ -814,6 +814,27 @@ class clsPmieducarServidorAlocacao extends Model
             if ($this->cod_servidor_alocacao) {
                 $sql .= " AND cod_servidor_alocacao <> {$this->cod_servidor_alocacao}";
             }
+
+            $db->Consulta($sql);
+            $db->ProximoRegistro();
+            $registro = $db->Tupla();
+
+            return $registro[0];
+        }
+
+        return '';
+    }
+
+    public function getCargaHorariaAno()
+    {
+        if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ano)) {
+            $db = new clsBanco();
+
+            $sql = "SELECT SUM(carga_horaria::interval)
+                FROM pmieducar.servidor_alocacao
+               WHERE ref_cod_servidor = {$this->ref_cod_servidor}
+                 AND ano = {$this->ano}
+                 AND (data_saida > now() or data_saida is null)";
 
             $db->Consulta($sql);
             $db->ProximoRegistro();
