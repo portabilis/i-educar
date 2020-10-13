@@ -19,7 +19,7 @@
                         <strong>{{$category->name}}</strong>
                     </td>
                 </tr>
-                @foreach($category->settings as $field)
+                @foreach($category->settings()->orderBy('description')->orderBy('key')->get() as $field)
                     {!! $settingView->makeInput(
                         $field->id,
                         $field->description,
