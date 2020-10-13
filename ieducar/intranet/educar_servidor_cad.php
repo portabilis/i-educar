@@ -115,7 +115,7 @@ class indice extends clsCadastro
                         pmieducar.servidor_alocacao
                     WHERE
                         ref_cod_servidor = %d AND
-                        ativo            = 1
+                        ativo = 1
                         AND ano = (
                             SELECT max(ano)
                             FROM pmieducar.servidor_alocacao
@@ -126,15 +126,12 @@ class indice extends clsCadastro
                 );
 
                 $db->Consulta($sql);
-
-                $carga = 0;
                 while ($db->ProximoRegistro()) {
                     $cargaHoraria = $db->Tupla();
-                    $cargaHoraria = explode(':', $cargaHoraria['carga_horaria']);
-                    $carga += $cargaHoraria[0] * 60 + $cargaHoraria[1];
+                    $cargaHoraria = $cargaHoraria['sum'];
                 }
+                $this->total_horas_alocadas = $cargaHoraria;
 
-                $this->total_horas_alocadas = sprintf('%02d:%02d', $carga / 60, $carga % 60);
                 // Funções
                 $obj_funcoes = new clsPmieducarServidorFuncao();
                 $lst_funcoes = $obj_funcoes->lista($this->ref_cod_instituicao, $this->cod_servidor);
@@ -254,7 +251,6 @@ class indice extends clsCadastro
             );
         }
 
-        // ----
         $this->inputsHelper()->integer(
             'cod_docente_inep',
             [
@@ -333,7 +329,7 @@ class indice extends clsCadastro
             $this->campoTextoInv(
                 'total_horas_alocadas_',
                 'Total de Horas Alocadadas',
-                $this->total_horas_alocadas,
+                $this->total_horas_alocadas . ':00',
                 9,
                 20
             );

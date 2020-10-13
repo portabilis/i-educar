@@ -75,7 +75,7 @@ class indice extends clsListagem
         ) );
 
         $this->campoTexto( "nm_cliente", "Cliente", $this->nm_cliente, 30, 255, false );
-        $this->campoNumero( "codigo", "Código", $this->codigo, 9, 9 );
+        $this->campoNumero( "codigo", "Código", $this->codigo, 15, 13 );
         $this->campoOculto("ref_cod_biblioteca",$this->ref_cod_biblioteca);
 
         if (isset($_GET["ref_cod_biblioteca"]))
@@ -88,7 +88,7 @@ class indice extends clsListagem
         $obj_acervo = new clsPmieducarCliente();
         $obj_acervo->setOrderby( "nome ASC" );
         $obj_acervo->setLimite( $this->limite, $this->offset );
-        
+
         if ($this->ref_cod_biblioteca)
         {
             $lista = $obj_acervo->listaPesquisaCliente(
