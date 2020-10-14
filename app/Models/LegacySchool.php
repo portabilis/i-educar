@@ -138,7 +138,7 @@ class LegacySchool extends Model
             'pmieducar.escola_serie',
             'ref_cod_escola',
             'ref_cod_serie'
-        )->withPivot('ativo', 'anos_letivos');
+        )->withPivot('ativo', 'anos_letivos', 'bloquear_enturmacao_sem_vagas');
     }
 
     /**
