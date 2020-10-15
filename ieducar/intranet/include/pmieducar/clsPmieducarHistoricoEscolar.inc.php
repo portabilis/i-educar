@@ -763,7 +763,7 @@ class clsPmieducarHistoricoEscolar extends Model
                 $ref_usuario_cad = $pessoa_logada,
                 $detMatricula['nome_serie'],
                 $detMatricula['ano'],
-                1000,
+                $detMatricula['carga_horaria'],
                 null,
                 strtoupper($dadosEscola['nome']),
                 strtoupper($dadosEscola['cidade']),
@@ -824,7 +824,7 @@ class clsPmieducarHistoricoEscolar extends Model
 
     protected static function dadosMatricula($ref_cod_matricula)
     {
-        $sql = "SELECT m.ref_cod_aluno, nm_serie as nome_serie, s.cod_serie, m.ano, m.ref_ref_cod_escola, c.ref_cod_instituicao, c.nm_curso as nome_curso
+        $sql = "SELECT m.ref_cod_aluno, nm_serie as nome_serie, s.cod_serie, m.ano, m.ref_ref_cod_escola, c.ref_cod_instituicao, c.nm_curso as nome_curso, s.carga_horaria
             FROM pmieducar.matricula m
             INNER JOIN pmieducar.serie s ON m.ref_ref_cod_serie = s.cod_serie
             INNER JOIN pmieducar.curso c ON m.ref_cod_curso = c.cod_curso

@@ -7,7 +7,7 @@ var API_URL_BASE  = 'diarioApi';
 var RESOURCE_NAME  = 'matricula';
 var RESOURCES_NAME = 'matriculas';
 
-var REGRA_DIFERENCIADA_TEXT = '* Regra diferenciada para alunos com deficiência';
+var REGRA_DIFERENCIADA_TEXT = '* Regra inclusiva para alunos com deficiência';
 
 var POST_LABEL   = '';
 var DELETE_LABEL = '';

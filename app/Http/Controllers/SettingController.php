@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Process;
 use App\Setting;
+use App\SettingCategory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -25,15 +26,9 @@ class SettingController extends Controller
             return redirect('/intranet/educar_configuracoes_index.php');
         }
 
-        $fields = $this->getSettingsFields();
-        return view('settings.index', ['fields' => $fields]);
-    }
+        $categories = SettingCategory::whereHas('settings')->orderBy('id', 'desc')->get();
 
-    private function getSettingsFields()
-    {
-        return Setting::query()
-        ->OrderBy('key')
-        ->get();
+        return view('settings.index', ['categories' => $categories]);
     }
 
     public function saveInputs(Request $request)
