@@ -41,7 +41,7 @@ class AlterSocialAssistanceView extends Migration
         );
 
         $this->executeSqlFile(
-            __DIR__ . '/../sqls/views/public.exporter_social_assistance-2020-04-22.sql'
+            __DIR__ . '/../sqls/views/public.exporter_social_assistance-2020-04-24.sql'
         );
     }
 }
