@@ -11,8 +11,8 @@ class RemoveSpacesInSlug extends Migration
             update cadastro.pessoa 
             set nome = trim(nome),
                 slug = trim(slug)
-            where substring(name, length(name), 1) = ' ' 
-            or substring(name, 1, 1) = ' '
+            where substring(nome, length(nome), 1) = ' ' 
+            or substring(nome, 1, 1) = ' '
             or substring(slug, length(slug), 1) = ' ' 
             or substring(slug, 1, 1) = ' ';
         SQL;
