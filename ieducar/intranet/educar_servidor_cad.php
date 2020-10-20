@@ -110,7 +110,7 @@ class indice extends clsCadastro
                 $sql = sprintf(
                     '
                     SELECT
-                        carga_horaria
+                        SUM(extract(hours from carga_horaria::interval))
                     FROM
                         pmieducar.servidor_alocacao
                     WHERE
