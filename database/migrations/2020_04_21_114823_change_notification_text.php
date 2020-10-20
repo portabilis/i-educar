@@ -26,7 +26,7 @@ class ChangeNotificationText extends Migration
     public function down()
     {
         Schema::table('public.notifications', function (Blueprint $table) {
-            $table->text('string')->change();
+            $table->string('text')->change();
         });
     }
 }
