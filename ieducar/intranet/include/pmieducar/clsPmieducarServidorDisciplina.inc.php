@@ -11,18 +11,20 @@ class clsPmieducarServidorDisciplina extends Model
     public $ref_ref_cod_instituicao;
     public $ref_cod_servidor;
     public $ref_cod_curso;
+    public $ref_cod_funcao;
 
     public function __construct(
         $ref_cod_disciplina = null,
         $ref_ref_cod_instituicao = null,
         $ref_cod_servidor = null,
-        $ref_cod_curso = null
+        $ref_cod_curso = null,
+        $ref_cod_funcao = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'servidor_disciplina';
 
-        $this->_campos_lista = $this->_todos_campos = 'ref_cod_disciplina, ref_ref_cod_instituicao, ref_cod_servidor, ref_cod_curso';
+        $this->_campos_lista = $this->_todos_campos = 'ref_cod_disciplina, ref_ref_cod_instituicao, ref_cod_servidor, ref_cod_curso, ref_cod_funcao';
 
         if (is_numeric($ref_cod_servidor) && is_numeric($ref_ref_cod_instituicao)) {
             $servidor = new clsPmieducarServidor(
@@ -70,7 +72,8 @@ class clsPmieducarServidorDisciplina extends Model
         if (is_numeric($this->ref_cod_disciplina) &&
             is_numeric($this->ref_ref_cod_instituicao) &&
             is_numeric($this->ref_cod_servidor) &&
-            is_numeric($this->ref_cod_curso)
+            is_numeric($this->ref_cod_curso) &&
+            is_numeric($this->ref_cod_funcao)
         ) {
             $db = new clsBanco();
 
@@ -99,6 +102,12 @@ class clsPmieducarServidorDisciplina extends Model
             if (is_numeric($this->ref_cod_curso)) {
                 $campos .= "{$gruda}ref_cod_curso";
                 $valores .= "{$gruda}'{$this->ref_cod_curso}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->ref_cod_funcao)) {
+                $campos .= "{$gruda}ref_cod_funcao";
+                $valores .= "{$gruda}'{$this->ref_cod_funcao}'";
                 $gruda = ', ';
             }
 
@@ -144,7 +153,8 @@ class clsPmieducarServidorDisciplina extends Model
         $int_ref_cod_disciplina = null,
         $int_ref_ref_cod_instituicao = null,
         $int_ref_cod_servidor = null,
-        $int_ref_cod_curso = null
+        $int_ref_cod_curso = null,
+        $int_ref_cod_funcao = null
     ) {
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
@@ -168,6 +178,11 @@ class clsPmieducarServidorDisciplina extends Model
 
         if (is_numeric($int_ref_cod_curso)) {
             $filtros .= "{$whereAnd} ref_cod_curso = '{$int_ref_cod_curso}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_funcao)) {
+            $filtros .= "{$whereAnd} (ref_cod_funcao is null or ref_cod_funcao = '{$int_ref_cod_funcao}')";
             $whereAnd = ' AND ';
         }
 

@@ -89,10 +89,11 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    
+
 
     $this->cod_servidor = $_GET['ref_cod_servidor'];
     $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
+    $this->ref_cod_funcao = $this->getQueryString('cod_funcao');
 
     $obj_permissoes = new clsPermissoes();
 
@@ -114,7 +115,7 @@ class indice extends clsCadastro
     if (!$this->cursos_disciplina) {
       $obj_servidor_disciplina = new clsPmieducarServidorDisciplina();
       $lst_servidor_disciplina = $obj_servidor_disciplina->lista(NULL,
-        $this->ref_cod_instituicao, $this->cod_servidor);
+        $this->ref_cod_instituicao, $this->cod_servidor, $this->ref_cod_funcao);
 
       if ($lst_servidor_disciplina) {
         foreach ($lst_servidor_disciplina as $disciplina) {
@@ -217,7 +218,7 @@ class indice extends clsCadastro
         if ($this->ref_cod_disciplina[$i] == 'todas_disciplinas'){
           $componenteAnoDataMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
           $componentes = $componenteAnoDataMapper->findComponentePorCurso($this->ref_cod_curso[$i]);
-          
+
           foreach ($componentes as $componente) {
             $curso = $this->ref_cod_curso[$i];
             $curso_servidor[$curso] = $curso;
@@ -237,6 +238,7 @@ class indice extends clsCadastro
         'cursos_disciplina' => $cursos_disciplina,
         'cod_servidor' => $this->cod_servidor,
         'cursos_servidor' => $curso_servidor,
+        'ref_cod_funcao' => $this->ref_cod_funcao
     ]);
     Session::save();
     Session::start();

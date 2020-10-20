@@ -15,8 +15,10 @@
                         <tr>
                             <td>{{$role->nm_funcao}}</td>
                             <td>{{$role->matricula}}</td>
-                            <td>{{$role->nm_curso}}</td>
-                            <td>{{$role->nome}}</td>
+                            @if($role->professor === 1)
+                                <td>{{$role->nm_curso}}</td>
+                                <td>{{$role->nome}}</td>
+                            @endif
                         </tr>
                     @endforeach
                 @endif

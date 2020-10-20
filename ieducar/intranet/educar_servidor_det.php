@@ -176,7 +176,6 @@ class indice extends clsDetalhe
 
         $server = Employee::findorfail($this->cod_servidor);
         $serverrole = $server->serverFunction($this->cod_servidor);
-        dd($serverrole);
 
         if (count($serverrole) > 0) {
             $this->addHtml(view('server-role.server-role', ['serverrole' => $serverrole])->render());

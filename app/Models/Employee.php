@@ -101,14 +101,14 @@ class Employee extends Model
     public function serverFunction($cod_servidor)
     {
         $users = DB::table('pmieducar.servidor_funcao')
-                        ->select(DB::raw('nm_funcao, matricula, nm_curso, array_agg(nome) as nome'))
+                        ->select(DB::raw('nm_funcao, pmieducar.servidor_funcao.matricula, nm_curso, array_agg(nome) as nome, professor'))
                         ->join('pmieducar.servidor_curso_ministra', 'pmieducar.servidor_funcao.ref_cod_servidor', '=', 'pmieducar.servidor_curso_ministra.ref_cod_servidor')
                         ->join('pmieducar.curso', 'pmieducar.curso.cod_curso', '=', 'pmieducar.servidor_curso_ministra.ref_cod_curso')
                         ->join('pmieducar.funcao', 'pmieducar.funcao.cod_funcao', '=', 'pmieducar.servidor_funcao.ref_cod_funcao')
                         ->join('pmieducar.servidor_disciplina', 'pmieducar.servidor_disciplina.ref_cod_servidor', '=', 'pmieducar.servidor_funcao.ref_cod_servidor')
                         ->join('modules.componente_curricular', 'modules.componente_curricular.id', '=', 'pmieducar.servidor_disciplina.ref_cod_disciplina')
-                        ->where([['pmieducar.servidor_funcao.ref_cod_servidor', '=',  $cod_servidor], ['pmieducar.funcao.professor', '=', '1']])
-                        ->groupBy('nm_funcao', 'matricula', 'nm_curso')
+                        ->where([['pmieducar.servidor_funcao.ref_cod_servidor', '=',  $cod_servidor]])
+                        ->groupBy('professor', 'nm_funcao', 'pmieducar.servidor_funcao.matricula', 'nm_curso')
                         ->get();
 
         return $users;

@@ -301,7 +301,7 @@ class indice extends clsCadastro
             ($this->ref_cod_funcao)
         );
 
-        $funcao = 'popless()';
+        $funcao = "popless(this)";
 
         $this->campoLista('ref_cod_funcao', 'Função', $opcoes, $this->ref_cod_funcao, 'funcaoChange(this)', '', '', '');
 
@@ -1219,11 +1219,12 @@ if (document.getElementById('total_horas_alocadas')) {
 }
 
 
-function popless()
+function popless(element)
 {
-  var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
-  var campoServidor = document.getElementById('cod_servidor').value;
-  pesquisa_valores_popless1('educar_servidor_disciplina_lst.php?ref_cod_servidor='+campoServidor+'&ref_cod_instituicao='+campoInstituicao, '');
+    var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
+    var campoServidor = document.getElementById('cod_servidor').value;
+    var codFuncao = $j(element).closest('tr').find('[id^=cod_servidor_funcao]').val();
+    pesquisa_valores_popless1('educar_servidor_disciplina_lst.php?ref_cod_servidor='+campoServidor+'&ref_cod_instituicao='+campoInstituicao+'&cod_funcao='+codFuncao, '');
 }
 
 function popCurso()
