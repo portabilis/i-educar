@@ -3,9 +3,27 @@
     var $instituicaoField = getElementFor('instituicao');
     var $escolaField = getElementFor('escola');
 
+    $escolaField.chosen({
+      no_results_text: "Sem resultados para ",
+      placeholder_text_single: "Selecione uma escola",
+      search_contains: true,
+    });
+
     var handleGetEscolas = function(response) {
-      var selectOptions = jsonResourcesToSelectOptions(response['options'], false);
-      updateSelect($escolaField, selectOptions, "Selecione uma escola");
+      $escolaField.empty();
+      $escolaField.trigger("chosen:updated");
+
+      options = '<option/>';
+
+      $j.each(response['options'], function(id, value) {
+        if (id.indexOf && id.substr && id.indexOf('__') == 0) {
+          id = id.substr(2);
+        }
+        options += '<option value="' + id + '"> ' + value + '</option>';;
+      });
+
+      $escolaField.append(options);
+      $escolaField.trigger("chosen:updated");
     }
 
     var updateEscolas = function() {
