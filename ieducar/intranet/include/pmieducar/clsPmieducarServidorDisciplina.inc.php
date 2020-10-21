@@ -72,8 +72,7 @@ class clsPmieducarServidorDisciplina extends Model
         if (is_numeric($this->ref_cod_disciplina) &&
             is_numeric($this->ref_ref_cod_instituicao) &&
             is_numeric($this->ref_cod_servidor) &&
-            is_numeric($this->ref_cod_curso) &&
-            is_numeric($this->ref_cod_funcao)
+            is_numeric($this->ref_cod_curso)
         ) {
             $db = new clsBanco();
 
@@ -108,7 +107,6 @@ class clsPmieducarServidorDisciplina extends Model
             if (is_numeric($this->ref_cod_funcao)) {
                 $campos .= "{$gruda}ref_cod_funcao";
                 $valores .= "{$gruda}'{$this->ref_cod_funcao}'";
-                $gruda = ', ';
             }
 
             $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");

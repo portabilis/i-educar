@@ -798,7 +798,7 @@ JS;
                 if ($obj_servidor_funcao->existe()) {
                     $this->atualizaFuncao($obj_servidor_funcao, $funcao, $this->matricula[$k]);
                 } else {
-                    $this->cadastraFuncao($funcao, $this->matricula[$k]);
+                    $cod_servidor_funcao = $this->cadastraFuncao($funcao, $this->matricula[$k]);
                 }
 
                 if (empty($cod_servidor_funcao)) {
@@ -872,7 +872,7 @@ JS;
     public function cadastraFuncao($funcao, $matricula)
     {
         $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao, $matricula);
-        $obj_servidor_funcao->cadastra();
+        return $obj_servidor_funcao->cadastra();
     }
 
     public function excluiDisciplinas()

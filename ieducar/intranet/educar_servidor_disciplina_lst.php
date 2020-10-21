@@ -238,7 +238,7 @@ class indice extends clsCadastro
         'cursos_disciplina' => $cursos_disciplina,
         'cod_servidor' => $this->cod_servidor,
         'cursos_servidor' => $curso_servidor,
-        'ref_cod_funcao' => $this->ref_cod_funcao
+        'ref_cod_funcao' => $this->getQueryString('cod_funcao')
     ]);
     Session::save();
     Session::start();

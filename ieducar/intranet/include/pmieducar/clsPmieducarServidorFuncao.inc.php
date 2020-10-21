@@ -244,14 +244,6 @@ class clsPmieducarServidorFuncao extends Model
                 $this->_tabela,
                 $this->cod_servidor_funcao
             );
-        } elseif (is_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_cod_servidor) && is_numeric($this->ref_cod_funcao)) {
-            $sql = sprintf(
-                'SELECT 1 FROM %s WHERE ref_ref_cod_instituicao = \'%d\' AND ref_cod_servidor = \'%d\' AND ref_cod_funcao = \'%d\'',
-                $this->_tabela,
-                $this->ref_ref_cod_instituicao,
-                $this->ref_cod_servidor,
-                $this->ref_cod_funcao
-            );
         }
 
         if ($sql === '') {
