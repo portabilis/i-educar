@@ -112,7 +112,7 @@ class indice extends clsCadastro
 
     $this->cursos_disciplina = Session::get('cursos_disciplina');
 
-    if (!$this->cursos_disciplina) {
+    if (!$this->cursos_disciplina || !in_array($this->ref_cod_funcao, Session::get('cod_funcao', []))) {
       $obj_servidor_disciplina = new clsPmieducarServidorDisciplina();
       $lst_servidor_disciplina = $obj_servidor_disciplina->lista(NULL,
         $this->ref_cod_instituicao, $this->cod_servidor, NULL, $this->ref_cod_funcao);
@@ -122,7 +122,7 @@ class indice extends clsCadastro
           $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
           $componente = $componenteMapper->find($disciplina['ref_cod_disciplina']);
 
-          $this->cursos_disciplina[$disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $disciplina['ref_cod_disciplina'];
+          $this->cursos_disciplina[$disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $this->ref_cod_funcao;
         }
       }
     }
@@ -131,6 +131,9 @@ class indice extends clsCadastro
       foreach ($this->cursos_disciplina as $curso => $disciplinas) {
         if ($disciplinas) {
           foreach ($disciplinas as $disciplina => $funcao) {
+            if ($funcao != $this->ref_cod_funcao) {
+                continue;
+            }
             $this->ref_cod_curso[] = $curso;
             $this->ref_cod_disciplina[] = $disciplina;
           }
@@ -168,6 +171,9 @@ class indice extends clsCadastro
       foreach ($this->cursos_disciplina as $curso => $disciplinas) {
         if ($disciplinas) {
           foreach ($disciplinas as $disciplina => $funcao) {
+             if ($funcao != $this->ref_cod_funcao) {
+                 continue;
+             }
             $arr_valores[] = array($curso, $disciplina);
           }
         }
