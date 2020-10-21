@@ -182,7 +182,7 @@ class clsPmieducarServidorDisciplina extends Model
         }
 
         if (is_numeric($int_ref_cod_funcao)) {
-            $filtros .= "{$whereAnd} (ref_cod_funcao is null or ref_cod_funcao = '{$int_ref_cod_funcao}')";
+            $filtros .= "{$whereAnd} (ref_cod_funcao = '{$int_ref_cod_funcao}' OR ref_cod_funcao is null)";
             $whereAnd = ' AND ';
         }
 
