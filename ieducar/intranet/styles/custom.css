@@ -1452,3 +1452,7 @@ a.btn-detalhes {
 .matricula-situacao-deslocamento {
   color: #FF6600;
 }
+
+#ref_cod_escola_chosen a.chosen-single {
+  width: 100% !important;
+}
