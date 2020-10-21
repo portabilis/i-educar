@@ -130,7 +130,7 @@ class indice extends clsCadastro
     if ($this->cursos_disciplina) {
       foreach ($this->cursos_disciplina as $curso => $disciplinas) {
         if ($disciplinas) {
-          foreach ($disciplinas as $disciplina) {
+          foreach ($disciplinas as $disciplina => $funcao) {
             $this->ref_cod_curso[] = $curso;
             $this->ref_cod_disciplina[] = $disciplina;
           }
@@ -167,7 +167,7 @@ class indice extends clsCadastro
     if ($this->cursos_disciplina) {
       foreach ($this->cursos_disciplina as $curso => $disciplinas) {
         if ($disciplinas) {
-          foreach ($disciplinas as $disciplina) {
+          foreach ($disciplinas as $disciplina => $funcao) {
             $arr_valores[] = array($curso, $disciplina);
           }
         }
@@ -223,22 +223,23 @@ class indice extends clsCadastro
             $curso = $this->ref_cod_curso[$i];
             $curso_servidor[$curso] = $curso;
             $disciplina = $componente->id;
-            $cursos_disciplina[$curso][$disciplina] = $disciplina;
+            $cursos_disciplina[$curso][$disciplina] = $this->getQueryString('cod_funcao');
           }
         }else{
           $curso = $this->ref_cod_curso[$i];
           $curso_servidor[$curso] = $curso;
           $disciplina = $this->ref_cod_disciplina[$i];
-          $cursos_disciplina[$curso][$disciplina] = $disciplina;
+          $cursos_disciplina[$curso][$disciplina] = $this->getQueryString('cod_funcao');
         }
       }
     }
-
+    $funcoes = Session::get('cod_funcao', []);
+    $funcoes[] = $this->getQueryString('cod_funcao');
     Session::put([
         'cursos_disciplina' => $cursos_disciplina,
         'cod_servidor' => $this->cod_servidor,
         'cursos_servidor' => $curso_servidor,
-        'ref_cod_funcao' => $this->getQueryString('cod_funcao')
+        'cod_funcao' => $funcoes
     ]);
     Session::save();
     Session::start();

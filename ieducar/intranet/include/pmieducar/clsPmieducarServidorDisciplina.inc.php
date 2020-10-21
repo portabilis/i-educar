@@ -60,6 +60,10 @@ class clsPmieducarServidorDisciplina extends Model
                 $this->ref_cod_curso = $ref_cod_curso;
             }
         }
+
+        if (is_numeric($ref_cod_funcao)) {
+            $this->ref_cod_funcao = $ref_cod_funcao;
+        }
     }
 
     /**
@@ -280,12 +284,17 @@ class clsPmieducarServidorDisciplina extends Model
      *
      * @return bool
      */
-    public function excluirTodos()
+    public function excluirTodos($funcao = null)
     {
         if (is_numeric($this->ref_ref_cod_instituicao) &&
             is_numeric($this->ref_cod_servidor)) {
+            $where = '';
+            if ($funcao) {
+                $funcao = implode(',', $funcao);
+                $where = "AND ref_cod_funcao in ({$funcao})";
+            }
             $db = new clsBanco();
-            $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}'");
+            $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_ref_cod_instituicao = '{$this->ref_ref_cod_instituicao}' AND ref_cod_servidor = '{$this->ref_cod_servidor}' {$where}");
 
             return true;
         }

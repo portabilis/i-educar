@@ -172,6 +172,7 @@ class indice extends clsCadastro
                     Session::put('cursos_disciplina', $this->cursos_disciplina);
                 } else {
                     Session::forget('cursos_disciplina');
+                    Session::forget('cod_funcao');
                 }
 
                 $retorno = 'Editar';
@@ -817,15 +818,16 @@ JS;
 
         if ($existe_funcao_professor) {
             if ($cursos_disciplina) {
-                $this->excluiDisciplinas();
+                $this->excluiDisciplinas(Session::get('cod_funcao'));
                 foreach ($cursos_disciplina as $curso => $disciplinas) {
                     if ($disciplinas) {
-                        foreach ($disciplinas as $disciplina) {
+                        foreach ($disciplinas as $disciplina => $funcao) {
                             $obj_servidor_disciplina = new clsPmieducarServidorDisciplina(
                                 $disciplina,
                                 $this->ref_cod_instituicao,
                                 $this->cod_servidor,
-                                $curso
+                                $curso,
+                                $funcao
                             );
 
                             if (!$obj_servidor_disciplina->existe()) {
@@ -875,10 +877,10 @@ JS;
         return $obj_servidor_funcao->cadastra();
     }
 
-    public function excluiDisciplinas()
+    public function excluiDisciplinas($funcao)
     {
         $obj_servidor_disciplina = new clsPmieducarServidorDisciplina(null, $this->ref_cod_instituicao, $this->cod_servidor);
-        $obj_servidor_disciplina->excluirTodos();
+        $obj_servidor_disciplina->excluirTodos($funcao);
     }
 
     public function excluiCursos()
