@@ -15,7 +15,7 @@
                         <tr>
                             <td>{{$function->nm_funcao}}</td>
                             <td>{{$function->matricula}}</td>
-                            @if($function->professor === 1)gst
+                            @if($function->professor === 1)
                                 <td>{{$function->nm_curso}}</td>
                                 <td>{{$function->nome}}</td>
                             @endif

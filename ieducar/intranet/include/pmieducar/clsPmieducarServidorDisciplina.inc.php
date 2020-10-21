@@ -282,14 +282,16 @@ class clsPmieducarServidorDisciplina extends Model
     /**
      * Exclui todos os registros de disciplinas de um servidor.
      *
+     * @param null $funcao
      * @return bool
+     * @throws Exception
      */
     public function excluirTodos($funcao = null)
     {
         if (is_numeric($this->ref_ref_cod_instituicao) &&
             is_numeric($this->ref_cod_servidor)) {
             $where = '';
-            if ($funcao) {
+            if ($funcao != null) {
                 $funcao = implode(',', $funcao);
                 $where = "AND ref_cod_funcao in ({$funcao})";
             }
