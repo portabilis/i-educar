@@ -7,7 +7,6 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'Educacenso/Model/DocenteDataMapper.php';
 
-use App\Models\Employee;
 use App\Models\EmployeeWithdrawal;
 use App\Support\View\Employee\EmployeeReturn;
 
@@ -174,11 +173,9 @@ class indice extends clsDetalhe
             ]
         );
 
-        $server = Employee::findorfail($this->cod_servidor);
-        $serverrole = $server->serverFunction($this->cod_servidor);
-
-        if (count($serverrole) > 0) {
-            $this->addHtml(view('server-role.server-role', ['serverrole' => $serverrole])->render());
+        $serverfunction = $this->getEmployeeFunctions($this->cod_servidor);
+        if (count($serverfunction) > 0) {
+            $this->addHtml(view('server-role.server-role', ['serverfunction' => $serverfunction])->render());
         }
 
         $tabela = null;
@@ -388,6 +385,19 @@ class indice extends clsDetalhe
         $this->breadcrumb('Funções do servidor', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
+    }
+
+    private function getEmployeeFunctions($cod_servidor)
+    {
+        return DB::table('pmieducar.servidor_funcao')
+            ->select(DB::raw('nm_funcao, pmieducar.servidor_funcao.matricula, nm_curso, array_to_string(array_agg(componente_curricular.nome), \', \') as nome, funcao.professor'))
+            ->join('pmieducar.servidor_disciplina', 'servidor_disciplina.ref_cod_funcao', 'servidor_funcao.cod_servidor_funcao')
+            ->join('pmieducar.funcao', 'funcao.cod_funcao', 'servidor_funcao.ref_cod_funcao')
+            ->join('pmieducar.curso', 'curso.cod_curso', 'servidor_disciplina.ref_cod_curso')
+            ->join('modules.componente_curricular', 'componente_curricular.id', 'servidor_disciplina.ref_cod_disciplina')
+            ->where([['servidor_funcao.ref_cod_servidor', $cod_servidor]])
+            ->groupBy('professor', 'nm_funcao', 'pmieducar.servidor_funcao.matricula', 'nm_curso')
+            ->get();
     }
 }
 

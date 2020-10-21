@@ -10,14 +10,14 @@
                     <th>Cursos ministrados</th>
                     <th>Componentes curriculares</th>
                 </tr>
-                @if(isset($serverrole))
-                    @foreach($serverrole as $role)
+                @if(isset($serverfunction))
+                    @foreach($serverfunction as $function)
                         <tr>
-                            <td>{{$role->nm_funcao}}</td>
-                            <td>{{$role->matricula}}</td>
-                            @if($role->professor === 1)
-                                <td>{{$role->nm_curso}}</td>
-                                <td>{{$role->nome}}</td>
+                            <td>{{$function->nm_funcao}}</td>
+                            <td>{{$function->matricula}}</td>
+                            @if($function->professor === 1)gst
+                                <td>{{$function->nm_curso}}</td>
+                                <td>{{$function->nome}}</td>
                             @endif
                         </tr>
                     @endforeach
