@@ -115,7 +115,7 @@ class indice extends clsCadastro
     if (!$this->cursos_disciplina) {
       $obj_servidor_disciplina = new clsPmieducarServidorDisciplina();
       $lst_servidor_disciplina = $obj_servidor_disciplina->lista(NULL,
-        $this->ref_cod_instituicao, $this->cod_servidor, $this->ref_cod_funcao);
+        $this->ref_cod_instituicao, $this->cod_servidor, NULL, $this->ref_cod_funcao);
 
       if ($lst_servidor_disciplina) {
         foreach ($lst_servidor_disciplina as $disciplina) {
