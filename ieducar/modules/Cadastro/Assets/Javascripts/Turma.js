@@ -319,7 +319,6 @@ $j(document).ready(function() {
   });
 
   var getLinhaComponente = function(componente) {
-    console.log(componente);
     return  `
     <tr class="linha-disciplina">
       <td width="250"><input type="checkbox" name="disciplinas[${componente.id}]" class="check-disciplina" id="disciplinas[]" value="${componente.id}">${componente.nome}</td>
