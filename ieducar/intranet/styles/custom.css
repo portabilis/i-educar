@@ -1452,3 +1452,7 @@ a.btn-detalhes {
 .matricula-situacao-deslocamento {
   color: #FF6600;
 }
+
+#componentes_turma_cad td{
+  padding: 5px;
+}

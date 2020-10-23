@@ -142,6 +142,7 @@ function getComponentesCurricularesPorSerie(){
                     'id' => $componente->id,
                     'nome' => $componente->nome,
                     'carga_horaria' => $componente->cargaHoraria,
+                    'abreviatura' => $componente->abreviatura,
                 ];
             }, array_values($componentes));
 
