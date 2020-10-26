@@ -1,4 +1,4 @@
-@inject('view', 'App\Support\View\SettingView')
+@inject('settingView', 'App\Support\View\SettingView')
 @extends('layout.default')
 
 @push('styles')
@@ -13,8 +13,23 @@
             <tr>
                 <td class="titulo-tabela-listagem" colspan="2" height="24"><b>Configurações iniciais</b></td>
             </tr>
-            @foreach($fields as $field)
-                {!! $view->makeInput($field->id, $field->description, $field->type, $field->key, $field->value) !!}
+            @foreach($categories as $category)
+                <tr>
+                    <td colspan="2" height="24">
+                        <strong>{{$category->name}}</strong>
+                    </td>
+                </tr>
+                @foreach($category->settings()->orderBy('description')->orderBy('key')->get() as $field)
+                    {!! $settingView->makeInput(
+                        $field->id,
+                        $field->description,
+                        $field->type,
+                        $field->key,
+                        $field->value,
+                        $category->enabled,
+                        $field->hint
+                    ) !!}
+                @endforeach
             @endforeach
             </tbody>
         </table>

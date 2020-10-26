@@ -4,11 +4,17 @@ namespace App\Services\Educacenso;
 
 use App\Models\Educacenso\RegistroEducacenso;
 use App\User;
+use DateTime;
 use Illuminate\Http\UploadedFile;
 
 abstract class ImportService
 {
     const DELIMITER = '|';
+
+    /**
+     * @var DateTime
+     */
+    public $registrationDate;
 
     /**
      * Faz a importação dos dados a partir da string do arquivo do censo
@@ -44,7 +50,11 @@ abstract class ImportService
 
         $model = $class::getModel($arrayColumns);
 
-        $class->import($model, $this->getYear(), $user);
+        if ($lineId == 60) {
+            $class->registrationDate = $this->registrationDate;
+        }
+
+        $class->import($model, $this->getYear(), $user, $this->registrationDate);
     }
 
     /**

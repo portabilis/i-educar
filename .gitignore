@@ -65,3 +65,7 @@ website/i18n/*
 
 # this is the code coverage generated when running phpunit.
 ieducar/tests/log
+
+programmatic-types.graphql
+schema-directives.graphql
+_lighthouse_ide_helper.php

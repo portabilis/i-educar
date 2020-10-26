@@ -14,7 +14,8 @@ use Illuminate\Database\Eloquent\Factory;
 $factory->define(LegacySchoolClass::class, function (Faker $faker) {
 
     $schoolGrade = factory(LegacySchoolGrade::class)->create();
-    $evaluationRule = factory(LegacyEvaluationRuleGradeYear::class)->create([
+
+    factory(LegacyEvaluationRuleGradeYear::class)->create([
         'serie_id' => $schoolGrade->grade,
         'ano_letivo' => now()->year,
     ]);

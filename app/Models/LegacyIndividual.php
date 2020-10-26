@@ -87,6 +87,7 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
         'nome_social',
         'pais_residencia',
         'localizacao_diferenciada',
+        'ideciv'
     ];
 
     /**
@@ -126,6 +127,14 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
     public function person()
     {
         return $this->hasOne(LegacyPerson::class, 'idpes', 'idpes');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function student()
+    {
+        return $this->hasOne(LegacyStudent::class, 'ref_idpes', 'idpes');
     }
 
     /**

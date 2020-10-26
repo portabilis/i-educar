@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Process;
 use App\Setting;
+use App\SettingCategory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -26,16 +27,9 @@ class SettingController extends Controller
             return back()->withErrors(['Error' => ['Você não tem permissão para acessar este recurso']]);
         }
 
-        $fields = $this->getSettingsFields();
+        $categories = SettingCategory::whereHas('settings')->orderBy('id', 'desc')->get();
 
-        return view('settings.index', ['fields' => $fields]);
-    }
-
-    private function getSettingsFields()
-    {
-        return Setting::query()
-        ->OrderBy('key')
-        ->get();
+        return view('settings.index', ['categories' => $categories]);
     }
 
     public function saveInputs(Request $request)
