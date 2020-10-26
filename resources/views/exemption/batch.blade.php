@@ -289,7 +289,7 @@
             });
         })(jQuery);
 
-        $j('#ref_cod_serie').on('change', function () {
+        $j('#ref_cod_serie, #ref_cod_turma').on('change', function () {
             setTimeout(function () {
                 $j('#ref_cod_componente_curricular').trigger('chosen:updated');
             }, 1000);
@@ -306,7 +306,6 @@
                 success: function (response) {
                     var stageType = response[0].ref_cod_modulo;
                     $j('#stage_type').val(stageType).trigger('change');
-                    $j('#ref_cod_componente_curricular').trigger('chosen:updated');
                 }
             });
         });
