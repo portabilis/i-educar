@@ -94,8 +94,8 @@ class EditController extends Core_Controller_Page_EditController
             'help' => ''
         ],
         'regraDiferenciada' => [
-            'label' => 'Regra diferenciada',
-            'help' => 'Regra para avaliação de alunos com deficiência'
+            'label' => 'Regra inclusiva',
+            'help' => 'Regra de avaliação inclusiva para alunos com deficiência'
         ],
         'notaMaximaGeral' => [
             'label' => 'Nota máxima geral',
@@ -312,7 +312,7 @@ class EditController extends Core_Controller_Page_EditController
             '/modules/RegraAvaliacao/Assets/Javascripts/RegraAvaliacao.js'
         );
 
-        $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
+        $nomeMenu = ($this->getRequest()->id == null || $this->getRequest()->copy) ? 'Cadastrar' : 'Editar';
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos([
             $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
@@ -328,6 +328,10 @@ class EditController extends Core_Controller_Page_EditController
      */
     public function Gerar()
     {
+        if ($this->getRequest()->copy) {
+            $this->tipoacao = 'Novo';
+        }
+
         $this->campoOculto('id', $this->getEntity()->id);
 
         // Instituição
@@ -878,7 +882,7 @@ class EditController extends Core_Controller_Page_EditController
         }
 
         // Verifica pela existência do field identity
-        if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
+        if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id && !$this->getRequest()->copy) {
             $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
             $entity = $this->getEntity();
         }
@@ -978,6 +982,10 @@ class EditController extends Core_Controller_Page_EditController
             $this->mensagem .= 'Erro no preenchimento do formulário. ';
 
             return false;
+        }
+
+        if ($this->getRequest()->copy) {
+            $this->_options['edit_success_params'] = ['id' => $entity->fetch()['id']];
         }
 
         return true;

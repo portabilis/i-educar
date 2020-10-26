@@ -800,6 +800,31 @@ class clsPmieducarServidorAlocacao extends Model
      *
      * @throws Exception
      */
+    public function getCargaHorariaAnoSemAlocacaoAtual()
+    {
+        if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ano)) {
+            $db = new clsBanco();
+
+            $sql = "SELECT SUM(carga_horaria::interval)
+                FROM pmieducar.servidor_alocacao
+               WHERE ref_cod_servidor = {$this->ref_cod_servidor}
+                 AND ano = {$this->ano}
+                 AND (data_saida > now() or data_saida is null)";
+
+            if ($this->cod_servidor_alocacao) {
+                $sql .= " AND cod_servidor_alocacao <> {$this->cod_servidor_alocacao}";
+            }
+
+            $db->Consulta($sql);
+            $db->ProximoRegistro();
+            $registro = $db->Tupla();
+
+            return $registro[0];
+        }
+
+        return '';
+    }
+
     public function getCargaHorariaAno()
     {
         if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ano)) {
@@ -808,11 +833,8 @@ class clsPmieducarServidorAlocacao extends Model
             $sql = "SELECT SUM(carga_horaria::interval)
                 FROM pmieducar.servidor_alocacao
                WHERE ref_cod_servidor = {$this->ref_cod_servidor}
-                 AND ano = {$this->ano}";
-
-            if ($this->cod_servidor_alocacao) {
-                $sql .= "AND cod_servidor_alocacao != {$this->cod_servidor_alocacao}";
-            }
+                 AND ano = {$this->ano}
+                 AND (data_saida > now() or data_saida is null)";
 
             $db->Consulta($sql);
             $db->ProximoRegistro();
@@ -839,7 +861,8 @@ class clsPmieducarServidorAlocacao extends Model
                  AND ref_cod_servidor = {$this->ref_cod_servidor}
                  AND ano = {$this->ano}
                  AND periodo = {$this->periodo}
-                 AND ativo = 1";
+                 AND ativo = 1
+                 AND (data_saida > now() or data_saida is null)";
 
             if (is_numeric($this->cod_servidor_alocacao)) {
                 $sql .= " AND cod_servidor_alocacao <> {$this->cod_servidor_alocacao}";

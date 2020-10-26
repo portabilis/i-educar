@@ -703,7 +703,7 @@ class indice extends clsCadastro
             $this->inputsHelper()->numeric('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'São aceito somente números, ponto "." e hífen "-"'));
 
             $this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
-            $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra diferenciada", dbBool($this->utiliza_regra_diferenciada), '', false, false, false, 'Se marcado, utilizará regra de avaliação diferenciada informada na Série');
+            $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra alternativa", dbBool($this->utiliza_regra_diferenciada), '', false, false, false, 'Se marcado a escola utilizará a regra de avaliação alternativa informada na Série');
 
             $resources = SelectOptions::situacoesFuncionamentoEscola();
             $options = array('label' => 'Situação de funcionamento', 'resources' => $resources, 'value' => $this->situacao_funcionamento);

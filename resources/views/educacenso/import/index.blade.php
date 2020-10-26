@@ -7,11 +7,12 @@
 @section('content')
     <table class="table-default">
         <tr class="titulo-tabela-listagem">
-            <th colspan="5">Importações - Listagem</th>
+            <th colspan="6">Importações - Listagem</th>
         </tr>
         <tr>
             <td style="font-weight:bold;">Ano</td>
             <td style="font-weight:bold;">Escola</td>
+            <td style="font-weight:bold;">Data de entrada das matrículas</td>
             <td style="font-weight:bold;">Usuário</td>
             <td style="font-weight:bold;">Data</td>
             <td style="font-weight:bold;">Situação</td>
@@ -23,6 +24,9 @@
                 </td>
                 <td>
                     {{ $import->school }}
+                </td>
+                <td>
+                    @if($import->registration_date) {{ $import->registration_date->format('d/m/Y') }} @endif
                 </td>
                 <td>
                     {{ $import->user->realName }}

@@ -73,7 +73,11 @@
             </tr>
 
             <tr id="tr_nm_tipo_boletim">
-                <td class="formlttd" valign="top"><span class="form">Tipo de boletim antigo</span></td>
+                <td class="formlttd" valign="top">
+                    <span class="form">Modelo de boletim antigo</span>
+                    <br>
+                    <sub style="vertical-align:top;">Deixe em branco para atualizar em todas as turmas</sub>
+                </td>
                 <td class="formlttd" valign="top">
                     <span class="form">
                         <select class="geral" name="old_report_card" id="old_report_card" style="width: 308px;">
@@ -98,8 +102,12 @@
             </tr>
 
             <tr id="tr_nm_tipo_boletim">
-                <td class="formlttd" valign="top"><span class="form">Tipo de boletim novo</span></td>
-                <td class="formlttd" valign="top">
+                <td class="formmdtd" valign="top">
+                    <span class="form">Novo modelo de boletim</span>
+                    <br>
+                    <sub style="vertical-align:top;">Deixe em branco para não alterar</sub>
+                </td>
+                <td class="formmdtd" valign="top">
                     <span class="form">
                         <select class="geral" name="new_report_card" id="new_report_card" style="width: 308px;">
                             <option value="">Selecione um tipo</option>
@@ -124,7 +132,7 @@
 
             <tr id="tr_nm_tipo_boletim">
                 <td class="formlttd" valign="top">
-                    <span class="form">Tipo de boletim diferenciado novo</span>
+                    <span class="form">Novo modelo de boletim (diferenciado)</span>
                     <br>
                     <sub style="vertical-align:top;">Deixe em branco para não alterar</sub>
                 </td>
@@ -168,12 +176,14 @@
             <tr>
                 <th>Código da turma</th>
                 <th>Nome da turma</th>
-                <th>Tipo de boletim antigo</th>
-                <th>Tipo de boletim novo</th>
-                @if(isset(Session::get('classrooms')[0]['new_alternative_report']))
-                    <th>Tipo de boletim diferenciado antigo</th>
-                    <th>Tipo de boletim diferenciado novo</th>
-                @endif
+                @isset(Session::get('classrooms')[0]['new_report'])
+                <th>Modelo de boletim antigo</th>
+                <th>Novo modelo de boletim</th>
+                @endisset
+                @isset(Session::get('classrooms')[0]['new_alternative_report'])
+                    <th>Modelo de boletim antigo (diferenciado)</th>
+                    <th>Novo modelo de boletim (diferenciado)</th>
+                @endisset
             </tr>
             </thead>
             <tbody>
@@ -181,15 +191,19 @@
                 <tr class="form-success">
                     <td>{{ $classroom['id'] }}</td>
                     <td>{{ $classroom['name'] }}</td>
-                    <td>{{ $reportCards[$classroom['old_report']] }}</td>
-                    <td>{{ $reportCards[$classroom['new_report']] }}</td>
+                    @if(isset($classroom['new_report']))
+                        @isset($reportCards[$classroom['old_report']])
+                            <td>{!! $reportCards[$classroom['old_report']] !!}</td>
+                        @endisset
+                        <td>{!! $reportCards[$classroom['new_report']] !!}</td>
+                    @endif
                     @if(isset($classroom['new_alternative_report']))
                         <td>
                             @isset($reportCards[$classroom['old_alternative_report']])
-                                {{ $reportCards[$classroom['old_alternative_report']] }}
+                                {!! $reportCards[$classroom['old_alternative_report']] !!}
                             @endisset
                         </td>
-                        <td>{{ $reportCards[$classroom['new_alternative_report']] }}</td>
+                        <td>{!! $reportCards[$classroom['new_alternative_report']] !!}</td>
                     @endif
                 </tr>
             @endforeach

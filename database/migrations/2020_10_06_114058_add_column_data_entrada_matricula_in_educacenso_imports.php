@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CriaCampoParaImportacaoDeSerieNoPreMatricula extends Migration
+class AddColumnDataEntradaMatriculaInEducacensoImports extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CriaCampoParaImportacaoDeSerieNoPreMatricula extends Migration
      */
     public function up()
     {
-        Schema::table('pmieducar.serie', function (Blueprint $table) {
-            $table->addColumn('boolean', 'importar_serie_pre_matricula')->default(false);
+        Schema::table('public.educacenso_imports', function (Blueprint $table) {
+            $table->date('registration_date')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class CriaCampoParaImportacaoDeSerieNoPreMatricula extends Migration
      */
     public function down()
     {
-        Schema::table('pmieducar.serie', function (Blueprint $table) {
-            $table->dropColumn('importar_serie_pre_matricula');
+        Schema::table('public.educacenso_imports', function (Blueprint $table) {
+            $table->dropColumn('registration_date');
         });
     }
 }
