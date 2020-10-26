@@ -154,7 +154,6 @@
             <tr>
                 <td class="formlttd" valign="top">
                     <span class="form">Tipo de etapa</span>
-                    <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
                     @include('form.stage-type')
@@ -290,10 +289,26 @@
             });
         })(jQuery);
 
-        $j('#ref_cod_serie, #ref_cod_turma').on('change', function () {
+        $j('#ref_cod_serie').on('change', function () {
             setTimeout(function () {
                 $j('#ref_cod_componente_curricular').trigger('chosen:updated');
             }, 1000);
+        });
+
+        $j('#ref_cod_turma').on('change', function () {
+            if (!$j(this).val()) {
+                return;
+            }
+
+            $j.ajax({
+                url: '/api/school-class/stages/' + $j(this).val(),
+                dataType: 'json',
+                success: function (response) {
+                    var stageType = response[0].ref_cod_modulo;
+                    $j('#stage_type').val(stageType).trigger('change');
+                    $j('#ref_cod_componente_curricular').trigger('chosen:updated');
+                }
+            });
         });
     </script>
     <script type="text/javascript"
