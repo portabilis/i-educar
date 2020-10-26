@@ -59,10 +59,10 @@ class BatchExemptionJob implements ShouldQueue
         try {
             $this->batchExemptionService->handle();
         } catch (Throwable $exception) {
-            $this->notificateError();
-
             DB::rollBack();
-            return;
+
+            $this->notificateError();
+            throw $exception;
         }
 
         $this->notificateSuccess();
@@ -80,6 +80,11 @@ class BatchExemptionJob implements ShouldQueue
     public function getSuccessMessage()
     {
         return 'O processo de Dispensa em lote foi finalizado.';
+    }
+
+    public function getErrorMessage()
+    {
+        return 'Não foi possível finalizar o processo de dispensa em lote.';
     }
 
     public function getNotificationUrl()
