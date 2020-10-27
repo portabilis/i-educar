@@ -326,8 +326,8 @@ class indice extends clsCadastro
             $this->campoTextoInv(
                 'total_horas_alocadas_',
                 'Total de Horas Alocadadas',
-                $this->total_horas_alocadas . ':00',
-                9,
+                $this->total_horas_alocadas == null ? '00:00' : $this->total_horas_alocadas . ':00',
+                6,
                 20
             );
 
