@@ -116,13 +116,10 @@ class indice extends clsCadastro
                     WHERE
                         ref_cod_servidor = %d AND
                         ativo = 1
-                        AND ano = (
-                            SELECT max(ano)
-                            FROM pmieducar.servidor_alocacao
-                            WHERE ref_cod_servidor = %d
-                        )',
+                        AND ano = %d
+                        AND (data_saida > now() or data_saida is null)',
                     $this->cod_servidor,
-                    $this->cod_servidor
+                    $this->ano ?: date('Y')
                 );
 
                 $db->Consulta($sql);
