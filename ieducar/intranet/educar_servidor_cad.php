@@ -326,11 +326,16 @@ class indice extends clsCadastro
 
         $this->campoTabelaFim();
 
+        $horas = '00:00';
+        if ($this->total_horas_alocadas) {
+            $horas = $this->total_horas_alocadas . ':00';
+        }
+
         if (strtoupper($this->tipoacao) == 'EDITAR') {
             $this->campoTextoInv(
                 'total_horas_alocadas_',
                 'Total de Horas Alocadadas',
-                ($this->total_horas_alocadas == null ? '00:00' : $this->total_horas_alocadas) . ':00',
+                $horas,
                 6,
                 20
             );
@@ -352,7 +357,7 @@ class indice extends clsCadastro
             'Carga Horária',
             $hora_formatada,
             true,
-            'Número de horas deve ser maior que horas alocadas',
+            ' Número de horas deve ser maior que horas alocadas',
             '',
             false
         );
