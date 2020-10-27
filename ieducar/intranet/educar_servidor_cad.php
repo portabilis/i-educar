@@ -357,7 +357,7 @@ class indice extends clsCadastro
             'Carga Horária',
             $hora_formatada,
             true,
-            'Número de horas deve ser maior que horas alocadas',
+            ' Número de horas deve ser maior que horas alocadas',
             '',
             false
         );
