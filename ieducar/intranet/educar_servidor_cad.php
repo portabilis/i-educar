@@ -91,6 +91,10 @@ class indice extends clsCadastro
 
             $registro = $obj->detalhe();
 
+            if (empty($registro)) {
+                return $this->simpleRedirect(url('intranet/educar_servidor_lst.php'));
+            }
+
             if ($registro) {
                 // passa todos os valores obtidos no registro para atributos do objeto
                 foreach ($registro as $campo => $val) {
