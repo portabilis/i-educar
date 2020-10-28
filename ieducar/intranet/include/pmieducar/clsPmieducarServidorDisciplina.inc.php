@@ -291,7 +291,8 @@ class clsPmieducarServidorDisciplina extends Model
         if (is_numeric($this->ref_ref_cod_instituicao) &&
             is_numeric($this->ref_cod_servidor)) {
             $where = '';
-            if ($funcao != null) {
+
+            if (!empty($funcao) && !empty($funcao[0])) {
                 $funcao = implode(',', $funcao);
                 $where = "AND ref_cod_funcao in ({$funcao})";
             }
