@@ -396,7 +396,8 @@ class indice extends clsDetalhe
             ->join('pmieducar.curso', 'curso.cod_curso', 'servidor_disciplina.ref_cod_curso')
             ->join('modules.componente_curricular', 'componente_curricular.id', 'servidor_disciplina.ref_cod_disciplina')
             ->where([['servidor_funcao.ref_cod_servidor', $cod_servidor]])
-            ->groupBy('professor', 'matricula', 'nm_funcao', 'pmieducar.servidor_funcao.matricula', 'nm_curso')
+            ->groupBy('professor', 'nm_funcao', 'pmieducar.servidor_funcao.matricula', 'nm_curso')
+            ->orderBy('matricula', 'asc')
             ->get();
     }
 }
