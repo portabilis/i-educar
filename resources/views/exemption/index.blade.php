@@ -96,7 +96,7 @@
                     <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->createdBy->name }}</a>
                 </td>
                 <td>
-                    <a href="{{ $exemptionUrl }}" target="_blank">@if($exemption->batch) {{ 'Sim' }} @endif</a>
+                    <a href="{{ $exemptionUrl }}" target="_blank">@if($exemption->batch) Sim @else Não @endif</a>
                 </td>
             </tr>
         @empty
