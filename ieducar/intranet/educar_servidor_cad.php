@@ -131,6 +131,9 @@ class indice extends clsCadastro
                     $cargaHoraria = $db->Tupla();
                     $cargaHoraria = $cargaHoraria['sum'];
                 }
+
+                $cargaHoraria = str_pad($cargaHoraria, 2, 0, STR_PAD_LEFT);
+
                 $this->total_horas_alocadas = $cargaHoraria;
 
                 // Funções
