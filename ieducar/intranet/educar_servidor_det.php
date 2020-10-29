@@ -394,7 +394,7 @@ class indice extends clsDetalhe
     private function getEmployeeFunctions($cod_servidor)
     {
         return DB::table('pmieducar.servidor_funcao')
-            ->select(DB::raw('nm_funcao, pmieducar.servidor_funcao.matricula, nm_curso, array_to_string(array_agg(componente_curricular.nome), \', \') as nome, funcao.professor'))
+            ->select(DB::raw('nm_funcao, pmieducar.servidor_funcao.matricula, nm_curso, array_to_string(array_agg(componente_curricular.nome), \'; \') as nome, funcao.professor'))
             ->join('pmieducar.funcao', 'funcao.cod_funcao', 'servidor_funcao.ref_cod_funcao')
             ->leftJoin('pmieducar.servidor_disciplina', 'servidor_disciplina.ref_cod_funcao', 'servidor_funcao.cod_servidor_funcao')
             ->leftJoin('modules.componente_curricular', 'componente_curricular.id', 'servidor_disciplina.ref_cod_disciplina')

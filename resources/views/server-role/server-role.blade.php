@@ -4,10 +4,10 @@
         <span class="form">
             <table class="table-detail">
                 <tr>
-                    <th>Função</th>
+                    <th style="width: 200px">Função</th>
                     <th>Matrícula</th>
-                    <th>Cursos ministrados</th>
-                    <th>Componentes curriculares</th>
+                    <th style="width: 300px">Cursos ministrados</th>
+                    <th style="width: 300px">Componentes curriculares</th>
                 </tr>
                 @if(isset($serverfunction))
                     @foreach($serverfunction as $function)
@@ -18,8 +18,8 @@
                                 <td>{{$function->nm_curso}}</td>
                                 <td>{{$function->nome}}</td>
                             @else
-                                <td colspan="2"></td>
-                                <td colspan="2"></td>
+                                <td></td>
+                                <td></td>
                             @endif
                         </tr>
                     @endforeach
