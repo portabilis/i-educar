@@ -21,7 +21,7 @@ class UpdateSchoolClassReportCardController extends Controller
     public function index(Request $request)
     {
         if (!$request->user()->isAdmin() && !$request->user()->isInstitutional()) {
-            return redirect('/');
+            return back()->withErrors(['Error' => ['Você não tem permissão para acessar este recurso']]);
         }
 
         $this->breadcrumb('Atualização de boletins em lote', [
