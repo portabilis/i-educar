@@ -12,36 +12,35 @@ require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
         $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Disciplina');
         $this->processoAp         = 0;
-        $this->renderBanner       = FALSE;
-        $this->renderMenu         = FALSE;
-        $this->renderMenuSuspenso = FALSE;
+        $this->renderBanner       = false;
+        $this->renderMenu         = false;
+        $this->renderMenuSuspenso = false;
     }
 }
 
 class indice extends clsCadastro
 {
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_servidor;
-    var $ref_cod_instituicao;
-    var $ref_idesco;
-    var $ref_cod_funcao;
-    var $carga_horaria;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $ref_cod_curso;
-    var $ref_cod_disciplina;
-    var $cursos_disciplina;
+    public $cod_servidor;
+    public $ref_cod_instituicao;
+    public $ref_idesco;
+    public $ref_cod_funcao;
+    public $carga_horaria;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_curso;
+    public $ref_cod_disciplina;
+    public $cursos_disciplina;
 
-    function Inicializar()
+    public function Inicializar()
     {
         $retorno = 'Novo';
-
 
         $this->cod_servidor = $_GET['ref_cod_servidor'];
         $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
@@ -49,12 +48,24 @@ class indice extends clsCadastro
 
         $obj_permissoes = new clsPermissoes();
 
-        $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7,
-            'educar_servidor_lst.php');
+        $obj_permissoes->permissao_cadastra(
+            635,
+            $this->pessoa_logada,
+            7,
+            'educar_servidor_lst.php'
+        );
 
         if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
-            $obj = new clsPmieducarServidor($this->cod_servidor, NULL, NULL, NULL,
-                NULL, NULL, NULL, $this->ref_cod_instituicao);
+            $obj = new clsPmieducarServidor(
+                $this->cod_servidor,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                $this->ref_cod_instituicao
+            );
 
             $registro  = $obj->detalhe();
             if ($registro) {
@@ -68,14 +79,20 @@ class indice extends clsCadastro
                 $result = collect($disciplinas)->filter(function ($funcao) {
                     return $funcao == $this->ref_cod_funcao;
                 });
+
                 return $result->count();
             })->toArray();
         }
 
         if (!empty($this->ref_cod_funcao) && (!$this->cursos_disciplina || !in_array($this->ref_cod_funcao, Session::get('cod_funcao', [])))) {
             $obj_servidor_disciplina = new clsPmieducarServidorDisciplina();
-            $lst_servidor_disciplina = $obj_servidor_disciplina->lista(NULL,
-                $this->ref_cod_instituicao, $this->cod_servidor, NULL, $this->ref_cod_funcao);
+            $lst_servidor_disciplina = $obj_servidor_disciplina->lista(
+                null,
+                $this->ref_cod_instituicao,
+                $this->cod_servidor,
+                null,
+                $this->ref_cod_funcao
+            );
 
             if ($lst_servidor_disciplina) {
                 foreach ($lst_servidor_disciplina as $disciplina) {
@@ -104,16 +121,40 @@ class indice extends clsCadastro
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
-        $opcoes = $opcoes_curso = array('' => 'Selecione');
+        $opcoes = $opcoes_curso = ['' => 'Selecione'];
 
         $obj_cursos = new clsPmieducarCurso();
         $obj_cursos->setOrderby('nm_curso');
-        $lst_cursos = $obj_cursos->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-            NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-            NULL, NULL, NULL,1, NULL, $this->ref_cod_instituicao);
+        $lst_cursos = $obj_cursos->lista(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            1,
+            null,
+            $this->ref_cod_instituicao
+        );
 
         if ($lst_cursos) {
             foreach ($lst_cursos as $curso) {
@@ -123,9 +164,8 @@ class indice extends clsCadastro
 
         $obj_disciplina = new clsPmieducarDisciplina();
         $obj_disciplina->setOrderby('nm_disciplina');
-        $lst_opcoes = array();
-        $arr_valores = array();
-
+        $lst_opcoes = [];
+        $arr_valores = [];
 
         if ($this->cursos_disciplina) {
             foreach ($this->cursos_disciplina as $curso => $disciplinas) {
@@ -134,7 +174,7 @@ class indice extends clsCadastro
                         if ($funcao != $this->ref_cod_funcao) {
                             continue;
                         }
-                        $arr_valores[] = array($curso, $disciplina);
+                        $arr_valores[] = [$curso, $disciplina];
                     }
                 }
             }
@@ -145,30 +185,52 @@ class indice extends clsCadastro
             foreach ($cursosDifferente as $curso) {
                 $obj_componentes = new clsModulesComponenteCurricular;
                 $componentes     = $obj_componentes->listaComponentesPorCurso($this->ref_cod_instituicao, $curso);
-                $opcoes_disc = array();
+                $opcoes_disc = [];
                 $opcoes_disc['todas_disciplinas']  = 'Todas as disciplinas';
 
                 $total_componentes = count($componentes);
                 for ($i=0; $i < $total_componentes; $i++) {
                     $opcoes_disc[$componentes[$i]['id']]  = $componentes[$i]['nome'];
                 }
-                $disciplinasCurso[$curso] = array($opcoes_curso, $opcoes_disc);
+                $disciplinasCurso[$curso] = [$opcoes_curso, $opcoes_disc];
             }
             foreach ($this->ref_cod_curso as $curso) {
                 $lst_opcoes[] = $disciplinasCurso[$curso];
             }
         }
 
-        $this->campoTabelaInicio('funcao', 'Componentes Curriculares', array('Curso', 'Componente Curricular'),
-            $arr_valores, '', $lst_opcoes);
+        $this->campoTabelaInicio(
+            'funcao',
+            'Componentes Curriculares',
+            ['Curso', 'Componente Curricular'],
+            $arr_valores,
+            '',
+            $lst_opcoes
+        );
 
         // Cursos
-        $this->campoLista('ref_cod_curso', 'Curso', $opcoes_curso,
-            $this->ref_cod_curso, 'trocaCurso(this)', '', '', '');
+        $this->campoLista(
+            'ref_cod_curso',
+            'Curso',
+            $opcoes_curso,
+            $this->ref_cod_curso,
+            'trocaCurso(this)',
+            '',
+            '',
+            ''
+        );
 
         // Disciplinas
-        $this->campoLista('ref_cod_disciplina', 'Componente Curricular', $opcoes,
-            $this->ref_cod_disciplina, '', '', '', '');
+        $this->campoLista(
+            'ref_cod_disciplina',
+            'Componente Curricular',
+            $opcoes,
+            $this->ref_cod_disciplina,
+            '',
+            '',
+            '',
+            ''
+        );
 
         $this->campoTabelaFim();
     }
@@ -180,7 +242,7 @@ class indice extends clsCadastro
 
         if ($this->ref_cod_curso) {
             for ($i = 0, $loop = count($this->ref_cod_curso); $i < $loop; $i++) {
-                if ($this->ref_cod_disciplina[$i] == 'todas_disciplinas'){
+                if ($this->ref_cod_disciplina[$i] == 'todas_disciplinas') {
                     $componenteAnoDataMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
                     $componentes = $componenteAnoDataMapper->findComponentePorCurso($this->ref_cod_curso[$i]);
 
@@ -190,7 +252,7 @@ class indice extends clsCadastro
                         $disciplina = $componente->id;
                         $cursos_disciplina[$curso][$disciplina] = $this->getQueryString('cod_funcao');
                     }
-                }else{
+                } else {
                     $curso = $this->ref_cod_curso[$i];
                     $curso_servidor[$curso] = $curso;
                     $disciplina = $this->ref_cod_disciplina[$i];
@@ -213,13 +275,14 @@ class indice extends clsCadastro
         die;
     }
 
-    public function Editar() {
+    public function Editar()
+    {
         return $this->Novo();
     }
 
-    function Excluir()
+    public function Excluir()
     {
-        return FALSE;
+        return false;
     }
 }
 

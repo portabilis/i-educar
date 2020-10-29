@@ -70,6 +70,7 @@ class clsPmieducarServidorDisciplina extends Model
      * Cria um novo registro.
      *
      * @return bool
+     * @throws Exception
      */
     public function cadastra()
     {
@@ -125,6 +126,7 @@ class clsPmieducarServidorDisciplina extends Model
      * Edita os dados de um registro.
      *
      * @return bool
+     * @throws Exception
      */
     public function edita()
     {
@@ -150,6 +152,7 @@ class clsPmieducarServidorDisciplina extends Model
      * Retorna uma lista de registros filtrados de acordo com os parâmetros.
      *
      * @return array
+     * @throws Exception
      */
     public function lista(
         $int_ref_cod_disciplina = null,
@@ -222,6 +225,7 @@ class clsPmieducarServidorDisciplina extends Model
      * Retorna um array com os dados de um registro.
      *
      * @return array
+     * @throws Exception
      */
     public function detalhe()
     {
@@ -244,6 +248,7 @@ class clsPmieducarServidorDisciplina extends Model
      * Retorna um array com os dados de um registro.
      *
      * @return array
+     * @throws Exception
      */
     public function existe()
     {

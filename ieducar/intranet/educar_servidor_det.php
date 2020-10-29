@@ -387,6 +387,10 @@ class indice extends clsDetalhe
     ]);
     }
 
+    /**
+     * @param $cod_servidor
+     * @return mixed
+     */
     private function getEmployeeFunctions($cod_servidor)
     {
         return DB::table('pmieducar.servidor_funcao')

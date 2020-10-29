@@ -302,7 +302,7 @@ class indice extends clsCadastro
             ($this->ref_cod_funcao)
         );
 
-        $funcao = "popless(this)";
+        $funcao = 'popless(this)';
 
         $this->campoLista('ref_cod_funcao', 'Função', $opcoes, $this->ref_cod_funcao, 'funcaoChange(this)', '', '', '');
 
@@ -874,6 +874,7 @@ JS;
     public function cadastraFuncao($funcao, $matricula)
     {
         $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor, $funcao, $matricula);
+
         return $obj_servidor_funcao->cadastra();
     }
 
