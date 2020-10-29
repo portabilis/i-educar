@@ -246,7 +246,7 @@ class indice extends clsCadastro
             return false;
         }
 
-        $exemptionService->runsPromotion($registration);
+        $exemptionService->runsPromotion($registration, $this->etapa);
 
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
         $this->simpleRedirect('educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
