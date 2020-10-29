@@ -391,10 +391,10 @@ class indice extends clsDetalhe
     {
         return DB::table('pmieducar.servidor_funcao')
             ->select(DB::raw('nm_funcao, pmieducar.servidor_funcao.matricula, nm_curso, array_to_string(array_agg(componente_curricular.nome), \', \') as nome, funcao.professor'))
-            ->join('pmieducar.servidor_disciplina', 'servidor_disciplina.ref_cod_funcao', 'servidor_funcao.cod_servidor_funcao')
             ->join('pmieducar.funcao', 'funcao.cod_funcao', 'servidor_funcao.ref_cod_funcao')
-            ->join('pmieducar.curso', 'curso.cod_curso', 'servidor_disciplina.ref_cod_curso')
-            ->join('modules.componente_curricular', 'componente_curricular.id', 'servidor_disciplina.ref_cod_disciplina')
+            ->leftJoin('pmieducar.servidor_disciplina', 'servidor_disciplina.ref_cod_funcao', 'servidor_funcao.cod_servidor_funcao')
+            ->leftJoin('modules.componente_curricular', 'componente_curricular.id', 'servidor_disciplina.ref_cod_disciplina')
+            ->leftJoin('pmieducar.curso', 'curso.cod_curso', 'servidor_disciplina.ref_cod_curso')
             ->where([['servidor_funcao.ref_cod_servidor', $cod_servidor]])
             ->groupBy('professor', 'nm_funcao', 'pmieducar.servidor_funcao.matricula', 'nm_curso')
             ->orderBy('matricula', 'asc')
