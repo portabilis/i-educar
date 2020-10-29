@@ -20,12 +20,8 @@ class BatchExemptionController extends Controller
      * @param Request $request
      * @return View
      */
-    public function index(Request $request)
+    public function index()
     {
-        if(!$request->user()->isAdmin() && !$request->user()->isInstitutional()) {
-            return redirect('/intranet/educar_configuracoes_index.php');
-        }
-
         $this->breadcrumb('Dispensa em lote', [
             url('intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
