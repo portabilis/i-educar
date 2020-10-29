@@ -43,9 +43,6 @@
                     <span class="form">
                         <select class="geral" name="ref_cod_curso" id="ref_cod_curso" style="width: 308px;">
                             <option value="">Selecione um curso</option>
-                            @foreach(App_Model_IedFinder::getCursos(old('ref_cod_escola', Request::get('ref_cod_escola'))) as $id => $name)
-                                <option value="{{$id}}">{{$name}}</option>
-                            @endforeach
                         </select>
                     </span>
 
@@ -69,9 +66,7 @@
                     <span class="form">
                         <select class="geral" name="ref_cod_serie" id="ref_cod_serie" style="width: 308px;">
                             <option value="">Selecione uma série</option>
-                            @foreach(App_Model_IedFinder::getSeries(null, old('ref_cod_escola', Request::get('ref_cod_escola')), old('ref_cod_curso', Request::get('ref_cod_curso'))) as $id => $name)
-                                <option value="{{$id}}">{{$name}}</option>
-                            @endforeach
+
                         </select>
                     </span>
 
