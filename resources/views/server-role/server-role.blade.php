@@ -1,4 +1,3 @@
-@inject('service', 'App\Services\UrlPresigner')
 <tr id="tr_funcao_servidor">
     <td class="formmdtd" valign="top"><span class="form">Função:</span></td>
     <td class="formmdtd" valign="top">
@@ -18,6 +17,9 @@
                             @if($function->professor === 1)
                                 <td>{{$function->nm_curso}}</td>
                                 <td>{{$function->nome}}</td>
+                            @else
+                                <td colspan="2"></td>
+                                <td colspan="2"></td>
                             @endif
                         </tr>
                     @endforeach

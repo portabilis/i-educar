@@ -2,13 +2,9 @@
 
 namespace App\Models;
 
-use App\Functions;
-use App\ServerCourseMinister;
-use App\ServerFunction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\DB;
 
 class Employee extends Model
 {
@@ -97,6 +93,4 @@ class Employee extends Model
             'ref_cod_disciplina'
         )->withPivot('ref_ref_cod_instituicao', 'ref_cod_curso');
     }
-
-
 }
