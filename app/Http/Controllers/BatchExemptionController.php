@@ -20,8 +20,12 @@ class BatchExemptionController extends Controller
      * @param Request $request
      * @return View
      */
-    public function index()
+    public function index(Request $request)
     {
+        if (!$request->user()->isAdmin() && !$request->user()->isInstitutional()) {
+            return back()->withErrors(['Error' => ['Você não tem permissão para acessar este recurso']]);
+        }
+
         $this->breadcrumb('Dispensa em lote', [
             url('intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
