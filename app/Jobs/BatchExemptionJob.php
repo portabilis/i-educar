@@ -89,7 +89,7 @@ class BatchExemptionJob implements ShouldQueue
 
     public function getNotificationUrl()
     {
-        return url()->route('exemption-list.index');
+        return '/consulta-dispensas';
     }
 
     public function getUser()
