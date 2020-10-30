@@ -63,7 +63,7 @@
 
     <table class="table-default">
         <tr class="titulo-tabela-listagem">
-            <th colspan="5">Dispensas - Listagem</th>
+            <th colspan="7">Dispensas - Listagem</th>
         </tr>
         <tr>
             <td style="font-weight:bold;">Ano</td>
@@ -71,6 +71,8 @@
             <td style="font-weight:bold;">Componente curricular</td>
             <td style="font-weight:bold;">Tipo de dispensa</td>
             <td style="font-weight:bold;">Data da dispensa</td>
+            <td style="font-weight:bold;">Feito por</td>
+            <td style="font-weight:bold;">Feito em lote</td>
         </tr>
         @forelse($exemptions as $exemption)
             @php $exemptionUrl = url('intranet/educar_dispensa_disciplina_det.php?ref_cod_matricula=' . $exemption->ref_cod_matricula . '&ref_cod_serie=' . $exemption->ref_cod_serie . '&ref_cod_escola=' . $exemption->ref_cod_escola . '&ref_cod_disciplina=' . $exemption->ref_cod_disciplina) @endphp
@@ -89,6 +91,12 @@
                 </td>
                 <td>
                     <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->data_cadastro->format('d/m/Y') }}</a>
+                </td>
+                <td>
+                    <a href="{{ $exemptionUrl }}" target="_blank">{{ $exemption->createdBy->name }}</a>
+                </td>
+                <td>
+                    <a href="{{ $exemptionUrl }}" target="_blank">@if($exemption->batch) Sim @else Não @endif</a>
                 </td>
             </tr>
         @empty
