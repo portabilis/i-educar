@@ -18,8 +18,7 @@
                                 <td>{{$function->nm_curso}}</td>
                                 <td>{{$function->nome}}</td>
                             @else
-                                <td></td>
-                                <td></td>
+                                <td colspan="2"></td>
                             @endif
                         </tr>
                     @endforeach
