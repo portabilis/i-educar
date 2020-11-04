@@ -1456,3 +1456,6 @@ a.btn-detalhes {
 #ref_cod_escola_chosen a.chosen-single {
   width: 100% !important;
 }
+#componentes_turma_cad td{
+  padding: 5px;
+}

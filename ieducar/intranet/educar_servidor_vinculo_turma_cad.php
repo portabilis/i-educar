@@ -289,6 +289,10 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
+        if (empty($this->id)) {
+            $this->simpleRedirect(url('/intranet/educar_servidor_vinculo_turma_lst.php'));
+        }
+
         $backUrl = sprintf(
             'educar_servidor_vinculo_turma_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
             $this->servidor_id,

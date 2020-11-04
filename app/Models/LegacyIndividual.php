@@ -132,6 +132,14 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
     /**
      * @return HasOne
      */
+    public function student()
+    {
+        return $this->hasOne(LegacyStudent::class, 'ref_idpes', 'idpes');
+    }
+
+    /**
+     * @return HasOne
+     */
     public function document()
     {
         return $this->hasOne(LegacyDocument::class, 'idpes');

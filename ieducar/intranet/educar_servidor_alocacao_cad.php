@@ -169,6 +169,7 @@ class indice extends clsCadastro
         );
 
         $carga = $this->carga_horaria_disponivel;
+        $carga = str_pad($carga, 2, 0, STR_PAD_LEFT);
         $this->campoRotulo('carga_horaria_disponivel', 'Carga horária do servidor', $carga . ':00');
         $cargadisponivel = $servidorAlocacao->getCargaHorariaAno();
         $this->campoRotulo('carga_horaria_sem_alocacao', 'Carga horária alocada', substr($cargadisponivel, 0, -3));

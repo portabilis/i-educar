@@ -190,6 +190,12 @@ class PromocaoApiController extends ApiCoreController
 
     protected function getNota($etapa = null, $componenteCurricularId)
     {
+        $notaComponente = $this->boletimService()->getNotaComponente($componenteCurricularId, $etapa);
+
+        if (empty($notaComponente)) {
+            return '';
+        }
+
         // FIXME #parameters
         $nota = urldecode($this->boletimService()->getNotaComponente($componenteCurricularId, $etapa)->nota);
 
@@ -285,7 +291,7 @@ class PromocaoApiController extends ApiCoreController
 
                 if ($hasNotaOrParecerInEtapa) {
                     // FIXME #parameters
-                    $falta = $this->boletimService()->getFalta($etapa)->quantidade;
+                    $falta = $this->boletimService()->getFalta($etapa) ? $this->boletimService()->getFalta($etapa)->quantidade : null;
 
                     if (is_null($falta)) {
                         $notaFalta = new Avaliacao_Model_FaltaGeral([
