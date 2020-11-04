@@ -34,7 +34,7 @@ class clsFisica
      */
     public $nacionalidade;
 
-    public $idpais_estrangeiro;
+    public $idpais_estrangeiro = false;
     public $data_chagada_brasil;
     public $idmun_nascimento;
     public $ultima_empresa;
@@ -529,7 +529,7 @@ class clsFisica
             if ($this->idpais_estrangeiro && $this->nacionalidade != Nacionalidade::BRASILEIRA) {
                 $set .= "$gruda idpais_estrangeiro = {$this->idpais_estrangeiro}";
                 $gruda = ', ';
-            } else {
+            } elseif ($this->idpais_estrangeiro !== false) {
                 $set .= "$gruda idpais_estrangeiro = null";
                 $gruda = ', ';
             }
