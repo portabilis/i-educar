@@ -59,7 +59,7 @@ class RegrasGeraisRegistro30 implements EducacensoExportRule
             $registro30->localizacaoDiferenciada = null;
         }
 
-        if ($registro30->escolaridade != Escolaridade::ENSINO_MEDIO) {
+        if ($registro30->escolaridade != Escolaridade::ENSINO_MEDIO && $registro30->escolaridade != Escolaridade::EDUCACAO_SUPERIOR) {
             $registro30->tipoEnsinoMedioCursado = null;
         }
 
