@@ -175,7 +175,7 @@ class indice extends clsDetalhe
 
         $serverfunction = $this->getEmployeeFunctions($this->cod_servidor);
         if (count($serverfunction) > 0) {
-            $this->addHtml(view('server-role.server-role', ['serverfunction' => $serverfunction])->render());
+            $this->addDetalhe(view('server-role.server-role', ['serverfunction' => $serverfunction])->render());
         }
 
         $tabela = null;

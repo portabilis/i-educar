@@ -38,7 +38,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
 
   public function addHtml($html)
   {
-      $this->detalhe[] = $html;
+      $this->detalhe['html'] = $html;
   }
 
   function enviaLocalizacao($localizao){
