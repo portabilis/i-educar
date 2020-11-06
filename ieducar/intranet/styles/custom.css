@@ -1453,9 +1453,11 @@ a.btn-detalhes {
   color: #FF6600;
 }
 
-#ref_cod_escola_chosen a.chosen-single {
+#ref_cod_escola_chosen a.chosen-single,
+#escola_chosen a.chosen-single{
   width: 100% !important;
 }
+
 #componentes_turma_cad td{
   padding: 5px;
 }
