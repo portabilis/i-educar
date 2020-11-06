@@ -4,6 +4,7 @@ use App\Models\City;
 use App\Models\Country;
 use App\Models\PersonHasPlace;
 use App\Services\UrlPresigner;
+use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
@@ -364,7 +365,7 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Nacionalidade', $registro['nacionalidade']]);
         }
 
-        if ($registro['pais_origem']) {
+        if ($registro['pais_origem'] && $registro['nacionalidade'] != Nacionalidade::BRASILEIRA) {
             $this->addDetalhe(['País de Origem', $registro['pais_origem']]);
         }
 
