@@ -28,7 +28,7 @@ class indice extends clsDetalhe
     {
         $this->titulo = 'Detalhe da Pessoa';
 
-        $cod_pessoa = $this->getQueryString('cod_pessoa');
+        $cod_pessoa = (int) $this->getQueryString('cod_pessoa');
 
         $objPessoa = new clsPessoaFisica($cod_pessoa);
         $db = new clsBanco();

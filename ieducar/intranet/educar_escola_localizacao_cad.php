@@ -4,7 +4,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/geral.inc.php");
-require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -84,8 +83,6 @@ class indice extends clsCadastro
 
     function Novo()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 562, $this->pessoa_logada, 3, "educar_escola_localizacao_lst.php" );
 
@@ -93,12 +90,6 @@ class indice extends clsCadastro
         $cadastrou = $obj->cadastra();
         if( $cadastrou )
         {
-            $escolaLocalizacao = new clsPmieducarEscolaLocalizacao($cadastrou);
-            $escolaLocalizacao = $escolaLocalizacao->detalhe();
-
-            $auditoria = new clsModulesAuditoriaGeral("escola_localizacao", $this->pessoa_logada, $cadastrou);
-            $auditoria->inclusao($escolaLocalizacao);
-
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
             $this->simpleRedirect('educar_escola_localizacao_lst.php');
         }
@@ -110,11 +101,6 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
-        $escolaLocalizacaoDetalhe = new clsPmieducarEscolaLocalizacao($this->cod_escola_localizacao);
-        $escolaLocalizacaoDetalheAntes = $escolaLocalizacaoDetalhe->detalhe();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 562, $this->pessoa_logada, 3, "educar_escola_localizacao_lst.php" );
 
@@ -122,10 +108,6 @@ class indice extends clsCadastro
         $editou = $obj->edita();
         if( $editou )
         {
-            $escolaLocalizacaoDetalheDepois = $escolaLocalizacaoDetalhe->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral("escola_localizacao", $this->pessoa_logada, $this->cod_escola_localizacao);
-            $auditoria->alteracao($escolaLocalizacaoDetalheAntes, $escolaLocalizacaoDetalheDepois);
-
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_escola_localizacao_lst.php');
         }
@@ -137,19 +119,13 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 562, $this->pessoa_logada, 3, "educar_escola_localizacao_lst.php" );
 
         $obj = new clsPmieducarEscolaLocalizacao( $this->cod_escola_localizacao,$this->pessoa_logada,null,null,null,null,0 );
-        $escolaLocalizacao = $obj->detalhe();
         $excluiu = $obj->excluir();
         if( $excluiu )
         {
-            $auditoria = new clsModulesAuditoriaGeral("escola_localizacao", $this->pessoa_logada, $this->cod_escola_localizacao);
-            $auditoria->exclusao($escolaLocalizacao);
-
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_escola_localizacao_lst.php');
         }

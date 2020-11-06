@@ -6,7 +6,6 @@ use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Session;
 
 require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsPmieducarHistoricoEscolar extends Model
 {
@@ -345,8 +344,6 @@ class clsPmieducarHistoricoEscolar extends Model
 
             if ($this->ref_cod_aluno) {
                 $detalhe = $this->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('historico_escolar', $this->pessoa_logada, $this->ref_cod_aluno);
-                $auditoria->inclusao($detalhe);
             }
 
             return $this->sequencial;
@@ -519,8 +516,6 @@ class clsPmieducarHistoricoEscolar extends Model
             if ($set) {
                 $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_aluno = '{$this->ref_cod_aluno}' AND sequencial = '{$this->sequencial}'");
-                $auditoria = new clsModulesAuditoriaGeral('historico_escolar', $this->pessoa_logada, $this->ref_cod_aluno);
-                $auditoria->alteracao($detalheAntigo, $this->detalhe());
 
                 return true;
             }
@@ -768,7 +763,7 @@ class clsPmieducarHistoricoEscolar extends Model
                 $ref_usuario_cad = $pessoa_logada,
                 $detMatricula['nome_serie'],
                 $detMatricula['ano'],
-                1000,
+                $detMatricula['carga_horaria'],
                 null,
                 strtoupper($dadosEscola['nome']),
                 strtoupper($dadosEscola['cidade']),
@@ -829,7 +824,7 @@ class clsPmieducarHistoricoEscolar extends Model
 
     protected static function dadosMatricula($ref_cod_matricula)
     {
-        $sql = "SELECT m.ref_cod_aluno, nm_serie as nome_serie, s.cod_serie, m.ano, m.ref_ref_cod_escola, c.ref_cod_instituicao, c.nm_curso as nome_curso
+        $sql = "SELECT m.ref_cod_aluno, nm_serie as nome_serie, s.cod_serie, m.ano, m.ref_ref_cod_escola, c.ref_cod_instituicao, c.nm_curso as nome_curso, s.carga_horaria
             FROM pmieducar.matricula m
             INNER JOIN pmieducar.serie s ON m.ref_ref_cod_serie = s.cod_serie
             INNER JOIN pmieducar.curso c ON m.ref_cod_curso = c.cod_curso

@@ -4,7 +4,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/geral.inc.php");
-require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -105,8 +104,6 @@ class indice extends clsCadastro
 
     function Novo()
     {
-
-
         $this->atividade_complementar = is_null($this->atividade_complementar) ? FALSE : TRUE;
 
         $obj = new clsPmieducarTipoEnsino();
@@ -118,12 +115,6 @@ class indice extends clsCadastro
         $cadastrou = $obj->cadastra();
         if( $cadastrou )
         {
-            $tipoEnsino = new clsPmieducarTipoEnsino($cadastrou);
-            $tipoEnsino = $tipoEnsino->detalhe();
-
-            $auditoria = new clsModulesAuditoriaGeral("tipo_ensino", $this->pessoa_logada, $cadastrou);
-            $auditoria->inclusao($tipoEnsino);
-
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
             $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
@@ -135,12 +126,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
         $this->atividade_complementar = is_null($this->atividade_complementar) ? FALSE : TRUE;
-
-        $tipoEnsinoDetalhe = new clsPmieducarTipoEnsino($this->cod_tipo_ensino);
-        $tipoEnsinoDetalheAntes = $tipoEnsinoDetalhe->detalhe();
 
         $obj = new clsPmieducarTipoEnsino();
         $obj->cod_tipo_ensino        = $this->cod_tipo_ensino;
@@ -153,10 +139,6 @@ class indice extends clsCadastro
         $editou = $obj->edita();
         if( $editou )
         {
-            $tipoEnsinoDetalheDepois = $tipoEnsinoDetalhe->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral("tipo_ensino", $this->pessoa_logada, $this->cod_tipo_ensino);
-            $auditoria->alteracao($tipoEnsinoDetalheAntes, $tipoEnsinoDetalheDepois);
-
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }
@@ -168,16 +150,10 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-
-
         $obj = new clsPmieducarTipoEnsino($this->cod_tipo_ensino, $this->pessoa_logada, null, $this->nm_tipo, null, null, 0);
-        $tipoEnsino = $obj->detalhe();
         $excluiu = $obj->excluir();
         if( $excluiu )
         {
-            $auditoria = new clsModulesAuditoriaGeral("tipo_ensino", $this->pessoa_logada, $this->cod_tipo_ensino);
-            $auditoria->exclusao($tipoEnsino);
-
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_tipo_ensino_lst.php');
         }

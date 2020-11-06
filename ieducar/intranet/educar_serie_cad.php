@@ -7,7 +7,6 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 require_once 'RegraAvaliacao/Model/SerieAnoDataMapper.php';
 require_once 'RegraAvaliacao/Model/SerieAno.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -53,6 +52,7 @@ class indice extends clsCadastro
     public $alerta_faixa_etaria;
     public $bloquear_matricula_faixa_etaria;
     public $exigir_inep;
+    public $importar_serie_pre_matricula;
 
     public function Inicializar()
     {
@@ -138,6 +138,7 @@ class indice extends clsCadastro
         $this->alerta_faixa_etaria = dbBool($this->alerta_faixa_etaria);
         $this->bloquear_matricula_faixa_etaria = dbBool($this->bloquear_matricula_faixa_etaria);
         $this->exigir_inep = dbBool($this->exigir_inep);
+        $this->importar_serie_pre_matricula = dbBool($this->importar_serie_pre_matricula);
 
         return $retorno;
     }
@@ -213,9 +214,9 @@ class indice extends clsCadastro
 
         $regras = ['' => 'Selecione'] + $regras;
 
-        $this->campoTabelaInicio("regras","Regras de avaliação",["Regra de avaliação","Regra de avaliação diferenciada", "Ano escolar"],$this->regras_ano_letivo);
-        $this->campoLista('regras_avaliacao_id', 'Regra de avaliação', $regras, $this->regras_avaliacao_id);
-        $this->campoLista('regras_avaliacao_diferenciada_id', 'Regra de avaliação diferenciada', $regras, $this->regras_avaliacao_diferenciada_id, '', FALSE, 'Será utilizada quando campo <b>Utilizar regra de avaliação diferenciada</b> estiver marcado no cadastro da escola', '', FALSE, FALSE);
+        $this->campoTabelaInicio("regras","Regras de avaliação",["Regra de avaliação (padrão)","Regra de avaliação (alternativa)<br><font size=-1; color=gray>O campo deve ser preenchido se existirem escolas avaliadas de forma alternativa (ex.: escola rural, indígena, etc)</font>", "Ano escolar"],$this->regras_ano_letivo);
+        $this->campoLista('regras_avaliacao_id', 'Regra de avaliação (padrão)', $regras, $this->regras_avaliacao_id);
+        $this->campoLista('regras_avaliacao_diferenciada_id', 'Regra de avaliação (alternativa)', $regras, $this->regras_avaliacao_difer>enciada_id, '', FALSE, 'Será utilizada quando campo <b>Utilizar regra de avaliação diferenciada</b> estiver marcado no cadastro da escola', '', FALSE, FALSE);
         $this->campoNumero("anos_letivos", "Ano letivo", $this->anos_letivos, 4, 4, true);
         $this->campoTabelaFim();
 
@@ -251,12 +252,11 @@ class indice extends clsCadastro
         $this->campoCheck('bloquear_matricula_faixa_etaria', 'Bloquear matrículas de alunos fora da faixa etária da série/ano', $this->bloquear_matricula_faixa_etaria);
 
         $this->campoCheck('exigir_inep', 'Exigir INEP para a matrícula?', $this->exigir_inep);
+        $this->campoCheck('importar_serie_pre_matricula', 'Importar os dados da série para o recurso de pré-matrícula online?', $this->importar_serie_pre_matricula);
     }
 
     public function Novo()
     {
-
-
         $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
         $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 
@@ -281,18 +281,14 @@ class indice extends clsCadastro
             !is_null($this->alerta_faixa_etaria),
             !is_null($this->bloquear_matricula_faixa_etaria),
             $this->idade_ideal,
-            !is_null($this->exigir_inep)
+            !is_null($this->exigir_inep),
+            !is_null($this->importar_serie_pre_matricula)
         );
 
         $this->cod_serie = $cadastrou = $obj->cadastra();
 
         if ($cadastrou) {
             $this->persisteRegraSerieAno();
-            $serie = new clsPmieducarSerie($this->cod_serie);
-            $serie = $serie->detalhe();
-
-            $auditoria = new clsModulesAuditoriaGeral('serie', $this->pessoa_logada, $this->cod_serie);
-            $auditoria->inclusao($serie);
 
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_serie_lst.php');
@@ -306,8 +302,6 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-
-
         $this->carga_horaria = str_replace('.', '', $this->carga_horaria);
         $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
 
@@ -332,17 +326,14 @@ class indice extends clsCadastro
             !is_null($this->alerta_faixa_etaria),
             !is_null($this->bloquear_matricula_faixa_etaria),
             $this->idade_ideal,
-            !is_null($this->exigir_inep)
+            !is_null($this->exigir_inep),
+            !is_null($this->importar_serie_pre_matricula)
         );
 
-        $detalheAntigo = $obj->detalhe();
         $editou = $obj->edita();
 
         if ($editou) {
             $this->persisteRegraSerieAno();
-            $detalheAtual = $obj->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral('serie', $this->pessoa_logada, $this->cod_serie);
-            $auditoria->alteracao($detalheAntigo, $detalheAtual);
 
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_serie_lst.php');
@@ -356,8 +347,6 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-
-
         $obj = new clsPmieducarSerie(
             $this->cod_serie,
             $this->pessoa_logada,
@@ -378,13 +367,9 @@ class indice extends clsCadastro
             return false;
         }
 
-        $serie = $obj->detalhe();
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
-            $auditoria = new clsModulesAuditoriaGeral('serie', $this->pessoa_logada, $this->cod_serie);
-            $auditoria->exclusao($serie);
-
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_serie_lst.php');
         }

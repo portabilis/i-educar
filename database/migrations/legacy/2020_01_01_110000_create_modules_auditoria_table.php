@@ -25,9 +25,6 @@ class CreateModulesAuditoriaTable extends Migration
                     valor_novo text,
                     data_hora timestamp without time zone
                 );
-                
-                ALTER TABLE ONLY modules.auditoria_geral
-                    ADD CONSTRAINT auditoria_geral_pkey PRIMARY KEY (id);
             '
         );
     }

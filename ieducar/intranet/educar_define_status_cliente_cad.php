@@ -34,7 +34,6 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -193,9 +192,6 @@ class indice extends clsCadastro
         if ($sequencial = $obj->cadastra())
         {
       $obj->sequencial = $sequencial;
-      $clienteSuspensao = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("cliente_suspensao", $this->pessoa_logada);
-      $auditoria->inclusao($clienteSuspensao);
 
             $this->mensagem .= "Suspens&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect("educar_cliente_det.php?cod_cliente={$this->cod_cliente}&ref_cod_biblioteca={$this->ref_cod_biblioteca}");
@@ -208,16 +204,11 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
 
         $obj_suspensao = new clsPmieducarClienteSuspensao( $this->sequencial, $this->cod_cliente, null, $this->pessoa_logada, null, null, null, null );
-        $detalheAntigo = $obj_suspensao->detalhe();
     if ( $obj_suspensao->edita() ) {
-      $detalheAtual = $obj_suspensao->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("cliente_suspensao", $this->pessoa_logada);
-      $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Libera&ccedil;&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect("educar_cliente_lst.php?cod_cliente={$this->cod_cliente}");
         }
@@ -230,19 +221,13 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
 
-
         $obj = new clsPmieducarCliente($this->cod_cliente, $this->ref_cod_cliente_tipo, $this->pessoa_logada, $this->pessoa_logada, $this->ref_idpes, $this->login, $this->senha, $this->data_cadastro, $this->data_exclusao, 0);
-    $detalhe = $obj->detalhe();
         $excluiu = $obj->excluir();
         if( $excluiu )
         {
-      $auditoria = new clsModulesAuditoriaGeral("cliente", $this->pessoa_logada, $this->cod_cliente);
-      $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect("educar_cliente_det.php?cod_cliente={$this->cod_cliente}");
         }

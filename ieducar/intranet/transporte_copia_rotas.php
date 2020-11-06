@@ -37,7 +37,7 @@ class indice extends clsCadastro {
     function Inicializar(){
 
         $retorno = "Novo";
-        
+
 
 
         $obj_permissoes = new clsPermissoes();
@@ -94,7 +94,7 @@ class indice extends clsCadastro {
 
     function Novo(){
 
-        
+
 
         if (!$this->ano_orig or !$this->ref_cod_empresa_transporte_escolar or !$this->ano_dest){
             $this->mensagem = "Preencha os dados corretamente.<br>";
@@ -179,14 +179,6 @@ class indice extends clsCadastro {
                     $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
                     $this->cod_rota_transporte_escolar = $db->InsertId("{$this->_tabela}_seq");
-
-                    if($this->cod_rota_transporte_escolar){
-                        $objRota = new clsModulesRotaTransporteEscolar($this->cod_rota_transporte_escolar);
-                        $detalhe = $objRota->detalhe();
-                        $auditoria = new clsModulesAuditoriaGeral("rota_transporte_escolar", $this->pessoa_logada, $this->cod_rota_transporte_escolar);
-                        $auditoria->inclusao($detalhe);
-                    }
-                    // return $db->InsertId("{$this->_tabela}_seq");
                 }
                 $obj_rota = new clsModulesRotaTransporteEscolar();
                 $obj_rota->setOrderby( " descricao ASC" );

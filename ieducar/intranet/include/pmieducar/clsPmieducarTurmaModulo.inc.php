@@ -293,7 +293,6 @@ class clsPmieducarTurmaModulo extends Model
             while ($db->ProximoRegistro()) {
                 $tupla[] = $db->Tupla();
             }
-            $this->auditStepsOfClasses($tupla, clsModulesAuditoriaGeral::OPERACAO_EXCLUSAO);
         } catch (Throwable $throwable) {
             return false;
         }
@@ -323,27 +322,11 @@ class clsPmieducarTurmaModulo extends Model
             while ($db->ProximoRegistro()) {
                 $tupla[] = $db->Tupla();
             }
-            $this->auditStepsOfClasses($tupla, clsModulesAuditoriaGeral::OPERACAO_INCLUSAO);
         } catch (Throwable $throwable) {
             return false;
         }
 
         return true;
-    }
-
-    private function auditStepsOfClasses($infos, $operation)
-    {
-        foreach ($infos as $key => $info) {
-            $auditoria = new clsModulesAuditoriaGeral('turma_modulo', $this->pessoa_logada, $info['ref_cod_turma']);
-            if ($operation == clsModulesAuditoriaGeral::OPERACAO_INCLUSAO) {
-                $auditoria->inclusao($info);
-                continue;
-            }
-            if ($operation == clsModulesAuditoriaGeral::OPERACAO_EXCLUSAO) {
-                $auditoria->exclusao($info);
-                continue;
-            }
-        }
     }
 
     /**

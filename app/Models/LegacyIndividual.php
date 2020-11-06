@@ -87,6 +87,7 @@ class LegacyIndividual extends EloquentBaseModel implements Transformable
         'nome_social',
         'pais_residencia',
         'localizacao_diferenciada',
+        'ideciv'
     ];
 
     /**

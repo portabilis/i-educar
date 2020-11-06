@@ -182,8 +182,6 @@ class indice extends clsDetalhe
             $turma = new clsPmieducarTurma($enturmacao['ref_cod_turma']);
             $turma = $turma->detalhe();
             $turma_id = $enturmacao['ref_cod_turma'];
-            $nomesTurmas[] = $turma['nm_turma'];
-            $datasEnturmacoes[] = Portabilis_Date_Utils::pgSQLToBr($enturmacao['data_enturmacao']);
 
             if (in_array($turma['etapa_educacenso'], App_Model_Educacenso::etapas_multisseriadas())) {
                 $existeTurmaMulti = true;
@@ -192,6 +190,9 @@ class indice extends clsDetalhe
             if ($enturmacao['ativo'] == 0) {
                 continue;
             }
+
+            $nomesTurmas[] = $turma['nm_turma'];
+            $datasEnturmacoes[] = Portabilis_Date_Utils::pgSQLToBr($enturmacao['data_enturmacao']);
 
             if ($turma['turma_turno_id'] == clsPmieducarTurma::TURNO_INTEGRAL) {
                 $existeTurmaTurnoIntegral = true;

@@ -27,6 +27,7 @@ class clsPmieducarSerie extends Model
     public $alerta_faixa_etaria;
     public $bloquear_matricula_faixa_etaria;
     public $exigir_inep;
+    public $importar_serie_pre_matricula;
 
     public function __construct(
         $cod_serie = null,
@@ -49,12 +50,13 @@ class clsPmieducarSerie extends Model
         $alerta_faixa_etaria = false,
         $bloquear_matricula_faixa_etaria = false,
         $idade_ideal = null,
-        $exigir_inep = false
+        $exigir_inep = false,
+        $importar_serie_pre_matricula = false
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}serie";
-        $this->_campos_lista = $this->_todos_campos = 's.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos, s.regra_avaliacao_diferenciada_id, s.alerta_faixa_etaria, s.bloquear_matricula_faixa_etaria, s.idade_ideal, s.exigir_inep';
+        $this->_campos_lista = $this->_todos_campos = 's.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos, s.regra_avaliacao_diferenciada_id, s.alerta_faixa_etaria, s.bloquear_matricula_faixa_etaria, s.idade_ideal, s.exigir_inep, s.importar_serie_pre_matricula';
 
         if (is_numeric($ref_cod_curso)) {
                     $this->ref_cod_curso = $ref_cod_curso;
@@ -167,6 +169,10 @@ class clsPmieducarSerie extends Model
 
         if (dbBool($exigir_inep)) {
             $this->exigir_inep = $exigir_inep;
+        }
+
+        if (dbBool($importar_serie_pre_matricula)) {
+            $this->importar_serie_pre_matricula = $importar_serie_pre_matricula;
         }
 
         $this->observacao_historico = $observacao_historico;
@@ -288,6 +294,14 @@ class clsPmieducarSerie extends Model
                 $valores[] = ' false ';
             }
 
+            if (dbBool($this->importar_serie_pre_matricula)) {
+                $campos[] = 'importar_serie_pre_matricula';
+                $valores[] = ' true ';
+            } else {
+                $campos[] = 'importar_serie_pre_matricula';
+                $valores[] = ' false ';
+            }
+
             $campos = join(', ', $campos);
             $valores = join(', ', $valores);
 
@@ -402,6 +416,12 @@ class clsPmieducarSerie extends Model
                 $set[] = 'exigir_inep = true ';
             } else {
                 $set[] = 'exigir_inep = false ';
+            }
+
+            if (dbBool($this->importar_serie_pre_matricula)) {
+                $set[] = 'importar_serie_pre_matricula = true ';
+            } else {
+                $set[] = 'importar_serie_pre_matricula = false ';
             }
 
             $set = join(', ', $set);
@@ -544,7 +564,7 @@ class clsPmieducarSerie extends Model
                                          FROM pmieducar.escola_serie es
                                         WHERE s.cod_serie = es.ref_cod_serie
                                           AND es.ativo = 1
-                                          AND {$ano} = ANY(es.anos_letivos) ";
+                                          AND {$ano} = ANY(es.anos_letivos)) ";
         }
 
         $countCampos = count(explode(',', $this->_campos_lista));

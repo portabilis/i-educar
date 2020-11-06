@@ -6,7 +6,6 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'Portabilis/View/Helper/Application.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -49,6 +48,7 @@ class indice extends clsCadastro
 
     public $multi_seriado;
     public $modalidade_curso;
+    public $importar_curso_pre_matricula;
 
     public function Inicializar()
     {
@@ -445,6 +445,8 @@ class indice extends clsCadastro
         $options = ['label' => 'Etapas que o curso contêm', 'size' => 50, 'required' => false, 'options' => ['value' => null]];
 
         $this->inputsHelper()->multipleSearchEtapacurso('', $options, $helperOptions);
+
+        $this->campoCheck('importar_curso_pre_matricula', 'Importar os dados do curso para o recurso de pré-matrícula digital?', $this->importar_curso_pre_matricula);
     }
 
     public function Novo()
@@ -457,6 +459,7 @@ class indice extends clsCadastro
 
             $this->padrao_ano_escolar = is_null($this->padrao_ano_escolar) ? 0 : 1;
             $this->multi_seriado = is_null($this->multi_seriado) ? 0 : 1;
+            $this->importar_curso_pre_matricula = is_null($this->importar_curso_pre_matricula) ? 0 : 1;
 
             $obj = new clsPmieducarCurso(
 				null,
@@ -485,18 +488,13 @@ class indice extends clsCadastro
 				$this->padrao_ano_escolar,
 				$this->hora_falta,
 				null,
-				$this->multi_seriado
+				$this->multi_seriado,
+				$this->importar_curso_pre_matricula
       		);
             $obj->modalidade_curso = $this->modalidade_curso;
 
             $this->cod_curso = $cadastrou = $obj->cadastra();
             if ($cadastrou) {
-                $curso = new clsPmieducarCurso($this->cod_curso);
-                $curso = $curso->detalhe();
-
-                $auditoria = new clsModulesAuditoriaGeral('curso', $this->pessoa_logada, $this->cod_curso);
-                $auditoria->inclusao($curso);
-
                 $this->gravaEtapacurso($cadastrou);
                 $this->habilitacao_curso = unserialize(urldecode($this->habilitacao_curso));
 
@@ -541,6 +539,7 @@ class indice extends clsCadastro
 
             $this->padrao_ano_escolar = is_null($this->padrao_ano_escolar) ? 0 : 1;
             $this->multi_seriado = is_null($this->multi_seriado) ? 0 : 1;
+            $this->importar_curso_pre_matricula = is_null($this->importar_curso_pre_matricula) ? 0 : 1;
 
             $obj = new clsPmieducarCurso(
 				$this->cod_curso,
@@ -569,7 +568,8 @@ class indice extends clsCadastro
 				$this->padrao_ano_escolar,
 				$this->hora_falta,
 				null,
-				$this->multi_seriado
+				$this->multi_seriado,
+				$this->importar_curso_pre_matricula
       		);
             $obj->modalidade_curso = $this->modalidade_curso;
 
@@ -577,10 +577,6 @@ class indice extends clsCadastro
             $alterouPadraoAnoEscolar = $detalheAntigo['padrao_ano_escolar'] != $this->padrao_ano_escolar;
             $editou = $obj->edita();
             if ($editou) {
-                $detalheAtual = $obj->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('curso', $this->pessoa_logada, $this->cod_curso);
-                $auditoria->alteracao($detalheAntigo, $detalheAtual);
-
                 $this->gravaEtapacurso($this->cod_curso);
                 $this->habilitacao_curso = unserialize(urldecode($this->habilitacao_curso));
                 $obj  = new clsPmieducarHabilitacaoCurso(null, $this->cod_curso);
@@ -651,11 +647,8 @@ class indice extends clsCadastro
 			$this->pessoa_logada
     	);
 
-        $curso = $obj->detalhe();
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $auditoria = new clsModulesAuditoriaGeral('curso', $this->pessoa_logada, $this->cod_curso);
-            $auditoria->exclusao($curso);
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_curso_lst.php');
         }

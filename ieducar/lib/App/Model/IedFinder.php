@@ -105,7 +105,7 @@ class App_Model_IedFinder extends CoreExt_Entity
      */
     public static function getEscolasByUser($instituicaoId)
     {
-        $query = LegacySchool::where('ref_cod_instituicao', $instituicaoId)->with('person');
+        $query = LegacySchool::query()->whereHas('person')->where('ref_cod_instituicao', $instituicaoId);
 
         if (Auth::user()->isSchooling()) {
             $schools = Auth::user()->schools->pluck('cod_escola')->all();

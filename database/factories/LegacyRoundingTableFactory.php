@@ -3,6 +3,9 @@
 use App\Models\LegacyRoundingTable;
 use Faker\Generator as Faker;
 use App\Models\LegacyInstitution;
+use Illuminate\Database\Eloquent\Factory;
+
+/** @var Factory $factory */
 
 $factory->define(LegacyRoundingTable::class, function (Faker $faker) {
     return [

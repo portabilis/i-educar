@@ -402,4 +402,26 @@ class LegacySchoolClass extends Model
 
         return $evaluationRuleGradeYear->evaluationRule;
     }
+
+    /**
+     * Retorna o turno da turma.
+     *
+     * Relação com turma_turno.
+     *
+     * @return bool | string
+     */
+    public function period()
+    {
+        return $this->belongsTo(LegacyPeriod::class, 'turma_turno_id');
+    }
+
+    /**
+     * @param Builder $query
+     *
+     * @return Builder
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('ativo', 1);
+    }
 }

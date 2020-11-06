@@ -128,13 +128,12 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
     public function Gerar()
     {
         $headers = $this->getTableMap();
-        $mapper = $this->getDataMapper();
 
         $this->titulo = $this->getBaseTitulo();
         $this->largura = '100%';
 
         try {
-            $entry = $mapper->find($this->getRequest()->id);
+            $entry = $this->getEntry();
         } catch (Exception $e) {
             $this->mensagem = $e;
 
@@ -150,5 +149,10 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
 
         $this->setUrlEditar($entry);
         $this->setUrlCancelar($entry);
+    }
+
+    public function getEntry()
+    {
+        return $this->getDataMapper()->find($this->getRequest()->id);
     }
 }

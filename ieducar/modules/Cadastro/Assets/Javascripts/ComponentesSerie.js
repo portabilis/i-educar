@@ -265,7 +265,7 @@ function handleGetAreaConhecimento(response) {
     var selectOptions = {};
 
     response['areas'].forEach((area) => {
-    selectOptions[area.id] = area.nome
+        selectOptions[area.id] = area.nome_agrupador;
     }, {});
 
     updateChozen(areaConhecimentoField, selectOptions);
