@@ -1,4 +1,3 @@
-
 var url = window.location.href;
 var modoCadastro = url.indexOf("id=") == -1;
 
@@ -444,7 +443,7 @@ $j('.tablecadastro >tbody  > tr').each(function (index, row) {
 });
 
 // Adiciona classe para que os campos de descrição possam ser desativados (checkboxs)
-$j('#restricao_atividade_fisica, #acomp_medico_psicologico, #medicacao_especifica, #tratamento_medico, #doenca_congenita, #alergia_alimento, #alergia_medicamento, #fratura_trauma, #plano_saude').addClass('temDescricao');
+$j('#restricao_atividade_fisica, #acomp_medico_psicologico, #medicacao_especifica, #tratamento_medico, #doenca_congenita, #alergia_alimento, #alergia_medicamento, #fratura_trauma, #plano_saude, #aceita_hospital_proximo').addClass('temDescricao');
 
 // ajax
 
@@ -723,6 +722,10 @@ resourceOptions.handleGet = function (dataResponse) {
         $j('#plano_saude').attr('checked', true);
         $j('#plano_saude').val('on');
     }
+    if (dataResponse.aceita_hospital_proximo == 'S') {
+      $j('#aceita_hospital_proximo').attr('checked', true);
+      $j('#aceita_hospital_proximo').val('on');
+    }
     // campos texto
     $j('#altura').val(dataResponse.altura);
     $j('#peso').val(dataResponse.peso);
@@ -738,13 +741,11 @@ resourceOptions.handleGet = function (dataResponse) {
     $j('#desc_restricao_atividade_fisica').val(dataResponse.desc_restricao_atividade_fisica);
     $j('#desc_fratura_trauma').val(dataResponse.desc_fratura_trauma);
     $j('#desc_plano_saude').val(dataResponse.desc_plano_saude);
-    $j('#hospital_clinica').val(dataResponse.hospital_clinica);
-    $j('#hospital_clinica_endereco').val(dataResponse.hospital_clinica_endereco);
-    $j('#hospital_clinica_telefone').val(dataResponse.hospital_clinica_telefone);
     $j('#responsavel').val(dataResponse.responsavel);
     $j('#responsavel_parentesco').val(dataResponse.responsavel_parentesco);
     $j('#responsavel_parentesco_telefone').val(dataResponse.responsavel_parentesco_telefone);
     $j('#responsavel_parentesco_celular').val(dataResponse.responsavel_parentesco_celular);
+    $j('#desc_aceita_hospital_proximo').val(dataResponse.desc_aceita_hospital_proximo);
 
     /***********************************************
      CAMPOS DA MORADIA

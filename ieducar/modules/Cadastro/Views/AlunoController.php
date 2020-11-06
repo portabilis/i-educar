@@ -212,11 +212,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         'desc_plano_saude' => array('label' => 'Qual?'),
 
-        'hospital_clinica' => array('label' => 'Nome'),
+        'aceita_hospital_proximo' => array('label' => 'Em caso de emergência, autorizo levar meu filho(a) para o Hospital ou Clínica mais próximos:'),
 
-        'hospital_clinica_endereco' => array('label' => 'Endereço'),
-
-        'hospital_clinica_telefone' => array('label' => 'Telefone'),
+        'desc_aceita_hospital_proximo' => array('label' => 'Responsável'),
 
         'responsavel' => array('label' => 'Nome'),
 
@@ -1103,19 +1101,13 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_plano_saude')), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->text('desc_plano_saude', $options);
 
-        $this->campoRotulo('tit_dados_hospital', Portabilis_String_Utils::toLatin1('Em caso de emergência, levar para hospital ou clínica'));
+        // Levar para hospital mais próximo
+        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('aceita_hospital_proximo')), 'required' => false, 'placeholder' => '');
+        $this->inputsHelper()->checkbox('aceita_hospital_proximo', $options);
 
-        // hospital_clinica
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('hospital_clinica')), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->text('hospital_clinica', $options);
-
-        // hospital_clinica_endereco
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('hospital_clinica_endereco')), 'size' => 50, 'max_length' => 50, 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->text('hospital_clinica_endereco', $options);
-
-        // hospital_clinica_telefone
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('hospital_clinica_telefone')), 'size' => 20, 'max_length' => 20, 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->text('hospital_clinica_telefone', $options);
+        // responsável hospital
+        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_aceita_hospital_proximo')), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
+        $this->inputsHelper()->text('desc_aceita_hospital_proximo', $options);
 
         $this->campoRotulo('tit_dados_responsavel', Portabilis_String_Utils::toLatin1('Em caso de emergência, caso não seja encontrado pais ou responsáveis, avisar'));
 
