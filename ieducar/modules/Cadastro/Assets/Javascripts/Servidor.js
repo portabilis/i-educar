@@ -133,13 +133,17 @@ function validaCursoFormacaoContinuada() {
 verificaCamposObrigatorio();
 
 let habilitaTipoEnsinoMedio = () => {
-  if (obrigarCamposCenso) {
-    $j('#tipo_ensino_medio_cursado').makeRequired();
-  } else {
-    $j('#tipo_ensino_medio_cursado').makeUnrequired();
-  }
+  let escolaridade = $j('#ref_idesco').val();
 
-  $j('#tipo_ensino_medio_cursado').removeAttr('disabled');
+  $j.getJSON(`/escolaridade/${escolaridade}`)
+    .done((escolaridade) => {
+      if (obrigarCamposCenso && escolaridade['escolaridade'] === 7) {
+        $j('#tipo_ensino_medio_cursado').makeRequired();
+      } else {
+        $j('#tipo_ensino_medio_cursado').makeUnrequired();
+      }
+      $j('#tipo_ensino_medio_cursado').removeAttr('disabled');
+    })
 };
 
 let bloqueiaTipoEnsinoMedio = () => {
@@ -155,7 +159,7 @@ let verificaEscolaridade = () => {
 
   $j.getJSON(`/escolaridade/${escolaridade}`)
   .done((escolaridade) => {
-    if (escolaridade['escolaridade'] == 7) {
+    if (escolaridade['escolaridade'] === 7 || escolaridade['escolaridade'] === 6) {
       habilitaTipoEnsinoMedio();
     } else {
       bloqueiaTipoEnsinoMedio();

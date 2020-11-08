@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LegacyPerson;
+use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
@@ -33,7 +34,7 @@ class clsFisica
      */
     public $nacionalidade;
 
-    public $idpais_estrangeiro;
+    public $idpais_estrangeiro = false;
     public $data_chagada_brasil;
     public $idmun_nascimento;
     public $ultima_empresa;
@@ -525,8 +526,11 @@ class clsFisica
                 $set .= "$gruda nacionalidade = {$this->nacionalidade}";
                 $gruda = ', ';
             }
-            if ($this->idpais_estrangeiro) {
+            if ($this->idpais_estrangeiro && $this->nacionalidade != Nacionalidade::BRASILEIRA) {
                 $set .= "$gruda idpais_estrangeiro = {$this->idpais_estrangeiro}";
+                $gruda = ', ';
+            } elseif ($this->idpais_estrangeiro !== false) {
+                $set .= "$gruda idpais_estrangeiro = null";
                 $gruda = ', ';
             }
             if ($this->data_chegada_brasil) {

@@ -1,18 +1,8 @@
 <?php
 
+use App\Process;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Auth::routes(['register' => false]);
 
@@ -98,15 +88,15 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::group(['namespace' => 'Educacenso', 'prefix' => 'educacenso'], function () {
         Route::get('validar/{validator}', 'ValidatorController@validation');
-        Route::post('importacao', 'ImportController@import');
-        Route::get('importacao/historico', 'ImportController@index')->name('educacenso.history');
+        Route::post('importacao', 'ImportController@import')->middleware('can:modify:' . Process::EDUCACENSO_IMPORT_HISTORY);
+        Route::get('importacao/historico', 'ImportController@index')->middleware('can:view:' . Process::EDUCACENSO_IMPORT_HISTORY)->name('educacenso.history');
     });
 
     Route::get('/consulta-dispensas', 'ExemptionListController@index')->name('exemption-list.index');
     Route::get('/backup-download', 'BackupController@download')->name('backup.download');
 
-    Route::get('/atualiza-situacao-matriculas', 'UpdateRegistrationStatusController@index')->name('update-registration-status.index');
-    Route::post('/atualiza-situacao-matriculas', 'UpdateRegistrationStatusController@updateStatus')->name('update-registration-status.update-status');
+    Route::get('/atualiza-situacao-matriculas', 'UpdateRegistrationStatusController@index')->middleware('can:view:' . Process::UPDATE_REGISTRATION_STATUS)->name('update-registration-status.index');
+    Route::post('/atualiza-situacao-matriculas', 'UpdateRegistrationStatusController@updateStatus')->middleware('can:modify:' . Process::UPDATE_REGISTRATION_STATUS)->name('update-registration-status.update-status');
 
     Route::get('/exportacao-para-o-seb', 'SebExportController@index')->name('seb-export.index');
     Route::post('/exportacao-para-o-seb', 'SebExportController@export')->name('seb-export.export');
@@ -119,12 +109,12 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
     Route::post('/notificacoes/marca-como-lida', 'NotificationController@markAsRead')->name('notifications.mark-as-read');
     Route::post('/notificacoes/marca-todas-como-lidas', 'NotificationController@markAllRead')->name('notifications.mark-all-read');
 
-    Route::get('/exportacoes', 'ExportController@index')->name('export.index');
-    Route::get('/exportacoes/novo', 'ExportController@form')->name('export.form');
-    Route::post('/exportacoes/exportar', 'ExportController@export')->name('export.export');
+    Route::get('/exportacoes', 'ExportController@index')->middleware('can:view:' . Process::DATA_EXPORT)->name('export.index');
+    Route::get('/exportacoes/novo', 'ExportController@form')->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.form');
+    Route::post('/exportacoes/exportar', 'ExportController@export')->middleware('can:modify:' . Process::DATA_EXPORT)->name('export.export');
 
-    Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->name('update-registration-date.index');
-    Route::post('/atualiza-data-entrada', 'UpdateRegistrationDateController@updateStatus')->name('update-registration-date.update-date');
+    Route::get('/atualiza-data-entrada', 'UpdateRegistrationDateController@index')->middleware('can:view:' . Process::UPDATE_REGISTRATION_DATE)->name('update-registration-date.index');
+    Route::post('/atualiza-data-entrada', 'UpdateRegistrationDateController@updateStatus')->middleware('can:modify:' . Process::UPDATE_REGISTRATION_DATE)->name('update-registration-date.update-date');
 
     Route::get('/configuracoes/configuracoes-de-sistema', 'SettingController@index')->name('settings.index');
     Route::post('/configuracoes/configuracoes-de-sistema', 'SettingController@saveInputs')->name('settings.update');
@@ -139,6 +129,9 @@ Route::group(['middleware' => ['ieducar.navigation', 'ieducar.footer', 'ieducar.
 
     Route::get('/alterar-tipo-boletim-turmas', 'UpdateSchoolClassReportCardController@index')->name('update-school-class-report-card.index');
     Route::post('/alterar-tipo-boletim-turmas', 'UpdateSchoolClassReportCardController@update')->name('update-school-class-report-card.update-date');
+
+    Route::get('/dispensa-lote', 'BatchExemptionController@index')->middleware('can:modify:' . Process::BATCH_EXEMPTION)->name('batch-exemption.index');
+    Route::post('/dispensa-lote', 'BatchExemptionController@exempt')->middleware('can:modify:' . Process::BATCH_EXEMPTION)->name('batch-exemption.exempt');
 });
 
 Route::group(['namespace' => 'Exports', 'prefix' => 'exports'], function () {

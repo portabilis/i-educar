@@ -2,6 +2,7 @@
 
 @push('styles')
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('css/ieducar.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ Asset::get('modules/Portabilis/Assets/Plugins/Chosen/chosen.css') }}"/>
 @endpush
 
 @section('content')
@@ -221,4 +222,5 @@
             src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Serie.js") }}"></script>
     <script type="text/javascript"
             src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Turma.js") }}"></script>
+    <script type="text/javascript" src="{{ Asset::get("/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js") }}"></script>
 @endprepend

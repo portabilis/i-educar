@@ -94,6 +94,14 @@ class SchoolHistoryService
             'portabilis_historico_escolar_series_anos' => 330,
         ];
 
+        if ((int) config('legacy.report.header.alternativo')) {
+            $usedSpaceByTemplate = [
+                'portabilis_historico_escolar_9anos' => 306,
+                'portabilis_historico_escolar' => 338,
+                'portabilis_historico_escolar_series_anos' => 273,
+            ];
+        }
+
         return $usedSpaceByTemplate[$templateName] ?? null;
     }
 
