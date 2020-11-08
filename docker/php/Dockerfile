@@ -56,7 +56,7 @@ RUN apt-get install -y libzip-dev
 RUN docker-php-ext-install zip
 
 RUN apt-get remove -y libgcc-8-dev
-RUN apt-get install -y libc6-dev
+RUN apt-get install -o APT::Immediate-Configure=false -y libc6-dev
 
 RUN mkdir -p /usr/share/man/man7
 RUN apt-get install -y postgresql-contrib-9.5
@@ -82,3 +82,5 @@ RUN docker-php-ext-install pcntl
 RUN apt-get install openjdk-8-jdk -y
 
 RUN apt-get install npm -y
+
+RUN composer self-update --1
