@@ -212,7 +212,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         'desc_plano_saude' => array('label' => 'Qual?'),
 
-        'aceita_hospital_proximo' => array('label' => 'Em caso de emergência, autorizo levar meu filho(a) para o Hospital ou Clínica mais próximos:'),
+        'aceita_hospital_proximo' => array('label' => 'Em caso de emergência, autorizo levar meu(minha) filho(a) para o Hospital ou Clínica mais próximos:'),
 
         'desc_aceita_hospital_proximo' => array('label' => 'Responsável'),
 
