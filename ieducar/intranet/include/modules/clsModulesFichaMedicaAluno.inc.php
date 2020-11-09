@@ -479,7 +479,6 @@ class clsModulesFichaMedicaAluno extends Model
 
             $campos .= "{$gruda}desc_aceita_hospital_proximo";
             $valores .= "{$gruda}'{$this->desc_aceita_hospital_proximo}'";
-            $gruda = ', ';
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
