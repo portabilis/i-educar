@@ -51,7 +51,6 @@
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/min-portabilis.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/mytdt.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/jquery.modal.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/localizacaoSistema.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/custom.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/flash-messages.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get("/intranet/scripts/select2/select2.min.css") }}">
