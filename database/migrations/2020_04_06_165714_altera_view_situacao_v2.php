@@ -23,6 +23,7 @@ class AlteraViewSituacaoV2 extends Migration
      */
     public function down()
     {
+        $this->dropView('public.exporter_student');
         $this->dropView('relatorio.view_situacao');
     }
 }
