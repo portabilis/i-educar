@@ -78,13 +78,6 @@ class clsCadastro extends clsCampos
         $this->tipoacao = @$_POST['tipoacao'];
     }
 
-    public function enviaLocalizacao($localizao)
-    {
-        if ($localizao) {
-            $this->locale = $localizao;
-        }
-    }
-
     public function PreCadastrar()
     {
     }

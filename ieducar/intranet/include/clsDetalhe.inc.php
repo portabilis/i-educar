@@ -40,11 +40,6 @@ class clsDetalhe extends Core_Controller_Page_Abstract
       $this->detalhe['html'] = $html;
   }
 
-  function enviaLocalizacao($localizao){
-    if($localizao)
-      $this->locale = $localizao;
-  }
-
   function Gerar() {
     return FALSE;
   }

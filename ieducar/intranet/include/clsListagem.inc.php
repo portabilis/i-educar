@@ -108,15 +108,6 @@ class clsListagem extends clsCampos
         // Apenas para fins de compatibilidade
     }
 
-    public function enviaLocalizacao($localizao, $appendInTop = false)
-    {
-        if ($localizao) {
-            $this->locale = $localizao;
-        }
-
-        $this->appendInTop = $appendInTop;
-    }
-
     public function addCabecalhos($coluna)
     {
         $this->cabecalho = $coluna;
