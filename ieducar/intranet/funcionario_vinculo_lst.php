@@ -65,13 +65,7 @@ class indice extends clsListagem
         $this->acao = 'go("funcionario_vinculo_cad.php")';
         $this->nome_acao = 'Novo';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            '' => 'Listagem de v&iacute;nculos'
-        ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Listagem de v&iacute;nculos');
     }
 }
 

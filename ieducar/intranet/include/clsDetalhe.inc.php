@@ -4,7 +4,6 @@ use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\View;
 
 require_once 'Core/Controller/Page/Abstract.php';
-require_once 'include/localizacaoSistema.php';
 
 class clsDetalhe extends Core_Controller_Page_Abstract
 {
@@ -44,7 +43,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
   function enviaLocalizacao($localizao){
     if($localizao)
       $this->locale = $localizao;
-  }  
+  }
 
   function Gerar() {
     return FALSE;

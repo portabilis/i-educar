@@ -133,13 +133,9 @@ class indice extends clsDetalhe
       $this->url_editar = "../module/TransporteEscolar/Veiculo?id={$cod_veiculo}";
     }
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_transporte_escolar_index.php"                  => "Transporte escolar",
-         ""                                  => "Detalhe do ve&iacute;culo"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Detalhe do ve&iacute;culo', [
+        url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
+    ]);
   }
 }
 
