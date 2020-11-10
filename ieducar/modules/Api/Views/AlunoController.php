@@ -476,13 +476,12 @@ class AlunoController extends ApiCoreController
         $obj->desc_fratura_trauma = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_fratura_trauma);
         $obj->plano_saude = ($this->getRequest()->plano_saude == 'on' ? 'S' : 'N');
         $obj->desc_plano_saude = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_plano_saude);
-        $obj->hospital_clinica = Portabilis_String_Utils::toLatin1($this->getRequest()->hospital_clinica);
-        $obj->hospital_clinica_endereco = Portabilis_String_Utils::toLatin1($this->getRequest()->hospital_clinica_endereco);
-        $obj->hospital_clinica_telefone = Portabilis_String_Utils::toLatin1($this->getRequest()->hospital_clinica_telefone);
         $obj->responsavel = Portabilis_String_Utils::toLatin1($this->getRequest()->responsavel);
         $obj->responsavel_parentesco = Portabilis_String_Utils::toLatin1($this->getRequest()->responsavel_parentesco);
         $obj->responsavel_parentesco_telefone = Portabilis_String_Utils::toLatin1($this->getRequest()->responsavel_parentesco_telefone);
         $obj->responsavel_parentesco_celular = Portabilis_String_Utils::toLatin1($this->getRequest()->responsavel_parentesco_celular);
+        $obj->aceita_hospital_proximo = ($this->getRequest()->aceita_hospital_proximo == 'on' ? 'S' : 'N');
+        $obj->desc_aceita_hospital_proximo = Portabilis_String_Utils::toLatin1($this->getRequest()->desc_aceita_hospital_proximo);
 
         return ($obj->existe() ? $obj->edita() : $obj->cadastra());
     }
