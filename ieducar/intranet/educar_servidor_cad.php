@@ -131,6 +131,9 @@ class indice extends clsCadastro
                     $cargaHoraria = $db->Tupla();
                     $cargaHoraria = $cargaHoraria['sum'];
                 }
+
+                $cargaHoraria = str_pad($cargaHoraria, 2, 0, STR_PAD_LEFT);
+
                 $this->total_horas_alocadas = $cargaHoraria;
 
                 // Funções
@@ -326,12 +329,17 @@ class indice extends clsCadastro
 
         $this->campoTabelaFim();
 
+        $horas = '00:00';
+        if ($this->total_horas_alocadas) {
+            $horas = $this->total_horas_alocadas . ':00';
+        }
+
         if (strtoupper($this->tipoacao) == 'EDITAR') {
             $this->campoTextoInv(
                 'total_horas_alocadas_',
                 'Total de Horas Alocadadas',
-                $this->total_horas_alocadas . ':00',
-                9,
+                $horas,
+                6,
                 20
             );
 
@@ -352,7 +360,7 @@ class indice extends clsCadastro
             'Carga Horária',
             $hora_formatada,
             true,
-            'Número de horas deve ser maior que horas alocadas',
+            ' Número de horas deve ser maior que horas alocadas',
             '',
             false
         );

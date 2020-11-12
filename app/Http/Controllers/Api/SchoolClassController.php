@@ -33,4 +33,9 @@ class SchoolClassController extends Controller
 
         return $schoolClassService->getCalendars($schoolClass);
     }
+
+    public function getStages(LegacySchoolClass $schoolClass)
+    {
+        return $schoolClass->stages;
+    }
 }

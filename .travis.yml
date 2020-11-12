@@ -20,6 +20,7 @@ matrix:
           - $HOME/.composer/cache
 
       before_script:
+        - composer self-update --1
         - composer new-install
         - php artisan serve > /dev/null 2>&1 &
 
@@ -57,6 +58,7 @@ matrix:
           - $HOME/.composer/cache
 
       before_script:
+        - composer self-update --1
         - composer new-install
         - php artisan serve > /dev/null 2>&1 &
 

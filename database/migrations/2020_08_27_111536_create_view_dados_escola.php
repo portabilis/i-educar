@@ -15,6 +15,7 @@ class CreateViewDadosEscola extends Migration
      */
     public function up()
     {
+        $this->dropView('relatorio.view_dados_escola');
         $this->createView('relatorio.view_dados_escola', '2020-08-27');
     }
 
