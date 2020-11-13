@@ -34,7 +34,6 @@ require_once('include/clsBanco.inc.php');
 require_once('include/clsAgenda.inc.php');
 //require_once ("include/juris/jurisGeral.inc.php");
 require_once('agenda_calendario.php');
-require_once 'include/localizacaoSistema.php';
 
 class clsIndex extends clsBase
 {

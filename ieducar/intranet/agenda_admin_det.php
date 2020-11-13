@@ -92,12 +92,7 @@ class indice extends clsDetalhe
 
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Detalhe da agenda"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Detalhe da agenda');
     }
 }
 

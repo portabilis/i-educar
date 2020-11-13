@@ -26,7 +26,10 @@ class indice extends clsCadastro
     {
         $this->nome_url_cancelar = "Voltar";
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
-        $this->montaLocalizacao();
+
+        $this->breadcrumb('Etapa do aluno', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     public function Inicializar()
@@ -97,13 +100,6 @@ class indice extends clsCadastro
 
         $this->mensagem .= "Etapas atualizadas com sucesso.<br>";
         $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->cod_matricula}");
-    }
-
-    private function montaLocalizacao()
-    {
-        $this->breadcrumb('Etapa do aluno', [
-            url('intranet/educar_index.php') => 'Escola',
-        ]);
     }
 
     private function validaPermissao()

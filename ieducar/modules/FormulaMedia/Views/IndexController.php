@@ -58,13 +58,8 @@ class IndexController extends Core_Controller_Page_ListController
 
     parent::_preRender();
 
-    $localizacao = new LocalizacaoSistema();
-
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Listagem de f&oacute;rmulas de m&eacute;dia"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Listagem de f&oacute;rmulas de m&eacute;dia', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
 }

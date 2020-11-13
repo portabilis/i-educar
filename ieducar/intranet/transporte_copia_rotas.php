@@ -43,13 +43,9 @@ class indice extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 950, $this->pessoa_logada, 7);
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_transporte_escolar_index.php"                  => "Transporte escolar",
-             ""                                  => "C&oacute;pia de rotas"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('C&oacute;pia de rotas', [
+        url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
+    ]);
 
         return $retorno;
     }

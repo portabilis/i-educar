@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\View;
 require_once 'include/clsCampos.inc.php';
 require_once 'Portabilis/View/Helper/Application.php';
 require_once 'Portabilis/View/Helper/Inputs.php';
-require_once 'include/localizacaoSistema.php';
 
 define('alTopLeft', 'valign=top align=left');
 define('alTopCenter', 'valign=top align=center');
@@ -107,15 +106,6 @@ class clsListagem extends clsCampos
         $boolFechaBanner = true
     ) {
         // Apenas para fins de compatibilidade
-    }
-
-    public function enviaLocalizacao($localizao, $appendInTop = false)
-    {
-        if ($localizao) {
-            $this->locale = $localizao;
-        }
-
-        $this->appendInTop = $appendInTop;
     }
 
     public function addCabecalhos($coluna)
