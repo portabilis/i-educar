@@ -1,5 +1,3 @@
-#import ../packages/portabilis/pre-matricula/graphql/schema.graphql
-
 type Query {
     now: DateTime!
 }
