@@ -41,7 +41,7 @@
                 <td class="formlttd" valign="top"><span class="form">Curso</span></td>
                 <td class="formlttd" valign="top">
                     <span class="form">
-                        <select class="geral" name="ref_cod_curso" id="ref_cod_curso" style="width: 308px;">
+                        <select class="geral" name="ref_cod_curso" id="ref_cod_curso" data-refresh-ano="false" style="width: 308px;">
                             <option value="">Selecione um curso</option>
                             @if (old('ref_cod_escola', Request::get('ref_cod_escola')) || ($user->isAdmin() || $user->isInstitutional()))
                                 @foreach(App_Model_IedFinder::getCursos(old('ref_cod_escola', Request::get('ref_cod_escola'))) as $id => $name)
@@ -254,8 +254,6 @@
             src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Escola.js") }}"></script>
     <script type="text/javascript"
             src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Curso.js") }}"></script>
-    <script type="text/javascript"
-            src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Serie.js") }}"></script>
     <script type="text/javascript"
             src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Turma.js") }}"></script>
 @endprepend
