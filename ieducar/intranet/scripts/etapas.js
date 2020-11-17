@@ -139,13 +139,6 @@ $j(function () {
 
                         return;
                     }
-                } else {
-                    if (dateParts.year !== currentYear) {
-                        valid = false;
-                        that.addError(elm, 'O ano "' + dateParts.year + '" não é válido. Utilize o ano especificado.');
-
-                        return;
-                    }
                 }
 
                 if (ts <= startDateTs) {
@@ -183,12 +176,6 @@ $j(function () {
                         return;
                     }
                 } else {
-                    if (dateParts.year !== currentYear) {
-                        valid = false;
-                        that.addError(elm, 'O ano "' + dateParts.year + '" não é válido. Utilize o ano especificado.');
-
-                        return;
-                    }
 
                     var previousDate = previousLine.find('[id^="data_fim["]'),
                         previousTs = that.makeTimestamp(that.getDateParts(previousDate.val()));
