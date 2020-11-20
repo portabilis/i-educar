@@ -540,7 +540,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                         $ref_usuario_cad = $this->getSession()->id_pessoa,
                         $dadosMatricula['nome_serie'],
                         $ano,
-                        $this->getService()->getOption('serieCargaHoraria'),
+                        $this->getCargaHorariaDisciplinas($alunoId),
                         $this->getRequest()->dias_letivos,
                         strtoupper($dadosEscola['nome']),
                         strtoupper($dadosEscola['cidade']),
@@ -650,6 +650,20 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
         }
 
         return true;
+    }
+
+    protected function getCargaHorariaDisciplinas($alunoId)
+    {
+        $carga_horaria_disciplinas = 0;
+
+        foreach ($this->getService()->getComponentes() as $componenteCurricular) {
+            if (!$this->shouldProcessAreaConhecimento($componenteCurricular->get('area_conhecimento'))) {
+                continue;
+            }
+            $carga_horaria_disciplinas += $componenteCurricular->cargaHoraria;
+        }
+
+        return $carga_horaria_disciplinas;
     }
 
     protected function recreateHistoricoDisciplinas($historicoSequencial, $alunoId, $turmaId = null)
