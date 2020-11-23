@@ -41,4 +41,5 @@ class Process
     const SETTINGS = 3000;
     const RELEASE_PERIOD = 999848;
     const POST_OUT_PERIOD = 999849;
+    const BATCH_EXEMPTION = 1025;
 }

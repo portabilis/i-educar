@@ -31,15 +31,9 @@ class ViewController extends Core_Controller_Page_ViewController
     {
         parent::_preRender();
 
-        $localizacao = new LocalizacaoSistema();
-
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => 'Detalhe do componente curricular'
+        $this->breadcrumb('Detalhe do componente curricular', [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
     }
 
     public function setUrlCancelar(CoreExt_Entity $entry)

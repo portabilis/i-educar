@@ -12,6 +12,7 @@ class SettingController extends Controller
 {
     /**
      * @param Request $request
+     *
      * @return View
      */
     public function index(Request $request)
@@ -22,8 +23,8 @@ class SettingController extends Controller
 
         $this->menu(Process::SETTINGS);
 
-        if(!$request->user()->isAdmin()) {
-            return redirect('/intranet/educar_configuracoes_index.php');
+        if (!$request->user()->isAdmin()) {
+            return back()->withErrors(['Error' => ['Você não tem permissão para acessar este recurso']]);
         }
 
         $categories = SettingCategory::whereHas('settings')->orderBy('id', 'desc')->get();

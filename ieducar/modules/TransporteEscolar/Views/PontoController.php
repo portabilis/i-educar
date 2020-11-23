@@ -36,13 +36,9 @@ class PontoController extends Portabilis_Controller_Page_EditController
             'delete_success' => '/intranet/transporte_ponto_lst.php'
         ], $this->_options);
         $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
-            'educar_transporte_escolar_index.php' => 'Transporte escolar',
-            '' => "$nomeMenu ponto"
+        $this->breadcrumb("$nomeMenu ponto", [
+            url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
         ]);
-        $this->enviaLocalizacao($localizacao->montar());
     }
 
     protected function _initNovo()

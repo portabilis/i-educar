@@ -8,7 +8,6 @@ require_once 'include/clsCampos.inc.php';
 require_once 'Portabilis/View/Helper/Application.php';
 require_once 'Portabilis/View/Helper/Inputs.php';
 require_once 'Portabilis/Utils/User.php';
-require_once 'include/localizacaoSistema.php';
 
 class clsCadastro extends clsCampos
 {
@@ -77,13 +76,6 @@ class clsCadastro extends clsCampos
     {
         parent::__construct();
         $this->tipoacao = @$_POST['tipoacao'];
-    }
-
-    public function enviaLocalizacao($localizao)
-    {
-        if ($localizao) {
-            $this->locale = $localizao;
-        }
     }
 
     public function PreCadastrar()

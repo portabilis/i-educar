@@ -212,11 +212,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         'desc_plano_saude' => array('label' => 'Qual?'),
 
-        'hospital_clinica' => array('label' => 'Nome'),
+        'aceita_hospital_proximo' => array('label' => '<b>Em caso de emergência, autorizo levar meu(minha) filho(a) para o Hospital ou Clínica mais próximos:</b>'),
 
-        'hospital_clinica_endereco' => array('label' => 'Endereço'),
-
-        'hospital_clinica_telefone' => array('label' => 'Telefone'),
+        'desc_aceita_hospital_proximo' => array('label' => 'Responsável'),
 
         'responsavel' => array('label' => 'Nome'),
 
@@ -318,14 +316,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     protected function _preConstruct()
     {
         $nomeMenu = $this->getRequest()->id == null ? "Cadastrar" : "Editar";
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(array(
-            $_SERVER['SERVER_NAME'] . "/intranet" => "In&iacute;cio",
-            "educar_index.php" => "Escola",
-            "" => "$nomeMenu aluno"
-        ));
 
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb("{$nomeMenu} aluno", [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
 
@@ -407,7 +401,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         // código aluno rede estadual
         $this->campoRA(
             "aluno_estado_id",
-            Portabilis_String_Utils::toLatin1("Código rede estadual do aluno (RA)"),
+            "Código rede estadual do aluno (RA)",
             $this->aluno_estado_id,
             FALSE
         );
@@ -415,7 +409,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         // código aluno sistema
         if (config('legacy.app.alunos.mostrar_codigo_sistema')) {
             $options = array(
-                'label' => Portabilis_String_Utils::toLatin1(config('legacy.app.alunos.codigo_sistema')),
+                'label' => config('legacy.app.alunos.codigo_sistema'),
                 'required' => false,
                 'size' => 25,
                 'max_length' => 30
@@ -515,7 +509,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->integer('nis_pis_pasep', $options);
 
         // tipo de certidao civil
-        $escolha_certidao = Portabilis_String_Utils::toLatin1('Tipo certidão civil');
+        $escolha_certidao = 'Tipo certidão civil';
         $selectOptions = array(
             null => $escolha_certidao,
             'certidao_nascimento_novo_formato' => 'Nascimento (novo formato)',
@@ -583,7 +577,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->integer('folha_certidao_civil', $options);
 
         // certidao nascimento (novo padrão)
-        $placeholderCertidao = Portabilis_String_Utils::toLatin1('Certidão nascimento');
+        $placeholderCertidao = 'Certidão nascimento';
         $options = array(
             'required' => false,
             'label' => '',
@@ -597,7 +591,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->integer('certidao_nascimento', $options);
 
         // certidao casamento (novo padrão)
-        $placeholderCertidao = Portabilis_String_Utils::toLatin1('Certidão casamento');
+        $placeholderCertidao = 'Certidão casamento';
         $options = array(
             'required' => false,
             'label' => '',
@@ -624,7 +618,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->uf($options, $helperOptions);
 
         // data emissão certidão civil
-        $placeholderEmissao = Portabilis_String_Utils::toLatin1('Data emissão');
+        $placeholderEmissao = 'Data emissão';
         $options = array(
             'required' => false,
             'label' => '',
@@ -641,7 +635,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
           );
 
         // cartório emissão certidão civil
-        $labelCartorio = Portabilis_String_Utils::toLatin1('Cartório emissão');
+        $labelCartorio = 'Cartório emissão';
         $options = array(
             'required' => false,
             'label' => $labelCartorio,
@@ -668,7 +662,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->select('justificativa_falta_documentacao', $options);
 
         // Passaporte
-        $labelPassaporte = Portabilis_String_Utils::toLatin1('Passaporte');
+        $labelPassaporte = 'Passaporte';
         $options = array(
             'required' => false,
             'label' => $labelPassaporte,
@@ -808,7 +802,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         // tipo
 
-        $label = Portabilis_String_Utils::toLatin1($this->_getLabel('responsavel'));
+        $label = $this->_getLabel('responsavel');
 
         /*$tiposResponsavel = array(null           => $label,
                                   'pai'          => 'Pai',
@@ -816,7 +810,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
                                   'outra_pessoa' => 'Outra pessoa');*/
         $tiposResponsavel = array(null => 'Informe uma Pessoa primeiro');
         $options = array(
-            'label' => Portabilis_String_Utils::toLatin1('Responsável'),
+            'label' => 'Responsável',
             'resources' => $tiposResponsavel,
             'required' => true,
             'inline' => true
@@ -868,28 +862,28 @@ class AlunoController extends Portabilis_Controller_Page_EditController
             }
 
             // Transporte Rota
-            $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('transporte_rota')), 'required' => false, 'resources' => $rota_resources);
+            $options = array('label' => $this->_getLabel('transporte_rota'), 'required' => false, 'resources' => $rota_resources);
             $this->inputsHelper()->select('transporte_rota', $options);
 
             // Ponto de Embarque
-            $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('transporte_ponto')), 'required' => false, 'resources' => array("" => "Selecione uma rota acima"));
+            $options = array('label' => $this->_getLabel('transporte_ponto'), 'required' => false, 'resources' => array("" => "Selecione uma rota acima"));
             $this->inputsHelper()->select('transporte_ponto', $options);
 
             // Transporte Destino
-            $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('transporte_destino')), 'required' => false);
+            $options = array('label' => $this->_getLabel('transporte_destino'), 'required' => false);
             $this->inputsHelper()->simpleSearchPessoaj('transporte_destino', $options);
 
             // Transporte observacoes
-            $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('transporte_observacao')), 'required' => false, 'size' => 50, 'max_length' => 255);
+            $options = array('label' => $this->_getLabel('transporte_observacao'), 'required' => false, 'size' => 50, 'max_length' => 255);
             $this->inputsHelper()->textArea('transporte_observacao', $options);
 
         // religião
-        $this->inputsHelper()->religiao(array('required' => false, 'label' => Portabilis_String_Utils::toLatin1('Religião')));
+        $this->inputsHelper()->religiao(array('required' => false, 'label' => 'Religião'));
 
         // Benefícios
         $helperOptions = array('objectName' => 'beneficios');
         $options = array(
-            'label' => Portabilis_String_Utils::toLatin1('Benefícios'),
+            'label' => 'Benefícios',
             'size' => 250,
             'required' => false,
             'options' => array('value' => null)
@@ -919,11 +913,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = ['label' => $this->_getLabel('emancipado')];
         $this->inputsHelper()->checkbox('emancipado', $options);
 
-        $this->campoArquivo('documento', Portabilis_String_Utils::toLatin1($this->_getLabel('documento')), $this->documento, 40, Portabilis_String_Utils::toLatin1("<br/> <span id='span-documento' style='font-style: italic; font-size= 10px;''> São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 250KB</span>", array('escape' => false)));
+        $this->campoArquivo('documento', $this->_getLabel('documento'), $this->documento, 40, "<br/> <span id='span-documento' style='font-style: italic; font-size= 10px;''> São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 250KB</span>", array('escape' => false));
 
         $this->inputsHelper()->hidden('url_documento');
 
-        $this->campoArquivo('laudo_medico', Portabilis_String_Utils::toLatin1($this->_getLabel('laudo_medico')), $this->laudo_medico, 40, Portabilis_String_Utils::toLatin1("<br/> <span id='span-laudo_medico' style='font-style: italic; font-size= 10px;''> São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 250KB</span>", array('escape' => false)));
+        $this->campoArquivo('laudo_medico', $this->_getLabel('laudo_medico'), $this->laudo_medico, 40, "<br/> <span id='span-laudo_medico' style='font-style: italic; font-size= 10px;''> São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 250KB</span>", array('escape' => false));
 
         $this->inputsHelper()->hidden('url_laudo_medico');
 
@@ -972,167 +966,161 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->text('sus', $options);
 
         // alergia_medicamento
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('alergia_medicamento')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('alergia_medicamento'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('alergia_medicamento', $options);
 
         // desc_alergia_medicamento
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_alergia_medicamento')), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('desc_alergia_medicamento'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->text('desc_alergia_medicamento', $options);
 
         // alergia_alimento
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('alergia_alimento')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('alergia_alimento'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('alergia_alimento', $options);
 
         // desc_alergia_alimento
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_alergia_alimento')), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('desc_alergia_alimento'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->text('desc_alergia_alimento', $options);
 
         // doenca_congenita
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('doenca_congenita')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('doenca_congenita'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('doenca_congenita', $options);
 
         // desc_doenca_congenita
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_doenca_congenita')), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('desc_doenca_congenita'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->text('desc_doenca_congenita', $options);
 
         // fumante
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('fumante')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('fumante'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('fumante', $options);
 
         // doenca_caxumba
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('doenca_caxumba')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('doenca_caxumba'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('doenca_caxumba', $options);
 
         // doenca_sarampo
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('doenca_sarampo')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('doenca_sarampo'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('doenca_sarampo', $options);
 
         // doenca_rubeola
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('doenca_rubeola')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('doenca_rubeola'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('doenca_rubeola', $options);
 
         // doenca_catapora
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('doenca_catapora')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('doenca_catapora'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('doenca_catapora', $options);
 
         // doenca_escarlatina
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('doenca_escarlatina')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('doenca_escarlatina'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('doenca_escarlatina', $options);
 
         // doenca_coqueluche
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('doenca_coqueluche')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('doenca_coqueluche'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('doenca_coqueluche', $options);
 
         // doenca_outras
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('doenca_outras')), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('doenca_outras'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->text('doenca_outras', $options);
 
         // epiletico
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('epiletico')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('epiletico'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('epiletico', $options);
 
         // epiletico_tratamento
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('epiletico_tratamento')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('epiletico_tratamento'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('epiletico_tratamento', $options);
 
         // hemofilico
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('hemofilico')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('hemofilico'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('hemofilico', $options);
 
         // hipertenso
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('hipertenso')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('hipertenso'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('hipertenso', $options);
 
         // asmatico
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('asmatico')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('asmatico'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('asmatico', $options);
 
         // diabetico
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('diabetico')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('diabetico'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('diabetico', $options);
 
         // insulina
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('insulina')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('insulina'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('insulina', $options);
 
         // tratamento_medico
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('tratamento_medico')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('tratamento_medico'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('tratamento_medico', $options);
 
         // desc_tratamento_medico
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_tratamento_medico')), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('desc_tratamento_medico'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->text('desc_tratamento_medico', $options);
 
         // medicacao_especifica
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('medicacao_especifica')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('medicacao_especifica'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('medicacao_especifica', $options);
 
         // desc_medicacao_especifica
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_medicacao_especifica')), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('desc_medicacao_especifica'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->text('desc_medicacao_especifica', $options);
 
         // acomp_medico_psicologico
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('acomp_medico_psicologico')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('acomp_medico_psicologico'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('acomp_medico_psicologico', $options);
 
         // desc_acomp_medico_psicologico
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_acomp_medico_psicologico')), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('desc_acomp_medico_psicologico'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->text('desc_acomp_medico_psicologico', $options);
 
         // restricao_atividade_fisica
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('restricao_atividade_fisica')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('restricao_atividade_fisica'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('restricao_atividade_fisica', $options);
 
         // desc_restricao_atividade_fisica
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_restricao_atividade_fisica')), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('desc_restricao_atividade_fisica'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->text('desc_restricao_atividade_fisica', $options);
 
         // fratura_trauma
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('fratura_trauma')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('fratura_trauma'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('fratura_trauma', $options);
 
         // desc_fratura_trauma
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_fratura_trauma')), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('desc_fratura_trauma'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->text('desc_fratura_trauma', $options);
 
         // plano_saude
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('plano_saude')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('plano_saude'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('plano_saude', $options);
 
         // desc_plano_saude
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_plano_saude')), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('desc_plano_saude'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->text('desc_plano_saude', $options);
 
-        $this->campoRotulo('tit_dados_hospital', Portabilis_String_Utils::toLatin1('Em caso de emergência, levar para hospital ou clínica'));
+        // Levar para hospital mais próximo
+        $options = array('label' => $this->_getLabel('aceita_hospital_proximo'), 'required' => false, 'placeholder' => '');
+        $this->inputsHelper()->checkbox('aceita_hospital_proximo', $options);
 
-        // hospital_clinica
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('hospital_clinica')), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->text('hospital_clinica', $options);
+        // responsável hospital
+        $options = array('label' => $this->_getLabel('desc_aceita_hospital_proximo'), 'size' => 50, 'max_length' => 100, 'required' => false, 'placeholder' => '');
+        $this->inputsHelper()->text('desc_aceita_hospital_proximo', $options);
 
-        // hospital_clinica_endereco
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('hospital_clinica_endereco')), 'size' => 50, 'max_length' => 50, 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->text('hospital_clinica_endereco', $options);
-
-        // hospital_clinica_telefone
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('hospital_clinica_telefone')), 'size' => 20, 'max_length' => 20, 'required' => false, 'placeholder' => '');
-        $this->inputsHelper()->text('hospital_clinica_telefone', $options);
-
-        $this->campoRotulo('tit_dados_responsavel', Portabilis_String_Utils::toLatin1('Em caso de emergência, caso não seja encontrado pais ou responsáveis, avisar'));
+        $this->campoRotulo('tit_dados_responsavel', 'Em caso de emergência, caso não seja encontrado pais ou responsáveis, avisar');
 
         // responsavel
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('responsavel')), 'size' => 50, 'max_length' => 50, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('responsavel'), 'size' => 50, 'max_length' => 50, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->text('responsavel', $options);
 
         // responsavel_parentesco
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('responsavel_parentesco')), 'size' => 20, 'max_length' => 20, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('responsavel_parentesco'), 'size' => 20, 'max_length' => 20, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->text('responsavel_parentesco', $options);
 
         // responsavel_parentesco_telefone
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('responsavel_parentesco_telefone')), 'size' => 20, 'max_length' => 20, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('responsavel_parentesco_telefone'), 'size' => 20, 'max_length' => 20, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->text('responsavel_parentesco_telefone', $options);
 
         // responsavel_parentesco_celular
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('responsavel_parentesco_celular')), 'size' => 20, 'max_length' => 20, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('responsavel_parentesco_celular'), 'size' => 20, 'max_length' => 20, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->text('responsavel_parentesco_celular', $options);
 
         $moradias = array(
@@ -1172,7 +1160,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $situacoes = array(
             null => 'Selecione',
             '1' => 'Alugado',
-            '2' => Portabilis_String_Utils::toLatin1('Próprio'),
+            '2' => 'Próprio',
             '3' => 'Cedido',
             '4' => 'Financiado',
             '5' => 'Outros'
@@ -1186,49 +1174,49 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->select('moradia_situacao', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quartos')), 'size' => 2, 'max_length' => 2, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('quartos'), 'size' => 2, 'max_length' => 2, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->integer('quartos', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('sala')), 'size' => 2, 'max_length' => 2, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('sala'), 'size' => 2, 'max_length' => 2, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->integer('sala', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('copa')), 'size' => 2, 'max_length' => 2, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('copa'), 'size' => 2, 'max_length' => 2, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->integer('copa', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('banheiro')), 'size' => 2, 'max_length' => 2, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('banheiro'), 'size' => 2, 'max_length' => 2, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->integer('banheiro', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('garagem')), 'size' => 2, 'max_length' => 2, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('garagem'), 'size' => 2, 'max_length' => 2, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->integer('garagem', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('empregada_domestica')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('empregada_domestica'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('empregada_domestica', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('automovel')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('automovel'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('automovel', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('motocicleta')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('motocicleta'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('motocicleta', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('geladeira')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('geladeira'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('geladeira', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('fogao')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('fogao'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('fogao', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('maquina_lavar')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('maquina_lavar'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('maquina_lavar', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('microondas')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('microondas'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('microondas', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('video_dvd')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('video_dvd'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('video_dvd', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('televisao')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('televisao'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('televisao', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('telefone')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('telefone'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('telefone', $options);
 
 
@@ -1255,28 +1243,28 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         ];
         $this->inputsHelper()->multipleSearchCustom('_', $options, $helperOptions);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quant_pessoas')), 'size' => 5, 'max_length' => 2, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('quant_pessoas'), 'size' => 5, 'max_length' => 2, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->integer('quant_pessoas', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('renda')), 'size' => 5, 'max_length' => 10, 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('renda'), 'size' => 5, 'max_length' => 10, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->numeric('renda', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('agua_encanada')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('agua_encanada'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('agua_encanada', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('poco')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('poco'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('poco', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('energia')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('energia'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('energia', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('esgoto')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('esgoto'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('esgoto', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('fossa')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('fossa'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('fossa', $options);
 
-        $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('lixo')), 'required' => false, 'placeholder' => '');
+        $options = array('label' => $this->_getLabel('lixo'), 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->checkbox('lixo', $options);
 
         $recursosProvaInep = RecursosRealizacaoProvas::getDescriptiveValues();
@@ -1306,7 +1294,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $this->inputsHelper()->select('recebe_escolarizacao_em_outro_espaco', $options);
 
         // Projetos
-        $this->campoTabelaInicio("projetos", "Projetos", array("Projeto", Portabilis_String_Utils::toLatin1("Data inclusão"), "Data desligamento", 'Turno'));
+        $this->campoTabelaInicio("projetos", "Projetos", array("Projeto", "Data inclusão"), "Data desligamento", 'Turno');
 
         $this->inputsHelper()->text('projeto_cod_projeto', array('required' => false));
 

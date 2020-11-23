@@ -13,6 +13,7 @@ use iEducar\Modules\ErrorTracking\Tracker;
 use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -101,7 +102,7 @@ class AppServiceProvider extends ServiceProvider
 
         Paginator::defaultView('vendor.pagination.default');
 
-        Builder::macro('whereUnaccent', function ($column, $value) {
+        QueryBuilder::macro('whereUnaccent', function ($column, $value) {
             $this->whereRaw('unaccent(' . $column . ') ilike unaccent(\'%\' || ? || \'%\')', [$value]);
         });
 

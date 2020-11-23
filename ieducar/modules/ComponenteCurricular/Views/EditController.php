@@ -61,14 +61,9 @@ class EditController extends Core_Controller_Page_EditController
 
         $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-        $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => "$nomeMenu componente curricular"
+        $this->breadcrumb( "$nomeMenu componente curricular", [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
     }
 
     /**

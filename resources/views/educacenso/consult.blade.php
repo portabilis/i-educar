@@ -2,6 +2,7 @@
 
 @push('styles')
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('css/ieducar.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ Asset::get('modules/Portabilis/Assets/Plugins/Chosen/chosen.css') }}"/>
 @endpush
 
 @section('content')
@@ -206,4 +207,5 @@
     <script type="text/javascript" src="{{ Asset::get("/modules/Portabilis/Assets/Javascripts/ClientApi.js") }}"></script>
     <script type="text/javascript" src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/DynamicInput.js") }}"></script>
     <script type="text/javascript" src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Escola.js") }}"></script>
+    <script type="text/javascript" src="{{ Asset::get("/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js") }}"></script>
 @endprepend

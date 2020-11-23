@@ -54,13 +54,10 @@ class indice extends clsCadastro
         $this->nome_url_cancelar = 'Cancelar';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-         $_SERVER['SERVER_NAME'].'/intranet' => 'Início',
-         'educar_enderecamento_index.php'    => 'Endereçamento',
-         ''        => "{$nomeMenu} país"
-    ]);
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb("{$nomeMenu} país", [
+            url('intranet/educar_enderecamento_index.php') => 'Endereçamento',
+        ]);
 
         return $retorno;
     }

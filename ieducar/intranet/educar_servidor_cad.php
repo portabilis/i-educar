@@ -91,6 +91,10 @@ class indice extends clsCadastro
 
             $registro = $obj->detalhe();
 
+            if (empty($registro)) {
+                return $this->simpleRedirect(url('intranet/educar_servidor_lst.php'));
+            }
+
             if ($registro) {
                 // passa todos os valores obtidos no registro para atributos do objeto
                 foreach ($registro as $campo => $val) {
@@ -116,13 +120,10 @@ class indice extends clsCadastro
                     WHERE
                         ref_cod_servidor = %d AND
                         ativo = 1
-                        AND ano = (
-                            SELECT max(ano)
-                            FROM pmieducar.servidor_alocacao
-                            WHERE ref_cod_servidor = %d
-                        )',
+                        AND ano = %d
+                        AND (data_saida > now() or data_saida is null)',
                     $this->cod_servidor,
-                    $this->cod_servidor
+                    $this->ano ?: date('Y')
                 );
 
                 $db->Consulta($sql);
@@ -130,6 +131,9 @@ class indice extends clsCadastro
                     $cargaHoraria = $db->Tupla();
                     $cargaHoraria = $cargaHoraria['sum'];
                 }
+
+                $cargaHoraria = str_pad($cargaHoraria, 2, 0, STR_PAD_LEFT);
+
                 $this->total_horas_alocadas = $cargaHoraria;
 
                 // Funções
@@ -325,12 +329,17 @@ class indice extends clsCadastro
 
         $this->campoTabelaFim();
 
+        $horas = '00:00';
+        if ($this->total_horas_alocadas) {
+            $horas = $this->total_horas_alocadas . ':00';
+        }
+
         if (strtoupper($this->tipoacao) == 'EDITAR') {
             $this->campoTextoInv(
                 'total_horas_alocadas_',
                 'Total de Horas Alocadadas',
-                $this->total_horas_alocadas . ':00',
-                9,
+                $horas,
+                6,
                 20
             );
 
@@ -351,7 +360,7 @@ class indice extends clsCadastro
             'Carga Horária',
             $hora_formatada,
             true,
-            'Número de horas deve ser maior que horas alocadas',
+            ' Número de horas deve ser maior que horas alocadas',
             '',
             false
         );

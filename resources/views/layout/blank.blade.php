@@ -56,8 +56,6 @@
     <script src="https://maps.google.com/maps/api/js?sensor=true" type="text/javascript" charset="utf-8"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
-    <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/localizacaoSistema.css') }} '/>
-
     <script>(function (e, t, n) {
             var r = e.querySelectorAll("html")[0];
             r.className = r.className.replace(/(^|\s)no-js(\s|$)/, "$1js$2")
