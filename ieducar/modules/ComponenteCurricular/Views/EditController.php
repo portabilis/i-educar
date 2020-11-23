@@ -53,6 +53,11 @@ class EditController extends Core_Controller_Page_EditController
             'help' => 'Ordem respeitada no lançamento de notas/faltas.',
             'entity' => 'ordenamento'
         ],
+        'desconsidera_para_progressao' => [
+            'label' => 'Desconsiderar o componente na aprovação/reprovação dos alunos?',
+            'help' => '',
+            'entity' => 'desconsidera_para_progressao'
+        ],
     ];
 
     protected function _preRender()
@@ -159,6 +164,17 @@ class EditController extends Core_Controller_Page_EditController
             false,
             $this->_getHelp('ordenamento')
         );
+
+        $this->campoCheck(
+            'desconsidera_para_progressao',
+            $this->_getLabel('desconsidera_para_progressao'),
+            $this->getEntity()->desconsidera_para_progressao,
+            '',
+            false,
+            false,
+            false,
+            $this->_getHelp('desconsidera_para_progressao')
+        );
     }
 
     /**
@@ -192,6 +208,12 @@ class EditController extends Core_Controller_Page_EditController
 
                 $data[$key] = $val;
             }
+        }
+
+        if (!isset($data['desconsidera_para_progressao'])) {
+            $data['desconsidera_para_progressao'] = false;
+        } else {
+            $data['desconsidera_para_progressao'] = true;
         }
 
         // Verifica pela existência do field identity

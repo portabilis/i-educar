@@ -24,7 +24,8 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
         'abreviatura' => 'abreviatura',
         'tipo_base' => 'tipo_base',
         'codigo_educacenso' => 'codigo_educacenso',
-        'ordenamento' => 'ordenamento'
+        'ordenamento' => 'ordenamento',
+        'desconsidera_para_progressao' => 'desconsidera_para_progressao'
     ];
 
     protected $_notPersistable = [
