@@ -21,7 +21,6 @@
         "composer/semver": "^1.4",
         "cossou/jasperphp": "^2.7",
         "doctrine/dbal": "^2.9",
-        "edersoares/laravel-plug-and-play": "^1.1",
         "fideloper/proxy": "^4.0",
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^6.3",
@@ -91,11 +90,6 @@
                 "laravel/dusk",
                 "laravel/telescope",
                 "barryvdh/laravel-debugbar"
-            ]
-        },
-        "merge-plugin": {
-            "include": [
-                "packages/*/*/composer.json"
             ]
         }
     },
