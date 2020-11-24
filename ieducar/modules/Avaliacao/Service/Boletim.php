@@ -857,6 +857,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
+        $disciplinasNaoReprovativas = App_Model_IedFinder::getDisciplinasDesconsideradasParaProgressao();
 
         // A situação é "aprovado" por padrão
         $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
@@ -1001,6 +1002,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
             }
 
+            if (in_array($id, $disciplinasNaoReprovativas) && $situacao->componentesCurriculares[$id]->situacao == App_Model_MatriculaSituacao::REPROVADO) {
+                continue;
+            }
+
             if ($this->_situacaoPrioritaria(
                 $situacao->componentesCurriculares[$id]->situacao,
                 $situacaoGeral
@@ -1139,6 +1144,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $total  = 0;
             $etapasComponentes = [];
             $faltasComponentes = [];
+            $disciplinasNaoReprovativas = App_Model_IedFinder::getDisciplinasDesconsideradasParaProgressao();
 
             foreach ($faltas as $key => $falta) {
                 // Total de faltas do componente
@@ -1196,8 +1202,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     $etapasComponentes[$etapa] = $etapa;
                 }
 
-                // Adiciona a quantidade de falta do componente ao total geral de faltas
-                $total += $componenteTotal;
+                if (!in_array($id, $disciplinasNaoReprovativas)) {
+                    // Adiciona a quantidade de falta do componente ao total geral de faltas
+                    $total += $componenteTotal;
+                }
             }
 
             if (0 == count($faltasComponentes) ||
