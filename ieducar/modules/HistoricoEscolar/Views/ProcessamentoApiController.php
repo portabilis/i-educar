@@ -581,7 +581,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                         $ref_usuario_cad = null,
                         $dadosMatricula['nome_serie'],
                         $ano,
-                        $this->getService()->getOption('serieCargaHoraria'),
+                        $this->getCargaHorariaDisciplinas($alunoId),
                         $this->getRequest()->dias_letivos,
                         strtoupper($dadosEscola['nome']),
                         strtoupper($dadosEscola['cidade']),
