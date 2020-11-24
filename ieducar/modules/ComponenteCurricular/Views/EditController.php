@@ -210,11 +210,7 @@ class EditController extends Core_Controller_Page_EditController
             }
         }
 
-        if (!isset($data['desconsidera_para_progressao'])) {
-            $data['desconsidera_para_progressao'] = false;
-        } else {
-            $data['desconsidera_para_progressao'] = true;
-        }
+        $data['desconsidera_para_progressao'] = isset($data['desconsidera_para_progressao']);
 
         // Verifica pela existência do field identity
         if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
