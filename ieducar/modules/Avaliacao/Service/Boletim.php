@@ -857,7 +857,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
-        $disciplinasNaoReprovativas = App_Model_IedFinder::getDisciplinasDesconsideradasParaProgressao();
+        $disciplinasNaoReprovativas = array_filter($componentesMatricula, function($componente){
+            if ($componente->desconsidera_para_progressao) {
+                return $componente->id;
+            }
+        });
+        $disciplinasNaoReprovativas = array_keys($disciplinasNaoReprovativas);
 
         // A situação é "aprovado" por padrão
         $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
@@ -1144,7 +1149,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $total  = 0;
             $etapasComponentes = [];
             $faltasComponentes = [];
-            $disciplinasNaoReprovativas = App_Model_IedFinder::getDisciplinasDesconsideradasParaProgressao();
+
+            $disciplinasNaoReprovativas = array_filter($componentes, function($componente){
+                if ($componente->desconsidera_para_progressao) {
+                    return $componente->id;
+                }
+            });
+            $disciplinasNaoReprovativas = array_keys($disciplinasNaoReprovativas);
 
             foreach ($faltas as $key => $falta) {
                 // Total de faltas do componente
