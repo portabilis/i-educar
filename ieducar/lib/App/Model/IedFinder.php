@@ -1149,14 +1149,6 @@ class App_Model_IedFinder extends CoreExt_Entity
         return $disciplinasDependencia;
     }
 
-    public static function getDisciplinasDesconsideradasParaProgressao()
-    {
-        return LegacyDiscipline::query()
-            ->where('desconsidera_para_progressao', true)
-            ->pluck('id')
-            ->toArray();
-    }
-
     /**
      * Retorna a quantidade de módulos do ano letivo por uma dada matrícula.
      *
