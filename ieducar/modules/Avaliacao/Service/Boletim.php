@@ -858,9 +858,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
         $disciplinasNaoReprovativas = array_filter($componentesMatricula, function($componente){
-            if ($componente->desconsidera_para_progressao) {
-                return $componente->id;
-            }
+            return $componente->desconsidera_para_progressao;
         });
         $disciplinasNaoReprovativas = array_map(function ($disciplina) {
             return $disciplina->id;
@@ -1153,9 +1151,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $faltasComponentes = [];
 
             $disciplinasNaoReprovativas = array_filter($componentes, function($componente){
-                if ($componente->desconsidera_para_progressao) {
-                    return $componente->id;
-                }
+                return $componente->desconsidera_para_progressao;
             });
             $disciplinasNaoReprovativas = array_map(function ($disciplina) {
                 return $disciplina->id;
