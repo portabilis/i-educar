@@ -862,7 +862,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 return $componente->id;
             }
         });
-        $disciplinasNaoReprovativas = array_keys($disciplinasNaoReprovativas);
+        $disciplinasNaoReprovativas = array_map(function ($disciplina) {
+            return $disciplina->id;
+        }, $disciplinasNaoReprovativas);
 
         // A situação é "aprovado" por padrão
         $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
@@ -1155,7 +1157,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     return $componente->id;
                 }
             });
-            $disciplinasNaoReprovativas = array_keys($disciplinasNaoReprovativas);
+            $disciplinasNaoReprovativas = array_map(function ($disciplina) {
+                return $disciplina->id;
+            }, $disciplinasNaoReprovativas);
 
             foreach ($faltas as $key => $falta) {
                 // Total de faltas do componente
