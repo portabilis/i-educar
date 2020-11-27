@@ -913,11 +913,11 @@ class AlunoController extends Portabilis_Controller_Page_EditController
         $options = ['label' => $this->_getLabel('emancipado')];
         $this->inputsHelper()->checkbox('emancipado', $options);
 
-        $this->campoArquivo('documento', $this->_getLabel('documento'), $this->documento, 40, "<br/> <span id='span-documento' style='font-style: italic; font-size= 10px;''> São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 250KB</span>", array('escape' => false));
+        $this->campoArquivo('documento', $this->_getLabel('documento'), $this->documento, 40, "<br/> <span id='span-documento' style='font-style: italic; font-size= 10px;''> São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 250KB</span>");
 
         $this->inputsHelper()->hidden('url_documento');
 
-        $this->campoArquivo('laudo_medico', $this->_getLabel('laudo_medico'), $this->laudo_medico, 40, "<br/> <span id='span-laudo_medico' style='font-style: italic; font-size= 10px;''> São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 250KB</span>", array('escape' => false));
+        $this->campoArquivo('laudo_medico', $this->_getLabel('laudo_medico'), $this->laudo_medico, 40, "<br/> <span id='span-laudo_medico' style='font-style: italic; font-size= 10px;''> São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 250KB</span>");
 
         $this->inputsHelper()->hidden('url_laudo_medico');
 

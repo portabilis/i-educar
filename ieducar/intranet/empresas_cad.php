@@ -232,7 +232,7 @@ class indice extends clsCadastro
             $this->simpleRedirect('empresas_lst.php');
         }
 
-        $this->mensagem = 'Ja existe uma empresa cadastrada com este CNPJ. ';
+        $this->mensagem = 'Já existe uma empresa cadastrada com este CNPJ.';
 
         return false;
     }
@@ -242,8 +242,10 @@ class indice extends clsCadastro
         $this->cnpj = idFederal2int(urldecode($this->cnpj));
         $objJuridica = new clsJuridica(false, $this->cnpj);
 
-        if ($objJuridica->detalhe()) {
-            $this->mensagem = 'Ja existe uma empresa cadastrada com este CNPJ. ';
+        $detalhe = $objJuridica->detalhe();
+
+        if ($detalhe && $this->cod_pessoa_fj != $detalhe['idpes']) {
+            $this->mensagem = 'Já existe uma empresa cadastrada com este CNPJ.';
 
             return false;
         }
