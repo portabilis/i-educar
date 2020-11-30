@@ -54,7 +54,8 @@ class indice extends clsListagem
 
         $lista_busca = [
             'Etapa',
-            'Número de meses'
+            'Número de etapas',
+            'Número de meses',
         ];
 
         $obj_permissoes = new clsPermissoes();
@@ -107,7 +108,8 @@ class indice extends clsListagem
 
                 $lista_busca = [
                     "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">{$registro['nm_tipo']}</a>",
-                    "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">{$registro['num_meses']}</a>"
+                    "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">{$registro['num_etapas']}</a>",
+                    "<a href=\"educar_modulo_det.php?cod_modulo={$registro['cod_modulo']}\">{$registro['num_meses']}</a>",
                 ];
 
                 if ($nivel_usuario == 1) {
