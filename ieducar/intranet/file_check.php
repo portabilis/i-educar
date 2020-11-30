@@ -20,7 +20,7 @@ class FileController
         if ($maxSize != null) {
             $this->maxSize = $maxSize;
         } else {
-            $this->maxSize = 250 * 1024;
+            $this->maxSize = 2048 * 1024;
         }
 
         if ($suportedExtensions != null) {

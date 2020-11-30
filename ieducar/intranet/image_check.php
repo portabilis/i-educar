@@ -62,7 +62,7 @@ class PictureController {
         if ($maxSize!=null)
             $this->maxSize = $maxSize;
         else
-            $this->maxSize = 150*1024;
+            $this->maxSize = 2048*1024;
 
         if ($suportedExtensions != null)
             $this->suportedExtensions = $suportedExtensions;
