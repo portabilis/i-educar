@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6739f748d234386a2dd6319529144162",
+    "content-hash": "c5b361aa3cbeb1961b78654ba3a818a7",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -546,6 +546,56 @@
                 "source": "https://github.com/cossou/JasperPHP/tree/master"
             },
             "time": "2018-11-16T11:45:31+00:00"
+        },
+        {
+            "name": "dex/composer-plug-and-play",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/edersoares/composer-plug-and-play.git",
+                "reference": "0080cc733392108bb24822344938297198dc0a54"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/edersoares/composer-plug-and-play/zipball/0080cc733392108bb24822344938297198dc0a54",
+                "reference": "0080cc733392108bb24822344938297198dc0a54",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^2.0",
+                "ext-json": "*",
+                "php": ">=7.3"
+            },
+            "require-dev": {
+                "composer/composer": "^2.0",
+                "phpunit/phpunit": "^9.4"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Dex\\Composer\\PlugAndPlay\\PlugAndPlayPlugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Dex\\Composer\\PlugAndPlay\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eder Soares",
+                    "email": "edersoares@me.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Plug and play packages for Composer",
+            "support": {
+                "issues": "https://github.com/edersoares/composer-plug-and-play/issues",
+                "source": "https://github.com/edersoares/composer-plug-and-play/tree/0.1.0"
+            },
+            "time": "2020-11-24T02:58:23+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",

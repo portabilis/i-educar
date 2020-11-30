@@ -20,6 +20,7 @@
         "cocur/slugify": "^3.1",
         "composer/semver": "^1.4",
         "cossou/jasperphp": "^2.7",
+        "dex/composer-plug-and-play": "^0.1.0",
         "doctrine/dbal": "^2.9",
         "fideloper/proxy": "^4.0",
         "google/recaptcha": "^1.2",
