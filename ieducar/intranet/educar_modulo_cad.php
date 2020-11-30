@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyStageType;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -102,6 +104,11 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(584, $this->pessoa_logada, 3, 'educar_modulo_lst.php');
 
+        if (LegacyStageType::alreadyExists($this->nm_tipo, $this->num_etapas)) {
+            $this->mensagem = 'Já existe um registro cadastrado com o mesmo nome e o mesmo número de etapa(s).<br>';
+            return false;
+        }
+
         $obj = new clsPmieducarModulo(null, null, $this->pessoa_logada, $this->nm_tipo, $this->descricao, $this->num_meses, $this->num_semanas, null, null, 1, $this->ref_cod_instituicao, $this->num_etapas);
         $cadastrou = $obj->cadastra();
         if ($cadastrou) {
@@ -118,6 +125,11 @@ class indice extends clsCadastro
     {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(584, $this->pessoa_logada, 3, 'educar_modulo_lst.php');
+
+        if (LegacyStageType::alreadyExists($this->nm_tipo, $this->num_etapas, $this->cod_modulo)) {
+            $this->mensagem = 'Já existe um registro cadastrado com o mesmo nome e o mesmo número de etapa(s).<br>';
+            return false;
+        }
 
         $obj = new clsPmieducarModulo($this->cod_modulo, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, $this->num_meses, $this->num_semanas, null, null, 1, $this->ref_cod_instituicao, $this->num_etapas);
         $editou = $obj->edita();
