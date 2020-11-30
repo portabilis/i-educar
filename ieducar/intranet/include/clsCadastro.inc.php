@@ -11,13 +11,6 @@ require_once 'Portabilis/Utils/User.php';
 
 class clsCadastro extends clsCampos
 {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
-    public $__nome = 'formcadastro';
     public $target = '_self';
     public $largura;
     public $tipoacao;
