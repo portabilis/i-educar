@@ -53,18 +53,6 @@ class clsCadastro extends clsCampos
     const NOVO = 'N';
     const EDITAR = 'E';
 
-    /**
-     * @deprecated
-     */
-    public function addBanner(
-        $strBannerUrl = '',
-        $strBannerLateralUrl = '',
-        $strBannerTitulo = '',
-        $boolFechaBanner = true
-    ) {
-        // Método deixado para compatibilidade
-    }
-
     public function __construct()
     {
         parent::__construct();
