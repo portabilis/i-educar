@@ -21,7 +21,6 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Documentos";
-        $this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet", false );
 
         $this->idpes = $this->pessoa_logada;
 
