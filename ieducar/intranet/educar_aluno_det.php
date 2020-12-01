@@ -287,16 +287,6 @@ class indice extends clsDetalhe
         // código estado
         $this->addDetalhe([_cl('aluno.detalhe.codigo_estado'), $registro['aluno_estado_id']]);
 
-        if ($registro['caminho_foto']) {
-            $this->addDetalhe([
-                'Foto',
-                sprintf(
-                    '<img src="arquivos/educar/aluno/small/%s" border="0">',
-                    $this->urlPresigner()->getPresignedUrl($registro['caminho_foto'])
-                )
-            ]);
-        }
-
         if ($registro['nome_aluno']) {
             if ($caminhoFoto != null and $caminhoFoto != '') {
                 $url = $this->urlPresigner()->getPresignedUrl($caminhoFoto);
