@@ -52,7 +52,6 @@ class LegacyLinkCommand extends Command
         $links = [
             '../../' => [
                 'intranet/fonts',
-                'intranet/fotos',
                 'intranet/imagens',
                 'intranet/scripts',
                 'intranet/static',
