@@ -1,7 +1,5 @@
 DocumentacaoPadrao.php
 acesso_indevido_lst.php
-adicionar_documentos_cad.php
-adicionar_documentos_det.php
 agenda.php
 agenda_admin_cad.php
 agenda_admin_det.php

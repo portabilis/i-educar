@@ -96,18 +96,6 @@ class clsListagem extends clsCampos
         return false;
     }
 
-    /**
-     * @deprecated
-     */
-    public function addBanner(
-        $strBannerUrl = '',
-        $strBannerLateralUrl = '',
-        $strBannerTitulo = '',
-        $boolFechaBanner = true
-    ) {
-        // Apenas para fins de compatibilidade
-    }
-
     public function addCabecalhos($coluna)
     {
         $this->cabecalho = $coluna;

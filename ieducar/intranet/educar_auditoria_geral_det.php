@@ -24,11 +24,6 @@ class indice extends clsDetalhe
     public function Gerar()
     {
         $this->titulo = 'Auditoria geral - Detalhe';
-        $this->addBanner(
-            'imagens/nvp_top_intranet.jpg',
-            'imagens/nvp_vert_intranet.jpg',
-            'Intranet'
-        );
 
         $this->id = $this->getQueryString('id');
 
@@ -57,7 +52,7 @@ class indice extends clsDetalhe
         ]);
 
         $operacoes = Operacoes::getDescriptiveValues();
-        
+
         $this->addDetalhe([
             'Operação',
             $operacoes[$registro["operacao"]]
@@ -72,7 +67,7 @@ class indice extends clsDetalhe
             'Data Hora',
             Portabilis_Date_Utils::pgSQLToBr($registro['data_hora'])
         ]);
-        
+
         $this->addDetalhe([
             'Valor Antigo',
             JsonToHtmlTable::transformJsonToHtmlTable($registro['valor_antigo'])

@@ -70,8 +70,6 @@ class indice extends clsDetalhe
         Portabilis_View_Helper_Application::loadStylesheet($this, $style);
 
         $this->titulo = 'Matrícula - Detalhe';
-        $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
-
         $this->ref_cod_matricula = $_GET['cod_matricula'];
 
         $obj_matricula = new clsPmieducarMatricula();
