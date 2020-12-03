@@ -26,7 +26,7 @@ class FileController
         if ($suportedExtensions != null) {
             $this->suportedExtensions = $suportedExtensions;
         } else {
-            $this->suportedExtensions = ['jpg', 'pdf', 'png', 'doc', 'docx', 'xls'];
+            $this->suportedExtensions = ['jpg', 'pdf', 'png', 'doc', 'docx', 'xls', 'gif'];
         }
     }
 
@@ -62,12 +62,12 @@ class FileController
                 if ($size < $this->maxSize) {
                     return true;
                 } else {
-                    $this->errorMessage = 'Não são permitidos arquivos com mais de 250KB.';
+                    $this->errorMessage = 'Não são permitidos arquivos com mais de 2MB.';
 
                     return false;
                 }
             } else {
-                $this->errorMessage = 'Deve ser enviado um arquivo do tipo jpg, pdf ou png.';
+                $this->errorMessage = 'Deve ser enviado um arquivo do tipo jpg, pdf, png ou gif.';
 
                 return false;
             }
