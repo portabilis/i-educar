@@ -254,11 +254,6 @@ document.getElementById('ref_cod_escola').onchange = function()
 
 before_getEscola = function()
 {
-    /*var campoPredio   = document.getElementById('ref_cod_infra_predio');
-    campoPredio.length = 1;
-    campoPredio.options[0].text = 'Selecione';
-    campoPredio.disabled = false;*/
-
     var campoFuncao = document.getElementById('ref_cod_infra_comodo_funcao');
     campoFuncao.length = 1;
     campoFuncao.options[0].text = 'Selecione';

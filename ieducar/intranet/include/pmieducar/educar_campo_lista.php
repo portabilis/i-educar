@@ -305,7 +305,6 @@ if (isset($get_cabecalho)) {
 ?>
 <script type='text/javascript'>
 <?php
-//   administrador          institucional = cpd
 if ($nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario) {
 ?>
 var before_getEscola;
