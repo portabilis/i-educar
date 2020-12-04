@@ -812,7 +812,7 @@ JS;
         }
         $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
         if (!$existe_funcao_professor) {
-            $this->excluiDisciplinas();
+            $this->excluiDisciplinas(Session::get('cod_funcao'));
             $this->excluiCursos();
         }
 
