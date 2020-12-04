@@ -20,7 +20,7 @@ class FileController
         if ($maxSize != null) {
             $this->maxSize = $maxSize;
         } else {
-            $this->maxSize = 250 * 1024;
+            $this->maxSize = 2048 * 1024;
         }
 
         if ($suportedExtensions != null) {
@@ -62,12 +62,12 @@ class FileController
                 if ($size < $this->maxSize) {
                     return true;
                 } else {
-                    $this->errorMessage = 'Não são permitidos arquivos com mais de 250KB.';
+                    $this->errorMessage = 'Não são permitidos arquivos com mais de 2MB.';
 
                     return false;
                 }
             } else {
-                $this->errorMessage = 'Deve ser enviado um arquivo do tipo jpg, pdf ou png.';
+                $this->errorMessage = 'Deve ser enviado um arquivo do tipo jpg, png ou pdf.';
 
                 return false;
             }
