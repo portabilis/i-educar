@@ -49,15 +49,10 @@ class EmprestimoController extends Portabilis_Controller_Page_ListController
 
     parent::_preRender();
 
-    $localizacao = new LocalizacaoSistema();
-
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Empr&eacute;stimo de exemplares"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar(), true);     
-  }  
+      $this->breadcrumb('Empréstimo de exemplares', [
+          url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+      ]);
+  }
 
   public function Gerar() {
     // inputs

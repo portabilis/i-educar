@@ -3,7 +3,7 @@
     "description": "Software livre de gestão escolar",
     "type": "project",
     "license": "GPL-2.0-or-later",
-    "version": "2.3.10",
+    "version": "2.4.1",
     "keywords": [
         "Portabilis",
         "i-Educar"
@@ -20,8 +20,8 @@
         "cocur/slugify": "^3.1",
         "composer/semver": "^1.4",
         "cossou/jasperphp": "^2.7",
+        "dex/composer-plug-and-play": "^0.1.0",
         "doctrine/dbal": "^2.9",
-        "edersoares/laravel-plug-and-play": "^1.1",
         "fideloper/proxy": "^4.0",
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^6.3",
@@ -30,10 +30,13 @@
         "laravel/framework": "^6.0",
         "laravel/horizon": "^3.4",
         "laravel/tinker": "^1.0",
+        "league/csv": "^9.6",
         "league/flysystem-aws-s3-v3": "~1.0",
         "league/flysystem-cached-adapter": "~1.0",
         "league/flysystem-sftp": "^1.0",
         "maatwebsite/excel": "^3.1",
+        "mll-lab/graphql-php-scalars": "^3.1",
+        "nuwave/lighthouse": "^4.18",
         "phpoffice/phpspreadsheet": "^1.6",
         "predis/predis": "^1.1",
         "prettus/l5-repository": "^2.6",
@@ -88,11 +91,6 @@
                 "laravel/dusk",
                 "laravel/telescope",
                 "barryvdh/laravel-debugbar"
-            ]
-        },
-        "merge-plugin": {
-            "include": [
-                "packages/*/*/composer.json"
             ]
         }
     },

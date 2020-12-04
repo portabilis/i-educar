@@ -219,6 +219,8 @@ class clsPmieducarEscolaSerieDisciplina extends Model
     ) {
         $whereAnd = ' WHERE ';
 
+        $campos = '';
+        $join = '';
         if ($boo_nome_disc) {
             $join = ',pmieducar.disciplina';
             $whereAnd = ' WHERE ref_cod_disciplina = cod_disciplina AND disciplina.ativo = 1 AND ';

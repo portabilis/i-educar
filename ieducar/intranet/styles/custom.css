@@ -165,7 +165,7 @@ span.error_notice {
 
 .topo .dropbtn:hover,
 .dropdown:hover .dropbtn{
-  background-image: url('../imagens/arrow-up.png');
+  background-image: url('/intranet/imagens/arrow-up.png');
   background-repeat: no-repeat;
   background-position: center right;
 }
@@ -1451,4 +1451,13 @@ a.btn-detalhes {
 
 .matricula-situacao-deslocamento {
   color: #FF6600;
+}
+
+#ref_cod_escola_chosen a.chosen-single,
+#escola_chosen a.chosen-single{
+  width: 100% !important;
+}
+
+#componentes_turma_cad td{
+  padding: 5px;
 }

@@ -56,13 +56,9 @@ class PromocaoController extends Portabilis_Controller_Page_ListController
 
     $this->loadResourceAssets($this->getDispatcher());
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_configuracoes_index.php"    => "Configurações",
-         ""                                  => "Atualização de matrículas"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Atualização de matrículas', [
+        url('intranet/educar_configuracoes_index.php') => 'Configurações',
+    ]);
   }
 }
 ?>

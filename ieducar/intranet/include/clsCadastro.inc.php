@@ -8,17 +8,9 @@ require_once 'include/clsCampos.inc.php';
 require_once 'Portabilis/View/Helper/Application.php';
 require_once 'Portabilis/View/Helper/Inputs.php';
 require_once 'Portabilis/Utils/User.php';
-require_once 'include/localizacaoSistema.php';
 
 class clsCadastro extends clsCampos
 {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
-    public $__nome = 'formcadastro';
     public $target = '_self';
     public $largura;
     public $tipoacao;
@@ -61,29 +53,10 @@ class clsCadastro extends clsCampos
     const NOVO = 'N';
     const EDITAR = 'E';
 
-    /**
-     * @deprecated
-     */
-    public function addBanner(
-        $strBannerUrl = '',
-        $strBannerLateralUrl = '',
-        $strBannerTitulo = '',
-        $boolFechaBanner = true
-    ) {
-        // Método deixado para compatibilidade
-    }
-
     public function __construct()
     {
         parent::__construct();
         $this->tipoacao = @$_POST['tipoacao'];
-    }
-
-    public function enviaLocalizacao($localizao)
-    {
-        if ($localizao) {
-            $this->locale = $localizao;
-        }
     }
 
     public function PreCadastrar()

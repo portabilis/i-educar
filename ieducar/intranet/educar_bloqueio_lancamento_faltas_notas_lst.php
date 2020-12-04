@@ -90,9 +90,6 @@ class indice extends clsListagem
       $this->$var = ($val === '') ? NULL : $val;
     }
 
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg',
-      'Intranet');
-
     $this->addCabecalhos(array(
       'Escola', 'Ano', 'Etapa', 'Data in&iacute;cio', 'Data fim'
     ));

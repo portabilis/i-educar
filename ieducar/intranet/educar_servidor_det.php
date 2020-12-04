@@ -21,6 +21,7 @@ class clsIndexBase extends clsBase
 
 class indice extends clsDetalhe
 {
+
     public $titulo;
 
     /**
@@ -385,6 +386,7 @@ class indice extends clsDetalhe
         $this->breadcrumb('Funções do servidor', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
+
     }
 
     /**
@@ -416,6 +418,7 @@ class indice extends clsDetalhe
                 ['funcao.professor', '=', 1]])
             ->exists();
     }
+
 }
 
 // Instancia o objeto da página

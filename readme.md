@@ -242,6 +242,7 @@ e siga as instruções de instalação.
 
 #### Upgrade
 
+- [Upgrade para 2.4 da 2.3](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.4-da-2.3).
 - [Upgrade para 2.3 da 2.2](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.3-da-2.2).
 - [Upgrade para 2.2 da 2.1](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.2-da-2.1).
 - [Upgrade para 2.1 da 2.0](https://github.com/portabilis/i-educar/wiki/Upgrade-para-2.1-da-2.0).

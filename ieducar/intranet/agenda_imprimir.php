@@ -84,12 +84,7 @@ class indice extends clsCadastro
             $this->cod_agenda = $_GET['cod_agenda'];
         }
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Imprimir agenda"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Imprimir agenda');
 
         return $retorno;
     }

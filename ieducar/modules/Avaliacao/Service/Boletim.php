@@ -857,6 +857,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
+        $disciplinasNaoReprovativas = array_filter($componentesMatricula, function($componente){
+            return $componente->desconsidera_para_progressao;
+        });
+        $disciplinasNaoReprovativas = array_map(function ($disciplina) {
+            return $disciplina->id;
+        }, $disciplinasNaoReprovativas);
 
         // A situação é "aprovado" por padrão
         $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
@@ -1001,6 +1007,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
             }
 
+            if (in_array($id, $disciplinasNaoReprovativas) && $situacao->componentesCurriculares[$id]->situacao == App_Model_MatriculaSituacao::REPROVADO) {
+                continue;
+            }
+
             if ($this->_situacaoPrioritaria(
                 $situacao->componentesCurriculares[$id]->situacao,
                 $situacaoGeral
@@ -1140,6 +1150,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $etapasComponentes = [];
             $faltasComponentes = [];
 
+            $disciplinasNaoReprovativas = array_filter($componentes, function($componente){
+                return $componente->desconsidera_para_progressao;
+            });
+            $disciplinasNaoReprovativas = array_map(function ($disciplina) {
+                return $disciplina->id;
+            }, $disciplinasNaoReprovativas);
+
             foreach ($faltas as $key => $falta) {
                 // Total de faltas do componente
                 $componenteTotal = array_sum(CoreExt_Entity::entityFilterAttr(
@@ -1196,8 +1213,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     $etapasComponentes[$etapa] = $etapa;
                 }
 
-                // Adiciona a quantidade de falta do componente ao total geral de faltas
-                $total += $componenteTotal;
+                if (!in_array($id, $disciplinasNaoReprovativas)) {
+                    // Adiciona a quantidade de falta do componente ao total geral de faltas
+                    $total += $componenteTotal;
+                }
             }
 
             if (0 == count($faltasComponentes) ||

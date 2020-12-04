@@ -9,15 +9,10 @@ indent_style = space
 indent_size = 4
 
 [*.php]
-indent_size = 4
 max_line_length = 120
 
-[{*.html,*.less,*.sass,*.css,*.js,*.json,*.tpl}]
+[{*.html, *.less, *.sass, *.css, *.js, *.json, *.tpl, *.vue, *.yml}]
 indent_size = 2
 
 [*.md]
 trim_trailing_whitespace = false
-
-[*.yml]
-indent_style = space
-indent_size = 2

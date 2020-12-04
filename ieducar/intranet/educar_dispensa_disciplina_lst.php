@@ -128,9 +128,6 @@ class indice extends clsListagem
 
     $this->campoOculto('ref_cod_turma', $this->ref_cod_turma);
 
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg',
-      'Intranet');
-
     $this->addCabecalhos(array(
       'Disciplina',
       'Tipo Dispensa',

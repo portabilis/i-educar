@@ -546,20 +546,6 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
 	margin-left: 10px;
 }
 
-.prog_alert
-{
-	background-color: #F0F8FF;
-	border-color: #FFBB88;
-	border-width: 1px;
-	border-style: dashed;
-	margin-top: 5px;
-	margin-bottom: 5px;
-	margin-left: 10px;
-	margin-right: 10px;
-	padding: 5px;
-	position: relative;
-}
-
 .controle_fechar
 {
 	float:right;

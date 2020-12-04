@@ -4,7 +4,6 @@ use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\View;
 
 require_once 'Core/Controller/Page/Abstract.php';
-require_once 'include/localizacaoSistema.php';
 
 class clsDetalhe extends Core_Controller_Page_Abstract
 {
@@ -20,18 +19,6 @@ class clsDetalhe extends Core_Controller_Page_Abstract
   var $array_botao_url;
   var $array_botao_url_script;
 
-    /**
-     * @deprecated
-     */
-  function addBanner(
-      $strBannerUrl = '',
-      $strBannerLateralUrl = '',
-      $strBannerTitulo = '',
-      $boolFechaBanner = FALSE
-  ) {
-      // Método permanece somente para fins de compatibilidade e evitar erros.
-  }
-
   function addDetalhe($detalhe) {
     $this->detalhe[] = $detalhe;
   }
@@ -39,11 +26,6 @@ class clsDetalhe extends Core_Controller_Page_Abstract
   public function addHtml($html)
   {
       $this->detalhe['html'] = $html;
-  }
-
-  function enviaLocalizacao($localizao){
-    if($localizao)
-      $this->locale = $localizao;
   }
 
   function Gerar() {

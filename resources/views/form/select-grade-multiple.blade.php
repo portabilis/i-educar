@@ -40,7 +40,8 @@
                 }
 
                 var updateSeries = function(){
-                    resetSelect($serieField);
+                    updateSelect($serieField, [], "Selecione uma série");
+                    $j('#ref_cod_serie').trigger('chosen:updated');
 
                     if ($instituicaoField.val() && $cursoField.val() && $cursoField.is(':enabled')) {
                         $serieField.children().first().html('Aguarde carregando...');
