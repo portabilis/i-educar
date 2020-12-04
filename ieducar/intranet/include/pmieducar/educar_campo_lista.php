@@ -97,24 +97,10 @@ elseif ($nivel_usuario != 1) {
 }
 //                    administrador          institucional - CPD
 if ($get_escola && ($nivel_usuario == 1 || $nivel_usuario == 2 || $cad_usuario)) {
-    $opcoes_escola = ['' => 'Selecione uma escola'];
-    // EDITAR
-    if ($this->ref_cod_instituicao) {
-        $obj_escola = new clsPmieducarEscola();
-        $obj_escola->setOrderby('nome ASC');
-        $lista = $obj_escola->lista(null, null, null, $this->ref_cod_instituicao, null, null, null, null, null, null, 1);
-        if (is_array($lista) && count($lista)) {
-            foreach ($lista as $registro) {
-                $opcoes_escola["{$registro['cod_escola']}"] = "{$registro['nome']}";
-            }
-        }
-    }
-
-    if ($get_biblioteca) {
-        $this->campoLista('ref_cod_escola', 'Escola', $opcoes_escola, $this->ref_cod_escola, 'getBiblioteca(2);', null, null, null, $escola_desabilitado, $escola_obrigatorio);
-    } else {
-        $this->campoLista('ref_cod_escola', 'Escola', $opcoes_escola, $this->ref_cod_escola, null, null, null, null, $escola_desabilitado, $escola_obrigatorio);
-    }
+    $this->inputsHelper()->dynamic(['escola'], [
+        'required' => $escola_obrigatorio,
+        'disabled' => $escola_desabilitado,
+    ]);
 }
 if ($get_curso) {
     $opcoes_curso = ['' => 'Selecione'];
@@ -316,44 +302,6 @@ function getEscola() {
     }
 
     limpaCampos(2);
-    var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
-
-    if (document.getElementById('ref_cod_escola')) {
-        var campoEscola = document.getElementById('ref_cod_escola');
-    }
-    if (document.getElementById('ref_ref_cod_escola')) {
-        var campoEscola = document.getElementById('ref_ref_cod_escola');
-    }
-    campoEscola.disabled = true;
-    campoEscola.options[0].text = 'Carregando escolas';
-
-    var xml = new ajax(atualizaLstEscola);
-    xml.envia('educar_escola_xml2.php?ins=' + campoInstituicao);
-}
-
-function atualizaLstEscola(xml) {
-    if (document.getElementById('ref_cod_escola')) {
-        var campoEscola = document.getElementById('ref_cod_escola');
-    }
-    if (document.getElementById('ref_ref_cod_escola')) {
-        var campoEscola = document.getElementById('ref_ref_cod_escola');
-    }
-    campoEscola.length = 1;
-    campoEscola.options[0].text = 'Selecione uma escola';
-    campoEscola.disabled = false;
-
-    var escolas = xml.getElementsByTagName('escola');
-    if (escolas.length) {
-        for (var i = 0; i < escolas.length; i++) {
-            campoEscola.options[campoEscola.options.length] = new Option(escolas[i].firstChild.data, escolas[i].getAttribute('cod_escola'), false, false);
-        }
-    } else {
-        campoEscola.options[0].text = 'A instituição não possui nenhuma escola';
-    }
-
-    if (typeof after_getEscola == 'function') {
-        after_getEscola();
-    }
 }
 <?php
 if ($get_escola && $get_biblioteca) {
