@@ -44,19 +44,15 @@ require_once __DIR__.'/TestCommon.php';
  */
 class Avaliacao_Service_InicializacaoTest extends Avaliacao_Service_TestCommon
 {
-  /**
-   * @expectedException CoreExt_Service_Exception
-   */
   public function testInstanciaLancaExcecaoCasoCodigoDeMatriculaNaoSejaInformado()
   {
+      $this->expectException(\CoreExt_Service_Exception::class);
     new Avaliacao_Service_Boletim();
   }
 
-  /**
-   * @expectedException InvalidArgumentException
-   */
   public function testInstanciaLancaExcecaoComOpcaoNaoAceitaPelaClasse()
   {
+      $this->expectException(\InvalidArgumentException::class);
     new Avaliacao_Service_Boletim(array('matricula' => 1, 'foo' => 'bar'));
   }
 

@@ -15,7 +15,7 @@ $factory->define(LegacyRoundingTable::class, function (Faker $faker) {
     ];
 });
 
-$factory->defineAs(LegacyRoundingTable::class, 'numeric', function (Faker $faker) use ($factory) {
+$factory->state(LegacyRoundingTable::class, 'numeric', function (Faker $faker) use ($factory) {
     $roundingTable = $factory->raw(LegacyRoundingTable::class);
 
     return array_merge($roundingTable, [
@@ -23,7 +23,7 @@ $factory->defineAs(LegacyRoundingTable::class, 'numeric', function (Faker $faker
     ]);
 });
 
-$factory->defineAs(LegacyRoundingTable::class, 'conceitual', function () use ($factory) {
+$factory->state(LegacyRoundingTable::class, 'conceitual', function () use ($factory) {
     $roundingTable = $factory->raw(LegacyRoundingTable::class);
 
     return array_merge($roundingTable, [

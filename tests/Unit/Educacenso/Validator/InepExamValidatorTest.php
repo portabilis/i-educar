@@ -25,7 +25,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('Não é possível informar mais de uma opção no campo: Recursos necessários para realização de provas, quando a opção: <b>Nenhum</b> estiver selecionada', $validator->getMessage());
+        $this->assertStringContainsString('Não é possível informar mais de uma opção no campo: Recursos necessários para realização de provas, quando a opção: <b>Nenhum</b> estiver selecionada', $validator->getMessage());
     }
 
     public function testProvaAmpliadaAndAnotherPermitedOptionChoosed()
@@ -44,7 +44,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testAuxilioLedorAndAllowedDeficiencyChoosed()
@@ -63,7 +63,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testAuxilioLedorAndNeutralDeficiencyChoosed()
@@ -73,7 +73,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testAuxilioTranscricaoAndAllowedAloneDeficiencyChoosed()
@@ -92,7 +92,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testAuxilioTranscricaoAndNotAllowedAloneDeficiencyWithAnotherResourceChoosed()
@@ -111,7 +111,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testGuiaInterpreteAndNeutralDeficiencyChoosed()
@@ -130,7 +130,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testTradutorInterpreteAndAllowedDeficiencyChoosed()
@@ -149,7 +149,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testTradutorInterpreteAndNeutralDeficiencyChoosed()
@@ -159,7 +159,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testLeituraLabialAndAllowedDeficiencyChoosed()
@@ -178,7 +178,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testLeituraLabialAndNeutralDeficiencyChoosed()
@@ -188,7 +188,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testProvaAmpliadaFonte18AndAllowedDeficiencyChoosed()
@@ -207,7 +207,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testProvaAmpliadaFonte18AndNeutralDeficiencyChoosed()
@@ -217,7 +217,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testProvaSuperAmpliadaFonte24AndAllowedDeficiencyChoosed()
@@ -236,7 +236,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testProvaSuperAmpliadaFonte24AndNeutralDeficiencyChoosed()
@@ -246,7 +246,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testCdComAudioAndAllowedDeficiencyChoosed()
@@ -265,7 +265,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testCdComAudioAndNeutralDeficiencyChoosed()
@@ -275,7 +275,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testProvaLinguaPortuguesaSegundaLinguaAndAllowedDeficiencyChoosed()
@@ -294,7 +294,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testProvaLinguaPortuguesaSegundaLinguaAndNeutralDeficiencyChoosed()
@@ -304,7 +304,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testProvaVideoLibrasAndAllowedDeficiencyChoosed()
@@ -323,7 +323,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testProvaVideoLibrasAndNeutralDeficiencyChoosed()
@@ -333,7 +333,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testMaterialDidaticoProvaBrailleAndAllowedDeficiencyChoosed()
@@ -352,7 +352,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testNenhumAndForbiddenDeficiencyChoosed()
@@ -362,7 +362,7 @@ class InepExamValidatorTest extends TestCase
         $validator = new InepExamValidator($resources, $deficiencies);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Recursos necessários para realização de provas foi preenchido incorretamente', $validator->getMessage());
     }
 
     public function testNenhumAndNeutralDeficiencyChoosed()
