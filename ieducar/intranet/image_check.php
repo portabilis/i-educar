@@ -142,7 +142,8 @@ class PictureController
             return false;
         }
 
-        return back()->withErrors(['Error' => ['Imagem inválida']]);
+        $this->errorMessage = 'Imagem inv&aacute;lida.';
+        return false;
     }
     /**
     * Retorna a mensagem de erro
