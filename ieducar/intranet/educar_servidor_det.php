@@ -412,17 +412,14 @@ class indice extends clsDetalhe
             ->join('pmieducar.servidor_funcao', 'servidor_funcao.ref_cod_servidor', 'servidor_alocacao.ref_cod_servidor')
             ->join('pmieducar.funcao', 'funcao.cod_funcao', 'servidor_funcao.ref_cod_funcao')
             ->where([['servidor_alocacao.ref_cod_servidor', '=', $cod_servidor],
-                ['servidor_alocacao.ano', '=', $ano]])
-            ->get();
-        $serverFunction = [];
-        foreach ($teacherFunction as $id => $function) {
-            $serverFunction[$id] = $function->professor;
-            if ($serverFunction === 0) {
-                continue;
-            }
-            return true;
+                ['servidor_alocacao.ano', '=', $ano],
+                ['funcao.professor', '=', 1]])
+            ->exists();
+        if ($teacherFunction === false) {
+            return false;
         }
-        return false;
+
+        return true;
     }
 }
 
