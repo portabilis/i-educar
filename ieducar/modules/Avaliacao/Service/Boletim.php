@@ -1224,6 +1224,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     $etapasComponentes[$etapa] = $etapa;
                 }
 
+                // Sempre que a regra de avaliação ter o checkbox desconsiderar
+                // lançamento de frequência marcado irá aprovar independente
+                // da frequência real
+
+                if ($this->getRegraAvaliacaoDesconsiderarLancamentoFrequencia()) {
+                    $faltasComponentes[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
+                }
+
                 if (!in_array($id, $disciplinasNaoReprovativas)) {
                     // Adiciona a quantidade de falta do componente ao total geral de faltas
                     $total += $componenteTotal;
@@ -1257,13 +1265,23 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
         $presenca->porcentagemPresenca = 100 - $presenca->porcentagemFalta;
         $presenca->componentesCurriculares = $faltasComponentes;
+
         // Na última etapa seta situação presença como aprovado ou reprovado.
         if ($etapa == $this->getOption('etapas') || $etapa === 'Rc') {
-            $aprovado = (
-                $presenca->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca() || $this->regraNaoPermiteReprovarFalta()
-            );
-            $presenca->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
-                App_Model_MatriculaSituacao::REPROVADO;
+
+            // Um aluno terá a situação de aprovado referente a frequência quando:
+            // - Atingir o percentual mínimo de presença
+            // - A regra de avaliação ser do tipo "continuada" ou "somente média"
+            // - Ter o checkbox desconsiderar lançamento de frequência marcado
+            //   na regra de avaliação
+
+            $aprovado = $presenca->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca()
+                || $this->regraNaoPermiteReprovarFalta()
+                || $this->getRegraAvaliacaoDesconsiderarLancamentoFrequencia();
+
+            $presenca->situacao = $aprovado
+                ? App_Model_MatriculaSituacao::APROVADO
+                : App_Model_MatriculaSituacao::REPROVADO;
         }
 
         return $presenca;
