@@ -26,7 +26,7 @@ class FileController
         if ($suportedExtensions != null) {
             $this->suportedExtensions = $suportedExtensions;
         } else {
-            $this->suportedExtensions = ['jpg', 'pdf', 'png', 'doc', 'docx', 'xls', 'jpeg'];
+            $this->suportedExtensions = ['jpg', 'pdf', 'png', 'doc', 'docx', 'xls'];
         }
     }
 
@@ -67,7 +67,7 @@ class FileController
                     return false;
                 }
             } else {
-                $this->errorMessage = 'Deve ser enviado um arquivo do tipo jpg, png, jpeg ou pdf.';
+                $this->errorMessage = 'Deve ser enviado um arquivo do tipo jpg, png ou pdf.';
 
                 return false;
             }
