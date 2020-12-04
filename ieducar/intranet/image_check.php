@@ -130,8 +130,7 @@ class PictureController {
             $this->errorMessage = "Selecione uma imagem.";
             return false;
         }
-        $this->errorMessage = "Imagem inv&aacute;lida.";
-        return false;
+        return back()->withErrors(['Error' => ['Imagem inválida']]);
     }
     /**
     * Retorna a mensagem de erro
