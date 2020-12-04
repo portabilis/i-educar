@@ -11,13 +11,6 @@ require_once 'Portabilis/Utils/User.php';
 
 class clsCadastro extends clsCampos
 {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
-    public $__nome = 'formcadastro';
     public $target = '_self';
     public $largura;
     public $tipoacao;
@@ -59,18 +52,6 @@ class clsCadastro extends clsCampos
 
     const NOVO = 'N';
     const EDITAR = 'E';
-
-    /**
-     * @deprecated
-     */
-    public function addBanner(
-        $strBannerUrl = '',
-        $strBannerLateralUrl = '',
-        $strBannerTitulo = '',
-        $boolFechaBanner = true
-    ) {
-        // Método deixado para compatibilidade
-    }
 
     public function __construct()
     {

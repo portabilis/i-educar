@@ -66,7 +66,6 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Categoria Nivel - Detalhe";
-        $this->addBanner("imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet");
 
         $this->cod_categoria_nivel=$_GET["cod_categoria_nivel"];
 

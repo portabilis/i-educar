@@ -14,7 +14,6 @@ class clsPmieducarAluno extends Model
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
-    public $caminho_foto;
     public $analfabeto;
     public $emancipado;
     public $nm_pai;
@@ -73,7 +72,7 @@ class clsPmieducarAluno extends Model
         $this->_tabela = $this->_schema . 'aluno a';
 
         $this->_campos_lista = $this->_todos_campos = 'a.cod_aluno, a.ref_cod_religiao, a.ref_usuario_exc,
-        a.ref_usuario_cad, a.ref_idpes, a.data_cadastro, a.data_exclusao, a.ativo, a.caminho_foto, a.analfabeto, tipo_responsavel, a.aluno_estado_id, a.recursos_prova_inep, a.recebe_escolarizacao_em_outro_espaco,
+        a.ref_usuario_cad, a.ref_idpes, a.data_cadastro, a.data_exclusao, a.ativo, a.analfabeto, tipo_responsavel, a.aluno_estado_id, a.recursos_prova_inep, a.recebe_escolarizacao_em_outro_espaco,
         a.justificativa_falta_documentacao, a.url_laudo_medico::text, a.codigo_sistema, a.veiculo_transporte_escolar, a.parentesco_um, a.autorizado_um, a.parentesco_dois, a.autorizado_dois,
         a.parentesco_tres, a.autorizado_tres, a.parentesco_quatro, a.autorizado_quatro, a.parentesco_cinco, a.autorizado_cinco, a.url_documento::text, a.emancipado';
 
@@ -111,16 +110,8 @@ class clsPmieducarAluno extends Model
             $this->ativo = $ativo;
         }
 
-        if (is_string($caminho_foto)) {
-            $this->caminho_foto = $caminho_foto;
-        }
-
         if (is_numeric($analfabeto)) {
             $this->analfabeto = $analfabeto;
-        }
-
-        if (is_string($caminho_foto)) {
-            $this->caminho_foto = $caminho_foto;
         }
 
         if (is_string($tipo_responsavel)) {
@@ -221,12 +212,6 @@ class clsPmieducarAluno extends Model
             $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
             $gruda = ', ';
-
-            if (is_string($this->caminho_foto)) {
-                $campos .= "{$gruda}caminho_foto";
-                $valores .= "{$gruda}'{$this->caminho_foto}'";
-                $gruda = ', ';
-            }
 
             if (is_string($this->tipo_responsavel) && sizeof($this->tipo_responsavel) <= 1) {
                 $campos .= "{$gruda}tipo_responsavel";
@@ -397,14 +382,6 @@ class clsPmieducarAluno extends Model
 
             if (is_numeric($this->ativo)) {
                 $set .= "{$gruda}ativo = '{$this->ativo}'";
-                $gruda = ', ';
-            }
-
-            if (is_string($this->caminho_foto) && $this->caminho_foto != 'NULL') {
-                $set .= "{$gruda}caminho_foto = '{$this->caminho_foto}'";
-                $gruda = ', ';
-            } elseif ($this->caminho_foto == 'NULL') {
-                $set .= "{$gruda}caminho_foto = {$this->caminho_foto}";
                 $gruda = ', ';
             }
 
@@ -681,11 +658,6 @@ class clsPmieducarAluno extends Model
             $whereAnd = ' AND ';
         }
 
-        if (is_string($str_caminho_foto)) {
-            $filtros .= "{$whereAnd} a.caminho_foto LIKE '%{$str_caminho_foto}%'";
-            $whereAnd = ' AND ';
-        }
-
         if (is_numeric($int_analfabeto)) {
             $filtros .= "{$whereAnd} a.analfabeto = '{$int_analfabeto}'";
             $whereAnd = ' AND ';
@@ -933,11 +905,6 @@ class clsPmieducarAluno extends Model
 
         if ($int_ativo) {
             $filtros .= "{$whereAnd} a.ativo = '1'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_string($str_caminho_foto)) {
-            $filtros .= "{$whereAnd} caminho_foto LIKE '%{$str_caminho_foto}%'";
             $whereAnd = ' AND ';
         }
 
