@@ -407,7 +407,7 @@ class indice extends clsDetalhe
 
     private function validateTeacher($cod_servidor, $ano)
     {
-        $teacherFunction = DB::table('pmieducar.servidor_alocacao')
+        return DB::table('pmieducar.servidor_alocacao')
             ->select(DB::raw('funcao.professor'))
             ->join('pmieducar.servidor_funcao', 'servidor_funcao.ref_cod_servidor', 'servidor_alocacao.ref_cod_servidor')
             ->join('pmieducar.funcao', 'funcao.cod_funcao', 'servidor_funcao.ref_cod_funcao')
@@ -415,11 +415,6 @@ class indice extends clsDetalhe
                 ['servidor_alocacao.ano', '=', $ano],
                 ['funcao.professor', '=', 1]])
             ->exists();
-        if ($teacherFunction === false) {
-            return false;
-        }
-
-        return true;
     }
 }
 
