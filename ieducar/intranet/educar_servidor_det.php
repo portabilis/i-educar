@@ -367,7 +367,7 @@ class indice extends clsDetalhe
                 $this->array_botao_url_script[] = "go(\"educar_servidor_afastamento_cad.php?{$get_padrao}&sequencial={$afastamento}&retornar_servidor=" . EmployeeReturn::SIM . '");';
             }
 
-            if ($this->is_professor) {
+            if ($this->validateProfessor($this->cod_servidor, date('Y'))) {
                 $this->array_botao[] = 'Vincular professor a turmas';
                 $this->array_botao_url_script[] = "go(\"educar_servidor_vinculo_turma_lst.php?{$get_padrao}\");";
             }
@@ -403,6 +403,26 @@ class indice extends clsDetalhe
             ->groupBy('professor', 'nm_funcao', 'pmieducar.servidor_funcao.matricula', 'nm_curso')
             ->orderBy('matricula', 'asc')
             ->get();
+    }
+
+    private function validateProfessor($cod_servidor, $ano)
+    {
+        $funcaoServidor = DB::table('pmieducar.servidor_alocacao')
+            ->select(DB::raw('funcao.professor'))
+            ->join('pmieducar.servidor_funcao', 'servidor_funcao.ref_cod_servidor', 'servidor_alocacao.ref_cod_servidor')
+            ->join('pmieducar.funcao', 'funcao.cod_funcao', 'servidor_funcao.ref_cod_funcao')
+            ->where([['servidor_alocacao.ref_cod_servidor', '=', $cod_servidor],
+                ['servidor_alocacao.ano', '=', $ano]])
+            ->get();
+        $serverFunction = [];
+        foreach ($funcaoServidor as $id => $funcao) {
+            $serverFunction[$id] = $funcao->professor;
+            if ($serverFunction === 0) {
+                continue;
+            }
+            return true;
+        }
+        return false;
     }
 }
 
