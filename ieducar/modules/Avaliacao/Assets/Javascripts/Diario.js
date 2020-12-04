@@ -112,6 +112,11 @@ function changeResource($resourceElement, postFunction, deleteFunction) {
 
 function setDefaultFaltaIfEmpty(matricula_id, componente_curricular_id) {
   var $element = $j('#falta-matricula-' + matricula_id + '-cc-' + componente_curricular_id);
+
+  if ($element.closest('tr').data('regra').desconsiderar_lancamento_frequencia) {
+    return;
+  }
+
   if ($j.trim($element.val()) == '') {
     $element.val(0);
     $element.change();
