@@ -26,7 +26,7 @@ class FileController
         if ($suportedExtensions != null) {
             $this->suportedExtensions = $suportedExtensions;
         } else {
-            $this->suportedExtensions = ['jpg', 'pdf', 'png', 'doc', 'docx', 'xls', 'gif'];
+            $this->suportedExtensions = ['jpg', 'pdf', 'png', 'doc', 'docx', 'xls'];
         }
     }
 
