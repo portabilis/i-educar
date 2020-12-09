@@ -618,7 +618,7 @@ class clsCadastro extends clsCampos
     protected function sugestaoAnosLetivos()
     {
         $anoAtual = date('Y');
-        $anos = range($anoAtual - 10, $anoAtual + 1);
+        $anos = range($anoAtual - 18, $anoAtual + 1);
 
         return array_combine($anos, $anos);
     }
