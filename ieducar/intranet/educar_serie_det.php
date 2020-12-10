@@ -85,8 +85,6 @@ class indice extends clsDetalhe
   function Gerar()
   {
     $this->titulo = 'S&eacute;rie - Detalhe';
-    $this->addBanner('imagens/nvp_top_intranet.jpg',
-      'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
     $this->cod_serie=$_GET["cod_serie"];
 

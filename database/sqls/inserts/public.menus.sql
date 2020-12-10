@@ -68,7 +68,6 @@ INSERT INTO public.menus VALUES (67, 11, 'Usuários', 'Usuários', '/intranet/ed
 INSERT INTO public.menus VALUES (68, 12, 'Configuração movimento geral', 'Configuração movimento geral', '/module/Configuracao/ConfiguracaoMovimentoGeral', NULL, 3, 3, 9998867, 9998867, 999909, true, NULL, NULL);
 INSERT INTO public.menus VALUES (69, 12, 'Configurações gerais', 'Configurações gerais', '/intranet/educar_configuracoes_gerais.php', NULL, 3, 3, 999873, 999873, 999909, true, NULL, NULL);
 INSERT INTO public.menus VALUES (70, 12, 'Customização de labels', 'Customização de labels', '/intranet/educar_configuracoes_labels.php', NULL, 4, 3, 9998869, 9998869, 999909, true, NULL, NULL);
-INSERT INTO public.menus VALUES (71, 13, 'Auditoria geral', 'Auditoria geral', '/intranet/educar_auditoria_geral_lst.php', NULL, 0, 3, 9998851, 9998851, 999910, true, NULL, NULL);
 INSERT INTO public.menus VALUES (72, 13, 'Backups', 'Backups', '/intranet/educar_backup_lst.php', NULL, 1, 3, 9998858, 9998858, 999910, true, NULL, NULL);
 INSERT INTO public.menus VALUES (73, 13, 'Exportação de usuários', 'Exportação de usuários', '/intranet/educar_exportacao_usuarios.php', NULL, 1, 3, 999869, 999869, 999910, true, NULL, NULL);
 INSERT INTO public.menus VALUES (75, 32, 'Tipos', NULL, NULL, NULL, 1, 3, NULL, 999912, 999911, true, NULL, NULL);

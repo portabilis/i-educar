@@ -93,13 +93,10 @@ class indice extends clsCadastro
         $this->nome_url_cancelar = 'Cancelar';
 
         $nomeMenu = $this->retorno == 'Editar' ? $this->retorno : 'Cadastrar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
-            'educar_pessoas_index.php' => 'Pessoas',
-            '' => "$nomeMenu pessoa jur&iacute;dica"
+
+        $this->breadcrumb("{$nomeMenu} pessoa jurídica", [
+            url('intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
-        $this->enviaLocalizacao($localizacao->montar());
 
         return $this->retorno;
     }
@@ -235,7 +232,7 @@ class indice extends clsCadastro
             $this->simpleRedirect('empresas_lst.php');
         }
 
-        $this->mensagem = 'Ja existe uma empresa cadastrada com este CNPJ. ';
+        $this->mensagem = 'Já existe uma empresa cadastrada com este CNPJ.';
 
         return false;
     }
@@ -245,8 +242,10 @@ class indice extends clsCadastro
         $this->cnpj = idFederal2int(urldecode($this->cnpj));
         $objJuridica = new clsJuridica(false, $this->cnpj);
 
-        if ($objJuridica->detalhe()) {
-            $this->mensagem = 'Ja existe uma empresa cadastrada com este CNPJ. ';
+        $detalhe = $objJuridica->detalhe();
+
+        if ($detalhe && $this->cod_pessoa_fj != $detalhe['idpes']) {
+            $this->mensagem = 'Já existe uma empresa cadastrada com este CNPJ.';
 
             return false;
         }

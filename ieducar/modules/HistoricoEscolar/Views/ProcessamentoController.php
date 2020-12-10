@@ -19,16 +19,9 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
 
         parent::_preRender();
 
-        $localizacao = new LocalizacaoSistema();
-
-        $localizacao->entradaCaminhos(
-            [
-                $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
-                'educar_index.php' => 'Escola',
-                '' => 'Processamento de hist&oacute;rico escolar'
-            ]
-        );
-        $this->enviaLocalizacao($localizacao->montar(), true);
+        $this->breadcrumb('Processamento de hist&oacute;rico escolar', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     // #TODO migrar funcionalidade para novo padrão

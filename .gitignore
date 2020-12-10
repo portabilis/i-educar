@@ -1,10 +1,13 @@
 /database/backups
 /database/data
 /database/migrations/extras
+/packages/*
 /public/modules
 /docker/jasper/
 /vendor
 /ieducar-*
+composer-plug-and-play.json
+composer-plug-and-play.lock
 laravel-echo-server.json
 
 ieducar-*.tar.gz
