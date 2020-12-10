@@ -160,9 +160,6 @@ class indice extends clsCadastro
             $this->pais_origem_id = $this->pais_origem;
             $this->naturalidade_id = $this->naturalidade;
 
-            $raca = new clsCadastroFisicaRaca($this->cod_pessoa_fj);
-            $raca = $raca->detalhe();
-            $this->cod_raca = is_array($raca) ? $raca['ref_cod_raca'] : null;
         }
 
         $this->fexcluir = $obj_permissoes->permissao_excluir(
@@ -651,6 +648,10 @@ class indice extends clsCadastro
 
         $selectOptionsRaca = Portabilis_Array_Utils::sortByValue($selectOptionsRaca);
         $selectOptionsRaca = array_replace([null => 'Selecione'], $selectOptionsRaca);
+
+        $raca = new clsCadastroFisicaRaca($this->cod_pessoa_fj);
+        $raca = $raca->detalhe();
+        $this->cod_raca = is_array($raca) ? $raca['ref_cod_raca'] : null;
 
         $this->campoLista('cor_raca', 'Raça', $selectOptionsRaca, $this->cod_raca, '', false, '', '', '', $obrigarCamposCenso);
 
