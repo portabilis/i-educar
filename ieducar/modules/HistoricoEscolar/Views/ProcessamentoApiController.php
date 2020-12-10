@@ -655,7 +655,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     protected function getCargaHorariaDisciplinas($alunoId)
     {
         $checked = $this->getQueryString('emitir_carga_disciplinas');
-        if ($checked == 'false') {
+        if (empty($checked)) {
             return $this->getService()->getOption('serieCargaHoraria');
         }
 
