@@ -1,4 +1,4 @@
-FROM php:7.3-fpm
+FROM php:7.3-fpm-alpine3.11
 
 LABEL maintainer="Portabilis <contato@portabilis.com.br>"
 
@@ -12,33 +12,15 @@ ENV XDEBUG_REMOTE_PORT 9000
 ENV XDEBUG_REMOTE_ENABLE 0
 ENV XDEBUG_AUTOSTART 0
 
-RUN apt-get update -y
-RUN apt-get install -y wget
+RUN apk update
+RUN apk add wget
 
-#
-# Adiciona o repositório do OpenJDK 8.
-#
-# https://packages.debian.org/sid/amd64/openjdk-8-jdk/download
-# https://github.com/balena-io-library/base-images/issues/273#issuecomment-349649205
-#
-RUN echo "deb http://ftp.us.debian.org/debian sid main" >> /etc/apt/sources.list
-
-#
-# Adiciona o repositório do Postgres 9.5 Client.
-#
-# https://www.postgresql.org/download/linux/debian/
-# https://stackoverflow.com/questions/50757647/e-gnupg-gnupg2-and-gnupg1-do-not-seem-to-be-installed-but-one-of-them-is-requ
-#
-RUN apt-get install -y gnupg2
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
-RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-
-RUN apt-get update -y
+RUN apk add --no-cache --virtual .phpize_deps $PHPIZE_DEPS
 
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
 
-RUN apt-get install -y libpq-dev
+RUN apk --no-cache add postgresql-dev
 RUN docker-php-ext-install pgsql
 
 RUN docker-php-ext-install pdo
@@ -50,21 +32,22 @@ RUN rm -rf /tmp/pear
 
 RUN docker-php-ext-install bcmath
 
-RUN apt-get install -y unzip
+RUN apk add unzip
 
-RUN apt-get install -y libzip-dev
+RUN apk add libzip-dev
 RUN docker-php-ext-install zip
 
-RUN apt-get remove -y libgcc-8-dev
-RUN apt-get install -o APT::Immediate-Configure=false -y libc6-dev
+RUN apk add libc-dev
 
 RUN mkdir -p /usr/share/man/man7
-RUN apt-get install -y postgresql-contrib-9.5
+RUN echo "@v3.4 http://nl.alpinelinux.org/alpine/v3.4/main" >> /etc/apk/repositories && \
+    apk update && \
+    apk add --no-cache "postgresql-client@v3.4>=9.5"
 
-RUN apt-get install -y libpng-dev
+RUN apk add libpng-dev
 RUN docker-php-ext-install gd
 
-RUN apt-get install -y jq git
+RUN apk add jq git
 
 RUN ln -s /var/www/ieducar/artisan /usr/local/bin/artisan
 
@@ -79,8 +62,10 @@ RUN echo "extension=/usr/local/lib/php/extensions/no-debug-non-zts-20180731/pdfl
 
 RUN docker-php-ext-install pcntl
 
-RUN apt-get install openjdk-8-jdk -y
+RUN apk add openjdk8
 
-RUN apt-get install npm -y
+RUN apk add --update npm
 
 RUN composer self-update --1
+
+RUN apk del .phpize_deps
