@@ -22,6 +22,9 @@ class BatchExemptionRequest extends FormRequest
             'ref_cod_componente_curricular' => 'required',
             'exemption_type' => 'required',
             'stage' => 'required',
+            'ref_cod_curso' => 'required',
+            'ref_cod_escola' => 'required',
+            'stage_type' => 'required'
         ];
     }
 
@@ -31,12 +34,15 @@ class BatchExemptionRequest extends FormRequest
     public function messages()
     {
         return [
-            'ano.required' => 'O ano é obrigatório.',
-            'ano.date_format' => 'O campo Ano deve ser um ano válido.',
-            'ref_cod_instituicao.required' => 'A instituição é obrigatória.',
+            'ano.required' => 'Você precisa informar o ano',
+            'ano.date_format' => 'Você precisa informar um ano válido.',
+            'ref_cod_instituicao.required' => 'Você precisa selecionar a instituição.',
             'ref_cod_componente_curricular.required' => 'Você precisa selecionar pelo menos um componente curricular.',
-            'exemption_type.required' => 'O tipo de dispensa é obrigatório.',
+            'exemption_type.required' => 'Você precisa selecionar o tipo de dispensa.',
             'stage.required' => 'Você precisa selecionar pelo menos uma etapa.',
+            'ref_cod_curso.required' => 'Você precisa selecionar um curso.',
+            'ref_cod_escola.required' => 'Você precisa selecionar uma escola.',
+            'stage_type.required' => 'Você precisa selecionar o tipo de etapa.',
         ];
     }
 }
