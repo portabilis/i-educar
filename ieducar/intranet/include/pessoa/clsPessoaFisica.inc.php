@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 require_once 'include/clsBanco.inc.php';
 require_once 'include/Geral.inc.php';
@@ -71,8 +72,7 @@ class clsPessoaFisica extends clsPessoaFj
         $db = new clsBanco();
 
         if (is_string($str_nome) && $str_nome != '') {
-            $str_nome = $db->escapeString($str_nome);
-            $where .= "{$whereAnd} slug ILIKE '%{$str_nome}%'";
+            $where .= "{$whereAnd} slug ILIKE unaccent('%{$str_nome}%')";
             $whereAnd = ' AND ';
         }
 
