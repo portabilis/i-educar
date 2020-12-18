@@ -1429,7 +1429,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             }
 
             // pega situacao da falta componente ou geral.
-            if ($tipoFaltaPorComponente) {
+            if ($this->getRegraAvaliacaoDesconsiderarLancamentoFrequencia()) {
+                $situacaoFalta = App_Model_MatriculaSituacao::APROVADO;
+            } else if ($tipoFaltaPorComponente) {
                 $situacaoFalta = $situacaoFaltas->componentesCurriculares[$ccId]->situacao;
             } else {
                 $situacaoFalta = $situacaoFaltas->situacao;
