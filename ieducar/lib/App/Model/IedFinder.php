@@ -816,6 +816,9 @@ class App_Model_IedFinder extends CoreExt_Entity
                     )
                 )
             )
+            ORDER BY
+                mt.ativo DESC,
+                mt.sequencial DESC
             LIMIT 1
     ';
 

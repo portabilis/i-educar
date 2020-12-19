@@ -8,7 +8,6 @@ require_once 'RegraAvaliacao/Model/RegraRecuperacaoDataMapper.php';
 
 class EditController extends Core_Controller_Page_EditController
 {
-
     protected $_dataMapper = 'RegraAvaliacao_Model_RegraDataMapper';
     protected $_titulo = 'Cadastro de regra de avaliação';
     protected $_processoAp = 947;
@@ -355,7 +354,7 @@ class EditController extends Core_Controller_Page_EditController
 
         // Nota tipo valor
         $notaTipoValor = RegraAvaliacao_Model_Nota_TipoValor::getInstance();
-            $this->campoRadio(
+        $this->campoRadio(
             'tipoNota',
             $this->_getLabel('tipoNota'),
             $notaTipoValor->getEnums(),
@@ -447,7 +446,7 @@ class EditController extends Core_Controller_Page_EditController
 
         // Tipo progressão
         $tipoProgressao = RegraAvaliacao_Model_TipoProgressao::getInstance();
-            $this->campoRadio(
+        $this->campoRadio(
             'tipoProgressao',
             $this->_getLabel('tipoProgressao'),
             $tipoProgressao->getEnums(),

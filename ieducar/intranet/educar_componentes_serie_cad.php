@@ -138,7 +138,7 @@ class indice extends clsCadastro
     $this->campoOculto('serie_id', $this->serie_id);
     $this->campoOculto('serie_id', $this->serie_id);
     $this->campoOculto('retorno', $this->retorno);
-    $this->campoOculto('sugestao_anos_letivos', json_encode(array_values($this->sugestaoAnosLetivos())));
+    $this->campoOculto('sugestao_anos_letivos', json_encode(array_values($this->anosLetivosExistentes())));
 
     $this->inputsHelper()->dynamic('instituicao', array('value' => $this->instituicao_id));
 

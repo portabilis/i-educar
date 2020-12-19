@@ -548,7 +548,8 @@
           turma_id : $('#ref_cod_turma').val(),
           dependencia : document.getElementById("alunos_dependencia").checked ? 't' : 'f',
           posicao : $('#posicao').val(),
-          area_conhecimento : $('#area-conhecimento').val()
+          area_conhecimento : $('#area-conhecimento').val(),
+          emitir_carga_disciplinas : document.getElementById("emitir_carga_disciplinas").checked ? 1 : 0
         },
         success : function(dataResponse){
           afterChangeResource($resourceElement, postProcessamento);

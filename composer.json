@@ -40,7 +40,6 @@
         "nuwave/lighthouse": "^4.18",
         "phpoffice/phpspreadsheet": "^1.6",
         "predis/predis": "^1.1",
-        "prettus/l5-repository": "^2.6",
         "swiftmailer/swiftmailer": "^6.1",
         "tooleks/laravel-asset-version": "^1.0"
     },
