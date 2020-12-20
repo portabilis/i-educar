@@ -12,7 +12,7 @@ class BirthDateValidatorTest extends TestCase
         $validator = new BirthDateValidator(date('Y-m-d', strtotime('+1 day')));
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('Informe uma data de nascimento menor que o dia de hoje.', $validator->getMessage());
+        $this->assertStringContainsString('Informe uma data de nascimento menor que o dia de hoje.', $validator->getMessage());
     }
 
     public function testBirthDateBeforeToday()

@@ -11,6 +11,6 @@ trait LoginAsAdmin
      */
     public function user()
     {
-        return factory(User::class, 'admin')->make();
+        return factory(User::class)->state('admin')->make();
     }
 }

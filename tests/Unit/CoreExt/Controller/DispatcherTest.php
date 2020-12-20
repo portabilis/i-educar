@@ -93,11 +93,9 @@ class CoreExt_Controller_DispatcherTest extends PHPUnit\Framework\TestCase
       $this->_uris[$index]['uri'] : $this->_uris[0]['uri'];
   }
 
-  /**
-   * @expectedException InvalidArgumentException
-   */
   public function testOpcaoDeConfiguracaoNaoExistenteLancaExcecao()
   {
+      $this->expectException(\InvalidArgumentException::class);
     $this->_dispatcher->setOptions(array('foo' => 'bar'));
   }
 

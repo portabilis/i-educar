@@ -20,7 +20,7 @@ $factory->define(LegacyEnrollment::class, function (Faker $faker) {
     ];
 });
 
-$factory->defineAs(LegacyEnrollment::class, 'active', function (Faker $faker) use ($factory) {
+$factory->state(LegacyEnrollment::class, 'active', function (Faker $faker) use ($factory) {
     $enrollment = $factory->raw(LegacyEnrollment::class);
 
     return array_merge($enrollment, [
@@ -28,7 +28,7 @@ $factory->defineAs(LegacyEnrollment::class, 'active', function (Faker $faker) us
     ]);
 });
 
-$factory->defineAs(LegacyEnrollment::class, 'inactive', function (Faker $faker) use ($factory) {
+$factory->state(LegacyEnrollment::class, 'inactive', function (Faker $faker) use ($factory) {
     $enrollment = $factory->raw(LegacyEnrollment::class);
 
     return array_merge($enrollment, [

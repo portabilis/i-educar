@@ -58,11 +58,9 @@ class CoreExt_SingletonTest extends TestCase
     $this->assertSame($oid1, $oid2);
   }
 
-  /**
-   * @expectedException CoreExt_Exception
-   */
   public function testClasseQueNaoImplementaMetodoLancaExcecao()
   {
+      $this->expectException(\CoreExt_Exception::class);
     $instance1 = CoreExt_SingletonIncompleteStub::getInstance();
   }
 }

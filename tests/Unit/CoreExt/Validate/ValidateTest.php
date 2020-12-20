@@ -52,11 +52,9 @@ class CoreExt_ValidateTest extends PHPUnit\Framework\TestCase
     $this->_validator = new CoreExt_ValidateStub();
   }
 
-  /**
-   * @expectedException InvalidArgumentException
-   */
   public function testOpcaoDeConfiguracaoNaoExistenteLancaExcecao()
   {
+      $this->expectException(\InvalidArgumentException::class);
     $this->_validator->setOptions(array('invalidOption' => TRUE));
   }
 
@@ -70,28 +68,22 @@ class CoreExt_ValidateTest extends PHPUnit\Framework\TestCase
     $this->assertFalse($this->_validator->getOption('required'));
   }
 
-  /**
-   * @expectedException Exception
-   */
   public function testValorStringSomenteEspacoRequerido()
   {
+      $this->expectException(\Exception::class);
     // Um espaço ASCII
     $this->assertTrue($this->_validator->isValid(' '));
   }
 
-  /**
-   * @expectedException Exception
-   */
   public function testValorNuloLancaExcecao()
   {
+      $this->expectException(\Exception::class);
     $this->assertTrue($this->_validator->isValid(NULL));
   }
 
-  /**
-   * @expectedException Exception
-   */
   public function testValorArrayVazioLancaExcecao()
   {
+      $this->expectException(\Exception::class);
     $this->assertTrue($this->_validator->isValid(array()));
   }
 
