@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\District;
 use App\Support\Database\CsvSeeder;
 

@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\State;
 use App\Support\Database\CsvSeeder;
 

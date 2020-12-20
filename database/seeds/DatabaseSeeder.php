@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Support\Database\IncrementSequence;
 use Illuminate\Database\Seeder;
 
