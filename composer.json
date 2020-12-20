@@ -21,16 +21,16 @@
         "cossou/jasperphp": "^2.7",
         "dex/composer-plug-and-play": "^0.1.0",
         "doctrine/dbal": "^2.9",
-        "fideloper/proxy": "^4.0",
+        "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "google/recaptcha": "^1.2",
         "guzzlehttp/guzzle": "^7.0.1",
         "honeybadger-io/honeybadger-laravel": "^3.0",
         "intervention/image": "^2.5",
-        "laravel/framework": "^8.0",
+        "laravel/framework": "^8.12",
         "laravel/horizon": "^5.0",
         "laravel/legacy-factories": "^1.1",
-        "laravel/tinker": "^2.0",
+        "laravel/tinker": "^2.5",
         "laravel/ui": "^3.0",
         "league/csv": "^9.6",
         "league/flysystem-aws-s3-v3": "~1.0",
@@ -47,15 +47,16 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
         "beyondcode/laravel-dump-server": "^1.0",
-        "facade/ignition": "^2.3.6",
+        "facade/ignition": "^2.5",
+        "fakerphp/faker": "^1.9.1",
         "filp/whoops": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.13",
-        "fzaninotto/faker": "^1.4",
         "laravel/dusk": "^6.0",
+        "laravel/sail": "^0.0.5",
         "laravel/telescope": "^4.0",
-        "mockery/mockery": "^1.3.1",
+        "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
-        "phpunit/phpunit": "^9.0"
+        "phpunit/phpunit": "^9.3.3"
     },
     "autoload": {
         "classmap": [
@@ -125,7 +126,7 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
-        ]
+      ]
     },
     "config": {
         "preferred-install": "dist",
