@@ -29,6 +29,7 @@
         "intervention/image": "^2.5",
         "laravel/framework": "^8.0",
         "laravel/horizon": "^5.0",
+        "laravel/legacy-factories": "^1.1",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
         "league/csv": "^9.6",
