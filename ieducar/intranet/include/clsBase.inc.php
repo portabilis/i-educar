@@ -22,9 +22,7 @@ class clsBase
 {
     public $titulo = 'Prefeitura Municipal';
     public $clsForm = [];
-    public $bodyscript = null;
     public $processoAp;
-    public $refresh = false;
     public $renderMenu = true;
     public $renderMenuSuspenso = true;
     public $_instituicao;
