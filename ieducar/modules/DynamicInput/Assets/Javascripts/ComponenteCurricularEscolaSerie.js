@@ -41,7 +41,6 @@
       if (!$j('#ref_cod_turma').val()) {
         updateComponentesCurriculares()
       }
-      return false;
     });
 
     // bind onchange event
