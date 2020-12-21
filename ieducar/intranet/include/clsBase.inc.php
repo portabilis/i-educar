@@ -28,8 +28,6 @@ class clsBase
     public $renderMenu = true;
     public $renderMenuSuspenso = true;
     public $renderBanner = true;
-    public $estilos;
-    public $scripts;
     public $_instituicao;
 
     public function __construct()
@@ -45,16 +43,6 @@ class clsBase
     public function AddForm($form)
     {
         $this->clsForm[] = $form;
-    }
-
-    public function addEstilo($estilo_nome)
-    {
-        $this->estilos[$estilo_nome] = $estilo_nome;
-    }
-
-    public function addScript($script_nome)
-    {
-        $this->scripts[$script_nome] = $script_nome;
     }
 
     public function verificaPermissao()
