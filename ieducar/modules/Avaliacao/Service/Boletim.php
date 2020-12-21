@@ -1284,6 +1284,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 : App_Model_MatriculaSituacao::REPROVADO;
         }
 
+        if ($this->getRegraAvaliacaoDesconsiderarLancamentoFrequencia()) {
+            $presenca->situacao = App_Model_MatriculaSituacao::APROVADO;
+        }
+
         return $presenca;
     }
 
