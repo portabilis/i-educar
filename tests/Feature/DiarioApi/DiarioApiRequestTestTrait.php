@@ -42,7 +42,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = factory(User::class, 'admin')->make();
+        $user = factory(User::class)->state('admin')->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
@@ -80,7 +80,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = factory(User::class, 'admin')->make();
+        $user = factory(User::class)->state('admin')->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
@@ -112,7 +112,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = factory(User::class, 'admin')->make();
+        $user = factory(User::class)->state('admin')->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
@@ -144,7 +144,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = factory(User::class, 'admin')->make();
+        $user = factory(User::class)->state('admin')->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));

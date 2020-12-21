@@ -65,6 +65,13 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
             'Marque esta op&ccedil;&atilde;o para trazer somente alunos que possuem alguma depend&ecirc;ncia.'
         );
 
+        $usaCargaHorariaComponente = [
+            'rondondopara',
+        ];
+        $checked = in_array(config('legacy.report.mostrar_relatorios'), $usaCargaHorariaComponente);
+        $mensagemCh = 'Se esta opção for selecionada, passará a ser processada a CH informada no cadastro da <b>Turma</b> e/ou <b>Séries da escola</b>.';
+        $this->inputsHelper()->checkbox('emitir_carga_disciplinas', ['label' => 'Usar soma das cargas horárias dos componentes como carga horária total?', 'value' => $checked, $mensagemCh]);
+
         $campoPosicao = '';
 
         if ($this->validaControlePosicaoHistorico()) {

@@ -26,7 +26,7 @@ class Registro002019ImportTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = factory(User::class, 'admin')->make();
+        $this->user = factory(User::class)->state('admin')->make();
     }
 
     /**

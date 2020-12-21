@@ -26,7 +26,7 @@ $factory->define(LegacyCourse::class, function (Faker $faker) {
     ];
 });
 
-$factory->defineAs(LegacyCourse::class, 'padrao-ano-escolar', function (Faker $faker) use ($factory) {
+$factory->state(LegacyCourse::class, 'padrao-ano-escolar', function (Faker $faker) use ($factory) {
     $course = $factory->raw(LegacyCourse::class);
 
     return array_merge($course, [

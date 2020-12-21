@@ -87,8 +87,9 @@ class NotificationController extends Controller
     private function getLimit(User $user)
     {
         $notRead = $this->getNotReadCount($user);
+
         if ($notRead > 5) {
-            return $notRead;
+            return 25;
         }
 
         return 5;

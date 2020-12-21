@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Support\Database\DateSerializer;
 use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
+    use DateSerializer;
+
     const TYPE_STRING = 'string';
     const TYPE_FLOAT = 'float';
     const TYPE_INTEGER = 'integer';

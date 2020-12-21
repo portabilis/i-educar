@@ -4,11 +4,11 @@ namespace App\Exceptions;
 
 use App\Http\Controllers\LegacyController;
 use App_Model_Exception;
-use Exception;
 use iEducar\Modules\ErrorTracking\Tracker;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -34,38 +34,40 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param Exception $exception
+     * @param Throwable $e
+     *
+     * @throws Throwable
      *
      * @return void
-     *
-     * @throws Exception
      */
-    public function report(Exception $exception)
+    public function report(Throwable $e)
     {
-        if (config('app.trackerror') && $this->shouldReport($exception)) {
+        if (config('app.trackerror') && $this->shouldReport($e)) {
             $data = [
                 'context' => $this->getContext(),
                 'controller' => $this->getController(),
                 'action' => $this->getAction(),
             ];
 
-            app(Tracker::class)->notify($exception, $data);
+            app(Tracker::class)->notify($e, $data);
         }
 
-        parent::report($exception);
+        parent::report($e);
     }
 
     /**
      * Render an exception into an HTTP response.
      *
      * @param Request   $request
-     * @param Exception $exception
+     * @param Throwable $e
+     *
+     * @throws Throwable
      *
      * @return Response
      */
-    public function render($request, Exception $exception)
+    public function render($request, Throwable $e)
     {
-        return parent::render($request, $exception);
+        return parent::render($request, $e);
     }
 
     /**
