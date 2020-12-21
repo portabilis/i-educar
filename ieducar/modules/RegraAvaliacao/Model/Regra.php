@@ -39,6 +39,7 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
         'regraDiferenciada' => null,
         'calculaMediaRecParalela' => null,
         'tipoCalculoRecuperacaoParalela' => null,
+        'desconsiderarLancamentoFrequencia' => null,
     ];
 
     protected $_dataTypes = [
