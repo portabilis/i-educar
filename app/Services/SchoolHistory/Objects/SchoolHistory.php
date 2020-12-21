@@ -121,6 +121,14 @@ class SchoolHistory
         }
     }
 
+    public function defineIfHasScoreGreaterThanTen($hasGreaterScoreThanTen)
+    {
+        foreach ($this->disciplines as $key => $student) {
+            $studentKey = array_key_last($student);
+            $this->disciplines[$key][$studentKey]->qtde_notas_maiores_dez = $hasGreaterScoreThanTen;
+        }
+    }
+
     public function makeAllObservations()
     {
         foreach ($this->disciplines as $key => $student) {
