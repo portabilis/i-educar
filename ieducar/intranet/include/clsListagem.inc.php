@@ -35,7 +35,6 @@ class clsListagem extends clsCampos
     public $tituloFormResultado;
     public $funcAcao = '';
     public $funcAcaoNome = '';
-    public $rotulo_anterior;
     public $appendInTop = false;
     public $array_botao;
     public $array_botao_url;
@@ -46,7 +45,6 @@ class clsListagem extends clsCampos
     public $paginador = [];
     public $numeropaginador = 0;
     public $paginador2;
-    public $busca_janela = 0;
     public $rodape = '';
     public $ordenacao;
     public $campos_ordenacao;
@@ -99,11 +97,6 @@ class clsListagem extends clsCampos
     public function addCabecalhos($coluna)
     {
         $this->cabecalho = $coluna;
-    }
-
-    public function addCabecalho($coluna)
-    {
-        $this->cabecalho[] = $coluna;
     }
 
     public function addLinhas($linha)
@@ -175,7 +168,6 @@ HTML;
             $strReturn .= '<table class=\'paginacao\' border="0" cellpadding="0" cellspacing="0" align="center"><tr>';
 
             // Setas de início e anterior
-            $imagem = ($intPaginaAtual > 1) ? 'seta' :'seta_transp';
             $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . (1 + $pag_modifier): '';
             $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . (1 + $pag_modifier) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a primeira pagina\"> &laquo; </a></td> ";
             $compl_url = ($add_iniciolimit) ? '&iniciolimit=' . max(1 + $pag_modifier, $intPaginaAtual - 1) : '';
@@ -183,18 +175,15 @@ HTML;
 
             // Meio
             $strReturn .= '';
-            $meios = [];
 
             $ordenacao = $_POST['ordenacao'] ?? $_GET['ordenacao'] ?? $_POST['ordenacao'] ?? null;
 
             for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
-                $imagem     = ($pagStart + $i + $pag_modifier == $intPaginaAtual) ? '2' : '1';
                 $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . ($pagStart + $i + $pag_modifier) : '';
                 $strReturn .= "<td align=\"center\" style=\"padding-left:5px;padding-right:5px;\"><a href=\"{$linkFixo}$getVar=" . ($pagStart + $i + $pag_modifier) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a p&aacute;gina " . ($pagStart + $i) . '">' . addLeadingZero($pagStart + $i) .'</a></td>';
             }
 
             // Setas de fim e próxima
-            $imagem     = ($intPaginaAtual < $totalPaginas) ? 'seta' : 'seta_transp';
             $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) : '';
             $strReturn .= "<td width=\"23\" align=\"center\"><a href=\"{$linkFixo}$getVar=" . min($totalPaginas + $pag_modifier, $intPaginaAtual + 1) . "{$compl_url}\" class=\"nvp_paginador\" title=\"Ir para a proxima pagina\"> &rsaquo; </a></td> ";
             $compl_url  = ($add_iniciolimit) ? '&iniciolimit=' . ($totalPaginas + $pag_modifier): '';
@@ -204,33 +193,6 @@ HTML;
 
             $this->paginador2 = $strReturn;
         }
-    }
-
-    /**
-     * Cria o código HTML.
-     *
-     * @param string $caminho
-     * @param int    $qdt_registros
-     * @param int    $limite
-     * @param string $link_atual
-     *
-     * @return NULL
-     */
-    public function paginador($caminho, $qdt_registros, $limite, $link_atual)
-    {
-        $this->addPaginador2(
-            '',
-            $qdt_registros,
-            $_GET,
-            'formulario',
-            $limite,
-            3,
-            'pos_atual',
-            -1,
-            true
-        );
-
-        return null;
     }
 
     public function RenderHTML()
@@ -621,17 +583,6 @@ HTML;
         Portabilis_View_Helper_Application::embedJavascriptToFixupFieldsWidth($this);
 
         return $retorno;
-    }
-
-    /**
-     * Exibe mensagem de DIE formatada;
-     *
-     * @param String $msg
-     * @param String $url Redirecionar após 1 segundo
-     */
-    public function erro($msg, $redir = 'index.php')
-    {
-        die("<div style='width: 300px; height: 100px; font: 700 11px Arial,Helv,Sans; background-color: #f6f6f6; color: #e11; position: absolute; left: 50%; top: 50%; margin-top: -20px; margin-left: -100px; text-align: center; border: solid 1px #a1a1f1;'>{$msg}</div><script>setTimeout('window.location=\'$redir\'',5000);</script>");
     }
 
     public function inputsHelper()
