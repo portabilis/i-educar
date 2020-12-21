@@ -121,11 +121,11 @@ class SchoolHistory
         }
     }
 
-    public function setNotaMaiorQueDez($notaMaiorQueDez)
+    public function defineIfHasScoreGreaterThanTen($hasGreaterScoreThanTen)
     {
         foreach ($this->disciplines as $key => $student) {
             $studentKey = array_key_last($student);
-            $this->disciplines[$key][$studentKey]->qtde_notas_maiores_dez = $notaMaiorQueDez;
+            $this->disciplines[$key][$studentKey]->qtde_notas_maiores_dez = $hasGreaterScoreThanTen;
         }
     }
 
