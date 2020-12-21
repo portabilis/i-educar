@@ -54,7 +54,6 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Disciplina');
     $this->processoAp         = 0;
-    $this->renderBanner       = FALSE;
     $this->renderMenu         = FALSE;
     $this->renderMenuSuspenso = FALSE;
   }
@@ -89,7 +88,7 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    
+
 
     $this->cod_servidor = $_GET['ref_cod_servidor'];
     $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
@@ -217,7 +216,7 @@ class indice extends clsCadastro
         if ($this->ref_cod_disciplina[$i] == 'todas_disciplinas'){
           $componenteAnoDataMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
           $componentes = $componenteAnoDataMapper->findComponentePorCurso($this->ref_cod_curso[$i]);
-          
+
           foreach ($componentes as $componente) {
             $curso = $this->ref_cod_curso[$i];
             $curso_servidor[$curso] = $curso;

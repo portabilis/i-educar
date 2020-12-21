@@ -27,7 +27,6 @@ class clsBase
     public $refresh = false;
     public $renderMenu = true;
     public $renderMenuSuspenso = true;
-    public $renderBanner = true;
     public $_instituicao;
 
     public function __construct()

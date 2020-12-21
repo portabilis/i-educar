@@ -49,7 +49,6 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' Servidores - Servidor Nível');
     $this->processoAp         = 0;
-    $this->renderBanner       = FALSE;
     $this->renderMenu         = FALSE;
     $this->renderMenuSuspenso = FALSE;
   }

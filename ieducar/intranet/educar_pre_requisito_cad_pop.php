@@ -11,7 +11,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo( "{$this->_instituicao} i-Educar - Pre Requisito" );
         $this->processoAp = "601";
-        $this->renderBanner = false;
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
     }

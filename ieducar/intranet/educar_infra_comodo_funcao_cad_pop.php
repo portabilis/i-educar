@@ -11,7 +11,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo de ambiente " );
         $this->processoAp = "572";
-        $this->renderBanner = false;
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
     }
