@@ -37,6 +37,12 @@
       $componenteCurricularField.change();
     };
 
+    $j('#ref_cod_turma').on('change', function () {
+      if (!$j('#ref_cod_turma').val()) {
+        updateComponentesCurriculares()
+      }
+    });
+
     // bind onchange event
     $serieField.change(updateComponentesCurriculares);
 
