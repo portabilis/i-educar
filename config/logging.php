@@ -51,6 +51,7 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => 'debug',
             'days' => 14,
+            'permission' => env('LOG_FILE_PERMISSION', 0644),
         ],
 
         'slack' => [
