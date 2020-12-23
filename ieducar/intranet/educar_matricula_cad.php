@@ -1450,7 +1450,7 @@ class indice extends clsCadastro
             $int_ref_ref_cod_escola_mult = null,
             $int_ref_ref_cod_serie_mult = null,
             $int_qtd_min_alunos_matriculados = null,
-            $bool_verifica_serie_multiseriada = false,
+            $bool_verifica_serie_multiseriada = true,
             $bool_tem_alunos_aguardando_nota = null,
             $visivel = null,
             $turma_turno_id = $det_t['turma_turno_id'],

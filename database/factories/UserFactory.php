@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyEmployee;
 use App\User;
 use Faker\Generator as Faker;
 use Illuminate\Database\Eloquent\Factory;
@@ -9,6 +10,7 @@ use Illuminate\Support\Str;
 
 $factory->define(User::class, function (Faker $faker) {
     return [
+        'cod_usuario' => factory(LegacyEmployee::class)->create(),
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),
@@ -17,6 +19,6 @@ $factory->define(User::class, function (Faker $faker) {
     ];
 });
 
-$factory->defineAs(User::class, 'admin', function () {
+$factory->state(User::class, 'admin', function () {
     return User::query()->find(1)->toArray();
 });

@@ -19,11 +19,9 @@ class CoreExt_DataMapperTest extends UnitBaseTest
         $this->_db = $this->getDbMock();
     }
 
-    /**
-     * @expectedException TypeError
-     */
     public function testDbAdapterLancaExcecaoQuandoNaoEDoTipoEsperado()
     {
+        $this->expectException(\TypeError::class);
         $db = new stdClass();
         $mapper = new CoreExt_EntityDataMapperStub($db);
     }
@@ -224,11 +222,9 @@ class CoreExt_DataMapperTest extends UnitBaseTest
         $this->assertEquals(12.300, $expected->peso);
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testRegistroNaoExistenteLancaExcecao()
     {
+        $this->expectException(\Exception::class);
         $this->_db->expects($this->once())
             ->method('ProximoRegistro')
             ->will($this->returnValue(false));

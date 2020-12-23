@@ -15,7 +15,7 @@ class FileRequest extends FormRequest
     {
         return [
             'file' => [
-                'mimes:jpeg,pdf,png,xls,doc',
+                'mimes:jpeg,pdf,png,xls,doc,jpg',
                 'max:2000'
             ],
         ];
@@ -27,8 +27,8 @@ class FileRequest extends FormRequest
     public function messages()
     {
         return [
-            'file.mimes' => 'Deve ser enviado um arquivo do tipo jpg, pdf ou png.',
-            'file.max' => 'Não são permitidos arquivos com mais de 500KB.',
+            'file.mimes' => 'Deve ser enviado um arquivo do tipo jpg, png, jpeg ou pdf.',
+            'file.max' => 'Não são permitidos arquivos com mais de 2MB.',
         ];
     }
 }

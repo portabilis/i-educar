@@ -30,7 +30,6 @@ class clsBase
     public $renderBanner = true;
     public $estilos;
     public $scripts;
-    public $prog_alert;
     public $_instituicao;
 
     public function __construct()
@@ -80,14 +79,6 @@ class clsBase
 
             if (method_exists($form, 'getAppendedOutput')) {
                 $corpo = $corpo . $form->getAppendedOutput();
-            }
-
-            if (!isset($form->prog_alert)) {
-                continue;
-            }
-
-            if (is_string($form->prog_alert) && $form->prog_alert) {
-                $this->prog_alert .= $form->prog_alert;
             }
         }
 

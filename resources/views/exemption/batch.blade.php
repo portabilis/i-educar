@@ -32,13 +32,19 @@
                 </td>
             </tr>
             <tr id="tr_nm_escola">
-                <td class="formmdtd" valign="top"><span class="form">Escola</span></td>
+                <td class="formmdtd" valign="top">
+                    <span class="form">Escola</span>
+                    <span class="campo_obrigatorio">*</span>
+                </td>
                 <td class="formmdtd" valign="top">
                     @include('form.select-school')
                 </td>
             </tr>
             <tr id="tr_nm_curso">
-                <td class="formlttd" valign="top"><span class="form">Curso</span></td>
+                <td class="formlttd" valign="top">
+                    <span class="form">Curso</span>
+                    <span class="campo_obrigatorio">*</span>
+                </td>
                 <td class="formlttd" valign="top">
                     <span class="form">
                         <select class="geral" name="ref_cod_curso" id="ref_cod_curso" style="width: 308px;">
@@ -66,7 +72,6 @@
                     <span class="form">
                         <select class="geral" name="ref_cod_serie" id="ref_cod_serie" style="width: 308px;">
                             <option value="">Selecione uma série</option>
-
                         </select>
                     </span>
 
@@ -103,7 +108,7 @@
                                     <option value="{{$id}}"
                                             @if(old('situacao', Request::get('situacao')) == $id) selected @endif>
                                             {{$name}}
-                                        </option>
+                                    </option>
                                 @endif
                             @endforeach
                         </select>
@@ -141,7 +146,7 @@
                                 @foreach(\App\Models\LegacyExemptionType::all() as $exemptionType)
                                 <option value="{{$exemptionType->getKey()}}"
                                         @if(old('exemption_type', Request::get('exemption_type')) == $exemptionType->getKey()) selected @endif>{{$exemptionType->nm_tipo}}</option>
-                            @endforeach
+                                @endforeach
                         </select>
                     </span>
                 </td>
@@ -149,6 +154,7 @@
             <tr>
                 <td class="formlttd" valign="top">
                     <span class="form">Tipo de etapa</span>
+                    <span class="campo_obrigatorio">*</span>
                 </td>
                 <td class="formlttd" valign="top">
                     @include('form.stage-type')
@@ -163,7 +169,6 @@
                         <span class="form">
                             <select class="geral" name="stage[]" id="stage" style="width: 308px;" multiple="multiple"
                                     data-placeholder="Selecione uma etapa">
-
                             </select>
                         </span>
                 </td>

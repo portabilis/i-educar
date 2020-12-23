@@ -708,6 +708,7 @@ class App_Model_IedFinder extends CoreExt_Entity
                         'cargaHoraria' => $getCargaHoraria($componentes, $discipline->id) ?? ($discipline->cargaHoraria ?? $disciplinesAcademicYear->get($discipline->id)),
                         'codigo_educacenso' => $discipline->codigo_educacenso,
                         'ordenamento' => $discipline->ordenamento,
+                        'desconsidera_para_progressao' => $discipline->desconsidera_para_progressao,
                     ]);
                 })->keyBy('id')->all();
 
@@ -815,6 +816,9 @@ class App_Model_IedFinder extends CoreExt_Entity
                     )
                 )
             )
+            ORDER BY
+                mt.ativo DESC,
+                mt.sequencial DESC
             LIMIT 1
     ';
 

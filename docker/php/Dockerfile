@@ -83,4 +83,4 @@ RUN apt-get install openjdk-8-jdk -y
 
 RUN apt-get install npm -y
 
-RUN composer self-update --1
+RUN composer self-update

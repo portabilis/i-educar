@@ -73,9 +73,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      * @param $enrollmentId
      * @param $disciplineId
      *
-     * @return array
-     *
      * @throws Exception
+     *
+     * @return array
      */
     private function getExemptedStages($enrollmentId, $disciplineId)
     {
@@ -92,7 +92,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      * @param int $id    O identificador de ComponenteCurricular_Model_Componente
      * @param int $etapa A etapa para o qual a nota foi lançada
      *
-     * @return Avaliacao_Model_NotaComponente|NULL
+     * @return Avaliacao_Model_NotaComponente|null
      */
     public function getNotaComponente($id, $etapa = 1)
     {
@@ -116,7 +116,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * @param $id
      *
-     * @return Array|null
+     * @return array|null
      */
     public function getMediaComponente($id)
     {
@@ -134,10 +134,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * Retorna uma instância de Avaliacao_Model_NotaGeral.
      *
-     * @param int $id    O identificador de ComponenteCurricular_Model_Componente
      * @param int $etapa A etapa para o qual a nota foi lançada
      *
-     * @return Avaliacao_Model_NotaComponente|NULL
+     * @return Avaliacao_Model_NotaComponente|null
      */
     public function getNotaGeral($etapa = 1)
     {
@@ -155,10 +154,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * Retorna uma instância de Avaliacao_Model_FaltaAbstract.
      *
-     * @param int $etapa A etapa para o qual a falta foi lançada
-     * @param int $id    O identificador de ComponenteCurricular_Model_Componente
+     * @param int      $etapa A etapa para o qual a falta foi lançada
+     * @param int|null $id    O identificador de ComponenteCurricular_Model_Componente
      *
-     * @return Avaliacao_Model_FaltaAbstract|NULL
+     * @return Avaliacao_Model_FaltaAbstract|null
      */
     public function getFalta($etapa = 1, $id = null)
     {
@@ -186,10 +185,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * Retorna uma instância de Avaliacao_Model_ParecerDescritivoAbstract.
      *
-     * @param int $etapa A etapa para o qual o parecer foi lançado
-     * @param int $id    O identificador de ComponenteCurricular_Model_Componente
+     * @param int      $etapa A etapa para o qual o parecer foi lançado
+     * @param int|null $id    O identificador de ComponenteCurricular_Model_Componente
      *
-     * @return Avaliacao_Model_ParecerAbstract|NULL
+     * @return Avaliacao_Model_ParecerDescritivoAbstract|null
      */
     public function getParecerDescritivo($etapa = 1, $id = null)
     {
@@ -229,11 +228,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     /**
-     * @return $this
-     *
      * @throws App_Model_Exception
      * @throws StudentNotEnrolledInSchoolClass
      * @throws EvaluationRuleNotDefinedInLevel
+     *
+     * @return $this
      */
     protected function _setMatriculaInfo()
     {
@@ -281,11 +280,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * Carrega todas as notas e médias já lançadas para a matrícula atual.
      *
-     * @param bool $loadMedias FALSE caso não seja necessário carregar as médias
-     *
-     * @return $this
+     * @param bool $loadMedias false caso não seja necessário carregar as médias
      *
      * @throws Exception
+     *
+     * @return $this
      */
     protected function _loadNotas($loadMedias = true)
     {
@@ -334,9 +333,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * Carrega as médias dos componentes curriculares já lançadas.
      *
-     * @return $this
-     *
      * @throws Exception
+     *
+     * @return $this
      */
     protected function _loadMedias()
     {
@@ -373,9 +372,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      * Carrega as faltas do aluno, sejam gerais ou por componente.
      *
      * @param bool $loadCyclicRegimeData Se true, carrega todas as faltas do ciclo, caso a regra de avaliaçao tenha essa configuraçao
-     * @return $this
      *
      * @throws Exception
+     *
+     * @return $this
      */
     protected function _loadFalta($loadCyclicRegimeData = false)
     {
@@ -433,8 +433,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     /**
      * @param bool $loadCyclicRegimeData
-     * @return Avaliacao_Model_FaltaGeral[]
+     *
      * @throws Exception
+     *
+     * @return Avaliacao_Model_FaltaGeral[]
      */
     private function getFaltasLancadas($loadCyclicRegimeData = false)
     {
@@ -456,6 +458,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      * Retorna as faltas de todas as series do ciclo
      *
      * @param $matricula
+     *
+     * @throws Exception
+     *
      * @return Avaliacao_Model_FaltaGeral[]
      */
     private function retornaFaltasCiclo($matricula)
@@ -480,11 +485,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         return $faltas;
     }
 
-
     /**
      * Retorna os componentes de todas as séries do ciclo
      *
      * @param $matricula
+     *
+     * @throws App_Model_Exception
+     *
+     * @return array
      */
     private function getComponentesRegimeCiclico($matricula)
     {
@@ -505,9 +513,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * Carrega os pareceres do aluno, sejam gerais ou por componentes.
      *
-     * @return $this
-     *
      * @throws Exception
+     *
+     * @return $this
      */
     protected function _loadParecerDescritivo()
     {
@@ -538,6 +546,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         ];
 
         $parecerDescritivo = $this->getRegraAvaliacaoTipoParecerDescritivo();
+
         if (in_array($parecerDescritivo, $gerais)) {
             $pareceresGerais = [];
 
@@ -607,7 +616,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             ]
         ]);
 
-        return $total - (int)$disciplinesWithoutStage[0]['count'];
+        return $total - (int) $disciplinesWithoutStage[0]['count'];
     }
 
     /**
@@ -718,10 +727,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      * $situacao->falta       = $this->getSituacaoFaltas();
      * </code>
      *
-     * @return stdClass
-     *
      * @see Avaliacao_Service_Boletim#getSituacaoComponentesCurriculares()
      * @see Avaliacao_Service_Boletim#getSituacaoFaltas()
+     *
+     * @throws App_Model_Exception
+     *
+     * @return stdClass
      */
     public function getSituacaoAluno()
     {
@@ -744,9 +755,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      * @param $classroomId
      * @param $disciplineId
      *
-     * @return mixed
-     *
      * @throws Exception
+     *
+     * @return mixed
      */
     private function getLastStage($enrollmentId, $classroomId, $disciplineId)
     {
@@ -826,9 +837,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      * algumas verificações que não são necessárias para essa validação, mas que podem ser úteis em outras situações, como
      * ao calcular a situação de um componente específico
      *
-     * @return stdClass|NULL Retorna NULL caso não
-     *
      * @see App_Model_MatriculaSituacao
+     *
+     * @throws App_Model_Exception
+     *
+     * @return stdClass|NULL Retorna NULL caso não
      */
     public function getSituacaoNotas($calcularSituacaoAluno = false)
     {
@@ -857,6 +870,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         $disciplinaDispensadaTurma = clsPmieducarTurma::getDisciplinaDispensada($this->getOption('ref_cod_turma'));
+        $disciplinasNaoReprovativas = array_filter($componentesMatricula, function ($componente) {
+            return $componente->desconsidera_para_progressao;
+        });
+        $disciplinasNaoReprovativas = array_map(function ($disciplina) {
+            return $disciplina->id;
+        }, $disciplinasNaoReprovativas);
 
         // A situação é "aprovado" por padrão
         $situacaoGeral = App_Model_MatriculaSituacao::APROVADO;
@@ -951,7 +970,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     $etapa = 0;
                 }
 
-                if ($etapa < $lastStage && (string)$etapa != 'Rc') {
+                if ($etapa < $lastStage && (string) $etapa != 'Rc') {
                     $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
                     $situacaoGeral = App_Model_MatriculaSituacao::EM_ANDAMENTO;
                 } else {
@@ -988,17 +1007,21 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     $qtdComponenteReprovado++;
                 }
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
-            } elseif ((string)$etapa == 'Rc' && $media < $this->getRegraAvaliacaoMediaRecuperacao()) {
+            } elseif ((string) $etapa == 'Rc' && $media < $this->getRegraAvaliacaoMediaRecuperacao()) {
                 if ($this->exibeSituacao($id)) {
                     $qtdComponenteReprovado++;
                 }
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
-            } elseif ((string)$etapa == 'Rc' && $media >= $this->getRegraAvaliacaoMediaRecuperacao() && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
+            } elseif ((string) $etapa == 'Rc' && $media >= $this->getRegraAvaliacaoMediaRecuperacao() && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
-            } elseif ($etapa < $lastStage && (string)$etapa != 'Rc') {
+            } elseif ($etapa < $lastStage && (string) $etapa != 'Rc') {
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
             } else {
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
+            }
+
+            if (in_array($id, $disciplinasNaoReprovativas) && $situacao->componentesCurriculares[$id]->situacao == App_Model_MatriculaSituacao::REPROVADO) {
+                continue;
             }
 
             if ($this->_situacaoPrioritaria(
@@ -1067,32 +1090,31 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      * Esses valores são calculados SOMENTE através das faltas já lançadas.
      *
      * @param bool $ignorarSeriesCiclo Se true, vai pegar sempre somente a serie atual para o calculo, mesmo que a regra
-     * use a progressao do regime ciclico
-     * @return stdClass
+     *                                 use a progressao do regime ciclico
      *
      * @throws Exception
-     * @todo Verificação de situação geral nos moldes dos componentes curriculares
-     *   para falta por componente (se 0 ou diferente de componentes matrícula)
+     *
+     * @return stdClass
      */
     public function getSituacaoFaltas($ignorarSeriesCiclo = false)
     {
-        $presenca                           = new stdClass();
-        $presenca->totalFaltas              = 0;
-        $presenca->horasFaltas              = 0;
-        $presenca->porcentagemFalta         = 0;
-        $presenca->porcentagemPresenca      = 0;
+        $presenca = new stdClass();
+        $presenca->totalFaltas = 0;
+        $presenca->horasFaltas = 0;
+        $presenca->porcentagemFalta = 0;
+        $presenca->porcentagemPresenca = 0;
         $presenca->porcentagemPresencaRegra = $this->getRegraAvaliacaoPorcentagemPresenca();
 
-        $presenca->tipoFalta                = $this->getRegraAvaliacaoTipoPresenca();
-        $presenca->cargaHoraria             = $this->getCargaHoraria($this->getOption('matricula'), $ignorarSeriesCiclo);
-        $presenca->diasLetivos              = $this->getDiasLetivos($this->getOption('matricula'), $ignorarSeriesCiclo);
+        $presenca->tipoFalta = $this->getRegraAvaliacaoTipoPresenca();
+        $presenca->cargaHoraria = $this->getCargaHoraria($this->getOption('matricula'), $ignorarSeriesCiclo);
+        $presenca->diasLetivos = $this->getDiasLetivos($this->getOption('matricula'), $ignorarSeriesCiclo);
 
-        $presenca->cursoHoraFalta           = $this->getOption('cursoHoraFalta');
-        $presenca->componentesCurriculares  = [];
-        $presenca->situacao                 = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+        $presenca->cursoHoraFalta = $this->getOption('cursoHoraFalta');
+        $presenca->componentesCurriculares = [];
+        $presenca->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
 
-        $etapa                              = 0;
-        $faltasComponentes                  = [];
+        $etapa = 0;
+        $faltasComponentes = [];
 
         $enrollmentData = $this->getOption('matriculaData');
         $enrollmentId = $enrollmentData['cod_matricula'];
@@ -1110,7 +1132,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         // O parametro true força o carregamento de faltas do regime ciclico (faltas de todas as series do curso), caso a regra de avaliaçao tenha essa configuraçao
         $this->_loadFalta(($this->isCyclicRegime() && !$ignorarSeriesCiclo));
 
-        $tipoFaltaGeral         = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::GERAL;
+        $tipoFaltaGeral = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::GERAL;
         $tipoFaltaPorComponente = $presenca->tipoFalta == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE;
 
         if ($tipoFaltaGeral) {
@@ -1123,7 +1145,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 $total = 0;
                 $etapa = 0;
             } else {
-
                 $total = array_sum(CoreExt_Entity::entityFilterAttr($faltas, 'id', 'quantidade'));
                 $etapa = array_pop($faltas)->etapa;
             }
@@ -1136,9 +1157,16 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             }
 
             $faltas = array_intersect_key($faltas, $componentes);
-            $total  = 0;
+            $total = 0;
             $etapasComponentes = [];
             $faltasComponentes = [];
+
+            $disciplinasNaoReprovativas = array_filter($componentes, function ($componente) {
+                return $componente->desconsidera_para_progressao;
+            });
+            $disciplinasNaoReprovativas = array_map(function ($disciplina) {
+                return $disciplina->id;
+            }, $disciplinasNaoReprovativas);
 
             foreach ($faltas as $key => $falta) {
                 // Total de faltas do componente
@@ -1196,8 +1224,18 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     $etapasComponentes[$etapa] = $etapa;
                 }
 
-                // Adiciona a quantidade de falta do componente ao total geral de faltas
-                $total += $componenteTotal;
+                // Sempre que a regra de avaliação ter o checkbox desconsiderar
+                // lançamento de frequência marcado irá aprovar independente
+                // da frequência real
+
+                if ($this->getRegraAvaliacaoDesconsiderarLancamentoFrequencia()) {
+                    $faltasComponentes[$id]->situacao = App_Model_MatriculaSituacao::APROVADO;
+                }
+
+                if (!in_array($id, $disciplinasNaoReprovativas)) {
+                    // Adiciona a quantidade de falta do componente ao total geral de faltas
+                    $total += $componenteTotal;
+                }
             }
 
             if (0 == count($faltasComponentes) ||
@@ -1225,15 +1263,29 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             );
         }
 
-        $presenca->porcentagemPresenca     = 100 - $presenca->porcentagemFalta;
+        $presenca->porcentagemPresenca = 100 - $presenca->porcentagemFalta;
         $presenca->componentesCurriculares = $faltasComponentes;
+
         // Na última etapa seta situação presença como aprovado ou reprovado.
         if ($etapa == $this->getOption('etapas') || $etapa === 'Rc') {
-            $aprovado           = (
-                $presenca->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca() || $this->regraNaoPermiteReprovarFalta()
-            );
-            $presenca->situacao = $aprovado ? App_Model_MatriculaSituacao::APROVADO :
-                App_Model_MatriculaSituacao::REPROVADO;
+
+            // Um aluno terá a situação de aprovado referente a frequência quando:
+            // - Atingir o percentual mínimo de presença
+            // - A regra de avaliação ser do tipo "continuada" ou "somente média"
+            // - Ter o checkbox desconsiderar lançamento de frequência marcado
+            //   na regra de avaliação
+
+            $aprovado = $presenca->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca()
+                || $this->regraNaoPermiteReprovarFalta()
+                || $this->getRegraAvaliacaoDesconsiderarLancamentoFrequencia();
+
+            $presenca->situacao = $aprovado
+                ? App_Model_MatriculaSituacao::APROVADO
+                : App_Model_MatriculaSituacao::REPROVADO;
+        }
+
+        if ($this->getRegraAvaliacaoDesconsiderarLancamentoFrequencia()) {
+            $presenca->situacao = App_Model_MatriculaSituacao::APROVADO;
         }
 
         return $presenca;
@@ -1256,7 +1308,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      *
      * @return array
      */
-    private function calculaEtapaNotasAglutinada(int $componenteCurricularId, array $notasComponentes) : array
+    private function calculaEtapaNotasAglutinada(int $componenteCurricularId, array $notasComponentes): array
     {
         $codigos = $this->codigoDisciplinasAglutinadas();
         if (empty($codigos) || !in_array($componenteCurricularId, $codigos)) {
@@ -1278,20 +1330,22 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         return $somaEtapaNotas;
     }
 
-    public function exibeSituacao($componenteCurricularId) : bool
+    public function exibeSituacao($componenteCurricularId): bool
     {
         return $this->exibeNotaNecessariaExame($componenteCurricularId);
     }
 
-    public function exibeNotaNecessariaExame($componenteCurricularId) : bool
+    public function exibeNotaNecessariaExame($componenteCurricularId): bool
     {
         $codigos = $this->codigoDisciplinasAglutinadas();
 
-        return empty($codigos) || !in_array($componenteCurricularId, $codigos) || $componenteCurricularId == $this->codigoDisciplinasAglutinadas()[0];;
+        return empty($codigos) || !in_array($componenteCurricularId, $codigos) || $componenteCurricularId == $this->codigoDisciplinasAglutinadas()[0];
     }
 
     /**
      * Retorna o valor da média considerado para calculo de situação conforme regra
+     *
+     * @param Avaliacao_Model_NotaComponenteMedia $mediaComponente
      *
      * @return float
      */
@@ -1339,9 +1393,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      *
      *      A implementa antiga deste metodo esta contida no metodo getSituacaoNotas
      *
-     * @return stdClass|NULL Retorna NULL caso não
-     *
      * @see App_Model_MatriculaSituacao
+     *
+     * @throws App_Model_Exception
+     *
+     * @return stdClass|null Retorna NULL caso não
      */
     public function getSituacaoComponentesCurriculares()
     {
@@ -1377,7 +1433,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             }
 
             // pega situacao da falta componente ou geral.
-            if ($tipoFaltaPorComponente) {
+            if ($this->getRegraAvaliacaoDesconsiderarLancamentoFrequencia()) {
+                $situacaoFalta = App_Model_MatriculaSituacao::APROVADO;
+            } else if ($tipoFaltaPorComponente) {
                 $situacaoFalta = $situacaoFaltas->componentesCurriculares[$ccId]->situacao;
             } else {
                 $situacaoFalta = $situacaoFaltas->situacao;
@@ -1408,6 +1466,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     /**
      * Cria e persiste uma instância de Avaliacao_Model_NotaAluno.
+     *
+     * @throws CoreExt_DataMapper_Exception
      *
      * @return bool
      */
@@ -1516,6 +1576,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * Cria e persiste uma instância de Avaliacao_Model_NotaAluno.
      *
+     * @throws CoreExt_DataMapper_Exception
+     *
      * @return bool
      */
     protected function _createFaltaAluno()
@@ -1622,6 +1684,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * Cria e persiste uma instância de Avaliacao_Model_ParecerDescritivoAluno.
      *
+     * @throws CoreExt_DataMapper_Exception
+     *
      * @return bool
      */
     protected function _createParecerDescritivoAluno()
@@ -1689,7 +1753,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      *
      * @param Avaliacao_Model_ParecerDescritivoAbstract $instance
      *
-     * @return int|NULL
+     * @return int|null
      */
     protected function _getParecerIdEtapa(Avaliacao_Model_ParecerDescritivoAbstract $instance)
     {
@@ -1836,7 +1900,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      * CoreExt_Validate_Validatable, com os valores permitidos para os atributos
      * 'componenteCurricular' e 'etapa'.
      *
-     * @param CoreExt_Validate_Validatable $nota
+     * @param CoreExt_Validate_Validatable $validatable
+     *
+     * @throws Exception
      *
      * @return CoreExt_Validate_Validatable
      *
@@ -1883,6 +1949,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      * para os atributos 'componenteCurricular' e 'etapa'.
      *
      * @param Avaliacao_Model_ParecerDescritivoAbstract $instance
+     *
+     * @throws Exception
      *
      * @return Avaliacao_Model_ParecerDescritivoAbstract
      */
@@ -1945,7 +2013,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * Atualiza a etapa de uma instância de Avaliacao_Model_Etapa.
      *
-     * @param Avaliacao_Model_Etapa $nota
+     * @param Avaliacao_Model_Etapa $instance
      *
      * @return Avaliacao_Model_Etapa
      */
@@ -2088,9 +2156,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      *
      * @param Avaliacao_Model_NotaComponente|int $nota
      *
-     * @return mixed
-     *
      * @throws CoreExt_Exception_InvalidArgumentException
+     *
+     * @return mixed
      */
     public function arredondaNota($nota)
     {
@@ -2157,11 +2225,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * Arredonda uma nota através da tabela de arredondamento da regra de avaliação.
      *
-     * @param Avaliacao_Model_NotaComponente|int $nota
+     * @param $media
      *
      * @return mixed
-     *
-     * @throws CoreExt_Exception_InvalidArgumentException
      */
     public function arredondaMedia($media)
     {
@@ -2195,9 +2261,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      *
      * @param int $id
      *
-     * @return int|NULL
-     *
-     * @see    TabelaArredondamento_Model_Tabela#predictValue()
+     * @return int|null
      */
     public function preverNotaRecuperacao($id)
     {
@@ -2293,7 +2357,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
             if ($notaRecuperacao && is_numeric($notaRecuperacao->notaRecuperacaoEspecifica)) {
                 // Caso tenha nota de recuperação para regra atual, atribuí variável RE+N
-                $substituiMenorNota = (bool)$_regraRecuperacao->substituiMenorNota;
+                $substituiMenorNota = (bool) $_regraRecuperacao->substituiMenorNota;
                 $data['RSP' . $cont] = $notaRecuperacao->notaRecuperacaoEspecifica;
 
                 $somaEtapasRecuperacao = 0;
@@ -2347,10 +2411,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     /**
-     * @param numeric $falta
-     * @param numeric $horaFalta
+     * @param float $falta
+     * @param float $horaFalta
      *
-     * @return numeric
+     * @return float
      */
     protected function _calculateHoraFalta($falta, $horaFalta)
     {
@@ -2360,10 +2424,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * Calcula a proporção de $num2 para $num1.
      *
-     * @param numeric $num1
-     * @param numeric $num2
-     * @param bool    $decimal Opcional. Se o resultado é retornado como decimal
-     *                         ou percentual. O padrão é TRUE.
+     * @param float $num1
+     * @param float $num2
+     * @param bool  $decimal Opcional. Se o resultado é retornado como decimal
+     *                       ou percentual. O padrão é TRUE.
      *
      * @return float
      */
@@ -2427,6 +2491,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * Insere ou atualiza as notas no boletim do aluno.
      *
+     * @throws CoreExt_DataMapper_Exception
+     *
      * @return Avaliacao_Service_Boletim Provê interface fluída
      */
     public function saveNotas()
@@ -2462,8 +2528,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      * Insere ou atualiza as faltas no boletim.
      *
      * @param bool $updateAverage
-     * @return Avaliacao_Service_Boletim Provê interface fluída
+     *
      * @throws CoreExt_DataMapper_Exception
+     *
+     * @return Avaliacao_Service_Boletim Provê interface fluída
      */
     public function saveFaltas($updateAverage = false)
     {
@@ -2490,6 +2558,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     /**
      * Insere ou atualiza os pareceres no boletim.
+     *
+     * @throws CoreExt_DataMapper_Exception
      *
      * @return Avaliacao_Service_Boletim Provê interface fluída
      */
@@ -2530,8 +2600,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      * necessário estabelecido por tipoProgressao de
      * RegraAvaliacao_Model_Regra.
      *
-     * @param bool $ok Caso a progressão não seja automática, é necessário uma
-     *                 confirmação externa para a promoção do aluno.
+     * @param null $novaSituacaoMatricula
+     *
+     * @throws App_Model_Exception
+     * @throws CoreExt_Exception
+     * @throws CoreExt_Service_Exception
      *
      * @return bool
      */
@@ -2644,11 +2717,12 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     }
 
     /**
-     * @param $media
-     * @param $componente
-     * @param $etapa
+     * @param      $media
+     * @param      $componente
+     * @param      $etapa
      * @param bool $lock
      *
+     * @throws App_Model_Exception
      * @throws CoreExt_DataMapper_Exception
      */
     public function updateMediaComponente($media, $componente, $etapa, bool $lock = false)
@@ -2667,7 +2741,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $notaComponenteCurricularMedia->situacao = null;
 
             $notaComponenteCurricularMedia->markOld();
-        } catch (Exeption $e) {
+        } catch (Exception $e) {
             $notaComponenteCurricularMedia = new Avaliacao_Model_NotaComponenteMedia([
                 'notaAluno' => $this->_getNotaAluno()->id,
                 'componenteCurricular' => $componente,
@@ -2851,7 +2925,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                             'componenteCurricular' => $id,
                         ]);
 
-                        $locked = (bool)$notaComponenteCurricularMedia->bloqueada;
+                        $locked = (bool) $notaComponenteCurricularMedia->bloqueada;
 
                         // A média pode estar bloqueada caso tenha sido alterada manualmente.
                         // Neste caso não acontece a atualização da mesma por aqui e é necessário
@@ -2894,13 +2968,13 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * Atualiza os dados da matrícula do aluno.
      *
-     * @param int  $matricula
+     * @see App_Model_Matricula#atualizaMatricula($matricula, $usuario, $promover)
+     *
      * @param int  $usuario
      * @param bool $promover
+     * @param int  $matricula
      *
      * @return bool
-     *
-     * @see App_Model_Matricula#atualizaMatricula($matricula, $usuario, $promover)
      */
     protected function _updateMatricula($matricula, $usuario, $promover)
     {
@@ -2911,9 +2985,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      * @param $etapa
      * @param $ComponenteCurricularId
      *
-     * @return $this
-     *
      * @throws Exception
+     *
+     * @return $this
      */
     public function deleteNota($etapa, $ComponenteCurricularId)
     {
@@ -2934,9 +3008,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      * @param $etapa
      * @param $ComponenteCurricularId
      *
-     * @return $this
-     *
      * @throws Exception
+     *
+     * @return $this
      */
     public function deleteFalta($etapa, $ComponenteCurricularId)
     {
@@ -2950,9 +3024,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      * @param $etapa
      * @param $ComponenteCurricularId
      *
-     * @return $this
-     *
      * @throws Exception
+     *
+     * @return $this
      */
     public function deleteParecer($etapa, $ComponenteCurricularId)
     {
@@ -2965,9 +3039,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * @param $etapa
      *
-     * @return $this
-     *
      * @throws Exception
+     *
+     * @return $this
      */
     public function deleteNotaGeral($etapa)
     {
@@ -2986,10 +3060,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      * @param int|string $etapaId
      * @param int        $componenteCurricularId
      *
-     * @return bool
-     *
      * @throws MissingStagesException
      * @throws Exception
+     *
+     * @return bool
      */
     public function verificaNotasLancadasNasEtapasAnteriores($etapaId, $componenteCurricularId)
     {
@@ -3007,18 +3081,18 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             return true;
         }
 
-        $etapasDispensadas = (array)App_Model_IedFinder::validaDispensaPorMatricula(
+        $etapasDispensadas = (array) App_Model_IedFinder::validaDispensaPorMatricula(
             $matriculaId,
             $serieId,
             $escolaId,
             $componenteCurricularId
         );
 
-        $informacoesMatricula = (array)App_Model_IedFinder::getMatricula(
+        $informacoesMatricula = (array) App_Model_IedFinder::getMatricula(
             $matriculaId
         );
 
-        $informacoesEtapas = (array)App_Model_IedFinder::getEtapasDaTurma(
+        $informacoesEtapas = (array) App_Model_IedFinder::getEtapasDaTurma(
             $informacoesMatricula['ref_cod_turma']
         );
 
@@ -3102,9 +3176,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      * @param int|string $etapaId
      * @param int        $componenteCurricularId
      *
-     * @return bool
-     *
      * @throws Exception
+     *
+     * @return bool
      */
     public function verificaFaltasLancadasNasEtapasAnteriores($etapaId, $componenteCurricularId)
     {
@@ -3114,7 +3188,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         $serieId = $this->getOption('ref_cod_serie');
         $escolaId = $this->getOption('ref_cod_escola');
 
-        $existeEtapaDispensada = (array)App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $componenteCurricularId);
+        $existeEtapaDispensada = (array) App_Model_IedFinder::validaDispensaPorMatricula($matriculaId, $serieId, $escolaId, $componenteCurricularId);
 
         for ($etapa = 1; $etapa <= $etapaId; $etapa++) {
             $faltas = $this->getFaltaAtual($etapa, $componenteCurricularId);
@@ -3187,11 +3261,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * Retorna as regras de avaliação.
      *
-     * @return array
-     *
-     * @see RegraAvaliacao_Model_Regra::findRegraRecuperacao()
      * @deprecated
+     * @see RegraAvaliacao_Model_Regra::findRegraRecuperacao()
      *
+     * @return array
      */
     public function getRegrasRecuperacao()
     {
@@ -3243,10 +3316,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     /**
      * Verifica se a matrícula pode ficar aprovada com dependência
      *
-     * @param integer $status
-     * @return bool
-     * @throws App_Model_Exception
+     * @param $newRegistrationStatus
+     *
      * @throws Exception
+     *
+     * @return bool
      */
     private function allowsApproveWithDependence($newRegistrationStatus)
     {
@@ -3282,7 +3356,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             if ($disciplineAverage->situacao == App_Model_MatriculaSituacao::REPROVADO) {
                 $amountReproved++;
             }
-
         }
 
         return $amountReproved <= $this->getRegraAvaliacaoQtdDisciplinasDependencia();
@@ -3311,7 +3384,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             return $this->getOption('serieDiasLetivos');
         }
 
-       /** @var LegacyRegistration[] $registrations */
+        /** @var LegacyRegistration[] $registrations */
         $registrations = app(CyclicRegimeService::class)->getAllRegistrationsOfCycle($registration);
 
         $diasLetivos = 0;
