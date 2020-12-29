@@ -59,6 +59,7 @@ COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 RUN docker-php-ext-install pcntl
 
 RUN apk add openjdk8
+RUN apk add ttf-dejavu
 
 RUN apk add --update npm
 
