@@ -5,26 +5,23 @@ namespace App\Models;
 use App\Menu;
 use App\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection as SupportCollection;
-use Prettus\Repository\Contracts\Transformable;
-use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * @property int    $id
- * @property string $name
- * @property string $description
- * @property int    $level
- * @property bool   $active
+ * @property int               $id
+ * @property string            $name
+ * @property string            $description
+ * @property int               $level
+ * @property bool              $active
  *
  * @property Collection|Menu[] $menus
  * @property Collection|User[] $users
  */
-class LegacyUserType extends EloquentBaseModel implements Transformable
+class LegacyUserType extends Model
 {
-    use TransformableTrait;
-
     const LEVEL_ADMIN = 1;
     const LEVEL_INSTITUTIONAL = 2;
     const LEVEL_SCHOOLING = 4;

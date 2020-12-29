@@ -72,11 +72,9 @@ class CoreExt_EntityTest extends UnitBaseTest
     $this->assertEquals('CoreExt_EntityStub', $output);
   }
 
-  /**
-   * @expectedException CoreExt_Exception_InvalidArgumentException
-   */
   public function testSetarAtributoQueNaoExisteLancaExcecaoNaoVerificada()
   {
+      $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
     $entity = new CoreExt_EntityStub();
     $entity->foo = 'bar';
   }
@@ -143,7 +141,7 @@ class CoreExt_EntityTest extends UnitBaseTest
   {
     $entity = new CoreExt_ChildEntityStub();
     $entity->peso = '12,5';
-    $this->assertInternalType('float', $entity->peso);
+    $this->assertIsFloat($entity->peso);
   }
 
   public function testSetaAtributosNaInstanciacao()
@@ -179,11 +177,11 @@ class CoreExt_EntityTest extends UnitBaseTest
   }
 
   /**
-   * @expectedException Exception
    * @group CoreExt_Validate_Validatable
    */
   public function testConfigurarValidadorParaAtributoInexistenteLancaExcecao()
   {
+      $this->expectException(\Exception::class);
     $entity = new CoreExt_EntityStub();
     $entity->setValidator('fooAttr', new CoreExt_Validate_String());
   }
@@ -272,7 +270,7 @@ class CoreExt_EntityTest extends UnitBaseTest
     // Valida e verifica pelos valores
     $this->assertTrue($entity->isValid());
     $this->assertEquals('fooBar', $entity->nome);
-    $this->assertInternalType('float', $entity->peso);
+    $this->assertIsFloat($entity->peso);
   }
 
   /**
@@ -303,11 +301,11 @@ class CoreExt_EntityTest extends UnitBaseTest
   }
 
   /**
-   * @expectedException CoreExt_Exception_InvalidArgumentException
    * @group CoreExt_Validate_Validatable
    */
   public function testMetodoDeCriacaoDeValidadorSensivelAoCasoLancaExcecaoQuandoClasseNaoESubclasseDeCoreextValidateAbstract()
   {
+      $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
     $entity = new CoreExt_EntityStub();
     $entity->validateIfEquals(
       'nome', '', 'CoreExt_Validate_Abstract', array(), array()
@@ -368,29 +366,23 @@ class CoreExt_EntityTest extends UnitBaseTest
     $this->assertEquals(array(1 => 'fooBar', 2 => 'barFoo'), $array);
   }
 
-  /**
-   * @expectedException CoreExt_Exception_InvalidArgumentException
-   */
   public function testSetterDeReferenciaParaAtributoInexistenteLancaExcecao()
   {
+      $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
     $expected = new CoreExt_ChildEntityStub();
     $expected->setReference('foo', array());
   }
 
-  /**
-   * @expectedException CoreExt_Exception_InvalidArgumentException
-   */
   public function testSetterDeReferenciaLancaExcecaoCasoArrayDeDefinicaoContenhaConfiguracaoInexistente()
   {
+      $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
     $expected = new CoreExt_ChildEntityStub();
     $expected->setReference('nome', array('autoload' => TRUE));
   }
 
-  /**
-   * @expectedException CoreExt_Exception_InvalidArgumentException
-   */
   public function testSetterDeReferenciaLancaExcecaoParaClasseCoreextDataMapperInvalida()
   {
+      $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
     $expected = new CoreExt_ChildEntityStub();
     $expected->setReference('nome', array('class' => new stdClass()));
   }
@@ -501,11 +493,10 @@ class CoreExt_EntityTest extends UnitBaseTest
     $this->assertNull(CoreExt_EntityStub::getClassFromStorage('fooBar'));
   }
 
-  /**
-   * @expectedException CoreExt_Exception_InvalidArgumentException
-   */
+
   public function testInstanciaDeClassNaoEspecificaLancaExcecaoQuandoInstanciaPassadaNaoTemAMesmaAssinaturaDoNomeDeClasseInformado()
   {
+      $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
     CoreExt_EntityStub::addClassToStorage('fooBar', new stdClass());
   }
 
@@ -608,11 +599,9 @@ class CoreExt_EntityTest extends UnitBaseTest
     $this->assertNull($parent->filho);
   }
 
-  /**
-   * @expectedException CoreExt_Exception_InvalidArgumentException
-   */
   public function testLazyLoadParametroQueEReferenciaLancaExcecaoQuandoNaoEDoTipoIntegerOuCoreextEntity()
   {
+      $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
     $expected = new stdClass();
 
     $data = array(

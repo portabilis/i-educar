@@ -19,18 +19,6 @@ class clsDetalhe extends Core_Controller_Page_Abstract
   var $array_botao_url;
   var $array_botao_url_script;
 
-    /**
-     * @deprecated
-     */
-  function addBanner(
-      $strBannerUrl = '',
-      $strBannerLateralUrl = '',
-      $strBannerTitulo = '',
-      $boolFechaBanner = FALSE
-  ) {
-      // Método permanece somente para fins de compatibilidade e evitar erros.
-  }
-
   function addDetalhe($detalhe) {
     $this->detalhe[] = $detalhe;
   }

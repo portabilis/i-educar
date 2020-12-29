@@ -14,7 +14,7 @@ class BirthCertificateValidatorTest extends TestCase
         $validator = new BirthCertificateValidator($number, $birthDate);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Tipo certidão civil (novo formato) possui valor inválido', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Tipo certidão civil (novo formato) possui valor inválido', $validator->getMessage());
     }
 
     public function testXDigitsBefore31Digit()
@@ -25,7 +25,7 @@ class BirthCertificateValidatorTest extends TestCase
         $validator = new BirthCertificateValidator($number, $birthDate);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Tipo certidão civil (novo formato) possui valor inválido', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Tipo certidão civil (novo formato) possui valor inválido', $validator->getMessage());
     }
 
     public function testXDigitsOn31Digit()
@@ -46,7 +46,7 @@ class BirthCertificateValidatorTest extends TestCase
         $validator = new BirthCertificateValidator($number, $birthDate);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Tipo certidão civil (novo formato) possui valor inválido', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Tipo certidão civil (novo formato) possui valor inválido', $validator->getMessage());
     }
 
     public function testForbiddenDigitOn31Digit()
@@ -57,7 +57,7 @@ class BirthCertificateValidatorTest extends TestCase
         $validator = new BirthCertificateValidator($number, $birthDate);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Tipo certidão civil (novo formato) possui valor inválido', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Tipo certidão civil (novo formato) possui valor inválido', $validator->getMessage());
     }
 
     public function testCertificateYearBeforeBirthDate()
@@ -69,7 +69,7 @@ class BirthCertificateValidatorTest extends TestCase
         $validator = new BirthCertificateValidator($number, $birthDate);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Tipo certidão civil (novo formato) foi preenchido com o ano inválido. O número localizado nas posições de 11 a 14, não pode ser anterior ao ano de nascimento e nem posterior ao ano corrente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Tipo certidão civil (novo formato) foi preenchido com o ano inválido. O número localizado nas posições de 11 a 14, não pode ser anterior ao ano de nascimento e nem posterior ao ano corrente', $validator->getMessage());
     }
 
     public function testCertificateYearAfterTodayYear()
@@ -81,7 +81,7 @@ class BirthCertificateValidatorTest extends TestCase
         $validator = new BirthCertificateValidator($number, $birthDate);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('O campo: Tipo certidão civil (novo formato) foi preenchido com o ano inválido. O número localizado nas posições de 11 a 14, não pode ser anterior ao ano de nascimento e nem posterior ao ano corrente', $validator->getMessage());
+        $this->assertStringContainsString('O campo: Tipo certidão civil (novo formato) foi preenchido com o ano inválido. O número localizado nas posições de 11 a 14, não pode ser anterior ao ano de nascimento e nem posterior ao ano corrente', $validator->getMessage());
     }
 
     public function testCertificateYearAtSameYearOfBirthDate()

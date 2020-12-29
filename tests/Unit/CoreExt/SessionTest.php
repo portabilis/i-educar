@@ -15,11 +15,9 @@ class CoreExt_SessionTest extends TestCase
     $this->_session = new CoreExt_Session(array('session_auto_start' => FALSE));
   }
 
-  /**
-   * @expectedException InvalidArgumentException
-   */
   public function testOpcaoDeConfiguracaoNaoExistenteLancaExcecao()
   {
+      $this->expectException(\InvalidArgumentException::class);
     $this->_session->setOptions(array('foo' => 'bar'));
   }
 

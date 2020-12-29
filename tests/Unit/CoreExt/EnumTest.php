@@ -102,20 +102,16 @@ class CoreExt_EnumTest extends PHPUnit\Framework\TestCase
     $this->assertEquals('red', $enum->getKey('#FF0000'));
   }
 
-  /**
-   * @expectedException CoreExt_Exception
-   */
   public function testEnumEApenasLeitura()
   {
+      $this->expectException(\CoreExt_Exception::class);
     $enum = CoreExt_Enum1Stub::getInstance();
     $enum['foo'] = 'bar';
   }
 
-  /**
-   * @expectedException CoreExt_Exception
-   */
   public function testEnumNaoPermiteRemoverEntrada()
   {
+      $this->expectException(\CoreExt_Exception::class);
     $enum = CoreExt_Enum1Stub::getInstance();
     unset($enum['foo']);
   }

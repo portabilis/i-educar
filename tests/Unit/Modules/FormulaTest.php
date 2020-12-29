@@ -80,7 +80,7 @@ class FormulaTest extends UnitBaseTest
     $values = $this->_values;
     $values['Rc'] = 7;
     $nota = $this->_entity->execFormulaMedia($values);
-    $this->assertEquals(5.8, $nota, '', 0.3);
+    $this->assertEqualsWithDelta(5.8, $nota, 0.3);
   }
 
   public function testEntityValidators()

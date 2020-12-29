@@ -17,11 +17,9 @@ class Core_Controller_Page_AbstractTest extends TestCase
     $this->_pageController = new Core_Controller_Page_AbstractStub();
   }
 
-  /**
-   * @expectedException CoreExt_Exception_InvalidArgumentException
-   */
   public function testOpcaoDeConfiguracaoNaoExistenteLancaExcecao()
   {
+      $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
     $this->_pageController->setOptions(array('foo' => 'bar'));
   }
 
@@ -40,27 +38,21 @@ class Core_Controller_Page_AbstractTest extends TestCase
     $this->assertInstanceOf('CoreExt_DataMapper', $this->_pageController->getDataMapper(), 'Falhou na asserção a partir de configuração via "setDataMapper()" com objeto "CoreExt_DataMapper".');
   }
 
-  /**
-   * @expectedException Core_Controller_Page_Exception
-   */
   public function testClasseDataMapperNaoExistenteLancaExcecao()
   {
+      $this->expectException(\Core_Controller_Page_Exception::class);
     $this->_pageController->setDataMapper('FooDataMapper');
   }
 
-  /**
-   * @expectedException CoreExt_Exception_InvalidArgumentException
-   */
   public function testMetodoLancaExcecaoQuandoNaoRecebeTipoSuportado()
   {
+      $this->expectException(\CoreExt_Exception_InvalidArgumentException::class);
     $this->_pageController->setDataMapper(0);
   }
 
-  /**
-   * @expectedException Core_Controller_Page_Exception
-   */
   public function testClasseDataMapperNaoInformadaEMetodoNaoSubclassificadoLancaExcecao()
   {
+      $this->expectException(\Core_Controller_Page_Exception::class);
     $this->_pageController->getDataMapper();
   }
 
@@ -79,7 +71,7 @@ class Core_Controller_Page_AbstractTest extends TestCase
   public function testNumeroDoProcessoConfigurado()
   {
     $this->_pageController->_processoAp = 1;
-    $this->assertInternalType('int', $this->_pageController->getBaseProcessoAp(), 'Falhou na asserção por tipo a partir da instanciação de "Core_Page_Controller_Abstract".');
+    $this->assertIsInt($this->_pageController->getBaseProcessoAp(), 'Falhou na asserção por tipo a partir da instanciação de "Core_Page_Controller_Abstract".');
     $this->assertEquals(1, $this->_pageController->getBaseProcessoAp(), 'Falhou na asserção por valor a partir da instanciação de "Core_Page_Controller_Abstract".');
 
     $this->_pageController->setOptions(array('processoAp' => 2));
@@ -89,18 +81,16 @@ class Core_Controller_Page_AbstractTest extends TestCase
     $this->assertEquals(3, $this->_pageController->getBaseProcessoAp(), 'Falhou na asserção a partir de configuração via "setBaseProcessoAp()".');
   }
 
-  /**
-   * @expectedException Core_Controller_Page_Exception
-   */
   public function testNumeroDoProcessoNaoInformadoEMetodoNaoSubclassificadoLancaExcecao()
   {
+      $this->expectException(\Core_Controller_Page_Exception::class);
     $this->_pageController->getBaseProcessoAp();
   }
 
   public function testTituloConfigurado()
   {
     $this->_pageController->_titulo = 'foo';
-    $this->assertInternalType('string', $this->_pageController->getBaseTitulo(), 'Falhou na asserção por tipo a partir da instanciação de "Core_Page_Controller_Abstract".');
+    $this->assertIsString($this->_pageController->getBaseTitulo(), 'Falhou na asserção por tipo a partir da instanciação de "Core_Page_Controller_Abstract".');
     $this->assertEquals('foo', $this->_pageController->getBaseTitulo(), 'Falhou na asserção por valor a partir da instanciação de "Core_Page_Controller_Abstract".');
 
     $this->_pageController->setOptions(array('titulo' => 'bar'));
@@ -110,11 +100,9 @@ class Core_Controller_Page_AbstractTest extends TestCase
     $this->assertEquals('zoo', $this->_pageController->getBaseTitulo(), 'Falhou na asserção a partir de configuração via "setBaseTitulo()".');
   }
 
-  /**
-   * @expectedException Core_Controller_Page_Exception
-   */
   public function testTituloNaoInformadoEMetodoNaoSubclassificadoLancaExcecao()
   {
+      $this->expectException(\Core_Controller_Page_Exception::class);
     $this->_pageController->getBaseTitulo();
   }
 

@@ -272,6 +272,17 @@ trait Avaliacao_Service_Boletim_RegraAvaliacao
     }
 
     /**
+     * Indica se a regra de avaliação deve desconsiderar a obrigatoriedade dos
+     * lançamentos de frequência para aprovar/reprovar o aluno.
+     *
+     * @return bool
+     */
+    public function getRegraAvaliacaoDesconsiderarLancamentoFrequencia()
+    {
+        return boolval($this->getRegraAvaliacao()->get('desconsiderarLancamentoFrequencia'));
+    }
+
+    /**
      * Indica se a regra de avaliação usa a progressão do regime cíclico
      *
      * @return bool

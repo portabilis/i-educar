@@ -15,7 +15,7 @@ $factory->define(LegacyAverageFormula::class, function (Faker $faker) {
     ];
 });
 
-$factory->defineAs(LegacyAverageFormula::class,  'calculo-media-ponderada', function (Faker $faker) use ($factory) {
+$factory->state(LegacyAverageFormula::class, 'calculo-media-ponderada', function (Faker $faker) use ($factory) {
     $averageFormula = $factory->raw(LegacyAverageFormula::class);
     return array_merge($averageFormula, [
         'formula_media' => $faker->randomElement(['((((Se / Et) * 7) + (Rc * 3)) / 10)', '(((((Se / Et) * 3) + (Rc * 2)) / 5))', '((Rc * 0.4) + (Se / Et * 0.6))']),
@@ -23,7 +23,7 @@ $factory->defineAs(LegacyAverageFormula::class,  'calculo-media-ponderada', func
     ]);
 });
 
-$factory->defineAs(LegacyEvaluationRule::class, 'media-presenca-sem-recuperacao', function (Faker $faker) use ($factory) {
+$factory->state(LegacyEvaluationRule::class, 'media-presenca-sem-recuperacao', function (Faker $faker) use ($factory) {
     $evaluationRule = $factory->raw(LegacyEvaluationRule::class);
 
     return array_merge($evaluationRule, [

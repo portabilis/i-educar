@@ -1,7 +1,5 @@
 DocumentacaoPadrao.php
 acesso_indevido_lst.php
-adicionar_documentos_cad.php
-adicionar_documentos_det.php
 agenda.php
 agenda_admin_cad.php
 agenda_admin_det.php
@@ -47,7 +45,6 @@ educar_aluno_det.php
 educar_aluno_lst.php
 educar_alunos_defasados_nominal.php
 educar_ano_letivo_modulo_cad.php
-educar_auditoria_geral_lst.php
 educar_avaliacao_desempenho_cad.php
 educar_avaliacao_desempenho_det.php
 educar_avaliacao_desempenho_lst.php

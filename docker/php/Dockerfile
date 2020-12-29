@@ -1,4 +1,4 @@
-FROM php:7.3-fpm-alpine3.11
+FROM php:7.4-fpm-alpine
 
 LABEL maintainer="Portabilis <contato@portabilis.com.br>"
 
@@ -66,6 +66,6 @@ RUN apk add openjdk8
 
 RUN apk add --update npm
 
-RUN composer self-update --1
+RUN composer self-update
 
 RUN apk del .phpize_deps
