@@ -4,6 +4,7 @@ use App\Models\City;
 use App\Models\Country;
 use App\Models\PersonHasPlace;
 use App\Services\UrlPresigner;
+use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
@@ -364,7 +365,7 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Nacionalidade', $registro['nacionalidade']]);
         }
 
-        if ($registro['pais_origem']) {
+        if ($registro['pais_origem'] && $registro['nacionalidade'] != Nacionalidade::BRASILEIRA) {
             $this->addDetalhe(['País de Origem', $registro['pais_origem']]);
         }
 
@@ -746,10 +747,8 @@ class indice extends clsDetalhe
                 $this->addDetalhe(['Qual', $reg['desc_plano_saude']]);
             }
 
-            $this->addDetalhe(['<span id="tr_tit_dados_hospital">Em caso de emergência, levar para hospital ou clínica</span>']);
-            $this->addDetalhe(['Nome', $reg['hospital_clinica']]);
-            $this->addDetalhe(['Endereço', $reg['hospital_clinica_endereco']]);
-            $this->addDetalhe(['Telefone', $reg['hospital_clinica_telefone']]);
+            $this->addDetalhe(['<span id="tr_tit_dados_hospital">Em caso de emergência, autorizo levar meu(minha) filho(a) para o Hospital ou Clínica mais próximos:</span>']);
+            $this->addDetalhe(['Responsável', $reg['desc_aceita_hospital_proximo']]);
             $this->addDetalhe(['<span id="tr_tit_dados_hospital">Em caso de emergência, se não for possível contatar os responsáveis, comunicar</span>']);
             $this->addDetalhe(['Nome', $reg['responsavel_nome']]);
             $this->addDetalhe(['Parentesco', $reg['responsavel_parentesco']]);

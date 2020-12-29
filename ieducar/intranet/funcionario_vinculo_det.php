@@ -41,13 +41,7 @@ class indice extends clsDetalhe
         $this->url_cancelar = 'funcionario_vinculo_lst.php';
         $this->largura = '100%';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            '' => 'Detalhe do v&iacute;nculo'
-        ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Detalhe do v&iacute;nculo');
     }
 }
 

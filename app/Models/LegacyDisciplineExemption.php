@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -83,6 +84,11 @@ class LegacyDisciplineExemption extends Model
     public function stages()
     {
         return $this->hasMany(LegacyExemptionStage::class, 'ref_cod_dispensa', 'cod_dispensa');
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'ref_usuario_cad');
     }
 
     /**

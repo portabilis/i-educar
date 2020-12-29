@@ -313,14 +313,10 @@ class EditController extends Core_Controller_Page_EditController
         );
 
         $nomeMenu = ($this->getRequest()->id == null || $this->getRequest()->copy) ? 'Cadastrar' : 'Editar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => "$nomeMenu regra de avalia&ccedil;&atilde;o"
-        ]);
 
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb("$nomeMenu regra de avaliação", [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     /**

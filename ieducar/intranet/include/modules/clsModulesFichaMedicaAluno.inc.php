@@ -44,13 +44,12 @@ class clsModulesFichaMedicaAluno extends Model
     public $desc_fratura_trauma;
     public $plano_saude;
     public $desc_plano_saude;
-    public $hospital_clinica;
-    public $hospital_clinica_endereco;
-    public $hospital_clinica_telefone;
     public $responsavel;
     public $responsavel_parentesco;
     public $responsavel_parentesco_telefone;
     public $responsavel_parentesco_celular;
+    public $aceita_hospital_proximo;
+    public $desc_aceita_hospital_proximo;
 
     /**
      * Construtor.
@@ -94,13 +93,12 @@ class clsModulesFichaMedicaAluno extends Model
         $desc_fratura_trauma = null,
         $plano_saude = null,
         $desc_plano_saude = null,
-        $hospital_clinica = null,
-        $hospital_clinica_endereco = null,
-        $hospital_clinica_telefone = null,
         $responsavel = null,
         $responsavel_parentesco = null,
         $responsavel_parentesco_telefone = null,
-        $responsavel_parentesco_celular = null
+        $responsavel_parentesco_celular = null,
+        $aceita_hospital_proximo = null,
+        $desc_aceita_hospital_proximo = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'modules.';
@@ -108,14 +106,13 @@ class clsModulesFichaMedicaAluno extends Model
 
         $this->_campos_lista = $this->_todos_campos = ' ref_cod_aluno, altura, peso, grupo_sanguineo,
         fator_rh, alergia_medicamento, desc_alergia_medicamento,alergia_alimento, desc_alergia_alimento,
-        doenca_congenita,desc_doenca_congenita, fumante, doenca_caxumba, doenca_sarampo,doenca_rubeola, 
-        doenca_catapora, doenca_escarlatina, doenca_coqueluche,doenca_outras,  epiletico, 
-        epiletico_tratamento, hemofilico,hipertenso, asmatico, diabetico, insulina,tratamento_medico, 
-        desc_tratamento_medico, medicacao_especifica,desc_medicacao_especifica, acomp_medico_psicologico, 
-        desc_acomp_medico_psicologico,restricao_atividade_fisica, desc_restricao_atividade_fisica, 
-        fratura_trauma,desc_fratura_trauma, plano_saude, desc_plano_saude, hospital_clinica,
-        hospital_clinica_endereco, hospital_clinica_telefone, responsavel,responsavel_parentesco, 
-        responsavel_parentesco_telefone, responsavel_parentesco_celular';
+        doenca_congenita,desc_doenca_congenita, fumante, doenca_caxumba, doenca_sarampo,doenca_rubeola,
+        doenca_catapora, doenca_escarlatina, doenca_coqueluche,doenca_outras,  epiletico,
+        epiletico_tratamento, hemofilico,hipertenso, asmatico, diabetico, insulina,tratamento_medico,
+        desc_tratamento_medico, medicacao_especifica,desc_medicacao_especifica, acomp_medico_psicologico,
+        desc_acomp_medico_psicologico,restricao_atividade_fisica, desc_restricao_atividade_fisica,
+        fratura_trauma,desc_fratura_trauma, plano_saude, desc_plano_saude, responsavel, responsavel_parentesco,
+        responsavel_parentesco_telefone, responsavel_parentesco_celular, aceita_hospital_proximo, desc_aceita_hospital_proximo';
 
         if (is_numeric($ref_cod_aluno)) {
             $this->ref_cod_aluno = $ref_cod_aluno;
@@ -269,18 +266,6 @@ class clsModulesFichaMedicaAluno extends Model
             $this->desc_plano_saude = $desc_plano_saude;
         }
 
-        if (is_string($hospital_clinica)) {
-            $this->hospital_clinica = $hospital_clinica;
-        }
-
-        if (is_string($hospital_clinica_endereco)) {
-            $this->hospital_clinica_endereco = $hospital_clinica_endereco;
-        }
-
-        if (is_string($hospital_clinica_telefone)) {
-            $this->hospital_clinica_telefone = $hospital_clinica_telefone;
-        }
-
         if (is_string($responsavel)) {
             $this->responsavel = $responsavel;
         }
@@ -295,6 +280,14 @@ class clsModulesFichaMedicaAluno extends Model
 
         if (is_string($responsavel_parentesco_celular)) {
             $this->responsavel_parentesco_celular = $responsavel_parentesco_celular;
+        }
+
+        if (is_string($aceita_hospital_proximo)) {
+            $this->aceita_hospital_proximo = $aceita_hospital_proximo;
+        }
+
+        if (is_string($desc_aceita_hospital_proximo)) {
+            $this->desc_aceita_hospital_proximo = $desc_aceita_hospital_proximo;
         }
     }
 
@@ -464,18 +457,6 @@ class clsModulesFichaMedicaAluno extends Model
             $valores .= "{$gruda}'{$this->desc_plano_saude}'";
             $gruda = ', ';
 
-            $campos .= "{$gruda}hospital_clinica";
-            $valores .= "{$gruda}'{$this->hospital_clinica}'";
-            $gruda = ', ';
-
-            $campos .= "{$gruda}hospital_clinica_endereco";
-            $valores .= "{$gruda}'{$this->hospital_clinica_endereco}'";
-            $gruda = ', ';
-
-            $campos .= "{$gruda}hospital_clinica_telefone";
-            $valores .= "{$gruda}'{$this->hospital_clinica_telefone}'";
-            $gruda = ', ';
-
             $campos .= "{$gruda}responsavel";
             $valores .= "{$gruda}'{$this->responsavel}'";
             $gruda = ', ';
@@ -491,6 +472,13 @@ class clsModulesFichaMedicaAluno extends Model
             $campos .= "{$gruda}responsavel_parentesco_telefone";
             $valores .= "{$gruda}'{$this->responsavel_parentesco_telefone}'";
             $gruda = ', ';
+
+            $campos .= "{$gruda}aceita_hospital_proximo";
+            $valores .= "{$gruda}'{$this->aceita_hospital_proximo}'";
+            $gruda = ', ';
+
+            $campos .= "{$gruda}desc_aceita_hospital_proximo";
+            $valores .= "{$gruda}'{$this->desc_aceita_hospital_proximo}'";
 
             $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
 
@@ -585,12 +573,6 @@ class clsModulesFichaMedicaAluno extends Model
 
             $set .= ",desc_plano_saude = '{$this->desc_plano_saude}'";
 
-            $set .= ",hospital_clinica = '{$this->hospital_clinica}'";
-
-            $set .= ",hospital_clinica_endereco = '{$this->hospital_clinica_endereco}'";
-
-            $set .= ",hospital_clinica_telefone = '{$this->hospital_clinica_telefone}'";
-
             $set .= ",responsavel = '{$this->responsavel}'";
 
             $set .= ",responsavel_parentesco = '{$this->responsavel_parentesco}'";
@@ -598,6 +580,10 @@ class clsModulesFichaMedicaAluno extends Model
             $set .= ",responsavel_parentesco_telefone = '{$this->responsavel_parentesco_telefone}'";
 
             $set .= ",responsavel_parentesco_celular = '{$this->responsavel_parentesco_celular}'";
+
+            $set .= ",aceita_hospital_proximo = '{$this->aceita_hospital_proximo}'";
+
+            $set .= ",desc_aceita_hospital_proximo = '{$this->desc_aceita_hospital_proximo}'";
 
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_aluno = '{$this->ref_cod_aluno}'");

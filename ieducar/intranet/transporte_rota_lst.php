@@ -170,13 +170,9 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_transporte_escolar_index.php"                  => "Transporte escolar",
-             ""                                  => "Listagem de rotas"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Listagem de rotas', [
+        url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
+    ]);
     }
 }
 // cria uma extensao da classe base

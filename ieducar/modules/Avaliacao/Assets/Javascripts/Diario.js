@@ -1187,8 +1187,8 @@ function handleSearch($resultTable, dataResponse) {
 }
 
 function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaConhecimentoId, maxLength, tipoNota, regra) {
-  var notaConceitual = regra.tipo_nota == 'numericaconceitual' && tipoNota == 1;
-  var notaNumerica   = regra.tipo_nota == 'numericaconceitual' && tipoNota == 2;
+  var notaNumerica   = regra.tipo_nota == 'numericaconceitual' && tipoNota == 1;
+  var notaConceitual = regra.tipo_nota == 'numericaconceitual' && tipoNota == 2;
   var opcoesNotas    = notaConceitual ? regra.opcoes_notas_conceituais : regra.opcoes_notas;
 
   if(regra.tipo_nota == 'conceitual' || notaConceitual) {
@@ -1227,8 +1227,8 @@ function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaC
 }
 
 function _mediaField(matriculaId, componenteCurricularId, klass, id, value, areaConhecimentoId, maxLength, tipoNota, regra) {
-  var notaConceitual = regra.tipo_nota == 'numericaconceitual' && tipoNota == 1;
-  var notaNumerica   = regra.tipo_nota == 'numericaconceitual' && tipoNota == 2;
+  var notaNumerica   = regra.tipo_nota == 'numericaconceitual' && tipoNota == 1;
+  var notaConceitual = regra.tipo_nota == 'numericaconceitual' && tipoNota == 2;
   var opcoesNotas    = notaConceitual ? regra.opcoes_notas_conceituais : regra.opcoes_notas;
 
   if(regra.tipo_nota == 'conceitual' || notaConceitual) {
