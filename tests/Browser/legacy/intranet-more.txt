@@ -38,4 +38,3 @@ controlesis_software_lst.php
 controlesis_software_patch_cad.php
 controlesis_software_patch_det.php
 controlesis_software_patch_lst.php
-educar_auditoria_geral_det.php

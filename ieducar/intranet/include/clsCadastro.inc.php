@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacySchoolAcademicYear;
 use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
@@ -11,13 +12,6 @@ require_once 'Portabilis/Utils/User.php';
 
 class clsCadastro extends clsCampos
 {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
-    public $__nome = 'formcadastro';
     public $target = '_self';
     public $largura;
     public $tipoacao;
@@ -59,18 +53,6 @@ class clsCadastro extends clsCampos
 
     const NOVO = 'N';
     const EDITAR = 'E';
-
-    /**
-     * @deprecated
-     */
-    public function addBanner(
-        $strBannerUrl = '',
-        $strBannerLateralUrl = '',
-        $strBannerTitulo = '',
-        $boolFechaBanner = true
-    ) {
-        // Método deixado para compatibilidade
-    }
 
     public function __construct()
     {
@@ -637,9 +619,18 @@ class clsCadastro extends clsCampos
     protected function sugestaoAnosLetivos()
     {
         $anoAtual = date('Y');
-        $anos = range($anoAtual - 10, $anoAtual + 1);
+        $anos = range($anoAtual - 18, $anoAtual + 1);
 
         return array_combine($anos, $anos);
+    }
+
+    protected function anosLetivosExistentes()
+    {
+        return LegacySchoolAcademicYear::query()
+            ->distinct('ano')
+            ->get()
+            ->pluck('ano', 'ano')
+            ->toArray();
     }
 
     protected function inputsHelper()

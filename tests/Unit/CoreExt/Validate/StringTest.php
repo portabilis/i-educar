@@ -51,11 +51,9 @@ class CoreExt_Validate_StringTest extends PHPUnit\Framework\TestCase
     $this->_validator = new CoreExt_Validate_String();
   }
 
-  /**
-   * @expectedException Exception
-   */
   public function testStringSomenteEspacoLancaExcecaoPorSerObrigatorio()
   {
+      $this->expectException(\Exception::class);
     // São três espaços ascii 20.
     $this->assertTrue($this->_validator->isValid('   '));
   }
@@ -65,20 +63,16 @@ class CoreExt_Validate_StringTest extends PHPUnit\Framework\TestCase
     $this->assertTrue($this->_validator->isValid('abc'));
   }
 
-  /**
-   * @expectedException Exception
-   */
   public function testStringMenorQueOTamanhoMinimoLancaExcecao()
   {
+      $this->expectException(\Exception::class);
     $this->_validator->setOptions(array('min' => 5));
     $this->assertTrue($this->_validator->isValid('Foo'));
   }
 
-  /**
-   * @expectedException Exception
-   */
   public function testAlfaStringQueOTamanhoMaximoLancaExcecao()
   {
+      $this->expectException(\Exception::class);
     $this->_validator->setOptions(array('max' => 2));
     $this->assertTrue($this->_validator->isValid('Foo'));
   }

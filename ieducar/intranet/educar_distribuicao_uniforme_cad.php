@@ -153,18 +153,7 @@ class indice extends clsCadastro
             'size' => 10
         ]);
 
-        $this->campoLista(
-            'ref_cod_escola',
-            'Escola',
-            $escolaOpcoes,
-            $this->ref_cod_escola,
-            '',
-            false,
-            '(Responsável pela distribuição do uniforme)',
-            '',
-            false,
-            true
-        );
+        $this->inputsHelper()->dynamic(['instituicao', 'escola']);
 
         $this->inputsHelper()->checkbox('kit_completo', [
             'label' => 'Kit completo', 'value' => $this->kit_completo

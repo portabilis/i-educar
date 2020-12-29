@@ -9,7 +9,6 @@ require_once 'RegraAvaliacao/Model/TipoRecuperacaoParalela.php';
 
 class RegraAvaliacao_Model_Regra extends CoreExt_Entity
 {
-
     protected $_data = [
         'instituicao' => null,
         'nome' => null,
@@ -40,6 +39,7 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
         'regraDiferenciada' => null,
         'calculaMediaRecParalela' => null,
         'tipoCalculoRecuperacaoParalela' => null,
+        'desconsiderarLancamentoFrequencia' => null,
     ];
 
     protected $_dataTypes = [
@@ -277,6 +277,7 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
      * Pega a nota máxima permitida para a recuperação
      *
      * @param $etapa
+     *
      * @return float
      */
     public function getNotaMaximaRecuperacao($etapa)

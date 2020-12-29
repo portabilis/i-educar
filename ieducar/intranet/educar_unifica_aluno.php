@@ -38,7 +38,6 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
 
-require_once 'App/Date/Utils.php';
 require_once 'App/Unificacao/Aluno.php';
 
 require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';

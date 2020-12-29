@@ -34,7 +34,6 @@ class indice extends clsDetalhe
     public function Gerar()
     {
         $this->titulo = 'Servidor alocação - Detalhe';
-        $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
         $this->cod_servidor_alocacao = $_GET['cod_servidor_alocacao'];
 

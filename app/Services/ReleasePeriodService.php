@@ -29,6 +29,10 @@ class ReleasePeriodService
 
         $stageType = $firstStage->ref_cod_modulo;
 
+        if ($stage === 'Rc') {
+            $stage = $stages->max('sequencial');
+        }
+
         /** @var ReleasePeriod $releasePeriod */
         $releasePeriod = ReleasePeriod::where('year', $year)
             ->where('stage_type_id', $stageType)

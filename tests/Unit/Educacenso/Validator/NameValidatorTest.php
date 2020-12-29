@@ -26,6 +26,6 @@ class NameValidatorTest extends TestCase
         $validator = new NameValidator('Lorem Ipsuuuum');
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('Nome não pode ter a repetição de 4 caracteres seguidos.', $validator->getMessage());
+        $this->assertStringContainsString('Nome não pode ter a repetição de 4 caracteres seguidos.', $validator->getMessage());
     }
 }

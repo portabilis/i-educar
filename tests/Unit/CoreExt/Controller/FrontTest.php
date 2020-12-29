@@ -61,11 +61,9 @@ class CoreExt_Controller_FrontTest extends PHPUnit\Framework\TestCase
     $this->_frontController->resetOptions();
   }
 
-  /**
-   * @expectedException InvalidArgumentException
-   */
   public function testOpcaoDeConfiguracaoNaoExistenteLancaExcecao()
   {
+      $this->expectException(\InvalidArgumentException::class);
     $this->_frontController->setOptions(array('foo' => 'bar'));
   }
 

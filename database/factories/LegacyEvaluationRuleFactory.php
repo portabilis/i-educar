@@ -23,7 +23,7 @@ $factory->define(LegacyEvaluationRule::class, function (Faker $faker) {
     ];
 });
 
-$factory->defineAs(LegacyEvaluationRule::class, 'without-score', function (Faker $faker) use ($factory) {
+$factory->state(LegacyEvaluationRule::class, 'without-score', function (Faker $faker) use ($factory) {
     $evaluationRule = $factory->raw(LegacyEvaluationRule::class);
 
     return array_merge($evaluationRule, [
@@ -33,7 +33,7 @@ $factory->defineAs(LegacyEvaluationRule::class, 'without-score', function (Faker
     ]);
 });
 
-$factory->defineAs(LegacyEvaluationRule::class, 'media-presenca-sem-recuperacao', function (Faker $faker) use ($factory) {
+$factory->state(LegacyEvaluationRule::class, 'media-presenca-sem-recuperacao', function (Faker $faker) use ($factory) {
     $evaluationRule = $factory->raw(LegacyEvaluationRule::class);
 
     return array_merge($evaluationRule, [
@@ -48,7 +48,7 @@ $factory->defineAs(LegacyEvaluationRule::class, 'media-presenca-sem-recuperacao'
     ]);
 });
 
-$factory->defineAs(LegacyEvaluationRule::class, 'progressao-continuada-nota-conceitual', function () use ($factory) {
+$factory->state(LegacyEvaluationRule::class, 'progressao-continuada-nota-conceitual', function () use ($factory) {
     $evaluationRule = $factory->raw(LegacyEvaluationRule::class);
 
     return array_merge($evaluationRule, [
@@ -62,12 +62,12 @@ $factory->defineAs(LegacyEvaluationRule::class, 'progressao-continuada-nota-conc
     ]);
 });
 
-$factory->defineAs(LegacyEvaluationRule::class, 'progressao-calculo-media-recuperacao-ponderada', function () use ($factory) {
+$factory->state(LegacyEvaluationRule::class, 'progressao-calculo-media-recuperacao-ponderada', function () use ($factory) {
     $evaluationRule = $factory->raw(LegacyEvaluationRule::class);
 
     return array_merge($evaluationRule, [
         'tipo_nota' => RegraAvaliacao_Model_Nota_TipoValor::NUMERICA,
-        'formula_recuperacao_id' => factory(LegacyAverageFormula::class, 'calculo-media-ponderada')->create(),
+        'formula_recuperacao_id' => factory(LegacyAverageFormula::class)->state('calculo-media-ponderada')->create(),
         'tipo_progressao' => RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MEDIA_PRESENCA,
         'tipo_presenca' => RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE,
         'porcentagem_presenca' => 75,
