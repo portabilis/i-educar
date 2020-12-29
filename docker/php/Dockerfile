@@ -39,10 +39,11 @@ RUN docker-php-ext-install zip
 
 RUN apk add libc-dev
 
-RUN mkdir -p /usr/share/man/man7
 RUN echo "@v3.4 http://nl.alpinelinux.org/alpine/v3.4/main" >> /etc/apk/repositories && \
     apk update && \
     apk add --no-cache "postgresql-client@v3.4>=9.5"
+
+RUN apk add postgresql-client
 
 RUN apk add libpng-dev
 RUN docker-php-ext-install gd
