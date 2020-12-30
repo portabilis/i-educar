@@ -76,6 +76,13 @@ class EditController extends Core_Controller_Page_EditController
                 "Não progressiva automática - Somente média".<br />
                 Em porcentagem, exemplo: <b>75</b> ou <b>80,750</b>'
         ],
+        'desconsiderarLancamentoFrequencia' => [
+            'label' => 'Desconsiderar lançamento de frequência para aprovação/reprovação',
+            'help' => '
+                Não irá obrigar o lançamento de frequência em todas as etapas para permitir a aprovação/reprovação do(a)
+                aluno(a).
+            '
+        ],
         'parecerDescritivo' => [
             'label' => 'Parecer descritivo',
             'help' => '',
@@ -528,6 +535,17 @@ class EditController extends Core_Controller_Page_EditController
             $this->_getHelp('porcentagemPresenca')
         );
 
+        $this->campoCheck(
+            'desconsiderarLancamentoFrequencia',
+            $this->_getLabel('desconsiderarLancamentoFrequencia'),
+            $this->getEntity()->desconsiderarLancamentoFrequencia,
+            '',
+            false,
+            false,
+            false,
+            $this->_getHelp('desconsiderarLancamentoFrequencia')
+        );
+
         // Parecer descritivo
         $parecerDescritivo = RegraAvaliacao_Model_TipoParecerDescritivo::getInstance();
 
@@ -890,6 +908,11 @@ class EditController extends Core_Controller_Page_EditController
         //fixup for checkbox
         if (!isset($data['definirComponentePorEtapa'])) {
             $data['definirComponentePorEtapa'] = '0';
+        }
+
+        //fixup for checkbox
+        if (!isset($data['desconsiderarLancamentoFrequencia'])) {
+            $data['desconsiderarLancamentoFrequencia'] = '0';
         }
 
         //fixup for checkbox

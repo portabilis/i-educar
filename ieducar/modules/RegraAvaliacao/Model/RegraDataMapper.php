@@ -22,6 +22,7 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
         'formulaMedia' => 'formula_media_id',
         'formulaRecuperacao' => 'formula_recuperacao_id',
         'porcentagemPresenca' => 'porcentagem_presenca',
+        'desconsiderarLancamentoFrequencia' => 'desconsiderar_lancamento_frequencia',
         'parecerDescritivo' => 'parecer_descritivo',
         'tipoPresenca' => 'tipo_presenca',
         'mediaRecuperacao' => 'media_recuperacao',

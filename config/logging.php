@@ -45,6 +45,7 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
+            'permission' => octdec(env('LOG_FILE_PERMISSION', 0644)),
         ],
 
         'daily' => [
@@ -52,6 +53,7 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
+            'permission' => octdec(env('LOG_FILE_PERMISSION', 0644)),
         ],
 
         'slack' => [
