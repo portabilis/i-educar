@@ -188,8 +188,29 @@ class indice extends clsCadastro
         $this->campoCheck('obrigar_documento_pessoa', 'Exigir documento (RG, CPF ou Certidão de nascimento / casamento) no cadastro pessoa / aluno', $this->obrigar_documento_pessoa);
 
         $this->campoRotulo('datas', '<b>Datas</b>');
-        $this->campoData('data_base_transferencia', 'Data máxima para deslocamento', Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia), null, null, false);
-        $this->campoData('data_base_remanejamento', 'Data máxima para troca de sala', Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento), null, null, false);
+        $dataBaseDeslocamento = 'A ordenação/apresentação de alunos transferidos nos relatórios (ex.: Relação de alunos por turma) será baseada neste campo quando preenchido';
+        $this->inputsHelper()->date(
+            'data_base_transferencia',
+            [
+                'label' => 'Data máxima para deslocamento',
+                'required' => false,
+                'hint' => $dataBaseDeslocamento,
+                'placeholder' => 'dd/mm/yyyy',
+                'value' => Portabilis_Date_Utils::pgSQLToBr($this->data_base_transferencia)
+            ]
+        );
+        $dataBaseRemanejamento = 'A ordenação/apresentação de alunos remanejados nas turmas, nos relatórios (ex.: Relação de alunos por turma), será baseada neste campo quando preenchido';
+        $this->inputsHelper()->date(
+            'data_base_remanejamento',
+            [
+                'label' => 'Data máxima para troca de sala',
+                'required' => false,
+                'hint' => $dataBaseRemanejamento,
+                'placeholder' => 'dd/mm/yyyy',
+                'value' => Portabilis_Date_Utils::pgSQLToBr($this->data_base_remanejamento)
+            ]
+        );
+        $dataBase = 'Caso o campo seja preenchido o sistema irá controlar distorção de idade/série e limitar inscrições por idade no Pré-matrícula com base na data informada';
         $this->inputsHelper()->text(
             'data_base',
             [
@@ -198,10 +219,22 @@ class indice extends clsCadastro
                 'max_length' => 5,
                 'placeholder' => 'dd/mm',
                 'required' => false,
-                'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_base_matricula)
+                'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_base_matricula),
+                'label_hint' => $dataBase
             ]
         );
-        $this->campoData('data_expiracao_reserva_vaga', 'Data para indeferimento automático da reserva de vaga', Portabilis_Date_Utils::pgSQLToBr($this->data_expiracao_reserva_vaga), null, null, false);
+        $dataExpiracaoReservaVaga = 'Caso o campo seja preenchido o sistema irá indeferir automaticamente as reservas em situação de espera após a data informada';
+        $this->inputsHelper()->date(
+            'data_expiracao_reserva_vaga',
+            [
+                'label' => 'Data para indeferimento automático da reserva de vaga',
+                'required' => false,
+                'hint' => $dataExpiracaoReservaVaga,
+                'placeholder' => 'dd/mm/yyyy',
+                'value' => Portabilis_Date_Utils::pgSQLToBr($this->data_expiracao_reserva_vaga)
+            ]
+        );
+        $dataFechamento = 'Caso o campo seja preenchido o sistema irá bloquear a matrícula de novos alunos nas turmas após a data informada';
         $this->inputsHelper()->text(
             'data_fechamento',
             [
@@ -210,14 +243,17 @@ class indice extends clsCadastro
                 'max_length' => 5,
                 'placeholder' => 'dd/mm',
                 'required' => false,
-                'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_fechamento)
+                'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_fechamento),
+                'label_hint' => $dataFechamento
             ]
         );
+        $dataEducacenso = 'Este campo deve ser preenchido com a data máxima das matrículas que devem ser enviadas para o Censo';
         $this->inputsHelper()->date(
             'data_educacenso',
             [
                 'label' => 'Data de referência do Educacenso',
                 'required' => false,
+                'hint' => $dataEducacenso,
                 'placeholder' => 'dd/mm/yyyy',
                 'value' => $this->data_educacenso
             ]
