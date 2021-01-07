@@ -1,3 +1,4 @@
+$j(document).ready(function () {
 $campoEscolaDestinoExterna = $j('#escola_destino_externa');
 $campoEstadoEscolaDestinoExterna = $j('#estado_escola_destino_externa');
 $campoMunicipioEscolaDestinoExterna = $j('#municipio_escola_destino_externa');
@@ -51,3 +52,4 @@ function validaSubmit() {
   }
   acao();
 }
+});
