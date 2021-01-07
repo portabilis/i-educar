@@ -262,7 +262,19 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $matricula
         ));
 
-        $this->_setComponentes(App_Model_IedFinder::getComponentesPorMatricula($codMatricula, $this->getComponenteDataMapper(), $this->getComponenteTurmaDataMapper(), $componenteCurricularId, $etapaAtual, null, $matricula));
+        $this->_setComponentes(
+            App_Model_IedFinder::getComponentesPorMatricula(
+                $codMatricula,
+                $this->getComponenteDataMapper(),
+                $this->getComponenteTurmaDataMapper(),
+                $componenteCurricularId,
+                $etapaAtual,
+                null,
+                $matricula,
+                true,
+                $this->getOption('ignorarDispensasParciais')
+            )
+        );
 
         $this->setOption('matriculaData', $matricula);
         $this->setOption('aprovado', $matricula['aprovado']);
@@ -2590,7 +2602,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                 null,
                 $this->getOption('etapaAtual'),
                 null,
-                $this->getOption('matriculaData')
+                $this->getOption('matriculaData'),
+                true,
+                $this->getOption('ignorarDispensasParciais')
             )
         );
     }
