@@ -41,5 +41,13 @@ function mostraEscolaOutroMunicipio() {
 }
 
 function validaSubmit() {
-  $j('#ref_cod_instituicao').closest("select").val();
+  if (!$j('#escola_em_outro_municipio').is(':checked')) {
+    if ($j('#ref_cod_instituicao').closest("select").val() === '') {
+      return alert('É necessário informar a instituição');
+    }
+    if ($j('#ref_cod_escola').closest("select").val() === '') {
+      return alert('É necessário informar a escola');
+    }
+  }
+  acao();
 }
