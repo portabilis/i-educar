@@ -102,6 +102,7 @@ class indice extends clsCadastro
             }
 
             $this->Excluir();
+
         }
 
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
@@ -161,9 +162,9 @@ class indice extends clsCadastro
         $det_matricula = $obj_matricula->detalhe();
         $ref_cod_instituicao = $det_matricula['ref_cod_instituicao'];
 
-        $this->inputsHelper()->dynamic(['instituicao']);
-        $this->inputsHelper()->dynamic(['escola'], ['label_hint' => 'Destino do aluno']);
-        $this->inputsHelper()->checkbox('escola_em_outro_municipio', ['label' => 'Escola em outro municipio?']);
+        $this->inputsHelper()->dynamic(['instituicao'], ['required' => false]);
+        $this->inputsHelper()->dynamic(['escola'], ['label_hint' => 'Destino do aluno', 'required' => false]);
+        $this->inputsHelper()->checkbox('escola_em_outro_municipio', ['label' => 'Escola em outro municipio?', ]);
         $this->campoTexto('escola_destino_externa', 'Nome da escola ', '', 30, 255, false, false, false, '');
         $this->campoTexto('estado_escola_destino_externa', 'Estado da escola ', '', 20, 50, false, false, false, '');
         $this->campoTexto('municipio_escola_destino_externa', 'Município da escola ', '', 20, 50, false, false, false, '');
@@ -185,6 +186,8 @@ class indice extends clsCadastro
         Portabilis_View_Helper_Application::loadStylesheet($this, [
             '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
         ]);
+
+        $this->acao_enviar = 'validaSubmit();';
     }
 
     public function Novo()
