@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 require_once __DIR__ . '/../../../../Portabilis/View/Helper/Input/Core.php';
 require_once  __DIR__ . '/../../../../Portabilis/Date/Utils.php';

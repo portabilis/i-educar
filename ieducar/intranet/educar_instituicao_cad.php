@@ -452,9 +452,9 @@ class indice extends clsCadastro
 
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_instituicao_lst.php');
+        } else {
+            $this->mensagem = 'Edição não realizada.<br>';
         }
-
-        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
