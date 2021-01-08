@@ -3,15 +3,14 @@
 use App\Menu;
 use App\Models\State;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/Geral.inc.php';
-require_once 'Portabilis/Date/Utils.php';
-require_once 'Portabilis/Currency/Utils.php';
-
-require_once 'Educacenso/Model/OrgaoRegionalDataMapper.php';
+require_once __DIR__ . '/include/clsBase.inc.php';
+require_once __DIR__ .'/include/clsCadastro.inc.php';
+require_once __DIR__ .'/include/clsBanco.inc.php';
+require_once __DIR__ .'/include/pmieducar/geral.inc.php';
+require_once __DIR__ .'/include/Geral.inc.php';
+require_once __DIR__ . '/../lib/Portabilis/Date/Utils.php';
+require_once __DIR__ . '/../lib/Portabilis/Currency/Utils.php';
+require_once __DIR__ . '/../modules/Educacenso/Model/OrgaoRegionalDataMapper.php';
 
 class clsIndexBase extends clsBase
 {
