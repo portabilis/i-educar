@@ -210,7 +210,7 @@ class indice extends clsCadastro
             ]
         );
         $dataBase = 'Caso o campo seja preenchido, o sistema irá controlar distorção de idade/série e limitar inscrições por idade no Pré-matrícula com base na data informada.';
-        $this->inputsHelper()->text(
+        $this->inputsHelper()->dateDm(
             'data_base',
             [
                 'label' => 'Data base para matrícula (dia/mês)',
@@ -219,7 +219,7 @@ class indice extends clsCadastro
                 'placeholder' => 'dd/mm',
                 'required' => false,
                 'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_base_matricula),
-                'label_hint' => $dataBase
+                'hint' => $dataBase
             ]
         );
         $dataExpiracaoReservaVaga = 'Caso o campo seja preenchido, o sistema irá indeferir automaticamente as reservas em situação de espera após a data informada.';
@@ -234,7 +234,7 @@ class indice extends clsCadastro
             ]
         );
         $dataFechamento = 'Caso o campo seja preenchido, o sistema irá bloquear a matrícula de novos alunos nas turmas após a data informada.';
-        $this->inputsHelper()->text(
+        $this->inputsHelper()->dateDm(
             'data_fechamento',
             [
                 'label' => 'Data de fechamento das turmas para matrícula',
@@ -243,7 +243,7 @@ class indice extends clsCadastro
                 'placeholder' => 'dd/mm',
                 'required' => false,
                 'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_fechamento),
-                'label_hint' => $dataFechamento
+                'hint' => $dataFechamento
             ]
         );
         $dataEducacenso = 'Este campo deve ser preenchido com a data máxima das matrículas que devem ser enviadas para o Censo.';
