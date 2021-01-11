@@ -186,42 +186,8 @@ class indice extends clsCadastro
             $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
             $habilitaCargaHoraria = $this->habilitaCargaHoraria($this->ref_cod_instituicao);
         }
-
-        $obj_nivel = new clsPmieducarUsuario($this->pessoa_logada);
-        $nivel_usuario = $obj_nivel->detalhe();
-
-        if ($nivel_usuario['ref_cod_tipo_usuario'] == 1) {
-            $obj_instituicao = new clsPmieducarInstituicao();
-            $lista = $obj_instituicao->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, 1);
-            $opcoes['1'] = 'Selecione';
-
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes["{$registro['cod_instituicao']}"] = "{$registro['nm_instituicao']}";
-                }
-            }
-
-            $this->campoLista('ref_cod_instituicao', 'Institui&ccedil;&atilde;o', $opcoes, '');
-        } else {
-            $obj_instituicao = new clsPmieducarInstituicao($nivel_usuario['ref_cod_instituicao']);
-            $inst = $obj_instituicao->detalhe();
-
-            $this->campoOculto('ref_cod_instituicao', $inst['cod_instituicao']);
-            $this->campoTexto('instituicao', 'Instiui&ccedil;&atilde;o', $inst['nm_instituicao'], 30, 255, false, false, false, '', '', '', '', true);
-        }
-
-        $opcoes = ['' => 'Selecione'];
-        $listar_escolas = new clsPmieducarEscola();
-
-        $escolas = $listar_escolas->lista_escola();
-
-        foreach ($escolas as $escola) {
-            $opcoes["{$escola['cod_escola']}"] = "{$escola['nome']}";
-        }
-
-        $opcoes['outra'] = 'OUTRA';
-
-        $this->campoLista('ref_cod_escola', 'Escola', $opcoes, null, '', false, '', '', false, true);
+        $this->inputsHelper()->dynamic(['instituicao', 'escola'], ['required' => false]);
+        $this->inputsHelper()->checkbox('escola_em_outro_municipio', ['label' => 'Escola em outro municipio?']);
 
         $escola_options = [
             'required' => false,

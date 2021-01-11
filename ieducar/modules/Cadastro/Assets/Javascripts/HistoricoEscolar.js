@@ -10,12 +10,17 @@ $j(document).ready(function(){
 	}
 	//Quando for edição e for outra
 	else if(codigoEscola === '' && numeroSequencial !== ''){
+    $j('#escola_em_outro_municipio').prop('checked', true);
+    $j('#ref_cod_instituicao').closest('tr').hide();
+    $j('#ref_cod_escola').closest('tr').hide();
 		$j('#ref_cod_escola').val('outra');
 		$j('#escola').closest('tr').show();
 		$j('#escola').val(nomeEscola);
 	}
 	//Quando for edição e não for outra
 	else{
+    $j('#ref_cod_escola').makeRequired();
+    $j('#ref_cod_instituicao').makeRequired();
 		$j('#ref_cod_escola').val(codigoEscola);
 		$j('#escola').val('');
 		$j('#escola').closest('tr').hide();
@@ -35,20 +40,23 @@ $j(document).ready(function(){
 
 	habilitaPosicao();
 
-});
+  $j(function () {
+    $j('#escola_em_outro_municipio').change(function () {
+      if ($j('#escola_em_outro_municipio').is(':checked')) {
+        $j('#ref_cod_escola').val('outra');
+        $j('#escola').closest('tr').show();
+        $j('#ref_cod_instituicao').closest('tr').hide();
+        $j('#ref_cod_escola').closest('tr').hide();
+      } else {
+        $j('#escola').closest('tr').hide();
+        $j('#ref_cod_instituicao').closest('tr').show();
+        $j('#ref_cod_escola').closest('tr').show();
+        $j('#ref_cod_instituicao').makeRequired();
+        $j('#ref_cod_escola').makeRequired();
+      }
+    });
 
-	$j(function (){
-	$j('#ref_cod_escola').change(function (){
-		var ref_cod_escola_destino = $j('#ref_cod_escola').val();
-		if(ref_cod_escola_destino === 'outra'){
-			$j('#escola').closest('tr').show();
-		}
-		else{
-			$j('#escola').val('');
-			$j('#escola').closest('tr').hide();
-		}
-	});
-
+  });
 });
 
 document.getElementById('cb_faltas_globalizadas').onclick =function()
@@ -161,5 +169,17 @@ $addDisciplinaButton.click(function(){
 var $submitButton = $j('#btn_enviar');
 
 $submitButton.removeAttr('onclick');
-$submitButton.click(submitForm);
+$submitButton.click(validaSubmit);
+
+  function validaSubmit() {
+    if (!$j('#escola_em_outro_municipio').is(':checked')) {
+      if ($j('#ref_cod_instituicao').closest("select").val() === '') {
+        return alert('É necessário informar a instituição');
+      }
+      if ($j('#ref_cod_escola').closest("select").val() === '') {
+        return alert('É necessário informar a escola');
+      }
+    }
+    acao();
+  };
 
