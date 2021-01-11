@@ -1,7 +1,7 @@
 $j(document).ready(function(){
-	var codigoEscola = document.getElementById('codigoEscola').value;
-	var nomeEscola = document.getElementById('escola').value;
-	var numeroSequencial = document.getElementById('numeroSequencial').value;
+	let codigoEscola = document.getElementById('codigoEscola').value;
+	let nomeEscola = document.getElementById('escola').value;
+	let numeroSequencial = document.getElementById('numeroSequencial').value;
 
 	//Quando for novo cadastro
 	if(codigoEscola === '' && nomeEscola === '' && numeroSequencial === ''){
@@ -70,14 +70,14 @@ document.getElementById('cb_faltas_globalizadas').onclick();
 
 
 document.getElementById('idpais').onchange = function() {
-	var campoPais = document.getElementById( 'idpais' ).value;
-	var campoEstado = document.getElementById( 'escola_uf' );
+	let campoPais = document.getElementById( 'idpais' ).value;
+	let campoEstado = document.getElementById( 'escola_uf' );
 
 	campoEstado.length = 1;
 	campoEstado.disabled = true;
 	campoEstado.options[0] = new Option( 'Carregando estados', '', false, false );
 
-	var xml1 = new ajax(getEstado_XML);
+	let xml1 = new ajax(getEstado_XML);
 	strURL = "public_uf_xml.php?pais="+campoPais+"&abbreviation=true";
 	xml1.envia(strURL);
 }
@@ -86,14 +86,14 @@ function getEstado_XML(xml)
 {
 
 
-	var campoEstado = document.getElementById( 'escola_uf' );
+	let campoEstado = document.getElementById( 'escola_uf' );
 
 
-	var estados = xml.getElementsByTagName( "estado" );
+	let estados = xml.getElementsByTagName( "estado" );
 
 	campoEstado.length = 1;
 	campoEstado.options[0] = new Option( 'Selecione um estado', '', false, false );
-	for ( var j = 0; j < estados.length; j++ )
+	for ( let j = 0; j < estados.length; j++ )
 	{
 
 		campoEstado.options[campoEstado.options.length] = new Option( estados[j].firstChild.nodeValue, estados[j].getAttribute('id'), false, false );
@@ -109,14 +109,14 @@ function getEstado_XML(xml)
 
 // autocomplete disciplina fields
 
-var handleSelect = function(event, ui){
+let handleSelect = function(event, ui){
 	$j(event.target).val(ui.item.label);
 	return false;
 };
 
-var search = function(request, response) {
-	var searchPath = '/module/Api/ComponenteCurricular?oper=get&resource=componente_curricular-search';
-	var params     = { query : request.term };
+let search = function(request, response) {
+	let searchPath = '/module/Api/ComponenteCurricular?oper=get&resource=componente_curricular-search';
+	let params     = { query : request.term };
 
 	$j.get(searchPath, params, function(dataResponse) {
 		simpleSearch.handleSearch(dataResponse, response);
@@ -138,10 +138,10 @@ function setAutoComplete() {
 
 setAutoComplete();
 
-var submitForm = function(event) {
-	var $frequenciaField  	  = $j('#frequencia');
-	var frequencia        	  = $frequenciaField.val();
-	var frequenciaObrigatoria = $frequenciaField.hasClass('obrigatorio');
+let submitForm = function(event) {
+	let $frequenciaField  	  = $j('#frequencia');
+	let frequencia        	  = $frequenciaField.val();
+	let frequenciaObrigatoria = $frequenciaField.hasClass('obrigatorio');
 
 if (frequencia.indexOf(',') > -1){
 	frequencia = frequencia.replace('.', '').replace(',', '.');
@@ -157,7 +157,7 @@ if((frequencia.trim() == '')&&(!frequenciaObrigatoria)){
 
 // bind events
 
-var $addDisciplinaButton = $j('#btn_add_tab_add_1');
+let $addDisciplinaButton = $j('#btn_add_tab_add_1');
 
 $addDisciplinaButton.click(function(){
 	setAutoComplete();
@@ -166,7 +166,7 @@ $addDisciplinaButton.click(function(){
 
 // submit button
 
-var $submitButton = $j('#btn_enviar');
+let $submitButton = $j('#btn_enviar');
 
 $submitButton.removeAttr('onclick');
 $submitButton.click(validaSubmit);
