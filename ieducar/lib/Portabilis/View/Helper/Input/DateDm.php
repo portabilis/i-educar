@@ -40,7 +40,7 @@ class Portabilis_View_Helper_Input_DateDm extends Portabilis_View_Helper_Input_C
             $inputOptions['value'] = Portabilis_Date_Utils::pgSQLToBr($inputOptions['value']);
         }
 
-        call_user_func_array([$this->viewInstance, 'campoData'], $inputOptions);
+        call_user_func_array([$this->viewInstance, 'campoDataDm'], $inputOptions);
 
         $this->fixupPlaceholder($inputOptions);
         $this->fixupOptions($inputOptions);
@@ -58,7 +58,7 @@ class Portabilis_View_Helper_Input_DateDm extends Portabilis_View_Helper_Input_C
             $sizeFixup
             $disableFixup
 
-            \$input.change(function(){
+            \$input .change(function(){
                 if (this.value == '') {
                     return true;
                 }
