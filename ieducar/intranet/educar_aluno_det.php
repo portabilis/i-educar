@@ -473,7 +473,7 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Deficiências', $tabela]);
         }
 
-        if (empty($registro['url_documento']) && $registro['url_documento'] != '[]') {
+        if (!empty($registro['url_documento']) && $registro['url_documento'] != '[]') {
             $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Documentos</td></tr>';
             $cor = '#e9f0f8';
 
@@ -495,7 +495,7 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Documentos do aluno', $tabela]);
         }
 
-        if (empty($registro['url_laudo_medico']) && $registro['url_laudo_medico'] != '[]') {
+        if (!empty($registro['url_laudo_medico']) && $registro['url_laudo_medico'] != '[]') {
             $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Laudo médico</td></tr>';
 
             $cor = '#D1DADF';
