@@ -2,6 +2,7 @@ $j(document).ready(function(){
 	let codigoEscola = document.getElementById('codigoEscola').value;
 	let nomeEscola = document.getElementById('escola').value;
 	let numeroSequencial = document.getElementById('numeroSequencial').value;
+  const escola_em_outro_municipio = $j('#escola_em_outro_municipio');
 
 	//Quando for novo cadastro
 	if(codigoEscola === '' && nomeEscola === '' && numeroSequencial === ''){
@@ -10,7 +11,7 @@ $j(document).ready(function(){
 	}
 	//Quando for edição e for outra
 	else if(codigoEscola === '' && numeroSequencial !== ''){
-    $j('#escola_em_outro_municipio').prop('checked', true);
+    escola_em_outro_municipio.prop('checked', true);
     $j('#ref_cod_instituicao').closest('tr').hide();
     $j('#ref_cod_escola').closest('tr').hide();
 		$j('#ref_cod_escola').val('outra');
@@ -41,8 +42,8 @@ $j(document).ready(function(){
 	habilitaPosicao();
 
   $j(function () {
-    $j('#escola_em_outro_municipio').change(function () {
-      if ($j('#escola_em_outro_municipio').is(':checked')) {
+    escola_em_outro_municipio.change(function () {
+      if (escola_em_outro_municipio.is(':checked')) {
         $j('#ref_cod_escola').val('outra');
         $j('#escola').closest('tr').show();
         $j('#ref_cod_instituicao').closest('tr').hide();
