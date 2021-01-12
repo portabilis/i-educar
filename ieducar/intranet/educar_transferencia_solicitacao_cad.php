@@ -66,7 +66,7 @@ class indice extends clsCadastro
 
     public $municipio_escola_destino_externa;
 
-    public $ref_cod_escola_destino;
+    public $ref_cod_escola;
 
     public function Inicializar()
     {
@@ -102,6 +102,7 @@ class indice extends clsCadastro
             }
 
             $this->Excluir();
+
         }
 
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}";
@@ -161,23 +162,12 @@ class indice extends clsCadastro
         $det_matricula = $obj_matricula->detalhe();
         $ref_cod_instituicao = $det_matricula['ref_cod_instituicao'];
 
-        $opcoes = ['' => 'Selecione'];
-        $objTemp = new clsPmieducarEscola();
-        $objTemp->_campo_order_by = 'nome';
-        $lista = $objTemp->lista(null, null, null, $det_matricula['ref_cod_instituicao']);
-
-        foreach ($lista as $escola) {
-            $opcoes["{$escola['cod_escola']}"] = "{$escola['nome']}";
-        }
-
-        $opcoes[0] = 'OUTRA';
-
-        $this->campoLista('ref_cod_escola_destino', 'Escola', $opcoes, null, '', false, 'Destino do aluno', '', false, false);
+        $this->inputsHelper()->dynamic(['instituicao'], ['required' => false]);
+        $this->inputsHelper()->dynamic(['escola'], ['label_hint' => 'Destino do aluno', 'required' => false]);
+        $this->inputsHelper()->checkbox('escola_em_outro_municipio', ['label' => 'Escola em outro municipio?', ]);
         $this->campoTexto('escola_destino_externa', 'Nome da escola ', '', 30, 255, false, false, false, '');
         $this->campoTexto('estado_escola_destino_externa', 'Estado da escola ', '', 20, 50, false, false, false, '');
         $this->campoTexto('municipio_escola_destino_externa', 'Município da escola ', '', 20, 50, false, false, false, '');
-
-        $opcoes = ['' => 'Selecione'];
 
         $objTemp = new clsPmieducarTransferenciaTipo();
         $objTemp->setOrderby(' nm_tipo ASC ');
@@ -267,7 +257,7 @@ class indice extends clsCadastro
         }
         clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada);
 
-        $obj = new clsPmieducarTransferenciaSolicitacao(null, $this->ref_cod_transferencia_tipo, null, $this->pessoa_logada, null, $this->ref_cod_matricula, $this->observacao, null, null, $this->ativo, $this->data_transferencia, $this->escola_destino_externa, $this->ref_cod_escola_destino, $this->estado_escola_destino_externa, $this->municipio_escola_destino_externa);
+        $obj = new clsPmieducarTransferenciaSolicitacao(null, $this->ref_cod_transferencia_tipo, null, $this->pessoa_logada, null, $this->ref_cod_matricula, $this->observacao, null, null, $this->ativo, $this->data_transferencia, $this->escola_destino_externa, $this->ref_cod_escola, $this->estado_escola_destino_externa, $this->municipio_escola_destino_externa);
         if ($obj->existSolicitacaoTransferenciaAtiva()) {
             $this->mensagem = 'Já existe uma solitação de transferência ativa.<br>';
 
