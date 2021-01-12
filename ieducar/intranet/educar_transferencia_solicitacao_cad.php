@@ -186,8 +186,6 @@ class indice extends clsCadastro
         Portabilis_View_Helper_Application::loadStylesheet($this, [
             '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
         ]);
-
-        $this->acao_enviar = 'validaSubmit();';
     }
 
     public function Novo()

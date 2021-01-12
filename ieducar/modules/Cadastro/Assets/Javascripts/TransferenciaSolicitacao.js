@@ -41,6 +41,11 @@ $j(document).ready(function () {
     }
   }
 
+  let $submitButton = $j('#btn_enviar');
+
+  $submitButton.removeAttr('onclick');
+  $submitButton.click(validaSubmit);
+
   function validaSubmit() {
     if (!$j('#escola_em_outro_municipio').is(':checked')) {
       if ($j('#ref_cod_instituicao').closest("select").val() === '') {
@@ -52,4 +57,4 @@ $j(document).ready(function () {
     }
     acao();
   }
-  });
+});
