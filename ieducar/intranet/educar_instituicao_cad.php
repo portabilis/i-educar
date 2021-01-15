@@ -210,7 +210,7 @@ class indice extends clsCadastro
             ]
         );
         $dataBase = 'Caso o campo seja preenchido, o sistema irá controlar distorção de idade/série e limitar inscrições por idade no Pré-matrícula com base na data informada.';
-        $this->inputsHelper()->dateDm(
+        $this->inputsHelper()->dateDiaMes(
             'data_base',
             [
                 'label' => 'Data base para matrícula (dia/mês)',
