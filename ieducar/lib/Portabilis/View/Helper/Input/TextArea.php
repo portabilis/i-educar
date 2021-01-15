@@ -48,7 +48,7 @@ class Portabilis_View_Helper_Input_TextArea extends Portabilis_View_Helper_Input
 
     /**
      * Implementação do plugin jQuery Max Length
-     * Consutlar a documentação para ter acesso a todos as opções de configuração do plugin
+     * Consultar a documentação para ter acesso a todos as opções de configuração do plugin.
      * Passa no array ['max_length_plugin_options'] do options do elemento
      *
      * @docs http://keith-wood.name/maxlengthRef.html
