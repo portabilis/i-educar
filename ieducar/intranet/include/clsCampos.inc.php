@@ -329,7 +329,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         }
     }
 
-    public function campoDataDm(
+    public function campoDataDiaMes(
         $nome,
         $campo,
         $valor,

@@ -98,7 +98,7 @@ class Portabilis_View_Helper_Inputs
 
     public function dateDiaMes($attrName, $inputOptions = [], $helperOptions = [])
     {
-        $this->input('dateDm', $attrName, $inputOptions, $helperOptions);
+        $this->input('dateDiaMes', $attrName, $inputOptions, $helperOptions);
     }
 
     public function textArea($attrName, $inputOptions = [], $helperOptions = [])

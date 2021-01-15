@@ -4,9 +4,9 @@ require_once __DIR__ . '/../../../../Portabilis/View/Helper/Input/Core.php';
 require_once  __DIR__ . '/../../../../Portabilis/Date/Utils.php';
 
 /**
- * Class Portabilis_View_Helper_Input_DateDm
+ * Class Portabilis_View_Helper_Input_DateDiaMes
  */
-class Portabilis_View_Helper_Input_DateDm extends Portabilis_View_Helper_Input_Core
+class Portabilis_View_Helper_Input_DateDiaMes extends Portabilis_View_Helper_Input_Core
 {
     public function dateDiaMes($attrName, $options = [])
     {
@@ -40,7 +40,7 @@ class Portabilis_View_Helper_Input_DateDm extends Portabilis_View_Helper_Input_C
             $inputOptions['value'] = Portabilis_Date_Utils::pgSQLToBr($inputOptions['value']);
         }
 
-        call_user_func_array([$this->viewInstance, 'campoDataDm'], $inputOptions);
+        call_user_func_array([$this->viewInstance, 'campoDataDiaMes'], $inputOptions);
 
         $this->fixupPlaceholder($inputOptions);
         $this->fixupOptions($inputOptions);
