@@ -8,7 +8,7 @@ require_once  __DIR__ . '/../../../../Portabilis/Date/Utils.php';
  */
 class Portabilis_View_Helper_Input_DateDm extends Portabilis_View_Helper_Input_Core
 {
-    public function dateDm($attrName, $options = [])
+    public function dateDiaMes($attrName, $options = [])
     {
         $defaultOptions = ['options' => [], 'objectName' => ''];
 
