@@ -3,6 +3,9 @@ $j(document).ready(function(){
 	let nomeEscola = document.getElementById('escola').value;
 	let numeroSequencial = document.getElementById('numeroSequencial').value;
   const escola_em_outro_municipio = $j('#escola_em_outro_municipio');
+  const cidade_escola = $j('#escola_cidade');
+  const estado_escola = $j('#escola_uf');
+  const pais_escola = $j('#idpais');
 
 	//Quando for novo cadastro
 	if(codigoEscola === '' && nomeEscola === '' && numeroSequencial === ''){
@@ -20,6 +23,9 @@ $j(document).ready(function(){
 	}
 	//Quando for edição e não for outra
 	else{
+    cidade_escola.closest('tr').hide();
+    estado_escola.closest('tr').hide();
+    pais_escola.closest('tr').hide();
     $j('#ref_cod_escola').makeRequired();
     $j('#ref_cod_instituicao').makeRequired();
 		$j('#ref_cod_escola').val(codigoEscola);
@@ -41,23 +47,47 @@ $j(document).ready(function(){
 
 	habilitaPosicao();
 
-  $j(function () {
     escola_em_outro_municipio.change(function () {
       if (escola_em_outro_municipio.is(':checked')) {
         $j('#ref_cod_escola').val('outra');
         $j('#escola').closest('tr').show();
         $j('#ref_cod_instituicao').closest('tr').hide();
         $j('#ref_cod_escola').closest('tr').hide();
+        cidade_escola.closest('tr').show();
+        estado_escola.closest('tr').show();
+        pais_escola.closest('tr').show();
       } else {
         $j('#escola').closest('tr').hide();
+        cidade_escola.closest('tr').hide();
+        estado_escola.closest('tr').hide();
+        pais_escola.closest('tr').hide();
+        pais_escola.val('');
+        estado_escola.val('');
+        cidade_escola.val('');
         $j('#ref_cod_instituicao').closest('tr').show();
         $j('#ref_cod_escola').closest('tr').show();
         $j('#ref_cod_instituicao').makeRequired();
         $j('#ref_cod_escola').makeRequired();
-      }
-    });
+        }
+      });
 
-  });
+    $j('#ref_cod_escola').change(function () {
+      const cod_escola = $j('#ref_cod_escola').val();
+      let url = getResourceUrlBuilder.buildUrl('/module/Api/Escola',
+        'endereco-escola',
+        { escola_id : cod_escola }
+      );
+      let options = {
+        url      : url,
+        dataType : 'json',
+        success  : function (response) {
+          pais_escola.val(response.country_id);
+          estado_escola.val(response.state_abbreviation);
+          cidade_escola.val(response.city);
+        }
+      };
+      getResources(options);
+    });
 });
 
 document.getElementById('cb_faltas_globalizadas').onclick =function()
