@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @deprecated
  * @property string $name
  */
 class LegacyPersonAddress extends Model
