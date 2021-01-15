@@ -34,7 +34,7 @@ class Portabilis_View_Helper_Input_DateDm extends Portabilis_View_Helper_Input_C
 
         $inputOptions = $this->mergeOptions($options['options'], $defaultInputOptions);
 
-        $isDbFormated = strrpos($inputOptions['value'], '-') > -1;
+        $isDbFormatted = strrpos($inputOptions['value'], '-') > -1;
 
         if ($isDbFormated) {
             $inputOptions['value'] = Portabilis_Date_Utils::pgSQLToBr($inputOptions['value']);
