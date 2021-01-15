@@ -234,7 +234,7 @@ class indice extends clsCadastro
             ]
         );
         $dataFechamento = 'Caso o campo seja preenchido, o sistema irá bloquear a matrícula de novos alunos nas turmas após a data informada.';
-        $this->inputsHelper()->dateDm(
+        $this->inputsHelper()->dateDiaMes(
             'data_fechamento',
             [
                 'label' => 'Data de fechamento das turmas para matrícula',
