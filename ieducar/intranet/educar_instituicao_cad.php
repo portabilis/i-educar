@@ -3,15 +3,14 @@
 use App\Menu;
 use App\Models\State;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/Geral.inc.php';
-require_once 'Portabilis/Date/Utils.php';
-require_once 'Portabilis/Currency/Utils.php';
-
-require_once 'Educacenso/Model/OrgaoRegionalDataMapper.php';
+require_once __DIR__ . '/include/clsBase.inc.php';
+require_once __DIR__ .'/include/clsCadastro.inc.php';
+require_once __DIR__ .'/include/clsBanco.inc.php';
+require_once __DIR__ .'/include/pmieducar/geral.inc.php';
+require_once __DIR__ .'/include/Geral.inc.php';
+require_once __DIR__ . '/../lib/Portabilis/Date/Utils.php';
+require_once __DIR__ . '/../lib/Portabilis/Currency/Utils.php';
+require_once __DIR__ . '/../modules/Educacenso/Model/OrgaoRegionalDataMapper.php';
 
 class clsIndexBase extends clsBase
 {
@@ -211,7 +210,7 @@ class indice extends clsCadastro
             ]
         );
         $dataBase = 'Caso o campo seja preenchido, o sistema irá controlar distorção de idade/série e limitar inscrições por idade no Pré-matrícula com base na data informada.';
-        $this->inputsHelper()->text(
+        $this->inputsHelper()->dateDiaMes(
             'data_base',
             [
                 'label' => 'Data base para matrícula (dia/mês)',
@@ -220,7 +219,7 @@ class indice extends clsCadastro
                 'placeholder' => 'dd/mm',
                 'required' => false,
                 'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_base_matricula),
-                'label_hint' => $dataBase
+                'hint' => $dataBase
             ]
         );
         $dataExpiracaoReservaVaga = 'Caso o campo seja preenchido, o sistema irá indeferir automaticamente as reservas em situação de espera após a data informada.';
@@ -235,7 +234,7 @@ class indice extends clsCadastro
             ]
         );
         $dataFechamento = 'Caso o campo seja preenchido, o sistema irá bloquear a matrícula de novos alunos nas turmas após a data informada.';
-        $this->inputsHelper()->text(
+        $this->inputsHelper()->dateDiaMes(
             'data_fechamento',
             [
                 'label' => 'Data de fechamento das turmas para matrícula',
@@ -244,7 +243,7 @@ class indice extends clsCadastro
                 'placeholder' => 'dd/mm',
                 'required' => false,
                 'value' => Portabilis_Date_Utils::pgSQLToBr_ddmm($this->data_fechamento),
-                'label_hint' => $dataFechamento
+                'hint' => $dataFechamento
             ]
         );
         $dataEducacenso = 'Este campo deve ser preenchido com a data máxima das matrículas que devem ser enviadas para o Censo.';
@@ -453,9 +452,9 @@ class indice extends clsCadastro
 
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_instituicao_lst.php');
+        } else {
+            $this->mensagem = 'Edição não realizada.<br>';
         }
-
-        $this->mensagem = 'Edição não realizada.<br>';
 
         return false;
     }
