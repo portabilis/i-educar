@@ -1396,19 +1396,18 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             // - Ter o checkbox desconsiderar lançamento de frequência marcado
             //   na regra de avaliação
 
-//            $aprovado = $presenca->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca()
-//                || $this->regraNaoPermiteReprovarFalta()
-//                || $this->getRegraAvaliacaoDesconsiderarLancamentoFrequencia();
-//
-//            $presenca->situacao = App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS;
-////                ? App_Model_MatriculaSituacao::APROVADO
-//                : ;
+            $aprovado = $presenca->porcentagemPresenca >= $this->getRegraAvaliacaoPorcentagemPresenca()
+                || $this->regraNaoPermiteReprovarFalta()
+                || $this->getRegraAvaliacaoDesconsiderarLancamentoFrequencia();
+
+            $presenca->situacao = $aprovado
+                ? App_Model_MatriculaSituacao::APROVADO
+                : App_Model_MatriculaSituacao::REPROVADO;
         }
 
-//        if ($this->getRegraAvaliacaoDesconsiderarLancamentoFrequencia()) {
-//            $presenca->situacao = App_Model_MatriculaSituacao::APROVADO;
-//        }
-        $presenca->situacao = App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS;
+        if ($this->getRegraAvaliacaoDesconsiderarLancamentoFrequencia()) {
+            $presenca->situacao = App_Model_MatriculaSituacao::APROVADO;
+        }
 
         return $presenca;
     }
