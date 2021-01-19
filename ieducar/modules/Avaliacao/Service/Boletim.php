@@ -679,7 +679,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         if ($situacao->andamento === false &&
-            ($situacao->retidoFalta === true)
+            $situacao->retidoFalta === true
         ) {
             $situacao->situacao = App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS;
 
@@ -687,7 +687,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         if ($situacao->andamento === false &&
-            ($situacao->aprovado === false)
+            $situacao->aprovado === false
         ) {
             $situacao->situacao = App_Model_MatriculaSituacao::REPROVADO;
 
