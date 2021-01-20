@@ -15,8 +15,6 @@ class CreatePmieducarFuncaoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.funcao_cod_funcao_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -36,7 +34,7 @@ class CreatePmieducarFuncaoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_instituicao integer NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.funcao
                     ADD CONSTRAINT funcao_pkey PRIMARY KEY (cod_funcao);
 

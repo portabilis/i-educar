@@ -15,8 +15,6 @@ class CreatePmieducarTipoRegimeTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.tipo_regime_cod_tipo_regime_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -34,7 +32,7 @@ class CreatePmieducarTipoRegimeTable extends Migration
                     ativo smallint NOT NULL,
                     ref_cod_instituicao integer NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.tipo_regime
                     ADD CONSTRAINT tipo_regime_pkey PRIMARY KEY (cod_tipo_regime);
 

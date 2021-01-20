@@ -15,8 +15,6 @@ class CreatePmieducarInstituicaoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.instituicao_cod_instituicao_seq
                     START WITH 0
                     INCREMENT BY 1

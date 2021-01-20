@@ -15,15 +15,13 @@ class CreatePmieducarCalendarioDiaAnotacaoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE TABLE pmieducar.calendario_dia_anotacao (
                     ref_dia integer NOT NULL,
                     ref_mes integer NOT NULL,
                     ref_ref_cod_calendario_ano_letivo integer NOT NULL,
                     ref_cod_calendario_anotacao integer NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.calendario_dia_anotacao
                     ADD CONSTRAINT calendario_dia_anotacao_pkey PRIMARY KEY (ref_dia, ref_mes, ref_ref_cod_calendario_ano_letivo, ref_cod_calendario_anotacao);
             '

@@ -15,8 +15,6 @@ class CreatePmieducarNivelEnsinoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.nivel_ensino_cod_nivel_ensino_seq
                     START WITH 0
                     INCREMENT BY 1
@@ -35,7 +33,7 @@ class CreatePmieducarNivelEnsinoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_instituicao integer NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.nivel_ensino
                     ADD CONSTRAINT nivel_ensino_pkey PRIMARY KEY (cod_nivel_ensino);
 

@@ -15,8 +15,6 @@ class CreateModulesMoradiaAlunoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE TABLE modules.moradia_aluno (
                     ref_cod_aluno integer NOT NULL,
                     moradia character(1),
@@ -49,7 +47,7 @@ class CreateModulesMoradiaAlunoTable extends Migration
                     fossa character(1),
                     lixo character(1)
                 );
-                
+
                 ALTER TABLE ONLY modules.moradia_aluno
                     ADD CONSTRAINT moradia_aluno_pkei PRIMARY KEY (ref_cod_aluno);
             '
