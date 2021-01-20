@@ -679,17 +679,17 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         if ($situacao->andamento === false &&
-            $situacao->retidoFalta === true
+            $situacao->aprovado === false
         ) {
-            $situacao->situacao = App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS;
+            $situacao->situacao = App_Model_MatriculaSituacao::REPROVADO;
 
             return $situacao;
         }
 
         if ($situacao->andamento === false &&
-            $situacao->aprovado === false
+            $situacao->retidoFalta === true
         ) {
-            $situacao->situacao = App_Model_MatriculaSituacao::REPROVADO;
+            $situacao->situacao = App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS;
 
             return $situacao;
         }
@@ -788,17 +788,14 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $situacao->retidoFalta = true;
             $andamento = false;
 
-            /**
-             * Permite o lançamento de nota de exame final, mesmo que o aluno
-             * esteja retido por falta, apenas quando a regra de avaliação possuir
-             * uma média para recuperação (exame final).
-             */
+            // Permite o lançamento de nota de exame final, mesmo que o aluno
+            // esteja retido por falta, apenas quando a regra de avaliação possuir
+            // uma média para recuperação (exame final).
+
             if ($this->hasRegraAvaliacaoMediaRecuperacao()) {
                 if ($this->getRegraAvaliacaoTipoNota() != RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
 
-                    /**
-                     * Mesmo se reprovado por falta, só da a situação final após o lançamento de todas as notas
-                     */
+                    //Mesmo se reprovado por falta, só da a situação final após o lançamento de todas as notas
                     $situacoesFinais = App_Model_MatriculaSituacao::getSituacoesFinais();
 
                     $andamento = in_array($flagSituacaoNota, $situacoesFinais, true) === false;
