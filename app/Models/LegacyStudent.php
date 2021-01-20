@@ -83,6 +83,11 @@ class LegacyStudent extends Model
         return $this->inep ? $this->inep->number : null;
     }
 
+    public function setStateRegistrationIdAttribute($value)
+    {
+        return $this->aluno_estado_id = $value;
+    }
+
     public function inep()
     {
         return $this->hasOne(StudentInep::class, 'cod_aluno', 'cod_aluno');
