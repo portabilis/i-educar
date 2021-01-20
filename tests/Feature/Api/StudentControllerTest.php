@@ -17,7 +17,7 @@ class StudentControllerTest extends TestCase
 
         $this->put("/api/students/{$student->getKey()}/update-state-registration", [
             'state_registration_id' => 12345,
-        ]);
+        ], $this->getAuthorizationHeader());
 
         $this->assertDatabaseHas($student->getTable(), [
             'aluno_estado_id' => 12345,
