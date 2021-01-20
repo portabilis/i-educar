@@ -15,8 +15,6 @@ class CreatePmieducarCandidatoReservaVagaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-                
                 CREATE SEQUENCE pmieducar.candidato_reserva_vaga_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -45,7 +43,7 @@ class CreatePmieducarCandidatoReservaVagaTable extends Migration
                     hora_solicitacao time without time zone,
 	                historico json NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.candidato_reserva_vaga
                     ADD CONSTRAINT cod_candidato_reserva_vaga_pkey PRIMARY KEY (cod_candidato_reserva_vaga);
 

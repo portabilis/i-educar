@@ -15,8 +15,6 @@ class CreatePmieducarMatriculaExcessaoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE SEQUENCE pmieducar.matricula_excessao_cod_aluno_excessao_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -36,7 +34,7 @@ class CreatePmieducarMatriculaExcessaoTable extends Migration
                     precisa_exame boolean NOT NULL,
                     permite_exame boolean
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.matricula_excessao
                     ADD CONSTRAINT matricula_excessao_pk PRIMARY KEY (cod_aluno_excessao);
 
