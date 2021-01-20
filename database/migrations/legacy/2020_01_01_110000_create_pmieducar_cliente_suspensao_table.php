@@ -15,8 +15,6 @@ class CreatePmieducarClienteSuspensaoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE TABLE pmieducar.cliente_suspensao (
                     sequencial integer NOT NULL,
                     ref_cod_cliente integer NOT NULL,
@@ -27,7 +25,7 @@ class CreatePmieducarClienteSuspensaoTable extends Migration
                     data_suspensao timestamp without time zone NOT NULL,
                     data_liberacao timestamp without time zone
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.cliente_suspensao
                     ADD CONSTRAINT cliente_suspensao_pkey PRIMARY KEY (sequencial, ref_cod_cliente, ref_cod_motivo_suspensao);
             '

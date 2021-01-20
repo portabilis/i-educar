@@ -15,8 +15,6 @@ class CreatePmieducarTurmaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.turma_cod_turma_seq
                     START WITH 0
                     INCREMENT BY 1
@@ -88,7 +86,7 @@ class CreatePmieducarTurmaTable extends Migration
                     local_funcionamento_diferenciado int2 NULL,
 	                updated_at timestamp NULL DEFAULT now()
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.turma
                     ADD CONSTRAINT turma_pkey PRIMARY KEY (cod_turma);
 

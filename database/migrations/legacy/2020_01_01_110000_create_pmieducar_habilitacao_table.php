@@ -15,8 +15,6 @@ class CreatePmieducarHabilitacaoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.habilitacao_cod_habilitacao_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -35,7 +33,7 @@ class CreatePmieducarHabilitacaoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_instituicao integer NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.habilitacao
                     ADD CONSTRAINT habilitacao_pkey PRIMARY KEY (cod_habilitacao);
 
