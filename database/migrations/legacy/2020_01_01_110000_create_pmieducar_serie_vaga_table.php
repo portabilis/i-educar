@@ -15,8 +15,6 @@ class CreatePmieducarSerieVagaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE TABLE pmieducar.serie_vaga (
                     ano integer NOT NULL,
                     cod_serie_vaga integer NOT NULL,
@@ -27,7 +25,7 @@ class CreatePmieducarSerieVagaTable extends Migration
                     vagas smallint NOT NULL,
                     turno smallint DEFAULT 1 NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.serie_vaga
                     ADD CONSTRAINT cod_serie_vaga_pkey PRIMARY KEY (cod_serie_vaga);
 

@@ -15,8 +15,6 @@ class CreatePmieducarFaltaAlunoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE SEQUENCE pmieducar.falta_aluno_cod_falta_aluno_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -39,7 +37,7 @@ class CreatePmieducarFaltaAlunoTable extends Migration
                     modulo smallint NOT NULL,
                     ref_cod_curso_disciplina integer
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.falta_aluno
                     ADD CONSTRAINT falta_aluno_pkey PRIMARY KEY (cod_falta_aluno);
 

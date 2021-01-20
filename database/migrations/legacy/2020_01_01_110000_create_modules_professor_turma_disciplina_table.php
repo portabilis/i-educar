@@ -15,13 +15,11 @@ class CreateModulesProfessorTurmaDisciplinaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-                
                 CREATE TABLE modules.professor_turma_disciplina (
                     professor_turma_id integer NOT NULL,
                     componente_curricular_id integer NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY modules.professor_turma_disciplina
                     ADD CONSTRAINT professor_turma_disciplina_pk PRIMARY KEY (professor_turma_id, componente_curricular_id);
             '
