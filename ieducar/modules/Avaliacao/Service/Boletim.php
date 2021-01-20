@@ -703,7 +703,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             return $situacao;
         }
 
-        if ($situacao->andamento === true &&
+        if ($situacao->andamento === false &&
             $situacao->aprovado === true &&
             $situacao->aprovadoComDependencia === true
         ) {
