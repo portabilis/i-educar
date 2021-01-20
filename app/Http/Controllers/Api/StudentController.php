@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\UpdateStateRegistrationRequest;
 use App\Models\LegacyStudent;
-use Illuminate\Http\Request;
 use Throwable;
 
 class StudentController extends Controller
@@ -12,18 +12,20 @@ class StudentController extends Controller
     /**
      * Atualiza a inscrição estadual de um aluno.
      *
-     * @param Request       $request
-     * @param LegacyStudent $student
+     * @param UpdateStateRegistrationRequest $request
+     * @param LegacyStudent                  $student
      *
      * @throws Throwable
-     *
-     * @return LegacyStudent
+     * @return array
      */
-    public function updateStateRegistration(Request $request, LegacyStudent $student)
+    public function updateStateRegistration(UpdateStateRegistrationRequest $request, LegacyStudent $student)
     {
-        $student->state_registration_id = $request->input('state_registration_id');
+        $student->state_registration_id = $request->getStateRegistration();
         $student->saveOrFail();
 
-        return $student;
+        return [
+            'id' => $student->getKey(),
+            'state_registration_id' => $student->state_registration_id,
+        ];
     }
 }
