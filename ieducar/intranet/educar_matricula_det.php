@@ -216,12 +216,10 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Número Reserva Vaga', $registro['ref_cod_reserva_vaga']]);
         }
 
-        $campoObs = false;
-
         $situacao = App_Model_MatriculaSituacao::getSituacao($registro['aprovado']);
         $this->addDetalhe(['Situação', $situacao]);
 
-        if ($registro[aprovado] == 4) {
+        if ($registro['aprovado'] == 4) {
             $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
 
             $lst_transferencia = $obj_transferencia->lista(null, null, null, null, null, $registro['cod_matricula'], null, null, null, null, null, 1, null, null, $registro['ref_cod_aluno'], false);
@@ -250,7 +248,7 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Observação', Portabilis_String_Utils::toLatin1($registro['observacao'])]);
         }
 
-        if ($campoObs) {
+        if ($registro['aprovado'] == App_Model_MatriculaSituacao::ABANDONO) {
             $tipoAbandono = new clsPmieducarAbandonoTipo($registro['ref_cod_abandono_tipo']);
             $tipoAbandono = $tipoAbandono->detalhe();
 
@@ -260,7 +258,7 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Observação', $observacaoAbandono]);
         }
 
-        if ($registro[aprovado] == App_Model_MatriculaSituacao::RECLASSIFICADO){
+        if ($registro['aprovado'] == App_Model_MatriculaSituacao::RECLASSIFICADO){
             $this->addDetalhe(['Descrição', $this->getDescription($registro['descricao_reclassificacao'])]);
         }
 
