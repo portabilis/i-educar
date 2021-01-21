@@ -34,6 +34,8 @@
  * @version     $Id$
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
+
 require_once __DIR__.'/TestCommon.php';
 
 /**
@@ -57,10 +59,10 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
     protected function _setUpRegraAvaliacaoMock($tipoProgressao)
     {
         $mock = $this->getCleanMock('RegraAvaliacao_Model_Regra');
-        $mock->expects($this->at(0))
+        $mock
          ->method('get')
          ->with('tipoProgressao')
-         ->will($this->returnValue($tipoProgressao));
+         ->willReturn($tipoProgressao);
 
         return $mock;
     }
@@ -73,23 +75,32 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
         $situacao->recuperacao = false;
         $situacao->retidoFalta = false;
 
-        $service = $this->setExcludedMethods(['promover', '_updateMatricula'])
-                    ->getCleanMock('Avaliacao_Service_Boletim');
+        /** @var Avaliacao_Service_Boletim|MockObject $service */
+        $service = $this
+            ->setExcludedMethods(
+                [
+                    'promover',
+                    '_updateMatricula'
+                ]
+            )
+            ->getCleanMock('Avaliacao_Service_Boletim');
 
-        $service->expects($this->once())
+        $service->expects(self::once())
             ->method('getSituacaoAluno')
-            ->will($this->returnValue($situacao));
+            ->willReturn($situacao);
 
-        $service->expects($this->any())
-        ->method('getOption')
-        ->will($this->returnValueMap([
-            ['aprovado', App_Model_MatriculaSituacao::EM_ANDAMENTO],
-            ['matricula', 1]
-        ]));
+        $service
+            ->method('getOption')
+            ->willReturnMap(
+                [
+                    ['aprovado', App_Model_MatriculaSituacao::EM_ANDAMENTO],
+                    ['matricula', 1]
+                ]
+            );
 
-        $service->expects($this->any())
-        ->method('getRegraAvaliacaoTipoProgressao')
-        ->will($this->returnValue(0));
+        $service
+            ->method('getRegraAvaliacaoTipoProgressao')
+            ->willReturn(0);
 
         $this->expectException('CoreExt_Service_Exception');
         $service->promover();
@@ -103,28 +114,35 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
         $situacao->recuperacao = false;
         $situacao->retidoFalta = false;
 
-        $service = $this->setExcludedMethods(['promover'])
-                    ->getCleanMock('Avaliacao_Service_Boletim');
+        /** @var Avaliacao_Service_Boletim|MockObject $service */
+        $service = $this
+            ->setExcludedMethods(['promover'])
+            ->getCleanMock('Avaliacao_Service_Boletim');
 
         // Mock para RegraAvaliacao_Model_Regra
-        $service->expects($this->any())
+        $service
             ->method('getRegraAvaliacaoTipoProgressao')
-            ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::CONTINUADA));
+            ->willReturn(RegraAvaliacao_Model_TipoProgressao::CONTINUADA);
 
-        $service->expects($this->once())
+        $service
+            ->expects(self::once())
             ->method('getSituacaoAluno')
-            ->will($this->returnValue($situacao));
+            ->willReturn($situacao);
 
-        $service->method('getOption')
-            ->will($this->returnValueMap([
-                ['aprovado', App_Model_MatriculaSituacao::EM_ANDAMENTO]
-            ]));
+        $service
+            ->method('getOption')
+            ->willReturnMap(
+                [
+                    ['aprovado', App_Model_MatriculaSituacao::EM_ANDAMENTO]
+                ]
+            );
 
-        $service->expects($this->once())
+        $service
+            ->expects(self::once())
             ->method('_updateMatricula')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
-        $this->assertTrue($service->promover());
+        self::assertTrue($service->promover());
     }
 
     public function testPromoverAlunoAutomaticamenteProgressaoNaoContinuadaAutoMediaPresenca()
@@ -139,26 +157,34 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
         $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
         $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
 
-        $service = $this->setExcludedMethods(['promover'])
-                    ->getCleanMock('Avaliacao_Service_Boletim');
+        /** @var Avaliacao_Service_Boletim|MockObject $service */
+        $service = $this
+            ->setExcludedMethods(['promover'])
+            ->getCleanMock('Avaliacao_Service_Boletim');
 
-        $service->method('getRegraAvaliacaoTipoProgressao')
-            ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MEDIA_PRESENCA));
+        $service
+            ->method('getRegraAvaliacaoTipoProgressao')
+            ->willReturn(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MEDIA_PRESENCA);
 
-        $service->method('getSituacaoAluno')
-            ->will($this->returnValue($situacao));
+        $service
+            ->method('getSituacaoAluno')
+            ->willReturn($situacao);
 
-        $service->method('getOption')
-            ->will($this->returnValueMap([
-                ['matricula', $codMatricula],
-                ['usuario', $codUsuario]
-            ]));
+        $service
+            ->method('getOption')
+            ->willReturnMap(
+                [
+                    ['matricula', $codMatricula],
+                    ['usuario', $codUsuario]
+                ]
+            );
 
-        $service->method('_updateMatricula')
+        $service
+            ->method('_updateMatricula')
             ->with($codMatricula, $codUsuario, true)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
-        $this->assertTrue($service->promover());
+        self::assertTrue($service->promover());
     }
 
     public function testReprovarAlunoAutomaticamenteProgressaoNaoContinuadaAutoMediaPresenca()
@@ -172,26 +198,32 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
         $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
         $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
 
-        $service = $this->setExcludedMethods(['promover'])
-                    ->getCleanMock('Avaliacao_Service_Boletim');
+        /** @var Avaliacao_Service_Boletim|MockObject $service */
+        $service = $this
+            ->setExcludedMethods(['promover'])
+            ->getCleanMock('Avaliacao_Service_Boletim');
 
-        $service->method('getSituacaoAluno')
-            ->will($this->returnValue($situacao));
+        $service
+            ->method('getSituacaoAluno')
+            ->willReturn($situacao);
 
-        $service->method('getRegraAvaliacaoTipoProgressao')
-            ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MEDIA_PRESENCA));
+        $service
+            ->method('getRegraAvaliacaoTipoProgressao')
+            ->willReturn(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MEDIA_PRESENCA);
 
-        $service->method('getOption')
-            ->will($this->returnValueMap([
+        $service
+            ->method('getOption')
+            ->willReturnMap([
                 ['matricula', $codMatricula],
                 ['usuario', $codUsuario]
-            ]));
+            ]);
 
-        $service->method('_updateMatricula')
+        $service
+            ->method('_updateMatricula')
             ->with($codMatricula, $codUsuario, App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
-        $this->assertTrue($service->promover());
+        self::assertTrue($service->promover());
     }
 
     public function testPromoverAlunoAutomaticamenteProgressaoNaoContinuadaAutoMedia()
@@ -207,27 +239,34 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
         $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
 
         // Mock para RegraAvaliacao_Model_Regra
+        /** @var Avaliacao_Service_Boletim|MockObject $service */
+        $service = $this
+            ->setExcludedMethods(['promover'])
+            ->getCleanMock('Avaliacao_Service_Boletim');
 
-        $service = $this->setExcludedMethods(['promover'])
-                    ->getCleanMock('Avaliacao_Service_Boletim');
+        $service
+            ->method('getSituacaoAluno')
+            ->willReturn($situacao);
 
-        $service->method('getSituacaoAluno')
-            ->will($this->returnValue($situacao));
+        $service
+            ->method('getRegraAvaliacaoTipoProgressao')
+            ->willReturn(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_SOMENTE_MEDIA);
 
-        $service->method('getRegraAvaliacaoTipoProgressao')
-            ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_SOMENTE_MEDIA));
+        $service
+            ->method('getOption')
+            ->willReturnMap(
+                [
+                    ['matricula', $codMatricula],
+                    ['usuario', $codUsuario]
+                ]
+            );
 
-        $service->method('getOption')
-            ->will($this->returnValueMap([
-                ['matricula', $codMatricula],
-                ['usuario', $codUsuario]
-            ]));
-
-        $service->method('_updateMatricula')
+        $service
+            ->method('_updateMatricula')
             ->with($codMatricula, $codUsuario, true)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
-        $this->assertTrue($service->promover());
+        self::assertTrue($service->promover());
     }
 
     public function testPromoverAlunoManualmenteProgressaoNaoContinuada()
@@ -241,26 +280,34 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
         $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
         $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
 
-        $service = $this->setExcludedMethods(['promover'])
-                    ->getCleanMock('Avaliacao_Service_Boletim');
+        /** @var Avaliacao_Service_Boletim|MockObject $service */
+        $service = $this
+            ->setExcludedMethods(['promover'])
+            ->getCleanMock('Avaliacao_Service_Boletim');
 
-        $service->method('getSituacaoAluno')
-            ->will($this->returnValue($situacao));
+        $service
+            ->method('getSituacaoAluno')
+            ->willReturn($situacao);
 
-        $service->method('getRegraAvaliacaoTipoProgressao')
-            ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL));
+        $service
+            ->method('getRegraAvaliacaoTipoProgressao')
+            ->willReturn(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL);
 
-        $service->method('getOption')
-            ->will($this->returnValueMap([
-                ['matricula', $codMatricula],
-                ['usuario', $codUsuario]
-            ]));
+        $service
+            ->method('getOption')
+            ->willReturnMap(
+                [
+                    ['matricula', $codMatricula],
+                    ['usuario', $codUsuario]
+                ]
+            );
 
-        $service->method('_updateMatricula')
+        $service
+            ->method('_updateMatricula')
             ->with($codMatricula, $codUsuario, true)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
-        $this->assertTrue($service->promover(true));
+        self::assertTrue($service->promover(true));
     }
 
     public function testReprovarAlunoManualmenteProgressaoNaoContinuada()
@@ -274,26 +321,34 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
         $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
         $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
 
-        $service = $this->setExcludedMethods(['promover'])
-                    ->getCleanMock('Avaliacao_Service_Boletim');
+        /** @var Avaliacao_Service_Boletim|MockObject $service */
+        $service = $this
+            ->setExcludedMethods(['promover'])
+            ->getCleanMock('Avaliacao_Service_Boletim');
 
-        $service->method('getSituacaoAluno')
-            ->will($this->returnValue($situacao));
+        $service
+            ->method('getSituacaoAluno')
+            ->willReturn($situacao);
 
-        $service->method('getRegraAvaliacaoTipoProgressao')
-            ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL));
+        $service
+            ->method('getRegraAvaliacaoTipoProgressao')
+            ->willReturn(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL);
 
-        $service->method('getOption')
-            ->will($this->returnValueMap([
-                ['matricula', $codMatricula],
-                ['usuario', $codUsuario]
-            ]));
+        $service
+            ->method('getOption')
+            ->willReturnMap(
+                [
+                    ['matricula', $codMatricula],
+                    ['usuario', $codUsuario]
+                ]
+            );
 
-        $service->method('_updateMatricula')
+        $service
+            ->method('_updateMatricula')
             ->with($codMatricula, $codUsuario, App_Model_MatriculaSituacao::REPROVADO)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
-        $this->assertTrue($service->promover());
+        self::assertTrue($service->promover());
     }
 
     public function testSaveBoletim()
@@ -345,26 +400,35 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
         $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
         $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
 
-        $service = $this->setExcludedMethods(['promover', '_updateMatricula'])
-                    ->getCleanMock('Avaliacao_Service_Boletim');
+        /** @var Avaliacao_Service_Boletim|MockObject $service */
+        $service = $this
+            ->setExcludedMethods(['promover', '_updateMatricula'])
+            ->getCleanMock('Avaliacao_Service_Boletim');
 
-        $service->method('getSituacaoAluno')
-            ->will($this->returnValue($situacao));
+        $service
+            ->method('getSituacaoAluno')
+            ->willReturn($situacao);
 
-        $service->method('getRegraAvaliacaoTipoProgressao')
-            ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::CONTINUADA));
+        $service
+            ->method('getRegraAvaliacaoTipoProgressao')
+            ->willReturn(RegraAvaliacao_Model_TipoProgressao::CONTINUADA);
 
-        $service->method('getOption')
-            ->will($this->returnValueMap([
-                ['matricula', $codMatricula],
-                ['usuario', $codUsuario]
-            ]));
+        $service
+            ->method('getOption')
+            ->willReturnMap(
+                [
+                    ['matricula', $codMatricula],
+                    ['usuario', $codUsuario]
+                ]
+            );
 
         // Configura mock de instância de classe legada
+        /** @var clsPmieducarMatricula|MockObject $matricula */
         $matricula = $this->getCleanMock('clsPmieducarMatricula');
 
-        $matricula->method('edita')
-              ->will($this->returnValue(true));
+        $matricula
+            ->method('edita')
+            ->willReturn(true);
 
         CoreExt_Entity::addClassToStorage(
             'clsPmieducarMatricula',
@@ -373,6 +437,6 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
             true
         );
 
-        $this->assertTrue($service->promover());
+        self::assertTrue($service->promover());
     }
 }
