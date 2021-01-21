@@ -34,6 +34,8 @@
  * @version     $Id$
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
+
 require_once __DIR__.'/TestCommon.php';
 require_once 'Avaliacao/Model/NotaComponente.php';
 
@@ -62,25 +64,26 @@ class Avaliacao_Service_NotaAlunoTest extends Avaliacao_Service_TestCommon
         $notaSave->id = null;
 
         // Configura mock para Avaliacao_Model_NotaAlunoDataMapper
+        /** @var Avaliacao_Model_NotaAlunoDataMapper|MockObject $mock */
         $mock = $this->getCleanMock('Avaliacao_Model_NotaAlunoDataMapper');
-        $mock->expects($this->at(0))
-         ->method('findAll')
-         ->with([], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')])
-         ->will($this->returnValue([]));
 
-        $mock->expects($this->at(1))
-         ->method('save')
-         ->with($notaSave)
-         ->will($this->returnValue(true));
+        $mock
+            ->method('save')
+            ->with($notaSave)
+            ->willReturn(true);
 
-        $mock->expects($this->at(2))
-         ->method('findAll')
-         ->with([], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')])
-         ->will($this->returnValue([$notaAluno]));
+        $mock
+            ->expects(self::exactly(2))
+            ->method('findAll')
+            ->withConsecutive(
+                [[], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')]],
+                [[], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')]]
+            )
+            ->willReturnOnConsecutiveCalls([], [$notaAluno]);
 
         $this->_setNotaAlunoDataMapperMock($mock);
 
-        $service = $this->_getServiceInstance();
+        $this->_getServiceInstance();
     }
 
     public function tearDown(): void
