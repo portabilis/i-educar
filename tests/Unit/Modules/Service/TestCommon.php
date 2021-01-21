@@ -1041,10 +1041,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
 
             $mock = $this->getCleanMock('Avaliacao_Model_NotaAlunoDataMapper');
-            $mock->expects($this->at(0))
+            $mock
                 ->method('findAll')
                 ->with([], ['matricula' => $notaAluno->matricula])
-                ->will($this->returnValue([$notaAluno]));
+                ->willReturn([$notaAluno]);
 
             $this->_setNotaAlunoDataMapperMock($mock);
         }
@@ -1063,10 +1063,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     {
         if (is_null($this->_notaComponenteDataMapperMock)) {
             $mock = $this->getCleanMock('Avaliacao_Model_NotaComponenteDataMapper');
-            $mock->expects($this->at(0))
+            $mock
                 ->method('findAll')
                 ->with([], ['notaAluno' => $this->_getConfigOption('matricula', 'cod_matricula')], ['etapa' => 'ASC'])
-                ->will($this->returnValue([]));
+                ->willReturn([]);
 
             $this->_setNotaComponenteDataMapperMock($mock);
         }
@@ -1087,10 +1087,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
 
             $mock = $this->getCleanMock('Avaliacao_Model_NotaComponenteMediaDataMapper');
-            $mock->expects($this->at(0))
+            $mock
                 ->method('findAll')
                 ->with([], ['notaAluno' => $notaAluno->id])
-                ->will($this->returnValue([]));
+                ->willReturn([]);
 
             $this->_setNotaComponenteMediaDataMapperMock($mock);
         }
@@ -1111,10 +1111,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
             $mock = $this->getCleanMock('Avaliacao_Model_FaltaAlunoDataMapper');
-            $mock->expects($this->at(0))
+            $mock
                 ->method('findAll')
                 ->with([], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')])
-                ->will($this->returnValue([$faltaAluno]));
+                ->willReturn([$faltaAluno]);
 
             $this->_setFaltaAlunoDataMapperMock($mock);
         }
@@ -1135,10 +1135,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
         if (is_null($this->_faltaAbstractDataMapperMock)) {
             $mock = $this->getCleanMock('Avaliacao_Model_FaltaAbstractDataMapper');
-            $mock->expects($this->at(0))
+            $mock
                 ->method('findAll')
                 ->with([], ['faltaAluno' => $faltaAluno->id], ['etapa' => 'ASC'])
-                ->will($this->returnValue([]));
+                ->willReturn([]);
 
             $this->_setFaltaAbstractDataMapperMock($mock);
         }
@@ -1161,12 +1161,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             $mock = $this->getCleanMock('Avaliacao_Model_ParecerDescritivoAlunoDataMapper');
 
             if ($this->_getRegraOption('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
-                $matcher = $this->at(0);
-
-                $mock->expects($matcher)
+                $mock
                     ->method('findAll')
                     ->with([], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')])
-                    ->will($this->returnValue([$parecerAluno]));
+                    ->willReturn([$parecerAluno]);
             }
 
             $this->_setParecerDescritivoAlunoDataMapperMock($mock);
@@ -1190,10 +1188,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             $mock = $this->getCleanMock('Avaliacao_Model_ParecerDescritivoAbstractDataMapper');
 
             if ($this->_getRegraOption('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
-                $mock->expects($this->at(0))
+                $mock
                     ->method('findAll')
                     ->with([], ['parecerDescritivoAluno' => $parecerAluno->id], ['etapa' => 'ASC'])
-                    ->will($this->returnValue([]));
+                    ->willReturn([]);
             }
 
             $this->_setParecerDescritivoAbstractDataMapperMock($mock);
