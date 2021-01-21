@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,334 +40,339 @@ require_once __DIR__.'/TestCommon.php';
  * Avaliacao_Service_PromocaoAlunoTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
 {
-  protected function _setUpRegraAvaliacaoMock($tipoProgressao)
-  {
-    $mock = $this->getCleanMock('RegraAvaliacao_Model_Regra');
-    $mock->expects($this->at(0))
+    protected function _setUpRegraAvaliacaoMock($tipoProgressao)
+    {
+        $mock = $this->getCleanMock('RegraAvaliacao_Model_Regra');
+        $mock->expects($this->at(0))
          ->method('get')
          ->with('tipoProgressao')
          ->will($this->returnValue($tipoProgressao));
 
-    return $mock;
-  }
+        return $mock;
+    }
 
-  public function testPromoverAlunoLancaExcecaoCasoSituacaoEstejaEmAndamento()
-  {
-    $situacao = new stdClass();
-    $situacao->aprovado    = true;
-    $situacao->andamento   = TRUE;
-    $situacao->recuperacao = FALSE;
-    $situacao->retidoFalta = FALSE;
+    public function testPromoverAlunoLancaExcecaoCasoSituacaoEstejaEmAndamento()
+    {
+        $situacao = new stdClass();
+        $situacao->aprovado    = true;
+        $situacao->andamento   = true;
+        $situacao->recuperacao = false;
+        $situacao->retidoFalta = false;
 
-    $service = $this->setExcludedMethods(array('promover', '_updateMatricula'))
+        $service = $this->setExcludedMethods(['promover', '_updateMatricula'])
                     ->getCleanMock('Avaliacao_Service_Boletim');
 
-    $service->expects($this->once())
+        $service->expects($this->once())
             ->method('getSituacaoAluno')
             ->will($this->returnValue($situacao));
 
-    $service->expects($this->any())
+        $service->expects($this->any())
         ->method('getOption')
         ->will($this->returnValueMap([
             ['aprovado', App_Model_MatriculaSituacao::EM_ANDAMENTO],
             ['matricula', 1]
         ]));
 
-    $service->expects($this->any())
+        $service->expects($this->any())
         ->method('getRegraAvaliacaoTipoProgressao')
         ->will($this->returnValue(0));
 
-    $this->expectException('CoreExt_Service_Exception');
-    $service->promover();
-  }
+        $this->expectException('CoreExt_Service_Exception');
+        $service->promover();
+    }
 
-  public function testPromoverAlunoAutomaticamenteProgressaoContinuada()
-  {
-    $situacao = new stdClass();
-    $situacao->aprovado    = TRUE;
-    $situacao->andamento   = FALSE;
-    $situacao->recuperacao = FALSE;
-    $situacao->retidoFalta = FALSE;
+    public function testPromoverAlunoAutomaticamenteProgressaoContinuada()
+    {
+        $situacao = new stdClass();
+        $situacao->aprovado    = true;
+        $situacao->andamento   = false;
+        $situacao->recuperacao = false;
+        $situacao->retidoFalta = false;
 
-    $service = $this->setExcludedMethods(array('promover'))
+        $service = $this->setExcludedMethods(['promover'])
                     ->getCleanMock('Avaliacao_Service_Boletim');
 
-    // Mock para RegraAvaliacao_Model_Regra
-    $service->expects($this->any())
+        // Mock para RegraAvaliacao_Model_Regra
+        $service->expects($this->any())
             ->method('getRegraAvaliacaoTipoProgressao')
             ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::CONTINUADA));
 
-    $service->expects($this->once())
+        $service->expects($this->once())
             ->method('getSituacaoAluno')
             ->will($this->returnValue($situacao));
 
-    $service->method('getOption')
+        $service->method('getOption')
             ->will($this->returnValueMap([
                 ['aprovado', App_Model_MatriculaSituacao::EM_ANDAMENTO]
             ]));
 
-    $service->expects($this->once())
+        $service->expects($this->once())
             ->method('_updateMatricula')
-            ->will($this->returnValue(TRUE));
+            ->will($this->returnValue(true));
 
-    $this->assertTrue($service->promover());
-  }
+        $this->assertTrue($service->promover());
+    }
 
-  public function testPromoverAlunoAutomaticamenteProgressaoNaoContinuadaAutoMediaPresenca()
-  {
-    $situacao = new stdClass();
-    $situacao->aprovado    = TRUE;
-    $situacao->andamento   = FALSE;
-    $situacao->recuperacao = FALSE;
-    $situacao->retidoFalta = FALSE;
-    $situacao->aprovadoComDependencia = FALSE;
+    public function testPromoverAlunoAutomaticamenteProgressaoNaoContinuadaAutoMediaPresenca()
+    {
+        $situacao = new stdClass();
+        $situacao->aprovado    = true;
+        $situacao->andamento   = false;
+        $situacao->recuperacao = false;
+        $situacao->retidoFalta = false;
+        $situacao->aprovadoComDependencia = false;
 
-    $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
-    $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
+        $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
+        $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
 
-    $service = $this->setExcludedMethods(array('promover'))
+        $service = $this->setExcludedMethods(['promover'])
                     ->getCleanMock('Avaliacao_Service_Boletim');
 
-    $service->method('getRegraAvaliacaoTipoProgressao')
+        $service->method('getRegraAvaliacaoTipoProgressao')
             ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MEDIA_PRESENCA));
 
-    $service->method('getSituacaoAluno')
+        $service->method('getSituacaoAluno')
             ->will($this->returnValue($situacao));
 
-    $service->method('getOption')
+        $service->method('getOption')
             ->will($this->returnValueMap([
                 ['matricula', $codMatricula],
                 ['usuario', $codUsuario]
             ]));
 
-    $service->method('_updateMatricula')
-            ->with($codMatricula, $codUsuario, TRUE)
-            ->will($this->returnValue(TRUE));
+        $service->method('_updateMatricula')
+            ->with($codMatricula, $codUsuario, true)
+            ->will($this->returnValue(true));
 
-    $this->assertTrue($service->promover());
-  }
+        $this->assertTrue($service->promover());
+    }
 
-  public function testReprovarAlunoAutomaticamenteProgressaoNaoContinuadaAutoMediaPresenca()
-  {
-    $situacao = new stdClass();
-    $situacao->aprovado    = TRUE;
-    $situacao->andamento   = FALSE;
-    $situacao->recuperacao = FALSE;
-    $situacao->retidoFalta = TRUE;
+    public function testReprovarAlunoAutomaticamenteProgressaoNaoContinuadaAutoMediaPresenca()
+    {
+        $situacao = new stdClass();
+        $situacao->aprovado    = true;
+        $situacao->andamento   = false;
+        $situacao->recuperacao = false;
+        $situacao->retidoFalta = true;
 
-    $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
-    $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
+        $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
+        $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
 
-    $service = $this->setExcludedMethods(array('promover'))
+        $service = $this->setExcludedMethods(['promover'])
                     ->getCleanMock('Avaliacao_Service_Boletim');
 
-    $service->method('getSituacaoAluno')
+        $service->method('getSituacaoAluno')
             ->will($this->returnValue($situacao));
 
-    $service->method('getRegraAvaliacaoTipoProgressao')
+        $service->method('getRegraAvaliacaoTipoProgressao')
             ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MEDIA_PRESENCA));
 
-    $service->method('getOption')
+        $service->method('getOption')
             ->will($this->returnValueMap([
                 ['matricula', $codMatricula],
                 ['usuario', $codUsuario]
             ]));
 
-    $service->method('_updateMatricula')
+        $service->method('_updateMatricula')
             ->with($codMatricula, $codUsuario, App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS)
-            ->will($this->returnValue(TRUE));
+            ->will($this->returnValue(true));
 
-    $this->assertTrue($service->promover());
-  }
+        $this->assertTrue($service->promover());
+    }
 
-  public function testPromoverAlunoAutomaticamenteProgressaoNaoContinuadaAutoMedia()
-  {
-    $situacao = new stdClass();
-    $situacao->aprovado    = TRUE;
-    $situacao->andamento   = FALSE;
-    $situacao->recuperacao = FALSE;
-    $situacao->retidoFalta = TRUE;  // Não considera retenção por falta
-    $situacao->aprovadoComDependencia = FALSE;
+    public function testPromoverAlunoAutomaticamenteProgressaoNaoContinuadaAutoMedia()
+    {
+        $situacao = new stdClass();
+        $situacao->aprovado    = true;
+        $situacao->andamento   = false;
+        $situacao->recuperacao = false;
+        $situacao->retidoFalta = true;  // Não considera retenção por falta
+        $situacao->aprovadoComDependencia = false;
 
-    $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
-    $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
+        $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
+        $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
 
-    // Mock para RegraAvaliacao_Model_Regra
+        // Mock para RegraAvaliacao_Model_Regra
 
-    $service = $this->setExcludedMethods(array('promover'))
+        $service = $this->setExcludedMethods(['promover'])
                     ->getCleanMock('Avaliacao_Service_Boletim');
 
-    $service->method('getSituacaoAluno')
+        $service->method('getSituacaoAluno')
             ->will($this->returnValue($situacao));
 
-    $service->method('getRegraAvaliacaoTipoProgressao')
+        $service->method('getRegraAvaliacaoTipoProgressao')
             ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_SOMENTE_MEDIA));
 
-    $service->method('getOption')
+        $service->method('getOption')
             ->will($this->returnValueMap([
                 ['matricula', $codMatricula],
                 ['usuario', $codUsuario]
             ]));
 
-    $service->method('_updateMatricula')
-            ->with($codMatricula, $codUsuario, TRUE)
-            ->will($this->returnValue(TRUE));
+        $service->method('_updateMatricula')
+            ->with($codMatricula, $codUsuario, true)
+            ->will($this->returnValue(true));
 
-    $this->assertTrue($service->promover());
-  }
+        $this->assertTrue($service->promover());
+    }
 
-  public function testPromoverAlunoManualmenteProgressaoNaoContinuada()
-  {
-    $situacao = new stdClass();
-    $situacao->aprovado    = FALSE; // Reprovado por nota
-    $situacao->andamento   = FALSE;
-    $situacao->recuperacao = FALSE;
-    $situacao->retidoFalta = FALSE;
+    public function testPromoverAlunoManualmenteProgressaoNaoContinuada()
+    {
+        $situacao = new stdClass();
+        $situacao->aprovado    = false; // Reprovado por nota
+        $situacao->andamento   = false;
+        $situacao->recuperacao = false;
+        $situacao->retidoFalta = false;
 
-    $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
-    $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
+        $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
+        $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
 
-
-    $service = $this->setExcludedMethods(array('promover'))
+        $service = $this->setExcludedMethods(['promover'])
                     ->getCleanMock('Avaliacao_Service_Boletim');
 
-    $service->method('getSituacaoAluno')
+        $service->method('getSituacaoAluno')
             ->will($this->returnValue($situacao));
 
-    $service->method('getRegraAvaliacaoTipoProgressao')
+        $service->method('getRegraAvaliacaoTipoProgressao')
             ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL));
 
-    $service->method('getOption')
+        $service->method('getOption')
             ->will($this->returnValueMap([
                 ['matricula', $codMatricula],
                 ['usuario', $codUsuario]
             ]));
 
-    $service->method('_updateMatricula')
-            ->with($codMatricula, $codUsuario, TRUE)
-            ->will($this->returnValue(TRUE));
+        $service->method('_updateMatricula')
+            ->with($codMatricula, $codUsuario, true)
+            ->will($this->returnValue(true));
 
-    $this->assertTrue($service->promover(TRUE));
-  }
+        $this->assertTrue($service->promover(true));
+    }
 
-  public function testReprovarAlunoManualmenteProgressaoNaoContinuada()
-  {
-    $situacao = new stdClass();
-    $situacao->aprovado    = FALSE; // Reprovado por nota
-    $situacao->andamento   = FALSE;
-    $situacao->recuperacao = FALSE;
-    $situacao->retidoFalta = FALSE;
+    public function testReprovarAlunoManualmenteProgressaoNaoContinuada()
+    {
+        $situacao = new stdClass();
+        $situacao->aprovado    = false; // Reprovado por nota
+        $situacao->andamento   = false;
+        $situacao->recuperacao = false;
+        $situacao->retidoFalta = false;
 
-    $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
-    $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
+        $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
+        $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
 
-
-    $service = $this->setExcludedMethods(array('promover'))
+        $service = $this->setExcludedMethods(['promover'])
                     ->getCleanMock('Avaliacao_Service_Boletim');
 
-    $service->method('getSituacaoAluno')
+        $service->method('getSituacaoAluno')
             ->will($this->returnValue($situacao));
 
-    $service->method('getRegraAvaliacaoTipoProgressao')
+        $service->method('getRegraAvaliacaoTipoProgressao')
             ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::NAO_CONTINUADA_MANUAL));
 
-    $service->method('getOption')
+        $service->method('getOption')
             ->will($this->returnValueMap([
                 ['matricula', $codMatricula],
                 ['usuario', $codUsuario]
             ]));
 
-    $service->method('_updateMatricula')
+        $service->method('_updateMatricula')
             ->with($codMatricula, $codUsuario, App_Model_MatriculaSituacao::REPROVADO)
-            ->will($this->returnValue(TRUE));
+            ->will($this->returnValue(true));
 
-    $this->assertTrue($service->promover());
-  }
+        $this->assertTrue($service->promover());
+    }
 
-  public function testSaveBoletim()
-  {
-    $situacao = new stdClass();
-    $situacao->aprovado    = TRUE;
-    $situacao->andamento   = FALSE;
-    $situacao->recuperacao = FALSE;
-    $situacao->retidoFalta = FALSE;
+    public function testSaveBoletim()
+    {
+        $situacao = new stdClass();
+        $situacao->aprovado    = true;
+        $situacao->andamento   = false;
+        $situacao->recuperacao = false;
+        $situacao->retidoFalta = false;
 
-    $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
-    $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
+        $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
+        $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
 
-    $service = $this->setExcludedMethods(array('save'))
+        $service = $this->setExcludedMethods(['save'])
                     ->getCleanMock('Avaliacao_Service_Boletim');
 
-    $service->expects($this->at(0))
+        $service->expects($this->at(0))
             ->method('saveNotas')
             ->will($this->returnValue($service));
 
-    $service->expects($this->at(1))
+        $service->expects($this->at(1))
             ->method('saveFaltas')
             ->will($this->returnValue($service));
 
-    $service->expects($this->at(2))
+        $service->expects($this->at(2))
             ->method('savePareceres')
             ->will($this->returnValue($service));
 
-    $service->expects($this->at(3))
+        $service->expects($this->at(3))
             ->method('promover')
-            ->will($this->returnValue(TRUE));
+            ->will($this->returnValue(true));
 
-    try {
-      $service->save();
-    }
-    catch (Exception $e) {
-      $this->fail('O método "->save()" não deveria ter lançado exceção com o '
+        try {
+            $service->save();
+        } catch (Exception $e) {
+            $this->fail('O método "->save()" não deveria ter lançado exceção com o '
                   . 'cenário de teste configurado.');
+        }
     }
-  }
 
-  public function testIntegracaoMatriculaPromoverAluno()
-  {
-    $situacao = new stdClass();
-    $situacao->aprovado    = TRUE;
-    $situacao->andamento   = FALSE;
-    $situacao->recuperacao = FALSE;
-    $situacao->retidoFalta = FALSE;
+    public function testIntegracaoMatriculaPromoverAluno()
+    {
+        $situacao = new stdClass();
+        $situacao->aprovado    = true;
+        $situacao->andamento   = false;
+        $situacao->recuperacao = false;
+        $situacao->retidoFalta = false;
 
-    $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
-    $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
+        $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
+        $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
 
-
-    $service = $this->setExcludedMethods(array('promover', '_updateMatricula'))
+        $service = $this->setExcludedMethods(['promover', '_updateMatricula'])
                     ->getCleanMock('Avaliacao_Service_Boletim');
 
-    $service->method('getSituacaoAluno')
+        $service->method('getSituacaoAluno')
             ->will($this->returnValue($situacao));
 
-    $service->method('getRegraAvaliacaoTipoProgressao')
+        $service->method('getRegraAvaliacaoTipoProgressao')
             ->will($this->returnValue(RegraAvaliacao_Model_TipoProgressao::CONTINUADA));
 
-    $service->method('getOption')
+        $service->method('getOption')
             ->will($this->returnValueMap([
                 ['matricula', $codMatricula],
                 ['usuario', $codUsuario]
             ]));
 
-    // Configura mock de instância de classe legada
-    $matricula = $this->getCleanMock('clsPmieducarMatricula');
+        // Configura mock de instância de classe legada
+        $matricula = $this->getCleanMock('clsPmieducarMatricula');
 
-    $matricula->method('edita')
-              ->will($this->returnValue(TRUE));
+        $matricula->method('edita')
+              ->will($this->returnValue(true));
 
-    CoreExt_Entity::addClassToStorage('clsPmieducarMatricula', $matricula,
-          'include/pmieducar/clsPmieducarMatricula.inc.php', TRUE);
+        CoreExt_Entity::addClassToStorage(
+            'clsPmieducarMatricula',
+            $matricula,
+            'include/pmieducar/clsPmieducarMatricula.inc.php',
+            true
+        );
 
-    $this->assertTrue($service->promover());
-  }
+        $this->assertTrue($service->promover());
+    }
 }
