@@ -359,27 +359,29 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
         $situacao->recuperacao = false;
         $situacao->retidoFalta = false;
 
-        $codMatricula = $this->_getConfigOption('matricula', 'cod_matricula');
-        $codUsuario   = $this->_getConfigOption('usuario', 'cod_usuario');
+        $this->_getConfigOption('matricula', 'cod_matricula');
+        $this->_getConfigOption('usuario', 'cod_usuario');
 
-        $service = $this->setExcludedMethods(['save'])
-                    ->getCleanMock('Avaliacao_Service_Boletim');
+        /** @var Avaliacao_Service_Boletim|MockObject $service */
+        $service = $this
+            ->setExcludedMethods(['save'])
+            ->getCleanMock('Avaliacao_Service_Boletim');
 
-        $service->expects($this->at(0))
+        $service
             ->method('saveNotas')
-            ->will($this->returnValue($service));
+            ->willReturn($service);
 
-        $service->expects($this->at(1))
+        $service
             ->method('saveFaltas')
-            ->will($this->returnValue($service));
+            ->willReturn($service);
 
-        $service->expects($this->at(2))
+        $service
             ->method('savePareceres')
-            ->will($this->returnValue($service));
+            ->willReturn($service);
 
-        $service->expects($this->at(3))
+        $service
             ->method('promover')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         try {
             $service->save();
@@ -387,6 +389,8 @@ class Avaliacao_Service_PromocaoAlunoTest extends Avaliacao_Service_TestCommon
             $this->fail('O método "->save()" não deveria ter lançado exceção com o '
                   . 'cenário de teste configurado.');
         }
+
+        self::assertTrue(true, 'O método "->save()" foi executado com sucesso');
     }
 
     public function testIntegracaoMatriculaPromoverAluno()
