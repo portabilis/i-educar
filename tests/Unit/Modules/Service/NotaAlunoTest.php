@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -36,45 +41,50 @@ require_once 'Avaliacao/Model/NotaComponente.php';
  * Avaliacao_Service_NotaAlunoTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class Avaliacao_Service_NotaAlunoTest extends Avaliacao_Service_TestCommon
 {
-  public function testCriaNovaInstanciaDeNotaAluno()
-  {
-    $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
-    $notaSave  = clone $notaAluno;
-    $notaSave->id = NULL;
+    public function testCriaNovaInstanciaDeNotaAluno()
+    {
+        $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
+        $notaSave  = clone $notaAluno;
+        $notaSave->id = null;
 
-    // Configura mock para Avaliacao_Model_NotaAlunoDataMapper
-    $mock = $this->getCleanMock('Avaliacao_Model_NotaAlunoDataMapper');
-    $mock->expects($this->at(0))
+        // Configura mock para Avaliacao_Model_NotaAlunoDataMapper
+        $mock = $this->getCleanMock('Avaliacao_Model_NotaAlunoDataMapper');
+        $mock->expects($this->at(0))
          ->method('findAll')
-         ->with(array(), array('matricula' => $this->_getConfigOption('matricula', 'cod_matricula')))
-         ->will($this->returnValue(array()));
+         ->with([], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')])
+         ->will($this->returnValue([]));
 
-    $mock->expects($this->at(1))
+        $mock->expects($this->at(1))
          ->method('save')
          ->with($notaSave)
-         ->will($this->returnValue(TRUE));
+         ->will($this->returnValue(true));
 
-    $mock->expects($this->at(2))
+        $mock->expects($this->at(2))
          ->method('findAll')
-         ->with(array(), array('matricula' => $this->_getConfigOption('matricula', 'cod_matricula')))
-         ->will($this->returnValue(array($notaAluno)));
+         ->with([], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')])
+         ->will($this->returnValue([$notaAluno]));
 
-    $this->_setNotaAlunoDataMapperMock($mock);
+        $this->_setNotaAlunoDataMapperMock($mock);
 
-    $service = $this->_getServiceInstance();
-  }
+        $service = $this->_getServiceInstance();
+    }
 
-  public function tearDown(): void
-  {
-    Portabilis_Utils_Database::$_db = null;
-  }
+    public function tearDown(): void
+    {
+        Portabilis_Utils_Database::$_db = null;
+    }
 }
