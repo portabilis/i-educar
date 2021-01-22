@@ -12,7 +12,7 @@ class RenameAuditMigration extends Migration
      */
     public function up()
     {
-        $batch = DB::table('migrations')->max('batch');
+        $batch = DB::table('migrations')->max('batch') + 1;
 
         DB::table('migrations')->insert([
             'batch' => $batch,
