@@ -38,7 +38,8 @@ class Avaliacao_Service_FaltaAlunoTest extends Avaliacao_Service_TestCommon
             ->with($faltaSave)
             ->willReturn(true);
 
-        $mock->expects($this->exactly(2))
+        $mock
+            ->expects(self::exactly(2))
             ->method('findAll')
             ->withConsecutive(
                 [[], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')]],
@@ -46,15 +47,11 @@ class Avaliacao_Service_FaltaAlunoTest extends Avaliacao_Service_TestCommon
             )
             ->willReturnOnConsecutiveCalls([], [$faltaAluno]);
 
-//        $mock
-//         ->method('findAll')
-//         ->with()
-//         ->willReturn([$faltaAluno]);
-
         $this->_setFaltaAlunoDataMapperMock($mock);
 
         $_GET['etapa'] = 'Rc';
-        $service = $this->_getServiceInstance();
+
+        $this->_getServiceInstance();
     }
 
     public function tearDown(): void
