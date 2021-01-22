@@ -43,5 +43,4 @@ from pmieducar.matricula_turma enturmacao
 inner join pmieducar.matricula matricula on true
 and matricula.cod_matricula = enturmacao.ref_cod_matricula
 inner join pmieducar.turma turma on true
-and turma.cod_turma = enturmacao.ref_cod_turma
-and turma.ativo = 1;
+and turma.cod_turma = enturmacao.ref_cod_turma;
