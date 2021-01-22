@@ -247,7 +247,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
      * Setter.
      *
      * @param string $namespace
-     * @param array $data
+     * @param array  $data
      *
      * @return Avaliacao_Service_TestCommon
      */
@@ -290,7 +290,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
      *
      * @param string $namespace
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return Avaliacao_Service_TestCommon
      */
@@ -557,9 +557,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     {
         $mock = $this->getCleanMock('clsPmieducarMatricula');
 
-        $mock->expects($this->any())
+        $mock
             ->method('detalhe')
-            ->will($this->returnValue($this->_getConfigOptions('matricula')));
+            ->willReturn($this->_getConfigOptions('matricula'));
 
         CoreExt_Entity::addClassToStorage(
             'clsPmieducarMatricula',
@@ -593,9 +593,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     {
         Portabilis_Utils_Database::$_db = $this->getDbMock();
 
-        Portabilis_Utils_Database::$_db->expects($this->any())
+        Portabilis_Utils_Database::$_db
             ->method('execPreparedQuery')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $returnCallback = function ($reset = false) use ($return) {
             static $total = 0;
@@ -606,7 +606,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
                 return false;
             }
 
-            if ($total == count($return) - 1) {
+            if ($total === count($return) - 1) {
                 return ++$total;
             }
 
@@ -615,17 +615,17 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
         $returnCallback(true);
 
-        Portabilis_Utils_Database::$_db->expects($this->any())
+        Portabilis_Utils_Database::$_db
             ->method('ProximoRegistro')
-            ->will($this->returnCallback($returnCallback));
+            ->willReturnCallback($returnCallback);
 
-        Portabilis_Utils_Database::$_db->expects($this->any())
+        Portabilis_Utils_Database::$_db
             ->method('Tupla')
-            ->will($this->returnCallback(function () use ($return) {
+            ->willReturnCallback(function () use ($return) {
                 static $total = 0;
 
                 return $return[$total++];
-            }));
+            });
     }
 
     /**
@@ -637,10 +637,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     {
         $mock = $this->getCleanMock('clsPmieducarMatriculaTurma');
 
-        $mock->expects($this->any())
+        $mock
             ->method('lista')
             ->with(1)
-            ->will($this->returnValue($this->_getConfigOptions('matriculaTurma')));
+            ->willReturn($this->_getConfigOptions('matriculaTurma'));
 
         CoreExt_Entity::addClassToStorage(
             'clsPmieducarMatriculaTurma',
@@ -661,9 +661,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     {
         $mock = $this->getCleanMock('clsPmieducarSerie');
 
-        $mock->expects($this->any())
+        $mock
             ->method('detalhe')
-            ->will($this->returnValue($this->_getConfigOptions('serie')));
+            ->willReturn($this->_getConfigOptions('serie'));
 
         CoreExt_Entity::addClassToStorage(
             'clsPmieducarSerie',
@@ -684,9 +684,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     {
         $mock = $this->getCleanMock('clsPmieducarCurso');
 
-        $mock->expects($this->any())
+        $mock
             ->method('detalhe')
-            ->will($this->returnValue($this->_getConfigOptions('curso')));
+            ->willReturn($this->_getConfigOptions('curso'));
 
         CoreExt_Entity::addClassToStorage(
             'clsPmieducarCurso',
@@ -707,10 +707,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     {
         $mock = $this->getCleanMock('clsPmieducarEscolaAnoLetivo');
 
-        $mock->expects($this->any())
+        $mock
             ->method('lista')
             ->with(1, 2009, null, null, 1, null, null, null, null, 1)
-            ->will($this->returnValue($this->_getConfigOptions('escolaAnoLetivo')));
+            ->willReturn($this->_getConfigOptions('escolaAnoLetivo'));
 
         CoreExt_Entity::addClassToStorage(
             'clsPmieducarEscolaAnoLetivo',
@@ -731,10 +731,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     {
         $mock = $this->getCleanMock('clsPmieducarAnoLetivoModulo');
 
-        $mock->expects($this->any())
+        $mock
             ->method('lista')
             ->with(2009, 1)
-            ->will($this->returnValue($this->_getConfigOptions('anoLetivoModulo')));
+            ->willReturn($this->_getConfigOptions('anoLetivoModulo'));
 
         CoreExt_Entity::addClassToStorage(
             'clsPmieducarAnoLetivoModulo',
@@ -755,9 +755,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     {
         $mock = $this->getCleanMock('clsPmieducarModulo');
 
-        $mock->expects($this->any())
+        $mock
             ->method('detalhe')
-            ->will($this->returnValue($this->_getConfigOptions('modulo')));
+            ->willReturn($this->_getConfigOptions('modulo'));
 
         CoreExt_Entity::addClassToStorage('clsPmieducarModulo', $mock, null, true);
 
@@ -796,9 +796,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     {
         $mock = $this->getCleanMock('clsPmieducarDispensaDisciplina');
 
-        $mock->expects($this->any())
+        $mock
             ->method('disciplinaDispensadaEtapa')
-            ->will($this->returnValue($this->_getConfigOptions('dispensaDisciplina')));
+            ->willReturn($this->_getConfigOptions('dispensaDisciplina'));
 
         CoreExt_Entity::addClassToStorage(
             'clsPmieducarDispensaDisciplina',
@@ -835,7 +835,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
      * RegraAvaliacao_Model_Regra.
      *
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return $this
      */
@@ -967,9 +967,9 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
         }
 
         $mock = $this->getCleanMock('TabelaArredondamento_Model_TabelaValorDataMapper');
-        $mock->expects($this->any())
+        $mock
             ->method('findAll')
-            ->will($this->returnValue($tabelaValores));
+            ->willReturn($tabelaValores);
 
         $tabelaDataMapper = new TabelaArredondamento_Model_TabelaDataMapper();
         $tabelaDataMapper->setTabelaValorDataMapper($mock);
@@ -994,7 +994,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
             // Mock para ComponenteCurricular_Model_ComponenteDataMapper
             $mock = $this->getCleanMock('ComponenteCurricular_Model_ComponenteDataMapper');
-            $mock->expects($this->any())
+            $mock
                 ->method('findComponenteCurricularAnoEscolar')
                 ->will(call_user_func_array([$this, 'onConsecutiveCalls'], $componentes));
 
@@ -1018,7 +1018,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
             // Mock para ComponenteCurricular_Model_TurmaDataMapper
             $mock = $this->getCleanMock('ComponenteCurricular_Model_TurmaDataMapper');
-            $mock->expects($this->any())
+            $mock
                 ->method('findAll')
                 ->will(call_user_func_array([$this, 'onConsecutiveCalls'], $componentes));
 
@@ -1041,10 +1041,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
 
             $mock = $this->getCleanMock('Avaliacao_Model_NotaAlunoDataMapper');
-            $mock->expects($this->at(0))
+            $mock
                 ->method('findAll')
                 ->with([], ['matricula' => $notaAluno->matricula])
-                ->will($this->returnValue([$notaAluno]));
+                ->willReturn([$notaAluno]);
 
             $this->_setNotaAlunoDataMapperMock($mock);
         }
@@ -1063,10 +1063,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     {
         if (is_null($this->_notaComponenteDataMapperMock)) {
             $mock = $this->getCleanMock('Avaliacao_Model_NotaComponenteDataMapper');
-            $mock->expects($this->at(0))
+            $mock
                 ->method('findAll')
                 ->with([], ['notaAluno' => $this->_getConfigOption('matricula', 'cod_matricula')], ['etapa' => 'ASC'])
-                ->will($this->returnValue([]));
+                ->willReturn([]);
 
             $this->_setNotaComponenteDataMapperMock($mock);
         }
@@ -1087,10 +1087,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
 
             $mock = $this->getCleanMock('Avaliacao_Model_NotaComponenteMediaDataMapper');
-            $mock->expects($this->at(0))
+            $mock
                 ->method('findAll')
                 ->with([], ['notaAluno' => $notaAluno->id])
-                ->will($this->returnValue([]));
+                ->willReturn([]);
 
             $this->_setNotaComponenteMediaDataMapperMock($mock);
         }
@@ -1111,10 +1111,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
             $mock = $this->getCleanMock('Avaliacao_Model_FaltaAlunoDataMapper');
-            $mock->expects($this->at(0))
+            $mock
                 ->method('findAll')
                 ->with([], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')])
-                ->will($this->returnValue([$faltaAluno]));
+                ->willReturn([$faltaAluno]);
 
             $this->_setFaltaAlunoDataMapperMock($mock);
         }
@@ -1135,10 +1135,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
         if (is_null($this->_faltaAbstractDataMapperMock)) {
             $mock = $this->getCleanMock('Avaliacao_Model_FaltaAbstractDataMapper');
-            $mock->expects($this->at(0))
+            $mock
                 ->method('findAll')
                 ->with([], ['faltaAluno' => $faltaAluno->id], ['etapa' => 'ASC'])
-                ->will($this->returnValue([]));
+                ->willReturn([]);
 
             $this->_setFaltaAbstractDataMapperMock($mock);
         }
@@ -1161,12 +1161,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             $mock = $this->getCleanMock('Avaliacao_Model_ParecerDescritivoAlunoDataMapper');
 
             if ($this->_getRegraOption('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
-                $matcher = $this->at(0);
-
-                $mock->expects($matcher)
+                $mock
                     ->method('findAll')
                     ->with([], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')])
-                    ->will($this->returnValue([$parecerAluno]));
+                    ->willReturn([$parecerAluno]);
             }
 
             $this->_setParecerDescritivoAlunoDataMapperMock($mock);
@@ -1190,10 +1188,10 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
             $mock = $this->getCleanMock('Avaliacao_Model_ParecerDescritivoAbstractDataMapper');
 
             if ($this->_getRegraOption('parecerDescritivo') != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM) {
-                $mock->expects($this->at(0))
+                $mock
                     ->method('findAll')
                     ->with([], ['parecerDescritivoAluno' => $parecerAluno->id], ['etapa' => 'ASC'])
-                    ->will($this->returnValue([]));
+                    ->willReturn([]);
             }
 
             $this->_setParecerDescritivoAbstractDataMapperMock($mock);
