@@ -107,6 +107,6 @@ class DependencyTest extends TestCase
         self::assertEquals('Reprovado por faltas', $response->situacao);
 
         $registration = $this->enrollment->registration;
-        self::assertEquals(App_Model_MatriculaSituacao::REPROVADO, $registration->refresh()->aprovado);
+        self::assertEquals(App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA, $registration->refresh()->aprovado);
     }
 }
