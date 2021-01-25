@@ -236,7 +236,7 @@ class indice extends clsDetalhe
                 $this->addDetalhe(['Estado escola destino', $det_transferencia['estado_escola_destino_externa']]);
                 $this->addDetalhe(['Município escola destino', $det_transferencia['municipio_escola_destino_externa']]);
             }
-            $this->addDetalhe(['Observação', $registro['observacao']]);
+            $this->addDetalhe(['Observação', $det_transferencia['observacao']]);
         }
 
         if ($registro['aprovado'] == App_Model_MatriculaSituacao::FALECIDO) {
