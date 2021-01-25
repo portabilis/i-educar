@@ -1,5 +1,5 @@
 [![Latest Release](https://img.shields.io/github/release/portabilis/i-educar.svg?label=latest%20release)](https://github.com/portabilis/i-educar/releases)
-[![Build Status](https://travis-ci.com/portabilis/i-educar.svg?branch=2.3)](https://travis-ci.com/portabilis/i-educar)
+[![Build Status](https://github.com/portabilis/i-educar/workflows/tests/badge.svg)](https://github.com/portabilis/i-educar/actions)
 
 # i-Educar
 
@@ -67,7 +67,7 @@ ajudar a alcançar nossos objetivos.
 - [Instalação do pacote de relatórios](#instalação-do-pacote-de-relatórios)
 - [Upgrade](#upgrade)
 
-### Depêndencias
+### Dependência
 
 Para executar o projeto é necessário a utilização de alguns softwares para
 facilitar o desenvolvimento.
@@ -81,8 +81,9 @@ facilitar o desenvolvimento.
 #### Servidor
 
 - [PHP](http://php.net/) versão 7.4
-- [Postgres](https://www.postgresql.org/) versão 9.5 (exata)
+- [Postgres](https://www.postgresql.org/) versão 9.5
 - [Nginx](https://www.nginx.com/)
+- [Redis](https://redis.io/)
 
 As seguintes extensões do PHP são necessárias:
 
