@@ -1,4 +1,4 @@
-name: Tests
+name: tests
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: 2.*
 
 jobs:
-  tests:
+  default:
 
     runs-on: ubuntu-latest
 

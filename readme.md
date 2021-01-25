@@ -1,5 +1,5 @@
 [![Latest Release](https://img.shields.io/github/release/portabilis/i-educar.svg?label=latest%20release)](https://github.com/portabilis/i-educar/releases)
-[![Build Status](https://travis-ci.com/portabilis/i-educar.svg?branch=2.3)](https://travis-ci.com/portabilis/i-educar)
+[![Build Status](https://github.com/portabilis/i-educar/workflows/tests/badge.svg)](https://github.com/portabilis/i-educar/actions)
 
 # i-Educar
 
