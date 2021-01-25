@@ -67,7 +67,7 @@ ajudar a alcançar nossos objetivos.
 - [Instalação do pacote de relatórios](#instalação-do-pacote-de-relatórios)
 - [Upgrade](#upgrade)
 
-### Depêndencias
+### Dependência
 
 Para executar o projeto é necessário a utilização de alguns softwares para
 facilitar o desenvolvimento.
@@ -81,8 +81,9 @@ facilitar o desenvolvimento.
 #### Servidor
 
 - [PHP](http://php.net/) versão 7.4
-- [Postgres](https://www.postgresql.org/) versão 9.5 (exata)
+- [Postgres](https://www.postgresql.org/) versão 9.5
 - [Nginx](https://www.nginx.com/)
+- [Redis](https://redis.io/)
 
 As seguintes extensões do PHP são necessárias:
 
