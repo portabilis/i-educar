@@ -46,6 +46,11 @@ class Kernel extends HttpKernel
         'api' => [
             'bindings',
         ],
+
+        'api:rest' => [
+            'bindings',
+            \App\Http\Middleware\CheckToken::class,
+        ],
     ];
 
     /**
