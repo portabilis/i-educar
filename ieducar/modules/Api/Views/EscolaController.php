@@ -695,9 +695,7 @@ class EscolaController extends ApiCoreController
 
     protected function canGetSchoolAddress()
     {
-        return (
-        $this->validatesPresenceOf('escola_id')
-        );
+        return $this->validatesPresenceOf('escola_id');
     }
 
     protected function getSchoolAddress()
