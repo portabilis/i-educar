@@ -21,7 +21,7 @@ class clsIndexBase extends clsBase
 {
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Transfer&ecirc;ncia Solicita&ccedil;&atilde;o");
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Transferência Solicitação");
         $this->processoAp = '578';
     }
 }
@@ -75,11 +75,6 @@ class indice extends clsCadastro
         $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
         $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
         $cancela = $_GET['cancela'];
-        $ano = $_GET['ano'];
-        $escolaId = $_GET['escola'];
-        $cursoId = $_GET['curso'];
-        $serieId = $_GET['serie'];
-        $turmaId = $_GET['turma'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
@@ -175,13 +170,13 @@ class indice extends clsCadastro
 
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
-                $opcoes["{$registro['cod_transferencia_tipo']}"] = "{$registro['nm_tipo']}";
+                $opcoes[$registro['cod_transferencia_tipo']] = $registro['nm_tipo'];
             }
         }
 
         $this->campoLista('ref_cod_transferencia_tipo', 'Motivo', $opcoes, $this->ref_cod_transferencia_tipo);
         $this->inputsHelper()->date('data_cancel', ['label' => 'Data', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
-        $this->campoMemo('observacao', 'Observa&ccedil;&atilde;o', $this->observacao, 60, 5, false);
+        $this->campoMemo('observacao', 'Observação', $this->observacao, 60, 5, false);
 
         Portabilis_View_Helper_Application::loadStylesheet($this, [
             '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
@@ -213,8 +208,6 @@ class indice extends clsCadastro
             }
         }
 
-        $editou = $obj->edita();
-
         $obj->data_cancel = $this->data_cancel;
 
         $this->data_transferencia = date('Y-m-d');
@@ -229,7 +222,7 @@ class indice extends clsCadastro
             $obj->data_cancel = $this->data_cancel;
             $editou = $obj->edita();
             if (!$editou) {
-                $this->mensagem = 'N&atilde;o foi poss&iacute;vel editar a Matr&iacute;cula do Aluno.<br>';
+                $this->mensagem = 'Não foi possível editar a Matrícula do Aluno.<br>';
 
                 return false;
             }
@@ -246,7 +239,7 @@ class indice extends clsCadastro
                     $detEnturmacao = $detEnturmacao['data_enturmacao'];
                     $enturmacao->data_enturmacao = $detEnturmacao;
                     if (!$enturmacao->edita()) {
-                        $this->mensagem = 'N&atilde;o foi poss&iacute;vel desativar as enturma&ccedil;&otilde;es da matr&iacute;cula.';
+                        $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
 
                         return false;
                     } else {
@@ -267,7 +260,6 @@ class indice extends clsCadastro
 
         if ($cadastrou) {
             $obj = new clsPmieducarMatricula($this->ref_cod_matricula, null, null, null, $this->pessoa_logada);
-            $det_matricula = $obj->detalhe();
             $obj->data_cancel = $this->data_cancel;
             $obj->edita();
 
@@ -294,7 +286,7 @@ class indice extends clsCadastro
 
         DB::rollback();
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -312,16 +304,16 @@ class indice extends clsCadastro
             $obj = new clsPmieducarTransferenciaSolicitacao($this->cod_transferencia_solicitacao, null, $this->pessoa_logada, null, null, null, null, null, null, 0);
             $excluiu = $obj->excluir();
             if ($excluiu) {
-                $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+                $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
                 $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
             }
         } else {
-            $this->mensagem = 'N&atilde;o foi poss&iacute;vel encontrar a Solicita&ccedil;&atilde;o de Transfer&ecirc;ncia do Aluno.<br>';
+            $this->mensagem = 'Não foi possível encontrar a Solicitação de Transferência do Aluno.<br>';
 
             return false;
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }
