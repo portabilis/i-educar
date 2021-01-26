@@ -68,6 +68,17 @@ class indice extends clsCadastro
 
     public $ref_cod_escola;
 
+    public function __construct()
+    {
+        parent::__construct();
+        Portabilis_View_Helper_Application::loadStylesheet($this, [
+            '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
+        ]);
+        Portabilis_View_Helper_Application::loadJavascript($this, [
+            '/modules/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js'
+        ]);
+    }
+
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -106,8 +117,6 @@ class indice extends clsCadastro
         $this->breadcrumb('Registro da solicitação de transferência da matrícula', [
             'educar_index.php' => 'Escola',
         ]);
-
-        Portabilis_View_Helper_Application::loadJavascript($this, ['/modules/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js']);
 
         return $retorno;
     }
@@ -168,19 +177,18 @@ class indice extends clsCadastro
         $objTemp->setOrderby(' nm_tipo ASC ');
         $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, $ref_cod_instituicao);
 
+        $opcoesMotivo = ['' => 'Selecione'];
+
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
-                $opcoes[$registro['cod_transferencia_tipo']] = $registro['nm_tipo'];
+                $opcoesMotivo[$registro['cod_transferencia_tipo']] = $registro['nm_tipo'];
             }
         }
 
-        $this->campoLista('ref_cod_transferencia_tipo', 'Motivo', $opcoes, $this->ref_cod_transferencia_tipo);
+        $this->campoLista('ref_cod_transferencia_tipo', 'Motivo', $opcoesMotivo, $this->ref_cod_transferencia_tipo);
         $this->inputsHelper()->date('data_cancel', ['label' => 'Data', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
         $this->campoMemo('observacao', 'Observação', $this->observacao, 60, 5, false);
 
-        Portabilis_View_Helper_Application::loadStylesheet($this, [
-            '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
-        ]);
     }
 
     public function Novo()
