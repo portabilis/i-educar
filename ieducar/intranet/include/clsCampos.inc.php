@@ -329,6 +329,38 @@ class clsCampos extends Core_Controller_Page_Abstract
         }
     }
 
+    public function campoDataDiaMes(
+        $nome,
+        $campo,
+        $valor,
+        $obrigatorio = false,
+        $descricao = '',
+        $duplo = false,
+        $acao = '',
+        $disabled = false,
+        $teste = null,
+        $dica = 'dd/mm'
+    ) {
+        $arr_componente = [
+            $duplo ? 'dataDupla' : 'data',
+            $this->__adicionando_tabela ? $nome : $campo,
+            false,
+            $valor,
+            9,
+            10,
+            $dica,
+            $descricao,
+            $acao,
+            $disabled,
+        ];
+
+        if (!$this->__adicionando_tabela) {
+            $this->campos[$nome] = $arr_componente;
+        } else {
+            $this->__campos_tabela[] = $arr_componente;
+        }
+    }
+
     public function campoHora($nome, $campo, $valor, $obrigatorio = false, $descricao = '', $acao = '', $limitaHora = true, $desabilitado = false, $maxLength = 5)
     {
         $arr_componente = [
@@ -1127,6 +1159,7 @@ class clsCampos extends Core_Controller_Page_Abstract
                         switch (strtolower($campo_[0])) {
                             case 'html':
                                 $retorno .= $componente;
+                                // no break
                             case 'texto':
                                 $retorno .= $this->getCampoTexto("{$nome}[{$key2}]", "{$nome}[{$key2}]", $valor[$key], $campo_[4], $campo_[5], $evento, $campo_[10], '', $class, $campo_[7]);
                                 break;
@@ -1241,9 +1274,8 @@ class clsCampos extends Core_Controller_Page_Abstract
             }
             if ($nome == 'html') {
                 $retorno .= $componente;
-            } else
-            // Separador: insere uma linha preta
-            if ($componente[0] == 'linha_preta') {
+            } elseif // Separador: insere uma linha preta
+            ($componente[0] == 'linha_preta') {
                 $retorno .= "<tr><td  style='padding:0px;background-color:{$componente['cor']};' colspan='2' height='{$componente['altura']}'></td></tr>";
                 continue;
             } elseif ($componente[0] == 'espaco') {
@@ -1270,7 +1302,7 @@ class clsCampos extends Core_Controller_Page_Abstract
 
                 $classe = $md ? 'formmdtd' : 'formlttd';
 
-               if ($campo_tabela && false) {
+                if ($campo_tabela && false) {
                     if ($componente[10] && ($componente[0] == 'textoDuploInv'
                             || $componente[0] == 'textoInv')) {
                         $name = " name='tr_{$componente[10]}'  ";
@@ -1674,19 +1706,19 @@ class clsCampos extends Core_Controller_Page_Abstract
 
     public function MakeFormat()
     {
-        $ret = "
+        $ret = '
     function AdicionaItem(chave, item, nome_pai, submete)
     {
       var x = document.getElementById(nome_pai);
 
-      opt = document.createElement('OPTION');
+      opt = document.createElement(\'OPTION\');
       opt.value = chave;
       opt.selected = true;
       opt.appendChild(document.createTextNode(item));
 
       x.appendChild(opt);
       if (submete) {
-    ";
+    ';
 
         if (isset($this->executa_submete)) {
             $ret .= '
@@ -1848,7 +1880,7 @@ class clsCampos extends Core_Controller_Page_Abstract
         $valor = '',
         $class,
         $tamanhovisivel,
-                          $tamanhomaximo,
+        $tamanhomaximo,
         $acao = '',
         $descricao = ''
     ) {
