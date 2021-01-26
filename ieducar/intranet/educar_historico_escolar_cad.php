@@ -186,7 +186,7 @@ class indice extends clsCadastro
             $this->ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
             $habilitaCargaHoraria = $this->habilitaCargaHoraria($this->ref_cod_instituicao);
         }
-        $this->inputsHelper()->dynamic(['instituicao', 'escola'], ['required' => false]);
+        $this->inputsHelper()->dynamic(['instituicao', 'escolaSemFiltroPorUsuario'], ['required' => false]);
         $this->inputsHelper()->checkbox('escola_em_outro_municipio', ['label' => 'Escola em outro municipio?']);
 
         $escola_options = [
