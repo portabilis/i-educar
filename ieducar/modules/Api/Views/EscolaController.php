@@ -156,38 +156,38 @@ class EscolaController extends ApiCoreController
             }
 
             $sql = "
-                select distinct 
+                select distinct
                     ref_cod_escola as escola_id,
-                    ano as ano, 
+                    ano as ano,
                     m.nm_tipo as descricao,
                     andamento as ano_em_aberto
                 from pmieducar.escola_ano_letivo eal
                 inner join pmieducar.ano_letivo_modulo alm
-                    on true 
-                    and alm.ref_ano = eal.ano 
+                    on true
+                    and alm.ref_ano = eal.ano
                     and alm.ref_ref_cod_escola = eal.ref_cod_escola
-                inner join pmieducar.modulo m 
-                    on true 
+                inner join pmieducar.modulo m
+                    on true
                     and m.cod_modulo = alm.ref_cod_modulo
-                where true 
+                where true
                     and (
-                        case when $1 = 0 then 
+                        case when $1 = 0 then
                             (
                                 andamento = 1
-                                or 
+                                or
                                 ano in (
-                                    select ano 
-                                    from pmieducar.escola_ano_letivo 
-                                    where ref_cod_escola = eal.ref_cod_escola 
-                                    order by ano desc 
+                                    select ano
+                                    from pmieducar.escola_ano_letivo
+                                    where ref_cod_escola = eal.ref_cod_escola
+                                    order by ano desc
                                     limit 2
                                 )
-                            ) 
-                        else 
-                            ano = $1 
+                            )
+                        else
+                            ano = $1
                         end
                     )
-                {$where} 
+                {$where}
                 order by ref_cod_escola, ano
             ";
 
@@ -266,7 +266,7 @@ class EscolaController extends ApiCoreController
               FROM pmieducar.turma_modulo tm
               INNER JOIN pmieducar.turma t ON (tm.ref_cod_turma = t.cod_turma)
               INNER JOIN pmieducar.curso c on (c.cod_curso = t.ref_cod_curso)
-              inner join pmieducar.modulo m 
+              inner join pmieducar.modulo m
               on m.cod_modulo = tm.ref_cod_modulo
             WHERE t.ano = $1 and t.ref_ref_cod_escola = $2 and c.padrao_ano_escolar = 0 and t.ativo = 1
           ORDER BY tm.ref_cod_turma';
@@ -693,6 +693,29 @@ class EscolaController extends ApiCoreController
         ];
     }
 
+    protected function canGetSchoolAddress()
+    {
+        return $this->validatesPresenceOf('escola_id');
+    }
+
+    protected function getSchoolAddress()
+    {
+        if ($this->canGetSchoolAddress()) {
+            $escola_id = $this->getRequest()->escola_id;
+
+            $sql = "
+            SELECT a.country, a.state, a.city, a.country_id, a.state_abbreviation FROM pmieducar.escola e
+                LEFT JOIN person_has_place php ON php.person_id = e.ref_idpes
+                LEFT JOIN addresses a ON a.id = php.id
+            WHERE e.cod_escola = $1
+            ";
+
+            return $this->fetchPreparedQuery($sql, [$escola_id], false, 'first-line');
+        }
+
+        return false;
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'escola')) {
@@ -721,6 +744,8 @@ class EscolaController extends ApiCoreController
             $this->appendResponse($this->getEscolasSelecao());
         } elseif ($this->isRequestFor('get', 'parametros-escolas')) {
             $this->appendResponse($this->getParametrosEscolas());
+        } elseif ($this->isRequestFor('get', 'endereco-escola')) {
+            $this->appendResponse($this->getSchoolAddress());
         } else {
             $this->notImplementedOperationError();
         }
