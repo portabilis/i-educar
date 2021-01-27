@@ -111,7 +111,7 @@ class indice extends clsCadastro
                     ],[
                         'serie' => $this->cod_serie
                     ],
-                    [],
+                    ['ano_letivo' => 'DESC'],
                     false
                 );
             }
