@@ -237,7 +237,8 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
     protected function _setMatriculaInfo()
     {
         $codMatricula = $this->getOption('matricula');
-        $matricula = App_Model_IedFinder::getMatricula($codMatricula);
+        $codTurma = $this->getOption('turmaId');
+        $matricula = App_Model_IedFinder::getMatricula($codMatricula, $codTurma);
         $etapas = App_Model_IedFinder::getQuantidadeDeModulosMatricula($codMatricula, $matricula);
         $maiorEtapaUtilizada = $etapas;
 
