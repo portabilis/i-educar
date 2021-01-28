@@ -2,7 +2,6 @@
 
 use Tests\TestCase;
 
-require_once __DIR__.'/_stub/View.php';
 require_once __DIR__.'/Controller/_stub/Page/Abstract.php';
 
 class Core_ViewTest extends TestCase
