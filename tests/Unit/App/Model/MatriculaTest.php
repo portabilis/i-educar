@@ -30,7 +30,6 @@
  */
 
 require_once 'App/Model/Matricula.php';
-require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 
 /**
  * App_Model_MatriculaTest class.

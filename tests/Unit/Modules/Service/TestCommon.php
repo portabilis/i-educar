@@ -1,10 +1,5 @@
 <?php
 
-require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
-require_once 'include/pmieducar/clsPmieducarSerie.inc.php';
-require_once 'include/pmieducar/clsPmieducarCurso.inc.php';
-require_once 'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php';
-require_once 'include/pmieducar/clsPmieducarDispensaDisciplina.inc.php';
 require_once 'AreaConhecimento/Model/AreaDataMapper.php';
 require_once 'FormulaMedia/Model/Formula.php';
 require_once 'FormulaMedia/Model/FormulaDataMapper.php';

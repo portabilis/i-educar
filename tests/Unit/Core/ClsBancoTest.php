@@ -2,7 +2,6 @@
 
 use Tests\TestCase;
 
-require_once 'include/pmieducar/clsPmieducarClienteSuspensao.inc.php';
 
 class ClsBancoTest extends TestCase
 {
@@ -14,7 +13,7 @@ class ClsBancoTest extends TestCase
 
         $this->assertNotEquals(true, is_null($db->doCountFromObj($obj)));
     }
-    
+
     public function testFormatacaoDeValoresBooleanos()
     {
         $data = [

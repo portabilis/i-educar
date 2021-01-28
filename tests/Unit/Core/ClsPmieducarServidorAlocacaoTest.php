@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'include/pmieducar/clsPmieducarServidorAlocacao.inc.php';
 
 /**
  * ClsPmieducarServidorAlocacaoTest class.

@@ -30,7 +30,6 @@
  */
 
 require_once 'FormulaMedia/Model/Formula.php';
-require_once 'include/pmieducar/clsPmieducarInstituicao.inc.php';
 
 /**
  * FormulaTest class.
