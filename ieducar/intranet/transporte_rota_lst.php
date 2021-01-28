@@ -31,8 +31,6 @@ require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once( "include/public/geral.inc.php" );
 
-require_once("include/modules/clsModulesRotaTransporteEscolar.inc.php");
-require_once("include/modules/clsModulesEmpresaTransporteEscolar.inc.php");
 
 class clsIndexBase extends clsBase
 {
