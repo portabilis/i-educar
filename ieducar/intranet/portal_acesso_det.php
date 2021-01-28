@@ -1,8 +1,5 @@
 <?php
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
 require_once( "include/portal/clsPortalAcesso.inc.php" );
 
 class clsIndexBase extends clsBase
@@ -34,7 +31,7 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = "Acesso - Detalhe";
-        
+
 
         $this->cod_acesso=$_GET["cod_acesso"];
 

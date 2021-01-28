@@ -29,8 +29,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 
-//require_once ("include/juris/jurisGeral.inc.php");
-require_once('agenda_calendario.php');
+//require_once('agenda_calendario.php');
 
 class clsIndex extends clsBase
 {

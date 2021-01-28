@@ -26,9 +26,6 @@
  * @since     07/2013
  * @version   $Id$
  */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
 require_once( "include/public/geral.inc.php" );
 
 

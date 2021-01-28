@@ -1,9 +1,8 @@
 <?php
 
-require_once ("include/clsBanco.inc.php");
 require_once( "include/pmieducar/geral.inc.php" );
 
-$sql = "SELECT cod_nota_aluno, ref_cod_matricula, ref_cod_disciplina, nota FROM 
+$sql = "SELECT cod_nota_aluno, ref_cod_matricula, ref_cod_disciplina, nota FROM
 pmieducar.nota_aluno na, pmieducar.matricula m WHERE
 na.ativo=1 and m.cod_matricula=na.ref_cod_matricula
 and m.ativo=1 and m.ano=2007 and m.aprovado in (1,2,3) and
@@ -89,7 +88,7 @@ foreach ($notas_exame as $ref_cod_matricula => $nota)
 //              }
 //              die("aqui");
 //          }
-//          else 
+//          else
 //          {
 //              die("nao exclui");
 //          }
