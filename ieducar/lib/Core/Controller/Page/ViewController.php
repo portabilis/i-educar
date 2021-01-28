@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Session;
 
 require_once 'Core/View/Tabulable.php';
 require_once 'CoreExt/View/Helper/UrlHelper.php';
-require_once 'Portabilis/View/Helper/Application.php';
 
 class Core_Controller_Page_ViewController extends clsDetalhe implements Core_View_Tabulable
 {

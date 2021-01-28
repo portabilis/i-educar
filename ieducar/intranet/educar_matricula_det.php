@@ -3,9 +3,7 @@
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 
-require_once 'Portabilis/String/Utils.php';
 require_once 'App/Model/MatriculaSituacao.php';
-require_once 'Portabilis/View/Helper/Application.php';
 
 class clsIndexBase extends clsBase
 {

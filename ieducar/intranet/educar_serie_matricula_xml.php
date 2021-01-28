@@ -33,7 +33,6 @@ use Illuminate\Support\Facades\Session;
 header('Content-type: text/xml');
 
 
-require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 require_once 'App/Model/MatriculaSituacao.php';

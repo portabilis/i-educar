@@ -29,8 +29,6 @@
  */
 
 
-require_once 'Portabilis/Date/Utils.php';
-require_once 'Portabilis/View/Helper/Application.php';
 
 
 /**

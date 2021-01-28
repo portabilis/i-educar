@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
-require_once 'Portabilis/Utils/Database.php';
-require_once 'Portabilis/Utils/User.php';
-require_once 'Portabilis/String/Utils.php';
 
 class clsBase
 {

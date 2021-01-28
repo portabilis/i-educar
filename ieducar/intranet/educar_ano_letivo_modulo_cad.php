@@ -3,8 +3,6 @@
 use App\Services\iDiarioService;
 use RuntimeException;
 
-require_once 'Portabilis/Date/Utils.php';
-require_once 'Portabilis/View/Helper/Application.php';
 require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 
 class clsIndexBase extends clsBase

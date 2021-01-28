@@ -32,7 +32,6 @@
  * @version   $Id$
  */
 
-require_once 'Portabilis/Controller/Page/ListController.php';
 
 // TODO migrar para novo padrao
 

@@ -1,8 +1,6 @@
 <?php
 
 require_once 'App/Model/IedFinder.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/Utils/CustomLabel.php';
 require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 
 class clsIndexBase extends clsBase

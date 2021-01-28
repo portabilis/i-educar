@@ -13,8 +13,6 @@ use Illuminate\Support\Facades\URL;
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'Educacenso/Model/AlunoDataMapper.php';
 require_once 'Transporte/Model/AlunoDataMapper.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/Utils/CustomLabel.php';
 
 class clsIndexBase extends clsBase
 {

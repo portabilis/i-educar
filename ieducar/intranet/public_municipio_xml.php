@@ -4,7 +4,6 @@ use App\Models\City;
 
 header('Content-type: text/xml');
 
-require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
 
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 

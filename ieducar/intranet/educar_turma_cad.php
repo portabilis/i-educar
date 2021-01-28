@@ -16,9 +16,6 @@ use RuntimeException;
 use Throwable;
 
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Utils/CustomLabel.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
@@ -503,7 +500,6 @@ class indice extends clsCadastro
 
         // modelos boletim
         require_once 'Reports/Tipos/TipoBoletim.php';
-        require_once 'Portabilis/Array/Utils.php';
 
         $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
         $tiposBoletim = Portabilis_Array_Utils::insertIn(null, 'Selecione um modelo', $tiposBoletim);

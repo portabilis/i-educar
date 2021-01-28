@@ -1,7 +1,6 @@
 <?php
 
 require_once 'Educacenso/Model/AlunoDataMapper.php';
-require_once 'Portabilis/Utils/CustomLabel.php';
 
 class clsIndexBase extends clsBase
 {

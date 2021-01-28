@@ -1,5 +1,4 @@
 <?php
-require_once 'Portabilis/Date/Utils.php';
 require_once 'modules/Api/Model/ApiExternaController.php';
 
 class clsIndexBase extends clsBase

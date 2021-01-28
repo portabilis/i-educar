@@ -12,7 +12,6 @@ require_once "include/pmieducar/clsPmieducarInstituicao.inc.php";
 require_once 'image_check.php';
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
-require_once 'Portabilis/String/Utils.php';
 
 class AlunoController extends Portabilis_Controller_Page_EditController
 {

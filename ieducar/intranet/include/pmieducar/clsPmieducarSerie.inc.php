@@ -3,7 +3,6 @@
 use iEducar\Legacy\Model;
 
 require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
-require_once 'Portabilis/Utils/Database.php';
 
 class clsPmieducarSerie extends Model
 {

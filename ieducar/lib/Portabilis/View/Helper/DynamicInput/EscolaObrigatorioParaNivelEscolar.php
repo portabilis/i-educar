@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Session;
 
-require_once 'Portabilis/Business/Professor.php';
 require_once 'App/Model/NivelTipoUsuario.php';
 
 class Portabilis_View_Helper_DynamicInput_EscolaObrigatorioParaNivelEscolar extends Portabilis_View_Helper_DynamicInput_Escola

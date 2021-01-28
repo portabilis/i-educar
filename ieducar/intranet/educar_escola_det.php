@@ -2,7 +2,6 @@
 
 use App\Models\PersonHasPlace;
 
-require_once 'Portabilis/View/Helper/Application.php';
 require_once 'App/Model/ZonaLocalizacao.php';
 
 class clsIndexBase extends clsBase

@@ -3,7 +3,6 @@
 use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Cache;
 
-require_once 'Portabilis/Utils/Database.php';
 
 class clsPmieducarTurma extends Model
 {

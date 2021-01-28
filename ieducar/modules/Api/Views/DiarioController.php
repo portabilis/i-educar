@@ -4,7 +4,6 @@ use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowGeneralAbse
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Support\Exceptions\Error;
 
-require_once 'Portabilis/Controller/ApiCoreController.php';
 require_once 'Avaliacao/Service/Boletim.php';
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'Avaliacao/Model/FaltaComponenteDataMapper.php';
@@ -14,7 +13,6 @@ require_once 'Avaliacao/Model/ParecerDescritivoGeralDataMapper.php';
 require_once 'RegraAvaliacao/Model/TipoPresenca.php';
 require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 require_once 'App/Model/MatriculaSituacao.php';
-require_once 'Portabilis/String/Utils.php';
 
 class DiarioController extends ApiCoreController
 {

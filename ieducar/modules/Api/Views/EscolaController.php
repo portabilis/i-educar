@@ -2,7 +2,6 @@
 
 use App\Models\LegacySchool;
 
-require_once 'Portabilis/Array/Utils.php';
 
 class EscolaController extends ApiCoreController
 {

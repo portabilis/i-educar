@@ -39,8 +39,6 @@ use iEducar\Modules\ValueObjects\SchoolManagerValueObject;
 use iEducar\Support\View\SelectOptions;
 use iEducar\Modules\Educacenso\Validator\School\HasDifferentStepsOfChildEducationValidator;
 
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/Utils/Database.php';
 require_once 'App/Model/ZonaLocalizacao.php';
 
 class clsIndexBase extends clsBase

@@ -3,10 +3,6 @@
 use App\Models\Place;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 
-require_once 'Portabilis/Controller/ApiCoreController.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Date/Utils.php';
 
 class PontoController extends ApiCoreController
 {

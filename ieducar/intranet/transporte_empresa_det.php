@@ -29,7 +29,6 @@
  */
 
 
-require_once 'Portabilis/View/Helper/Application.php';
 
 
 /**

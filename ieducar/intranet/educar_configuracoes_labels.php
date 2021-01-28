@@ -1,6 +1,5 @@
 <?php
 
-require_once 'Portabilis/Utils/CustomLabel.php';
 
 class clsIndexBase extends clsBase
 {

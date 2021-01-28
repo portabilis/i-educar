@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Cache;
 
-require_once 'Portabilis/Utils/CustomLabel.php';
 
 class clsIndexBase extends clsBase
 {

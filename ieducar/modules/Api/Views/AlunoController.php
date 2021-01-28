@@ -15,11 +15,6 @@ use Illuminate\Support\Facades\Session;
 
 require_once 'image_check.php';
 require_once 'App/Model/MatriculaSituacao.php';
-require_once 'Portabilis/Controller/ApiCoreController.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/Date/Utils.php';
 require_once 'Transporte/Model/Responsavel.php';
 
 class AlunoController extends ApiCoreController

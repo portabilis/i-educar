@@ -18,11 +18,6 @@ require_once 'image_check.php';
 
 require_once 'App/Model/ZonaLocalizacao.php';
 
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Utils/Database.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/Utils/Validation.php';
-require_once 'Portabilis/Date/Utils.php';
 
 class clsIndex extends clsBase
 {

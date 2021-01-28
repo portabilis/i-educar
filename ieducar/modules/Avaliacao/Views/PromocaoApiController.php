@@ -11,7 +11,6 @@ require_once 'RegraAvaliacao/Model/TipoPresenca.php';
 require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
-require_once 'Portabilis/String/Utils.php';
 
 class PromocaoApiController extends ApiCoreController
 {

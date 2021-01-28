@@ -1,6 +1,5 @@
 <?php
 
-require_once 'Portabilis/Business/Professor.php';
 
 class TurmaController extends ApiCoreController
 {

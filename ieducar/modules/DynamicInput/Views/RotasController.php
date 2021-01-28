@@ -32,7 +32,6 @@
  * @version   $Id$
  */
 
-require_once 'Portabilis/Business/Professor.php';
 
 /**
  * CursoController class.
