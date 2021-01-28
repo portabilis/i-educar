@@ -40,7 +40,6 @@ use iEducar\Modules\Educacenso\Formatters;
 use iEducar\Modules\Educacenso\ValueTurmaMaisEducacao;
 use Illuminate\Support\Facades\Session;
 
-require_once __DIR__ . '/../../../lib/App/Model/Servidor.php';
 
 /**
  * Class EducacensoExportController
