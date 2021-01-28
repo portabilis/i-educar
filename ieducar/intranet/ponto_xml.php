@@ -29,7 +29,6 @@
  * @version   $Id$
  */
 
-require_once 'include/modules/clsModulesItinerarioTransporteEscolar.inc.php';
 
 // Id do país na tabela public.pais
 $id = isset($_GET['rota']) ? $_GET['rota'] : NULL;

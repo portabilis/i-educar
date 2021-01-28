@@ -28,15 +28,6 @@
  * @version   $Id$
  */
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
-require_once 'include/modules/clsModulesItinerarioTransporteEscolar.inc.php';
-require_once 'include/modules/clsModulesPontoTransporteEscolar.inc.php';
-require_once 'include/modules/clsModulesVeiculo.inc.php';
-require_once 'include/modules/clsModulesMotorista.inc.php';
 
 require_once 'Portabilis/Date/Utils.php';
 require_once 'Portabilis/View/Helper/Application.php';

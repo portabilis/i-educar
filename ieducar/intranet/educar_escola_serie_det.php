@@ -2,10 +2,6 @@
 
 use App\Services\SchoolGradeDisciplineService;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
 require_once 'App/Model/IedFinder.php';
 
 class clsIndexBase extends clsBase

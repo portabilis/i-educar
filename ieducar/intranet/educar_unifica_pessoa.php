@@ -5,10 +5,6 @@ use App\Models\LogUnification;
 use iEducar\Modules\Unification\PersonLogUnification;
 use Illuminate\Support\Facades\DB;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/public/geral.inc.php';
 
 require_once 'lib/App/Unificacao/Pessoa.php';
 require_once 'lib/CoreExt/Exception.php';

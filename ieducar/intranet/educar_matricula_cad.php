@@ -10,10 +10,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use App\Events\RegistrationEvent;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Utils/Database.php';
@@ -441,8 +437,7 @@ class indice extends clsCadastro
         }
 
         if (is_array($anoLetivoEmAndamentoEscola)) {
-            require_once 'include/pmieducar/clsPmieducarSerie.inc.php';
-            $db = new clsBanco();
+                        $db = new clsBanco();
 
             $db->Consulta("SELECT ref_ref_cod_serie, ref_cod_curso
                              FROM pmieducar.matricula
@@ -490,8 +485,6 @@ class indice extends clsCadastro
                     $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
 
                     if (($mesmoCursoAno || config('legacy.app.matricula.multiplas_matriculas') == 0) && !$cursoDeAtividadeComplementar) {
-                        require_once 'include/pmieducar/clsPmieducarEscola.inc.php';
-                        require_once 'include/pessoa/clsJuridica.inc.php';
 
                         $serie = new clsPmieducarSerie($m['ref_ref_cod_serie'], null, null, $m['ref_cod_curso']);
                         $serie = $serie->detalhe();

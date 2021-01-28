@@ -1,9 +1,5 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -274,7 +270,7 @@ class indice extends clsDetalhe
 
         $script = sprintf('
             <script type="text/javascript">
-            
+
                 function enturmar(ref_cod_matricula, ref_cod_turma_destino, tipo){
                   var data = $j("#data_enturmacao").val();
                   var array_data = data.split("/");
@@ -283,9 +279,9 @@ class indice extends clsDetalhe
                     alert("Informe a data corretamente");
                     return false;
                   }
-                
+
                   document.formcadastro.ref_cod_turma_origem.value = "";
-                
+
                   if(tipo == "transferir") {
                     var turmaOrigemId = document.getElementById("ref_cod_turma_origem");
                     if (turmaOrigemId && turmaOrigemId.value)
@@ -295,15 +291,15 @@ class indice extends clsDetalhe
                       return false;
                     }
                   }
-                
+
                   %s
-                
+
                   document.formcadastro.ref_cod_matricula.value = ref_cod_matricula;
                   document.formcadastro.ref_cod_turma_destino.value = ref_cod_turma_destino;
                   document.formcadastro.data_enturmacao.value = document.getElementById("data_enturmacao").value;
                   document.formcadastro.submit();
                 }
-                
+
                 function IsDate(day, month, year) {
                   var date = new Date();
                   var blnRet = false;
@@ -319,18 +315,18 @@ class indice extends clsDetalhe
                   }
                   return blnRet;
                 }
-                
+
                 function removerEnturmacao(ref_cod_matricula, ref_cod_turma_destino, data_enturmacao) {
-                
+
                   if (! confirm("Confirma remoção da enturmação?"))
                     return false;
-                
+
                   document.formcadastro.ref_cod_turma_origem.value = "remover-enturmacao-destino";
                   document.formcadastro.ref_cod_matricula.value = ref_cod_matricula;
                   document.formcadastro.ref_cod_turma_destino.value = ref_cod_turma_destino;
                   document.formcadastro.submit();
                 }
-            
+
             </script>', $jsEnturmacao
         );
 

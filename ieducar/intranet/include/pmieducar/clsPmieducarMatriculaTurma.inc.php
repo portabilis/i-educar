@@ -3,9 +3,7 @@
 use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Session;
 
-require_once 'include/pmieducar/geral.inc.php';
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
-require_once 'include/services/matricula/SequencialEnturmacao.php';
 require_once 'lib/App/Model/Educacenso.php';
 
 class clsPmieducarMatriculaTurma extends Model
