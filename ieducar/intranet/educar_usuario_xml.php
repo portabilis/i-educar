@@ -2,8 +2,6 @@
 
     header( 'Content-type: text/xml charset=utf-8' );
 
-    require_once( "include/clsBanco.inc.php" );
-    require_once( "include/funcoes.inc.php" );
 
     Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 

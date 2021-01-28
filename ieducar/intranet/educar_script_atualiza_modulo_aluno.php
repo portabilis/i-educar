@@ -1,5 +1,4 @@
 <?php
-require_once( "include/pmieducar/geral.inc.php" );
 
 /**
  * busca escolas

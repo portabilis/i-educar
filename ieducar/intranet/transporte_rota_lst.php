@@ -26,7 +26,6 @@
  * @since     07/2013
  * @version   $Id$
  */
-require_once( "include/public/geral.inc.php" );
 
 
 class clsIndexBase extends clsBase

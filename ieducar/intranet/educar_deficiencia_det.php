@@ -4,8 +4,6 @@
  * @author Adriano Erik Weiguert Nagasava
  */
 
-require_once( "include/Geral.inc.php" );
-require_once( "include/pmieducar/geral.inc.php" );
 
 class clsIndexBase extends clsBase
 {

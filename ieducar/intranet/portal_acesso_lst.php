@@ -1,6 +1,5 @@
 <?php
 
-require_once( "include/portal/clsPortalAcesso.inc.php" );
 
 class clsIndexBase extends clsBase
 {

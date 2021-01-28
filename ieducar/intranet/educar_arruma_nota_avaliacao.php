@@ -1,6 +1,5 @@
 <?php
 
-require_once( "include/pmieducar/geral.inc.php" );
 
 $sql = "SELECT cod_nota_aluno, ref_cod_matricula, ref_cod_disciplina, nota FROM
 pmieducar.nota_aluno na, pmieducar.matricula m WHERE

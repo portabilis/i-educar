@@ -5,7 +5,6 @@ use App\Models\City;
 use App\Models\State;
 use Illuminate\Support\Facades\Session;
 
-require_once( "include/Geral.inc.php" );
 
 class clsIndexBase extends clsBase
 {

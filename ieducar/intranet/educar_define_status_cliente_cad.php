@@ -30,7 +30,6 @@ ini_set("display_errors", 1);
 /**
  * @author Adriano Erik Weiguert Nagasava
  */
-require_once( "include/pmieducar/geral.inc.php" );
 
 class clsIndexBase extends clsBase
 {

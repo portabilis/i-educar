@@ -2,7 +2,6 @@
 
 use App\Models\State;
 
-require_once( "include/pmieducar/geral.inc.php" );
 
 class clsIndexBase extends clsBase
 {
