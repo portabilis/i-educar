@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Session;
 
 $desvio_diretorio = "";
 
-require_once ( "include/Geral.inc.php" );
 
 class clsIndex extends clsBase
 {
