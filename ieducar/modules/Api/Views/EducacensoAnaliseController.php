@@ -46,13 +46,7 @@ use Illuminate\Support\Facades\DB;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'intranet/include/clsBanco.inc.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'lib/App/Model/IedFinder.php';
-require_once 'lib/App/Model/Educacenso.php';
-require_once 'lib/App/Model/Educacenso/TipoMediacaoDidaticoPedagogico.php';
-require_once 'lib/App/Model/Educacenso/LocalFuncionamentoDiferenciado.php';
 
 /**
  * @deprecated Essa versão da API pública será descontinuada

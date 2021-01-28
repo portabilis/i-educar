@@ -28,7 +28,6 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/Date/Utils.php';
 
 /**
  * clsIndexBase class.

@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\DB;
 use RuntimeException;
 use Throwable;
 
-require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 require_once 'Portabilis/View/Helper/Application.php';
 require_once 'Portabilis/String/Utils.php';
@@ -23,8 +22,6 @@ require_once 'Portabilis/Utils/CustomLabel.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
-require_once 'lib/App/Model/Educacenso/LocalFuncionamentoDiferenciado.php';
-require_once 'lib/App/Model/Educacenso/TipoMediacaoDidaticoPedagogico.php';
 
 class clsIndexBase extends clsBase
 {

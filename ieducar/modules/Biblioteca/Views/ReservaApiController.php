@@ -32,7 +32,6 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 
 // TODO migrar novo padrao api controller
 

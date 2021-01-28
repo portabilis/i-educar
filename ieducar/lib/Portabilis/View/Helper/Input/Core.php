@@ -1,11 +1,6 @@
 <?php
 
 require_once 'App/Model/IedFinder.php';
-require_once 'lib/Portabilis/View/Helper/Application.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'lib/Portabilis/Object/Utils.php';
-require_once 'lib/Portabilis/DataMapper/Utils.php';
 
 class Portabilis_View_Helper_Input_Core
 {

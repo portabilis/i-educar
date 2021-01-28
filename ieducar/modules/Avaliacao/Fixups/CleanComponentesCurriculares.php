@@ -28,7 +28,6 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/Utils/Database.php';
 
 /**
  * CleanComponentesCurriculares class.

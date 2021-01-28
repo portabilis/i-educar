@@ -1,6 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 
 class ConsultaBaseController extends ApiCoreController
 {

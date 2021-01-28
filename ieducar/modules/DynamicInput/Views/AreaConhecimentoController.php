@@ -3,7 +3,6 @@
 // error_reporting(E_ALL);
 // ini_set("display_errors", 1);
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'App/Model/IedFinder.php';
 
 /**
@@ -20,10 +19,10 @@ require_once 'App/Model/IedFinder.php';
 class AreaConhecimentoController extends ApiCoreController{
 
   protected function getAreasConhecimento() {
-     
+
      $instituicaoId = $this->getRequest()->instituicao_id;
      $sql    = 'SELECT ac.id AS id,
-                       ac.nome AS nome 
+                       ac.nome AS nome
                   FROM modules.area_conhecimento ac
                  WHERE instituicao_id = $1
               ORDER BY (lower(nome)) ASC';
@@ -48,7 +47,7 @@ class AreaConhecimentoController extends ApiCoreController{
   public function Gerar() {
     if ($this->isRequestFor('get', 'area_conhecimento'))
       $this->appendResponse($this->getAreasConhecimento());
-    elseif($this->isRequestFor('get','area_conhecimento-search')) 
+    elseif($this->isRequestFor('get','area_conhecimento-search'))
       $this->appendResponse($this->search());
     else
       $this->notImplementedOperationError();

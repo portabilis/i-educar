@@ -1,6 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Array/Utils.php';
 
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;

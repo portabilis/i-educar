@@ -1,6 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/String/Utils.php';
 
 use iEducar\Support\View\SelectOptions;
 

@@ -7,7 +7,6 @@ require_once "include/pmieducar/geral.inc.php";
 require_once "lib/Portabilis/Date/Utils.php";
 require_once 'modules/Avaliacao/Model/NotaAlunoDataMapper.php';
 require_once 'modules/Avaliacao/Model/NotaComponenteMediaDataMapper.php';
-require_once 'lib/App/Model/MatriculaSituacao.php';
 
 class clsIndexBase extends clsBase
 {

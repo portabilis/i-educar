@@ -15,7 +15,6 @@ require_once 'Educacenso/Model/AlunoDataMapper.php';
 require_once 'Transporte/Model/AlunoDataMapper.php';
 require_once 'Portabilis/View/Helper/Application.php';
 require_once 'Portabilis/Utils/CustomLabel.php';
-require_once 'lib/Portabilis/Date/Utils.php';
 
 class clsIndexBase extends clsBase
 {

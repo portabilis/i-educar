@@ -3,10 +3,7 @@
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'lib/Portabilis/Utils/CustomLabel.php';
 require_once 'Portabilis/String/Utils.php';
-require_once 'lib/App/Model/Educacenso.php';
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'Portabilis/View/Helper/Application.php';
 

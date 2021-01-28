@@ -11,8 +11,6 @@ require_once "include/clsBanco.inc.php";
 require_once "include/pmieducar/clsPmieducarInstituicao.inc.php";
 require_once 'image_check.php';
 require_once 'App/Model/ZonaLocalizacao.php';
-require_once 'lib/Portabilis/Controller/Page/EditController.php';
-require_once 'lib/Portabilis/Utils/CustomLabel.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
 require_once 'Portabilis/String/Utils.php';
 

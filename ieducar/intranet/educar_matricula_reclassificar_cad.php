@@ -2,10 +2,8 @@
 // error_reporting(E_ERROR);
 // ini_set("display_errors", 1);
 
-require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'modules/Avaliacao/Model/NotaAlunoDataMapper.php';
 require_once 'modules/Avaliacao/Model/NotaComponenteMediaDataMapper.php';
-require_once 'lib/App/Model/MatriculaSituacao.php';
 
 use App\Process;
 

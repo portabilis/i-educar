@@ -3,8 +3,6 @@
 use App\Models\Country;
 use App\Models\State;
 
-require_once 'lib/Portabilis/View/Helper/Application.php';
-require_once 'lib/Portabilis/Utils/CustomLabel.php';
 require_once 'App/Model/NivelTipoUsuario.php';
 
 class clsIndexBase extends clsBase

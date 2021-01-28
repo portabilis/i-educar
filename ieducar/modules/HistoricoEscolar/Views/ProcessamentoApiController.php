@@ -10,9 +10,7 @@ require_once 'RegraAvaliacao/Model/TipoPresenca.php';
 require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 
 
-require_once 'lib/Portabilis/String/Utils.php';
 require_once 'Portabilis/Utils/Database.php';
-require_once 'lib/Utils/SafeJson.php';
 
 // TODO migrar classe novo padrao api controller
 class ProcessamentoApiController extends Core_Controller_Page_EditController

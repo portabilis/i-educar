@@ -2,7 +2,6 @@
 
 use App\Services\SchoolGradeDisciplineService;
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'Portabilis/Business/Professor.php';
 
 class ComponenteCurricularController extends ApiCoreController
@@ -80,7 +79,7 @@ class ComponenteCurricularController extends ApiCoreController
                             CASE
                                 WHEN cct.etapas_especificas = 1
                                     THEN $3 = ANY (string_to_array(cct.etapas_utilizadas,',')::int[])
-                                ELSE true 
+                                ELSE true
                             END
                         )
                     ORDER BY

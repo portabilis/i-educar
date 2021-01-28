@@ -1,5 +1,4 @@
 <?php
-require_once 'lib/Portabilis/String/Utils.php';
 
 use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Support\View\SelectOptions;

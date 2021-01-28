@@ -2,9 +2,6 @@
 
 ini_set('max_execution_time', 0);
 
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'lib/Portabilis/DataMapper/Utils.php';
 
 class clsIndexBase extends clsBase
 {

@@ -3,9 +3,7 @@
 use iEducar\Modules\ErrorTracking\TrackerFactory;
 
 require_once 'Core/Controller/Page/EditController.php';
-require_once 'lib/Portabilis/View/Helper/Inputs.php';
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
-require_once 'lib/Portabilis/String/Utils.php';
 
 class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_EditController
 {

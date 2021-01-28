@@ -30,7 +30,6 @@
 
 use iEducar\Support\View\SelectOptions;
 
-require_once 'lib/Portabilis/String/Utils.php';
 
 require_once 'CoreExt/View/Helper/UrlHelper.php';
 

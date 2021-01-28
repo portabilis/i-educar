@@ -1,6 +1,5 @@
 <?php
 
-require_once 'lib/CoreExt/Exception.php';
 require_once 'App/Unificacao/Base.php';
 require_once 'App/Unificacao/Servidor.php';
 require_once 'App/Unificacao/Aluno.php';

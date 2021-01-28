@@ -6,8 +6,6 @@ use iEducar\Modules\Unification\PersonLogUnification;
 use Illuminate\Support\Facades\DB;
 
 
-require_once 'lib/App/Unificacao/Pessoa.php';
-require_once 'lib/CoreExt/Exception.php';
 
 class clsIndexBase extends clsBase
 {

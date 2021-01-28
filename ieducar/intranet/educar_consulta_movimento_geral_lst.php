@@ -2,7 +2,6 @@
 
 use iEducar\Modules\Reports\QueryFactory\MovimentoGeralQueryFactory;
 
-require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'Portabilis/View/Helper/Application.php';
 
 class clsIndex extends clsBase

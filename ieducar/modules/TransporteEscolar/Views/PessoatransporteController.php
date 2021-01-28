@@ -2,7 +2,6 @@
 
 use iEducar\Support\View\SelectOptions;
 
-require_once 'lib/Portabilis/Controller/Page/EditController.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
 
 class PessoatransporteController extends Portabilis_Controller_Page_EditController

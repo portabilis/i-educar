@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Session;
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 require_once 'Portabilis/Business/Professor.php';
 require_once 'App/Model/NivelTipoUsuario.php';
 

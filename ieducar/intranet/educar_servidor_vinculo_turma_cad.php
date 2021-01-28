@@ -11,7 +11,6 @@ use iEducar\Support\View\SelectOptions;
 
 require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Utils/Database.php';
-require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 class clsIndexBase extends clsBase

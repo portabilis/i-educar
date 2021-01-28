@@ -3,7 +3,6 @@
 use App\Models\LegacyRegistration;
 use App\Services\SchoolClass\AvailableTimeService;
 
-require_once 'lib/Portabilis/Date/Utils.php';
 
 class clsIndexBase extends clsBase
 {

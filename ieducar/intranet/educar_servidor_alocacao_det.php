@@ -1,6 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Date/Utils.php';
 
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'Educacenso/Model/DocenteDataMapper.php';

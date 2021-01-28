@@ -27,7 +27,6 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/View/Helper/Application.php';
 
 
 class clsIndexBase extends clsBase

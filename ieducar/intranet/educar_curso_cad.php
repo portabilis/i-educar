@@ -1,6 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'Portabilis/View/Helper/Application.php';
 
 class clsIndexBase extends clsBase
