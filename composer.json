@@ -61,7 +61,8 @@
             "database/seeds",
             "database/factories",
             "ieducar/intranet/include",
-            "ieducar/lib"
+            "ieducar/lib",
+            "ieducar/modules/*/Model"
         ],
         "files": [
             "ieducar/intranet/include/funcoes.inc.php"
