@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Avaliacao/Service/Boletim.php';
 
 /**
  * ParecerController class.

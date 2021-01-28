@@ -4,9 +4,7 @@ use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClassStage;
 use App\Models\LegacySchoolStage;
 
-require_once 'Avaliacao/Service/Boletim.php';
 
-require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 
 class PromocaoApiController extends ApiCoreController
 {

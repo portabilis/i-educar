@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
-require_once 'Avaliacao/Service/Boletim.php';
 
 
 

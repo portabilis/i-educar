@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\DB;
 use RuntimeException;
 use Throwable;
 
-require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 
 class clsIndexBase extends clsBase
 {

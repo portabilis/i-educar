@@ -8,7 +8,6 @@ use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
 
-require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 
 class clsIndexBase extends clsBase
 {

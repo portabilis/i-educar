@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\DB;
 
-require_once 'Avaliacao/Service/Boletim.php';
 
 
 

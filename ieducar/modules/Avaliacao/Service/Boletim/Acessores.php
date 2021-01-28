@@ -1,11 +1,5 @@
 <?php
 
-require_once 'Avaliacao/Service/Boletim/Avaliacao.php';
-require_once 'Avaliacao/Service/Boletim/FaltaAluno.php';
-require_once 'Avaliacao/Service/Boletim/NotaAluno.php';
-require_once 'Avaliacao/Service/Boletim/ParecerDescritivoAluno.php';
-require_once 'Avaliacao/Service/Boletim/RegraAvaliacao.php';
-require_once 'Avaliacao/Service/Boletim/Validators.php';
 
 trait Avaliacao_Service_Boletim_Acessores
 {

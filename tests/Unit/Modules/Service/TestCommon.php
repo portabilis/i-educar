@@ -1,6 +1,5 @@
 <?php
 
-require_once 'Avaliacao/Service/Boletim.php';
 
 /**
  * Avaliacao_Service_TestCommon abstract class.

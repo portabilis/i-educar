@@ -14,7 +14,6 @@ use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByCoordinatorException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByTeacherException;
 
-require_once 'Avaliacao/Service/Boletim/Acessores.php';
 
 class Avaliacao_Service_Boletim implements CoreExt_Configurable
 {

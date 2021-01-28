@@ -4,7 +4,6 @@ use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotAllowGeneralAbse
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Support\Exceptions\Error;
 
-require_once 'Avaliacao/Service/Boletim.php';
 
 class DiarioController extends ApiCoreController
 {

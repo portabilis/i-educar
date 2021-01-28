@@ -3,7 +3,6 @@
 use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Session;
 
-require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 
 class clsPmieducarMatriculaTurma extends Model
 {
