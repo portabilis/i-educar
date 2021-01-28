@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Session;
 
-require_once 'clsCalendario.inc.php';
 
 class clsIndexBase extends clsBase
 {
