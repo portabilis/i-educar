@@ -5,7 +5,6 @@ use App\Models\State;
 
 require_once __DIR__ . '/../lib/Portabilis/Date/Utils.php';
 require_once __DIR__ . '/../lib/Portabilis/Currency/Utils.php';
-require_once __DIR__ . '/../modules/Educacenso/Model/OrgaoRegionalDataMapper.php';
 
 class clsIndexBase extends clsBase
 {
