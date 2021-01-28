@@ -2,7 +2,6 @@
 
 use App\Models\State;
 
-require_once 'Core/Controller/Page/EditController.php';
 
 class EditController extends Core_Controller_Page_EditController
 {

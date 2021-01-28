@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Session;
 
-require_once 'Core/View/Tabulable.php';
 
 class Core_Controller_Page_ViewController extends clsDetalhe implements Core_View_Tabulable
 {

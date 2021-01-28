@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Core/Controller/Page/EditController.php';
 require_once 'Avaliacao/Service/Boletim.php';
 
 /**

@@ -1,6 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/ListController.php';
 
 class Portabilis_Controller_Page_ListController extends Core_Controller_Page_ListController
 {

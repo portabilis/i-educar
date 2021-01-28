@@ -1,6 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/EditController.php';
 
 class AnoController extends Core_Controller_Page_EditController
 {

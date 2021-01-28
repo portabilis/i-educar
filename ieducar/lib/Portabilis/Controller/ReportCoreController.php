@@ -2,7 +2,6 @@
 
 use iEducar\Modules\ErrorTracking\TrackerFactory;
 
-require_once 'Core/Controller/Page/EditController.php';
 
 class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_EditController
 {

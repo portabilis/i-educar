@@ -1,6 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/EditController.php';
 require_once 'FormulaMedia/Validate/Formula.php';
 
 use App\Models\LegacyExamRule;

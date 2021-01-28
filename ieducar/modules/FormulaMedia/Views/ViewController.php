@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Core/Controller/Page/ViewController.php';
 
 /**
  * ViewController class.

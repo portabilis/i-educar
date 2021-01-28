@@ -1,6 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/Abstract.php';
 
 class clsCampos extends Core_Controller_Page_Abstract
 {

@@ -4,8 +4,6 @@ use App\User;
 use iEducar\Modules\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\Auth;
 
-require_once 'Core/Controller/Page/Interface.php';
-require_once 'Core/Controller/Page/Exception.php';
 
 abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract implements Core_Controller_Page_Interface
 {
@@ -491,8 +489,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      */
     public function generate(CoreExt_Controller_Page_Interface $instance)
     {
-        require_once 'Core/View.php';
-        Core_View::generate($instance);
+                Core_View::generate($instance);
     }
 
     public function getQueryString($name, $default = null)

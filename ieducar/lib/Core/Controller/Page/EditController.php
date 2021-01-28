@@ -1,6 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/Validatable.php';
 
 abstract class Core_Controller_Page_EditController extends clsCadastro implements Core_Controller_Page_Validatable
 {
