@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/../_stub/Validate.php';
 
 /**
  * CoreExt_ValidateTest class.

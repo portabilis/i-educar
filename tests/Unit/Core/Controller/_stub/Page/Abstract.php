@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/../../../../CoreExt/_stub/EntityDataMapper.php';
 
 /**
  * Core_Controller_Page_AbstractStub class.
