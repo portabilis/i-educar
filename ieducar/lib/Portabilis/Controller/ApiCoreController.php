@@ -2,7 +2,6 @@
 
 use iEducar\Support\Exceptions\Exception as iEducarException;
 
-require_once 'include/clsBanco.inc.php';
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'CoreExt/Exception.php';
 require_once 'lib/Portabilis/Messenger.php';

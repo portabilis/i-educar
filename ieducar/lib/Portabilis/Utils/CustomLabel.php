@@ -1,6 +1,5 @@
 <?php
 
-require_once 'include/pmieducar/clsPmieducarConfiguracoesGerais.inc.php';
 
 class CustomLabel
 {
