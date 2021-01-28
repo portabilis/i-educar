@@ -9,10 +9,6 @@ require_once 'App/Model/MatriculaSituacao.php';
 require_once 'RegraAvaliacao/Model/TipoPresenca.php';
 require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 
-require_once 'include/pmieducar/clsPmieducarTurma.inc.php';
-require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
-require_once 'include/pmieducar/clsPmieducarHistoricoEscolar.inc.php';
-require_once 'include/pmieducar/clsPmieducarHistoricoDisciplinas.inc.php';
 
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'Portabilis/Utils/Database.php';

@@ -13,7 +13,6 @@ require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
-require_once 'include/modules/clsModulesNotaExame.inc.php';
 require_once 'Portabilis/String/Utils.php';
 
 class PromocaoApiController extends ApiCoreController

@@ -1,6 +1,5 @@
 <?php
 
-require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
 
@@ -74,9 +73,9 @@ class ItinerarioController extends Portabilis_Controller_Page_EditController
       <tr>
         <th>Ponto</th>
         <th>Hora</th>
-        <th>Tipo</th> 
+        <th>Tipo</th>
         <th>Veiculo</th>
-        
+
         <th>A&ccedil;&atilde;o</th>
       </tr>
       <tr class=\'ponto\'>
@@ -88,11 +87,11 @@ class ItinerarioController extends Portabilis_Controller_Page_EditController
             <option value=\'I\'>Ida</option>
             <option value=\'V\'>Volta</option>
           </select>
-        </td>              
+        </td>
         <td>
           <input class=\'nome obrigatorio disable-on-search change-state-with-parent\'></input>
         </td>
-  
+
         <td>
           <a class=\'remove-disciplina-line\' href=\'#\'>Remover</a>
         </td>
@@ -106,15 +105,15 @@ class ItinerarioController extends Portabilis_Controller_Page_EditController
             <option value=\'I\'>Ida</option>
             <option value=\'V\'>Volta</option>
           </select>
-        </td>              
+        </td>
         <td>
           <input class=\'nome obrigatorio disable-on-search change-state-with-parent\'></input>
         </td>
-  
+
         <td>
           <a class=\'remove-disciplina-line\' href=\'#\'>Remover</a>
         </td>
-      </tr>      
+      </tr>
       <tr class=\'actions\'>
         <td colspan=\'4\'>
           <input type=\'button\' class=\'action\' id=\'new-disciplina-line\' name=\'new-line\' value=\'Adicionar ponto\'></input>

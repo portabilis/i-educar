@@ -1,7 +1,5 @@
 <?php
 
-require_once 'include/modules/clsModulesItinerarioTransporteEscolar.inc.php';
-require_once 'include/modules/clsModulesVeiculo.inc.php';
 require_once 'Portabilis/Controller/ApiCoreController.php';
 require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/String/Utils.php';

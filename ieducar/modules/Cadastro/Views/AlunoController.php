@@ -7,16 +7,13 @@ use iEducar\Modules\Educacenso\Model\RecursosRealizacaoProvas;
 use iEducar\Modules\Educacenso\Model\VeiculoTransporteEscolar;
 use iEducar\Support\View\SelectOptions;
 
-require_once 'include/clsCadastro.inc.php';
 require_once "include/clsBanco.inc.php";
 require_once "include/pmieducar/clsPmieducarInstituicao.inc.php";
-require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 require_once 'image_check.php';
 require_once 'App/Model/ZonaLocalizacao.php';
 require_once 'lib/Portabilis/Controller/Page/EditController.php';
 require_once 'lib/Portabilis/Utils/CustomLabel.php';
 require_once 'Usuario/Model/FuncionarioDataMapper.php';
-require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
 require_once 'Portabilis/String/Utils.php';
 
 class AlunoController extends Portabilis_Controller_Page_EditController

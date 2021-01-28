@@ -1,7 +1,6 @@
 <?php
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'include/pmieducar/clsPmieducarEscolaCurso.inc.php';
 
 class EscolaCursoController extends ApiCoreController
 {

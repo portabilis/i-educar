@@ -5,7 +5,6 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'Reports/Tipos/TipoBoletim.php';
 require_once 'App/Model/IedFinder.php';
-require_once 'include/funcoes.inc.php';
 
 class TurmaController extends ApiCoreController
 {

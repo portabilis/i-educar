@@ -19,7 +19,6 @@ require_once 'CoreExt/Entity.php';
 require_once 'App/Model/IedFinder.php';
 require_once 'App/Model/Matricula.php';
 require_once 'App/Model/MatriculaSituacao.php';
-require_once 'include/pmieducar/clsPermissoes.inc.php';
 require_once 'ComponenteCurricular/Model/TipoNotaComponenteSerie.php';
 require_once 'Avaliacao/Service/Boletim/Acessores.php';
 

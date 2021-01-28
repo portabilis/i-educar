@@ -13,7 +13,6 @@ require_once 'Avaliacao/Model/ParecerDescritivoComponenteDataMapper.php';
 require_once 'Avaliacao/Model/ParecerDescritivoGeralDataMapper.php';
 require_once 'RegraAvaliacao/Model/TipoPresenca.php';
 require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
-require_once 'include/modules/clsModulesNotaExame.inc.php';
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'Portabilis/String/Utils.php';
 

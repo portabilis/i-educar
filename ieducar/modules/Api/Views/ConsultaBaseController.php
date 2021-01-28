@@ -1,6 +1,5 @@
 <?php
 
-require_once 'include/clsBanco.inc.php';
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 
 class ConsultaBaseController extends ApiCoreController

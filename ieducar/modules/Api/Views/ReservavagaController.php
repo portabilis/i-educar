@@ -4,7 +4,6 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'include/funcoes.inc.php';
 
 class ReservavagaController extends ApiCoreController
 {

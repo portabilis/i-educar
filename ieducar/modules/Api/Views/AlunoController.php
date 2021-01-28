@@ -13,21 +13,13 @@ use iEducar\Modules\People\CertificateType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 require_once 'image_check.php';
-require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
-require_once 'include/pmieducar/clsPmieducarProjeto.inc.php';
-require_once 'include/pmieducar/clsPmieducarAlunoHistoricoAlturaPeso.inc.php';
-require_once 'include/modules/clsModulesFichaMedicaAluno.inc.php';
-require_once 'include/modules/clsModulesMoradiaAluno.inc.php';
-require_once 'include/pmieducar/clsPermissoes.inc.php';
 require_once 'App/Model/MatriculaSituacao.php';
 require_once 'Portabilis/Controller/ApiCoreController.php';
 require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/Date/Utils.php';
-require_once 'include/modules/clsModulesPessoaTransporte.inc.php';
 require_once 'Transporte/Model/Responsavel.php';
 
 class AlunoController extends ApiCoreController

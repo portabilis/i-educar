@@ -41,8 +41,6 @@ use iEducar\Modules\Educacenso\ValueTurmaMaisEducacao;
 use Illuminate\Support\Facades\Session;
 
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
