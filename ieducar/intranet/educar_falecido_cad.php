@@ -1,7 +1,5 @@
 <?php
 
-require_once 'modules/Avaliacao/Model/NotaAlunoDataMapper.php';
-require_once 'modules/Avaliacao/Model/NotaComponenteMediaDataMapper.php';
 
 class clsIndexBase extends clsBase
 {
