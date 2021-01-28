@@ -258,6 +258,14 @@ class indice extends clsCadastro
         }
         clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada);
 
+        if($this->escola_em_outro_municipio === 'on'){
+            $this->ref_cod_escola = null;
+        } else {
+            $this->escola_destino_externa = null;
+            $this->estado_escola_destino_externa = null;
+            $this->municipio_escola_destino_externa = null;
+        }
+
         $obj = new clsPmieducarTransferenciaSolicitacao(null, $this->ref_cod_transferencia_tipo, null, $this->pessoa_logada, null, $this->ref_cod_matricula, $this->observacao, null, null, $this->ativo, $this->data_transferencia, $this->escola_destino_externa, $this->ref_cod_escola, $this->estado_escola_destino_externa, $this->municipio_escola_destino_externa);
         if ($obj->existSolicitacaoTransferenciaAtiva()) {
             $this->mensagem = 'Já existe uma solitação de transferência ativa.<br>';

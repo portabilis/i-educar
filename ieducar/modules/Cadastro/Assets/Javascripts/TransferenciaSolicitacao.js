@@ -46,9 +46,6 @@ $j(document).ready(function () {
             $campoCodInstituicao.makeRequired();
             $campoCodEscola.closest("tr").show();
             $campoCodEscola.makeRequired();
-            $campoEscolaDestinoExterna.val("");
-            $campoEstadoEscolaDestinoExterna.val("");
-            $campoMunicipioEscolaDestinoExterna.val("");
         }
     }
 
