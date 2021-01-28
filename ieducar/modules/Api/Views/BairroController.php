@@ -2,7 +2,6 @@
 
 use App\Models\Place;
 
-require_once 'intranet/include/clsBanco.inc.php';
 
 class BairroController extends ApiCoreController
 {

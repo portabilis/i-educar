@@ -1,6 +1,5 @@
 <?php
 
-require_once 'intranet/include/pmieducar/clsPmieducarAcervoAcervoAutor.inc.php';
 
 class AutorController extends ApiCoreController
 {

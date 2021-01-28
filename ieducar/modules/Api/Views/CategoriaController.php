@@ -1,6 +1,5 @@
 <?php
 
-require_once 'intranet/include/pmieducar/clsPmieducarCategoriaAcervo.inc.php';
 
 class CategoriaController extends ApiCoreController
 {

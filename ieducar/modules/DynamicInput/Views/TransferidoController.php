@@ -32,7 +32,6 @@
  * @version   $Id$
  */
 
-require_once 'intranet/include/pmieducar/clsPmieducarMatricula.inc.php';
 
 /**
  * MatriculaTransferidoController class.

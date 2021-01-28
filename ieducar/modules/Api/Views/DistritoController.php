@@ -1,6 +1,5 @@
 <?php
 
-require_once 'intranet/include/clsBanco.inc.php';
 
 class DistritoController extends ApiCoreController
 {

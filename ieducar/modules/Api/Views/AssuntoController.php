@@ -1,6 +1,5 @@
 <?php
 
-require_once 'intranet/include/pmieducar/clsPmieducarAcervoAssunto.inc.php';
 
 class AssuntoController extends ApiCoreController
 {

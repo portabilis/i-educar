@@ -32,8 +32,7 @@
  * @version   $Id$
  */
 
-#require_once 'intranet/include/pmieducar/clsPmieducarEtapa.inc.php';
-
+#
 /**
  * EtapaController class.
  *

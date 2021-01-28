@@ -46,7 +46,6 @@ use Illuminate\Support\Facades\DB;
 use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
 
-require_once 'intranet/include/clsBanco.inc.php';
 
 /**
  * @deprecated Essa versão da API pública será descontinuada

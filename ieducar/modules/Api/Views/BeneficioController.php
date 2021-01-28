@@ -1,6 +1,5 @@
 <?php
 
-require_once 'intranet/include/pmieducar/clsPmieducarAlunoBeneficio.inc.php';
 
 class BeneficioController extends ApiCoreController
 {

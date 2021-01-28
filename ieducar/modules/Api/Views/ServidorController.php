@@ -2,7 +2,6 @@
 use App\Models\LegacyDeficiency;
 use App\Models\LogUnification;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
-require_once 'intranet/include/clsBanco.inc.php';
 
 class ServidorController extends ApiCoreController
 {

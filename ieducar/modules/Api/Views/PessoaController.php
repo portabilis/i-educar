@@ -8,7 +8,6 @@ use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
 use App\Models\LegacyIndividual;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
 
-require_once 'intranet/include/funcoes.inc.php';
 
 class PessoaController extends ApiCoreController
 {

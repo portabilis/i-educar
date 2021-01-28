@@ -1,6 +1,5 @@
 <?php
 
-require_once 'intranet/include/clsBanco.inc.php';
 
 class ProjetoController extends ApiCoreController
 {
