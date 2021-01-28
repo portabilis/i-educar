@@ -34,7 +34,6 @@ use iEducar\Modules\Unification\StudentLogUnification;
 use Illuminate\Support\Facades\DB;
 
 
-require_once 'App/Unificacao/Aluno.php';
 
 
 

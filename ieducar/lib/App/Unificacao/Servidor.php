@@ -1,6 +1,5 @@
 <?php
 
-require_once 'App/Unificacao/Base.php';
 
 class App_Unificacao_Servidor extends App_Unificacao_Base
 {
