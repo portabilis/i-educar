@@ -5,8 +5,6 @@ use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 use Illuminate\Support\Str;
 
-require_once 'App/Model/Pais.php';
-require_once 'App/Model/NivelAcesso.php';
 
 class clsIndexBase extends clsBase
 {

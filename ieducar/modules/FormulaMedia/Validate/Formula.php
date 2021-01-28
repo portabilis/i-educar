@@ -30,7 +30,6 @@
  */
 
 require_once 'CoreExt/Validate/Abstract.php';
-require_once 'FormulaMedia/Model/Formula.php';
 
 /**
  * FormulaMedia_Validate_Formula class.

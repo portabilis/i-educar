@@ -29,7 +29,6 @@
  */
 
 require_once 'CoreExt/View/Helper/UrlHelper.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 /**
  * clsIndexBase class.

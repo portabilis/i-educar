@@ -10,9 +10,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 
-require_once 'App/Model/ZonaLocalizacao.php';
-require_once 'Educacenso/Model/AlunoDataMapper.php';
-require_once 'Transporte/Model/AlunoDataMapper.php';
 
 class clsIndexBase extends clsBase
 {

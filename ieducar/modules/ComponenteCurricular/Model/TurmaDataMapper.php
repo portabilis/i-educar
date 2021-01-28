@@ -5,7 +5,6 @@ use App\Models\LegacyDiscipline;
 use App\Services\iDiarioService;
 
 require_once 'CoreExt/DataMapper.php';
-require_once 'ComponenteCurricular/Model/Turma.php';
 
 class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
 {

@@ -7,7 +7,6 @@ use App\Models\LegacySchoolGradeDiscipline;
 use App\Services\CheckPostedDataService;
 use App\Services\iDiarioService;
 
-require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 
 class ComponentesSerieController extends ApiCoreController
 {

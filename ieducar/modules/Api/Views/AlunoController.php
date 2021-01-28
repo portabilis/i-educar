@@ -14,8 +14,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 require_once 'image_check.php';
-require_once 'App/Model/MatriculaSituacao.php';
-require_once 'Transporte/Model/Responsavel.php';
 
 class AlunoController extends ApiCoreController
 {

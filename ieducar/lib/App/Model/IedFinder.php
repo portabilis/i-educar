@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 require_once 'CoreExt/Entity.php';
-require_once 'App/Model/Exception.php';
 
 class App_Model_IedFinder extends CoreExt_Entity
 {
@@ -570,8 +569,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $ano = null
     ) {
         if (is_null($mapper)) {
-            require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
-            $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
+                        $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
         }
 
         $where = ['turma' => $turma];
@@ -857,8 +855,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $possuiDeficiencia = self::verificaSePossuiDeficiencia($matricula['ref_cod_aluno']);
 
         if (is_null($mapper)) {
-            require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
-            $mapper = new RegraAvaliacao_Model_RegraDataMapper();
+                        $mapper = new RegraAvaliacao_Model_RegraDataMapper();
         }
 
         if (dbBool($matricula['escola_utiliza_regra_diferenciada']) && is_numeric($matricula['serie_regra_avaliacao_diferenciada_id'])) {
@@ -900,8 +897,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $escola = self::getEscola($turma['ref_ref_cod_escola']);
 
         if (is_null($mapper)) {
-            require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
-            $mapper = new RegraAvaliacao_Model_RegraDataMapper();
+                        $mapper = new RegraAvaliacao_Model_RegraDataMapper();
         }
 
         if (dbBool($escola['utiliza_regra_diferenciada']) && is_numeric($serie['regra_avaliacao_diferenciada_id'])) {

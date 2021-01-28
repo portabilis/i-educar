@@ -30,8 +30,6 @@
  */
 
 require_once 'Core/Controller/Page/EditController.php';
-require_once 'Avaliacao/Model/ParecerDescritivoComponenteDataMapper.php';
-require_once 'Avaliacao/Model/ParecerDescritivoGeralDataMapper.php';
 require_once 'Avaliacao/Service/Boletim.php';
 
 /**

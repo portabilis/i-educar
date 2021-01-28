@@ -16,9 +16,6 @@ use RuntimeException;
 use Throwable;
 
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
-require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 
 class clsIndexBase extends clsBase
 {
@@ -1466,8 +1463,7 @@ class indice extends clsCadastro
 
     public function atualizaComponentesCurriculares($codSerie, $codEscola, $codTurma, $componentes, $cargaHoraria, $usarComponente, $docente)
     {
-        require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
-        $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
+                $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
 
         $componentesTurma = [];
 

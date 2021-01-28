@@ -2,7 +2,6 @@
 
 use App\Services\SchoolGradeDisciplineService;
 
-require_once 'App/Model/IedFinder.php';
 
 class clsIndexBase extends clsBase
 {

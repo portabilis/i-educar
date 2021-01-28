@@ -35,7 +35,6 @@
 
 header('Content-type: text/xml; charset=UTF-8');
 
-require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 

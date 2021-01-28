@@ -36,7 +36,6 @@ use Illuminate\Support\Facades\DB;
 
 require_once 'App/Unificacao/Aluno.php';
 
-require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 
 
 class clsIndexBase extends clsBase

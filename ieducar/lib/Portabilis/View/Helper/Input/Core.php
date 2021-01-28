@@ -1,6 +1,5 @@
 <?php
 
-require_once 'App/Model/IedFinder.php';
 
 class Portabilis_View_Helper_Input_Core
 {

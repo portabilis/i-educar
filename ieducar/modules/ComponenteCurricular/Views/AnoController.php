@@ -1,8 +1,6 @@
 <?php
 
 require_once 'Core/Controller/Page/EditController.php';
-require_once 'ComponenteCurricular/Model/Componente.php';
-require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 
 class AnoController extends Core_Controller_Page_EditController
 {

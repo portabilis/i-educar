@@ -28,7 +28,6 @@
  * @version   $Id$
  */
 
-require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 
 /**
  * clsIndexBase class.

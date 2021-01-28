@@ -3,7 +3,6 @@
 use App\Models\LegacyRegistration;
 use Illuminate\Support\Str;
 
-require_once 'App/Model/MatriculaSituacao.php';
 require_once 'intranet/include/clsBanco.inc.php';
 require_once 'modules/Avaliacao/Views/PromocaoApiController.php';
 

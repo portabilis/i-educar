@@ -31,15 +31,6 @@
 
 use iEducar\Modules\Enrollments\Exceptions\StudentNotEnrolledInSchoolClass;
 
-require_once 'App/Model/IedFinder.php';
-require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
-require_once 'FormulaMedia/Model/FormulaDataMapper.php';
-require_once 'TabelaArredondamento/Model/TabelaDataMapper.php';
-require_once 'TabelaArredondamento/Model/TabelaValorDataMapper.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
-require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
-require_once 'AreaConhecimento/Model/AreaDataMapper.php';
 
 /**
  * App_Model_IedFinderTest class.

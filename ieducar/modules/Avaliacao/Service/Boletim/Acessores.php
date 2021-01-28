@@ -248,8 +248,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getComponenteDataMapper()
     {
         if (is_null($this->_componenteDataMapper)) {
-            require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-            $this->setComponenteDataMapper(new ComponenteCurricular_Model_ComponenteDataMapper());
+                        $this->setComponenteDataMapper(new ComponenteCurricular_Model_ComponenteDataMapper());
         }
 
         return $this->_componenteDataMapper;
@@ -273,8 +272,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getComponenteTurmaDataMapper()
     {
         if (is_null($this->_componenteTurmaDataMapper)) {
-            require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
-            $this->setComponenteTurmaDataMapper(new ComponenteCurricular_Model_TurmaDataMapper());
+                        $this->setComponenteTurmaDataMapper(new ComponenteCurricular_Model_TurmaDataMapper());
         }
 
         return $this->_componenteTurmaDataMapper;
@@ -298,8 +296,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getRegraDataMapper()
     {
         if (is_null($this->_regraDataMapper)) {
-            require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
-            $this->setRegraDataMapper(new RegraAvaliacao_Model_RegraDataMapper());
+                        $this->setRegraDataMapper(new RegraAvaliacao_Model_RegraDataMapper());
         }
 
         return $this->_regraDataMapper;
@@ -323,8 +320,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getNotaAlunoDataMapper()
     {
         if (is_null($this->_notaAlunoDataMapper)) {
-            require_once 'Avaliacao/Model/NotaAlunoDataMapper.php';
-            $this->setNotaAlunoDataMapper(new Avaliacao_Model_NotaAlunoDataMapper());
+                        $this->setNotaAlunoDataMapper(new Avaliacao_Model_NotaAlunoDataMapper());
         }
 
         return $this->_notaAlunoDataMapper;
@@ -348,8 +344,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getNotaComponenteDataMapper()
     {
         if (is_null($this->_notaComponenteDataMapper)) {
-            require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
-            $this->setNotaComponenteDataMapper(new Avaliacao_Model_NotaComponenteDataMapper());
+                        $this->setNotaComponenteDataMapper(new Avaliacao_Model_NotaComponenteDataMapper());
         }
 
         return $this->_notaComponenteDataMapper;
@@ -373,8 +368,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getNotaComponenteMediaDataMapper()
     {
         if (is_null($this->_notaComponenteMediaDataMapper)) {
-            require_once 'Avaliacao/Model/NotaComponenteMediaDataMapper.php';
-            $this->setNotaComponenteMediaDataMapper(new Avaliacao_Model_NotaComponenteMediaDataMapper());
+                        $this->setNotaComponenteMediaDataMapper(new Avaliacao_Model_NotaComponenteMediaDataMapper());
         }
 
         return $this->_notaComponenteMediaDataMapper;
@@ -398,8 +392,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getFaltaAlunoDataMapper()
     {
         if (is_null($this->_faltaAlunoDataMapper)) {
-            require_once 'Avaliacao/Model/FaltaAlunoDataMapper.php';
-            $this->setFaltaAlunoDataMapper(new Avaliacao_Model_FaltaAlunoDataMapper());
+                        $this->setFaltaAlunoDataMapper(new Avaliacao_Model_FaltaAlunoDataMapper());
         }
 
         return $this->_faltaAlunoDataMapper;
@@ -425,13 +418,11 @@ trait Avaliacao_Service_Boletim_Acessores
         if (is_null($this->_faltaAbstractDataMapper)) {
             switch ($this->getRegraAvaliacaoTipoPresenca()) {
                 case RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE:
-                    require_once 'Avaliacao/Model/FaltaComponenteDataMapper.php';
-                    $this->setFaltaAbstractDataMapper(new Avaliacao_Model_FaltaComponenteDataMapper());
+                                        $this->setFaltaAbstractDataMapper(new Avaliacao_Model_FaltaComponenteDataMapper());
                     break;
 
                 case RegraAvaliacao_Model_TipoPresenca::GERAL:
-                    require_once 'Avaliacao/Model/FaltaGeralDataMapper.php';
-                    $this->setFaltaAbstractDataMapper(new Avaliacao_Model_FaltaGeralDataMapper());
+                                        $this->setFaltaAbstractDataMapper(new Avaliacao_Model_FaltaGeralDataMapper());
                     break;
             }
         }
@@ -457,8 +448,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getParecerDescritivoAlunoDataMapper()
     {
         if (is_null($this->_parecerDescritivoAlunoDataMapper)) {
-            require_once 'Avaliacao/Model/ParecerDescritivoAlunoDataMapper.php';
-            $this->setParecerDescritivoAlunoDataMapper(new Avaliacao_Model_ParecerDescritivoAlunoDataMapper());
+                        $this->setParecerDescritivoAlunoDataMapper(new Avaliacao_Model_ParecerDescritivoAlunoDataMapper());
         }
 
         return $this->_parecerDescritivoAlunoDataMapper;
@@ -549,8 +539,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getNotaGeralDataMapper()
     {
         if (is_null($this->_notaGeralDataMapper)) {
-            require_once 'Avaliacao/Model/NotaGeralDataMapper.php';
-            $this->setNotaGeralDataMapper(new Avaliacao_Model_NotaGeralDataMapper());
+                        $this->setNotaGeralDataMapper(new Avaliacao_Model_NotaGeralDataMapper());
         }
 
         return $this->_notaGeralDataMapper;
@@ -574,8 +563,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getMediaGeralDataMapper()
     {
         if (is_null($this->_mediaGeralDataMapper)) {
-            require_once 'Avaliacao/Model/MediaGeralDataMapper.php';
-            $this->setMediaGeralDataMapper(new Avaliacao_Model_MediaGeralDataMapper());
+                        $this->setMediaGeralDataMapper(new Avaliacao_Model_MediaGeralDataMapper());
         }
 
         return $this->_mediaGeralDataMapper;

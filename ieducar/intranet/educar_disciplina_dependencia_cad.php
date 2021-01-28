@@ -28,7 +28,6 @@
  * @version   $Id$
  */
 
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 /**
  * clsIndexBase class.

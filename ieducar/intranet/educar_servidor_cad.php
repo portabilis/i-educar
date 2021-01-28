@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Session;
 
 
 
-require_once 'Educacenso/Model/DocenteDataMapper.php';
 
 class clsIndexBase extends clsBase
 {

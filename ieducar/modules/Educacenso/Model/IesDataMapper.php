@@ -1,7 +1,6 @@
 <?php
 
 require_once 'CoreExt/DataMapper.php';
-require_once 'Educacenso/Model/Ies.php';
 
 /**
  * Educacenso_Model_IesDataMapper class.

@@ -1,25 +1,5 @@
 <?php
 
-require_once 'AreaConhecimento/Model/AreaDataMapper.php';
-require_once 'FormulaMedia/Model/Formula.php';
-require_once 'FormulaMedia/Model/FormulaDataMapper.php';
-require_once 'TabelaArredondamento/Model/TabelaValor.php';
-require_once 'TabelaArredondamento/Model/TabelaValorDataMapper.php';
-require_once 'TabelaArredondamento/Model/Tabela.php';
-require_once 'TabelaArredondamento/Model/TabelaDataMapper.php';
-require_once 'RegraAvaliacao/Model/Regra.php';
-require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
-require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
-require_once 'Avaliacao/Model/NotaAlunoDataMapper.php';
-require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
-require_once 'Avaliacao/Model/NotaComponenteMediaDataMapper.php';
-require_once 'Avaliacao/Model/FaltaAlunoDataMapper.php';
-require_once 'Avaliacao/Model/FaltaGeralDataMapper.php';
-require_once 'Avaliacao/Model/FaltaComponenteDataMapper.php';
-require_once 'Avaliacao/Model/ParecerDescritivoAlunoDataMapper.php';
-require_once 'Avaliacao/Model/ParecerDescritivoAbstractDataMapper.php';
-require_once 'Avaliacao/Model/ParecerDescritivoComponenteDataMapper.php';
-require_once 'Avaliacao/Model/ParecerDescritivoGeralDataMapper.php';
 require_once 'Avaliacao/Service/Boletim.php';
 
 /**

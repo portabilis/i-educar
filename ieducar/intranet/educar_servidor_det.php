@@ -30,8 +30,6 @@
  */
 
 
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-require_once 'Educacenso/Model/DocenteDataMapper.php';
 
 use App\Models\Employee;
 use App\Models\EmployeeWithdrawal;

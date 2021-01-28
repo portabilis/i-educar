@@ -4,11 +4,7 @@ use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClassStage;
 use App\Models\LegacySchoolStage;
 
-require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'Avaliacao/Service/Boletim.php';
-require_once 'App/Model/MatriculaSituacao.php';
-require_once 'RegraAvaliacao/Model/TipoPresenca.php';
-require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 

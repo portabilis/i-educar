@@ -1,8 +1,6 @@
 <?php
 
 require_once 'Core/Controller/Page/Validatable.php';
-require_once 'App/Model/NivelAcesso.php';
-require_once 'App/Model/NivelTipoUsuario.php';
 
 abstract class Core_Controller_Page_EditController extends clsCadastro implements Core_Controller_Page_Validatable
 {

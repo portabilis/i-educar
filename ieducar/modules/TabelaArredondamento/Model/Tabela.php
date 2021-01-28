@@ -1,9 +1,6 @@
 <?php
 
 require_once 'CoreExt/Entity.php';
-require_once 'App/Model/IedFinder.php';
-require_once 'RegraAvaliacao/Model/Nota/TipoValor.php';
-require_once 'TabelaArredondamento/Model/TipoArredondamentoMedia.php';
 
 class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
 {
@@ -40,8 +37,7 @@ class TabelaArredondamento_Model_Tabela extends CoreExt_Entity
     public function getDataMapper()
     {
         if (is_null($this->_dataMapper)) {
-            require_once 'TabelaArredondamento/Model/TabelaDataMapper.php';
-            $this->setDataMapper(new TabelaArredondamento_Model_TabelaDataMapper());
+                        $this->setDataMapper(new TabelaArredondamento_Model_TabelaDataMapper());
         }
 
         return parent::getDataMapper();

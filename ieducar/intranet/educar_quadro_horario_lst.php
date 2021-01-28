@@ -31,7 +31,6 @@
 use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\Session;
 
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 /**
  * clsIndexBase class.

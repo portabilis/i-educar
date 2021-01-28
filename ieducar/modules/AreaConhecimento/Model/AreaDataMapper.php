@@ -1,7 +1,6 @@
 <?php
 
 require_once 'CoreExt/DataMapper.php';
-require_once 'AreaConhecimento/Model/Area.php';
 
 class AreaConhecimento_Model_AreaDataMapper extends CoreExt_DataMapper
 {

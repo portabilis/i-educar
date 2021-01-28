@@ -1,8 +1,6 @@
 <?php
 
 
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-require_once 'Educacenso/Model/DocenteDataMapper.php';
 
 class clsIndexBase extends clsBase
 {

@@ -30,7 +30,6 @@
  */
 
 require_once __DIR__.'/TestCommon.php';
-require_once 'Avaliacao/Model/NotaComponente.php';
 
 /**
  * Avaliacao_Service_NotaAlunoTest class.

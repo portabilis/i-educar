@@ -2,7 +2,6 @@
 
 use App\Process;
 
-require_once 'App/Model/MatriculaSituacao.php';
 
 class clsIndexBase extends clsBase
 {

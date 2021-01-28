@@ -2,8 +2,6 @@
 
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 
-require_once 'App/Model/ZonaLocalizacao.php';
-require_once 'Usuario/Model/FuncionarioDataMapper.php';
 
 class PontoController extends Portabilis_Controller_Page_EditController
 {

@@ -1,7 +1,6 @@
 <?php
 
 require_once 'Core/Controller/Page/ViewController.php';
-require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 
 class ViewController extends Core_Controller_Page_ViewController
 {

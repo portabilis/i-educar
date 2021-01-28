@@ -3,8 +3,6 @@
 use Illuminate\Support\Facades\Session;
 
 require_once 'clsCalendario.inc.php';
-require_once 'Calendario/Model/TurmaDataMapper.php';
-require_once 'App/Model/IedFinder.php';
 
 class clsIndexBase extends clsBase
 {

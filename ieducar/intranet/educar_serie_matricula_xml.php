@@ -35,7 +35,6 @@ header('Content-type: text/xml');
 
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
-require_once 'App/Model/MatriculaSituacao.php';
 
 print '<?xml version="1.0" encoding=""?>' . "\n";
 print '<query xmlns="sugestoes">' . "\n";

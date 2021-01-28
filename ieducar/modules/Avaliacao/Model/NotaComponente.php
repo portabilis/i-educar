@@ -30,7 +30,6 @@
  */
 
 require_once 'CoreExt/Entity.php';
-require_once 'Avaliacao/Model/Etapa.php';
 
 /**
  * Avaliacao_Model_NotaComponente class.

@@ -29,9 +29,6 @@
  */
 
 
-require_once 'App/Model/IedFinder.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 
 /**
  * clsIndexBase class.

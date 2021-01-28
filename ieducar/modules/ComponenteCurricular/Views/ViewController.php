@@ -1,7 +1,6 @@
 <?php
 
 require_once 'Core/Controller/Page/ViewController.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 class ViewController extends Core_Controller_Page_ViewController
 {

@@ -30,7 +30,6 @@
  */
 
 require_once 'Core/Controller/Page/ListController.php';
-require_once 'FormulaMedia/Model/FormulaDataMapper.php';
 
 /**
  * IndexController class.

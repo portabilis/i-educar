@@ -1,8 +1,6 @@
 <?php
 
 require_once 'CoreExt/DataMapper.php';
-require_once 'RegraAvaliacao/Model/RegraRecuperacao.php';
-require_once 'App/Model/IedFinder.php';
 
 class RegraAvaliacao_Model_RegraRecuperacaoDataMapper extends CoreExt_DataMapper
 {

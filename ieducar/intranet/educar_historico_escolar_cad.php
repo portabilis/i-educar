@@ -3,7 +3,6 @@
 use App\Models\Country;
 use App\Models\State;
 
-require_once 'App/Model/NivelTipoUsuario.php';
 
 class clsIndexBase extends clsBase
 {

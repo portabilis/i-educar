@@ -1,7 +1,6 @@
 <?php
 
 
-require_once 'App/Model/ZonaLocalizacao.php';
 
 use App\Models\LegacyIndividual;
 use App\Services\FileService;

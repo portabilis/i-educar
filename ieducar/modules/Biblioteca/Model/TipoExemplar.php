@@ -33,7 +33,6 @@
  */
 
 require_once 'CoreExt/Entity.php';
-require_once 'App/Model/IedFinder.php';
 require_once 'CoreExt/Validate/Email.php';
 
 /**
@@ -74,8 +73,7 @@ class Biblioteca_Model_TipoExemplar extends CoreExt_Entity
   public function getDataMapper()
   {
     if (is_null($this->_dataMapper)) {
-      require_once 'Biblioteca/Model/TipoExemplarDataMapper.php';
-      $this->setDataMapper(new Biblioteca_Model_TipoExemplarDataMapper());
+            $this->setDataMapper(new Biblioteca_Model_TipoExemplarDataMapper());
     }
     return parent::getDataMapper();
   }

@@ -30,8 +30,6 @@
 
 use Illuminate\Support\Facades\Session;
 
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 
 /**
  * clsIndexBase class.

@@ -1,7 +1,6 @@
 <?php
 
 require_once 'Reports/Tipos/TipoBoletim.php';
-require_once 'App/Model/IedFinder.php';
 
 class TurmaController extends ApiCoreController
 {

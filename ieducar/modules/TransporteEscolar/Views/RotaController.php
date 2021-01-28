@@ -1,6 +1,5 @@
 <?php
 
-require_once 'Usuario/Model/FuncionarioDataMapper.php';
 
 class RotaController extends Portabilis_Controller_Page_EditController
 {

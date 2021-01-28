@@ -1,7 +1,6 @@
 <?php
 
 require_once 'CoreExt/DataMapper.php';
-require_once 'RegraAvaliacao/Model/SerieAno.php';
 
 class RegraAvaliacao_Model_SerieAnoDataMapper extends CoreExt_DataMapper
 {

@@ -16,7 +16,6 @@ use App\Services\FileService;
 
 require_once 'image_check.php';
 
-require_once 'App/Model/ZonaLocalizacao.php';
 
 
 class clsIndex extends clsBase

@@ -8,8 +8,6 @@ use iEducar\Modules\Educacenso\Model\VeiculoTransporteEscolar;
 use iEducar\Support\View\SelectOptions;
 
 require_once 'image_check.php';
-require_once 'App/Model/ZonaLocalizacao.php';
-require_once 'Usuario/Model/FuncionarioDataMapper.php';
 
 class AlunoController extends Portabilis_Controller_Page_EditController
 {

@@ -1,6 +1,5 @@
 <?php
 
-require_once 'Educacenso/Model/AlunoDataMapper.php';
 
 class clsIndexBase extends clsBase
 {

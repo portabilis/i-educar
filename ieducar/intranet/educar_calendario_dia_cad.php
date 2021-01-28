@@ -32,8 +32,6 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
 
-require_once 'App/Model/IedFinder.php';
-require_once 'Calendario/Model/TurmaDataMapper.php';
 
 /**
  * clsIndexBase class.

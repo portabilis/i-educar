@@ -16,12 +16,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
-require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
-require_once 'Avaliacao/Model/NotaGeralDataMapper.php';
 require_once 'Avaliacao/Service/Boletim.php';
-require_once 'App/Model/MatriculaSituacao.php';
-require_once 'RegraAvaliacao/Model/TipoPresenca.php';
-require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 
 
 
@@ -1255,8 +1250,7 @@ class DiarioApiController extends ApiCoreController
             throw new Exception('Não foi possível obter a área de conhecimento pois não foi recebido o id do componente curricular.');
         }
 
-        require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-        $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+                $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
 
         $where = array('id' => $componenteCurricularId);
 

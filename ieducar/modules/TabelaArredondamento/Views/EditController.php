@@ -1,9 +1,6 @@
 <?php
 
 require_once 'Core/Controller/Page/EditController.php';
-require_once 'TabelaArredondamento/Model/TabelaDataMapper.php';
-require_once 'TabelaArredondamento/Model/TabelaValor.php';
-require_once 'TabelaArredondamento/Model/TipoArredondamentoMedia.php';
 
 class EditController extends Core_Controller_Page_EditController
 {

@@ -32,7 +32,6 @@
  * @version   $Id$
  */
 
-require_once 'Biblioteca/Model/TipoExemplarDataMapper.php';
 
 /**
  * TipoExemplarController class.

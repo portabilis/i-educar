@@ -1,6 +1,5 @@
 <?php
 
-require_once 'Configuracao/Model/ConfiguracaoMovimentoGeralDataMapper.php';
 
 class clsIndexBase extends clsBase
 {

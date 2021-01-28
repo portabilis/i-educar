@@ -9,7 +9,6 @@ use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Support\View\SelectOptions;
 
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 class clsIndexBase extends clsBase
 {

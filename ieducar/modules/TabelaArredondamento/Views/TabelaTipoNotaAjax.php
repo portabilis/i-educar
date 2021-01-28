@@ -1,6 +1,5 @@
 <?php
 
-require_once 'TabelaArredondamento/Model/TabelaDataMapper.php';
 
 $tabelas = [];
 

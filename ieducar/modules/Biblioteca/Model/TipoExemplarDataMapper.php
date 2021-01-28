@@ -1,7 +1,6 @@
 <?php
 
 require_once 'CoreExt/DataMapper.php';
-require_once 'Biblioteca/Model/TipoExemplar.php';
 
 /**
  * Usuario_Model_TipoExemplarDataMapper class.

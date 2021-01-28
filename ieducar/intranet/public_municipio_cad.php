@@ -4,8 +4,6 @@ use App\Models\City;
 use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 
-require_once 'App/Model/Pais.php';
-require_once 'App/Model/NivelAcesso.php';
 
 class clsIndexBase extends clsBase
 {

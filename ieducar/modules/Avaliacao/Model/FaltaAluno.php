@@ -30,7 +30,6 @@
  */
 
 require_once 'CoreExt/Entity.php';
-require_once 'RegraAvaliacao/Model/TipoPresenca.php';
 
 /**
  * Avaliacao_Model_FaltaAluno class.

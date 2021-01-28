@@ -1,7 +1,6 @@
 <?php
 
 require_once 'CoreExt/DataMapper.php';
-require_once 'Avaliacao/Model/FaltaAluno.php';
 
 /**
  * Avaliacao_Model_FaltaAlunoDataMapper class.

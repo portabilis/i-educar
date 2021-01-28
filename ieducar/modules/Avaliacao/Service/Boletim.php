@@ -16,10 +16,6 @@ use iEducar\Modules\Stages\Exceptions\StagesNotInformedByTeacherException;
 
 require_once 'CoreExt/Configurable.php';
 require_once 'CoreExt/Entity.php';
-require_once 'App/Model/IedFinder.php';
-require_once 'App/Model/Matricula.php';
-require_once 'App/Model/MatriculaSituacao.php';
-require_once 'ComponenteCurricular/Model/TipoNotaComponenteSerie.php';
 require_once 'Avaliacao/Service/Boletim/Acessores.php';
 
 class Avaliacao_Service_Boletim implements CoreExt_Configurable
@@ -2827,8 +2823,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      */
     protected function _updateNotaComponenteMedia()
     {
-        require_once 'Avaliacao/Model/NotaComponenteMedia.php';
-        $this->_loadNotas(false);
+                $this->_loadNotas(false);
 
         $etapa = 1;
 

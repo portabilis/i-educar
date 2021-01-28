@@ -3,7 +3,6 @@
 use App\Services\iDiarioService;
 use RuntimeException;
 
-require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 
 class clsIndexBase extends clsBase
 {

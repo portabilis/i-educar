@@ -8,9 +8,6 @@ use App\Services\iDiarioService;
 use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
 
-require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
 
 class clsIndexBase extends clsBase

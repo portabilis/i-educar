@@ -1,7 +1,6 @@
 <?php
 
 require_once 'Core/Controller/Page/ListController.php';
-require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 
 class IndexController extends Core_Controller_Page_ListController
 {

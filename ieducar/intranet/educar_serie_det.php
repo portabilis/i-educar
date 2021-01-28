@@ -28,7 +28,6 @@
  * @version   $Id$
  */
 
-require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 
 /**
  * clsIndexBase class.

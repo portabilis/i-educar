@@ -40,8 +40,6 @@ use iEducar\Modules\Educacenso\Formatters;
 use iEducar\Modules\Educacenso\ValueTurmaMaisEducacao;
 use Illuminate\Support\Facades\Session;
 
-require_once 'App/Model/IedFinder.php';
-require_once 'ComponenteCurricular/Model/CodigoEducacenso.php';
 require_once __DIR__ . '/../../../lib/App/Model/Servidor.php';
 
 /**
