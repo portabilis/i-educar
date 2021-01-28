@@ -62,7 +62,10 @@
             "database/factories",
             "ieducar/intranet/include",
             "ieducar/lib",
-            "ieducar/modules/*/Model"
+            "ieducar/modules/*/Model",
+            "ieducar/modules/Avaliacao/Service",
+            "ieducar/modules/Avaliacao/Fixups",
+            "ieducar/modules/FormulaMedia/Validate"
         ],
         "files": [
             "ieducar/intranet/include/funcoes.inc.php"
