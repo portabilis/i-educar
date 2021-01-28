@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/EntityCompound.php';
-
 /**
  * CoreExt_EntityCompoundDataMapperStub class.
  *

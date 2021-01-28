@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/ParentEntity.php';
-
 /**
  * CoreExt_ParentEntityDataMapperStub class.
  *

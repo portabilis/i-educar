@@ -32,8 +32,6 @@
 use App\Models\LegacyLevel;
 use App\Models\LegacyRegistration;
 
-require_once __DIR__.'/TestCommon.php';
-
 /**
  * Avaliacao_Service_SituacaoTest class.
  *
