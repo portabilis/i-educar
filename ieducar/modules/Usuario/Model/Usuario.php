@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Entity.php';
-require_once 'CoreExt/Validate/Email.php';
 
 class Usuario_Model_Usuario extends CoreExt_Entity
 {

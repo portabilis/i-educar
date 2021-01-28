@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/Entity.php';
 
 class AreaConhecimento_Model_Area extends CoreExt_Entity
 {

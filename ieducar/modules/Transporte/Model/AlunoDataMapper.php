@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
 
 class Transporte_Model_AlunoDataMapper extends CoreExt_DataMapper
 {

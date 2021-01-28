@@ -817,8 +817,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     protected function _setRegraOption($key, $value)
     {
         if (!array_key_exists($key, $this->_regraOptions)) {
-            require_once 'CoreExt/Exception/InvalidArgumentException.php';
-            throw new CoreExt_Exception_InvalidArgumentException('regraOption:' . $key);
+                        throw new CoreExt_Exception_InvalidArgumentException('regraOption:' . $key);
         }
 
         $this->_regraOptions[$key] = $value;
@@ -836,8 +835,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     protected function _getRegraOption($key)
     {
         if (!array_key_exists($key, $this->_regraOptions)) {
-            require_once 'CoreExt/Exception/InvalidArgumentException.php';
-            throw new CoreExt_Exception_InvalidArgumentException('regraOption: ' . $key);
+                        throw new CoreExt_Exception_InvalidArgumentException('regraOption: ' . $key);
         }
 
         return $this->_regraOptions[$key];

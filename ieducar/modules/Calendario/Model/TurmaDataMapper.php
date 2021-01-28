@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
 
 class Calendario_Model_TurmaDataMapper extends CoreExt_DataMapper
 {

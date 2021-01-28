@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
 
 /**
  * Educacenso_Model_AlunoDataMapper class.

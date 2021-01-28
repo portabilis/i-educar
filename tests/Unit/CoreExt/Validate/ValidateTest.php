@@ -30,7 +30,6 @@
  */
 
 require_once __DIR__.'/../_stub/Validate.php';
-require_once 'CoreExt/Validate/String.php';
 
 /**
  * CoreExt_ValidateTest class.

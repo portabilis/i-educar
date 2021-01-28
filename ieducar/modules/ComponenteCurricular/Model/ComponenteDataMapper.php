@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
 
 class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
 {

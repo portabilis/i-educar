@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/Entity.php';
 
 class RegraAvaliacao_Model_Regra extends CoreExt_Entity
 {

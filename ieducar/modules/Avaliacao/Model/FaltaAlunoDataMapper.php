@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
 
 /**
  * Avaliacao_Model_FaltaAlunoDataMapper class.

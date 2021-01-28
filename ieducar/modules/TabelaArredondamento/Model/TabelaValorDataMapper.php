@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
 
 class TabelaArredondamento_Model_TabelaValorDataMapper extends CoreExt_DataMapper
 {

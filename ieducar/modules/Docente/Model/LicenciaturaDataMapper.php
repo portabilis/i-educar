@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
 
 class Docente_Model_LicenciaturaDataMapper extends CoreExt_DataMapper
 {

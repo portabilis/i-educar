@@ -4,7 +4,6 @@ use App\Exceptions\SchoolClass\HasDataInDiario;
 use App\Models\LegacyDiscipline;
 use App\Services\iDiarioService;
 
-require_once 'CoreExt/DataMapper.php';
 
 class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
 {

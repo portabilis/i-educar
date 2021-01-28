@@ -4,7 +4,6 @@ use App\Models\District;
 use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 
-require_once 'CoreExt/View/Helper/UrlHelper.php';
 
 class clsIndexBase extends clsBase
 {

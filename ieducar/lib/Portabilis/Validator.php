@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/Exception.php';
 
 class Portabilis_Validator
 {

@@ -31,7 +31,6 @@
 use iEducar\Support\View\SelectOptions;
 
 
-require_once 'CoreExt/View/Helper/UrlHelper.php';
 
 /**
  * clsIndexBase class.

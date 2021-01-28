@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/DataMapper.php';
 require_once __DIR__.'/ChildEntity.php';
 
 /**

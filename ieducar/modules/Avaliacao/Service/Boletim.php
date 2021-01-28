@@ -14,8 +14,6 @@ use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByCoordinatorException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByTeacherException;
 
-require_once 'CoreExt/Configurable.php';
-require_once 'CoreExt/Entity.php';
 require_once 'Avaliacao/Service/Boletim/Acessores.php';
 
 class Avaliacao_Service_Boletim implements CoreExt_Configurable
@@ -2176,8 +2174,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         if (!is_numeric($nota)) {
-            require_once 'CoreExt/Exception/InvalidArgumentException.php';
-            throw new CoreExt_Exception_InvalidArgumentException(sprintf(
+                        throw new CoreExt_Exception_InvalidArgumentException(sprintf(
                 'O parâmetro $nota ("%s") não é um valor numérico.',
                 $nota
             ));
@@ -2245,8 +2242,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         if (!is_numeric($media)) {
-            require_once 'CoreExt/Exception/InvalidArgumentException.php';
-            throw new CoreExt_Exception_InvalidArgumentException(sprintf(
+                        throw new CoreExt_Exception_InvalidArgumentException(sprintf(
                 'O parâmetro $media ("%s") não é um valor numérico.',
                 $media
             ));
@@ -2696,8 +2692,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         if ($exceptionMsg) {
-            require_once 'CoreExt/Service/Exception.php';
-            throw new CoreExt_Service_Exception($exceptionMsg);
+                        throw new CoreExt_Service_Exception($exceptionMsg);
         }
 
         return $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'), $novaSituacaoMatricula);

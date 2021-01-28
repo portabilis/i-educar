@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
 
 class FormulaMedia_Model_FormulaDataMapper extends CoreExt_DataMapper
 {

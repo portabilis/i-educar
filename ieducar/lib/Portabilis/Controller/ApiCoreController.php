@@ -3,7 +3,6 @@
 use iEducar\Support\Exceptions\Exception as iEducarException;
 
 require_once 'Core/Controller/Page/EditController.php';
-require_once 'CoreExt/Exception.php';
 
 class ApiCoreController extends Core_Controller_Page_EditController
 {

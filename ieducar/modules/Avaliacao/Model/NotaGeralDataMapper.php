@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
 
 class Avaliacao_Model_NotaGeralDataMapper extends CoreExt_DataMapper
 {

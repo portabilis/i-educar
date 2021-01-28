@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/Entity.php';
 
 class ComponenteCurricular_Model_AnoEscolar extends CoreExt_Entity
 {

@@ -32,8 +32,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/Entity.php';
-require_once 'CoreExt/Validate/Email.php';
 
 /**
  * ComponenteCurricular_Model_Componente class.

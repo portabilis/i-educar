@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/Entity.php';
 
 class Transporte_Model_Aluno extends CoreExt_Entity
 {

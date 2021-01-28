@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
 
 class Usuario_Model_FuncionarioDataMapper extends CoreExt_DataMapper
 {

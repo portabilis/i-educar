@@ -131,8 +131,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function setOptions(array $options = [])
     {
         if (!isset($options['matricula'])) {
-            require_once 'CoreExt/Service/Exception.php';
-            throw new CoreExt_Service_Exception('É necessário informar o número de matrícula do aluno.');
+                        throw new CoreExt_Service_Exception('É necessário informar o número de matrícula do aluno.');
         }
 
         if (isset($options['ComponenteDataMapper'])) {

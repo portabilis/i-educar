@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/View/Helper/TableHelper.php';
 
 /**
  * CoreExt_View_TableHelperTest class.

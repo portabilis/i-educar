@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/Validate/Abstract.php';
 
 /**
  * FormulaMedia_Validate_Formula class.

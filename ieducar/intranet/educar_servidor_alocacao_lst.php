@@ -1,7 +1,6 @@
 <?php
 
 
-require_once 'CoreExt/View/Helper/UrlHelper.php';
 
 class clsIndexBase extends clsBase
 {

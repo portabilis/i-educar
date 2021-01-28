@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/Entity.php';
 
 class TabelaArredondamento_Model_TabelaValor extends CoreExt_Entity
 {

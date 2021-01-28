@@ -13,7 +13,6 @@ use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
-require_once 'CoreExt/Entity.php';
 
 class App_Model_IedFinder extends CoreExt_Entity
 {

@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
 
 class Educacenso_Model_OrgaoRegionalDataMapper extends CoreExt_DataMapper
 {
