@@ -5,7 +5,7 @@
 if ($_FILES) {
     foreach ($_FILES as $file) {
         if (!empty($file['name'])) {
-            $objFile = new FileController($file);
+            $objFile = new FileControllerPdf($file);
             if ($objFile->validateFile()) {
                 $caminho = $objFile->sendFile();
                 if ($caminho != '') {
