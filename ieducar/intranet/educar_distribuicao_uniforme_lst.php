@@ -1,6 +1,5 @@
 <?php
 
-require_once( "lib/Portabilis/Date/Utils.php" );
 
 class clsIndexBase extends clsBase
 {

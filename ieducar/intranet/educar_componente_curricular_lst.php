@@ -1,7 +1,5 @@
 <?php
 
-require_once('modules/ComponenteCurricular/Model/TipoBase.php');
-require_once('modules/AreaConhecimento/Model/AreaDataMapper.php');
 
 class clsIndexBase extends clsBase
 {
