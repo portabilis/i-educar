@@ -494,7 +494,7 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->turmaTurno();
 
-        // modelos boletim
+        # TODO remove-require
         require_once 'Reports/Tipos/TipoBoletim.php';
 
         $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();

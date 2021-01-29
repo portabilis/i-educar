@@ -1,5 +1,6 @@
 <?php
 
+# TODO remove-require
 require_once 'Reports/Tipos/TipoBoletim.php';
 
 class TurmaController extends ApiCoreController

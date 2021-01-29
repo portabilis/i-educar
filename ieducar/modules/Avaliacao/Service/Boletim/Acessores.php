@@ -469,23 +469,19 @@ trait Avaliacao_Service_Boletim_Acessores
             switch ($this->getRegraAvaliacaoTipoParecerDescritivo()) {
                 case RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL:
                 case RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL:
-                    $filename = 'Avaliacao/Model/ParecerDescritivoGeralDataMapper.php';
                     $class = 'Avaliacao_Model_ParecerDescritivoGeralDataMapper';
                     break;
 
                 case RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE:
                 case RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE:
-                    $filename = 'Avaliacao/Model/ParecerDescritivoComponenteDataMapper.php';
                     $class = 'Avaliacao_Model_ParecerDescritivoComponenteDataMapper';
                     break;
             }
 
             // Se não usar parecer descritivo, retorna NULL
-            if (!isset($filename)) {
+            if (!isset($class)) {
                 return null;
             }
-
-            require_once $filename;
 
             $this->setParecerDescritivoAbstractDataMapper(new $class());
         }
@@ -508,10 +504,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getNotaGeralAbstractDataMapper()
     {
         if (is_null($this->_notaGeralAbstractDataMapper)) {
-            $filename = 'Avaliacao/Model/NotaGeralDataMapper.php';
             $class = 'Avaliacao_Model_NotaGeralDataMapper';
-
-            require_once $filename;
 
             $this->setNotaGeralAbstractDataMapper(new $class());
         }
