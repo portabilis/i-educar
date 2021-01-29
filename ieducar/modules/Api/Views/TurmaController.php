@@ -1,5 +1,6 @@
 <?php
 
+require_once 'Reports/Tipos/TipoBoletim.php';
 
 class TurmaController extends ApiCoreController
 {
