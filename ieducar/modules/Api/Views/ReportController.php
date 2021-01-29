@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Reports/Reports/BoletimReport.php';
+require_once 'Reports/Reports/BoletimProfessorReport.php';
 
 class ReportController extends ApiCoreController
 {
