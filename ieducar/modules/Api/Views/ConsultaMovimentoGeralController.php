@@ -10,7 +10,6 @@ use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosRemQueryFactory;
 use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosReclaQueryFactory;
 use iEducar\Modules\Reports\QueryFactory\MovimentoGeralAlunosObitoQueryFactory;
 
-require_once 'ConsultaBaseController.php';
 
 class ConsultaMovimentoGeralController extends ConsultaBaseController
 {
