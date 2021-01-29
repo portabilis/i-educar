@@ -1,6 +1,5 @@
 <?php
 
-require_once 'FormulaMedia/Validate/Formula.php';
 
 use App\Models\LegacyExamRule;
 use Illuminate\Http\Exceptions\HttpResponseException;

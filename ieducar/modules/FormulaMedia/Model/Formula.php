@@ -1,6 +1,5 @@
 <?php
 
-require_once 'FormulaMedia/Validate/Formula.php';
 
 class FormulaMedia_Model_Formula extends CoreExt_Entity
 {

@@ -109,8 +109,7 @@ class FormulaMedia_Validate_Formula extends CoreExt_Validate_Abstract
      */
     $evaled = @eval('?><?php $result = ' . $formula . '; ?>');
     if (!is_null($evaled)) {
-      require_once 'FormulaMedia/Validate/Exception.php';
-      throw new FormulaMedia_Validate_Exception('A fórmula apresenta erros.'
+            throw new FormulaMedia_Validate_Exception('A fórmula apresenta erros.'
                 . ' Verifique algum parêntese faltante ou um sinal de operação'
                 . ' matemática sem um operando.');
     }
