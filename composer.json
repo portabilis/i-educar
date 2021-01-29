@@ -64,7 +64,6 @@
             "ieducar/lib",
             "ieducar/modules/*/Model",
             "ieducar/modules/Avaliacao/Service",
-            "ieducar/modules/Api/Views/ConsultaBaseController.php",
             "ieducar/modules/Avaliacao/Fixups",
             "ieducar/modules/Avaliacao/Views",
             "ieducar/modules/FormulaMedia/Validate"
