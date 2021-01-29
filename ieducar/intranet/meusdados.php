@@ -97,7 +97,7 @@ class indice extends clsCadastro
         $foto = false;
 
         if (is_numeric($this->pessoa_logada)) {
-            $objFoto = new ClsCadastroFisicaFoto($this->pessoa_logada);
+            $objFoto = new clsCadastroFisicaFoto($this->pessoa_logada);
             $detalheFoto = $objFoto->detalhe();
 
             if (count($detalheFoto)) {

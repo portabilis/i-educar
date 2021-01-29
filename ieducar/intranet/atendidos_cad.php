@@ -207,7 +207,7 @@ class indice extends clsCadastro
 
         $foto = false;
         if (is_numeric($this->cod_pessoa_fj)) {
-            $objFoto = new ClsCadastroFisicaFoto($this->cod_pessoa_fj);
+            $objFoto = new clsCadastroFisicaFoto($this->cod_pessoa_fj);
             $detalheFoto = $objFoto->detalhe();
             if (count($detalheFoto)) {
                 $foto = $detalheFoto['caminho'];
