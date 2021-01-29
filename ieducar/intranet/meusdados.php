@@ -1,6 +1,5 @@
 <?php
 
-require_once 'image_check.php';
 
 class clsIndex extends clsBase
 {

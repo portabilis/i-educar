@@ -14,7 +14,6 @@ use iEducar\Support\View\SelectOptions;
 use App\Services\FileService;
 
 
-require_once 'image_check.php';
 
 
 

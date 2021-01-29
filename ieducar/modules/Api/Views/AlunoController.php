@@ -13,7 +13,6 @@ use iEducar\Modules\People\CertificateType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-require_once 'image_check.php';
 
 class AlunoController extends ApiCoreController
 {

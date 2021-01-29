@@ -7,7 +7,6 @@ use iEducar\Modules\Educacenso\Model\RecursosRealizacaoProvas;
 use iEducar\Modules\Educacenso\Model\VeiculoTransporteEscolar;
 use iEducar\Support\View\SelectOptions;
 
-require_once 'image_check.php';
 
 class AlunoController extends Portabilis_Controller_Page_EditController
 {
