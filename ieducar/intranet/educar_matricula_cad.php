@@ -10,7 +10,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use App\Events\RegistrationEvent;
 
-require_once 'modules/Avaliacao/Views/PromocaoApiController.php';
 
 class clsIndexBase extends clsBase
 {

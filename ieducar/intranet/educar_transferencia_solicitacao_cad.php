@@ -6,7 +6,6 @@ use App\Models\LegacyTransferRequest;
 use App\Services\PromotionService;
 use Illuminate\Support\Facades\DB;
 
-require_once 'modules/Avaliacao/Views/PromocaoApiController.php';
 
 class clsIndexBase extends clsBase
 {

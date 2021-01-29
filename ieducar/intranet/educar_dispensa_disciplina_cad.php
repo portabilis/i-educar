@@ -4,7 +4,6 @@ use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyRegistration;
 use App\Services\Exemption\ExemptionService;
 
-require_once 'modules/Avaliacao/Views/PromocaoApiController.php';
 
 class clsIndexBase extends clsBase
 {
