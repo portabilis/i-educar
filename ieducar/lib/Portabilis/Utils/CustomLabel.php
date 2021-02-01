@@ -43,8 +43,3 @@ class CustomLabel
         return self::$instance;
     }
 }
-
-function _cl($key)
-{
-    return CustomLabel::getInstance()->customize($key);
-}
