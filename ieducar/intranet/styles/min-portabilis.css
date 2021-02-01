@@ -247,3 +247,7 @@ select, input[type="text"], input[type="password"], textarea {
   position: fixed !important;
   right: 280px !important;
 }
+
+.bg-green {
+  background-color: #f0f9ee !important;
+}
