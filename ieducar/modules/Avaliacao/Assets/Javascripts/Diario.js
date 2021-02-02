@@ -266,34 +266,7 @@ var changeFalta = function(event) {
   }
 };
 
-
-var changeParecer = function(event) {
-  if (locked) {
-    handleLockedMessage();
-    return;
-  }
-
-  var $element = $j(this);
-  var regra = $j(this).closest('tr').data('regra');
-  setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
-  changeResource($element, postParecer, deleteParecer);
-
-  // se parecer geral, muda o valor em todos pareceres da mesma matricula
-  var parecerGeral = $j.inArray(regra.tipo_parecer_descritivo,
-                                ['etapa_geral', 'anual_geral']) > -1;
-
-  if (parecerGeral) {
-    var $fieldsParecerMatricula = $element.closest('table').find('.parecer-matricula-' + $element
-                                                                 .data('matricula_id') + '-cc')
-                                                                 .not($element);
-
-    $fieldsParecerMatricula.val($element.val());
-    $fieldsParecerMatricula.data('old_value', $element.val());
-  }
-};
-
-
-var changeParecer2 = function(element) {
+var changeParecer = function(element) {
   if (locked) {
     handleLockedMessage();
     return;
@@ -617,7 +590,8 @@ function postParecer($parecerFieldElement) {
         $parecerFieldElement.closest('td').find('.note-editable').addClass('bg-green');
     })
     .fail(function() {
-      errorCallback || handleErrorOnDeleteResource;
+        $parecerFieldElement.closest('td').find('.note-editable').addClass('bg-red');
+        errorCallback || handleErrorOnDeleteResource;
     });
 }
 
@@ -1166,9 +1140,8 @@ function handleSearch($resultTable, dataResponse) {
     if ((!componenteCurricularSelected) && (showBotaoReplicarNotas))
       criaBotaoReplicarNotasPorArea(value.componentes_curriculares);
 
-    //initSummernote(`parecer-matricula-${value.matricula_id}-cc-${value.componentes_curriculares[0].id}`);
+    initSummernote(`parecer-matricula-${value.matricula_id}-cc-${value.componentes_curriculares[0].id}`);
   });
-  initSummernote();
   // seta colspan [th, td].aluno quando exibe nota exame
   if (useNota &&
       (ultimaEtapa || definirComponentesEtapa)) {
@@ -1181,7 +1154,6 @@ function handleSearch($resultTable, dataResponse) {
   var $notaFields = $resultTable.find('.nota-matricula-cc');
   var $notaExameFields = $resultTable.find('.nota_exame-matricula-cc');
   var $faltaFields = $resultTable.find('.falta-matricula-cc');
-  var $parecerFields = $resultTable.find('.parecer-matricula-cc');
   var $notaRecuperacaoParalelaFields = $resultTable.find('.nota-recuperacao-paralela-cc');
   var $notaRecuperacaoEspecificaFields = $resultTable.find('.nota-recuperacao-especifica-matricula-cc');
   var $notaGeralEtapaFields = $resultTable.find('.nota-geral-etapa');
@@ -1191,7 +1163,6 @@ function handleSearch($resultTable, dataResponse) {
   $notaFields.on('change', changeNota);
   $notaExameFields.on('change', changeNotaExame);
   $faltaFields.on('change', changeFalta);
-  //$parecerFields.on('change', changeParecer);
   $notaRecuperacaoParalelaFields.on('change', changeNotaRecuperacaoParalela);
   $notaRecuperacaoEspecificaFields.on('change', changeNotaRecuperacaoEspecifica);
   $notaGeralEtapaFields.on('change', changeNotaGeralEtapa);
@@ -1632,7 +1603,7 @@ function updateComponenteCurricularHeaders($targetElement, $tagElement) {
   $tagElement.clone().addClass('center').html('Falta').appendTo($targetElement);
 
   if (hUseParecer)
-    $tagElement.clone().addClass('center').html('Parecer descritivo').appendTo($targetElement);
+    $tagElement.clone().addClass('center').css('width', '45%').html('Parecer descritivo').appendTo($targetElement);
 }
 
 function updateComponenteCurriculares($targetElement, matriculaId, componentesCurriculares, regra) {
@@ -1968,7 +1939,10 @@ function criaBotaoReplicarNotas(){
   }
 }
 
-function initSummernote() {
+function initSummernote(sElement) {
+
+  const element = $j(`#${sElement}`);
+  let value = element.val();
 
   const settings = {
     height: 146,                 // set editor height
@@ -1977,24 +1951,40 @@ function initSummernote() {
     focus: false,                 // set focus to editable area after initializing summernote
     lang: 'pt-BR',
     toolbar: [
-      //['save', ['save']],
       ['style', ['bold', 'italic', 'underline', 'clear']],
-      ['fontsize', ['fontsize']],
-      ['para', ['ul', 'ol', 'paragraph']],
-      ['height', ['height']],
-      ['table', ['table']],
     ],
+    fontNames: ['Arial'],
     callbacks: {
       onBlur: function(contents) {
+
         const elementToFind = contents.relatedTarget;
         const attrCalss = $j(elementToFind).attr('class');
-        if(!attrCalss || !attrCalss.include('note-btn')){
-          changeParecer2($j(this));
+
+        if(!attrCalss || !attrCalss.include('note-btn')) {
+
+          const currentlyValue = element.summernote("code");
+
+          if (value != currentlyValue) {
+
+            if (currentlyValue.replace(/<\/?[^>]+(>|$)/g, "") === '') {
+
+              element.val(currentlyValue.replace(/<\/?[^>]+(>|$)/g, ""));
+
+              value = currentlyValue.replace(/<\/?[^>]+(>|$)/g, "");
+
+            } else {
+
+              value = currentlyValue;
+            }
+
+            changeParecer($j(this));
+
+          }
         }
       }
     }
   };
-  $j('.parecer-matricula-cc-summernote').summernote(settings);
+  element.summernote(settings);
 }
 
 
