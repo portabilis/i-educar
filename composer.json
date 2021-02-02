@@ -68,8 +68,7 @@
         ],
         "psr-4": {
             "App\\": "app/",
-            "iEducar\\": "src",
-            "iEducar\\Packages\\Reports\\": "ieducar/modules/Reports/src"
+            "iEducar\\": "src"
         }
     },
     "autoload-dev": {
