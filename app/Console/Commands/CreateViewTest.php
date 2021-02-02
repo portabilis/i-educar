@@ -34,16 +34,15 @@ class CreateViewTest extends Command
      * Create the test file.
      *
      * @param string $class
-     * @param string $path
      * @param string $route
      *
-     * @return void
+     * @return boolean
      */
-    private function createTestFile($class, $path, $route)
+    private function createTestFile(string $class, string $route): bool
     {
         $replaces = [
-            'BaseTestName' => 'TVA',
-            'ProjectRoute' => '/asdaonda.php'
+            'BaseTestName' => $class,
+            'ProjectRoute' => $route
         ];
 
         $stub = file_get_contents(
@@ -51,32 +50,163 @@ class CreateViewTest extends Command
         );
 
         $stub = str_replace(
-            array_keys($replaces), array_values($replaces), $stub
+            array_keys($replaces),
+            array_values($replaces),
+            $stub
         );
 
-        dd($stub);
+        $filename = base_path('tests/Feature/Intranet/' . $class . '.php');
 
-        $filename = base_path('tests/Browser/Routes/' . $path . '/' . $class . '.php');
+        if (file_exists($filename)) {
+            return false;
+        }
 
-        file_put_contents($filename, $stub);
+        return file_put_contents($filename, $stub) !== false;
     }
 
     /**
-     * Execute the console command.
+     * @description Executa o comando.
      *
      * @return int
      */
     public function handle()
     {
-        $this->getAllView();
+        $allViews = $this->getAllViews();
 
-        $this->createTestFile('', '', '');
+        $allViewsFiltered = $this->excludeRouters($allViews);
+
+        $routersInfo = $this->processRoutersInformation($allViewsFiltered);
+
+        foreach ($routersInfo as $router) {
+            $created = $this->createTestFile($router['className'], $router['route']);
+
+            if ($created === false) {
+                $this->warn(
+                    "Teste {$router['className']} criado para a rota {$router['route']} já criado ou houve falha"
+                );
+                continue;
+            }
+
+            $this->info("Teste {$router['className']} criado para a rota {$router['route']}");
+        }
 
         $this->info('Testes criados com sucesso!');
     }
 
-    private function getAllView()
+    /**
+     * @description Busca todas os arquivos da pasta intranet para gerar os testes de rota
+     *
+     * @return array
+     */
+    private function getAllViews(): array
     {
-        $temp_files = glob(__DIR__ .'/../../../ieducar/intranet/*.php');
+        $files = glob(__DIR__ . '/../../../ieducar/intranet/*.php');
+        $filtered = $this->filterOnlineHttpView($files);
+
+        return $this->cleanStringUrl($filtered);
+    }
+
+    /**
+     * @param array $files
+     *
+     * @return array
+     */
+    private function filterOnlineHttpView(array $files)
+    {
+        $filtered = [];
+        foreach ($files as $file) {
+            if (preg_match('/^((?!xml).)*.php/', $file)) {
+                $filtered[] = $file;
+            }
+        }
+
+        return $filtered;
+    }
+
+    /**
+     * @description  Pega o nome do arquivo/rota
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    private function cleanStringUrl(array $data)
+    {
+        $cleanRouter = [];
+        foreach ($data as $item) {
+            $array = explode('/', $item);
+            $cleanRouter[] = end($array);
+        }
+
+        return $cleanRouter;
+    }
+
+    /**
+     * @description Faz a montagem da informações para processamento
+     *
+     * @param array $allViews
+     *
+     * @return array
+     */
+    private function processRoutersInformation(array $allViews)
+    {
+        $routersInformation = [];
+        foreach ($allViews as $view) {
+            $className = $this->processClassName($view);
+
+            $routersInformation[] = [
+                'className' => $className . 'Test',
+                'route' => '/intranet/' . $view,
+            ];
+        }
+
+        return $routersInformation;
+    }
+
+    /**
+     * @param $view
+     *
+     * @return string|string[]
+     */
+    private function processClassName($view)
+    {
+        $view = str_replace(['.php', '.inc', '.ajax'], '', $view);
+
+        return str_replace(' ', '', ucwords(str_replace('_', ' ', $view)));
+    }
+
+    /**
+     * @description Remove rota/arquivo da lista rotas que vão ser geradas
+     *
+     * @param array $allViews
+     *
+     * @return array
+     */
+    private function excludeRouters(array $allViews): array
+    {
+        $excludeRoutersList = $this->excludeRoutersList();
+        foreach ($allViews as $key => $view) {
+            if (in_array($view, $excludeRoutersList, true)) {
+                unset($allViews[$key]);
+            }
+        }
+
+        return array_values($allViews);
+    }
+
+    /**
+     * Lista com rotas/arquivos para não processar
+     *
+     * @return string[]
+     */
+    private function excludeRoutersList(): array
+    {
+        return [
+            'S3.php',
+            's3_config.php',
+            'upload.php',
+            'file_check.php',
+            'file_check_just_pdf.php',
+        ];
     }
 }
