@@ -23,7 +23,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}empresa_transporte_escolar";
 
-        $this->pessoa_logada = Session::get('id_pessoa');
+
 
         $this->_campos_lista = $this->_todos_campos = ' cod_empresa_transporte_escolar, ref_idpes, ref_resp_idpes, observacao ';
 

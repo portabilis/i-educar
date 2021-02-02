@@ -42,7 +42,7 @@ class clsPmieducarHistoricoEscolar extends Model
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}historico_escolar";
 
-        $this->pessoa_logada = Session::get('id_pessoa');
+
 
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_aluno, sequencial, ref_usuario_exc, ref_usuario_cad, ano, carga_horaria, dias_letivos, escola, escola_cidade, escola_uf, observacao, aprovado, data_cadastro, data_exclusao, ativo, faltas_globalizadas, ref_cod_instituicao, nm_serie, origem, extra_curricular, ref_cod_matricula, frequencia, registro, livro, folha, nm_curso, historico_grade_curso_id, aceleracao, ref_cod_escola, dependencia, posicao';
 

@@ -32,7 +32,7 @@ class clsPmieducarExemplar extends Model
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}exemplar";
 
-        $this->pessoa_logada = Session::get('id_pessoa');
+
 
         $this->_campos_lista = $this->_todos_campos = 'e.cod_exemplar, e.ref_cod_fonte, e.ref_cod_motivo_baixa, e.ref_cod_acervo, e.ref_cod_situacao, e.ref_usuario_exc, e.ref_usuario_cad, e.permite_emprestimo, e.preco, e.data_cadastro, e.data_exclusao, e.ativo, e.data_aquisicao, e.tombo, e.sequencial, e.data_baixa_exemplar';
 

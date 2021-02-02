@@ -137,7 +137,7 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosCensoPorEscola($escolaId, $ano, $data_ini, $data_fim)
     {
-        $this->pessoa_logada = Session::get('id_pessoa');
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
@@ -165,7 +165,7 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosCensoPorEscolaFase2($escolaId, $ano, $data_ini, $data_fim)
     {
-        $this->pessoa_logada = Session::get('id_pessoa');
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,

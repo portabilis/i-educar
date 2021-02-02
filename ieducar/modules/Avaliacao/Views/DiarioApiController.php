@@ -1800,7 +1800,7 @@ class DiarioApiController extends ApiCoreController
 
     public function canPostSituacaoAndNota()
     {
-        $this->pessoa_logada = Session::get('id_pessoa');
+
 
         $acesso = new clsPermissoes();
 

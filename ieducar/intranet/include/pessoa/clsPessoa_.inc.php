@@ -27,7 +27,7 @@ class clsPessoa_
 
     public function __construct($int_idpes = false, $str_nome = false, $int_idpes_cad = false, $str_url = false, $int_tipo = false, $int_idpes_rev = false, $str_data_rev = false, $str_email = false)
     {
-        $this->pessoa_logada = Session::get('id_pessoa');
+
 
         $this->idpes = $int_idpes;
         $this->nome = $str_nome;
