@@ -94,13 +94,7 @@ class indice extends clsListagem
 
         $this->inputsHelper()->integer('ano', ['required' => false, 'value' => $this->ano, 'max_length' => 4]);
         $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao]);
-        $this->inputsHelper()->dynamic(
-            'escolaSemFiltroPorUsuario', [
-                'required' => false,
-                'show-select' => true,
-                'value' => $this->ref_cod_escola
-            ]
-        );
+        $this->inputsHelper()->dynamic('escolaSemFiltroPorUsuario', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_escola]);
         $this->inputsHelper()->dynamic(['curso', 'serie'], ['required' => false]);
 
         //$this->inputsHelper()->select('periodo', array('required' => false, 'value' => $this->periodo, 'resources' => array(null => 'Selecione', 1 => 'Matutino', 2 => 'Vespertino', 3 => 'Noturno', 4 => 'Integral' )));
