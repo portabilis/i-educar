@@ -1,0 +1,55 @@
+name: tests
+
+on:
+  push:
+    branches:
+      - 2.*
+      - master
+  pull_request:
+    branches:
+      - 2.*
+      - master
+
+jobs:
+  default:
+
+    runs-on: ubuntu-latest
+
+    env:
+      APP_URL: http://localhost:8000
+      APP_ENV: testing
+      DB_CONNECTION: pgsql
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_DATABASE: ieducar
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      API_ACCESS_KEY: ieducar-access-key
+      API_SECRET_KEY: ieducar-secret-key
+      BROADCAST_DRIVER: log
+      CACHE_DRIVER: array
+      QUEUE_CONNECTION: sync
+      SESSION_DRIVER: array
+
+    services:
+      postgres:
+        image: postgres:9.5
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ieducar
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
+
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+      - uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: composer new-install
+      - name: Unit tests
+        run: vendor/bin/phpunit
+      - name: Integration tests
+        run: vendor/bin/phpunit --testsuite=Diario

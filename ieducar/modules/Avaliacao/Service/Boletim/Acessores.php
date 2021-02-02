@@ -23,6 +23,7 @@ trait Avaliacao_Service_Boletim_Acessores
         'matricula' => null,
         'etapas' => null,
         'usuario' => null,
+        'turmaId' => null,
         'ignorarDispensasParciais' => false,
     ];
 
