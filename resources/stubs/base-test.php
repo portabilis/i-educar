@@ -3,7 +3,6 @@
 namespace Tests\Feature\Intranet;
 
 use App\User;
-use phpDocumentor\Reflection\Types\Self_;
 use Tests\TestCase;
 
 class BaseTestName extends TestCase
