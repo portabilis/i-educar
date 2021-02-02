@@ -4,31 +4,21 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class CreateViewTest extends Command
+class LegacyCreateTestsCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'create:tests';
+    protected $signature = 'legacy:create:tests';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Comando para criar os testes das views';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected $description = 'Creates tests for legacy pages';
 
     /**
      * Create the test file.
@@ -55,7 +45,7 @@ class CreateViewTest extends Command
             $stub
         );
 
-        $filename = base_path('tests/Feature/Intranet/' . $class . '.php');
+        $filename = base_path('tests/Pages/Intranet/' . $class . '.php');
 
         if (file_exists($filename)) {
             return false;

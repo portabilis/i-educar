@@ -1,27 +1,18 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace Tests\Feature\Intranet;
 
-use App\User;
+use Tests\LoginFirstUser;
 use Tests\TestCase;
 
 class BaseTestName extends TestCase
 {
-    /**
-     * Route.
-     *
-     * @var string
-     */
+    use LoginFirstUser;
+
     public const ROUTE = 'ProjectRoute';
 
     public function testSuccessResponse()
     {
-
-        $this->actingAs(User::query()->first());
-
-        $this
-            ->get(self::ROUTE)
-            ->assertSuccessful()
-        ;
+        $this->get(self::ROUTE)->assertSuccessful();
     }
 }
