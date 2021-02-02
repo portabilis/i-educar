@@ -95,7 +95,7 @@ class indice extends clsListagem
         $this->inputsHelper()->integer('ano', ['required' => false, 'value' => $this->ano, 'max_length' => 4]);
         $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao]);
         $this->inputsHelper()->dynamic(
-            'escola', [
+            'escolaSemFiltroPorUsuario', [
                 'required' => false,
                 'show-select' => true,
                 'value' => $this->ref_cod_escola
