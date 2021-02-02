@@ -251,3 +251,7 @@ select, input[type="text"], input[type="password"], textarea {
 .bg-green {
   background-color: #f0f9ee !important;
 }
+
+.bg-red {
+  background-color: #FBECEF !important;
+}
