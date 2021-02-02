@@ -11,24 +11,14 @@ class CreateViewTest extends Command
      *
      * @var string
      */
-    protected $signature = 'create:tests';
+    protected $signature = 'legacy:create:tests';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Comando para criar os testes das views';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected $description = 'Creates tests for legacy pages';
 
     /**
      * Create the test file.
