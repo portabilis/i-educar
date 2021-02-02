@@ -144,6 +144,10 @@ class LegacyCreateTestsCommand extends Command
         foreach ($allViews as $view) {
             $className = $this->processClassName($view);
 
+            if ($this->isClassWithKnownErrors($className)) {
+                continue;
+            }
+
             $routersInformation[] = [
                 'className' => $className . 'Test',
                 'route' => '/intranet/' . $view,
@@ -185,6 +189,18 @@ class LegacyCreateTestsCommand extends Command
     }
 
     /**
+     * @description Valida se esta na lista de exclusão
+     *
+     * @param string $className
+     * @return bool
+     */
+    private function isClassWithKnownErrors(string $className)
+    {
+        $excludeClasseNameList = $this->excludeClasseNameList();
+        return in_array($className, $excludeClasseNameList, true);
+    }
+
+    /**
      * Lista com rotas/arquivos para não processar
      *
      * @return string[]
@@ -197,6 +213,152 @@ class LegacyCreateTestsCommand extends Command
             'upload.php',
             'file_check.php',
             'file_check_just_pdf.php',
+            'educar_arruma_nota_avaliacao.php',
+            'educar_exemplar_emprestimo_cad.php',
+            'educar_servidor_nivel_cad.php',
+            'educar_subniveis_cad.php',
+            'educar_coffebreak_tipo_lst.php',
+            'transporte_itinerario_del.php',
+        ];
+    }
+
+    /**
+     * @description Lista de Classes com erros conhecidos
+     *
+     * @return string[]
+     */
+    private function excludeClasseNameList()
+    {
+        return [
+            'EducarAbandonoTipoDet',
+            'EducarAcervoAssuntoDet',
+            'EducarAcervoAutorDet',
+            'EducarAcervoDet',
+            'EducarAcervoEditoraDet',
+            'EducarAcervoIdiomaDet',
+            'EducarAlunoBeneficioDet',
+            'EducarAlunoDet',
+            'EducarAvaliacaoDesempenhoDet',
+            'EducarBibliotecaDadosDet',
+            'EducarBibliotecaDet',
+            'EducarBloqueioAnoLetivoDet',
+            'EducarBloqueioLancamentoFaltasNotasDet',
+            'EducarCalendarioAnotacaoCad',
+            'EducarCalendarioAnotacaoDet',
+            'EducarCalendarioAnotacaoLst',
+            'EducarCalendarioDiaMotivoDet',
+            'EducarCategoriaNivelDet',
+            'EducarCategoriaObraDet',
+            'EducarClienteDet',
+            'EducarClienteTipoDet',
+            'EducarCoffebreakTipoDet',
+            'EducarConsultaMovimentoGeralLst',
+            'EducarConsultaMovimentoMensalLst',
+            'EducarCursoDet',
+            'EducarCursoDetV',
+            'EducarDeficienciaDet',
+            'EducarDefinirClienteTipoDet',
+            'EducarDisciplinaDependenciaCad',
+            'EducarDisciplinaDependenciaDet',
+            'EducarDisciplinaDependenciaLst',
+            'EducarDisciplinaTopicoDet',
+            'EducarDispensaDisciplinaCad',
+            'EducarDispensaDisciplinaDet',
+            'EducarDispensaDisciplinaLst',
+            'EducarDistribuicaoUniformeDet',
+            'EducarDistribuicaoUniformeLst',
+            'EducarEscolaDet',
+            'EducarEscolaLocalizacaoDet',
+            'EducarEscolaRedeEnsinoDet',
+            'EducarEscolaSerieDet',
+            'EducarEscolaridadeDet',
+            'EducarExemplarDet',
+            'EducarExemplarDevolucaoDet',
+            'EducarExemplarEmprestimoDet',
+            'EducarExemplarTipoDet',
+            'EducarFaltaAlunoCad',
+            'EducarFaltaAtrasoDet',
+            'EducarFaltaNotaAlunoCad',
+            'EducarFaltaNotaAlunoDet',
+            'EducarFonteDet',
+            'EducarFuncaoDet',
+            'EducarHabilitacaoDet',
+            'EducarHistoricoEscolarDet',
+            'EducarHistoricoEscolarLst',
+            'EducarInfraComodoFuncaoDet',
+            'EducarInfraPredioComodoDet',
+            'EducarInfraPredioDet',
+            'EducarIniciarAnoLetivo',
+            'EducarMatriculaAbandonoCad',
+            'EducarMatriculaCad',
+            'EducarMatriculaDet',
+            'EducarMatriculaEtapaTurmaCad',
+            'EducarMatriculaFormandoCad',
+            'EducarMatriculaHistoricoCad',
+            'EducarMatriculaLst',
+            'EducarMatriculaOcorrenciaDisciplinarDet',
+            'EducarMatriculaOcorrenciaDisciplinarLst',
+            'EducarMatriculaReclassificarCad',
+            'EducarMatriculaTurmaCad',
+            'EducarMatriculaTurmaDet',
+            'EducarMatriculaTurmaLst',
+            'EducarMatriculaTurmaTipoAeeCad',
+            'EducarMatriculaTurmaTurnoCad',
+            'EducarModuloDet',
+            'EducarMotivoAfastamentoDet',
+            'EducarMotivoBaixaDet',
+            'EducarMotivoSuspensaoDet',
+            'EducarNivelCad',
+            'EducarNivelEnsinoDet',
+            'EducarOperadorDet',
+            'EducarPagamentoMultaCad',
+            'EducarPagamentoMultaDet',
+            'EducarPreRequisitoDet',
+            'EducarProjetoDet',
+            'EducarQuadroHorarioHorariosCad',
+            'EducarRacaDet',
+            'EducarReligiaoDet',
+            'EducarReservaVagaDet',
+            'EducarReservadaVagaDet',
+            'EducarReservasCad',
+            'EducarReservasDet',
+            'EducarSequenciaSerieDet',
+            'EducarSerieDet',
+            'EducarSeriePreRequisitoCad',
+            'EducarSeriePreRequisitoDet',
+            'EducarSerieVagaDet',
+            'EducarServidorAlocacaoCad',
+            'EducarServidorAlocacaoDet',
+            'EducarServidorAlocacaoLst',
+            'EducarServidorDet',
+            'EducarServidorFormacaoDet',
+            'EducarServidorSubstituicaoCad',
+            'EducarServidorVinculoTurmaDet',
+            'EducarSituacaoCad',
+            'EducarSituacaoDet',
+            'EducarTipoDispensaDet',
+            'EducarTipoEnsinoDet',
+            'EducarTipoOcorrenciaDisciplinarDet',
+            'EducarTipoRegimeDet',
+            'EducarTransferenciaTipoDet',
+            'EducarTurmaDet',
+            'EducarTurmaTipoDet',
+            'FuncionarioVinculoDet',
+            'Logof',
+            'Manutencao',
+            'PesquisaFuncionarioLst',
+            'PortalAcessoDet',
+            'PublicDistritoDet',
+            'PublicMunicipioDet',
+            'PublicPaisDet',
+            'PublicUfDet',
+            'TransporteEmpresaDet',
+            'TransporteItinerarioCad',
+            'TransporteMotoristaDet',
+            'TransportePessoaDet',
+            'TransportePontoDet',
+            'TransporteRotaDet',
+            'TransporteVeiculoDet'
         ];
     }
 }
