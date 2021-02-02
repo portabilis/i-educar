@@ -1038,7 +1038,7 @@ class DiarioApiController extends ApiCoreController
             try {
                 $params = array(
                     'matricula' => $matriculaId,
-                    'usuario' => $this->getSession()->id_pessoa,
+                    'usuario' => \Illuminate\Support\Facades\Auth::id(),
                     'componenteCurricularId' => $this->getRequest()->componente_curricular_id,
                 );
                 $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
@@ -1776,7 +1776,7 @@ class DiarioApiController extends ApiCoreController
 
     public function canChange()
     {
-        $user = $this->getSession()->id_pessoa;
+        $user = \Illuminate\Support\Facades\Auth::id();
         $processoAp = $this->_processoAp;
         $obj_permissao = new clsPermissoes();
 
@@ -1800,8 +1800,6 @@ class DiarioApiController extends ApiCoreController
 
     public function canPostSituacaoAndNota()
     {
-
-
         $acesso = new clsPermissoes();
 
         return $acesso->permissao_cadastra(630, $this->pessoa_logada, 7, null, true);

@@ -25,7 +25,6 @@ class clsModulesVeiculo extends Model
     public $ref_cod_empresa_transporte_escolar;
     public $ref_cod_motorista;
     public $observacao;
-    public $pessoa_logada;
 
     public function __construct(
         $cod_veiculo = null,

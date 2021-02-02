@@ -60,8 +60,6 @@ class EducacensoExportController extends ApiCoreController
 {
     use Formatters;
 
-    var $pessoa_logada;
-
     var $ref_cod_escola;
     var $ref_cod_escola_;
     var $ref_cod_serie;
