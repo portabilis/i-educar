@@ -97,8 +97,6 @@ class indice extends clsListagem
         $this->inputsHelper()->dynamic('escolaSemFiltroPorUsuario', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_escola]);
         $this->inputsHelper()->dynamic(['curso', 'serie'], ['required' => false]);
 
-        //$this->inputsHelper()->select('periodo', array('required' => false, 'value' => $this->periodo, 'resources' => array(null => 'Selecione', 1 => 'Matutino', 2 => 'Vespertino', 3 => 'Noturno', 4 => 'Integral' )));
-
         $obj_permissoes = new clsPermissoes();
         $cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
 
@@ -109,9 +107,6 @@ class indice extends clsListagem
                 $ref_cod_escola = $cod_escola;
             }
         }
-
-        $array_matriculado = ['S' => 'Sim', 'N' => 'Não'];
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         if (!$configuracoes['mostrar_codigo_inep_aluno']) {
             $cabecalhos = ['Código Aluno',
