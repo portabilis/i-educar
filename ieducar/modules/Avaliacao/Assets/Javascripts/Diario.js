@@ -1962,7 +1962,7 @@ function initSummernote(sElement) {
 
         if(!attrCalss || !attrCalss.include('note-btn')) {
 
-          const currentlyValue = element.summernote("code");
+          const currentlyValue = element.val();
 
           if (value != currentlyValue) {
 
@@ -1981,6 +1981,20 @@ function initSummernote(sElement) {
 
           }
         }
+      },
+      onPaste : function (event) {
+        event.preventDefault();
+        let text = null;
+        if (window.clipboardData){
+          text = window.clipboardData.getData("Text");
+
+        } else if (event.originalEvent && event.originalEvent.clipboardData){
+          text = event.originalEvent.clipboardData.getData("Text");
+        }
+
+        element.summernote('insertText', text);
+
+        element.val(text);
       }
     }
   };
