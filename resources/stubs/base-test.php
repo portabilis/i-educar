@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Intranet;
+namespace Tests\Pages\Intranet;
 
 use Tests\LoginFirstUser;
 use Tests\TestCase;
