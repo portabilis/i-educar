@@ -55,7 +55,7 @@ class CreateViewTest extends Command
             $stub
         );
 
-        $filename = base_path('tests/Feature/Intranet/' . $class . '.php');
+        $filename = base_path('tests/Pages/Intranet/' . $class . '.php');
 
         if (file_exists($filename)) {
             return false;
