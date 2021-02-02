@@ -1883,8 +1883,6 @@ class AlunoController extends ApiCoreController
 
     protected function loadAcessoDataEntradaSaida()
     {
-
-
         $acesso = new clsPermissoes();
 
         return $acesso->permissao_cadastra(626, $this->pessoa_logada, 7, null, true);

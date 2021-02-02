@@ -1800,8 +1800,6 @@ class DiarioApiController extends ApiCoreController
 
     public function canPostSituacaoAndNota()
     {
-
-
         $acesso = new clsPermissoes();
 
         return $acesso->permissao_cadastra(630, $this->pessoa_logada, 7, null, true);

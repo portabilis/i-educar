@@ -2,6 +2,7 @@
 
 use App\Models\LegacyPerson;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
@@ -197,8 +198,8 @@ class clsFisica
         }
 
         $this->justificativa_provisorio = $justificativa_provisorio;
-        $this->idpes_cad = $idpes_cad ? $idpes_cad : Session::get('id_pessoa');
-        $this->idpes_rev = $idpes_rev ? $idpes_rev : Session::get('id_pessoa');
+        $this->idpes_cad = $idpes_cad ? $idpes_cad : Auth::id();
+        $this->idpes_rev = $idpes_rev ? $idpes_rev : Auth::id();
 
         $this->tabela = 'fisica';
         $this->schema = 'cadastro';
