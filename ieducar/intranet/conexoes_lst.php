@@ -31,7 +31,7 @@ class indice extends clsListagem
         $limite = 20;
         $iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
 
-        $id_pessoa = Session::get('id_pessoa');
+        $id_pessoa = \Illuminate\Support\Facades\Auth::id();
 
         $sql = "SELECT b.data_hora, b.ip_externo FROM acesso b WHERE cod_pessoa={$id_pessoa}";
         if (!empty($_GET['status']))
