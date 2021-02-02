@@ -38,6 +38,18 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * Retorna o header de autorização da API.
+     *
+     * @return string[]
+     */
+    protected function getAuthorizationHeader()
+    {
+        return [
+            'Authorization' => 'Bearer ' . env('API_ACCESS_KEY')
+        ];
+    }
+
+    /**
      * Método necessário para executar testes legados.
      *
      * @deprecated

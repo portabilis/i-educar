@@ -219,7 +219,7 @@ class indice extends clsDetalhe
         $situacao = App_Model_MatriculaSituacao::getSituacao($registro['aprovado']);
         $this->addDetalhe(['Situação', $situacao]);
 
-        if ($registro['aprovado'] == 4) {
+        if ($registro['aprovado'] == App_Model_MatriculaSituacao::TRANSFERIDO) {
             $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
 
             $lst_transferencia = $obj_transferencia->lista(null, null, null, null, null, $registro['cod_matricula'], null, null, null, null, null, 1, null, null, $registro['ref_cod_aluno'], false);
@@ -236,23 +236,24 @@ class indice extends clsDetalhe
                 $this->addDetalhe(['Estado escola destino', $det_transferencia['estado_escola_destino_externa']]);
                 $this->addDetalhe(['Município escola destino', $det_transferencia['municipio_escola_destino_externa']]);
             }
+            $this->addDetalhe(['Observação', $det_transferencia['observacao']]);
         }
 
         if ($registro['aprovado'] == App_Model_MatriculaSituacao::FALECIDO) {
-            $this->addDetalhe(['Observação', Portabilis_String_Utils::toLatin1($registro['observacao'])]);
+            $this->addDetalhe(['Observação', $registro['observacao']]);
         }
 
         if ($existeSaidaEscola) {
             $this->addDetalhe(['Saída da escola', 'Sim']);
             $this->addDetalhe(['Data de saída da escola', Portabilis_Date_Utils::pgSQLToBr($registro['data_saida_escola'])]);
-            $this->addDetalhe(['Observação', Portabilis_String_Utils::toLatin1($registro['observacao'])]);
+            $this->addDetalhe(['Observação', $registro['observacao']]);
         }
 
         if ($registro['aprovado'] == App_Model_MatriculaSituacao::ABANDONO) {
             $tipoAbandono = new clsPmieducarAbandonoTipo($registro['ref_cod_abandono_tipo']);
             $tipoAbandono = $tipoAbandono->detalhe();
 
-            $observacaoAbandono = Portabilis_String_Utils::toLatin1($registro['observacao']);
+            $observacaoAbandono = $registro['observacao'];
 
             $this->addDetalhe(['Motivo do Abandono', $tipoAbandono['nome']]);
             $this->addDetalhe(['Observação', $observacaoAbandono]);
