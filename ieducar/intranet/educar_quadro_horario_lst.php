@@ -91,7 +91,7 @@ class indice
   {
     $retorno = '';
 
-    $this->pessoa_logada = Session::get('id_pessoa');
+
 
     $obj_permissoes = new clsPermissoes();
 

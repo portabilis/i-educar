@@ -24,7 +24,7 @@ class clsPmieducarReservas extends Model
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}reservas";
 
-        $this->pessoa_logada = Session::get('id_pessoa');
+
 
         $this->_campos_lista = $this->_todos_campos = 'r.cod_reserva, r.ref_usuario_libera, r.ref_usuario_cad, r.ref_cod_cliente, r.data_reserva, r.data_prevista_disponivel, r.data_retirada, r.ref_cod_exemplar, r.ativo';
 

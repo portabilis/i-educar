@@ -25,7 +25,7 @@ class clsJuridica
      */
     public function __construct($idpes = false, $cnpj = false, $fantasia = false, $insc_estadual = false, $capital_social = false, $idpes_cad = false, $idpes_rev = false)
     {
-        $this->pessoa_logada = Session::get('id_pessoa');
+
 
         $objPessoa = new clsPessoa_($idpes);
         if ($objPessoa->detalhe()) {

@@ -112,7 +112,7 @@ class clsFisica
         $horario_final_trabalho = false,
         $nome_social = false
     ) {
-        $this->pessoa_logada = Session::get('id_pessoa');
+
         $objPessoa = new clsPessoa_($idpes);
         if ($objPessoa->detalhe()) {
             $this->idpes  = $idpes;

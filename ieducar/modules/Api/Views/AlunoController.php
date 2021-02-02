@@ -1883,7 +1883,7 @@ class AlunoController extends ApiCoreController
 
     protected function loadAcessoDataEntradaSaida()
     {
-        $this->pessoa_logada = Session::get('id_pessoa');
+
 
         $acesso = new clsPermissoes();
 

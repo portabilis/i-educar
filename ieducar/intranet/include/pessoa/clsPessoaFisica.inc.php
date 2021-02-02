@@ -521,7 +521,7 @@ class clsPessoaFisica extends clsPessoaFj
     public function excluir()
     {
         if ($this->idpes) {
-            $this->pessoa_logada = Session::get('id_pessoa');
+
 
             $db = new clsBanco();
             $detalheAntigo = $this->detalheSimples();
