@@ -173,7 +173,7 @@ class PromocaoApiController extends ApiCoreController
         if (!isset($this->_boletimServices[$matriculaId]) || $reload) {
             // set service
             try {
-                $params = ['matricula' => $matriculaId, 'usuario' => $this->getSession()->id_pessoa];
+                $params = ['matricula' => $matriculaId, 'usuario' => \Illuminate\Support\Facades\Auth::id()];
                 $this->_boletimServices[$matriculaId] = new Avaliacao_Service_Boletim($params);
             } catch (Exception $e) {
                 $this->messenger->append("Erro ao instanciar serviço boletim para matricula {$matriculaId}: " . $e->getMessage(), 'error', true);

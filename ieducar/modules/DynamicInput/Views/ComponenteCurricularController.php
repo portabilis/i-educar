@@ -41,7 +41,7 @@ class ComponenteCurricularController extends ApiCoreController
     protected function getComponentesCurricularesForDiario()
     {
         if ($this->canGetComponentesCurriculares()) {
-            $userId = $this->getSession()->id_pessoa;
+            $userId = \Illuminate\Support\Facades\Auth::id();
             $instituicaoId = $this->getRequest()->instituicao_id;
             $turmaId = $this->getRequest()->turma_id;
             $ano = $this->getRequest()->ano;
@@ -80,7 +80,7 @@ class ComponenteCurricularController extends ApiCoreController
                             CASE
                                 WHEN cct.etapas_especificas = 1
                                     THEN $3 = ANY (string_to_array(cct.etapas_utilizadas,',')::int[])
-                                ELSE true 
+                                ELSE true
                             END
                         )
                     ORDER BY
@@ -141,7 +141,7 @@ class ComponenteCurricularController extends ApiCoreController
     protected function getComponentesCurriculares()
     {
         if ($this->canGetComponentesCurriculares()) {
-            $userId = $this->getSession()->id_pessoa;
+            $userId = \Illuminate\Support\Facades\Auth::id();
             $instituicaoId = $this->getRequest()->instituicao_id;
             $turmaId = $this->getRequest()->turma_id;
             $ano = $this->getRequest()->ano;
