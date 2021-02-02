@@ -248,7 +248,7 @@ class FilaUnicaController extends ApiCoreController
     protected function getMontaSelectEscolasCandidato()
     {
         $cod_candidato_fila_unica = $this->getRequest()->cod_candidato_fila_unica;
-        $userId = Session::get('id_pessoa');
+        $userId = \Illuminate\Support\Facades\Auth::id();
         $nivelAcesso = $this->getNivelAcesso();
         $acessoEscolar = $nivelAcesso == 4;
 

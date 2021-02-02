@@ -95,7 +95,7 @@ class clsBase
         if (Session::get('marcado') != "private") {
             $ip = empty($_SERVER['REMOTE_ADDR']) ? "NULL" : $_SERVER['REMOTE_ADDR'];
             $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? "NULL" : $_SERVER['HTTP_X_FORWARDED_FOR'];
-            $id_pessoa = Session::get('id_pessoa');
+            $id_pessoa = \Illuminate\Support\Facades\Auth::id();
 
             $logAcesso = new clsLogAcesso(FALSE, $ip, $ip_de_rede, $id_pessoa);
             $logAcesso->cadastra();

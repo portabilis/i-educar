@@ -78,7 +78,7 @@ class indice
 
   function RenderHTML()
   {
-    $id_pessoa = Session::get('id_pessoa');
+    $id_pessoa = \Illuminate\Support\Facades\Auth::id();
 
     if ($id_pessoa) {
       $endScript = '<script>var x = new Array();' . PHP_EOL;

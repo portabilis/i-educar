@@ -670,7 +670,7 @@ abstract class CoreExt_DataMapper
         $return = $this->_getDbAdapter()->Consulta($this->_getDeleteStatment($pkToDelete));
 
         if (count($info)) {
-            $pessoa_logada = Session::get('id_pessoa');
+            $pessoa_logada = \Illuminate\Support\Facades\Auth::id();
         }
 
         return $return;

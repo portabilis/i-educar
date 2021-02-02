@@ -40,8 +40,8 @@ class clsJuridica
         $this->cnpj = $cnpj;
         $this->insc_estadual = $insc_estadual;
         $this->capital_social = $capital_social;
-        $this->idpes_cad = $idpes_cad ? $idpes_cad : Session::get('id_pessoa');
-        $this->idpes_rev = $idpes_rev ? $idpes_rev : Session::get('id_pessoa');
+        $this->idpes_cad = $idpes_cad ? $idpes_cad : \Illuminate\Support\Facades\Auth::id();
+        $this->idpes_rev = $idpes_rev ? $idpes_rev : \Illuminate\Support\Facades\Auth::id();
 
         $this->tabela = 'juridica';
         $this->schema = 'cadastro';
