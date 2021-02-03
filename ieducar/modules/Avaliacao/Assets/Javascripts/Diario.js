@@ -587,10 +587,12 @@ function postParecer($parecerFieldElement) {
     .done(function(dataResponse) {
       afterChangeResource($parecerFieldElement);
       handleChange(dataResponse);
-        $parecerFieldElement.closest('td').find('.note-editable').removeClass('bg-red').addClass('bg-green');
+        $parecerFieldElement.closest('td').find('.note-editable').removeClass('summernote-parecer-bg-red')
+            .addClass('summernote-parecer-bg-green');
     })
     .fail(function() {
-        $parecerFieldElement.closest('td').find('.note-editable').addClass('bg-red');
+        $parecerFieldElement.closest('td').find('.note-editable').removeClass('summernote-parecer-bg-green')
+            .addClass('summernote-parecer-bg-red');
         errorCallback || handleErrorOnDeleteResource;
     });
 }
@@ -1140,7 +1142,7 @@ function handleSearch($resultTable, dataResponse) {
     if ((!componenteCurricularSelected) && (showBotaoReplicarNotas))
       criaBotaoReplicarNotasPorArea(value.componentes_curriculares);
 
-    initSummernote(`parecer-matricula-${value.matricula_id}-cc-${value.componentes_curriculares[0].id}`);
+    initSummernote('parecer-matricula-'+value.matricula_id+'-cc-'+value.componentes_curriculares[0].id);
   });
   // seta colspan [th, td].aluno quando exibe nota exame
   if (useNota &&
