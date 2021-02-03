@@ -25,13 +25,16 @@
       $escolaField.append(options);
       $escolaField.trigger("chosen:updated");
     }
-
     var updateEscolas = function() {
+      let resource = 'escolas-para-selecao';
+      if ($escolaField.attr('escola_sem_filtro_por_usuario') === 'true') {
+        resource = 'escolas-para-selecao-sem-filtro-por-usuario';
+      }
       var additionalVars = {
         instituicao : $instituicaoField.val()
       };
       var options = {
-        url      : getResourceUrlBuilder.buildUrl('/module/Api/escola', 'escolas-para-selecao', additionalVars),
+        url      : getResourceUrlBuilder.buildUrl('/module/Api/escola', resource, additionalVars),
         dataType : 'json',
         data     : {},
         success  : handleGetEscolas,
