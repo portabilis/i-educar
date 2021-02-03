@@ -1958,7 +1958,7 @@ function initSummernote(sElement) {
       onBlur: function(contents) {
 
         const elementToFind = contents.relatedTarget;
-        const attrCalss = $j(elementToFind).attr('class');
+        const attrClass = $j(elementToFind).attr('class');
 
         if(!attrCalss || !attrCalss.include('note-btn')) {
 
