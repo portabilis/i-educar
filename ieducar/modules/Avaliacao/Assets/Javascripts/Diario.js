@@ -1960,7 +1960,7 @@ function initSummernote(sElement) {
         const elementToFind = contents.relatedTarget;
         const attrClass = $j(elementToFind).attr('class');
 
-        if(!attrCalss || !attrCalss.include('note-btn')) {
+        if(!attrClass || !attrClass.include('note-btn')) {
 
           const currentlyValue = element.val();
 
