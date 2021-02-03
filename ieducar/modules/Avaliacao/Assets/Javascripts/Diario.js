@@ -587,7 +587,7 @@ function postParecer($parecerFieldElement) {
     .done(function(dataResponse) {
       afterChangeResource($parecerFieldElement);
       handleChange(dataResponse);
-        $parecerFieldElement.closest('td').find('.note-editable').addClass('bg-green');
+        $parecerFieldElement.closest('td').find('.note-editable').removeClass('bg-red').addClass('bg-green');
     })
     .fail(function() {
         $parecerFieldElement.closest('td').find('.note-editable').addClass('bg-red');
