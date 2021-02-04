@@ -163,7 +163,7 @@ class indice extends clsDetalhe
                 } else {
                     $color = ' bgcolor=\'#ffffff\' ';
                 }
-                $obj_curso = new clspmieducarcurso($valor['ref_cod_curso']);
+                $obj_curso = new clsPmieducarCurso($valor['ref_cod_curso']);
                 $obj_curso->setorderby('nm_curso asc');
                 $obj_curso_det = $obj_curso->detalhe();
                 $nm_curso = $obj_curso_det['nm_curso'];
