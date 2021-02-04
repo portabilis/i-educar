@@ -55,7 +55,7 @@ class LegacyCreateTestsCommand extends Command
     }
 
     /**
-     * @description Executa o comando.
+     * Executa o comando.
      *
      * @return int
      */
@@ -84,7 +84,7 @@ class LegacyCreateTestsCommand extends Command
     }
 
     /**
-     * @description Busca todas os arquivos da pasta intranet para gerar os testes de rota
+     * Busca todas os arquivos da pasta intranet para gerar os testes de rota
      *
      * @return array
      */
@@ -114,7 +114,7 @@ class LegacyCreateTestsCommand extends Command
     }
 
     /**
-     * @description  Pega o nome do arquivo/rota
+     * Pega o nome do arquivo/rota
      *
      * @param array $data
      *
@@ -132,7 +132,7 @@ class LegacyCreateTestsCommand extends Command
     }
 
     /**
-     * @description Faz a montagem da informações para processamento
+     * Faz a montagem da informações para processamento
      *
      * @param array $allViews
      *
@@ -170,7 +170,7 @@ class LegacyCreateTestsCommand extends Command
     }
 
     /**
-     * @description Remove rota/arquivo da lista rotas que vão ser geradas
+     * Remove rota/arquivo da lista rotas que vão ser geradas
      *
      * @param array $allViews
      *
@@ -189,7 +189,7 @@ class LegacyCreateTestsCommand extends Command
     }
 
     /**
-     * @description Valida se esta na lista de exclusão
+     * Valida se esta na lista de exclusão
      *
      * @param string $className
      * @return bool
@@ -223,7 +223,7 @@ class LegacyCreateTestsCommand extends Command
     }
 
     /**
-     * @description Lista de Classes com erros conhecidos
+     * Lista de Classes com erros conhecidos
      *
      * @return string[]
      */
