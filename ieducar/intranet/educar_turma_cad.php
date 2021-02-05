@@ -14,6 +14,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 use Throwable;
+use App\Models\LegacySchoolCourse;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -287,6 +288,34 @@ class indice extends clsCadastro
             false,
             false
         );
+
+        $opcoesCursos = [
+            null => 'Selecione um curso',
+        ];
+
+        if ($this->ref_ref_cod_escola) {
+            $cursosDaEscola = LegacySchoolCourse::query()
+                ->with('course')
+                ->where('ref_cod_escola', $this->ref_ref_cod_escola)
+                ->get()
+                ->pluck('course.nm_curso', 'ref_cod_curso')
+                ->toArray();
+            $opcoesCursos = array_replace($opcoesCursos, $cursosDaEscola);
+        }
+
+        // modelos boletim
+        require_once 'Reports/Tipos/TipoBoletim.php';
+        require_once 'Portabilis/Array/Utils.php';
+        $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
+        $tiposBoletim = Portabilis_Array_Utils::insertIn(null, 'Selecione um modelo', $tiposBoletim);
+
+        $this->campoTabelaInicio('turma_serie', 'Séries da turma', ['Curso', 'Série', 'Boletim', 'Boletim diferenciado'], $this->turma_serie);
+            $this->campoLista('mult_curso_id', 'Curso', $opcoesCursos, $this->mult_curso_id);
+            $this->campoLista('mult_serie_id', 'Série', ['Selecione uma série'], $this->mult_serie_id);
+            $this->campoLista('mult_boletim_id', 'Boletim', $tiposBoletim, $this->mult_boletim_id);
+            $this->campoLista('mult_boletim_diferenciado_id', 'Boletim diferenciado', $tiposBoletim, $this->mult_boletim_diferenciado_id);
+        $this->campoTabelaFim();
+
         $this->inputsHelper()->dynamic('curso', ['value' => $this->ref_cod_curso, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('serie', ['value' => $this->ref_cod_serie, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('anoLetivo', ['value' => $this->ano, 'disabled' => $desabilitado]);
@@ -490,13 +519,6 @@ class indice extends clsCadastro
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
         $this->inputsHelper()->turmaTurno();
-
-        // modelos boletim
-        require_once 'Reports/Tipos/TipoBoletim.php';
-        require_once 'Portabilis/Array/Utils.php';
-
-        $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
-        $tiposBoletim = Portabilis_Array_Utils::insertIn(null, 'Selecione um modelo', $tiposBoletim);
 
         $this->campoLista('tipo_boletim', 'Modelo relat&oacute;rio boletim', $tiposBoletim, $this->tipo_boletim);
         $this->campoLista('tipo_boletim_diferenciado', 'Modelo relat&oacute;rio boletim diferenciado', $tiposBoletim, $this->tipo_boletim_diferenciado, '', false, '', '', false, false);
