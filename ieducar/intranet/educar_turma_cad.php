@@ -279,6 +279,14 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->dynamic('instituicao', ['value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('escola', ['value' => $this->ref_cod_escola, 'disabled' => $desabilitado]);
+        $this->campoCheck(
+            'multiseriada',
+            'Multisseriada',
+            $this->multiseriada,
+            '',
+            false,
+            false
+        );
         $this->inputsHelper()->dynamic('curso', ['value' => $this->ref_cod_curso, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('serie', ['value' => $this->ref_cod_serie, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('anoLetivo', ['value' => $this->ano, 'disabled' => $desabilitado]);
@@ -428,15 +436,6 @@ class indice extends clsCadastro
 
         $ativo = isset($this->cod_turma) ? dbBool($this->visivel) : true;
         $this->campoCheck('visivel', 'Ativo', $ativo);
-
-        $this->campoCheck(
-            'multiseriada',
-            'Multi-Seriada',
-            $this->multiseriada,
-            '',
-            false,
-            false
-        );
 
         $resources = SelectOptions::tiposMediacaoDidaticoPedagogico();
         $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => $obrigarCamposCenso, 'size' => 70,];
