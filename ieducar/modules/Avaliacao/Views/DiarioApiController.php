@@ -1041,6 +1041,7 @@ class DiarioApiController extends ApiCoreController
                     'matricula' => $matriculaId,
                     'usuario' => $this->getSession()->id_pessoa,
                     'componenteCurricularId' => $this->getRequest()->componente_curricular_id,
+                    'turmaId' => $this->getRequest()->turma_id,
                 ];
                 $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
             } catch (Exception $e) {
