@@ -675,7 +675,8 @@ class indice extends clsCadastro
 
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/Turma.js',
-            '/intranet/scripts/etapas.js'
+            '/intranet/scripts/etapas.js',
+            '/intranet/scripts/tabelaSerieMult.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
