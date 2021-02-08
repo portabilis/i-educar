@@ -67,7 +67,7 @@ trait JsonDataSource
                 (CASE WHEN {$notSchool} THEN instituicao.logradouro ELSE a.address END) AS logradouro,
                 (CASE WHEN {$notSchool} THEN instituicao.numero::text ELSE a.number END) AS numero,
                 (CASE WHEN {$notSchool} THEN instituicao.cep::text ELSE a.postal_code END) AS cep,
-                view_dados_escola.inep,
+                (CASE WHEN {$notSchool} THEN NULL ELSE view_dados_escola.inep END) AS inep,
                 escola.ato_autorizativo,
                 escola.ato_criacao,
                 configuracoes_gerais.emitir_ato_autorizativo,
