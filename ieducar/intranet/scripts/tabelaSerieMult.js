@@ -96,3 +96,38 @@ function atualizaOpcoesDeSerie(input) {
 
     getResources(options);
 }
+
+function atualizaOpcoesAnoLetivo() {
+    let escolaId = $j('#ref_cod_escola').val();
+    let series = [];
+    let combosSeries = $j('select[name^="mult_serie_id"]');
+
+    $j.each(combosSeries, function(key, serie){
+        series.push(serie.value);
+    });
+
+    var url = getResourceUrlBuilder.buildUrl(
+        '/module/DynamicInput/AnoLetivo',
+        'anos_letivos_em_comum_series_da_escola',
+        {
+            escola_id : escolaId,
+            series : series
+        }
+    );
+
+    var options = {
+        url      : url,
+        dataType : 'json',
+        success  : function(response) {
+            let comboAnoLetivo = $j('#ano_letivo');
+            comboAnoLetivo.empty();
+            comboAnoLetivo.append('<option value="">Selecione um ano letivo</option>');
+
+            $j.each(response.anos_letivos, function(key, ano) {
+                comboAnoLetivo.append('<option value="' + ano + '">' + ano + '</option>');
+            });
+        }
+    };
+
+    getResources(options);
+}
