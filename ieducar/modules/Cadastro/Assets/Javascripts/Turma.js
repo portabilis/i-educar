@@ -246,6 +246,8 @@ $j(document).ready(function() {
           row.show();
         }
       });
+      //multisseriada
+      configuraCamposExibidos();
     }
   );
 
