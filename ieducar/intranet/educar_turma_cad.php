@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use RuntimeException;
 use Throwable;
 use App\Models\LegacySchoolCourse;
+use App\Http\Controllers\SchoolClassGradeController;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -231,6 +232,7 @@ class indice extends clsCadastro
 
         $this->campoOculto('obrigar_campos_censo', (int)$obrigarCamposCenso);
         $this->campoOculto('cod_turma', $this->cod_turma);
+        $this->campoOculto('ref_cod_escola_', $this->ref_cod_escola);
         $this->campoOculto('ano_letivo_', $this->ano);
         $this->campoOculto('dependencia_administrativa', $this->dependencia_administrativa);
         $this->campoOculto('modalidade_curso', $this->modalidade_curso);
@@ -909,6 +911,11 @@ class indice extends clsCadastro
 
         $this->cod_turma = $cadastrou = $objTurma->cadastra();
 
+        if ($this->multiseriada) {
+            $controller = new SchoolClassGradeController;
+            $controller->storeSchoolClassGrade(request());
+        }
+
         if (!$cadastrou) {
             $this->mensagem = 'Cadastro não realizado.';
 
@@ -994,6 +1001,11 @@ class indice extends clsCadastro
 
         DB::beginTransaction();
         $editou = $objTurma->edita();
+
+        if ($this->multiseriada) {
+            $controller = new SchoolClassGradeController;
+            $controller->storeSchoolClassGrade(request());
+        }
 
         if (!$editou) {
             $this->mensagem = 'Edição não realizada.';
