@@ -110,6 +110,14 @@ function atualizaOpcoesDeSerie(input, value) {
     let cursoId = input.value;
     let linha = input.id.replace(/\D/g, '');
 
+    let comboSerie = $j('select[id="mult_serie_id['+linha+']"]');
+    comboSerie.empty();
+    comboSerie.append('<option value="">Selecione uma série</option>');
+
+    if (cursoId == '') {
+        return;
+    }
+
     var url = getResourceUrlBuilder.buildUrl(
         '/module/Api/Serie',
         'series',
@@ -125,10 +133,6 @@ function atualizaOpcoesDeSerie(input, value) {
         url      : url,
         dataType : 'json',
         success  : function(response) {
-            let comboSerie = $j('select[id="mult_serie_id['+linha+']"]');
-            comboSerie.empty();
-            comboSerie.append('<option value="">Selecione uma série</option>');
-
             $j.each(response.series, function(key, serie) {
                 comboSerie.append('<option value="' + serie.id + '">' + serie.nome + '</option>');
             });
