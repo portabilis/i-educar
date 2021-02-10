@@ -532,7 +532,7 @@ class indice extends clsCadastro
             $reload = Session::get('reload_faixa_etaria');
 
             if ($verificarDataCorte && !$reload) {
-                $instituicao = new clsPmiEducarInstituicao($this->ref_cod_instituicao);
+                $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
                 $instituicao = $instituicao->detalhe();
 
                 $dataCorte = $instituicao['data_base_matricula'];
