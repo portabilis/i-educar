@@ -24,10 +24,14 @@ function configuraCamposExibidos() {
         $j('#tr_ref_cod_curso').hide();
         $j('#tr_ref_cod_serie').hide();
         $j('#tr_turma_serie').show();
+        if ($j("[name^=tr_turma_serie]").length == 0) {
+            tab_add_1.addRow();
+        }
     } else {
         $j('#tr_ref_cod_curso').show();
         $j('#tr_ref_cod_serie').show();
         $j('#tr_turma_serie').hide();
+        $j("[name^=tr_turma_serie]").remove();
     }
 }
 
