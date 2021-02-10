@@ -10,7 +10,7 @@ $j('#ref_cod_escola').change(function(){
 });
 
 $j('#btn_add_tab_add_1').click(function(){
-    let lastComboId = $j('select[name^="mult_curso_id"]').length - 1;
+    let lastComboId = $j('select[name^="mult_curso_id"]').length;
     let lastCombo = $j('select[name="mult_curso_id['+lastComboId+']"]');
     $j.each(opcoesCurso, function(key, curso) {
         lastCombo.append('<option value="' + key + '">' + curso + '</option>');
