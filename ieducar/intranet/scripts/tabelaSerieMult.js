@@ -17,6 +17,42 @@ $j('#btn_add_tab_add_1').click(function(){
     });
 });
 
+if ($j('#cod_turma').val() > 0 && $j('#multiseriada').is(':checked')) {
+    preencheTabelaSeriesDaTurma();
+}
+
+function preencheTabelaSeriesDaTurma() {
+    let turmaId = $j('#cod_turma').val();
+
+    var url = getResourceUrlBuilder.buildUrl(
+        '/module/Api/Turma',
+        'series-da-turma',
+        {
+            turma_id : turmaId
+        }
+    );
+
+    var options = {
+        url      : url,
+        dataType : 'json',
+        success  : function(response) {
+            let linha = 0;
+            $j("[name^=tr_turma_serie]").remove();
+
+            $j.each(response.series_turma, function(key, serie_turma) {
+                tab_add_1.addRow();
+                linha = key + 1;
+                $j('select[id="mult_curso_id['+ linha +']"]').val(serie_turma.ref_cod_curso);
+                atualizaOpcoesDeSerie(document.getElementById('mult_curso_id[' + linha +']'), serie_turma.serie_id);
+                $j('select[id="mult_boletim_id['+ linha +']"]').val(serie_turma.boletim_id);
+                $j('select[id="mult_boletim_diferenciado_id['+ linha +']"]').val(serie_turma.boletim_diferenciado_id);
+            });
+        }
+    };
+
+    getResources(options);
+}
+
 function configuraCamposExibidos() {
     let turmaMultisseriada = $j('#multiseriada').is(':checked');
     
@@ -67,7 +103,7 @@ function atualizaOpcoesDeCurso() {
     getResources(options);
 }
 
-function atualizaOpcoesDeSerie(input) {
+function atualizaOpcoesDeSerie(input, value) {
     let instituicaoId = $j('#ref_cod_instituicao').val();
     let escolaId = $j('#ref_cod_escola').val();
     let cursoId = input.value;
@@ -95,6 +131,10 @@ function atualizaOpcoesDeSerie(input) {
             $j.each(response.series, function(key, serie) {
                 comboSerie.append('<option value="' + serie.id + '">' + serie.nome + '</option>');
             });
+
+            if (value > 0) {
+                $j('select[id="mult_serie_id['+ linha +']"]').val(value);
+            }
         }
     };
 
