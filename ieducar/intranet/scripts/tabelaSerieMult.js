@@ -62,6 +62,7 @@ function configuraCamposExibidos() {
         $j('#tr_turma_serie').show();
         if ($j("[name^=tr_turma_serie]").length == 0) {
             tab_add_1.addRow();
+            atualizaOpcoesDeCurso();
         }
     } else {
         $j('#tr_ref_cod_curso').show();
