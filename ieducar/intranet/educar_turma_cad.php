@@ -1002,8 +1002,13 @@ class indice extends clsCadastro
         DB::beginTransaction();
         $editou = $objTurma->edita();
 
+        $controller = new SchoolClassGradeController;
+
+        if ($turmaDetalhe['multiseriada'] == 1 && $this->multiseriada == 0) {
+            $controller->deleteAllGradesOfSchoolClass(request());
+        }
+
         if ($this->multiseriada) {
-            $controller = new SchoolClassGradeController;
             $controller->storeSchoolClassGrade(request());
         }
 

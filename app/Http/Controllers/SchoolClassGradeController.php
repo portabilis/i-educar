@@ -27,6 +27,13 @@ class SchoolClassGradeController extends Controller
         $this->saveSchoolClassGrade($schoolClassGrades);
     }
 
+    public function deleteAllGradesOfSchoolClass(Request $request) {
+        $schoolClass = $request->get('cod_turma');
+        LegacySchoolClassGrade::query()
+            ->where('turma_id', $schoolClass)
+            ->delete();
+    }
+
     private function saveSchoolClassGrade($schoolClassGrades)
     {
         foreach ($schoolClassGrades as $schoolClassGrade) {
