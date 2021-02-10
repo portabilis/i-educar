@@ -749,7 +749,7 @@ class indice extends clsCadastro
                 );
             }
 
-            $objInstituicao = new clsPmiEducarInstituicao($this->ref_cod_instituicao);
+            $objInstituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
             $detInstituicao = $objInstituicao->detalhe();
             $controlaEspacoUtilizacaoAluno = $detInstituicao['controlar_espaco_utilizacao_aluno'];
 
@@ -1008,7 +1008,7 @@ class indice extends clsCadastro
 
     public function permiteDependenciaAnoConcluinte()
     {
-        $instituicao = new clsPmiEducarInstituicao($this->ref_cod_instituicao);
+        $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
         $instituicao = $instituicao->detalhe();
         $serie = new clsPmieducarSerie($this->ref_cod_serie);
         $serie = $serie->detalhe();
