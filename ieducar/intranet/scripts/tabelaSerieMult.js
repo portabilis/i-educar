@@ -143,6 +143,10 @@ function atualizaOpcoesDeSerie(input, value) {
 }
 
 function atualizaOpcoesAnoLetivo() {
+    if ($j('#ano_letivo').prop('disabled')) {
+        return;
+    }
+
     let escolaId = $j('#ref_cod_escola').val();
     let series = [];
     let combosSeries = $j('select[name^="mult_serie_id"]');
