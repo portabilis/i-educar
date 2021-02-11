@@ -10,10 +10,11 @@ $j('#ref_cod_escola').change(function(){
 });
 
 $j('#btn_add_tab_add_1').click(function(){
-    let lastComboId = $j('select[name^="mult_curso_id"]').length;
-    let lastCombo = $j('select[name="mult_curso_id['+lastComboId+']"]');
+    let quantidadeDeCursos = $j('select[name^="mult_curso_id"]').length;
+    let idUltimoSelectCurso = $j('select[name^="mult_curso_id"]')[quantidadeDeCursos - 1].id;
+    let ultimoCurso = $j('select[id="'+idUltimoSelectCurso+'"]');
     $j.each(opcoesCurso, function(key, curso) {
-        lastCombo.append('<option value="' + key + '">' + curso + '</option>');
+        ultimoCurso.append('<option value="' + key + '">' + curso + '</option>');
     });
 });
 
