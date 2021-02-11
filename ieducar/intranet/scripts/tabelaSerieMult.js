@@ -46,6 +46,7 @@ function preencheTabelaSeriesDaTurma() {
                 atualizaOpcoesDeSerie(document.getElementById('mult_curso_id[' + linha +']'), serie_turma.serie_id);
                 $j('select[id="mult_boletim_id['+ linha +']"]').val(serie_turma.boletim_id);
                 $j('select[id="mult_boletim_diferenciado_id['+ linha +']"]').val(serie_turma.boletim_diferenciado_id);
+                $j('input[id="mult_padrao_ano_escolar['+ linha +']"]').val(serie_turma.padrao_ano_escolar);
             });
         }
     };
@@ -104,6 +105,11 @@ function atualizaOpcoesDeCurso() {
     getResources(options);
 }
 
+function atualizaInformacoesComBaseNoCurso(inputCurso) {
+    atualizaOpcoesDeSerie(inputCurso, 0);
+    atualizaPadraoAnoEscolar(inputCurso);
+}
+
 function atualizaOpcoesDeSerie(input, value) {
     let instituicaoId = $j('#ref_cod_instituicao').val();
     let escolaId = $j('#ref_cod_escola').val();
@@ -140,6 +146,34 @@ function atualizaOpcoesDeSerie(input, value) {
             if (value > 0) {
                 $j('select[id="mult_serie_id['+ linha +']"]').val(value);
             }
+        }
+    };
+
+    getResources(options);
+}
+
+function atualizaPadraoAnoEscolar(input) {
+    let cursoId = input.value;
+    let linha = input.id.replace(/\D/g, '');
+
+    if (cursoId == '') {
+        return;
+    }
+
+    var url = getResourceUrlBuilder.buildUrl(
+        '/module/Api/Curso',
+        'dados-curso',
+        {
+            curso_id : cursoId
+        }
+    );
+
+    var options = {
+        url      : url,
+        dataType : 'json',
+        success  : function(response) {
+            let padrao_ano_escolar = response.dados_curso['padrao_ano_escolar'] ? 1 : 0;
+            $j('input[id="mult_padrao_ano_escolar['+ linha +']"]').val(padrao_ano_escolar);
         }
     };
 

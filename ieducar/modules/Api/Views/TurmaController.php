@@ -386,8 +386,9 @@ class TurmaController extends ApiCoreController
     {
         $schoolClass = $this->getRequest()->turma_id;
         $seriesDaTurma = LegacySchoolClassGrade::query()
-            ->select('turma_serie.*', 'serie.ref_cod_curso')
+            ->select('turma_serie.*', 'serie.ref_cod_curso', 'curso.padrao_ano_escolar')
             ->join('pmieducar.serie', 'serie.cod_serie', '=', 'turma_serie.serie_id')
+            ->join('pmieducar.curso', 'curso.cod_curso', '=', 'serie.ref_cod_curso')
             ->where('turma_id', $schoolClass)
             ->get()
             ->toArray();
