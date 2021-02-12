@@ -16,6 +16,8 @@ $j('#btn_add_tab_add_1').click(function(){
     $j.each(opcoesCurso, function(key, curso) {
         ultimoCurso.append('<option value="' + key + '">' + curso + '</option>');
     });
+    let linha = idUltimoSelectCurso.replace(/\D/g, '');
+    adicionaEventoClickAoRemoverLinha('link_remove['+ linha +']');
 });
 
 if ($j('#cod_turma').val() > 0 && $j('#multiseriada').is(':checked')) {
@@ -48,6 +50,7 @@ function preencheTabelaSeriesDaTurma() {
                 $j('select[id="mult_boletim_id['+ linha +']"]').val(serie_turma.boletim_id);
                 $j('select[id="mult_boletim_diferenciado_id['+ linha +']"]').val(serie_turma.boletim_diferenciado_id);
                 $j('input[id="mult_padrao_ano_escolar['+ linha +']"]').val(serie_turma.padrao_ano_escolar);
+                adicionaEventoClickAoRemoverLinha('link_remove['+ linha +']');
             });
         }
     };
@@ -109,6 +112,11 @@ function atualizaOpcoesDeCurso() {
 function atualizaInformacoesComBaseNoCurso(inputCurso) {
     atualizaOpcoesDeSerie(inputCurso, 0);
     atualizaPadraoAnoEscolar(inputCurso);
+}
+
+function atualizaInformacoesComBaseNaSerie() {
+    atualizaOpcoesAnoLetivo()
+    defineSerieCursoPrincipal();
 }
 
 function atualizaOpcoesDeSerie(input, value) {
@@ -218,4 +226,42 @@ function atualizaOpcoesAnoLetivo() {
     };
 
     getResources(options);
+}
+
+function defineSerieCursoPrincipal() {
+    let combosCursos = $j('select[name^="mult_curso_id"]');
+    let cursoPrincipal = 0;
+    let seriePrincipal = 0;
+
+    $j.each(combosCursos, function(key, curso) {
+        let idLinha = curso.id.replace(/\D/g, '');
+        let padraoAnoEscolar = $j('input[id="mult_padrao_ano_escolar['+idLinha+']"]').val();
+        let serieId = $j('select[id="mult_serie_id['+idLinha+']"]').val();
+
+        if (key == 0) {
+            cursoPrincipal = curso.value;
+            seriePrincipal = serieId;
+        }
+
+        if (padraoAnoEscolar == 0) {
+            cursoPrincipal = curso.value;
+            seriePrincipal = serieId;
+            return false;
+        }
+    });
+
+    $j('#ref_cod_curso').val(cursoPrincipal);
+
+    $j.ajax({
+        url:getEscolaCursoSerie(),
+        success:function(){
+            $j('#ref_cod_serie').val(seriePrincipal);
+        }
+    })
+}
+
+function adicionaEventoClickAoRemoverLinha(idLinkRemove) {
+    $j('a[id="' + idLinkRemove + '"]').click(function() {
+        defineSerieCursoPrincipal();
+    })
 }

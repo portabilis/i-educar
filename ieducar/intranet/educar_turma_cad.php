@@ -313,7 +313,7 @@ class indice extends clsCadastro
 
         $this->campoTabelaInicio('turma_serie', 'Séries da turma', ['Curso', 'Série', 'Boletim', 'Boletim diferenciado'], $this->turma_serie);
             $this->campoLista('mult_curso_id', 'Curso', $opcoesCursos, $this->mult_curso_id, 'atualizaInformacoesComBaseNoCurso(this)');
-            $this->campoLista('mult_serie_id', 'Série', ['Selecione uma série'], $this->mult_serie_id, 'atualizaOpcoesAnoLetivo()');
+            $this->campoLista('mult_serie_id', 'Série', ['Selecione uma série'], $this->mult_serie_id, 'atualizaInformacoesComBaseNaSerie()');
             $this->campoLista('mult_boletim_id', 'Boletim', $tiposBoletim, $this->mult_boletim_id);
             $this->campoLista('mult_boletim_diferenciado_id', 'Boletim diferenciado', $tiposBoletim, $this->mult_boletim_diferenciado_id, null, null, null, null, null, false);
             $this->campoOculto('mult_padrao_ano_escolar', $this->mult_padrao_ano_escolar);
