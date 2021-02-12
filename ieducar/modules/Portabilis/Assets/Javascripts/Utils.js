@@ -66,14 +66,11 @@ $j.fn.makeUnrequired = function(){
 
 // Aplica o autocomplete off nos campo de input
 function fixAutoComplete() {
-  if (/firefox/.test(navigator.userAgent.toLowerCase())) {
-    $j(':input').live('focus',function() {
+  $j(':input').live('focus', function () {
+    if (/firefox/.test(navigator.userAgent.toLowerCase())) {
       $j(this).attr('autocomplete', 'off');
-    });
-    return;
-  }
-
-  $j(':input').live('focus',function() {
+      return;
+    }
     $j(this).attr('autocomplete', 'nope');
   });
 }
