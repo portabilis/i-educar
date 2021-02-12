@@ -64,6 +64,13 @@ $j.fn.makeUnrequired = function(){
   });
 }
 
+// Aplica o autocomplete off nos campo de input
+function fixAutoComplete() {
+  $j(':input').live('focus',function() {
+    $j(this).attr('autocomplete', 'off');
+  });
+}
+
 function fixupFieldsWidth(additionalFields, force){
   if (! $j(document).data('fixed-fields-width') || force) {
     var maxWidth = 0;
