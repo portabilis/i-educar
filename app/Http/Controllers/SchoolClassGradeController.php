@@ -3,21 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\LegacySchoolClassGrade;
+use App\Models\LegacySchoolClass;
 use Illuminate\Http\Request;
 
 class SchoolClassGradeController extends Controller
 {
-    public function storeSchoolClassGrade(Request $request)
+    public function storeSchoolClassGrade(Request $request, LegacySchoolClass $schoolClass)
     {
         $schoolClassGrades = [];
-        $schoolClass = $request->get('cod_turma');
         $school = $request->get('ref_cod_escola') ?? $request->get('ref_cod_escola_');
-
+    
         foreach ($request->get('mult_serie_id') as $key => $serieId) {
             $schoolClassGrades[] = [
                 'escola_id' => $school,
                 'serie_id' => $serieId,
-                'turma_id' => $schoolClass,
+                'turma_id' => $schoolClass->getKey(),
                 'boletim_id' => $request->get('mult_boletim_id')[$key],
                 'boletim_diferenciado_id' => $request->get('mult_boletim_diferenciado_id')[$key],
             ];
@@ -27,10 +27,9 @@ class SchoolClassGradeController extends Controller
         $this->saveSchoolClassGrade($schoolClassGrades);
     }
 
-    public function deleteAllGradesOfSchoolClass(Request $request) {
-        $schoolClass = $request->get('cod_turma');
+    public function deleteAllGradesOfSchoolClass(Request $request, LegacySchoolClass $schoolClass) {
         LegacySchoolClassGrade::query()
-            ->where('turma_id', $schoolClass)
+            ->where('turma_id', $schoolClass->getId())
             ->delete();
     }
 

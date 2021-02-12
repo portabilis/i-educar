@@ -910,11 +910,14 @@ class indice extends clsCadastro
 
         $objTurma = $this->montaObjetoTurma(null, $this->pessoa_logada);
 
+        DB::beginTransaction();
         $this->cod_turma = $cadastrou = $objTurma->cadastra();
+
+        $schoolClass = LegacySchoolClass::find($this->cod_turma);
 
         if ($this->multiseriada) {
             $controller = new SchoolClassGradeController;
-            $controller->storeSchoolClassGrade(request());
+            $controller->storeSchoolClassGrade(request(), $schoolClass);
         }
 
         if (!$cadastrou) {
@@ -942,6 +945,8 @@ class indice extends clsCadastro
         if (!$this->atualizaModulos()) {
             return false;
         }
+
+        DB::commit();
 
         $this->mensagem = 'Cadastro efetuado com sucesso.';
         $this->simpleRedirect('educar_turma_lst.php');
@@ -1004,13 +1009,14 @@ class indice extends clsCadastro
         $editou = $objTurma->edita();
 
         $controller = new SchoolClassGradeController;
+        $schoolClass = LegacySchoolClass::find($this->cod_turma);
 
         if ($turmaDetalhe['multiseriada'] == 1 && $this->multiseriada == 0) {
-            $controller->deleteAllGradesOfSchoolClass(request());
+            $controller->deleteAllGradesOfSchoolClass(request(), $schoolClass);
         }
 
         if ($this->multiseriada) {
-            $controller->storeSchoolClassGrade(request());
+            $controller->storeSchoolClassGrade(request(), $schoolClass);
         }
 
         if (!$editou) {
