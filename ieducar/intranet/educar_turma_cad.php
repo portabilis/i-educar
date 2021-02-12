@@ -799,7 +799,7 @@ class indice extends clsCadastro
                     }
 
                     $conteudo .= '<tr class="linha-disciplina" >';
-                    $conteudo .= "<td><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" class='check-disciplina' id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</td>";
+                    $conteudo .= "<td><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" class='check-disciplina' id=\"disciplinas[$registro->id]\" value=\"{$registro->id}\">{$registro}</td>";
                     $conteudo .= "<td>{$registro->abreviatura}</td>";
                     $conteudo .= "<td><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></td>";
                     $conteudo .= "<td><input type='checkbox' name='usar_componente[$registro->id]' value='1' " . ($usarComponente == true ? $checked : '') . ">($cargaComponente h)</td>";
