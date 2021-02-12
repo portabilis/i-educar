@@ -70,11 +70,12 @@ function fixAutoComplete() {
     $j(':input').live('focus',function() {
       $j(this).attr('autocomplete', 'off');
     });
-  } else {
-    $j(':input').live('focus',function() {
-      $j(this).attr('autocomplete', 'nope');
-    });
+    return;
   }
+
+  $j(':input').live('focus',function() {
+    $j(this).attr('autocomplete', 'nope');
+  });
 }
 
 function fixupFieldsWidth(additionalFields, force){
