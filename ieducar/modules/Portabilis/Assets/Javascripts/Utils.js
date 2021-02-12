@@ -67,7 +67,7 @@ $j.fn.makeUnrequired = function(){
 // Aplica o autocomplete off nos campo de input
 function fixAutoComplete() {
   $j(':input').live('focus',function() {
-    $j(this).attr('autocomplete', 'off');
+    $j(this).attr('autocomplete', 'nope');
   });
 }
 
