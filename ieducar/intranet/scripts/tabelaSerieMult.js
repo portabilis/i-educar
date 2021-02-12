@@ -241,11 +241,15 @@ function defineSerieCursoPrincipal() {
         if (key == 0) {
             cursoPrincipal = curso.value;
             seriePrincipal = serieId;
+            $j('#padrao_ano_escolar').val(1);
+            setModuleAndPhasesVisibility(false);
         }
 
         if (padraoAnoEscolar == 0) {
             cursoPrincipal = curso.value;
             seriePrincipal = serieId;
+            $j('#padrao_ano_escolar').val(0);
+            setModuleAndPhasesVisibility(true);
             return false;
         }
     });
