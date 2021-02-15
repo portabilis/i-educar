@@ -15,15 +15,13 @@ class CreatePmieducarMaterialDidaticoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.material_didatico_cod_material_didatico_seq
                     START WITH 1
                     INCREMENT BY 1
                     MINVALUE 0
                     NO MAXVALUE
                     CACHE 1;
-                    
+
                 CREATE TABLE pmieducar.material_didatico (
                     cod_material_didatico integer DEFAULT nextval(\'pmieducar.material_didatico_cod_material_didatico_seq\'::regclass) NOT NULL,
                     ref_cod_instituicao integer NOT NULL,
@@ -37,7 +35,7 @@ class CreatePmieducarMaterialDidaticoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.material_didatico
                     ADD CONSTRAINT material_didatico_pkey PRIMARY KEY (cod_material_didatico);
 

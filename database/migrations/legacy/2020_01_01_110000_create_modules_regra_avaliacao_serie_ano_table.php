@@ -15,8 +15,6 @@ class CreateModulesRegraAvaliacaoSerieAnoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-                
                 CREATE TABLE modules.regra_avaliacao_serie_ano (
                     serie_id integer NOT NULL,
                     regra_avaliacao_id integer NOT NULL,
@@ -24,7 +22,7 @@ class CreateModulesRegraAvaliacaoSerieAnoTable extends Migration
                     ano_letivo smallint NOT NULL,
 	                updated_at timestamp NOT NULL DEFAULT now()
                 );
-                
+
                 ALTER TABLE ONLY modules.regra_avaliacao_serie_ano
                     ADD CONSTRAINT regra_avaliacao_serie_ano_pkey PRIMARY KEY (serie_id, ano_letivo);
             '

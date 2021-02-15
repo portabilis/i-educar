@@ -15,8 +15,6 @@ class CreatePmieducarCalendarioDiaMotivoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.calendario_dia_motivo_cod_calendario_dia_motivo_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -37,7 +35,7 @@ class CreatePmieducarCalendarioDiaMotivoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     nm_motivo character varying(255) NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.calendario_dia_motivo
                     ADD CONSTRAINT calendario_dia_motivo_pkey PRIMARY KEY (cod_calendario_dia_motivo);
 

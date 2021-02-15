@@ -15,14 +15,12 @@ class CreateCadastroFisicaFotoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE TABLE cadastro.fisica_foto (
                     idpes integer NOT NULL,
                     caminho character varying(255),
 	                updated_at timestamp NULL DEFAULT now()
                 );
-                
+
                 ALTER TABLE ONLY cadastro.fisica_foto
                     ADD CONSTRAINT fisica_foto_pkey PRIMARY KEY (idpes);
             '

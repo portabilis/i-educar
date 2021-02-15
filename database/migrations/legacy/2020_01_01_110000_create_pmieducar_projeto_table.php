@@ -15,8 +15,6 @@ class CreatePmieducarProjetoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.projeto_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -29,7 +27,7 @@ class CreatePmieducarProjetoTable extends Migration
                     nome character varying(50),
                     observacao character varying(255)
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.projeto
                     ADD CONSTRAINT pmieducar_projeto_cod_projeto PRIMARY KEY (cod_projeto);
 

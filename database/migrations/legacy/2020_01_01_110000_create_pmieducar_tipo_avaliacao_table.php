@@ -15,8 +15,6 @@ class CreatePmieducarTipoAvaliacaoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE SEQUENCE pmieducar.tipo_avaliacao_cod_tipo_avaliacao_seq
                     START WITH 1
                     INCREMENT BY 1

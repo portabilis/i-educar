@@ -15,8 +15,6 @@ class CreatePmieducarAlunoHistoricoAlturaPesoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE TABLE pmieducar.aluno_historico_altura_peso (
                     ref_cod_aluno integer NOT NULL,
                     data_historico date NOT NULL,

@@ -15,8 +15,6 @@ class CreateCadastroDeficienciaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE cadastro.deficiencia_cod_deficiencia_seq
                     START WITH 15
                     INCREMENT BY 1

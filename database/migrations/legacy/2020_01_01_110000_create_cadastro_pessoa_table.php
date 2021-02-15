@@ -15,8 +15,6 @@ class CreateCadastroPessoaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE cadastro.seq_pessoa
                     START WITH 0
                     INCREMENT BY 1
@@ -42,7 +40,7 @@ class CreateCadastroPessoaTable extends Migration
                     CONSTRAINT ck_pessoa_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar) OR (situacao = \'P\'::bpchar))),
                     CONSTRAINT ck_pessoa_tipo CHECK (((tipo = \'F\'::bpchar) OR (tipo = \'J\'::bpchar)))
                 );
-                
+
                 ALTER TABLE ONLY cadastro.pessoa
                     ADD CONSTRAINT pk_pessoa PRIMARY KEY (idpes);
 
