@@ -15,8 +15,6 @@ class CreatePmieducarMatriculaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.matricula_cod_matricula_seq
                     START WITH 0
                     INCREMENT BY 1
@@ -55,7 +53,7 @@ class CreatePmieducarMatriculaTable extends Migration
                     data_saida_escola date,
 	                updated_at timestamp NULL DEFAULT now()
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.matricula
                     ADD CONSTRAINT matricula_pkey PRIMARY KEY (cod_matricula);
 

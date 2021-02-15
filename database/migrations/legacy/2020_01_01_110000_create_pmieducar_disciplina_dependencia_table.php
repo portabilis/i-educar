@@ -15,8 +15,6 @@ class CreatePmieducarDisciplinaDependenciaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE TABLE pmieducar.disciplina_dependencia (
                     ref_cod_matricula integer NOT NULL,
                     ref_cod_disciplina integer NOT NULL,
@@ -26,7 +24,7 @@ class CreatePmieducarDisciplinaDependenciaTable extends Migration
                     cod_disciplina_dependencia integer NOT NULL,
 	                updated_at timestamp NULL DEFAULT now()
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.disciplina_dependencia
                     ADD CONSTRAINT cod_disciplina_dependencia_pkey PRIMARY KEY (cod_disciplina_dependencia);
             '

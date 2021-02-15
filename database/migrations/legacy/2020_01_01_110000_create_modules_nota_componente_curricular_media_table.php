@@ -15,8 +15,6 @@ class CreateModulesNotaComponenteCurricularMediaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE TABLE modules.nota_componente_curricular_media (
                     nota_aluno_id integer NOT NULL,
                     componente_curricular_id integer NOT NULL,
@@ -26,7 +24,7 @@ class CreateModulesNotaComponenteCurricularMediaTable extends Migration
                     situacao integer,
 	                bloqueada bool NOT NULL DEFAULT false
                 );
-                
+
                 ALTER TABLE ONLY modules.nota_componente_curricular_media
                     ADD CONSTRAINT nota_componente_curricular_media_pkey PRIMARY KEY (nota_aluno_id, componente_curricular_id);
             '

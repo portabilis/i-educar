@@ -15,8 +15,6 @@ class CreateModulesPontoTransporteEscolarTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE SEQUENCE modules.ponto_transporte_escolar_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -35,7 +33,7 @@ class CreateModulesPontoTransporteEscolarTable extends Migration
                     latitude character varying(20),
                     longitude character varying(20)
                 );
-                
+
                 ALTER TABLE ONLY modules.ponto_transporte_escolar
                     ADD CONSTRAINT ponto_transporte_escolar_cod_ponto_transporte_escolar_pkey PRIMARY KEY (cod_ponto_transporte_escolar);
 

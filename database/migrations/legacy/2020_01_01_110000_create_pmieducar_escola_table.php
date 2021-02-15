@@ -15,8 +15,6 @@ class CreatePmieducarEscolaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.escola_cod_escola_seq
                     START WITH 0
                     INCREMENT BY 1
@@ -196,7 +194,7 @@ class CreatePmieducarEscolaTable extends Migration
 	                updated_at timestamp NULL DEFAULT now(),
 	                iddis int4 NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.escola
                     ADD CONSTRAINT escola_pkey PRIMARY KEY (cod_escola);
 

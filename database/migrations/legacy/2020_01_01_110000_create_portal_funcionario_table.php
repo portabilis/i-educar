@@ -15,8 +15,6 @@ class CreatePortalFuncionarioTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE TABLE portal.funcionario (
                     ref_cod_pessoa_fj integer DEFAULT 0 NOT NULL,
                     matricula character varying(12),
@@ -47,7 +45,7 @@ class CreatePortalFuncionarioTable extends Migration
                     atualizou_cadastro smallint,
 	                data_expiracao date NULL
                 );
-                
+
                 ALTER TABLE ONLY portal.funcionario
                     ADD CONSTRAINT funcionario_pk PRIMARY KEY (ref_cod_pessoa_fj);
             '

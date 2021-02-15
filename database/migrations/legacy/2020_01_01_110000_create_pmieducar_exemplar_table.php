@@ -15,8 +15,6 @@ class CreatePmieducarExemplarTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.exemplar_cod_exemplar_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -42,7 +40,7 @@ class CreatePmieducarExemplarTable extends Migration
                     sequencial integer,
                     data_baixa_exemplar date
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.exemplar
                     ADD CONSTRAINT exemplar_pkey PRIMARY KEY (cod_exemplar);
 
