@@ -16,7 +16,6 @@ require_once 'include/pmieducar/clsPermissoes.inc.php';
 
 class EscolaController extends ApiCoreController
 {
-
     protected $_processoAp = 561;
     protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
 
@@ -570,7 +569,7 @@ class EscolaController extends ApiCoreController
         if (is_numeric($cod_usuario) && $nivel == App_Model_NivelTipoUsuario::ESCOLA) {
             $escolas = $this->getEscolasUsuarios($cod_usuario);
             if (! empty($escolas['escolas'])) {
-                $escolas = implode(", ", $escolas['escolas']);
+                $escolas = implode(', ', $escolas['escolas']);
                 $sql .= " and escola.cod_escola in ({$escolas})";
             }
         }
