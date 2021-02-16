@@ -59,6 +59,9 @@ $j(document).ready(function(){
         cidade_escola.closest('tr').show();
         estado_escola.closest('tr').show();
         pais_escola.closest('tr').show();
+        pais_escola.val('');
+        estado_escola.val('');
+        cidade_escola.val('');
       } else {
         $j('#escola').closest('tr').hide();
         cidade_escola.closest('tr').hide();
