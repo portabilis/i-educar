@@ -83,7 +83,7 @@ $j(document).ready(function(){
         success  : function (response) {
           pais_escola.val(response.country_id);
           estado_escola.val(response.state_abbreviation);
-          cidade_escola.val(response.fcn_upper);
+          cidade_escola.val(response.city);
         }
       };
       getResources(options);

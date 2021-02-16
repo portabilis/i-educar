@@ -715,7 +715,7 @@ class EscolaController extends ApiCoreController
             $escola_id = $this->getRequest()->escola_id;
 
             $sql = '
-            SELECT a.country, a.state, fcn_upper(a.city), a.country_id, a.state_abbreviation FROM pmieducar.escola e
+            SELECT a.country, a.state, fcn_upper(a.city) as city, a.country_id, a.state_abbreviation FROM pmieducar.escola e
                 LEFT JOIN person_has_place php ON php.person_id = e.ref_idpes
                 LEFT JOIN addresses a ON a.id = php.id
             WHERE e.cod_escola = $1
