@@ -89,7 +89,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $escolas = [];
 
         foreach ($_escolas->lista(null, null, null, $instituicaoId) as $escola) {
-            $escolas[$escola['cod_escola']] = $escola['nome'];
+            $escolas[$escola['cod_escola']] = mb_strtoupper($escola['nome']);
         }
 
         return $escolas;
