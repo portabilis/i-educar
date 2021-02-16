@@ -192,7 +192,7 @@ class indice extends clsListagem
             // responsavel
             $aluno->cod_aluno = $registro['cod_aluno'];
             $responsavel = $aluno->getResponsavelAluno();
-            $nomeResponsavel = strtoupper($responsavel['nome_responsavel']);
+            $nomeResponsavel = mb_strtoupper($responsavel['nome_responsavel']);
 
             if (!$configuracoes['mostrar_codigo_inep_aluno']) {
                 $linhas = [

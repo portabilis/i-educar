@@ -227,7 +227,7 @@ class Registro10 extends AbstractRegistro
         $data->organizacaoEnsino = Portabilis_Utils_Database::pgArrayToArray($data->organizacaoEnsino);
         $data->instrumentosPedagogicos = Portabilis_Utils_Database::pgArrayToArray($data->instrumentosPedagogicos);
         $data->codigoLinguaIndigena = Portabilis_Utils_Database::pgArrayToArray($data->codigoLinguaIndigena);
-        $data->nomeEscola = strtoupper($data->nomeEscola);
+        $data->nomeEscola = mb_strtoupper($data->nomeEscola);
 
         return $data;
     }

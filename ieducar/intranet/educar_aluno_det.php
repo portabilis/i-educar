@@ -105,7 +105,7 @@ class indice extends clsDetalhe
                 $caminhoFoto = $detalheFoto['caminho'];
             }
 
-            $registro['nome_aluno'] = strtoupper($det_pessoa_fj['nome']);
+            $registro['nome_aluno'] = mb_strtoupper($det_pessoa_fj['nome']);
             $registro['cpf'] = int2IdFederal($det_fisica['cpf']);
             $registro['data_nasc'] = Portabilis_Date_Utils::pgSQLToBr($det_fisica['data_nasc']);
 
@@ -303,7 +303,7 @@ class indice extends clsDetalhe
         }
 
         if ($det_fisica['nome_social']) {
-            $this->addDetalhe(['Nome Social', strtoupper($det_fisica['nome_social'])]);
+            $this->addDetalhe(['Nome Social', mb_strtoupper($det_fisica['nome_social'])]);
         }
 
         if (idFederal2int($registro['cpf'])) {

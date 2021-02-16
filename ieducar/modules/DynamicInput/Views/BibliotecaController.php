@@ -66,7 +66,7 @@ class BibliotecaController extends ApiCoreController
 
       $options = array();
       foreach ($bibliotecas as $biblioteca)
-        $options['__' . $biblioteca['id']] = strtoupper($biblioteca['nome']);
+        $options['__' . $biblioteca['id']] = mb_strtoupper($biblioteca['nome']);
 
       return array('options' => $options);
     }

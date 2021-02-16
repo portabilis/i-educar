@@ -44,7 +44,7 @@ class Registro30 extends AbstractRegistro
         $arrayEmployeeId = $this->getArrayEmployeeId();
         $employeeData = $this->repository->getEmployeeDataForRecord30($arrayEmployeeId);
         foreach ($employeeData as $data) {
-            $data->email = strtoupper($data->email);
+            $data->email = mb_strtoupper($data->email);
             $this->model = $this->modelArray[$data->codigoPessoa];
             $this->hydrateModel($data);
             $this->modelArray[$data->codigoPessoa] = $this->model;
