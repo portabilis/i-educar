@@ -90,7 +90,7 @@ class EducacensoAnaliseController extends ApiCoreController
             ];
         }
 
-        $nomeEscola = Portabilis_String_Utils::toUtf8(strtoupper($escola->nome));
+        $nomeEscola = Portabilis_String_Utils::toUtf8(mb_strtoupper($escola->nome));
         $codEscola = $escola->idEscola;
 
         $codInstituicao = $escola->idInstituicao;
@@ -700,8 +700,8 @@ class EducacensoAnaliseController extends ApiCoreController
         $chavesTurmas = [];
 
         foreach ($turmas as $turma) {
-            $nomeEscola = strtoupper($turma->nomeEscola);
-            $nomeTurma = strtoupper($turma->nomeTurma);
+            $nomeEscola = mb_strtoupper($turma->nomeEscola);
+            $nomeTurma = mb_strtoupper($turma->nomeTurma);
             $atividadeComplementar = ($turma->tipoAtendimento == 4); //Código 4 fixo no cadastro de turma
             $existeAtividadeComplementar = !empty(array_filter($turma->atividadesComplementares));
 
@@ -1379,9 +1379,9 @@ class EducacensoAnaliseController extends ApiCoreController
         $avaliableTimeService->onlyUntilEnrollmentDate($educacensoDate)->onlySchoolClassesInformedOnCensus();
 
         foreach ($alunos as $aluno) {
-            $nomeEscola = strtoupper($aluno->nomeEscola);
-            $nomeAluno = strtoupper($aluno->nomeAluno);
-            $nomeTurma = strtoupper($aluno->nomeTurma);
+            $nomeEscola = mb_strtoupper($aluno->nomeEscola);
+            $nomeAluno = mb_strtoupper($aluno->nomeAluno);
+            $nomeTurma = mb_strtoupper($aluno->nomeTurma);
             $codigoAluno = $aluno->codigoAluno;
             $codigoTurma = $aluno->codigoTurma;
             $codigoMatricula = $aluno->codigoMatricula;

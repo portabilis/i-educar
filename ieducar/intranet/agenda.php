@@ -192,7 +192,7 @@ class indice extends clsCadastro
                                     </td>
                                     <td class=\"data-info\" title=\"Dia: {$this->arr_data_atual[0]} de {$mesesArr[$this->arr_data_atual[1]]} de {$this->arr_data_atual[2]}\" align=\"center\">
                                         <span class=\"data1\">{$this->arr_data_atual[0]}<br></span>
-                                        <span class=\"data2\">" . strtoupper(substr($mesesArr[$this->arr_data_atual[1]], 0, 3)) . "<br>
+                                        <span class=\"data2\">" . mb_strtoupper(substr($mesesArr[$this->arr_data_atual[1]], 0, 3)) . "<br>
                                         <span class=\"data3\">{$this->arr_data_atual[2]}</span></td>
                                     <td class=\"arrow-dia\" rowspan=\"2\" valign=\"middle\">
                                         <a href=\"{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_amanha}\">
