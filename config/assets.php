@@ -7,14 +7,14 @@ return [
     | Assets Version Number
     |--------------------------------------------------------------------------
     |
-    | Assets version number that will append to each asset resource URL
+    | Assets version number that will append to each asset resource URLg
     | as version 'v' GET parameter.
     |
     | Example: http://website.domain/path/to/asset.css?v=0.0.1
     |
     */
 
-    'version' => '0.0.75',
+    'version' => '0.0.76',
 
     /*
     |--------------------------------------------------------------------------
