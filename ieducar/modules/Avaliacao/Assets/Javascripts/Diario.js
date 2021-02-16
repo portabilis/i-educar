@@ -1646,6 +1646,7 @@ function updateComponenteCurriculares($targetElement, matriculaId, componentesCu
     updateComponenteCurricular($ccRow, matriculaId, cc, regra);
 
     $ccRow.appendTo($targetElement);
+    initSummernote('parecer-matricula-'+matriculaId+'-cc-'+cc.id);
   });
 
   $j('.tr-area-conhecimento').bind('click', function() {
