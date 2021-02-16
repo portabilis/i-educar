@@ -1,60 +1,60 @@
 $j(document).ready(function () {
-  $campoEscolaDestinoExterna = $j('#escola_destino_externa');
-  $campoEstadoEscolaDestinoExterna = $j('#estado_escola_destino_externa');
-  $campoMunicipioEscolaDestinoExterna = $j('#municipio_escola_destino_externa');
 
-  $campoEscolaDestinoExterna.closest("tr").hide();
-  $campoEstadoEscolaDestinoExterna.closest("tr").hide();
-  $campoMunicipioEscolaDestinoExterna.closest("tr").hide();
+    const $campoEscolaDestinoExterna = $j('#escola_destino_externa');
+    const $campoEstadoEscolaDestinoExterna = $j('#estado_escola_destino_externa');
+    const $campoMunicipioEscolaDestinoExterna = $j('#municipio_escola_destino_externa');
+    const $campoCodInstituicao = $j('#ref_cod_instituicao');
+    const $campoCodEscola = $j('#ref_cod_escola');
+    const $campoEscolaOutroMunicipio = $j('#escola_em_outro_municipio');
+    const $submitButton = $j('#btn_enviar');
 
-  let msg = '<b>Novidade</b>: O processo de transferência foi simplificado!<br/>' +
-    'Agora você não precisa mais informar o tipo de transferência<br/>' +
-    'que será utilizado. Basta preencher os campos obrigatórios, e<br/>' +
-    'o aluno ficará com a situação de transferido automaticamente.';
+    $campoEscolaDestinoExterna.closest("tr").hide();
+    $campoEstadoEscolaDestinoExterna.closest("tr").hide();
+    $campoMunicipioEscolaDestinoExterna.closest("tr").hide();
 
-  $j('<p>').addClass('right-top-notice notice')
-    .html(stringUtils.toUtf8(msg))
-    .appendTo($j('#tr_nm_aluno').closest('td'));
+    const msg = '<b>Novidade</b>: O processo de transferência foi simplificado!<br/>' +
+        'Agora você não precisa mais informar o tipo de transferência<br/>' +
+        'que será utilizado. Basta preencher os campos obrigatórios, e<br/>' +
+        'o aluno ficará com a situação de transferido automaticamente.';
 
-  $j('#ref_cod_instituicao').makeRequired();
-  $j('#ref_cod_escola').makeRequired();
-  $j('#escola_em_outro_municipio').change(mostraEscolaOutroMunicipio);
+    $j('<p>').addClass('right-top-notice notice')
+        .html(stringUtils.toUtf8(msg))
+        .appendTo($j('#tr_nm_aluno').closest('td'));
 
-  function mostraEscolaOutroMunicipio() {
-    if ($j(this).is(':checked')) {
-      $campoEscolaDestinoExterna.closest("tr").show();
-      $campoEstadoEscolaDestinoExterna.closest("tr").show();
-      $campoMunicipioEscolaDestinoExterna.closest("tr").show();
-      $j('#ref_cod_instituicao').closest("tr").hide();
-      $j('#ref_cod_escola').closest("tr").hide();
-    } else {
-      $campoEscolaDestinoExterna.closest("tr").hide();
-      $campoEstadoEscolaDestinoExterna.closest("tr").hide();
-      $campoMunicipioEscolaDestinoExterna.closest("tr").hide();
-      $j('#ref_cod_instituicao').closest("tr").show();
-      $j('#ref_cod_instituicao').makeRequired();
-      $j('#ref_cod_escola').closest("tr").show();
-      $j('#ref_cod_escola').makeRequired();
-      $campoEscolaDestinoExterna.val("");
-      $campoEstadoEscolaDestinoExterna.val("");
-      $campoMunicipioEscolaDestinoExterna.val("");
+    $campoCodInstituicao.makeRequired();
+    $campoCodEscola.makeRequired();
+    $campoEscolaOutroMunicipio.change(mostraEscolaOutroMunicipio);
+
+    function mostraEscolaOutroMunicipio() {
+        if ($j(this).is(':checked')) {
+            $campoEscolaDestinoExterna.closest("tr").show();
+            $campoEstadoEscolaDestinoExterna.closest("tr").show();
+            $campoMunicipioEscolaDestinoExterna.closest("tr").show();
+            $campoCodInstituicao.closest("tr").hide();
+            $campoCodEscola.closest("tr").hide();
+        } else {
+            $campoEscolaDestinoExterna.closest("tr").hide();
+            $campoEstadoEscolaDestinoExterna.closest("tr").hide();
+            $campoMunicipioEscolaDestinoExterna.closest("tr").hide();
+            $campoCodInstituicao.closest("tr").show();
+            $campoCodInstituicao.makeRequired();
+            $campoCodEscola.closest("tr").show();
+            $campoCodEscola.makeRequired();
+        }
     }
-  }
 
-  let $submitButton = $j('#btn_enviar');
+    $submitButton.removeAttr('onclick');
+    $submitButton.click(validaSubmit);
 
-  $submitButton.removeAttr('onclick');
-  $submitButton.click(validaSubmit);
-
-  function validaSubmit() {
-    if (!$j('#escola_em_outro_municipio').is(':checked')) {
-      if ($j('#ref_cod_instituicao').closest("select").val() === '') {
-        return alert('É necessário informar a instituição');
-      }
-      if ($j('#ref_cod_escola').closest("select").val() === '') {
-        return alert('É necessário informar a escola');
-      }
+    function validaSubmit() {
+        if (!$campoEscolaOutroMunicipio.is(':checked')) {
+            if ($campoCodInstituicao.closest("select").val() === '') {
+                return alert('É necessário informar a instituição');
+            }
+            if ($campoCodEscola.closest("select").val() === '') {
+                return alert('É necessário informar a escola');
+            }
+        }
+        acao();
     }
-    acao();
-  }
 });

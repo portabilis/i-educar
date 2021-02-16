@@ -21,7 +21,7 @@ class clsIndexBase extends clsBase
 {
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Transfer&ecirc;ncia Solicita&ccedil;&atilde;o");
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Transferência Solicitação");
         $this->processoAp = '578';
     }
 }
@@ -68,6 +68,17 @@ class indice extends clsCadastro
 
     public $ref_cod_escola;
 
+    public function __construct()
+    {
+        parent::__construct();
+        Portabilis_View_Helper_Application::loadStylesheet($this, [
+            '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
+        ]);
+        Portabilis_View_Helper_Application::loadJavascript($this, [
+            '/modules/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js'
+        ]);
+    }
+
     public function Inicializar()
     {
         $retorno = 'Novo';
@@ -75,11 +86,6 @@ class indice extends clsCadastro
         $this->ref_cod_matricula = $_GET['ref_cod_matricula'];
         $this->ref_cod_aluno = $_GET['ref_cod_aluno'];
         $cancela = $_GET['cancela'];
-        $ano = $_GET['ano'];
-        $escolaId = $_GET['escola'];
-        $cursoId = $_GET['curso'];
-        $serieId = $_GET['serie'];
-        $turmaId = $_GET['turma'];
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
@@ -111,8 +117,6 @@ class indice extends clsCadastro
         $this->breadcrumb('Registro da solicitação de transferência da matrícula', [
             'educar_index.php' => 'Escola',
         ]);
-
-        Portabilis_View_Helper_Application::loadJavascript($this, ['/modules/Cadastro/Assets/Javascripts/TransferenciaSolicitacao.js']);
 
         return $retorno;
     }
@@ -164,7 +168,8 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->dynamic(['instituicao'], ['required' => false]);
         $this->inputsHelper()->dynamic(['escolaSemFiltroPorUsuario'], ['label_hint' => 'Destino do aluno', 'required' => false]);
-        $this->inputsHelper()->checkbox('escola_em_outro_municipio', ['label' => 'Escola em outro municipio?', ]);
+        $labelHintEscolaForaDoMunicipio = 'Transferência para uma escola externa (outro município, particular, etc)';
+        $this->inputsHelper()->checkbox('escola_em_outro_municipio', ['label' => 'Escola em outro município ou fora da rede?', '<br>label_hint' => $labelHintEscolaForaDoMunicipio]);
         $this->campoTexto('escola_destino_externa', 'Nome da escola ', '', 30, 255, false, false, false, '');
         $this->campoTexto('estado_escola_destino_externa', 'Estado da escola ', '', 20, 50, false, false, false, '');
         $this->campoTexto('municipio_escola_destino_externa', 'Município da escola ', '', 20, 50, false, false, false, '');
@@ -173,19 +178,18 @@ class indice extends clsCadastro
         $objTemp->setOrderby(' nm_tipo ASC ');
         $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, $ref_cod_instituicao);
 
+        $opcoesMotivo = ['' => 'Selecione'];
+
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $registro) {
-                $opcoes["{$registro['cod_transferencia_tipo']}"] = "{$registro['nm_tipo']}";
+                $opcoesMotivo[$registro['cod_transferencia_tipo']] = $registro['nm_tipo'];
             }
         }
 
-        $this->campoLista('ref_cod_transferencia_tipo', 'Motivo', $opcoes, $this->ref_cod_transferencia_tipo);
+        $this->campoLista('ref_cod_transferencia_tipo', 'Motivo', $opcoesMotivo, $this->ref_cod_transferencia_tipo);
         $this->inputsHelper()->date('data_cancel', ['label' => 'Data', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')]);
-        $this->campoMemo('observacao', 'Observa&ccedil;&atilde;o', $this->observacao, 60, 5, false);
+        $this->campoMemo('observacao', 'Observação', $this->observacao, 60, 5, false);
 
-        Portabilis_View_Helper_Application::loadStylesheet($this, [
-            '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css'
-        ]);
     }
 
     public function Novo()
@@ -213,8 +217,6 @@ class indice extends clsCadastro
             }
         }
 
-        $editou = $obj->edita();
-
         $obj->data_cancel = $this->data_cancel;
 
         $this->data_transferencia = date('Y-m-d');
@@ -229,7 +231,7 @@ class indice extends clsCadastro
             $obj->data_cancel = $this->data_cancel;
             $editou = $obj->edita();
             if (!$editou) {
-                $this->mensagem = 'N&atilde;o foi poss&iacute;vel editar a Matr&iacute;cula do Aluno.<br>';
+                $this->mensagem = 'Não foi possível editar a Matrícula do Aluno.<br>';
 
                 return false;
             }
@@ -246,7 +248,7 @@ class indice extends clsCadastro
                     $detEnturmacao = $detEnturmacao['data_enturmacao'];
                     $enturmacao->data_enturmacao = $detEnturmacao;
                     if (!$enturmacao->edita()) {
-                        $this->mensagem = 'N&atilde;o foi poss&iacute;vel desativar as enturma&ccedil;&otilde;es da matr&iacute;cula.';
+                        $this->mensagem = 'Não foi possível desativar as enturmações da matrícula.';
 
                         return false;
                     } else {
@@ -256,6 +258,14 @@ class indice extends clsCadastro
             }
         }
         clsPmieducarHistoricoEscolar::gerarHistoricoTransferencia($this->ref_cod_matricula, $this->pessoa_logada);
+
+        if($this->escola_em_outro_municipio === 'on'){
+            $this->ref_cod_escola = null;
+        } else {
+            $this->escola_destino_externa = null;
+            $this->estado_escola_destino_externa = null;
+            $this->municipio_escola_destino_externa = null;
+        }
 
         $obj = new clsPmieducarTransferenciaSolicitacao(null, $this->ref_cod_transferencia_tipo, null, $this->pessoa_logada, null, $this->ref_cod_matricula, $this->observacao, null, null, $this->ativo, $this->data_transferencia, $this->escola_destino_externa, $this->ref_cod_escola, $this->estado_escola_destino_externa, $this->municipio_escola_destino_externa);
         if ($obj->existSolicitacaoTransferenciaAtiva()) {
@@ -267,7 +277,6 @@ class indice extends clsCadastro
 
         if ($cadastrou) {
             $obj = new clsPmieducarMatricula($this->ref_cod_matricula, null, null, null, $this->pessoa_logada);
-            $det_matricula = $obj->detalhe();
             $obj->data_cancel = $this->data_cancel;
             $obj->edita();
 
@@ -294,7 +303,7 @@ class indice extends clsCadastro
 
         DB::rollback();
 
-        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+        $this->mensagem = 'Cadastro não realizado.<br>';
 
         return false;
     }
@@ -312,16 +321,16 @@ class indice extends clsCadastro
             $obj = new clsPmieducarTransferenciaSolicitacao($this->cod_transferencia_solicitacao, null, $this->pessoa_logada, null, null, null, null, null, null, 0);
             $excluiu = $obj->excluir();
             if ($excluiu) {
-                $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
+                $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
                 $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}");
             }
         } else {
-            $this->mensagem = 'N&atilde;o foi poss&iacute;vel encontrar a Solicita&ccedil;&atilde;o de Transfer&ecirc;ncia do Aluno.<br>';
+            $this->mensagem = 'Não foi possível encontrar a Solicitação de Transferência do Aluno.<br>';
 
             return false;
         }
 
-        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
+        $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
     }
