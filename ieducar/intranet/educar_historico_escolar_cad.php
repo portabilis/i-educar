@@ -404,13 +404,10 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
-        $historicoEscolar = new clsPmieducarHistoricoEscolar($this->ref_cod_aluno, $this->sequencial);
-        $historicoEscolarDetalheAntes = $historicoEscolar->detalhe();
-
-        $this->carga_horaria = is_numeric($this->carga_horaria) ? intval($this->carga_horaria) : $this->carga_horaria;
+        $this->carga_horaria = is_numeric($this->carga_horaria) ? (int) $this->carga_horaria : $this->carga_horaria;
         $this->frequencia = $this->fixupFrequencia($this->frequencia);
 
-        if ($this->cb_faltas_globalizadas != 'on') {
+        if ($this->cb_faltas_globalizadas !== 'on') {
             $this->faltas_globalizadas = 'NULL';
         }
 
@@ -457,7 +454,6 @@ class indice extends clsCadastro
 
             //--------------EDITA DISCIPLINAS--------------//
             if ($this->nm_disciplina) {
-
                 $obj = new clsPmieducarHistoricoDisciplinas();
                 $excluiu = $obj->excluirTodos($this->ref_cod_aluno, $this->sequencial);
                 if ($excluiu) {
