@@ -13,6 +13,7 @@ class AjustaTurmasEMatriculasCodCursoDiferenteSerie extends Migration
     public function up()
     {
         DB::unprepared('
+        SET "audit.context" = \'{"user_id" : 0, "user_name" : "Rodrigo Cabral", "origin": "Issue 8222"}\';
         UPDATE pmieducar.turma t
         SET ref_cod_curso = s.ref_cod_curso
         FROM pmieducar.serie s
