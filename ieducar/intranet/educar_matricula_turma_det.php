@@ -184,7 +184,7 @@ class indice extends clsDetalhe
 
         $this->addDetalhe(['<b>Turma selecionada</b>', '<b>' . $registro['nm_turma'] . '</b>']);
 
-        $objTurma = new clsPmiEducarTurma($this->ref_cod_turma);
+        $objTurma = new clsPmieducarTurma($this->ref_cod_turma);
 
         $capacidadeMaximaAlunosSala = $objTurma->maximoAlunosSala();
 
