@@ -12,7 +12,7 @@ class UpdatePmieducarTurmaCharacterInvalid extends Migration
      */
     public function up()
     {
-        DB::statement(
+        DB::unprepared(
             '
             SET "audit.context" = \'{"user_id" : 0, "user_name" : "Joalisson Barros", "origin": "issue-8229" }\';
             UPDATE pmieducar.turma SET nm_turma = REPLACE(nm_turma, \'°\', \'º\')
