@@ -15,8 +15,6 @@ class CreatePmieducarDisciplinaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.disciplina_cod_disciplina_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -39,7 +37,7 @@ class CreatePmieducarDisciplinaTable extends Migration
                     nm_disciplina character varying(255) NOT NULL,
                     ref_cod_curso integer
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.disciplina
                     ADD CONSTRAINT disciplina_pkey PRIMARY KEY (cod_disciplina);
 

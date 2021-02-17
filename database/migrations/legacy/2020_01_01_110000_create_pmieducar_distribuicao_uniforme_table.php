@@ -15,8 +15,6 @@ class CreatePmieducarDistribuicaoUniformeTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.distribuicao_uniforme_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -52,7 +50,7 @@ class CreatePmieducarDistribuicaoUniformeTable extends Migration
                     saia_qtd int2 NULL,
                     saia_tm varchar(20) NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.distribuicao_uniforme
                     ADD CONSTRAINT distribuicao_uniforme_cod_distribuicao_uniforme_pkey PRIMARY KEY (cod_distribuicao_uniforme);
 

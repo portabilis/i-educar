@@ -168,7 +168,8 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->dynamic(['instituicao'], ['required' => false]);
         $this->inputsHelper()->dynamic(['escolaSemFiltroPorUsuario'], ['label_hint' => 'Destino do aluno', 'required' => false]);
-        $this->inputsHelper()->checkbox('escola_em_outro_municipio', ['label' => 'Escola em outro municipio?', ]);
+        $labelHintEscolaForaDoMunicipio = 'Transferência para uma escola externa (outro município, particular, etc)';
+        $this->inputsHelper()->checkbox('escola_em_outro_municipio', ['label' => 'Escola em outro município ou fora da rede?', '<br>label_hint' => $labelHintEscolaForaDoMunicipio]);
         $this->campoTexto('escola_destino_externa', 'Nome da escola ', '', 30, 255, false, false, false, '');
         $this->campoTexto('estado_escola_destino_externa', 'Estado da escola ', '', 20, 50, false, false, false, '');
         $this->campoTexto('municipio_escola_destino_externa', 'Município da escola ', '', 20, 50, false, false, false, '');

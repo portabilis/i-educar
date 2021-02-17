@@ -15,8 +15,6 @@ class CreateModulesFormulaMediaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-                
                 CREATE SEQUENCE modules.formula_media_id_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -34,12 +32,12 @@ class CreateModulesFormulaMediaTable extends Migration
                 );
 
                 ALTER SEQUENCE modules.formula_media_id_seq OWNED BY modules.formula_media.id;
-                
+
                 ALTER TABLE ONLY modules.formula_media
                     ADD CONSTRAINT formula_media_pkey PRIMARY KEY (id, instituicao_id);
 
                 ALTER TABLE ONLY modules.formula_media ALTER COLUMN id SET DEFAULT nextval(\'modules.formula_media_id_seq\'::regclass);
-                
+
                 SELECT pg_catalog.setval(\'modules.formula_media_id_seq\', 2, true);
             '
         );

@@ -15,8 +15,6 @@ class CreatePmieducarPagamentoMultaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.pagamento_multa_cod_pagamento_multa_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -32,7 +30,7 @@ class CreatePmieducarPagamentoMultaTable extends Migration
                     data_cadastro timestamp without time zone NOT NULL,
                     ref_cod_biblioteca integer NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.pagamento_multa
                     ADD CONSTRAINT pagamento_multa_pkey PRIMARY KEY (cod_pagamento_multa);
 
