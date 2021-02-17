@@ -15,8 +15,6 @@ class CreatePmieducarEscolaSerieTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE TABLE pmieducar.escola_serie (
                     ref_cod_escola integer NOT NULL,
                     ref_cod_serie integer NOT NULL,
@@ -34,10 +32,10 @@ class CreatePmieducarEscolaSerieTable extends Migration
                     anos_letivos smallint[] DEFAULT \'{}\'::smallint[] NOT NULL,
 	                updated_at timestamp NULL DEFAULT now()
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.escola_serie
                     ADD CONSTRAINT escola_serie_pkey PRIMARY KEY (ref_cod_escola, ref_cod_serie);
-                    
+
                 CREATE INDEX i_escola_serie_ensino_ativo ON pmieducar.escola_serie USING btree (ativo);
 
                 CREATE INDEX i_escola_serie_hora_final ON pmieducar.escola_serie USING btree (hora_final);

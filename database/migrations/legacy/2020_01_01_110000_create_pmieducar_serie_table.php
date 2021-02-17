@@ -15,8 +15,6 @@ class CreatePmieducarSerieTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.serie_cod_serie_seq
                     START WITH 0
                     INCREMENT BY 1
@@ -49,7 +47,7 @@ class CreatePmieducarSerieTable extends Migration
                     exigir_inep boolean,
 	                updated_at timestamp NULL DEFAULT now()
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.serie
                     ADD CONSTRAINT serie_pkey PRIMARY KEY (cod_serie);
 

@@ -15,8 +15,6 @@ class CreatePmieducarDisciplinaTopicoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE SEQUENCE pmieducar.disciplina_topico_cod_disciplina_topico_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -34,7 +32,7 @@ class CreatePmieducarDisciplinaTopicoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.disciplina_topico
                     ADD CONSTRAINT disciplina_topico_pkey PRIMARY KEY (cod_disciplina_topico);
 

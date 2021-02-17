@@ -15,8 +15,6 @@ class CreatePmieducarExemplarEmprestimoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.exemplar_emprestimo_cod_emprestimo_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -34,7 +32,7 @@ class CreatePmieducarExemplarEmprestimoTable extends Migration
                     data_devolucao timestamp without time zone,
                     valor_multa double precision
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.exemplar_emprestimo
                     ADD CONSTRAINT exemplar_emprestimo_pkey PRIMARY KEY (cod_emprestimo);
 

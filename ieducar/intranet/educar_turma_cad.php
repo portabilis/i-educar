@@ -923,8 +923,8 @@ class indice extends clsCadastro
         $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
         $possuiAlunosVinculados = $turmaDetalhe->possuiAlunosVinculados();
         $turmaDetalhe = $turmaDetalhe->detalhe();
-        $this->ref_cod_curso = $turmaDetalhe['ref_cod_curso'];
-        $this->ref_ref_cod_escola = $turmaDetalhe['ref_ref_cod_escola'];
+        $this->ref_cod_curso = $this->ref_cod_curso ?? $turmaDetalhe['ref_cod_curso'];
+        $this->ref_ref_cod_escola = $this->ref_ref_cod_escola ?? $turmaDetalhe['ref_ref_cod_escola'];
 
         if (!$this->verificaModulos()) {
             return false;

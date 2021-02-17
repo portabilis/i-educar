@@ -15,14 +15,12 @@ class CreatePmieducarDisciplinaSerieTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE TABLE pmieducar.disciplina_serie (
                     ref_cod_disciplina integer NOT NULL,
                     ref_cod_serie integer NOT NULL,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.disciplina_serie
                     ADD CONSTRAINT disciplina_serie_pkey PRIMARY KEY (ref_cod_disciplina, ref_cod_serie);
             '

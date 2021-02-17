@@ -15,8 +15,6 @@ class CreateModulesFaltaGeralTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-                
                 CREATE SEQUENCE modules.falta_geral_id_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -32,12 +30,12 @@ class CreateModulesFaltaGeralTable extends Migration
                 );
 
                 ALTER SEQUENCE modules.falta_geral_id_seq OWNED BY modules.falta_geral.id;
-                
+
                 ALTER TABLE ONLY modules.falta_geral
                     ADD CONSTRAINT falta_geral_pkey PRIMARY KEY (falta_aluno_id, etapa);
 
                 ALTER TABLE ONLY modules.falta_geral ALTER COLUMN id SET DEFAULT nextval(\'modules.falta_geral_id_seq\'::regclass);
-                
+
                 CREATE INDEX idx_falta_geral_falta_aluno_id ON modules.falta_geral USING btree (falta_aluno_id);
 
                 SELECT pg_catalog.setval(\'modules.falta_geral_id_seq\', 1, false);

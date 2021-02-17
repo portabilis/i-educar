@@ -15,8 +15,6 @@ class CreatePmieducarBloqueioLancamentoFaltasNotasTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE SEQUENCE public.bloqueio_lancamento_faltas_notas_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -32,7 +30,7 @@ class CreatePmieducarBloqueioLancamentoFaltasNotasTable extends Migration
                     data_inicio date NOT NULL,
                     data_fim date NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.bloqueio_lancamento_faltas_notas
                     ADD CONSTRAINT fk_bloqueio_lancamento_faltas_notas PRIMARY KEY (cod_bloqueio);
 

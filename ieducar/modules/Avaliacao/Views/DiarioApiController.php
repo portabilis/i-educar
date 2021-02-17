@@ -11,7 +11,6 @@ use Cocur\Slugify\Slugify;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -44,6 +43,7 @@ class DiarioApiController extends ApiCoreController
 
         if ($escola['bloquear_lancamento_diario_anos_letivos_encerrados'] == '1' && $anoLetivoEncerrado) {
             $this->messenger->append("O ano letivo '{$this->getRequest()->ano}' está encerrado, esta escola está configurada para não permitir alterar o diário de anos letivos encerrados.");
+
             return false;
         }
 
@@ -51,12 +51,13 @@ class DiarioApiController extends ApiCoreController
         $bloqueioAnoLetivo = $objBloqueioAnoLetivo->detalhe();
 
         if ($bloqueioAnoLetivo) {
-            $dataAtual = strtotime(date("Y-m-d"));
+            $dataAtual = strtotime(date('Y-m-d'));
             $data_inicio = strtotime($bloqueioAnoLetivo['data_inicio']);
             $data_fim = strtotime($bloqueioAnoLetivo['data_fim']);
 
             if ($dataAtual < $data_inicio || $dataAtual > $data_fim) {
-                $this->messenger->append("O lançamento de notas nessa instituição está bloqueado nesta data.");
+                $this->messenger->append('O lançamento de notas nessa instituição está bloqueado nesta data.');
+
                 return false;
             }
         }
@@ -69,7 +70,7 @@ class DiarioApiController extends ApiCoreController
         $isValid = $this->serviceBoletim()->getRegra()->get('tipoNota') != RegraAvaliacao_Model_Nota_TipoValor::NENHUM;
 
         if (!$isValid) {
-            $this->messenger->append("Nota não lançada, pois a regra de avaliação não utiliza nota.");
+            $this->messenger->append('Nota não lançada, pois a regra de avaliação não utiliza nota.');
         }
 
         return $isValid;
@@ -81,7 +82,7 @@ class DiarioApiController extends ApiCoreController
         !is_null($this->serviceBoletim()->getRegra()->formulaRecuperacao);
 
         if (!$isValid) {
-            $this->messenger->append("Nota de recuperação não lançada, pois a fórmula de recuperação não possui fórmula de recuperação.");
+            $this->messenger->append('Nota de recuperação não lançada, pois a fórmula de recuperação não possui fórmula de recuperação.');
         }
 
         return $isValid;
@@ -94,7 +95,7 @@ class DiarioApiController extends ApiCoreController
             FormulaMedia_Model_TipoFormula::MEDIA_RECUPERACAO);
 
         if (!$isValid) {
-            $this->messenger->append("Nota de recuperação não lançada, pois a fórmula de recuperação é diferente do tipo média recuperação.");
+            $this->messenger->append('Nota de recuperação não lançada, pois a fórmula de recuperação é diferente do tipo média recuperação.');
         }
 
         return $isValid;
@@ -108,7 +109,8 @@ class DiarioApiController extends ApiCoreController
 
         try {
             return $serviceBoletim->verificaNotasLancadasNasEtapasAnteriores(
-                $etapaId, $componenteCurricularId
+                $etapaId,
+                $componenteCurricularId
             );
         } catch (MissingStagesException $exception) {
             $this->messenger->append($exception->getMessage());
@@ -132,7 +134,8 @@ class DiarioApiController extends ApiCoreController
 
         try {
             return $serviceBoletim->verificaFaltasLancadasNasEtapasAnteriores(
-                $etapaId, $componenteCurricularId
+                $etapaId,
+                $componenteCurricularId
             );
         } catch (Exception $e) {
             $this->messenger->append($e->getMessage());
@@ -148,16 +151,18 @@ class DiarioApiController extends ApiCoreController
         $isValid = false;
         $etapa = $this->getRequest()->etapa;
 
-        $tiposParecerAnual = array(RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
-            RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL);
+        $tiposParecerAnual = [RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE,
+            RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL];
 
-        $parecerAnual = in_array($this->serviceBoletim()->getRegra()->get('parecerDescritivo'),
-            $tiposParecerAnual);
+        $parecerAnual = in_array(
+            $this->serviceBoletim()->getRegra()->get('parecerDescritivo'),
+            $tiposParecerAnual
+        );
 
         if ($parecerAnual && $etapa != 'An') {
             $this->messenger->append("Valor inválido para o atributo 'etapa', é esperado 'An' e foi recebido '{$etapa}'.");
         } elseif (!$parecerAnual && $etapa == 'An') {
-            $this->messenger->append("Valor inválido para o atributo 'etapa', é esperado um valor diferente de 'An'.");
+            $this->messenger->append('Valor inválido para o atributo \'etapa\', é esperado um valor diferente de \'An\'.');
         } else {
             $isValid = true;
         }
@@ -167,11 +172,13 @@ class DiarioApiController extends ApiCoreController
 
     protected function validatesPresenceOfComponenteCurricularIdIfParecerComponente()
     {
-        $tiposParecerComponente = array(RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
-            RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE);
+        $tiposParecerComponente = [RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE,
+            RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE];
 
-        $parecerPorComponente = in_array($this->serviceBoletim()->getRegra()->get('parecerDescritivo'),
-            $tiposParecerComponente);
+        $parecerPorComponente = in_array(
+            $this->serviceBoletim()->getRegra()->get('parecerDescritivo'),
+            $tiposParecerComponente
+        );
 
         return (!$parecerPorComponente) || $this->validatesPresenceOf('componente_curricular_id');
     }
@@ -184,7 +191,7 @@ class DiarioApiController extends ApiCoreController
         $isValid = $tpParecer != RegraAvaliacao_Model_TipoParecerDescritivo::NENHUM;
 
         if (!$isValid) {
-            $this->messenger->append("Parecer descritivo não lançado, pois a regra de avaliação não utiliza parecer.");
+            $this->messenger->append('Parecer descritivo não lançado, pois a regra de avaliação não utiliza parecer.');
         }
 
         return $isValid;
@@ -203,7 +210,6 @@ class DiarioApiController extends ApiCoreController
             if (!$isValid) {
                 $this->messenger->append('Nota da matrícula ' . $this->getRequest()->matricula_id . ' somente pode ser removida, após remover nota do exame.', 'error');
             }
-
         }
 
         return $isValid;
@@ -211,7 +217,7 @@ class DiarioApiController extends ApiCoreController
 
     protected function validatesInexistenceNotasInNextEtapas()
     {
-        $etapasComNota = array();
+        $etapasComNota = [];
 
         if (is_numeric($this->getRequest()->etapa)) {
             $etapas = $this->serviceBoletim()->getOption('etapas');
@@ -223,11 +229,10 @@ class DiarioApiController extends ApiCoreController
                 if (!empty($nota)) {
                     $etapasComNota[] = $etapa;
                 }
-
             }
 
             if (!empty($etapasComNota)) {
-                $msg = "Nota somente pode ser removida, após remover as notas lançadas nas etapas posteriores: " .
+                $msg = 'Nota somente pode ser removida, após remover as notas lançadas nas etapas posteriores: ' .
                 join(', ', $etapasComNota) . '.';
                 $this->messenger->append($msg, 'error');
             }
@@ -240,7 +245,7 @@ class DiarioApiController extends ApiCoreController
 
     protected function validatesInexistenceFaltasInNextEtapas()
     {
-        $etapasComFalta = array();
+        $etapasComFalta = [];
 
         if (is_numeric($this->getRequest()->etapa)) {
             $etapas = $this->serviceBoletim()->getOption('etapas');
@@ -252,13 +257,11 @@ class DiarioApiController extends ApiCoreController
                 if (!empty($falta)) {
                     $etapasComFalta[] = $etapa;
                 }
-
             }
 
             if (!empty($etapasComFalta)) {
-                $this->messenger->append("Falta somente pode ser removida, após remover as faltas lançadas nas etapas posteriores: " . join(', ', $etapasComFalta) . '.', 'error');
+                $this->messenger->append('Falta somente pode ser removida, após remover as faltas lançadas nas etapas posteriores: ' . join(', ', $etapasComFalta) . '.', 'error');
             }
-
         }
 
         return empty($etapasComFalta);
@@ -268,6 +271,7 @@ class DiarioApiController extends ApiCoreController
     {
         if (empty($this->getRequest()->componente_curricular_id) && empty($this->getRequest()->matricula_id)) {
             $this->messenger->append('É necessário receber matricula_id ou componente_curricular_id.', 'error');
+
             return false;
         }
 
@@ -285,7 +289,8 @@ class DiarioApiController extends ApiCoreController
             $this->getRequest()->escola_id,
             $this->getRequest()->turma_id,
             $this->getRequest()->etapa,
-            $this->getRequest()->ano_escolar)
+            $this->getRequest()->ano_escolar
+        )
         ) {
             return true;
         }
@@ -301,14 +306,14 @@ class DiarioApiController extends ApiCoreController
 
     protected function canGetMatriculas()
     {
-        return $this->validatesPresenceOf(array('instituicao_id',
+        return $this->validatesPresenceOf(['instituicao_id',
             'escola_id',
             'curso_id',
             'curso_id',
             'serie_id',
             'turma_id',
             'ano',
-            'etapa')) &&
+            'etapa']) &&
         $this->validatesPresenceOfMatriculaIdOrComponenteCurricularId() &&
         $this->validatesCanChangeDiarioForAno();
     }
@@ -345,7 +350,6 @@ class DiarioApiController extends ApiCoreController
 
     protected function canPostParecer()
     {
-
         return $this->canPost() &&
         $this->validatesPresenceOf('att_value') &&
         $this->validatesEtapaParecer() &&
@@ -396,12 +400,12 @@ class DiarioApiController extends ApiCoreController
 
             $nota = $this->serviceBoletim()->calculateStageScore($etapa, $nota, null);
 
-            $array_nota = array(
+            $array_nota = [
                 'componenteCurricular' => $this->getRequest()->componente_curricular_id,
                 'nota' => $nota,
                 'etapa' => $etapa,
                 'notaOriginal' => $notaOriginal,
-            );
+            ];
 
             if ($_notaAntiga = $this->serviceBoletim()->getNotaComponente($this->getRequest()->componente_curricular_id, $this->getRequest()->etapa)) {
                 $array_nota['notaRecuperacaoParalela'] = $_notaAntiga->notaRecuperacaoParalela;
@@ -423,21 +427,20 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('media', round($this->getMediaAtual($this->getRequest()->componente_curricular_id), 3));
         $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
-        if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), array('Em exame', 'Aprovado após exame', 'Retido'))) {
+        if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
             $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
         } else {
             $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
         }
-
     }
 
     protected function postNotaGeral()
     {
         if ($this->canPostNotaGeral()) {
             $notaGeral = urldecode($this->getRequest()->att_value);
-            $nota = new Avaliacao_Model_NotaGeral(array(
+            $nota = new Avaliacao_Model_NotaGeral([
                 'etapa' => $this->getRequest()->etapa,
-                'nota' => $notaGeral));
+                'nota' => $notaGeral]);
 
             $this->serviceBoletim()->updateMediaGeral(0, $this->getRequest()->etapa);
             $this->serviceBoletim()->addNotaGeral($nota);
@@ -472,7 +475,8 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
     }
 
-    protected function postMediaDesbloqueia() {
+    protected function postMediaDesbloqueia()
+    {
         if ($this->canPostMedia()) {
             $componenteCurricular = $this->getRequest()->componente_curricular_id;
 
@@ -487,7 +491,6 @@ class DiarioApiController extends ApiCoreController
     protected function deleteMedia()
     {
         if ($this->canDeleteMedia()) {
-
             $media = $this->getMediaAtual();
             if (empty($media) && !is_numeric($media)) {
                 $this->messenger->append('Média matrícula ' . $this->getRequest()->matricula_id . ' inexistente ou já removida.', 'notice');
@@ -523,15 +526,18 @@ class DiarioApiController extends ApiCoreController
             $etapa = $this->getRequest()->etapa;
 
             $notaNova = $this->serviceBoletim()->calculateStageScore(
-                $etapa, $notaOriginal, $notaRecuperacaoParalela
+                $etapa,
+                $notaOriginal,
+                $notaRecuperacaoParalela
             );
 
-            $nota = new Avaliacao_Model_NotaComponente(array(
+            $nota = new Avaliacao_Model_NotaComponente(
+                [
                 'componenteCurricular' => $this->getRequest()->componente_curricular_id,
                 'etapa' => $etapa,
                 'nota' => $notaNova,
                 'notaRecuperacaoParalela' => $notaRecuperacaoParalela,
-                'notaOriginal' => $notaOriginal)
+                'notaOriginal' => $notaOriginal]
             );
 
             $this->serviceBoletim()->addNota($nota);
@@ -547,12 +553,11 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
         $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
-        if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), array('Em exame', 'Aprovado após exame', 'Retido'))) {
+        if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
             $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
         } else {
             $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
         }
-
     }
 
     protected function postNotaRecuperacaoEspecifica()
@@ -561,12 +566,12 @@ class DiarioApiController extends ApiCoreController
             $notaOriginal = $this->getNotaOriginal();
             $notaRecuperacaoParalela = urldecode($this->getRequest()->att_value);
 
-            $nota = new Avaliacao_Model_NotaComponente(array(
+            $nota = new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => $this->getRequest()->componente_curricular_id,
                 'etapa' => $this->getRequest()->etapa,
                 'nota' => $notaOriginal,
                 'notaRecuperacaoEspecifica' => $notaRecuperacaoParalela,
-                'notaOriginal' => $notaOriginal));
+                'notaOriginal' => $notaOriginal]);
 
             $this->serviceBoletim()->addNota($nota);
             $this->trySaveServiceBoletim();
@@ -582,18 +587,16 @@ class DiarioApiController extends ApiCoreController
         $this->appendResponse('media', $this->getMediaAtual($this->getRequest()->componente_curricular_id));
         $this->appendResponse('media_arredondada', $this->getMediaArredondadaAtual($this->getRequest()->componente_curricular_id));
 
-        if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), array('Em exame', 'Aprovado após exame', 'Retido'))) {
+        if (!empty($notaNecessariaExame) && in_array($this->getSituacaoComponente(), ['Em exame', 'Aprovado após exame', 'Retido'])) {
             $this->createOrUpdateNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id, $notaNecessariaExame);
         } else {
             $this->deleteNotaExame($this->getRequest()->matricula_id, $this->getRequest()->componente_curricular_id);
         }
-
     }
 
     // TODO mover validacao para canPostFalta
     protected function postFalta()
     {
-
         $canPost = $this->canPostFalta();
         if ($canPost && $this->serviceBoletim()->getRegra()->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
             $canPost = $this->validatesPresenceOf('componente_curricular_id');
@@ -619,7 +622,6 @@ class DiarioApiController extends ApiCoreController
 
     protected function postParecer()
     {
-
         if ($this->canPostParecer()) {
             $tpParecer = $this->serviceBoletim()->getRegra()->get('parecerDescritivo');
             $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo;
@@ -645,7 +647,6 @@ class DiarioApiController extends ApiCoreController
     protected function deleteNota()
     {
         if ($this->canDeleteNota()) {
-
             $nota = $this->getNotaAtual();
             if (empty($nota) && !is_numeric($nota)) {
                 $this->messenger->append('Nota matrícula ' . $this->getRequest()->matricula_id . ' inexistente ou já removida.', 'notice');
@@ -669,12 +670,12 @@ class DiarioApiController extends ApiCoreController
         if ($this->canDeleteNota()) {
             $notaOriginal = $this->getNotaOriginal();
             $notaAtual = $this->getNotaAtual();
-            $nota = new Avaliacao_Model_NotaComponente(array(
+            $nota = new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => $this->getRequest()->componente_curricular_id,
                 'etapa' => $this->getRequest()->etapa,
                 'nota' => $notaOriginal,
                 'notaRecuperacaoEspecifica' => null,
-                'notaOriginal' => $notaOriginal));
+                'notaOriginal' => $notaOriginal]);
 
             $this->serviceBoletim()->addNota($nota);
             $this->trySaveServiceBoletim();
@@ -695,12 +696,12 @@ class DiarioApiController extends ApiCoreController
         if ($this->canDeleteNota()) {
             $notaOriginal = $this->getNotaOriginal();
             $notaAtual = $this->getNotaAtual();
-            $nota = new Avaliacao_Model_NotaComponente(array(
+            $nota = new Avaliacao_Model_NotaComponente([
                 'componenteCurricular' => $this->getRequest()->componente_curricular_id,
                 'etapa' => $this->getRequest()->etapa,
                 'nota' => $notaOriginal,
                 'notaRecuperacaoParalela' => null,
-                'notaOriginal' => $notaOriginal));
+                'notaOriginal' => $notaOriginal]);
 
             $this->serviceBoletim()->addNota($nota);
             $this->trySaveServiceBoletim();
@@ -978,8 +979,8 @@ class DiarioApiController extends ApiCoreController
     // TODO usar esta funcao onde é verificado se parecer geral
     protected function parecerGeral()
     {
-        $tiposParecerGeral = array(RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
-            RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL);
+        $tiposParecerGeral = [RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL,
+            RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL];
 
         return in_array($this->serviceBoletim()->getRegra()->get('parecerDescritivo'), $tiposParecerGeral);
     }
@@ -997,7 +998,7 @@ class DiarioApiController extends ApiCoreController
         } elseif (!is_null($this->getRequest()->matricula_id)) {
             $matriculaId = $this->getRequest()->matricula_id;
         } else {
-            throw new CoreExt_Exception("Não foi possivel recuperar o id da matricula atual.");
+            throw new CoreExt_Exception('Não foi possivel recuperar o id da matricula atual.');
         }
 
         return $matriculaId;
@@ -1015,17 +1016,18 @@ class DiarioApiController extends ApiCoreController
         $matriculaId = $this->getCurrentMatriculaId();
 
         if (!isset($this->_boletimServiceInstances)) {
-            $this->_boletimServiceInstances = array();
+            $this->_boletimServiceInstances = [];
         }
 
         // set service
         if (!isset($this->_boletimServiceInstances[$matriculaId]) || $reload) {
             try {
-                $params = array(
+                $params = [
                     'matricula' => $matriculaId,
                     'usuario' => $this->getSession()->id_pessoa,
                     'componenteCurricularId' => $this->getRequest()->componente_curricular_id,
-                );
+                    'turmaId' => $this->getRequest()->turma_id,
+                ];
                 $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
             } catch (Exception $e) {
                 $this->messenger->append("Erro ao instanciar serviço boletim para matricula {$matriculaId}: " . $e->getMessage(), 'error', true);
@@ -1074,38 +1076,38 @@ class DiarioApiController extends ApiCoreController
 
     protected function getFaltaGeral()
     {
-        return new Avaliacao_Model_FaltaGeral(array(
+        return new Avaliacao_Model_FaltaGeral([
             'quantidade' => $this->getQuantidadeFalta(),
             'etapa' => $this->getRequest()->etapa,
-        ));
+        ]);
     }
 
     protected function getFaltaComponente()
     {
-        return new Avaliacao_Model_FaltaComponente(array(
+        return new Avaliacao_Model_FaltaComponente([
             'componenteCurricular' => $this->getRequest()->componente_curricular_id,
             'quantidade' => $this->getQuantidadeFalta(),
             'etapa' => $this->getRequest()->etapa,
-        ));
+        ]);
     }
 
     // metodos auxiliares getParecer
 
     protected function getParecerComponente()
     {
-        return new Avaliacao_Model_ParecerDescritivoComponente(array(
+        return new Avaliacao_Model_ParecerDescritivoComponente([
             'componenteCurricular' => $this->getRequest()->componente_curricular_id,
             'parecer' => $this->safeStringForDb($this->getRequest()->att_value),
             'etapa' => $this->getRequest()->etapa,
-        ));
+        ]);
     }
 
     protected function getParecerGeral()
     {
-        return new Avaliacao_Model_ParecerDescritivoGeral(array(
+        return new Avaliacao_Model_ParecerDescritivoGeral([
             'parecer' => $this->safeStringForDb($this->getRequest()->att_value),
             'etapa' => $this->getRequest()->etapa,
-        ));
+        ]);
     }
 
     // metodos auxiliares getSituacaoComponente
@@ -1123,7 +1125,7 @@ class DiarioApiController extends ApiCoreController
         $situacao = null;
 
         $situacoes = $this->getSituacaoComponentes();
-        if(isset($situacoes[$ccId])){
+        if (isset($situacoes[$ccId])) {
             $situacao = $situacoes[$ccId];
         }
 
@@ -1132,14 +1134,13 @@ class DiarioApiController extends ApiCoreController
 
     protected function getSituacaoComponentes()
     {
-        $situacoes = array();
+        $situacoes = [];
 
         try {
             $componentesCurriculares = $this->serviceBoletim()->getSituacaoComponentesCurriculares()->componentesCurriculares;
-            foreach($componentesCurriculares as $componenteCurricularId => $situacaoCc){
+            foreach ($componentesCurriculares as $componenteCurricularId => $situacaoCc) {
                 $situacoes[$componenteCurricularId] = $this->serviceBoletim()->exibeSituacao($componenteCurricularId) ? App_Model_MatriculaSituacao::getInstance()->getValue($situacaoCc->situacao) : null;
             }
-
         } catch (Exception $e) {
             $matriculaId = $this->getRequest()->matricula_id;
             $this->messenger->append("Erro ao recuperar situação da matrícula '$matriculaId': " .
@@ -1153,7 +1154,7 @@ class DiarioApiController extends ApiCoreController
 
     protected function loadComponentesCurricularesForMatricula($matriculaId, $turmaId, $serieId)
     {
-        $componentesCurriculares = array();
+        $componentesCurriculares = [];
 
         $componenteCurricularId = $this->getRequest()->componente_curricular_id;
         $etapa = $this->getRequest()->etapa;
@@ -1166,7 +1167,7 @@ class DiarioApiController extends ApiCoreController
         $slugify = new Slugify();
 
         foreach ($_componentesCurriculares as $_componente) {
-            $componente = array();
+            $componente = [];
             $componenteId = $_componente->get('id');
             $tipoNota = App_Model_IedFinder::getTipoNotaComponenteSerie($componenteId, $serieId);
 
@@ -1217,7 +1218,7 @@ class DiarioApiController extends ApiCoreController
             $componentesCurriculares[] = $componente;
         }
 
-        $ordenamentoComponentes = array();
+        $ordenamentoComponentes = [];
 
         foreach ($componentesCurriculares as $chave => $componente) {
             $ordenamentoComponentes['ordenamento_ac'][$chave] = $componente['ordenamento_ac'];
@@ -1225,17 +1226,26 @@ class DiarioApiController extends ApiCoreController
             $ordenamentoComponentes['ordem_nome_area_conhecimento'][$chave] = $componente['ordem_nome_area_conhecimento'];
             $ordenamentoComponentes['ordem_componente_curricular'][$chave] = $componente['ordem_componente_curricular'];
         }
-        array_multisort($ordenamentoComponentes['ordenamento_ac'], SORT_ASC, SORT_NUMERIC,
-            $ordenamentoComponentes['ordem_nome_area_conhecimento'], SORT_ASC,
-            $ordenamentoComponentes['ordenamento'], SORT_ASC, SORT_NUMERIC,
-            $ordenamentoComponentes['ordem_componente_curricular'], SORT_ASC,
-            $componentesCurriculares);
+        array_multisort(
+            $ordenamentoComponentes['ordenamento_ac'],
+            SORT_ASC,
+            SORT_NUMERIC,
+            $ordenamentoComponentes['ordem_nome_area_conhecimento'],
+            SORT_ASC,
+            $ordenamentoComponentes['ordenamento'],
+            SORT_ASC,
+            SORT_NUMERIC,
+            $ordenamentoComponentes['ordem_componente_curricular'],
+            SORT_ASC,
+            $componentesCurriculares
+        );
 
         //removendo chave temporária
         $len = count($componentesCurriculares);
         for ($i = 0; $i < $len; $i++) {
             unset($componentesCurriculares[$i]['my_order']);
         }
+
         return $componentesCurriculares;
     }
 
@@ -1251,12 +1261,12 @@ class DiarioApiController extends ApiCoreController
 
                 $mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
 
-        $where = array('id' => $componenteCurricularId);
+        $where = ['id' => $componenteCurricularId];
 
         $key = json_encode($where);
 
         $area = Cache::store('array')->remember("getAreaConhecimento:{$key}", now()->addMinute(), function () use ($mapper, $where) {
-            return $mapper->findAll(array('area_conhecimento'), $where);
+            return $mapper->findAll(['area_conhecimento'], $where);
         });
 
         $areaConhecimento = new stdClass();
@@ -1270,7 +1280,6 @@ class DiarioApiController extends ApiCoreController
 
     protected function createOrUpdateNotaExame($matriculaId, $componenteCurricularId, $notaExame)
     {
-
         $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId, $notaExame);
 
         return ($obj->existe() ? $obj->edita() : $obj->cadastra());
@@ -1279,12 +1288,12 @@ class DiarioApiController extends ApiCoreController
     protected function deleteNotaExame($matriculaId, $componenteCurricularId)
     {
         $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId);
+
         return ($obj->excluir());
     }
 
     /**
      * @deprecated
-     *
      * @see Avaliacao_Service_Boletim::getNotaAtual()
      */
     protected function getNotaAtual($etapa = null, $componenteCurricularId = null)
@@ -1310,7 +1319,6 @@ class DiarioApiController extends ApiCoreController
 
     protected function getNotaGeral($etapa = null)
     {
-
         if (is_null($etapa)) {
             $etapa = $this->getRequest()->etapa;
         }
@@ -1318,7 +1326,6 @@ class DiarioApiController extends ApiCoreController
         $nota = urldecode($this->serviceBoletim()->getNotaGeral($etapa)->nota);
 
         return str_replace(',', '.', $nota);
-
     }
 
     protected function getMediaAtual($componenteCurricularId = null)
@@ -1394,6 +1401,7 @@ class DiarioApiController extends ApiCoreController
 
         $nota = urldecode($this->serviceBoletim()->getNotaComponente($componenteCurricularId, $etapa)->notaRecuperacaoParalela);
         $nota = str_replace(',', '.', $nota);
+
         return $nota;
     }
 
@@ -1420,7 +1428,6 @@ class DiarioApiController extends ApiCoreController
 
         if ($tipoRecuperacaoParalela == RegraAvaliacao_Model_TipoRecuperacaoParalela::USAR_POR_ETAPAS_ESPECIFICAS
             && $regraRecuperacao && $regraRecuperacao->getLastEtapa() == $etapa) {
-
             $etapas = $regraRecuperacao->getEtapas();
             $sumNota = 0;
             foreach ($etapas as $key => $_etapa) {
@@ -1437,20 +1444,22 @@ class DiarioApiController extends ApiCoreController
                 $notaRecuperacao = $this->serviceBoletim()->getNotaComponente($componenteCurricularId, $regraRecuperacao->getLastEtapa());
 
                 if ($notaRecuperacao) {
-                    $nota = new Avaliacao_Model_NotaComponente(array(
+                    $nota = new Avaliacao_Model_NotaComponente([
                         'componenteCurricular' => $componenteCurricularId,
                         'nota' => $notaRecuperacao->notaOriginal,
                         'etapa' => $notaRecuperacao->etapa,
                         'notaOriginal' => $notaRecuperacao->notaOriginal,
                         'notaRecuperacaoParalela' => $notaRecuperacao->notaRecuperacaoParalela,
-                    ));
+                    ]);
 
                     $this->serviceBoletim()->addNota($nota);
                     $this->trySaveServiceBoletim();
                 }
+
                 return false;
             }
         }
+
         return false;
     }
 
@@ -1472,6 +1481,7 @@ class DiarioApiController extends ApiCoreController
 
         $nota = urldecode($this->serviceBoletim()->getNotaComponente($componenteCurricularId, $etapa)->notaRecuperacaoEspecifica);
         $nota = str_replace(',', '.', $nota);
+
         return $nota;
     }
 
@@ -1493,12 +1503,12 @@ class DiarioApiController extends ApiCoreController
 
         $nota = urldecode($this->serviceBoletim()->getNotaComponente($componenteCurricularId, $etapa)->notaOriginal);
         $nota = str_replace(',', '.', $nota);
+
         return $nota;
     }
 
     protected function getNotaExame($componenteCurricularId = null)
     {
-
         $turmaId = $this->getRequest()->turma_id;
         $regra = $this->serviceBoletim()->getRegra();
         $defineComponentePorEtapa = $regra->get('definirComponentePorEtapa') == 1;
@@ -1533,7 +1543,6 @@ class DiarioApiController extends ApiCoreController
 
     /**
      * @deprecated
-     *
      * @see Avaliacao_Service_Boletim::getFaltaAtual()
      */
     protected function getFaltaAtual($etapa = null, $componenteCurricularId = null)
@@ -1567,7 +1576,6 @@ class DiarioApiController extends ApiCoreController
         } else {
             return $this->getRequest()->etapa;
         }
-
     }
 
     protected function getParecerAtual($componenteCurricularId = null)
@@ -1733,9 +1741,9 @@ class DiarioApiController extends ApiCoreController
         }
 
         if ($evaluationRule->nota_geral_por_etapa == '1') {
-            $rule['nota_geral_por_etapa'] = "SIM";
+            $rule['nota_geral_por_etapa'] = 'SIM';
         } else {
-            $rule['nota_geral_por_etapa'] = "NAO UTILIZA";
+            $rule['nota_geral_por_etapa'] = 'NAO UTILIZA';
         }
 
         $rule['definir_componente_por_etapa'] = $evaluationRule->definir_componente_etapa == 1;
@@ -1755,7 +1763,7 @@ class DiarioApiController extends ApiCoreController
 
     protected function usaAuditoriaNotas()
     {
-        return (config('legacy.app.auditoria.notas') == "1");
+        return (config('legacy.app.auditoria.notas') == '1');
     }
 
     public function canChange()
@@ -1833,6 +1841,5 @@ class DiarioApiController extends ApiCoreController
         } else {
             $this->notImplementedOperationError();
         }
-
     }
 }

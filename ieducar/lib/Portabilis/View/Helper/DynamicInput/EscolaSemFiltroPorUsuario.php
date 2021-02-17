@@ -23,8 +23,16 @@ class Portabilis_View_Helper_DynamicInput_EscolaSemFiltroPorUsuario extends Port
 
     public function escolaSemFiltroPorUsuario($options = [])
     {
+        $this->attributeJs($options);
         $this->select($options);
         Portabilis_View_Helper_Application::loadChosenLib($this->viewInstance);
         Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, '/modules/DynamicInput/Assets/Javascripts/Escola.js');
+    }
+
+    protected function attributeJs($options)
+    {
+        $js = '$j("#ref_cod_escola").attr("escola_sem_filtro_por_usuario", true)';
+
+        Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = false);
     }
 }

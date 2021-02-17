@@ -15,8 +15,6 @@ class CreatePmieducarInstituicaoDocumentacaoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE SEQUENCE pmieducar.instituicao_documentacao_seq
                     START WITH 2
                     INCREMENT BY 1
@@ -32,7 +30,7 @@ class CreatePmieducarInstituicaoDocumentacaoTable extends Migration
                     ref_usuario_cad integer DEFAULT 0 NOT NULL,
                     ref_cod_escola integer
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.instituicao_documentacao
                     ADD CONSTRAINT instituicao_documentacao_pkey PRIMARY KEY (id);
 

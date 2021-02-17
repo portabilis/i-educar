@@ -723,8 +723,12 @@ class App_Model_IedFinder extends CoreExt_Entity
      * @throws EvaluationRuleNotDefinedInLevel
      * @throws StudentNotEnrolledInSchoolClass
      */
-    public static function getMatricula($codMatricula)
+    public static function getMatricula($codMatricula, $codTurma = null)
     {
+        if (empty($codTurma)) {
+            $codTurma = 0;
+        }
+
         $sql = '
             SELECT
                 m.cod_matricula,
@@ -792,6 +796,7 @@ class App_Model_IedFinder extends CoreExt_Entity
             ON rasa.ano_letivo = m.ano
             AND rasa.serie_id = s.cod_serie
             WHERE m.cod_matricula = $1
+            AND CASE WHEN $2 = 0 THEN true ELSE t.cod_turma = $2 END
             AND a.ativo = 1
             AND t.ativo = 1
             AND
@@ -819,7 +824,7 @@ class App_Model_IedFinder extends CoreExt_Entity
             LIMIT 1
     ';
 
-        $matricula = Portabilis_Utils_Database::selectRow($sql, ['params' => $codMatricula]);
+        $matricula = Portabilis_Utils_Database::selectRow($sql, ['params' => [$codMatricula, $codTurma]]);
 
         if (!$matricula) {
             throw new StudentNotEnrolledInSchoolClass($codMatricula);

@@ -31,7 +31,7 @@ class clsBase
 
     public function SetTitulo($titulo)
     {
-        $this->titulo = $titulo;
+        $this->titulo = html_entity_decode($titulo);
     }
 
     public function AddForm($form)

@@ -15,8 +15,6 @@ class CreatePmieducarNotaAlunoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE SEQUENCE pmieducar.nota_aluno_cod_nota_aluno_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -41,7 +39,7 @@ class CreatePmieducarNotaAlunoTable extends Migration
                     ref_cod_curso_disciplina integer,
                     nota double precision
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.nota_aluno
                     ADD CONSTRAINT nota_aluno_pkey PRIMARY KEY (cod_nota_aluno);
 

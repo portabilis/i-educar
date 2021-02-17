@@ -15,8 +15,6 @@ class CreatePmieducarSequenciaSerieTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE TABLE pmieducar.sequencia_serie (
                     ref_serie_origem integer NOT NULL,
                     ref_serie_destino integer NOT NULL,
@@ -26,7 +24,7 @@ class CreatePmieducarSequenciaSerieTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.sequencia_serie
                     ADD CONSTRAINT sequencia_serie_pkey PRIMARY KEY (ref_serie_origem, ref_serie_destino);
             '

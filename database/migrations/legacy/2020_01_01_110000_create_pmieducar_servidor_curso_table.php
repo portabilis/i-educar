@@ -15,8 +15,6 @@ class CreatePmieducarServidorCursoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE SEQUENCE pmieducar.servidor_curso_cod_servidor_curso_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -31,7 +29,7 @@ class CreatePmieducarServidorCursoTable extends Migration
                     data_registro timestamp without time zone,
                     diplomas_registros text
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.servidor_curso
                     ADD CONSTRAINT servidor_curso_pkey PRIMARY KEY (cod_servidor_curso);
 
