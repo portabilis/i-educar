@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use RuntimeException;
 use Throwable;
 use App\Models\LegacySchoolCourse;
+use App\Models\LegacyDisciplineSchoolClass;
 use App\Http\Controllers\SchoolClassGradeController;
 
 require_once 'include/clsBase.inc.php';
@@ -694,11 +695,19 @@ class indice extends clsCadastro
         return $this->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL;
     }
 
+    protected function existeComponentesNaTurma()
+    {
+        return LegacyDisciplineSchoolClass::query()
+            ->where('turma_id', $this->cod_turma)
+            ->exists();
+    }
+
     public function montaListaComponentesSerieEscola()
     {
         $this->campoQuebra2();
+        $existeComponentesNaTurma = $this->existeComponentesNaTurma();
 
-        if ($this->ref_cod_serie) {
+        if ($this->ref_cod_serie && (!$this->multiseriada || $existeComponentesNaTurma)) {
             $conteudo = '';
 
             try {
@@ -825,6 +834,10 @@ class indice extends clsCadastro
 
         $label = 'Componentes curriculares definidos em s&eacute;ries da escola';
 
+        if ($this->multiseriada && !$existeComponentesNaTurma) {
+            $label = 'Os componentes curriculares de turmas multisseriadas devem ser definidos em suas respectivas Séries (Escola > Cadastros > Séries da escola)';
+        }
+
         $label = sprintf($label, $help);
 
         $this->campoRotulo(
@@ -930,15 +943,17 @@ class indice extends clsCadastro
         $turma = new clsPmieducarTurma($this->cod_turma);
         $turma = $turma->detalhe();
 
-        $this->atualizaComponentesCurriculares(
-            $this->ref_cod_serie,
-            $this->ref_cod_escola,
-            $this->cod_turma,
-            $this->disciplinas,
-            $this->carga_horaria,
-            $this->usar_componente,
-            $this->docente_vinculado
-        );
+        if (!$this->multiseriada) {
+            $this->atualizaComponentesCurriculares(
+                $this->ref_cod_serie,
+                $this->ref_cod_escola,
+                $this->cod_turma,
+                $this->disciplinas,
+                $this->carga_horaria,
+                $this->usar_componente,
+                $this->docente_vinculado
+            );
+        }
 
         $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
@@ -1031,15 +1046,17 @@ class indice extends clsCadastro
         }
 
         try {
-            $this->atualizaComponentesCurriculares(
-                $turmaDetalhe['ref_ref_cod_serie'],
-                $turmaDetalhe['ref_ref_cod_escola'],
-                $this->cod_turma,
-                $this->disciplinas,
-                $this->carga_horaria,
-                $this->usar_componente,
-                $this->docente_vinculado
-            );
+            if (!$this->multiseriada) {
+                $this->atualizaComponentesCurriculares(
+                    $turmaDetalhe['ref_ref_cod_serie'],
+                    $turmaDetalhe['ref_ref_cod_escola'],
+                    $this->cod_turma,
+                    $this->disciplinas,
+                    $this->carga_horaria,
+                    $this->usar_componente,
+                    $this->docente_vinculado
+                );
+            }
         } catch (DisciplinesValidationException $e) {
             $this->mensagem = $e->getMessage();
 

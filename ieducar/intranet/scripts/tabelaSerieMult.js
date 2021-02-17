@@ -3,6 +3,7 @@ configuraCamposExibidos();
 
 $j('#multiseriada').change(function(){
     configuraCamposExibidos();
+    atualizaOpcoesDeDisciplinas();
 });
 
 $j('#ref_cod_escola').change(function(){
@@ -74,6 +75,7 @@ function configuraCamposExibidos() {
         $j('#tr_ref_cod_serie').show();
         $j('#tr_turma_serie').hide();
         $j("[name^=tr_turma_serie]").remove();
+        $j('#tr_disciplinas_ td:nth-child(1)').html('Componentes curriculares definidos em séries da escola');
     }
 }
 
