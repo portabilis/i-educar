@@ -15,8 +15,6 @@ class CreateModulesRegraAvaliacaoRecuperacaoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-                
                 CREATE SEQUENCE modules.regra_avaliacao_recuperacao_id_seq
                     START WITH 1
                     INCREMENT BY 1

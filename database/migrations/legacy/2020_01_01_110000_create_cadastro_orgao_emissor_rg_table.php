@@ -15,8 +15,6 @@ class CreateCadastroOrgaoEmissorRgTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE cadastro.orgao_emissor_rg_idorg_rg_seq
                     START WITH 30
                     INCREMENT BY 1
@@ -32,7 +30,7 @@ class CreateCadastroOrgaoEmissorRgTable extends Migration
                     codigo_educacenso integer,
                     CONSTRAINT ck_orgao_emissor_rg_situacao CHECK (((situacao = \'A\'::bpchar) OR (situacao = \'I\'::bpchar)))
                 );
-                
+
                 ALTER TABLE ONLY cadastro.orgao_emissor_rg
                     ADD CONSTRAINT pk_orgao_emissor_rg PRIMARY KEY (idorg_rg);
 

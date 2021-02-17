@@ -15,8 +15,6 @@ class CreateModulesNotaComponenteCurricularTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-                
                 CREATE SEQUENCE modules.nota_componente_curricular_id_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -37,12 +35,12 @@ class CreateModulesNotaComponenteCurricularTable extends Migration
                 );
 
                 ALTER SEQUENCE modules.nota_componente_curricular_id_seq OWNED BY modules.nota_componente_curricular.id;
-                
+
                 ALTER TABLE ONLY modules.nota_componente_curricular
                     ADD CONSTRAINT nota_componente_curricular_pkey PRIMARY KEY (nota_aluno_id, componente_curricular_id, etapa);
 
                 ALTER TABLE ONLY modules.nota_componente_curricular ALTER COLUMN id SET DEFAULT nextval(\'modules.nota_componente_curricular_id_seq\'::regclass);
-                
+
                 CREATE INDEX idx_nota_componente_curricular_etapa ON modules.nota_componente_curricular USING btree (nota_aluno_id, componente_curricular_id, etapa);
 
                 CREATE INDEX idx_nota_componente_curricular_etp ON modules.nota_componente_curricular USING btree (componente_curricular_id, etapa);

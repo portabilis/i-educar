@@ -52,11 +52,11 @@ class DependencyTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Retido', $response->situacao);
+            self::assertEquals('Retido', $response->situacao);
         }
 
         $registration = $this->enrollment->registration;
-        $this->assertEquals(App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA, $registration->refresh()->aprovado);
+        self::assertEquals(App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA, $registration->refresh()->aprovado);
     }
 
     /**
@@ -91,7 +91,7 @@ class DependencyTest extends TestCase
         $this->postAbsenceForStages($absence, $disciplines[0]);
         $this->postScoreForStages($score, $disciplines[0]);
         $response = $this->postExam($this->enrollment, $disciplines[0]->id, 'Rc', '1');
-        $this->assertEquals('Retido', $response->situacao);
+        self::assertEquals('Retido', $response->situacao);
 
         $score = [
             1 => 10,
@@ -104,9 +104,9 @@ class DependencyTest extends TestCase
 
         $this->postAbsenceForStages($absence, $disciplines[1]);
         $response = $this->postScoreForStages($score, $disciplines[1]);
-        $this->assertEquals('Retido', $response->situacao);
+        self::assertEquals('Reprovado por faltas', $response->situacao);
 
         $registration = $this->enrollment->registration;
-        $this->assertEquals(App_Model_MatriculaSituacao::REPROVADO, $registration->refresh()->aprovado);
+        self::assertEquals(App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA, $registration->refresh()->aprovado);
     }
 }

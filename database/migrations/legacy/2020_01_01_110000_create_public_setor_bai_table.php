@@ -15,8 +15,6 @@ class CreatePublicSetorBaiTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE public.seq_setor_bai
                     START WITH 1
                     INCREMENT BY 1
@@ -28,7 +26,7 @@ class CreatePublicSetorBaiTable extends Migration
                     idsetorbai numeric(6,0) DEFAULT nextval((\'public.seq_setor_bai\'::text)::regclass) NOT NULL,
                     nome character varying(80) NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY public.setor_bai
                     ADD CONSTRAINT pk_setorbai PRIMARY KEY (idsetorbai);
 

@@ -15,8 +15,6 @@ class CreatePmieducarEscolaRedeEnsinoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.escola_rede_ensino_cod_escola_rede_ensino_seq
                     START WITH 0
                     INCREMENT BY 1
@@ -34,7 +32,7 @@ class CreatePmieducarEscolaRedeEnsinoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_instituicao integer NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.escola_rede_ensino
                     ADD CONSTRAINT escola_rede_ensino_pkey PRIMARY KEY (cod_escola_rede_ensino);
 

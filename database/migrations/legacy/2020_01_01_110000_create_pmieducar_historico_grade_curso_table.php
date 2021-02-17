@@ -15,8 +15,6 @@ class CreatePmieducarHistoricoGradeCursoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.historico_grade_curso_seq
                     START WITH 3
                     INCREMENT BY 1
@@ -32,7 +30,7 @@ class CreatePmieducarHistoricoGradeCursoTable extends Migration
                     quantidade_etapas integer,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.historico_grade_curso
                     ADD CONSTRAINT historico_grade_curso_pk PRIMARY KEY (id);
 
