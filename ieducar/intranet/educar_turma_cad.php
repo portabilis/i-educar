@@ -16,7 +16,7 @@ use RuntimeException;
 use Throwable;
 use App\Models\LegacySchoolCourse;
 use App\Models\LegacyDisciplineSchoolClass;
-use App\Http\Controllers\SchoolClassGradeController;
+use App\Services\SchoolClass\MultiGradesService;
 
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -929,8 +929,19 @@ class indice extends clsCadastro
         $schoolClass = LegacySchoolClass::find($this->cod_turma);
 
         if ($this->multiseriada) {
-            $controller = new SchoolClassGradeController;
-            $controller->storeSchoolClassGrade(request(), $schoolClass);
+            $schoolClassGrades = [];
+            foreach ($this->mult_serie_id as $key => $serieId) {
+                $schoolClassGrades[] = [
+                    'escola_id' => $this->ref_cod_escola,
+                    'serie_id' => $serieId,
+                    'turma_id' => $this->cod_turma,
+                    'boletim_id' => $this->mult_boletim_id[$key],
+                    'boletim_diferenciado_id' => $this->mult_boletim_diferenciado_id[$key],
+                ];
+            }
+
+            $service = new MultiGradesService($schoolClassGrades);
+            $service->storeSchoolClassGrade();
         }
 
         if (!$cadastrou) {
@@ -1023,15 +1034,26 @@ class indice extends clsCadastro
         DB::beginTransaction();
         $editou = $objTurma->edita();
 
-        $controller = new SchoolClassGradeController;
+        $schoolClassGrades = [];
+        foreach ($this->mult_serie_id as $key => $serieId) {
+            $schoolClassGrades[] = [
+                'escola_id' => $this->ref_ref_cod_escola,
+                'serie_id' => $serieId,
+                'turma_id' => $this->cod_turma,
+                'boletim_id' => $this->mult_boletim_id[$key],
+                'boletim_diferenciado_id' => $this->mult_boletim_diferenciado_id[$key],
+            ];
+        }
+
+        $service = new MultiGradesService($schoolClassGrades);
         $schoolClass = LegacySchoolClass::find($this->cod_turma);
 
         if ($turmaDetalhe['multiseriada'] == 1 && $this->multiseriada == 0) {
-            $controller->deleteAllGradesOfSchoolClass(request(), $schoolClass);
+            $service->deleteAllGradesOfSchoolClass($schoolClass);
         }
 
         if ($this->multiseriada) {
-            $controller->storeSchoolClassGrade(request(), $schoolClass);
+            $service->storeSchoolClassGrade();
         }
 
         if (!$editou) {
