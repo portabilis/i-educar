@@ -17,4 +17,9 @@ trait UnknowUser
 
         return $result->idpes;
     }
+
+    public function checkUnknowUserExists(): bool
+    {
+        return (bool) $this->getUnknowUserId();
+    }
 }
