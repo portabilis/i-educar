@@ -11,7 +11,10 @@ class CreateUserDesconhecidoFixUserFkMatricula extends Migration
 
     public function up()
     {
-        $this->createDesconhecidoUser();
+        if (!$this->checkUnknowUserExists()) {
+            $this->createDesconhecidoUser();
+        }
+        $this->fixCodUserMissedOnMatriculaTurmaTable();
     }
 
     private function createDesconhecidoUser()
@@ -168,6 +171,23 @@ class CreateUserDesconhecidoFixUserFkMatricula extends Migration
              0
         FROM pmieducar.usuario
         where cod_usuario = 1;
+        ");
+    }
+
+    private function fixCodUserMissedOnMatriculaTurmaTable()
+    {
+
+        $unknowUserId = $this->getUnknowUserId();
+
+        DB::statement("
+        UPDATE pmieducar.matricula_turma
+        set ref_usuario_cad = {$unknowUserId}
+        where NOT EXISTS (SELECT 1 FROM pmieducar.usuario where cod_usuario = ref_usuario_cad);
+        ");
+        DB::statement("
+        UPDATE pmieducar.matricula_turma
+        set ref_usuario_exc = {$unknowUserId}
+        where NOT EXISTS (SELECT 1 FROM pmieducar.usuario where cod_usuario = ref_usuario_exc) and ref_usuario_exc is not null;
         ");
     }
 }
