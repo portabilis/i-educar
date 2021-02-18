@@ -15,8 +15,6 @@ class CreateModulesEducacensoCodDocenteTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE TABLE modules.educacenso_cod_docente (
                     cod_servidor integer NOT NULL,
                     cod_docente_inep bigint NOT NULL,
@@ -25,7 +23,7 @@ class CreateModulesEducacensoCodDocenteTable extends Migration
                     created_at timestamp without time zone NOT NULL,
                     updated_at timestamp without time zone
                 );
-                
+
                 ALTER TABLE ONLY modules.educacenso_cod_docente
                     ADD CONSTRAINT educacenso_cod_docente_pk PRIMARY KEY (cod_servidor, cod_docente_inep);
             '

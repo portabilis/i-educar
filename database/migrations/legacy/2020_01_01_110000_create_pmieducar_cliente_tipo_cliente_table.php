@@ -15,8 +15,6 @@ class CreatePmieducarClienteTipoClienteTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE TABLE pmieducar.cliente_tipo_cliente (
                     ref_cod_cliente_tipo integer NOT NULL,
                     ref_cod_cliente integer NOT NULL,
@@ -27,7 +25,7 @@ class CreatePmieducarClienteTipoClienteTable extends Migration
                     ativo smallint DEFAULT (1)::smallint,
                     ref_cod_biblioteca integer
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.cliente_tipo_cliente
                     ADD CONSTRAINT cliente_tipo_cliente_pk PRIMARY KEY (ref_cod_cliente_tipo, ref_cod_cliente);
             '

@@ -15,8 +15,6 @@ class CreatePmieducarUsuarioTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE TABLE pmieducar.usuario (
                     cod_usuario integer NOT NULL,
                     ref_cod_instituicao integer,
@@ -27,7 +25,7 @@ class CreatePmieducarUsuarioTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.usuario
                     ADD CONSTRAINT usuario_pkey PRIMARY KEY (cod_usuario);
             '

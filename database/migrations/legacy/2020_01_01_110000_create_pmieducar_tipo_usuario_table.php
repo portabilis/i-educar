@@ -15,8 +15,6 @@ class CreatePmieducarTipoUsuarioTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.tipo_usuario_cod_tipo_usuario_seq
                     START WITH 0
                     INCREMENT BY 1
@@ -35,7 +33,7 @@ class CreatePmieducarTipoUsuarioTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.tipo_usuario
                     ADD CONSTRAINT tipo_usuario_pkey PRIMARY KEY (cod_tipo_usuario);
 

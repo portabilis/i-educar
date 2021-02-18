@@ -15,8 +15,6 @@ class CreateModulesUniformeAlunoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE TABLE modules.uniforme_aluno (
                     ref_cod_aluno integer NOT NULL,
                     recebeu_uniforme character(1),
@@ -35,7 +33,7 @@ class CreateModulesUniformeAlunoTable extends Migration
                     quantidade_meia integer,
                     tamanho_meia character(2)
                 );
-                
+
                 ALTER TABLE ONLY modules.uniforme_aluno
                     ADD CONSTRAINT uniforme_aluno_pkey PRIMARY KEY (ref_cod_aluno);
             '

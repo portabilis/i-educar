@@ -15,8 +15,6 @@ class CreatePortalFuncionarioVinculoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE SEQUENCE portal.funcionario_vinculo_cod_funcionario_vinculo_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -29,7 +27,7 @@ class CreatePortalFuncionarioVinculoTable extends Migration
                     nm_vinculo character varying(255) DEFAULT \'\'::character varying NOT NULL,
                     abreviatura character varying(16)
                 );
-                
+
                 ALTER TABLE ONLY portal.funcionario_vinculo
                     ADD CONSTRAINT funcionario_vinculo_pk PRIMARY KEY (cod_funcionario_vinculo);
 

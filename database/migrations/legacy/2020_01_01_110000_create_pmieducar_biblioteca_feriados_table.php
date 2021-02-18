@@ -15,8 +15,6 @@ class CreatePmieducarBibliotecaFeriadosTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.biblioteca_feriados_cod_feriado_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -34,7 +32,7 @@ class CreatePmieducarBibliotecaFeriadosTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     data_feriado date NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.biblioteca_feriados
                     ADD CONSTRAINT biblioteca_feriados_pkey PRIMARY KEY (cod_feriado);
 

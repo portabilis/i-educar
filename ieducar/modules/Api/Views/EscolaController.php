@@ -665,6 +665,18 @@ class EscolaController extends ApiCoreController
         return ['options' => $escolas];
     }
 
+    protected function getEscolasSelecaoSemFiltroPorUsuario()
+    {
+        $instituicao = $this->getRequest()->instituicao;
+        $escolasInstituicao = App_Model_IedFinder::getEscolas($instituicao);
+
+        foreach ($escolasInstituicao as $id => $nome) {
+            $escolas['__'.$id] = strtoupper($this->toUtf8($nome));
+        }
+
+        return ['options' => $escolas];
+    }
+
     /**
      * Retorna os parâmetros das escolas.
      *
@@ -742,6 +754,8 @@ class EscolaController extends ApiCoreController
             $this->appendResponse($this->getEscolasUsuarios());
         } elseif ($this->isRequestFor('get', 'escolas-para-selecao')) {
             $this->appendResponse($this->getEscolasSelecao());
+        } elseif ($this->isRequestFor('get', 'escolas-para-selecao-sem-filtro-por-usuario')) {
+            $this->appendResponse($this->getEscolasSelecaoSemFiltroPorUsuario());
         } elseif ($this->isRequestFor('get', 'parametros-escolas')) {
             $this->appendResponse($this->getParametrosEscolas());
         } elseif ($this->isRequestFor('get', 'endereco-escola')) {

@@ -15,8 +15,6 @@ class CreateCadastroDocumentoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE TABLE cadastro.documento (
                     idpes numeric(8,0) NOT NULL,
                     rg character varying(25),
@@ -53,7 +51,7 @@ class CreateCadastroDocumentoTable extends Migration
                     CONSTRAINT ck_documento_origem_gravacao CHECK (((origem_gravacao = \'M\'::bpchar) OR (origem_gravacao = \'U\'::bpchar) OR (origem_gravacao = \'C\'::bpchar) OR (origem_gravacao = \'O\'::bpchar))),
                     CONSTRAINT ck_documento_tipo_cert CHECK (((tipo_cert_civil >= (91)::numeric) AND (tipo_cert_civil <= (92)::numeric)))
                 );
-                
+
                 ALTER TABLE ONLY cadastro.documento
                     ADD CONSTRAINT pk_documento PRIMARY KEY (idpes);
             '

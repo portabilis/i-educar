@@ -15,13 +15,11 @@ class CreateModulesEtapasCursoEducacensoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-                
                 CREATE TABLE modules.etapas_curso_educacenso (
                     etapa_id integer NOT NULL,
                     curso_id integer NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY modules.etapas_curso_educacenso
                     ADD CONSTRAINT etapas_curso_educacenso_pk PRIMARY KEY (etapa_id, curso_id);
             '

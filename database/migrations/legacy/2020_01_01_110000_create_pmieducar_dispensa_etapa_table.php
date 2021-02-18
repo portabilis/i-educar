@@ -15,8 +15,6 @@ class CreatePmieducarDispensaEtapaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE TABLE pmieducar.dispensa_etapa (
                     ref_cod_dispensa integer,
                     etapa integer

@@ -28,20 +28,14 @@ $j(document).ready(function () {
     function mostraEscolaOutroMunicipio() {
         if ($j(this).is(':checked')) {
             $campoEscolaDestinoExterna.closest("tr").show();
-            $campoEscolaDestinoExterna.makeRequired();
             $campoEstadoEscolaDestinoExterna.closest("tr").show();
-            $campoEstadoEscolaDestinoExterna.makeRequired();
             $campoMunicipioEscolaDestinoExterna.closest("tr").show();
-            $campoMunicipioEscolaDestinoExterna.makeRequired();
             $campoCodInstituicao.closest("tr").hide();
             $campoCodEscola.closest("tr").hide();
         } else {
             $campoEscolaDestinoExterna.closest("tr").hide();
-            $campoEscolaDestinoExterna.makeUnrequired();
             $campoEstadoEscolaDestinoExterna.closest("tr").hide();
-            $campoEstadoEscolaDestinoExterna.makeUnrequired();
             $campoMunicipioEscolaDestinoExterna.closest("tr").hide();
-            $campoMunicipioEscolaDestinoExterna.makeUnrequired();
             $campoCodInstituicao.closest("tr").show();
             $campoCodInstituicao.makeRequired();
             $campoCodEscola.closest("tr").show();
@@ -60,19 +54,6 @@ $j(document).ready(function () {
             if ($campoCodEscola.closest("select").val() === '') {
                 return alert('É necessário informar a escola');
             }
-        } else {
-            if ($campoEscolaDestinoExterna.val() == '') {
-                return alert('É necessário informar o nome da escola.');
-            }
-
-            if ($campoEstadoEscolaDestinoExterna.val() == '') {
-                return alert('É necessário informar o estado da escola.');
-            }
-
-            if ($campoMunicipioEscolaDestinoExterna.val() == '') {
-                return alert('É necessário informar o município da escola.');
-            }
-
         }
         acao();
     }
