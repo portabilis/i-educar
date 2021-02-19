@@ -4,6 +4,7 @@ namespace App\Services\SchoolClass;
 
 use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClass;
+use iEducar\Modules\SchoolClass\Validator\MultiGradesValidator;
 
 class MultiGradesService
 {
@@ -28,20 +29,28 @@ class MultiGradesService
 
     private function saveSchoolClassGrade()
     {
-        foreach ($this->schoolClassGrades as $schoolClassGrade) {
-            $schoolGrade = LegacySchoolClassGrade::firstOrNew([
-                'turma_id' => $schoolClassGrade['turma_id'],
-                'escola_id' => $schoolClassGrade['escola_id'],
-                'serie_id' => $schoolClassGrade['serie_id'],
-            ]);
+        $validator = new MultiGradesValidator;
 
-            $schoolGrade->boletim_id = $schoolClassGrade['boletim_id'];
+        if ($validator->canSaveSchoolClassGrades($this->schoolClassGrades)) {
+            foreach ($this->schoolClassGrades as $schoolClassGrade) {
+                $schoolGrade = LegacySchoolClassGrade::firstOrNew([
+                    'turma_id' => $schoolClassGrade['turma_id'],
+                    'escola_id' => $schoolClassGrade['escola_id'],
+                    'serie_id' => $schoolClassGrade['serie_id'],
+                ]);
 
-            if ($schoolClassGrade['boletim_diferenciado_id']) {
-                $schoolGrade->boletim_diferenciado_id = $schoolClassGrade['boletim_diferenciado_id'];
+                $schoolGrade->boletim_id = $schoolClassGrade['boletim_id'];
+
+                if ($schoolClassGrade['boletim_diferenciado_id']) {
+                    $schoolGrade->boletim_diferenciado_id = $schoolClassGrade['boletim_diferenciado_id'];
+                }
+
+                $schoolGrade->save();
             }
 
-            $schoolGrade->save();            
+            return true;
+        } else {
+            return $validator->getMessage();
         }
     }
 
