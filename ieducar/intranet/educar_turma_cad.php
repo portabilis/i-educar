@@ -697,9 +697,13 @@ class indice extends clsCadastro
 
     protected function existeComponentesNaTurma()
     {
-        return LegacyDisciplineSchoolClass::query()
-            ->where('turma_id', $this->cod_turma)
-            ->exists();
+        if ($this->cod_turma) {
+            return LegacyDisciplineSchoolClass::query()
+                ->where('turma_id', $this->cod_turma)
+                ->exists();
+        }
+
+        return false;
     }
 
     public function montaListaComponentesSerieEscola()
