@@ -15,11 +15,14 @@ trait UnknowUser
             ->where('nome', 'Desconhecido')
             ->first();
 
-        return $result instanceof LegacyPerson ? $result->idpes : 0;
+        if (!$result instanceof LegacyPerson)
+            throw new \Exception('Unknow user not found');
+
+        return $result->idpes;
     }
 
     public function checkUnknowUserExists(): bool
     {
-        return (bool)$this->getUnknowUserId();
+        return (bool) $this->getUnknowUserId();
     }
 }

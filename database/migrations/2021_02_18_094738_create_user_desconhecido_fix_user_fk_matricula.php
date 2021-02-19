@@ -26,7 +26,6 @@ class CreateUserDesconhecidoFixUserFkMatricula extends Migration
 
     private function createDesconhecidoUser()
     {
-
         $person = LegacyPerson::create([
             'nome' => 'Desconhecido',
             'tipo' => 'F',
@@ -56,7 +55,6 @@ class CreateUserDesconhecidoFixUserFkMatricula extends Migration
 
     private function fixCodUserMissedOnMatriculaTurmaTable()
     {
-
         $unknowUserId = $this->getUnknowUserId();
 
         $sSql = <<<SQL
