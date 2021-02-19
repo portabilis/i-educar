@@ -15,7 +15,7 @@ trait UnknowUser
             ->where('nome', 'Desconhecido')
             ->first();
 
-        return $result instanceof LegacyPerson ? $result->idpes : false;
+        return $result instanceof LegacyPerson ? $result->idpes : 0;
     }
 
     public function checkUnknowUserExists(): bool
