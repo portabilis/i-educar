@@ -437,14 +437,6 @@ abstract class clsBancoSQL_
     }
 
     /**
-     * @see clsBancoSQL_#numLinhas()
-     */
-    public function Num_Linhas()
-    {
-        return $this->numLinhas();
-    }
-
-    /**
      * Retorna o número de linhas do resultado de uma chamada a Consulta().
      *
      * @return int

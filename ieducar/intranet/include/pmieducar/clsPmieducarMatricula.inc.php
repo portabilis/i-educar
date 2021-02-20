@@ -1443,7 +1443,7 @@ class clsPmieducarMatricula extends Model
 
             $db = new clsBanco();
             $db->Consulta($select);
-            $total_registros = $db->Num_Linhas();
+            $total_registros = $db->numLinhas();
 
             if (!$total_registros) {
                 return false;
@@ -1565,7 +1565,7 @@ class clsPmieducarMatricula extends Model
 
             $db = new clsBanco();
             $db->Consulta($select);
-            $total_registros = $db->Num_Linhas();
+            $total_registros = $db->numLinhas();
 
             if (!$total_registros) {
                 return false;

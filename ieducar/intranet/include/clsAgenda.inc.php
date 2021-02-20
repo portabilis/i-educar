@@ -462,7 +462,7 @@ class clsAgenda
         if($cod_compromisso)
         {
             $db->Consulta( "SELECT 1 FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}' AND ref_cod_agenda = '{$this->agenda}'" );
-            if( $db->Num_Linhas() )
+            if( $db->numLinhas() )
             {
                 return true;
             }
