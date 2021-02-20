@@ -29,10 +29,6 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/_stub/Enum1.php';
-require_once __DIR__.'/_stub/Enum2.php';
-require_once __DIR__.'/_stub/EnumCoffee.php';
-require_once __DIR__.'/_stub/EnumString.php';
 
 /**
  * CoreExt_EnumTest class.

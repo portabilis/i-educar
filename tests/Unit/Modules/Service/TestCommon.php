@@ -1,31 +1,5 @@
 <?php
 
-require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
-require_once 'include/pmieducar/clsPmieducarSerie.inc.php';
-require_once 'include/pmieducar/clsPmieducarCurso.inc.php';
-require_once 'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php';
-require_once 'include/pmieducar/clsPmieducarDispensaDisciplina.inc.php';
-require_once 'AreaConhecimento/Model/AreaDataMapper.php';
-require_once 'FormulaMedia/Model/Formula.php';
-require_once 'FormulaMedia/Model/FormulaDataMapper.php';
-require_once 'TabelaArredondamento/Model/TabelaValor.php';
-require_once 'TabelaArredondamento/Model/TabelaValorDataMapper.php';
-require_once 'TabelaArredondamento/Model/Tabela.php';
-require_once 'TabelaArredondamento/Model/TabelaDataMapper.php';
-require_once 'RegraAvaliacao/Model/Regra.php';
-require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
-require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
-require_once 'Avaliacao/Model/NotaAlunoDataMapper.php';
-require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
-require_once 'Avaliacao/Model/NotaComponenteMediaDataMapper.php';
-require_once 'Avaliacao/Model/FaltaAlunoDataMapper.php';
-require_once 'Avaliacao/Model/FaltaGeralDataMapper.php';
-require_once 'Avaliacao/Model/FaltaComponenteDataMapper.php';
-require_once 'Avaliacao/Model/ParecerDescritivoAlunoDataMapper.php';
-require_once 'Avaliacao/Model/ParecerDescritivoAbstractDataMapper.php';
-require_once 'Avaliacao/Model/ParecerDescritivoComponenteDataMapper.php';
-require_once 'Avaliacao/Model/ParecerDescritivoGeralDataMapper.php';
-require_once 'Avaliacao/Service/Boletim.php';
 
 /**
  * Avaliacao_Service_TestCommon abstract class.
@@ -842,8 +816,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     protected function _setRegraOption($key, $value)
     {
         if (!array_key_exists($key, $this->_regraOptions)) {
-            require_once 'CoreExt/Exception/InvalidArgumentException.php';
-            throw new CoreExt_Exception_InvalidArgumentException('regraOption:' . $key);
+                        throw new CoreExt_Exception_InvalidArgumentException('regraOption:' . $key);
         }
 
         $this->_regraOptions[$key] = $value;
@@ -861,8 +834,7 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     protected function _getRegraOption($key)
     {
         if (!array_key_exists($key, $this->_regraOptions)) {
-            require_once 'CoreExt/Exception/InvalidArgumentException.php';
-            throw new CoreExt_Exception_InvalidArgumentException('regraOption: ' . $key);
+                        throw new CoreExt_Exception_InvalidArgumentException('regraOption: ' . $key);
         }
 
         return $this->_regraOptions[$key];

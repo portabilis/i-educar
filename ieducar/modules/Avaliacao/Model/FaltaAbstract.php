@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Avaliacao/Model/Etapa.php';
 
 /**
  * Avaliacao_Model_FaltaAbstract abstract class.

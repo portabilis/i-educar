@@ -2,8 +2,6 @@
 
 use PHPUnit\Framework\MockObject\MockObject;
 
-require_once __DIR__.'/TestCommon.php';
-
 /**
  * Avaliacao_Service_FaltaAlunoTest class.
  *

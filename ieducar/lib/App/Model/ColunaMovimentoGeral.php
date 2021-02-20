@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/Enum.php';
 
 class ColunaMovimentoGeral extends CoreExt_Enum
 {

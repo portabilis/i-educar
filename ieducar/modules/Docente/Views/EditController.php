@@ -2,10 +2,6 @@
 
 use App\Models\State;
 
-require_once 'Core/Controller/Page/EditController.php';
-require_once 'Educacenso/Model/CursoSuperiorDataMapper.php';
-require_once 'Educacenso/Model/IesDataMapper.php';
-require_once 'Docente/Model/LicenciaturaDataMapper.php';
 
 class EditController extends Core_Controller_Page_EditController
 {

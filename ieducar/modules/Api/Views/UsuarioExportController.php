@@ -1,8 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'intranet/include/clsBanco.inc.php';
-require_once 'intranet/include/clsBase.inc.php';
 
 class UsuarioExportController extends ApiCoreController
 {

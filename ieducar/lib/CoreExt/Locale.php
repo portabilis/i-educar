@@ -1,6 +1,5 @@
 <?php
 
-require_once __DIR__ . '/Singleton.php';
 
 class CoreExt_Locale extends CoreExt_Singleton
 {

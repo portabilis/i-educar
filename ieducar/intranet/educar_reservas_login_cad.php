@@ -6,10 +6,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
 
 class clsIndexBase extends clsBase
 {
@@ -58,11 +54,11 @@ class indice extends clsCadastro
         $instituicao_obrigatorio = true;
         $biblioteca_obrigatorio = true;
         include("include/pmieducar/educar_campo_lista.php");
-        
+
         // text
         $this->campoNumero( "login_", "Login", $this->login_, 9, 9);
         $this->campoSenha( "senha_", "Senha", $this->senha_ );
-        
+
         $this->campoTexto("nm_cliente1", "Cliente", $this->nm_cliente, 30, 255, false, false, false, "", "<img border=\"0\" onclick=\"pesquisa_cliente();\" id=\"ref_cod_cliente_lupa\" name=\"ref_cod_cliente_lupa\" src=\"imagens/lupa.png\"\/>","","",true );
         $this->campoOculto("ref_cod_cliente", $this->ref_cod_cliente);
         $this->botao_enviar = false;

@@ -5,7 +5,6 @@ use App\Services\GlobalAverageService;
 use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Session;
 
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarHistoricoEscolar extends Model
 {

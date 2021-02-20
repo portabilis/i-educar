@@ -32,8 +32,6 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'intranet/include/pmieducar/clsPmieducarMatricula.inc.php';
 
 /**
  * MatriculaTransferidoController class.

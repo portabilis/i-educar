@@ -1,7 +1,5 @@
 <?php
 
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Utils/SafeJson.php';
 
 class clsPmieducarConfiguracoesGerais
 {

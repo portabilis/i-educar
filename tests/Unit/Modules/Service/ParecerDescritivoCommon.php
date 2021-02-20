@@ -1,8 +1,6 @@
 <?php
 
 
-require_once __DIR__.'/TestCommon.php';
-
 /**
  * Class Avaliacao_Service_ParecerDescritivoCommon
  */

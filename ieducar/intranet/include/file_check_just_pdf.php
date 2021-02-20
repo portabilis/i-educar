@@ -32,7 +32,7 @@
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\File;
 
-class FileController {
+class FileControllerPdf {
 
     var $file;
     var $errorMessage;

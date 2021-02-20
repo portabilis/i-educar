@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Educacenso/Model/Docente.php';
-require_once 'CoreExt/DataMapper.php';
 
 /**
  * Educacenso_Model_DocenteDataMapper class.
