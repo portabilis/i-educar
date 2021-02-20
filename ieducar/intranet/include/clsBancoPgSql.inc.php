@@ -437,14 +437,6 @@ abstract class clsBancoSQL_
     }
 
     /**
-     * Retorna a quantidade de linhas afetadas por queries INSERT, UPDATE e DELETE.
-     */
-    public function Linhas_Afetadas()
-    {
-        return @pg_affected_rows($this->bConsulta_ID);
-    }
-
-    /**
      * @see clsBancoSQL_#numLinhas()
      */
     public function Num_Linhas()
@@ -460,14 +452,6 @@ abstract class clsBancoSQL_
     public function numLinhas()
     {
         return $this->bConsulta_ID->rowCount();
-    }
-
-    /**
-     * @see clsBancoSQL_#numCampos()
-     */
-    public function Num_Campos()
-    {
-        return $this->numCampos();
     }
 
     /**
