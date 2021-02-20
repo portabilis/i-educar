@@ -15,8 +15,6 @@ class CreateModulesEmpresaTransporteEscolarTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE SEQUENCE modules.empresa_transporte_escolar_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -30,7 +28,7 @@ class CreateModulesEmpresaTransporteEscolarTable extends Migration
                     ref_resp_idpes integer NOT NULL,
                     observacao character varying(255)
                 );
-                
+
                 ALTER TABLE ONLY modules.empresa_transporte_escolar
                     ADD CONSTRAINT empresa_transporte_escolar_cod_empresa_transporte_escolar_pkey PRIMARY KEY (cod_empresa_transporte_escolar);
 

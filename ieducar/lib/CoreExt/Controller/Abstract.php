@@ -3,7 +3,6 @@
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-require_once 'CoreExt/Controller/Interface.php';
 
 abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interface
 {
@@ -106,8 +105,7 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
     public function getRequest()
     {
         if (is_null($this->_request)) {
-            require_once 'CoreExt/Controller/Request.php';
-            $this->setRequest(new CoreExt_Controller_Request());
+                        $this->setRequest(new CoreExt_Controller_Request());
         }
 
         return $this->_request;
@@ -138,8 +136,7 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
     public function getSession()
     {
         if (is_null($this->_session)) {
-            require_once 'CoreExt/Session.php';
-            $this->setSession(new CoreExt_Session());
+                        $this->setSession(new CoreExt_Session());
         }
 
         return $this->_session;
@@ -167,8 +164,7 @@ abstract class CoreExt_Controller_Abstract implements CoreExt_Controller_Interfa
     public function getDispatcher()
     {
         if (is_null($this->_dispatcher)) {
-            require_once 'CoreExt/Controller/Dispatcher/Standard.php';
-            $this->setDispatcher(new CoreExt_Controller_Dispatcher_Standard());
+                        $this->setDispatcher(new CoreExt_Controller_Dispatcher_Standard());
         }
 
         return $this->_dispatcher;

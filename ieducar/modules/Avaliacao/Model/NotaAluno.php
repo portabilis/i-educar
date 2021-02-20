@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/Entity.php';
 
 /**
  * Avaliacao_Model_NotaAluno class.

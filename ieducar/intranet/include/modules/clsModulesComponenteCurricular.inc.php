@@ -5,7 +5,6 @@ use iEducar\Legacy\Model;
 error_reporting(E_ERROR);
 ini_set('display_errors', 1);
 
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsModulesComponenteCurricular extends Model
 {

@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Avaliacao/Model/FaltaAluno.php';
 
 /**
  * FaltaAlunoTest class.

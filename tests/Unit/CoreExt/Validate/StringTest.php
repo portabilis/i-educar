@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/Validate/String.php';
 
 /**
  * CoreExt_Validate_StringTest class.

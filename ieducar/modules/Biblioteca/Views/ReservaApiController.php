@@ -32,8 +32,6 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'include/pmieducar/clsPmieducarExemplar.inc.php';
 
 // TODO migrar novo padrao api controller
 

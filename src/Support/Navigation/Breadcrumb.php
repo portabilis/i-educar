@@ -34,7 +34,7 @@ class Breadcrumb
      */
     public function current($currentPage, $pages = [])
     {
-        $this->currentPage = $currentPage;
+        $this->currentPage = html_entity_decode($currentPage);
 
         foreach ($pages as $link => $label) {
             $this->push($label, $link);

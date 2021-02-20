@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/NotaSituacaoCommon.php';
-
 /**
  * Avaliacao_Service_NotaConceitualSituacaoTest class.
  *

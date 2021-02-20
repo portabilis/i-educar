@@ -3,8 +3,6 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-require_once 'include/clsBanco.inc.php';
-require_once 'include/Geral.inc.php';
 
 class clsPessoaFisica extends clsPessoaFj
 {

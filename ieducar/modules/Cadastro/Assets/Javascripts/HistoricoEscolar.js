@@ -11,6 +11,9 @@ $j(document).ready(function(){
 	if(codigoEscola === '' && nomeEscola === '' && numeroSequencial === ''){
 		$j('#ref_cod_escola').val("");
 		$j('#escola').closest('tr').hide();
+    cidade_escola.closest('tr').hide();
+    estado_escola.closest('tr').hide();
+    pais_escola.closest('tr').hide();
 	}
 	//Quando for edição e for outra
 	else if(codigoEscola === '' && numeroSequencial !== ''){
@@ -56,6 +59,9 @@ $j(document).ready(function(){
         cidade_escola.closest('tr').show();
         estado_escola.closest('tr').show();
         pais_escola.closest('tr').show();
+        pais_escola.val('');
+        estado_escola.val('');
+        cidade_escola.val('');
       } else {
         $j('#escola').closest('tr').hide();
         cidade_escola.closest('tr').hide();

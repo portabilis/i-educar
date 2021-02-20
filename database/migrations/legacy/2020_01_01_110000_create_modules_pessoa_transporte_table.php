@@ -15,8 +15,6 @@ class CreateModulesPessoaTransporteTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE modules.pessoa_transporte_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -33,7 +31,7 @@ class CreateModulesPessoaTransporteTable extends Migration
                     observacao character varying(255),
                     turno character varying(255)
                 );
-                
+
                 ALTER TABLE ONLY modules.pessoa_transporte
                     ADD CONSTRAINT pessoa_transporte_cod_pessoa_transporte_pkey PRIMARY KEY (cod_pessoa_transporte);
 

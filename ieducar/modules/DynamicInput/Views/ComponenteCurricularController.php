@@ -2,8 +2,6 @@
 
 use App\Services\SchoolGradeDisciplineService;
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'Portabilis/Business/Professor.php';
 
 class ComponenteCurricularController extends ApiCoreController
 {

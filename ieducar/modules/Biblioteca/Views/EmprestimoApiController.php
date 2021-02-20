@@ -32,11 +32,6 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'include/pmieducar/clsPmieducarExemplar.inc.php';
-require_once 'include/pmieducar/clsPmieducarBibliotecaDia.inc.php';
-require_once 'include/pmieducar/clsPmieducarBibliotecaFeriados.inc.php';
-require_once 'lib/Portabilis/Array/Utils.php';
 
 class EmprestimoApiController extends ApiCoreController
 {

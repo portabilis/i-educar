@@ -2,21 +2,8 @@
 
 use Illuminate\Support\Facades\DB;
 
-require_once 'Core/Controller/Page/EditController.php';
-require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
-require_once 'Avaliacao/Service/Boletim.php';
-require_once 'App/Model/MatriculaSituacao.php';
-require_once 'RegraAvaliacao/Model/TipoPresenca.php';
-require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 
-require_once 'include/pmieducar/clsPmieducarTurma.inc.php';
-require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
-require_once 'include/pmieducar/clsPmieducarHistoricoEscolar.inc.php';
-require_once 'include/pmieducar/clsPmieducarHistoricoDisciplinas.inc.php';
 
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'Portabilis/Utils/Database.php';
-require_once 'lib/Utils/SafeJson.php';
 
 // TODO migrar classe novo padrao api controller
 class ProcessamentoApiController extends Core_Controller_Page_EditController
@@ -160,7 +147,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
     protected function validatesValueIsInBd($fieldName, &$value, $schemaName, $tableName, $raiseExceptionOnError = true)
     {
         $sql = "select 1 from $schemaName.$tableName where $fieldName = $1";
-        $isValid = Portabilis_Utils_DataBase::selectField($sql, $value) == '1';
+        $isValid = Portabilis_Utils_Database::selectField($sql, $value) == '1';
 
         if (!$isValid) {
             $msg = "O valor informado {$value} para $tableName, não esta presente no banco de dados.";
@@ -965,7 +952,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             ano = $2 and ref_cod_instituicao = $3 and ref_cod_matricula = $4 and ativo = 1';
 
         $params = [$alunoId, $ano, $this->getRequest()->instituicao_id, $matriculaId];
-        $sequencial = Portabilis_Utils_DataBase::selectField($sql, $params);
+        $sequencial = Portabilis_Utils_Database::selectField($sql, $params);
 
         if (is_numeric($sequencial)) {
             $link = "/intranet/educar_historico_escolar_det.php?ref_cod_aluno=$alunoId&sequencial=$sequencial";
@@ -1067,7 +1054,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
             $sql = 'select coalesce(observacao_historico, \'\') as observacao_historico from pmieducar.serie
                      where cod_serie = $1';
 
-            $observacao = Portabilis_Utils_DataBase::selectField($sql, $this->getRequest()->serie_id);
+            $observacao = Portabilis_Utils_Database::selectField($sql, $this->getRequest()->serie_id);
         } else {
             $observacao = '';
         }

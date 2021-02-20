@@ -1,7 +1,5 @@
 <?php
 
-require_once 'include/clsBanco.inc.php';
-require_once 'Educacenso/Model/IesDataMapper.php';
 
 $iesMapper = new Educacenso_Model_IesDataMapper();
 $iesUf = $iesMapper->findAll(array(), array('uf' => $_GET['uf']), array('nome' => 'ASC'));

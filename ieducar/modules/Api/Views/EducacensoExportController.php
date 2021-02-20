@@ -40,17 +40,6 @@ use iEducar\Modules\Educacenso\Formatters;
 use iEducar\Modules\Educacenso\ValueTurmaMaisEducacao;
 use Illuminate\Support\Facades\Session;
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'Portabilis/Business/Professor.php';
-require_once 'App/Model/IedFinder.php';
-require_once 'ComponenteCurricular/Model/CodigoEducacenso.php';
-require_once 'lib/App/Model/Educacenso.php';
-require_once __DIR__ . '/../../../lib/App/Model/Servidor.php';
 
 /**
  * Class EducacensoExportController

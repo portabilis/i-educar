@@ -15,13 +15,11 @@ class CreateCadastroOcupacaoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE TABLE cadastro.ocupacao (
                     idocup numeric(6,0) NOT NULL,
                     descricao character varying(250) NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY cadastro.ocupacao
                     ADD CONSTRAINT pk_ocupacao PRIMARY KEY (idocup);
             '

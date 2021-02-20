@@ -15,8 +15,6 @@ class CreatePmieducarHistoricoEscolarTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE TABLE pmieducar.historico_escolar (
 	                id serial NOT NULL,
                     ref_cod_aluno integer NOT NULL,
@@ -52,16 +50,16 @@ class CreatePmieducarHistoricoEscolarTable extends Migration
                     dependencia boolean,
                     posicao integer
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.historico_escolar
 	                ADD CONSTRAINT historico_escolar_pkey PRIMARY KEY (id);
-                    
+
                 CREATE INDEX historico_escolar_ano_idx ON pmieducar.historico_escolar USING btree (ano);
 
                 CREATE INDEX historico_escolar_ativo_idx ON pmieducar.historico_escolar USING btree (ativo);
 
                 CREATE INDEX historico_escolar_nm_serie_idx ON pmieducar.historico_escolar USING btree (nm_serie);
-                
+
                 CREATE INDEX idx_historico_escolar_aluno_ativo ON pmieducar.historico_escolar USING btree (ref_cod_aluno, ativo);
 
                 CREATE INDEX idx_historico_escolar_id1 ON pmieducar.historico_escolar USING btree (ref_cod_aluno, sequencial);
@@ -69,7 +67,7 @@ class CreatePmieducarHistoricoEscolarTable extends Migration
                 CREATE INDEX idx_historico_escolar_id2 ON pmieducar.historico_escolar USING btree (ref_cod_aluno, sequencial, ano);
 
                 CREATE INDEX idx_historico_escolar_id3 ON pmieducar.historico_escolar USING btree (ref_cod_aluno, ano);
-                
+
                 CREATE UNIQUE INDEX pmieducar_historico_escolar_ref_cod_aluno_sequencial_unique ON pmieducar.historico_escolar USING btree (ref_cod_aluno, sequencial);
             '
         );

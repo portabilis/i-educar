@@ -3,8 +3,6 @@
 
 use Tests\TestCase;
 
-require_once __DIR__.'/../_stub/Page/Abstract.php';
-require_once __DIR__.'/../../../CoreExt/_stub/EntityDataMapper.php';
 
 class Core_Controller_Page_AbstractTest extends TestCase
 {

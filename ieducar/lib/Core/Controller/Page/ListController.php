@@ -2,9 +2,6 @@
 
 use Illuminate\Support\Facades\Session;
 
-require_once 'Core/View/Tabulable.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'CoreExt/View/Helper/UrlHelper.php';
 
 class Core_Controller_Page_ListController extends clsListagem implements Core_View_Tabulable
 {

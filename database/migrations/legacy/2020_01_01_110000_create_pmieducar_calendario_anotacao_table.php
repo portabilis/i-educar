@@ -15,8 +15,6 @@ class CreatePmieducarCalendarioAnotacaoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.calendario_anotacao_cod_calendario_anotacao_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -34,7 +32,7 @@ class CreatePmieducarCalendarioAnotacaoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.calendario_anotacao
                     ADD CONSTRAINT calendario_anotacao_pkey PRIMARY KEY (cod_calendario_anotacao);
 

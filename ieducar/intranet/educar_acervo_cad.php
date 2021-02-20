@@ -2,12 +2,6 @@
 #error_reporting(E_ALL);
 #ini_set("display_errors", 1);
 
-require_once "include/clsBase.inc.php";
-require_once "include/clsCadastro.inc.php";
-require_once "include/clsBanco.inc.php";
-require_once "include/pmieducar/geral.inc.php";
-require_once "include/pmieducar/clsPmieducarCategoriaObra.inc.php";
-require_once "include/pmieducar/clsPmieducarCategoriaAcervo.inc.php";
 
 class clsIndexBase extends clsBase
 {
