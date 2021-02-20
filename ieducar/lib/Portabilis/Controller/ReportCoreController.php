@@ -144,7 +144,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
                 $tracker->notify($e, $data);
             }
 
-            $nivelUsuario = (new clsPermissoes)->nivel_acesso($this->getSession()->id_pessoa);
+            $nivelUsuario = (new clsPermissoes)->nivel_acesso(\Illuminate\Support\Facades\Auth::id());
 
             if ((bool) config('legacy.report.show_error_details') === true || (int) $nivelUsuario === 1) {
                 $details = 'Detalhes: ' . $e->getMessage();
@@ -209,7 +209,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
      */
     protected function validatesIfUserIsLoggedIn()
     {
-        if (!$this->getSession()->id_pessoa) {
+        if (!\Illuminate\Support\Facades\Auth::id()) {
             $this->simpleRedirect('logof.php');
         }
     }

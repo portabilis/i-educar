@@ -62,7 +62,7 @@ class indice extends clsCadastro
         $db = new clsBanco();
         $db2 = new clsBanco();
         // inicializacao de variaveis
-        $this->editor = Session::get('id_pessoa');
+        $this->editor = \Illuminate\Support\Facades\Auth::id();
 
         Portabilis_View_Helper_Application::loadJavascript($this, '/intranet/scripts/agenda.js');
         Portabilis_View_Helper_Application::loadStylesheet($this, '/intranet/styles/agenda.css');

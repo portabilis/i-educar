@@ -539,7 +539,7 @@ class EscolaController extends ApiCoreController
 
     protected function getEscolasMultipleSearch()
     {
-        $cod_usuario = $this->getSession()->id_pessoa;
+        $cod_usuario = \Illuminate\Support\Facades\Auth::id();
         $permissao = new clsPermissoes();
         $nivel = $permissao->nivel_acesso($cod_usuario);
         $cursoId = $this->getRequest()->curso_id;
@@ -626,7 +626,7 @@ class EscolaController extends ApiCoreController
 
     protected function getEscolasSelecao()
     {
-        $userId = $this->getSession()->id_pessoa;
+        $userId = \Illuminate\Support\Facades\Auth::id();
         $permissao = new clsPermissoes();
         $nivel = $permissao->nivel_acesso($userId);
 

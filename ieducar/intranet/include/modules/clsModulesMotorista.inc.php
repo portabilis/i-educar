@@ -1,7 +1,6 @@
 <?php
 
 use iEducar\Legacy\Model;
-use Illuminate\Support\Facades\Session;
 
 
 class clsModulesMotorista extends Model
@@ -14,7 +13,6 @@ class clsModulesMotorista extends Model
     public $vencimento_cnh;
     public $ref_cod_empresa_transporte_escolar;
     public $observacao;
-    public $pessoa_logada;
 
     /**
      * Construtor.
@@ -32,8 +30,6 @@ class clsModulesMotorista extends Model
         $db = new clsBanco();
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}motorista";
-
-        $this->pessoa_logada = Session::get('id_pessoa');
 
         $this->_campos_lista = $this->_todos_campos = ' cod_motorista, ref_idpes, cnh, tipo_cnh, dt_habilitacao, vencimento_cnh, ref_cod_empresa_transporte_escolar, observacao';
 

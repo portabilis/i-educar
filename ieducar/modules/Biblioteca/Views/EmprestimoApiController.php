@@ -672,7 +672,7 @@ class EmprestimoApiController extends ApiCoreController
     $exemplar->cod_exemplar     = $this->getRequest()->exemplar_id;
     $exemplar->ref_cod_acervo   = $this->getRequest()->acervo_id;
     $exemplar->ref_cod_situacao = $newSituacao['id'];
-    $exemplar->ref_usuario_exc  = $this->getSession()->id_pessoa;
+    $exemplar->ref_usuario_exc  = \Illuminate\Support\Facades\Auth::id();
 
     return $exemplar->edita();
   }
@@ -685,7 +685,7 @@ class EmprestimoApiController extends ApiCoreController
         $this->messenger->append("Operação não realizada, pois o cliente possui empréstimos em atraso de devolução.", 'error');
         return;
       }
-      $emprestimo->ref_usuario_cad  = $this->getSession()->id_pessoa;
+      $emprestimo->ref_usuario_cad  = \Illuminate\Support\Facades\Auth::id();
       $emprestimo->ref_cod_cliente  = $this->getRequest()->cliente_id;
       $emprestimo->ref_cod_exemplar = $this->getRequest()->exemplar_id;
       // altera situacao exemplar para emprestado
@@ -737,7 +737,7 @@ class EmprestimoApiController extends ApiCoreController
         $_emprestimo                        = $this->loadEmprestimoForExemplar();
         $emprestimo                         = new clsPmieducarExemplarEmprestimo();
         $emprestimo->cod_emprestimo         = $_emprestimo['id'];
-        $emprestimo->ref_usuario_devolucao  = $this->getSession()->id_pessoa;
+        $emprestimo->ref_usuario_devolucao  = \Illuminate\Support\Facades\Auth::id();
         $emprestimo->data_devolucao         = date("Y-m-d");
 
         // TODO calcular / setar valor multa (se) devolução atrasada?

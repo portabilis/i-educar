@@ -24,7 +24,7 @@ class TurmaController extends ApiCoreController
     protected function getTurmas()
     {
         if ($this->canGetTurmas()) {
-            $userId = $this->getSession()->id_pessoa;
+            $userId = \Illuminate\Support\Facades\Auth::id();
             $instituicaoId = $this->getRequest()->instituicao_id;
             $escolaId = $this->getRequest()->escola_id;
             $serieId = $this->getRequest()->serie_id;

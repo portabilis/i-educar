@@ -108,7 +108,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
 
     protected function requiresLogin($raiseExceptionOnEmpty)
     {
-        return $this->validatesPresenceOf($this->getSession()->id_pessoa, '', $raiseExceptionOnEmpty,
+        return $this->validatesPresenceOf(\Illuminate\Support\Facades\Auth::id(), '', $raiseExceptionOnEmpty,
             'Usuário deve estar logado');
     }
 
@@ -380,7 +380,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 $historicoEscolar = new clsPmieducarHistoricoEscolar(
                     $ref_cod_aluno = $alunoId,
                     $sequencial,
-                    $ref_usuario_exc = $this->getSession()->id_pessoa,
+                    $ref_usuario_exc = \Illuminate\Support\Facades\Auth::id(),
                     $ref_usuario_cad = null,
                     //TODO nm_curso
                     $nm_serie = null,
@@ -524,7 +524,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                         $alunoId,
                         $sequencial,
                         $ref_usuario_exc = null,
-                        $ref_usuario_cad = $this->getSession()->id_pessoa,
+                        $ref_usuario_cad = \Illuminate\Support\Facades\Auth::id(),
                         $dadosMatricula['nome_serie'],
                         $ano,
                         $this->getCargaHorariaDisciplinas($alunoId),
@@ -564,7 +564,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                     $historicoEscolar = new clsPmieducarHistoricoEscolar(
                         $alunoId,
                         $sequencial,
-                        $this->getSession()->id_pessoa,
+                        \Illuminate\Support\Facades\Auth::id(),
                         $ref_usuario_cad = null,
                         $dadosMatricula['nome_serie'],
                         $ano,
@@ -1120,7 +1120,7 @@ class ProcessamentoApiController extends Core_Controller_Page_EditController
                 $this->service = new Avaliacao_Service_Boletim(
                     [
                         'matricula' => $matriculaId,
-                        'usuario' => $this->getSession()->id_pessoa,
+                        'usuario' => \Illuminate\Support\Facades\Auth::id(),
                         'ignorarDispensasParciais' => true,
                     ]
                 );

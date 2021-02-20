@@ -117,7 +117,7 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
 
     protected function getPessoaLogada()
     {
-        return Session::get('id_pessoa');
+        return \Illuminate\Support\Facades\Auth::id();
     }
 
     public function Gerar()

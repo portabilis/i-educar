@@ -522,7 +522,7 @@ class ReservaApiController extends ApiCoreController
 
         $reserva = new clsPmieducarReservas(null,
                                           null,
-                                          $this->getSession()->id_pessoa,
+                                          \Illuminate\Support\Facades\Auth::id(),
                                           $this->getRequest()->ref_cod_cliente,
                                           null,
                                           $dataPrevistaDisponivel,

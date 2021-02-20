@@ -63,7 +63,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     protected function validatesUserIsLoggedIn()
     {
-        $canAccess = is_numeric($this->getSession()->id_pessoa);
+        $canAccess = is_numeric(\Illuminate\Support\Facades\Auth::id());
 
         if (!$canAccess) {
             $canAccess = ($this->validatesAccessKey() && $this->validatesSignature());
@@ -95,7 +95,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     {
         $can = $this->getClsPermissoes()->permissao_excluir(
             $this->getBaseProcessoAp(),
-            $this->getSession()->id_pessoa,
+            \Illuminate\Support\Facades\Auth::id(),
             $this->_nivelAcessoOption
         );
 
@@ -110,7 +110,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     {
         $can = $this->getClsPermissoes()->permissao_cadastra(
             $this->getBaseProcessoAp(),
-            $this->getSession()->id_pessoa,
+            \Illuminate\Support\Facades\Auth::id(),
             $this->_nivelAcessoOption
         );
 

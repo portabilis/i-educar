@@ -77,7 +77,7 @@ class Core_Controller_Page_ListController extends clsListagem implements Core_Vi
 
     protected function getPessoaLogada()
     {
-        return Session::get('id_pessoa');
+        return \Illuminate\Support\Facades\Auth::id();
     }
 
     /**

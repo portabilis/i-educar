@@ -15,8 +15,8 @@ class clsFisicaCpf
     public function __construct($idpes = false, $cpf = false, $idpes_cad = false, $idpes_rev = false)
     {
         $this->idpes = $idpes;
-        $this->idpes_cad = $idpes_cad ? $idpes_cad : Session::get('id_pessoa');
-        $this->idpes_rev = $idpes_rev ? $idpes_rev : Session::get('id_pessoa');
+        $this->idpes_cad = $idpes_cad ? $idpes_cad : \Illuminate\Support\Facades\Auth::id();
+        $this->idpes_rev = $idpes_rev ? $idpes_rev : \Illuminate\Support\Facades\Auth::id();
         $this->cpf = $cpf;
 
         $this->tabela = 'fisica';

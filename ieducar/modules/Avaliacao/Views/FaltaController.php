@@ -86,7 +86,7 @@ class FaltaController extends Core_Controller_Page_EditController
   protected function _preConstruct()
   {
     // Id do usuário na session
-    $usuario = $this->getSession()->id_pessoa;
+    $usuario = \Illuminate\Support\Facades\Auth::id();
 
     $this->_options = array(
       'new_success'         => 'boletim',

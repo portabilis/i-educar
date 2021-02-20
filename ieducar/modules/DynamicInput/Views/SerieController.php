@@ -13,7 +13,7 @@ class SerieController extends ApiCoreController
     protected function getSeries()
     {
         if ($this->canGetSeries()) {
-            $userId = $this->getSession()->id_pessoa;
+            $userId = \Illuminate\Support\Facades\Auth::id();
             $instituicaoId = $this->getRequest()->instituicao_id;
             $escolaId = $this->getRequest()->escola_id;
             $cursoId = $this->getRequest()->curso_id;

@@ -23,7 +23,7 @@ class clsJuridica
      */
     public function __construct($idpes = false, $cnpj = false, $fantasia = false, $insc_estadual = false, $capital_social = false, $idpes_cad = false, $idpes_rev = false)
     {
-        $this->pessoa_logada = Session::get('id_pessoa');
+
 
         $objPessoa = new clsPessoa_($idpes);
         if ($objPessoa->detalhe()) {
@@ -38,8 +38,8 @@ class clsJuridica
         $this->cnpj = $cnpj;
         $this->insc_estadual = $insc_estadual;
         $this->capital_social = $capital_social;
-        $this->idpes_cad = $idpes_cad ? $idpes_cad : Session::get('id_pessoa');
-        $this->idpes_rev = $idpes_rev ? $idpes_rev : Session::get('id_pessoa');
+        $this->idpes_cad = $idpes_cad ? $idpes_cad : \Illuminate\Support\Facades\Auth::id();
+        $this->idpes_rev = $idpes_rev ? $idpes_rev : \Illuminate\Support\Facades\Auth::id();
 
         $this->tabela = 'juridica';
         $this->schema = 'cadastro';

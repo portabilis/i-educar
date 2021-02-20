@@ -113,7 +113,7 @@ class indice extends clsCadastro
             $this->campoTexto('razao_social', 'Raz&atilde;o Social', $this->razao_social, '50', '255', true);
             $this->campoTexto('capital_social', 'Capital Social', $this->capital_social, '50', '255');
 
-            $nivelUsuario = (new clsPermissoes)->nivel_acesso($this->getSession()->id_pessoa);
+            $nivelUsuario = (new clsPermissoes)->nivel_acesso(\Illuminate\Support\Facades\Auth::id());
             if (!$this->cod_pessoa_fj || $nivelUsuario > App_Model_NivelTipoUsuario::INSTITUCIONAL) {
                 $this->campoRotulo('cnpj_', 'CNPJ', $this->cnpj);
                 $this->campoOculto('cnpj', $this->cnpj);

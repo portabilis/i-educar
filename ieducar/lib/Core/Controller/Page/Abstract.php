@@ -111,8 +111,8 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      */
     public function __construct()
     {
-        $this->_options['id_usuario'] = $this->getSession()->id_pessoa;
-        $this->pessoa_logada = $this->getSession()->id_pessoa ?? null;
+        $this->_options['id_usuario'] = Auth::id();
+        $this->pessoa_logada          = Auth::id();
     }
 
     /**
