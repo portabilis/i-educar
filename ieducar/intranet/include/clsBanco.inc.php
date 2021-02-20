@@ -18,29 +18,6 @@ class clsBanco extends clsBancoSQL_
     }
 
     /**
-     * Retorna a quantidade de registros de uma tabela baseado no objeto que a
-     * abstrai. Este deve ter um atributo público Object->_tabela.
-     *
-     * @param mixed   Objeto que abstrai a tabela
-     * @param string  Nome da coluna para cálculo COUNT()
-     *
-     * @throws Exception
-     *
-     * @return int Quantidade de registros da tabela
-     */
-    public function doCountFromObj($obj, $column = '*')
-    {
-        if ($obj->_tabela == null) {
-            return false;
-        }
-
-        $sql = sprintf('SELECT COUNT(%s) FROM %s', $column, $obj->_tabela);
-        $this->Consulta($sql);
-
-        return (int) $this->UnicoCampo($sql);
-    }
-
-    /**
      * Retorna os dados convertidos para a sintaxe SQL aceita por ext/pgsql.
      *
      * <code>
