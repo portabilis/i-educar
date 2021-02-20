@@ -15,8 +15,6 @@ class CreatePmieducarTipoDispensaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.tipo_dispensa_cod_tipo_dispensa_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -35,7 +33,7 @@ class CreatePmieducarTipoDispensaTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_instituicao integer NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.tipo_dispensa
                     ADD CONSTRAINT tipo_dispensa_pkey PRIMARY KEY (cod_tipo_dispensa);
 

@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Avaliacao/Model/FaltaAbstract.php';
 
 /**
  * Avaliacao_Model_FaltaGeral class.

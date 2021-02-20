@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
-require_once 'ComponenteCurricular/Model/AnoEscolar.php';
 
 class ComponenteCurricular_Model_AnoEscolarDataMapper extends CoreExt_DataMapper
 {
@@ -51,8 +49,7 @@ class ComponenteCurricular_Model_AnoEscolarDataMapper extends CoreExt_DataMapper
     public function getComponenteDataMapper()
     {
         if (is_null($this->_componenteDataMapper)) {
-            require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-            $this->_componenteDataMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+                        $this->_componenteDataMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
         }
 
         return $this->_componenteDataMapper;

@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Avaliacao/Model/ParecerDescritivoAbstractDataMapper.php';
-require_once 'Avaliacao/Model/ParecerDescritivoComponente.php';
 
 /**
  * Avaliacao_Model_ParecerDescritivoComponenteDataMapper class.

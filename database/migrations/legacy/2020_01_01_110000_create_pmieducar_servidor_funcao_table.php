@@ -15,8 +15,6 @@ class CreatePmieducarServidorFuncaoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE SEQUENCE pmieducar.servidor_funcao_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -31,7 +29,7 @@ class CreatePmieducarServidorFuncaoTable extends Migration
                     matricula character varying,
                     cod_servidor_funcao integer DEFAULT nextval(\'pmieducar.servidor_funcao_seq\'::regclass) NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.servidor_funcao
                     ADD CONSTRAINT cod_servidor_funcao_pkey PRIMARY KEY (cod_servidor_funcao);
 

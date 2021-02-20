@@ -15,8 +15,6 @@ class CreatePmieducarAcervoAutorTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.acervo_autor_cod_acervo_autor_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -35,7 +33,7 @@ class CreatePmieducarAcervoAutorTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_biblioteca integer NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.acervo_autor
                     ADD CONSTRAINT acervo_autor_pkey PRIMARY KEY (cod_acervo_autor);
 

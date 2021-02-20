@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Core/Controller/Page/ViewController.php';
-require_once 'FormulaMedia/Model/FormulaDataMapper.php';
 
 /**
  * ViewController class.

@@ -15,8 +15,6 @@ class CreateModulesVeiculoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE SEQUENCE modules.veiculo_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -44,7 +42,7 @@ class CreateModulesVeiculoTable extends Migration
                     ref_cod_motorista integer,
                     observacao character varying(255)
                 );
-                
+
                 ALTER TABLE ONLY modules.veiculo
                     ADD CONSTRAINT veiculo_pkey PRIMARY KEY (cod_veiculo);
 

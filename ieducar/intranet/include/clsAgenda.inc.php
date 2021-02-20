@@ -1,10 +1,8 @@
 <?php
 
-require_once ("include/clsBanco.inc.php");
 if( file_exists("include/juris/jurisGeral.inc.php") )
 {
-    require_once ("include/juris/jurisGeral.inc.php");
-}
+    }
 
 class clsAgenda
 {

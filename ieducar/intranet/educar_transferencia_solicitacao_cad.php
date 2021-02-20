@@ -6,16 +6,6 @@ use App\Models\LegacyTransferRequest;
 use App\Services\PromotionService;
 use Illuminate\Support\Facades\DB;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'modules/Avaliacao/Model/NotaAlunoDataMapper.php';
-require_once 'modules/Avaliacao/Model/NotaComponenteMediaDataMapper.php';
-require_once 'lib/App/Model/MatriculaSituacao.php';
-require_once 'modules/Avaliacao/Views/PromocaoApiController.php';
-require_once 'lib/CoreExt/Controller/Request.php';
 
 class clsIndexBase extends clsBase
 {
@@ -168,7 +158,8 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->dynamic(['instituicao'], ['required' => false]);
         $this->inputsHelper()->dynamic(['escolaSemFiltroPorUsuario'], ['label_hint' => 'Destino do aluno', 'required' => false]);
-        $this->inputsHelper()->checkbox('escola_em_outro_municipio', ['label' => 'Escola em outro municipio?', ]);
+        $labelHintEscolaForaDoMunicipio = 'Transferência para uma escola externa (outro município, particular, etc)';
+        $this->inputsHelper()->checkbox('escola_em_outro_municipio', ['label' => 'Escola em outro município ou fora da rede?', '<br>label_hint' => $labelHintEscolaForaDoMunicipio]);
         $this->campoTexto('escola_destino_externa', 'Nome da escola ', '', 30, 255, false, false, false, '');
         $this->campoTexto('estado_escola_destino_externa', 'Estado da escola ', '', 20, 50, false, false, false, '');
         $this->campoTexto('municipio_escola_destino_externa', 'Município da escola ', '', 20, 50, false, false, false, '');

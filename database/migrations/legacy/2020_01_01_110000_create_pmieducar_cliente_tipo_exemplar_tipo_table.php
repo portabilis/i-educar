@@ -15,14 +15,12 @@ class CreatePmieducarClienteTipoExemplarTipoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE TABLE pmieducar.cliente_tipo_exemplar_tipo (
                     ref_cod_cliente_tipo integer NOT NULL,
                     ref_cod_exemplar_tipo integer NOT NULL,
                     dias_emprestimo numeric(3,0)
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.cliente_tipo_exemplar_tipo
                     ADD CONSTRAINT cliente_tipo_exemplar_tipo_pkey PRIMARY KEY (ref_cod_cliente_tipo, ref_cod_exemplar_tipo);
             '

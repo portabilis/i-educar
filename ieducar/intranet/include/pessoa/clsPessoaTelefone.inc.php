@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Session;
 
-require_once 'include/clsBanco.inc.php';
 
 class clsPessoaTelefone
 {
@@ -22,8 +21,8 @@ class clsPessoaTelefone
         $this->ddd = $str_ddd;
         $this->fone = $str_fone;
         $this->tipo = $int_tipo;
-        $this->idpes_cad = $idpes_cad ? $idpes_cad : Session::get('id_pessoa');
-        $this->idpes_rev = $idpes_rev ? $idpes_rev : Session::get('id_pessoa');
+        $this->idpes_cad = $idpes_cad ? $idpes_cad : \Illuminate\Support\Facades\Auth::id();
+        $this->idpes_rev = $idpes_rev ? $idpes_rev : \Illuminate\Support\Facades\Auth::id();
     }
 
     public function cadastra()

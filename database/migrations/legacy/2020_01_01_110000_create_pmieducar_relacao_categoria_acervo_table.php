@@ -15,8 +15,6 @@ class CreatePmieducarRelacaoCategoriaAcervoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE TABLE pmieducar.relacao_categoria_acervo (
                     ref_cod_acervo integer NOT NULL,
                     categoria_id integer NOT NULL

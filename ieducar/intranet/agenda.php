@@ -29,11 +29,6 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 
-require_once('include/clsBase.inc.php');
-require_once('include/clsBanco.inc.php');
-require_once('include/clsAgenda.inc.php');
-//require_once ("include/juris/jurisGeral.inc.php");
-require_once('agenda_calendario.php');
 
 class clsIndex extends clsBase
 {
@@ -67,7 +62,7 @@ class indice extends clsCadastro
         $db = new clsBanco();
         $db2 = new clsBanco();
         // inicializacao de variaveis
-        $this->editor = Session::get('id_pessoa');
+        $this->editor = \Illuminate\Support\Facades\Auth::id();
 
         Portabilis_View_Helper_Application::loadJavascript($this, '/intranet/scripts/agenda.js');
         Portabilis_View_Helper_Application::loadStylesheet($this, '/intranet/styles/agenda.css');

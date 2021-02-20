@@ -15,20 +15,6 @@ use Illuminate\Support\Facades\DB;
 use RuntimeException;
 use Throwable;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Utils/CustomLabel.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
-require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
-require_once 'lib/App/Model/Educacenso/LocalFuncionamentoDiferenciado.php';
-require_once 'lib/App/Model/Educacenso/TipoMediacaoDidaticoPedagogico.php';
 
 class clsIndexBase extends clsBase
 {
@@ -508,9 +494,6 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->turmaTurno();
 
-        // modelos boletim
-        require_once 'Portabilis/Array/Utils.php';
-
         $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
         $tiposBoletim = Portabilis_Array_Utils::insertIn(null, 'Selecione um modelo', $tiposBoletim);
 
@@ -937,8 +920,8 @@ class indice extends clsCadastro
         $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
         $possuiAlunosVinculados = $turmaDetalhe->possuiAlunosVinculados();
         $turmaDetalhe = $turmaDetalhe->detalhe();
-        $this->ref_cod_curso = $turmaDetalhe['ref_cod_curso'];
-        $this->ref_ref_cod_escola = $turmaDetalhe['ref_ref_cod_escola'];
+        $this->ref_cod_curso = $this->ref_cod_curso ?? $turmaDetalhe['ref_cod_curso'];
+        $this->ref_ref_cod_escola = $this->ref_ref_cod_escola ?? $turmaDetalhe['ref_ref_cod_escola'];
 
         if (!$this->verificaModulos()) {
             return false;
@@ -1476,8 +1459,7 @@ class indice extends clsCadastro
 
     public function atualizaComponentesCurriculares($codSerie, $codEscola, $codTurma, $componentes, $cargaHoraria, $usarComponente, $docente)
     {
-        require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
-        $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
+                $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
 
         $componentesTurma = [];
 

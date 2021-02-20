@@ -14,14 +14,6 @@ use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByCoordinatorException;
 use iEducar\Modules\Stages\Exceptions\StagesNotInformedByTeacherException;
 
-require_once 'CoreExt/Configurable.php';
-require_once 'CoreExt/Entity.php';
-require_once 'App/Model/IedFinder.php';
-require_once 'App/Model/Matricula.php';
-require_once 'App/Model/MatriculaSituacao.php';
-require_once 'include/pmieducar/clsPermissoes.inc.php';
-require_once 'ComponenteCurricular/Model/TipoNotaComponenteSerie.php';
-require_once 'Avaliacao/Service/Boletim/Acessores.php';
 
 class Avaliacao_Service_Boletim implements CoreExt_Configurable
 {
@@ -364,8 +356,6 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $mediasComponentes[$media->get('componenteCurricular')][] = $media;
         }
 
-        $mediasGerais = [];
-
         $mediasGerais = $this->getMediaGeralDataMapper()->findAll(
             [],
             ['notaAluno' => $notaAluno->id]
@@ -640,83 +630,187 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      */
     public function getSituacaoNotaFalta($flagSituacaoNota, $flagSituacaoFalta)
     {
-        $situacao = new stdClass();
-        $situacao->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
-        $situacao->aprovado = true;
-        $situacao->andamento = false;
-        $situacao->recuperacao = false;
-        $situacao->aprovadoComDependencia = false;
-        $situacao->retidoFalta = false;
+        $situacao = $this->montaObjetoSituacao();
 
-        switch ($flagSituacaoNota) {
-            case App_Model_MatriculaSituacao::EM_ANDAMENTO:
-                $situacao->aprovado = false;
-                $situacao->andamento = true;
-                break;
-            case App_Model_MatriculaSituacao::APROVADO_APOS_EXAME:
-                $situacao->andamento = false;
-                $situacao->recuperacao = true;
-                break;
-            case App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA:
-                $situacao->aprovadoComDependencia = true;
-                break;
-            case App_Model_MatriculaSituacao::EM_EXAME:
-                $situacao->aprovado = false;
-                $situacao->andamento = true;
-                $situacao->recuperacao = true;
-                break;
-            case App_Model_MatriculaSituacao::REPROVADO:
-                $situacao->aprovado = false;
-                break;
+        $situacao = $this->processaSituacaoDaNota($flagSituacaoNota, $situacao);
+
+        $situacao = $this->processaSituacaoFalta($flagSituacaoFalta, $flagSituacaoNota, $situacao);
+
+        return $this->verificaSituacao($situacao);
+    }
+
+    /**
+     * @return stdClass
+     */
+    private function montaObjetoSituacao()
+    {
+        $situacao                         = new stdClass();
+        $situacao->situacao               = App_Model_MatriculaSituacao::EM_ANDAMENTO;
+        $situacao->aprovado               = true;
+        $situacao->andamento              = false;
+        $situacao->recuperacao            = false;
+        $situacao->aprovadoComDependencia = false;
+        $situacao->retidoFalta            = false;
+
+        return $situacao;
+    }
+
+    /**
+     * @param $situacao
+     *
+     * @return stdClass
+     */
+    private function verificaSituacao($situacao)
+    {
+        // seta situacao geral
+        if ($situacao->andamento === true &&
+            $situacao->recuperacao === true
+        ) {
+            $situacao->situacao = App_Model_MatriculaSituacao::EM_EXAME;
+
+            return $situacao;
         }
 
-        switch ($flagSituacaoFalta) {
-            case App_Model_MatriculaSituacao::EM_ANDAMENTO:
-                $situacao->aprovado = false;
-                $situacao->andamento = true;
-                break;
-            case App_Model_MatriculaSituacao::REPROVADO:
-                $situacao->retidoFalta = true;
-                $andamento = false;
+        if ($situacao->andamento === false &&
+            $situacao->aprovado === false
+        ) {
+            $situacao->situacao = App_Model_MatriculaSituacao::REPROVADO;
 
-                // Permite o lançamento de nota de exame final, mesmo que o aluno
-                // esteja retido por falta, apenas quando a regra de avaliação possuir
-                // uma média para recuperação (exame final).
+            return $situacao;
+        }
 
-                if ($this->hasRegraAvaliacaoMediaRecuperacao()) {
-                    if ($this->getRegraAvaliacaoTipoNota() != RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
-                        // Mesmo se reprovado por falta, só da a situação final após o lançamento de todas as notas
-                        $situacoesFinais = App_Model_MatriculaSituacao::getSituacoesFinais();
-                        $andamento = in_array($flagSituacaoNota, $situacoesFinais) === false;
-                    }
+        if ($situacao->andamento === false &&
+            $situacao->retidoFalta === true
+        ) {
+            $situacao->situacao = App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS;
 
-                    if ($flagSituacaoNota == App_Model_MatriculaSituacao::EM_EXAME) {
-                        $andamento = true;
-                    }
+            return $situacao;
+        }
+
+        if ($situacao->andamento === false &&
+            $situacao->aprovado === true &&
+            $situacao->recuperacao === true
+        ) {
+            $situacao->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
+
+            return $situacao;
+        }
+
+        if ($situacao->andamento === false &&
+            $situacao->aprovado === true &&
+            $situacao->aprovadoComDependencia === true
+        ) {
+            $situacao->situacao = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
+
+            return $situacao;
+        }
+
+        if ($situacao->andamento === false &&
+            $situacao->aprovado === true
+        ) {
+            $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
+
+            return $situacao;
+        }
+
+        return $situacao;
+    }
+
+    /**
+     * @param $flagSituacaoNota
+     * @param $situacao
+     *
+     * @return stdClass
+     */
+    private function processaSituacaoDaNota($flagSituacaoNota, $situacao)
+    {
+        if ($flagSituacaoNota === App_Model_MatriculaSituacao::EM_ANDAMENTO) {
+            $situacao->aprovado = false;
+            $situacao->andamento = true;
+
+            return $situacao;
+        }
+
+        if ($flagSituacaoNota === App_Model_MatriculaSituacao::APROVADO_APOS_EXAME) {
+            $situacao->andamento = false;
+            $situacao->recuperacao = true;
+
+            return $situacao;
+        }
+
+        if ($flagSituacaoNota === App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA) {
+            $situacao->aprovadoComDependencia = true;
+
+            return $situacao;
+        }
+
+        if ($flagSituacaoNota === App_Model_MatriculaSituacao::EM_EXAME) {
+            $situacao->aprovado = false;
+            $situacao->andamento = true;
+            $situacao->recuperacao = true;
+
+            return $situacao;
+        }
+
+        if ($flagSituacaoNota === App_Model_MatriculaSituacao::REPROVADO) {
+            $situacao->aprovado = false;
+
+            return $situacao;
+        }
+
+        return $situacao;
+    }
+
+    /**
+     * @param $flagSituacaoFalta
+     * @param $flagSituacaoNota
+     * @param $situacao
+     *
+     * @return stdClass
+     */
+    private function processaSituacaoFalta($flagSituacaoFalta, $flagSituacaoNota, $situacao)
+    {
+        if ($flagSituacaoFalta === App_Model_MatriculaSituacao::EM_ANDAMENTO) {
+            $situacao->aprovado = false;
+            $situacao->andamento = true;
+
+            return $situacao;
+        }
+
+        if ($flagSituacaoFalta === App_Model_MatriculaSituacao::REPROVADO) {
+            $situacao->retidoFalta = true;
+            $andamento = false;
+
+            // Permite o lançamento de nota de exame final, mesmo que o aluno
+            // esteja retido por falta, apenas quando a regra de avaliação possuir
+            // uma média para recuperação (exame final).
+
+            if ($this->hasRegraAvaliacaoMediaRecuperacao()) {
+                if ($this->getRegraAvaliacaoTipoNota() != RegraAvaliacao_Model_Nota_TipoValor::NENHUM) {
+
+                    //Mesmo se reprovado por falta, só da a situação final após o lançamento de todas as notas
+                    $situacoesFinais = App_Model_MatriculaSituacao::getSituacoesFinais();
+
+                    $andamento = in_array($flagSituacaoNota, $situacoesFinais, true) === false;
                 }
 
-                $situacao->andamento = $andamento;
-                break;
+                if ($flagSituacaoNota === App_Model_MatriculaSituacao::EM_EXAME) {
+                    $andamento = true;
+                }
+            }
 
-            case App_Model_MatriculaSituacao::APROVADO:
-                $situacao->retidoFalta = false;
-                break;
-            default:
-                $situacao->andamento = true;
+            $situacao->andamento = $andamento;
+
+            return $situacao;
         }
 
-        // seta situacao geral
-        if ($situacao->andamento and $situacao->recuperacao) {
-            $situacao->situacao = App_Model_MatriculaSituacao::EM_EXAME;
-        } elseif (!$situacao->andamento and (!$situacao->aprovado || $situacao->retidoFalta)) {
-            $situacao->situacao = App_Model_MatriculaSituacao::REPROVADO;
-        } elseif (!$situacao->andamento and $situacao->aprovado and $situacao->recuperacao) {
-            $situacao->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
-        } elseif (!$situacao->andamento and $situacao->aprovado and $situacao->aprovadoComDependencia) {
-            $situacao->situacao = App_Model_MatriculaSituacao::APROVADO_COM_DEPENDENCIA;
-        } elseif (!$situacao->andamento and $situacao->aprovado) {
-            $situacao->situacao = App_Model_MatriculaSituacao::APROVADO;
+        if ($flagSituacaoFalta === App_Model_MatriculaSituacao::APROVADO) {
+            $situacao->retidoFalta = false;
+
+            return $situacao;
         }
+
+        $situacao->andamento = true;
 
         return $situacao;
     }
@@ -1025,7 +1119,11 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
                     $qtdComponenteReprovado++;
                 }
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::REPROVADO;
-            } elseif ((string) $etapa == 'Rc' && $media >= $this->getRegraAvaliacaoMediaRecuperacao() && $this->hasRegraAvaliacaoFormulaRecuperacao()) {
+            } elseif (
+                (string) $etapa == 'Rc' &&
+                $media >= $this->getRegraAvaliacaoMediaRecuperacao()
+                && $this->hasRegraAvaliacaoFormulaRecuperacao()
+            ) {
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::APROVADO_APOS_EXAME;
             } elseif ($etapa < $lastStage && (string) $etapa != 'Rc') {
                 $situacao->componentesCurriculares[$id]->situacao = App_Model_MatriculaSituacao::EM_ANDAMENTO;
@@ -1174,10 +1272,10 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             $etapasComponentes = [];
             $faltasComponentes = [];
 
-            $disciplinasNaoReprovativas = array_filter($componentes, function ($componente) {
+            $disciplinasNaoReprovativas = array_filter($componentes, static function ($componente) {
                 return $componente->desconsidera_para_progressao;
             });
-            $disciplinasNaoReprovativas = array_map(function ($disciplina) {
+            $disciplinasNaoReprovativas = array_map(static function ($disciplina) {
                 return $disciplina->id;
             }, $disciplinasNaoReprovativas);
 
@@ -1448,7 +1546,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
             // pega situacao da falta componente ou geral.
             if ($this->getRegraAvaliacaoDesconsiderarLancamentoFrequencia()) {
                 $situacaoFalta = App_Model_MatriculaSituacao::APROVADO;
-            } else if ($tipoFaltaPorComponente) {
+            } elseif ($tipoFaltaPorComponente) {
                 $situacaoFalta = $situacaoFaltas->componentesCurriculares[$ccId]->situacao;
             } else {
                 $situacaoFalta = $situacaoFaltas->situacao;
@@ -2182,8 +2280,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         if (!is_numeric($nota)) {
-            require_once 'CoreExt/Exception/InvalidArgumentException.php';
-            throw new CoreExt_Exception_InvalidArgumentException(sprintf(
+                        throw new CoreExt_Exception_InvalidArgumentException(sprintf(
                 'O parâmetro $nota ("%s") não é um valor numérico.',
                 $nota
             ));
@@ -2251,8 +2348,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         if (!is_numeric($media)) {
-            require_once 'CoreExt/Exception/InvalidArgumentException.php';
-            throw new CoreExt_Exception_InvalidArgumentException(sprintf(
+                        throw new CoreExt_Exception_InvalidArgumentException(sprintf(
                 'O parâmetro $media ("%s") não é um valor numérico.',
                 $media
             ));
@@ -2702,8 +2798,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
         }
 
         if ($exceptionMsg) {
-            require_once 'CoreExt/Service/Exception.php';
-            throw new CoreExt_Service_Exception($exceptionMsg);
+                        throw new CoreExt_Service_Exception($exceptionMsg);
         }
 
         return $this->_updateMatricula($this->getOption('matricula'), $this->getOption('usuario'), $novaSituacaoMatricula);
@@ -2829,8 +2924,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
      */
     protected function _updateNotaComponenteMedia()
     {
-        require_once 'Avaliacao/Model/NotaComponenteMedia.php';
-        $this->_loadNotas(false);
+                $this->_loadNotas(false);
 
         $etapa = 1;
 

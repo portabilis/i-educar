@@ -15,8 +15,6 @@ class CreatePmieducarFaltasTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE SEQUENCE pmieducar.faltas_sequencial_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -31,7 +29,7 @@ class CreatePmieducarFaltasTable extends Migration
                     falta integer NOT NULL,
                     data_cadastro timestamp without time zone NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.faltas
                     ADD CONSTRAINT faltas_pkey PRIMARY KEY (ref_cod_matricula, sequencial);
 

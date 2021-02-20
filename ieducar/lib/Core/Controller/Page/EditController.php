@@ -1,9 +1,5 @@
 <?php
 
-require_once 'include/clsCadastro.inc.php';
-require_once 'Core/Controller/Page/Validatable.php';
-require_once 'App/Model/NivelAcesso.php';
-require_once 'App/Model/NivelTipoUsuario.php';
 
 abstract class Core_Controller_Page_EditController extends clsCadastro implements Core_Controller_Page_Validatable
 {
@@ -257,8 +253,7 @@ abstract class Core_Controller_Page_EditController extends clsCadastro implement
     public function getClsPermissoes()
     {
         if (is_null($this->_clsPermissoes)) {
-            require_once 'include/pmieducar/clsPermissoes.inc.php';
-            $this->setClsPermissoes(new clsPermissoes());
+                        $this->setClsPermissoes(new clsPermissoes());
         }
 
         return $this->_clsPermissoes;

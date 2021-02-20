@@ -15,8 +15,6 @@ class CreateModulesFichaMedicaAlunoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE TABLE modules.ficha_medica_aluno (
                     ref_cod_aluno integer NOT NULL,
                     altura character varying(4),
@@ -65,7 +63,7 @@ class CreateModulesFichaMedicaAlunoTable extends Migration
                     responsavel_parentesco_celular character varying(20),
                     observacao character varying(255)
                 );
-                
+
                 ALTER TABLE ONLY modules.ficha_medica_aluno
                     ADD CONSTRAINT ficha_medica_cod_aluno_pkey PRIMARY KEY (ref_cod_aluno);
             '
