@@ -64,16 +64,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.173.10",
+            "version": "3.173.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "fc5153fc7047b4092cd60659c907d4591b65caa0"
+                "reference": "b8ef72b8b335a1bb004505784f1a03ff5b37928f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/fc5153fc7047b4092cd60659c907d4591b65caa0",
-                "reference": "fc5153fc7047b4092cd60659c907d4591b65caa0",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b8ef72b8b335a1bb004505784f1a03ff5b37928f",
+                "reference": "b8ef72b8b335a1bb004505784f1a03ff5b37928f",
                 "shasum": ""
             },
             "require": {
@@ -148,9 +148,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.173.10"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.173.13"
             },
-            "time": "2021-02-16T19:15:07+00:00"
+            "time": "2021-02-19T19:14:50+00:00"
         },
         {
             "name": "aws/aws-sdk-php-laravel",
@@ -1713,16 +1713,16 @@
         },
         {
             "name": "honeybadger-io/honeybadger-laravel",
-            "version": "3.5.0",
+            "version": "v3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/honeybadger-io/honeybadger-laravel.git",
-                "reference": "28661092306c2a4959a54491d542e9b231985cf5"
+                "reference": "96181230cfce844d8411def46acef22a02c8d3e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/honeybadger-io/honeybadger-laravel/zipball/28661092306c2a4959a54491d542e9b231985cf5",
-                "reference": "28661092306c2a4959a54491d542e9b231985cf5",
+                "url": "https://api.github.com/repos/honeybadger-io/honeybadger-laravel/zipball/96181230cfce844d8411def46acef22a02c8d3e5",
+                "reference": "96181230cfce844d8411def46acef22a02c8d3e5",
                 "shasum": ""
             },
             "require": {
@@ -1779,25 +1779,26 @@
             ],
             "support": {
                 "issues": "https://github.com/honeybadger-io/honeybadger-laravel/issues",
-                "source": "https://github.com/honeybadger-io/honeybadger-laravel/tree/3.5.0"
+                "source": "https://github.com/honeybadger-io/honeybadger-laravel/tree/v3.6.0"
             },
-            "time": "2021-02-15T18:49:05+00:00"
+            "time": "2021-02-19T17:13:42+00:00"
         },
         {
             "name": "honeybadger-io/honeybadger-php",
-            "version": "v2.4.1",
+            "version": "v2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/honeybadger-io/honeybadger-php.git",
-                "reference": "23fdc725ed83f77cd94356364b845fe0d8a51423"
+                "reference": "dcf115760d2aa116267b62f88cc31dddda4517a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/honeybadger-io/honeybadger-php/zipball/23fdc725ed83f77cd94356364b845fe0d8a51423",
-                "reference": "23fdc725ed83f77cd94356364b845fe0d8a51423",
+                "url": "https://api.github.com/repos/honeybadger-io/honeybadger-php/zipball/dcf115760d2aa116267b62f88cc31dddda4517a0",
+                "reference": "dcf115760d2aa116267b62f88cc31dddda4517a0",
                 "shasum": ""
             },
             "require": {
+                "ext-json": "*",
                 "guzzlehttp/guzzle": "^6.3|^7.0.1",
                 "monolog/monolog": "^2.0",
                 "php": "^7.2|^8.0",
@@ -1810,6 +1811,11 @@
                 "phpunit/phpunit": "^8.5|^9.4"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Honeybadger\\": "src"
@@ -1840,9 +1846,9 @@
             ],
             "support": {
                 "issues": "https://github.com/honeybadger-io/honeybadger-php/issues",
-                "source": "https://github.com/honeybadger-io/honeybadger-php/tree/v2.4.1"
+                "source": "https://github.com/honeybadger-io/honeybadger-php/tree/v2.5.0"
             },
-            "time": "2021-02-16T00:47:05+00:00"
+            "time": "2021-02-19T16:58:45+00:00"
         },
         {
             "name": "intervention/image",
