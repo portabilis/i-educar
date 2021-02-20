@@ -2,7 +2,6 @@
 
 use Tests\TestCase;
 
-
 class ClsBancoTest extends TestCase
 {
     public function testDoCountFromObj()

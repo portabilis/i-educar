@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\DB;
 
-
 class clsBanco extends clsBancoSQL_
 {
     public function __construct($strDataBase = false)
@@ -22,12 +21,12 @@ class clsBanco extends clsBancoSQL_
      * Retorna a quantidade de registros de uma tabela baseado no objeto que a
      * abstrai. Este deve ter um atributo público Object->_tabela.
      *
-     * @param   mixed   Objeto que abstrai a tabela
-     * @param   string  Nome da coluna para cálculo COUNT()
-     *
-     * @return int Quantidade de registros da tabela
+     * @param mixed   Objeto que abstrai a tabela
+     * @param string  Nome da coluna para cálculo COUNT()
      *
      * @throws Exception
+     *
+     * @return int Quantidade de registros da tabela
      */
     public function doCountFromObj($obj, $column = '*')
     {
@@ -95,6 +94,7 @@ class clsBanco extends clsBancoSQL_
     {
         return ($val == true ? 't' : 'f');
     }
+
     public function escapeString($string)
     {
         return pg_escape_string($string);
