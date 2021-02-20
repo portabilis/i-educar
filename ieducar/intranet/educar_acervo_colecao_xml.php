@@ -19,7 +19,7 @@
                 AND
                     ativo = 1";
         $db->Consulta($sql);
-        if ($db->Num_Linhas())
+        if ($db->numLinhas())
         {
             while ($db->ProximoRegistro())
             {

@@ -32,7 +32,7 @@ class clsPessoaTelefone
             $db = new clsBanco();
             $db->Consulta("SELECT 1 FROM {$this->schema_cadastro}.{$this->tabela_telefone} WHERE idpes = '$this->idpes' AND tipo = '$this->tipo'");
             // Verifica se ja existe um telefone desse tipo cadastrado para essa pessoa
-            if (!$db->Num_Linhas()) {
+            if (!$db->numLinhas()) {
                 // nao tem, cadastra 1 novo
                 if ($this->ddd && $this->fone) {
                     $db->Consulta("INSERT INTO {$this->schema_cadastro}.{$this->tabela_telefone} (idpes, tipo, ddd, fone,origem_gravacao, data_cad, operacao, idpes_cad) VALUES ('$this->idpes', '$this->tipo', '$this->ddd', '$this->fone','M', NOW(), 'I', '$this->idpes_cad')");

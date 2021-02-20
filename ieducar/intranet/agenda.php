@@ -381,7 +381,7 @@ class indice extends clsCadastro
 
             // verifica se o compromisso eh mesmo dessa agenda
             $db->Consulta("SELECT 1 FROM portal.agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND cod_agenda_compromisso = '{$_GET['versoes']}'");
-            if ($db->Num_Linhas()) {
+            if ($db->numLinhas()) {
                 // seleciona as versoes desse compromisso
                 $db->Consulta("SELECT versao, ref_ref_cod_pessoa_cad, ativo, data_inicio, titulo, descricao, importante, publico, data_cadastro, data_fim FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$_GET['versoes']}' ORDER BY versao DESC");
                 while ($db->ProximoRegistro()) {
