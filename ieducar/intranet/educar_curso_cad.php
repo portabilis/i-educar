@@ -665,7 +665,7 @@ class indice extends clsCadastro
 
     public function  updateClassStepsForCourse($courseCode, $standerdSchoolYear, $currentYear)
     {
-        $classStepsObject = new ClsPmieducarTurmaModulo();
+        $classStepsObject = new clsPmieducarTurmaModulo();
 
         $classStepsObject->removeStepsOfClassesForCourseAndYear($courseCode, $currentYear);
 
