@@ -610,6 +610,26 @@ class indice extends clsDetalhe
                 sprintf('go("educar_historico_escolar_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']),
                 sprintf('go("educar_distribuicao_uniforme_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno'])
             ];
+
+            if ($titulo = config('legacy.app.alunos.sistema_externo.titulo')) {
+                $link = config('legacy.app.alunos.sistema_externo.link');
+                $token = config('legacy.app.alunos.sistema_externo.token');
+
+                $link = "go(\"{$link}\")";
+
+                $link = str_replace([
+                    '@aluno',
+                    '@usuario',
+                    '@token',
+                ], [
+                    $registro['cod_aluno'],
+                    $this->user()->getKey(),
+                    $token,
+                ], $link);
+
+                array_unshift($this->array_botao, $titulo);
+                array_unshift($this->array_botao_url_script, $link);
+            }
         }
 
         $objFichaMedica = new clsModulesFichaMedicaAluno($this->cod_aluno);
