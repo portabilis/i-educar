@@ -29,7 +29,6 @@ class CoreExt_Config_Ini extends CoreExt_Config
      */
     public function __construct($filename, $section = 'production')
     {
-        require_once 'CoreExt/Config.class.php';
 
         $this->iniArr = $this->loadFile($filename);
 

@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Portabilis/Controller/Page/ListController.php';
-require_once 'Portabilis/Utils/CustomLabel.php';
 
 class ProcessamentoController extends Portabilis_Controller_Page_ListController
 {

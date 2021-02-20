@@ -3,7 +3,6 @@
 use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Session;
 
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsModulesProfessorTurma extends Model
 {
@@ -294,8 +293,8 @@ class clsModulesProfessorTurma extends Model
         $tipo_vinculo = null
     ) {
         $sql = "
-            
-            SELECT 
+
+            SELECT
                 {$this->_campos_lista},
                 t.nm_turma,
                 t.cod_turma as ref_cod_turma,

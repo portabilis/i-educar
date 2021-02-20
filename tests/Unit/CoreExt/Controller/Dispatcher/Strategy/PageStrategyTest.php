@@ -31,8 +31,6 @@ use PHPUnit\Framework\TestCase;
  * @version     $Id$
  */
 
-require_once 'CoreExt/Controller/Front.php';
-require_once 'CoreExt/Controller/Dispatcher/Strategy/PageStrategy.php';
 
 /**
  * CoreExt_Controller_Strategy_PageStrategyTest class.

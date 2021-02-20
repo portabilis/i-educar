@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/TestCommon.php';
-
 /**
  * Avaliacao_Service_UtilityTest class.
  *

@@ -1,6 +1,5 @@
 <?php
 
-require_once ("include/clsPDF.inc.php");
 
 class relatoriosPref
 {

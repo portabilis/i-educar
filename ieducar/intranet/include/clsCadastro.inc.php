@@ -5,10 +5,6 @@ use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
-require_once 'include/clsCampos.inc.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/View/Helper/Inputs.php';
-require_once 'Portabilis/Utils/User.php';
 
 class clsCadastro extends clsCampos
 {

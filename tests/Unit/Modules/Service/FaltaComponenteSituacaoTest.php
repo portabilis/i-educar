@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/FaltaSituacaoCommon.php';
-
 /**
  * Avaliacao_Service_FaltaComponenteSituacaoTest class.
  *

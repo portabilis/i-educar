@@ -30,10 +30,6 @@
 
 use App\Models\LegacySchool;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
 
 /**
  * clsIndexBase class.

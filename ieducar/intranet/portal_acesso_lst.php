@@ -1,9 +1,5 @@
 <?php
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/portal/clsPortalAcesso.inc.php" );
 
 class clsIndexBase extends clsBase
 {
@@ -78,7 +74,7 @@ class indice extends clsListagem
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
-        
+
 
         $this->addCabecalhos( array(
             "Cod. Pessoa",

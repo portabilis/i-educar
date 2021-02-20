@@ -1,8 +1,5 @@
 <?php
 
-require_once 'include/clsBanco.inc.php';
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-
 class ConsultaBaseController extends ApiCoreController
 {
     protected $pdo;
@@ -25,7 +22,8 @@ class ConsultaBaseController extends ApiCoreController
         return $this->pdo;
     }
 
-    protected function getAlunos() {
+    protected function getAlunos()
+    {
         if (!$this->canGetAlunos()) {
             return null;
         }
@@ -33,7 +31,8 @@ class ConsultaBaseController extends ApiCoreController
         return $this->getData();
     }
 
-    protected function getData() {
+    protected function getData()
+    {
         return [];
     }
 

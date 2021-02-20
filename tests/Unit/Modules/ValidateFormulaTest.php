@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'FormulaMedia/Validate/Formula.php';
-require_once 'FormulaMedia/Validate/Exception.php';
 
 /**
  * ValidateFormulaTest class.
