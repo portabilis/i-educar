@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Avaliacao/Model/ParecerDescritivoAbstractDataMapper.php';
-require_once 'Avaliacao/Model/ParecerDescritivoGeral.php';
 
 /**
  * Avaliacao_Model_FaltaComponenteDataMapper class.

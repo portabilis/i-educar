@@ -15,8 +15,6 @@ class CreatePmieducarTipoOcorrenciaDisciplinarTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.tipo_ocorrencia_disciplinar_cod_tipo_ocorrencia_disciplinar_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -36,7 +34,7 @@ class CreatePmieducarTipoOcorrenciaDisciplinarTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_instituicao integer NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.tipo_ocorrencia_disciplinar
                     ADD CONSTRAINT tipo_ocorrencia_disciplinar_pkey PRIMARY KEY (cod_tipo_ocorrencia_disciplinar);
 

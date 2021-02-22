@@ -29,8 +29,6 @@
  * @version   $Id$
  */
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
 
 /**
  * @author    Paula Bonot <bonot@portabilis.com.br>

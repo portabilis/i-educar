@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/Entity.php';
-require_once 'Educacenso/Model/CodigoReferencia.php';
 
 /**
  * Educacenso_Model_Docente class.

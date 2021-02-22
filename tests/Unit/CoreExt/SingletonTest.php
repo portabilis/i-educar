@@ -31,8 +31,6 @@ use PHPUnit\Framework\TestCase;
  * @version     $Id$
  */
 
-require_once __DIR__.'/_stub/Singleton.php';
-require_once __DIR__.'/_stub/SingletonIncomplete.php';
 
 /**
  * CoreExt_SingletonTest class.

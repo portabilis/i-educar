@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/FaltaCommon.php';
-
 /**
  * Avaliacao_Service_FaltaGeralTest class.
  *

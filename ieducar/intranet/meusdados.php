@@ -1,10 +1,5 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/RDStationAPI.class.php';
-require_once 'image_check.php';
 
 class clsIndex extends clsBase
 {
@@ -102,7 +97,7 @@ class indice extends clsCadastro
         $foto = false;
 
         if (is_numeric($this->pessoa_logada)) {
-            $objFoto = new ClsCadastroFisicaFoto($this->pessoa_logada);
+            $objFoto = new clsCadastroFisicaFoto($this->pessoa_logada);
             $detalheFoto = $objFoto->detalhe();
 
             if (count($detalheFoto)) {

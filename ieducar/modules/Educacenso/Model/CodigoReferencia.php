@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/Entity.php';
 
 /**
  * Educacenso_Model_CodigoReferencia abstract class.

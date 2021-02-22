@@ -32,18 +32,14 @@ use Illuminate\Support\Facades\Session;
 
 header('Content-type: text/xml');
 
-require_once 'include/clsBanco.inc.php';
-require_once 'include/funcoes.inc.php';
 
-require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
-require_once 'App/Model/MatriculaSituacao.php';
 
 print '<?xml version="1.0" encoding=""?>' . "\n";
 print '<query xmlns="sugestoes">' . "\n";
 
-$pessoa_logada = Session::get('id_pessoa');
+$pessoa_logada = \Illuminate\Support\Facades\Auth::id();
 
 /**
  * @param  array  $data

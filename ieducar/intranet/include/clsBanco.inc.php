@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Facades\DB;
 
-require_once 'include/clsBancoPgSql.inc.php';
-
 class clsBanco extends clsBancoSQL_
 {
     public function __construct($strDataBase = false)
@@ -17,29 +15,6 @@ class clsBanco extends clsBancoSQL_
         $this->setPassword($connection['password']);
         $this->setUser($connection['username']);
         $this->setPort($connection['port']);
-    }
-
-    /**
-     * Retorna a quantidade de registros de uma tabela baseado no objeto que a
-     * abstrai. Este deve ter um atributo público Object->_tabela.
-     *
-     * @param   mixed   Objeto que abstrai a tabela
-     * @param   string  Nome da coluna para cálculo COUNT()
-     *
-     * @return int Quantidade de registros da tabela
-     *
-     * @throws Exception
-     */
-    public function doCountFromObj($obj, $column = '*')
-    {
-        if ($obj->_tabela == null) {
-            return false;
-        }
-
-        $sql = sprintf('SELECT COUNT(%s) FROM %s', $column, $obj->_tabela);
-        $this->Consulta($sql);
-
-        return (int) $this->UnicoCampo($sql);
     }
 
     /**
@@ -96,6 +71,7 @@ class clsBanco extends clsBancoSQL_
     {
         return ($val == true ? 't' : 'f');
     }
+
     public function escapeString($string)
     {
         return pg_escape_string($string);

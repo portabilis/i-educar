@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/Enum.php';
 
 class RegraAvaliacao_Model_Nota_TipoValor extends CoreExt_Enum
 {

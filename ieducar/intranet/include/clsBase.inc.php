@@ -9,14 +9,6 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
-require_once 'include/clsBanco.inc.php';
-require_once 'include/clsLogAcesso.inc.php';
-require_once 'include/Geral.inc.php';
-require_once 'include/funcoes.inc.php';
-require_once 'Portabilis/Utils/Database.php';
-require_once 'Portabilis/Utils/User.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
 class clsBase
 {
@@ -39,7 +31,7 @@ class clsBase
 
     public function SetTitulo($titulo)
     {
-        $this->titulo = $titulo;
+        $this->titulo = html_entity_decode($titulo);
     }
 
     public function AddForm($form)
@@ -95,7 +87,7 @@ class clsBase
         if (Session::get('marcado') != "private") {
             $ip = empty($_SERVER['REMOTE_ADDR']) ? "NULL" : $_SERVER['REMOTE_ADDR'];
             $ip_de_rede = empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? "NULL" : $_SERVER['HTTP_X_FORWARDED_FOR'];
-            $id_pessoa = Session::get('id_pessoa');
+            $id_pessoa = \Illuminate\Support\Facades\Auth::id();
 
             $logAcesso = new clsLogAcesso(FALSE, $ip, $ip_de_rede, $id_pessoa);
             $logAcesso->cadastra();

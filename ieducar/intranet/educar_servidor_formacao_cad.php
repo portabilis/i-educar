@@ -28,10 +28,6 @@
  * @version   $Id$
  */
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
 
 /**
  * clsIndexBase class.
@@ -90,7 +86,7 @@ class indice extends clsCadastro
   {
     $retorno = '';
 
-    
+
 
     $this->cod_formacao        = $_GET['cod_formacao'];
     $this->ref_cod_servidor    = $_GET['ref_cod_servidor'];
@@ -306,7 +302,7 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    
+
 
     $backUrl = sprintf(
       'educar_servidor_formacao_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
@@ -349,7 +345,7 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    
+
 
     $backUrl = sprintf(
       'educar_servidor_formacao_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
@@ -399,7 +395,7 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-    
+
 
     $backUrl = sprintf(
       'educar_servidor_formacao_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',

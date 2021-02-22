@@ -2,8 +2,6 @@
 
 
 $desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsBanco.inc.php");
 
 class clsIndex extends clsBase
 {

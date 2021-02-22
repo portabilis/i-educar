@@ -1,7 +1,5 @@
 <?php
 
-require_once 'modules/Avaliacao/Model/NotaAlunoDataMapper.php';
-require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 
 class DispensaDisciplinaPorEtapaController extends ApiCoreController
 {

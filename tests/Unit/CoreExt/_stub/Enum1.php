@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/Enum.php';
 
 /**
  * CoreExt_Enum1Stub class.

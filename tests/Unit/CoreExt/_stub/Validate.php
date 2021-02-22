@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/Validate/Abstract.php';
 
 /**
  * CoreExt_ValidateStub class.

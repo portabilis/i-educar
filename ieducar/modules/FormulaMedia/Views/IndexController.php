@@ -29,8 +29,6 @@
  * @version     $Id: /ieducar/branches/1.1.0-avaliacao/ieducar/modules/AreaConhecimento/Views/IndexController.php 791 2009-11-27T16:23:16.505103Z eriksen  $
  */
 
-require_once 'Core/Controller/Page/ListController.php';
-require_once 'FormulaMedia/Model/FormulaDataMapper.php';
 
 /**
  * IndexController class.

@@ -15,8 +15,6 @@ class CreatePmieducarEscolaAnoLetivoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE TABLE pmieducar.escola_ano_letivo (
                     ref_cod_escola integer NOT NULL,
                     ano integer NOT NULL,
@@ -28,7 +26,7 @@ class CreatePmieducarEscolaAnoLetivoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     turmas_por_ano smallint
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.escola_ano_letivo
                     ADD CONSTRAINT escola_ano_letivo_pkey PRIMARY KEY (ref_cod_escola, ano);
             '

@@ -1,13 +1,5 @@
 <?php
 
-require_once 'include/modules/clsModulesEmpresaTransporteEscolar.inc.php';
-require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
-require_once 'include/modules/clsModulesMotorista.inc.php';
-require_once 'Portabilis/Controller/ApiCoreController.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/Date/Utils.php';
 
 class EmpresaController extends ApiCoreController
 {

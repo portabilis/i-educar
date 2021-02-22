@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Educacenso/Model/Ies.php';
 
 /**
  * Educacenso_Model_IesTest class.

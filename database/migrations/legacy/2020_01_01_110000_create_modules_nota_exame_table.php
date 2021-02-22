@@ -15,8 +15,6 @@ class CreateModulesNotaExameTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE TABLE modules.nota_exame (
                     ref_cod_matricula integer NOT NULL,
                     ref_cod_componente_curricular integer NOT NULL,

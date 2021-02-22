@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/Entity.php';
-require_once 'Avaliacao/Model/Etapa.php';
 
 /**
  * Avaliacao_Model_NotaGeral class.
@@ -62,7 +60,7 @@ class Avaliacao_Model_NotaGeral extends Avaliacao_Model_Etapa
       'file'  => 'Avaliacao/Model/NotaAluno.php'
     )
   );
-  
+
   /**
    * @see CoreExt_Entity_Validatable#getDefaultValidatorCollection()
    */

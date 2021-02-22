@@ -15,8 +15,6 @@ class CreateCadastroFisicaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE TABLE cadastro.fisica (
                     idpes numeric(8,0) NOT NULL,
                     data_nasc date,
@@ -75,7 +73,7 @@ class CreateCadastroFisicaTable extends Migration
                     CONSTRAINT ck_fisica_origem_gravacao CHECK (((origem_gravacao = \'M\'::bpchar) OR (origem_gravacao = \'U\'::bpchar) OR (origem_gravacao = \'C\'::bpchar) OR (origem_gravacao = \'O\'::bpchar))),
                     CONSTRAINT ck_fisica_sexo CHECK (((sexo = \'M\'::bpchar) OR (sexo = \'F\'::bpchar)))
                 );
-                
+
                 ALTER TABLE ONLY cadastro.fisica
                     ADD CONSTRAINT pk_fisica PRIMARY KEY (idpes);
             '

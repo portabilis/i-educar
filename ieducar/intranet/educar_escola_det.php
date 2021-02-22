@@ -2,12 +2,6 @@
 
 use App\Models\PersonHasPlace;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'App/Model/ZonaLocalizacao.php';
 
 class clsIndexBase extends clsBase
 {
@@ -169,7 +163,7 @@ class indice extends clsDetalhe
                 } else {
                     $color = ' bgcolor=\'#ffffff\' ';
                 }
-                $obj_curso = new clspmieducarcurso($valor['ref_cod_curso']);
+                $obj_curso = new clsPmieducarCurso($valor['ref_cod_curso']);
                 $obj_curso->setorderby('nm_curso asc');
                 $obj_curso_det = $obj_curso->detalhe();
                 $nm_curso = $obj_curso_det['nm_curso'];

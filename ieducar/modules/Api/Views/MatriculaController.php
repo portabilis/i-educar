@@ -3,17 +3,6 @@
 use App\Models\LegacyRegistration;
 use Illuminate\Support\Str;
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'App/Model/MatriculaSituacao.php';
-require_once 'intranet/include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'Portabilis/Date/Utils.php';
-require_once 'modules/Avaliacao/Model/NotaAlunoDataMapper.php';
-require_once 'modules/Avaliacao/Model/NotaComponenteMediaDataMapper.php';
-require_once 'modules/Avaliacao/Views/PromocaoApiController.php';
-require_once 'lib/CoreExt/Controller/Request.php';
 
 class MatriculaController extends ApiCoreController
 {

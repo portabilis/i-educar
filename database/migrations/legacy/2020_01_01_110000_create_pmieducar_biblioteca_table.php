@@ -15,8 +15,6 @@ class CreatePmieducarBibliotecaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.biblioteca_cod_biblioteca_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -40,7 +38,7 @@ class CreatePmieducarBibliotecaTable extends Migration
                     tombo_automatico boolean DEFAULT true,
                     bloqueia_emprestimo_em_atraso boolean
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.biblioteca
                     ADD CONSTRAINT biblioteca_pkey PRIMARY KEY (cod_biblioteca);
 
