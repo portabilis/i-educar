@@ -1,6 +1,5 @@
 <?php
 
-require_once 'include/pmieducar/clsPmieducarServidorAlocacao.inc.php';
 
 class Portabilis_Business_Professor
 {
@@ -213,8 +212,8 @@ class Portabilis_Business_Professor
             $sql = '
                 SELECT
                     t.cod_turma AS id,
-		            t.nm_turma AS nome,
- 	                t.ano
+		                t.nm_turma AS nome,
+ 	                  t.ano
                 FROM pmieducar.turma AS t
                 LEFT JOIN pmieducar.turma_serie AS ts ON ts.turma_id = t.cod_turma
                 WHERE t.ref_ref_cod_escola = $1

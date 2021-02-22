@@ -49,11 +49,11 @@ class PromotionFromAverageAndAttendanceWithoutRetakeTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Aprovado', $response->situacao);
+            self::assertEquals('Aprovado', $response->situacao);
         }
 
         $registration = $this->enrollment->registration;
-        $this->assertEquals(1, $registration->refresh()->aprovado);
+        self::assertEquals(1, $registration->refresh()->aprovado);
     }
 
     public function testFailureAfterAllScoreAndAbsencePosted()
@@ -84,11 +84,11 @@ class PromotionFromAverageAndAttendanceWithoutRetakeTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Retido', $response->situacao);
+            self::assertEquals('Retido', $response->situacao);
         }
 
         $registration = $this->enrollment->registration;
-        $this->assertEquals(2, $registration->refresh()->aprovado);
+        self::assertEquals(2, $registration->refresh()->aprovado);
     }
 
     public function testFailureForNonAttendanceAfterAllScoreAndAbsencePosted()
@@ -119,11 +119,11 @@ class PromotionFromAverageAndAttendanceWithoutRetakeTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Retido', $response->situacao);
+            self::assertEquals('Reprovado por faltas', $response->situacao);
         }
 
         $registration = $this->enrollment->registration;
-        $this->assertEquals(14, $registration->refresh()->aprovado);
+        self::assertEquals(14, $registration->refresh()->aprovado);
     }
 
     public function testReturnsToStudyingAfterRemoveScoreInLastStage()
@@ -154,18 +154,18 @@ class PromotionFromAverageAndAttendanceWithoutRetakeTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Aprovado', $response->situacao);
+            self::assertEquals('Aprovado', $response->situacao);
         }
 
         $registration = $this->enrollment->registration;
 
-        $this->assertEquals(1, $registration->refresh()->aprovado);
+        self::assertEquals(1, $registration->refresh()->aprovado);
 
         $randomDiscipline = $schoolClass->disciplines->random()->id;
         $response = $this->deleteScore($this->enrollment, $randomDiscipline, 4);
-        $this->assertEquals('Cursando', $response->situacao);
+        self::assertEquals('Cursando', $response->situacao);
 
-        $this->assertEquals(3, $registration->refresh()->aprovado);
+        self::assertEquals(3, $registration->refresh()->aprovado);
     }
 
     public function testRemoveScoreWhenNotLastStage()
@@ -196,18 +196,18 @@ class PromotionFromAverageAndAttendanceWithoutRetakeTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Aprovado', $response->situacao);
+            self::assertEquals('Aprovado', $response->situacao);
         }
 
         $registration = $this->enrollment->registration;
 
-        $this->assertEquals(1, $registration->refresh()->aprovado);
+        self::assertEquals(1, $registration->refresh()->aprovado);
 
         $randomDiscipline = $schoolClass->disciplines->random()->id;
         $response = $this->deleteScore($this->enrollment, $randomDiscipline, 2);
-        $this->assertTrue($response->any_error_msg);
+        self::assertTrue($response->any_error_msg);
 
-        $this->assertEquals(1, $registration->refresh()->aprovado);
+        self::assertEquals(1, $registration->refresh()->aprovado);
     }
 
     public function testReturnsToStudyingAfterRemoveAbsenceInLastStage()
@@ -238,18 +238,18 @@ class PromotionFromAverageAndAttendanceWithoutRetakeTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Aprovado', $response->situacao);
+            self::assertEquals('Aprovado', $response->situacao);
         }
 
         $registration = $this->enrollment->registration;
 
-        $this->assertEquals(1, $registration->refresh()->aprovado);
+        self::assertEquals(1, $registration->refresh()->aprovado);
 
         $randomDiscipline = $schoolClass->disciplines->random()->id;
         $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 4);
-        $this->assertEquals('Cursando', $response->situacao);
+        self::assertEquals('Cursando', $response->situacao);
 
-        $this->assertEquals(3, $registration->refresh()->aprovado);
+        self::assertEquals(3, $registration->refresh()->aprovado);
     }
 
     public function testRemoveAbsenceWhenNotIsLastStage()
@@ -280,17 +280,17 @@ class PromotionFromAverageAndAttendanceWithoutRetakeTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Aprovado', $response->situacao);
+            self::assertEquals('Aprovado', $response->situacao);
         }
 
         $registration = $this->enrollment->registration;
 
-        $this->assertEquals(1, $registration->refresh()->aprovado);
+        self::assertEquals(1, $registration->refresh()->aprovado);
 
         $randomDiscipline = $schoolClass->disciplines->random()->id;
         $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 2);
-        $this->assertTrue($response->any_error_msg);
+        self::assertTrue($response->any_error_msg);
 
-        $this->assertEquals(1, $registration->refresh()->aprovado);
+        self::assertEquals(1, $registration->refresh()->aprovado);
     }
 }

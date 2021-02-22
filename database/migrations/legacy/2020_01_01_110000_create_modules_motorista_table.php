@@ -15,8 +15,6 @@ class CreateModulesMotoristaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE SEQUENCE modules.motorista_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -34,7 +32,7 @@ class CreateModulesMotoristaTable extends Migration
                     ref_cod_empresa_transporte_escolar integer NOT NULL,
                     observacao character varying(255)
                 );
-                
+
                 ALTER TABLE ONLY modules.motorista
                     ADD CONSTRAINT motorista_pkey PRIMARY KEY (cod_motorista);
 

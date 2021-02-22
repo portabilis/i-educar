@@ -15,8 +15,6 @@ class CreatePmieducarTipoEnsinoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.tipo_ensino_cod_tipo_ensino_seq
                     START WITH 0
                     INCREMENT BY 1
@@ -35,7 +33,7 @@ class CreatePmieducarTipoEnsinoTable extends Migration
                     ref_cod_instituicao integer NOT NULL,
                     atividade_complementar boolean DEFAULT false
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.tipo_ensino
                     ADD CONSTRAINT tipo_ensino_pkey PRIMARY KEY (cod_tipo_ensino);
 

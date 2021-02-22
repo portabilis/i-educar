@@ -2,9 +2,6 @@
 use App\Models\LegacyDeficiency;
 use App\Models\LogUnification;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'intranet/include/clsBanco.inc.php';
 
 class ServidorController extends ApiCoreController
 {

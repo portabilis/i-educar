@@ -2,11 +2,6 @@
 
 namespace App\Services\Exemption;
 
-require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Model/NotaAlunoDataMapper.php';
-require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Model/NotaComponenteDataMapper.php';
-require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Model/FaltaAlunoDataMapper.php';
-require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Model/FaltaComponenteDataMapper.php';
-require_once __DIR__ . '/../../../ieducar/modules/Avaliacao/Views/PromocaoApiController.php';
 
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineExemption;

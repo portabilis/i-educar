@@ -3,8 +3,6 @@
 use App\Models\LegacySchoolClass;
 use App\Services\SchoolClassService;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
 
 class clsIndexBase extends clsBase
 {

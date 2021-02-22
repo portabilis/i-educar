@@ -15,8 +15,6 @@ class CreateModulesItinerarioTransporteEscolarTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE SEQUENCE modules.itinerario_transporte_escolar_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -33,7 +31,7 @@ class CreateModulesItinerarioTransporteEscolarTable extends Migration
                     hora time without time zone,
                     tipo character(1) NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY modules.itinerario_transporte_escolar
                     ADD CONSTRAINT itinerario_transporte_escolar_cod_itinerario_transporte_escolar PRIMARY KEY (cod_itinerario_transporte_escolar);
 

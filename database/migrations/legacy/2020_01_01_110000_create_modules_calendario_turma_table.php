@@ -15,8 +15,6 @@ class CreateModulesCalendarioTurmaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE TABLE modules.calendario_turma (
                     calendario_ano_letivo_id integer NOT NULL,
                     ano integer NOT NULL,
@@ -24,7 +22,7 @@ class CreateModulesCalendarioTurmaTable extends Migration
                     dia integer NOT NULL,
                     turma_id integer NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY modules.calendario_turma
                     ADD CONSTRAINT calendario_turma_pk PRIMARY KEY (calendario_ano_letivo_id, ano, mes, dia, turma_id);
             '

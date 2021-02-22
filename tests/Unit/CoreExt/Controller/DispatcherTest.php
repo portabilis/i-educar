@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/_stub/Dispatcher.php';
 
 /**
  * CoreExt_Controller_DispatcherTest class.

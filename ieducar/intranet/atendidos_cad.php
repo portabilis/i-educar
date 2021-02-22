@@ -13,25 +13,9 @@ use iEducar\Modules\Educacenso\Model\PaisResidencia;
 use iEducar\Support\View\SelectOptions;
 use App\Services\FileService;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/pessoa/clsCadastroRaca.inc.php';
 
-require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
-require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
-require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
-require_once 'include/modules/clsModulesPessoaTransporte.inc.php';
-require_once 'include/modules/clsModulesMotorista.inc.php';
-require_once 'image_check.php';
 
-require_once 'App/Model/ZonaLocalizacao.php';
 
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Utils/Database.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/Utils/Validation.php';
-require_once 'Portabilis/Date/Utils.php';
 
 class clsIndex extends clsBase
 {
@@ -223,7 +207,7 @@ class indice extends clsCadastro
 
         $foto = false;
         if (is_numeric($this->cod_pessoa_fj)) {
-            $objFoto = new ClsCadastroFisicaFoto($this->cod_pessoa_fj);
+            $objFoto = new clsCadastroFisicaFoto($this->cod_pessoa_fj);
             $detalheFoto = $objFoto->detalhe();
             if (count($detalheFoto)) {
                 $foto = $detalheFoto['caminho'];

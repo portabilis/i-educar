@@ -15,8 +15,6 @@ class CreatePmieducarCalendarioDiaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE TABLE pmieducar.calendario_dia (
                     ref_cod_calendario_ano_letivo integer NOT NULL,
                     mes integer NOT NULL,
@@ -29,10 +27,10 @@ class CreatePmieducarCalendarioDiaTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     descricao text
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.calendario_dia
                     ADD CONSTRAINT calendario_dia_pkey PRIMARY KEY (ref_cod_calendario_ano_letivo, mes, dia);
-                    
+
                 CREATE INDEX i_calendario_dia_ativo ON pmieducar.calendario_dia USING btree (ativo);
 
                 CREATE INDEX i_calendario_dia_dia ON pmieducar.calendario_dia USING btree (dia);

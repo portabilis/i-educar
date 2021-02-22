@@ -2,9 +2,6 @@
 
 use iEducar\Modules\EvaluationRules\Models\ParallelRemedialCalculationType;
 
-require_once 'Core/Controller/Page/EditController.php';
-require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
-require_once 'RegraAvaliacao/Model/RegraRecuperacaoDataMapper.php';
 
 class EditController extends Core_Controller_Page_EditController
 {

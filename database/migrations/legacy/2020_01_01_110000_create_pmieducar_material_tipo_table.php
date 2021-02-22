@@ -15,8 +15,6 @@ class CreatePmieducarMaterialTipoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.material_tipo_cod_material_tipo_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -35,7 +33,7 @@ class CreatePmieducarMaterialTipoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_instituicao integer NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.material_tipo
                     ADD CONSTRAINT material_tipo_pkey PRIMARY KEY (cod_material_tipo);
 

@@ -2,7 +2,6 @@
 
 use Tooleks\LaravelAssetVersion\Facades\Asset;
 
-require_once 'CoreExt/View/Helper/Abstract.php';
 
 class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract
 {
