@@ -36,8 +36,6 @@ class clsIndex extends clsBase
     {
         $this->SetTitulo("{$this->_instituicao} Agenda Particular");
         $this->processoAp = '0';
-        $this->addEstilo('agenda');
-        $this->addScript('agenda');
     }
 }
 

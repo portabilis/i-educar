@@ -47,7 +47,6 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Disciplina');
     $this->processoAp         = 0;
-    $this->renderBanner       = FALSE;
     $this->renderMenu         = FALSE;
     $this->renderMenuSuspenso = FALSE;
   }

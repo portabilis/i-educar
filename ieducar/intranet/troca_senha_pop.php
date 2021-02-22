@@ -42,7 +42,6 @@ class clsIndex extends clsBase
   {
     $this->SetTitulo($this->_instituicao . 'Usu&aacute;rios');
     $this->processoAp   = "0";
-    $this->renderBanner = FALSE;
     $this->renderMenu   = FALSE;
     $this->renderMenuSuspenso = FALSE;
   }
