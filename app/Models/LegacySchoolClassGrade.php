@@ -22,4 +22,9 @@ class LegacySchoolClassGrade extends Model
         'boletim_id',
         'boletim_diferenciado_id',
     ];
+
+    public function grade()
+    {
+        return $this->belongsTo(LegacyGrade::class, 'serie_id');
+    }
 }
