@@ -18,14 +18,16 @@ class InsereSeriesMultiInexistentesNasEscolas extends Migration
                 ref_cod_serie,
                 ref_usuario_cad,
                 ativo,
-                anos_letivos
+                anos_letivos,
+                data_cadastro
             )
             SELECT
                 t.ref_ref_cod_escola,
                 s.cod_serie,
                 1 AS ref_usuario_cad,
                 1 AS ativo,
-                array_agg(DISTINCT t.ano) AS anos_letivos
+                array_agg(DISTINCT t.ano) AS anos_letivos,
+                now()
             FROM pmieducar.turma t
             JOIN pmieducar.serie s ON s.cod_serie = t.ref_ref_cod_serie_mult
             WHERE t.ref_ref_cod_serie_mult IS NOT NULL
