@@ -1,7 +1,6 @@
 <?php
 
 
-require_once( "include/Geral.inc.php" );
 
 /**
  * Classe de parametrização dos dados a serem informados para as listagens genéricas.

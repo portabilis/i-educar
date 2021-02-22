@@ -1,6 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/Core.php';
 
 class Portabilis_View_Helper_DynamicInput_ComponenteCurricular extends Portabilis_View_Helper_DynamicInput_Core
 {

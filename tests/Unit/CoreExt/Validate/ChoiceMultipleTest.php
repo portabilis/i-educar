@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/Validate/ChoiceMultiple.php';
 
 /**
  * CoreExt_Validate_ChoiceMultipleTest class.

@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
-require_once 'Avaliacao/Model/ParecerDescritivoAluno.php';
 
 /**
  * Avaliacao_Model_ParecerDescritivoAlunoDataMapper class.

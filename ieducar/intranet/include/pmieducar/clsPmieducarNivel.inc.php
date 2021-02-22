@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarNivel extends Model
 {
@@ -356,7 +355,7 @@ class clsPmieducarNivel extends Model
 
             $resultado = [];
 
-            if ($db->Num_Linhas()) {
+            if ($db->numLinhas()) {
                 $db->ProximoRegistro();
 
                 $registro = $db->Tupla();

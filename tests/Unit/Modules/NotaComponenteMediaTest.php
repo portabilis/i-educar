@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Avaliacao/Model/NotaComponenteMedia.php';
 
 /**
  * NotaComponenteMediaTest class.

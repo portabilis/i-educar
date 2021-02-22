@@ -25,10 +25,6 @@
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once ("include/pmieducar/geral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -68,7 +64,7 @@ class indice extends clsCadastro
 
         if( is_numeric( $this->cod_abandono_tipo ) )
         {
-            $obj = new clsPmiEducarAbandonoTipo();
+            $obj = new clsPmieducarAbandonoTipo();
             $lst  = $obj->lista( $this->cod_abandono_tipo );
             $registro  = array_shift($lst);
             if( $registro )
@@ -106,7 +102,7 @@ class indice extends clsCadastro
 
     function Novo()
     {
-        $obj = new clsPmiEducarAbandonoTipo( null,
+        $obj = new clsPmieducarAbandonoTipo( null,
                                              null,
                                              $this->pessoa_logada,
                                              $this->nome,
@@ -129,7 +125,7 @@ class indice extends clsCadastro
 
     function Editar()
     {
-        $obj = new clsPmiEducarAbandonoTipo( $this->cod_abandono_tipo,$this->pessoa_logada,null,$this->nome,null,null,1,$this->ref_cod_instituicao );
+        $obj = new clsPmieducarAbandonoTipo( $this->cod_abandono_tipo,$this->pessoa_logada,null,$this->nome,null,null,1,$this->ref_cod_instituicao );
         $editou = $obj->edita();
         if( $editou )
         {
@@ -145,7 +141,7 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-        $obj = new clsPmiEducarAbandonoTipo( $this->cod_abandono_tipo, $this->pessoa_logada, null, null, null, null, null, 0);
+        $obj = new clsPmieducarAbandonoTipo( $this->cod_abandono_tipo, $this->pessoa_logada, null, null, null, null, null, 0);
         $excluiu = $obj->excluir();
         if( $excluiu )
         {

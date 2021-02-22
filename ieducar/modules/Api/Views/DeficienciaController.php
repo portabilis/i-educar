@@ -3,9 +3,6 @@
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
 
 class DeficienciaController extends ApiCoreController
 {

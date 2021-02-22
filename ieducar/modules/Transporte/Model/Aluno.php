@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/Entity.php';
 
 class Transporte_Model_Aluno extends CoreExt_Entity
 {
@@ -28,7 +27,6 @@ class Transporte_Model_Aluno extends CoreExt_Entity
 
     public function getDefaultValidatorCollection()
     {
-        require_once 'Transporte/Model/Responsavel.php';
 
         $responsavel = Transporte_Model_Responsavel::getInstance();
 

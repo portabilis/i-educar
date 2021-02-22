@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Educacenso/Model/CursoSuperior.php';
 
 /**
  * Educacenso_Model_CursoSuperiorTest class.

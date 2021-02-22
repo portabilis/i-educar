@@ -2,11 +2,6 @@
 
 use iEducar\Modules\Reports\QueryFactory\MovimentoGeralQueryFactory;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'Portabilis/View/Helper/Application.php';
 
 class clsIndex extends clsBase
 {
@@ -112,10 +107,10 @@ class indice extends clsListagem
 (function () {
   let paramsTable = document.querySelectorAll('#form_resultado .tablelistagem')[0];
   paramsTable.setAttribute('style', 'width: 100%;');
-  
+
   let data = {$data};
   let table = [];
-  
+
   table.push('<table class="tablelistagem" style="width: 100%; margin-bottom: 100px;" cellspacing="1" cellpadding="4" border="0">');
     table.push('<tr>');
       table.push('<td class="titulo-tabela-listagem" colspan="19">Resultados</td>');
@@ -178,12 +173,12 @@ class indice extends clsListagem
       table.push('<td class="formmttd" valign="top" align="left" colspan="19"><strong>Legenda</strong><br>* Escola possui AEE<br>** Escola possui regime por ciclo<br>*** Escola possui regime por ciclo e AEE</td>');
     table.push('</tr>');
   table.push('</table>');
-  
+
   let base = document.querySelectorAll('#corpo')[0];
   let wrapper= document.createElement('div');
   wrapper.innerHTML = table.join('');
   let tableObj = wrapper.firstChild;
-  
+
   base.appendChild(tableObj);
 })();
 JS;

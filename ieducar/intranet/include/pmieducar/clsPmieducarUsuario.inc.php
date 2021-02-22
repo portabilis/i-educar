@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarUsuario extends Model
 {
@@ -286,7 +285,7 @@ class clsPmieducarUsuario extends Model
                        END AS status,
                        tu.nm_tipo,
                        i.nm_instituicao,
-                       (select REPLACE(TEXTCAT_ALL(relatorio.get_nome_escola(ref_cod_escola)),\'<br>\',\',\') FROM pmieducar.escola_usuario 
+                       (select REPLACE(TEXTCAT_ALL(relatorio.get_nome_escola(ref_cod_escola)),\'<br>\',\',\') FROM pmieducar.escola_usuario
                         WHERE ref_cod_usuario = u.cod_usuario' .
             (is_numeric($int_ref_cod_escola) ? " AND ref_cod_escola = '{$int_ref_cod_escola}'" : '') . ") AS nm_escola
                   FROM {$this->_tabela} u

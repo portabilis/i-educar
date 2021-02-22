@@ -1,9 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'lib/Portabilis/Utils/Database.php';
 
 class AreaConhecimentoController extends ApiCoreController
 {
@@ -40,9 +36,9 @@ class AreaConhecimentoController extends ApiCoreController
                     FROM modules.area_conhecimento
                     WHERE instituicao_id = $1
                     {$where}
-                    
+
                 )
-                UNION ALL 
+                UNION ALL
                 (
                     SELECT
                         id,
@@ -56,7 +52,7 @@ class AreaConhecimentoController extends ApiCoreController
                     WHERE instituicao_id = $1
                     {$where}
                 )
-                ORDER BY updated_at, nome 
+                ORDER BY updated_at, nome
             ";
 
             $areas = $this->fetchPreparedQuery($sql, $params);
