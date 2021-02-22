@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/EditController.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-require_once 'ComponenteCurricular/Model/TipoBase.php';
-require_once 'ComponenteCurricular/Model/CodigoEducacenso.php';
 
 class EditController extends Core_Controller_Page_EditController
 {

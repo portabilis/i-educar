@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/Enum.php';
 
 class TabelaArredondamento_Model_TipoArredondamentoMedia extends CoreExt_Enum
 {

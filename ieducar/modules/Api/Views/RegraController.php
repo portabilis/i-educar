@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
 
 class RegraController extends ApiCoreController
 {
@@ -269,7 +267,7 @@ class RegraController extends ApiCoreController
 
         $sql = "
             (
-                SELECT 
+                SELECT
                     serie_id,
                     regra_avaliacao_id,
                     regra_avaliacao_diferenciada_id,
@@ -280,9 +278,9 @@ class RegraController extends ApiCoreController
                 WHERE ano_letivo = $1
                 {$modified}
             )
-            UNION 
+            UNION
             (
-                SELECT 
+                SELECT
                     serie_id,
                     regra_avaliacao_id,
                     regra_avaliacao_diferenciada_id,

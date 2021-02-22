@@ -51,7 +51,6 @@ return [
     'migrations' => [
         database_path('migrations/extras'),
         database_path('migrations/legacy'),
-        base_path('ieducar/modules/Reports/database/migrations'),
     ],
 
     'env' => env('LEGACY_ENV', 'local'),

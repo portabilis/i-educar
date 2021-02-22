@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
-require_once 'Configuracao/Model/ConfiguracaoMovimentoGeral.php';
 
 class ConfiguracaoMovimentoGeralDataMapper extends CoreExt_DataMapper
 {

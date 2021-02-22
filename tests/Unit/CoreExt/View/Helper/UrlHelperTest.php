@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/View/Helper/UrlHelper.php';
 
 /**
  * CoreExt_View_UrlHelperTest class.

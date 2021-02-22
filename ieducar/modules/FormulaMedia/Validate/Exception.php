@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/Exception.php';
 
 /**
  * FormulaMedia_Validate_Exception class.

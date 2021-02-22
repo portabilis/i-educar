@@ -3,12 +3,6 @@
 use App\Models\LegacyCourse;
 use App\Models\LegacySchoolCourse;
 
-require_once 'Portabilis/Controller/ApiCoreController.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/Date/Utils.php';
-
 class CursoController extends ApiCoreController
 {
 

@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/Entity.php';
-require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 
 /**
  * Avaliacao_Model_ParecerDescritivoAluno class.

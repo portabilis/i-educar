@@ -32,9 +32,6 @@
  * @version   $Id$
  */
 
-require_once 'Portabilis/Controller/Page/ListController.php';
-require_once 'lib/Portabilis/View/Helper/Application.php';
-require_once 'lib/Portabilis/View/Helper/Inputs.php';
 
 // TODO migrar para novo padrao
 
