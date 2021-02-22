@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/Enum.php';
 
 class App_Model_TipoMediacaoDidaticoPedagogico extends CoreExt_Enum
 {

@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Session;
 
-$pessoa_logada = Session::get('id_pessoa');
+$pessoa_logada = \Illuminate\Support\Facades\Auth::id();
 
 if (!isset($exibe_campo_lista_curso_escola)) {
     $exibe_campo_lista_curso_escola = true;

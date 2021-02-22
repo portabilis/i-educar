@@ -2,8 +2,6 @@
 
 use App\Models\LegacySchoolGrade;
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/App/Model/IedFinder.php';
 
 class AnoLetivoController extends ApiCoreController
 {

@@ -28,10 +28,7 @@
 
 header('Content-type: text/xml; charset=UTF-8');
 
-require_once('include/clsBanco.inc.php');
-require_once('include/funcoes.inc.php');
 
-require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 print '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;

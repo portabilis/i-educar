@@ -3,7 +3,6 @@
 use App\Models\LogUnificationOldData;
 use Illuminate\Support\Facades\DB;
 
-require_once 'CoreExt/Exception.php';
 
 class App_Unificacao_Aluno
 {
@@ -19,12 +18,12 @@ class App_Unificacao_Aluno
             DB::statement(
                 "
                 UPDATE pmieducar.historico_escolar
-                SET 
+                SET
                     ref_cod_aluno = {$codAlunoPrincipal},
                     sequencial = he.seq+he.max_seq
                 FROM
                 (
-                    SELECT 
+                    SELECT
                         ref_cod_aluno AS aluno,
                         sequencial AS seq,
                         COALESCE

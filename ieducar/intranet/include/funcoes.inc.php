@@ -308,3 +308,8 @@ function int2Nis($nis)
 {
     return is_numeric($nis) ? str_pad($nis, 11, '0', STR_PAD_LEFT) : '';
 }
+
+function _cl($key)
+{
+    return CustomLabel::getInstance()->customize($key);
+}

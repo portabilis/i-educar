@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Session;
 use Tests\TestCase;
 
-require_once 'CoreExt/Session/Storage/Default.php';
 
 class CoreExt_Session_Storage_DefaultTest extends TestCase
 {

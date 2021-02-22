@@ -3,13 +3,6 @@
 use App\Models\Country;
 use App\Models\State;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/View/Helper/Application.php';
-require_once 'lib/Portabilis/Utils/CustomLabel.php';
-require_once 'App/Model/NivelTipoUsuario.php';
 
 class clsIndexBase extends clsBase
 {

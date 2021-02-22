@@ -18,20 +18,6 @@ use App\Models\LegacySchoolCourse;
 use App\Models\LegacyDisciplineSchoolClass;
 use App\Services\SchoolClass\MultiGradesService;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Utils/CustomLabel.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
-require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
-require_once 'lib/App/Model/Educacenso/LocalFuncionamentoDiferenciado.php';
-require_once 'lib/App/Model/Educacenso/TipoMediacaoDidaticoPedagogico.php';
 
 class clsIndexBase extends clsBase
 {
@@ -1548,8 +1534,7 @@ class indice extends clsCadastro
 
     public function atualizaComponentesCurriculares($codSerie, $codEscola, $codTurma, $componentes, $cargaHoraria, $usarComponente, $docente)
     {
-        require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
-        $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
+                $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
 
         $componentesTurma = [];
 

@@ -24,10 +24,6 @@
     *   02111-1307, USA.                                                     *
     *                                                                        *
     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
 
 class clsIndexBase extends clsBase
 {
@@ -109,7 +105,7 @@ class indice extends clsListagem
         $this->limite = 20;
         $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_abandono_tipo = new clsPmiEducarAbandonoTipo();
+        $obj_abandono_tipo = new clsPmieducarAbandonoTipo();
         $obj_abandono_tipo->setOrderby( "nome ASC" );
         $obj_abandono_tipo->setLimite( $this->limite, $this->offset );
 

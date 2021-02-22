@@ -1,8 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/Page/EditController.php';
-require_once 'Usuario/Model/FuncionarioDataMapper.php';
-require_once 'include/modules/clsModulesTipoVeiculo.inc.php';
 
 class VeiculoController extends Portabilis_Controller_Page_EditController
 {
