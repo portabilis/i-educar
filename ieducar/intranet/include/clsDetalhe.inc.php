@@ -3,7 +3,6 @@
 use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\View;
 
-require_once 'Core/Controller/Page/Abstract.php';
 
 class clsDetalhe extends Core_Controller_Page_Abstract
 {

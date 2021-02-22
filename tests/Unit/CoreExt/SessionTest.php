@@ -2,7 +2,6 @@
 
 use Tests\TestCase;
 
-require_once 'CoreExt/Session.php';
 
 class CoreExt_SessionTest extends TestCase
 {

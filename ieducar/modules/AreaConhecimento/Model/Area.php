@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Entity.php';
-require_once 'App/Model/IedFinder.php';
 
 class AreaConhecimento_Model_Area extends CoreExt_Entity
 {

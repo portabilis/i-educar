@@ -15,15 +15,13 @@ class CreatePmieducarSeriePreRequisitoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE TABLE pmieducar.serie_pre_requisito (
                     ref_cod_pre_requisito integer NOT NULL,
                     ref_cod_operador integer NOT NULL,
                     ref_cod_serie integer NOT NULL,
                     valor character varying
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.serie_pre_requisito
                     ADD CONSTRAINT serie_pre_requisito_pkey PRIMARY KEY (ref_cod_pre_requisito, ref_cod_operador, ref_cod_serie);
             '

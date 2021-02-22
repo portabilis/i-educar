@@ -30,10 +30,7 @@
 
 header('Content-type: text/xml; charset=UTF-8');
 
-require_once 'include/clsBanco.inc.php';
-require_once 'include/funcoes.inc.php';
 
-require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
 Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
@@ -42,8 +39,7 @@ $componentes = array();
 
 // Seleciona os componentes de um curso ou série
 if (is_numeric($_GET['cur']) || is_numeric($_GET['ser'])) {
-  require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
-  $mapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+    $mapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
 
   if (is_numeric($_GET['cur'])) {
     $componentes = $mapper->findComponentePorCurso($_GET['cur']);
@@ -55,7 +51,6 @@ if (is_numeric($_GET['cur']) || is_numeric($_GET['ser'])) {
 
 // Seleciona os componentes de uma escola-série
 if (is_numeric($_GET['esc']) && is_numeric($_GET['ser'])) {
-  require_once 'App/Model/IedFinder.php';
 
   $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($_GET['ser'],
     $_GET['esc']);

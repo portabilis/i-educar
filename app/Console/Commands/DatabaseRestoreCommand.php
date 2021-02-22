@@ -156,7 +156,7 @@ class DatabaseRestoreCommand extends Command
      */
     private function restoreDatabaseUsingBackupFile($database, $filename)
     {
-        $definition = 'pg_restore -L %s --host=%s --port=%s --username=%s --dbname=%s %s';
+        $definition = 'pg_restore -L %s --host=%s --port=%s --username=%s --dbname=%s %s --no-privileges --no-owner';
 
         $command = sprintf(
             $definition,

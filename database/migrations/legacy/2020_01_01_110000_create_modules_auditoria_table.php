@@ -15,8 +15,6 @@ class CreateModulesAuditoriaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE TABLE modules.auditoria (
                     usuario character varying(300),
                     operacao smallint,

@@ -40,17 +40,6 @@ use iEducar\Modules\Educacenso\Formatters;
 use iEducar\Modules\Educacenso\ValueTurmaMaisEducacao;
 use Illuminate\Support\Facades\Session;
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'Portabilis/Business/Professor.php';
-require_once 'App/Model/IedFinder.php';
-require_once 'ComponenteCurricular/Model/CodigoEducacenso.php';
-require_once 'lib/App/Model/Educacenso.php';
-require_once __DIR__ . '/../../../lib/App/Model/Servidor.php';
 
 /**
  * Class EducacensoExportController
@@ -59,8 +48,6 @@ require_once __DIR__ . '/../../../lib/App/Model/Servidor.php';
 class EducacensoExportController extends ApiCoreController
 {
     use Formatters;
-
-    var $pessoa_logada;
 
     var $ref_cod_escola;
     var $ref_cod_escola_;
@@ -137,7 +124,7 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosCensoPorEscola($escolaId, $ano, $data_ini, $data_fim)
     {
-        $this->pessoa_logada = Session::get('id_pessoa');
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,
@@ -165,7 +152,7 @@ class EducacensoExportController extends ApiCoreController
 
     protected function exportaDadosCensoPorEscolaFase2($escolaId, $ano, $data_ini, $data_fim)
     {
-        $this->pessoa_logada = Session::get('id_pessoa');
+
 
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(846, $this->pessoa_logada, 7,

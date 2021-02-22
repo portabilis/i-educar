@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Avaliacao/Model/ParecerDescritivoAluno.php';
 
 /**
  * ParecerDescritivoAlunoTest class.

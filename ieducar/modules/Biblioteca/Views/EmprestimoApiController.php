@@ -32,11 +32,6 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'include/pmieducar/clsPmieducarExemplar.inc.php';
-require_once 'include/pmieducar/clsPmieducarBibliotecaDia.inc.php';
-require_once 'include/pmieducar/clsPmieducarBibliotecaFeriados.inc.php';
-require_once 'lib/Portabilis/Array/Utils.php';
 
 class EmprestimoApiController extends ApiCoreController
 {
@@ -256,7 +251,7 @@ class EmprestimoApiController extends ApiCoreController
     // Array de dias de não funcionamento
     $biblioteca_dias_folga = array_diff($dias_da_semana, $biblioteca_dias_semana);
     // inverte as relacoes entre chaves e valores ( de $variavel["Sun"] => 1, para $variavel[1] => "Sun")
-    $biblioteca_dias_folga = array_flip($biblioteca_dias_folga);    
+    $biblioteca_dias_folga = array_flip($biblioteca_dias_folga);
 
     $obj_biblioteca_feriado = new clsPmieducarBibliotecaFeriados();
     $lst_biblioteca_feriado = $obj_biblioteca_feriado->lista( null, $this->getRequest()->biblioteca_id );
@@ -267,7 +262,7 @@ class EmprestimoApiController extends ApiCoreController
         // dias de feriado da biblioteca
         $biblioteca_dias_feriado[] = dataFromPgToBr($dia_feriado["data_feriado"], "D Y-m-d");
       }
-    }    
+    }
 
     $data_entrega = dataFromPgToBr($date, "D Y-m-d");
 
@@ -287,7 +282,7 @@ class EmprestimoApiController extends ApiCoreController
       $data_entrega = dataFromPgToBr($data_entrega, "D Y-m-d");
     }
 
-    $data_entrega = dataFromPgToBr($data_entrega, $format);  
+    $data_entrega = dataFromPgToBr($data_entrega, $format);
 
     return $data_entrega;
   }
@@ -474,7 +469,7 @@ class EmprestimoApiController extends ApiCoreController
         $reservas->data_retirada = date('Y-m-d H:i:s');
         $reservas->edita();
         $return = 'disponivel';
-      }else{ 
+      }else{
 
         $this->messenger->append("Outros clientes já haviam reservado o exemplar.", 'error');
         $return = 'reservado';
@@ -484,7 +479,7 @@ class EmprestimoApiController extends ApiCoreController
       $return = 'reservado';
     }
 
-    return $return;      
+    return $return;
   }
 
 
@@ -677,7 +672,7 @@ class EmprestimoApiController extends ApiCoreController
     $exemplar->cod_exemplar     = $this->getRequest()->exemplar_id;
     $exemplar->ref_cod_acervo   = $this->getRequest()->acervo_id;
     $exemplar->ref_cod_situacao = $newSituacao['id'];
-    $exemplar->ref_usuario_exc  = $this->getSession()->id_pessoa;
+    $exemplar->ref_usuario_exc  = \Illuminate\Support\Facades\Auth::id();
 
     return $exemplar->edita();
   }
@@ -690,7 +685,7 @@ class EmprestimoApiController extends ApiCoreController
         $this->messenger->append("Operação não realizada, pois o cliente possui empréstimos em atraso de devolução.", 'error');
         return;
       }
-      $emprestimo->ref_usuario_cad  = $this->getSession()->id_pessoa;
+      $emprestimo->ref_usuario_cad  = \Illuminate\Support\Facades\Auth::id();
       $emprestimo->ref_cod_cliente  = $this->getRequest()->cliente_id;
       $emprestimo->ref_cod_exemplar = $this->getRequest()->exemplar_id;
       // altera situacao exemplar para emprestado
@@ -742,7 +737,7 @@ class EmprestimoApiController extends ApiCoreController
         $_emprestimo                        = $this->loadEmprestimoForExemplar();
         $emprestimo                         = new clsPmieducarExemplarEmprestimo();
         $emprestimo->cod_emprestimo         = $_emprestimo['id'];
-        $emprestimo->ref_usuario_devolucao  = $this->getSession()->id_pessoa;
+        $emprestimo->ref_usuario_devolucao  = \Illuminate\Support\Facades\Auth::id();
         $emprestimo->data_devolucao         = date("Y-m-d");
 
         // TODO calcular / setar valor multa (se) devolução atrasada?

@@ -4,17 +4,7 @@ use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClassStage;
 use App\Models\LegacySchoolStage;
 
-require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
-require_once 'Avaliacao/Service/Boletim.php';
-require_once 'App/Model/MatriculaSituacao.php';
-require_once 'RegraAvaliacao/Model/TipoPresenca.php';
-require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
-require_once 'include/modules/clsModulesNotaExame.inc.php';
-require_once 'Portabilis/String/Utils.php';
 
 class PromocaoApiController extends ApiCoreController
 {
@@ -173,7 +163,7 @@ class PromocaoApiController extends ApiCoreController
         if (!isset($this->_boletimServices[$matriculaId]) || $reload) {
             // set service
             try {
-                $params = ['matricula' => $matriculaId, 'usuario' => $this->getSession()->id_pessoa];
+                $params = ['matricula' => $matriculaId, 'usuario' => \Illuminate\Support\Facades\Auth::id()];
                 $this->_boletimServices[$matriculaId] = new Avaliacao_Service_Boletim($params);
             } catch (Exception $e) {
                 $this->messenger->append("Erro ao instanciar serviço boletim para matricula {$matriculaId}: " . $e->getMessage(), 'error', true);
@@ -248,7 +238,7 @@ class PromocaoApiController extends ApiCoreController
 
         $stages = LegacySchoolClassStage::query(['sequencial'])
             ->where(['ref_cod_turma' => $turmaId])
-            // ->where('data_fim', '<', now())
+            ->where('data_fim', '<', now())
             ->orderBy('sequencial');
 
         if (!$stages->exists()) {
@@ -257,7 +247,7 @@ class PromocaoApiController extends ApiCoreController
                     'ref_ref_cod_escola' => $escolaId,
                     'ref_ano' => $ano
                 ])
-                // ->where('data_fim', '<', now())
+                ->where('data_fim', '<', now())
                 ->orderBy('sequencial');
         }
 

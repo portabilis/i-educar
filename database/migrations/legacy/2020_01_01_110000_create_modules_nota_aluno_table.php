@@ -15,8 +15,6 @@ class CreateModulesNotaAlunoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-                
                 CREATE SEQUENCE modules.nota_aluno_id_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -30,7 +28,7 @@ class CreateModulesNotaAlunoTable extends Migration
                 );
 
                 ALTER SEQUENCE modules.nota_aluno_id_seq OWNED BY modules.nota_aluno.id;
-                
+
                 ALTER TABLE ONLY modules.nota_aluno
                     ADD CONSTRAINT nota_aluno_pkey PRIMARY KEY (id);
 
@@ -38,7 +36,7 @@ class CreateModulesNotaAlunoTable extends Migration
                     ADD CONSTRAINT modules_nota_aluno_matricula_id_unique UNIQUE (matricula_id);
 
                 ALTER TABLE ONLY modules.nota_aluno ALTER COLUMN id SET DEFAULT nextval(\'modules.nota_aluno_id_seq\'::regclass);
-                
+
                 CREATE INDEX idx_nota_aluno_matricula ON modules.nota_aluno USING btree (matricula_id);
 
                 CREATE INDEX idx_nota_aluno_matricula_id ON modules.nota_aluno USING btree (id, matricula_id);

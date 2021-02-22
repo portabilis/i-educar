@@ -2,11 +2,10 @@
 
 use App\Models\LegacyPerson;
 use iEducar\Modules\Educacenso\Model\Nacionalidade;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
-require_once 'include/clsBanco.inc.php';
-require_once 'include/Geral.inc.php';
 
 class clsFisica
 {
@@ -112,7 +111,7 @@ class clsFisica
         $horario_final_trabalho = false,
         $nome_social = false
     ) {
-        $this->pessoa_logada = Session::get('id_pessoa');
+
         $objPessoa = new clsPessoa_($idpes);
         if ($objPessoa->detalhe()) {
             $this->idpes  = $idpes;
@@ -197,8 +196,8 @@ class clsFisica
         }
 
         $this->justificativa_provisorio = $justificativa_provisorio;
-        $this->idpes_cad = $idpes_cad ? $idpes_cad : Session::get('id_pessoa');
-        $this->idpes_rev = $idpes_rev ? $idpes_rev : Session::get('id_pessoa');
+        $this->idpes_cad = $idpes_cad ? $idpes_cad : Auth::id();
+        $this->idpes_rev = $idpes_rev ? $idpes_rev : Auth::id();
 
         $this->tabela = 'fisica';
         $this->schema = 'cadastro';

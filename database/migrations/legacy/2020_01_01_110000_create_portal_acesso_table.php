@@ -15,8 +15,6 @@ class CreatePortalAcessoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE portal.acesso_cod_acesso_seq
                     START WITH 0
                     INCREMENT BY 1
@@ -33,7 +31,7 @@ class CreatePortalAcessoTable extends Migration
                     obs text,
                     sucesso boolean DEFAULT true NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY portal.acesso
                     ADD CONSTRAINT acesso_pk PRIMARY KEY (cod_acesso);
 

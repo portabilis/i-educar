@@ -9,6 +9,7 @@
 composer-plug-and-play.json
 composer-plug-and-play.lock
 laravel-echo-server.json
+package-lock.json
 
 ieducar-*.tar.gz
 .env

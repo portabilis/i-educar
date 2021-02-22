@@ -15,8 +15,6 @@ class CreatePmieducarServidorTituloConcursoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.servidor_titulo_concurso_cod_servidor_titulo_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -30,7 +28,7 @@ class CreatePmieducarServidorTituloConcursoTable extends Migration
                     data_vigencia_homolog timestamp without time zone NOT NULL,
                     data_publicacao timestamp without time zone NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.servidor_titulo_concurso
                     ADD CONSTRAINT servidor_titulo_concurso_pkey PRIMARY KEY (cod_servidor_titulo);
 

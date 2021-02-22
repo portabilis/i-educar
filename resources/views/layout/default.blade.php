@@ -57,6 +57,7 @@
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
     <link rel="stylesheet" type='text/css' href='{{ Asset::get('css/base.css') }}'>
     <link rel="stylesheet" type="text/css" href='{{ Asset::get('/intranet/scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css') }}'>
+    <link rel="stylesheet" type="text/css" href='{{ Asset::get('/intranet/scripts/jquery-maxlength/jquery.maxlength.css') }}'>
 
     @stack('styles')
 
@@ -293,6 +294,7 @@
 <script type='text/javascript'>(function ($) {
     $(document).ready(function () {
             fixupFieldsWidth();
+            fixAutoComplete()
         });
     })(jQuery);
 </script>
@@ -303,6 +305,8 @@
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/flash-messages.js") }}"></script>
 <script type="text/javascript" src="{{ Asset::get("/js/app.js") }}"></script>
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/notifications.js") }}"></script>
+<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery-maxlength/jquery.plugin.min.js") }}"></script>
+<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery-maxlength/jquery.maxlength.min.js") }}"></script>
 <script>
     getNotifications();
 

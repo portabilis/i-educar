@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Core/View.php';
 
 /**
  * Core_ViewStub class.

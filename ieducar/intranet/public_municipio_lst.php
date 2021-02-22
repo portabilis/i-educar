@@ -4,10 +4,6 @@ use App\Models\City;
 use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/public/geral.inc.php';
 
 class clsIndexBase extends clsBase
 {
