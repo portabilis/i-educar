@@ -25,7 +25,6 @@ educar_servidor_vinculo_turma_det.php
 educar_subniveis_cad.php
 acesso_indevido_det.php
 educar_arruma_nota_avaliacao.php
-educar_falta_nota_aluno_det.php
 educar_exemplar_devolucao_cad.php
 educar_exemplar_renovacao_cad.php
 educar_exemplar_emprestimo_cad.php

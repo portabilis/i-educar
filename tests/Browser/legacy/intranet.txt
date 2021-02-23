@@ -164,8 +164,6 @@ educar_falta_atraso_cad.php
 educar_falta_atraso_compensado_cad.php
 educar_falta_atraso_det.php
 educar_falta_atraso_lst.php
-educar_falta_nota_aluno_cad.php
-educar_falta_nota_aluno_lst.php
 educar_fonte_cad.php
 educar_fonte_det.php
 educar_fonte_lst.php
@@ -277,12 +275,8 @@ educar_sequencia_serie_cad.php
 educar_sequencia_serie_det.php
 educar_sequencia_serie_lst.php
 educar_serie_cad.php
-educar_serie_cad_pop.php
 educar_serie_det.php
 educar_serie_lst.php
-educar_serie_pre_requisito_cad.php
-educar_serie_pre_requisito_det.php
-educar_serie_pre_requisito_lst.php
 educar_serie_vaga_cad.php
 educar_serie_vaga_det.php
 educar_serie_vaga_lst.php

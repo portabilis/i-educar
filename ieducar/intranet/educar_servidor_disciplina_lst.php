@@ -152,8 +152,6 @@ class indice extends clsCadastro
             }
         }
 
-        $obj_disciplina = new clsPmieducarDisciplina();
-        $obj_disciplina->setOrderby('nm_disciplina');
         $lst_opcoes = [];
         $arr_valores = [];
 
