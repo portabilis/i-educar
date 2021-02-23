@@ -275,7 +275,6 @@ educar_sequencia_serie_cad.php
 educar_sequencia_serie_det.php
 educar_sequencia_serie_lst.php
 educar_serie_cad.php
-educar_serie_cad_pop.php
 educar_serie_det.php
 educar_serie_lst.php
 educar_serie_vaga_cad.php
