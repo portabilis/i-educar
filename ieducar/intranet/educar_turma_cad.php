@@ -929,7 +929,12 @@ class indice extends clsCadastro
             }
 
             $service = new MultiGradesService;
-            $service->storeSchoolClassGrade($schoolClass, $schoolClassGrades);
+
+            try {
+                $service->storeSchoolClassGrade($schoolClass, $schoolClassGrades);
+            } catch (ValidationException $exception) {
+                $this->mensagem = $exception->errors()['grades'][0];
+            }
         }
 
         if (!$cadastrou) {
@@ -1034,12 +1039,16 @@ class indice extends clsCadastro
         $service = new MultiGradesService();
         $schoolClass = LegacySchoolClass::find($this->cod_turma);
 
-        if ($turmaDetalhe['multiseriada'] == 1 && $this->multiseriada == 0) {
-            $service->deleteAllGradesOfSchoolClass($schoolClass);
-        }
-
-        if ($this->multiseriada) {
-            $service->storeSchoolClassGrade($schoolClass, $schoolClassGrades);
+        try {
+            if ($this->multiseriada) {
+                $service->storeSchoolClassGrade($schoolClass, $schoolClassGrades);
+            } elseif ($turmaDetalhe['multiseriada'] == 1 && $this->multiseriada == 0) {
+                $service->deleteAllGradesOfSchoolClass($schoolClass);
+            }
+        } catch (ValidationException $exception) {
+            $this->mensagem = $exception->errors()['grades'][0];
+            DB::rollBack();
+            return false;
         }
 
         if (!$editou) {

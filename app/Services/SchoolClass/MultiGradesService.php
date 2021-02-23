@@ -7,8 +7,22 @@ use App\Models\LegacySchoolClass;
 
 class MultiGradesService
 {
+    private function validate($schoolClassGrades)
+    {
+        validator([
+            'grades' => $schoolClassGrades,
+        ], [
+            'grades' => [
+                'min:2',
+            ]
+        ], [
+            'grades.min' => 'Você deve selecionar pelo menos 2 séries em turmas multisseriadas',
+        ])->validate();
+    }
+
     public function storeSchoolClassGrade(LegacySchoolClass $schoolClass, $schoolClassGrades)
     {
+        $this->validate($schoolClassGrades);
         $this->deleteGradesOfSchoolClass($schoolClass, $schoolClassGrades);
         $this->saveSchoolClassGrade($schoolClass, $schoolClassGrades);
     }
