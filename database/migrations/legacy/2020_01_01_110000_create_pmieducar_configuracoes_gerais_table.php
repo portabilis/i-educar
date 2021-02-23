@@ -15,8 +15,6 @@ class CreatePmieducarConfiguracoesGeraisTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE TABLE pmieducar.configuracoes_gerais (
                     ref_cod_instituicao integer NOT NULL,
                     permite_relacionamento_posvendas integer DEFAULT 1 NOT NULL,
@@ -43,8 +41,8 @@ class CreatePmieducarConfiguracoesGeraisTable extends Migration
                     emitir_ato_autorizativo bool NOT NULL DEFAULT false,
                     emitir_ato_criacao_credenciamento bool NOT NULL DEFAULT false
                 );
-                
-                ALTER TABLE pmieducar.configuracoes_gerais 
+
+                ALTER TABLE pmieducar.configuracoes_gerais
                     ADD CONSTRAINT configuracoes_gerais_pkey PRIMARY KEY (ref_cod_instituicao);
             '
         );

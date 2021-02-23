@@ -15,8 +15,6 @@ class CreateModulesComponenteCurricularAnoEscolarTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE TABLE modules.componente_curricular_ano_escolar (
                     componente_curricular_id integer NOT NULL,
                     ano_escolar_id integer NOT NULL,

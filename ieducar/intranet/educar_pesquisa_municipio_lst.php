@@ -5,10 +5,6 @@ use App\Models\City;
 use App\Models\State;
 use Illuminate\Support\Facades\Session;
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/Geral.inc.php" );
 
 class clsIndexBase extends clsBase
 {
@@ -16,7 +12,6 @@ class clsIndexBase extends clsBase
     {
         $this->SetTitulo( "{$this->_instituicao} i-Educar - Municipio" );
         $this->processoAp = "0";
-        $this->renderBanner = false;
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
     }

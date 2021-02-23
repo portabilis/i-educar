@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Educacenso/Model/CursoSuperior.php';
 
 /**
  * Educacenso_Model_CursoSuperiorTest class.
@@ -46,7 +45,7 @@ class Educacenso_Model_CursoSuperiorTest extends PHPUnit\Framework\TestCase
 {
   protected $_entity = NULL;
 
-  protected function setUp()
+  protected function setUp(): void
   {
     $this->_entity = new Educacenso_Model_CursoSuperior();
   }

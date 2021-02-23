@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/Controller/Abstract.php';
 
 /**
  * CoreExt_Controller_Abstract class.

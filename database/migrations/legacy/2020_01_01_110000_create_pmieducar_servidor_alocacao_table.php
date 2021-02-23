@@ -15,8 +15,6 @@ class CreatePmieducarServidorAlocacaoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.servidor_alocacao_cod_servidor_alocacao_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -47,7 +45,7 @@ class CreatePmieducarServidorAlocacaoTable extends Migration
                     horas_excedentes time without time zone,
                     data_saida date NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.servidor_alocacao
                     ADD CONSTRAINT servidor_alocacao_pkey PRIMARY KEY (cod_servidor_alocacao);
 

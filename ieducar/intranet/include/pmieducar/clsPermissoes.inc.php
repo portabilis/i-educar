@@ -1,8 +1,5 @@
 <?php
 
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
-require_once 'lib/Portabilis/Array/Utils.php';
 
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;

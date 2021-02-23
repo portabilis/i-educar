@@ -15,8 +15,6 @@ class CreateCadastroRacaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE cadastro.raca_cod_raca_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -34,7 +32,7 @@ class CreateCadastroRacaTable extends Migration
                     ativo boolean DEFAULT false,
                     raca_educacenso smallint
                 );
-                
+
                 ALTER TABLE ONLY cadastro.raca
                     ADD CONSTRAINT raca_pkey PRIMARY KEY (cod_raca);
 

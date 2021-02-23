@@ -15,8 +15,6 @@ class CreatePmieducarTransferenciaTipoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.transferencia_tipo_cod_transferencia_tipo_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -35,7 +33,7 @@ class CreatePmieducarTransferenciaTipoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_instituicao integer
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.transferencia_tipo
                     ADD CONSTRAINT transferencia_tipo_pkey PRIMARY KEY (cod_transferencia_tipo);
 

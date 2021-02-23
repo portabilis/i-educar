@@ -2,19 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Prettus\Repository\Contracts\Transformable;
-use Prettus\Repository\Traits\TransformableTrait;
 
-/**
- * Class User.
- *
- * @package namespace App\Entities;
- */
-class LegacyUser extends EloquentBaseModel implements Transformable
+class LegacyUser extends Model
 {
-    use TransformableTrait;
-
     /**
      * @var string
      */

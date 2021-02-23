@@ -29,7 +29,7 @@ trait DiarioApiFakeDataTestTrait
      */
     public function getCommonFakeData($evaluationRule)
     {
-        $course = factory(LegacyCourse::class, 'padrao-ano-escolar')->create();
+        $course = factory(LegacyCourse::class)->state('padrao-ano-escolar')->create();
 
         $level = factory(LegacyLevel::class)->create([
             'ref_cod_curso' => $course,
@@ -55,7 +55,7 @@ trait DiarioApiFakeDataTestTrait
         $school->courses()->attach($schoolClass->course_id, [
             'ativo' => 1,
             'anos_letivos' => '{'.now()->year.'}',
-            'ref_usuario_cad' => factory(User::class, 'admin')->make()->id,
+            'ref_usuario_cad' => factory(User::class)->state('admin')->make()->id,
             'data_cadastro' => now(),
         ]);
 
@@ -102,12 +102,12 @@ trait DiarioApiFakeDataTestTrait
      */
     public function getPromotionFromAverageAndAttendanceWithoutRetake()
     {
-        $roundingTable = factory(LegacyRoundingTable::class, 'numeric')->create();
+        $roundingTable = factory(LegacyRoundingTable::class)->state('numeric')->create();
         factory(LegacyValueRoundingTable::class, 10)->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
 
-        $evaluationRule = factory(LegacyEvaluationRule::class, 'media-presenca-sem-recuperacao')->create([
+        $evaluationRule = factory(LegacyEvaluationRule::class)->state('media-presenca-sem-recuperacao')->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
 
@@ -118,12 +118,12 @@ trait DiarioApiFakeDataTestTrait
 
     public function getProgressionWithAverageCalculationWeightedRecovery()
     {
-        $roundingTable = factory(LegacyRoundingTable::class, 'numeric')->create();
+        $roundingTable = factory(LegacyRoundingTable::class)->state('numeric')->create();
         factory(LegacyValueRoundingTable::class, 10)->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
 
-        $evaluationRule = factory(LegacyEvaluationRule::class, 'progressao-calculo-media-recuperacao-ponderada')->create([
+        $evaluationRule = factory(LegacyEvaluationRule::class)->state('progressao-calculo-media-recuperacao-ponderada')->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
 

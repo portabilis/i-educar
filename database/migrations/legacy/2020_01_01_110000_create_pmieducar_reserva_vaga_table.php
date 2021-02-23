@@ -15,8 +15,6 @@ class CreatePmieducarReservaVagaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.reserva_vaga_cod_reserva_vaga_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -37,7 +35,7 @@ class CreatePmieducarReservaVagaTable extends Migration
                     nm_aluno character varying(255),
                     cpf_responsavel numeric(11,0)
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.reserva_vaga
                     ADD CONSTRAINT reserva_vaga_pkey PRIMARY KEY (cod_reserva_vaga);
 

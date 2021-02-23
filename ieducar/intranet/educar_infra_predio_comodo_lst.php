@@ -1,9 +1,5 @@
 <?php
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
 
 class clsIndexBase extends clsBase
 {
@@ -254,11 +250,6 @@ document.getElementById('ref_cod_escola').onchange = function()
 
 before_getEscola = function()
 {
-    /*var campoPredio   = document.getElementById('ref_cod_infra_predio');
-    campoPredio.length = 1;
-    campoPredio.options[0].text = 'Selecione';
-    campoPredio.disabled = false;*/
-
     var campoFuncao = document.getElementById('ref_cod_infra_comodo_funcao');
     campoFuncao.length = 1;
     campoFuncao.options[0].text = 'Selecione';

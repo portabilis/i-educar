@@ -17,21 +17,21 @@ class BreadCrumbTest extends TestCase
         parent::setUp();
         $this->breadCrumbObject = new Breadcrumb();
     }
-    
+
     public function testTitleWithoutParent()
     {
         $this->markTestSkipped();
         $htmlBreadCrumb = $this->breadCrumbObject->makeBreadcrumb('Página teste', []);
-        $this->assertContains('Página teste', $htmlBreadCrumb);
+        $this->assertStringContainsString('Página teste', $htmlBreadCrumb);
     }
 
     public function testTitleAndOneParent()
     {
         $this->markTestSkipped();
         $htmlBreadCrumb = $this->breadCrumbObject->makeBreadcrumb('Página teste', ['arquivo_teste.php' => 'Arquivo Teste']);
-        $this->assertContains('Página teste', $htmlBreadCrumb);
-        $this->assertContains('arquivo_teste.php', $htmlBreadCrumb);
-        $this->assertContains('Arquivo Teste', $htmlBreadCrumb);
+        $this->assertStringContainsString('Página teste', $htmlBreadCrumb);
+        $this->assertStringContainsString('arquivo_teste.php', $htmlBreadCrumb);
+        $this->assertStringContainsString('Arquivo Teste', $htmlBreadCrumb);
     }
 
     public function testTitleAndMultipleParents()
@@ -43,9 +43,9 @@ class BreadCrumbTest extends TestCase
             ]
         );
 
-        $this->assertContains('arquivo1.php', $htmlBreadCrumb);
-        $this->assertContains('Arquivo 1', $htmlBreadCrumb);
-        $this->assertContains('arquivo2.php', $htmlBreadCrumb);
-        $this->assertContains('Arquivo 2', $htmlBreadCrumb);
+        $this->assertStringContainsString('arquivo1.php', $htmlBreadCrumb);
+        $this->assertStringContainsString('Arquivo 1', $htmlBreadCrumb);
+        $this->assertStringContainsString('arquivo2.php', $htmlBreadCrumb);
+        $this->assertStringContainsString('Arquivo 2', $htmlBreadCrumb);
     }
 }

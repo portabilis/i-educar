@@ -15,8 +15,6 @@ class CreateModulesTransporteAlunoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE TABLE modules.transporte_aluno (
                     aluno_id integer NOT NULL,
                     responsavel integer NOT NULL,
@@ -24,7 +22,7 @@ class CreateModulesTransporteAlunoTable extends Migration
                     created_at timestamp without time zone NOT NULL,
                     updated_at timestamp without time zone
                 );
-                
+
                 ALTER TABLE ONLY modules.transporte_aluno
                     ADD CONSTRAINT transporte_aluno_pk PRIMARY KEY (aluno_id);
             '

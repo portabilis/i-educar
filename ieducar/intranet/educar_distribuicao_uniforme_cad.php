@@ -1,11 +1,5 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/View/Helper/Application.php';
-require_once 'lib/Portabilis/Date/Utils.php';
 
 class clsIndexBase extends clsBase
 {
@@ -153,18 +147,7 @@ class indice extends clsCadastro
             'size' => 10
         ]);
 
-        $this->campoLista(
-            'ref_cod_escola',
-            'Escola',
-            $escolaOpcoes,
-            $this->ref_cod_escola,
-            '',
-            false,
-            '(Responsável pela distribuição do uniforme)',
-            '',
-            false,
-            true
-        );
+        $this->inputsHelper()->dynamic(['instituicao', 'escola']);
 
         $this->inputsHelper()->checkbox('kit_completo', [
             'label' => 'Kit completo', 'value' => $this->kit_completo

@@ -1,13 +1,10 @@
 <?php
 
+use App\Models\LegacySchoolAcademicYear;
 use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
-require_once 'include/clsCampos.inc.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/View/Helper/Inputs.php';
-require_once 'Portabilis/Utils/User.php';
 
 class clsCadastro extends clsCampos
 {
@@ -618,9 +615,18 @@ class clsCadastro extends clsCampos
     protected function sugestaoAnosLetivos()
     {
         $anoAtual = date('Y');
-        $anos = range($anoAtual - 10, $anoAtual + 1);
+        $anos = range($anoAtual - 18, $anoAtual + 1);
 
         return array_combine($anos, $anos);
+    }
+
+    protected function anosLetivosExistentes()
+    {
+        return LegacySchoolAcademicYear::query()
+            ->distinct('ano')
+            ->get()
+            ->pluck('ano', 'ano')
+            ->toArray();
     }
 
     protected function inputsHelper()

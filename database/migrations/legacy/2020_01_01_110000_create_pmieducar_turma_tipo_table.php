@@ -15,8 +15,6 @@ class CreatePmieducarTurmaTipoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.turma_tipo_cod_turma_tipo_seq
                     START WITH 0
                     INCREMENT BY 1
@@ -35,7 +33,7 @@ class CreatePmieducarTurmaTipoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_instituicao integer
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.turma_tipo
                     ADD CONSTRAINT turma_tipo_pkey PRIMARY KEY (cod_turma_tipo);
 

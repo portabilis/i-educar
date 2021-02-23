@@ -15,13 +15,11 @@ class CreatePmieducarHabilitacaoCursoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE TABLE pmieducar.habilitacao_curso (
                     ref_cod_habilitacao integer NOT NULL,
                     ref_cod_curso integer NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.habilitacao_curso
                     ADD CONSTRAINT habilitacao_curso_pkey PRIMARY KEY (ref_cod_habilitacao, ref_cod_curso);
             '

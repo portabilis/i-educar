@@ -5,10 +5,6 @@ use App\Models\EmployeeWithdrawal;
 use App\Services\UrlPresigner;
 use App\Support\View\Employee\EmployeeReturn;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -270,7 +266,7 @@ class indice extends clsCadastro
                         $temp['ref_cod_escola']     = $val['ref_cod_escola'];
                         $temp['ref_cod_disciplina'] = $val['ref_cod_disciplina'];
                         $temp['ref_cod_substituto'] = $val['ref_servidor_substituto'];
-                        $objTemp = new ClsPmieducarSerie($val['ref_cod_serie']);
+                        $objTemp = new clsPmieducarSerie($val['ref_cod_serie']);
                         $detalheTemp = $objTemp->detalhe();
                         $temp['ref_cod_curso']      = $detalheTemp['ref_cod_curso'];
                         $this->alocacao_array[]     = $temp;

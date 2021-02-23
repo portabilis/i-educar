@@ -37,7 +37,7 @@ $factory->define(LegacySchoolClass::class, function (Faker $faker) {
     ];
 });
 
-$factory->defineAs(LegacySchoolClass::class, 'morning', function (Faker $faker) use ($factory) {
+$factory->state(LegacySchoolClass::class, 'morning', function (Faker $faker) use ($factory) {
     $schollClass = $factory->raw(LegacySchoolClass::class);
 
     return array_merge($schollClass, [
@@ -46,7 +46,7 @@ $factory->defineAs(LegacySchoolClass::class, 'morning', function (Faker $faker) 
     ]);
 });
 
-$factory->defineAs(LegacySchoolClass::class, 'afternoon', function (Faker $faker) use ($factory) {
+$factory->state(LegacySchoolClass::class, 'afternoon', function (Faker $faker) use ($factory) {
     $schollClass = $factory->raw(LegacySchoolClass::class);
 
     return array_merge($schollClass, [

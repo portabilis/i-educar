@@ -37,6 +37,10 @@ class BatchExemptionJob implements ShouldQueue
      */
     private $user;
 
+    /**
+     * @var int
+     */
+    public $timeout = 600;
 
     public function __construct(BatchExemptionService $batchExemptionService, $databaseConnection, User $user)
     {

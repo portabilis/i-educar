@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/Controller/Request/Interface.php';
 
 class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
 {
@@ -164,7 +163,6 @@ class CoreExt_Controller_Request implements CoreExt_Controller_Request_Interface
     public function getBaseurl()
     {
         if (is_null($this->_getOption('baseurl'))) {
-            require_once 'CoreExt/View/Helper/UrlHelper.php';
 
             $url = CoreExt_View_Helper_UrlHelper::url(
                 $this->get('REQUEST_URI'),

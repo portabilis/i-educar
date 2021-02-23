@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Educacenso/Model/Aluno.php';
 
 /**
  * Educacenso_Model_AlunoTest class.

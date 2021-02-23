@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 class clsPmieducarServidorDisciplina extends Model
 {

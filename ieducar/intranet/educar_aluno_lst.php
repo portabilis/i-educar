@@ -1,11 +1,5 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'Educacenso/Model/AlunoDataMapper.php';
-require_once 'Portabilis/Utils/CustomLabel.php';
 
 class clsIndexBase extends clsBase
 {
@@ -93,17 +87,9 @@ class indice extends clsListagem
         $this->campoRotulo('filtros_matricula', '<b>Filtros de matrículas em andamento</b>');
 
         $this->inputsHelper()->integer('ano', ['required' => false, 'value' => $this->ano, 'max_length' => 4]);
-        $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao]);
-        $this->inputsHelper()->dynamic(
-            'escola', [
-                'required' => false,
-                'show-select' => true,
-                'value' => $this->ref_cod_escola
-            ]
-        );
+        $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'value' => $this->ref_cod_instituicao]);
+        $this->inputsHelper()->dynamic('escolaSemFiltroPorUsuario', ['required' => false, 'value' => $this->ref_cod_escola]);
         $this->inputsHelper()->dynamic(['curso', 'serie'], ['required' => false]);
-
-        //$this->inputsHelper()->select('periodo', array('required' => false, 'value' => $this->periodo, 'resources' => array(null => 'Selecione', 1 => 'Matutino', 2 => 'Vespertino', 3 => 'Noturno', 4 => 'Integral' )));
 
         $obj_permissoes = new clsPermissoes();
         $cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
@@ -115,9 +101,6 @@ class indice extends clsListagem
                 $ref_cod_escola = $cod_escola;
             }
         }
-
-        $array_matriculado = ['S' => 'Sim', 'N' => 'Não'];
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         if (!$configuracoes['mostrar_codigo_inep_aluno']) {
             $cabecalhos = ['Código Aluno',

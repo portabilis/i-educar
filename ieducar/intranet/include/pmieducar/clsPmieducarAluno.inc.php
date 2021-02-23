@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarAluno extends Model
 {
@@ -665,7 +664,7 @@ class clsPmieducarAluno extends Model
 
         if (is_string($str_nome_aluno)) {
             $str_nm_aluno = $db->escapeString($str_nome_aluno);
-            $filtros .= "{$whereAnd} pessoa.slug ILIKE '%{$str_nm_aluno}%'";
+            $filtros .= "{$whereAnd} pessoa.slug ILIKE unaccent('%{$str_nm_aluno}%')";
             $whereAnd = ' AND ';
         }
 
@@ -676,9 +675,9 @@ class clsPmieducarAluno extends Model
                 $and_nome_pai_mae = '';
 
                 $and_nome_resp = "
-          (pai_mae.slug ILIKE '%$str_nome_responsavel%') AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
+          (pai_mae.slug ILIKE unaccent('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
           OR
-          (pai_mae.slug ILIKE '%$str_nome_responsavel%') AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae";
+          (pai_mae.slug ILIKE unaccent('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae";
 
                 $and_resp = ' AND ';
             }
@@ -940,9 +939,9 @@ class clsPmieducarAluno extends Model
 
             if (is_string($str_nome_responsavel)) {
                 $and_nome_resp = "
-              (pai_mae.slug ILIKE '%$str_nome_responsavel%') AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
+              (pai_mae.slug ILIKE unaccent('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
               OR
-              (pai_mae.slug ILIKE '%$str_nome_responsavel%') AND (aluno.tipo_responsavel = 'p') AND pai_mae.idpes = fisica_aluno.idpes_pai";
+              (pai_mae.slug ILIKE unaccent('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'p') AND pai_mae.idpes = fisica_aluno.idpes_pai";
 
                 $and_resp = 'AND';
             }
@@ -1043,21 +1042,21 @@ class clsPmieducarAluno extends Model
             if (!empty($str_nm_pai2)) {
                 $str_nome_pai2 = $db->escapeString($str_nm_pai2);
                 $complemento_sql .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_pai ON (pessoa_pai.idpes = f.idpes_pai)';
-                $complemento_where .= "{$and_where} (pessoa_pai.slug ILIKE '%{$str_nome_pai2}%')";
+                $complemento_where .= "{$and_where} (pessoa_pai.slug ILIKE unaccent('%{$str_nome_pai2}%'))";
                 $and_where = ' AND ';
             }
 
             if (!empty($str_nm_mae2)) {
                 $str_nome_mae2 = $db->escapeString($str_nm_mae2);
                 $complemento_sql .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_mae ON (pessoa_mae.idpes = f.idpes_mae)';
-                $complemento_where .= "{$and_where} (pessoa_mae.slug ILIKE '%{$str_nome_mae2}%')";
+                $complemento_where .= "{$and_where} (pessoa_mae.slug ILIKE unaccent('%{$str_nome_mae2}%'))";
                 $and_where = ' AND ';
             }
 
             if (!empty($str_nm_responsavel2)) {
                 $str_nome_responsavel2 = $db->escapeString($str_nm_responsavel2);
                 $complemento_sql .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_responsavel ON (pessoa_responsavel.idpes = f.idpes_responsavel)';
-                $complemento_where .= "{$and_where} (pessoa_responsavel.slug ILIKE '%{$str_nome_responsavel2}%')";
+                $complemento_where .= "{$and_where} (pessoa_responsavel.slug ILIKE unaccent('%{$str_nome_responsavel2}%'))";
                 $and_where = ' AND ';
             }
 

@@ -2,17 +2,6 @@
 
 use iEducar\Support\Exceptions\Exception as iEducarException;
 
-require_once 'include/clsBanco.inc.php';
-require_once 'Core/Controller/Page/EditController.php';
-require_once 'CoreExt/Exception.php';
-require_once 'lib/Portabilis/Messenger.php';
-require_once 'lib/Portabilis/Validator.php';
-require_once 'lib/Portabilis/DataMapper/Utils.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'lib/Portabilis/Utils/User.php';
-require_once 'lib/Utils/SafeJson.php';
 
 class ApiCoreController extends Core_Controller_Page_EditController
 {
@@ -74,7 +63,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     protected function validatesUserIsLoggedIn()
     {
-        $canAccess = is_numeric($this->getSession()->id_pessoa);
+        $canAccess = is_numeric(\Illuminate\Support\Facades\Auth::id());
 
         if (!$canAccess) {
             $canAccess = ($this->validatesAccessKey() && $this->validatesSignature());
@@ -106,7 +95,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     {
         $can = $this->getClsPermissoes()->permissao_excluir(
             $this->getBaseProcessoAp(),
-            $this->getSession()->id_pessoa,
+            \Illuminate\Support\Facades\Auth::id(),
             $this->_nivelAcessoOption
         );
 
@@ -121,7 +110,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     {
         $can = $this->getClsPermissoes()->permissao_cadastra(
             $this->getBaseProcessoAp(),
-            $this->getSession()->id_pessoa,
+            \Illuminate\Support\Facades\Auth::id(),
             $this->_nivelAcessoOption
         );
 

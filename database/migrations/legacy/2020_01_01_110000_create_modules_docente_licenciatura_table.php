@@ -15,8 +15,6 @@ class CreateModulesDocenteLicenciaturaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE SEQUENCE modules.docente_licenciatura_id_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -37,7 +35,7 @@ class CreateModulesDocenteLicenciaturaTable extends Migration
                 );
 
                 ALTER SEQUENCE modules.docente_licenciatura_id_seq OWNED BY modules.docente_licenciatura.id;
-                
+
                 ALTER TABLE ONLY modules.docente_licenciatura
                     ADD CONSTRAINT docente_licenciatura_curso_unique UNIQUE (servidor_id, curso_id, ies_id);
 
@@ -45,7 +43,7 @@ class CreateModulesDocenteLicenciaturaTable extends Migration
                     ADD CONSTRAINT docente_licenciatura_pk PRIMARY KEY (id);
 
                 ALTER TABLE ONLY modules.docente_licenciatura ALTER COLUMN id SET DEFAULT nextval(\'modules.docente_licenciatura_id_seq\'::regclass);
-                
+
                 CREATE INDEX docente_licenciatura_ies_idx ON modules.docente_licenciatura USING btree (ies_id);
 
                 SELECT pg_catalog.setval(\'modules.docente_licenciatura_id_seq\', 1, false);

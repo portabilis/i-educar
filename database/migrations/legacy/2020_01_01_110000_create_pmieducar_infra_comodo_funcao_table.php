@@ -15,8 +15,6 @@ class CreatePmieducarInfraComodoFuncaoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.infra_comodo_funcao_cod_infra_comodo_funcao_seq
                     START WITH 0
                     INCREMENT BY 1
@@ -35,7 +33,7 @@ class CreatePmieducarInfraComodoFuncaoTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_escola integer
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.infra_comodo_funcao
                     ADD CONSTRAINT infra_comodo_funcao_pkey PRIMARY KEY (cod_infra_comodo_funcao);
 
