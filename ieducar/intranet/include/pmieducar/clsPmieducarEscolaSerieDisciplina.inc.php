@@ -219,11 +219,6 @@ class clsPmieducarEscolaSerieDisciplina extends Model
 
         $campos = '';
         $join = '';
-        if ($boo_nome_disc) {
-            $join = ',pmieducar.disciplina';
-            $whereAnd = ' WHERE ref_cod_disciplina = cod_disciplina AND disciplina.ativo = 1 AND ';
-            $campos = ',disciplina.nm_disciplina';
-        }
 
         $sql = "SELECT {$this->_campos_lista}{$campos} FROM {$this->_tabela}{$join}";
         $filtros = '';
