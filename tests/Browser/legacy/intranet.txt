@@ -164,8 +164,6 @@ educar_falta_atraso_cad.php
 educar_falta_atraso_compensado_cad.php
 educar_falta_atraso_det.php
 educar_falta_atraso_lst.php
-educar_falta_nota_aluno_cad.php
-educar_falta_nota_aluno_lst.php
 educar_fonte_cad.php
 educar_fonte_det.php
 educar_fonte_lst.php
