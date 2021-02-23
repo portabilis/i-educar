@@ -9,9 +9,6 @@ use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
-
-
-
 class clsIndexBase extends clsBase
 {
     public function Formular()
@@ -177,8 +174,8 @@ class indice extends clsCadastro
         }
 
         $this->url_cancelar = ($retorno == 'Editar') ?
-        "educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}" :
-        'educar_servidor_lst.php';
+            "educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}" :
+            'educar_servidor_lst.php';
 
         $this->nome_url_cancelar = 'Cancelar';
 
@@ -292,10 +289,10 @@ class indice extends clsCadastro
             'funcao',
             'Funções Servidor',
             [
-            'Função',
-            'Componentes Curriculares',
-            'Cursos',
-            'Matrícula'],
+                'Função',
+                'Componentes Curriculares',
+                'Cursos',
+                'Matrícula'],
             ($this->ref_cod_funcao)
         );
 
@@ -359,7 +356,7 @@ class indice extends clsCadastro
             false
         );
 
-        $this->inputsHelper()->checkbox('multi_seriado', [ 'label' => 'Multisseriado', 'value' => $this->multi_seriado]);
+        $this->inputsHelper()->checkbox('multi_seriado', ['label' => 'Multisseriado', 'value' => $this->multi_seriado]);
 
         // Dados do docente no Inep/Educacenso.
         if ($this->docente) {
@@ -402,7 +399,7 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->select('tipo_ensino_medio_cursado', $options);
 
-        $helperOptions = ['objectName'  => 'pos_graduacao'];
+        $helperOptions = ['objectName' => 'pos_graduacao'];
         $options = [
             'label' => 'Pós-Graduações concluídas',
             'required' => false,
@@ -418,7 +415,7 @@ class indice extends clsCadastro
         ];
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
-        $helperOptions = ['objectName'  => 'curso_formacao_continuada'];
+        $helperOptions = ['objectName' => 'curso_formacao_continuada'];
         $options = [
             'label' => 'Outros cursos de formação continuada (Mínimo de 80 horas)',
             'required' => $obrigarCamposCenso,
@@ -488,8 +485,8 @@ JS;
         $this->ref_cod_instituicao = (int) $this->ref_cod_instituicao;
 
         $timesep = explode(':', $this->carga_horaria);
-        $hour    = $timesep[0] + ((int) ($timesep[1] / 60));
-        $min     = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
+        $hour = $timesep[0] + ((int) ($timesep[1] / 60));
+        $min = abs(((int) ($timesep[1] / 60)) - ($timesep[1] / 60)) . '<br>';
 
         $this->carga_horaria = $hour + $min;
         $this->carga_horaria = $hour + $min;
@@ -501,7 +498,7 @@ JS;
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
 
-        $obj   = new clsPmieducarServidor($this->cod_servidor, null, null, null, null, null, null, $this->ref_cod_instituicao);
+        $obj = new clsPmieducarServidor($this->cod_servidor, null, null, null, null, null, null, $this->ref_cod_instituicao);
 
         if ($obj->detalhe()) {
             $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
@@ -1067,48 +1064,44 @@ $pagina->MakeAll();
 /**
  * Carrega as opções de um campo select de funções via Ajax
  */
-function getFuncao(id_campo)
-{
-  var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
-  var campoFuncao      = document.getElementById(id_campo);
-  campoFuncao.length   = 1;
+function getFuncao(id_campo) {
+    var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
+    var campoFuncao = document.getElementById(id_campo);
+    campoFuncao.length = 1;
 
-  if (campoFuncao) {
-    campoFuncao.disabled = true;
-    campoFuncao.options[0].text = 'Carregando funções';
+    if (campoFuncao) {
+        campoFuncao.disabled = true;
+        campoFuncao.options[0].text = 'Carregando funções';
 
-    var xml = new ajax(atualizaLstFuncao,id_campo);
-    xml.envia("educar_funcao_xml.php?ins="+campoInstituicao+"&professor=true");
-  }
-  else {
-    campoFuncao.options[0].text = 'Selecione';
-  }
+        var xml = new ajax(atualizaLstFuncao, id_campo);
+        xml.envia('educar_funcao_xml.php?ins=' + campoInstituicao + '&professor=true');
+    } else {
+        campoFuncao.options[0].text = 'Selecione';
+    }
 }
 
 /**
  * Parse de resultado da chamada Ajax de getFuncao(). Adiciona cada item
  * retornado como option do select
  */
-function atualizaLstFuncao(xml)
-{
-  var campoFuncao = document.getElementById(arguments[1]);
+function atualizaLstFuncao(xml) {
+    var campoFuncao = document.getElementById(arguments[1]);
 
-  campoFuncao.length = 1;
-  campoFuncao.options[0].text = 'Selecione uma função';
-  campoFuncao.disabled = false;
+    campoFuncao.length = 1;
+    campoFuncao.options[0].text = 'Selecione uma função';
+    campoFuncao.disabled = false;
 
-  funcaoChange(campoFuncao);
+    funcaoChange(campoFuncao);
 
-  var funcoes = xml.getElementsByTagName('funcao');
-  if (funcoes.length) {
-    for (var i = 0; i < funcoes.length; i++) {
-      campoFuncao.options[campoFuncao.options.length] =
-        new Option(funcoes[i].firstChild.data, funcoes[i].getAttribute('cod_funcao'), false, false);
+    var funcoes = xml.getElementsByTagName('funcao');
+    if (funcoes.length) {
+        for (var i = 0; i < funcoes.length; i++) {
+            campoFuncao.options[campoFuncao.options.length] =
+                new Option(funcoes[i].firstChild.data, funcoes[i].getAttribute('cod_funcao'), false, false);
+        }
+    } else {
+        campoFuncao.options[0].text = 'A instituição não possui funções de servidores';
     }
-  }
-  else {
-    campoFuncao.options[0].text = 'A instituição não possui funções de servidores';
-  }
 }
 
 
@@ -1120,24 +1113,22 @@ function atualizaLstFuncao(xml)
  *
  * É um toggle on/off
  */
-function funcaoChange(campo)
-{
-  var valor = campo.value.split("-");
-  var id = /[0-9]+/.exec(campo.id)[0];
-  var professor = (valor[1] == true);
+function funcaoChange(campo) {
+    var valor = campo.value.split('-');
+    var id = /[0-9]+/.exec(campo.id)[0];
+    var professor = (valor[1] == true);
 
-  var campo_img  = document.getElementById('td_disciplina['+ id +']').lastChild.lastChild;
-  var campo_img2 = document.getElementById('td_curso['+ id +']').lastChild.lastChild;
+    var campo_img = document.getElementById('td_disciplina[' + id + ']').lastChild.lastChild;
+    var campo_img2 = document.getElementById('td_curso[' + id + ']').lastChild.lastChild;
 
-  // Se for professor
-  if (professor == true) {
-    setVisibility(campo_img,  true);
-    setVisibility(campo_img2, true);
-  }
-  else {
-    setVisibility(campo_img,  false);
-    setVisibility(campo_img2, false);
-  }
+    // Se for professor
+    if (professor == true) {
+        setVisibility(campo_img, true);
+        setVisibility(campo_img2, true);
+    } else {
+        setVisibility(campo_img, false);
+        setVisibility(campo_img2, false);
+    }
 }
 
 
@@ -1146,13 +1137,13 @@ function funcaoChange(campo)
  * de função de servidor
  */
 function trocaTodasfuncoes() {
-  for (var ct = 0; ct < tab_add_1.id; ct++) {
-    // Não executa durante onload senão, funções atuais são substituídas
-    if (onloadCallOnce == false) {
-      getFuncao('ref_cod_funcao[' + ct + ']');
+    for (var ct = 0; ct < tab_add_1.id; ct++) {
+        // Não executa durante onload senão, funções atuais são substituídas
+        if (onloadCallOnce == false) {
+            getFuncao('ref_cod_funcao[' + ct + ']');
+        }
+        funcaoChange(document.getElementById('ref_cod_funcao[' + ct + ']'));
     }
-    funcaoChange(document.getElementById('ref_cod_funcao[' + ct + ']'));
-  }
 }
 
 
@@ -1161,14 +1152,15 @@ function trocaTodasfuncoes() {
  * onchange do elemento para executar a função trocaTodasfuncoes()
  */
 if (document.getElementById('ref_cod_instituicao')) {
-  var ref_cod_instituicao = document.getElementById('ref_cod_instituicao');
+    var ref_cod_instituicao = document.getElementById('ref_cod_instituicao');
 
-  // Função anônima para evento onchance do select de instituição
-  ref_cod_instituicao.onchange = function() {
-    trocaTodasfuncoes();
-    var xml = new ajax(function(){});
-    xml.envia("educar_limpa_sessao_curso_disciplina_servidor.php");
-  }
+    // Função anônima para evento onchance do select de instituição
+    ref_cod_instituicao.onchange = function () {
+        trocaTodasfuncoes();
+        var xml = new ajax(function () {
+        });
+        xml.envia('educar_limpa_sessao_curso_disciplina_servidor.php');
+    };
 }
 
 
@@ -1176,9 +1168,9 @@ if (document.getElementById('ref_cod_instituicao')) {
  * Chama as funções funcaoChange e getFuncao após a execução da função addRow
  */
 tab_add_1.afterAddRow = function () {
-  funcaoChange(document.getElementById('ref_cod_funcao['+(tab_add_1.id - 1)+']'));
-  getFuncao('ref_cod_funcao['+(tab_add_1.id-1)+']');
-}
+    funcaoChange(document.getElementById('ref_cod_funcao[' + (tab_add_1.id - 1) + ']'));
+    getFuncao('ref_cod_funcao[' + (tab_add_1.id - 1) + ']');
+};
 
 
 /**
@@ -1186,116 +1178,110 @@ tab_add_1.afterAddRow = function () {
  * não um trecho de código apenas durante o onload
  */
 var onloadCallOnce = true;
-window.onload = function() {
-  trocaTodasfuncoes();
-  onloadCallOnce = false;
-}
+window.onload = function () {
+    trocaTodasfuncoes();
+    onloadCallOnce = false;
+};
 
 
 function getArrayHora(hora) {
-  var array_h;
-  if (hora) {
-    array_h = hora.split(":");
-  }
-  else {
-    array_h = new Array(0,0);
-  }
+    var array_h;
+    if (hora) {
+        array_h = hora.split(':');
+    } else {
+        array_h = new Array(0, 0);
+    }
 
-  return array_h;
+    return array_h;
 }
 
-function acao2()
-{
-  var total_horas_alocadas = getArrayHora(document.getElementById('total_horas_alocadas').value);
-  var carga_horaria = (document.getElementById('carga_horaria').value).replace(',', '.');
+function acao2() {
+    var total_horas_alocadas = getArrayHora(document.getElementById('total_horas_alocadas').value);
+    var carga_horaria = (document.getElementById('carga_horaria').value).replace(',', '.');
 
-  if (parseFloat(total_horas_alocadas) > parseFloat(carga_horaria)) {
-    alert('Atenção, carga horária deve ser maior que horas alocadas!');
+    if (parseFloat(total_horas_alocadas) > parseFloat(carga_horaria)) {
+        alert('Atenção, carga horária deve ser maior que horas alocadas!');
 
-    return false;
-  }
-  else {
-    acao();
-  }
+        return false;
+    } else {
+        acao();
+    }
 }
 
 if (document.getElementById('total_horas_alocadas')) {
-  document.getElementById('total_horas_alocadas').style.textAlign='right';
+    document.getElementById('total_horas_alocadas').style.textAlign = 'right';
 }
 
 
-function popless(element)
-{
+function popless(element) {
     var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
     var campoServidor = document.getElementById('cod_servidor').value;
     var codFuncao = $j(element).closest('tr').find('[id^=cod_servidor_funcao]').val();
-    pesquisa_valores_popless1('educar_servidor_disciplina_lst.php?ref_cod_servidor='+campoServidor+'&ref_cod_instituicao='+campoInstituicao+'&cod_funcao='+codFuncao, '');
+    pesquisa_valores_popless1('educar_servidor_disciplina_lst.php?ref_cod_servidor=' + campoServidor + '&ref_cod_instituicao=' + campoInstituicao + '&cod_funcao=' + codFuncao, '');
 }
 
-function popCurso()
-{
-  var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
-  var campoServidor = document.getElementById('cod_servidor').value;
-  pesquisa_valores_popless('educar_servidor_curso_lst.php?ref_cod_servidor='+campoServidor+'&ref_cod_instituicao='+campoInstituicao, '');
+function popCurso() {
+    var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
+    var campoServidor = document.getElementById('cod_servidor').value;
+    pesquisa_valores_popless('educar_servidor_curso_lst.php?ref_cod_servidor=' + campoServidor + '&ref_cod_instituicao=' + campoInstituicao, '');
 }
 
-function pesquisa_valores_popless1(caminho, campo)
-{
-  new_id = DOM_divs.length;
-  div = 'div_dinamico_' + new_id;
-  if (caminho.indexOf('?') == -1) {
-    showExpansivel(850, 500, '<iframe src="' + caminho + '?campo=' + campo + '&div=' + div + '&popless=1" frameborder="0" height="100%" width="100%" marginheight="0" marginwidth="0" name="temp_win_popless"></iframe>', 'Pesquisa de valores' );
-  }
-  else {
-    showExpansivel(850, 500, '<iframe src="' + caminho + '&campo=' + campo + '&div=' + div + '&popless=1" frameborder="0" height="100%" width="100%" marginheight="0" marginwidth="0" name="temp_win_popless"></iframe>', 'Pesquisa de valores' );
-  }
+function pesquisa_valores_popless1(caminho, campo) {
+    new_id = DOM_divs.length;
+    div = 'div_dinamico_' + new_id;
+    if (caminho.indexOf('?') == -1) {
+        showExpansivel(850, 500, '<iframe src="' + caminho + '?campo=' + campo + '&div=' + div + '&popless=1" frameborder="0" height="100%" width="100%" marginheight="0" marginwidth="0" name="temp_win_popless"></iframe>', 'Pesquisa de valores');
+    } else {
+        showExpansivel(850, 500, '<iframe src="' + caminho + '&campo=' + campo + '&div=' + div + '&popless=1" frameborder="0" height="100%" width="100%" marginheight="0" marginwidth="0" name="temp_win_popless"></iframe>', 'Pesquisa de valores');
+    }
 }
 
-var handleGetInformacoesServidor = function(dataResponse){
+var handleGetInformacoesServidor = function (dataResponse) {
 
-  // deficiencias
-  $j('#deficiencias').closest('tr').show();
-  $j('#cod_docente_inep').val(dataResponse.inep).closest('tr').show();
+    // deficiencias
+    $j('#deficiencias').closest('tr').show();
+    $j('#cod_docente_inep').val(dataResponse.inep).closest('tr').show();
 
-  $deficiencias = $j('#deficiencias');
+    $deficiencias = $j('#deficiencias');
 
-  $j.each(dataResponse.deficiencias, function(id, nome) {
-    $deficiencias.children("[value=" + id + "]").attr('selected', '');
-  });
+    $j.each(dataResponse.deficiencias, function (id, nome) {
+        $deficiencias.children('[value=' + id + ']').attr('selected', '');
+    });
 
-  $deficiencias.trigger('chosen:updated');
+    $deficiencias.trigger('chosen:updated');
 };
 
-function atualizaInformacoesServidor(){
+function atualizaInformacoesServidor() {
 
-  $j('#deficiencias').closest('tr').hide();
-  $j('#deficiencias option').removeAttr('selected');
-  $j('#deficiencias').trigger('chosen:updated');
-  $j('#cod_docente_inep').closest('tr').hide();
+    $j('#deficiencias').closest('tr').hide();
+    $j('#deficiencias option').removeAttr('selected');
+    $j('#deficiencias').trigger('chosen:updated');
+    $j('#cod_docente_inep').closest('tr').hide();
 
-  var servidor_id = $j('#cod_servidor').val();
+    var servidor_id = $j('#cod_servidor').val();
 
-  if (servidor_id != ''){
-    var data = {
-      servidor_id : servidor_id
-    };
-    var options = {
-      url : getResourceUrlBuilder.buildUrl('/module/Api/pessoa', 'info-servidor', {}),
-        dataType : 'json',
-        data : data,
-        success : handleGetInformacoesServidor
-    };
-    getResources(options);
-  }
+    if (servidor_id != '') {
+        var data = {
+            servidor_id: servidor_id,
+        };
+        var options = {
+            url: getResourceUrlBuilder.buildUrl('/module/Api/pessoa', 'info-servidor', {}),
+            dataType: 'json',
+            data: data,
+            success: handleGetInformacoesServidor,
+        };
+        getResources(options);
+    }
 }
-$j(document).ready(function() {
 
-  atualizaInformacoesServidor();
+$j(document).ready(function () {
 
-  // fixup multipleSearchDeficiencias size:
-  $j('#deficiencias_chzn ul').css('width', '307px');
-  $j('#deficiencias_chzn input').css('height', '25px');
+    atualizaInformacoesServidor();
 
-  $j('#cod_servidor').attr('onchange', 'atualizaInformacoesServidor();');
+    // fixup multipleSearchDeficiencias size:
+    $j('#deficiencias_chzn ul').css('width', '307px');
+    $j('#deficiencias_chzn input').css('height', '25px');
+
+    $j('#cod_servidor').attr('onchange', 'atualizaInformacoesServidor();');
 });
 </script>

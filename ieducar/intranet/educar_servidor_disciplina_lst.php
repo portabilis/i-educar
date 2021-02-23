@@ -2,14 +2,13 @@
 
 use Illuminate\Support\Facades\Session;
 
-
 class clsIndexBase extends clsBase
 {
     public function Formular()
     {
         $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Disciplina');
-        $this->processoAp         = 0;
-        $this->renderMenu         = false;
+        $this->processoAp = 0;
+        $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
     }
 }
@@ -17,7 +16,6 @@ class clsIndexBase extends clsBase
 class indice extends clsCadastro
 {
     public $pessoa_logada;
-
     public $cod_servidor;
     public $ref_cod_instituicao;
     public $ref_idesco;
@@ -59,7 +57,7 @@ class indice extends clsCadastro
                 $this->ref_cod_instituicao
             );
 
-            $registro  = $obj->detalhe();
+            $registro = $obj->detalhe();
             if ($registro) {
                 $retorno = 'Editar';
             }
@@ -176,13 +174,13 @@ class indice extends clsCadastro
             $cursosDifferente = array_unique($this->ref_cod_curso);
             foreach ($cursosDifferente as $curso) {
                 $obj_componentes = new clsModulesComponenteCurricular;
-                $componentes     = $obj_componentes->listaComponentesPorCurso($this->ref_cod_instituicao, $curso);
+                $componentes = $obj_componentes->listaComponentesPorCurso($this->ref_cod_instituicao, $curso);
                 $opcoes_disc = [];
-                $opcoes_disc['todas_disciplinas']  = 'Todas as disciplinas';
+                $opcoes_disc['todas_disciplinas'] = 'Todas as disciplinas';
 
                 $total_componentes = count($componentes);
-                for ($i=0; $i < $total_componentes; $i++) {
-                    $opcoes_disc[$componentes[$i]['id']]  = $componentes[$i]['nome'];
+                for ($i = 0; $i < $total_componentes; $i++) {
+                    $opcoes_disc[$componentes[$i]['id']] = $componentes[$i]['nome'];
                 }
                 $disciplinasCurso[$curso] = [$opcoes_curso, $opcoes_disc];
             }
@@ -291,77 +289,70 @@ $pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
-    function trocaCurso(id_campo)
-    {
-        var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
-        var campoCurso = document.getElementById(id_campo.id).value;
-        var id = /[0-9]+/.exec(id_campo.id);
-        var campoDisciplina = document.getElementById('ref_cod_disciplina['+id+']');
-        campoDisciplina.length = 1;
+function trocaCurso(id_campo) {
+    var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
+    var campoCurso = document.getElementById(id_campo.id).value;
+    var id = /[0-9]+/.exec(id_campo.id);
+    var campoDisciplina = document.getElementById('ref_cod_disciplina[' + id + ']');
+    campoDisciplina.length = 1;
 
-        if (campoDisciplina) {
-            campoDisciplina.disabled = true;
-            campoDisciplina.options[0].text = 'Carregando Disciplinas';
+    if (campoDisciplina) {
+        campoDisciplina.disabled = true;
+        campoDisciplina.options[0].text = 'Carregando Disciplinas';
 
-            var xml = new ajax(atualizaLstDisciplina,'ref_cod_disciplina['+id+']');
-            xml.envia("educar_disciplina_xml.php?cur="+campoCurso);
-        }
-        else {
-            campoFuncao.options[0].text = 'Selecione';
-        }
+        var xml = new ajax(atualizaLstDisciplina, 'ref_cod_disciplina[' + id + ']');
+        xml.envia('educar_disciplina_xml.php?cur=' + campoCurso);
+    } else {
+        campoFuncao.options[0].text = 'Selecione';
     }
+}
 
-    function atualizaLstDisciplina(xml)
-    {
-        var campoDisciplina = document.getElementById(arguments[1]);
+function atualizaLstDisciplina(xml) {
+    var campoDisciplina = document.getElementById(arguments[1]);
 
-        campoDisciplina.length = 1;
-        campoDisciplina.options[0].text = 'Selecione uma Disciplina';
-        campoDisciplina.disabled = false;
+    campoDisciplina.length = 1;
+    campoDisciplina.options[0].text = 'Selecione uma Disciplina';
+    campoDisciplina.disabled = false;
 
-        var disciplinas = xml.getElementsByTagName('disciplina');
+    var disciplinas = xml.getElementsByTagName('disciplina');
 
-        if (disciplinas.length) {
+    if (disciplinas.length) {
+        campoDisciplina.options[campoDisciplina.options.length] =
+            new Option('Todas as disciplinas', 'todas_disciplinas', false, false);
+        for (var i = 0; i < disciplinas.length; i++) {
             campoDisciplina.options[campoDisciplina.options.length] =
-                new Option('Todas as disciplinas', 'todas_disciplinas', false, false);
-            for (var i = 0; i < disciplinas.length; i++) {
-                campoDisciplina.options[campoDisciplina.options.length] =
-                    new Option(disciplinas[i].firstChild.data, disciplinas[i].getAttribute('cod_disciplina'), false, false);
-            }
+                new Option(disciplinas[i].firstChild.data, disciplinas[i].getAttribute('cod_disciplina'), false, false);
         }
-        else {
-            campoDisciplina.options[0].text = 'A instituição não possui nenhuma disciplina';
-        }
+    } else {
+        campoDisciplina.options[0].text = 'A instituição não possui nenhuma disciplina';
     }
+}
 
-    tab_add_1.afterAddRow = function () { }
+tab_add_1.afterAddRow = function () {
+};
 
-    window.onload = function()
-    {
+window.onload = function () {
+};
+
+function trocaTodasfuncoes() {
+    for (var ct = 0; ct < tab_add_1.id; ct++) {
+        getFuncao('ref_cod_funcao[' + ct + ']');
     }
+}
 
-    function trocaTodasfuncoes()
-    {
-        for (var ct = 0; ct < tab_add_1.id; ct++) {
-            getFuncao('ref_cod_funcao['+ct+']');
-        }
+function acao2() {
+    var total_horas_alocadas = getArrayHora(document.getElementById('total_horas_alocadas').value);
+    var carga_horaria = (document.getElementById('carga_horaria').value).replace(',', '.');
+
+    if (parseFloat(total_horas_alocadas) > parseFloat(carga_horaria)) {
+        alert('Atenção, carga horária deve ser maior que horas alocadas!');
+        return false;
+    } else {
+        acao();
     }
+}
 
-    function acao2()
-    {
-        var total_horas_alocadas = getArrayHora(document.getElementById('total_horas_alocadas').value);
-        var carga_horaria = (document.getElementById('carga_horaria').value).replace(',', '.');
-
-        if (parseFloat(total_horas_alocadas) > parseFloat(carga_horaria)) {
-            alert('Atenção, carga horária deve ser maior que horas alocadas!');
-            return false;
-        }
-        else {
-            acao();
-        }
-    }
-
-    if (document.getElementById('total_horas_alocadas')) {
-        document.getElementById('total_horas_alocadas').style.textAlign = 'right';
-    }
+if (document.getElementById('total_horas_alocadas')) {
+    document.getElementById('total_horas_alocadas').style.textAlign = 'right';
+}
 </script>

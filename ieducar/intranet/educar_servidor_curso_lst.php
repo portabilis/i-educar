@@ -1,86 +1,21 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- *
- * @category  i-Educar
- *
- * @license   @@license@@
- *
- * @package   iEd_Pmieducar
- *
- * @since     Arquivo disponível desde a versão 1.0.0
- *
- * @version   $Id$
- */
-
 use Illuminate\Support\Facades\Session;
 
-
-/**
- * clsIndexBase class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- *
- * @category  i-Educar
- *
- * @license   @@license@@
- *
- * @package   iEd_Pmieducar
- *
- * @since     Classe disponível desde a versão 1.0.0
- *
- * @version   @@package_version@@
- */
 class clsIndexBase extends clsBase
 {
     public function Formular()
     {
         $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Curso');
-        $this->processoAp         = 0;
-        $this->renderMenu         = false;
+        $this->processoAp = 0;
+        $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
     }
 }
 
-/**
- * indice class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- *
- * @category  i-Educar
- *
- * @license   @@license@@
- *
- * @package   iEd_Pmieducar
- *
- * @since     Classe disponível desde a versão 1.0.0
- *
- * @version   @@package_version@@
- */
 class indice extends clsCadastro
 {
     public $pessoa_logada;
-
     public $cod_servidor;
     public $ref_cod_instituicao;
     public $ref_idesco;
@@ -97,7 +32,7 @@ class indice extends clsCadastro
     {
         $retorno = 'Novo';
 
-        $this->cod_servidor        = $_GET['ref_cod_servidor'];
+        $this->cod_servidor = $_GET['ref_cod_servidor'];
         $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
         $obj_permissoes = new clsPermissoes();
@@ -116,7 +51,7 @@ class indice extends clsCadastro
                 $this->ref_cod_instituicao
             );
 
-            $registro  = $obj->detalhe();
+            $registro = $obj->detalhe();
 
             if ($registro) {
                 $retorno = 'Editar';
@@ -226,9 +161,9 @@ class indice extends clsCadastro
         }
 
         Session::put([
-        'cursos_servidor' => $curso_servidor,
-        'cod_servidor' => $this->cod_servidor,
-    ]);
+            'cursos_servidor' => $curso_servidor,
+            'cod_servidor' => $this->cod_servidor,
+        ]);
         Session::save();
         Session::start();
 

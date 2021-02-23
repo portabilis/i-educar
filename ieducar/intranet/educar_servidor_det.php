@@ -1,7 +1,5 @@
 <?php
 
-
-
 use App\Models\EmployeeWithdrawal;
 use App\Support\View\Employee\EmployeeReturn;
 
@@ -40,7 +38,7 @@ class indice extends clsDetalhe
     {
         $this->titulo = 'Servidor - Detalhe';
 
-        $this->cod_servidor        = $_GET['cod_servidor'];
+        $this->cod_servidor = $_GET['cod_servidor'];
         $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
         $tmp_obj = new clsPmieducarServidor($this->cod_servidor, null, null, null, null, null, null, $this->ref_cod_instituicao);
@@ -62,12 +60,12 @@ class indice extends clsDetalhe
         $registro['ref_cod_funcao'] = $det_ref_cod_funcao['nm_funcao'];
 
         // Nome
-        $obj_cod_servidor      = new clsFuncionario($registro['cod_servidor']);
-        $det_cod_servidor      = $obj_cod_servidor->detalhe();
+        $obj_cod_servidor = new clsFuncionario($registro['cod_servidor']);
+        $det_cod_servidor = $obj_cod_servidor->detalhe();
         $registro['matricula'] = $det_cod_servidor['matricula'];
 
-        $obj_cod_servidor      = new clsPessoaFisica($registro['cod_servidor']);
-        $det_cod_servidor      = $obj_cod_servidor->detalhe();
+        $obj_cod_servidor = new clsPessoaFisica($registro['cod_servidor']);
+        $det_cod_servidor = $obj_cod_servidor->detalhe();
         $registro['nome'] = $det_cod_servidor['nome'];
 
         // Instituição
@@ -143,7 +141,7 @@ class indice extends clsDetalhe
         }
 
         if ($registro['ref_cod_instituicao']) {
-            $this->addDetalhe([ 'Instituição', $registro['ref_cod_instituicao']]);
+            $this->addDetalhe(['Instituição', $registro['ref_cod_instituicao']]);
         }
 
         if ($registro['ref_idesco']) {
@@ -169,6 +167,7 @@ class indice extends clsDetalhe
         );
 
         $serverfunction = $this->getEmployeeFunctions($this->cod_servidor);
+
         if (count($serverfunction) > 0) {
             $this->addDetalhe(view('server-role.server-role', ['serverfunction' => $serverfunction])->render());
         }
@@ -180,22 +179,22 @@ class indice extends clsDetalhe
          */
         if ($registro['carga_horaria']) {
             $cargaHoraria = $registro['carga_horaria'];
-            $horas   = (int)$cargaHoraria;
+            $horas = (int) $cargaHoraria;
             $minutos = round(($cargaHoraria - $horas) * 60);
             $cargaHoraria = sprintf('%02d:%02d', $horas, $minutos);
             $this->addDetalhe(['Carga Horária', $cargaHoraria]);
         }
 
         $dias_da_semana = [
-      '' => 'Selecione',
-      1  => 'Domingo',
-      2  => 'Segunda',
-      3  => 'Terça',
-      4  => 'Quarta',
-      5  => 'Quinta',
-      6  => 'Sexta',
-      7  => 'Sábado'
-    ];
+            '' => 'Selecione',
+            1 => 'Domingo',
+            2 => 'Segunda',
+            3 => 'Terça',
+            4 => 'Quarta',
+            5 => 'Quinta',
+            6 => 'Sexta',
+            7 => 'Sábado'
+        ];
 
         if ($this->alocacao_array) {
             $tabela .= '
@@ -209,19 +208,19 @@ class indice extends clsDetalhe
             $class = 'formlttd';
             foreach ($this->alocacao_array as $alocacao) {
                 switch ($alocacao['periodo']) {
-          case 1:
-            $nm_periodo = 'Matutino';
+                    case 1:
+                        $nm_periodo = 'Matutino';
 
-            break;
-          case 2:
-            $nm_periodo = 'Vespertino';
+                        break;
+                    case 2:
+                        $nm_periodo = 'Vespertino';
 
-            break;
-          case 3:
-            $nm_periodo = 'Noturno';
+                        break;
+                    case 3:
+                        $nm_periodo = 'Noturno';
 
-            break;
-        }
+                        break;
+                }
 
                 $tabela .= "
           <tr class='$class' align='center'>
@@ -236,7 +235,7 @@ class indice extends clsDetalhe
             $tabela .= '</table>';
 
             $this->addDetalhe(['Horários de trabalho',
-        '<a href=\'javascript:trocaDisplay("det_pree");\' >Mostrar detalhe</a><div id=\'det_pree\' name=\'det_pree\' style=\'display:none;\'>'.$tabela.'</div>']);
+                '<a href=\'javascript:trocaDisplay("det_pree");\' >Mostrar detalhe</a><div id=\'det_pree\' name=\'det_pree\' style=\'display:none;\'>' . $tabela . '</div>']);
         }
 
         // Horários do professor
@@ -286,18 +285,18 @@ class indice extends clsDetalhe
             $tabela .= '</table>';
 
             $this->addDetalhe([
-        'Horários de aula',
-        '<a href=\'javascript:trocaDisplay("horarios");\' >Mostrar detalhes</a>' .
-        '<div id=\'horarios\' name=\'det_pree\' style=\'display:none;\'>' . $tabela . '</div>'
-      ]);
+                'Horários de aula',
+                '<a href=\'javascript:trocaDisplay("horarios");\' >Mostrar detalhes</a>' .
+                '<div id=\'horarios\' name=\'det_pree\' style=\'display:none;\'>' . $tabela . '</div>'
+            ]);
         }
 
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
-            $this->url_novo   = 'educar_servidor_cad.php';
+            $this->url_novo = 'educar_servidor_cad.php';
             $this->url_editar = "educar_servidor_cad.php?cod_servidor={$registro['cod_servidor']}&ref_cod_instituicao={$this->ref_cod_instituicao}";
 
-            $get_padrao ="ref_cod_servidor={$registro['cod_servidor']}&ref_cod_instituicao={$this->ref_cod_instituicao}";
+            $get_padrao = "ref_cod_servidor={$registro['cod_servidor']}&ref_cod_instituicao={$this->ref_cod_instituicao}";
 
             $this->array_botao = [];
             $this->array_botao_url_script = [];
@@ -308,14 +307,14 @@ class indice extends clsDetalhe
              *** Avaliando remoção pois será criado aba nova no próprio cadastro/edit do servidor com informações de cursos
              *** e escolaridade normalizados pelo censo
              ***************************************************************************************************************
-            $this->array_botao[] = 'Formação';
-            $this->array_botao_url_script[] = "go(\"educar_servidor_formacao_lst.php?{$get_padrao}\");";
-
-            $this->array_botao[] = 'Cursos superiores/Licenciaturas';
-            $this->array_botao_url_script[] = sprintf(
-              "go(\"../module/Docente/index?servidor=%d&instituicao=%d\");",
-              $registro['cod_servidor'], $this->ref_cod_instituicao
-            );*/
+             * $this->array_botao[] = 'Formação';
+             * $this->array_botao_url_script[] = "go(\"educar_servidor_formacao_lst.php?{$get_padrao}\");";
+             *
+             * $this->array_botao[] = 'Cursos superiores/Licenciaturas';
+             * $this->array_botao_url_script[] = sprintf(
+             * "go(\"../module/Docente/index?servidor=%d&instituicao=%d\");",
+             * $registro['cod_servidor'], $this->ref_cod_instituicao
+             * );*/
 
             $this->array_botao[] = 'Faltas/Atrasos';
             $this->array_botao_url_script[] = "go(\"educar_falta_atraso_lst.php?{$get_padrao}\");";
@@ -378,13 +377,14 @@ class indice extends clsDetalhe
         $this->largura = '100%';
 
         $this->breadcrumb('Funções do servidor', [
-        url('intranet/educar_servidores_index.php') => 'Servidores',
-    ]);
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
 
     }
 
     /**
      * @param $cod_servidor
+     *
      * @return mixed
      */
     private function getEmployeeFunctions($cod_servidor)
@@ -428,16 +428,14 @@ $pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
-function trocaDisplay(id)
-{
-  var element = document.getElementById(id);
-  element.style.display = (element.style.display == 'none') ? 'inline' : 'none';
+function trocaDisplay(id) {
+    var element = document.getElementById(id);
+    element.style.display = (element.style.display == 'none') ? 'inline' : 'none';
 }
 
-function popless()
-{
-  var campoServidor = <?=$_GET['cod_servidor'];?>;
-  var campoInstituicao = <?=$_GET['ref_cod_instituicao'];?>;
-  pesquisa_valores_popless('educar_servidor_nivel_cad.php?ref_cod_servidor='+campoServidor+'&ref_cod_instituicao='+campoInstituicao, '');
+function popless() {
+    var campoServidor = <?=$_GET['cod_servidor'];?>;
+    var campoInstituicao = <?=$_GET['ref_cod_instituicao'];?>;
+    pesquisa_valores_popless('educar_servidor_nivel_cad.php?ref_cod_servidor=' + campoServidor + '&ref_cod_instituicao=' + campoInstituicao, '');
 }
 </script>
