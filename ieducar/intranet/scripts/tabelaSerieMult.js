@@ -14,6 +14,8 @@ $j('#btn_add_tab_add_1').click(function(){
     let quantidadeDeCursos = $j('select[name^="mult_curso_id"]').length;
     let idUltimoSelectCurso = $j('select[name^="mult_curso_id"]')[quantidadeDeCursos - 1].id;
     let ultimoCurso = $j('select[id="'+idUltimoSelectCurso+'"]');
+    ultimoCurso.empty();
+    ultimoCurso.append('<option value="">Selecione um curso</option>');
     $j.each(opcoesCurso, function(key, curso) {
         ultimoCurso.append('<option value="' + key + '">' + curso + '</option>');
     });
