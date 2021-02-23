@@ -922,7 +922,9 @@ class indice extends clsCadastro
             $schoolClassGrades = [];
             foreach ($this->mult_serie_id as $key => $serieId) {
                 $schoolClassGrades[] = [
+                    'escola_id' => $this->ref_cod_escola,
                     'serie_id' => $serieId,
+                    'turma_id' => $this->cod_turma,
                     'boletim_id' => $this->mult_boletim_id[$key],
                     'boletim_diferenciado_id' => $this->mult_boletim_diferenciado_id[$key],
                 ];
@@ -1030,7 +1032,9 @@ class indice extends clsCadastro
         $schoolClassGrades = [];
         foreach ($this->mult_serie_id as $key => $serieId) {
             $schoolClassGrades[] = [
+                'escola_id' => $this->ref_ref_cod_escola,
                 'serie_id' => $serieId,
+                'turma_id' => $this->cod_turma,
                 'boletim_id' => $this->mult_boletim_id[$key],
                 'boletim_diferenciado_id' => $this->mult_boletim_diferenciado_id[$key],
             ];
