@@ -45,7 +45,7 @@ class MultiGradesService
 
     public function deleteAllGradesOfSchoolClass(LegacySchoolClass $schoolClass) {
         LegacySchoolClassGrade::query()
-            ->where('turma_id', $schoolClass->getId())
+            ->where('turma_id', $schoolClass->getKey())
             ->delete();
     }
 
