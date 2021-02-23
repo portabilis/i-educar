@@ -149,11 +149,8 @@ class indice extends clsCadastro
       }
     }
 
-    $obj_disciplina = new clsPmieducarDisciplina();
-    $obj_disciplina->setOrderby('nm_disciplina');
-    $lst_opcoes = array();
-    $arr_valores = array();
-
+        $lst_opcoes = [];
+        $arr_valores = [];
 
     if ($this->cursos_disciplina) {
       foreach ($this->cursos_disciplina as $curso => $disciplinas) {
