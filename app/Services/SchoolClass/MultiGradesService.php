@@ -5,6 +5,7 @@ namespace App\Services\SchoolClass;
 use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClass;
 use App\Rules\IncompatibleAbsenceType;
+use App\Rules\IncompatibleDescriptiveOpinion;
 
 class MultiGradesService
 {
@@ -16,6 +17,7 @@ class MultiGradesService
             'grades' => [
                 'min:2',
                 new IncompatibleAbsenceType(),
+                new IncompatibleDescriptiveOpinion(),
             ]
         ], [
             'grades.min' => 'Você deve selecionar pelo menos 2 séries em turmas multisseriadas',
