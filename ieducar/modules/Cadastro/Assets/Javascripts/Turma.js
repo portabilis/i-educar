@@ -270,10 +270,10 @@ var preencheComponentesCurriculares = function(data) {
       conteudo += getLinhaComponente(componente);
     });
 
-    $j('#tr_disciplinas_ td:nth-child(1)').html('Componentes curriculares definidos em séries da escola');
+    $j('#tr_disciplinas_ td:first').html('Componentes curriculares definidos em séries da escola');
     $j('#disciplinas').show();
   }  else if (multisseriada) {
-    $j('#tr_disciplinas_ td:nth-child(1)').html('Os componentes curriculares de turmas multisseriadas devem ser definidos em suas respectivas series (Escola > Cadastros > Séries da escola)');
+    $j('#tr_disciplinas_ td:first').html('Os componentes curriculares de turmas multisseriadas devem ser definidos em suas respectivas series (Escola > Cadastros > Séries da escola)');
     $j('#disciplinas').hide();
   } else {
     $j('#disciplinas').html('A série/ano escolar não possui componentes curriculares cadastrados.');
