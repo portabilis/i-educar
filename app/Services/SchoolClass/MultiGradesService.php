@@ -4,6 +4,7 @@ namespace App\Services\SchoolClass;
 
 use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClass;
+use App\Rules\DuplicateMultiGrades;
 use App\Rules\IncompatibleAbsenceType;
 use App\Rules\IncompatibleDescriptiveOpinion;
 
@@ -16,6 +17,7 @@ class MultiGradesService
         ], [
             'grades' => [
                 'min:2',
+                new DuplicateMultiGrades(),
                 new IncompatibleAbsenceType(),
                 new IncompatibleDescriptiveOpinion(),
             ]
