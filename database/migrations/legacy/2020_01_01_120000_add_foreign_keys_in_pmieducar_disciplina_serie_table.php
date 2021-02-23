@@ -19,12 +19,6 @@ class AddForeignKeysInPmieducarDisciplinaSerieTable extends Migration
                ->on('pmieducar.serie')
                ->onUpdate('restrict')
                ->onDelete('restrict');
-
-            $table->foreign('ref_cod_disciplina')
-               ->references('cod_disciplina')
-               ->on('pmieducar.disciplina')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
         });
     }
 
@@ -37,7 +31,6 @@ class AddForeignKeysInPmieducarDisciplinaSerieTable extends Migration
     {
         Schema::table('pmieducar.disciplina_serie', function (Blueprint $table) {
             $table->dropForeign(['ref_cod_serie']);
-            $table->dropForeign(['ref_cod_disciplina']);
         });
     }
 }

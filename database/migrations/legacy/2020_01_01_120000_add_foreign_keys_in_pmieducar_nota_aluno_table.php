@@ -31,12 +31,6 @@ class AddForeignKeysInPmieducarNotaAlunoTable extends Migration
                ->on('pmieducar.matricula')
                ->onUpdate('restrict')
                ->onDelete('restrict');
-
-            $table->foreign('ref_cod_curso_disciplina')
-               ->references('cod_disciplina')
-               ->on('pmieducar.disciplina')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
         });
     }
 
@@ -51,7 +45,6 @@ class AddForeignKeysInPmieducarNotaAlunoTable extends Migration
             $table->dropForeign(['ref_ref_cod_tipo_avaliacao', 'ref_sequencial']);
             $table->dropForeign(['ref_cod_serie', 'ref_cod_escola', 'ref_cod_disciplina']);
             $table->dropForeign(['ref_cod_matricula']);
-            $table->dropForeign(['ref_cod_curso_disciplina']);
         });
     }
 }
