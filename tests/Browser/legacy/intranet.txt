@@ -278,9 +278,6 @@ educar_serie_cad.php
 educar_serie_cad_pop.php
 educar_serie_det.php
 educar_serie_lst.php
-educar_serie_pre_requisito_cad.php
-educar_serie_pre_requisito_det.php
-educar_serie_pre_requisito_lst.php
 educar_serie_vaga_cad.php
 educar_serie_vaga_det.php
 educar_serie_vaga_lst.php
