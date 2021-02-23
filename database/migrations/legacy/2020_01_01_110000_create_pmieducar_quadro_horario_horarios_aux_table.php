@@ -15,8 +15,6 @@ class CreatePmieducarQuadroHorarioHorariosAuxTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE TABLE pmieducar.quadro_horario_horarios_aux (
                     ref_cod_quadro_horario integer NOT NULL,
                     sequencial integer NOT NULL,
@@ -31,7 +29,7 @@ class CreatePmieducarQuadroHorarioHorariosAuxTable extends Migration
                     identificador character varying(30),
                     data_cadastro timestamp without time zone NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.quadro_horario_horarios_aux
                     ADD CONSTRAINT quadro_horario_horarios_aux_pkey PRIMARY KEY (ref_cod_quadro_horario, sequencial);
             '

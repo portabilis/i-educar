@@ -15,14 +15,12 @@ class CreatePmieducarAcervoAcervoAutorTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE TABLE pmieducar.acervo_acervo_autor (
                     ref_cod_acervo_autor integer NOT NULL,
                     ref_cod_acervo integer NOT NULL,
                     principal smallint DEFAULT (0)::smallint NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.acervo_acervo_autor
                     ADD CONSTRAINT acervo_acervo_autor_pkey PRIMARY KEY (ref_cod_acervo_autor, ref_cod_acervo);
             '

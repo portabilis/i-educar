@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/ParecerDescritivoCommon.php';
-
 /**
  * Avaliacao_Service_ParecerDescritivoGeralAnualTest class.
  *

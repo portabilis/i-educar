@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/Enum.php';
 
 class ComponenteCurricular_Model_TipoBase extends CoreExt_Enum
 {

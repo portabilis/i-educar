@@ -15,8 +15,6 @@ class CreatePmieducarAbandonoTipoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE SEQUENCE pmieducar.abandono_tipo_cod_abandono_tipo_seq
                     START WITH 0
                     INCREMENT BY 1
@@ -34,7 +32,7 @@ class CreatePmieducarAbandonoTipoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo integer
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.abandono_tipo
                     ADD CONSTRAINT pk_cod_abandono_tipo PRIMARY KEY (cod_abandono_tipo);
 

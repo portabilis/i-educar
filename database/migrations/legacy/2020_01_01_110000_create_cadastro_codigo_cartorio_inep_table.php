@@ -15,8 +15,6 @@ class CreateCadastroCodigoCartorioInepTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE SEQUENCE cadastro.codigo_cartorio_inep_id_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -32,14 +30,14 @@ class CreateCadastroCodigoCartorioInepTable extends Migration
                     cod_municipio integer,
                     ref_sigla_uf character varying(3)
                 );
-                
+
                 ALTER SEQUENCE cadastro.codigo_cartorio_inep_id_seq OWNED BY cadastro.codigo_cartorio_inep.id;
-                
+
                 ALTER TABLE ONLY cadastro.codigo_cartorio_inep
                     ADD CONSTRAINT pk_id PRIMARY KEY (id);
 
                 ALTER TABLE ONLY cadastro.codigo_cartorio_inep ALTER COLUMN id SET DEFAULT nextval(\'cadastro.codigo_cartorio_inep_id_seq\'::regclass);
-                
+
                 SELECT pg_catalog.setval(\'cadastro.codigo_cartorio_inep_id_seq\', 14212, true);
             '
         );

@@ -1,11 +1,5 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'Portabilis/View/Helper/Application.php';
 
 class clsIndexBase extends clsBase
 {
@@ -671,7 +665,7 @@ class indice extends clsCadastro
 
     public function  updateClassStepsForCourse($courseCode, $standerdSchoolYear, $currentYear)
     {
-        $classStepsObject = new ClsPmieducarTurmaModulo();
+        $classStepsObject = new clsPmieducarTurmaModulo();
 
         $classStepsObject->removeStepsOfClassesForCourseAndYear($courseCode, $currentYear);
 

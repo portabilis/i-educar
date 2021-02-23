@@ -2,9 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
-require_once 'Portabilis/Utils/Database.php';
 
 class clsPmieducarSerie extends Model
 {

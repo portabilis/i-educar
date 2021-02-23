@@ -15,14 +15,12 @@ class CreateCadastroEscolaridadeTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE TABLE cadastro.escolaridade (
                     idesco numeric(2,0) NOT NULL,
                     descricao character varying(60) NOT NULL,
                     escolaridade smallint
                 );
-                
+
                 ALTER TABLE ONLY cadastro.escolaridade
                     ADD CONSTRAINT pk_escolaridade PRIMARY KEY (idesco);
             '

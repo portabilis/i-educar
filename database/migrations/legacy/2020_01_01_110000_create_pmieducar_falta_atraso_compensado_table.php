@@ -15,8 +15,6 @@ class CreatePmieducarFaltaAtrasoCompensadoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.falta_atraso_compensado_cod_compensado_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -37,7 +35,7 @@ class CreatePmieducarFaltaAtrasoCompensadoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.falta_atraso_compensado
                     ADD CONSTRAINT falta_atraso_compensado_pkey PRIMARY KEY (cod_compensado);
 

@@ -1,8 +1,6 @@
 <?php
 
 
-require_once( "include/clsBanco.inc.php" );
-require_once( "include/funcoes.inc.php" );
 
 if (is_numeric($_GET['biblioteca']))
 {
