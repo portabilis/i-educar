@@ -7,20 +7,30 @@ use App\Models\LegacySchoolClass;
 use App\Rules\DuplicateMultiGrades;
 use App\Rules\IncompatibleAbsenceType;
 use App\Rules\IncompatibleDescriptiveOpinion;
+use App\Rules\ExistsEnrollmentsInSchoolClassGrades;
 
 class MultiGradesService
 {
-    private function validate($schoolClassGrades)
+    private function validate(LegacySchoolClass $schoolClass, $schoolClassGrades)
     {
+        $gradesToDelete = [
+            'turma' => $schoolClass,
+            'grades_delete' => $this->getGradesToDelete($schoolClass, $schoolClassGrades),
+        ];
+
         validator([
             'grades' => $schoolClassGrades,
+            'grades_delete' => $gradesToDelete,
         ], [
             'grades' => [
                 'min:2',
                 new DuplicateMultiGrades(),
                 new IncompatibleAbsenceType(),
                 new IncompatibleDescriptiveOpinion(),
-            ]
+            ],
+            'grades_delete' => [
+                new ExistsEnrollmentsInSchoolClassGrades(),
+            ],
         ], [
             'grades.min' => 'Você deve selecionar pelo menos 2 séries em turmas multisseriadas',
         ])->validate();
@@ -28,7 +38,7 @@ class MultiGradesService
 
     public function storeSchoolClassGrade(LegacySchoolClass $schoolClass, $schoolClassGrades)
     {
-        $this->validate($schoolClassGrades);
+        $this->validate($schoolClass, $schoolClassGrades);
         $this->deleteGradesOfSchoolClass($schoolClass, $schoolClassGrades);
         $this->saveSchoolClassGrade($schoolClass, $schoolClassGrades);
     }
