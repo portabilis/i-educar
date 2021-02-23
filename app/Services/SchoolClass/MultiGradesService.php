@@ -4,21 +4,13 @@ namespace App\Services\SchoolClass;
 
 use App\Models\LegacySchoolClassGrade;
 use App\Models\LegacySchoolClass;
-use iEducar\Modules\SchoolClass\Validator\MultiGradesValidator;
 
 class MultiGradesService
 {
-    private $schoolClassGrades;
-
-    public function __construct($schoolClassGrades)
+    public function storeSchoolClassGrade(LegacySchoolClass $schoolClass, $schoolClassGrades)
     {
-        $this->schoolClassGrades = $schoolClassGrades;
-    }
-
-    public function storeSchoolClassGrade()
-    {
-        $this->deleteGradesOfSchoolClass($this->schoolClassGrades);
-        $this->saveSchoolClassGrade($this->schoolClassGrades);
+        $this->deleteGradesOfSchoolClass($schoolClass, $schoolClassGrades);
+        $this->saveSchoolClassGrade($schoolClass, $schoolClassGrades);
     }
 
     public function deleteAllGradesOfSchoolClass(LegacySchoolClass $schoolClass) {
@@ -27,50 +19,34 @@ class MultiGradesService
             ->delete();
     }
 
-    private function saveSchoolClassGrade()
+    private function saveSchoolClassGrade(LegacySchoolClass $schoolClass, $schoolClassGrades)
     {
-        $validator = new MultiGradesValidator;
-
-        if ($validator->canSaveSchoolClassGrades($this->schoolClassGrades)) {
-            foreach ($this->schoolClassGrades as $schoolClassGrade) {
-                $schoolGrade = LegacySchoolClassGrade::firstOrNew([
-                    'turma_id' => $schoolClassGrade['turma_id'],
-                    'escola_id' => $schoolClassGrade['escola_id'],
-                    'serie_id' => $schoolClassGrade['serie_id'],
-                ]);
-
-                $schoolGrade->boletim_id = $schoolClassGrade['boletim_id'];
-
-                if ($schoolClassGrade['boletim_diferenciado_id']) {
-                    $schoolGrade->boletim_diferenciado_id = $schoolClassGrade['boletim_diferenciado_id'];
-                }
-
-                $schoolGrade->save();
-            }
-
-            return true;
-        } else {
-            return $validator->getMessage();
+        foreach ($schoolClassGrades as $schoolClassGrade) {
+            LegacySchoolClassGrade::query()->firstOrCreate([
+                'turma_id' => $schoolClass->getKey(),
+                'escola_id' => $schoolClass->school->getKey(),
+                'serie_id' => $schoolClassGrade['serie_id'],
+            ], [
+                'boletim_id' => $schoolClassGrade['boletim_id'],
+                'boletim_diferenciado_id' => $schoolClassGrade['boletim_diferenciado_id'] ?: null,
+            ]);
         }
     }
 
-    private function deleteGradesOfSchoolClass()
+    private function deleteGradesOfSchoolClass(LegacySchoolClass $schoolClass, $schoolClassGrades)
     {
-        $schoolClass = $this->schoolClassGrades[0]['turma_id'];
-        $gradesToDelete = $this->getGradesToDelete($this->schoolClassGrades);
+        $gradesToDelete = $this->getGradesToDelete($schoolClass, $schoolClassGrades);
         LegacySchoolClassGrade::query()
-            ->where('turma_id', $schoolClass)
+            ->where('turma_id', $schoolClass->getKey())
             ->whereIn('serie_id', $gradesToDelete)
             ->delete();
     }
-    
 
-    private function getGradesToDelete($schoolClassGrades)
+    private function getGradesToDelete(LegacySchoolClass $schoolClass, $schoolClassGrades)
     {
-        $schoolClass = $schoolClassGrades[0]['turma_id'];
         $newGrades = array_column($schoolClassGrades, 'serie_id');
         $oldGrades = LegacySchoolClassGrade::query()
-            ->where('turma_id', $schoolClass)
+            ->where('turma_id', $schoolClass->getKey())
             ->get()
             ->pluck('serie_id')
             ->toArray();

@@ -922,16 +922,14 @@ class indice extends clsCadastro
             $schoolClassGrades = [];
             foreach ($this->mult_serie_id as $key => $serieId) {
                 $schoolClassGrades[] = [
-                    'escola_id' => $this->ref_cod_escola,
                     'serie_id' => $serieId,
-                    'turma_id' => $this->cod_turma,
                     'boletim_id' => $this->mult_boletim_id[$key],
                     'boletim_diferenciado_id' => $this->mult_boletim_diferenciado_id[$key],
                 ];
             }
 
-            $service = new MultiGradesService($schoolClassGrades);
-            $service->storeSchoolClassGrade();
+            $service = new MultiGradesService;
+            $service->storeSchoolClassGrade($schoolClass, $schoolClassGrades);
         }
 
         if (!$cadastrou) {
@@ -1027,15 +1025,13 @@ class indice extends clsCadastro
         $schoolClassGrades = [];
         foreach ($this->mult_serie_id as $key => $serieId) {
             $schoolClassGrades[] = [
-                'escola_id' => $this->ref_ref_cod_escola,
                 'serie_id' => $serieId,
-                'turma_id' => $this->cod_turma,
                 'boletim_id' => $this->mult_boletim_id[$key],
                 'boletim_diferenciado_id' => $this->mult_boletim_diferenciado_id[$key],
             ];
         }
 
-        $service = new MultiGradesService($schoolClassGrades);
+        $service = new MultiGradesService();
         $schoolClass = LegacySchoolClass::find($this->cod_turma);
 
         if ($turmaDetalhe['multiseriada'] == 1 && $this->multiseriada == 0) {
@@ -1043,7 +1039,7 @@ class indice extends clsCadastro
         }
 
         if ($this->multiseriada) {
-            $service->storeSchoolClassGrade();
+            $service->storeSchoolClassGrade($schoolClass, $schoolClassGrades);
         }
 
         if (!$editou) {
