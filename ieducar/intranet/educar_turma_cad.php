@@ -1043,10 +1043,18 @@ class indice extends clsCadastro
         $service = new MultiGradesService();
         $schoolClass = LegacySchoolClass::find($this->cod_turma);
 
+        $mudouParaMultisseriada = $turmaDetalhe['multiseriada'] == 0 && $this->multiseriada == 1;
+        $mudouParaTurmaSerieUnica = $turmaDetalhe['multiseriada'] == 1 && $this->multiseriada == 0;
+        $naoManteveSerieOriginal = !in_array($turmaDetalhe['ref_ref_cod_serie'], $this->mult_serie_id);
+
         try {
-            if ($this->multiseriada) {
+            if ($mudouParaMultisseriada && $naoManteveSerieOriginal && $possuiAlunosVinculados) {
+                $this->mensagem = 'Não foi possível alterar a turma para ser multisseriada, pois a série original possui matrículas vinculadas.';
+                DB::rollBack();
+                return false;
+            } elseif ($this->multiseriada) {
                 $service->storeSchoolClassGrade($schoolClass, $schoolClassGrades);
-            } elseif ($turmaDetalhe['multiseriada'] == 1 && $this->multiseriada == 0) {
+            } elseif ($mudouParaTurmaSerieUnica) {
                 $service->deleteAllGradesOfSchoolClass($schoolClass);
             }
         } catch (ValidationException $exception) {
