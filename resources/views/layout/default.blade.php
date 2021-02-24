@@ -244,11 +244,7 @@
 
 <script type="text/javascript">
     function go(url) {
-        if(window.opener){
-            window.close();
-        } else {
-            document.location = url;
-        }
+        document.location = url;
     }
 
     var goodIE = (document.all) ? 1 : 0;
@@ -285,6 +281,14 @@
         if (confirm('Excluir imagem?')) {
             document.formcadastro.tipoacao.value = 'ExcluirImg';
             document.formcadastro.submit();
+        }
+    }
+
+    function goOrClose(url) {
+        if (window.opener) {
+            window.close();
+        } else {
+            document.location = url;
         }
     }
 </script>

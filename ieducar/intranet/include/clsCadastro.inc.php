@@ -503,7 +503,7 @@ class clsCadastro extends clsCampos
             $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: $this->acao' value=' $this->nome_acao '>&nbsp;";
         }
         if (!empty($this->url_cancelar) || !empty($this->script_cancelar)) {
-            $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: $this->script_cancelar go( \"$this->url_cancelar\" );' value=' $this->nome_url_cancelar '>&nbsp;";
+            $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: $this->script_cancelar goOrClose( \"$this->url_cancelar\" );' value=' $this->nome_url_cancelar '>&nbsp;";
         }
         if (!empty($this->url_copiar_enturmacoes)) {
             $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: go( \"$this->url_copiar_enturmacoes\" );' value=' $this->nome_url_copiar_enturmacoes '>&nbsp;";
