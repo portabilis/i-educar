@@ -244,7 +244,11 @@
 
 <script type="text/javascript">
     function go(url) {
-        document.location = url;
+        if(window.opener){
+            window.close();
+        } else {
+            document.location = url;
+        }
     }
 
     var goodIE = (document.all) ? 1 : 0;
@@ -265,10 +269,6 @@
 
             document.formcadastro.submit();
         }
-    }
-
-    function go(url) {
-        document.location = url;
     }
 
     function excluir() {
