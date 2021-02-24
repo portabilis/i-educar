@@ -148,8 +148,11 @@ class indice extends clsCadastro
 
                 if ($lst_servidor_disciplina) {
                     foreach ($lst_servidor_disciplina as $disciplina) {
-                        $this->cursos_disciplina[$disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $disciplina['ref_cod_disciplina'];
+                        $funcoes[$disciplina['ref_cod_funcao']][$disciplina['ref_cod_curso']][] = $disciplina['ref_cod_disciplina'];
                     }
+
+                    // Armazena na sessão para permitir a alteração via modal
+                    Session::put("servant:{$this->cod_servidor}", $funcoes);
                 }
 
                 if (is_string($this->pos_graduacao)) {
@@ -158,13 +161,6 @@ class indice extends clsCadastro
 
                 if (is_string($this->curso_formacao_continuada)) {
                     $this->curso_formacao_continuada = explode(',', str_replace(['{', '}'], '', $this->curso_formacao_continuada));
-                }
-
-                if (Session::get('cod_servidor') == $this->cod_servidor) {
-                    Session::put('cursos_disciplina', $this->cursos_disciplina);
-                } else {
-                    Session::forget('cursos_disciplina');
-                    Session::forget('cod_funcao');
                 }
 
                 $retorno = 'Editar';
@@ -776,8 +772,7 @@ JS;
 
     public function cadastraFuncoes()
     {
-        $cursos_disciplina = Session::get('cursos_disciplina');
-        $cursos_servidor = Session::get('cursos_servidor');
+        $funcoes = Session::get("servant:{$this->cod_servidor}", []);
         $existe_funcao_professor = false;
 
         $listFuncoesCadastradas = [];
@@ -797,6 +792,9 @@ JS;
                     $this->atualizaFuncao($obj_servidor_funcao, $funcao, $this->matricula[$k]);
                 } else {
                     $cod_servidor_funcao = $this->cadastraFuncao($funcao, $this->matricula[$k]);
+
+                    $funcoes[$cod_servidor_funcao] = $funcoes['new_' . $k];
+                    unset($funcoes['new_' . $k]);
                 }
 
                 if (empty($cod_servidor_funcao)) {
@@ -807,36 +805,44 @@ JS;
                 array_push($listFuncoesCadastradas, $cod_servidor_funcao);
             }
         }
+
         $this->excluiFuncoesRemovidas($listFuncoesCadastradas);
+
         if (!$existe_funcao_professor) {
-            $this->excluiDisciplinas(Session::get('cod_funcao'));
+            $this->excluiDisciplinas(array_keys($funcoes));
             $this->excluiCursos();
         }
 
-        if ($existe_funcao_professor) {
-            if ($cursos_disciplina) {
-                $this->excluiDisciplinas(Session::get('cod_funcao'));
-                foreach ($cursos_disciplina as $curso => $disciplinas) {
-                    if ($disciplinas) {
-                        foreach ($disciplinas as $disciplina => $funcao) {
-                            $obj_servidor_disciplina = new clsPmieducarServidorDisciplina(
-                                $disciplina,
-                                $this->ref_cod_instituicao,
-                                $this->cod_servidor,
-                                $curso,
-                                $funcao
-                            );
+        $cursos_servidor = [];
 
-                            if (!$obj_servidor_disciplina->existe()) {
-                                $obj_servidor_disciplina->cadastra();
-                            }
+        if ($existe_funcao_professor) {
+            $this->excluiDisciplinas(array_keys($funcoes));
+
+            foreach ($funcoes as $funcao => $cursos) {
+                foreach ($cursos as $curso => $disciplinas) {
+                    $cursos_servidor[] = $curso;
+
+                    foreach ($disciplinas as $disciplina) {
+                        $obj_servidor_disciplina = new clsPmieducarServidorDisciplina(
+                            $disciplina,
+                            $this->ref_cod_instituicao,
+                            $this->cod_servidor,
+                            $curso,
+                            $funcao
+                        );
+
+                        if (!$obj_servidor_disciplina->existe()) {
+                            $obj_servidor_disciplina->cadastra();
                         }
                     }
                 }
+
+                $cursos_servidor = array_unique($cursos_servidor);
             }
 
             if ($cursos_servidor) {
                 $this->excluiCursos();
+
                 foreach ($cursos_servidor as $curso) {
                     $obj_curso_servidor = new clsPmieducarServidorCursoMinistra($curso, $this->ref_cod_instituicao, $this->cod_servidor);
 
@@ -1210,11 +1216,11 @@ if (document.getElementById('total_horas_alocadas')) {
     document.getElementById('total_horas_alocadas').style.textAlign = 'right';
 }
 
-
 function popless(element) {
+    var novaFuncao = $j(element).closest('td').attr('id').replace('td_disciplina[', '').replace(']', '');
     var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
     var campoServidor = document.getElementById('cod_servidor').value;
-    var codFuncao = $j(element).closest('tr').find('[id^=cod_servidor_funcao]').val();
+    var codFuncao = $j(element).closest('tr').find('[id^=cod_servidor_funcao]').val() || 'new_' + novaFuncao;
     pesquisa_valores_popless1('educar_servidor_disciplina_lst.php?ref_cod_servidor=' + campoServidor + '&ref_cod_instituicao=' + campoInstituicao + '&cod_funcao=' + codFuncao, '');
 }
 

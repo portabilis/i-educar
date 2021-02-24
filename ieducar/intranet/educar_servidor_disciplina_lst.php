@@ -32,8 +32,8 @@ class indice extends clsCadastro
     {
         $retorno = 'Novo';
 
-        $this->cod_servidor = $_GET['ref_cod_servidor'];
-        $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
+        $this->cod_servidor = $this->getQueryString('ref_cod_servidor');
+        $this->ref_cod_instituicao = $this->getQueryString('ref_cod_instituicao');
         $this->ref_cod_funcao = $this->getQueryString('cod_funcao');
 
         $obj_permissoes = new clsPermissoes();
@@ -63,34 +63,12 @@ class indice extends clsCadastro
             }
         }
 
-        $this->cursos_disciplina = Session::get('cursos_disciplina');
-        if (!empty($this->ref_cod_funcao)) {
-            $this->cursos_disciplina = collect($this->cursos_disciplina)->filter(function ($disciplinas) {
-                $result = collect($disciplinas)->filter(function ($funcao) {
-                    return $funcao == $this->ref_cod_funcao;
-                });
+        $funcoes = Session::get("servant:{$this->cod_servidor}", []);
+        $funcoes = $funcoes[$this->ref_cod_funcao] ?? [];
 
-                return $result->count();
-            })->toArray();
-        }
-
-        if (!empty($this->ref_cod_funcao) && (!$this->cursos_disciplina || !in_array($this->ref_cod_funcao, Session::get('cod_funcao', [])))) {
-            $obj_servidor_disciplina = new clsPmieducarServidorDisciplina();
-            $lst_servidor_disciplina = $obj_servidor_disciplina->lista(
-                null,
-                $this->ref_cod_instituicao,
-                $this->cod_servidor,
-                null,
-                $this->ref_cod_funcao
-            );
-
-            if ($lst_servidor_disciplina) {
-                foreach ($lst_servidor_disciplina as $disciplina) {
-                    $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-                    $componente = $componenteMapper->find($disciplina['ref_cod_disciplina']);
-
-                    $this->cursos_disciplina[$disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $this->ref_cod_funcao;
-                }
+        foreach ($funcoes as $curso => $disciplinas) {
+            foreach ($disciplinas as $disciplina) {
+                $this->cursos_disciplina[$curso][$disciplina] = $this->ref_cod_funcao;
             }
         }
 
@@ -98,9 +76,6 @@ class indice extends clsCadastro
             foreach ($this->cursos_disciplina as $curso => $disciplinas) {
                 if ($disciplinas) {
                     foreach ($disciplinas as $disciplina => $funcao) {
-                        if ($funcao != $this->ref_cod_funcao) {
-                            continue;
-                        }
                         $this->ref_cod_curso[] = $curso;
                         $this->ref_cod_disciplina[] = $disciplina;
                     }
@@ -225,8 +200,12 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-        $curso_servidor = Session::get('cursos_servidor');
-        $cursos_disciplina = Session::get('cursos_disciplina');
+        $cod_servidor = $this->getQueryString('ref_cod_servidor');
+        $cod_funcao = $this->getQueryString('cod_funcao');
+
+        $funcoes = Session::get("servant:{$cod_servidor}", []);
+
+        unset($funcoes[$cod_funcao]);
 
         if ($this->ref_cod_curso) {
             for ($i = 0, $loop = count($this->ref_cod_curso); $i < $loop; $i++) {
@@ -235,27 +214,15 @@ class indice extends clsCadastro
                     $componentes = $componenteAnoDataMapper->findComponentePorCurso($this->ref_cod_curso[$i]);
 
                     foreach ($componentes as $componente) {
-                        $curso = $this->ref_cod_curso[$i];
-                        $curso_servidor[$curso] = $curso;
-                        $disciplina = $componente->id;
-                        $cursos_disciplina[$curso][$disciplina] = $this->getQueryString('cod_funcao');
+                        $funcoes[$cod_funcao][$this->ref_cod_curso[$i]][] = $componente->id;
                     }
                 } else {
-                    $curso = $this->ref_cod_curso[$i];
-                    $curso_servidor[$curso] = $curso;
-                    $disciplina = $this->ref_cod_disciplina[$i];
-                    $cursos_disciplina[$curso][$disciplina] = $this->getQueryString('cod_funcao');
+                    $funcoes[$cod_funcao][$this->ref_cod_curso[$i]][] = $this->ref_cod_disciplina[$i];
                 }
             }
         }
-        $funcoes = Session::get('cod_funcao', []);
-        $funcoes[] = $this->getQueryString('cod_funcao');
-        Session::put([
-            'cursos_disciplina' => $cursos_disciplina,
-            'cod_servidor' => $this->cod_servidor,
-            'cursos_servidor' => $curso_servidor,
-            'cod_funcao' => $funcoes
-        ]);
+
+        Session::put("servant:{$cod_servidor}", $funcoes);
         Session::save();
         Session::start();
 
