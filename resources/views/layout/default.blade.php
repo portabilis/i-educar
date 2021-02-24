@@ -288,7 +288,7 @@
         if (window.opener) {
             window.close();
         } else {
-            document.location = url;
+            go(url);
         }
     }
 </script>
