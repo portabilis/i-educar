@@ -13,22 +13,6 @@ use iEducar\Modules\People\CertificateType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
-require_once 'image_check.php';
-require_once 'include/pmieducar/clsPmieducarAluno.inc.php';
-require_once 'include/pmieducar/clsPmieducarProjeto.inc.php';
-require_once 'include/pmieducar/clsPmieducarAlunoHistoricoAlturaPeso.inc.php';
-require_once 'include/modules/clsModulesFichaMedicaAluno.inc.php';
-require_once 'include/modules/clsModulesMoradiaAluno.inc.php';
-require_once 'include/pmieducar/clsPermissoes.inc.php';
-require_once 'App/Model/MatriculaSituacao.php';
-require_once 'Portabilis/Controller/ApiCoreController.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/Date/Utils.php';
-require_once 'include/modules/clsModulesPessoaTransporte.inc.php';
-require_once 'Transporte/Model/Responsavel.php';
 
 class AlunoController extends ApiCoreController
 {
@@ -420,7 +404,7 @@ class AlunoController extends ApiCoreController
         $data = [
             'aluno' => $alunoId,
             'responsavel' => $tiposTransporte[$this->getRequest()->tipo_transporte],
-            'user' => $this->getSession()->id_pessoa,
+            'user' => \Illuminate\Support\Facades\Auth::id(),
             'created_at' => 'NOW()',
         ];
 
@@ -637,7 +621,7 @@ class AlunoController extends ApiCoreController
 
         $aluno->emancipado = (bool) $this->getRequest()->emancipado;
         $aluno->tipo_responsavel = $tiposResponsavel[$this->getRequest()->tipo_responsavel];
-        $aluno->ref_usuario_exc = $this->getSession()->id_pessoa;
+        $aluno->ref_usuario_exc = \Illuminate\Support\Facades\Auth::id();
 
         // INFORAMÇÕES PROVA INEP
         $recursosProvaInep = array_filter($this->getRequest()->recursos_prova_inep__);
@@ -1714,7 +1698,7 @@ class AlunoController extends ApiCoreController
         if ($this->canEnable()) {
             $aluno = new clsPmieducarAluno();
             $aluno->cod_aluno = $id;
-            $aluno->ref_usuario_exc = $this->getSession()->id_pessoa;
+            $aluno->ref_usuario_exc = \Illuminate\Support\Facades\Auth::id();
             $aluno->ativo = 1;
 
             if ($aluno->edita()) {
@@ -1736,7 +1720,7 @@ class AlunoController extends ApiCoreController
             if ($this->canDelete()) {
                 $aluno = new clsPmieducarAluno();
                 $aluno->cod_aluno = $id;
-                $aluno->ref_usuario_exc = $this->getSession()->id_pessoa;
+                $aluno->ref_usuario_exc = \Illuminate\Support\Facades\Auth::id();
 
                 $detalheAluno = $aluno->detalhe();
 
@@ -1883,8 +1867,6 @@ class AlunoController extends ApiCoreController
 
     protected function loadAcessoDataEntradaSaida()
     {
-        $this->pessoa_logada = Session::get('id_pessoa');
-
         $acesso = new clsPermissoes();
 
         return $acesso->permissao_cadastra(626, $this->pessoa_logada, 7, null, true);

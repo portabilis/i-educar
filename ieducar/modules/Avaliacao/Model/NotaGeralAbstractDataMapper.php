@@ -28,7 +28,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/DataMapper.php';
 
 /**
  * Avaliacao_Model_NotaGeralAbstractDataMapper class.

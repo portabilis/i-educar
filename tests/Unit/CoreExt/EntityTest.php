@@ -29,13 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/Entity.php';
-require_once __DIR__.'/_stub/Entity.php';
-require_once __DIR__.'/_stub/EntityDataMapper.php';
-require_once __DIR__.'/_stub/ParentEntity.php';
-require_once __DIR__.'/_stub/ChildEntity.php';
-require_once __DIR__.'/_stub/ChildEntityDataMapper.php';
-require_once __DIR__.'/_stub/EnumSex.php';
 
 /**
  * CoreExt_EntityTest class.

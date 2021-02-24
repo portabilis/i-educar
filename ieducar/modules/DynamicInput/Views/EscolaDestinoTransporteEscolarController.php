@@ -1,6 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 
 /**
  * EscolaDestinoTransporteEscolarController class.
@@ -17,7 +16,7 @@ class EscolaDestinoTransporteEscolarController extends ApiCoreController{
 
   protected function getEscolaDestinoTransporteEscolar() {
 
-     $sql    = 'SELECT idpes AS id, 
+     $sql    = 'SELECT idpes AS id,
                        nome AS nome
                           FROM cadastro.pessoa
                           WHERE idpes IN
@@ -42,7 +41,7 @@ class EscolaDestinoTransporteEscolarController extends ApiCoreController{
   }
 
   public function Gerar() {
-    if($this->isRequestFor('get','escola_destino_transporte_escolar')) 
+    if($this->isRequestFor('get','escola_destino_transporte_escolar'))
       $this->appendResponse($this->getEscolaDestinoTransporteEscolar());
     else
       $this->notImplementedOperationError();

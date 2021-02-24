@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/Abstract.php';
-require_once 'App/Model/NivelTipoUsuario.php';
-require_once 'include/pmieducar/clsPermissoes.inc.php';
 
 class clsCampos extends Core_Controller_Page_Abstract
 {

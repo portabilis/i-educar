@@ -32,8 +32,6 @@
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
 
 /**
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>

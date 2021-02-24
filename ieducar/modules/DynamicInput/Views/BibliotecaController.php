@@ -32,7 +32,6 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 /**
  * CursoController class.
  *

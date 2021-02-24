@@ -3,8 +3,6 @@
 use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Cache;
 
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'Portabilis/Utils/Database.php';
 
 class clsPmieducarTurma extends Model
 {
@@ -1657,7 +1655,7 @@ class clsPmieducarTurma extends Model
     public function maximoAlunosSala()
     {
         $detTurma = $this->detalhe();
-        $objInstituicao = new clsPmiEducarInstituicao($detTurma['ref_cod_instituicao']);
+        $objInstituicao = new clsPmieducarInstituicao($detTurma['ref_cod_instituicao']);
         $detInstituicao = $objInstituicao->detalhe();
         $controlaEspacoUtilizacaoAluno = $detInstituicao['controlar_espaco_utilizacao_aluno'];
         //se o parametro de controle de utilização de espaço estiver setado como verdadeiro
@@ -1666,7 +1664,7 @@ class clsPmieducarTurma extends Model
             $quantidadeAlunosPorMetroQuadrado = $detInstituicao['quantidade_alunos_metro_quadrado'];
             $codSalaUtilizada = $detTurma['ref_cod_infra_predio_comodo'];
 
-            $objInfraPredioComodo = new clsPmiEducarInfraPredioComodo($codSalaUtilizada);
+            $objInfraPredioComodo = new clsPmieducarInfraPredioComodo($codSalaUtilizada);
             $detInfraPredioComodo = $objInfraPredioComodo->detalhe();
             $areaSala = $detInfraPredioComodo['area'];
 

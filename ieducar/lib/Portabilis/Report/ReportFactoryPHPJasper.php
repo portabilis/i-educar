@@ -1,6 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Report/ReportFactory.php';
 
 use JasperPHP\JasperPHP;
 

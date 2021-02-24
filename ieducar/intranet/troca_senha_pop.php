@@ -34,9 +34,6 @@
 use Illuminate\Support\Facades\Session;
 
 $desvio_diretorio = "";
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
 
 
 class clsIndex extends clsBase
@@ -45,7 +42,6 @@ class clsIndex extends clsBase
   {
     $this->SetTitulo($this->_instituicao . 'Usu&aacute;rios');
     $this->processoAp   = "0";
-    $this->renderBanner = FALSE;
     $this->renderMenu   = FALSE;
     $this->renderMenuSuspenso = FALSE;
   }

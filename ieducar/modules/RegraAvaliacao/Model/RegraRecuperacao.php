@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Entity.php';
-require_once 'App/Model/IedFinder.php';
 
 class RegraAvaliacao_Model_RegraRecuperacao extends CoreExt_Entity
 {
@@ -35,8 +33,7 @@ class RegraAvaliacao_Model_RegraRecuperacao extends CoreExt_Entity
     public function getDataMapper()
     {
         if (is_null($this->_dataMapper)) {
-            require_once 'RegraAvaliacao/Model/RegraRecuperacaoDataMapper.php';
-            $this->setDataMapper(new RegraAvaliacao_Model_RegraRecuperacaoDataMapper());
+                        $this->setDataMapper(new RegraAvaliacao_Model_RegraRecuperacaoDataMapper());
         }
 
         return parent::getDataMapper();

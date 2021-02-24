@@ -2,17 +2,6 @@
 
 use App\Models\LegacySchool;
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
-require_once 'include/pmieducar/clsPermissoes.inc.php';
 
 class EscolaController extends ApiCoreController
 {
@@ -549,7 +538,7 @@ class EscolaController extends ApiCoreController
 
     protected function getEscolasMultipleSearch()
     {
-        $cod_usuario = $this->getSession()->id_pessoa;
+        $cod_usuario = \Illuminate\Support\Facades\Auth::id();
         $permissao = new clsPermissoes();
         $nivel = $permissao->nivel_acesso($cod_usuario);
         $cursoId = $this->getRequest()->curso_id;
@@ -636,7 +625,7 @@ class EscolaController extends ApiCoreController
 
     protected function getEscolasSelecao()
     {
-        $userId = $this->getSession()->id_pessoa;
+        $userId = \Illuminate\Support\Facades\Auth::id();
         $permissao = new clsPermissoes();
         $nivel = $permissao->nivel_acesso($userId);
 
