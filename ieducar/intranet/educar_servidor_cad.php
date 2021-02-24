@@ -327,7 +327,7 @@ class indice extends clsCadastro
             $horas = $this->total_horas_alocadas . ':00';
         }
 
-        if (strtoupper($this->tipoacao) == 'EDITAR') {
+        if (mb_strtoupper($this->tipoacao) == 'EDITAR') {
             $this->campoTextoInv(
                 'total_horas_alocadas_',
                 'Total de Horas Alocadadas',
