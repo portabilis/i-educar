@@ -1055,7 +1055,7 @@ class indice extends clsCadastro
             } elseif ($this->multiseriada) {
                 $service->storeSchoolClassGrade($schoolClass, $schoolClassGrades);
             } elseif ($mudouParaTurmaSerieUnica) {
-                $service->deleteAllGradesOfSchoolClass($schoolClass);
+                $service->deleteAllGradesOfSchoolClass($schoolClass, [$this->ref_cod_serie]);
             }
         } catch (ValidationException $exception) {
             $this->mensagem = $exception->errors()['grades'][0];

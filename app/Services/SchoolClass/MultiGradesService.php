@@ -36,6 +36,20 @@ class MultiGradesService
         ])->validate();
     }
 
+    private function validateDeleteAllGrades(LegacySchoolClass $schoolClass, $gradesToDelete)
+    {
+        validator([
+            'delete_all_grades' => [
+                'turma' => $schoolClass,
+                'grades_delete' => $gradesToDelete,
+            ],
+        ], [
+            'delete_all_grades' => [
+                new ExistsEnrollmentsInSchoolClassGrades(),
+            ],
+        ])->validate();
+    }
+
     public function storeSchoolClassGrade(LegacySchoolClass $schoolClass, $schoolClassGrades)
     {
         $this->validate($schoolClass, $schoolClassGrades);
@@ -43,10 +57,18 @@ class MultiGradesService
         $this->saveSchoolClassGrade($schoolClass, $schoolClassGrades);
     }
 
-    public function deleteAllGradesOfSchoolClass(LegacySchoolClass $schoolClass) {
-        LegacySchoolClassGrade::query()
-            ->where('turma_id', $schoolClass->getKey())
-            ->delete();
+    public function deleteAllGradesOfSchoolClass(LegacySchoolClass $schoolClass, $excludeGrades) {
+        $query = LegacySchoolClassGrade::query()
+            ->where('turma_id', $schoolClass->getKey());
+
+        $gradesToDelete = $query->whereNotIn('serie_id', $excludeGrades)
+            ->get()
+            ->pluck('serie_id')
+            ->toArray();
+
+        $this->validateDeleteAllGrades($schoolClass, $gradesToDelete);
+
+        $query->delete();
     }
 
     private function saveSchoolClassGrade(LegacySchoolClass $schoolClass, $schoolClassGrades)
