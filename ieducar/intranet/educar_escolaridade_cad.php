@@ -1,6 +1,5 @@
 <?php
 
-
 use iEducar\Support\View\SelectOptions;
 
 class clsIndexBase extends clsBase
@@ -134,6 +133,7 @@ class indice extends clsCadastro
 
         if ($obj->findUsages()) {
             $this->mensagem = 'Exclusão não realizada - Ainda existe vínculos.<br>';
+
             return false;
         }
 
