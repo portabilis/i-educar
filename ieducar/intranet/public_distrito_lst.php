@@ -4,7 +4,6 @@ use App\Models\District;
 use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 
-
 class clsIndexBase extends clsBase
 {
     public function Formular()
@@ -141,9 +140,9 @@ class indice extends clsListagem
             ]);
         }
 
-    $this->addPaginador2('public_distrito_lst.php', $total, $_GET, $this->nome, $this->__limite);
+        $this->addPaginador2('public_distrito_lst.php', $total, $_GET, $this->nome, $this->__limite);
 
-    $obj_permissao = new clsPermissoes();
+        $obj_permissao = new clsPermissoes();
 
         if ($obj_permissao->permissao_cadastra(759, $this->pessoa_logada, 7, null, true)) {
             $this->acao = 'go("public_distrito_cad.php")';
