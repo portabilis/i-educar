@@ -18,8 +18,6 @@ class indice extends clsDetalhe
     public $nm_tipo;
     public $descricao;
     public $num_etapas;
-    public $num_meses;
-    public $num_semanas;
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
