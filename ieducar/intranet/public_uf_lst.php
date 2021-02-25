@@ -5,7 +5,6 @@ use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 use Illuminate\Support\Str;
 
-
 class clsIndexBase extends clsBase
 {
     public function Formular()
