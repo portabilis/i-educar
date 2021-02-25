@@ -3,7 +3,6 @@
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 
-
 class clsIndexBase extends clsBase
 {
     public function Formular()
@@ -248,7 +247,7 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Observação', $observacaoAbandono]);
         }
 
-        if ($registro['aprovado'] == App_Model_MatriculaSituacao::RECLASSIFICADO){
+        if ($registro['aprovado'] == App_Model_MatriculaSituacao::RECLASSIFICADO) {
             $this->addDetalhe(['Descrição', $this->getDescription($registro['descricao_reclassificacao'])]);
         }
 

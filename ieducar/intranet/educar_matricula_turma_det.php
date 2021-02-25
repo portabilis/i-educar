@@ -1,6 +1,5 @@
 <?php
 
-
 class clsIndexBase extends clsBase
 {
     public function Formular()
@@ -268,7 +267,8 @@ class indice extends clsDetalhe
             $jsEnturmacao = 'if (!confirm("Confirma a enturmação?")) return false;';
         }
 
-        $script = sprintf('
+        $script = sprintf(
+            '
             <script type="text/javascript">
 
                 function enturmar(ref_cod_matricula, ref_cod_turma_destino, tipo){
@@ -327,7 +327,8 @@ class indice extends clsDetalhe
                   document.formcadastro.submit();
                 }
 
-            </script>', $jsEnturmacao
+            </script>',
+            $jsEnturmacao
         );
 
         print $script;
