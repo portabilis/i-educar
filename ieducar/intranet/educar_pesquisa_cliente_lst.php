@@ -2,13 +2,12 @@
 
 use Illuminate\Support\Facades\Session;
 
-
 class clsIndex extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Cliente" );
-        $this->processoAp = "0";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Cliente");
+        $this->processoAp = '0';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
     }
@@ -21,72 +20,71 @@ class indice extends clsListagem
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
      */
-    var $limite;
+    public $limite;
 
     /**
      * Inicio dos registros a serem exibidos (limit)
      *
      * @var int
      */
-    var $offset;
+    public $offset;
 
-    var $login;
-    var $nm_cliente;
-    var $ref_cod_biblioteca;
+    public $login;
+    public $nm_cliente;
+    public $ref_cod_biblioteca;
 
-    function Gerar()
+    public function Gerar()
     {
-        foreach ($_GET as $campo => $valor)
-        {
+        foreach ($_GET as $campo => $valor) {
             $this->$campo = $valor;
         }
         Session::put([
-            'campo1' => $_GET["campo1"] ?? Session::get('campo1'),
-            'campo2' => $_GET["campo2"] ?? Session::get('campo2'),
+            'campo1' => $_GET['campo1'] ?? Session::get('campo1'),
+            'campo2' => $_GET['campo2'] ?? Session::get('campo2'),
         ]);
         Session::save();
         Session::start();
 
         $this->ref_cod_biblioteca = $this->ref_cod_biblioteca ? $this->ref_cod_biblioteca : $_GET['ref_cod_biblioteca'];
 
-        $this->titulo = "Cliente - Listagem";
+        $this->titulo = 'Cliente - Listagem';
 
-        $this->addCabecalhos( array(
-            "Código",
-            "Cliente"
-        ) );
+        $this->addCabecalhos([
+            'Código',
+            'Cliente'
+        ]);
 
-        $this->campoTexto( "nm_cliente", "Cliente", $this->nm_cliente, 30, 255, false );
-        $this->campoNumero( "codigo", "Código", $this->codigo, 15, 13 );
-        $this->campoOculto("ref_cod_biblioteca",$this->ref_cod_biblioteca);
+        $this->campoTexto('nm_cliente', 'Cliente', $this->nm_cliente, 30, 255, false);
+        $this->campoNumero('codigo', 'Código', $this->codigo, 15, 13);
+        $this->campoOculto('ref_cod_biblioteca', $this->ref_cod_biblioteca);
 
-        if (isset($_GET["ref_cod_biblioteca"]))
-            $this->ref_cod_biblioteca = $_GET["ref_cod_biblioteca"];
+        if (isset($_GET['ref_cod_biblioteca'])) {
+            $this->ref_cod_biblioteca = $_GET['ref_cod_biblioteca'];
+        }
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $obj_acervo = new clsPmieducarCliente();
-        $obj_acervo->setOrderby( "nome ASC" );
-        $obj_acervo->setLimite( $this->limite, $this->offset );
+        $obj_acervo->setOrderby('nome ASC');
+        $obj_acervo->setLimite($this->limite, $this->offset);
 
-        if ($this->ref_cod_biblioteca)
-        {
+        if ($this->ref_cod_biblioteca) {
             $lista = $obj_acervo->listaPesquisaCliente(
                 $this->codigo,
                 null,
@@ -102,9 +100,7 @@ class indice extends clsListagem
                 $this->nm_cliente,
                 $this->ref_cod_biblioteca
             );
-        }
-        else
-        {
+        } else {
             $lista = $obj_acervo->lista(
                 $this->codigo,
                 null,
@@ -124,24 +120,23 @@ class indice extends clsListagem
         $total = $obj_acervo->_total;
 
         // monta a lista
-        if( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista AS $registro )
-            {
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
                 $campo1 = Session::get('campo1');
                 $campo2 = Session::get('campo2');
-                if ( is_string( $campo1 ) && is_string( $campo2 ) )
+                if (is_string($campo1) && is_string($campo2)) {
                     $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_cliente']}', '{$registro['nome']}'); addVal1('{$campo2}','{$registro['nome']}', '{$registro['cod_cliente']}'); fecha();\"";
-                else if ( is_string( $campo1 ) )
+                } elseif (is_string($campo1)) {
                     $script = " onclick=\"addVal1('{$campo1}','{$registro['cod_cliente']}', '{$registro['nome']}'); fecha();\"";
-                $this->addLinhas( array(
-                    "<a href=\"javascript:void(0);\" {$script}>{$registro["cod_cliente"]}</a>",
-                    "<a href=\"javascript:void(0);\" {$script}>{$registro["nome"]}</a>"
-                ) );
+                }
+                $this->addLinhas([
+                    "<a href=\"javascript:void(0);\" {$script}>{$registro['cod_cliente']}</a>",
+                    "<a href=\"javascript:void(0);\" {$script}>{$registro['nome']}</a>"
+                ]);
             }
         }
-        $this->addPaginador2( "educar_pesquisa_cliente_lst.php", $total, $_GET, $this->nome, $this->limite );
-        $this->largura = "100%";
+        $this->addPaginador2('educar_pesquisa_cliente_lst.php', $total, $_GET, $this->nome, $this->limite);
+        $this->largura = '100%';
     }
 }
 // cria uma extensao da classe base
@@ -150,7 +145,7 @@ $pagina = new clsIndex();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>
