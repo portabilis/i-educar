@@ -3,7 +3,6 @@
 use App\Models\LegacySchoolClass;
 use App\Services\SchoolClassService;
 
-
 class clsIndexBase extends clsBase
 {
     public function Formular()
@@ -64,8 +63,8 @@ class indice extends clsCadastro
 
     public function Gerar()
     {
-        $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
-        $this->inputsHelper()->dynamic(array('curso', 'serie', 'turma'), array('required' => false));
+        $this->inputsHelper()->dynamic(['ano', 'instituicao', 'escola']);
+        $this->inputsHelper()->dynamic(['curso', 'serie', 'turma'], ['required' => false]);
 
         $options = [
             'label' => 'Modalidade',
@@ -86,7 +85,7 @@ class indice extends clsCadastro
                 ->with('calendars', $calendars)
         );
 
-        $this->inputsHelper()->dynamic(array('dataInicial', 'dataFinal'));
+        $this->inputsHelper()->dynamic(['dataInicial', 'dataFinal']);
 
         Portabilis_View_Helper_Application::loadJavascript($this, [
             '/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js',
@@ -139,6 +138,7 @@ class indice extends clsCadastro
         $schoolClass = $this->getSchoolClass();
 
         $schoolClassService = new SchoolClassService();
+
         return $schoolClassService->getCalendars($schoolClass);
     }
 
