@@ -1,12 +1,11 @@
 <?php
 
-
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Defici&ecirc;ncia" );
-        $this->processoAp = "631";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Defici&ecirc;ncia");
+        $this->processoAp = '631';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
     }
@@ -19,68 +18,59 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_deficiencia;
-    var $nm_deficiencia;
+    public $cod_deficiencia;
+    public $nm_deficiencia;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
 
-
-        $this->cod_deficiencia=$_GET["cod_deficiencia"];
+        $this->cod_deficiencia=$_GET['cod_deficiencia'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 631, $this->pessoa_logada, 7,  "educar_deficiencia_lst.php" );
+        $obj_permissoes->permissao_cadastra(631, $this->pessoa_logada, 7, 'educar_deficiencia_lst.php');
 
-        if( is_numeric( $this->cod_deficiencia ) )
-        {
-
-            $obj = new clsCadastroDeficiencia( $this->cod_deficiencia );
+        if (is_numeric($this->cod_deficiencia)) {
+            $obj = new clsCadastroDeficiencia($this->cod_deficiencia);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
+                }
 
-                if( $obj_permissoes->permissao_excluir( 631, $this->pessoa_logada, 7 ) )
-                {
+                if ($obj_permissoes->permissao_excluir(631, $this->pessoa_logada, 7)) {
                     $this->fexcluir = true;
                 }
-                $retorno = "Editar";
+                $retorno = 'Editar';
             }
         }
 //      $this->url_cancelar = ($retorno == "Editar") ? "educar_deficiencia_det.php?cod_deficiencia={$registro["cod_deficiencia"]}" : "educar_deficiencia_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
-        $this->script_cancelar = "window.parent.fechaExpansivel(\"div_dinamico_\"+(parent.DOM_divs.length-1));";
+        $this->nome_url_cancelar = 'Cancelar';
+        $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_deficiencia", $this->cod_deficiencia );
+        $this->campoOculto('cod_deficiencia', $this->cod_deficiencia);
 
         // foreign keys
 
         // text
-        $this->campoTexto( "nm_deficiencia", "Deficiência", $this->nm_deficiencia, 30, 255, true );
+        $this->campoTexto('nm_deficiencia', 'Deficiência', $this->nm_deficiencia, 30, 255, true);
 
         // data
-
     }
 
-    function Novo()
+    public function Novo()
     {
-
-
-
-
-        $obj = new clsCadastroDeficiencia( $this->cod_deficiencia, $this->nm_deficiencia );
+        $obj = new clsCadastroDeficiencia($this->cod_deficiencia, $this->nm_deficiencia);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
+        if ($cadastrou) {
             echo "<script>
                         parent.document.getElementById('ref_cod_deficiencia').options[parent.document.getElementById('ref_cod_deficiencia').options.length] = new Option('$this->nm_deficiencia', '$cadastrou', false, false);
                         parent.document.getElementById('ref_cod_deficiencia').value = '$cadastrou';
@@ -89,16 +79,16 @@ class indice extends clsCadastro
             die();
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
 
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
     }
 
-    function Excluir()
+    public function Excluir()
     {
     }
 }
@@ -108,7 +98,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>
