@@ -1,7 +1,5 @@
 <?php
 
-
-
 class clsIndexBase extends clsBase
 {
     public function Formular()
@@ -110,8 +108,8 @@ class indice extends clsDetalhe
         $this->largura = '100%';
 
         $this->breadcrumb('Detalhe da alocação', [
-        url('intranet/educar_servidores_index.php') => 'Servidores',
-    ]);
+            url('intranet/educar_servidores_index.php') => 'Servidores',
+        ]);
     }
 }
 

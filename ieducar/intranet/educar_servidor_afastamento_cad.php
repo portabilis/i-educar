@@ -18,11 +18,11 @@ class clsIndexBase extends clsBase
 class indice extends clsCadastro
 {
 
-  /**
-   * Referência a usuário da sessão
-   *
-   * @var int
-   */
+    /**
+     * Referência a usuário da sessão
+     *
+     * @var int
+     */
     public $pessoa_logada = null;
 
     /**
@@ -85,7 +85,7 @@ class indice extends clsCadastro
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, $urlPemite);
 
         if (is_numeric($this->ref_cod_servidor) && is_numeric($this->sequencial) &&
-        is_numeric($this->ref_cod_instituicao)) {
+            is_numeric($this->ref_cod_instituicao)) {
             $obj = new clsPmieducarServidorAfastamento(
                 $this->ref_cod_servidor,
                 $this->sequencial,
@@ -257,7 +257,7 @@ class indice extends clsCadastro
 
                 if ($lista) {
 
-          // Passa todos os valores obtidos no registro para atributos do objeto
+                    // Passa todos os valores obtidos no registro para atributos do objeto
                     foreach ($lista as $campo => $val) {
                         $temp = [];
                         $temp['hora_inicial']       = $val['hora_inicial'];
@@ -704,29 +704,29 @@ $pagina->MakeAll();
 ?>
 
 <script type="text/javascript">
-if (document.getElementById('btn_enviar')) {
-  document.getElementById('btn_enviar').onclick = function() { validaFormulario(); }
-}
-
-function validaFormulario() {
-  var c    = 0;
-  var loop = true;
-
-  do {
-    if (document.getElementById('ref_cod_servidor_substituto_' + c + '_')) {
-      if (document.getElementById('ref_cod_servidor_substituto_' + c + '_').value == '') {
-        alert('Você deve informar um substituto para cada horário.');
-
-        return;
-      }
-    }
-    else {
-      loop = false;
+    if (document.getElementById('btn_enviar')) {
+        document.getElementById('btn_enviar').onclick = function() { validaFormulario(); }
     }
 
-    c++;
-  } while (loop);
+    function validaFormulario() {
+        var c    = 0;
+        var loop = true;
 
-  acao();
-}
+        do {
+            if (document.getElementById('ref_cod_servidor_substituto_' + c + '_')) {
+                if (document.getElementById('ref_cod_servidor_substituto_' + c + '_').value == '') {
+                    alert('Você deve informar um substituto para cada horário.');
+
+                    return;
+                }
+            }
+            else {
+                loop = false;
+            }
+
+            c++;
+        } while (loop);
+
+        acao();
+    }
 </script>

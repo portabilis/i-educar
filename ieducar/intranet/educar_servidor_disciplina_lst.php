@@ -1,247 +1,259 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
- * @version   $Id$
- */
-
 use Illuminate\Support\Facades\Session;
 
-
-/**
- * clsIndexBase class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
 class clsIndexBase extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Disciplina');
-    $this->processoAp         = 0;
-    $this->renderMenu         = FALSE;
-    $this->renderMenuSuspenso = FALSE;
-  }
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Disciplina');
+        $this->processoAp         = 0;
+        $this->renderMenu         = false;
+        $this->renderMenuSuspenso = false;
+    }
 }
 
-/**
- * indice class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
 class indice extends clsCadastro
 {
-  var $pessoa_logada;
+    public $pessoa_logada;
 
-  var $cod_servidor;
-  var $ref_cod_instituicao;
-  var $ref_idesco;
-  var $ref_cod_funcao;
-  var $carga_horaria;
-  var $data_cadastro;
-  var $data_exclusao;
-  var $ativo;
-  var $ref_cod_curso;
-  var $ref_cod_disciplina;
-  var $cursos_disciplina;
+    public $cod_servidor;
+    public $ref_cod_instituicao;
+    public $ref_idesco;
+    public $ref_cod_funcao;
+    public $carga_horaria;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_curso;
+    public $ref_cod_disciplina;
+    public $cursos_disciplina;
 
-  function Inicializar()
-  {
-    $retorno = 'Novo';
+    public function Inicializar()
+    {
+        $retorno = 'Novo';
 
+        $this->cod_servidor = $_GET['ref_cod_servidor'];
+        $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
 
-    $this->cod_servidor = $_GET['ref_cod_servidor'];
-    $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
+        $obj_permissoes = new clsPermissoes();
 
-    $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(
+            635,
+            $this->pessoa_logada,
+            7,
+            'educar_servidor_lst.php'
+        );
 
-    $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7,
-      'educar_servidor_lst.php');
+        if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
+            $obj = new clsPmieducarServidor(
+                $this->cod_servidor,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                $this->ref_cod_instituicao
+            );
 
-    if (is_numeric($this->cod_servidor) && is_numeric($this->ref_cod_instituicao)) {
-      $obj = new clsPmieducarServidor($this->cod_servidor, NULL, NULL, NULL,
-        NULL, NULL, NULL, $this->ref_cod_instituicao);
-
-      $registro  = $obj->detalhe();
-      if ($registro) {
-        $retorno = 'Editar';
-      }
-    }
-
-    $this->cursos_disciplina = Session::get('cursos_disciplina');
-
-    if (!$this->cursos_disciplina) {
-      $obj_servidor_disciplina = new clsPmieducarServidorDisciplina();
-      $lst_servidor_disciplina = $obj_servidor_disciplina->lista(NULL,
-        $this->ref_cod_instituicao, $this->cod_servidor);
-
-      if ($lst_servidor_disciplina) {
-        foreach ($lst_servidor_disciplina as $disciplina) {
-          $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
-          $componente = $componenteMapper->find($disciplina['ref_cod_disciplina']);
-
-          $this->cursos_disciplina[$disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $disciplina['ref_cod_disciplina'];
+            $registro  = $obj->detalhe();
+            if ($registro) {
+                $retorno = 'Editar';
+            }
         }
-      }
-    }
 
-    if ($this->cursos_disciplina) {
-      foreach ($this->cursos_disciplina as $curso => $disciplinas) {
-        if ($disciplinas) {
-          foreach ($disciplinas as $disciplina) {
-            $this->ref_cod_curso[] = $curso;
-            $this->ref_cod_disciplina[] = $disciplina;
-          }
+        $this->cursos_disciplina = Session::get('cursos_disciplina');
+
+        if (!$this->cursos_disciplina) {
+            $obj_servidor_disciplina = new clsPmieducarServidorDisciplina();
+            $lst_servidor_disciplina = $obj_servidor_disciplina->lista(
+                null,
+                $this->ref_cod_instituicao,
+                $this->cod_servidor
+            );
+
+            if ($lst_servidor_disciplina) {
+                foreach ($lst_servidor_disciplina as $disciplina) {
+                    $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+                    $componente = $componenteMapper->find($disciplina['ref_cod_disciplina']);
+
+                    $this->cursos_disciplina[$disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $disciplina['ref_cod_disciplina'];
+                }
+            }
         }
-      }
+
+        if ($this->cursos_disciplina) {
+            foreach ($this->cursos_disciplina as $curso => $disciplinas) {
+                if ($disciplinas) {
+                    foreach ($disciplinas as $disciplina) {
+                        $this->ref_cod_curso[] = $curso;
+                        $this->ref_cod_disciplina[] = $disciplina;
+                    }
+                }
+            }
+        }
+
+        return $retorno;
     }
 
-    return $retorno;
-  }
+    public function Gerar()
+    {
+        $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
+        $opcoes = $opcoes_curso = ['' => 'Selecione'];
 
-  function Gerar()
-  {
-    $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
-    $opcoes = $opcoes_curso = array('' => 'Selecione');
+        $obj_cursos = new clsPmieducarCurso();
+        $obj_cursos->setOrderby('nm_curso');
+        $lst_cursos = $obj_cursos->lista(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            1,
+            null,
+            $this->ref_cod_instituicao
+        );
 
-    $obj_cursos = new clsPmieducarCurso();
-    $obj_cursos->setOrderby('nm_curso');
-    $lst_cursos = $obj_cursos->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-      NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-      NULL, NULL, NULL,1, NULL, $this->ref_cod_instituicao);
-
-    if ($lst_cursos) {
-      foreach ($lst_cursos as $curso) {
-        $opcoes_curso[$curso['cod_curso']] = $curso['nm_curso'];
-      }
-    }
+        if ($lst_cursos) {
+            foreach ($lst_cursos as $curso) {
+                $opcoes_curso[$curso['cod_curso']] = $curso['nm_curso'];
+            }
+        }
 
         $lst_opcoes = [];
         $arr_valores = [];
 
-    if ($this->cursos_disciplina) {
-      foreach ($this->cursos_disciplina as $curso => $disciplinas) {
-        if ($disciplinas) {
-          foreach ($disciplinas as $disciplina) {
-            $arr_valores[] = array($curso, $disciplina);
-          }
+        if ($this->cursos_disciplina) {
+            foreach ($this->cursos_disciplina as $curso => $disciplinas) {
+                if ($disciplinas) {
+                    foreach ($disciplinas as $disciplina) {
+                        $arr_valores[] = [$curso, $disciplina];
+                    }
+                }
+            }
         }
-      }
+
+        if ($this->ref_cod_curso) {
+            $cursosDifferente = array_unique($this->ref_cod_curso);
+            foreach ($cursosDifferente as $curso) {
+                $obj_componentes = new clsModulesComponenteCurricular;
+                $componentes     = $obj_componentes->listaComponentesPorCurso($this->ref_cod_instituicao, $curso);
+                $opcoes_disc = [];
+                $opcoes_disc['todas_disciplinas']  = 'Todas as disciplinas';
+
+                $total_componentes = count($componentes);
+                for ($i=0; $i < $total_componentes; $i++) {
+                    $opcoes_disc[$componentes[$i]['id']]  = $componentes[$i]['nome'];
+                }
+                $disciplinasCurso[$curso] = [$opcoes_curso, $opcoes_disc];
+            }
+            foreach ($this->ref_cod_curso as $curso) {
+                $lst_opcoes[] = $disciplinasCurso[$curso];
+            }
+        }
+
+        $this->campoTabelaInicio(
+            'funcao',
+            'Componentes Curriculares',
+            ['Curso', 'Componente Curricular'],
+            $arr_valores,
+            '',
+            $lst_opcoes
+        );
+
+        // Cursos
+        $this->campoLista(
+            'ref_cod_curso',
+            'Curso',
+            $opcoes_curso,
+            $this->ref_cod_curso,
+            'trocaCurso(this)',
+            '',
+            '',
+            ''
+        );
+
+        // Disciplinas
+        $this->campoLista(
+            'ref_cod_disciplina',
+            'Componente Curricular',
+            $opcoes,
+            $this->ref_cod_disciplina,
+            '',
+            '',
+            '',
+            ''
+        );
+
+        $this->campoTabelaFim();
     }
 
-    if ($this->ref_cod_curso) {
-      $cursosDifferente = array_unique($this->ref_cod_curso);
-      foreach ($cursosDifferente as $curso) {
-        $obj_componentes = new clsModulesComponenteCurricular;
-        $componentes     = $obj_componentes->listaComponentesPorCurso($this->ref_cod_instituicao, $curso);
-        $opcoes_disc = array();
-        $opcoes_disc['todas_disciplinas']  = 'Todas as disciplinas';
+    public function Novo()
+    {
+        $cursos_disciplina = [];
 
-        $total_componentes = count($componentes);
-        for ($i=0; $i < $total_componentes; $i++) {
-          $opcoes_disc[$componentes[$i]['id']]  = $componentes[$i]['nome'];
+        $curso_servidor = Session::get('cursos_servidor');
+
+        if ($this->ref_cod_curso) {
+            for ($i = 0, $loop = count($this->ref_cod_curso); $i < $loop; $i++) {
+                if ($this->ref_cod_disciplina[$i] == 'todas_disciplinas') {
+                    $componenteAnoDataMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+                    $componentes = $componenteAnoDataMapper->findComponentePorCurso($this->ref_cod_curso[$i]);
+
+                    foreach ($componentes as $componente) {
+                        $curso = $this->ref_cod_curso[$i];
+                        $curso_servidor[$curso] = $curso;
+                        $disciplina = $componente->id;
+                        $cursos_disciplina[$curso][$disciplina] = $disciplina;
+                    }
+                } else {
+                    $curso = $this->ref_cod_curso[$i];
+                    $curso_servidor[$curso] = $curso;
+                    $disciplina = $this->ref_cod_disciplina[$i];
+                    $cursos_disciplina[$curso][$disciplina] = $disciplina;
+                }
+            }
         }
-        $disciplinasCurso[$curso] = array($opcoes_curso, $opcoes_disc);
-      }
-      foreach ($this->ref_cod_curso as $curso) {
-        $lst_opcoes[] = $disciplinasCurso[$curso];
-      }
-    }
 
-    $this->campoTabelaInicio('funcao', 'Componentes Curriculares', array('Curso', 'Componente Curricular'),
-      $arr_valores, '', $lst_opcoes);
-
-    // Cursos
-    $this->campoLista('ref_cod_curso', 'Curso', $opcoes_curso,
-      $this->ref_cod_curso, 'trocaCurso(this)', '', '', '');
-
-    // Disciplinas
-    $this->campoLista('ref_cod_disciplina', 'Componente Curricular', $opcoes,
-      $this->ref_cod_disciplina, '', '', '', '');
-
-    $this->campoTabelaFim();
-  }
-
-  public function Novo()
-  {
-    $cursos_disciplina = array();
-
-    $curso_servidor = Session::get('cursos_servidor');
-
-    if ($this->ref_cod_curso) {
-      for ($i = 0, $loop = count($this->ref_cod_curso); $i < $loop; $i++) {
-        if ($this->ref_cod_disciplina[$i] == 'todas_disciplinas'){
-          $componenteAnoDataMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
-          $componentes = $componenteAnoDataMapper->findComponentePorCurso($this->ref_cod_curso[$i]);
-
-          foreach ($componentes as $componente) {
-            $curso = $this->ref_cod_curso[$i];
-            $curso_servidor[$curso] = $curso;
-            $disciplina = $componente->id;
-            $cursos_disciplina[$curso][$disciplina] = $disciplina;
-          }
-        }else{
-          $curso = $this->ref_cod_curso[$i];
-          $curso_servidor[$curso] = $curso;
-          $disciplina = $this->ref_cod_disciplina[$i];
-          $cursos_disciplina[$curso][$disciplina] = $disciplina;
-        }
-      }
-    }
-
-    Session::put([
+        Session::put([
         'cursos_disciplina' => $cursos_disciplina,
         'cod_servidor' => $this->cod_servidor,
         'cursos_servidor' => $curso_servidor,
     ]);
-    Session::save();
-    Session::start();
+        Session::save();
+        Session::start();
 
-    echo "<script>parent.fechaExpansivel('{$_GET['div']}');</script>";
-    die;
-  }
+        echo "<script>parent.fechaExpansivel('{$_GET['div']}');</script>";
+        die;
+    }
 
-  public function Editar() {
-    return $this->Novo();
-  }
+    public function Editar()
+    {
+        return $this->Novo();
+    }
 
-  function Excluir()
-  {
-    return FALSE;
-  }
+    public function Excluir()
+    {
+        return false;
+    }
 }
 
 // Instancia objeto de página
