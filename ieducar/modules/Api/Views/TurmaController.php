@@ -147,7 +147,7 @@ class TurmaController extends ApiCoreController
 
         foreach ($lstMatriculaTurma as $matricula) {
             $lstNomes[] = [
-                'nome' => limpa_acentos(strtoupper($matricula['nome'])),
+                'nome' => limpa_acentos(mb_strtoupper($matricula['nome'])),
                 'ref_cod_matricula' => $matricula['ref_cod_matricula'],
                 'sequencial' => $matricula['sequencial']
             ];
