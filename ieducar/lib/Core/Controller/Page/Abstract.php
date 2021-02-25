@@ -4,7 +4,6 @@ use App\User;
 use iEducar\Modules\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\Auth;
 
-
 abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract implements Core_Controller_Page_Interface
 {
     /**
@@ -99,7 +98,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
     /**
      * @var integer
      */
-    public int $pessoa_logada = null;
+    public $pessoa_logada = null;
 
     /**
      * @var string
@@ -489,7 +488,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
      */
     public function generate(CoreExt_Controller_Page_Interface $instance)
     {
-                Core_View::generate($instance);
+        Core_View::generate($instance);
     }
 
     public function getQueryString($name, $default = null)
