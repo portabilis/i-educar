@@ -267,10 +267,6 @@
         }
     }
 
-    function go(url) {
-        document.location = url;
-    }
-
     function excluir() {
         document.formcadastro.reset();
 
@@ -285,6 +281,14 @@
         if (confirm('Excluir imagem?')) {
             document.formcadastro.tipoacao.value = 'ExcluirImg';
             document.formcadastro.submit();
+        }
+    }
+
+    function goOrClose(url) {
+        if (window.opener) {
+            window.close();
+        } else {
+            go(url);
         }
     }
 </script>
