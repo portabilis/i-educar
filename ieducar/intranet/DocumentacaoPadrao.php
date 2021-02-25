@@ -1,12 +1,11 @@
 <?php
 
-
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Documentação padrão" );
-        $this->processoAp = "578";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Documentação padrão");
+        $this->processoAp = '578';
     }
 }
 
@@ -17,40 +16,40 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
      */
-    var $limite;
+    public $limite;
 
     /**
      * Inicio dos registros a serem exibidos (limit)
      *
      * @var int
      */
-    var $offset;
+    public $offset;
 
-    function Gerar()
+    public function Gerar()
     {
         $obj_usuario = new clsPmieducarUsuario($this->pessoa_logada);
         $obj_usuario_det = $obj_usuario->detalhe();
-        $this->ref_cod_instituicao = $obj_usuario_det["ref_cod_instituicao"];
+        $this->ref_cod_instituicao = $obj_usuario_det['ref_cod_instituicao'];
 
         $obj_permissoes = new clsPermissoes();
 
         $nivelUsuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-        if ($nivelUsuario == 4){
-            $this->campoOculto( "ref_cod_instituicao", $this->ref_cod_instituicao );
+        if ($nivelUsuario == 4) {
+            $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
 
             $obj_instituicao = new clsPmieducarInstituicao();
             $lst_instituicao = $obj_instituicao->lista($this->ref_cod_instituicao);
@@ -62,17 +61,17 @@ class indice extends clsCadastro
             }
         }
 
-        $this->largura = "100%";
+        $this->largura = '100%';
 
         $this->breadcrumb('Documentação padrão', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
-        $this->inputsHelper()->dynamic(array('instituicao'));
+        $this->inputsHelper()->dynamic(['instituicao']);
 
-        $opcoes_relatorio = array();
-        $opcoes_relatorio[""] = "Selecione";
-        $this->campoLista("relatorio", "Relatório", $opcoes_relatorio);
+        $opcoes_relatorio = [];
+        $opcoes_relatorio[''] = 'Selecione';
+        $this->campoLista('relatorio', 'Relatório', $opcoes_relatorio);
     }
 }
 // cria uma extensao da classe base
@@ -80,7 +79,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>

@@ -99,7 +99,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
     /**
      * @var integer
      */
-    public $pessoa_logada = null;
+    public int $pessoa_logada = null;
 
     /**
      * @var string
