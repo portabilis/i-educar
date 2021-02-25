@@ -1,7 +1,5 @@
 <?php
 
-
-
 use App\Models\LegacyIndividual;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
