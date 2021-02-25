@@ -1,45 +1,44 @@
 <?php
 
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\URL;
-
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Biblioteca" );
-        $this->processoAp = "591";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Biblioteca");
+        $this->processoAp = '591';
     }
 }
 
 class indice extends clsCadastro
 {
-    var $tipo_biblioteca;
+    public $tipo_biblioteca;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 591, $this->pessoa_logada, 3,  "educar_biblioteca_lst.php" );
+        $obj_permissoes->permissao_cadastra(591, $this->pessoa_logada, 3, 'educar_biblioteca_lst.php');
 
-        $this->url_cancelar = "educar_biblioteca_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->url_cancelar = 'educar_biblioteca_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // list
-        $opcoes = array( "" => "Selecione", 2 => "Institucional", 4 => "Escolar");
-        $this->campoLista( "tipo_biblioteca", "Tipo Biblioteca", $opcoes, $this->tipo_biblioteca);
+        $opcoes = [ '' => 'Selecione', 2 => 'Institucional', 4 => 'Escolar'];
+        $this->campoLista('tipo_biblioteca', 'Tipo Biblioteca', $opcoes, $this->tipo_biblioteca);
     }
 
-    function Novo()
+    public function Novo()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 591, $this->pessoa_logada, 3,  "educar_biblioteca_lst.php" );
+        $obj_permissoes->permissao_cadastra(591, $this->pessoa_logada, 3, 'educar_biblioteca_lst.php');
 
         Session::put('biblioteca.tipo_biblioteca', $this->tipo_biblioteca);
 
@@ -52,7 +51,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>
