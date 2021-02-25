@@ -1,20 +1,17 @@
 <?php
 
 use App\Exceptions\SchoolClass\DisciplinesValidationException;
-use App\Services\iDiarioService;
-use App\Services\SchoolClassService;
-use App\Services\SchoolClass\ExemptedDisciplineLinksRemover;
-use App\Models\School;
 use App\Models\LegacyCourse;
 use App\Models\LegacySchoolClass;
+use App\Models\School;
+use App\Services\iDiarioService;
+use App\Services\SchoolClass\ExemptedDisciplineLinksRemover;
+use App\Services\SchoolClassService;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
-use RuntimeException;
-use Throwable;
-
 
 class clsIndexBase extends clsBase
 {
@@ -476,7 +473,6 @@ class indice extends clsCadastro
 
         $this->campoHora('hora_final', 'Hora final', $this->hora_final, false, null, null, null);
 
-
         $helperOptions = ['objectName' => 'dias_semana'];
         $options = ['label' => 'Dias da semana',
             'size' => 50,
@@ -832,11 +828,11 @@ class indice extends clsCadastro
      * @param $levelId
      * @param $academicYear
      * @param $alternativeReportCard
+     *
      * @return bool
      */
     public function temBoletimDiferenciado($levelId, $academicYear, $alternativeReportCard)
     {
-
         if ($alternativeReportCard) {
             return true;
         }
@@ -888,7 +884,6 @@ class indice extends clsCadastro
         if (!$cadastrou) {
             $this->mensagem = 'Cadastro não realizado.';
 
-
             return false;
         }
 
@@ -930,7 +925,6 @@ class indice extends clsCadastro
         if (!$this->verificaCamposCenso()) {
             return false;
         }
-
 
         $this->visivel = isset($this->visivel);
 
@@ -975,6 +969,7 @@ class indice extends clsCadastro
             $this->mensagem = 'Edição não realizada.';
 
             DB::rollBack();
+
             return false;
         }
 
@@ -996,6 +991,7 @@ class indice extends clsCadastro
             $this->mensagem = $e->getMessage();
 
             DB::rollBack();
+
             return false;
         }
 
@@ -1003,6 +999,7 @@ class indice extends clsCadastro
 
         if (!$this->atualizaModulos()) {
             DB::rollBack();
+
             return false;
         }
 
@@ -1079,19 +1076,20 @@ class indice extends clsCadastro
         $school = School::find($this->ref_ref_cod_escola);
         $localFuncionamentoEscola = $school->local_funcionamento;
         if (is_string($localFuncionamentoEscola)) {
-            $localFuncionamentoEscola = explode(',', str_replace(array('{', "}"), '', $localFuncionamentoEscola));
+            $localFuncionamentoEscola = explode(',', str_replace(['{', '}'], '', $localFuncionamentoEscola));
         }
 
         $localFuncionamentoEscola = (array) $localFuncionamentoEscola;
 
         if (!in_array(9, $localFuncionamentoEscola) && $this->local_funcionamento_diferenciado == App_Model_LocalFuncionamentoDiferenciado::UNIDADE_ATENDIMENTO_SOCIOEDUCATIVO) {
-
             $this->mensagem = 'Não é possível selecionar a opção: Unidade de atendimento socioeducativo quando o local de funcionamento da escola não for: Unidade de atendimento socioeducativo.';
+
             return false;
         }
 
         if (!in_array(10, $localFuncionamentoEscola) && $this->local_funcionamento_diferenciado == App_Model_LocalFuncionamentoDiferenciado::UNIDADE_PRISIONAL) {
             $this->mensagem = 'Não é possível selecionar a opção: Unidade prisional quando o local de funcionamento da escola não for: Unidade prisional.';
+
             return false;
         }
 
@@ -1133,31 +1131,37 @@ class indice extends clsCadastro
 
         if ($course->modalidade_curso == 1 && !in_array($this->etapa_educacenso, [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 41, 56])) {
             $this->mensagem = 'Quando a modalidade do curso é: Ensino regular, o campo: Etapa de ensino deve ser uma das seguintes opções: 1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 35, 36, 37, 38, 41 ou 56.';
+
             return false;
         }
 
         if ($course->modalidade_curso == 2 && !in_array($this->etapa_educacenso, [1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 41, 56, 39, 40, 69, 70, 71, 72, 73, 74, 64, 67, 68])) {
             $this->mensagem = 'Quando a modalidade do curso é: Educação Especial - Modalidade Substitutiva, o campo: Etapa de ensino deve ser uma das seguintes opções: 1, 2, 3, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 41, 56, 39, 40, 69, 70, 71, 72, 73, 74, 64, 67 ou 68.';
+
             return false;
         }
 
         if ($course->modalidade_curso == 3 && !in_array($this->etapa_educacenso, [69, 70, 71, 72])) {
             $this->mensagem = 'Quando a modalidade do curso é: Educação de Jovens e Adultos (EJA), o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72.';
+
             return false;
         }
 
         if ($course->modalidade_curso == 4 && !in_array($this->etapa_educacenso, [30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67, 68])) {
             $this->mensagem = 'Quando a modalidade do curso é: Educação Profissional, o campo: Etapa de ensino deve ser uma das seguintes opções: 30, 31, 32, 33, 34, 39, 40, 73, 74, 64, 67 ou 68.';
+
             return false;
         }
 
         if ($this->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL && !in_array($this->etapa_educacenso, [69, 70, 71, 72])) {
             $this->mensagem = 'Quando o campo: Tipo de mediação didático-pedagógica é: Semipresencial, o campo: Etapa de ensino deve ser uma das seguintes opções: 69, 70, 71 ou 72';
+
             return false;
         }
 
         if ($this->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA && !in_array($this->etapa_educacenso, [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67, 68])) {
             $this->mensagem = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67 ou 68';
+
             return false;
         }
 
@@ -1166,6 +1170,7 @@ class indice extends clsCadastro
         ) {
             $nomeOpcao = (App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums())[$this->local_funcionamento_diferenciado];
             $this->mensagem = "Quando o campo: Local de funcionamento diferenciado é: {$nomeOpcao}, o campo: Etapa de ensino não pode ser nenhuma das seguintes opções: 1, 2, 3 ou 56";
+
             return false;
         }
 
@@ -1207,25 +1212,25 @@ class indice extends clsCadastro
 
         if ($turnoId === clsPmieducarTurma::TURNO_INTEGRAL) { // Se integral não pode ter vínculos noturnos
             $count += DB::table('pmieducar.matricula_turma as mt')
-                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'mt.ref_cod_turma')
+                ->join('pmieducar.turma as t', 't.cod_turma', '=', 'mt.ref_cod_turma')
                 ->where('mt.turno_id', clsPmieducarTurma::TURNO_NOTURNO)
                 ->where('t.cod_turma', $turmaId)
                 ->count();
 
             $count += DB::table('modules.professor_turma as pt')
-                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'pt.turma_id')
+                ->join('pmieducar.turma as t', 't.cod_turma', '=', 'pt.turma_id')
                 ->where('pt.turno_id', clsPmieducarTurma::TURNO_NOTURNO)
                 ->where('t.cod_turma', $turmaId)
                 ->count();
         } else { // Se ñ é integral não pode ter vínculos diferentes do novo turno
             $count += DB::table('pmieducar.matricula_turma as mt')
-                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'mt.ref_cod_turma')
+                ->join('pmieducar.turma as t', 't.cod_turma', '=', 'mt.ref_cod_turma')
                 ->where('mt.turno_id', '<>', $turnoId)
                 ->where('t.cod_turma', $turmaId)
                 ->count();
 
             $count += DB::table('modules.professor_turma as pt')
-                ->join('pmieducar.turma as t', 't.cod_turma',  '=', 'pt.turma_id')
+                ->join('pmieducar.turma as t', 't.cod_turma', '=', 'pt.turma_id')
                 ->where('pt.turno_id', '<>', $turnoId)
                 ->where('t.cod_turma', $turmaId)
                 ->count();
@@ -1321,7 +1326,7 @@ class indice extends clsCadastro
         $counts = [];
 
         $counts[] = DB::table('modules.falta_componente_curricular as fcc')
-            ->join('modules.falta_aluno as fa', 'fa.id',  '=', 'fcc.falta_aluno_id')
+            ->join('modules.falta_aluno as fa', 'fa.id', '=', 'fcc.falta_aluno_id')
             ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'fa.matricula_id')
             ->join('pmieducar.matricula_turma as mt', 'mt.ref_cod_matricula', '=', 'm.cod_matricula')
             ->whereIn('fcc.etapa', $etapas)
@@ -1330,7 +1335,7 @@ class indice extends clsCadastro
             ->count();
 
         $counts[] = DB::table('modules.falta_geral as fg')
-            ->join('modules.falta_aluno as fa', 'fa.id',  '=', 'fg.falta_aluno_id')
+            ->join('modules.falta_aluno as fa', 'fa.id', '=', 'fg.falta_aluno_id')
             ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'fa.matricula_id')
             ->join('pmieducar.matricula_turma as mt', 'mt.ref_cod_matricula', '=', 'm.cod_matricula')
             ->whereIn('fg.etapa', $etapas)
@@ -1339,7 +1344,7 @@ class indice extends clsCadastro
             ->count();
 
         $counts[] = DB::table('modules.nota_componente_curricular as ncc')
-            ->join('modules.nota_aluno as na', 'na.id',  '=', 'ncc.nota_aluno_id')
+            ->join('modules.nota_aluno as na', 'na.id', '=', 'ncc.nota_aluno_id')
             ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'na.matricula_id')
             ->join('pmieducar.matricula_turma as mt', 'mt.ref_cod_matricula', '=', 'm.cod_matricula')
             ->whereIn('ncc.etapa', $etapas)
@@ -1433,7 +1438,6 @@ class indice extends clsCadastro
         $cadastrou = $objModulo->cadastra();
 
         if (!$cadastrou) {
-
         }
 
         return true;
@@ -1459,7 +1463,7 @@ class indice extends clsCadastro
 
     public function atualizaComponentesCurriculares($codSerie, $codEscola, $codTurma, $componentes, $cargaHoraria, $usarComponente, $docente)
     {
-                $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
+        $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
 
         $componentesTurma = [];
 
@@ -1534,13 +1538,11 @@ class indice extends clsCadastro
             } else {
                 $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.';
 
-
                 return false;
             }
         }
 
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.';
-
 
         return false;
     }
