@@ -1,6 +1,5 @@
 <?php
 
-
 class clsIndexBase extends clsBase
 {
     public function Formular()
@@ -51,7 +50,6 @@ class indice extends clsCadastro
     {
         $retorno = 'Novo';
 
-
         $this->cod_serie=$_GET['cod_serie'];
 
         $obj_permissoes = new clsPermissoes();
@@ -101,7 +99,8 @@ class indice extends clsCadastro
                         'regraAvaliacaoDiferenciada',
                         'serie',
                         'anoLetivo',
-                    ],[
+                    ],
+                    [
                         'serie' => $this->cod_serie
                     ],
                     ['ano_letivo' => 'DESC'],
@@ -202,15 +201,15 @@ class indice extends clsCadastro
 
         // @TODO entender como funciona a tabela para poder popular os campos de regra
         // baseado na instituição escolhida
-        $regras = $mapper->findAll([],[]);
+        $regras = $mapper->findAll([], []);
         $regras = CoreExt_Entity::entityFilterAttr($regras, 'id', 'nome');
 
         $regras = ['' => 'Selecione'] + $regras;
 
-        $this->campoTabelaInicio("regras","Regras de avaliação",["Regra de avaliação (padrão)","Regra de avaliação (alternativa)<br><font size=-1; color=gray>O campo deve ser preenchido se existirem escolas avaliadas de forma alternativa (ex.: escola rural, indígena, etc)</font>", "Ano escolar"],$this->regras_ano_letivo);
+        $this->campoTabelaInicio('regras', 'Regras de avaliação', ['Regra de avaliação (padrão)','Regra de avaliação (alternativa)<br><font size=-1; color=gray>O campo deve ser preenchido se existirem escolas avaliadas de forma alternativa (ex.: escola rural, indígena, etc)</font>', 'Ano escolar'], $this->regras_ano_letivo);
         $this->campoLista('regras_avaliacao_id', 'Regra de avaliação (padrão)', $regras, $this->regras_avaliacao_id);
-        $this->campoLista('regras_avaliacao_diferenciada_id', 'Regra de avaliação (alternativa)', $regras, $this->regras_avaliacao_difer>enciada_id, '', FALSE, 'Será utilizada quando campo <b>Utilizar regra de avaliação diferenciada</b> estiver marcado no cadastro da escola', '', FALSE, FALSE);
-        $this->campoNumero("anos_letivos", "Ano letivo", $this->anos_letivos, 4, 4, true);
+        $this->campoLista('regras_avaliacao_diferenciada_id', 'Regra de avaliação (alternativa)', $regras, $this->regras_avaliacao_difer>enciada_id, '', false, 'Será utilizada quando campo <b>Utilizar regra de avaliação diferenciada</b> estiver marcado no cadastro da escola', '', false, false);
+        $this->campoNumero('anos_letivos', 'Ano letivo', $this->anos_letivos, 4, 4, true);
         $this->campoTabelaFim();
 
         $opcoes = ['' => 'Selecione', 1 => 'não', 2 => 'sim'];
@@ -289,7 +288,6 @@ class indice extends clsCadastro
 
         $this->mensagem = 'Cadastro não realizado.<br>';
 
-
         return false;
     }
 
@@ -334,7 +332,6 @@ class indice extends clsCadastro
 
         $this->mensagem = 'Edição não realizada.<br>';
 
-
         return false;
     }
 
@@ -369,7 +366,6 @@ class indice extends clsCadastro
 
         $this->mensagem = 'Exclusão não realizada.<br>';
 
-
         return false;
     }
 
@@ -395,21 +391,19 @@ class indice extends clsCadastro
 
     protected function deletaRegraSerieAnoNaoEnviada(array $anosParaManter)
     {
-
-        $anosParaManter = implode(',',$anosParaManter);
+        $anosParaManter = implode(',', $anosParaManter);
         $serieAnoMapper = new RegraAvaliacao_Model_SerieAnoDataMapper();
         $regrasSerieAnoDeletar = $serieAnoMapper->findAll([
             'regraAvaliacao',
             'regraAvaliacaoDiferenciada',
             'serie',
             'anoLetivo',
-        ],[
+        ], [
             'serie' => $this->cod_serie,
-            " not ano_letivo = any('{".$anosParaManter."}') "
+            ' not ano_letivo = any(\'{'.$anosParaManter.'}\') '
         ], [], false);
 
-        foreach ($regrasSerieAnoDeletar as $regra)
-        {
+        foreach ($regrasSerieAnoDeletar as $regra) {
             $serieAnoMapper->delete($regra);
         }
     }
