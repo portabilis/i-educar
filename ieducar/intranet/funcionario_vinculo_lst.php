@@ -1,6 +1,5 @@
 <?php
 
-
 class clsIndex extends clsBase
 {
     public function Formular()
