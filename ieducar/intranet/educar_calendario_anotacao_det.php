@@ -1,16 +1,14 @@
 <?php
 
-
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Calendario Anotacao" );
-        $this->processoAp = "620";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Calendario Anotacao");
+        $this->processoAp = '620';
     }
 }
 
@@ -21,64 +19,59 @@ class indice extends clsDetalhe
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
-    var $cod_calendario_anotacao;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nm_anotacao;
-    var $descricao;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $cod_calendario_anotacao;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_anotacao;
+    public $descricao;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    var $dia;
-    var $mes;
-    var $ano;
-    var $ref_cod_calendario_ano_letivo;
+    public $dia;
+    public $mes;
+    public $ano;
+    public $ref_cod_calendario_ano_letivo;
 
-    function Gerar()
+    public function Gerar()
     {
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
+        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
+            $this->$var = ($val === '') ? null: $val;
+        }
 
-        $this->titulo = "Calendario Anotacao - Detalhe";
+        $this->titulo = 'Calendario Anotacao - Detalhe';
 
+        $this->cod_calendario_anotacao=$_GET['cod_calendario_anotacao'];
 
-        $this->cod_calendario_anotacao=$_GET["cod_calendario_anotacao"];
-
-        $tmp_obj = new clsPmieducarCalendarioAnotacao( $this->cod_calendario_anotacao );
+        $tmp_obj = new clsPmieducarCalendarioAnotacao($this->cod_calendario_anotacao);
         $registro = $tmp_obj->detalhe();
 
-        if( ! $registro )
-        {
+        if (! $registro) {
             throw new HttpResponseException(
                 new RedirectResponse('educar_calendario_ano_letivo_lst.php')
             );
         }
 
-        if( $registro["cod_calendario_anotacao"] )
-        {
-            $this->addDetalhe( array( "Calendario Anotac&atilde;o", "{$registro["cod_calendario_anotacao"]}") );
+        if ($registro['cod_calendario_anotacao']) {
+            $this->addDetalhe([ 'Calendario Anotac&atilde;o', "{$registro['cod_calendario_anotacao']}"]);
         }
-        if( $registro["nm_anotacao"] )
-        {
-            $this->addDetalhe( array( "Nome Anotac&atilde;o", "{$registro["nm_anotacao"]}") );
+        if ($registro['nm_anotacao']) {
+            $this->addDetalhe([ 'Nome Anotac&atilde;o', "{$registro['nm_anotacao']}"]);
         }
-        if( $registro["descricao"] )
-        {
-            $this->addDetalhe( array( "Descric&atilde;o", "{$registro["descricao"]}") );
+        if ($registro['descricao']) {
+            $this->addDetalhe([ 'Descric&atilde;o', "{$registro['descricao']}"]);
         }
 
         $obj_permissoes = new clsPermissoes();
-        if( $obj_permissoes->permissao_cadastra( 620, $this->pessoa_logada, 7 ) )
-        {
-        $this->url_novo = "educar_calendario_anotacao_cad.php";
-        $this->url_editar = "educar_calendario_anotacao_cad.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}&cod_calendario_anotacao={$registro["cod_calendario_anotacao"]}";
+        if ($obj_permissoes->permissao_cadastra(620, $this->pessoa_logada, 7)) {
+            $this->url_novo = 'educar_calendario_anotacao_cad.php';
+            $this->url_editar = "educar_calendario_anotacao_cad.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}&cod_calendario_anotacao={$registro['cod_calendario_anotacao']}";
         }
 
         $this->url_cancelar = "educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}";
-        $this->largura = "100%";
+        $this->largura = '100%';
     }
 }
 
@@ -87,7 +80,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>
