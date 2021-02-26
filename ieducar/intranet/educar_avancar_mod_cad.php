@@ -3,16 +3,7 @@
 use App\Models\LegacyInstitution;
 use Illuminate\Support\Facades\Session;
 
-
-# ABC
-    public function Formular()
-    {
-        $this->titulo = "i-Educar";
-        $this->processoAp = '845';
-    }
-# ABC
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $data_matricula;
@@ -369,6 +360,10 @@ return new class extends clsCadastro
 
         return false;
     }
-}
 
-
+    public function Formular()
+    {
+        $this->titulo = 'i-Educar';
+        $this->processoAp = '845';
+    }
+};

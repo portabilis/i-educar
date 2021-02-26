@@ -1,14 +1,6 @@
 <?php
 
-# ABC
-    public function Formular()
-    {
-        $this->titulo = "Servidores - Falta Atraso";
-        $this->processoAp = 635;
-    }
-# ABC
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -183,6 +175,10 @@ return new class extends clsListagem
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
     }
-}
 
-;
+    public function Formular()
+    {
+        $this->titulo = 'Servidores - Falta Atraso';
+        $this->processoAp = 635;
+    }
+};
