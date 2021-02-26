@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -78,28 +76,18 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-escola-localizacao-cad-pop.js');
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Escola Localiza&ccedil;&atilde;o";
+        $this->titulo = 'i-Educar - Escola Localização';
         $this->processoAp = '562';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
     }
 };
-
-
-?>
-
-<script>
-
-Event.observe(window, 'load', Init, false);
-
-function Init()
-{
-    $('ref_cod_instituicao').value = parent.document.getElementById('ref_cod_instituicao').value;
-}
-
-</script>
