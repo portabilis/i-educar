@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -183,22 +181,16 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
 
         return false;
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/define-status-cliente-cad.js');
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Cliente";
+        $this->titulo = 'i-Educar - Cliente';
         $this->processoAp = '603';
     }
 };
-
-
-?>
-<script>
-
-var ref_cod_motivo_suspensao = document.getElementById( 'cod_motivo_suspensao' );
-ref_cod_motivo_suspensao.onchange = function() { getDescricao(); };
-
-
-</script>
