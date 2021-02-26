@@ -1,17 +1,7 @@
 <?php
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Aluno");
-        $this->processoAp = '0';
-        $this->renderMenu = false;
-        $this->renderMenuSuspenso = false;
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -143,6 +133,15 @@ function fecha()
     {
         window.parent.document.getElementById('passo').value = 2;
         window.parent.document.forms[0].submit();
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Aluno");
+        $this->processoAp = '0';
+        $this->renderMenu = false;
+        $this->renderMenuSuspenso = false;
+    }
+};
 </script>

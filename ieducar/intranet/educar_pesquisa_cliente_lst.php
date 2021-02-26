@@ -2,18 +2,8 @@
 
 use Illuminate\Support\Facades\Session;
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Cliente");
-        $this->processoAp = '0';
-        $this->renderMenu = false;
-        $this->renderMenuSuspenso = false;
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -159,8 +149,17 @@ function addVal1( campo, valor, opcao )
     {
         obj       =  window.parent.document.getElementById( campo );
         obj.value = valor;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Cliente");
+        $this->processoAp = '0';
+        $this->renderMenu = false;
+        $this->renderMenuSuspenso = false;
+    }
+};
 
 function fecha()
 {

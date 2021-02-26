@@ -1,16 +1,8 @@
 <?php
 
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Vínculo Funcionários");
-        $this->processoAp = '190';
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     public $cod_usuario;
 
@@ -38,7 +30,14 @@ class indice extends clsDetalhe
         $this->largura = '100%';
 
         $this->breadcrumb('Detalhe do v&iacute;nculo');
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} Vínculo Funcionários");
+        $this->processoAp = '190';
+    }
+};
 
 

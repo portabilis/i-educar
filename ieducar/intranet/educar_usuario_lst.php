@@ -4,16 +4,8 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Usu&aacute;rios!");
-        $this->processoAp = '555';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     public function Gerar()
     {
@@ -151,7 +143,14 @@ class indice extends clsListagem
         $this->breadcrumb('Usuários', [
             url('intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} Usu&aacute;rios!");
+        $this->processoAp = '555';
+    }
+};
 
 

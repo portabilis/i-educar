@@ -13,16 +13,8 @@ use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\NisValidator;
 use iEducar\Support\View\SelectOptions;
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Pessoas Físicas - Cadastro');
-        $this->processoAp = 43;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     use LegacyAddressingFields;
 
@@ -1420,7 +1412,14 @@ class indice extends clsCadastro
             $deletedFiles = explode(',', $this->file_url_deleted);
             $fileService->deleteFiles($deletedFiles);
         }
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Pessoas Físicas - Cadastro');
+        $this->processoAp = 43;
+    }
+};
 
 

@@ -2,18 +2,8 @@
 
 $desvio_diretorio = '';
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . 'Usu&aacute;rios');
-        $this->processoAp   = '0';
-        $this->renderMenu   = false;
-        $this->renderMenuSuspenso = false;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $p_cod_pessoa_fj;
     public $f_senha;
@@ -86,8 +76,17 @@ class indice extends clsCadastro
 
     public function Editar()
     {
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . 'Usu&aacute;rios');
+        $this->processoAp   = '0';
+        $this->renderMenu   = false;
+        $this->renderMenuSuspenso = false;
+    }
+};
 
 ?>
 

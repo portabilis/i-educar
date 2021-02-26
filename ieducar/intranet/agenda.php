@@ -30,16 +30,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Agenda Particular");
-        $this->processoAp = '0';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $agenda;
     public $editor;
@@ -476,6 +468,13 @@ class indice extends clsCadastro
         </table>';
 
         return $conteudo;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} Agenda Particular");
+        $this->processoAp = '0';
+    }
+};
 

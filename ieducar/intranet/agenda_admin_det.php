@@ -2,16 +2,8 @@
 
 $desvio_diretorio = '';
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Agenda");
-        $this->processoAp = '343';
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     public function Gerar()
     {
@@ -81,7 +73,14 @@ class indice extends clsDetalhe
         $this->largura = '100%';
 
         $this->breadcrumb('Detalhe da agenda');
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} Agenda");
+        $this->processoAp = '343';
+    }
+};
 
 

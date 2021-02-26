@@ -2,16 +2,8 @@
 
 $desvio_diretorio = '';
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Conexões!");
-        $this->processoAp = '157';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     public function Gerar()
     {
@@ -74,7 +66,14 @@ class indice extends clsListagem
         $this->largura = '100%';
 
         $this->breadcrumb('Listagem de conexões realizadas');
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} Conexões!");
+        $this->processoAp = '157';
+    }
+};
 
 

@@ -1,15 +1,7 @@
 <?php
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Vínculo Funcionários!");
-        $this->processoAp = '190';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $nm_vinculo;
     public $cod_vinculo;
@@ -123,7 +115,14 @@ class indice extends clsCadastro
         $count = (int)$this->db->CampoUnico($sql);
 
         return $count > 0;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} Vínculo Funcionários!");
+        $this->processoAp = '190';
+    }
+};
 
 
