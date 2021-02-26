@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -108,35 +106,22 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
+    }
 
+    public function makeExtra()
+    {
+        if (! $_GET['precisa_lista']) {
+            return file_get_contents(__DIR__ . '/scripts/extra/educar-infra-predio-cad-pop.js');
+        }
+
+        return '';
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Infra Predio";
+        $this->titulo = 'i-Educar - Infra Predio';
         $this->processoAp = '567';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
     }
 };
-
-
-?>
-<script>
-
-<?php
-
-if (!$_GET['precisa_lista']) {
-    ?>
-    Event.observe(window, 'load', Init, false);
-
-    function Init()
-    {
-        $('ref_cod_escola').value = parent.document.getElementById('ref_cod_escola').value;
-//      alert($F('ref_cod_escola'));
-    }
-
-<?php
-} ?>
-
-</script>
