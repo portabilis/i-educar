@@ -2,7 +2,7 @@
 
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 
-$desvio_diretorio = '';
+
 
 
 return new class extends clsCadastro
