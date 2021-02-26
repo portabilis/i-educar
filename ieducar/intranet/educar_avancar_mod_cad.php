@@ -4,17 +4,14 @@ use App\Models\LegacyInstitution;
 use Illuminate\Support\Facades\Session;
 
 
-class clsIndexBase extends clsBase
-{
+# ABC
     public function Formular()
     {
         $this->SetTitulo($this->_instituicao . ' i-Educar');
         $this->processoAp = '845';
     }
-}
-
-
-class indice extends clsCadastro
+# ABC
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 

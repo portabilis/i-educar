@@ -3,17 +3,7 @@
 
 $desvio_diretorio = "";
 
-class clsIndex extends clsBase
-{
-
-    function Formular()
-    {
-        $this->SetTitulo( "{$this->_instituicao} Agenda" );
-        $this->processoAp = "343";
-    }
-}
-
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     var $cod_agenda,
         $ref_ref_cod_pessoa_exc,
@@ -242,7 +232,13 @@ class indice extends clsCadastro
         $this->mensagem = "Codigo da Agenda inválido!";
         return false;
     }
-}
+
+    function Formular()
+    {
+        $this->SetTitulo( "{$this->_instituicao} Agenda" );
+        $this->processoAp = "343";
+    }
+};
 
 
 

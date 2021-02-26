@@ -1,16 +1,6 @@
 <?php
 
-
-class clsIndexBase extends clsBase
-{
-    function Formular()
-    {
-        $this->SetTitulo( "{$this->_instituicao} Acesso" );
-        $this->processoAp = "666";
-    }
-}
-
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     /**
      * Titulo no topo da pagina
@@ -79,7 +69,13 @@ class indice extends clsDetalhe
         $this->url_cancelar = "portal_acesso_lst.php";
         $this->largura = "100%";
     }
-}
+
+    function Formular()
+    {
+        $this->SetTitulo( "{$this->_instituicao} Acesso" );
+        $this->processoAp = "666";
+    }
+};
 
 
 ?>

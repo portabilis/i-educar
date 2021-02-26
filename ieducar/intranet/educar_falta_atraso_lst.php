@@ -1,16 +1,13 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
+# ABC
     public function Formular()
     {
         $this->SetTitulo($this->_instituicao . ' Servidores - Falta Atraso');
         $this->processoAp = 635;
     }
-}
-
-
-class indice extends clsListagem
+# ABC
+return new class extends clsListagem
 {
     public $pessoa_logada;
     public $titulo;

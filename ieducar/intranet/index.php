@@ -1,66 +1,9 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestĂŁo escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaĂ­
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa ĂŠ software livre; vocĂŞ pode redistribuĂ­-lo e/ou modificĂĄ-lo
- * sob os termos da LicenĂ§a PĂşblica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versĂŁo 2 da LicenĂ§a, como (a seu critĂŠrio)
- * qualquer versĂŁo posterior.
- *
- * Este programa ĂŠ distribuĂ­Â­do na expectativa de que seja Ăştil, porĂŠm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implĂ­Â­cita de COMERCIABILIDADE OU
- * ADEQUAĂĂO A UMA FINALIDADE ESPECĂFICA. Consulte a LicenĂ§a PĂşblica Geral
- * do GNU para mais detalhes.
- *
- * VocĂŞ deve ter recebido uma cĂłpia da LicenĂ§a PĂşblica Geral do GNU junto
- * com este programa; se nĂŁo, escreva para a Free Software Foundation, Inc., no
- * endereĂ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Prefeitura Municipal de ItajaĂ­ <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Arquivo disponĂ­vel desde a versĂŁo 1.0.0
- * @version   $Id$
- */
-
-
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-/**
- * clsIndex class.
- *
- * @author    Prefeitura Municipal de ItajaĂ­ <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponĂ­vel desde a versĂŁo 1.0.0
- * @version   @@package_version@@
- */
-class clsIndex extends clsBase
-{
-  public function Formular() {
-    $this->SetTitulo($this->_instituicao);
-    $this->processoAp = 0;
-  }
-}
-
-/**
- * indice class.
- *
- * @author    Prefeitura Municipal de ItajaĂ­ <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponĂ­vel desde a versĂŁo 1.0.0
- * @version   @@package_version@@
- */
-class indice
+return new class
 {
   function addLeadingZero($num)
   {
@@ -358,5 +301,10 @@ class indice
           });
          </script>';
   }
-}
+
+    public function Formular() {
+        $this->SetTitulo($this->_instituicao);
+        $this->processoAp = 0;
+    }
+};
 

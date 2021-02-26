@@ -1,15 +1,6 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular(): bool
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Dados Biblioteca");
-        $this->processoAp = '629';
-    }
-}
-
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     /**
      * Titulo no topo da pagina
@@ -159,6 +150,12 @@ class indice extends clsDetalhe
             url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
         ]);
     }
-}
+
+    public function Formular(): bool
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Dados Biblioteca");
+        $this->processoAp = '629';
+    }
+};
 
 
