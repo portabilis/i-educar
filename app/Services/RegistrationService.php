@@ -199,6 +199,10 @@ class RegistrationService
 
         $enrollment = $registration->lastEnrollment;
 
+        if(empty($enrollment)) {
+            return;
+        }
+
         if (!$relocated && $enrollment->remanejado) {
             return;
         }

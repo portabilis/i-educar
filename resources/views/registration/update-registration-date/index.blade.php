@@ -202,7 +202,8 @@
                     <td>{{ $registration->cod_matricula }}</td>
                     <td>{{ $registration->student->person->name }}</td>
                     <td>{{ $registration->data_matricula->format('d/m/Y') }}</td>
-                    <td>{{ $registration->lastEnrollment->data_enturmacao->format('d/m/Y') }}</td>
+                    <td>@if($registration->lastEnrollment) {{ $registration->lastEnrollment->data_enturmacao->format('d/m/Y') }} @else Sem enturmação @endif</td>
+                    <td></td>
                 </tr>
             @endforeach
             </tbody>
