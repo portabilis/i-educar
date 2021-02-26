@@ -323,17 +323,7 @@ class indice extends clsListagem
     }
 }
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
-
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
 ?>
 <script type="text/javascript">
     function enturmar(ref_cod_escola, ref_cod_serie, ref_cod_matricula, ref_cod_turma, ano_letivo) {
