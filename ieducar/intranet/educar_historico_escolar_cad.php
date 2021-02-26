@@ -540,8 +540,4 @@ function validaControlePosicaoHistorico()
     return dbBool($lst[0]['controlar_posicao_historicos']);
 }
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();

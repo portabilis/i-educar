@@ -302,11 +302,7 @@ class indice extends clsDetalhe
     }
 }
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();
 
 ?>
 <script>

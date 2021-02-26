@@ -140,8 +140,4 @@ class indice extends clsListagem
     }
 }
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();
