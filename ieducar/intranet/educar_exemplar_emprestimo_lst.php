@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Session;
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -195,30 +193,16 @@ return new class extends clsListagem
         }
 
         $this->largura = '100%';
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-exemplar-emprestimo-lst.js');
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Exemplar Empr&eacute;stimo";
+        $this->titulo = 'i-Educar - Exemplar Empr&eacute;stimo';
         $this->processoAp = '610';
     }
 };
-
-?>
-
-<script>
-
-function pesquisa_cliente()
-{
-    var campoBiblioteca = document.getElementById('cod_biblioteca').value;
-    pesquisa_valores_popless('educar_pesquisa_cliente_lst.php?campo1=ref_cod_cliente&campo2=nm_cliente&ref_cod_biblioteca='+campoBiblioteca)
-}
-
-function pesquisa_obra()
-{
-    var campoBiblioteca = document.getElementById('cod_biblioteca').value;
-    pesquisa_valores_popless('educar_pesquisa_obra_lst.php?campo1=ref_cod_acervo&campo2=nm_obra&campo3='+campoBiblioteca)
-}
-
-</script>
