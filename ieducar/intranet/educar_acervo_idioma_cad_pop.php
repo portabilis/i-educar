@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -72,20 +70,18 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-acervo-autor-cad-pop.js');
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Idioma";
+        $this->titulo = 'i-Educar - Idioma';
         $this->processoAp = '590';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
     }
 };
-
-
-?>
-<script>
-    document.getElementById('ref_cod_biblioteca').value = parent.document.getElementById('ref_cod_biblioteca').value;
-</script>
