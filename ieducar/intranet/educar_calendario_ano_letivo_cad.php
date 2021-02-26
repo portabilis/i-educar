@@ -3,9 +3,7 @@
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -233,91 +231,16 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
 
         return false;
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ .'/scripts/extra/educar-calendario-ano-letivo.js');
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Calendario Ano Letivo";
+        $this->titulo = 'i-Educar - Calendario Ano Letivo';
         $this->processoAp = '620';
     }
 };
-
-
-?>
-<script>
-<?php echo 'var anoAtual='.date('Y').";\n"; ?>
-
-after_getEscola = function()
-{
-    var campoAno = document.getElementById('ano').length = 1;
-}
-
-document.getElementById('ref_cod_escola').onchange = (function(){geraAnos();});
-
-function geraAnos()
-{
-    var campoEscola = document.getElementById('ref_cod_escola');
-
-//      campoAno.length = 1;
-    //  campoAno.options[0].value = anoAtual;
-    //  campoAno.options[0].text = anoAtual;
-
-    var campoAno = document.getElementById('ano');
-    campoAno.length = 1;
-    campoAno.disabled = true;
-    campoAno.options[0].text = 'Carregando ano';
-
-    if(campoEscola.value == '')
-        return;
-
-    var xml1 = new ajax(loadFromXML);
-    strURL = "educar_escola_ano_letivo_xml.php?esc="+campoEscola.value+"&lim=5&ano_atual="+anoAtual;
-    xml1.envia(strURL);
-}
-
-function loadFromXML(xml)
-{
-    var campoAno = document.getElementById('ano');
-
-    //var num_anos = 5;
-    //var achou;
-    //for(var ct = anoAtual ;ct < anoAtual + num_anos;ct++){
-        //achou = false;
-        /*
-        var ar_anos = xml.getElementsByTagName( "ano" );
-        for(var c = 0; c < ar_anos.length;c++)
-        {
-            //if(ar_anos[c][1] == ct){
-            campoAno.options[campoAno.length] = new Option( ar_anos[c].firstChild.nodeValue, ar_anos[c].firstChild.nodeValue, false, false );
-                //num_anos++;
-                //achou = true;
-            //}
-        }
-        if(campoAno.length == 1)
-        {
-            campoAno.options[0].text = 'Escola não possui anos letivos';
-        }
-        ///if(!achou)
-            //campoAno.options[campoAno.length] = new Option( ct, ct, false, false );
-    //}
-    */
-    var DOM_array = xml.getElementsByTagName( "ano" );
-
-    if(DOM_array.length)
-    {
-        campoAno.length = 1;
-        campoAno.options[0].text = 'Selecione um ano';
-        campoAno.disabled = false;
-
-        for( var i = 0; i < DOM_array.length; i++ )
-        {
-            campoAno.options[campoAno.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].firstChild.data,false,false);
-        }
-    }
-    else
-        campoAno.options[0].text = 'A escola não possui nenhum ano letivo';
-}
-
-geraAnos();
-</script>
