@@ -149,7 +149,7 @@ class LegacyController extends Controller
     {
         $class = new clsBase();
 
-        if (is_callable([$viewToRender,'Formular'])) {
+        if (method_exists($viewToRender, 'Formular')) {
             $viewToRender->Formular();
         }
 
