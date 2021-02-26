@@ -215,14 +215,4 @@ class indice extends clsDetalhe
     }
 }
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
-
-// Atribui o conteúdo à página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
