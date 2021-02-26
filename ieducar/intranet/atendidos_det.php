@@ -4,9 +4,7 @@ use App\Models\LegacyIndividual;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public function Gerar()
     {
         $this->titulo = 'Detalhe da Pessoa';
@@ -163,14 +161,11 @@ return new class extends clsDetalhe
         $this->largura = '100%';
 
         $this->breadcrumb('Pessoa física', ['educar_pessoas_index.php' => 'Pessoas']);
-
     }
 
     public function Formular()
     {
-        $this->titulo = "Pessoa";
+        $this->titulo = 'Pessoa';
         $this->processoAp = 43;
     }
 };
-
-
