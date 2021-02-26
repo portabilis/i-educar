@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa');
-        $this->processoAp = 999848;
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     public $pessoa_logada;
     public $titulo;
@@ -116,7 +108,14 @@ class indice extends clsListagem
         $this->breadcrumb('Listagem de bloqueio de lan&ccedil;amento de notas e faltas por etapa', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa');
+        $this->processoAp = 999848;
+    }
+};
 
 

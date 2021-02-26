@@ -3,16 +3,8 @@
 use App\Process;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Matrícula');
-        $this->processoAp = 578;
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     public $titulo;
 
@@ -453,7 +445,14 @@ class indice extends clsDetalhe
         $db = new clsBanco();
 
         return $db->CampoUnico($sql);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Matrícula');
+        $this->processoAp = 578;
+    }
+};
 
 

@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Situa&ccedil;&atilde;o");
-        $this->processoAp = '602';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -287,8 +279,15 @@ function getSituacao(xml_situacao)
             if (DOM_array[i].getAttribute("situacao_emprestada") == 1) //jah existe uma situacao emprestada
                 setVisibility('tr_situacao_emprestada',false);
         }
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Situa&ccedil;&atilde;o");
+        $this->processoAp = '602';
+    }
+};
 
 function valida()
 {

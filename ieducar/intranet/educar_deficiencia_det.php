@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Defici&ecirc;ncia");
-        $this->processoAp = '631';
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     /**
      * Titulo no topo da pagina
@@ -48,7 +40,14 @@ class indice extends clsDetalhe
         $this->breadcrumb('Detalhe da deficiência', [
             url('intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Defici&ecirc;ncia");
+        $this->processoAp = '631';
+    }
+};
 
 

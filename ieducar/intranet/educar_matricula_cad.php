@@ -11,16 +11,8 @@ use Illuminate\Support\Facades\Session;
 use App\Events\RegistrationEvent;
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Matrícula');
-        $this->processoAp = 578;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -1528,7 +1520,14 @@ class indice extends clsCadastro
         $this->availableTimeService->onlySchoolClassesInformedOnCensus();
 
         return $this->availableTimeService;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Matrícula');
+        $this->processoAp = 578;
+    }
+};
 
 

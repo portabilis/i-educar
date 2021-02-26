@@ -2,16 +2,8 @@
 
 use Illuminate\Support\Facades\Session;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Biblioteca");
-        $this->processoAp = '591';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $tipo_biblioteca;
 
@@ -43,7 +35,14 @@ class indice extends clsCadastro
         Session::put('biblioteca.tipo_biblioteca', $this->tipo_biblioteca);
 
         $this->simpleRedirect('educar_biblioteca_cad.php');
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Biblioteca");
+        $this->processoAp = '591';
+    }
+};
 
 

@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Motivo Abandono");
-        $this->processoAp = '950';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -125,6 +117,13 @@ class indice extends clsListagem
         $this->breadcrumb('Listagem de tipos de abandono', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Motivo Abandono");
+        $this->processoAp = '950';
+    }
+};
 

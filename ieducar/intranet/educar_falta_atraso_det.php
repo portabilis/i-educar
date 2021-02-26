@@ -2,16 +2,8 @@
 
 use App\Models\LegacySchool;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Falta Atraso');
-        $this->processoAp = 635;
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     public $titulo;
 
@@ -140,7 +132,14 @@ class indice extends clsDetalhe
         $this->breadcrumb('Detalhe da falta/atraso do servidor', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Servidores - Falta Atraso');
+        $this->processoAp = 635;
+    }
+};
 
 

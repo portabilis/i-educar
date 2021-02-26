@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Dispensa Componente Curricular');
-        $this->processoAp = 578;
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     public $pessoa_logada;
     public $titulo;
@@ -244,7 +236,14 @@ class indice extends clsListagem
         $this->breadcrumb('Dispensa de componentes curriculares', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Dispensa Componente Curricular');
+        $this->processoAp = 578;
+    }
+};
 
 

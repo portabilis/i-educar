@@ -2,16 +2,8 @@
 
 use iEducar\Support\Navigation\Breadcrumb;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Quadro de Horário');
-        $this->processoAp = '641';
-    }
-}
 
-class indice
+return new class
 {
     public $pessoa_logada;
     public $titulo;
@@ -273,8 +265,15 @@ class indice
         }
 
         return $valores;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Quadro de Horário');
+        $this->processoAp = '641';
+    }
+};
 
 
 ?>

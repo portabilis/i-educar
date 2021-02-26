@@ -3,16 +3,8 @@
 error_reporting(E_ERROR);
 ini_set('display_errors', 1);
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - C&oacute;pia de Rotas");
-        $this->processoAp = '21240';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -219,7 +211,14 @@ class indice extends clsCadastro
         } else {
             return empty($this->mensagem) ? '' : "<p class='form_erro error'>$this->mensagem</p>";
         }
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - C&oacute;pia de Rotas");
+        $this->processoAp = '21240';
+    }
+};
 
 

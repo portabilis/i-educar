@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Acesso");
-        $this->processoAp = '666';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -140,6 +132,13 @@ class indice extends clsListagem
         $this->nome_acao = 'Novo';
 
         $this->largura = '100%';
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} Acesso");
+        $this->processoAp = '666';
+    }
+};
 

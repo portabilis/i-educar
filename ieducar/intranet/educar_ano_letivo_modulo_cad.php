@@ -2,16 +2,8 @@
 
 use App\Services\iDiarioService;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Ano Letivo Etapa');
-        $this->processoAp = 561;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -695,8 +687,15 @@ class indice extends clsCadastro
         }
 
         return true;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Ano Letivo Etapa');
+        $this->processoAp = 561;
+    }
+};
 
 
 ?>

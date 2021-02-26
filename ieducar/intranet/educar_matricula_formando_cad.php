@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Matricula Turma");
-        $this->processoAp = '578';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -76,7 +68,14 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Matricula Turma");
+        $this->processoAp = '578';
+    }
+};
 
 

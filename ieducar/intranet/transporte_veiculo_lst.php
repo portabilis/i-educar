@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Veículos");
-        $this->processoAp = '21237';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -138,6 +130,13 @@ class indice extends clsListagem
         $this->breadcrumb('Listagem de ve&iacute;culos', [
         url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
     ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Veículos");
+        $this->processoAp = '21237';
+    }
+};
 

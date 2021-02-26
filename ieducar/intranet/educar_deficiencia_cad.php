@@ -3,16 +3,8 @@
 use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Support\View\SelectOptions;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Deficiência");
-        $this->processoAp = '631';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -138,8 +130,15 @@ class indice extends clsCadastro
 
 
         return false;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Deficiência");
+        $this->processoAp = '631';
+    }
+};
 
 
 ?>

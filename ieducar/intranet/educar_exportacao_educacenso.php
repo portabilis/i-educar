@@ -2,16 +2,8 @@
 
 use Illuminate\Support\Facades\DB;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Exporta&ccedil;&atilde;o Educacenso');
-        $this->processoAp = ($_REQUEST['fase2'] == 1 ? 9998845 : 846);
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -152,6 +144,13 @@ function marcarCheck(idValue) {
 
             campo.elements[i].checked = campo.CheckTodos.checked;
         }
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Exporta&ccedil;&atilde;o Educacenso');
+        $this->processoAp = ($_REQUEST['fase2'] == 1 ? 9998845 : 846);
+    }
+};
 </script>

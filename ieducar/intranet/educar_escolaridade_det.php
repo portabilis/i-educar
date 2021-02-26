@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Escolaridade');
-        $this->processoAp = '632';
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     /**
      * Referência a usuário da sessão
@@ -57,7 +49,14 @@ class indice extends clsDetalhe
         $this->breadcrumb('Detalhe da escolaridade', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Servidores - Escolaridade');
+        $this->processoAp = '632';
+    }
+};
 
 

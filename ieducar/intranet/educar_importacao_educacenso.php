@@ -3,16 +3,8 @@
 ini_set('max_execution_time', 0);
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Importação educacenso');
-        $this->processoAp = 9998849;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -76,6 +68,13 @@ class indice extends clsCadastro
     public function Editar()
     {
         return;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Importação educacenso');
+        $this->processoAp = 9998849;
+    }
+};
 

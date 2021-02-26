@@ -4,16 +4,8 @@ use App\Models\Individual;
 use App\Models\LogUnification;
 use iEducar\Modules\Unification\PersonLogUnification;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Unificação de pessoas');
-        $this->processoAp = '9998878';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -135,8 +127,15 @@ class indice extends clsCadastro
         }
 
         return $names;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Unificação de pessoas');
+        $this->processoAp = '9998878';
+    }
+};
 
 
 ?>

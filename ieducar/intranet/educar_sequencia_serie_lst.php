@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Sequ&ecirc;ncia Enturma&ccedil;&atilde;o");
-        $this->processoAp = '587';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -338,8 +330,15 @@ function getSerie( tipo )
                 campoSerie_.options[campoSerie_.options.length] = new Option( serie[j][1], serie[j][0],false,false);
             }
         }
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Sequ&ecirc;ncia Enturma&ccedil;&atilde;o");
+        $this->processoAp = '587';
+    }
+};
 */
 
 document.getElementById('ref_cod_instituicao').onchange = function()

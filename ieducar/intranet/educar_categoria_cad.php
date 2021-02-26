@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Categoria obras");
-        $this->processoAp = 599;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -120,7 +112,14 @@ class indice extends clsCadastro
         $this->array_botao_url_script[] = 'go(\'educar_categoria_obra_det.php?id='. $this->id .'\')';
 
         return false;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Categoria obras");
+        $this->processoAp = 599;
+    }
+};
 
 

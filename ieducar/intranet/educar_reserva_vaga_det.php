@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Reserva Vaga');
-        $this->processoAp = '639';
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     /**
      * Referência a usuário da sessão
@@ -212,7 +204,14 @@ class indice extends clsDetalhe
         $this->breadcrumb('Detalhe da reserva de vaga', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Reserva Vaga');
+        $this->processoAp = '639';
+    }
+};
 
 

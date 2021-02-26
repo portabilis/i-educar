@@ -5,16 +5,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Reservas");
-        $this->processoAp = '609';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -196,8 +188,15 @@ function requisitaSenha(xml_tipo_regime)
                 setVisibility('tr_senha_', true);
             }
         }
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Reservas");
+        $this->processoAp = '609';
+    }
+};
 
 document.getElementById('ref_cod_biblioteca').onchange = function()
 {

@@ -2,18 +2,8 @@
 
 use Illuminate\Support\Facades\Session;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor');
-        $this->processoAp = '0';
-        $this->renderMenu = false;
-        $this->renderMenuSuspenso = false;
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     public $pessoa_logada;
     public $titulo;
@@ -119,8 +109,17 @@ class indice extends clsListagem
 
         Session::save();
         Session::start();
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor');
+        $this->processoAp = '0';
+        $this->renderMenu = false;
+        $this->renderMenuSuspenso = false;
+    }
+};
 
 ?>
 <script type="text/javascript">

@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Etapa do aluno");
-        $this->processoAp = '578';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $cod_matricula;
     public $ref_cod_aluno;
@@ -152,7 +144,14 @@ class indice extends clsCadastro
         $matchedKeys = array_filter(array_keys($array), $callback);
 
         return array_intersect_key($array, array_flip($matchedKeys));
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Etapa do aluno");
+        $this->processoAp = '578';
+    }
+};
 
 

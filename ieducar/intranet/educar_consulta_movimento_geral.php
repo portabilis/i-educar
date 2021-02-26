@@ -1,16 +1,8 @@
 <?php
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Consulta de movimento geral');
-        $this->processoAp = 9998900;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     const PROCESSO_AP = 9998900;
 
@@ -75,7 +67,14 @@ class indice extends clsCadastro
         $url = '/intranet/educar_consulta_movimento_geral_lst.php?' . $queryString;
 
         $this->simpleRedirect($url);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Consulta de movimento geral');
+        $this->processoAp = 9998900;
+    }
+};
 
 

@@ -3,16 +3,8 @@
 #error_reporting(E_ALL);
 #ini_set("display_errors", 1);
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Exemplar");
-        $this->processoAp = '606';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -220,7 +212,14 @@ class indice extends clsCadastro
         $sequencial = $exemplar->getProximoSequencialObra($this->ref_cod_acervo);
 
         return $sequencial;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Exemplar");
+        $this->processoAp = '606';
+    }
+};
 
 

@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Pagamento Multa");
-        $this->processoAp = '622';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -183,8 +175,15 @@ class indice extends clsListagem
         $this->breadcrumb('Listagem de dívidas', [
             url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
         ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Pagamento Multa");
+        $this->processoAp = '622';
+    }
+};
 
 ?>
 <script>

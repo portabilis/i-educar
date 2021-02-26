@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Quadro Curricular");
-        $this->processoAp = '696';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
 
     /**
@@ -72,8 +64,15 @@ class indice extends clsCadastro
 
         $this->acao_enviar = 'acao2()';
         $this->acao_executa_submit = false;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Quadro Curricular");
+        $this->processoAp = '696';
+    }
+};
 
 
 

@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Itinerário");
-        $this->processoAp = '21238';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $cod_rota;
 
@@ -46,7 +38,14 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Itinerário");
+        $this->processoAp = '21238';
+    }
+};
 
 

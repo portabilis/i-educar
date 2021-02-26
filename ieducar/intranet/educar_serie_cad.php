@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Série');
-        $this->processoAp = '583';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -406,8 +398,15 @@ class indice extends clsCadastro
         foreach ($regrasSerieAnoDeletar as $regra) {
             $serieAnoMapper->delete($regra);
         }
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Série');
+        $this->processoAp = '583';
+    }
+};
 
 
 ?>

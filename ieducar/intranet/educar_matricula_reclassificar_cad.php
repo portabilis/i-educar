@@ -2,16 +2,8 @@
 
 use App\Process;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Reclassificar Matr&iacute;cula");
-        $this->processoAp = Process::RECLASSIFY_REGISTRATION;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -240,7 +232,14 @@ function getSerie_XML(xml)
         //{
         campoSerie[campoSerie.length] = new Option(seq_serie[ct].firstChild.nodeValue,seq_serie[ct].getAttribute("cod_serie"),false,false);
     //  }
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Reclassificar Matr&iacute;cula");
+        $this->processoAp = Process::RECLASSIFY_REGISTRATION;
+    }
+};
 getSerie();
 </script>

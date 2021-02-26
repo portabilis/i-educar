@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Calend&aacute;rio Dia Motivo");
-        $this->processoAp = '576';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -147,6 +139,13 @@ class indice extends clsListagem
         $this->breadcrumb('Tipos de evento do calendário', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Calend&aacute;rio Dia Motivo");
+        $this->processoAp = '576';
+    }
+};
 

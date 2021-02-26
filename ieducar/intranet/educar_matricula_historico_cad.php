@@ -3,17 +3,8 @@
 use App\Process;
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Bloqueio do ano letivo");
 
-        $this->processoAp = Process::ENROLLMENT_HISTORY;
-    }
-}
-
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $ref_cod_matricula;
     public $ref_cod_turma;
@@ -231,7 +222,15 @@ class indice extends clsCadastro
         $this->mensagem = 'Exclusão não realizada.';
 
         return false;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Bloqueio do ano letivo");
+
+        $this->processoAp = Process::ENROLLMENT_HISTORY;
+    }
+};
 
 

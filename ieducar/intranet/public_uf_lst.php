@@ -5,16 +5,8 @@ use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 use Illuminate\Support\Str;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Uf");
-        $this->processoAp = 754;
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     use InteractWithDatabase, SelectOptions;
 
@@ -88,7 +80,14 @@ class indice extends clsListagem
         $this->breadcrumb('Listagem de UFs', [
             url('intranet/educar_enderecamento_index.php') => 'Endereçamento',
         ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} Uf");
+        $this->processoAp = 754;
+    }
+};
 
 

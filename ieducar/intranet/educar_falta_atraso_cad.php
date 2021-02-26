@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Falta Atraso');
-        $this->processoAp = 635;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -311,8 +303,15 @@ class indice extends clsCadastro
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Servidores - Falta Atraso');
+        $this->processoAp = 635;
+    }
+};
 
 
 ?>

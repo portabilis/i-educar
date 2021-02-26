@@ -3,16 +3,8 @@
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Servidores - Motivo Afastamento");
-        $this->processoAp = '633';
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     /**
      * Titulo no topo da pagina
@@ -76,7 +68,14 @@ class indice extends clsDetalhe
         $this->breadcrumb('Detalhe do motivo de afastamento', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo("{$this->_instituicao} Servidores - Motivo Afastamento");
+        $this->processoAp = '633';
+    }
+};
 
 

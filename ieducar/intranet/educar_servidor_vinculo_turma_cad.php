@@ -8,16 +8,8 @@ use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Servidores\Model\FuncaoExercida;
 use iEducar\Support\View\SelectOptions;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Servidor vínculo turma');
-        $this->processoAp = 635;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -390,7 +382,14 @@ class indice extends clsCadastro
         }
 
         return false;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' Servidores - Servidor vínculo turma');
+        $this->processoAp = 635;
+    }
+};
 
 

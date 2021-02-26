@@ -1,16 +1,8 @@
 <?php
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Escolaridade do servidor');
-        $this->processoAp = '632';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referência a usuário da sessão
@@ -95,7 +87,14 @@ class indice extends clsListagem
     ]);
 
         $this->largura = '100%';
+
     }
-}
+
+    public function Formular()
+    {
+        $this->SetTitulo($this->_instituicao . ' i-Educar - Escolaridade do servidor');
+        $this->processoAp = '632';
+    }
+};
 
 
