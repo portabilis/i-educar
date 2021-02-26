@@ -469,9 +469,7 @@ class indice extends clsCadastro
     }
 }
 
-$pagina = new clsIndexBase();
-$pagina->addForm(new indice());
-$pagina->MakeAll();
+
 
 ?>
 

@@ -275,14 +275,7 @@ class indice extends clsListagem
         $this->largura = '100%';
     }
 }
-// Instancia objeto de pÃ¡gina
-$pagina = new clsIndexBase();
-// Instancia objeto de conteÃºdo
-$miolo = new indice();
-// Atribui o conteÃºdo Ã   pÃ¡gina
-$pagina->addForm($miolo);
-// Gera o cÃ³digo HTML
-$pagina->MakeAll();
+
 ?>
 <script type="text/javascript">
 function addVal1(campo,opcao, valor)

@@ -1423,14 +1423,4 @@ class indice extends clsCadastro
     }
 }
 
-// Instancia objeto de página
-$pagina = new clsIndex();
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
-
-// Atribui o conteúdo à página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();

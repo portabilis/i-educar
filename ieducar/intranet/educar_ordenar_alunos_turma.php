@@ -76,14 +76,3 @@ class indice extends clsCadastro
     }
 }
 
-// Instancia objeto de pÃ¡gina
-$pagina = new clsIndexBase();
-
-// Instancia objeto de conteÃºdo
-$miolo = new indice();
-
-// Atribui o conteÃºdo Ã Â  pÃ¡gina
-$pagina->addForm($miolo);
-
-// Gera o cÃ³digo HTML
-$pagina->MakeAll();

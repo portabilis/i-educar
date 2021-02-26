@@ -151,14 +151,4 @@ class indice extends clsListagem
     }
 }
 
-// Instancia a classe da página
-$pagina = new clsIndexBase();
 
-// Instancia o conteúdo
-$miolo = new indice();
-
-// Passa o conteúdo para a classe da página
-$pagina->addForm($miolo);
-
-// Imprime o HTML
-$pagina->MakeAll();

@@ -367,8 +367,5 @@ class indice extends clsListagem
         $this->largura = "100%";
     }
 }
-$pagina = new clsIndex();
-$miolo = new indice();
-$pagina->addForm( $miolo );
-$pagina->MakeAll();
+
 ?>

@@ -360,14 +360,3 @@ class indice
   }
 }
 
-// Instancia objeto de pĂĄgina
-$pagina = new clsIndex();
-
-// Instancia objeto de conteĂşdo
-$miolo = new indice();
-
-// Atribui o conteĂşdo Ă   pĂĄgina
-$pagina->addForm($miolo);
-
-// Gera o cĂłdigo HTML
-$pagina->MakeAll();

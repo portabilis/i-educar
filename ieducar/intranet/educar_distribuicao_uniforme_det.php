@@ -99,6 +99,4 @@ class indice extends clsDetalhe
     }
 }
 
-$pagina = new clsIndexBase();
-$pagina->addForm(new indice());
-$pagina->MakeAll();
+
