@@ -477,17 +477,7 @@ class indice extends clsDetalhe
     }
 }
 
-// Instancia o objeto da página
-$pagina = new clsIndexBase();
 
-// Instancia o objeto de conteúdo
-$miolo = new indice();
-
-// Passa o conteúdo para a página
-$pagina->addForm($miolo);
-
-// Gera o HTML
-$pagina->MakeAll();
 ?>
 <script type="text/javascript">
 function trocaDisplay(id)
