@@ -157,7 +157,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . 'Servidores - Nível');
+        $this->titulo = "Servidores - Nível";
         $this->processoAp = '829';
     }
 };

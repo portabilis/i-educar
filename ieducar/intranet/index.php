@@ -303,7 +303,7 @@ return new class
   }
 
     public function Formular() {
-        $this->SetTitulo($this->_instituicao);
+        $this->titulo = 'i-Educar';
         $this->processoAp = 0;
     }
 };

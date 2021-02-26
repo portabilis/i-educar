@@ -241,7 +241,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Dispensa Componente Curricular');
+        $this->titulo = "i-Educar - Dispensa Componente Curricular";
         $this->processoAp = 578;
     }
 };

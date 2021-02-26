@@ -471,7 +471,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Servidor');
+        $this->titulo = "Servidores - Servidor";
         $this->processoAp = 635;
     }
 };

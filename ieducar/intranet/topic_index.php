@@ -15,7 +15,7 @@ return new class
 
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-OpeTopicE" );
+        $this->titulo = "i-OpeTopicE";
         $this->processoAp = "459";
     }
 };

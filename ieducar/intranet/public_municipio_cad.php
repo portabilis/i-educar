@@ -119,7 +119,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . ' Município');
+        $this->titulo = "Município";
         $this->processoAp = 755;
     }
 };

@@ -417,7 +417,7 @@ function requisitaSenha(xml)
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Cliente");
+        $this->titulo = "i-Educar - Cliente";
         $this->processoAp = '603';
     }
 };

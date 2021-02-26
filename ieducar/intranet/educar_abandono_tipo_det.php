@@ -61,7 +61,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Motivo Abandono");
+        $this->titulo = "i-Educar - Motivo Abandono";
         $this->processoAp = '950';
     }
 };

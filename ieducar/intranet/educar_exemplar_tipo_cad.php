@@ -303,7 +303,7 @@ function getClienteTipo_XML(xml)
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Tipo Exemplar");
+        $this->titulo = "i-Educar - Tipo Exemplar";
         $this->processoAp = '597';
     }
 };

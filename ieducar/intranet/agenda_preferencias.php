@@ -94,7 +94,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} Agenda - Preferencias");
+        $this->titulo = "Agenda - Preferencias";
         $this->processoAp = '345';
     }
 };

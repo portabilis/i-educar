@@ -94,7 +94,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} Backups");
+        $this->titulo = "Backups";
         $this->processoAp = '9998858';
     }
 };

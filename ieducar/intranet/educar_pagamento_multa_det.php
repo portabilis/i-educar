@@ -138,7 +138,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Pagamento Multa");
+        $this->titulo = "i-Educar - Pagamento Multa";
         $this->processoAp = '622';
     }
 };

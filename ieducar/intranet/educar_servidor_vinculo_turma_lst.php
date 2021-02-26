@@ -141,7 +141,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Servidor Vínculo Turma');
+        $this->titulo = "Servidores - Servidor Vínculo Turma";
         $this->processoAp = 635;
     }
 };

@@ -17,7 +17,7 @@ return new class
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Transporte Escolar");
+        $this->titulo = "i-Educar - Transporte Escolar";
         $this->processoAp = '21234';
     }
 };

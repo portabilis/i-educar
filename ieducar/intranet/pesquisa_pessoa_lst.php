@@ -359,7 +359,7 @@ return new class extends clsListagem
 
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Pesquisa por Pessoa!" );
+        $this->titulo = "Pesquisa por Pessoa!";
         $this->processoAp         = "0";
         $this->renderMenu         = false;
         $this->renderMenuSuspenso = false;

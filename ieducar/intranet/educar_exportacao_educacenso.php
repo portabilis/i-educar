@@ -149,7 +149,7 @@ function marcarCheck(idValue) {
 
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Exporta&ccedil;&atilde;o Educacenso');
+        $this->titulo = "i-Educar - Exporta&ccedil;&atilde;o Educacenso";
         $this->processoAp = ($_REQUEST['fase2'] == 1 ? 9998845 : 846);
     }
 };
