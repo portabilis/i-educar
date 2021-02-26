@@ -65,11 +65,6 @@ class indice extends clsListagem
 }
 
 
-$pagina = new clsIndex();
 
-$miolo = new indice();
-$pagina->addForm( $miolo );
-
-$pagina->MakeAll();
 
 ?>
