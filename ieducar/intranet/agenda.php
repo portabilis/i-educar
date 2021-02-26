@@ -478,9 +478,4 @@ class indice extends clsCadastro
         return $conteudo;
     }
 }
-$pagina = new clsIndex();
 
-$miolo = new indice();
-$pagina->addForm($miolo);
-
-$pagina->MakeAll();

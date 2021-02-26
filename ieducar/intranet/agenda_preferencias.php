@@ -100,9 +100,4 @@ class indice extends clsCadastro
     }
 }
 
-$pagina = new clsIndex();
 
-$miolo = new indice();
-$pagina->addForm($miolo);
-
-$pagina->MakeAll();
