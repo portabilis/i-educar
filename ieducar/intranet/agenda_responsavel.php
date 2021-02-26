@@ -1,10 +1,6 @@
 <?php
 
-
-
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public $cd_agenda;
     public $nm_agenda;
 
@@ -57,14 +53,11 @@ return new class extends clsListagem
         $this->largura = '100%';
 
         $this->breadcrumb('Agendas');
-
     }
 
     public function Formular()
     {
-        $this->titulo = "Agenda";
+        $this->titulo = 'Agenda';
         $this->processoAp = '341';
     }
 };
-
-

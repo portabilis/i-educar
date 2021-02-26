@@ -1,10 +1,6 @@
 <?php
 
-
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $cod_agenda;
     public $ref_ref_cod_pessoa_exc;
     public $ref_ref_cod_pessoa_cad;
@@ -89,14 +85,11 @@ return new class extends clsCadastro
 
         $db->Consulta("UPDATE portal.agenda SET ref_ref_cod_pessoa_exc = '{$this->pessoa_logada}', data_edicao = NOW() $set WHERE cod_agenda = '{$this->cod_agenda}'");
         $this->simpleRedirect('agenda.php');
-
     }
 
     public function Formular()
     {
-        $this->titulo = "Agenda - Preferencias";
+        $this->titulo = 'Agenda - Preferencias';
         $this->processoAp = '345';
     }
 };
-
-
