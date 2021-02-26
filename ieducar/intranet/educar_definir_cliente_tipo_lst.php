@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -158,28 +156,16 @@ return new class extends clsListagem
         }
 
         $this->largura = '100%';
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-definir-cliente-tipo-lst.js');
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Cliente";
+        $this->titulo = 'i-Educar - Cliente';
         $this->processoAp = '623';
     }
 };
-
-?>
-<script>
-if ( document.getElementById( 'ref_cod_instituicao' ) ) {
-    var ref_cod_instituicao = document.getElementById( 'ref_cod_instituicao' );
-    ref_cod_instituicao.onchange = function() { getEscola(); getBiblioteca(1); getClienteTipo(); }
-}
-if ( document.getElementById( 'ref_cod_escola' ) ) {
-    var ref_cod_escola = document.getElementById( 'ref_cod_escola' );
-    ref_cod_escola.onchange = function() { getBiblioteca(2); getClienteTipo(); }
-}
-if ( document.getElementById( 'ref_cod_biblioteca' ) ) {
-    var ref_cod_biblioteca = document.getElementById( 'ref_cod_biblioteca' );
-    ref_cod_biblioteca.onchange = function() { getClienteTipo(); }
-}
-</script>
