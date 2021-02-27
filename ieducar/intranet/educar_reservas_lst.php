@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Session;
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -207,29 +205,16 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de reservas', [
             url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
         ]);
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-reserva-lst.js');
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Reservas";
+        $this->titulo = 'i-Educar - Reservas';
         $this->processoAp = '609';
     }
 };
-
-?>
-
-<script>
-
-function pesquisa_cliente()
-{
-    pesquisa_valores_popless('educar_pesquisa_cliente_lst.php?campo1=ref_cod_cliente&campo2=nm_cliente')
-}
-
-function pesquisa_obra()
-{
-    var campoBiblioteca = document.getElementById('cod_biblioteca').value;
-    pesquisa_valores_popless('educar_pesquisa_obra_lst.php?campo1=ref_cod_exemplar&campo2=nm_exemplar&campo3='+campoBiblioteca)
-}
-
-</script>
