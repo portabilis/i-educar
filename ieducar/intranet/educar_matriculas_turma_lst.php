@@ -1,9 +1,6 @@
 <?php
 
-
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Titulo no topo da pagina
      *
@@ -163,31 +160,16 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de turmas para enturmações', [
             'educar_index.php' => 'Escola',
         ]);
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-matriculas-turma-lst.js');
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Matrículas Turmas";
+        $this->titulo = 'i-Educar - Matrículas Turmas';
         $this->processoAp = '659';
     }
 };
-
-
-?>
-
-<script>
-
-    document.getElementById('ref_cod_escola').onchange = function () {
-        getEscolaCurso();
-    };
-
-    document.getElementById('ref_cod_curso').onchange = function () {
-        getEscolaCursoSerie();
-    };
-
-    document.getElementById('ref_ref_cod_serie').onchange = function () {
-        getTurma();
-    };
-
-</script>
