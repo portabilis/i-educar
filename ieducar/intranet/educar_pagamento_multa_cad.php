@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -157,43 +155,16 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
 
         return false;
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-pagamento-multa-cad.js');
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Pagamento Multa";
+        $this->titulo = 'i-Educar - Pagamento Multa';
         $this->processoAp = '622';
     }
 };
-
-
-?>
-<script>
-    function validaValor()
-    {
-        var valor_pago_bib;
-        var valor_pagamento;
-        var total_divida;
-        var valor_pendente;
-
-        if ( document.getElementById('total_divida') )
-            total_divida = document.getElementById('total_divida').value;
-        if ( document.getElementById('valor_pago_bib') )
-            valor_pago_bib   = document.getElementById('valor_pago_bib').value;
-        if ( document.getElementById('valor_pagamento') )
-            valor_pagamento  = document.getElementById('valor_pagamento').value;
-        if ( document.getElementById('valor_pendente') )
-            valor_pendente  = document.getElementById('valor_pendente').value;
-
-        if ( ( total_divida.replace(",", ".") - valor_pago_bib.replace(",", ".") ) < valor_pagamento.replace(",", ".") ) {
-            alert( "O valor de pagamento deve ser inferior ou igual ao valor devido na respectiva biblioteca." );
-            valor_pagamento  = document.getElementById('valor_pagamento').value = "";
-            return;
-        }
-        else
-        {
-            document.formcadastro.submit();
-        }
-    }
-</script>
