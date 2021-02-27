@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -229,80 +227,15 @@ return new class extends clsCadastro
 
         return false;
     }
-}
 
-
-?>
-<script>
-
-document.getElementById('ref_cod_biblioteca').onchange = function()
-{
-//  getSituacao();
-    var campoBiblioteca = document.getElementById('ref_cod_biblioteca').value;
-
-    var xml_situacao = new ajax( getSituacao );
-    xml_situacao.envia( "educar_situacao_xml.php?bib="+campoBiblioteca );
-}
-
-function getSituacao(xml_situacao)
-{
-    /*
-    var campoBiblioteca = document.getElementById('ref_cod_biblioteca').value;
-
-    setVisibility('tr_situacao_padrao',true);
-    setVisibility('tr_situacao_emprestada',true);
-
-    for (var j = 0; j < situacao.length; j++)
+    public function makeExtra()
     {
-        if (situacao[j][3] == campoBiblioteca)
-        {
-            if (situacao[j][1] == 1) //jah existe uma situacao padrao
-                setVisibility('tr_situacao_padrao',false);
-
-            if (situacao[j][2] == 1) //jah existe uma situacao emprestada
-                setVisibility('tr_situacao_emprestada',false);
-        }
-    }
-    */
-    setVisibility('tr_situacao_padrao',true);
-    setVisibility('tr_situacao_emprestada',true);
-
-    var DOM_array = xml_situacao.getElementsByTagName( "situacao" );
-
-    if(DOM_array.length)
-    {
-        for( var i = 0; i < DOM_array.length; i++ )
-        {
-            if (DOM_array[i].getAttribute("situacao_padrao") == 1) //jah existe uma situacao padrao
-                setVisibility('tr_situacao_padrao',false);
-
-            if (DOM_array[i].getAttribute("situacao_emprestada") == 1) //jah existe uma situacao emprestada
-                setVisibility('tr_situacao_emprestada',false);
-        }
-
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-situacao-cad.js');
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Situa&ccedil;&atilde;o";
+        $this->titulo = 'i-Educar - Situa&ccedil;&atilde;o';
         $this->processoAp = '602';
     }
 };
-
-function valida()
-{
-    var campoPadrao = document.getElementById('situacao_padrao').checked;
-    var campoEmprestada = document.getElementById('situacao_emprestada').checked;
-
-    if( campoPadrao == true && campoEmprestada == true)
-    {
-        alert("Não é permitido setar ao mesmo tempo os campos \n 'Situação Padrão' e 'Situação Emprestada'!");
-        return false;
-    }
-
-    if(!acao())
-        return;
-    document.forms[0].submit();
-}
-
-</script>
