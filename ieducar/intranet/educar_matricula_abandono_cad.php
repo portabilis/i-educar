@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -67,28 +65,16 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-matricula-abandono-cad.js');
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Abandono Matrícula";
+        $this->titulo = 'i-Educar - Abandono Matrícula';
         $this->processoAp = '578';
     }
 };
-
-
-?>
-<script>
-
-document.getElementById('ref_cod_escola').onchange = function()
-{
-    getEscolaCurso();
-}
-
-document.getElementById('ref_cod_curso').onchange = function()
-{
-    getEscolaCursoSerie();
-}
-
-</script>
