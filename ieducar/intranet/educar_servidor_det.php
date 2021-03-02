@@ -4,9 +4,7 @@ use App\Models\Employee;
 use App\Models\EmployeeWithdrawal;
 use App\Support\View\Employee\EmployeeReturn;
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
 
     /**
@@ -466,29 +464,20 @@ return new class extends clsDetalhe
         $this->breadcrumb('Funções do servidor', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
+    }
 
+    public function makeExtra()
+    {
+        return str_replace(
+            ['#cod_servidor','#ref_cod_instituicao'],
+            [$_GET['cod_servidor'],$_GET['ref_cod_instituicao']],
+            file_get_contents(__DIR__ . '/scripts/extra/educar-servidor-det.js')
+        );
     }
 
     public function Formular()
     {
-        $this->titulo = "Servidores - Servidor";
+        $this->titulo = 'Servidores - Servidor';
         $this->processoAp = 635;
     }
 };
-
-
-?>
-<script type="text/javascript">
-function trocaDisplay(id)
-{
-  var element = document.getElementById(id);
-  element.style.display = (element.style.display == 'none') ? 'inline' : 'none';
-}
-
-function popless()
-{
-  var campoServidor = <?=$_GET['cod_servidor'];?>;
-  var campoInstituicao = <?=$_GET['ref_cod_instituicao'];?>;
-  pesquisa_valores_popless('educar_servidor_nivel_cad.php?ref_cod_servidor='+campoServidor+'&ref_cod_instituicao='+campoInstituicao, '');
-}
-</script>
