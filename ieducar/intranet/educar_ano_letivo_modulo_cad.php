@@ -2,9 +2,7 @@
 
 use App\Services\iDiarioService;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $ref_cod_instituicao;
@@ -696,9 +694,3 @@ return new class extends clsCadastro
         $this->processoAp = 561;
     }
 };
-
-
-?>
-<script type="text/javascript">
-    var modulosDisponiveis = <?php echo $miolo->gerarJsonDosModulos(); ?>;
-</script>
