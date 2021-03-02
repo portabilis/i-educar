@@ -1,11 +1,8 @@
 <?php
 
-use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Support\View\SelectOptions;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -21,7 +18,6 @@ return new class extends clsCadastro
     public function Inicializar()
     {
         $retorno = 'Novo';
-
 
         $this->cod_deficiencia=$_GET['cod_deficiencia'];
 
@@ -93,7 +89,6 @@ return new class extends clsCadastro
 
         $this->mensagem = 'Cadastro não realizado.<br>';
 
-
         return false;
     }
 
@@ -113,7 +108,6 @@ return new class extends clsCadastro
 
         $this->mensagem = 'Edição não realizada.<br>';
 
-
         return false;
     }
 
@@ -128,18 +122,15 @@ return new class extends clsCadastro
 
         $this->mensagem = 'Exclusão não realizada.<br>';
 
-
         return false;
-
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Deficiência";
+        $this->titulo = 'i-Educar - Deficiência';
         $this->processoAp = '631';
     }
 };
-
 
 ?>
 <script type="text/javascript">
