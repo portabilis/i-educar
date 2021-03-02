@@ -125,24 +125,14 @@ return new class extends clsCadastro {
         return false;
     }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-deficiencia-cad.js');
+    }
+
     public function Formular()
     {
         $this->titulo = 'i-Educar - Deficiência';
         $this->processoAp = '631';
     }
 };
-
-?>
-<script type="text/javascript">
-    // Reescrita da função para exibir mensagem interativa
-    function excluir()
-    {
-      document.formcadastro.reset();
-
-      if (confirm('Deseja mesmo excluir essa deficiência? \nVinculos com os alunos serão deletados.')) {
-        document.formcadastro.tipoacao.value = 'Excluir';
-        document.formcadastro.submit();
-      }
-    }
-
-</script>
