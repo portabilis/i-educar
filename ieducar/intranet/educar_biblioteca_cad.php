@@ -2,11 +2,6 @@
 
 use Illuminate\Support\Facades\Session;
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -179,21 +174,13 @@ class indice extends clsCadastro
 
     function Novo()
     {
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 591, $this->pessoa_logada, 3,  "educar_biblioteca_lst.php" );
-        /*if ($this->tombo_automatico == "on")
-            $this->tombo_automatico = "TRUE";
-        else
-            $this->tombo_automatico = "FALSE";*/
         $obj = new clsPmieducarBiblioteca( null, $this->ref_cod_instituicao, $this->ref_cod_escola, $this->nm_biblioteca, null, null, null, null, null, null, 1, null);
         $this->cod_biblioteca = $cadastrou = $obj->cadastra();
         if( $cadastrou )
         {
       $obj->cod_biblioteca = $this->cod_biblioteca;
-      $biblioteca = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("biblioteca", $this->pessoa_logada, $this->cod_biblioteca);
-      $auditoria->inclusao($biblioteca);
           //-----------------------CADASTRA USUARIOS------------------------//
             $this->biblioteca_usuario = unserialize( urldecode( $this->biblioteca_usuario ) );
             if ($this->biblioteca_usuario)
@@ -227,19 +214,12 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 591, $this->pessoa_logada, 3,  "educar_biblioteca_lst.php" );
         $obj = new clsPmieducarBiblioteca($this->cod_biblioteca, $this->ref_cod_instituicao, $this->ref_cod_escola, $this->nm_biblioteca, null, null, null, null, null, null, 1, null);
-    $detalheAntigo = $obj->detalhe();
         $editou = $obj->edita();
         if( $editou )
         {
-      $detalheAtual = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("biblioteca", $this->pessoa_logada, $this->cod_biblioteca);
-      $auditoria->alteracao($detalheAntigo, $detalheAtual);
-
         //-----------------------EDITA USUARIOS------------------------//
             $this->biblioteca_usuario = unserialize( urldecode( $this->biblioteca_usuario ) );
             $obj  = new clsPmieducarBibliotecaUsuario( $this->cod_biblioteca );
@@ -277,19 +257,13 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 591, $this->pessoa_logada, 3,  "educar_biblioteca_lst.php" );
 
-
         $obj = new clsPmieducarBiblioteca($this->cod_biblioteca, null,null,null,null,null,null,null,null,null, 0);
-        $detalhe = $obj->detalhe();
     $excluiu = $obj->excluir();
         if( $excluiu )
         {
-      $auditoria = new clsModulesAuditoriaGeral("biblioteca", $this->pessoa_logada, $this->cod_biblioteca);
-      $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_biblioteca_lst.php');
         }
@@ -377,22 +351,8 @@ function getUsuario(xml_usuario)
         campoUsuario.options[0].text = 'A instituição não possui nenhum usuário';
 }
 
-/*
-document.getElementById('ref_cod_instituicao').onchange = function()
-{
-    getUsuarios();
-}
-*/
-/*
 before_getEscola = function()
 {
-    getUsuarios(1);
-}
-*/
-//document.getElementById('ref_cod_instituicao').onchange = function()
-before_getEscola = function()
-{
-//  getUsuarios(1);
     var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
 
     var campoUsuario = document.getElementById('ref_cod_usuario');

@@ -1,10 +1,9 @@
 <?php
 
 use iEducar\Legacy\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsModulesRotaTransporteEscolar extends Model
 {
@@ -17,15 +16,12 @@ class clsModulesRotaTransporteEscolar extends Model
     public $km_npav;
     public $ref_cod_empresa_transporte_escolar;
     public $tercerizado;
-    public $pessoa_logada;
 
     public function __construct($cod_rota_transporte_escolar = null, $ref_idpes_destino = null, $descricao = null, $ano = null, $tipo_rota = null, $km_pav = null, $km_npav = null, $ref_cod_empresa_transporte_escolar = null, $tercerizado = null)
     {
         $db = new clsBanco();
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}rota_transporte_escolar";
-
-        $this->pessoa_logada = Session::get('id_pessoa');
 
         $this->_campos_lista = $this->_todos_campos = ' cod_rota_transporte_escolar, ref_idpes_destino, descricao, ano, tipo_rota, km_pav, km_npav, ref_cod_empresa_transporte_escolar, tercerizado';
 
@@ -89,8 +85,9 @@ class clsModulesRotaTransporteEscolar extends Model
             }
 
             if (is_string($this->descricao)) {
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
 
@@ -136,8 +133,6 @@ class clsModulesRotaTransporteEscolar extends Model
 
             if ($this->cod_rota_transporte_escolar) {
                 $detalhe = $this->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('rota_transporte_escolar', $this->pessoa_logada, $this->cod_rota_transporte_escolar);
-                $auditoria->inclusao($detalhe);
             }
 
             return $this->cod_rota_transporte_escolar;
@@ -164,7 +159,8 @@ class clsModulesRotaTransporteEscolar extends Model
             }
 
             if (is_string($this->descricao)) {
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
 
@@ -201,8 +197,6 @@ class clsModulesRotaTransporteEscolar extends Model
             if ($set) {
                 $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_rota_transporte_escolar = '{$this->cod_rota_transporte_escolar}'");
-                $auditoria = new clsModulesAuditoriaGeral('rota_transporte_escolar', $this->pessoa_logada, $this->cod_rota_transporte_escolar);
-                $auditoria->alteracao($detalheAntigo, $this->detalhe());
 
                 return true;
             }
@@ -226,6 +220,8 @@ class clsModulesRotaTransporteEscolar extends Model
         $nome_empresa = null,
         $tercerizado = null
     ) {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista}, (
           SELECT
             nome
@@ -251,7 +247,8 @@ class clsModulesRotaTransporteEscolar extends Model
         }
 
         if (is_string($descricao)) {
-            $filtros .= "{$whereAnd} translate(upper(descricao),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$descricao}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $desc= $db->escapeString($descricao);
+            $filtros .= "{$whereAnd} translate(upper(descricao),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$desc}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
         }
 
@@ -291,7 +288,7 @@ class clsModulesRotaTransporteEscolar extends Model
           FROM
             cadastro.pessoa, modules.empresa_transporte_escolar
           WHERE
-            idpes = ref_idpes and cod_empresa_transporte_escolar = ref_cod_empresa_transporte_escolar 
+            idpes = ref_idpes and cod_empresa_transporte_escolar = ref_cod_empresa_transporte_escolar
             AND (LOWER(nome)) LIKE (LOWER('%{$nome_empresa}%'))
         )";
 
@@ -303,7 +300,6 @@ class clsModulesRotaTransporteEscolar extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista)) + 2;
         $resultado = [];
 
@@ -395,9 +391,6 @@ class clsModulesRotaTransporteEscolar extends Model
             $sql = "DELETE FROM {$this->_tabela} WHERE cod_rota_transporte_escolar = '{$this->cod_rota_transporte_escolar}'";
             $db = new clsBanco();
             $db->Consulta($sql);
-
-            $auditoria = new clsModulesAuditoriaGeral('rota_transporte_escolar', $this->pessoa_logada, $this->cod_rota_transporte_escolar);
-            $auditoria->exclusao($detalhe);
 
             return true;
         }

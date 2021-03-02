@@ -1,10 +1,7 @@
 <?php
 
 use iEducar\Legacy\Model;
-use Illuminate\Support\Facades\Session;
 
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsModulesMotorista extends Model
 {
@@ -16,7 +13,6 @@ class clsModulesMotorista extends Model
     public $vencimento_cnh;
     public $ref_cod_empresa_transporte_escolar;
     public $observacao;
-    public $pessoa_logada;
 
     /**
      * Construtor.
@@ -35,10 +31,7 @@ class clsModulesMotorista extends Model
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}motorista";
 
-        $this->pessoa_logada = Session::get('id_pessoa');
-
-        $this->_campos_lista = $this->_todos_campos = ' cod_motorista, ref_idpes, cnh, tipo_cnh, dt_habilitacao, vencimento_cnh, ref_cod_empresa_transporte_escolar, 
-       observacao';
+        $this->_campos_lista = $this->_todos_campos = ' cod_motorista, ref_idpes, cnh, tipo_cnh, dt_habilitacao, vencimento_cnh, ref_cod_empresa_transporte_escolar, observacao';
 
         if (is_numeric($cod_motorista)) {
             $this->cod_motorista = $cod_motorista;
@@ -130,8 +123,9 @@ class clsModulesMotorista extends Model
             }
 
             if (is_string($this->observacao)) {
+                $observacao = $db->escapeString($this->observacao);
                 $campos .= "{$gruda}observacao";
-                $valores .= "{$gruda}'{$this->observacao}'";
+                $valores .= "{$gruda}'{$observacao}'";
                 $gruda = ', ';
             }
 
@@ -141,8 +135,6 @@ class clsModulesMotorista extends Model
 
             if ($this->cod_motorista) {
                 $detalhe = $this->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('motorista', $this->pessoa_logada, $this->cod_motorista);
-                $auditoria->inclusao($detalhe);
             }
 
             return $this->cod_motorista;
@@ -198,15 +190,14 @@ class clsModulesMotorista extends Model
             }
 
             if (is_string($this->observacao)) {
-                $set .= "{$gruda}observacao = '{$this->observacao}'";
+                $observacao = $db->escapeString($this->observacao);
+                $set .= "{$gruda}observacao = '{$observacao}'";
                 $gruda = ', ';
             }
 
             if ($set) {
                 $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_motorista = '{$this->cod_motorista}'");
-                $auditoria = new clsModulesAuditoriaGeral('motorista', $this->pessoa_logada, $this->cod_motorista);
-                $auditoria->alteracao($detalheAntigo, $this->detalhe());
 
                 return true;
             }
@@ -228,6 +219,8 @@ class clsModulesMotorista extends Model
         $ref_cod_empresa_transporte_escolar = null,
         $ref_idpes = null
     ) {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista}, (
           SELECT
             nome
@@ -250,8 +243,9 @@ class clsModulesMotorista extends Model
         }
 
         if (is_string($nome_motorista)) {
+            $nm_motorista = $db->escapeString($nome_motorista);
             $filtros .= "
-        {$whereAnd} translate(upper((SELECT nome FROM cadastro.pessoa WHERE idpes = ref_idpes)),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome_motorista}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+        {$whereAnd} exists(SELECT 1 FROM cadastro.pessoa WHERE unaccent(nome) ILIKE unaccent('%{$nm_motorista}%'))";
 
             $whereAnd = ' AND ';
         }
@@ -271,7 +265,6 @@ class clsModulesMotorista extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista)) + 2;
         $resultado = [];
 
@@ -356,9 +349,6 @@ class clsModulesMotorista extends Model
             $sql = "DELETE FROM {$this->_tabela} WHERE cod_motorista = '{$this->cod_motorista}'";
             $db = new clsBanco();
             $db->Consulta($sql);
-
-            $auditoria = new clsModulesAuditoriaGeral('motorista', $this->pessoa_logada, $this->cod_motorista);
-            $auditoria->exclusao($detalhe);
 
             return true;
         }

@@ -9,15 +9,8 @@ use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
 
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'lib/Portabilis/String/Utils.php';
 
-require_once 'Educacenso/Model/DocenteDataMapper.php';
 
 class clsIndexBase extends clsBase
 {
@@ -91,6 +84,10 @@ class indice extends clsCadastro
 
             $registro = $obj->detalhe();
 
+            if (empty($registro)) {
+                return $this->simpleRedirect(url('intranet/educar_servidor_lst.php'));
+            }
+
             if ($registro) {
                 // passa todos os valores obtidos no registro para atributos do objeto
                 foreach ($registro as $campo => $val) {
@@ -107,32 +104,31 @@ class indice extends clsCadastro
                 $db = new clsBanco();
 
                 // Carga horária alocada no ultimo ano de alocação
-                $sql = sprintf("
+                $sql = sprintf(
+                    '
                     SELECT
-                        carga_horaria
+                        SUM(extract(hours from carga_horaria::interval))
                     FROM
                         pmieducar.servidor_alocacao
                     WHERE
-                        ref_cod_servidor = '%d' AND
-                        ativo            = 1
-                        AND ano = (
-                            SELECT max(ano)
-                            FROM pmieducar.servidor_alocacao
-                            WHERE ref_cod_servidor = $this->cod_servidor
-                        )",
-                    $this->cod_servidor
+                        ref_cod_servidor = %d AND
+                        ativo = 1
+                        AND ano = %d
+                        AND (data_saida > now() or data_saida is null)',
+                    $this->cod_servidor,
+                    $this->ano ?: date('Y')
                 );
 
                 $db->Consulta($sql);
-
-                $carga = 0;
                 while ($db->ProximoRegistro()) {
                     $cargaHoraria = $db->Tupla();
-                    $cargaHoraria = explode(':', $cargaHoraria['carga_horaria']);
-                    $carga += $cargaHoraria[0] * 60 + $cargaHoraria[1];
+                    $cargaHoraria = $cargaHoraria['sum'];
                 }
 
-                $this->total_horas_alocadas = sprintf('%02d:%02d', $carga / 60, $carga % 60);
+                $cargaHoraria = str_pad($cargaHoraria, 2, 0, STR_PAD_LEFT);
+
+                $this->total_horas_alocadas = $cargaHoraria;
+
                 // Funções
                 $obj_funcoes = new clsPmieducarServidorFuncao();
                 $lst_funcoes = $obj_funcoes->lista($this->ref_cod_instituicao, $this->cod_servidor);
@@ -155,9 +151,7 @@ class indice extends clsCadastro
 
                 if ($lst_servidor_disciplina) {
                     foreach ($lst_servidor_disciplina as $disciplina) {
-                        $obj_disciplina = new clsPmieducarDisciplina($disciplina['ref_cod_disciplina']);
-                        $det_disciplina = $obj_disciplina->detalhe();
-                        $this->cursos_disciplina[$det_disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $disciplina['ref_cod_disciplina'];
+                        $this->cursos_disciplina[$disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $disciplina['ref_cod_disciplina'];
                     }
                 }
 
@@ -187,7 +181,7 @@ class indice extends clsCadastro
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
-        $this->breadcrumb($nomeMenu . ' servidor', [
+        $this->breadcrumb('Funções do servidor', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
 
@@ -252,7 +246,6 @@ class indice extends clsCadastro
             );
         }
 
-        // ----
         $this->inputsHelper()->integer(
             'cod_docente_inep',
             [
@@ -280,17 +273,17 @@ class indice extends clsCadastro
 
         $opcoes = ['' => 'Selecione'];
 
-            if (is_numeric($this->ref_cod_instituicao)) {
-                $objTemp = new clsPmieducarFuncao();
-                $objTemp->setOrderby('nm_funcao ASC');
-                $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
+        if (is_numeric($this->ref_cod_instituicao)) {
+            $objTemp = new clsPmieducarFuncao();
+            $objTemp->setOrderby('nm_funcao ASC');
+            $lista = $objTemp->lista(null, null, null, null, null, null, null, null, null, null, 1, $this->ref_cod_instituicao);
 
-                if (is_array($lista) && count($lista)) {
-                    foreach ($lista as $registro) {
-                        $opcoes[$registro['cod_funcao'] . '-' . $registro['professor']] = $registro['nm_funcao'];
-                    }
+            if (is_array($lista) && count($lista)) {
+                foreach ($lista as $registro) {
+                    $opcoes[$registro['cod_funcao'] . '-' . $registro['professor']] = $registro['nm_funcao'];
                 }
             }
+        }
 
         $this->campoTabelaInicio(
             'funcao',
@@ -327,12 +320,17 @@ class indice extends clsCadastro
 
         $this->campoTabelaFim();
 
-        if (strtoupper($this->tipoacao) == 'EDITAR') {
+        $horas = '00:00';
+        if ($this->total_horas_alocadas) {
+            $horas = $this->total_horas_alocadas . ':00';
+        }
+
+        if (mb_strtoupper($this->tipoacao) == 'EDITAR') {
             $this->campoTextoInv(
                 'total_horas_alocadas_',
                 'Total de Horas Alocadadas',
-                $this->total_horas_alocadas,
-                9,
+                $horas,
+                6,
                 20
             );
 
@@ -353,7 +351,7 @@ class indice extends clsCadastro
             'Carga Horária',
             $hora_formatada,
             true,
-            'Número de horas deve ser maior que horas alocadas',
+            ' Número de horas deve ser maior que horas alocadas',
             '',
             false
         );
@@ -373,14 +371,14 @@ class indice extends clsCadastro
 
         $opcoes = ['' => 'Selecione'];
 
-            $objTemp = new clsCadastroEscolaridade();
-            $lista = $objTemp->lista();
+        $objTemp = new clsCadastroEscolaridade();
+        $lista = $objTemp->lista();
 
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['idesco']] = $registro['descricao'];
-                }
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $opcoes[$registro['idesco']] = $registro['descricao'];
             }
+        }
 
         $obj_permissoes = new clsPermissoes();
         if ($obj_permissoes->permissao_cadastra(632, $this->pessoa_logada, 4)) {
@@ -502,8 +500,6 @@ JS;
 
         $obj   = new clsPmieducarServidor($this->cod_servidor, null, null, null, null, null, null, $this->ref_cod_instituicao);
 
-        $servidorAntes = $obj->detalhe();
-
         if ($obj->detalhe()) {
             $this->carga_horaria = str_replace(',', '.', $this->carga_horaria);
             $obj = new clsPmieducarServidor($this->cod_servidor, null, $this->ref_idesco, $this->carga_horaria, null, null, 1, $this->ref_cod_instituicao);
@@ -514,9 +510,6 @@ JS;
 
             if ($editou) {
                 $servidorDepois = $obj->detalhe();
-
-                $auditoria = new clsModulesAuditoriaGeral('servidor', $this->pessoa_logada, $this->cod_servidor);
-                $auditoria->alteracao($servidorAntes, $servidorDepois);
 
                 $this->cadastraFuncoes();
                 $this->createOrUpdateInep();
@@ -541,12 +534,6 @@ JS;
             $cadastrou = $obj_2->cadastra();
 
             if ($cadastrou) {
-                $servidor = new clsPmieducarServidor($cadastrou, null, null, null, null, null, null, $this->ref_cod_instituicao);
-                $servidor = $servidor->detalhe();
-
-                $auditoria = new clsModulesAuditoriaGeral('servidor', $this->pessoa_logada, $cadastrou);
-                $auditoria->inclusao($servidor);
-
                 $this->cadastraFuncoes();
                 $this->createOrUpdateInep();
                 $this->createOrUpdateDeficiencias();
@@ -576,9 +563,6 @@ JS;
 
         $this->curso_formacao_continuada = '{' . implode(',', $this->curso_formacao_continuada) . '}';
 
-        $servidor = new clsPmieducarServidor($this->cod_servidor, null, null, null, null, null, null, $this->ref_cod_instituicao);
-        $servidorAntes = $servidor->detalhe();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7, 'educar_servidor_lst.php');
 
@@ -591,11 +575,6 @@ JS;
             $editou = $obj->edita();
 
             if ($editou) {
-                $servidorDepois = $servidor->detalhe();
-
-                $auditoria = new clsModulesAuditoriaGeral('servidor', $this->pessoa_logada, $this->cod_servidor);
-                $auditoria->alteracao($servidorAntes, $servidorDepois);
-
                 $this->cadastraFuncoes();
                 $this->createOrUpdateInep();
                 $this->createOrUpdateDeficiencias();
@@ -774,14 +753,9 @@ JS;
                     $this->ref_cod_instituicao_original
                 );
 
-                $servidor = $obj->detalhe();
-
                 $excluiu = $obj->excluir();
 
                 if ($excluiu) {
-                    $auditoria = new clsModulesAuditoriaGeral('servidor', $this->pessoa_logada, $this->cod_servidor);
-                    $auditoria->exclusao($servidor);
-
                     $this->excluiFuncoes();
                     $this->mensagem = 'Exclusão efetuada com sucesso.<br>';
                     $this->simpleRedirect('educar_servidor_lst.php');

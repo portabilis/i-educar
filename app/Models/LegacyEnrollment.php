@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Support\Database\DateSerializer;
+use App\User;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +22,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class LegacyEnrollment extends Model
 {
+    use DateSerializer;
+
     /**
      * @var string
      */
@@ -124,5 +128,38 @@ class LegacyEnrollment extends Model
     public function schoolClass()
     {
         return $this->belongsTo(LegacySchoolClass::class, 'ref_cod_turma');
+    }
+
+
+    /**
+     * Retorna o turno do aluno.
+     *
+     * Relação com turma_turno.
+     *
+     * @return bool | string
+     */
+    public function period()
+    {
+        return $this->belongsTo(LegacyPeriod::class, 'turno_id')->withDefault();
+    }
+
+    /**
+     * Relação com servidor.
+     *
+     * @return BelongsTo
+     */
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'ref_usuario_cad');
+    }
+
+    /**
+     * Relação com servidor.
+     *
+     * @return BelongsTo
+     */
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'ref_usuario_exc');
     }
 }

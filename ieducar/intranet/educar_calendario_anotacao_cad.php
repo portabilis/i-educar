@@ -4,11 +4,6 @@
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -110,8 +105,6 @@ class indice extends clsCadastro
 
     function Novo()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 620, $this->pessoa_logada, 7,  "educar_calendario_anotacao_lst.php" );
 
@@ -128,11 +121,6 @@ class indice extends clsCadastro
         $this->cod_calendario_anotacao = $cadastrou = $obj->cadastra();
         if( $cadastrou )
         {
-      $calendario_anotacao = new clsPmieducarCalendarioAnotacao($this->cod_calendario_anotacao);
-      $calendario_anotacao = $calendario_anotacao->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("calendario_anotacao", $this->pessoa_logada, $this->cod_calendario_anotacao);
-      $auditoria->inclusao($calendario_anotacao);
-
             $obj_anotacao_dia = new clsPmieducarCalendarioDiaAnotacao($this->dia,$this->mes,$this->ref_ref_cod_calendario_ano_letivo,$cadastrou);
             $cadastrado = $obj_anotacao_dia->cadastra();
             if($cadastrado){
@@ -151,20 +139,13 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 620, $this->pessoa_logada, 7,  "educar_calendario_anotacao_lst.php" );
 
-
         $obj = new clsPmieducarCalendarioAnotacao($this->cod_calendario_anotacao, $this->pessoa_logada, $this->pessoa_logada, $this->nm_anotacao, $this->descricao, $this->data_cadastro, $this->data_exclusao, $this->ativo);
-    $detalheAntigo = $obj->detalhe();
         $editou = $obj->edita();
         if( $editou )
         {
-      $detalheAtual = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("calendario_anotacao", $this->pessoa_logada, $this->cod_calendario_anotacao);
-      $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
             throw new HttpResponseException(
                 new RedirectResponse("educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}")
@@ -178,20 +159,13 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 620, $this->pessoa_logada, 7,  "educar_calendario_anotacao_lst.php" );
 
-
         $obj = new clsPmieducarCalendarioAnotacao($this->cod_calendario_anotacao, $this->pessoa_logada, $this->pessoa_logada, $this->nm_anotacao, $this->descricao, $this->data_cadastro, $this->data_exclusao, 0);
-    $detalhe = $obj->detalhe();
         $excluiu = $obj->excluir();
         if( $excluiu )
         {
-      $auditoria = new clsModulesAuditoriaGeral("calendario_anotacao", $this->pessoa_logada, $this->cod_calendario_anotacao);
-      $auditoria->exclusao($detalhe);
-
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
             throw new HttpResponseException(
                 new RedirectResponse("educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_ref_cod_calendario_ano_letivo}")

@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/Validate/Numeric.php';
 
 class CoreExt_Validate_NumericTest extends PHPUnit\Framework\TestCase
 {
@@ -11,36 +10,28 @@ class CoreExt_Validate_NumericTest extends PHPUnit\Framework\TestCase
         $this->_validator = new CoreExt_Validate_Numeric();
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testValorStringVaziaLancaExcecao()
     {
+        $this->expectException(\Exception::class);
         $this->_validator->isValid('');
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testValorStringEspacoLancaExcecao()
     {
+        $this->expectException(\Exception::class);
         // São três espaço ascii 20
         $this->_validator->isValid('   ');
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testValorNullLancaExcecao()
     {
+        $this->expectException(\Exception::class);
         $this->_validator->isValid(null);
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testValorNaoNumericoLancaExcecao()
     {
+        $this->expectException(\Exception::class);
         $this->_validator->isValid('zero');
     }
 
@@ -68,38 +59,30 @@ class CoreExt_Validate_NumericTest extends PHPUnit\Framework\TestCase
         $this->assertTrue($this->_validator->isValid(-49.9999));
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testValorMenorQueOPermitidoLancaExcecao()
     {
+        $this->expectException(\Exception::class);
         $this->_validator->setOptions(['min' => 0]);
         $this->_validator->isValid(-1);
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testValorPontoFlutuanteMenorQueOPermitidoLancaExcecao()
     {
+        $this->expectException(\Exception::class);
         $this->_validator->setOptions(['min' => 0]);
         $this->_validator->isValid(-1.5);
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testValorMaiorQueOPermitidoLancaExcecao()
     {
+        $this->expectException(\Exception::class);
         $this->_validator->setOptions(['max' => 0]);
         $this->_validator->isValid(1);
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testValorPontoFlutuanteMaiorQueOPermitidoLancaExcecao()
     {
+        $this->expectException(\Exception::class);
         $this->_validator->setOptions(['max' => 0]);
         $this->_validator->isValid(1.5);
     }

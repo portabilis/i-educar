@@ -1,6 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Report/ReportFactory.php';
 
 use JasperPHP\JasperPHP;
 
@@ -99,6 +98,7 @@ class Portabilis_Report_ReportFactoryPHPJasper extends Portabilis_Report_ReportF
 
         if ($report->useJson()) {
             $data = $report->getJsonData();
+            $data = $report->modify($data);
             $json = json_encode($data);
 
             file_put_contents($dataFile, $json);

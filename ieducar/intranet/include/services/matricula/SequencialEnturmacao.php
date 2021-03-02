@@ -284,12 +284,12 @@ class SequencialEnturmacao
 
         foreach ($students as $student) {
             $sequencial = $student->sequencial_fechamento;
-            $alunos[$sequencial] = strtoupper($student->nome);
+            $alunos[$sequencial] = mb_strtoupper($student->nome);
         }
 
         $nome = $this->registration->student->person->name;
 
-        $alunos['novo-aluno'] = limpa_acentos(strtoupper($nome));
+        $alunos['novo-aluno'] = limpa_acentos(mb_strtoupper($nome));
 
         asort($alunos);
 
@@ -395,12 +395,18 @@ class SequencialEnturmacao
     public function getRelocationDate()
     {
         $date = $this->schoolClass->school->institution->relocation_date;
-
         if ($date) {
             $date = substr($this->dataEnturmacao, 0, 4) . $date->format('-m-d');
         }
 
-        return $date;
+        $newDate = new DateTime($date);
+        $day = $newDate->format('d');
+
+        if (date('L', $newDate->getTimestamp()) == 0 && $day == '29') {
+            return $newDate->modify('-1 day')->format('Y-m-d');
+        }
+
+        return $newDate->format('Y-m-d');
     }
 
     public function existeMatriculaTurma()

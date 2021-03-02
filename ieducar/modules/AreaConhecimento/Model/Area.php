@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Entity.php';
-require_once 'App/Model/IedFinder.php';
 
 class AreaConhecimento_Model_Area extends CoreExt_Entity
 {
@@ -9,7 +7,8 @@ class AreaConhecimento_Model_Area extends CoreExt_Entity
         'instituicao' => null,
         'nome' => null,
         'secao' => null,
-        'ordenamento_ac' => null
+        'ordenamento_ac' => null,
+        'agrupar_descritores' => null,
     ];
 
     public function getDefaultValidatorCollection()

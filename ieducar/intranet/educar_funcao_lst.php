@@ -1,9 +1,5 @@
 <?php
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
 
 class clsIndexBase extends clsBase
 {
@@ -58,7 +54,7 @@ class indice extends clsListagem
 
     function Gerar()
     {
-        $this->titulo = "Funcao - Listagem";
+        $this->titulo = "Função - Listagem";
 
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;

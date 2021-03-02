@@ -2,13 +2,11 @@
 
 namespace App\Services\Educacenso\Version2019;
 
+use App\Models\City;
 use App\Models\Educacenso\Registro00;
 use App\Models\Educacenso\RegistroEducacenso;
-use App\Models\LegacyCity;
-use App\Models\LegacyDistrict;
 use App\Models\LegacyEducationNetwork;
 use App\Models\LegacyInstitution;
-use App\Models\LegacyNeighborhood;
 use App\Models\LegacyOrganization;
 use App\Models\LegacyPerson;
 use App\Models\LegacyPersonAddress;
@@ -17,9 +15,8 @@ use App\Models\LegacySchool;
 use App\Models\LegacySchoolAcademicYear;
 use App\Models\LegacySchoolStage;
 use App\Models\LegacyStageType;
-use App\Models\LegacyPlace;
-use App\Models\LegacyPostalCodeStreet;
-use App\Models\LegacyPostalCodeStreetNeighborhood;
+use App\Models\PersonHasPlace;
+use App\Models\Place;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\RegistroImportInterface;
 use App\User;
@@ -161,69 +158,24 @@ class Registro00Import implements RegistroImportInterface
             return;
         }
 
-        $city = LegacyCity::where('cod_ibge', $this->model->codigoIbgeMunicipio)->first();
+        $city = City::where('ibge_code', $this->model->codigoIbgeMunicipio)->first();
         if (!$city) {
             return;
         }
 
-        $district = $this->getDistrict($city, $this->model->codigoIbgeDistrito);
-        if (!$district) {
-            return;
-        }
-
-        $neighborhood = LegacyNeighborhood::firstOrCreate([
-            'idmun' => $city->getKey(),
-            'nome' => $this->model->bairro,
-            'iddis' => $district->getKey(),
-            'origem_gravacao' => 'M',
-            'idpes_cad' => $this->user->id,
-            'data_cad' => now(),
-            'operacao' => 'I',
-            'zona_localizacao' => $this->model->zonaLocalizacao,
+        $place = Place::firstOrCreate([
+            'city_id' => $city->getKey(),
+            'address' => $this->model->logradouro,
+            'number' => (int) (is_numeric($this->model->numero) ? $this->model->numero : null),
+            'complement' => $this->model->complemento,
+            'neighborhood' => $this->model->bairro,
+            'postal_code' => $this->model->cep,
         ]);
 
-        $street = LegacyPlace::firstOrCreate([
-            'idtlog' => 'RUA',
-            'nome' => trim(str_replace('RUA', '', $this->model->logradouro)),
-            'idmun' => $city->getKey(),
-            'ident_oficial' => 'N',
-            'origem_gravacao' => 'M',
-            'idpes_cad' => $this->user->id,
-            'data_cad' => now(),
-            'operacao' => 'I',
-        ]);
-
-        LegacyPostalCodeStreet::firstOrCreate([
-            'cep' => $this->model->cep,
-            'idlog' => $street->getKey(),
-            'origem_gravacao' => 'U',
-            'idpes_cad' => $this->user->id,
-            'data_cad' => now(),
-            'operacao' => 'I',
-        ]);
-
-        LegacyPostalCodeStreetNeighborhood::firstOrCreate([
-            'cep' => $this->model->cep,
-            'idlog' => $street->getKey(),
-            'idbai' => $neighborhood->getKey(),
-            'origem_gravacao' => 'U',
-            'idpes_cad' => $this->user->id,
-            'data_cad' => now(),
-            'operacao' => 'I',
-        ]);
-
-        LegacyPersonAddress::create([
-            'idpes' => $school->ref_idpes,
-            'tipo' => '1',
-            'cep' => $this->model->cep,
-            'idlog' => $street->getKey(),
-            'numero' => (int) (is_numeric($this->model->numero) ? $this->model->numero : null),
-            'complemento' => $this->model->complemento,
-            'idbai' => $neighborhood->getKey(),
-            'origem_gravacao' => 'M',
-            'idpes_cad' => $this->user->id,
-            'data_cad' => now(),
-            'operacao' => 'I',
+        PersonHasPlace::firstOrCreate([
+            'person_id' => $school->ref_idpes,
+            'place_id' => $place->getKey(),
+            'type' => 1,
         ]);
     }
 
@@ -381,21 +333,5 @@ class Registro00Import implements RegistroImportInterface
         $registro = new Registro00();
         $registro->hydrateModel($arrayColumns);
         return $registro;
-    }
-
-    /**
-     * @param LegacyCity $city
-     * @param string $codigoIbgeDistrito
-     * @return LegacyDistrict|null
-     */
-    private function getDistrict(LegacyCity $city, string $codigoIbgeDistrito)
-    {
-        if (!$codigoIbgeDistrito) {
-            return null;
-        }
-
-        $codigoIbgeDistrito = substr($codigoIbgeDistrito, -2, 2);
-
-        return LegacyDistrict::where('idmun', $city->getKey())->where('cod_ibge', $codigoIbgeDistrito)->first();
     }
 }

@@ -29,10 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Core/Controller/Page/EditController.php';
-require_once 'Avaliacao/Model/ParecerDescritivoComponenteDataMapper.php';
-require_once 'Avaliacao/Model/ParecerDescritivoGeralDataMapper.php';
-require_once 'Avaliacao/Service/Boletim.php';
 
 /**
  * ParecerController class.
@@ -90,7 +86,7 @@ class ParecerController extends Core_Controller_Page_EditController
   protected function _preConstruct()
   {
     // Id do usuário na session
-    $usuario = $this->getSession()->id_pessoa;
+    $usuario = \Illuminate\Support\Facades\Auth::id();
 
     $this->_options = array(
       'new_success'         => 'boletim',

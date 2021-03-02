@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use Prettus\Repository\Contracts\Transformable;
-use Prettus\Repository\Traits\TransformableTrait;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property string $login
@@ -14,10 +13,8 @@ use Prettus\Repository\Traits\TransformableTrait;
  * @property string $remember_token
  * @property bool   $active
  */
-class LegacyEmployee extends EloquentBaseModel implements Transformable
+class LegacyEmployee extends Model
 {
-    use TransformableTrait;
-
     /**
      * @var string
      */
@@ -32,6 +29,15 @@ class LegacyEmployee extends EloquentBaseModel implements Transformable
      * @var bool
      */
     public $timestamps = false;
+
+    protected $fillable = [
+        'ref_cod_pessoa_fj',
+        'matricula',
+        'senha',
+        'ativo',
+        'force_reset_password',
+        'email',
+    ];
 
     /**
      * @return string

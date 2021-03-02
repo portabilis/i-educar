@@ -73,8 +73,8 @@
 }
 
 .flashMessages__message.-notice {
-  color: #B0AF84;
-  background-color: #FEFFCE;
+  color: #67664f;
+  background-color: #fffee0;
 }
 
 .flashMessages__message .close-msg {

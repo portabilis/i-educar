@@ -1,7 +1,7 @@
 <?php
 
-use App\City;
-use App\District;
+use App\Models\City;
+use App\Models\District;
 use Faker\Generator as Faker;
 use Illuminate\Database\Eloquent\Factory;
 
@@ -9,17 +9,8 @@ use Illuminate\Database\Eloquent\Factory;
 
 $factory->define(District::class, function (Faker $faker) {
     return [
-        'city_id' => function () {
-
-            $city = City::query()->inRandomOrder()->first();
-
-            if (empty($city)) {
-                $city = factory(City::class)->create();
-            }
-
-            return $city->getKey();
-        },
-        'name' => $faker->name,
-        'ibge' => $faker->randomNumber(6),
+        'city_id' => factory(City::class)->create(),
+        'name' => $faker->dayOfWeek . ' District',
+        'ibge_code' => $faker->numerify('########'),
     ];
 });

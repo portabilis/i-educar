@@ -2,9 +2,6 @@
 
 
 $desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
 
 class clsIndex extends clsBase
 {
@@ -85,12 +82,8 @@ class indice extends clsCadastro
         $this->nome_url_cancelar = "Cancelar";
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "$nomeMenu agenda"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb("$nomeMenu agenda");
 
         return $retorno;
     }

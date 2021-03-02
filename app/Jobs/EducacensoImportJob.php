@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\EducacensoImport as EducacensoImportModel;
 use App\Services\Educacenso\ImportServiceFactory;
+use DateTime;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -30,6 +31,11 @@ class EducacensoImportJob implements ShouldQueue
      */
     private $databaseConnection;
 
+    /**
+     * @var DateTime
+     */
+    private $registrationDate;
+
     public $timeout = 600;
 
     /**
@@ -38,12 +44,14 @@ class EducacensoImportJob implements ShouldQueue
      * @param EducacensoImportModel $educacensoImport
      * @param $importArray
      * @param string $databaseConnection
+     * @param DateTime $registrationDate
      */
-    public function __construct(EducacensoImportModel $educacensoImport, $importArray, $databaseConnection)
+    public function __construct(EducacensoImportModel $educacensoImport, $importArray, $databaseConnection, $registrationDate)
     {
         $this->educacensoImport = $educacensoImport;
         $this->importArray = $importArray;
         $this->databaseConnection = $databaseConnection;
+        $this->registrationDate = $registrationDate;
     }
 
     /**
@@ -58,8 +66,9 @@ class EducacensoImportJob implements ShouldQueue
         DB::beginTransaction();
 
         try {
-            $importService = ImportServiceFactory::createImportService($this->educacensoImport->year);
+            $importService = ImportServiceFactory::createImportService($this->educacensoImport->year, $this->registrationDate);
             $importService->import($this->importArray, $this->educacensoImport->user);
+            $importService->adaptData();
         } catch (Throwable $e) {
             DB::rollBack();
             throw $e;
@@ -70,5 +79,13 @@ class EducacensoImportJob implements ShouldQueue
         $educacensoImport->save();
 
         DB::commit();
+    }
+
+    public function tags()
+    {
+        return [
+            $this->databaseConnection,
+            'educacenso-import'
+        ];
     }
 }

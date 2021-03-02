@@ -40,8 +40,6 @@ educar_turma_sala_xml.php
 educar_turma_xml.php
 educar_usuario_xml.php
 ponto_xml.php
-public_bairro_xml.php
 public_distrito_xml.php
 public_municipio_xml.php
 public_uf_xml.php
-public_logradouro_xml.php

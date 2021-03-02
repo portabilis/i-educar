@@ -1,9 +1,5 @@
 <?php
 
-require_once('include/clsBase.inc.php');
-require_once('include/clsDetalhe.inc.php');
-require_once('include/clsBanco.inc.php');
-require_once('include/time.inc.php');
 
 class clsIndex extends clsBase
 {
@@ -41,13 +37,7 @@ class indice extends clsDetalhe
         $this->url_cancelar = 'funcionario_vinculo_lst.php';
         $this->largura = '100%';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            '' => 'Detalhe do v&iacute;nculo'
-        ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Detalhe do v&iacute;nculo');
     }
 }
 

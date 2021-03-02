@@ -2,11 +2,11 @@
 
 namespace App\Exceptions;
 
-use Exception;
+use App\Http\Controllers\LegacyController;
+use App_Model_Exception;
 use iEducar\Modules\ErrorTracking\Tracker;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -16,7 +16,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
+        App_Model_Exception::class,
     ];
 
     /**
@@ -30,34 +30,23 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * Report or log an exception.
-     *
-     * @param Exception $exception
+     * Register the exception handling callbacks for the application.
      *
      * @return void
-     *
-     * @throws Exception
      */
-    public function report(Exception $exception)
+    public function register()
     {
-        if (config('app.trackerror') && $this->shouldReport($exception)) {
-            app(Tracker::class)->notify($exception, $this->getContext());
-        }
+        $this->reportable(function (Throwable $e) {
+            if (config('app.trackerror') && $this->shouldReport($e)) {
+                $data = [
+                    'context' => $this->getContext(),
+                    'controller' => $this->getController(),
+                    'action' => $this->getAction(),
+                ];
 
-        parent::report($exception);
-    }
-
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param Request   $request
-     * @param Exception $exception
-     *
-     * @return Response
-     */
-    public function render($request, Exception $exception)
-    {
-        return parent::render($request, $exception);
+                app(Tracker::class)->notify($e, $data);
+            }
+        });
     }
 
     /**
@@ -72,5 +61,52 @@ class Handler extends ExceptionHandler
         }
 
         return app('request')->all();
+    }
+
+    /**
+     * Return current controller
+     *
+     * @return array|mixed
+     */
+    private function getController()
+    {
+        if (app()->runningInConsole()) {
+            return null;
+        }
+
+        $controller = explode('@', $this->getActionName())[0];
+
+        if ($controller == class_basename(LegacyController::class)) {
+            $controller = app('request')->path();
+        }
+
+        return $controller;
+    }
+
+    /**
+     * Return current action.
+     *
+     * @return array|mixed
+     */
+    private function getAction()
+    {
+        if (app()->runningInConsole()) {
+            return null;
+        }
+
+        return explode('@', $this->getActionName())[1];
+    }
+
+    /**
+     * Return current action name.
+     *
+     * @return string
+     */
+    private function getActionName()
+    {
+        $controller = app('request')->route()->getAction();
+        $controller = class_basename($controller['controller']);
+
+        return $controller;
     }
 }

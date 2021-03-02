@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarEscolaLocalizacao extends Model
 {
@@ -70,8 +69,9 @@ class clsPmieducarEscolaLocalizacao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_localizacao)) {
+                $nm_localizacao = $db->escapeString($this->nm_localizacao);
                 $campos .= "{$gruda}nm_localizacao";
-                $valores .= "{$gruda}'{$this->nm_localizacao}'";
+                $valores .= "{$gruda}'{$nm_localizacao}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -103,6 +103,7 @@ class clsPmieducarEscolaLocalizacao extends Model
     {
         if (is_numeric($this->cod_escola_localizacao) && is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
+
             $set = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
@@ -114,7 +115,8 @@ class clsPmieducarEscolaLocalizacao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_localizacao)) {
-                $set .= "{$gruda}nm_localizacao = '{$this->nm_localizacao}'";
+                $nm_localizacao = $db->escapeString($this->nm_localizacao);
+                $set .= "{$gruda}nm_localizacao = '{$nm_localizacao}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -149,6 +151,8 @@ class clsPmieducarEscolaLocalizacao extends Model
      */
     public function lista($int_cod_escola_localizacao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_localizacao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -167,7 +171,8 @@ class clsPmieducarEscolaLocalizacao extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_localizacao)) {
-            $filtros .= "{$whereAnd} nm_localizacao LIKE '%{$str_nm_localizacao}%'";
+            $str_nome_localizacao = $db->escapeString($str_nm_localizacao);
+            $filtros .= "{$whereAnd} nm_localizacao LIKE '%{$str_nome_localizacao}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_cadastro_ini)) {
@@ -198,7 +203,6 @@ class clsPmieducarEscolaLocalizacao extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

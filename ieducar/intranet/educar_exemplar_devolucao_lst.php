@@ -1,10 +1,5 @@
 <?php
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once ('Portabilis/Date/Utils.php');
 
 class clsIndexBase extends clsBase
 {
@@ -102,7 +97,7 @@ class indice extends clsListagem
         $this->campoLista("situacao", "Situação", $situacoes, $this->situacao);
 
         $this->campoNumero("ref_cod_exemplar","Código exemplar", $this->ref_cod_exemplar, 15, 10);
-        $this->campoNumero("tombo","Tombo", $this->tombo, 15, 10);
+        $this->campoNumero("tombo","Tombo", $this->tombo, 15, 13);
 
         if ($this->ref_cod_biblioteca)
         {

@@ -4,6 +4,8 @@ namespace App\Services\Educacenso;
 
 use App\Exceptions\Educacenso\NotImplementedYear;
 use App\Services\Educacenso\Version2019\ImportService as ImportService2019;
+use App\Services\Educacenso\Version2020\ImportService as ImportService2020;
+use DateTime;
 
 class ImportServiceFactory
 {
@@ -11,13 +13,18 @@ class ImportServiceFactory
      * Intancia um service de importação
      *
      * @param $year
+     * @param DateTime $registrationDate
      * @return ImportService
      */
-    public static function createImportService($year)
+    public static function createImportService($year, $registrationDate)
     {
+        /** @var ImportService $class */
         $class = self::getClassByYear($year);
 
-        return new $class();
+        $class = new $class();
+        $class->registrationDate = $registrationDate;
+
+        return $class;
     }
 
     /**
@@ -30,6 +37,7 @@ class ImportServiceFactory
     {
         $imports = [
             2019 => ImportService2019::class,
+            2020 => ImportService2020::class,
         ];
 
         if (isset($imports[$year])) {

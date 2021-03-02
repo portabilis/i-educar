@@ -1,9 +1,5 @@
 <?php
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
 
 class clsIndexBase extends clsBase
 {
@@ -36,7 +32,7 @@ class indice extends clsDetalhe
 
     function Gerar()
     {
-        $this->titulo = "Funcao - Detalhe";
+        $this->titulo = "Função - Detalhe";
 
 
         $this->cod_funcao=$_GET["cod_funcao"];

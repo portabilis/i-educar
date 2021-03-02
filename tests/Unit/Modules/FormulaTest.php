@@ -29,8 +29,6 @@
  * @version     $Id: /ieducar/branches/1.1.0-avaliacao/ieducar/modules/AreaConhecimento/_tests/AreaTest.php 862 2009-12-04T18:55:17.468486Z eriksen  $
  */
 
-require_once 'FormulaMedia/Model/Formula.php';
-require_once 'include/pmieducar/clsPmieducarInstituicao.inc.php';
 
 /**
  * FormulaTest class.
@@ -80,7 +78,7 @@ class FormulaTest extends UnitBaseTest
     $values = $this->_values;
     $values['Rc'] = 7;
     $nota = $this->_entity->execFormulaMedia($values);
-    $this->assertEquals(5.8, $nota, '', 0.3);
+    $this->assertEqualsWithDelta(5.8, $nota, 0.3);
   }
 
   public function testEntityValidators()

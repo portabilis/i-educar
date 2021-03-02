@@ -3,10 +3,6 @@
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsIndex extends clsBase
 {
@@ -118,7 +114,6 @@ class indice extends clsListagem
             foreach ($lst_func as $pessoa) {
                 $ativo = ($pessoa['ativo'] == '1') ? 'Ativo' : 'Inativo';
                 $total = $pessoa['_total'];
-                $pessoa['nome'] = minimiza_capitaliza($pessoa['nome']);
 
                 if ($pessoa['nivel'] == 1) {
                     $nivel = 'Poli-Institucional';

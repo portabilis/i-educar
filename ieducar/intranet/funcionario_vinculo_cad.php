@@ -1,8 +1,5 @@
 <?php
 
-require_once('include/clsBase.inc.php');
-require_once('include/clsCadastro.inc.php');
-require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
@@ -25,7 +22,7 @@ class indice extends clsCadastro
     {
         parent::__construct();
 
-        $this->db = new clsBanco;
+        $this->db = new clsBanco();
     }
 
     public function Inicializar()
@@ -49,13 +46,8 @@ class indice extends clsCadastro
         $this->url_cancelar = 'funcionario_vinculo_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            '' => "{$nomeMenu} v&iacute;nculo"
-        ]);
 
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb("{$nomeMenu} v&iacute;nculo");
 
         return $retorno;
     }
@@ -69,13 +61,16 @@ class indice extends clsCadastro
 
     public function Novo()
     {
+        $db = new clsBanco();
         if ($this->duplicado($this->nm_vinculo, $this->abreviatura)) {
             $this->mensagem = 'Já existe um registro com este nome ou abreviatura.';
 
             return false;
         }
+            $nm_vinculo = $db->escapeString($this->nm_vinculo);
+            $abreviatura = $db->escapeString($this->abreviatura);
 
-        $this->db->Consulta("INSERT INTO portal.funcionario_vinculo ( nm_vinculo, abreviatura ) VALUES ( '$this->nm_vinculo', '$this->abreviatura' )");
+        $this->db->Consulta("INSERT INTO portal.funcionario_vinculo ( nm_vinculo, abreviatura ) VALUES ( '$nm_vinculo', '$abreviatura' )");
         echo '<script>document.location=\'funcionario_vinculo_lst.php\';</script>';
 
         return true;
@@ -83,13 +78,16 @@ class indice extends clsCadastro
 
     public function Editar()
     {
+        $db = new clsBanco();
         if ($this->duplicado($this->nm_vinculo, $this->abreviatura, $this->cod_vinculo)) {
             $this->mensagem = 'Já existe um registro com este nome ou abreviatura.';
 
             return false;
         }
+        $nm_vinculo = $db->escapeString($this->nm_vinculo);
+        $abreviatura = $db->escapeString($this->abreviatura);
 
-        $this->db->Consulta("UPDATE portal.funcionario_vinculo SET nm_vinculo = '$this->nm_vinculo', abreviatura = '$this->abreviatura' WHERE cod_funcionario_vinculo = $this->cod_vinculo");
+        $this->db->Consulta("UPDATE portal.funcionario_vinculo SET nm_vinculo = '{$nm_vinculo}', abreviatura = '{$abreviatura}' WHERE cod_funcionario_vinculo = $this->cod_vinculo");
         echo '<script>document.location=\'funcionario_vinculo_lst.php\';</script>';
 
         return true;
@@ -114,7 +112,10 @@ class indice extends clsCadastro
 
     protected function duplicado($nmVinculo, $abreviatura, $id = null)
     {
-        $sql = "SELECT COUNT(*) FROM portal.funcionario_vinculo WHERE TRUE AND (nm_vinculo LIKE '{$nmVinculo}' OR abreviatura LIKE '{$abreviatura}')";
+        $db = new clsBanco();
+        $nm_Vinculo = $db->escapeString($nmVinculo);
+        $abrevia = $db->escapeString($abreviatura);
+        $sql = "SELECT COUNT(*) FROM portal.funcionario_vinculo WHERE TRUE AND nm_vinculo ILIKE '{$nm_Vinculo}' OR abreviatura ILIKE '{$abrevia}'";
 
         if (!is_null($id)) {
             $sql .= " AND cod_funcionario_vinculo <> {$id}";

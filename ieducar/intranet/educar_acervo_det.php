@@ -1,11 +1,6 @@
 <?php
 
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once ("include/pmieducar/clsPmieducarCategoriaAcervo.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -74,18 +69,10 @@ class indice extends clsDetalhe
         $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_cod_escola"] );
         $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
         $idpes = $det_ref_cod_escola["ref_idpes"];
-        if ($idpes)
-        {
-            $obj_escola = new clsPessoaJuridica( $idpes );
-            $obj_escola_det = $obj_escola->detalhe();
-            $registro["ref_cod_escola"] = $obj_escola_det["fantasia"];
-        }
-        else
-        {
-            $obj_escola = new clsPmieducarEscolaComplemento( $registro["ref_cod_escola"] );
-            $obj_escola_det = $obj_escola->detalhe();
-            $registro["ref_cod_escola"] = $obj_escola_det["nm_escola"];
-        }
+
+        $obj_escola = new clsPessoaJuridica( $idpes );
+        $obj_escola_det = $obj_escola->detalhe();
+        $registro["ref_cod_escola"] = $obj_escola_det["fantasia"];
 
         $obj_ref_cod_exemplar_tipo = new clsPmieducarExemplarTipo( $registro["ref_cod_exemplar_tipo"] );
         $det_ref_cod_exemplar_tipo = $obj_ref_cod_exemplar_tipo->detalhe();

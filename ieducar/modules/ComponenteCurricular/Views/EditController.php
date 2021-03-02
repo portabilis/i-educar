@@ -1,9 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/EditController.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-require_once 'ComponenteCurricular/Model/TipoBase.php';
-require_once 'ComponenteCurricular/Model/CodigoEducacenso.php';
 
 class EditController extends Core_Controller_Page_EditController
 {
@@ -53,6 +49,11 @@ class EditController extends Core_Controller_Page_EditController
             'help' => 'Ordem respeitada no lançamento de notas/faltas.',
             'entity' => 'ordenamento'
         ],
+        'desconsidera_para_progressao' => [
+            'label' => 'Desconsiderar o componente na aprovação/reprovação dos alunos?',
+            'help' => '',
+            'entity' => 'desconsidera_para_progressao'
+        ],
     ];
 
     protected function _preRender()
@@ -61,14 +62,9 @@ class EditController extends Core_Controller_Page_EditController
 
         $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-        $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => "$nomeMenu componente curricular"
+        $this->breadcrumb( "$nomeMenu componente curricular", [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
     }
 
     /**
@@ -125,8 +121,17 @@ class EditController extends Core_Controller_Page_EditController
         );
 
         // Área de conhecimento
-        $areas = $this->getDataMapper()->findAreaConhecimento();
-        $areas = CoreExt_Entity::entityFilterAttr($areas, 'id', 'nome');
+        $areasMapper = $this->getDataMapper()->getAreaDataMapper()->findAll(['nome', 'agrupar_descritores']);
+        $areas = [];
+
+        foreach ($areasMapper as $area) {
+            if ($area->agrupar_descritores) {
+                $area->nome .= ' (agrupador)';
+            }
+            $areas[$area->id] = $area->nome;
+        }
+
+        $areas = Portabilis_Array_Utils::insertIn(null, 'Selecione', $areas);
 
         $this->campoLista(
             'area_conhecimento',
@@ -154,6 +159,17 @@ class EditController extends Core_Controller_Page_EditController
             15,
             false,
             $this->_getHelp('ordenamento')
+        );
+
+        $this->campoCheck(
+            'desconsidera_para_progressao',
+            $this->_getLabel('desconsidera_para_progressao'),
+            $this->getEntity()->desconsidera_para_progressao,
+            '',
+            false,
+            false,
+            false,
+            $this->_getHelp('desconsidera_para_progressao')
         );
     }
 
@@ -189,6 +205,8 @@ class EditController extends Core_Controller_Page_EditController
                 $data[$key] = $val;
             }
         }
+
+        $data['desconsidera_para_progressao'] = isset($data['desconsidera_para_progressao']);
 
         // Verifica pela existência do field identity
         if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {

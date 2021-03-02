@@ -335,7 +335,7 @@ class EnrollmentServiceTest extends TestCase
     }
 
     /**
-     * Instituição sem data base, a ultima enturmação deverá ser retornada
+     * Instituição com data base antes da data de remanejamento, devera retornar null
      */
     public function testGetPreviousEnrollmentWithRelocationDateBeforeDepartedDate()
     {
@@ -354,7 +354,7 @@ class EnrollmentServiceTest extends TestCase
     }
 
     /**
-     * Instituição sem data base, a ultima enturmação deverá ser retornada
+     * Instituição com data base depois da data de remanejamento, a ultima enturmação deverá ser retornada
      */
     public function testGetPreviousEnrollmentWithRelocationDateAfterDepartedDate()
     {

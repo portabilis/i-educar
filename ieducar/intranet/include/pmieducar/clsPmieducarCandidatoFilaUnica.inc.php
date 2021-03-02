@@ -26,6 +26,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
     public $ativo;
     public $sexo;
     public $ideciv;
+    public $comments;
 
     public function __construct(
         $cod_candidato_fila_unica = null,
@@ -70,7 +71,8 @@ class clsPmieducarCandidatoFilaUnica extends Model
                                                        cfu.data_situacao,
                                                        cfu.via_judicial,
                                                        cfu.via_judicial_doc,
-                                                       cfu.ativo';
+                                                       cfu.ativo,
+                                                       cfu.comments';
 
         if (is_numeric($cod_candidato_fila_unica)) {
             $this->cod_candidato_fila_unica = $cod_candidato_fila_unica;
@@ -243,6 +245,12 @@ class clsPmieducarCandidatoFilaUnica extends Model
                 $gruda = ', ';
             }
 
+            if (is_string($this->comments)) {
+                $campos .= "{$gruda}comments";
+                $valores .= "{$gruda}'{$this->comments}'";
+                $gruda = ', ';
+            }
+
             $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
             $gruda = ', ';
@@ -353,6 +361,14 @@ class clsPmieducarCandidatoFilaUnica extends Model
                 $gruda = ', ';
             }
 
+            if (is_string($this->comments)) {
+                $set .= "{$gruda}comments = '{$this->comments}'";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}comments = NULL";
+                $gruda = ', ';
+            }
+
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_candidato_fila_unica = {$this->cod_candidato_fila_unica}");
 
@@ -371,8 +387,20 @@ class clsPmieducarCandidatoFilaUnica extends Model
     public function lista(
         $nome = null,
         $nome_responsavel = null,
-        $ref_cod_escola = null
+        $ref_cod_escola = null,
+        $getEscolas = false
     ) {
+        $sqlEscolas = 'null';
+
+        if ($getEscolas) {
+            $sqlEscolas = " (SELECT string_agg(j.fantasia, ', ')
+                          FROM pmieducar.escola_candidato_fila_unica ecfu
+                    INNER JOIN pmieducar.escola e ON e.cod_escola = ecfu.ref_cod_escola
+                    INNER JOIN cadastro.juridica j ON j.idpes = e.ref_idpes
+                         WHERE ecfu.ref_cod_candidato_fila_unica = cfu.cod_candidato_fila_unica
+                      GROUP BY ecfu.ref_cod_candidato_fila_unica) AS escolas";
+        }
+
         $sql = "SELECT {$this->_campos_lista},
                        p.nome,
                        f.data_nasc,
@@ -385,33 +413,20 @@ class clsPmieducarCandidatoFilaUnica extends Model
                        f.sexo,
                        f.ideciv,
                        s.nm_serie,
-                       ep.observacoes,
+                       cfu.comments AS observacoes,
                        (cfu.ano_letivo || to_char(cfu.cod_candidato_fila_unica, 'fm00000000')) AS protocolo,
                        (CASE cfu.situacao
                         WHEN 'A' THEN 'Atendida'
                         WHEN 'I' THEN 'Indeferida'
                         WHEN 'D' THEN 'Desistente'
                         ELSE 'Em espera' END) AS situacao_desc,
-                       (SELECT (STRING_AGG(nome, ', '))
-                          FROM (SELECT p.nome
-                                  FROM pmieducar.responsaveis_aluno ra
-                                 INNER JOIN cadastro.pessoa p ON (p.idpes = ra.ref_idpes)
-                                 WHERE ref_cod_aluno = cfu.ref_cod_aluno
-                                 ORDER BY vinculo_familiar
-                                 LIMIT 3) r) AS responsaveis,
-                       (SELECT string_agg(j.fantasia, ', ')
-                          FROM pmieducar.escola_candidato_fila_unica ecfu
-                    INNER JOIN pmieducar.escola e ON e.cod_escola = ecfu.ref_cod_escola
-                    INNER JOIN cadastro.juridica j ON j.idpes = e.ref_idpes
-                         WHERE ecfu.ref_cod_candidato_fila_unica = cfu.cod_candidato_fila_unica
-                      GROUP BY ecfu.ref_cod_candidato_fila_unica) AS escolas
+                        {$sqlEscolas}
                   FROM {$this->_tabela} cfu
             INNER JOIN pmieducar.aluno a ON (a.cod_aluno = cfu.ref_cod_aluno)
             INNER JOIN cadastro.pessoa p ON (p.idpes = a.ref_idpes)
             INNER JOIN cadastro.fisica f ON (f.idpes = a.ref_idpes)
             INNER JOIN pmieducar.serie s ON (s.cod_serie = cfu.ref_cod_serie)
-             LEFT JOIN cadastro.documento d ON (d.idpes = a.ref_idpes)
-             LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)";
+             LEFT JOIN cadastro.documento d ON (d.idpes = a.ref_idpes)";
 
         $filtros = '';
 
@@ -693,7 +708,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
      */
     public function excluir()
     {
-        if (is_numeric($this->cod_canddidato_fila_unica) && is_numeric($this->ref_cod_pessoa_exc)) {
+        if (is_numeric($this->cod_candidato_fila_unica) && is_numeric($this->ref_cod_pessoa_exc)) {
             $this->ativo = 0;
 
             return $this->edita();
@@ -761,6 +776,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
             $db->Consulta("UPDATE pmieducar.candidato_fila_unica
                               SET ref_cod_matricula = '{$ref_cod_matricula}',
                                   situacao = 'A',
+                                  motivo = null,
                                   data_situacao = NOW(),
                                   historico = '{$historico}'
                             WHERE cod_candidato_fila_unica = '{$this->cod_candidato_fila_unica}'");
@@ -779,7 +795,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
         }
 
         $situacao = $situacao ?: 'NULL';
-        $motivo = str_replace("\'", "''", $motivo) ?: 'NULL';
+        $motivo = str_replace("\'", "''", $motivo) ?: null;
         $historico = $this->montaHistorico();
         $data = $data ?: 'NOW()';
 
@@ -788,6 +804,7 @@ class clsPmieducarCandidatoFilaUnica extends Model
                           SET situacao = {$situacao},
                               motivo = '{$motivo}',
                               data_situacao = NOW(),
+                              ref_cod_matricula = null,
                               data_solicitacao = '{$data}',
                               hora_solicitacao = NOW(),
                               historico = '{$historico}'

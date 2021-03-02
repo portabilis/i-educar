@@ -1,11 +1,6 @@
 <?php
 
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once ("include/pmieducar/geral.inc.php" );
-require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -91,18 +86,10 @@ class indice extends clsCadastro
 
     function Novo()
     {
-
-
         $obj = new clsPmieducarAlunoBeneficio( $this->cod_aluno_beneficio, $this->pessoa_logada, $this->pessoa_logada, $this->nm_beneficio, $this->desc_beneficio, $this->data_cadastro, $this->data_exclusao, $this->ativo );
         $cadastrou = $obj->cadastra();
         if( $cadastrou )
         {
-            $beneficio = new clsPmieducarAlunoBeneficio($cadastrou);
-            $beneficio = $beneficio->detalhe();
-
-            $auditoria = new clsModulesAuditoriaGeral("aluno_beneficio", $this->pessoa_logada, $cadastrou);
-            $auditoria->inclusao($beneficio);
-
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
             $this->simpleRedirect('educar_aluno_beneficio_lst.php');
         }
@@ -115,19 +102,10 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
-        $beneficioDetalhe = new clsPmieducarAlunoBeneficio($this->cod_aluno_beneficio);
-        $beneficioDetalheAntes = $beneficioDetalhe->detalhe();
-
         $obj = new clsPmieducarAlunoBeneficio($this->cod_aluno_beneficio, $this->pessoa_logada, $this->pessoa_logada, $this->nm_beneficio, $this->desc_beneficio, $this->data_cadastro, $this->data_exclusao, $this->ativo);
         $editou = $obj->edita();
         if( $editou )
         {
-            $beneficioDetalheDepois = $beneficioDetalhe->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral("aluno_beneficio", $this->pessoa_logada, $this->cod_aluno_beneficio);
-            $auditoria->alteracao($beneficioDetalheAntes, $beneficioDetalheDepois);
-
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_aluno_beneficio_lst.php');
         }
@@ -139,18 +117,11 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-
-
         $obj = new clsPmieducarAlunoBeneficio($this->cod_aluno_beneficio, $this->pessoa_logada, $this->pessoa_logada, $this->nm_beneficio, $this->desc_beneficio, $this->data_cadastro, $this->data_exclusao, 0);
-
-        $beneficio = $obj->detalhe();
 
         $excluiu = $obj->excluir();
         if( $excluiu )
         {
-            $auditoria = new clsModulesAuditoriaGeral("aluno_beneficio", $this->pessoa_logada, $this->cod_aluno_beneficio);
-            $auditoria->exclusao($beneficio);
-
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_aluno_beneficio_lst.php');
         }

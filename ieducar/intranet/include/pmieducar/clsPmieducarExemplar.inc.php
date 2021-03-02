@@ -3,8 +3,6 @@
 use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Session;
 
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsPmieducarExemplar extends Model
 {
@@ -24,16 +22,12 @@ class clsPmieducarExemplar extends Model
     public $tombo;
     public $sequencial;
     public $data_baixa_exemplar;
-    public $pessoa_logada;
     public $codUsuario;
 
     public function __construct($cod_exemplar = null, $ref_cod_fonte = null, $ref_cod_motivo_baixa = null, $ref_cod_acervo = null, $ref_cod_situacao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $permite_emprestimo = null, $preco = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $data_aquisicao = null, $tombo = null, $sequencial = null, $data_baixa_exemplar = null)
     {
-        $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}exemplar";
-
-        $this->pessoa_logada = Session::get('id_pessoa');
 
         $this->_campos_lista = $this->_todos_campos = 'e.cod_exemplar, e.ref_cod_fonte, e.ref_cod_motivo_baixa, e.ref_cod_acervo, e.ref_cod_situacao, e.ref_usuario_exc, e.ref_usuario_cad, e.permite_emprestimo, e.preco, e.data_cadastro, e.data_exclusao, e.ativo, e.data_aquisicao, e.tombo, e.sequencial, e.data_baixa_exemplar';
 
@@ -173,8 +167,6 @@ class clsPmieducarExemplar extends Model
             $this->cod_exemplar = $db->InsertId("{$this->_tabela}_cod_exemplar_seq");
             if ($this->cod_exemplar) {
                 $detalhe = $this->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('exemplar', $this->pessoa_logada, $this->cod_exemplar);
-                $auditoria->inclusao($detalhe);
             }
 
             return $this->cod_exemplar;
@@ -254,8 +246,6 @@ class clsPmieducarExemplar extends Model
                 $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_exemplar = '{$this->cod_exemplar}'");
                 $detalheAtual = $this->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('exemplar', $this->pessoa_logada, $this->cod_exemplar);
-                $auditoria->alteracao($detalheAntigo, $detalheAtual);
 
                 return true;
             }
@@ -476,6 +466,8 @@ class clsPmieducarExemplar extends Model
      */
     public function lista_com_acervos($int_cod_exemplar = null, $int_ref_cod_fonte = null, $int_ref_cod_motivo_baixa = null, $int_ref_cod_acervo = null, $int_ref_cod_situacao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_permite_emprestimo = null, $int_preco = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $date_data_aquisicao_ini = null, $date_data_aquisicao_fim = null, $int_ref_exemplar_tipo = null, $str_titulo_livro = null, $int_ref_cod_biblioteca = null, $int_ref_cod_instituicao = null, $int_ref_cod_escola = null, $int_ref_cod_acervo_colecao = null, $int_ref_cod_acervo_editora = null, $tombo)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista}, a.ref_cod_biblioteca, a.titulo FROM {$this->_tabela} e, {$this->_schema}acervo a, {$this->_schema}biblioteca b";
 
         $whereAnd = ' AND';
@@ -549,7 +541,8 @@ class clsPmieducarExemplar extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_titulo_livro)) {
-            $filtros .= "{$whereAnd} (a.titulo) LIKE ('%{$str_titulo_livro}%')";
+            $titulo_livro = $db->escapeString($str_titulo_livro);
+            $filtros .= "{$whereAnd} (a.titulo) LIKE ('%{$titulo_livro}%')";
             $whereAnd = ' AND ';
         }
 
@@ -603,7 +596,6 @@ class clsPmieducarExemplar extends Model
          * FIM  - PESQUISAS EXTRAS
          */
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

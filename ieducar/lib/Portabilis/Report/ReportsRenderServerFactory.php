@@ -4,7 +4,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
 
-require_once 'lib/Portabilis/Report/ReportFactory.php';
 
 class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_ReportFactory
 {
@@ -115,10 +114,14 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
 
         $params['timezone'] = $this->timezone;
 
+        $data = [];
         if ($report->useJson()) {
             $params['datasource'] = 'json';
             $this->url = str_replace('/deprecated', '', $this->url);
             $this->sourcePath = str_replace('/deprecated', '', $this->sourcePath);
+
+            $data = $report->getJsonData();
+            $data = $report->modify($data);
         } else {
             $params['datasource'] = 'database';
             $params['connection'] = 'postgresql';
@@ -127,8 +130,6 @@ class Portabilis_Report_ReportsRenderServerFactory extends Portabilis_Report_Rep
         }
 
         $url = $this->sourcePath;
-        $data = $report->getJsonData();
-        $data = $report->modify($data);
 
         $payload = [
             'json' => [

@@ -1,6 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/View/Helper/DynamicInput/CoreSelect.php';
 
 class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_DynamicInput_CoreSelect
 {
@@ -22,7 +21,11 @@ class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_D
         $isOnlyProfessor = Portabilis_Business_Professor::isOnlyProfessor($instituicaoId, $userId);
 
         if ($escolaId and $serieId and empty($resources) and $isOnlyProfessor) {
-            $resources = Portabilis_Business_Professor::turmasAlocado($instituicaoId, $escolaId, $serieId, $userId);
+            $resources = collect(Portabilis_Business_Professor::turmasAlocado($instituicaoId, $escolaId, $serieId, $userId))
+                ->keyBy('id')
+                ->map(function ($turma) {
+                    return $turma['nome'] . ' - ' . $turma['ano'];
+                })->toArray();
         } elseif ($escolaId && $serieId && empty($resources)) {
             $resources = App_Model_IedFinder::getTurmas($escolaId, $serieId);
         }

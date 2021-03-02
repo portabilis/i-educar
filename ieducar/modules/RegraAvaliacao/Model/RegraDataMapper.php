@@ -1,8 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
-require_once 'RegraAvaliacao/Model/Regra.php';
-require_once 'FormulaMedia/Model/TipoFormula.php';
 
 class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
 {
@@ -22,6 +19,7 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
         'formulaMedia' => 'formula_media_id',
         'formulaRecuperacao' => 'formula_recuperacao_id',
         'porcentagemPresenca' => 'porcentagem_presenca',
+        'desconsiderarLancamentoFrequencia' => 'desconsiderar_lancamento_frequencia',
         'parecerDescritivo' => 'parecer_descritivo',
         'tipoPresenca' => 'tipo_presenca',
         'mediaRecuperacao' => 'media_recuperacao',
@@ -80,8 +78,7 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     public function getFormulaDataMapper()
     {
         if (is_null($this->_formulaDataMapper)) {
-            require_once 'FormulaMedia/Model/FormulaDataMapper.php';
-            $this->setFormulaDataMapper(new FormulaMedia_Model_FormulaDataMapper());
+                        $this->setFormulaDataMapper(new FormulaMedia_Model_FormulaDataMapper());
         }
 
         return $this->_formulaDataMapper;
@@ -109,8 +106,7 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     public function getTabelaDataMapper()
     {
         if (is_null($this->_tabelaDataMapper)) {
-            require_once 'TabelaArredondamento/Model/TabelaDataMapper.php';
-            $this->setTabelaDataMapper(
+                        $this->setTabelaDataMapper(
                 new TabelaArredondamento_Model_TabelaDataMapper()
             );
         }
@@ -200,8 +196,7 @@ class RegraAvaliacao_Model_RegraDataMapper extends CoreExt_DataMapper
     public function getRegraRecuperacaoDataMapper()
     {
         if (is_null($this->_regraRecuperacaoDataMapper)) {
-            require_once 'RegraAvaliacao/Model/RegraRecuperacaoDataMapper.php';
-            $this->setRegraRecuperacaoDataMapper(
+                        $this->setRegraRecuperacaoDataMapper(
                 new RegraAvaliacao_Model_RegraRecuperacaoDataMapper()
             );
         }

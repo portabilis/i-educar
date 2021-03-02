@@ -28,13 +28,7 @@
  * @version   $Id$
  */
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesEmpresaTransporteEscolar.inc.php';
 
-require_once 'Portabilis/View/Helper/Application.php';
 
 
 /**
@@ -126,13 +120,9 @@ class indice extends clsDetalhe
 
     $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_transporte_escolar_index.php"                  => "Transporte escolar",
-         ""                                  => "Detalhe da empresa de transporte"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Detalhe da empresa de transporte', [
+        url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
+    ]);
   }
 }
 

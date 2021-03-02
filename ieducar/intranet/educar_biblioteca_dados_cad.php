@@ -1,11 +1,6 @@
 <?php
 
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -243,8 +238,6 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 629, $this->pessoa_logada, 11,  "educar_biblioteca_dados_lst.php" );
 
@@ -269,13 +262,9 @@ class indice extends clsCadastro
                                                                             $this->dias_espera,
                                                                             $this->tombo_automatico,
                                                                             $this->bloqueia_emprestimo_em_atraso == "on");
-        $detalheAntigo = $obj->detalhe();
     $editou = $obj->edita();
         if( $editou )
         {
-      $detalheAtual = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("biblioteca", $this->pessoa_logada, $this->cod_biblioteca);
-      $auditoria->alteracao($detalheAntigo, $detalheAtual);
         //-----------------------EDITA DIA SEMANA------------------------//
 
             if ($this->dia_semana) {

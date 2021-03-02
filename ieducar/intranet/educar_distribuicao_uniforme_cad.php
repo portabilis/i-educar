@@ -1,12 +1,5 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/View/Helper/Application.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -154,18 +147,7 @@ class indice extends clsCadastro
             'size' => 10
         ]);
 
-        $this->campoLista(
-            'ref_cod_escola',
-            'Escola',
-            $escolaOpcoes,
-            $this->ref_cod_escola,
-            '',
-            false,
-            '(Responsável pela distribuição do uniforme)',
-            '',
-            false,
-            true
-        );
+        $this->inputsHelper()->dynamic(['instituicao', 'escola']);
 
         $this->inputsHelper()->checkbox('kit_completo', [
             'label' => 'Kit completo', 'value' => $this->kit_completo
@@ -401,12 +383,6 @@ class indice extends clsCadastro
         $this->cod_distribuicao_uniforme = $cadastrou = $obj->cadastra();
 
         if ($cadastrou) {
-            $distribuicao = new clsPmieducarDistribuicaoUniforme($this->cod_distribuicao_uniforme);
-            $distribuicao = $distribuicao->detalhe();
-
-            $auditoria = new clsModulesAuditoriaGeral('distribuicao_uniforme', $this->pessoa_logada, $this->cod_distribuicao_uniforme);
-            $auditoria->inclusao($distribuicao);
-
             $this->redirectIf(true, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
@@ -464,13 +440,9 @@ class indice extends clsCadastro
             $this->saia_tm
         );
 
-        $detalheAntigo = $obj->detalhe();
         $editou = $obj->edita();
 
         if ($editou) {
-            $auditoria = new clsModulesAuditoriaGeral('distribuicao_uniforme', $this->pessoa_logada, $this->cod_distribuicao_uniforme);
-            $auditoria->alteracao($detalheAntigo, $obj->detalhe());
-
             $this->redirectIf(true, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 
@@ -485,13 +457,9 @@ class indice extends clsCadastro
         $obj_permissoes->permissao_excluir(578, $this->pessoa_logada, 7, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
         $obj = new clsPmieducarDistribuicaoUniforme($this->cod_distribuicao_uniforme);
-        $detalhe = $obj->detalhe();
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
-            $auditoria = new clsModulesAuditoriaGeral('distribuicao_uniforme', $this->pessoa_logada, $this->cod_distribuicao_uniforme);
-            $auditoria->exclusao($detalhe);
-
             $this->redirectIf(true, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
 

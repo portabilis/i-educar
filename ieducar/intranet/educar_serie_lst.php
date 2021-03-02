@@ -28,10 +28,6 @@
  * @version   $Id$
  */
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
 
 /**
  * clsIndexBase class.
@@ -93,9 +89,6 @@ class indice extends clsListagem
       $this->$var = ($val === '') ? NULL : $val;
     }
 
-    $this->addBanner('imagens/nvp_top_intranet.jpg',
-      'imagens/nvp_vert_intranet.jpg', 'Intranet');
-
     $lista_busca = array(
       'S&eacute;rie',
       'Curso'
@@ -113,7 +106,7 @@ class indice extends clsListagem
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso'));
 
     // outros Filtros
-    $this->campoTexto('nm_serie', 'S&eacute;rie', $this->nm_serie, 30, 255, FALSE);
+    $this->campoTexto('nm_serie', 'Série', $this->nm_serie, 30, 255, FALSE);
 
     // Paginador
     $this->limite = 20;

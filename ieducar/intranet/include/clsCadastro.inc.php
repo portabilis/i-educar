@@ -1,24 +1,13 @@
 <?php
 
+use App\Models\LegacySchoolAcademicYear;
 use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
-require_once 'include/clsCampos.inc.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/View/Helper/Inputs.php';
-require_once 'Portabilis/Utils/User.php';
-require_once 'include/localizacaoSistema.php';
 
 class clsCadastro extends clsCampos
 {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    public $pessoa_logada;
-    public $__nome = 'formcadastro';
     public $target = '_self';
     public $largura;
     public $tipoacao;
@@ -58,29 +47,13 @@ class clsCadastro extends clsCampos
     public $onSubmit = 'acao()';
     public $form_enctype;
 
-    /**
-     * @deprecated
-     */
-    public function addBanner(
-        $strBannerUrl = '',
-        $strBannerLateralUrl = '',
-        $strBannerTitulo = '',
-        $boolFechaBanner = true
-    ) {
-        // Método deixado para compatibilidade
-    }
+    const NOVO = 'N';
+    const EDITAR = 'E';
 
     public function __construct()
     {
         parent::__construct();
         $this->tipoacao = @$_POST['tipoacao'];
-    }
-
-    public function enviaLocalizacao($localizao)
-    {
-        if ($localizao) {
-            $this->locale = $localizao;
-        }
     }
 
     public function PreCadastrar()
@@ -345,7 +318,7 @@ class clsCadastro extends clsCampos
                             $retorno .= " alert( 'Preencha o campo \'{$nome_campos[$ct_campo]}\' corretamente!' ); \n  return false; }";
                             $retorno .= "else { if(! DvCnpjOk( $campo) ) return false; }  }";
                             $retorno .= "else{ if(! DvCpfOk( $campo) ) return false; }";
-                        } elseif ($componente_campo[0] != 'oculto') {
+                        } elseif ($componente_campo[0] != 'oculto' && $nomeCampo != 'html') {
                             $campo = "document.getElementById(\"{$nomeCampo}[\"+id_campo+\"]\")";
                             $fim_for = '';
                             if ($validador[0] == '*') {
@@ -445,7 +418,7 @@ class clsCadastro extends clsCampos
                         $retorno .= " alert( 'Preencha o campo \'$componente[1]\' corretamente!' ); \n  return false; }";
                         $retorno .= "else { if(! DvCnpjOk( document.getElementById('$nome')) ) return false; }  }";
                         $retorno .= "else{ if(! DvCpfOk( document.getElementById('$nome')) ) return false; }";
-                    } else {
+                    } elseif ($nome != 'html') {
                         //substituito referencia a elementos por padrï¿½o W3C document.getElementById()
                         //quando se referenciava um nome de elemento como um array ex: cadastro[aluno]
                         //nao funcionava na referencia por nome
@@ -530,7 +503,7 @@ class clsCadastro extends clsCampos
             $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: $this->acao' value=' $this->nome_acao '>&nbsp;";
         }
         if (!empty($this->url_cancelar) || !empty($this->script_cancelar)) {
-            $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: $this->script_cancelar go( \"$this->url_cancelar\" );' value=' $this->nome_url_cancelar '>&nbsp;";
+            $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: $this->script_cancelar goOrClose( \"$this->url_cancelar\" );' value=' $this->nome_url_cancelar '>&nbsp;";
         }
         if (!empty($this->url_copiar_enturmacoes)) {
             $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: go( \"$this->url_copiar_enturmacoes\" );' value=' $this->nome_url_copiar_enturmacoes '>&nbsp;";
@@ -642,9 +615,18 @@ class clsCadastro extends clsCampos
     protected function sugestaoAnosLetivos()
     {
         $anoAtual = date('Y');
-        $anos = range($anoAtual - 10, $anoAtual + 1);
+        $anos = range($anoAtual - 18, $anoAtual + 1);
 
         return array_combine($anos, $anos);
+    }
+
+    protected function anosLetivosExistentes()
+    {
+        return LegacySchoolAcademicYear::query()
+            ->distinct('ano')
+            ->get()
+            ->pluck('ano', 'ano')
+            ->toArray();
     }
 
     protected function inputsHelper()

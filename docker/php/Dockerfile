@@ -1,4 +1,4 @@
-FROM php:7.3-fpm
+FROM php:7.4-fpm-alpine
 
 LABEL maintainer="Portabilis <contato@portabilis.com.br>"
 
@@ -12,14 +12,15 @@ ENV XDEBUG_REMOTE_PORT 9000
 ENV XDEBUG_REMOTE_ENABLE 0
 ENV XDEBUG_AUTOSTART 0
 
-RUN echo "deb http://ftp.us.debian.org/debian sid main" >> /etc/apt/sources.list
+RUN apk update
+RUN apk add wget
 
-RUN apt-get update -y
+RUN apk add --no-cache --virtual .phpize_deps $PHPIZE_DEPS
 
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug
 
-RUN apt-get install -y libpq-dev
+RUN apk --no-cache add postgresql-dev
 RUN docker-php-ext-install pgsql
 
 RUN docker-php-ext-install pdo
@@ -31,18 +32,23 @@ RUN rm -rf /tmp/pear
 
 RUN docker-php-ext-install bcmath
 
-RUN apt-get install -y unzip
+RUN apk add unzip
 
-RUN apt-get install -y libzip-dev
+RUN apk add libzip-dev
 RUN docker-php-ext-install zip
 
-RUN mkdir -p /usr/share/man/man7
-RUN apt-get install -y postgresql-client
+RUN apk add libc-dev
 
-RUN apt-get install -y libpng-dev
+RUN echo "@v3.4 http://nl.alpinelinux.org/alpine/v3.4/main" >> /etc/apk/repositories && \
+    apk update && \
+    apk add --no-cache "postgresql-client@v3.4>=9.5"
+
+RUN apk add postgresql-client
+
+RUN apk add libpng-dev
 RUN docker-php-ext-install gd
 
-RUN apt-get install -y jq git
+RUN apk add jq git
 
 RUN ln -s /var/www/ieducar/artisan /usr/local/bin/artisan
 
@@ -50,11 +56,13 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
-COPY php.ini /usr/local/etc/php/php.ini
-
-COPY pdflib.so /usr/local/lib/php/extensions/no-debug-non-zts-20180731/pdflib.so
-RUN echo "extension=/usr/local/lib/php/extensions/no-debug-non-zts-20180731/pdflib.so" > /usr/local/etc/php/conf.d/pdflib.ini
-
 RUN docker-php-ext-install pcntl
 
-RUN apt-get install openjdk-8-jdk -y
+RUN apk add openjdk8
+RUN apk add ttf-dejavu
+
+RUN apk add --update npm
+
+RUN composer self-update
+
+RUN apk del .phpize_deps

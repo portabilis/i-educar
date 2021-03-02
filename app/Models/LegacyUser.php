@@ -2,19 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Prettus\Repository\Contracts\Transformable;
-use Prettus\Repository\Traits\TransformableTrait;
 
-/**
- * Class User.
- *
- * @package namespace App\Entities;
- */
-class LegacyUser extends EloquentBaseModel implements Transformable
+class LegacyUser extends Model
 {
-    use TransformableTrait;
-
     /**
      * @var string
      */
@@ -35,7 +27,14 @@ class LegacyUser extends EloquentBaseModel implements Transformable
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'cod_usuario',
+        'ref_cod_instituicao',
+        'ref_funcionario_cad',
+        'ref_cod_tipo_usuario',
+        'data_cadastro',
+        'ativo',
+    ];
 
     /**
      * @return int

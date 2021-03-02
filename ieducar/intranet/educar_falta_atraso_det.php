@@ -28,10 +28,8 @@
  * @version   $Id$
  */
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
+use App\Models\LegacySchool;
+
 
 /**
  * clsIndexBase class.
@@ -122,8 +120,8 @@ class indice extends clsDetalhe
           $color = ' bgcolor="#FFFFFF" ';
         }
 
-        $obj_esc = new clsPmieducarEscolaComplemento($falta['ref_cod_escola']);
-        $det_esc = $obj_esc->detalhe();
+        $school = LegacySchool::query()->with('person')->find($falta['ref_cod_escola']);
+
         $obj_ins = new clsPmieducarInstituicao($falta['ref_ref_cod_instituicao']);
         $det_ins = $obj_ins->detalhe();
 
@@ -140,7 +138,7 @@ class indice extends clsDetalhe
           $color, $falta['tipo'] == 1 ? 'Atraso' : 'Falta',
           $color, $falta['qtd_horas'],
           $color, $falta['qtd_min'],
-          $color, $det_esc['nm_escola'],
+          $color, $school->person->name ?? null,
           $color, $det_ins['nm_instituicao']);
 
         $cont++;

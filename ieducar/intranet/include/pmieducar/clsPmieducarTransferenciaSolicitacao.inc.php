@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarTransferenciaSolicitacao extends Model
 {
@@ -113,8 +112,9 @@ class clsPmieducarTransferenciaSolicitacao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->observacao)) {
+                $observacao = $db->escapeString($this->observacao);
                 $campos .= "{$gruda}observacao";
-                $valores .= "{$gruda}'{$this->observacao}'";
+                $valores .= "{$gruda}'{$observacao}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -142,13 +142,15 @@ class clsPmieducarTransferenciaSolicitacao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->estado_escola_destino_externa)) {
+                $escolaDestinoExterna = $db->escapeString($this->estado_escola_destino_externa);
                 $campos .= "{$gruda}estado_escola_destino_externa";
-                $valores .= "{$gruda}'{$this->estado_escola_destino_externa}'";
+                $valores .= "{$gruda}'{$escolaDestinoExterna}'";
                 $gruda = ', ';
             }
             if (is_string($this->municipio_escola_destino_externa)) {
+                $municipioEscolaDestinoExterna = $db->escapeString($this->municipio_escola_destino_externa);
                 $campos .= "{$gruda}municipio_escola_destino_externa";
-                $valores .= "{$gruda}'{$this->municipio_escola_destino_externa}'";
+                $valores .= "{$gruda}'{$municipioEscolaDestinoExterna}'";
                 $gruda = ', ';
             }
 
@@ -192,7 +194,8 @@ class clsPmieducarTransferenciaSolicitacao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->observacao)) {
-                $set .= "{$gruda}observacao = '{$this->observacao}'";
+                $observacao = $db->escapeString($this->observacao);
+                $set .= "{$gruda}observacao = '{$observacao}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {

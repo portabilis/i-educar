@@ -42,7 +42,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = factory(User::class, 'admin')->make();
+        $user = factory(User::class)->state('admin')->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
@@ -50,14 +50,19 @@ trait DiarioApiRequestTestTrait
         return json_decode($response->content());
     }
 
-    public function postScore($enrollment, $disciplineId, $stage, $score)
+    public function postExam($enrollment, $disciplineId, $stage, $score)
+    {
+        return $this->postScore($enrollment, $disciplineId, $stage, $score, 'nota_exame');
+    }
+
+    public function postScore($enrollment, $disciplineId, $stage, $score, $resource = 'nota')
     {
         $this->cleanGlobals();
 
         $schoolClass = $enrollment->schoolClass;
 
         $data = [
-            'resource' => 'nota',
+            'resource' => $resource,
             'oper' => 'post',
             'instituicao_id' => $schoolClass->school->institution->id,
             'escola_id' => $schoolClass->school_id,
@@ -75,7 +80,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = factory(User::class, 'admin')->make();
+        $user = factory(User::class)->state('admin')->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
@@ -107,7 +112,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = factory(User::class, 'admin')->make();
+        $user = factory(User::class)->state('admin')->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));
@@ -139,7 +144,7 @@ trait DiarioApiRequestTestTrait
 
         $_GET = $data;
 
-        $user = factory(User::class, 'admin')->make();
+        $user = factory(User::class)->state('admin')->make();
 
         /** @var TestResponse $response */
         $response = $this->actingAs($user)->get('/module/Avaliacao/diarioApi?' . http_build_query($data));

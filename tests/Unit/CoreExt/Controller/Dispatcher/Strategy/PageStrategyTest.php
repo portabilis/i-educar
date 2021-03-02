@@ -31,8 +31,6 @@ use PHPUnit\Framework\TestCase;
  * @version     $Id$
  */
 
-require_once 'CoreExt/Controller/Front.php';
-require_once 'CoreExt/Controller/Dispatcher/Strategy/PageStrategy.php';
 
 /**
  * CoreExt_Controller_Strategy_PageStrategyTest class.
@@ -63,11 +61,9 @@ class CoreExt_Controller_Dispatcher_Strategy_PageStrategyTest extends PHPUnit\Fr
     $this->_pageStrategy = new CoreExt_Controller_Dispatcher_Strategy_PageStrategy($this->_frontController);
   }
 
-  /**
-   * @expectedException CoreExt_Exception_FileNotFoundException
-   */
   public function testRequisicaoAControllerNaoExistenteLancaExcecao()
   {
+      $this->expectException(\CoreExt_Exception_FileNotFoundException::class);
     $_SERVER['REQUEST_URI'] = 'http://www.example.com/PageController/view';
     $this->_pageStrategy->dispatch();
   }

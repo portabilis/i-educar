@@ -1,12 +1,5 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'Educacenso/Model/AlunoDataMapper.php';
-require_once 'include/public/clsPublicSetorBai.inc.php';
-require_once 'Portabilis/Utils/CustomLabel.php';
 
 class clsIndexBase extends clsBase
 {
@@ -63,7 +56,8 @@ class indice extends clsListagem
     public $ref_cod_escola;
     public $ref_cod_curso;
     public $ref_cod_serie;
-    public $idsetorbai;
+    public $cpf_aluno;
+    public $rg_aluno;
 
     public function Gerar()
     {
@@ -85,37 +79,17 @@ class indice extends clsListagem
         $this->campoRA('aluno_estado_id', 'Código rede estadual do aluno (RA)', $this->aluno_estado_id, false);
         $this->campoTexto('nome_aluno', 'Nome do aluno', $this->nome_aluno, 50, 255, false);
         $this->campoData('data_nascimento', 'Data de Nascimento', $this->data_nascimento);
+        $this->campoCpf('cpf_aluno', 'CPF', $this->cpf_aluno);
+        $this->campoTexto('rg_aluno', 'RG', $this->rg_aluno);
         $this->campoTexto('nome_pai', 'Nome do Pai', $this->nome_pai, 50, 255);
         $this->campoTexto('nome_mae', 'Nome da Mãe', $this->nome_mae, 50, 255);
         $this->campoTexto('nome_responsavel', 'Nome do Responsável', $this->nome_responsavel, 50, 255);
-
-        $opcoes = ['' => 'Selecione'];
-            $objTemp = new clsPublicSetorBai();
-            $objTemp->setOrderBy(' nome asc ');
-            $lista = $objTemp->lista();
-
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['idsetorbai']] = $registro['nome'];
-                }
-            }
-
-        $this->campoLista('idsetorbai', 'Setor', $opcoes, $this->idsetorbai, null, null, null, null, null, false);
-
         $this->campoRotulo('filtros_matricula', '<b>Filtros de matrículas em andamento</b>');
 
         $this->inputsHelper()->integer('ano', ['required' => false, 'value' => $this->ano, 'max_length' => 4]);
-        $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao]);
-        $this->inputsHelper()->dynamic(
-            'escola', [
-                'required' => false,
-                'show-select' => true,
-                'value' => $this->ref_cod_escola
-            ]
-        );
+        $this->inputsHelper()->dynamic('instituicao', ['required' => false, 'value' => $this->ref_cod_instituicao]);
+        $this->inputsHelper()->dynamic('escolaSemFiltroPorUsuario', ['required' => false, 'value' => $this->ref_cod_escola]);
         $this->inputsHelper()->dynamic(['curso', 'serie'], ['required' => false]);
-
-        //$this->inputsHelper()->select('periodo', array('required' => false, 'value' => $this->periodo, 'resources' => array(null => 'Selecione', 1 => 'Matutino', 2 => 'Vespertino', 3 => 'Noturno', 4 => 'Integral' )));
 
         $obj_permissoes = new clsPermissoes();
         $cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
@@ -127,9 +101,6 @@ class indice extends clsListagem
                 $ref_cod_escola = $cod_escola;
             }
         }
-
-        $array_matriculado = ['S' => 'Sim', 'N' => 'Não'];
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         if (!$configuracoes['mostrar_codigo_inep_aluno']) {
             $cabecalhos = ['Código Aluno',
@@ -187,40 +158,50 @@ class indice extends clsListagem
             $this->ref_cod_escola,
             $this->ref_cod_curso,
             $this->ref_cod_serie,
-            $this->idsetorbai
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            idFederal2int($this->cpf_aluno),
+            idFederal2int($this->rg_aluno)
         );
 
         $total = $aluno->_total;
 
         foreach ($alunos as $registro) {
-            $alunoInepId = $this->tryLoadAlunoInepId($registro['cod_aluno']);
-            $nomeAluno = strtoupper($registro['nome_aluno']);
-            $nomeSocial = strtoupper($registro['nome_social']);
+            $nomeAluno = $registro['nome_aluno'];
+            $nomeSocial = $registro['nome_social'];
 
             if ($nomeSocial) {
                 $nomeAluno = $nomeSocial . '<br> <i>Nome de registro: </i>' . $nomeAluno;
             }
-            $nomeMae = strtoupper($this->loadNomeMae($registro));
 
             // responsavel
             $aluno->cod_aluno = $registro['cod_aluno'];
             $responsavel = $aluno->getResponsavelAluno();
-            $nomeResponsavel = strtoupper($responsavel['nome_responsavel']);
+            $nomeResponsavel = mb_strtoupper($responsavel['nome_responsavel']);
 
             if (!$configuracoes['mostrar_codigo_inep_aluno']) {
                 $linhas = [
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['cod_aluno']}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeAluno}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeMae}</a>",
+                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['nome_mae']}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeResponsavel}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$responsavel['cpf_responsavel']}</a>"
                 ];
             } else {
                 $linhas = [
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['cod_aluno']}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$alunoInepId}</a>",
+                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['codigo_inep']}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeAluno}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeMae}</a>",
+                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$registro['nome_mae']}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$nomeResponsavel}</a>",
                     "<a href=\"educar_aluno_det.php?cod_aluno={$registro['cod_aluno']}\">{$responsavel['cpf_responsavel']}</a>"
                 ];
@@ -255,36 +236,6 @@ class indice extends clsListagem
         Portabilis_View_Helper_Application::loadJavascript($this, ['/intranet/scripts/exporter.js']);
 
         $this->breadcrumb('Alunos', ['/intranet/educar_index.php' => 'Escola']);
-    }
-
-    protected function loadNomeMae($aluno)
-    {
-        $nome = $aluno['nm_mae'];
-
-        $pessoaAluno = new clsFisica($aluno['ref_idpes']);
-        $pessoaAluno = $pessoaAluno->detalhe();
-
-        if ($pessoaAluno['idpes_mae']) {
-            $pessoaMae = new clsPessoaFj($pessoaAluno['idpes_mae']);
-            $pessoaMae = $pessoaMae->detalhe();
-            $nome = $pessoaMae['nome'];
-        }
-
-        return $nome;
-    }
-
-    protected function tryLoadAlunoInepId($alunoId)
-    {
-        $dataMapper = new Educacenso_Model_AlunoDataMapper();
-
-        try {
-            $alunoInep = $dataMapper->find(['cod_aluno' => $alunoId]);
-            $id = $alunoInep->alunoInep;
-        } catch (Exception $e) {
-            $id = '';
-        }
-
-        return $id;
     }
 }
 

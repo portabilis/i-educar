@@ -26,7 +26,7 @@ class Registro002019ImportTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = factory(User::class, 'admin')->make();
+        $this->user = factory(User::class)->state('admin')->make();
     }
 
     /**
@@ -68,7 +68,7 @@ class Registro002019ImportTest extends TestCase
         /** @var LegacySchool $school */
         $school = $schoolInep->school;
 
-        $this->assertEquals(strtoupper($model->nome), $school->name);
+        $this->assertEquals($model->nome, $school->name);
     }
 
     /**
@@ -92,7 +92,7 @@ class Registro002019ImportTest extends TestCase
         $phones = $school->person->phone;
 
         $this->assertCount(1, $phones);
-        $this->assertEquals($model->telefone, $phones->first()->fone);
+        $this->assertEquals((int)$model->telefone, (int)$phones->first()->fone);
     }
 
     /**

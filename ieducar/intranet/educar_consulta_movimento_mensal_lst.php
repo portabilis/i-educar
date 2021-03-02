@@ -2,11 +2,6 @@
 
 use iEducar\Modules\Reports\QueryFactory\MovimentoMensalQueryFactory;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'Portabilis/View/Helper/Application.php';
 
 class clsIndex extends clsBase
 {
@@ -31,6 +26,7 @@ class indice extends clsListagem
         $params['turma'] = $this->getQueryString('ref_cod_turma');
         $params['data_inicial'] = $this->getQueryString('data_inicial');
         $params['data_final'] = $this->getQueryString('data_final');
+        $params['modalidade'] = $this->getQueryString('modalidade');
 
         $this->breadcrumb('Consulta de movimento mensal', ['educar_index.php' => 'Escola']);
 
@@ -50,6 +46,18 @@ class indice extends clsListagem
 
         $params['data_inicial'] = Portabilis_Date_Utils::brToPgSQL($params['data_inicial']);
         $params['data_final'] = Portabilis_Date_Utils::brToPgSQL($params['data_final']);
+
+        $startDate = [];
+        $endDate = [];
+
+        foreach($this->getQueryString('calendars') as $datas) {
+            $arrayDatas = explode(' ', $datas);
+            $startDate[] = $arrayDatas[0];
+            $endDate[] = $arrayDatas[1];
+        }
+
+        $params['data_inicial_calendario'] = $startDate ?: null;
+        $params['data_final_calendario'] = $endDate ?: null;
 
         $base = new clsBanco();
         $base->FraseConexao();
@@ -157,10 +165,10 @@ class indice extends clsListagem
 (function () {
   let paramsTable = document.querySelectorAll('#form_resultado .tablelistagem')[0];
   paramsTable.setAttribute('style', 'width: 100%;');
-  
+
   let data = {$data};
   let table = [];
-  
+
   table.push('<table class="tablelistagem" style="width: 100%; margin-bottom: 100px;" cellspacing="1" cellpadding="4" border="0">');
     table.push('<tr>');
       table.push('<td class="titulo-tabela-listagem" colspan="25">Resultados</td>');
@@ -174,7 +182,7 @@ class indice extends clsListagem
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="16">Alunos</td>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="3">Matrícula final</td>');
     table.push('</tr>');
-    
+
     table.push('<tr>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">M</td>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">F</td>');
@@ -189,14 +197,14 @@ class indice extends clsListagem
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">F</td>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" rowspan="3">T</td>');
     table.push('</tr>');
-    
+
     table.push('<tr>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">saiu</td>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">entrou</td>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">saiu</td>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;" colspan="2">entrou</td>');
     table.push('</tr>');
-    
+
     table.push('<tr>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">M</td>');
       table.push('<td class="formdktd" style="font-weight: bold; text-align: center;">F</td>');
@@ -250,12 +258,12 @@ class indice extends clsListagem
   }
 
   table.push('</table>');
-  
+
   let base = document.querySelectorAll('#corpo')[0];
   let wrapper= document.createElement('div');
   wrapper.innerHTML = table.join('');
   let tableObj = wrapper.firstChild;
-  
+
   base.appendChild(tableObj);
 })();
 JS;

@@ -62,7 +62,8 @@ class EnrollmentService
      */
     private function getAvailableTimeService()
     {
-        return new AvailableTimeService();
+        $availableTimeService = new AvailableTimeService();
+        return $availableTimeService->onlySchoolClassesInformedOnCensus();
     }
 
     /**
@@ -164,6 +165,14 @@ class EnrollmentService
         $enrollment->ref_usuario_exc = $this->user->getKey();
         $enrollment->data_exclusao = $date;
         $enrollment->ativo = 0;
+
+        $relocationDate = $enrollment->schoolClass->school->institution->relocation_date;
+
+        // Se a matrícula anterior data de saída antes da data base (ou não houver data base)
+        // reordena o sequencial da turma de origem
+        if (!$relocationDate || $date < $relocationDate) {
+            $this->reorderSchoolClass($enrollment);
+        }
 
         return $enrollment->saveOrFail();
     }
@@ -318,10 +327,8 @@ class EnrollmentService
 
         $dateDeparted = $previousEnrollment->date_departed;
 
-        $relocationDate = $previousEnrollment->schoolClass->school->institution->relocation_date;
-
-        if (!$relocationDate || $relocationDate < $dateDeparted) {
-           return $previousEnrollment;
+        if ($this->withoutRelocationDateOrDateIsAfter($previousEnrollment, $dateDeparted)) {
+            return $previousEnrollment;
         }
     }
 
@@ -340,5 +347,64 @@ class EnrollmentService
         });
 
         return true;
+    }
+
+    /**
+     * Reordena os sequenciais da turma baseado em uma matrícula que vai ser remanejada
+     *
+     * Altera o sequencial da matrícula anterior para null
+     * e atualiza todos os sequenciais da turma de origem a partir do sequencial do aluno
+     * remanejado devem ser atualizados subtraindo 1
+     *
+     * @param LegacyEnrollment $enrollment
+     * @param DateTime $date
+     */
+    public function reorderSchoolClass(LegacyEnrollment $enrollment)
+    {
+        if (!$enrollment->sequencial_fechamento) {
+            return;
+        }
+
+        $schoolClass = $enrollment->schoolClass;
+        $schoolClass->enrollments()->where('sequencial_fechamento', '>', $enrollment->sequencial_fechamento)
+            ->orderBy('sequencial_fechamento')
+            ->get()
+            ->each(function (LegacyEnrollment $enrollment) {
+                $enrollment->sequencial_fechamento -= 1;
+                $enrollment->save();
+        });
+
+        $enrollment->sequencial_fechamento = 9999;
+        $enrollment->save();
+    }
+
+    /**
+     * Compara data de saída da enturmação com data base para definir a
+     * reordenação, ou não, dos sequenciais
+     *
+     * @param LegacyEnrollment $enrollment
+     */
+    public function reorderSchoolClassAccordingToRelocationDate(LegacyEnrollment $enrollment)
+    {
+        $relocationDate = $enrollment->schoolClass->school->institution->relocation_date;
+
+        if(!$relocationDate || $enrollment->data_exclusao < $relocationDate) {
+            $this->reorderSchoolClass($enrollment);
+        }
+    }
+
+    /**
+     * Verifica se a instituição não usa database
+     * ou se a data informada é antes da database
+     *
+     * @param LegacyEnrollment $enrollment
+     * @param DateTime $date
+     * @return bool
+     */
+    private function withoutRelocationDateOrDateIsAfter($enrollment, $date)
+    {
+        $relocationDate = $enrollment->schoolClass->school->institution->relocation_date;
+
+        return !$relocationDate || $date >= $relocationDate;
     }
 }

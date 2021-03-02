@@ -4,6 +4,9 @@ use App\Models\LegacyDiscipline;
 use App\Models\LegacyDisciplineAcademicYear;
 use App\Models\LegacySchool;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
+
+/** @var Factory $factory */
 
 $factory->define(LegacyDisciplineAcademicYear::class, function (Faker $faker) {
     return [

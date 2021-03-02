@@ -30,14 +30,7 @@
 
 use iEducar\Support\View\SelectOptions;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesProfessorTurma.inc.php';
-require_once 'lib/Portabilis/String/Utils.php';
 
-require_once 'CoreExt/View/Helper/UrlHelper.php';
 
 /**
  * clsIndexBase class.
@@ -199,7 +192,7 @@ class indice extends clsListagem
 
     $this->largura = '100%';
 
-    $this->breadcrumb('Vincular servidor à turmas', [
+    $this->breadcrumb('Registro de vínculos do professor', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
   }

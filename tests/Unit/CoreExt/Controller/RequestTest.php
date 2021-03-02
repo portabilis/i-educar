@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'CoreExt/Controller/Request.php';
 
 /**
  * CoreExt_Controller_RequestTest class.
@@ -51,11 +50,9 @@ class CoreExt_Controller_RequestTest extends PHPUnit\Framework\TestCase
     $this->_request = new CoreExt_Controller_Request();
   }
 
-  /**
-   * @expectedException InvalidArgumentException
-   */
   public function testOpcaoDeConfiguracaoNaoExistenteLancaExcecao()
   {
+      $this->expectException(\InvalidArgumentException::class);
     $this->_request->setOptions(array('foo' => 'bar'));
   }
 

@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarInstituicao extends Model
 {
@@ -52,6 +51,7 @@ class clsPmieducarInstituicao extends Model
     public $bloquear_vinculo_professor_sem_alocacao_escola;
     public $permitir_matricula_fora_periodo_letivo;
     public $ordenar_alunos_sequencial_enturmacao;
+    public $obrigar_telefone_pessoa;
 
     public function __construct(
         $cod_instituicao = null,
@@ -83,7 +83,8 @@ class clsPmieducarInstituicao extends Model
         $exibir_apenas_professores_alocados = null,
         $bloquear_vinculo_professor_sem_alocacao_escola = null,
         $permitir_matricula_fora_periodo_letivo = null,
-        $ordenar_alunos_sequencial_enturmacao = null
+        $ordenar_alunos_sequencial_enturmacao = null,
+        $obrigar_telefone_pessoa = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
@@ -139,7 +140,8 @@ class clsPmieducarInstituicao extends Model
             exibir_apenas_professores_alocados,
             bloquear_vinculo_professor_sem_alocacao_escola,
             permitir_matricula_fora_periodo_letivo,
-            ordenar_alunos_sequencial_enturmacao
+            ordenar_alunos_sequencial_enturmacao,
+            obrigar_telefone_pessoa
         ';
 
         if (is_numeric($ref_usuario_cad)) {
@@ -256,6 +258,10 @@ class clsPmieducarInstituicao extends Model
         if (is_bool($ordenar_alunos_sequencial_enturmacao)) {
             $this->ordenar_alunos_sequencial_enturmacao = $ordenar_alunos_sequencial_enturmacao;
         }
+
+        if (is_bool($obrigar_telefone_pessoa)) {
+            $this->obrigar_telefone_pessoa = $obrigar_telefone_pessoa;
+        }
     }
 
     public function canRegister()
@@ -370,8 +376,9 @@ class clsPmieducarInstituicao extends Model
             }
 
             if (is_string($this->nm_instituicao)) {
+                $instituicao = $db->escapeString($this->nm_instituicao);
                 $campos .= "{$gruda}nm_instituicao";
-                $valores .= "{$gruda}'{$this->nm_instituicao}'";
+                $valores .= "{$gruda}'{$instituicao}'";
                 $gruda = ', ';
             }
 
@@ -652,6 +659,16 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
+            if (dbBool($this->obrigar_telefone_pessoa)) {
+                $campos .= "{$gruda}obrigar_telefone_pessoa";
+                $valores .= "{$gruda} true ";
+                $gruda = ', ';
+            } else {
+                $campos .= "{$gruda}obrigar_telefone_pessoa";
+                $valores .= "{$gruda} false ";
+                $gruda = ', ';
+            }
+
             if (is_string($this->orgao_regional) and !empty($this->orgao_regional)) {
                 $campos .= "{$gruda}orgao_regional";
                 $valores .= "{$gruda}'{$this->orgao_regional}'";
@@ -756,7 +773,8 @@ class clsPmieducarInstituicao extends Model
             }
 
             if (is_string($this->nm_instituicao)) {
-                $set .= "{$gruda}nm_instituicao = '{$this->nm_instituicao}'";
+                $instituicao = $db->escapeString($this->nm_instituicao);
+                $set .= "{$gruda}nm_instituicao = '{$instituicao}'";
                 $gruda = ', ';
             }
 
@@ -1019,6 +1037,14 @@ class clsPmieducarInstituicao extends Model
                 $gruda = ', ';
             }
 
+            if (dbBool($this->obrigar_telefone_pessoa)) {
+                $set .= "{$gruda}obrigar_telefone_pessoa = true ";
+                $gruda = ', ';
+            } else {
+                $set .= "{$gruda}obrigar_telefone_pessoa = false ";
+                $gruda = ', ';
+            }
+
             if ($set) {
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_instituicao = '{$this->cod_instituicao}'");
 
@@ -1065,6 +1091,7 @@ class clsPmieducarInstituicao extends Model
         $int_ativo = null,
         $str_nm_instituicao = null
     ) {
+        $db = new clsBanco();
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -1134,11 +1161,11 @@ class clsPmieducarInstituicao extends Model
         }
 
         if (is_string($str_nm_instituicao)) {
-            $filtros .= "{$whereAnd} nm_instituicao LIKE '%{$str_nm_instituicao}%'";
+            $nm_instituicao = $db->escapeString($str_nm_instituicao);
+            $filtros .= "{$whereAnd} nm_instituicao ILIKE '%{$nm_instituicao}%'";
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

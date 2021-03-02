@@ -31,7 +31,7 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
      */
     public function getContinuingProgressionWithConceptualScoreTest()
     {
-        $roundingTable = factory(LegacyRoundingTable::class, 'conceitual')->create();
+        $roundingTable = factory(LegacyRoundingTable::class)->state('conceitual')->create();
 
         $valuesRoundingTable = [
             [
@@ -76,7 +76,7 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
             ]);
         }
 
-        $evaluationRule = factory(LegacyEvaluationRule::class, 'progressao-continuada-nota-conceitual')->create([
+        $evaluationRule = factory(LegacyEvaluationRule::class)->state('progressao-continuada-nota-conceitual')->create([
             'tabela_arredondamento_id' => $roundingTable->id,
         ]);
 
@@ -150,11 +150,12 @@ class ContinuingProgressionWithConceptualScoreTest extends TestCase
     }
 
     /**
-     * @todo Remover Skip (line 157) depois que resolver bug deste teste, onde retorna retido na situação do componente curricular, quando é esperado aprovado (line 179).
+     * Regra com progressão continuada
+     *
+     * Após o lançamentos das notas, não deverá reprovar mesmo com número de presenças insuficiente
      */
     public function testContinuingProgressionMoreThanAbsenceLimitAfterAllScoreAndAbsencePosted()
     {
-        $this->markTestSkipped();
         $schoolClass = $this->enrollment->schoolClass;
         $disciplines = $schoolClass->disciplines;
 

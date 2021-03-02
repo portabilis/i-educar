@@ -1,10 +1,7 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'lib/App/Model/IedFinder.php';
+use App\Models\MigratedDiscipline;
+
 
 class ComponenteCurricularController extends ApiCoreController
 {
@@ -88,6 +85,19 @@ class ComponenteCurricularController extends ApiCoreController
     }
   }
 
+    private function getComponentesCurricularesMigrados()
+    {
+        $modified = $this->getRequest()->modified;
+
+        $query = MigratedDiscipline::query();
+
+        if ($modified) {
+            $query->where('created_at', '>=', $modified);
+        }
+
+        return array('disciplinas' => $query->get());
+    }
+
 function getComponentesCurricularesPorSerie(){
     if($this->canGetComponentesCurriculares()){
 
@@ -127,6 +137,7 @@ function getComponentesCurricularesPorSerie(){
                     'id' => $componente->id,
                     'nome' => $componente->nome,
                     'carga_horaria' => $componente->cargaHoraria,
+                    'abreviatura' => $componente->abreviatura,
                 ];
             }, array_values($componentes));
 
@@ -214,6 +225,8 @@ function getComponentesCurricularesPorSerie(){
       $this->appendResponse($this->getComponentesCurricularesPorEscolaSerieAno());
     elseif($this->isRequestFor('get', 'componentes-curriculares-for-multiple-search'))
       $this->appendResponse($this->getComponentesCurricularesForMultipleSearch());
+    elseif($this->isRequestFor('get', 'componentes-curriculares-migrados'))
+      $this->appendResponse($this->getComponentesCurricularesMigrados());
     else
       $this->notImplementedOperationError();
   }

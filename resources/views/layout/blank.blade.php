@@ -22,6 +22,7 @@
           'teachers_count': '{{ $loggedUser->teachers_count }}',
           'classes_count': '{{ $loggedUser->classes_count }}',
         }];
+        window.useEcho = '{{ config('broadcasting.default') }}' !== '';
     </script>
 
 @if(!empty($config['app']['gtm']['id']))
@@ -54,8 +55,6 @@
     <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/jquery.modal.css') }}'/>
     <script src="https://maps.google.com/maps/api/js?sensor=true" type="text/javascript" charset="utf-8"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-
-    <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/localizacaoSistema.css') }} '/>
 
     <script>(function (e, t, n) {
             var r = e.querySelectorAll("html")[0];

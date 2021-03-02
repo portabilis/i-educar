@@ -27,14 +27,7 @@
  * @version   $Id$
  */
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/View/Helper/Application.php';
 
-require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
-require_once 'include/modules/clsModulesItinerarioTransporteEscolar.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -102,13 +95,9 @@ class indice extends clsCadastro
         $this->url_cancelar = "transporte_rota_det.php?cod_rota={$this->cod_rota}";
         $this->nome_url_cancelar = "Cancelar";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_transporte_escolar_index.php" => "Transporte escolar",
-         "" => "Editar itinerário"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Editar itinerário', [
+        url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
+    ]);
 
         return $retorno;
     }
@@ -184,29 +173,17 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 21238, $this->pessoa_logada, 7,  "transporte_rota_det.php?cod_rota={$this->cod_rota}" );
 
         if ($this->ref_cod_ponto_transporte_escolar)
         {
-
             $obj  = new clsModulesItinerarioTransporteEscolar();
-            $codRotaInt = (int)$this->cod_rota;
-            $itinerario = $obj->lista(null, $codRotaInt);
 
             $excluiu = $obj->excluirTodos( $this->cod_rota );
 
             if ( $excluiu )
             {
-
-            foreach ($itinerario as $key => $campo) {
-                $auditoria = new clsModulesAuditoriaGeral("itinerario_transporte_escolar", $this->pessoa_logada, $campo['cod_itinerario_transporte_escolar']);
-                $auditoria->exclusao($campo);
-            }
-
                 $sequencial = 1;
                 foreach ( $this->ref_cod_ponto_transporte_escolar AS $key => $ponto )
                 {
@@ -220,13 +197,6 @@ class indice extends clsCadastro
                         return false;
                     }
                     $sequencial++;
-
-                    $itinerario = new clsModulesItinerarioTransporteEscolar($cadastrou1);
-                    $itinerario = $itinerario->detalhe();
-
-                    $auditoria = new clsModulesAuditoriaGeral("itinerario_transporte_escolar", $this->pessoa_logada, $cadastrou1);
-                    $auditoria->inclusao($itinerario);
-
                 }
             }
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";

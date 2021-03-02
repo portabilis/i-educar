@@ -4,6 +4,7 @@ $j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="tu
 $j('td .formdktd b').remove();
 $j('.tablecadastro td .formdktd div').remove();
 $j('#tab1').addClass('turmaTab-active').removeClass('turmaTab');
+$j('#ref_cod_disciplina_dispensada').css('maxWidth', '600px');
 
 // Atribui um id a linha, para identificar até onde/a partir de onde esconder os campos
 $j('#codigo_inep_educacenso').closest('tr').attr('id','tr_codigo_inep_educacenso');
@@ -199,7 +200,7 @@ $j('#tipo_mediacao_didatico_pedagogico').on('change', function(){
   }
 }).trigger('change');
 
-function buscaEtapasDaEscola() {  
+function buscaEtapasDaEscola() {
   var urlApi = getResourceUrlBuilder.buildUrl('/module/Api/Escola', 'etapas-da-escola-por-ano', {
     escola_id : $j('#ref_cod_escola').val(),
     ano : new Date().getFullYear()
@@ -319,13 +320,13 @@ $j(document).ready(function() {
 
   var getLinhaComponente = function(componente) {
     return  `
-    <div style="margin-bottom: 10px; float: left" class="linha-disciplina">
-      <label style="display: block; float: left; width: 250px;"><input type="checkbox" name="disciplinas[${componente.id}]" class="check-disciplina" id="disciplinas[]" value="${componente.id}">${componente.nome}</label>
-      <label style="display: block; float: left; width: 100px;"><input type="text" name="carga_horaria[${componente.id}]" value="" size="5" maxlength="7"></label>
-      <label style="display: block; float: left;width: 200px;"><input type="checkbox" name="usar_componente[${componente.id}]" value="1">(${componente.carga_horaria} h)</label>
-      <label style="display: block; float: left;"><input type="checkbox" name="docente_vinculado[${componente.id}]" value="1"></label>
-    </div>
-    <br style="clear: left" />`;
+    <tr class="linha-disciplina">
+      <td width="250"><input type="checkbox" name="disciplinas[${componente.id}]" class="check-disciplina" id="disciplinas[]" value="${componente.id}">${componente.nome}</td>
+      <td><span>${componente.abreviatura}</span></td>
+      <td><input type="text" name="carga_horaria[${componente.id}]" value="" size="5" maxlength="7"></td>
+      <td><input type="checkbox" name="usar_componente[${componente.id}]" value="1">(${componente.carga_horaria} h)</td>
+      <td><input type="checkbox" name="docente_vinculado[${componente.id}]" value="1"></td>
+    </tr>`;
   }
 
   var preencheComponentesCurriculares = function(data) {
@@ -333,14 +334,13 @@ $j(document).ready(function() {
     var conteudo = '';
 
     if (componentesCurriculares.length) {
-      conteudo += `<div style="margin-bottom: 10px; float: left">
-                     <span style="display: block; float: left; width: 250px;">Nome</span>
-                     <span style="display: block; float: left; width: 250px;">Abreviatura</span>
-                     <label> <span style="display: block; float: left; width: 100px">Carga hor&aacute;ria </span></label>
-                     <label> <span style="display: block; float: left; width: 200px">Usar padr&atilde;o do componente?</span></label>
-                     <label> <span style="display: block; float: left">Possui docente vinculado?</span></label>
-                   </div>
-                   <br style="clear: left" />`;
+      conteudo += `<tr>
+                     <td> <span>Nome</span></td>
+                     <td> <span>Abreviatura</span></td>
+                     <td> <span>Carga horária </span></td>
+                     <td> <span>Usar padrão do componente?</span></td>
+                     <td> <span>Possui docente vinculado?</span></td>
+                   </tr>`;
 
       componentesCurriculares.forEach((componente) => {
         conteudo += getLinhaComponente(componente);
@@ -351,7 +351,7 @@ $j(document).ready(function() {
 
     if (conteudo) {
       $j('#disciplinas').html(
-        `<table cellspacing="0" cellpadding="0" border="0">
+        `<table id="componentes_turma_cad" cellspacing="0" cellpadding="0" border="0">
             <tr align="left"><td>${conteudo}</td></tr>
         </table>`
       );

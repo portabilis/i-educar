@@ -2,13 +2,9 @@
 
 use iEducar\Modules\EvaluationRules\Models\ParallelRemedialCalculationType;
 
-require_once 'Core/Controller/Page/EditController.php';
-require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
-require_once 'RegraAvaliacao/Model/RegraRecuperacaoDataMapper.php';
 
 class EditController extends Core_Controller_Page_EditController
 {
-
     protected $_dataMapper = 'RegraAvaliacao_Model_RegraDataMapper';
     protected $_titulo = 'Cadastro de regra de avaliação';
     protected $_processoAp = 947;
@@ -77,6 +73,13 @@ class EditController extends Core_Controller_Page_EditController
                 "Não progressiva automática - Somente média".<br />
                 Em porcentagem, exemplo: <b>75</b> ou <b>80,750</b>'
         ],
+        'desconsiderarLancamentoFrequencia' => [
+            'label' => 'Desconsiderar lançamento de frequência para aprovação/reprovação',
+            'help' => '
+                Não irá obrigar o lançamento de frequência em todas as etapas para permitir a aprovação/reprovação do(a)
+                aluno(a).
+            '
+        ],
         'parecerDescritivo' => [
             'label' => 'Parecer descritivo',
             'help' => '',
@@ -94,8 +97,8 @@ class EditController extends Core_Controller_Page_EditController
             'help' => ''
         ],
         'regraDiferenciada' => [
-            'label' => 'Regra diferenciada',
-            'help' => 'Regra para avaliação de alunos com deficiência'
+            'label' => 'Regra inclusiva',
+            'help' => 'Regra de avaliação inclusiva para alunos com deficiência'
         ],
         'notaMaximaGeral' => [
             'label' => 'Nota máxima geral',
@@ -312,15 +315,11 @@ class EditController extends Core_Controller_Page_EditController
             '/modules/RegraAvaliacao/Assets/Javascripts/RegraAvaliacao.js'
         );
 
-        $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => "$nomeMenu regra de avalia&ccedil;&atilde;o"
-        ]);
+        $nomeMenu = ($this->getRequest()->id == null || $this->getRequest()->copy) ? 'Cadastrar' : 'Editar';
 
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb("$nomeMenu regra de avaliação", [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     /**
@@ -328,6 +327,10 @@ class EditController extends Core_Controller_Page_EditController
      */
     public function Gerar()
     {
+        if ($this->getRequest()->copy) {
+            $this->tipoacao = 'Novo';
+        }
+
         $this->campoOculto('id', $this->getEntity()->id);
 
         // Instituição
@@ -355,7 +358,7 @@ class EditController extends Core_Controller_Page_EditController
 
         // Nota tipo valor
         $notaTipoValor = RegraAvaliacao_Model_Nota_TipoValor::getInstance();
-            $this->campoRadio(
+        $this->campoRadio(
             'tipoNota',
             $this->_getLabel('tipoNota'),
             $notaTipoValor->getEnums(),
@@ -447,7 +450,7 @@ class EditController extends Core_Controller_Page_EditController
 
         // Tipo progressão
         $tipoProgressao = RegraAvaliacao_Model_TipoProgressao::getInstance();
-            $this->campoRadio(
+        $this->campoRadio(
             'tipoProgressao',
             $this->_getLabel('tipoProgressao'),
             $tipoProgressao->getEnums(),
@@ -527,6 +530,17 @@ class EditController extends Core_Controller_Page_EditController
             false,
             false,
             $this->_getHelp('porcentagemPresenca')
+        );
+
+        $this->campoCheck(
+            'desconsiderarLancamentoFrequencia',
+            $this->_getLabel('desconsiderarLancamentoFrequencia'),
+            $this->getEntity()->desconsiderarLancamentoFrequencia,
+            '',
+            false,
+            false,
+            false,
+            $this->_getHelp('desconsiderarLancamentoFrequencia')
         );
 
         // Parecer descritivo
@@ -878,7 +892,7 @@ class EditController extends Core_Controller_Page_EditController
         }
 
         // Verifica pela existência do field identity
-        if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
+        if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id && !$this->getRequest()->copy) {
             $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
             $entity = $this->getEntity();
         }
@@ -891,6 +905,11 @@ class EditController extends Core_Controller_Page_EditController
         //fixup for checkbox
         if (!isset($data['definirComponentePorEtapa'])) {
             $data['definirComponentePorEtapa'] = '0';
+        }
+
+        //fixup for checkbox
+        if (!isset($data['desconsiderarLancamentoFrequencia'])) {
+            $data['desconsiderarLancamentoFrequencia'] = '0';
         }
 
         //fixup for checkbox
@@ -978,6 +997,10 @@ class EditController extends Core_Controller_Page_EditController
             $this->mensagem .= 'Erro no preenchimento do formulário. ';
 
             return false;
+        }
+
+        if ($this->getRequest()->copy) {
+            $this->_options['edit_success_params'] = ['id' => $entity->fetch()['id']];
         }
 
         return true;

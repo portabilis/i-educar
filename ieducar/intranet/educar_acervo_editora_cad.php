@@ -1,11 +1,8 @@
 <?php
 
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
+use App\Models\State;
+
 
 class clsIndexBase extends clsBase
 {
@@ -102,17 +99,7 @@ class indice extends clsCadastro
 
         $this->campoCep( "cep", "CEP", $this->cep, false );
 
-        $opcoes = array( "" => "Selecione" );
-
-        $objTemp = new clsUf();
-        $lista = $objTemp->lista();
-        if ( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista as $registro )
-            {
-                $opcoes["{$registro['sigla_uf']}"] = "{$registro['nome']}";
-            }
-        }
+        $opcoes = array( "" => "Selecione" ) + State::getListKeyAbbreviation()->toArray();
 
         $this->campoLista( "ref_sigla_uf", "Estado", $opcoes, $this->ref_sigla_uf, '', false, '', '', false, false );
 
@@ -120,16 +107,6 @@ class indice extends clsCadastro
         $this->campoTexto( "bairro", "Bairro", $this->bairro, 30, 60, false );
 
         $opcoes = array( "" => "Selecione" );
-
-        $objTemp = new clsTipoLogradouro();
-        $lista = $objTemp->lista();
-        if ( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista as $registro )
-            {
-                $opcoes["{$registro['idtlog']}"] = "{$registro['descricao']}";
-            }
-        }
 
         $this->campoLista( "ref_idtlog", "Tipo Logradouro", $opcoes, $this->ref_idtlog, '', false, '', '', false, false );
 
@@ -146,8 +123,6 @@ class indice extends clsCadastro
 
     function Novo()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 595, $this->pessoa_logada, 11,  "educar_acervo_editora_lst.php" );
 
@@ -158,9 +133,6 @@ class indice extends clsCadastro
         if( $cadastrou )
         {
       $obj->cod_acervo_editora = $this->cod_acervo_editora;
-      $acervo_editora = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("acervo_editora", $this->pessoa_logada, $this->cod_acervo_editora);
-      $auditoria->inclusao($acervo_editora);
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 
             $this->simpleRedirect('educar_acervo_editora_lst.php');
@@ -173,21 +145,15 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 595, $this->pessoa_logada, 11,  "educar_acervo_editora_lst.php" );
 
         $this->cep = idFederal2int($this->cep);
 
         $obj = new clsPmieducarAcervoEditora($this->cod_acervo_editora, null, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, $this->nm_editora, $this->cep, $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->telefone, $this->ddd_telefone, null, null, 1, $this->ref_cod_biblioteca);
-    $detalheAntigo = $obj->detalhe();
         $editou = $obj->edita();
         if( $editou )
         {
-      $detalheAtual = $obj->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("acervo_editora", $this->pessoa_logada, $this->cod_acervo_editora);
-      $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_acervo_editora_lst.php');
         }
@@ -199,20 +165,13 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 595, $this->pessoa_logada, 11,  "educar_acervo_editora_lst.php" );
 
-
         $obj = new clsPmieducarAcervoEditora($this->cod_acervo_editora, null, $this->pessoa_logada, null,null,null,null,null,null,null,null,null,null,null,null, 0);
-    $detalhe = $obj->detalhe();
         $excluiu = $obj->excluir();
         if( $excluiu )
         {
-
-      $auditoria = new clsModulesAuditoriaGeral("acervo_editora", $this->pessoa_logada, $this->cod_acervo_editora);
-      $auditoria->exclusao($detalhe);
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_acervo_editora_lst.php');
         }

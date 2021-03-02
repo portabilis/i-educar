@@ -101,7 +101,7 @@ a:hover {
 
 .ieducar-header-links .dropbtn:hover,
 .dropdown:hover .dropbtn {
-  background-image: url('../intranet/imagens/arrow-up.png');
+  background-image: url('/intranet/imagens/arrow-up.png');
   background-repeat: no-repeat;
   background-position: center right;
 }
@@ -151,7 +151,6 @@ a:hover {
 .notifications img {
   position: relative;
   top: 7px;
-  margin-right: 15px;
   width: 20px;
 }
 
@@ -334,6 +333,11 @@ a:hover {
 .breadcrumb .breadcrumb-separator,
 .breadcrumb .breadcrumb-separator:hover {
   color: #999 !important;
+}
+
+.beta-badge {
+  position: absolute;
+  margin-left: 10px;
 }
 
 .quick-search {

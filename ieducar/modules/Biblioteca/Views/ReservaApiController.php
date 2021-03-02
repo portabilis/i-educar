@@ -32,8 +32,6 @@
  * @version   $Id$
  */
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'include/pmieducar/clsPmieducarExemplar.inc.php';
 
 // TODO migrar novo padrao api controller
 
@@ -524,7 +522,7 @@ class ReservaApiController extends ApiCoreController
 
         $reserva = new clsPmieducarReservas(null,
                                           null,
-                                          $this->getSession()->id_pessoa,
+                                          \Illuminate\Support\Facades\Auth::id(),
                                           $this->getRequest()->ref_cod_cliente,
                                           null,
                                           $dataPrevistaDisponivel,

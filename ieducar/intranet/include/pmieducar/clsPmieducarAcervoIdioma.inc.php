@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarAcervoIdioma extends Model
 {
@@ -70,8 +69,9 @@ class clsPmieducarAcervoIdioma extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_idioma)) {
+                $nm_idioma = $db->escapeString($this->nm_idioma);
                 $campos .= "{$gruda}nm_idioma";
-                $valores .= "{$gruda}'{$this->nm_idioma}'";
+                $valores .= "{$gruda}'{$nm_idioma}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->ref_cod_biblioteca)) {
@@ -114,7 +114,8 @@ class clsPmieducarAcervoIdioma extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_idioma)) {
-                $set .= "{$gruda}nm_idioma = '{$this->nm_idioma}'";
+                $nm_idioma = $db->escapeString($this->nm_idioma);
+                $set .= "{$gruda}nm_idioma = '{$nm_idioma}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -149,6 +150,8 @@ class clsPmieducarAcervoIdioma extends Model
      */
     public function lista($int_cod_acervo_idioma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_idioma = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_biblioteca = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -167,7 +170,8 @@ class clsPmieducarAcervoIdioma extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_idioma)) {
-            $filtros .= "{$whereAnd} nm_idioma LIKE '%{$str_nm_idioma}%'";
+            $str_nome_idioma = $db->escapeString($str_nm_idioma);
+            $filtros .= "{$whereAnd} nm_idioma LIKE '%{$str_nome_idioma}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($date_data_cadastro_ini)) {
@@ -202,7 +206,6 @@ class clsPmieducarAcervoIdioma extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

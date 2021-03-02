@@ -329,6 +329,18 @@ if(participa_projetos){
   });
 }
 
+jQuery(document).ready(function () {
+  jQuery('.rotate-picture').click(function () {
+    jQuery.post('/api/students/' + jQuery('#aluno_id').val() + '/rotate-picture', {
+      url: jQuery('#student-picture').attr('src'),
+      angle: jQuery(this).attr('data-angle'),
+    }).done(function (res) {
+      jQuery('#student-picture').attr('src', res.url);
+    }).fail(function () {
+      alert('Não foi possível girar a imagem.');
+    });
+  });
+});
 
 // when page is ready
 $j(document).ready(function() {

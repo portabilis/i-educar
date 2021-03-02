@@ -2,10 +2,6 @@
 
 use Illuminate\Support\Facades\Session;
 
-require_once 'Core/View/Tabulable.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'CoreExt/View/Helper/UrlHelper.php';
-require_once 'Portabilis/View/Helper/Application.php';
 
 class Core_Controller_Page_ViewController extends clsDetalhe implements Core_View_Tabulable
 {
@@ -98,7 +94,6 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
      */
     public function getClsPermissoes()
     {
-        require_once 'include/pmieducar/clsPermissoes.inc.php';
 
         return new clsPermissoes();
     }
@@ -122,19 +117,18 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
 
     protected function getPessoaLogada()
     {
-        return Session::get('id_pessoa');
+        return \Illuminate\Support\Facades\Auth::id();
     }
 
     public function Gerar()
     {
         $headers = $this->getTableMap();
-        $mapper = $this->getDataMapper();
 
         $this->titulo = $this->getBaseTitulo();
         $this->largura = '100%';
 
         try {
-            $entry = $mapper->find($this->getRequest()->id);
+            $entry = $this->getEntry();
         } catch (Exception $e) {
             $this->mensagem = $e;
 
@@ -150,5 +144,10 @@ class Core_Controller_Page_ViewController extends clsDetalhe implements Core_Vie
 
         $this->setUrlEditar($entry);
         $this->setUrlCancelar($entry);
+    }
+
+    public function getEntry()
+    {
+        return $this->getDataMapper()->find($this->getRequest()->id);
     }
 }

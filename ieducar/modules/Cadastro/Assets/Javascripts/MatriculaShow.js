@@ -61,3 +61,13 @@ function desfazerSaidaEscola(matriculaId) {
 
     deleteResource(options)
 }
+jQuery(document).ready(function () {
+  jQuery(".ver-mais").click(function () {
+    jQuery(".desc-red, .ver-mais").hide();
+    jQuery(".descricao, .ver-menos").show();
+  });
+  jQuery(".ver-menos").click(function () {
+    jQuery(".descricao, .ver-menos").hide();
+    jQuery(".desc-red, .ver-mais").show();
+  });
+});

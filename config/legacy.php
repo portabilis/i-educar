@@ -51,7 +51,6 @@ return [
     'migrations' => [
         database_path('migrations/extras'),
         database_path('migrations/legacy'),
-        base_path('ieducar/modules/Reports/database/migrations'),
     ],
 
     'env' => env('LEGACY_ENV', 'local'),
@@ -134,12 +133,22 @@ return [
         ],
         'matricula' => [
             'dependencia' => '1',
+            'multiplas_matriculas' => '0',
         ],
         'alunos' => [
             'laudo_medico_obrigatorio' => '1',
             'nao_apresentar_campo_alfabetizado' => '0',
             'codigo_sistema' => 'Código sistema',
             'mostrar_codigo_sistema' => '1',
+            'obrigar_recursos_tecnologicos' => '0',
+            'sistema_externo' => [
+                'titulo' => null,
+                'link' => null,
+                'token' => null,
+            ],
+        ],
+        'fisica' => [
+            'exigir_cartao_sus' => false,
         ],
         'faltas_notas' => [
             'mostrar_botao_replicar' => '1',
@@ -166,6 +175,12 @@ return [
                 'theme' => 'white',
             ],
         ],
+        'recaptcha_v3' => [
+            'public_key' => env('RECAPTCHA_V3_PUBLIC_KEY'),
+            'private_key' => env('RECAPTCHA_V3_PRIVATE_KEY'),
+            'minimum_score' => env('RECAPTCHA_V3_MINIMUM_SCORE', 0.5),
+        ],
+        'uppercase_names' => 0,
     ],
 
     'modules' => [
@@ -190,7 +205,7 @@ return [
         'portaria_aprovacao_pontos' => 'Resolução n° 12/2011 - CME, Artigo 7°, § 2°;',
         'modelo_ficha_individual' => 'todos',
         'mostrar_relatorios' => '',
-        'logo_file_name' => 'brasil.png',
+        'logo_file_name' => env('REPORTS_LOGO', 'brasil.png'),
         'show_error_details' => true,
         'default_factory' => env('REPORTS_FACTORY', 'Portabilis_Report_ReportFactoryPHPJasper'),
         'source_path' => env('REPORTS_SOURCE_PATH', base_path('ieducar/modules/Reports/ReportSources/')),

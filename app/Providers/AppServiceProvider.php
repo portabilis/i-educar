@@ -11,7 +11,9 @@ use Exception;
 use iEducar\Modules\ErrorTracking\HoneyBadgerTracker;
 use iEducar\Modules\ErrorTracking\Tracker;
 use iEducar\Support\Navigation\Breadcrumb;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -99,6 +101,44 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         Paginator::defaultView('vendor.pagination.default');
+
+        QueryBuilder::macro('whereUnaccent', function ($column, $value) {
+            $this->whereRaw('unaccent(' . $column . ') ilike unaccent(\'%\' || ? || \'%\')', [$value]);
+        });
+
+        Builder::macro('search', function ($columns, $value, $type = 'both') {
+            if (is_string($columns)) {
+                $columns = [$columns];
+            }
+
+            $operator = $this->getConnection()->getDriverName() === 'pgsql' ? 'ilike' : 'like';
+
+            $search = "%{$value}%";
+
+            if ($type == 'left') {
+                $search = "%{$value}";
+            }
+
+            if ($type == 'right') {
+                $search = "{$value}%";
+            }
+
+            return $this->where(function ($builder) use ($columns, $operator, $search) {
+                foreach ($columns as $column) {
+                    if (Str::contains($column, '.')) {
+                        [$relation, $column] = explode('.', $column);
+
+                        $builder->orWhereHas($relation, function ($builder) use ($column, $operator, $search) {
+                            $builder->where($column, $operator, $search);
+                        });
+                    } else {
+                        $builder->orWhere($column, $operator, $search);
+                    }
+                }
+            });
+        });
+
+        Paginator::useBootstrap();
     }
 
     /**

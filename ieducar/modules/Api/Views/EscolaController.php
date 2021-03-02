@@ -2,21 +2,9 @@
 
 use App\Models\LegacySchool;
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
-require_once 'include/pmieducar/clsPermissoes.inc.php';
 
 class EscolaController extends ApiCoreController
 {
-
     protected $_processoAp = 561;
     protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
 
@@ -143,36 +131,64 @@ class EscolaController extends ApiCoreController
     {
         if ($this->canGetEtapasPorEscola()) {
             $ano = $this->getRequest()->ano ? $this->getRequest()->ano : 0;
+            $escola = $this->getRequest()->escola;
 
-            $sql = '
-                select distinct 
+            $where = '';
+
+            if ($escola) {
+                if (is_array($escola)) {
+                    $escola = implode(',', $escola);
+                }
+
+                $where = " AND eal.ref_cod_escola in ({$escola})";
+            }
+
+            $sql = "
+                select distinct
                     ref_cod_escola as escola_id,
-                    ano as ano, 
-                    m.nm_tipo as descricao
+                    ano as ano,
+                    m.nm_tipo as descricao,
+                    andamento as ano_em_aberto
                 from pmieducar.escola_ano_letivo eal
                 inner join pmieducar.ano_letivo_modulo alm
-                    on true 
-                    and alm.ref_ano = eal.ano 
+                    on true
+                    and alm.ref_ano = eal.ano
                     and alm.ref_ref_cod_escola = eal.ref_cod_escola
-                inner join pmieducar.modulo m 
-                    on true 
+                inner join pmieducar.modulo m
+                    on true
                     and m.cod_modulo = alm.ref_cod_modulo
-                where true 
+                where true
                     and (
-                        case when $1 = 0 then 
-                            true 
-                        else 
-                            ano = $1 
+                        case when $1 = 0 then
+                            (
+                                andamento = 1
+                                or
+                                ano in (
+                                    select ano
+                                    from pmieducar.escola_ano_letivo
+                                    where ref_cod_escola = eal.ref_cod_escola
+                                    order by ano desc
+                                    limit 2
+                                )
+                            )
+                        else
+                            ano = $1
                         end
                     )
-                and andamento = 1
+                {$where}
                 order by ref_cod_escola, ano
-            ';
+            ";
 
             $anosLetivos = $this->fetchPreparedQuery($sql, [$ano]);
 
-            $attrs = ['escola_id', 'ano', 'descricao'];
+            $attrs = ['escola_id', 'ano', 'descricao', 'ano_em_aberto'];
             $anosLetivos = Portabilis_Array_Utils::filterSet($anosLetivos, $attrs);
+
+            $anosLetivos = array_map(function ($ano) {
+                $ano['ano_em_aberto'] = $ano['ano_em_aberto'] == 1;
+
+                return $ano;
+            }, $anosLetivos);
 
             foreach ($anosLetivos as $index => $anoLetivo) {
                 $anosLetivos[$index] = array_merge($anosLetivos[$index], $this->getEtapasAnoEscola($anoLetivo['ano'], $anoLetivo['escola_id']));
@@ -238,7 +254,7 @@ class EscolaController extends ApiCoreController
               FROM pmieducar.turma_modulo tm
               INNER JOIN pmieducar.turma t ON (tm.ref_cod_turma = t.cod_turma)
               INNER JOIN pmieducar.curso c on (c.cod_curso = t.ref_cod_curso)
-              inner join pmieducar.modulo m 
+              inner join pmieducar.modulo m
               on m.cod_modulo = tm.ref_cod_modulo
             WHERE t.ano = $1 and t.ref_ref_cod_escola = $2 and c.padrao_ano_escolar = 0 and t.ativo = 1
           ORDER BY tm.ref_cod_turma';
@@ -471,13 +487,13 @@ class EscolaController extends ApiCoreController
     {
         $sql = ' SELECT escola.cod_escola as cod_escola,
           juridica.fantasia as nome,
-          coalesce(endereco_pessoa.cep, endereco_externo.cep) as cep,
-          coalesce(endereco_pessoa.numero, endereco_externo.numero) as numero,
-          coalesce(endereco_pessoa.complemento, endereco_externo.complemento) as complemento,
-          coalesce(logradouro.nome,endereco_externo.logradouro) as logradouro,
-          coalesce(bairro.nome, endereco_externo.bairro) as bairro,
-          coalesce(municipio.nome, endereco_externo.cidade) as municipio,
-          coalesce(uf.sigla_uf, endereco_externo.sigla_uf) as uf,
+          endereco_pessoa.cep as cep,
+          endereco_pessoa.numero as numero,
+          endereco_pessoa.complemento as complemento,
+          logradouro.nome as logradouro,
+          bairro.nome as bairro,
+          municipio.nome as municipio,
+          uf.sigla_uf as uf,
           pais.nome as pais,
           pessoa.email as email,
           fone_pessoa.ddd as ddd,
@@ -490,7 +506,6 @@ class EscolaController extends ApiCoreController
          left join cadastro.pessoa pessoa_responsavel on(escola.ref_idpes_gestor = pessoa_responsavel.idpes)
          left join cadastro.fone_pessoa on(fone_pessoa.idpes = pessoa.idpes and fone_pessoa.tipo = 1)
          left join cadastro.endereco_pessoa on(escola.ref_idpes = endereco_pessoa.idpes)
-         left join cadastro.endereco_externo on(escola.ref_idpes = endereco_externo.idpes)
          left join public.logradouro on(endereco_pessoa.idlog = logradouro.idlog)
          left join public.municipio on(logradouro.idmun = municipio.idmun)
          left join public.uf on(municipio.sigla_uf = uf.sigla_uf)
@@ -523,7 +538,7 @@ class EscolaController extends ApiCoreController
 
     protected function getEscolasMultipleSearch()
     {
-        $cod_usuario = $this->getSession()->id_pessoa;
+        $cod_usuario = \Illuminate\Support\Facades\Auth::id();
         $permissao = new clsPermissoes();
         $nivel = $permissao->nivel_acesso($cod_usuario);
         $cursoId = $this->getRequest()->curso_id;
@@ -543,7 +558,7 @@ class EscolaController extends ApiCoreController
         if (is_numeric($cod_usuario) && $nivel == App_Model_NivelTipoUsuario::ESCOLA) {
             $escolas = $this->getEscolasUsuarios($cod_usuario);
             if (! empty($escolas['escolas'])) {
-                $escolas = implode(", ", $escolas['escolas']);
+                $escolas = implode(', ', $escolas['escolas']);
                 $sql .= " and escola.cod_escola in ({$escolas})";
             }
         }
@@ -610,7 +625,7 @@ class EscolaController extends ApiCoreController
 
     protected function getEscolasSelecao()
     {
-        $userId = $this->getSession()->id_pessoa;
+        $userId = \Illuminate\Support\Facades\Auth::id();
         $permissao = new clsPermissoes();
         $nivel = $permissao->nivel_acesso($userId);
 
@@ -622,7 +637,7 @@ class EscolaController extends ApiCoreController
             $escolasUser = App_Model_IedFinder::getEscolasUser($userId);
 
             foreach ($escolasUser as $e) {
-                $escolas_usuario['__'.$e['ref_cod_escola']] = strtoupper($e['nome']);
+                $escolas_usuario['__'.$e['ref_cod_escola']] = mb_strtoupper($e['nome']);
             }
 
             return ['options' => $escolas_usuario];
@@ -632,7 +647,19 @@ class EscolaController extends ApiCoreController
         $escolasInstituicao = App_Model_IedFinder::getEscolas($instituicao);
 
         foreach ($escolasInstituicao as $id => $nome) {
-            $escolas['__'.$id] = strtoupper($this->toUtf8($nome));
+            $escolas['__'.$id] = mb_strtoupper($this->toUtf8($nome));
+        }
+
+        return ['options' => $escolas];
+    }
+
+    protected function getEscolasSelecaoSemFiltroPorUsuario()
+    {
+        $instituicao = $this->getRequest()->instituicao;
+        $escolasInstituicao = App_Model_IedFinder::getEscolas($instituicao);
+
+        foreach ($escolasInstituicao as $id => $nome) {
+            $escolas['__'.$id] = mb_strtoupper($this->toUtf8($nome));
         }
 
         return ['options' => $escolas];
@@ -666,6 +693,29 @@ class EscolaController extends ApiCoreController
         ];
     }
 
+    protected function canGetSchoolAddress()
+    {
+        return $this->validatesPresenceOf('escola_id');
+    }
+
+    protected function getSchoolAddress()
+    {
+        if ($this->canGetSchoolAddress()) {
+            $escola_id = $this->getRequest()->escola_id;
+
+            $sql = '
+            SELECT a.country, a.state, fcn_upper(a.city) as city, a.country_id, a.state_abbreviation FROM pmieducar.escola e
+                LEFT JOIN person_has_place php ON php.person_id = e.ref_idpes
+                LEFT JOIN addresses a ON a.id = php.id
+            WHERE e.cod_escola = $1
+            ';
+
+            return $this->fetchPreparedQuery($sql, [$escola_id], false, 'first-line');
+        }
+
+        return false;
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'escola')) {
@@ -692,8 +742,12 @@ class EscolaController extends ApiCoreController
             $this->appendResponse($this->getEscolasUsuarios());
         } elseif ($this->isRequestFor('get', 'escolas-para-selecao')) {
             $this->appendResponse($this->getEscolasSelecao());
+        } elseif ($this->isRequestFor('get', 'escolas-para-selecao-sem-filtro-por-usuario')) {
+            $this->appendResponse($this->getEscolasSelecaoSemFiltroPorUsuario());
         } elseif ($this->isRequestFor('get', 'parametros-escolas')) {
             $this->appendResponse($this->getParametrosEscolas());
+        } elseif ($this->isRequestFor('get', 'endereco-escola')) {
+            $this->appendResponse($this->getSchoolAddress());
         } else {
             $this->notImplementedOperationError();
         }

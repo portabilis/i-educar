@@ -2,26 +2,35 @@
 
 namespace App\Http\Controllers\Educacenso;
 
+use App\Exceptions\Educacenso\ImportException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EducacensoImportRequest;
 use App\Models\EducacensoImport;
 use App\Process;
 use App\Services\Educacenso\HandleFileService;
-use App\Services\Educacenso\ImportService;
 use App\Services\Educacenso\ImportServiceFactory;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class ImportController extends Controller
 {
-    public function import(Request $request)
+    public function import(EducacensoImportRequest $request)
     {
         $file = $request->file('arquivo');
 
-        $yearImportService = ImportServiceFactory::createImportService($request->get('ano'));
+        try {
+            $yearImportService = ImportServiceFactory::createImportService(
+                $request->get('ano'),
+                DateTime::createFromFormat('d/m/Y', $request->get('data_entrada_matricula')));
 
-        $importFileService = new HandleFileService($yearImportService, Auth::user());
-        $importFileService->handleFile($file);
+            $importFileService = new HandleFileService($yearImportService, Auth::user());
+
+            $importFileService->handleFile($file);
+        } catch (ImportException $exception) {
+            return redirect('/intranet/educar_importacao_educacenso.php')->with('error', $exception->getMessage());
+        }
 
         return redirect()->route('educacenso.history');
     }

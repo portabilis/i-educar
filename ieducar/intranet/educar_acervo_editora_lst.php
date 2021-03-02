@@ -1,9 +1,7 @@
 <?php
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+use App\Models\State;
+
 
 class clsIndexBase extends clsBase
 {
@@ -86,17 +84,7 @@ class indice extends clsListagem
         $this->campoTexto( "nm_editora", "Editora", $this->nm_editora, 30, 255, false );
 
         // Filtros de Foreign Keys
-        $opcoes = array( "" => "Selecione" );
-
-        $objTemp = new clsUf();
-        $lista = $objTemp->lista();
-        if ( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista as $registro )
-            {
-                $opcoes["{$registro['sigla_uf']}"] = "{$registro['nome']}";
-            }
-        }
+        $opcoes = array( "" => "Selecione" ) + State::getListKeyAbbreviation()->toArray();
 
         $this->campoLista( "ref_sigla_uf", "Estado", $opcoes, $this->ref_sigla_uf, null,null,null,null,null,false );
 
@@ -146,9 +134,7 @@ class indice extends clsListagem
         {
             foreach ( $lista AS $registro )
             {
-                $obj_ref_sigla_uf = new clsUf( $registro["ref_sigla_uf"] );
-                $det_ref_sigla_uf = $obj_ref_sigla_uf->detalhe();
-                $registro["ref_sigla_uf"] = $det_ref_sigla_uf["nome"];
+                $registro["ref_sigla_uf"] = State::getNameByAbbreviation($registro["ref_sigla_uf"]);
 
                 $obj_biblioteca = new clsPmieducarBiblioteca($registro['ref_cod_biblioteca']);
                 $det_biblioteca = $obj_biblioteca->detalhe();

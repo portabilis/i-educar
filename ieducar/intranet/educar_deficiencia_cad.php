@@ -1,11 +1,4 @@
 <?php
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/Geral.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Support\View\SelectOptions;
@@ -31,6 +24,7 @@ class indice extends clsCadastro
     public $cod_deficiencia;
     public $nm_deficiencia;
     public $deficiencia_educacenso;
+    public $exigir_laudo_medico;
 
     public function Inicializar()
     {
@@ -87,26 +81,20 @@ class indice extends clsCadastro
         ];
 
         $this->inputsHelper()->select('deficiencia_educacenso', $options);
+        $this->campoCheck('exigir_laudo_medico', 'Exigir laudo médico?', dbBool($this->exigir_laudo_medico));
         $this->campoCheck('desconsidera_regra_diferenciada', 'Desconsiderar deficiência na regra de avaliação diferenciada', dbBool($this->desconsidera_regra_diferenciada));
     }
 
     public function Novo()
     {
-
-
         $obj = new clsCadastroDeficiencia($this->cod_deficiencia);
         $obj->nm_deficiencia = $this->nm_deficiencia;
         $obj->deficiencia_educacenso = $this->deficiencia_educacenso;
         $obj->desconsidera_regra_diferenciada = !is_null($this->desconsidera_regra_diferenciada);
+        $obj->exigir_laudo_medico = !is_null($this->exigir_laudo_medico);
 
         $cadastrou = $obj->cadastra();
         if ($cadastrou) {
-            $deficiencia = new clsCadastroDeficiencia($cadastrou);
-            $deficiencia = $deficiencia->detalhe();
-
-            $auditoria = new clsModulesAuditoriaGeral('deficiencia', $this->pessoa_logada, $cadastrou);
-            $auditoria->inclusao($deficiencia);
-
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
             $this->simpleRedirect('educar_deficiencia_lst.php');
         }
@@ -119,23 +107,14 @@ class indice extends clsCadastro
 
     public function Editar()
     {
-
-
-        $deficienciaDetalhe = new clsCadastroDeficiencia($this->cod_deficiencia);
-        $deficienciaDetalheAntes = $deficienciaDetalhe->detalhe();
-
         $obj = new clsCadastroDeficiencia($this->cod_deficiencia);
         $obj->nm_deficiencia = $this->nm_deficiencia;
         $obj->deficiencia_educacenso = $this->deficiencia_educacenso;
         $obj->desconsidera_regra_diferenciada = !is_null($this->desconsidera_regra_diferenciada);
+        $obj->exigir_laudo_medico = !is_null($this->exigir_laudo_medico);
 
         $editou = $obj->edita();
         if ($editou) {
-            $deficienciaDetalheDepois = $deficienciaDetalhe->detalhe();
-
-            $auditoria = new clsModulesAuditoriaGeral('deficiencia', $this->pessoa_logada, $this->cod_deficiencia);
-            $auditoria->alteracao($deficienciaDetalheAntes, $deficienciaDetalheDepois);
-
             $this->mensagem .= 'Edição efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_deficiencia_lst.php');
         }
@@ -148,15 +127,9 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-
-
         $obj = new clsCadastroDeficiencia($this->cod_deficiencia, $this->nm_deficiencia);
-        $detalhe = $obj->detalhe();
         $excluiu = $obj->excluir();
         if ($excluiu) {
-            $auditoria = new clsModulesAuditoriaGeral('deficiencia', $this->pessoa_logada, $this->cod_deficiencia);
-            $auditoria->exclusao($detalhe);
-
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_deficiencia_lst.php');
         }

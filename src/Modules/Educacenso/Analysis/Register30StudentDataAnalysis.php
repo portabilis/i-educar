@@ -18,6 +18,8 @@ class Register30StudentDataAnalysis implements AnalysisInterface
      */
     private $data;
 
+    private $year;
+
     /**
      * @var array
      */
@@ -28,11 +30,18 @@ class Register30StudentDataAnalysis implements AnalysisInterface
         $this->data = $data;
     }
 
+    public function setYear($year)
+    {
+        $this->year = $year;
+    }
+
     public function run()
     {
         $data = $this->data;
 
-        $arrayDeficiencias = array_filter(Portabilis_Utils_Database::pgArrayToArray($data->arrayDeficiencias));
+        $arrayDeficiencias = array_filter(
+            Portabilis_Utils_Database::pgArrayToArray($data->arrayDeficiencias)
+        );
         $arrayRecursos = array_filter(Portabilis_Utils_Database::pgArrayToArray($data->recursosProvaInep));
 
         if (!$arrayDeficiencias && ($data->dadosAluno->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE || $data->dadosAluno->modalidadeCurso == ModalidadeCurso::EDUCACAO_ESPECIAL)) {
@@ -44,6 +53,7 @@ class Register30StudentDataAnalysis implements AnalysisInterface
             ];
         }
 
+        $arrayDeficiencias = $this->data::removeAltasHabilidadesArrayDeficiencias($arrayDeficiencias);
         if (empty($arrayRecursos) && $arrayDeficiencias) {
             $this->messages[] = [
                 'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o(a) aluno(a)  {$data->nomePessoa} possui deficiência, portanto é necessário informar qual o recurso para a realização de provas o(a) mesmo(a) necessita ou já recebe.",
@@ -91,14 +101,6 @@ class Register30StudentDataAnalysis implements AnalysisInterface
             ];
         }
 
-        if ($data->semDocumentacao() && !$data->justificativaFaltaDocumentacao) {
-            $this->messages[] = [
-                'text' => "Dados para formular o registro 30 da escola {$data->nomeEscola} não encontrados. Verificamos que o(a) aluno(a) {$data->nomePessoa} não possui nenhuma documentação informada (CPF, NIS ou Certidão de Nascimento (nova)), portanto é necessário justificar a falta das documentações.",
-                'path' => '(Escola > Cadastros > Alunos > Editar > Aba: Dados pessoais > Campo: Justificativa para a falta de documentação)',
-                'linkPath' => "/module/Cadastro/aluno?id={$data->codigoAluno}",
-                'fail' => true
-            ];
-        }
     }
 
     public function getMessages(): array

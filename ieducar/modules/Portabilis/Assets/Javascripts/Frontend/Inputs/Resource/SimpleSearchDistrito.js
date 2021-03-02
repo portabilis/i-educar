@@ -1,18 +1,17 @@
-var simpleSearchDistritoOptions = {
+var simpleSearchDistrictOptions = {
 
-  params : { 
-    municipio_id : function() {
-      return $j('#municipio_id').val() 
+  params: {
+    city_id: function () {
+      return $j('#city_id').val()
     }
   },
 
-  canSearch : function() { 
-
-    if (! $j('#municipio_id').val()) {
-      alert('Selecione um munic\u00edpio.');
+  canSearch: function () {
+    if (!$j('#city_id').val()) {
+      alert('Selecione uma cidade.');
       return false;
     }
-    
+
     return true;
- }
+  }
 };

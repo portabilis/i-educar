@@ -1,9 +1,5 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
-require_once 'Portabilis/Utils/CustomLabel.php';
 
 class clsIndexBase extends clsBase
 {
@@ -49,8 +45,15 @@ class indice extends clsCadastro
 
     $customLabel = new CustomLabel();
     $defaults = $customLabel->getDefaults();
-
+     ksort($defaults);
+    $rotulo = null;
     foreach($defaults as $k => $v) {
+        $rotulo2 = explode('.', $k)[0];
+
+        if ($rotulo2 != $rotulo) {
+            $rotulo2 = ucfirst($rotulo2);
+            $this->campoRotulo($rotulo2, '<strong>' . $rotulo2 . '</strong>');
+        }
         $this->inputsHelper()->text('custom_labels[' . $k . ']', array(
             'label' => $k,
             'size' => 100,
@@ -63,8 +66,6 @@ class indice extends clsCadastro
 
   function Editar()
   {
-
-
     $obj_permissoes = new clsPermissoes();
     $ref_cod_instituicao = $obj_permissoes->getInstituicao($this->pessoa_logada);
 
@@ -72,13 +73,9 @@ class indice extends clsCadastro
         'custom_labels' => $this->custom_labels
     ));
 
-    $detalheAntigo = $configuracoes->detalhe();
     $editou = $configuracoes->edita();
 
     if ($editou) {
-      $detalheAtual = $configuracoes->detalhe();
-      $auditoria = new clsModulesAuditoriaGeral("configuracoes_gerais", $this->pessoa_logada, $ref_cod_instituicao ? $ref_cod_instituicao : 'null');
-      $auditoria->alteracao($detalheAntigo, $detalheAtual);
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
       $this->simpleRedirect('index.php');
     }

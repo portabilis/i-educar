@@ -1,9 +1,5 @@
 <?php
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
 
 class clsIndexBase extends clsBase
 {
@@ -88,7 +84,7 @@ class indice extends clsCadastro
 
         // text
         $this->campoTexto( "nm_funcao", "Func&atilde;o", $this->nm_funcao, 30, 255, true );
-        $this->campoTexto( "abreviatura", "Abreviatura", $this->abreviatura, 30, 255, true );
+        $this->campoTexto( "abreviatura", "Abreviatura", $this->abreviatura, 30, 30, true );
         $opcoes = array('' => 'Selecione',
                         'S' => 'Sim',
                         'N' => 'N&atilde;o'
@@ -99,8 +95,6 @@ class indice extends clsCadastro
 
     function Novo()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 634, $this->pessoa_logada, 3,  "educar_funcao_lst.php" );
 
@@ -113,13 +107,6 @@ class indice extends clsCadastro
         $cadastrou = $obj->cadastra();
         if( $cadastrou )
         {
-
-            $funcao = new clsPmieducarFuncao($cadastrou);
-            $funcao = $funcao->detalhe();
-
-            $auditoria = new clsModulesAuditoriaGeral("servidor_funcao", $this->pessoa_logada, $cadastrou);
-            $auditoria->inclusao($funcao);
-
             $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
             $this->simpleRedirect('educar_funcao_lst.php');
         }
@@ -131,11 +118,6 @@ class indice extends clsCadastro
 
     function Editar()
     {
-
-
-        $funcao = new clsPmieducarFuncao($this->cod_funcao);
-        $funcaoAntes = $funcao->detalhe();
-
         if($this->professor == 'N')
             $this->professor =  "0";
         elseif($this->professor == 'S')
@@ -144,15 +126,10 @@ class indice extends clsCadastro
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 634, $this->pessoa_logada, 3,  "educar_funcao_lst.php" );
 
-
         $obj = new clsPmieducarFuncao($this->cod_funcao, $this->pessoa_logada, null, $this->nm_funcao, $this->abreviatura, $this->professor, null, null, 1, $this->ref_cod_instituicao );
         $editou = $obj->edita();
         if( $editou )
         {
-            $funcaoDepois = $funcao->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral("servidor_funcao", $this->pessoa_logada, $this->cod_funcao);
-            $auditoria->alteracao($funcaoAntes, $funcaoDepois);
-
             $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_funcao_lst.php');
         }
@@ -164,21 +141,14 @@ class indice extends clsCadastro
 
     function Excluir()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir( 634, $this->pessoa_logada, 3,  "educar_funcao_lst.php" );
 
-
         $obj = new clsPmieducarFuncao( $this->cod_funcao, $this->pessoa_logada, null,null,null,null,null,null,0,$this->ref_cod_instituicao );
-        $funcao = $obj->detalhe();
 
         $excluiu = $obj->excluir();
         if( $excluiu )
         {
-            $auditoria = new clsModulesAuditoriaGeral("servidor_funcao", $this->pessoa_logada, $this->cod_funcao);
-            $auditoria->exclusao($funcao);
-
             $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
             $this->simpleRedirect('educar_funcao_lst.php');
         }

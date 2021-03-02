@@ -6,6 +6,7 @@ use App\Models\SchoolManager;
 use App\Rules\SchoolManagerAtLeastOneChief;
 use App\Rules\SchoolManagerUniqueIndividuals;
 use App\Services\SchoolManagerService;
+use iEducar\Modules\Addressing\LegacyAddressingFields;
 use iEducar\Modules\Educacenso\Model\AreasExternas;
 use iEducar\Modules\Educacenso\Model\Banheiros;
 use iEducar\Modules\Educacenso\Model\Dormitorios;
@@ -36,15 +37,8 @@ use iEducar\Modules\Educacenso\Model\UsoInternet;
 use iEducar\Modules\Educacenso\Validator\Telefone;
 use iEducar\Modules\ValueObjects\SchoolManagerValueObject;
 use iEducar\Support\View\SelectOptions;
+use iEducar\Modules\Educacenso\Validator\School\HasDifferentStepsOfChildEducationValidator;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/Utils/Database.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
-require_once 'App/Model/ZonaLocalizacao.php';
 
 class clsIndexBase extends clsBase
 {
@@ -57,6 +51,8 @@ class clsIndexBase extends clsBase
 
 class indice extends clsCadastro
 {
+    use LegacyAddressingFields;
+
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -83,14 +79,6 @@ class indice extends clsCadastro
     public $ref_cod_curso;
     public $autorizacao;
     public $fantasia;
-    public $sigla_uf_;
-    public $cidade_;
-    public $cep_;
-    public $idtlog_;
-    public $idbai_;
-    public $endereco;
-    public $cep;
-    public $ref_bairro;
     public $p_ddd_telefone_1;
     public $p_telefone_1;
     public $p_ddd_telefone_2;
@@ -102,16 +90,6 @@ class indice extends clsCadastro
     public $p_email;
     public $p_http;
     public $tipo_pessoa;
-    public $cidade;
-    public $bairro;
-    public $logradouro;
-    public $idlog;
-    public $idbai;
-    public $idtlog;
-    public $sigla_uf;
-    public $complemento;
-    public $numero;
-    public $andar;
     public $situacao_funcionamento;
     public $dependencia_administrativa;
     public $orgao_vinculado_escola;
@@ -190,13 +168,11 @@ class indice extends clsCadastro
     public $excluir_curso;
     public $sem_cnpj;
     public $com_cnpj;
-    public $isEnderecoExterno = 0;
     public $esfera_administrativa;
     public $managers_inep_id;
     public $managers_role_id;
     public $servidor_id;
     public $managers_access_criteria_id;
-    public $managers_access_criteria_description;
     public $managers_link_type_id;
     public $managers_chief;
     public $managers_email;
@@ -213,13 +189,16 @@ class indice extends clsCadastro
     public $qtd_bombeiro;
     public $qtd_psicologo;
     public $qtd_fonoaudiologo;
+    public $qtd_vice_diretor;
+    public $qtd_orientador_comunitario;
+    public $iddis;
 
     private $inputsRecursos = [
         'qtd_secretario_escolar' => 'Secretário(a) escolar',
         'qtd_auxiliar_administrativo' => 'Auxiliares de secretaria ou auxiliares administrativos, atendentes',
         'qtd_apoio_pedagogico' => 'Profissionais de apoio e supervisão pedagógica: pedagogo(a), coordenador(a) pedagógico(a), orientador(a) educacional, supervisor(a) escolar e coordenador(a) de área de ensino',
         'qtd_coordenador_turno' => 'Coordenador(a) de turno/disciplina',
-        'qtd_tecnicos' => 'Técnicos(as), monitores(as) ou auxiliares de laboratório(s)',
+        'qtd_tecnicos' => 'Técnicos(as), monitores(as), supervisores(as) ou auxiliares de laboratório(s), de apoio a tecnologias educacionais ou em multimeios/multimídias eletrônico-digitais',
         'qtd_bibliotecarios' => 'Bibliotecário(a), auxiliar de biblioteca ou monitor(a) da sala de leitura',
         'qtd_segurancas' => 'Seguranças, guarda ou segurança patrimonial',
         'qtd_auxiliar_servicos_gerais' => 'Auxiliar de serviços gerais, porteiro(a), zelador(a), faxineiro(a), horticultor(a), jardineiro(a)',
@@ -228,6 +207,8 @@ class indice extends clsCadastro
         'qtd_bombeiro' => 'Bombeiro(a) brigadista, profissionais de assistência a saúde (urgência e emergência), Enfermeiro(a), Técnico(a) de enfermagem e socorrista',
         'qtd_psicologo' => 'Psicólogo(a) Escolar',
         'qtd_fonoaudiologo' => 'Fonoaudiólogo(a)',
+        'qtd_vice_diretor' => 'Vice-diretor(a) ou diretor(a) adjunto(a), profissionais responsáveis pela gestão administrativa e/ou financeira',
+        'qtd_orientador_comunitario' => 'Orientador(a) comunitário(a) ou assistente social'
     ];
 
     public function Inicializar()
@@ -284,16 +265,10 @@ class indice extends clsCadastro
                     $this->$campo = $val;
                 }
 
+                $this->loadAddress($this->ref_idpes);
+
                 $this->gestor_id = $registro['ref_idpes_gestor'];
                 $this->secretario_id = $registro['ref_idpes_secretario_escolar'];
-                $objEndereco = new clsPessoaEndereco($this->ref_idpes);
-                $detEndereco = $objEndereco->detalhe();
-
-                if ($detEndereco) {
-                    $this->isEnderecoExterno = 0;
-                } else {
-                    $this->isEnderecoExterno = 1;
-                }
 
                 $this->fantasia = $registro['nome'];
                 $objJuridica = new clsPessoaJuridica($this->ref_idpes);
@@ -306,9 +281,7 @@ class indice extends clsCadastro
                     $objJuridica = new clsPessoaJuridica(false, idFederal2int($this->cnpj));
                     $det = $objJuridica->detalhe();
                     $objPessoa = new clsPessoaFj($det["idpes"]);
-                    list($this->endereco,
-                        $this->cep,
-                        $this->ref_bairro,
+                    list(
                         $this->p_ddd_telefone_1,
                         $this->p_telefone_1,
                         $this->p_ddd_telefone_2,
@@ -319,20 +292,8 @@ class indice extends clsCadastro
                         $this->p_telefone_fax,
                         $this->p_email,
                         $this->p_http,
-                        $this->tipo_pessoa,
-                        $this->cidade,
-                        $this->bairro,
-                        $this->logradouro,
-                        $this->idlog,
-                        $this->idbai,
-                        $this->idtlog,
-                        $this->sigla_uf,
-                        $this->complemento,
-                        $this->numero,
-                        $this->andar) = $objPessoa->queryRapida($det["idpes"],
-                        "endereco",
-                        "cep",
-                        "bairro",
+                        $this->tipo_pessoa
+                    ) = $objPessoa->queryRapida($det["idpes"],
                         "ddd_1",
                         "fone_1",
                         "ddd_2",
@@ -343,41 +304,15 @@ class indice extends clsCadastro
                         "fone_fax",
                         "email",
                         "url",
-                        "tipo",
-                        "cidade",
-                        "bairro",
-                        "logradouro",
-                        "idlog",
-                        "idbai",
-                        "idtlog",
-                        "sigla_uf",
-                        "complemento",
-                        "numero",
-                        "andar");
-                } else {
-                    $objEscolaComplemento = new clsPmieducarEscolaComplemento($this->cod_escola);
-                    $detComplemento = $objEscolaComplemento->detalhe();
-
-                    foreach ($detComplemento as $campo => $val) {
-                        $this->$campo = $val;
-                    }
-
-                    $this->cep_ = $this->cep;
-                    $this->p_email = $this->email;
-                    $this->cidade = $this->municipio;
-                    $this->p_ddd_telefone_1 = $this->ddd_telefone;
-                    $this->p_telefone_1 = $this->telefone;
-                    $this->p_ddd_telefone_fax = $this->ddd_fax;
-                    $this->p_telefone_fax = $this->fax;
+                        "tipo"
+                    );
                 }
             }
         } elseif ($_POST['cnpj'] && !$_POST["passou"]) {
             $objJuridica = new clsPessoaJuridica(false, idFederal2int($_POST['cnpj']));
             $det = $objJuridica->detalhe();
             $objPessoa = new clsPessoaFj($det["idpes"]);
-            list($this->endereco,
-                $this->cep,
-                $this->ref_bairro,
+            list(
                 $this->p_ddd_telefone_1,
                 $this->p_telefone_1,
                 $this->p_ddd_telefone_2,
@@ -388,20 +323,8 @@ class indice extends clsCadastro
                 $this->p_telefone_fax,
                 $this->p_email,
                 $this->p_http,
-                $this->tipo_pessoa,
-                $this->cidade,
-                $this->bairro,
-                $this->logradouro,
-                $this->idlog,
-                $this->idbai,
-                $this->idtlog,
-                $this->sigla_uf,
-                $this->complemento,
-                $this->numero,
-                $this->andar) = $objPessoa->queryRapida($det["idpes"],
-                "endereco",
-                "cep",
-                "bairro",
+                $this->tipo_pessoa
+            ) = $objPessoa->queryRapida($det["idpes"],
                 "ddd_1",
                 "fone_1",
                 "ddd_2",
@@ -412,17 +335,8 @@ class indice extends clsCadastro
                 "fone_fax",
                 "email",
                 "url",
-                "tipo",
-                "cidade",
-                "bairro",
-                "logradouro",
-                "idlog",
-                "idbai",
-                "idtlog",
-                "sigla_uf",
-                "complemento",
-                "numero",
-                "andar");
+                "tipo"
+            );
         }
 
         if ($this->cnpj_mantenedora_principal) {
@@ -543,6 +457,7 @@ class indice extends clsCadastro
             '/modules/Portabilis/Assets/Javascripts/Utils.js',
             '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
             '/modules/Cadastro/Assets/Javascripts/Escola.js',
+            '/modules/Cadastro/Assets/Javascripts/Addresses.js',
             '/modules/Cadastro/Assets/Javascripts/SchoolManagersModal.js',
         );
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
@@ -654,16 +569,6 @@ class indice extends clsCadastro
 
                 $this->inputsHelper()->select('zona_localizacao', $options);
 
-                if (is_numeric($this->cep)) {
-                    $this->cep = int2CEP($this->cep);
-                }
-
-                $this->campoCep("cep", "CEP", $this->cep, true, "-", false, false);
-                $this->campoTexto("cidade", "Cidade", $this->cidade, "50", "255", true);
-                $this->campoTexto("bairro", "Bairro", $this->bairro, "50", "20", true);
-                $this->campoTexto("logradouro", "Logradouro", $this->logradouro, "50", "255", true);
-                $this->campoTexto("complemento", "Complemento", $this->complemento, "22", "20", false);
-                $this->campoNumero("numero", "Número", $this->numero, "10", "10", true);
                 $this->campoTexto("p_ddd_telefone_1", "DDD Telefone 1", $this->p_ddd_telefone_1, "2", "2", false);
                 $this->campoTexto("p_telefone_1", "Telefone 1", $this->p_telefone_1, "10", "15", false);
                 $this->campoTexto("p_ddd_telefone_fax", "DDD Fax", $this->p_ddd_telefone_fax, "2", "2", false);
@@ -763,100 +668,19 @@ class indice extends clsCadastro
                 $options = array('label' => 'Localização diferenciada da escola', 'resources' => $resources, 'value' => $this->localizacao_diferenciada, 'required' => $obrigarCamposCenso, 'size' => 70);
                 $this->inputsHelper()->select('localizacao_diferenciada', $options);
 
-                // Detalhes do Endereco
-                $objUf = new clsUf();
-                $listauf = $objUf->lista();
-                $listaEstado = array("" => "Selecione");
+                $this->viewAddress();
 
-                if ($listauf) {
-                    foreach ($listauf as $uf) {
-                        $listaEstado[$uf['sigla_uf']] = $uf['sigla_uf'];
-                    }
-                }
-
-                $objTipoLog = new clsTipoLogradouro();
-                $listaTipoLog = $objTipoLog->lista();
-                $listaTLog = array("" => "Selecione");
-
-                if ($listaTipoLog) {
-                    foreach ($listaTipoLog as $tipoLog) {
-                        $listaTLog[urldecode($tipoLog['idtlog'])] = $tipoLog['descricao'];
-                    }
-                }
-
-                $this->campoOculto("isEnderecoExterno", $this->isEnderecoExterno);
-                $this->campoOculto("cep_", $this->cep_);
-                $this->campoOculto("sigla_uf_", $this->sigla_uf_);
-                $this->campoOculto("cidade_", $this->cidade_);
-                $this->campoOculto("bairro_", $this->bairro_);
-                $this->campoOculto("idbai", $this->idbai);
-                $this->campoOculto("logradouro_", $this->logradouro_);
-                $this->campoOculto("idlog", $this->idlog);
-                $this->campoOculto("idtlog_", $this->idtlog_);
-                $disabled = $this->isEnderecoExterno ? false : true;
-
-                if ($this->idlog && $this->idbai && $this->cep && $this->ref_idpes) {
-                    $this->campoOculto("cep_", $this->cep);
-                    $this->cep_ = int2CEP($this->cep);
-                    $this->campoCep("cep", "CEP", $this->cep_, true, "-", "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep_&campo4=logradouro&campo5=idlog&campo6=sigla_uf_&campo7=cidade&campo8=idtlog_&campo9=isEnderecoExterno&campo10=cep&campo11=sigla_uf&campo12=idtlog&campo13=cidade_\'></iframe>');\">", $disabled);
-                    $this->campoLista("sigla_uf", "Estado", $listaEstado, $this->sigla_uf, false, false, false, false, true, true);
-                    $this->campoTexto("cidade", "Cidade", $this->cidade, "50", "255", true, false, false, "", "", "", "onKeyUp", true);
-                    $this->campoTexto("bairro", "Bairro", $this->bairro, "50", "255", true, false, false, "", "", "", "onKeyUp", true);
-                    $this->campoLista("idtlog", "Tipo Logradouro", $listaTLog, $this->idtlog, false, false, false, false, true, true);
-                    $this->campoTexto("logradouro", "Logradouro", $this->logradouro, "50", "255", true, false, false, "", "", "", "onKeyUp", true);
-                    $this->campoTexto("complemento", "Complemento", $this->complemento, "22", "20", false, false);
-                    $this->campoNumero("numero", "Número", $this->numero, "10", "10", false);
-                    $this->campoNumero("andar", "Andar", $this->andar, "2", "2", false);
-                } elseif ($this->ref_idpes && $this->cep) {
-                    $this->cep = (is_numeric($this->cep)) ? int2CEP($this->cep) : $this->cep;
-                    $this->campoCep("cep", "CEP", $this->cep, true, "-", "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep_&campo4=logradouro&campo5=idlog&campo6=sigla_uf_&campo7=cidade&campo8=idtlog_&campo9=isEnderecoExterno&campo10=cep&campo11=sigla_uf&campo12=idtlog&campo13=cidade_\'></iframe>');\">");
-                    $this->campoLista("sigla_uf", "Estado", $listaEstado, $this->sigla_uf, "", false, "", "", false, true);
-                    $this->campoTexto("cidade", "Cidade", $this->cidade, "50", "255", true, false, false, "", "", "", "onKeyUp", false);
-                    $this->campoTexto("bairro", "Bairro", $this->bairro, "50", "255", true, false, false, "", "", "", "onKeyUp", false);
-                    $this->campoLista("idtlog", "Tipo Logradouro", $listaTLog, $this->idtlog, "", false, "", "", false, true);
-                    $this->campoTexto("logradouro", "Logradouro", $this->logradouro, "50", "255", true, false, false, "", "", "", "onKeyUp", false);
-                    $this->campoTexto("complemento", "Complemento", $this->complemento, "22", "20", false, false, false, "", "", "", "onKeyUp", false);
-                    $this->campoNumero("numero", "Número", $this->numero, 10, 10, false, "", "");
-                    $this->campoNumero("andar", "Andar", $this->andar, "2", "2", false);
-                } else {
-                    if (!$this->isEnderecoExterno) {
-                        $obj_bairro = new clsBairro($this->idbai);
-                        $this->cep_ = int2CEP($this->cep_);
-                        $obj_bairro_det = $obj_bairro->detalhe();
-
-                        if ($obj_bairro_det) {
-                            $this->bairro = $obj_bairro_det["nome"];
-                        }
-
-                        $obj_log = new clsLogradouro($this->idlog);
-                        $obj_log_det = $obj_log->detalhe();
-
-                        if ($obj_log_det) {
-                            $this->logradouro = $obj_log_det["nome"];
-                            $this->idtlog = $obj_log_det["idtlog"]->idtlog;
-                            $obj_mun = new clsMunicipio($obj_log_det["idmun"]);
-                            $det_mun = $obj_mun->detalhe();
-
-                            if ($det_mun) {
-                                $this->cidade = strtoupper(ucfirst(strtolower($det_mun["nome"])));
-                            }
-
-                            $this->sigla_uf = $this->sigla_uf_ = $det_mun['sigla_uf']->sigla_uf;
-                        }
-                    } else {
-                        $this->cep_ = $this->cep;
-                    }
-
-                    $this->campoCep("cep", "CEP", $this->cep_, true, "-", "<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel(500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep_&campo4=logradouro&campo5=idlog&campo6=sigla_uf_&campo7=cidade&campo8=idtlog_&campo9=isEnderecoExterno&campo10=cep&campo11=sigla_uf&campo12=idtlog&campo13=cidade_\'></iframe>');\">", $disabled);
-                    $this->campoLista("sigla_uf", "Estado", $listaEstado, $this->sigla_uf, false, false, false, false, $disabled, true);
-                    $this->campoTexto("cidade", "Cidade", $this->cidade, "50", "255", true, false, false, "", "", "", "", $disabled, true);
-                    $this->campoTexto("bairro", "Bairro", $this->bairro, "50", "20", true, false, false, "", "", "", "", $disabled, true);
-                    $this->campoLista("idtlog", "Tipo Logradouro", $listaTLog, $this->idtlog, false, false, false, false, $disabled, true);
-                    $this->campoTexto("logradouro", "Logradouro", $this->logradouro, "50", "255", true, false, false, "", "", "", "", $disabled, true);
-                    $this->campoTexto("complemento", "Complemento", $this->complemento, "22", "20", false, false, false);
-                    $this->campoNumero("numero", "N&uacute;mero", $this->numero, "10", "10", false);
-                    $this->campoNumero("andar", "Andar", $this->andar, "2", "2", false);
-                }
+                $this->inputsHelper()->simpleSearchDistrito('district', [
+                    'required' => $obrigarCamposCenso,
+                    'label' => 'Distrito',
+                ], [
+                    'objectName' => 'district',
+                    'hiddenInputOptions' => [
+                        'options' => [
+                            'value' => $this->iddis ?? $this->district_id,
+                        ],
+                    ],
+                ]);
 
                 $this->inputTelefone('1', 'Telefone 1');
                 $this->inputTelefone('2', 'Telefone 2');
@@ -872,7 +696,7 @@ class indice extends clsCadastro
             $this->inputsHelper()->numeric('longitude', array('max_length' => '20', 'size' => '20', 'required' => false, 'value' => $this->longitude, 'label_hint' => 'São aceito somente números, ponto "." e hífen "-"'));
 
             $this->campoCheck("bloquear_lancamento_diario_anos_letivos_encerrados", "Bloquear lançamento no diário para anos letivos encerrados", $this->bloquear_lancamento_diario_anos_letivos_encerrados);
-            $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra diferenciada", dbBool($this->utiliza_regra_diferenciada), '', false, false, false, 'Se marcado, utilizará regra de avaliação diferenciada informada na Série');
+            $this->campoCheck("utiliza_regra_diferenciada", "Utiliza regra alternativa", dbBool($this->utiliza_regra_diferenciada), '', false, false, false, 'Se marcado a escola utilizará a regra de avaliação alternativa informada na Série');
 
             $resources = SelectOptions::situacoesFuncionamentoEscola();
             $options = array('label' => 'Situação de funcionamento', 'resources' => $resources, 'value' => $this->situacao_funcionamento);
@@ -1409,7 +1233,7 @@ class indice extends clsCadastro
 
             $this->campoRotulo(
                 'quantidade_computadores_alunos',
-                '<b>Quantidade de computadores de uso dos aluno</b>'
+                '<b>Quantidade de computadores de uso dos alunos</b>'
             );
 
             $options = array('label' => 'Computadores de mesa (desktop)', 'resources' => $resources, 'value' => $this->quantidade_computadores_alunos_mesa, 'required' => false, 'size' => 4, 'max_length' => 4, 'placeholder' => '');
@@ -1474,11 +1298,17 @@ class indice extends clsCadastro
             );
             $this->inputsHelper()->booleanSelect('fundamental_ciclo', $options);
 
+            $obrigarOrganizacaoEnsino = false;
+            if ($this->cod_escola) {
+                $obrigarOrganizacaoEnsino = new HasDifferentStepsOfChildEducationValidator($this->cod_escola);
+                $obrigarOrganizacaoEnsino = $obrigarOrganizacaoEnsino->isValid();
+            }
+
             $helperOptions = ['objectName' => 'organizacao_ensino'];
             $options = [
                 'label' => 'Forma(s) de organização do ensino',
                 'size' => 50,
-                'required' => false,
+                'required' => $obrigarCamposCenso && $obrigarOrganizacaoEnsino,
                 'options' => [
                     'values' => $this->organizacao_ensino,
                     'all_values' => OrganizacaoEnsino::getDescriptiveValues()
@@ -1502,7 +1332,7 @@ class indice extends clsCadastro
             $options = [
                 'label' => 'Órgãos colegiados em funcionamento na escola',
                 'size' => 50,
-                'required' => false,
+                'required' => $obrigarCamposCenso,
                 'options' => [
                     'values' => $this->orgaos_colegiados,
                     'all_values' => OrgaosColegiados::getDescriptiveValues()
@@ -1751,10 +1581,7 @@ class indice extends clsCadastro
                     $obj->educacao_indigena = $this->educacao_indigena;
                     $obj->lingua_ministrada = $this->lingua_ministrada;
                     $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-                    $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
-                    $obj->abre_final_semana = $this->abre_final_semana;
                     $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
-                    $obj->proposta_pedagogica = $this->proposta_pedagogica;
                     $obj->equipamentos = $equipamentos;
                     $obj->uso_internet = $uso_internet;
                     $obj->rede_local = $rede_local;
@@ -1779,6 +1606,7 @@ class indice extends clsCadastro
                     $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
                     $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
                     $obj->esfera_administrativa = $this->esfera_administrativa;
+                    $obj->iddis = (int)$this->district_id;
                     foreach ($this->inputsRecursos as $key => $value) {
                         $obj->{$key} = $this->{$key};
                     }
@@ -1788,8 +1616,6 @@ class indice extends clsCadastro
                     if ($cadastrou1) {
                         $escola = new clsPmieducarEscola($cod_escola);
                         $escola = $escola->detalhe();
-                        $auditoria = new clsModulesAuditoriaGeral("escola", $this->pessoa_logada, $cod_escola);
-                        $auditoria->inclusao($escola);
 
                         $objTelefone = new clsPessoaTelefone($this->ref_idpes);
                         $objTelefone->excluiTodos();
@@ -1802,26 +1628,7 @@ class indice extends clsCadastro
                         $objTelefone = new clsPessoaTelefone($this->ref_idpes, 4, str_replace("-", "", $this->p_telefone_fax), $this->p_ddd_telefone_fax);
                         $objTelefone->cadastra();
 
-                        if (!$this->isEnderecoExterno) {
-                            $this->cep = $this->cep_;
-                            $objEndereco = new clsPessoaEndereco($this->ref_idpes, $this->cep, $this->idlog, $this->idbai, $this->numero, $this->complemento, false);
-
-                            if ($objEndereco->detalhe()) {
-                                $objEndereco->edita();
-                            } else {
-                                $objEndereco->cadastra();
-                            }
-
-                        } else {
-                            $this->cep = idFederal2int($this->cep);
-                            $objEnderecoExterno = new clsEnderecoExterno($this->ref_idpes, "1", $this->idtlog, $this->logradouro, $this->numero, $this->letra, $this->complemento, $this->bairro, $this->cep, $this->cidade, $this->sigla_uf, false);
-
-                            if ($objEnderecoExterno->existe()) {
-                                $objEnderecoExterno->edita();
-                            } else {
-                                $objEnderecoExterno->cadastra();
-                            }
-                        }
+                        $this->saveAddress($this->ref_idpes);
 
                         //-----------------------CADASTRA CURSO------------------------//
                         $this->escola_curso = unserialize(urldecode($this->escola_curso));
@@ -1918,10 +1725,7 @@ class indice extends clsCadastro
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
             $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-            $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
-            $obj->abre_final_semana = $this->abre_final_semana;
             $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
-            $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->equipamentos = $equipamentos;
             $obj->uso_internet = $uso_internet;
             $obj->rede_local = $rede_local;
@@ -1946,6 +1750,7 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
+            $obj->iddis = (int)$this->district_id;
             foreach ($this->inputsRecursos as $key => $value) {
                 $obj->{$key} = $this->{$key};
             }
@@ -1955,12 +1760,7 @@ class indice extends clsCadastro
             if ($cadastrou) {
                 $escola = new clsPmieducarEscola($cod_escola);
                 $escola = $escola->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral("escola", $this->pessoa_logada, $cod_escola);
-                $auditoria->inclusao($escola);
-                $obj2 = new clsPmieducarEscolaComplemento($cadastrou, null, $this->pessoa_logada, idFederal2int($this->cep), $this->numero, $this->complemento, $this->p_email, $this->fantasia, $this->cidade, $this->bairro, $this->logradouro, $this->p_ddd_telefone_1, $this->p_telefone_1, $this->p_ddd_telefone_fax, $this->p_telefone_fax, null, null, 1);
-                $cadastrou2 = $obj2->cadastra();
 
-                if ($cadastrou2) {
                     //-----------------------CADASTRA CURSO------------------------//
                     $this->escola_curso = unserialize(urldecode($this->escola_curso));
                     $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao));
@@ -1983,18 +1783,12 @@ class indice extends clsCadastro
                     $this->saveInep($escola['cod_escola']);
                     //-----------------------FIM CADASTRA CURSO------------------------//
 
-
-
                     $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 
                     throw new HttpResponseException(
                         new RedirectResponse('educar_escola_lst.php')
                     );
-                } else {
-                    $this->mensagem = "Cadastro não realizado.<br>";
 
-                    return false;
-                }
             } else {
                 $this->mensagem = "Cadastro não realizado (clsPmieducarEscola).<br>";
                 return false;
@@ -2124,10 +1918,7 @@ class indice extends clsCadastro
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
             $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-            $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
-            $obj->abre_final_semana = $this->abre_final_semana;
             $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
-            $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->equipamentos = $equipamentos;
             $obj->uso_internet = $uso_internet;
             $obj->rede_local = $rede_local;
@@ -2152,6 +1943,7 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
+            $obj->iddis = (int)$this->district_id;
             foreach ($this->inputsRecursos as $key => $value) {
                 $obj->{$key} = $this->{$key};
             }
@@ -2160,8 +1952,6 @@ class indice extends clsCadastro
 
             if ($editou) {
                 $escolaDetAtual = $obj->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral("escola", $this->pessoa_logada, $this->cod_escola);
-                $auditoria->alteracao($escolaDetAntigo, $escolaDetAtual);
             }
         } else {
             $obj = new clsPmieducarEscola(null, $this->pessoa_logada, null, $this->ref_cod_instituicao, $this->zona_localizacao, $this->ref_cod_escola_rede_ensino, $this->ref_idpes, $this->sigla, null, null, 1, $this->bloquear_lancamento_diario_anos_letivos_encerrados, $this->utiliza_regra_diferenciada);
@@ -2218,10 +2008,7 @@ class indice extends clsCadastro
             $obj->educacao_indigena = $this->educacao_indigena;
             $obj->lingua_ministrada = $this->lingua_ministrada;
             $obj->codigo_lingua_indigena = $this->codigo_lingua_indigena;
-            $obj->espaco_brasil_aprendizado = $this->espaco_brasil_aprendizado;
-            $obj->abre_final_semana = $this->abre_final_semana;
             $obj->codigo_lingua_indigena = $codigo_lingua_indigena;
-            $obj->proposta_pedagogica = $this->proposta_pedagogica;
             $obj->equipamentos = $equipamentos;
             $obj->uso_internet = $uso_internet;
             $obj->rede_local = $rede_local;
@@ -2246,6 +2033,7 @@ class indice extends clsCadastro
             $obj->mantenedora_escola_privada = $mantenedora_escola_privada;
             $obj->cnpj_mantenedora_principal = idFederal2int($this->cnpj_mantenedora_principal);
             $obj->esfera_administrativa = $this->esfera_administrativa;
+            $obj->iddis = (int)$this->district_id;
             foreach ($this->inputsRecursos as $key => $value) {
                 $obj->{$key} = $this->{$key};
             }
@@ -2255,8 +2043,6 @@ class indice extends clsCadastro
             if ($this->cod_escola) {
                 $obj = new clsPmieducarEscola($this->cod_escola);
                 $escolaDetAtual = $obj->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral("escola", $this->pessoa_logada, $this->cod_escola);
-                $auditoria->inclusao($escolaDetAtual);
             }
         }
 
@@ -2280,34 +2066,9 @@ class indice extends clsCadastro
                         $objTelefone->cadastra();
                         $objTelefone = new clsPessoaTelefone($this->ref_idpes, 4, str_replace("-", "", $this->p_telefone_fax), $this->p_ddd_telefone_fax);
                         $objTelefone->cadastra();
-                        $objEndereco = new clsPessoaEndereco($this->ref_idpes);
-                        $detEndereco = $objEndereco->detalhe();
 
-                        if ($this->cep) {
-                            $this->cep_ = idFederal2int($this->cep);
-                        }
+                        $this->saveAddress($this->ref_idpes);
 
-                        $this->cep = $this->cep;
-
-                        if (!$this->isEnderecoExterno) {
-                            $this->cep = $this->cep_;
-                            $objEndereco = new clsPessoaEndereco($this->ref_idpes, $this->cep, $this->idlog, $this->idbai, $this->numero, $this->complemento, false);
-
-                            if ($objEndereco->detalhe()) {
-                                $objEndereco->edita();
-                            } else {
-                                $objEndereco->cadastra();
-                            }
-                        } else {
-                            $this->cep = idFederal2int($this->cep);
-                            $objEnderecoExterno = new clsEnderecoExterno($this->ref_idpes, "1", $this->idtlog, $this->logradouro, $this->numero, $this->letra, $this->complemento, $this->bairro, $this->cep, $this->cidade, $this->sigla_uf, false);
-
-                            if ($objEnderecoExterno->existe()) {
-                                $objEnderecoExterno->edita();
-                            } else {
-                                $objEnderecoExterno->cadastra();
-                            }
-                        }
                         //-----------------------EDITA CURSO------------------------//
                         $this->escola_curso = unserialize(urldecode($this->escola_curso));
                         $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao));
@@ -2342,10 +2103,6 @@ class indice extends clsCadastro
                     }
                 }
             } elseif ($this->sem_cnpj) {
-                $objComplemento = new clsPmieducarEscolaComplemento($this->cod_escola, $this->pessoa_logada, null, idFederal2int($this->cep_), $this->numero, $this->complemento, $this->p_email, $this->fantasia, $this->cidade, $this->bairro, $this->logradouro, $this->p_ddd_telefone_1, $this->p_telefone_1, $this->p_ddd_telefone_fax, $this->p_telefone_fax);
-                $editou1 = $objComplemento->edita();
-
-                if ($editou1) {
                     //-----------------------EDITA CURSO------------------------//
                     $this->escola_curso = unserialize(urldecode($this->escola_curso));
                     $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao));
@@ -2376,10 +2133,6 @@ class indice extends clsCadastro
                     throw new HttpResponseException(
                         new RedirectResponse('educar_escola_lst.php')
                     );
-                } else {
-                    $this->mensagem = "Edição não realizada (clsPmieducarEscolaComplemento).<br>";
-                    return false;
-                }
             }
         }
 
@@ -2397,8 +2150,6 @@ class indice extends clsCadastro
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
-            $auditoria = new clsModulesAuditoriaGeral("escola", $this->pessoa_logada, $this->cod_escola);
-            $auditoria->exclusao($escola);
             $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
 
             throw new HttpResponseException(
@@ -2456,6 +2207,7 @@ class indice extends clsCadastro
                 $this->validaSalasUtilizadasForaEscola() &&
                 $this->validaSalasClimatizadas() &&
                 $this->validaSalasAcessibilidade() &&
+                $this->validaEquipamentosAcessoInternet() &&
                 $this->validaRecursos() &&
                 $this->validaQuantidadeComputadoresAlunos() &&
                 $this->validaQuantidadeEquipamentosEnsino() &&
@@ -2564,11 +2316,26 @@ class indice extends clsCadastro
     protected function validaDadosTelefones()
     {
         return $this->validaDDDTelefone($this->p_ddd_telefone_1, $this->p_telefone_1, 'Telefone 1') &&
-        $this->validaTelefone($this->p_telefone_1, 'Telefone 1') &&
-        $this->validaDDDTelefone($this->p_ddd_telefone_2, $this->p_telefone_2, 'Telefone 2') &&
-        $this->validaTelefone($this->p_telefone_2, 'Telefone 2') &&
-        $this->validaDDDTelefone($this->p_ddd_telefone_mov, $this->p_telefone_mov, 'Celular') &&
-        $this->validaDDDTelefone($this->p_ddd_telefone_fax, $this->p_telefone_fax, 'Fax');
+            $this->validaTelefone($this->p_telefone_1, 'Telefone 1') &&
+            $this->validaDDDTelefone($this->p_ddd_telefone_2, $this->p_telefone_2, 'Telefone 2') &&
+            $this->validaTelefone($this->p_telefone_2, 'Telefone 2') &&
+            $this->validaDDDTelefone($this->p_ddd_telefone_mov, $this->p_telefone_mov, 'Celular') &&
+            $this->validaDDDTelefone($this->p_ddd_telefone_fax, $this->p_telefone_fax, 'Fax') &&
+            $this->validaTelefones($this->p_telefone_1, $this->p_telefone_2);
+    }
+
+    protected function validaTelefones($telefone1, $telefone2)
+    {
+        if (empty($telefone1) && empty($telefone2)) {
+            return true;
+        }
+
+        if ($telefone1 == $telefone2) {
+            $this->mensagem = 'O campo: Telefone 2 não pode ter o mesmo valor do campo: Telefone 1';
+            return false;
+        }
+
+        return true;
     }
 
     protected function validaDDDTelefone($valorDDD = null, $valorTelefone = null, $nomeCampo)
@@ -2658,7 +2425,6 @@ class indice extends clsCadastro
                     old('managers_chief')[$key],
                     old('servidor_id')[$key],
                     old('managers_access_criteria_id')[$key],
-                    old('managers_access_criteria_description')[$key],
                     old('managers_link_type_id')[$key],
                     old('managers_email')[$key],
                 ];
@@ -2691,7 +2457,6 @@ class indice extends clsCadastro
         $this->inputsHelper()->select('managers_role_id', $options);
         $this->campoRotulo('detalhes', 'Detalhes', '<a class="btn-detalhes" onclick="modalOpen(this)">Dados adicionais do(a) gestor(a)</a>');
         $this->campoOculto('managers_access_criteria_id', null);
-        $this->campoOculto('managers_access_criteria_description', null);
         $this->campoOculto('managers_link_type_id', null);
         $this->campoOculto('managers_email', null);
 
@@ -2723,7 +2488,6 @@ class indice extends clsCadastro
             $this->managers_chief[$key] ?? (int)$schoolManager->chief,
             $this->servidor_id[$key] ?? $schoolManager->employee_id,
             $this->managers_access_criteria_id[$key] ?? $schoolManager->access_criteria_id,
-            $this->managers_access_criteria_description[$key] ?? $schoolManager->access_criteria_description,
             $this->managers_link_type_id[$key] ?? $schoolManager->link_type_id,
             $this->managers_email[$key] ?? $schoolManager->individual->person->email,
         ];
@@ -2748,7 +2512,6 @@ class indice extends clsCadastro
             $valueObject->schoolId = $schoolId;
             $valueObject->roleId = $this->managers_role_id[$key] ?: null;
             $valueObject->accessCriteriaId = $this->managers_access_criteria_id[$key] ?: null;
-            $valueObject->accessCriteriaDescription = $this->managers_access_criteria_description[$key];
             $valueObject->linkTypeId = $this->managers_link_type_id[$key] ?: null;
             $valueObject->isChief = $this->managers_chief[$key];
             $schoolService->storeManager($valueObject);
@@ -2809,13 +2572,12 @@ class indice extends clsCadastro
             $valueObject->inepId = $this->managers_inep_id[$key];
             $valueObject->roleId = $this->managers_role_id[$key];
             $valueObject->accessCriteriaId = $this->managers_access_criteria_id[$key];
-            $valueObject->accessCriteriaDescription = $this->managers_access_criteria_description[$key];
             $valueObject->linkTypeId = $this->managers_link_type_id[$key];
             $valueObject->isChief = $this->managers_chief[$key];
             $managers[] = $valueObject;
         }
 
-        $managersValidator = new SchoolManagers($managers, $this->dependencia_administrativa);
+        $managersValidator = new SchoolManagers($managers, $this->dependencia_administrativa, $this->situacao_funcionamento);
 
         if (!$managersValidator->isValid()) {
             $this->mensagem = implode('<br>', $managersValidator->getMessage());
@@ -3021,6 +2783,16 @@ class indice extends clsCadastro
         return true;
     }
 
+    protected function validaEquipamentosAcessoInternet()
+    {
+        if(in_array(2, $this->equipamentos_acesso_internet) && !in_array(3, $this->rede_local)) {
+            $this->mensagem = "O campo: <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> não deve ser preenchido com a opção: <b>Dispositivos pessoais (computadores portáteis, celulares, tablets, etc.)</b> quando o campo: <b>Rede local de interligação de computadores</b> não possuir a opção: <b>Wireless</b> selecionada.";
+            return false;
+        }
+
+        return true;
+    }
+
     protected function validaRecursos()
     {
         $algumCampoPreenchido = false;
@@ -3043,6 +2815,12 @@ class indice extends clsCadastro
 
     protected function validaQuantidadeComputadoresAlunos()
     {
+        $quantidadesNaoPreenchidas = (
+            $this->quantidade_computadores_alunos_mesa == '' &&
+            $this->quantidade_computadores_alunos_portateis == '' &&
+            $this->quantidade_computadores_alunos_tablets == ''
+        );
+
         if ($this->quantidade_computadores_alunos_mesa == '0') {
             $this->mensagem = 'O campo: <b>Computadores de mesa</b> não pode ser preenchido com 0';
             return false;
@@ -3055,6 +2833,11 @@ class indice extends clsCadastro
 
         if ($this->quantidade_computadores_alunos_tablets == '0') {
             $this->mensagem = 'O campo: <b>Tablets</b> não pode ser preenchido com 0';
+            return false;
+        }
+
+        if (in_array(EquipamentosAcessoInternet::COMPUTADOR_MESA, $this->equipamentos_acesso_internet) && $quantidadesNaoPreenchidas) {
+            $this->mensagem = 'Preencha pelo menos um dos campos da seção <b>Quantidade de computadores de uso dos alunos</b> quando o campo <b>Equipamentos que os aluno(a)s usam para acessar a internet da escola</b> for preenchido com <b>Computadores de mesa, portáteis e tablets da escola (no laboratório de informática, biblioteca, sala de aula, etc.)</b>.';
             return false;
         }
 

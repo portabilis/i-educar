@@ -2,10 +2,61 @@
 
 namespace App\Repositories;
 
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
 class EducacensoRepository
 {
+    /**
+     * @param int $year
+     * @param int $school
+     *
+     * @return Builder
+     */
+    public function getBuilderForRecord20($year, $school)
+    {
+        return DB::table('public.educacenso_record20')
+            ->where('anoTurma', $year)
+            ->where('codEscola', $school);
+    }
+
+    /**
+     * @param int $school
+     *
+     * @return Builder
+     */
+    public function getBuilderForRecord40($school)
+    {
+        return DB::table('public.educacenso_record40')
+            ->where('codEscola', $school);
+    }
+
+    /**
+     * @param int $year
+     * @param int $school
+     *
+     * @return Builder
+     */
+    public function getBuilderForRecord50($year, $school)
+    {
+        return DB::table('public.educacenso_record50')
+            ->where('anoTurma', $year)
+            ->where('codEscola', $school);
+    }
+
+    /**
+     * @param int $year
+     * @param int $school
+     *
+     * @return Builder
+     */
+    public function getBuilderForRecord60($year, $school)
+    {
+        return DB::table('public.educacenso_record60')
+            ->where('anoTurma', $year)
+            ->where('codEscola', $school);
+    }
+
     /**
      * @param $sql
      * @param array $params
@@ -35,13 +86,13 @@ class EducacensoRepository
               FROM pmieducar.ano_letivo_modulo
               WHERE ano_letivo_modulo.ref_ano = :year AND ano_letivo_modulo.ref_ref_cod_escola = e.cod_escola) AS "fimAnoLetivo",
             j.fantasia AS nome,
-            COALESCE(ep.cep, ee.cep) AS cep,
+            ep.cep AS cep,
             municipio.cod_ibge AS "codigoIbgeMunicipio",
-            distrito.cod_ibge AS "codigoIbgeDistrito",
-            COALESCE(l.idtlog || l.nome, ee.idtlog || ee.logradouro) AS logradouro,
-            COALESCE(ep.numero, ee.numero) AS numero,
-            COALESCE(ep.complemento, ee.complemento) AS complemento,
-            COALESCE(bairro.nome, ee.bairro) AS bairro,
+            districts.ibge_code AS "codigoIbgeDistrito",
+            l.nome AS logradouro,
+            ep.numero AS numero,
+            ep.complemento AS complemento,
+            bairro.nome AS bairro,
             (SELECT COALESCE(
               (SELECT min(fone_pessoa.ddd)
                     FROM cadastro.fone_pessoa
@@ -52,7 +103,7 @@ class EducacensoRepository
             (SELECT COALESCE(
               (SELECT min(fone_pessoa.fone)
                     FROM cadastro.fone_pessoa
-                    WHERE j.idpes = fone_pessoa.idpes),
+                    WHERE j.idpes = fone_pessoa.idpes AND fone_pessoa.tipo = 1),
               (SELECT min(telefone)
                 FROM pmieducar.escola_complemento
                 WHERE escola_complemento.ref_cod_escola = e.cod_escola))) AS telefone,
@@ -95,7 +146,7 @@ class EducacensoRepository
             e.esfera_administrativa AS "esferaAdministrativa",
             e.cod_escola AS "idEscola",
             municipio.idmun AS "idMunicipio",
-            distrito.iddis AS "idDistrito",
+            districts.id AS "idDistrito",
             i.cod_instituicao AS "idInstituicao",
             uf.sigla_uf AS "siglaUf",
             (SELECT EXTRACT(YEAR FROM min(ano_letivo_modulo.data_inicio))
@@ -110,28 +161,11 @@ class EducacensoRepository
             INNER JOIN cadastro.pessoa p ON (e.ref_idpes = p.idpes)
             INNER JOIN cadastro.juridica j ON (j.idpes = p.idpes)
             LEFT JOIN modules.educacenso_cod_escola ece ON (e.cod_escola = ece.cod_escola)
-            LEFT JOIN cadastro.endereco_externo ee ON (ee.idpes = p.idpes)
             LEFT JOIN cadastro.endereco_pessoa ep ON (ep.idpes = p.idpes)
-            LEFT JOIN public.bairro ON (bairro.idbai = COALESCE(ep.idbai, (SELECT b.idbai
-                                                                       FROM public.bairro b
-                                                                           INNER JOIN cadastro.endereco_externo ee
-                                                                               ON (UPPER(ee.bairro) = UPPER(b.nome))
-                                                                       WHERE ee.idpes = e.ref_idpes
-                                                                       LIMIT 1)))
-            LEFT JOIN public.municipio ON (municipio.idmun = COALESCE(bairro.idmun, (SELECT m.idmun
-                                                                           FROM public.municipio m
-                                                                          INNER JOIN cadastro.endereco_externo ee
-                                                                             ON (UPPER(ee.cidade) = UPPER(m.nome))
-                                                                          WHERE ee.idpes = e.ref_idpes
-                                                                          LIMIT 1)))
-            LEFT JOIN public.uf ON (uf.sigla_uf = COALESCE(municipio.sigla_uf, ee.sigla_uf))
-            LEFT JOIN public.distrito ON (distrito.idmun = COALESCE(bairro.idmun, (SELECT d.idmun
-                                                                       FROM public.distrito d
-                                                                      INNER JOIN public.municipio m on d.idmun = m.idmun
-                                                                      INNER JOIN cadastro.endereco_externo ee
-                                                                         ON (UPPER(ee.cidade) = UPPER(m.nome))
-                                                                       WHERE ee.idpes = e.ref_idpes
-                                                                       LIMIT 1)))
+            LEFT JOIN public.bairro ON (bairro.idbai = ep.idbai)
+            LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
+            LEFT JOIN public.uf ON (uf.sigla_uf = municipio.sigla_uf)
+            LEFT JOIN public.districts ON (districts.id = e.iddis)
 
             LEFT JOIN urbano.cep_logradouro_bairro clb ON (clb.idbai = ep.idbai AND clb.idlog = ep.idlog AND clb.cep = ep.cep)
             LEFT JOIN urbano.cep_logradouro cl ON (cl.idlog = clb.idlog AND clb.cep = cl.cep)
@@ -253,7 +287,9 @@ SQL;
                 escola.compartilha_espacos_atividades_integracao AS "compartilhaEspacosAtividadesIntegracao",
                 escola.usa_espacos_equipamentos_atividades_regulares AS "usaEspacosEquipamentosAtividadesRegulares",
                 pessoa.url AS "url",
-                escola.projeto_politico_pedagogico AS "projetoPoliticoPedagogico"
+                escola.projeto_politico_pedagogico AS "projetoPoliticoPedagogico",
+                escola.qtd_vice_diretor AS "qtdViceDiretor",
+                escola.qtd_orientador_comunitario AS "qtdOrientadorComunitario"
             FROM pmieducar.escola
             INNER JOIN cadastro.juridica ON juridica.idpes = escola.ref_idpes
             INNER JOIN cadastro.pessoa ON pessoa.idpes = escola.ref_idpes
@@ -273,28 +309,9 @@ SQL;
      */
     public function getDataForRecord40($school)
     {
-        $sql = <<<'SQL'
-            SELECT
-               40 AS registro,
-               educacenso_cod_escola.cod_escola_inep AS "inepEscola",
-               school_managers.employee_id AS "codigoPessoa",
-               educacenso_cod_docente.cod_docente_inep AS "inepGestor",
-               school_managers.role_id AS cargo,
-               school_managers.access_criteria_id AS "criterioAcesso",
-               school_managers.access_criteria_description AS "especificacaoCriterioAcesso",
-               school_managers.link_type_id AS "tipoVinculo",
-               escola.dependencia_administrativa AS "dependenciaAdministrativa"
-          FROM school_managers
-          JOIN pmieducar.escola ON escola.cod_escola = school_managers.school_id
-     LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
-     LEFT JOIN pmieducar.servidor ON servidor.cod_servidor = school_managers.employee_id
-     LEFT JOIN modules.educacenso_cod_docente ON educacenso_cod_docente.cod_servidor = servidor.cod_servidor
-        WHERE school_managers.school_id = :school
-SQL;
-
-        return $this->fetchPreparedQuery($sql, [
-            'school' => $school,
-        ]);
+        return $this->getBuilderForRecord40($school)
+            ->get()
+            ->toArray();
     }
 
     /**
@@ -304,156 +321,9 @@ SQL;
      */
     public function getDataForRecord20($school, $year)
     {
-        $sql = ' SELECT turma.cod_turma AS "codTurma",
-                   educacenso_cod_escola.cod_escola_inep AS "codigoEscolaInep",
-                   turma.ref_ref_cod_escola AS "codEscola",
-                   turma.ref_cod_curso AS "codCurso",
-                   turma.ref_ref_cod_serie AS "codSerie",
-                   turma.nm_turma AS "nomeTurma",
-                   turma.ano AS "anoTurma",
-                   turma.hora_inicial AS "horaInicial",
-                   turma.hora_final AS "horaFinal",
-                   turma.dias_semana AS "diasSemana",
-                   turma.tipo_atendimento AS "tipoAtendimento",
-                   turma.atividades_complementares AS "atividadesComplementares",
-                   turma.etapa_educacenso AS "etapaEducacenso",
-                   juridica.fantasia AS "nomeEscola",
-                   turma.tipo_mediacao_didatico_pedagogico AS "tipoMediacaoDidaticoPedagogico",
-
-                   COALESCE((
-                        SELECT 1
-                        FROM modules.professor_turma
-                        INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
-                        WHERE professor_turma.turma_id = turma.cod_turma
-                        LIMIT 1),0)as "possuiServidor",
-
-                   COALESCE((
-                        SELECT 1
-                        FROM modules.professor_turma
-                        INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
-                        WHERE professor_turma.turma_id = turma.cod_turma
-                        AND professor_turma.funcao_exercida IN (1, 5)
-                        LIMIT 1),0)as "possuiServidorDocente",
-
-                   COALESCE((
-                        SELECT 1
-                        FROM modules.professor_turma
-                        INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
-                        WHERE professor_turma.turma_id = turma.cod_turma
-                        AND professor_turma.funcao_exercida = 4
-                        LIMIT 1),0)as "possuiServidorLibras",
-
-                   COALESCE((
-                        SELECT 1
-                        FROM modules.professor_turma
-                        INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
-                        WHERE professor_turma.turma_id = turma.cod_turma
-                        AND professor_turma.funcao_exercida IN (4, 6)
-                        LIMIT 1),0)as "possuiServidorLibrasOuAuxiliarEad",
-
-                   COALESCE((
-                        SELECT 1
-                        FROM modules.professor_turma
-                        INNER JOIN pmieducar.servidor ON (servidor.cod_servidor = professor_turma.servidor_id)
-                        WHERE professor_turma.turma_id = turma.cod_turma
-                        AND professor_turma.funcao_exercida NOT IN (4, 6)
-                        LIMIT 1),0)as "possuiServidorDiferenteLibrasOuAuxiliarEad",
-
-                   COALESCE((
-                        SELECT 1
-                        FROM pmieducar.matricula_turma
-                        JOIN pmieducar.matricula
-                        ON matricula.cod_matricula = matricula_turma.ref_cod_matricula
-                        JOIN pmieducar.aluno
-                        ON aluno.cod_aluno = matricula.ref_cod_aluno
-                        JOIN cadastro.fisica_deficiencia
-                        ON fisica_deficiencia.ref_idpes = aluno.ref_idpes
-                        JOIN cadastro.deficiencia
-                        ON fisica_deficiencia.ref_cod_deficiencia = deficiencia.cod_deficiencia
-                        AND deficiencia.deficiencia_educacenso IN (3,4,5)
-                        WHERE matricula_turma.ref_cod_turma = turma.cod_turma
-                        AND matricula_turma.data_enturmacao <= instituicao.data_educacenso
-                        AND coalesce(matricula_turma.data_exclusao, \'2999-01-01\'::date) > instituicao.data_educacenso
-
-                        LIMIT 1),0)as "possuiAlunoNecessitandoTradutor",
-
-                   COALESCE((
-                        SELECT 1
-                        FROM modules.professor_turma
-                        INNER JOIN pmieducar.servidor
-                        ON servidor.cod_servidor = professor_turma.servidor_id
-                        JOIN cadastro.fisica_deficiencia
-                        ON fisica_deficiencia.ref_idpes = servidor.cod_servidor
-                        JOIN cadastro.deficiencia
-                        ON fisica_deficiencia.ref_cod_deficiencia = deficiencia.cod_deficiencia
-                        AND deficiencia.deficiencia_educacenso IN (3,4,5)
-                        WHERE professor_turma.turma_id = turma.cod_turma
-                        LIMIT 1),0)as "possuiServidorNecessitandoTradutor",
-
-
-                turma.local_funcionamento_diferenciado as "localFuncionamentoDiferenciado",
-                escola.local_funcionamento as "localFuncionamento",
-                curso.modalidade_curso as "modalidadeCurso",
-                turma.cod_curso_profissional as "codCursoProfissional"
-
-              FROM pmieducar.escola
-              LEFT JOIN modules.educacenso_cod_escola ON (escola.cod_escola = educacenso_cod_escola.cod_escola)
-             JOIN cadastro.juridica ON (juridica.idpes = escola.ref_idpes)
-             JOIN pmieducar.turma ON (turma.ref_ref_cod_escola = escola.cod_escola)
-             JOIN pmieducar.curso ON (turma.ref_cod_curso = curso.cod_curso)
-             JOIN pmieducar.instituicao ON (escola.ref_cod_instituicao = instituicao.cod_instituicao)
-             WHERE escola.cod_escola = :school
-               AND COALESCE(turma.nao_informar_educacenso, 0) = 0
-               AND turma.ano = :year
-               AND turma.ativo = 1
-               AND turma.visivel = TRUE
-               AND escola.ativo = 1
-               AND
-        ' . $this->enrollmentConditionSubquery();
-
-        return $this->fetchPreparedQuery($sql, [
-            'school' => $school,
-            'year' => $year,
-        ]);
-    }
-
-    private function enrollmentConditionSubquery()
-    {
-        return " (
-                exists (
-                  SELECT 1
-                  FROM pmieducar.matricula_turma
-                  JOIN pmieducar.matricula
-                      ON matricula.cod_matricula = matricula_turma.ref_cod_matricula
-                  WHERE matricula_turma.ref_cod_turma = turma.cod_turma
-                  AND matricula.ativo = 1
-                  AND matricula_turma.data_enturmacao < instituicao.data_educacenso
-                  AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
-                )
-                OR
-                exists (
-                  SELECT 1
-                  FROM pmieducar.matricula_turma
-                  JOIN pmieducar.matricula
-                      ON matricula.cod_matricula = matricula_turma.ref_cod_matricula
-                  WHERE matricula_turma.ref_cod_turma = turma.cod_turma
-                  AND matricula.ativo = 1
-                  AND matricula_turma.data_enturmacao = instituicao.data_educacenso
-                  AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
-                  AND NOT EXISTS (
-                    SELECT 1
-                    FROM pmieducar.matricula_turma smt
-                    JOIN pmieducar.matricula sm
-                      ON sm.cod_matricula = smt.ref_cod_matricula
-                    WHERE sm.ref_cod_aluno = matricula.ref_cod_aluno
-                    AND sm.ativo = 1
-                    AND sm.ano = matricula.ano
-                    AND smt.data_enturmacao < matricula_turma.data_enturmacao
-                    AND coalesce(smt.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
-                  )
-                )
-              )
-        ";
+        return $this->getBuilderForRecord20($year, $school)
+            ->get()
+            ->toArray();
     }
 
     /**
@@ -485,159 +355,16 @@ SQL;
 
     public function getDataForRecord50($year, $school)
     {
-        $sql = <<<'SQL'
-            SELECT    DISTINCT
-                       '50' AS registro,
-                       educacenso_cod_escola.cod_escola_inep AS "inepEscola",
-                       servidor.cod_servidor AS "codigoPessoa",
-                       educacenso_cod_docente.cod_docente_inep AS "inepDocente",
-                       turma.cod_turma AS "codigoTurma",
-                       null AS "inepTurma",
-                       professor_turma.funcao_exercida AS "funcaoDocente",
-                       professor_turma.tipo_vinculo AS "tipoVinculo",
-                       tbl_componentes.componentes AS componentes,
-                       relatorio.get_nome_escola(escola.cod_escola) AS "nomeEscola",
-                       pessoa.nome AS "nomeDocente",
-                       servidor.cod_servidor AS "idServidor",
-                       instituicao.cod_instituicao AS "idInstituicao",
-                       professor_turma.id AS "idAlocacao",
-                       turma.tipo_mediacao_didatico_pedagogico AS "tipoMediacaoTurma",
-                       turma.tipo_atendimento AS "tipoAtendimentoTurma",
-                       turma.nm_turma AS "nomeTurma",
-                       escola.dependencia_administrativa AS "dependenciaAdministrativaEscola",
-                       turma.etapa_educacenso AS "etapaEducacensoTurma"
-                 FROM pmieducar.servidor
-                 JOIN modules.professor_turma     ON professor_turma.servidor_id = servidor.cod_servidor
-                 JOIN pmieducar.turma             ON turma.cod_turma = professor_turma.turma_id
-                                                 AND turma.ano = professor_turma.ano
-                 JOIN pmieducar.escola            ON escola.cod_escola = turma.ref_ref_cod_escola
-                 JOIN pmieducar.instituicao       ON escola.ref_cod_instituicao = instituicao.cod_instituicao
-                 JOIN cadastro.pessoa             ON pessoa.idpes = servidor.cod_servidor
-            LEFT JOIN pmieducar.servidor_alocacao ON servidor_alocacao.ref_cod_escola = escola.cod_escola
-                                                 AND servidor_alocacao.ref_cod_servidor = servidor.cod_servidor
-                                                 AND servidor_alocacao.ano = turma.ano
-            LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
-            LEFT JOIN modules.educacenso_cod_docente ON educacenso_cod_docente.cod_servidor = servidor.cod_servidor
-            LEFT JOIN modules.educacenso_cod_turma ON educacenso_cod_turma.cod_turma = turma.cod_turma
-            LEFT JOIN modules.professor_turma_disciplina ON professor_turma_disciplina.professor_turma_id = professor_turma.id,
-              LATERAL (
-                         SELECT DISTINCT array_agg(DISTINCT cc.codigo_educacenso) AS componentes
-                         FROM modules.componente_curricular cc
-                                  INNER JOIN modules.professor_turma_disciplina ptd ON (cc.id = ptd.componente_curricular_id)
-                         WHERE   ptd.professor_turma_id = professor_turma.id
-                      ) AS tbl_componentes
-                WHERE turma.ano = :year
-                  AND turma.ativo = 1
-                  AND turma.visivel = true
-                  AND escola.ativo = 1
-                  AND escola.cod_escola = :school
-                  AND COALESCE(turma.nao_informar_educacenso, 0) = 0
-                  AND servidor.ativo = 1
-                  AND coalesce(servidor_alocacao.data_admissao, '1900-01-01'::date) <= instituicao.data_educacenso
-                  AND coalesce(servidor_alocacao.data_saida, '2999-01-01'::date) >= instituicao.data_educacenso
-                  AND
-SQL;
-        $sql .= $this->enrollmentConditionSubquery();
-
-        return $this->fetchPreparedQuery($sql, [
-            'year' => (int)$year,
-            'school' => (int)$school,
-        ]);
+        return $this->getBuilderForRecord50($year, $school)
+            ->get()
+            ->toArray();
     }
 
     public function getDataForRecord60($school, $year)
     {
-        $sql = <<<'SQL'
-                  SELECT  '60' AS registro,
-                    educacenso_cod_escola.cod_escola_inep "inepEscola",
-                    aluno.ref_idpes "codigoPessoa",
-                    educacenso_cod_aluno.cod_aluno_inep "inepAluno",
-                    turma.cod_turma "codigoTurma",
-                    null "inepTurma",
-                    null "matriculaAluno",
-                    matricula_turma.etapa_educacenso "etapaAluno",
-                    COALESCE((ARRAY[1] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoDesenvolvimentoFuncoesGognitivas",
-                    COALESCE((ARRAY[2] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoDesenvolvimentoVidaAutonoma",
-                    COALESCE((ARRAY[3] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnriquecimentoCurricular",
-                    COALESCE((ARRAY[4] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoInformaticaAcessivel",
-                    COALESCE((ARRAY[5] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoLibras",
-                    COALESCE((ARRAY[6] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoLinguaPortuguesa",
-                    COALESCE((ARRAY[7] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoSoroban",
-                    COALESCE((ARRAY[8] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoBraile",
-                    COALESCE((ARRAY[9] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoOrientacaoMobilidade",
-                    COALESCE((ARRAY[10] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoCaa",
-                    COALESCE((ARRAY[11] <@ matricula_turma.tipo_atendimento)::INT, 0) "tipoAtendimentoEnsinoRecursosOpticosNaoOpticos",
-                    aluno.recebe_escolarizacao_em_outro_espaco AS "recebeEscolarizacaoOutroEspacao",
-                    (CASE WHEN transporte_aluno.responsavel > 0 THEN 1
-                        ELSE transporte_aluno.responsavel END) AS "transportePublico",
-                    transporte_aluno.responsavel AS "poderPublicoResponsavelTransporte",
-                    (ARRAY[4] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteBicicleta",
-                    (ARRAY[2] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteMicroonibus",
-                    (ARRAY[3] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteOnibus",
-                    (ARRAY[5] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteTracaoAnimal",
-                    (ARRAY[1] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteVanKonbi",
-                    (ARRAY[6] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteOutro",
-                    (ARRAY[7] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteAquaviarioCapacidade5",
-                    (ARRAY[8] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteAquaviarioCapacidade5a15",
-                    (ARRAY[9] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteAquaviarioCapacidade15a35",
-                    (ARRAY[10] <@ aluno.veiculo_transporte_escolar)::INT "veiculoTransporteAquaviarioCapacidadeAcima35",
-                    relatorio.get_nome_escola(escola.cod_escola) "nomeEscola",
-                    cadastro.pessoa.nome "nomeAluno",
-                    aluno.cod_aluno "codigoAluno",
-                    turma.tipo_atendimento "tipoAtendimentoTurma",
-                    turma.cod_turma "codigoTurma",
-                    turma.etapa_educacenso "etapaTurma",
-                    matricula.cod_matricula "codigoMatricula",
-                    turma.nm_turma "nomeTurma",
-                    matricula_turma.tipo_atendimento "tipoAtendimentoMatricula",
-                    turma.tipo_mediacao_didatico_pedagogico "tipoMediacaoTurma",
-                    aluno.veiculo_transporte_escolar "veiculoTransporteEscolar",
-                    curso.modalidade_curso as "modalidadeCurso"
-                     FROM pmieducar.aluno
-                     JOIN pmieducar.matricula ON matricula.ref_cod_aluno = aluno.cod_aluno
-                     JOIN pmieducar.escola ON escola.cod_escola = matricula.ref_ref_cod_escola
-                     JOIN pmieducar.matricula_turma ON matricula_turma.ref_cod_matricula = matricula.cod_matricula
-                     JOIN pmieducar.instituicao ON instituicao.cod_instituicao = escola.ref_cod_instituicao
-                     JOIN pmieducar.turma ON turma.cod_turma = matricula_turma.ref_cod_turma
-                     JOIN pmieducar.curso ON curso.cod_curso = turma.ref_cod_curso
-                     JOIN cadastro.pessoa ON pessoa.idpes = aluno.ref_idpes
-                LEFT JOIN modules.educacenso_cod_escola ON educacenso_cod_escola.cod_escola = escola.cod_escola
-                LEFT JOIN modules.educacenso_cod_turma ON educacenso_cod_turma.cod_turma = turma.cod_turma
-                LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = aluno.cod_aluno
-                LEFT JOIN modules.transporte_aluno ON transporte_aluno.aluno_id = aluno.cod_aluno
-                    WHERE matricula.ano = :year
-                      AND matricula.ativo = 1
-                      AND turma.ativo = 1
-                      AND escola.cod_escola = :school
-                      AND COALESCE(turma.nao_informar_educacenso, 0) = 0
-                      AND (
-                          (
-                            matricula_turma.data_enturmacao < instituicao.data_educacenso
-                            AND coalesce(matricula_turma.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
-                          )
-                       OR (
-                           matricula_turma.data_enturmacao = instituicao.data_educacenso AND
-                           (
-                             NOT EXISTS(
-                                SELECT 1
-                                FROM pmieducar.matricula_turma smt
-                                JOIN pmieducar.matricula sm
-                                  ON sm.cod_matricula = smt.ref_cod_matricula
-                                WHERE sm.ref_cod_aluno = matricula.ref_cod_aluno
-                                AND sm.ativo = 1
-                                AND sm.ano = matricula.ano
-                                AND smt.data_enturmacao < matricula_turma.data_enturmacao
-                                AND coalesce(smt.data_exclusao, '2999-01-01'::date) >= instituicao.data_educacenso
-                                 )
-                           )
-                          )
-                        );
-SQL;
-
-        return $this->fetchPreparedQuery($sql, [
-            'school' => $school,
-            'year' => $year,
-        ]);
+        return $this->getBuilderForRecord60($year, $school)
+            ->get()
+            ->toArray();
     }
 
     public function getCommonDataForRecord30($arrayPersonId, $schoolId)
@@ -815,8 +542,7 @@ SQL;
                 (ARRAY[9] <@ aluno.recursos_prova_inep)::INT "recursoBraile",
                 (ARRAY[14] <@ aluno.recursos_prova_inep)::INT "recursoNenhum",
                 fisica.nis_pis_pasep AS "nis",
-                documento.certidao_nascimento AS "certidaoNascimento",
-                aluno.justificativa_falta_documentacao AS "justificativaFaltaDocumentacao"
+                documento.certidao_nascimento AS "certidaoNascimento"
             FROM pmieducar.aluno
                  JOIN cadastro.fisica ON fisica.idpes = aluno.ref_idpes
             LEFT JOIN cadastro.documento ON documento.idpes = fisica.idpes

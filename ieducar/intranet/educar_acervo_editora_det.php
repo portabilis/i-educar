@@ -1,10 +1,8 @@
 <?php
 
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+use App\Models\State;
+
 
 class clsIndexBase extends clsBase
 {
@@ -56,13 +54,7 @@ class indice extends clsDetalhe
             $this->simpleRedirect('educar_acervo_editora_lst.php');
         }
 
-        $obj_ref_idtlog = new clsTipoLogradouro( $registro["ref_idtlog"] );
-        $det_ref_idtlog = $obj_ref_idtlog->detalhe();
-        $registro["ref_idtlog"] = $det_ref_idtlog["descricao"];
-
-        $obj_ref_sigla_uf = new clsUf( $registro["ref_sigla_uf"] );
-        $det_ref_sigla_uf = $obj_ref_sigla_uf->detalhe();
-        $registro["ref_sigla_uf"] = $det_ref_sigla_uf["nome"];
+        $registro["ref_sigla_uf"] = State::getNameByAbbreviation($registro["ref_sigla_uf"]);
 
         if( $registro["nm_editora"] )
         {

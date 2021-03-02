@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/Controller/Dispatcher/Abstract.php';
-require_once 'CoreExt/Controller/Dispatcher/Strategy/Interface.php';
 
 class CoreExt_Controller_Dispatcher_Strategy_PageStrategy extends CoreExt_Controller_Dispatcher_Abstract implements CoreExt_Controller_Dispatcher_Strategy_Interface
 {
@@ -93,8 +91,7 @@ class CoreExt_Controller_Dispatcher_Strategy_PageStrategy extends CoreExt_Contro
         $controllerFile = sprintf('%s.php', implode(DIRECTORY_SEPARATOR, $controllerFile));
 
         if (!file_exists($controllerFile)) {
-            require_once 'CoreExt/Exception/FileNotFoundException.php';
-            throw new CoreExt_Exception_FileNotFoundException('Nenhuma classe CoreExt_Controller_Page_Interface para o controller informado no caminho: "' . $controllerFile . '"');
+                        throw new CoreExt_Exception_FileNotFoundException('Nenhuma classe CoreExt_Controller_Page_Interface para o controller informado no caminho: "' . $controllerFile . '"');
         }
 
         require_once $controllerFile;

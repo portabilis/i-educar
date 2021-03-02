@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use iEducar\Modules\Educacenso\Model\ModalidadeCurso;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * LegacyCourse
  *
  * @property string $name Nome do curso
+ * @property LegacyGrade[] grades
  */
 class LegacyCourse extends Model
 {
@@ -64,5 +68,24 @@ class LegacyCourse extends Model
     public function getIsStandardCalendarAttribute()
     {
         return $this->padrao_ano_escolar;
+    }
+
+    /**
+     * Relacionamento com as series
+     *
+     * @return HasMany
+     */
+    public function grades()
+    {
+        return $this->hasMany(LegacyGrade::class, 'ref_cod_curso');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeIsEja($query)
+    {
+        return $query->where('modalidade_curso', ModalidadeCurso::EJA);
     }
 }

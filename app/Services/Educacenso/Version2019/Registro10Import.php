@@ -7,6 +7,7 @@ use App\Models\Educacenso\RegistroEducacenso;
 use App\Models\LegacySchool;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\RegistroImportInterface;
+use App\Services\Educacenso\Version2019\Models\Registro10Model;
 use App\User;
 use iEducar\Modules\Educacenso\Model\AbastecimentoAgua;
 use iEducar\Modules\Educacenso\Model\AreasExternas;
@@ -37,15 +38,15 @@ class Registro10Import implements RegistroImportInterface
     /**
      * @var Registro10
      */
-    private $model;
+    protected $model;
     /**
      * @var User
      */
-    private $user;
+    protected $user;
     /**
      * @var int
      */
-    private $year;
+    protected $year;
 
     /**
      * Faz a importação dos dados a partir da linha do arquivo
@@ -125,18 +126,18 @@ class Registro10Import implements RegistroImportInterface
         $school->qtd_secretario_escolar = $model->qtdSecretarioEscolar ?: null;
         $school->qtd_segurancas = $model->qtdSegurancas ?: null;
         $school->qtd_tecnicos = $model->qtdTecnicos ?: null;
-        $school->alimentacao_escolar_alunos = $model->alimentacaoEscolarAlunos;
+        $school->alimentacao_escolar_alunos = $model->alimentacaoEscolarAlunos ?: null;
         $school->organizacao_ensino = $this->getArrayOrganizacaoEnsino();
         $school->instrumentos_pedagogicos = $this->getArrayInstrumentosPedagogicos();
-        $school->educacao_indigena = $model->educacaoIndigena;
+        $school->educacao_indigena = $model->educacaoIndigena ?: null;
         $school->lingua_ministrada = $model->linguaIndigena ? LinguaMinistrada::INDIGENA : LinguaMinistrada::PORTUGUESA;
         $school->codigo_lingua_indigena = $this->getArrayLinguaIndigena();
-        $school->exame_selecao_ingresso = $model->exameSelecaoIngresso;
+        $school->exame_selecao_ingresso = $model->exameSelecaoIngresso ?: null;
         $school->reserva_vagas_cotas = $this->getArrayReservaVagas();
         $school->predio_compartilhado_outra_escola = $model->predioCompartilhadoOutraEscola ?: null;
-        $school->usa_espacos_equipamentos_atividades_regulares = $model->usaEspacosEquipamentosAtividadesRegulares;
+        $school->usa_espacos_equipamentos_atividades_regulares = $model->usaEspacosEquipamentosAtividadesRegulares ?: null;
         $school->orgaos_colegiados = $this->getArrayOrgaosColegiados();
-        $school->projeto_politico_pedagogico = $model->projetoPoliticoPedagogico;
+        $school->projeto_politico_pedagogico = $model->projetoPoliticoPedagogico ?: null;
 
         $school->save();
     }
@@ -147,12 +148,12 @@ class Registro10Import implements RegistroImportInterface
      */
     public static function getModel($arrayColumns)
     {
-        $registro = new Registro10();
+        $registro = new Registro10Model();
         $registro->hydrateModel($arrayColumns);
         return $registro;
     }
 
-    private function getSchool()
+    protected function getSchool()
     {
         return SchoolInep::where('cod_escola_inep', $this->model->codigoInep)->first();
     }

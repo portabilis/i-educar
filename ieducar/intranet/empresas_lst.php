@@ -1,9 +1,6 @@
 <?php
 
 $desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
 
 class clsIndex extends clsBase
 {
@@ -57,6 +54,7 @@ class indice extends clsListagem
         }
 
         $objPessoa = new clsPessoaJuridica();
+        $db = new clsBanco();
 
         if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
             $objPessoa->codUsuario = $this->pessoa_logada;
@@ -69,8 +67,8 @@ class indice extends clsListagem
             {
                 $total = $empresa['total'];
                 $cod_empresa = $empresa['idpes'];
-                $razao_social = $empresa['nome'];
-                $nome_fantasia = $empresa['fantasia'];
+                $razao_social = $db->escapeString($empresa['nome']);
+                $nome_fantasia = $db->escapeString($empresa['fantasia']);
                 $this->addLinhas( array( "<a href='empresas_det.php?cod_empresa={$cod_empresa}'><img src='imagens/noticia.jpg' border=0>$razao_social</a>", "<a href='empresas_det.php?cod_empresa={$cod_empresa}'>{$nome_fantasia}</a>" ) );
             }
         }
@@ -87,13 +85,9 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_pessoas_index.php"          => "Pessoas",
-         ""                                  => "Listagem de pessoas jur&iacute;dicas"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb("Listagem de pessoas jurídicas", [
+            url('intranet/educar_pessoas_index.php') => 'Pessoas',
+        ]);
     }
 }
 

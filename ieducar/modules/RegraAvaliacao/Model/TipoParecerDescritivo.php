@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/Enum.php';
 
 class RegraAvaliacao_Model_TipoParecerDescritivo extends CoreExt_Enum
 {
@@ -17,7 +16,7 @@ class RegraAvaliacao_Model_TipoParecerDescritivo extends CoreExt_Enum
         self::NENHUM => 'Não usar parecer descritivo',
         self::ETAPA_COMPONENTE => 'Um parecer por etapa e por componente curricular',
         self::ETAPA_GERAL => 'Um parecer por etapa, geral',
-        self::ANUAL_COMPONENTE => 'Uma parecer por ano letivo e por componente curricular',
+        self::ANUAL_COMPONENTE => 'Um parecer por ano letivo e por componente curricular',
         self::ANUAL_GERAL => 'Um parecer por ano letivo, geral',
     ];
 

@@ -46,7 +46,7 @@ class CnpjMantenedoraPrivadaTest extends TestCase
         $validator = new CnpjMantenedoraPrivada($registro);
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('Instituição sem fins lucrativos', $validator->getMessage());
+        $this->assertStringContainsString('Instituição sem fins lucrativos', $validator->getMessage());
     }
 
     private function getFakeRegistro()

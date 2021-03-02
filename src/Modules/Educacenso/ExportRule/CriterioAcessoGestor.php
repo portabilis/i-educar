@@ -15,8 +15,8 @@ class CriterioAcessoGestor implements EducacensoExportRule
      */
     public static function handle(RegistroEducacenso $registro40): RegistroEducacenso
     {
-        if ($registro40->criterioAcesso != SchoolManagerAccessCriteria::OUTRO) {
-            $registro40->especificacaoCriterioAcesso = null;
+        if ($registro40->situacaoFuncionamento != \iEducar\Modules\Educacenso\Model\SituacaoFuncionamento::EM_ATIVIDADE) {
+            $registro40->criterioAcesso = null;
         }
 
         return $registro40;

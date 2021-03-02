@@ -39,7 +39,7 @@ trait Formatters
         ),
             explode(" ", "a A e E i I o O u U n N c C"), $string);
 
-        return strtoupper($string);
+        return mb_strtoupper($string);
     }
 
     public function convertStringToAlpha($string)

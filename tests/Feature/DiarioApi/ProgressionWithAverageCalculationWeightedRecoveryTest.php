@@ -22,23 +22,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->enrollment = $this->getProgressionWithAverageCalculationWeightedRecoveryTest();
-    }
-
-    public function getProgressionWithAverageCalculationWeightedRecoveryTest()
-    {
-        $roundingTable = factory(LegacyRoundingTable::class, 'numeric')->create();
-        factory(LegacyValueRoundingTable::class, 10)->create([
-            'tabela_arredondamento_id' => $roundingTable->id,
-        ]);
-
-        $evaluationRule = factory(LegacyEvaluationRule::class, 'progressao-calculo-media-recuperacao-ponderada')->create([
-            'tabela_arredondamento_id' => $roundingTable->id,
-        ]);
-
-        $enrollment = $this->getCommonFakeData($evaluationRule);
-
-        return $enrollment;
+        $this->enrollment = $this->getProgressionWithAverageCalculationWeightedRecovery();
     }
 
     /**
@@ -72,11 +56,11 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Aprovado', $response->situacao);
+            self::assertEquals('Aprovado', $response->situacao);
         }
 
         $registration = $this->enrollment->registration;
-        $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
+        self::assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
     }
 
     /**
@@ -110,11 +94,11 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Retido', $response->situacao);
+            self::assertEquals('Reprovado por faltas', $response->situacao);
         }
 
         $registration = $this->enrollment->registration;
-        $this->assertEquals(App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS, $registration->refresh()->aprovado);
+        self::assertEquals(App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS, $registration->refresh()->aprovado);
     }
 
     /**
@@ -148,11 +132,11 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Em exame', $response->situacao);
+            self::assertEquals('Em exame', $response->situacao);
         }
 
         $registration = $this->enrollment->registration;
-        $this->assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
+        self::assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
     }
 
     /**
@@ -187,7 +171,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Em exame', $response->situacao);
+            self::assertEquals('Em exame', $response->situacao);
         }
 
         // Nota da etapa de recuperação
@@ -200,11 +184,11 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Aprovado após exame', $response->situacao);
+            self::assertEquals('Aprovado após exame', $response->situacao);
         }
 
         $registration = $this->enrollment->registration;
-        $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
+        self::assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
     }
 
     /**
@@ -239,7 +223,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Em exame', $response->situacao);
+            self::assertEquals('Em exame', $response->situacao);
         }
 
         // Nota da etapa de recuperação
@@ -252,11 +236,11 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Retido', $response->situacao);
+            self::assertEquals('Retido', $response->situacao);
         }
 
         $registration = $this->enrollment->registration;
-        $this->assertEquals(App_Model_MatriculaSituacao::REPROVADO, $registration->refresh()->aprovado);
+        self::assertEquals(App_Model_MatriculaSituacao::REPROVADO, $registration->refresh()->aprovado);
     }
 
     /**
@@ -291,11 +275,11 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Em exame', $response->situacao);
+            self::assertEquals('Em exame', $response->situacao);
         }
 
         $registration = $this->enrollment->registration;
-        $this->assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
+        self::assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
     }
 
     /**
@@ -329,7 +313,7 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Em exame', $response->situacao);
+            self::assertEquals('Em exame', $response->situacao);
         }
 
         // Nota da etapa de recuperação
@@ -342,11 +326,11 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Retido', $response->situacao);
+            self::assertEquals('Reprovado por faltas', $response->situacao);
         }
 
         $registration = $this->enrollment->registration;
-        $this->assertEquals(App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS, $registration->refresh()->aprovado);
+        self::assertEquals(App_Model_MatriculaSituacao::REPROVADO_POR_FALTAS, $registration->refresh()->aprovado);
     }
 
     /**
@@ -377,11 +361,11 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Cursando', $response->situacao);
+            self::assertEquals('Cursando', $response->situacao);
         }
 
         $registration = $this->enrollment->registration;
-        $this->assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
+        self::assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
     }
 
     /**
@@ -415,19 +399,19 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Aprovado', $response->situacao);
+            self::assertEquals('Aprovado', $response->situacao);
         }
 
         $registration = $this->enrollment->registration;
-        $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
+        self::assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
 
         // Remove falta da última etapa, de um dos componentes
         $randomDiscipline = $schoolClass->disciplines->random()->id;
         $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 4);
-        $this->assertEquals('Cursando', $response->situacao);
+        self::assertEquals('Cursando', $response->situacao);
 
         $registration = $this->enrollment->registration;
-        $this->assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
+        self::assertEquals(App_Model_MatriculaSituacao::EM_ANDAMENTO, $registration->refresh()->aprovado);
     }
 
     /**
@@ -461,15 +445,15 @@ class ProgressionWithAverageCalculationWeightedRecoveryTest extends TestCase
             $this->postAbsenceForStages($absence, $discipline);
             $response = $this->postScoreForStages($score, $discipline);
 
-            $this->assertEquals('Aprovado', $response->situacao);
+            self::assertEquals('Aprovado', $response->situacao);
         }
 
         // Remove falta de uma etapa
         $randomDiscipline = $schoolClass->disciplines->random()->id;
         $response = $this->deleteAbsence($this->enrollment, $randomDiscipline, 3);
-        $this->assertTrue($response->any_error_msg);
+        self::assertTrue($response->any_error_msg);
 
         $registration = $this->enrollment->registration;
-        $this->assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
+        self::assertEquals(App_Model_MatriculaSituacao::APROVADO, $registration->refresh()->aprovado);
     }
 }

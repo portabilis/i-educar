@@ -1,10 +1,7 @@
 <?php
 
 use iEducar\Legacy\Model;
-use Illuminate\Support\Facades\Session;
 
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsModulesEmpresaTransporteEscolar extends Model
 {
@@ -12,7 +9,6 @@ class clsModulesEmpresaTransporteEscolar extends Model
     public $ref_idpes;
     public $ref_resp_idpes;
     public $observacao;
-    public $pessoa_logada;
 
     public function __construct(
         $cod_empresa_transporte_escolar = null,
@@ -23,8 +19,6 @@ class clsModulesEmpresaTransporteEscolar extends Model
         $db = new clsBanco();
         $this->_schema = 'modules.';
         $this->_tabela = "{$this->_schema}empresa_transporte_escolar";
-
-        $this->pessoa_logada = Session::get('id_pessoa');
 
         $this->_campos_lista = $this->_todos_campos = ' cod_empresa_transporte_escolar, ref_idpes, ref_resp_idpes, observacao ';
 
@@ -72,8 +66,9 @@ class clsModulesEmpresaTransporteEscolar extends Model
             }
 
             if (is_string($this->observacao)) {
+                $observacao = $db->escapeString($this->observacao);
                 $campos .= "{$gruda}observacao";
-                $valores .= "{$gruda}'{$this->observacao}'";
+                $valores .= "{$gruda}'{$observacao}'";
                 $gruda = ', ';
             }
 
@@ -83,8 +78,6 @@ class clsModulesEmpresaTransporteEscolar extends Model
 
             if ($this->cod_empresa_transporte_escolar) {
                 $detalhe = $this->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('empresa_transporte_escolar', $this->pessoa_logada, $this->cod_empresa_transporte_escolar);
-                $auditoria->inclusao($detalhe);
             }
 
             return $this->cod_empresa_transporte_escolar;
@@ -115,14 +108,13 @@ class clsModulesEmpresaTransporteEscolar extends Model
             }
 
             if (is_string($this->observacao)) {
-                $set .= "{$gruda}observacao = '{$this->observacao}'";
+                $observacao = $db->escapeString($this->observacao);
+                $set .= "{$gruda}observacao = '{$observacao}'";
                 $gruda = ', ';
             }
             if ($set) {
                 $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_empresa_transporte_escolar = '{$this->cod_empresa_transporte_escolar}'");
-                $auditoria = new clsModulesAuditoriaGeral('empresa_transporte_escolar', $this->pessoa_logada, $this->cod_empresa_transporte_escolar);
-                $auditoria->alteracao($detalheAntigo, $this->detalhe());
 
                 return true;
             }
@@ -143,6 +135,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
         $nm_idpes = null,
         $nm_resp_idpes = null
     ) {
+        $db = new clsBanco();
         $sql = "SELECT {$this->_campos_lista}, (
           SELECT
             nome
@@ -178,6 +171,7 @@ class clsModulesEmpresaTransporteEscolar extends Model
         }
 
         if (is_string($nm_idpes)) {
+            $nome_idpes = $db->escapeString($nm_idpes);
             $filtros .= "
         {$whereAnd} exists (
           SELECT
@@ -186,24 +180,15 @@ class clsModulesEmpresaTransporteEscolar extends Model
             cadastro.pessoa
           WHERE
             cadastro.pessoa.idpes = ref_idpes
-            AND translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nm_idpes}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
+            AND unaccent(nome) ILIKE unaccent('%{$nome_idpes}%')
         )";
 
             $whereAnd = ' AND ';
         }
 
         if (is_string($nm_resp_idpes)) {
-            $filtros .= "
-        {$whereAnd} exists (
-          SELECT
-            1
-          FROM
-            cadastro.pessoa
-          WHERE
-            cadastro.pessoa.idpes = ref_resp_idpes
-            AND translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nm_resp_idpes}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
-        )";
-
+            $nome_resp_idpes = $db->escapeString($nm_resp_idpes);
+            $filtros .= "{$whereAnd} exists(SELECT 1 FROM cadastro.pessoa WHERE unaccent(nome) ILIKE unaccent('%{$nome_resp_idpes}%'))";
             $whereAnd = ' AND ';
         }
 
@@ -292,9 +277,6 @@ class clsModulesEmpresaTransporteEscolar extends Model
             $sql = "DELETE FROM {$this->_tabela} WHERE cod_empresa_transporte_escolar = '{$this->cod_empresa_transporte_escolar}'";
             $db = new clsBanco();
             $db->Consulta($sql);
-
-            $auditoria = new clsModulesAuditoriaGeral('empresa_transporte_escolar', $this->pessoa_logada, $this->cod_empresa_transporte_escolar);
-            $auditoria->exclusao($detalhe);
 
             return true;
         }

@@ -4,13 +4,6 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/clsPmieducarUsuario.inc.php';
-require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
-require_once 'include/pmieducar/clsPmieducarFuncionarioVinculo.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -34,11 +27,13 @@ class indice extends clsCadastro
     public $matricula_interna;
     public $data_expiracao;
     public $escola;
+    public $force_reset_password;
 
     public function Inicializar()
     {
         $retorno = 'Novo';
-
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, "educar_usuario_lst.php");
         $this->ref_pessoa = $_POST['ref_pessoa'];
 
         if ($_GET['ref_pessoa']) {
@@ -74,8 +69,7 @@ class indice extends clsCadastro
                     $this->$campo = $val;
                 }
 
-                $obj_permissoes = new clsPermissoes();
-                $this->fexcluir = $obj_permissoes->permissao_excluir(555, $this->pessoa_logada, 7, 'educar_usuario_lst.php', true);
+                $this->fexcluir = $obj_permissoes->permissao_excluir(555, $this->pessoa_logada, 7);
                 $retorno = 'Editar';
             }
         }
@@ -138,6 +132,11 @@ class indice extends clsCadastro
 
         $this->campoTexto('matricula', 'Matrícula', $this->matricula, 12, 12, true);
         $this->campoSenha('_senha', 'Senha', null, $cadastrando, empty($cadastrando) ? 'Preencha apenas se desejar alterar a senha' : '');
+
+        if (empty($this->_senha)) {
+            $this->inputsHelper()->checkbox('force_reset_password', ['label' => 'Forçar alteração de senha no primeiro acesso', $this->force_reset_password]);
+        }
+
         $this->campoEmail('email', 'E-mail usuário', $this->email, 50, 50, false, false, false, 'Utilizado para redefinir a senha, caso o usúario esqueça<br />Este campo pode ser gravado em branco, neste caso será solicitado um e-mail ao usuário, após entrar no sistema.');
         $this->campoTexto('matricula_interna', 'Matrícula interna', $this->matricula_interna, 30, 30, false, false, false, 'Utilizado somente para registro, caso a instituição deseje que a matrícula interna deste funcionário seja registrada no sistema.');
         $this->campoData('data_expiracao', 'Data de expiração', $this->data_expiracao);
@@ -170,7 +169,6 @@ class indice extends clsCadastro
 
         /** @var User $user */
         $user = Auth::user();
-
         // verifica se pessoa logada é super-usuario
         if ($user->isAdmin()) {
             $lista = $objTemp->lista(null, null, null, null, null, null, null, null, 1);
@@ -209,9 +207,14 @@ class indice extends clsCadastro
 
         $scripts = ['/modules/Cadastro/Assets/Javascripts/Usuario.js'];
 
-        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
-
         $this->acao_enviar = 'valida()';
+        if(!$this->canChange($user, $this->ref_pessoa)) {
+            $this->acao_enviar = null;
+            $this->fexcluir = null;
+            $scripts[] = '/modules/Cadastro/Assets/Javascripts/disableAllFields.js';
+        }
+
+        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
     }
 
     public function Novo()
@@ -232,13 +235,9 @@ class indice extends clsCadastro
 
         $senha = Hash::make($this->_senha);
 
-        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, 0, null, 0, 1, $this->email, $this->matricula_interna);
+        $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, 0, null, 0, 1, $this->email, $this->matricula_interna, !is_null($this->force_reset_password));
 
         if ($obj_funcionario->cadastra()) {
-            $funcionario = $obj_funcionario->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral('funcionario', $this->pessoa_logada, $this->ref_pessoa);
-            $auditoria->inclusao($funcionario);
-
             if ($this->ref_cod_instituicao) {
                 $obj = new clsPmieducarUsuario($this->ref_pessoa, null, $this->ref_cod_instituicao, $this->pessoa_logada, $this->pessoa_logada, $this->ref_cod_tipo_usuario, null, null, 1);
             } else {
@@ -246,17 +245,9 @@ class indice extends clsCadastro
             }
 
             if ($obj->existe()) {
-                $detalheAntigo = $obj->detalhe();
                 $cadastrou = $obj->edita();
-                $detalheNovo = $obj->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('usuario', $this->pessoa_logada, $cadastrou);
-                $auditoria->alteracao($detalheAntigo, $detalheNovo);
             } else {
                 $cadastrou = $obj->cadastra();
-                $usuario = new clsPmieducarUsuario($cadastrou);
-                $usuario = $usuario->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('usuario', $this->pessoa_logada, $cadastrou);
-                $auditoria->inclusao($usuario);
             }
 
             $this->insereUsuarioEscolas($this->ref_pessoa, $this->escola);
@@ -274,6 +265,12 @@ class indice extends clsCadastro
 
     public function Editar()
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if(!$this->canChange($user, $this->ref_pessoa)) {
+            return false;
+        }
+
         if ($this->email && !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             $this->mensagem = 'Formato do e-mail inválido.';
 
@@ -298,13 +295,8 @@ class indice extends clsCadastro
         }
 
         $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa, $this->matricula, $senha, $this->ativo, null, null, null, null, null, null, null, null, null, null, $this->ref_cod_funcionario_vinculo, $this->tempo_expira_senha, Portabilis_Date_Utils::brToPgSQL($this->data_expiracao), 'NOW()', 'NOW()', $this->pessoa_logada, 0, 0, null, 0, null, $this->email, $this->matricula_interna);
-        $detalheAntigo = $obj_funcionario->detalhe();
 
         if ($obj_funcionario->edita()) {
-            $detalheNovo = $obj_funcionario->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral('funcionario', $this->pessoa_logada, $this->ref_pessoa);
-            $auditoria->alteracao($detalheAntigo, $detalheNovo);
-
             if ($this->ref_cod_instituicao) {
                 $obj = new clsPmieducarUsuario($this->ref_pessoa, null, $this->ref_cod_instituicao, $this->pessoa_logada, $this->pessoa_logada, $this->ref_cod_tipo_usuario, null, null, 1);
             } else {
@@ -312,17 +304,9 @@ class indice extends clsCadastro
             }
 
             if ($obj->existe()) {
-                $detalheAntigo = $obj->detalhe();
                 $editou = $obj->edita();
-                $detalheNovo = $obj->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('usuario', $this->pessoa_logada, $editou);
-                $auditoria->alteracao($detalheAntigo, $detalheNovo);
             } else {
                 $editou = $obj->cadastra();
-                $usuario = new clsPmieducarUsuario($editou);
-                $usuario = $usuario->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('usuario', $this->pessoa_logada, $editou);
-                $auditoria->inclusao($usuario);
             }
 
             $this->insereUsuarioEscolas($this->ref_pessoa, $this->escola);
@@ -369,12 +353,15 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
+        /** @var User $user */
+        $user = Auth::user();
+        if(!$this->canChange($user, $this->ref_pessoa)) {
+            return false;
+        }
+
         $obj_funcionario = new clsPortalFuncionario($this->ref_pessoa);
-        $detalhe = $obj_funcionario->detalhe();
 
         if ($obj_funcionario->excluir()) {
-            $auditoria = new clsModulesAuditoriaGeral('funcionario', $this->pessoa_logada, $this->ref_pessoa);
-            $auditoria->exclusao($detalhe);
             $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_usuario_lst.php');
         }
@@ -433,6 +420,40 @@ class indice extends clsCadastro
             $usuarioEscola->ref_cod_escola = $e;
             $usuarioEscola->cadastra();
         }
+    }
+
+    /**
+     * Verifica se o usuário logado pode alterar o usuário em questão
+     *
+     * Caso algum usuário com nível diferente de admin tentar alterar dados do usuário admin,
+     * esse método retornará false
+     *
+     * @param User $currentUser
+     * @param integer $changedUserId
+     * @return bool
+     */
+    private function canChange(User $currentUser, $changedUserId)
+    {
+        if (!$changedUserId) {
+            return true;
+        }
+
+        if ($currentUser->isAdmin()) {
+            return true;
+        }
+
+        /** @var User $changedUser */
+        $changedUser = User::find($changedUserId);
+
+        if (empty($changedUser)) {
+            return true;
+        }
+
+        if (!$changedUser->isAdmin()) {
+            return true;
+        }
+
+        return false;
     }
 }
 

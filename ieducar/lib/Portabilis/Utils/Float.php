@@ -1,6 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Array/Utils.php';
 
 class Portabilis_Utils_Float
 {

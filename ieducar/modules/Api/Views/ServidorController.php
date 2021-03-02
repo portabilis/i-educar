@@ -1,9 +1,7 @@
 <?php
 use App\Models\LegacyDeficiency;
+use App\Models\LogUnification;
 use iEducar\Modules\Educacenso\Validator\DeficiencyValidator;
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'intranet/include/clsBanco.inc.php';
 
 class ServidorController extends ApiCoreController
 {
@@ -94,7 +92,7 @@ class ServidorController extends ApiCoreController
         }
 
         $sql = "
-            SELECT 
+            SELECT
                 s.cod_servidor as servidor_id,
                 p.nome as nome,
                 s.ativo as ativo,
@@ -140,28 +138,40 @@ class ServidorController extends ApiCoreController
             $sql = "
                 (
                     select
-                        pt.id,
-                        pt.servidor_id,
-                        pt.turma_id,
-                        pt.turno_id,
-                        pt.permite_lancar_faltas_componente,
-                        string_agg(concat(ptd.componente_curricular_id, ' ', ccae.tipo_nota)::varchar, ',') as disciplinas,
-                        greatest(pt.updated_at, date(ccae.updated_at)) as updated_at,
+                        tmp.id,
+                        tmp.servidor_id,
+                        tmp.turma_id,
+                        tmp.turno_id,
+                        tmp.permite_lancar_faltas_componente,
+                        string_agg(concat(tmp.componente_curricular_id, ' ', tmp.tipo_nota)::varchar, ',') as disciplinas,
+                        max(tmp.updated_at) as updated_at,
                         null as deleted_at
-                    from modules.professor_turma pt 
-                    left join modules.professor_turma_disciplina ptd 
-                    on ptd.professor_turma_id = pt.id
-                    inner join pmieducar.turma t 
-                    on t.cod_turma = pt.turma_id
-                    inner join modules.componente_curricular_ano_escolar ccae 
-                    on ccae.ano_escolar_id = t.ref_ref_cod_serie
-                    and ccae.componente_curricular_id = ptd.componente_curricular_id
-                    where true
-                    and pt.instituicao_id = $1
-                    and pt.ano = $2
-                    and t.ref_ref_cod_escola in ({$escola})
-                    {$where}
-                    group by id, greatest(pt.updated_at, date(ccae.updated_at))
+                    from (
+                             select
+                                 pt.id,
+                                 pt.servidor_id,
+                                 pt.turma_id,
+                                 pt.turno_id,
+                                 pt.permite_lancar_faltas_componente,
+                                 ptd.componente_curricular_id,
+                                 ccae.tipo_nota,
+                                 greatest(pt.updated_at, ccae.updated_at) as updated_at,
+                                 null as deleted_at
+                             from modules.professor_turma pt
+                                      left join modules.professor_turma_disciplina ptd
+                                                on ptd.professor_turma_id = pt.id
+                                      inner join pmieducar.turma t
+                                                 on t.cod_turma = pt.turma_id
+                                      inner join modules.componente_curricular_ano_escolar ccae
+                                                 on ccae.ano_escolar_id = t.ref_ref_cod_serie
+                                                     and ccae.componente_curricular_id = ptd.componente_curricular_id
+                             where true
+                             and pt.instituicao_id = $1
+                             and pt.ano = $2
+                             and t.ref_ref_cod_escola in ({$escola})
+                            {$where}
+                         ) as tmp
+                    group by tmp.id, tmp.servidor_id, tmp.turma_id, tmp.turno_id, tmp.permite_lancar_faltas_componente
                 )
                 union all
                 (
@@ -174,10 +184,10 @@ class ServidorController extends ApiCoreController
                         null as disciplinas,
                         pt.updated_at,
                         pt.deleted_at
-                    from modules.professor_turma_excluidos pt 
-                    inner join pmieducar.turma t 
+                    from modules.professor_turma_excluidos pt
+                    inner join pmieducar.turma t
                     on t.cod_turma = pt.turma_id
-                    where true 
+                    where true
                     and pt.instituicao_id = $1
                     and pt.ano = $2
                     and t.ref_ref_cod_escola in ({$escola})
@@ -232,6 +242,25 @@ class ServidorController extends ApiCoreController
         return ['result' => $result[0]];
     }
 
+    protected function getUnificacoes()
+    {
+        $modified = $this->getRequest()->modified;
+
+        $unificationsQuery = LogUnification::query();
+
+        if ($modified) {
+            $unificationsQuery->where('created_at', '>=', $modified);
+        }
+
+        $unificationsQuery->whereHas('personMain', function ($individualQuery) {
+            $individualQuery->whereHas('employee');
+        });
+
+        $unificationsQuery->person();
+
+        return ['unificacoes' => $unificationsQuery->get(['main_id', 'duplicates_id', 'created_at', 'active'])];
+    }
+
     /**
      * @return bool
      */
@@ -279,6 +308,8 @@ class ServidorController extends ApiCoreController
             $this->appendResponse($this->validateDeficiencies());
         } elseif ($this->isRequestFor('get', 'servidores')) {
             $this->appendResponse($this->getServidores());
+        } elseif ($this->isRequestFor('get', 'unificacoes')) {
+            $this->appendResponse($this->getUnificacoes());
         } else {
             $this->notImplementedOperationError();
         }

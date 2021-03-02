@@ -31,10 +31,6 @@
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-require_once "include/clsBase.inc.php";
-require_once "include/clsDetalhe.inc.php";
-require_once "include/clsBanco.inc.php";
-require_once "include/pmieducar/geral.inc.php";
 
 /**
  * clsIndexBase class.
@@ -74,8 +70,6 @@ class indice extends clsDetalhe
   function Gerar()
   {
     $this->titulo = 'Vagas por série - Detalhe';
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg',
-      'Intranet');
 
     $this->cod_serie_vaga = $_GET['cod_serie_vaga'];
 

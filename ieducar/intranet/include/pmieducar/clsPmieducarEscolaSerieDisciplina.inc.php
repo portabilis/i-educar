@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 class clsPmieducarEscolaSerieDisciplina extends Model
 {
@@ -219,11 +217,8 @@ class clsPmieducarEscolaSerieDisciplina extends Model
     ) {
         $whereAnd = ' WHERE ';
 
-        if ($boo_nome_disc) {
-            $join = ',pmieducar.disciplina';
-            $whereAnd = ' WHERE ref_cod_disciplina = cod_disciplina AND disciplina.ativo = 1 AND ';
-            $campos = ',disciplina.nm_disciplina';
-        }
+        $campos = '';
+        $join = '';
 
         $sql = "SELECT {$this->_campos_lista}{$campos} FROM {$this->_tabela}{$join}";
         $filtros = '';
@@ -447,20 +442,24 @@ class clsPmieducarEscolaSerieDisciplina extends Model
         return false;
     }
 
-    public function existeDependencia(array $listaComponentesSelecionados)
+    public function existeDependencia(array $listaComponentesSelecionados, bool $exclusao = false)
     {
         if (is_numeric($this->ref_ref_cod_serie) && is_numeric($this->ref_ref_cod_escola)) {
             $componentesSelecionados = join(',', $listaComponentesSelecionados);
 
+            $condicao = 'NOT IN';
+            if ($exclusao) {
+                $condicao = 'IN';
+            }
             $db = new clsBanco();
             $sql = "SELECT EXISTS (SELECT 1
                                      FROM {$this->_tabela}
                                     WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}'
                                       AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}'
-                                      AND ref_cod_disciplina NOT IN ({$componentesSelecionados})
+                                      AND ref_cod_disciplina {$condicao} ({$componentesSelecionados})
                                       AND EXISTS (SELECT 1
                                                     FROM pmieducar.disciplina_dependencia
-                                                   WHERE disciplina_dependencia.ref_cod_disciplina NOT IN ({$componentesSelecionados})
+                                                   WHERE disciplina_dependencia.ref_cod_disciplina {$condicao} ({$componentesSelecionados})
                                                      AND disciplina_dependencia.ref_cod_escola = {$this->_tabela}.ref_ref_cod_escola
                                                      AND disciplina_dependencia.ref_cod_serie = {$this->_tabela}.ref_ref_cod_serie))";
 

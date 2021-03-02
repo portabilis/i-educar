@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarMotivoSuspensao extends Model
 {
@@ -74,13 +73,15 @@ class clsPmieducarMotivoSuspensao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_motivo)) {
+                $nm_motivo = $db->escapeString($this->nm_motivo);
                 $campos .= "{$gruda}nm_motivo";
-                $valores .= "{$gruda}'{$this->nm_motivo}'";
+                $valores .= "{$gruda}'{$nm_motivo}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
+                $descricao = $db->escapeString($this->descricao);
                 $campos .= "{$gruda}descricao";
-                $valores .= "{$gruda}'{$this->descricao}'";
+                $valores .= "{$gruda}'{$descricao}'";
                 $gruda = ', ';
             }
             if (is_numeric($this->ref_cod_biblioteca)) {
@@ -123,11 +124,13 @@ class clsPmieducarMotivoSuspensao extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_motivo)) {
-                $set .= "{$gruda}nm_motivo = '{$this->nm_motivo}'";
+                $nm_motivo = $db->escapeString($this->nm_motivo);
+                $set .= "{$gruda}nm_motivo = '{$nm_motivo}'";
                 $gruda = ', ';
             }
             if (is_string($this->descricao)) {
-                $set .= "{$gruda}descricao = '{$this->descricao}'";
+                $descricao = $db->escapeString($this->descricao);
+                $set .= "{$gruda}descricao = '{$descricao}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -162,6 +165,8 @@ class clsPmieducarMotivoSuspensao extends Model
      */
     public function lista($int_cod_motivo_suspensao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_motivo = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_biblioteca = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -180,7 +185,8 @@ class clsPmieducarMotivoSuspensao extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_motivo)) {
-            $filtros .= "{$whereAnd} nm_motivo LIKE '%{$str_nm_motivo}%'";
+            $nm_motivo = $db->escapeString($str_nm_motivo);
+            $filtros .= "{$whereAnd} nm_motivo LIKE '%{$nm_motivo}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_descricao)) {
@@ -219,7 +225,6 @@ class clsPmieducarMotivoSuspensao extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

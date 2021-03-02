@@ -1,13 +1,5 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'App/Model/IedFinder.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/Utils/CustomLabel.php';
-require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 
 class clsIndexBase extends clsBase
 {
@@ -47,12 +39,6 @@ class indice extends clsDetalhe
     function Gerar()
     {
         $this->titulo = 'Turma - Detalhe';
-        $this->addBanner(
-            'imagens/nvp_top_intranet.jpg',
-            'imagens/nvp_vert_intranet.jpg',
-            'Intranet'
-        );
-
         $this->cod_turma = $_GET['cod_turma'];
 
         $dias_da_semana = [

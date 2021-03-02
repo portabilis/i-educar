@@ -2,9 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
-require_once 'Portabilis/Utils/Database.php';
 
 class clsPmieducarSerie extends Model
 {
@@ -27,6 +24,7 @@ class clsPmieducarSerie extends Model
     public $alerta_faixa_etaria;
     public $bloquear_matricula_faixa_etaria;
     public $exigir_inep;
+    public $importar_serie_pre_matricula;
 
     public function __construct(
         $cod_serie = null,
@@ -49,12 +47,13 @@ class clsPmieducarSerie extends Model
         $alerta_faixa_etaria = false,
         $bloquear_matricula_faixa_etaria = false,
         $idade_ideal = null,
-        $exigir_inep = false
+        $exigir_inep = false,
+        $importar_serie_pre_matricula = false
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = "{$this->_schema}serie";
-        $this->_campos_lista = $this->_todos_campos = 's.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos, s.regra_avaliacao_diferenciada_id, s.alerta_faixa_etaria, s.bloquear_matricula_faixa_etaria, s.idade_ideal, s.exigir_inep';
+        $this->_campos_lista = $this->_todos_campos = 's.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos, s.regra_avaliacao_diferenciada_id, s.alerta_faixa_etaria, s.bloquear_matricula_faixa_etaria, s.idade_ideal, s.exigir_inep, s.importar_serie_pre_matricula';
 
         if (is_numeric($ref_cod_curso)) {
                     $this->ref_cod_curso = $ref_cod_curso;
@@ -169,6 +168,10 @@ class clsPmieducarSerie extends Model
             $this->exigir_inep = $exigir_inep;
         }
 
+        if (dbBool($importar_serie_pre_matricula)) {
+            $this->importar_serie_pre_matricula = $importar_serie_pre_matricula;
+        }
+
         $this->observacao_historico = $observacao_historico;
         $this->dias_letivos = $dias_letivos;
     }
@@ -202,8 +205,9 @@ class clsPmieducarSerie extends Model
             }
 
             if (is_string($this->nm_serie)) {
+                $nm_serie = $db->escapeString($this->nm_serie);
                 $campos[] = 'nm_serie';
-                $valores[] = "'{$this->nm_serie}'";
+                $valores[] = "'{$nm_serie}'";
             }
 
             if (is_numeric($this->etapa_curso)) {
@@ -248,8 +252,9 @@ class clsPmieducarSerie extends Model
             $valores[] = '\'1\'';
 
             if (is_string($this->observacao_historico)) {
+                $observacao_historico = $db->escapeString($this->observacao_historico);
                 $campos[] = 'observacao_historico';
-                $valores[] = "'{$this->observacao_historico}'";
+                $valores[] = "'{$observacao_historico}'";
             }
 
             if (is_numeric($this->dias_letivos)) {
@@ -283,6 +288,14 @@ class clsPmieducarSerie extends Model
                 $valores[] = ' true ';
             } else {
                 $campos[] = 'exigir_inep';
+                $valores[] = ' false ';
+            }
+
+            if (dbBool($this->importar_serie_pre_matricula)) {
+                $campos[] = 'importar_serie_pre_matricula';
+                $valores[] = ' true ';
+            } else {
+                $campos[] = 'importar_serie_pre_matricula';
                 $valores[] = ' false ';
             }
 
@@ -321,7 +334,8 @@ class clsPmieducarSerie extends Model
             }
 
             if (is_string($this->nm_serie)) {
-                $set[] = "nm_serie = '{$this->nm_serie}'";
+                $nm_serie = $db->escapeString($this->nm_serie);
+                $set[] = "nm_serie = '{$nm_serie}'";
             }
 
             if (is_numeric($this->etapa_curso)) {
@@ -369,7 +383,8 @@ class clsPmieducarSerie extends Model
             }
 
             if (is_string($this->observacao_historico)) {
-                $set[] = "observacao_historico = '{$this->observacao_historico}'";
+                $observacao_historico = $db->escapeString($this->observacao_historico);
+                $set[] = "observacao_historico = '{$observacao_historico}'";
             }
 
             if (is_numeric($this->dias_letivos)) {
@@ -398,6 +413,12 @@ class clsPmieducarSerie extends Model
                 $set[] = 'exigir_inep = true ';
             } else {
                 $set[] = 'exigir_inep = false ';
+            }
+
+            if (dbBool($this->importar_serie_pre_matricula)) {
+                $set[] = 'importar_serie_pre_matricula = true ';
+            } else {
+                $set[] = 'importar_serie_pre_matricula = false ';
             }
 
             $set = join(', ', $set);
@@ -439,6 +460,7 @@ class clsPmieducarSerie extends Model
         $int_idade_ideal = null,
         $ano = null
     ) {
+        $db = new clsBanco();
         $sql = "SELECT {$this->_campos_lista}, c.ref_cod_instituicao FROM {$this->_tabela} s, {$this->_schema}curso c";
 
         $filtros = [' WHERE s.ref_cod_curso = c.cod_curso'];
@@ -460,7 +482,8 @@ class clsPmieducarSerie extends Model
         }
 
         if (is_string($str_nm_serie)) {
-            $filtros[] = "translate(upper(s.nm_serie),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_serie}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $nm_serie = $db->escapeString($str_nm_serie);
+            $filtros[] = "EXISTS (SELECT 1 FROM pmieducar.serie WHERE unaccent(s.nm_serie) ILIKE unaccent('%{$nm_serie}%'))";
         }
 
         if (is_numeric($int_etapa_curso)) {
@@ -538,10 +561,9 @@ class clsPmieducarSerie extends Model
                                          FROM pmieducar.escola_serie es
                                         WHERE s.cod_serie = es.ref_cod_serie
                                           AND es.ativo = 1
-                                          AND {$ano} = ANY(es.anos_letivos) ";
+                                          AND {$ano} = ANY(es.anos_letivos)) ";
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
         $filtros = join(' AND ', $filtros);

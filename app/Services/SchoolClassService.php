@@ -2,8 +2,12 @@
 
 namespace App\Services;
 
+use App\Models\LegacyAcademicYearStage;
 use App\Models\LegacyLevel;
 use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolClassStage;
+use iEducar\Modules\SchoolClass\Period;
+use Illuminate\Support\Facades\DB;
 
 class SchoolClassService
 {
@@ -46,6 +50,7 @@ class SchoolClassService
      *
      * @param integer $levelId
      * @param integer $academicYear
+     *
      * @return bool
      */
     public function isRequiredAlternativeReportCard($levelId, $academicYear): bool
@@ -54,11 +59,31 @@ class SchoolClassService
             ->wherePivot('ano_letivo', $academicYear)
             ->get()
             ->first();
-        
+
         if (empty($evaluationRule->regra_diferenciada_id)) {
             return false;
         }
 
         return true;
+    }
+
+
+    /**
+     * Retorna o array com os calendários letivos das turmas informadas
+     * Data inicial da primeira etapa e data final da última etapa
+     *
+     * @param array $schoolClassId
+     * @return array|null
+     */
+    public function getCalendars(array $schoolClassId)
+    {
+        return LegacySchoolClassStage::query()
+            ->select([
+                DB::raw('(SELECT min(data_inicio) FROM turma_modulo tm WHERE tm.ref_cod_turma = turma_modulo.ref_cod_turma) as start_date'),
+                DB::raw('(SELECT max(data_fim) FROM turma_modulo tm WHERE tm.ref_cod_turma = turma_modulo.ref_cod_turma) as end_date')
+            ])
+            ->distinct()
+            ->whereIn('ref_cod_turma', $schoolClassId)
+            ->get();
     }
 }

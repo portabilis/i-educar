@@ -2,11 +2,12 @@
 
 namespace App\Models\Educacenso;
 
+use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
+use iEducar\Modules\Educacenso\Model\PaisResidencia;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use Transporte_Model_Responsavel;
 
-require_once __DIR__ . '/../../../ieducar/modules/Transporte/Model/Responsavel.php';
 
 class Registro60 implements RegistroEducacenso, ItemOfRegistro30
 {
@@ -14,7 +15,6 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
     public $inepEscola;
     public $codigoPessoa;
     public $inepAluno;
-    public $codigoTUrma;
     public $inepTurma;
     public $matriculaAluno;
     public $etapaAluno;
@@ -100,6 +100,16 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
     public $veiculoTransporteEscolar;
 
     /**
+     * @var string Campo usado somente na análise
+     */
+    public $localFuncionamentoDiferenciadoTurma;
+
+    /**
+     * @var string Campo usado somente na análise
+     */
+    public $paisResidenciaAluno;
+
+    /**
      * @return bool
      */
     public function transportePublicoRequired()
@@ -109,7 +119,9 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
             TipoMediacaoDidaticoPedagogico::SEMIPRESENCIAL,
         ];
 
-        return $this->tipoAtendimentoTurma == TipoAtendimentoTurma::ESCOLARIZACAO && in_array($this->tipoMediacaoTurma, $tiposMediacaoPresencialSemiPresencial);
+        return $this->tipoAtendimentoTurma == TipoAtendimentoTurma::ESCOLARIZACAO
+            && in_array($this->tipoMediacaoTurma, $tiposMediacaoPresencialSemiPresencial)
+            && $this->paisResidenciaAluno == PaisResidencia::BRASIL;
     }
 
     /**
@@ -129,6 +141,17 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
     {
         return $this->tipoAtendimentoTurma == TipoAtendimentoTurma::ATIVIDADE_COMPLEMENTAR ||
             $this->tipoAtendimentoTurma == TipoAtendimentoTurma::AEE;
+    }
+
+    /**
+     * @return bool
+     */
+    public function recebeEscolarizacaoOutroEspacoIsRequired()
+    {
+        return $this->tipoAtendimentoTurma == TipoAtendimentoTurma::ESCOLARIZACAO &&
+            $this->tipoMediacaoTurma == TipoMediacaoDidaticoPedagogico::PRESENCIAL &&
+            $this->localFuncionamentoDiferenciadoTurma == \App_Model_LocalFuncionamentoDiferenciado::NAO_ESTA &&
+            $this->localFuncionamentoDiferenciadoTurma == \App_Model_LocalFuncionamentoDiferenciado::SALA_ANEXA;
     }
 
     public function getCodigoPessoa()

@@ -32,7 +32,6 @@
  * @version   $Id$
  */
 
-require_once 'Portabilis/Controller/Page/ListController.php';
 
 class ReservaController extends Portabilis_Controller_Page_ListController
 {
@@ -45,15 +44,10 @@ class ReservaController extends Portabilis_Controller_Page_ListController
 
     parent::_preRender();
 
-    $localizacao = new LocalizacaoSistema();
-
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""                                  => "Reserva de exemplares"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar(), true);     
-  }  
+    $this->breadcrumb('Reserva de exemplares', [
+        url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
+    ]);
+  }
 
   public function Gerar() {
     // inputs

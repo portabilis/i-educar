@@ -31,8 +31,6 @@ use PHPUnit\Framework\TestCase;
  * @version     $Id$
  */
 
-require_once __DIR__.'/_stub/Singleton.php';
-require_once __DIR__.'/_stub/SingletonIncomplete.php';
 
 /**
  * CoreExt_SingletonTest class.
@@ -58,11 +56,9 @@ class CoreExt_SingletonTest extends TestCase
     $this->assertSame($oid1, $oid2);
   }
 
-  /**
-   * @expectedException CoreExt_Exception
-   */
   public function testClasseQueNaoImplementaMetodoLancaExcecao()
   {
+      $this->expectException(\CoreExt_Exception::class);
     $instance1 = CoreExt_SingletonIncompleteStub::getInstance();
   }
 }

@@ -2,11 +2,6 @@
 
 use Illuminate\Support\Facades\Session;
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'include/funcoes.inc.php';
 
 class FilaUnicaController extends ApiCoreController
 {
@@ -30,34 +25,21 @@ class FilaUnicaController extends ApiCoreController
                        documento.num_folha,
                        documento.num_livro,
                        documento.certidao_nascimento,
-                       to_char(endereco_pessoa.cep, '99999-999') AS cep,
-                       endereco_pessoa.idlog,
-                       endereco_pessoa.idbai,
-                       bairro.nome || ' / Zona ' || CASE bairro.zona_localizacao WHEN 1 THEN 'urbana' WHEN 2 THEN 'rural' END AS nm_bairro,
-                       municipio.idmun,
-                       municipio.idmun || ' - ' || municipio.nome AS nm_municipio,
-                       distrito.iddis,
-                       distrito.iddis || ' - ' || distrito.nome AS nm_distrito,
-                       tipo_logradouro.descricao || ' ' || logradouro.nome AS nm_logradouro,
-                       endereco_pessoa.numero,
-                       endereco_pessoa.letra,
-                       endereco_pessoa.complemento,
-                       endereco_pessoa.bloco,
-                       endereco_pessoa.andar,
-                       endereco_pessoa.apartamento,
-                       endereco_pessoa.observacoes,
+                       ad.postal_code AS cep,
+                       ad.neighborhood AS nm_bairro,
+                       ad.city_id,
+                       ad.city_id || ' - ' || ad.city AS nm_municipio,
+                       ad.address AS nm_logradouro,
+                       ad.number as numero,
+                       ad.complement as complemento,
                        fisica.sexo,
                        fisica.ideciv
                   FROM pmieducar.aluno
                  INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
                  INNER JOIN cadastro.fisica ON (fisica.idpes = aluno.ref_idpes)
                  INNER JOIN cadastro.documento ON (documento.idpes = aluno.ref_idpes)
-                  LEFT JOIN cadastro.endereco_pessoa ON (endereco_pessoa.idpes = aluno.ref_idpes)
-                  LEFT JOIN public.bairro ON (bairro.idbai = endereco_pessoa.idbai)
-                  LEFT JOIN public.logradouro ON (logradouro.idlog = endereco_pessoa.idlog)
-                  LEFT JOIN urbano.tipo_logradouro ON (tipo_logradouro.idtlog = logradouro.idtlog)
-                  LEFT JOIN public.municipio ON (municipio.idmun = bairro.idmun)
-                  LEFT JOIN public.distrito ON (distrito.idmun = bairro.idmun)
+                  LEFT JOIN person_has_place php ON php.person_id = aluno.ref_idpes
+                  LEFT JOIN addresses ad ON ad.id = php.place_id
                   WHERE
                  ";
         if ($byCertidao) {
@@ -85,21 +67,13 @@ class FilaUnicaController extends ApiCoreController
             'num_livro',
             'certidao_nascimento',
             'cep',
-            'idlog',
-            'idbai',
             'nm_bairro',
             'idmun',
             'nm_municipio',
-            'iddis',
-            'nm_distrito',
             'nm_logradouro',
             'numero',
             'letra',
             'complemento',
-            'bloco',
-            'andar',
-            'apartamento',
-            'observacoes',
             'sexo',
             'ideciv'
         ];
@@ -269,7 +243,7 @@ class FilaUnicaController extends ApiCoreController
     protected function getMontaSelectEscolasCandidato()
     {
         $cod_candidato_fila_unica = $this->getRequest()->cod_candidato_fila_unica;
-        $userId = Session::get('id_pessoa');
+        $userId = \Illuminate\Support\Facades\Auth::id();
         $nivelAcesso = $this->getNivelAcesso();
         $acessoEscolar = $nivelAcesso == 4;
 

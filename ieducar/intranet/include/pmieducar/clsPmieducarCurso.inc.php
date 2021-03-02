@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarCurso extends Model
 {
@@ -26,6 +25,7 @@ class clsPmieducarCurso extends Model
     public $padrao_ano_escolar;
     public $hora_falta;
     public $modalidade_curso;
+    public $importar_curso_pre_matricula;
 
     public function __construct(
         $cod_curso = null,
@@ -54,13 +54,14 @@ class clsPmieducarCurso extends Model
         $padrao_ano_escolar = null,
         $hora_falta = null,
         $avaliacao_globalizada = null,
-        $multi_seriado = null
+        $multi_seriado = null,
+        $importar_curso_pre_matricula = null
     ) {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'curso';
 
-        $this->_campos_lista = $this->_todos_campos = 'cod_curso, ref_usuario_cad, ref_cod_tipo_regime, ref_cod_nivel_ensino, ref_cod_tipo_ensino, nm_curso, sgl_curso, qtd_etapas, carga_horaria, ato_poder_publico, objetivo_curso, publico_alvo, data_cadastro, data_exclusao, ativo, ref_usuario_exc, ref_cod_instituicao, padrao_ano_escolar, hora_falta, multi_seriado, modalidade_curso';
+        $this->_campos_lista = $this->_todos_campos = 'cod_curso, ref_usuario_cad, ref_cod_tipo_regime, ref_cod_nivel_ensino, ref_cod_tipo_ensino, nm_curso, sgl_curso, qtd_etapas, carga_horaria, ato_poder_publico, objetivo_curso, publico_alvo, data_cadastro, data_exclusao, ativo, ref_usuario_exc, ref_cod_instituicao, padrao_ano_escolar, hora_falta, multi_seriado, modalidade_curso, importar_curso_pre_matricula';
 
         if (is_numeric($ref_cod_instituicao)) {
                     $this->ref_cod_instituicao = $ref_cod_instituicao;
@@ -139,6 +140,7 @@ class clsPmieducarCurso extends Model
         }
 
         $this->multi_seriado = $multi_seriado;
+        $this->importar_curso_pre_matricula = $importar_curso_pre_matricula;
     }
 
     /**
@@ -183,14 +185,16 @@ class clsPmieducarCurso extends Model
             }
 
             if (is_string($this->nm_curso)) {
+                $nm_curso = $db->escapeString($this->nm_curso);
                 $campos .= "{$gruda}nm_curso";
-                $valores .= "{$gruda}'{$this->nm_curso}'";
+                $valores .= "{$gruda}'{$nm_curso}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->sgl_curso)) {
+                $sgl_curso = $db->escapeString($this->sgl_curso);
                 $campos .= "{$gruda}sgl_curso";
-                $valores .= "{$gruda}'{$this->sgl_curso}'";
+                $valores .= "{$gruda}'{$sgl_curso}'";
                 $gruda = ', ';
             }
 
@@ -207,20 +211,23 @@ class clsPmieducarCurso extends Model
             }
 
             if (is_string($this->ato_poder_publico)) {
+                $ato_poder_publico = $db->escapeString($this->ato_poder_publico);
                 $campos .= "{$gruda}ato_poder_publico";
-                $valores .= "{$gruda}'{$this->ato_poder_publico}'";
+                $valores .= "{$gruda}'{$ato_poder_publico}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->objetivo_curso)) {
+                $objetivo_curso = $db->escapeString($this->objetivo_curso);
                 $campos .= "{$gruda}objetivo_curso";
-                $valores .= "{$gruda}'{$this->objetivo_curso}'";
+                $valores .= "{$gruda}'{$objetivo_curso}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->publico_alvo)) {
+                $publico_alvo = $db->escapeString($this->publico_alvo);
                 $campos .= "{$gruda}publico_alvo";
-                $valores .= "{$gruda}'{$this->publico_alvo}'";
+                $valores .= "{$gruda}'{$publico_alvo}'";
                 $gruda = ', ';
             }
 
@@ -253,6 +260,12 @@ class clsPmieducarCurso extends Model
             if (is_numeric($this->multi_seriado)) {
                 $campos .= "{$gruda}multi_seriado";
                 $valores .= "{$gruda}'{$this->multi_seriado}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->importar_curso_pre_matricula)) {
+                $campos .= "{$gruda}importar_curso_pre_matricula";
+                $valores .= "{$gruda}'{$this->importar_curso_pre_matricula}'";
                 $gruda = ', ';
             }
 
@@ -302,12 +315,14 @@ class clsPmieducarCurso extends Model
             }
 
             if (is_string($this->nm_curso)) {
-                $set .= "{$gruda}nm_curso = '{$this->nm_curso}'";
+                $nm_curso = $db->escapeString($this->nm_curso);
+                $set .= "{$gruda}nm_curso = '{$nm_curso}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->sgl_curso)) {
-                $set .= "{$gruda}sgl_curso = '{$this->sgl_curso}'";
+                $sgl_curso = $db->escapeString($this->sgl_curso);
+                $set .= "{$gruda}sgl_curso = '{$sgl_curso}'";
                 $gruda = ', ';
             }
 
@@ -322,17 +337,20 @@ class clsPmieducarCurso extends Model
             }
 
             if (is_string($this->ato_poder_publico)) {
-                $set .= "{$gruda}ato_poder_publico = '{$this->ato_poder_publico}'";
+                $ato_poder_publico = $db->escapeString($this->ato_poder_publico);
+                $set .= "{$gruda}ato_poder_publico = '{$ato_poder_publico}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->objetivo_curso)) {
-                $set .= "{$gruda}objetivo_curso = '{$this->objetivo_curso}'";
+                $objetivo_curso = $db->escapeString($this->objetivo_curso);
+                $set .= "{$gruda}objetivo_curso = '{$objetivo_curso}'";
                 $gruda = ', ';
             }
 
             if (is_string($this->publico_alvo)) {
-                $set .= "{$gruda}publico_alvo = '{$this->publico_alvo}'";
+                $publico_alvo = $db->escapeString($this->publico_alvo);
+                $set .= "{$gruda}publico_alvo = '{$publico_alvo}'";
                 $gruda = ', ';
             }
 
@@ -374,6 +392,11 @@ class clsPmieducarCurso extends Model
 
             if (is_numeric($this->multi_seriado)) {
                 $set .= "{$gruda}multi_seriado = '{$this->multi_seriado}'";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->importar_curso_pre_matricula)) {
+                $set .= "{$gruda}importar_curso_pre_matricula = '{$this->importar_curso_pre_matricula}'";
                 $gruda = ', ';
             }
 
@@ -427,6 +450,8 @@ class clsPmieducarCurso extends Model
         $int_hora_falta = null,
         $bool_avaliacao_globalizada = null
     ) {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         $filtros = '';
 
@@ -458,7 +483,8 @@ class clsPmieducarCurso extends Model
         }
 
         if (is_string($str_nm_curso)) {
-            $filtros .= "{$whereAnd} translate(upper(nm_curso),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_curso}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $str_nome_curso = $db->escapeString($str_nm_curso);
+            $filtros .= "{$whereAnd} translate(upper(nm_curso),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_curso}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
             $whereAnd = ' AND ';
         }
 
@@ -540,7 +566,6 @@ class clsPmieducarCurso extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

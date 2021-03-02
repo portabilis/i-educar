@@ -28,11 +28,6 @@
  * @version   $Id$
  */
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 /**
  * clsIndexBase class.
@@ -237,7 +232,7 @@ SQL;
 
         $db = new clsBanco();
         $db->consulta("SELECT (CASE
-                               WHEN escola.utiliza_regra_diferenciada AND serie.regra_avaliacao_diferenciada_id IS NOT NULL
+                               WHEN escola.utiliza_regra_diferenciada AND rasa.regra_avaliacao_diferenciada_id IS NOT NULL
                                THEN regra_avaliacao_diferenciada.qtd_disciplinas_dependencia
                                ELSE regra_avaliacao.qtd_disciplinas_dependencia
                                 END) AS qtd_disciplinas_dependencia

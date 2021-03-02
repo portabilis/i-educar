@@ -1,4 +1,3 @@
-
 var url = window.location.href;
 var modoCadastro = url.indexOf("id=") == -1;
 
@@ -185,58 +184,95 @@ function certidaoCasamentoInvalida() {
 }
 
 var newSubmitForm = function (event) {
-    if (obrigarDocumentoPessoa && !possuiDocumentoObrigatorio()) {
-        messageUtils.error('É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil.');
-        return false;
+  if ($j('#deficiencias').val().length > 1) {
+    let laudos = $j('#url_laudo_medico').val();
+    let temLaudos = false;
+
+    if (laudos.length > 0) {
+      temLaudos = JSON.parse(laudos).length > 0;
     }
 
-    var codigoInep = $j('#aluno_inep_id').val();
+    var additionalVars = {
+      deficiencias: $j('#deficiencias').val(),
+    };
 
-    if (codigoInep && codigoInep.length != 12) {
-        return codigoInepInvalido();
-    }
-
-    if ($j('#deficiencias').val().length > 1) {
-
-        let laudos = $j('#url_laudo_medico').val();
-        let temLaudos = false;
-
-        if (laudos.length > 0) {
-          temLaudos = JSON.parse(laudos).length > 0;
+    var options = {
+      url: getResourceUrlBuilder.buildUrl('/module/Api/aluno', 'deve-obrigar-laudo-medico', additionalVars),
+      dataType: 'json',
+      data: {},
+      success: function (response) {
+        if (response.result && $j('#url_laudo_medico_obrigatorio').length > 0 && !temLaudos) {
+          return laudoMedicoObrigatorio();
+        } else {
+          return formularioValido();
         }
-
-        if ($j('#url_laudo_medico_obrigatorio').length > 0 && !temLaudos) {
-            return laudoMedicoObrigatorio();
-        }
-    }
-
-    var tipoCertidaoNascimento = ($j('#tipo_certidao_civil').val() == 'certidao_nascimento_novo_formato');
-    var tipoCertidaoCasamento = ($j('#tipo_certidao_civil').val() == 'certidao_casamento_novo_formato');
-
-    if (tipoCertidaoNascimento && $j('#certidao_nascimento').val().length < 32) {
-        return certidaoNascimentoInvalida();
-    } else if (tipoCertidaoCasamento && $j('#certidao_casamento').val().length < 32) {
-        return certidaoCasamentoInvalida();
-    }
-
-    // Valida se o tamanho do campo aluno_estado_id é igual à 13
-    if ($j('#aluno_estado_id').val() !== '' && ! (($j('#aluno_estado_id').val().length === 13) || ($j('#aluno_estado_id').val().length === 11))) {
-        messageUtils.error('O campo Código rede estadual (RA) deve conter exatos 13 ou 11 dígitos.');
-        return false;
-    }
-
-    $tipoTransporte = $j('#tipo_transporte');
-
-    if ($tipoTransporte.val() == 'municipal' || $tipoTransporte.val() == 'estadual') {
-        veiculoTransporte = $j('#veiculo_transporte_escolar').val();
-        if (obrigarCamposCenso && (veiculoTransporte == '' || veiculoTransporte == null)) {
-            messageUtils.error('O campo Veículo utilizado deve ser preenchido');
-            return false;
-        }
-    }
-
-    submitFormExterno();
+      }
+    };
+    getResource(options);
+  } else {
+    return formularioValido();
+  }
 };
+
+function formularioValido() {
+  if (obrigarDocumentoPessoa && !possuiDocumentoObrigatorio()) {
+    messageUtils.error('É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil.');
+    return false;
+  }
+
+  var codigoInep = $j('#aluno_inep_id').val();
+
+  if (codigoInep && codigoInep.length != 12) {
+    return codigoInepInvalido();
+  }
+
+  var tipoCertidaoNascimento = ($j('#tipo_certidao_civil').val() == 'certidao_nascimento_novo_formato');
+  var tipoCertidaoCasamento = ($j('#tipo_certidao_civil').val() == 'certidao_casamento_novo_formato');
+
+  if (tipoCertidaoNascimento && $j('#certidao_nascimento').val().length < 32) {
+    return certidaoNascimentoInvalida();
+  } else if (tipoCertidaoCasamento && $j('#certidao_casamento').val().length < 32) {
+    return certidaoCasamentoInvalida();
+  }
+
+  // Valida se o tamanho do campo aluno_estado_id é igual à 13
+  if ($j('#aluno_estado_id').val() !== '' && ! (($j('#aluno_estado_id').val().length === 13) || ($j('#aluno_estado_id').val().length === 11))) {
+    messageUtils.error('O campo Código rede estadual (RA) deve conter exatos 13 ou 11 dígitos.');
+    return false;
+  }
+
+  $tipoTransporte = $j('#tipo_transporte');
+
+  if ($tipoTransporte.val() != 'nenhum') {
+    veiculoTransporte = $j('#veiculo_transporte_escolar').val();
+    if (obrigarCamposCenso && (veiculoTransporte == '' || veiculoTransporte == null)) {
+      messageUtils.error('O campo Veículo utilizado deve ser preenchido');
+      return false;
+    }
+  }
+
+  if (!validaObrigatoriedadeRecursosTecnologicos()) {
+    return false;
+  }
+
+  submitFormExterno();
+}
+
+function validaObrigatoriedadeRecursosTecnologicos() {
+    let obrigarRecursosTecnologicos = $j('#obrigar_recursos_tecnologicos').val() == '1';
+    let recursosTecnologicos = $j('#recursos_tecnologicos__').val();
+
+    if (Array.isArray(recursosTecnologicos)) {
+        recursosTecnologicos = recursosTecnologicos.toString();
+    }
+
+    if (obrigarRecursosTecnologicos && !recursosTecnologicos) {
+        messageUtils.error("É necessário informar o campo: <strong>Possui acesso à recursos tecnológicos?</strong> da aba: <strong>Moradia</strong>.");
+        return false;
+    }
+
+    return true;
+}
 
 var $loadingDocumento = $j('<img>')
     .attr('src', 'imagens/indicator.gif')
@@ -407,7 +443,7 @@ $j('.tablecadastro >tbody  > tr').each(function (index, row) {
 });
 
 // Adiciona classe para que os campos de descrição possam ser desativados (checkboxs)
-$j('#restricao_atividade_fisica, #acomp_medico_psicologico, #medicacao_especifica, #tratamento_medico, #doenca_congenita, #alergia_alimento, #alergia_medicamento, #fratura_trauma, #plano_saude').addClass('temDescricao');
+$j('#restricao_atividade_fisica, #acomp_medico_psicologico, #medicacao_especifica, #tratamento_medico, #doenca_congenita, #alergia_alimento, #alergia_medicamento, #fratura_trauma, #plano_saude, #aceita_hospital_proximo').addClass('temDescricao');
 
 // ajax
 
@@ -504,6 +540,7 @@ resourceOptions.handleGet = function (dataResponse) {
     $j('#religiao_id').val(dataResponse.religiao_id);
     $j('#tipo_transporte').val(dataResponse.tipo_transporte);
     $j('#alfabetizado').attr('checked', dataResponse.alfabetizado);
+    document.getElementById('emancipado').checked = dataResponse.emancipado;
     $j('#autorizado_um').val(dataResponse.autorizado_um);
     $j('#parentesco_um').val(dataResponse.parentesco_um);
     $j('#autorizado_dois').val(dataResponse.autorizado_dois);
@@ -681,10 +718,17 @@ resourceOptions.handleGet = function (dataResponse) {
         $j('#fratura_trauma').attr('checked', true);
         $j('#fratura_trauma').val('on');
     }
+
     if (dataResponse.plano_saude == 'S') {
         $j('#plano_saude').attr('checked', true);
         $j('#plano_saude').val('on');
     }
+
+    if (dataResponse.aceita_hospital_proximo == 'S') {
+      $j('#aceita_hospital_proximo').attr('checked', true);
+      $j('#aceita_hospital_proximo').val('on');
+    }
+
     // campos texto
     $j('#altura').val(dataResponse.altura);
     $j('#peso').val(dataResponse.peso);
@@ -700,9 +744,7 @@ resourceOptions.handleGet = function (dataResponse) {
     $j('#desc_restricao_atividade_fisica').val(dataResponse.desc_restricao_atividade_fisica);
     $j('#desc_fratura_trauma').val(dataResponse.desc_fratura_trauma);
     $j('#desc_plano_saude').val(dataResponse.desc_plano_saude);
-    $j('#hospital_clinica').val(dataResponse.hospital_clinica);
-    $j('#hospital_clinica_endereco').val(dataResponse.hospital_clinica_endereco);
-    $j('#hospital_clinica_telefone').val(dataResponse.hospital_clinica_telefone);
+    $j('#desc_aceita_hospital_proximo').val(dataResponse.desc_aceita_hospital_proximo);
     $j('#responsavel').val(dataResponse.responsavel);
     $j('#responsavel_parentesco').val(dataResponse.responsavel_parentesco);
     $j('#responsavel_parentesco_telefone').val(dataResponse.responsavel_parentesco_telefone);
@@ -725,11 +767,6 @@ resourceOptions.handleGet = function (dataResponse) {
     if (dataResponse.motocicleta == 'S') {
         $j('#motocicleta').attr('checked', true);
         $j('#motocicleta').val('on');
-    }
-
-    if (dataResponse.computador == 'S') {
-        $j('#computador').attr('checked', true);
-        $j('#computador').val('on');
     }
 
     if (dataResponse.geladeira == 'S') {
@@ -775,11 +812,6 @@ resourceOptions.handleGet = function (dataResponse) {
     if (dataResponse.ddd_celular == 'S') {
         $j('#ddd_celular').attr('checked', true);
         $j('#ddd_celular').val('on');
-    }
-
-    if (dataResponse.celular == 'S') {
-        $j('#celular').attr('checked', true);
-        $j('#celular').val('on');
     }
 
     if (dataResponse.agua_encanada == 'S') {
@@ -837,6 +869,13 @@ resourceOptions.handleGet = function (dataResponse) {
     $j('#moradia').val(dataResponse.moradia).change();
     $j('#material').val(dataResponse.material).change();
     $j('#moradia_situacao').val(dataResponse.moradia_situacao).change();
+
+    if (dataResponse.recursos_tecnologicos) {
+        var recursosTecnologicos = JSON.parse(dataResponse.recursos_tecnologicos);
+        $j('#recursos_tecnologicos__').val(recursosTecnologicos);
+        $j('#recursos_tecnologicos__').trigger("chosen:updated");
+    }
+
     $j('#justificativa_falta_documentacao').val(dataResponse.justificativa_falta_documentacao).change();
 
     // Transporte escolar
@@ -1050,12 +1089,25 @@ var handleGetPersonDetails = function (dataResponse) {
     function habilitaRecursosProvaInep() {
         var deficiencias = $j('#deficiencias').val();
 
-        $j('#recursos_prova_inep__').prop('disabled', false).trigger("chosen:updated");
+        var additionalVars = {
+          deficiencias: deficiencias,
+        };
 
-        // o MultipleSearch vem com uma opção vazia por padrão
-        if (deficiencias.length <= 1) {
-            $j('#recursos_prova_inep__').prop('disabled', true).val([]).trigger("chosen:updated");
-        }
+        var options = {
+          url: getResourceUrlBuilder.buildUrl('/module/Api/aluno', 'deve-habilitar-campo-recursos-prova-inep', additionalVars),
+          dataType: 'json',
+          data: {},
+          success: function (response) {
+            if (response.result) {
+              $j('#recursos_prova_inep__').prop('disabled', false).trigger("chosen:updated");
+            } else {
+              $j('#recursos_prova_inep__').prop('disabled', true).val([]).trigger("chosen:updated");
+            }
+          }
+        };
+        getResource(options);
+
+
     }
 
     habilitaRecursosProvaInep();
@@ -1171,19 +1223,12 @@ var checkTipoCertidaoCivil = function () {
 
 function disableJustificativaFields() {
     $jField = $j('#justificativa_falta_documentacao');
-    $jField.makeUnrequired();
     $jField.attr('disabled', 'disabled');
 }
 
 function enableJustificativaFields() {
     $jField = $j('#justificativa_falta_documentacao');
     $jField.removeAttr('disabled');
-
-    if ($j('#obrigar_campos_censo').val() == '1') {
-      $jField.makeRequired();
-    } else {
-      $jField.makeUnrequired();
-    }
 }
 
 var handleGetPersonParentDetails = function (dataResponse, parentType) {
@@ -1707,7 +1752,8 @@ function canShowParentsFields() {
                         <option id="estado-civil-pessoa-aluno_3" value="3">Divorciado(a)</option>
                         <option id="estado-civil-pessoa-aluno_4" value="4">Separado(a)</option>
                         <option id="estado-civil-pessoa-aluno_1" value="1">Solteiro(a)</option>
-                        <option id="estado-civil-pessoa-aluno_5" value="5">Vi&uacute;vo(a)</option>
+                        <option id="estado-civil-pessoa-aluno_5" value="5">Viúvo(a)</option>
+                        <option id="estado-civil-pessoa-aluno_7" value="7">Não informado</option>
                       </select>
                       <label for="data-nasc-pessoa-aluno"> Data de nascimento<span class="campo_obrigatorio">*</span> </label>
                       <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-aluno" id="data-nasc-pessoa-aluno" value="" size="11" maxlength="10">
@@ -1733,7 +1779,7 @@ function canShowParentsFields() {
                   </td>
                 </tr>
               </table>
-              <p><a id="link_cadastro_detalhado" target="_blank">Cadastro detalhado</a></p>
+              <p><a id="link_cadastro_detalhado">Cadastro detalhado</a></p>
             </form>
           </div>
 
@@ -1805,8 +1851,8 @@ function canShowParentsFields() {
             telefone_mov = $j("#telefone_cel"),
             ddd_telefone_1 = $j("#ddd_telefone_fixo"),
             ddd_telefone_mov = $j("#ddd_telefone_cel"),
-            complemento = $j("#complemento"),
-            numero = $j("#numero"),
+            complemento = $j("#complement"),
+            numero = $j("#number"),
             letra = $j("#letra"),
             apartamento = $j("#apartamento"),
             bloco = $j("#bloco"),
@@ -1815,26 +1861,21 @@ function canShowParentsFields() {
 
         municipio.show().toggleClass('geral text').attr('display', 'block').appendTo('#dialog-form-pessoa-aluno tr td:first-child fieldset');
 
-        $j('<label>').html('CEP').attr('for', 'cep_').insertBefore($j('#cep_'));
-        $j('#cep_').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
-        $j('<label>').html('Munic&iacute;pio').attr('for', 'municipio_municipio').insertBefore($j('#municipio_municipio'));
-        $j('#municipio_municipio').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
-        $j('<label>').html('Distrito').attr('for', 'distrito_distrito').insertBefore($j('#distrito_distrito'));
-        $j('#distrito_distrito').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
-        $j('<label>').html('Logradouro').attr('for', 'logradouro_logradouro').insertBefore($j('#logradouro_logradouro'));
-        $j('#logradouro_logradouro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
-        $j('<label>').html('Tipo de logradouro').attr('for', 'idtlog').insertBefore($j('#idtlog'));
-        $j('#idtlog').toggleClass('geral text');
-        $j('<label>').html('Logradouro').attr('for', 'logradouro').insertBefore($j('#logradouro'));
-        $j('#logradouro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
-        $j('<label>').html('Bairro').attr('for', 'bairro_bairro').insertBefore($j('#bairro_bairro'));
-        $j('#bairro_bairro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+        $j('<label>').html('CEP').attr('for', 'postal_code').insertBefore($j('#postal_code'));
+        $j('#postal_code').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+        $j('<label>').html('Endereço').attr('for', 'address').insertBefore($j('#address'));
+        $j('#address').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+        $j('<label>').html('Número').attr('for', 'number').insertBefore($j('#number'));
+        $j('#number').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+        $j('<label>').html('Complemento').attr('for', 'complement').insertBefore($j('#complement'));
+        $j('#complement').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+        $j('<label>').html('Bairro').attr('for', 'neighborhood').insertBefore($j('#neighborhood'));
+        $j('#neighborhood').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+        $j('<label>').html('Município').attr('for', 'city_city').insertBefore($j('#city_city'));
+        $j('#city_city').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+
         $j('<label>').html('País de residência').attr('for', 'pais_residencia').insertBefore($j('#pais_residencia'));
         $j('#pais_residencia').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
-        $j('<label>').html('Zona de localiza&ccedil;&atilde;o').attr('for', 'zona_localizacao').insertBefore($j('#zona_localizacao'));
-        $j('#zona_localizacao').toggleClass('geral text');
-        $j('<label>').html('Bairro').attr('for', 'bairro').insertBefore($j('#bairro'));
-        $j('#bairro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
 
         let $label = $j('<label>').html('Zona de residência').attr('for', 'zona_localizacao_censo').insertBefore($j('#zona_localizacao_censo'));
         if ($j('#zona_localizacao_censo').hasClass('obrigatorio')) {
@@ -1842,7 +1883,7 @@ function canShowParentsFields() {
         }
         $j('#zona_localizacao_censo').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
 
-        $j('<label>').html('Localização diferenciada').attr('for', 'localizacao_diferenciada').insertBefore($j('#localizacao_diferenciada'));
+        $j('<label>').html('Localização diferenciada de residência').attr('for', 'localizacao_diferenciada').insertBefore($j('#localizacao_diferenciada'));
         $j('#localizacao_diferenciada').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
 
         $label = $j('<label>').html('Raça').attr('for', 'cor_raca').attr('style', 'display:block;').insertBefore($j('#cor_raca'));
@@ -1874,21 +1915,8 @@ function canShowParentsFields() {
         }
         $j('#tipo_nacionalidade').change(checkTipoNacionalidade);
 
-        $j('<label>').html('Complemento').attr('for', 'complemento').insertBefore($j('#complemento'));
-        $j('#complemento').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
-        $j('<label>').html('N&uacute;mero').attr('for', 'numero').insertBefore($j('#numero'));
-        $j('#numero').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(3) fieldset table').find('td').removeClass();
-        $j('<label>').html('Letra').attr('for', 'letra').insertBefore($j('#letra'));
-        $j('#letra').toggleClass('geral text');
-        $j('<label>').html('N&ordm; de apartamento').attr('for', 'apartamento').insertBefore($j('#apartamento'));
-        $j('#apartamento').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(3) fieldset table').find('td').removeClass();
-        $j('<label>').html('Bloco').attr('for', 'bloco').insertBefore($j('#bloco'));
-        $j('#bloco').toggleClass('geral text');
-        $j('<label>').html('Andar').attr('for', 'andar').insertBefore($j('#andar'));
-        $j('#andar').toggleClass('geral text');
-
         $j('#dialog-form-pessoa-aluno').find(':input').css('display', 'block');
-        $j('#cep_').css('display', 'inline');
+        $j('#postal_code').css('display', 'inline');
         $j('#ddd_telefone_fixo').css('display', 'inline');
         $j('#telefone_fixo').css('display', 'inline');
         $j('#ddd_telefone_cel').css('display', 'inline');
@@ -1919,7 +1947,11 @@ function canShowParentsFields() {
                       bValid = bValid && checkSimpleSearch(municipio, municipio_id, "munic\u00edpio");
                     }
 
-                    bValid = bValid && ($j('#cep_').val() == '' ? true : validateEndereco());
+                    bValid = bValid && ($j('#postal_code').val() == '' ? true : validateEndereco());
+
+                    if (!validaObrigatoriedadeTelefone()) {
+                        bValid = false;
+                    }
 
                     if ($j('#zona_localizacao_censo').hasClass('obrigatorio')) {
                       bValid = bValid && checkSelect($j('#zona_localizacao_censo'), "zona localização");
@@ -1935,7 +1967,7 @@ function canShowParentsFields() {
                     }
 
                     if (bValid) {
-                        postPessoa($j(this), $j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val() || 'NULL', (editar_pessoa ? $j('#pessoa_id').val() : null), null, ddd_telefone_1.val(), telefone_1.val(), ddd_telefone_mov.val(), telefone_mov.val(), undefined,
+                        postPessoa($j(this), $j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val(), (editar_pessoa ? $j('#pessoa_id').val() : null), null, ddd_telefone_1.val(), telefone_1.val(), ddd_telefone_mov.val(), telefone_mov.val(), undefined,
                           $j('#tipo_nacionalidade').val(), $j('#pais_origem_id').val(), $j('#cor_raca').val(), $j('#zona_localizacao_censo').val(), $j('#localizacao_diferenciada').val(), nome_social.val(), $j('#pais_residencia').val());
                     }
                 },
@@ -1963,7 +1995,7 @@ function canShowParentsFields() {
             }
         });
 
-        $j('body').append('<div id="dialog-form-pessoa-parent"><form><h2></h2><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="49" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> <div id="falecido-modal"> <label>Falecido?</label><input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </div></fieldset><p><a id="link_cadastro_detalhado_parent" target="_blank">Cadastro detalhado</a></p></form></div>');
+        $j('body').append('<div id="dialog-form-pessoa-parent"><form><h2></h2><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="49" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option><option id="estado-civil-pessoa-parent_7" value="7">Não informado</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> <div id="falecido-modal"> <label>Falecido?</label><input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </div></fieldset><p><a id="link_cadastro_detalhado_parent">Cadastro detalhado</a></p></form></div>');
 
         $j('#dialog-form-pessoa-parent').find(':input').css('display', 'block');
 
@@ -2023,20 +2055,22 @@ function canShowParentsFields() {
             }
         });
 
-        $j('#link_cadastro_detalhado').click(function () {
+        $j('#link_cadastro_detalhado').click(function (e) {
+            e.preventDefault();
+            windowUtils.open(this.href);
             $j("#dialog-form-pessoa-aluno").dialog("close");
         });
 
-        $j('#link_cadastro_detalhado_parent').click(function () {
+        $j('#link_cadastro_detalhado_parent').click(function (e) {
+            e.preventDefault();
+            windowUtils.open(this.href);
             $j("#dialog-form-pessoa-parent").dialog("close");
         });
 
         $j("#cadastrar-pessoa-link").click(function () {
             $j('#link_cadastro_detalhado').attr('href', '/intranet/atendidos_cad.php');
             $j("#dialog-form-pessoa-aluno").dialog("open");
-            $j('#cep_').val('');
-            clearEnderecoFields();
-            hideEnderecoFields();
+            $j('#postal_code').val('');
             permiteEditarEndereco();
             checkTipoNacionalidade();
 
@@ -2052,7 +2086,6 @@ function canShowParentsFields() {
 
         $j("#editar-pessoa-link").click(function () {
             $j('#link_cadastro_detalhado').attr('href', '/intranet/atendidos_cad.php?cod_pessoa_fj=' + person_details.id);
-            clearEnderecoFields();
 
             name.val(person_details.nome);
             nome_social.val(person_details.nome_social);
@@ -2077,54 +2110,25 @@ function canShowParentsFields() {
               $j('#pais_origem_nome').val('');
             }
 
-            $j('#cep_').val(person_details.cep);
+            $j('#postal_code').val(person_details.cep);
             $j('#ddd_telefone_fixo').val(person_details.ddd_fone_fixo);
             $j('#telefone_fixo').val(person_details.fone_fixo);
             $j('#ddd_telefone_cel').val(person_details.ddd_fone_mov);
             $j('#telefone_cel').val(person_details.fone_mov);
-            $j('#distrito_id').val(person_details.iddis);
             $j('#pais_residencia').val(person_details.pais_residencia);
 
-            if ($j('#cep_').val()) {
-                $j('#municipio_municipio').removeAttr('disabled');
-                $j('#distrito_distrito').removeAttr('disabled');
-                $j('#bairro_bairro').removeAttr('disabled');
-                $j('#logradouro_logradouro').removeAttr('disabled');
-                $j('#bairro').removeAttr('disabled');
+            if ($j('#postal_code').val()) {
+                $j('#city_city').removeAttr('disabled');
+                $j('#neighborhood').removeAttr('disabled');
+                $j('#address').removeAttr('disabled');
                 $j('#zona_localizacao').removeAttr('disabled');
-                $j('#idtlog').removeAttr('disabled');
-                $j('#logradouro').removeAttr('disabled');
-                $j('#complemento').val(person_details.complemento);
-                $j('#numero').val(person_details.numero);
-                $j('#letra').val(person_details.letra);
-                $j('#apartamento').val(person_details.apartamento);
-                $j('#bloco').val(person_details.bloco);
-                $j('#andar').val(person_details.andar);
-
-                $j('#municipio_id').val(person_details.idmun);
-
-                $j('#municipio_municipio').val(person_details.idmun + ' - ' + person_details.municipio + ' (' + person_details.sigla_uf + ')');
-                $j('#distrito_distrito').val(person_details.iddis + ' - ' + person_details.distrito);
-
-                if (person_details.idbai && person_details.idlog) {
-                    var params = $j('#id').val();
-                    $j.get('/module/Api/aluno?&oper=get&resource=get-nome-bairro&id=' + params, function (data) {
-                        $j('#bairro_bairro').empty();
-                        $j('#bairro_bairro').val(data[0]['nome'] + ' / Zona ' + (person_details.zona_localizacao == "1" ? "Urbana" : "Rural"));
-                    });
-
-                    $j('#bairro_id').val(person_details.idbai);
-                    $j('#logradouro_id').val(person_details.idlog);
-                    $j('#logradouro_logradouro').val($j("#idtlog option[value='" + person_details.idtlog + "']").text() + ' ' + person_details.logradouro);
-                } else {
-                    $j('#bairro').val(person_details.bairro);
-                    $j('#logradouro').val(person_details.logradouro);
-                    $j('#idtlog').val(person_details.idtlog);
-                    $j('#zona_localizacao').val(person_details.zona_localizacao);
-                }
+                $j('#address').val(person_details.address);
+                $j('#number').val(person_details.number);
+                $j('#complement').val(person_details.complement);
+                $j('#neighborhood').val(person_details.neighborhood);
+                $j('#city_id').val(person_details.city_id);
+                $j('#city_city').val(person_details.city_id + ' - ' + person_details.city_name + ' (' + person_details.state_abbreviation + ')');
             }
-
-            hideEnderecoFields();
 
             $j("#dialog-form-pessoa-aluno").dialog("open");
 
@@ -2236,7 +2240,6 @@ function canShowParentsFields() {
             estadocivilParent.val(window[parentType + '_details'].estadocivil);
             sexoParent.val(window[parentType + '_details'].sexo);
             datanascParent.val(window[parentType + '_details'].data_nascimento);
-            // console.log(window[parentType+'_details'].falecido);
             falecidoParent.prop('checked', (window[parentType + '_details'].falecido));
 
             if (parentType == 'responsavel') {
@@ -2291,6 +2294,19 @@ function canShowParentsFields() {
             } else {
                 return true;
             }
+        }
+
+        function validaObrigatoriedadeTelefone() {
+            let obrigarTelefonePessoa = $j('#obrigar_telefone_pessoa').val() == '1';
+            let telefoneFixo = $j('#telefone_fixo').val();
+            let telefoneCel = $j('#telefone_cel').val();
+
+            if (obrigarTelefonePessoa && telefoneFixo == '' && telefoneCel == '') {
+                messageUtils.error("É necessário informar um Telefone ou Celular.");
+                return false;
+            }
+
+            return true;
         }
 
         $j('#pai_id').change(function () {
@@ -2431,26 +2447,15 @@ function canShowParentsFields() {
 
     function postEnderecoPessoa(pessoa_id) {
 
-        if (checkCepFields($j('#cep_').val())) {
+        if (checkCepFields($j('#postal_code').val())) {
             var data = {
-                pessoa_id: pessoa_id,
-                cep: $j('#cep_').val(),
-                municipio_id: $j('#municipio_id').val(),
-                distrito_id: $j('#distrito_id').val(),
-                bairro: $j('#bairro').val(),
-                bairro_id: $j('#bairro_id').val(),
-                zona_localizacao: $j('#zona_localizacao').val(),
-                logradouro: $j('#logradouro').val(),
-                idtlog: $j('#idtlog').val(),
-                logradouro_id: $j('#logradouro_id').val(),
-                apartamento: $j('#apartamento').val(),
-                complemento: $j('#complemento').val(),
-                numero: $j('#numero').val(),
-                letra: $j('#letra').val(),
-                bloco: $j('#bloco').val(),
-                andar: $j('#andar').val()
-                // telefone_1         : $j('#telefone_1').val()
-                // telefone_mov       : $j('#telefone_mov').val()
+                person_id: pessoa_id,
+                postal_code: $j('#postal_code').val(),
+                address: $j('#address').val(),
+                number: $j('#number').val(),
+                complement: $j('#complement').val(),
+                neighborhood: $j('#neighborhood').val(),
+                city_id: $j('#city_id').val(),
             };
 
             var options = {
@@ -2562,7 +2567,11 @@ if ($j('#transporte_rota').length > 0) {
         $j('#veiculo_transporte_escolar').makeUnrequired();
         if ($tipoTransporte.val() == 'nenhum') {
             document.getElementById('veiculo_transporte_escolar').disabled = true;
-        } else if ($tipoTransporte.val() == 'municipal' || $tipoTransporte.val() == 'estadual') {
+            $j('#transporte_rota').closest('tr').hide();
+            $j('#transporte_ponto').closest('tr').hide();
+            $j('#pessoaj_transporte_destino').closest('tr').hide();
+            $j('#transporte_observacao').closest('tr').hide();
+        }else if ($tipoTransporte.val() == 'municipal' || $tipoTransporte.val() == 'estadual' && $tipoTransporte.val() != 'nenhum') {
             if (obrigarCamposCenso) {
               $j('#veiculo_transporte_escolar').makeRequired();
             }
@@ -2572,7 +2581,7 @@ if ($j('#transporte_rota').length > 0) {
             $j('#pessoaj_transporte_destino').closest('tr').show();
             $j('#transporte_observacao').closest('tr').show();
         } else {
-            document.getElementById('veiculo_transporte_escolar').disabled = false;
+            document.getElementById('veiculo_transporte_escolar').disabled = true;
             $j('#transporte_rota').closest('tr').hide();
             $j('#transporte_ponto').closest('tr').hide();
             $j('#pessoaj_transporte_destino').closest('tr').hide();

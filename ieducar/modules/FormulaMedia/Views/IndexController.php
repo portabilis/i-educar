@@ -29,8 +29,6 @@
  * @version     $Id: /ieducar/branches/1.1.0-avaliacao/ieducar/modules/AreaConhecimento/Views/IndexController.php 791 2009-11-27T16:23:16.505103Z eriksen  $
  */
 
-require_once 'Core/Controller/Page/ListController.php';
-require_once 'FormulaMedia/Model/FormulaDataMapper.php';
 
 /**
  * IndexController class.
@@ -58,13 +56,8 @@ class IndexController extends Core_Controller_Page_ListController
 
     parent::_preRender();
 
-    $localizacao = new LocalizacaoSistema();
-
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Listagem de f&oacute;rmulas de m&eacute;dia"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Listagem de f&oacute;rmulas de m&eacute;dia', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
 }

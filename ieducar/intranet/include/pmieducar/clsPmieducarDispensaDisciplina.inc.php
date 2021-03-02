@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarDispensaDisciplina extends Model
 {
@@ -81,8 +80,7 @@ class clsPmieducarDispensaDisciplina extends Model
         }
 
         if (is_numeric($ref_cod_disciplina) && is_numeric($ref_cod_escola) && is_numeric($ref_cod_serie)) {
-            require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
-            $anoEscolarMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+                        $anoEscolarMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
             $componenteAnos = $anoEscolarMapper->findAll([], [
                 'componenteCurricular' => $ref_cod_disciplina,
                 'anoEscolar' => $ref_cod_serie
@@ -178,8 +176,9 @@ class clsPmieducarDispensaDisciplina extends Model
             $gruda = ', ';
 
             if (is_string($this->observacao)) {
+                $observacao = $db->escapeString($this->observacao);
                 $campos .= "{$gruda}observacao";
-                $valores .= "{$gruda}'{$this->observacao}'";
+                $valores .= "{$gruda}'{$observacao}'";
                 $gruda = ', ';
             }
 
@@ -187,8 +186,6 @@ class clsPmieducarDispensaDisciplina extends Model
             $db->Consulta($sql);
             $id = $db->InsertId("{$this->_tabela}_cod_dispensa_seq");
             $this->id = $id;
-            $auditoria = new clsModulesAuditoriaGeral('dispensa_disciplina', $this->pessoa_logada, $id);
-            $auditoria->inclusao($this->detalhe());
 
             return $id;
         }
@@ -208,6 +205,7 @@ class clsPmieducarDispensaDisciplina extends Model
             is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
             $set = '';
+            $gruda = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
                 $set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
@@ -238,7 +236,8 @@ class clsPmieducarDispensaDisciplina extends Model
             }
 
             if (is_string($this->observacao)) {
-                $set .= "{$gruda}observacao = '{$this->observacao}'";
+                $observacao = $db->escapeString($this->observacao);
+                $set .= "{$gruda}observacao = '{$observacao}'";
                 $gruda = ', ';
             }
 
@@ -246,8 +245,6 @@ class clsPmieducarDispensaDisciplina extends Model
                 $detalheAntigo = $this->detalhe();
                 $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_serie = '{$this->ref_cod_serie}' AND ref_cod_escola = '{$this->ref_cod_escola}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}'");
                 $detalheAtual = $this->detalhe();
-                $auditoria = new clsModulesAuditoriaGeral('dispensa_disciplina', $this->pessoa_logada, $this->id);
-                $auditoria->alteracao($detalheAntigo, $detalheAtual);
 
                 return true;
             }
@@ -538,8 +535,6 @@ class clsPmieducarDispensaDisciplina extends Model
             $detalhe = $this->detalhe();
             $db = new clsBanco();
             $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}'");
-            $auditoria = new clsModulesAuditoriaGeral('dispensa_disciplina', $this->pessoa_logada, $this->id);
-            $auditoria->exclusao($detalhe);
 
             return $this->edita();
         }

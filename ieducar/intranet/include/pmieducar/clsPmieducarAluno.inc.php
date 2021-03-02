@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarAluno extends Model
 {
@@ -14,8 +13,8 @@ class clsPmieducarAluno extends Model
     public $data_cadastro;
     public $data_exclusao;
     public $ativo;
-    public $caminho_foto;
     public $analfabeto;
+    public $emancipado;
     public $nm_pai;
     public $nm_mae;
     public $tipo_responsavel;
@@ -72,9 +71,9 @@ class clsPmieducarAluno extends Model
         $this->_tabela = $this->_schema . 'aluno a';
 
         $this->_campos_lista = $this->_todos_campos = 'a.cod_aluno, a.ref_cod_religiao, a.ref_usuario_exc,
-        a.ref_usuario_cad, a.ref_idpes, a.data_cadastro, a.data_exclusao, a.ativo, a.caminho_foto, a.analfabeto, a.nm_pai, a.nm_mae,tipo_responsavel, a.aluno_estado_id, a.recursos_prova_inep, a.recebe_escolarizacao_em_outro_espaco,
+        a.ref_usuario_cad, a.ref_idpes, a.data_cadastro, a.data_exclusao, a.ativo, a.analfabeto, tipo_responsavel, a.aluno_estado_id, a.recursos_prova_inep, a.recebe_escolarizacao_em_outro_espaco,
         a.justificativa_falta_documentacao, a.url_laudo_medico::text, a.codigo_sistema, a.veiculo_transporte_escolar, a.parentesco_um, a.autorizado_um, a.parentesco_dois, a.autorizado_dois,
-        a.parentesco_tres, a.autorizado_tres, a.parentesco_quatro, a.autorizado_quatro, a.parentesco_cinco, a.autorizado_cinco, a.url_documento::text';
+        a.parentesco_tres, a.autorizado_tres, a.parentesco_quatro, a.autorizado_quatro, a.parentesco_cinco, a.autorizado_cinco, a.url_documento::text, a.emancipado';
 
         if (is_numeric($ref_usuario_exc)) {
                     $this->ref_usuario_exc = $ref_usuario_exc;
@@ -110,24 +109,8 @@ class clsPmieducarAluno extends Model
             $this->ativo = $ativo;
         }
 
-        if (is_string($caminho_foto)) {
-            $this->caminho_foto = $caminho_foto;
-        }
-
         if (is_numeric($analfabeto)) {
             $this->analfabeto = $analfabeto;
-        }
-
-        if (is_string($caminho_foto)) {
-            $this->caminho_foto = $caminho_foto;
-        }
-
-        if (is_string($nm_pai)) {
-            $this->nm_pai = $nm_pai;
-        }
-
-        if (is_string($nm_mae)) {
-            $this->nm_mae = $nm_mae;
         }
 
         if (is_string($tipo_responsavel)) {
@@ -215,6 +198,12 @@ class clsPmieducarAluno extends Model
                 $gruda = ', ';
             }
 
+            if ($this->emancipado) {
+                $campos .= "{$gruda}emancipado";
+                $valores .= "{$gruda}TRUE";
+                $gruda = ', ';
+            }
+
             $campos .= "{$gruda}data_cadastro";
             $valores .= "{$gruda}NOW()";
             $gruda = ', ';
@@ -222,24 +211,6 @@ class clsPmieducarAluno extends Model
             $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
             $gruda = ', ';
-
-            if (is_string($this->caminho_foto)) {
-                $campos .= "{$gruda}caminho_foto";
-                $valores .= "{$gruda}'{$this->caminho_foto}'";
-                $gruda = ', ';
-            }
-
-            if (is_string($this->nm_pai) && $this->nm_pai != 'NULL') {
-                $campos .= "{$gruda}nm_pai";
-                $valores .= "{$gruda}'{$this->nm_pai}'";
-                $gruda = ', ';
-            }
-
-            if (is_string($this->nm_mae) && $this->nm_mae != 'NULL') {
-                $campos .= "{$gruda}nm_mae";
-                $valores .= "{$gruda}'{$this->nm_mae}'";
-                $gruda = ', ';
-            }
 
             if (is_string($this->tipo_responsavel) && sizeof($this->tipo_responsavel) <= 1) {
                 $campos .= "{$gruda}tipo_responsavel";
@@ -302,8 +273,9 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_um) && $this->parentesco_um != 'NULL') {
+                $parentesco_um = $db->escapeString($this->parentesco_um);
                 $campos .= "{$gruda}parentesco_um";
-                $valores .= "{$gruda}'{$this->parentesco_um}'";
+                $valores .= "{$gruda}'{$parentesco_um}'";
                 $gruda = ', ';
             }
 
@@ -314,8 +286,9 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_dois) && $this->parentesco_dois != 'NULL') {
+                $parentesco_dois = $db->escapeString($this->parentesco_dois);
                 $campos .= "{$gruda}parentesco_dois";
-                $valores .= "{$gruda}'{$this->parentesco_dois}'";
+                $valores .= "{$gruda}'{$parentesco_dois}'";
                 $gruda = ', ';
             }
 
@@ -326,8 +299,9 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_tres) && $this->parentesco_tres != 'NULL') {
+                $parentesco_tres = $db->escapeString($this->parentesco_tres);
                 $campos .= "{$gruda}parentesco_tres";
-                $valores .= "{$gruda}'{$this->parentesco_tres}'";
+                $valores .= "{$gruda}'{$parentesco_tres}'";
                 $gruda = ', ';
             }
 
@@ -338,8 +312,9 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_quatro) && $this->parentesco_quatro != 'NULL') {
+                $parentesco_quatro = $db->escapeString($this->parentesco_quatro);
                 $campos .= "{$gruda}parentesco_quatro";
-                $valores .= "{$gruda}'{$this->parentesco_quatro}'";
+                $valores .= "{$gruda}'{$parentesco_quatro}'";
                 $gruda = ', ';
             }
 
@@ -350,8 +325,9 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_cinco) && $this->parentesco_cinco != 'NULL') {
+                $parentesco_cinco = $db->escapeString($this->parentesco_cinco);
                 $campos .= "{$gruda}parentesco_cinco";
-                $valores .= "{$gruda}'{$this->parentesco_cinco}'";
+                $valores .= "{$gruda}'{$parentesco_cinco}'";
                 $gruda = ', ';
             }
 
@@ -408,32 +384,14 @@ class clsPmieducarAluno extends Model
                 $gruda = ', ';
             }
 
-            if (is_string($this->caminho_foto) && $this->caminho_foto != 'NULL') {
-                $set .= "{$gruda}caminho_foto = '{$this->caminho_foto}'";
-                $gruda = ', ';
-            } elseif ($this->caminho_foto == 'NULL') {
-                $set .= "{$gruda}caminho_foto = {$this->caminho_foto}";
-                $gruda = ', ';
-            }
-
             if (is_numeric($this->analfabeto)) {
                 $set .= "{$gruda}analfabeto = '{$this->analfabeto}'";
                 $gruda = ', ';
             }
 
-            if (is_string($this->nm_pai) && $this->nm_pai != 'NULL') {
-                $set .= "{$gruda}nm_pai = '{$this->nm_pai}'";
-                $gruda = ', ';
-            } elseif ($this->nm_pai == 'NULL') {
-                $set .= "{$gruda}nm_pai = NULL";
-                $gruda = ', ';
-            }
-
-            if (is_string($this->nm_mae) && $this->nm_mae != 'NULL') {
-                $set .= "{$gruda}nm_mae = '{$this->nm_mae}'";
-                $gruda = ', ';
-            } elseif ($this->nm_mae == 'NULL') {
-                $set .= "{$gruda}nm_mae = NULL";
+            if (isset($this->emancipado)) {
+                $condicaoBd = $this->emancipado ? 'TRUE' : 'FALSE';
+                $set .= "{$gruda}emancipado = {$condicaoBd}";
                 $gruda = ', ';
             }
 
@@ -504,7 +462,8 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_um) && $this->parentesco_um != 'NULL') {
-                $set .= "{$gruda}parentesco_um = '{$this->parentesco_um}'";
+                $parentesco_um = $db->escapeString($this->parentesco_um);
+                $set .= "{$gruda}parentesco_um = '{$parentesco_um}'";
                 $gruda = ', ';
             } elseif ($this->parentesco_um == 'NULL') {
                 $set .= "{$gruda}parentesco_um = NULL";
@@ -521,7 +480,8 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_dois) && $this->parentesco_dois != 'NULL') {
-                $set .= "{$gruda}parentesco_dois = '{$this->parentesco_dois}'";
+                $parentesco_dois = $db->escapeString($this->parentesco_dois);
+                $set .= "{$gruda}parentesco_dois = '{$parentesco_dois}'";
                 $gruda = ', ';
             } elseif ($this->parentesco_dois == 'NULL') {
                 $set .= "{$gruda}parentesco_dois = NULL";
@@ -538,7 +498,8 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_tres) && $this->parentesco_tres != 'NULL') {
-                $set .= "{$gruda}parentesco_tres = '{$this->parentesco_tres}'";
+                $parentesco_tres = $db->escapeString($this->parentesco_tres);
+                $set .= "{$gruda}parentesco_tres = '{$parentesco_tres}'";
                 $gruda = ', ';
             } elseif ($this->parentesco_tres == 'NULL') {
                 $set .= "{$gruda}parentesco_tres = NULL";
@@ -555,7 +516,8 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_quatro) && $this->parentesco_quatro != 'NULL') {
-                $set .= "{$gruda}parentesco_quatro = '{$this->parentesco_quatro}'";
+                $parentesco_quatro = $db->escapeString($this->parentesco_quatro);
+                $set .= "{$gruda}parentesco_quatro = '{$parentesco_quatro}'";
                 $gruda = ', ';
             } elseif ($this->parentesco_quatro == 'NULL') {
                 $set .= "{$gruda}parentesco_quatro = NULL";
@@ -572,7 +534,8 @@ class clsPmieducarAluno extends Model
             }
 
             if (is_string($this->parentesco_cinco) && $this->parentesco_cinco != 'NULL') {
-                $set .= "{$gruda}parentesco_cinco = '{$this->parentesco_cinco}'";
+                $parentesco_cinco = $db->escapeString($this->parentesco_cinco);
+                $set .= "{$gruda}parentesco_cinco = '{$parentesco_cinco}'";
                 $gruda = ', ';
             } elseif ($this->parentesco_cinco == 'NULL') {
                 $set .= "{$gruda}parentesco_cinco = NULL";
@@ -630,6 +593,8 @@ class clsPmieducarAluno extends Model
         $this->resetCamposLista();
 
         $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social';
+
+        $db = new clsBanco();
 
         $sql = "
             SELECT
@@ -692,18 +657,14 @@ class clsPmieducarAluno extends Model
             $whereAnd = ' AND ';
         }
 
-        if (is_string($str_caminho_foto)) {
-            $filtros .= "{$whereAnd} a.caminho_foto LIKE '%{$str_caminho_foto}%'";
-            $whereAnd = ' AND ';
-        }
-
         if (is_numeric($int_analfabeto)) {
             $filtros .= "{$whereAnd} a.analfabeto = '{$int_analfabeto}'";
             $whereAnd = ' AND ';
         }
 
         if (is_string($str_nome_aluno)) {
-            $filtros .= "{$whereAnd} translate(upper(coalesce(fisica.nome_social, '') || pessoa.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_aluno}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
+            $str_nm_aluno = $db->escapeString($str_nome_aluno);
+            $filtros .= "{$whereAnd} pessoa.slug ILIKE unaccent('%{$str_nm_aluno}%')";
             $whereAnd = ' AND ';
         }
 
@@ -711,14 +672,12 @@ class clsPmieducarAluno extends Model
             $and_resp = '';
 
             if (is_string($str_nome_responsavel)) {
-                $and_nome_pai_mae = "OR translate(upper(aluno.nm_pai),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') AND (aluno.tipo_responsavel = 'p')";
-
-                $and_nome_pai_mae .= "OR translate(upper(aluno.nm_mae),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') AND (aluno.tipo_responsavel = 'm')";
+                $and_nome_pai_mae = '';
 
                 $and_nome_resp = "
-          (translate(upper(pai_mae.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
+          (pai_mae.slug ILIKE unaccent('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
           OR
-          (translate(upper(pai_mae.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae";
+          (pai_mae.slug ILIKE unaccent('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae";
 
                 $and_resp = ' AND ';
             }
@@ -768,16 +727,6 @@ class clsPmieducarAluno extends Model
             $whereAnd = ' AND ';
         }
 
-        if (is_string($str_nm_pai)) {
-            $filtros .= "{$whereAnd} translate(upper(nm_pai),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') nm_pai LIKE translate(upper('%{$str_nm_pai}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_string($str_nm_mae)) {
-            $filtros .= "{$whereAnd} translate(upper(nm_mae),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_mae}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
-            $whereAnd = ' AND ';
-        }
-
         if (is_numeric($int_ref_cod_escola)) {
             $filtros .= "{$whereAnd} cod_aluno IN ( SELECT ref_cod_aluno FROM pmieducar.matricula WHERE ref_ref_cod_escola = '{$int_ref_cod_escola}' AND ultima_matricula = 1 )";
             $whereAnd = ' AND ';
@@ -788,7 +737,6 @@ class clsPmieducarAluno extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -876,41 +824,36 @@ class clsPmieducarAluno extends Model
         $autorizado_quatro = null,
         $parentesco_quatro = null,
         $autorizado_cinco = null,
-        $parentesco_cinco = null
+        $parentesco_cinco = null,
+        $int_cpf_aluno = null,
+        $int_rg_aluno = null
     ) {
         $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie);// || is_numeric($periodo);
 
         $filtros = '';
         $this->resetCamposLista();
 
-        $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social, COALESCE(nome_social, pessoa.nome) AS ordem_aluno';
+        $this->_campos_lista .= ', pessoa.nome AS nome_aluno, fisica.nome_social, COALESCE(nome_social, pessoa.nome) AS ordem_aluno, pessoa_mae.nome AS nome_mae, educacenso_cod_aluno.cod_aluno_inep AS codigo_inep';
 
         if ($filtra_baseado_matricula) {
             $sql = "SELECT distinct {$this->_campos_lista} FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
         } else {
             $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
         }
+        $db = new clsBanco();
 
-        $sql .= '
+        $joins = '
              LEFT JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes
-             LEFT JOIN cadastro.fisica ON fisica.idpes = a.ref_idpes';
-        if ($idsetorbai) {
-            $sql .= '
-            INNER JOIN cadastro.endereco_pessoa ep ON (a.ref_idpes = ep.idpes)
-            INNER JOIN public.bairro b ON (ep.idbai = b.idbai)
-            INNER JOIN public.setor_bai sb ON (sb.idsetorbai = b.idsetorbai)
-          ';
-        }
+             LEFT JOIN cadastro.fisica ON fisica.idpes = a.ref_idpes
+             LEFT JOIN cadastro.pessoa AS pessoa_mae ON pessoa_mae.idpes = fisica.idpes_mae
+             LEFT JOIN modules.educacenso_cod_aluno ON educacenso_cod_aluno.cod_aluno = a.cod_aluno';
+
+        $sql .= $joins;
 
         $whereAnd = ' WHERE ';
 
         if (is_numeric($int_cod_aluno)) {
-            $filtros .= "{$whereAnd} cod_aluno = {$int_cod_aluno}";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($idsetorbai)) {
-            $filtros .= "{$whereAnd} sb.idsetorbai = {$idsetorbai}";
+            $filtros .= "{$whereAnd} a.cod_aluno = {$int_cod_aluno}";
             $whereAnd = ' AND ';
         }
 
@@ -964,30 +907,30 @@ class clsPmieducarAluno extends Model
             $whereAnd = ' AND ';
         }
 
-        if (is_string($str_caminho_foto)) {
-            $filtros .= "{$whereAnd} caminho_foto LIKE '%{$str_caminho_foto}%'";
-            $whereAnd = ' AND ';
-        }
-
         if (is_numeric($int_analfabeto)) {
             $filtros .= "{$whereAnd} analfabeto = '{$int_analfabeto}'";
             $whereAnd = ' AND ';
         }
 
         if (is_string($str_nome_aluno)) {
-            $str_nome_aluno = pg_escape_string($str_nome_aluno);
+            $str_nm_aluno = $db->escapeString($str_nome_aluno);
+            $filtros .= "{$whereAnd}  unaccent(coalesce(fisica.nome_social, '') || pessoa.nome) LIKE unaccent('%{$str_nm_aluno}%')";
 
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_cpf_aluno)) {
+            $filtros .= "{$whereAnd}  fisica.cpf = '{$int_cpf_aluno}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_rg_aluno)) {
             $filtros .= "{$whereAnd} EXISTS (
-                     SELECT
-                       1
-                     FROM
-                       cadastro.pessoa
-                       inner join cadastro.fisica ON (fisica.idpes = pessoa.idpes)
-                     WHERE
-                       cadastro.pessoa.idpes = ref_idpes
-                       AND translate(upper(coalesce(nome_social, '') || nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_aluno}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
-                   )";
-
+                            SELECT 1
+                            FROM cadastro.documento cd
+                            WHERE cd.idpes = a.ref_idpes
+                            AND translate(cd.rg, './-', '') = '{$int_rg_aluno}'
+                        )";
             $whereAnd = ' AND ';
         }
 
@@ -995,14 +938,10 @@ class clsPmieducarAluno extends Model
             $and_resp = '';
 
             if (is_string($str_nome_responsavel)) {
-                $and_nome_pai_mae = "OR translate(upper(aluno.nm_pai),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') AND (aluno.tipo_responsavel = 'p')";
-
-                $and_nome_pai_mae .= "OR translate(upper(aluno.nm_mae),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') AND (aluno.tipo_responsavel = 'm')";
-
                 $and_nome_resp = "
-              (translate(upper(pai_mae.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
+              (pai_mae.slug ILIKE unaccent('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
               OR
-              (translate(upper(pai_mae.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) AND (aluno.tipo_responsavel = 'p') AND pai_mae.idpes = fisica_aluno.idpes_pai";
+              (pai_mae.slug ILIKE unaccent('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'p') AND pai_mae.idpes = fisica_aluno.idpes_pai";
 
                 $and_resp = 'AND';
             }
@@ -1026,7 +965,6 @@ class clsPmieducarAluno extends Model
                 AND responsavel.idpes = fisica.idpes_responsavel
                 $and_cpf_pai_mae
                 and aluno.ref_idpes = pessoa.idpes)
-              $and_nome_pai_mae
               OR EXISTS (
                 SELECT
                   1
@@ -1051,18 +989,8 @@ class clsPmieducarAluno extends Model
             $whereAnd = ' AND ';
         }
 
-        if (is_string($str_nm_pai)) {
-            $filtros .= "{$whereAnd} translate(upper(nm_pai),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') nm_pai LIKE translate(upper('%{$str_nm_pai}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_string($str_nm_mae)) {
-            $filtros .= "{$whereAnd} translate(upper(nm_mae),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_mae}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
-            $whereAnd = ' AND ';
-        }
-
         if (is_numeric($int_ref_cod_escola)) {
-            $filtros .= "{$whereAnd} cod_aluno IN ( SELECT ref_cod_aluno FROM pmieducar.matricula WHERE ref_ref_cod_escola = '{$int_ref_cod_escola}' AND ultima_matricula = 1)";
+            $filtros .= "{$whereAnd} a.cod_aluno IN ( SELECT ref_cod_aluno FROM pmieducar.matricula WHERE ref_ref_cod_escola = '{$int_ref_cod_escola}' AND ultima_matricula = 1)";
             $whereAnd = ' AND ';
         }
 
@@ -1077,7 +1005,7 @@ class clsPmieducarAluno extends Model
         }
 
         if (!empty($cod_inep) && is_numeric($cod_inep)) {
-            $filtros .= "{$whereAnd} cod_aluno IN( SELECT cod_aluno FROM modules.educacenso_cod_aluno WHERE cod_aluno_inep = {$cod_inep})";
+            $filtros .= "{$whereAnd} a.cod_aluno IN( SELECT cod_aluno FROM modules.educacenso_cod_aluno WHERE cod_aluno_inep = {$cod_inep})";
             $whereAnd = ' AND ';
         }
 
@@ -1112,26 +1040,23 @@ class clsPmieducarAluno extends Model
             $and_where = '';
 
             if (!empty($str_nm_pai2)) {
-                $str_nm_pai2 = addslashes($str_nm_pai2);
-
+                $str_nome_pai2 = $db->escapeString($str_nm_pai2);
                 $complemento_sql .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_pai ON (pessoa_pai.idpes = f.idpes_pai)';
-                $complemento_where .= "{$and_where} (translate(upper(nm_pai),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE (translate(upper('%{$str_nm_pai2}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) OR translate(upper(pessoa_pai.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE (translate(upper('%{$str_nm_pai2}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')))";
+                $complemento_where .= "{$and_where} (pessoa_pai.slug ILIKE unaccent('%{$str_nome_pai2}%'))";
                 $and_where = ' AND ';
             }
 
             if (!empty($str_nm_mae2)) {
-                $str_nm_mae2 = addslashes($str_nm_mae2);
-
+                $str_nome_mae2 = $db->escapeString($str_nm_mae2);
                 $complemento_sql .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_mae ON (pessoa_mae.idpes = f.idpes_mae)';
-                $complemento_where .= "{$and_where} (translate(upper(nm_mae),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE (translate(upper('%{$str_nm_mae2}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) OR translate(upper(pessoa_mae.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE (translate(upper('%{$str_nm_mae2}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')))";
+                $complemento_where .= "{$and_where} (pessoa_mae.slug ILIKE unaccent('%{$str_nome_mae2}%'))";
                 $and_where = ' AND ';
             }
 
             if (!empty($str_nm_responsavel2)) {
-                $str_nm_responsavel2 = addslashes($str_nm_responsavel2);
-
+                $str_nome_responsavel2 = $db->escapeString($str_nm_responsavel2);
                 $complemento_sql .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_responsavel ON (pessoa_responsavel.idpes = f.idpes_responsavel)';
-                $complemento_where .= "{$and_where} (translate(upper(pessoa_responsavel.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE (translate(upper('%{$str_nm_responsavel2}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')))";
+                $complemento_where .= "{$and_where} (pessoa_responsavel.slug ILIKE unaccent('%{$str_nome_responsavel2}%'))";
                 $and_where = ' AND ';
             }
 
@@ -1146,7 +1071,6 @@ class clsPmieducarAluno extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 
@@ -1157,19 +1081,12 @@ class clsPmieducarAluno extends Model
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
         if ($filtra_baseado_matricula) {
-            $sqlCount = "SELECT COUNT(DISTINCT cod_aluno) FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
+            $sqlCount = "SELECT COUNT(DISTINCT a.cod_aluno) FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
         } else {
             $sqlCount = "SELECT COUNT(0) FROM {$this->_tabela} ";
         }
 
-        if ($idsetorbai) {
-            $sqlCount .= '
-        INNER JOIN cadastro.endereco_pessoa ep ON (a.ref_idpes = ep.idpes)
-        INNER JOIN public.bairro b ON (ep.idbai = b.idbai)
-        INNER JOIN public.setor_bai sb ON (sb.idsetorbai = b.idsetorbai)
-      ';
-        }
-
+        $sqlCount .= $joins;
         $sqlCount .= $filtros;
 
         $this->_total = $db->CampoUnico($sqlCount);
@@ -1243,24 +1160,6 @@ class clsPmieducarAluno extends Model
         return false;
     }
 
-    /**
-     * Retorna um array com os dados de um registro.
-     *
-     * @return array
-     */
-    public function existePessoa()
-    {
-        if (is_numeric($this->ref_idpes)) {
-            $db = new clsBanco();
-            $db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE ref_idpes = '{$this->ref_idpes}'");
-            $db->ProximoRegistro();
-
-            return $db->Tupla();
-        }
-
-        return false;
-    }
-
     public function verificaInep($cod_aluno = null)
     {
         if (is_numeric($cod_aluno)) {
@@ -1296,10 +1195,7 @@ class clsPmieducarAluno extends Model
                     $det_fisica = $obj_fisica->detalhe();
 
                     $registro['nome_responsavel'] = $det_ref_idpes['nome'];
-
-                    if ($det_fisica['cpf']) {
-                        $registro['cpf_responsavel'] = int2CPF($det_fisica['cpf']);
-                    }
+                    $registro['cpf_responsavel'] = $det_fisica['cpf'] ? int2CPF($det_fisica['cpf']) : "Não informado";
                 }
             }
 
@@ -1318,10 +1214,7 @@ class clsPmieducarAluno extends Model
                     $det_fisica = $obj_fisica->detalhe();
 
                     $registro['nome_responsavel'] = $det_ref_idpes['nome'];
-
-                    if ($det_fisica['cpf']) {
-                        $registro['cpf_responsavel'] = int2CPF($det_fisica['cpf']);
-                    }
+                    $registro['cpf_responsavel'] = $det_fisica['cpf'] ? int2CPF($det_fisica['cpf']) : "Não informado";
                 }
             }
 
@@ -1340,10 +1233,7 @@ class clsPmieducarAluno extends Model
                     $det_fisica = $obj_fisica->detalhe();
 
                     $registro['nome_responsavel'] = $det_ref_idpes['nome'];
-
-                    if ($det_fisica['cpf']) {
-                        $registro['cpf_responsavel'] = int2CPF($det_fisica['cpf']);
-                    }
+                    $registro['cpf_responsavel'] = $det_fisica['cpf'] ? int2CPF($det_fisica['cpf']) : "Não informado";
                 }
             }
 
@@ -1355,32 +1245,17 @@ class clsPmieducarAluno extends Model
 
                 if ($det_fisica_aluno['idpes_mae'] && $det_fisica_aluno['idpes_pai']) {
                     $obj_mae = new clsPessoa_($det_fisica_aluno['idpes_mae']);
+                    $fisica_mae = (new clsFisica($det_fisica_aluno['idpes_mae']))->detalhe();
                     $det_mae = $obj_mae->detalhe();
 
                     $obj_pai = new clsPessoa_($det_fisica_aluno['idpes_pai']);
+                    $fisica_pai = (new clsFisica($det_fisica_aluno['idpes_pai']))->detalhe();
                     $det_pai = $obj_pai->detalhe();
 
                     $registro['nome_responsavel'] = $det_pai['nome'] . ', ' . $det_mae['nome'];
-
-                    if ($det_fisica['cpf']) {
-                        $registro['cpf_responsavel'] = int2CPF($det_fisica['cpf']);
-                    }
-                }
-            }
-
-            if (!$registro['nome_responsavel']) {
-                if ($registro['tipo_responsavel'] != null) {
-                    if ($registro['tipo_responsavel'] == 'p') {
-                        $registro['nome_responsavel'] = $registro['nm_pai'];
-                    } else {
-                        $registro['nome_responsavel'] = $registro['nm_mae'];
-                    }
-                } else {
-                    if ($registro['nm_pai']) {
-                        $registro['nome_responsavel'] = $registro['nm_pai'];
-                    } else {
-                        $registro['nome_responsavel'] = $registro['nm_mae'];
-                    }
+                    $cpfPai = $fisica_pai['cpf'] ? int2CPF($fisica_pai['cpf']) : "Não informado";
+                    $cpfMae = $fisica_mae['cpf'] ? int2CPF($fisica_mae['cpf']) : "não informado";
+                    $registro['cpf_responsavel'] = $cpfPai . ', ' . $cpfMae;
                 }
             }
 

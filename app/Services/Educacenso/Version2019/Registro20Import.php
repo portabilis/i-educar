@@ -21,6 +21,7 @@ use App\Models\LegacySchoolGradeDiscipline;
 use App\Models\SchoolClassInep;
 use App\Models\SchoolInep;
 use App\Services\Educacenso\RegistroImportInterface;
+use App\Services\SchoolClass\PeriodService;
 use App\User;
 use Exception;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
@@ -83,6 +84,9 @@ class Registro20Import implements RegistroImportInterface
         $course = $this->getOrCreateCourse($school);
         $level = $this->getOrCreateLevel($school, $course);
 
+        $horaInicial = sprintf("%02d:%02d:00", intval($model->horaInicial), intval($model->horaInicialMinuto));
+        $horaFinal = sprintf("%02d:%02d:00", intval($model->horaFinal), intval($model->horaFinalMinuto));
+
         $schoolClass = LegacySchoolClass::create(
             [
                 'ref_ref_cod_escola' => $school->getKey(),
@@ -92,8 +96,8 @@ class Registro20Import implements RegistroImportInterface
                 'ref_usuario_cad' => $this->user->getKey(),
                 'nm_turma' => $model->nomeTurma,
                 'tipo_mediacao_didatico_pedagogico' => $model->tipoMediacaoDidaticoPedagogico,
-                'hora_inicial' => sprintf("%02d:%02d:00", intval($model->horaInicial), intval($model->horaInicialMinuto)),
-                'hora_final' => sprintf("%02d:%02d:00", intval($model->horaFinal), intval($model->horaFinalMinuto)),
+                'hora_inicial' => $horaInicial,
+                'hora_final' => $horaFinal,
                 'dias_semana' => $this->getArrayDaysWeek(),
                 'tipo_atendimento' => $this->getTipoAtendimento(),
                 'atividades_complementares' => $this->getArrayAtividadesComplementares(),
@@ -108,6 +112,7 @@ class Registro20Import implements RegistroImportInterface
                 'sgl_turma' => '',
                 'data_cadastro' => now(),
                 'ref_cod_instituicao' => $this->institution->id,
+                'turma_turno_id' => $this->getTurno($horaInicial, $horaFinal),
             ]
         );
 
@@ -324,7 +329,7 @@ class Registro20Import implements RegistroImportInterface
             throw new Exception('Não foi possível encontrar os dados do curso');
         }
 
-        $course = LegacyCourse::where('nm_curso', 'ilike', $courseData['curso'])->first();
+        $course = LegacyCourse::where('nm_curso', 'ilike', utf8_encode($courseData['curso']))->first();
 
         if (empty($course)) {
             $course = $this->createCourse($educationLevel, $educationType, $courseData);
@@ -445,9 +450,9 @@ class Registro20Import implements RegistroImportInterface
             4 => 'Biologia',
             5 => 'Ciências',
             6 => 'Língua/Literatura portuguesa',
-            7 => 'Língua/Literatura extrangeira - Inglês',
-            8 => 'Língua/Literatura extrangeira - Espanhol',
-            9 => 'Língua/Literatura extrangeira - Outra',
+            7 => 'Língua/Literatura estrangeira - Inglês',
+            8 => 'Língua/Literatura estrangeira - Espanhol',
+            9 => 'Língua/Literatura estrangeira - Outra',
             10 => 'Artes (educação artística, teatro, dança, música, artes plásticas e outras)',
             11 => 'Educação física',
             12 => 'História',
@@ -461,7 +466,7 @@ class Registro20Import implements RegistroImportInterface
             27 => 'Língua indígena',
             28 => 'Estudos sociais',
             29 => 'Sociologia',
-            30 => 'Língua/Literatura extrangeira - Francês',
+            30 => 'Língua/Literatura estrangeira - Francês',
             31 => 'Língua Portuguesa como Segunda Língua',
             32 => 'Estágio Curricular Supervisionado',
             99 => 'Outras disciplinas'
@@ -965,8 +970,8 @@ class Registro20Import implements RegistroImportInterface
             'ref_usuario_cad' => $this->user->id,
             'ref_cod_nivel_ensino' => $educationLevel->getKey(),
             'ref_cod_tipo_ensino' => $educationType->getKey(),
-            'nm_curso' => $courseData['curso'],
-            'sgl_curso' => substr($courseData['curso'], 0, 15),
+            'nm_curso' => utf8_encode($courseData['curso']),
+            'sgl_curso' => utf8_encode(substr($courseData['curso'], 0, 15)),
             'qtd_etapas' => $courseData['etapas'],
             'carga_horaria' => 800 * $courseData['etapas'],
             'data_cadastro' => now(),
@@ -976,5 +981,23 @@ class Registro20Import implements RegistroImportInterface
             'padrao_ano_escolar' => 1,
             'multi_seriado' => 1,
         ]);
+    }
+
+    /**
+     * Retorna o turno da turma se houver horário de início e término
+     *
+     * @param $horaInicial
+     * @param $horaFinal
+     * @return string|null
+     * @throws Exception
+     */
+    private function getTurno($horaInicial, $horaFinal)
+    {
+        if (empty($horaInicial) || empty($horaFinal)) {
+            return null;
+        }
+
+        $service = new PeriodService();
+        return $service->getPeriodByTime($horaInicial, $horaFinal);
     }
 }

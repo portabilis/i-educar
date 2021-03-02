@@ -1,11 +1,7 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'App/Model/ZonaLocalizacao.php';
+use App\Models\PersonHasPlace;
+
 
 class clsIndexBase extends clsBase
 {
@@ -64,49 +60,11 @@ class indice extends clsDetalhe
             $obj_escola_det1 = $obj_escola1->detalhe();
             $nm_escola = $obj_escola_det1['fantasia'];
 
-            $obj_endereco = new clsPessoaEndereco($registro['ref_idpes']);
-
-            $tipo = 1;
-            $endereco_lst = $obj_endereco->lista($registro['ref_idpes']);
-
-            if ($endereco_lst) {
-                foreach ($endereco_lst as $endereco) {
-                    $cep = $endereco['cep']->cep;
-                    $idlog = $endereco['idlog']->idlog;
-                    $obj = new clsLogradouro($idlog);
-                    $obj_det = $obj->detalhe();
-                    $logradouro = $obj_det['nome'];
-                    $idtlog = $obj_det['idtlog']->detalhe();
-                    $tipo_logradouro = $idtlog['descricao'];
-                    $idbai = $endereco['idbai']->detalhe();
-                    $idbai = $idbai['nome'];
-                    $numero = $endereco['numero'];
-                    $complemento = $endereco['complemento'];
-                    $andar = $endereco['andar'];
-                }
-            }
-
-            if (empty($endereco_lst)) {
-                $tipo = 2;
-                $obj_endereco = new clsEnderecoExterno();
-                $endereco_lst = $obj_endereco->lista(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $registro['ref_idpes']);
-
-                if ($endereco_lst) {
-                    foreach ($endereco_lst as $endereco) {
-                        $cep = $endereco['cep'];
-                        $sigla_uf = $endereco['sigla_uf']->detalhe();
-                        $sigla_uf = $sigla_uf['nome'];
-                        $cidade = $endereco['cidade'];
-                        $idtlog = $endereco['idtlog']->detalhe();
-                        $tipo_logradouro = $idtlog['descricao'];
-                        $logradouro = $endereco['logradouro'];
-                        $bairro = $endereco['bairro'];
-                        $numero = $endereco['numero'];
-                        $complemento = $endereco['complemento'];
-                        $andar = $endereco['andar'];
-                    }
-                }
-            }
+            $place = PersonHasPlace::query()
+                ->with('place.city.state')
+                ->where('person_id', $registro['ref_idpes'])
+                ->orderBy('type')
+                ->first();
 
             $obj_telefone = new clsPessoaTelefone();
             $telefone_lst = $obj_telefone->lista($registro['ref_idpes'], 'tipo');
@@ -123,23 +81,6 @@ class indice extends clsDetalhe
                     }
                 }
             }
-
-        } else {
-            $tipo = 3;
-            $obj_escola = new clsPmieducarEscolaComplemento($this->cod_escola);
-            $obj_escola_det = $obj_escola->detalhe();
-            $nm_escola = $obj_escola_det['nm_escola'];
-            $cep = $obj_escola_det['cep'];
-            $numero = $obj_escola_det['numero'];
-            $complemento = $obj_escola_det['complemento'];
-            $email = $obj_escola_det['email'];
-            $cidade = $obj_escola_det['municipio'];
-            $bairro = $obj_escola_det['bairro'];
-            $logradouro = $obj_escola_det['logradouro'];
-            $ddd_telefone = $obj_escola_det['ddd_telefone'];
-            $telefone = $obj_escola_det['telefone'];
-            $ddd_telefone_fax = $obj_escola_det['ddd_fax'];
-            $telefone_fax = $obj_escola_det['fax'];
         }
 
         $obj_ref_cod_escola_rede_ensino = new clsPmieducarEscolaRedeEnsino($registro['ref_cod_escola_rede_ensino']);
@@ -176,123 +117,34 @@ class indice extends clsDetalhe
         if ($registro['ref_idpes']) {
             $this->addDetalhe(['Raz&atilde;o Social', "{$registro['ref_idpes']}"]);
         }
-        if ($tipo == 1) {
-            if ($cep) {
-                $cep = int2CEP($cep);
-                $this->addDetalhe(['CEP', "{$cep}"]);
-            }
-            if ($idbai) {
-                $this->addDetalhe(['Bairro', "{$idbai}"]);
-            }
-            if ($tipo_logradouro) {
-                $this->addDetalhe(['Tipo Logradouro', "{$tipo_logradouro}"]);
-            }
-            if ($logradouro) {
-                $this->addDetalhe(['Logradouro', "{$logradouro}"]);
-            }
-            if ($complemento) {
-                $this->addDetalhe(['Complemento', "{$complemento}"]);
-            }
-            if ($numero) {
-                $this->addDetalhe(['N&uacute;mero', "{$numero}"]);
-            }
-            if ($andar) {
-                $this->addDetalhe(['Andar', "{$andar}"]);
-            }
-            if ($url) {
-                $this->addDetalhe(['Site', "{$url}"]);
-            }
-            if ($email) {
-                $this->addDetalhe(['E-mail', "{$email}"]);
-            }
-            if ($telefone_1) {
-                $this->addDetalhe(['Telefone 1', "{$telefone_1}"]);
-            }
-            if ($telefone_2) {
-                $this->addDetalhe(['Telefone 2', "{$telefone_2}"]);
-            }
-            if ($telefone_mov) {
-                $this->addDetalhe(['Celular', "{$telefone_mov}"]);
-            }
-            if ($telefone_fax) {
-                $this->addDetalhe(['Fax', "{$telefone_fax}"]);
-            }
-        } elseif ($tipo == 2) {
-            if ($cep) {
-                $cep = int2CEP($cep);
-                $this->addDetalhe(['CEP', "{$cep}"]);
-            }
-            if ($sigla_uf) {
-                $this->addDetalhe(['Estado', "{$sigla_uf}"]);
-            }
-            if ($cidade) {
-                $this->addDetalhe(['Cidade', "{$cidade}"]);
-            }
-            if ($bairro) {
-                $this->addDetalhe(['Bairro', "{$bairro}"]);
-            }
-            if ($tipo_logradouro) {
-                $this->addDetalhe(['Tipo Logradouro', "{$tipo_logradouro}"]);
-            }
-            if ($logradouro) {
-                $this->addDetalhe(['Logradouro', "{$logradouro}"]);
-            }
-            if ($complemento) {
-                $this->addDetalhe(['Complemento', "{$complemento}"]);
-            }
-            if ($numero) {
-                $this->addDetalhe(['N&uacute;mero', "{$numero}"]);
-            }
-            if ($andar) {
-                $this->addDetalhe(['Andar', "{$andar}"]);
-            }
-            if ($url) {
-                $this->addDetalhe(['Site', "{$url}"]);
-            }
-            if ($email) {
-                $this->addDetalhe(['E-mail', "{$email}"]);
-            }
-            if ($telefone_1) {
-                $this->addDetalhe(['Telefone 1', "{$telefone_1}"]);
-            }
-            if ($telefone_2) {
-                $this->addDetalhe(['Telefone 2', "{$telefone_2}"]);
-            }
-            if ($telefone_mov) {
-                $this->addDetalhe(['Celular', "{$telefone_mov}"]);
-            }
-            if ($telefone_fax) {
-                $this->addDetalhe(['Fax', "{$telefone_fax}"]);
-            }
-        } elseif ($tipo == 3) {
-            if ($cep) {
-                $cep = int2CEP($cep);
-                $this->addDetalhe(['CEP', "{$cep}"]);
-            }
-            if ($cidade) {
-                $this->addDetalhe(['Cidade', "{$cidade}"]);
-            }
-            if ($bairro) {
-                $this->addDetalhe(['Bairro', "{$bairro}"]);
-            }
-            if ($logradouro) {
-                $this->addDetalhe(['Logradouro', "{$logradouro}"]);
-            }
-            if ($complemento) {
-                $this->addDetalhe(['Complemento', "{$complemento}"]);
-            }
-            if ($numero) {
-                $this->addDetalhe(['N&uacute;mero', "{$numero}"]);
-            }
-            if ($email) {
-                $this->addDetalhe(['E-mail', "{$email}"]);
-            }
-            if ($telefone) {
-                $this->addDetalhe(['Telefone', "{$telefone}"]);
-            }
-            if ($telefone_fax) {
-                $this->addDetalhe(['Fax', "{$telefone_fax}"]);
-            }
+
+        if (isset($place)) {
+            $place = $place->place;
+
+            $this->addDetalhe(['Logradouro', $place->address]);
+            $this->addDetalhe(['Número', $place->number]);
+            $this->addDetalhe(['Complemento', $place->complement]);
+            $this->addDetalhe(['Bairro', $place->neighborhood]);
+            $this->addDetalhe(['CEP', int2CEP($place->postal_code)]);
+        }
+
+        if ($url) {
+            $this->addDetalhe(['Site', "{$url}"]);
+        }
+        if ($email) {
+            $this->addDetalhe(['E-mail', "{$email}"]);
+        }
+        if ($telefone_1) {
+            $this->addDetalhe(['Telefone 1', "{$telefone_1}"]);
+        }
+        if ($telefone_2) {
+            $this->addDetalhe(['Telefone 2', "{$telefone_2}"]);
+        }
+        if ($telefone_mov) {
+            $this->addDetalhe(['Celular', "{$telefone_mov}"]);
+        }
+        if ($telefone_fax) {
+            $this->addDetalhe(['Fax', "{$telefone_fax}"]);
         }
 
         $obj = new clsPmieducarEscolaCurso();
@@ -311,7 +163,7 @@ class indice extends clsDetalhe
                 } else {
                     $color = ' bgcolor=\'#ffffff\' ';
                 }
-                $obj_curso = new clspmieducarcurso($valor['ref_cod_curso']);
+                $obj_curso = new clsPmieducarCurso($valor['ref_cod_curso']);
                 $obj_curso->setorderby('nm_curso asc');
                 $obj_curso_det = $obj_curso->detalhe();
                 $nm_curso = $obj_curso_det['nm_curso'];

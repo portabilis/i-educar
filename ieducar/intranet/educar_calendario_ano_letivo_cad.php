@@ -4,11 +4,6 @@
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -171,8 +166,6 @@ class indice extends clsCadastro
 
     function Novo()
     {
-
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 620, $this->pessoa_logada, 7,  "educar_calendario_ano_letivo_lst.php" );
 
@@ -206,12 +199,6 @@ class indice extends clsCadastro
                 $obj_calend_ano_letivo = new clsPmieducarCalendarioAnoLetivo( null, $this->ref_cod_escola, null, $this->pessoa_logada, $this->ano, null, null, 1);
                 if( $cod_calendario_ano_letivo = $obj_calend_ano_letivo->cadastra() )
                 {
-
-          $calendario_ano_letivo = new clsPmieducarCalendarioAnoLetivo($cod_calendario_ano_letivo);
-          $calendario_ano_letivo = $calendario_ano_letivo->detalhe();
-          $auditoria = new clsModulesAuditoriaGeral("calendario_ano_letivo", $this->pessoa_logada, $cod_calendario_ano_letivo);
-          $auditoria->inclusao($calendario_ano_letivo);
-
                     $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
                     throw new HttpResponseException(
                         new RedirectResponse("educar_calendario_ano_letivo_lst.php?ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}")
@@ -222,7 +209,6 @@ class indice extends clsCadastro
 
                 return false;
             }
-
         }
 
         echo "<script> alert( 'Não foi possível definir as datas de início e fim do ano letivo.' ) </script>";

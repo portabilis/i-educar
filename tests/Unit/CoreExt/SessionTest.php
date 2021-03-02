@@ -2,7 +2,6 @@
 
 use Tests\TestCase;
 
-require_once 'CoreExt/Session.php';
 
 class CoreExt_SessionTest extends TestCase
 {
@@ -15,11 +14,9 @@ class CoreExt_SessionTest extends TestCase
     $this->_session = new CoreExt_Session(array('session_auto_start' => FALSE));
   }
 
-  /**
-   * @expectedException InvalidArgumentException
-   */
   public function testOpcaoDeConfiguracaoNaoExistenteLancaExcecao()
   {
+      $this->expectException(\InvalidArgumentException::class);
     $this->_session->setOptions(array('foo' => 'bar'));
   }
 

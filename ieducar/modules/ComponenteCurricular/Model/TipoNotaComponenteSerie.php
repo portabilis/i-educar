@@ -1,15 +1,14 @@
 <?php
 
-require_once 'CoreExt/Enum.php';
 
 class ComponenteSerie_Model_TipoNota extends CoreExt_Enum
 {
-    const CONCEITUAL = 1;
-    const NUMERICA = 2;
+    const NUMERICA = 1;
+    const CONCEITUAL = 2;
 
     protected $_data = [
-        self::CONCEITUAL => 'Nota conceitual',
         self::NUMERICA => 'Nota numérica',
+        self::CONCEITUAL => 'Nota conceitual',
     ];
 
     public static function getInstance()

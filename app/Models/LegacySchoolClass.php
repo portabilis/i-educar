@@ -71,13 +71,6 @@ class LegacySchoolClass extends Model
         'turma_turno_id',
         'ano',
         'tipo_atendimento',
-        'turma_mais_educacao',
-        'atividade_complementar_1',
-        'atividade_complementar_2',
-        'atividade_complementar_3',
-        'atividade_complementar_4',
-        'atividade_complementar_5',
-        'atividade_complementar_6',
         'atividades_complementares',
         'atividades_aee',
         'local_funcionamento_diferenciado',
@@ -408,5 +401,27 @@ class LegacySchoolClass extends Model
         }
 
         return $evaluationRuleGradeYear->evaluationRule;
+    }
+
+    /**
+     * Retorna o turno da turma.
+     *
+     * Relação com turma_turno.
+     *
+     * @return bool | string
+     */
+    public function period()
+    {
+        return $this->belongsTo(LegacyPeriod::class, 'turma_turno_id');
+    }
+
+    /**
+     * @param Builder $query
+     *
+     * @return Builder
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('ativo', 1);
     }
 }

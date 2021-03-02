@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Core/Controller/Page/ViewController.php';
-require_once 'FormulaMedia/Model/FormulaDataMapper.php';
 
 /**
  * ViewController class.
@@ -58,13 +56,8 @@ class ViewController extends Core_Controller_Page_ViewController
 
     parent::_preRender();
 
-    $localizacao = new LocalizacaoSistema();
-
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Detalhe da f&oacute;rmula de m&eacute;dia"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Detalhe da f&oacute;rmula de m&eacute;dia', [
+        url('intranet/educar_index.php') => 'Escola',
+    ]);
   }
 }

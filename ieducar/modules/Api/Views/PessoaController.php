@@ -1,21 +1,17 @@
 <?php
 
+use App\Models\PersonHasPlace;
+use iEducar\Modules\Addressing\LegacyAddressingFields;
 use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
 use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
 use App\Models\LegacyIndividual;
+use iEducar\Modules\Educacenso\Model\Nacionalidade;
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'include/pessoa/clsPessoa_.inc.php';
-require_once 'include/pessoa/clsFisica.inc.php';
-require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
-require_once 'intranet/include/funcoes.inc.php';
 
 class PessoaController extends ApiCoreController
 {
+    use LegacyAddressingFields;
 
     protected function canGet()
     {
@@ -125,48 +121,7 @@ class PessoaController extends ApiCoreController
             (select num_folha from cadastro.documento where documento.idpes = fisica.idpes) as num_folha,
             (select certidao_nascimento from cadastro.documento where documento.idpes = fisica.idpes) as certidao_nascimento,
             (select certidao_casamento from cadastro.documento where documento.idpes = fisica.idpes) as certidao_casamento,
-            (SELECT COALESCE((SELECT cep FROM cadastro.endereco_pessoa WHERE idpes = $2),
-             (SELECT cep FROM cadastro.endereco_externo WHERE idpes = $2))) as cep,
-
-             (SELECT COALESCE((SELECT l.nome FROM public.logradouro l, cadastro.endereco_pessoa ep WHERE l.idlog = ep.idlog and ep.idpes = $2),
-             (SELECT logradouro FROM cadastro.endereco_externo WHERE idpes = $2))) as logradouro,
-
-             (SELECT COALESCE((SELECT l.idtlog FROM public.logradouro l, cadastro.endereco_pessoa ep WHERE l.idlog = ep.idlog and ep.idpes = $2),
-             (SELECT idtlog FROM cadastro.endereco_externo WHERE idpes = $2))) as idtlog,
-
-           (SELECT COALESCE((SELECT b.nome FROM public.bairro b, cadastro.endereco_pessoa ep WHERE b.idbai = ep.idbai and ep.idpes = $2),
-             (SELECT bairro FROM cadastro.endereco_externo WHERE idpes = $2))) as bairro,
-
-             (SELECT COALESCE((SELECT b.zona_localizacao FROM public.bairro b, cadastro.endereco_pessoa ep WHERE b.idbai = ep.idbai and ep.idpes = $2),
-             (SELECT zona_localizacao FROM cadastro.endereco_externo WHERE idpes = $2))) as zona_localizacao,
-
-             (SELECT COALESCE((SELECT l.idmun FROM public.logradouro l, cadastro.endereco_pessoa ep WHERE l.idlog = ep.idlog and ep.idpes = $2),
-             (SELECT idmun FROM public.logradouro l, urbano.cep_logradouro cl, cadastro.endereco_externo ee
-              WHERE cl.idlog = l.idlog AND cl.cep = ee.cep and ee.idpes = $2 order by 1 desc limit 1))) as idmun,
-
               idmun_nascimento,
-
-
-              (SELECT COALESCE((SELECT numero FROM cadastro.endereco_pessoa WHERE idpes = $2),
-             (SELECT numero FROM cadastro.endereco_externo WHERE idpes = $2))) as numero,
-
-              (SELECT COALESCE((SELECT letra FROM cadastro.endereco_pessoa WHERE idpes = $2),
-             (SELECT letra FROM cadastro.endereco_externo WHERE idpes = $2))) as letra,
-
-              (SELECT COALESCE((SELECT complemento FROM cadastro.endereco_pessoa WHERE idpes = $2),
-             (SELECT complemento FROM cadastro.endereco_externo WHERE idpes = $2))) as complemento,
-
-              (SELECT COALESCE((SELECT andar FROM cadastro.endereco_pessoa WHERE idpes = $2),
-             (SELECT andar FROM cadastro.endereco_externo WHERE idpes = $2))) as andar,
-
-              (SELECT COALESCE((SELECT bloco FROM cadastro.endereco_pessoa WHERE idpes = $2),
-             (SELECT bloco FROM cadastro.endereco_externo WHERE idpes = $2))) as bloco,
-
-              (SELECT COALESCE((SELECT apartamento FROM cadastro.endereco_pessoa WHERE idpes = $2),
-             (SELECT apartamento FROM cadastro.endereco_externo WHERE idpes = $2))) as apartamento,
-
-
-             (SELECT idbai FROM cadastro.endereco_pessoa WHERE idpes = $2) as idbai,
              fisica.idpais_estrangeiro as pais_origem_id,
            fisica.nacionalidade as tipo_nacionalidade,
            fisica.zona_localizacao_censo,
@@ -175,23 +130,12 @@ class PessoaController extends ApiCoreController
            (SELECT pais.nome
                    FROM public.pais
                    WHERE pais.idpais = fisica.idpais_estrangeiro) AS pais_origem_nome,
-
            (SELECT ref_cod_raca FROM cadastro.fisica_raca WHERE fisica.idpes = fisica_raca.ref_idpes) as cor_raca,
-
-             (SELECT bairro.iddis FROM cadastro.endereco_pessoa
-                INNER JOIN public.bairro ON (endereco_pessoa.idbai = bairro.idbai)
-                WHERE idpes = $2) as iddis,
-
-             (SELECT distrito.nome FROM cadastro.endereco_pessoa
-                INNER JOIN public.bairro ON (endereco_pessoa.idbai = bairro.idbai)
-                INNER JOIN public.distrito ON (bairro.iddis = distrito.iddis)
-                         WHERE idpes = $2) as distrito,
               (SELECT fone_pessoa.fone FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 1) as fone_fixo,
               (SELECT fone_pessoa.fone FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 2) as fone_mov,
               (SELECT fone_pessoa.ddd FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 1) as ddd_fone_fixo,
               (SELECT fone_pessoa.ddd FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 2) as ddd_fone_mov,
 
-             (SELECT idlog FROM cadastro.endereco_pessoa WHERE idpes = $2) as idlog,
              fisica.pais_residencia
             from cadastro.fisica
             where idpes = $2';
@@ -218,30 +162,14 @@ class PessoaController extends ApiCoreController
             'nome_responsavel',
             'sexo',
             'estadocivil',
-            'cep',
-            'logradouro',
-            'idtlog',
-            'bairro',
             'tipo_cert_civil',
             'num_termo',
             'num_livro',
             'num_folha',
             'certidao_nascimento',
             'certidao_casamento',
-            'zona_localizacao',
-            'idbai',
-            'idlog',
-            'idmun',
             'idmun_nascimento',
-            'complemento',
-            'apartamento',
-            'andar',
-            'bloco',
-            'numero',
-            'letra',
             'possui_documento',
-            'iddis',
-            'distrito',
             'ddd_fone_fixo',
             'fone_fixo',
             'fone_mov',
@@ -272,6 +200,7 @@ class PessoaController extends ApiCoreController
         $details['nome_pai'] = $this->toUtf8($details['nome_pai'], ['transform' => true]);
         $details['nome_responsavel'] = $this->toUtf8($details['nome_responsavel'], ['transform' => true]);
         $details['cep'] = int2CEP($details['cep']);
+        $details['cpf'] = int2CPF($details['cpf']);
 
         $details['nis_pis_pasep'] = int2Nis($details['nis_pis_pasep']);
 
@@ -292,11 +221,39 @@ class PessoaController extends ApiCoreController
 
         $details['pais_origem_nome'] = $this->toUtf8($details['pais_origem_nome']);
 
-        if ($details['idmun']) {
-            $_sql = ' SELECT nome, sigla_uf FROM public.municipio WHERE idmun = $1; ';
-            $mun = $this->fetchPreparedQuery($_sql, $details['idmun'], false, 'first-row');
-            $details['municipio'] = $this->toUtf8($mun['nome']);
-            $details['sigla_uf'] = $mun['sigla_uf'];
+        $has = PersonHasPlace::query()->with('place.city.state')->where('person_id', $pessoaId)->orderBy('type')->first();
+
+        if ($has) {
+            $place = $has->place;
+
+            $details['id'] = $place->id;
+            $details['postal_code'] = $place->postal_code;
+            $details['address'] = $place->address;
+            $details['number'] = $place->number;
+            $details['complement'] = $place->complement;
+            $details['neighborhood'] = $place->neighborhood;
+            $details['city_id'] = $place->city_id;
+            $details['city_name'] = $place->city->name;
+            $details['state_abbreviation'] = $place->city->state->abbreviation;
+
+            $details['cep'] = int2CEP($place->postal_code);
+            $details['logradouro'] = $place->address;
+            $details['idtlog'] = $place->id;
+            $details['bairro'] = $place->neighborhood;
+            $details['zona_localizacao'] = 1;
+            $details['idmun'] = $place->city_id;
+            $details['numero'] = $place->number;
+            $details['letra'] = null;
+            $details['complemento'] = $place->complement;
+            $details['andar'] = null;
+            $details['bloco'] = null;
+            $details['apartamento'] = null;
+            $details['idbai'] = $place->id;
+            $details['iddis'] = null;
+            $details['distrito'] = null;
+            $details['idlog'] = $place->id;
+            $details['municipio'] = $place->city->name;
+            $details['sigla_uf'] = $place->city->state->abbreviation;
         }
 
         if ($details['idmun_nascimento']) {
@@ -602,10 +559,13 @@ class PessoaController extends ApiCoreController
         $individual->pais_residencia = $this->getRequest()->pais_residencia ?: $individual->pais_residencia;
         $individual->falecido = $this->getRequest()->falecido == 'true';
         $individual->idpais_estrangeiro = $this->getRequest()->pais_origem_id ?: $individual->idpais_estrangeiro;
+        if ($this->getRequest()->tipo_nacionalidade == Nacionalidade::BRASILEIRA) {
+            $individual->idpais_estrangeiro = null;
+        }
         $individual->nacionalidade = $this->getRequest()->tipo_nacionalidade ?: $individual->nacionalidade;
         $individual->zona_localizacao_censo = $this->getRequest()->zona_localizacao_censo ?: $individual->zona_localizacao_censo;
         $individual->localizacao_diferenciada = $this->getRequest()->localizacao_diferenciada ?: $individual->localizacao_diferenciada;
-        $individual->nome_social = $this->getRequest()->nome_social ?: $individual->nome_social;
+        $individual->nome_social = $this->getRequest()->nome_social ?? $this->getRequest()->nome_social;
 
         $individual->saveOrFail();
 
@@ -636,73 +596,17 @@ class PessoaController extends ApiCoreController
         }
     }
 
-    //select fone from fone_pessoa where fone_pessoa.idpes = 18664 AND fone_pessoa.tipo = 1
-    protected function _createOrUpdatePessoaEndereco($pessoaId)
-    {
-        $cep = idFederal2Int($this->getRequest()->cep);
-        $objCepLogradouro = new ClsCepLogradouro($cep, $this->getRequest()->logradouro_id);
-
-        if (!$objCepLogradouro->existe()) {
-            $objCepLogradouro->cadastra();
-        }
-
-        $objCepLogradouroBairro = new ClsCepLogradouroBairro();
-        $objCepLogradouroBairro->cep = $cep;
-        $objCepLogradouroBairro->idbai = $this->getRequest()->bairro_id;
-        $objCepLogradouroBairro->idlog = $this->getRequest()->logradouro_id;
-
-        if (! $objCepLogradouroBairro->existe()) {
-            $objCepLogradouroBairro->cadastra();
-        }
-
-        $endereco = new clsPessoaEndereco(
-            $this->getRequest()->pessoa_id,
-            $cep,
-            $this->getRequest()->logradouro_id,
-            $this->getRequest()->bairro_id,
-            $this->getRequest()->numero,
-            Portabilis_String_Utils::toLatin1($this->getRequest()->complemento),
-            false,
-            Portabilis_String_Utils::toLatin1($this->getRequest()->letra),
-            Portabilis_String_Utils::toLatin1($this->getRequest()->bloco),
-            $this->getRequest()->apartamento,
-            $this->getRequest()->andar
-        );
-
-        // forçado exclusão, assim ao cadastrar endereco_pessoa novamente,
-        // será excluido endereco_externo (por meio da trigger fcn_aft_ins_endereco_pessoa).
-        $endereco->exclui();
-        $endereco->cadastra();
-    }
-
     protected function createOrUpdateEndereco()
     {
-        $pessoaId = $this->getRequest()->pessoa_id;
+        $this->person_id = $this->getRequest()->person_id;
+        $this->postal_code = $this->getRequest()->postal_code;
+        $this->address = $this->getRequest()->address;
+        $this->number = $this->getRequest()->number;
+        $this->complement = $this->getRequest()->complement;
+        $this->neighborhood = $this->getRequest()->neighborhood;
+        $this->city_id = $this->getRequest()->city_id;
 
-        if ($this->getRequest()->cep && is_numeric($this->getRequest()->bairro_id) && is_numeric($this->getRequest()->logradouro_id)) {
-            $this->_createOrUpdatePessoaEndereco($pessoaId);
-        } elseif ($this->getRequest()->cep && is_numeric($this->getRequest()->municipio_id) && is_numeric($this->getRequest()->distrito_id)) {
-            if (!is_numeric($this->getRequest()->bairro_id)) {
-                if ($this->canCreateBairro()) {
-                    $this->getRequest()->bairro_id = $this->createBairro();
-                } else {
-                    return;
-                }
-            }
-
-            if (!is_numeric($this->getRequest()->logradouro_id)) {
-                if ($this->canCreateLogradouro()) {
-                    $this->getRequest()->logradouro_id = $this->createLogradouro();
-                } else {
-                    return;
-                }
-            }
-
-            $this->_createOrUpdatePessoaEndereco($pessoaId);
-        } else {
-            $endereco = new clsPessoaEndereco($pessoaId);
-            $endereco->exclui();
-        }
+        $this->saveAddress($this->getRequest()->person_id);
     }
 
     protected function getInep($servidorId)
@@ -719,40 +623,6 @@ class PessoaController extends ApiCoreController
         $_servidor['deficiencias'] = $this->loadDeficiencias($servidorId);
 
         return $_servidor;
-    }
-
-    protected function canCreateBairro()
-    {
-        return !empty($this->getRequest()->bairro) && !empty($this->getRequest()->zona_localizacao);
-    }
-
-    protected function canCreateLogradouro()
-    {
-        return !empty($this->getRequest()->logradouro) && !empty($this->getRequest()->idtlog);
-    }
-
-    protected function createBairro()
-    {
-        $objBairro = new clsBairro(null, $this->getRequest()->municipio_id, null, Portabilis_String_Utils::toLatin1($this->getRequest()->bairro), $this->currentUserId());
-        $objBairro->zona_localizacao = $this->getRequest()->zona_localizacao;
-        $objBairro->iddis = $this->getRequest()->distrito_id;
-
-        return $objBairro->cadastra();
-    }
-
-    protected function createLogradouro()
-    {
-        $objLogradouro = new clsLogradouro(
-            null,
-            $this->getRequest()->idtlog,
-            Portabilis_String_Utils::toLatin1($this->getRequest()->logradouro),
-            $this->getRequest()->municipio_id,
-            null,
-            'S',
-            $this->currentUserId()
-        );
-
-        return $objLogradouro->cadastra();
     }
 
     protected function reativarPessoa()

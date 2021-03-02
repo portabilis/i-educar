@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LogUnification;
+use App\Models\Student;
 use App\Services\StudentUnificationService;
 use Illuminate\Http\Request;
 use Throwable;
@@ -18,6 +19,7 @@ class StudentLogUnificationController extends Controller
         $this->menu(999847);
 
         $unificationsQuery = LogUnification::query()->with('main.registrations');
+        $unificationsQuery->where('type', Student::class);
 
         if ($request->get('ref_cod_escola')) {
             $schoolId = $request->get('ref_cod_escola');

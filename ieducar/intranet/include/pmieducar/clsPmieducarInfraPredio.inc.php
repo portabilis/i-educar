@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarInfraPredio extends Model
 {
@@ -87,18 +86,21 @@ class clsPmieducarInfraPredio extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_predio)) {
+                $nm_predio = $db->escapeString($this->nm_predio);
                 $campos .= "{$gruda}nm_predio";
-                $valores .= "{$gruda}'{$this->nm_predio}'";
+                $valores .= "{$gruda}'{$nm_predio}'";
                 $gruda = ', ';
             }
             if (is_string($this->desc_predio)) {
+                $desc_predio = $db->escapeString($this->desc_predio);
                 $campos .= "{$gruda}desc_predio";
-                $valores .= "{$gruda}'{$this->desc_predio}'";
+                $valores .= "{$gruda}'{$desc_predio}'";
                 $gruda = ', ';
             }
             if (is_string($this->endereco)) {
+                $endereco = $db->escapeString($this->endereco);
                 $campos .= "{$gruda}endereco";
-                $valores .= "{$gruda}'{$this->endereco}'";
+                $valores .= "{$gruda}'{$endereco}'";
                 $gruda = ', ';
             }
             $campos .= "{$gruda}data_cadastro";
@@ -145,15 +147,18 @@ class clsPmieducarInfraPredio extends Model
                 $gruda = ', ';
             }
             if (is_string($this->nm_predio)) {
-                $set .= "{$gruda}nm_predio = '{$this->nm_predio}'";
+                $nm_predio = $db->escapeString($this->nm_predio);
+                $set .= "{$gruda}nm_predio = '{$nm_predio}'";
                 $gruda = ', ';
             }
             if (is_string($this->desc_predio)) {
-                $set .= "{$gruda}desc_predio = '{$this->desc_predio}'";
+                $desc_predio = $db->escapeString($this->desc_predio);
+                $set .= "{$gruda}desc_predio = '{$desc_predio}'";
                 $gruda = ', ';
             }
             if (is_string($this->endereco)) {
-                $set .= "{$gruda}endereco = '{$this->endereco}'";
+                $endereco = $db->escapeString($this->endereco);
+                $set .= "{$gruda}endereco = '{$endereco}'";
                 $gruda = ', ';
             }
             if (is_string($this->data_cadastro)) {
@@ -186,6 +191,8 @@ class clsPmieducarInfraPredio extends Model
      */
     public function lista($int_cod_infra_predio = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $int_ref_cod_escola = null, $str_nm_predio = null, $str_desc_predio = null, $str_endereco = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $str_escola_in = null, $int_cod_instituicao = null)
     {
+        $db = new clsBanco();
+
         $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} predio,pmieducar.escola escola";
 
         $whereAnd = ' AND ';
@@ -208,7 +215,8 @@ class clsPmieducarInfraPredio extends Model
             $whereAnd = ' AND ';
         }
         if (is_string($str_nm_predio)) {
-            $filtros .= "{$whereAnd} predio.nm_predio LIKE '%{$str_nm_predio}%'";
+            $nm_predio = $db->escapeString($str_nm_predio);
+            $filtros .= "{$whereAnd} predio.nm_predio LIKE '%{$nm_predio}%'";
             $whereAnd = ' AND ';
         }
         if (is_string($str_desc_predio)) {
@@ -259,7 +267,6 @@ class clsPmieducarInfraPredio extends Model
             $whereAnd = ' AND ';
         }
 
-        $db = new clsBanco();
         $countCampos = count(explode(',', $this->_campos_lista));
         $resultado = [];
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\SchoolClass\DisciplinesValidationException;
 use App\Services\iDiarioService;
 use App\Services\SchoolClassService;
 use App\Services\SchoolClass\ExemptedDisciplineLinksRemover;
@@ -10,24 +11,10 @@ use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Support\View\SelectOptions;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use RuntimeException;
 use Throwable;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Utils/CustomLabel.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
-require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
-require_once 'lib/App/Model/Educacenso/LocalFuncionamentoDiferenciado.php';
-require_once 'lib/App/Model/Educacenso/TipoMediacaoDidaticoPedagogico.php';
 
 class clsIndexBase extends clsBase
 {
@@ -507,10 +494,6 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->turmaTurno();
 
-        // modelos boletim
-        require_once 'Reports/Tipos/TipoBoletim.php';
-        require_once 'Portabilis/Array/Utils.php';
-
         $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
         $tiposBoletim = Portabilis_Array_Utils::insertIn(null, 'Selecione um modelo', $tiposBoletim);
 
@@ -659,7 +642,7 @@ class indice extends clsCadastro
         $resources = App_Model_LocalFuncionamentoDiferenciado::getInstance()->getEnums();
         $resources = array_replace([null => 'Selecione'], $resources);
 
-        $options = ['label' => 'Local de funcionamento diferenciado', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => false, 'size' => 70,];
+        $options = ['label' => 'Local de funcionamento diferenciado da turma', 'resources' => $resources, 'value' => $this->local_funcionamento_diferenciado, 'required' => false, 'size' => 70,];
         $this->inputsHelper()->select('local_funcionamento_diferenciado', $options);
 
         $options = ['label' => Portabilis_String_Utils::toLatin1('Não informar esta turma no Censo escolar'),
@@ -748,17 +731,17 @@ class indice extends clsCadastro
             $this->escola_serie_disciplina = [];
 
             if (is_array($lista) && count($lista)) {
-                $conteudo .= '<div style="margin-bottom: 10px;">';
-                $conteudo .= '  <span style="display: block; float: left; width: 250px;">Nome</span>';
-                $conteudo .= '  <span style="display: block; float: left; width: 100px;">Nome abreviado</span>';
-                $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga hor&aacute;ria</span>';
-                $conteudo .= '  <span style="display: block; float: left;width: 100px;">Usar padr&atilde;o do componente?</span>';
+                $conteudo .= '<tr>';
+                $conteudo .= '<td  width="250"><span style="display: block; float: left; width: 250px;">Nome</span></td>';
+                $conteudo .= '<td><span>Nome abreviado</span></td>';
+                $conteudo .= '<td><span>Carga horária</span></td>';
+                $conteudo .= '<td><span>Usar padrão do componente?</span></td>';
                 if ($this->definirComponentePorEtapa) {
-                    $conteudo .= '  <span style="display: block; float: left;width: 150px;">Usar etapas espec&iacute;ficas?</span>';
+                    $conteudo .= '<td><span>Usar etapas específicas?</span></td>';
+                    $conteudo .= '<td><span">Etapas utilizadas</span></td>';
                 }
-                $conteudo .= '  <span style="display: block; float: left">Possui docente v&iacute;nculado?</span>';
-                $conteudo .= '</div>';
-                $conteudo .= '<br style="clear: left" />';
+                $conteudo .= '<td><span>Possui docente vinculado?</span></td>';
+                $conteudo .= '</tr>';
 
                 foreach ($lista as $registro) {
                     $checked = '';
@@ -788,23 +771,22 @@ class indice extends clsCadastro
                         $docenteVinculado = true;
                     }
 
-                    $conteudo .= '<div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
-                    $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" class='check-disciplina' id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
-                    $conteudo .= "  <span style='display: block; float: left; width: 100px'>{$registro->abreviatura}</span>";
-                    $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></label>";
-                    $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='checkbox' name='usar_componente[$registro->id]' value='1' " . ($usarComponente == true ? $checked : '') . ">($cargaComponente h)</label>";
+                    $conteudo .= '<tr class="linha-disciplina" >';
+                    $conteudo .= "<td><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" class='check-disciplina' id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</td>";
+                    $conteudo .= "<td>{$registro->abreviatura}</td>";
+                    $conteudo .= "<td><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></td>";
+                    $conteudo .= "<td><input type='checkbox' name='usar_componente[$registro->id]' value='1' " . ($usarComponente == true ? $checked : '') . ">($cargaComponente h)</td>";
                     if ($this->definirComponentePorEtapa) {
-                        $conteudo .= "  <input style='float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' " . $checkedEtapaEspecifica . '></label>';
-                        $conteudo .= "  <label style='display: block; float: left; width: 150px;'>Etapas utilizadas: <input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapaUtilizada}' size='5' maxlength='7'></label>";
+                        $conteudo .= "<td><input style='float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' " . $checkedEtapaEspecifica . '></td>';
+                        $conteudo .= "<td><input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapaUtilizada}' size='5' maxlength='7'></td>";
                     }
-                    $conteudo .= "  <label style='display: block; float: left'><input type='checkbox' name='docente_vinculado[$registro->id]' value='1' " . ($docenteVinculado == true ? $checked : '') . '></label>';
-                    $conteudo .= '</div>';
-                    $conteudo .= '<br style="clear: left" />';
+                    $conteudo .= "<td><input type='checkbox' name='docente_vinculado[$registro->id]' value='1' " . ($docenteVinculado == true ? $checked : '') . '></td>';
+                    $conteudo .= '</tr>';
 
                     $cargaHoraria = '';
                 }
 
-                $disciplinas = '<table cellspacing="0" cellpadding="0" border="0">';
+                $disciplinas = '<table id="componentes_turma_cad" cellspacing="0" cellpadding="0" border="0">';
                 $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $conteudo);
                 $disciplinas .= '</table>';
             } else {
@@ -912,8 +894,6 @@ class indice extends clsCadastro
 
         $turma = new clsPmieducarTurma($this->cod_turma);
         $turma = $turma->detalhe();
-        $auditoria = new clsModulesAuditoriaGeral('turma', $this->pessoa_logada, $this->cod_turma);
-        $auditoria->inclusao($turma);
 
         $this->atualizaComponentesCurriculares(
             $this->ref_cod_serie,
@@ -940,8 +920,8 @@ class indice extends clsCadastro
         $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
         $possuiAlunosVinculados = $turmaDetalhe->possuiAlunosVinculados();
         $turmaDetalhe = $turmaDetalhe->detalhe();
-        $this->ref_cod_curso = $turmaDetalhe['ref_cod_curso'];
-        $this->ref_ref_cod_escola = $turmaDetalhe['ref_ref_cod_escola'];
+        $this->ref_cod_curso = $this->ref_cod_curso ?? $turmaDetalhe['ref_cod_curso'];
+        $this->ref_ref_cod_escola = $this->ref_ref_cod_escola ?? $turmaDetalhe['ref_ref_cod_escola'];
 
         if (!$this->verificaModulos()) {
             return false;
@@ -988,12 +968,13 @@ class indice extends clsCadastro
             $this->ref_cod_instituicao_regente = $this->ref_cod_instituicao;
         }
 
+        DB::beginTransaction();
         $editou = $objTurma->edita();
 
         if (!$editou) {
             $this->mensagem = 'Edição não realizada.';
 
-
+            DB::rollBack();
             return false;
         }
 
@@ -1001,24 +982,31 @@ class indice extends clsCadastro
             (new ExemptedDisciplineLinksRemover())->remove(LegacySchoolClass::find($this->cod_turma));
         }
 
-        $auditoria = new clsModulesAuditoriaGeral('turma', $this->pessoa_logada, $this->cod_turma);
-        $auditoria->alteracao($turmaDetalhe, $objTurma->detalhe());
+        try {
+            $this->atualizaComponentesCurriculares(
+                $turmaDetalhe['ref_ref_cod_serie'],
+                $turmaDetalhe['ref_ref_cod_escola'],
+                $this->cod_turma,
+                $this->disciplinas,
+                $this->carga_horaria,
+                $this->usar_componente,
+                $this->docente_vinculado
+            );
+        } catch (DisciplinesValidationException $e) {
+            $this->mensagem = $e->getMessage();
 
-        $this->atualizaComponentesCurriculares(
-            $turmaDetalhe['ref_ref_cod_serie'],
-            $turmaDetalhe['ref_ref_cod_escola'],
-            $this->cod_turma,
-            $this->disciplinas,
-            $this->carga_horaria,
-            $this->usar_componente,
-            $this->docente_vinculado
-        );
+            DB::rollBack();
+            return false;
+        }
 
         $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
         if (!$this->atualizaModulos()) {
+            DB::rollBack();
             return false;
         }
+
+        DB::commit();
 
         $this->mensagem = 'Edição efetuada com sucesso.';
 
@@ -1168,8 +1156,8 @@ class indice extends clsCadastro
             return false;
         }
 
-        if ($this->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA && !in_array($this->etapa_educacenso, [30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67, 68])) {
-            $this->mensagem = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67 ou 68';
+        if ($this->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::EDUCACAO_A_DISTANCIA && !in_array($this->etapa_educacenso, [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67, 68])) {
+            $this->mensagem = 'Quando o campo: Tipo de mediação didático-pedagógica é: Educação a Distância, o campo: Etapa de ensino deve ser uma das seguintes opções: 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 70, 71, 73, 74, 64, 67 ou 68';
             return false;
         }
 
@@ -1365,6 +1353,16 @@ class indice extends clsCadastro
             throw new RuntimeException('Não foi possível remover uma das etapas pois existem notas ou faltas lançadas.');
         }
 
+        // Caso não exista token e URL de integração com o i-Diário, não irá
+        // validar se há lançamentos nas etapas removidas
+
+        $checkReleases = config('legacy.config.url_novo_educacao')
+            && config('legacy.config.token_novo_educacao');
+
+        if (!$checkReleases) {
+            return true;
+        }
+
         $iDiarioService = app(iDiarioService::class);
 
         foreach ($etapas as $etapa) {
@@ -1461,8 +1459,7 @@ class indice extends clsCadastro
 
     public function atualizaComponentesCurriculares($codSerie, $codEscola, $codTurma, $componentes, $cargaHoraria, $usarComponente, $docente)
     {
-        require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
-        $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
+                $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
 
         $componentesTurma = [];
 
@@ -1487,7 +1484,9 @@ class indice extends clsCadastro
             ];
         }
 
-        $mapper->bulkUpdate($codSerie, $codEscola, $codTurma, $componentesTurma);
+        $idiarioService = $this->getIdiarioService();
+
+        $mapper->bulkUpdate($codSerie, $codEscola, $codTurma, $componentesTurma, $idiarioService);
     }
 
     public function cadastraInepTurma($cod_turma, $codigo_inep_educacenso)
@@ -1520,8 +1519,6 @@ class indice extends clsCadastro
             return false;
         }
 
-        $turma = $obj->detalhe();
-
         $excluiu = $obj->excluir();
 
         if ($excluiu) {
@@ -1529,9 +1526,6 @@ class indice extends clsCadastro
             $excluiu1 = $obj->excluirTodos($this->cod_turma);
 
             if ($excluiu1) {
-                $auditoria = new clsModulesAuditoriaGeral('turma', $this->pessoa_logada, $this->cod_turma);
-                $auditoria->exclusao($turma);
-
                 $this->mensagem = 'Exclusão efetuada com sucesso.';
 
                 throw new HttpResponseException(
@@ -1569,22 +1563,15 @@ class indice extends clsCadastro
         return $escolaSerie->detalhe();
     }
 
-    protected function getAnoEscolarEmAndamento($escolaId)
+    protected function getCountMatriculas($turmaId)
     {
-        return $this->getDb()->CampoUnico("select ano from pmieducar.escola_ano_letivo where ativo = 1 and andamento = 1 and ref_cod_escola = $escolaId");
-    }
-
-    protected function getCountMatriculas($escolaId, $turmaId)
-    {
-        $ano = $this->getAnoEscolarEmAndamento($escolaId);
-
-        if (!is_numeric($ano)) {
-            $this->mensagem = 'N&atilde;o foi possivel obter um ano em andamento, por favor, inicie um ano para a escola ou desative a configura&ccedil;&atilde;o (para s&eacute;rie e escola) \'Bloquear cadastro de novas turmas antes de atingir limite de vagas (no mesmo turno)\'.';
+        if (!is_numeric($this->ano_letivo)) {
+            $this->mensagem = 'É necessário informar um ano letivo.';
 
             return false;
         }
 
-        $sql = "select count(cod_matricula) as matriculas from pmieducar.matricula, pmieducar.matricula_turma where ano = $ano and matricula.ativo = 1 and matricula_turma.ativo = matricula.ativo and cod_matricula = ref_cod_matricula and ref_cod_turma = $turmaId";
+        $sql = "select count(cod_matricula) as matriculas from pmieducar.matricula, pmieducar.matricula_turma where ano = {$this->ano_letivo} and matricula.ativo = 1 and matricula_turma.ativo = matricula.ativo and cod_matricula = ref_cod_matricula and ref_cod_turma = {$turmaId}";
 
         return $this->getDb()->CampoUnico($sql);
     }
@@ -1596,10 +1583,10 @@ class indice extends clsCadastro
         if ($escolaSerie['bloquear_cadastro_turma_para_serie_com_vagas'] == 1) {
             $turmas = new clsPmieducarTurma();
 
-            $turmas = $turmas->lista(null, null, null, $serieId, $escolaId, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, $turnoId, null, null, true);
+            $turmas = $turmas->lista(null, null, null, $serieId, $escolaId, null, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, $turnoId, null, $this->ano_letivo, true);
 
             foreach ($turmas as $turma) {
-                $countMatriculas = $this->getCountMatriculas($escolaId, $turma['cod_turma']);
+                $countMatriculas = $this->getCountMatriculas($turma['cod_turma']);
 
                 // countMatriculas retorna false e adiciona mensagem, se não obter ano em andamento
                 if ($countMatriculas === false) {
@@ -1628,6 +1615,20 @@ class indice extends clsCadastro
         }
 
         return json_encode($retorno);
+    }
+
+    /**
+     * Retorna instância do iDiarioService
+     *
+     * @return iDiarioService|null
+     */
+    private function getIdiarioService()
+    {
+        if (iDiarioService::hasIdiarioConfigurations()) {
+            return app(iDiarioService::class);
+        }
+
+        return null;
     }
 }
 
@@ -1820,11 +1821,14 @@ $pagina->MakeAll();
     function changeMultiSerie() {
         var campoCurso = document.getElementById('ref_cod_curso').value;
         var campoSerie = document.getElementById('ref_cod_serie').value;
+        var campoEscola = document.getElementById('ref_cod_escola').value;
+        var campoAno = document.getElementById('ano_letivo').value;
+        if (campoAno != '') {
+            var xml1 = new ajax(atualizaMultiSerie);
+            strURL = 'educar_sequencia_serie_xml.php?cur=' + campoCurso + '&ser_dif=' + campoSerie + '&escola=' + campoEscola + '&ano=' + campoAno;
 
-        var xml1 = new ajax(atualizaMultiSerie);
-        strURL = 'educar_sequencia_serie_xml.php?cur=' + campoCurso + '&ser_dif=' + campoSerie;
-
-        xml1.envia(strURL);
+            xml1.envia(strURL);
+        }
     }
 
     function atualizaMultiSerie(xml) {
@@ -1884,14 +1888,22 @@ $pagina->MakeAll();
         hideMultiSerie();
     }
 
+    document.getElementById('ano_letivo').onchange = function () {
+
+        changeMultiSerie();
+
+        hideMultiSerie();
+    }
+
     function hideMultiSerie() {
         setVisibility('tr_multiseriada', document.getElementById('ref_cod_serie').value != '' ? true : false);
 
         var multiBool = (document.getElementById('multiseriada').checked == true &&
-            document.getElementById('ref_cod_serie').value != '') ? true : false;
+            document.getElementById('ref_cod_serie').value != '' && document.getElementById('ano_letivo').value != '' ) ? true : false;
 
         setVisibility('ref_cod_serie_mult', multiBool);
         setVisibility('tr_ref_cod_serie_mult', multiBool);
+        setVisibility('tr_multiseriada', document.getElementById('ano_letivo').value != '' ? true : false);
     }
 
     function PadraoAnoEscolar(xml) {

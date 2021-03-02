@@ -1,10 +1,5 @@
 <?php
 
-require_once 'Portabilis/Controller/ApiCoreController.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/Date/Utils.php';
 
 class CursoController extends ApiCoreController
 {
@@ -24,6 +19,7 @@ class CursoController extends ApiCoreController
             $ano = $this->getRequest()->ano ? $this->getRequest()->ano : 0;
             $turnoId = $this->getRequest()->turno_id;
             $modified = $this->getRequest()->modified ?: null;
+            $ativo = $this->getRequest()->ativo;
 
             $params = [$instituicaoId];
 
@@ -33,29 +29,29 @@ class CursoController extends ApiCoreController
                 }
 
                 $sql = "
-                    SELECT DISTINCT 
-                        c.cod_curso, 
+                    SELECT DISTINCT
+                        c.cod_curso,
                         c.nm_curso,
                         (
                             CASE c.updated_at >= ec.updated_at WHEN TRUE THEN
                                 c.updated_at
-                            ELSE 
+                            ELSE
                                 ec.updated_at
-                            END 
+                            END
                         ) as updated_at,
                         (
-                            CASE c.ativo WHEN 1 THEN 
-                                NULL 
-                            ELSE 
+                            CASE c.ativo WHEN 1 THEN
+                                NULL
+                            ELSE
                                 c.data_exclusao::timestamp(0)
                             END
                         ) AS deleted_at
                     FROM pmieducar.curso c
-                    INNER JOIN pmieducar.escola_curso ec ON TRUE 
+                    INNER JOIN pmieducar.escola_curso ec ON TRUE
                         AND ec.ref_cod_curso = c.cod_curso
-                    WHERE TRUE 
+                    WHERE TRUE
                         AND c.ref_cod_instituicao = $1
-                        AND ec.ref_cod_escola IN ($escolaId) 
+                        AND ec.ref_cod_escola IN ($escolaId)
                 ";
 
                 if ($modified) {
@@ -74,21 +70,25 @@ class CursoController extends ApiCoreController
             } else {
 
                 $sql = "
-                    SELECT 
-                        cod_curso, 
-                        nm_curso, 
+                    SELECT
+                        cod_curso,
+                        nm_curso,
                         updated_at,
                         (
-                            CASE ativo WHEN 1 THEN 
-                                NULL 
-                            ELSE 
+                            CASE ativo WHEN 1 THEN
+                                NULL
+                            ELSE
                                 data_exclusao::timestamp(0)
                             END
                         ) AS deleted_at
                     FROM pmieducar.curso
-                    WHERE TRUE 
+                    WHERE TRUE
                         AND ref_cod_instituicao = $1
                 ";
+
+                if ($ativo ) {
+                    $sql .= ' AND curso.ativo = 1';
+                }
 
                 if ($modified) {
                     $params[] = $modified;
