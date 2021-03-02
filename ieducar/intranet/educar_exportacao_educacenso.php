@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\DB;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $ano;
@@ -79,7 +77,13 @@ return new class extends clsCadastro
     {
         return false;
     }
-}
+
+    public function Formular()
+    {
+        $this->titulo = 'i-Educar - Exportação Educacenso';
+        $this->processoAp = ($_REQUEST['fase2'] == 1 ? 9998845 : 846);
+    }
+};
 
 ?>
 <script type="text/javascript">
@@ -139,18 +143,12 @@ function marcarCheck(idValue) {
     var campo = document.formcadastro;
     var i;
 
-    for (i=0; i<contaForm; i++) {
+    for (i = 0; i < contaForm; i++) {
         if (campo.elements[i].id == idValue) {
 
             campo.elements[i].checked = campo.CheckTodos.checked;
         }
 
     }
-
-    public function Formular()
-    {
-        $this->titulo = "i-Educar - Exporta&ccedil;&atilde;o Educacenso";
-        $this->processoAp = ($_REQUEST['fase2'] == 1 ? 9998845 : 846);
-    }
-};
+}
 </script>
