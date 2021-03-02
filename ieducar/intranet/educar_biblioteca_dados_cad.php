@@ -320,6 +320,11 @@ return new class extends clsCadastro {
         return false;
     }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-biblioteca-dados-cad.js');
+    }
+
     public function Formular()
     {
         $this->titulo = 'i-Educar - Dados Biblioteca';
