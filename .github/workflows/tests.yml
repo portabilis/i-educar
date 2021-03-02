@@ -1,11 +1,11 @@
-name: tests
+name: Tests
 
 on: [push, pull_request]
 
 jobs:
   default:
 
-    name: Tests
+    name: Unit, Integration and Pages
 
     runs-on: ubuntu-latest
 
