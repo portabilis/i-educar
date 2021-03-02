@@ -247,6 +247,11 @@ return new class extends clsListagem {
     ]);
     }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ .'/scripts/extra/educar-curso-lst.js');
+    }
+
     public function Formular()
     {
         $this->titulo = 'i-Educar - Curso';
