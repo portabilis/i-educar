@@ -44,7 +44,6 @@
         "tooleks/laravel-asset-version": "^1.0"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.2",
         "beyondcode/laravel-dump-server": "^1.0",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
@@ -95,8 +94,7 @@
         "laravel": {
             "dont-discover": [
                 "laravel/dusk",
-                "laravel/telescope",
-                "barryvdh/laravel-debugbar"
+                "laravel/telescope"
             ]
         }
     },
