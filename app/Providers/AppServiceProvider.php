@@ -6,7 +6,6 @@ use App\Models\LegacyInstitution;
 use App\Providers\Postgres\DatabaseServiceProvider;
 use App\Services\CacheManager;
 use App\Services\StudentUnificationService;
-use Barryvdh\Debugbar\ServiceProvider as DebugbarServiceProvider;
 use Exception;
 use iEducar\Modules\ErrorTracking\HoneyBadgerTracker;
 use iEducar\Modules\ErrorTracking\Tracker;
@@ -131,7 +130,6 @@ class AppServiceProvider extends ServiceProvider
 
         if ($this->app->environment('development', 'local', 'testing')) {
             $this->app->register(TelescopeServiceProvider::class);
-            $this->app->register(DebugbarServiceProvider::class);
         }
 
         $this->app->bind(Tracker::class, HoneyBadgerTracker::class);
