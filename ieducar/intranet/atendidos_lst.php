@@ -1,5 +1,5 @@
 <?php
-$desvio_diretorio = '';
+
 
 
 return new class extends clsListagem

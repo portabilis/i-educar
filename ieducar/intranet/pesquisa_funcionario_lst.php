@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Session;
 
-$desvio_diretorio = '';
+
 
 
 return new class extends clsListagem
