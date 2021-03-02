@@ -78,6 +78,15 @@ return new class extends clsDetalhe {
         ]);
     }
 
+    public function makeExtra()
+    {
+        return str_replace(
+            '#cod_categoria_nivel',
+            $_GET['cod_categoria_nivel'],
+            file_get_contents(__DIR__ . '/scripts/extra/educar-categoria-nivel-det.js')
+        );
+    }
+
     public function Formular()
     {
         $this->titulo = 'Servidores - Detalhe Categoria Nível';
