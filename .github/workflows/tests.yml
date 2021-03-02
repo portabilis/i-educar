@@ -56,4 +56,4 @@ jobs:
       - name: Page tests
         run: |
           php artisan legacy:create:tests
-          vendor/bin/phpunit --testsuite Pages --process-isolation
+          php artisan test --parallel --testsuite Pages
