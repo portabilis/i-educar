@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -247,16 +245,14 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de cursos', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
-
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Curso";
+        $this->titulo = 'i-Educar - Curso';
         $this->processoAp = '566';
     }
 };
-
 
 ?>
 <script type="text/javascript">
