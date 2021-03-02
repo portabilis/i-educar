@@ -1,9 +1,6 @@
 <?php
 
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -74,7 +71,6 @@ return new class extends clsCadastro
         $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, "educar_distribuicao_uniforme_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
 
         if (is_numeric($this->ref_cod_aluno) && is_numeric($this->cod_distribuicao_uniforme)) {
-
             $obj = new clsPmieducarDistribuicaoUniforme($this->cod_distribuicao_uniforme);
 
             $registro  = $obj->detalhe();
@@ -162,7 +158,6 @@ return new class extends clsCadastro
             'max_length'  => 10,
             'size' => 10
         ]);
-
 
         $this->inputsHelper()->integer('camiseta_curta_qtd', [
             'required' => false,
@@ -458,17 +453,14 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Distribui&ccedil;&atilde;o de uniforme";
+        $this->titulo = 'i-Educar - Distribui&ccedil;&atilde;o de uniforme';
         $this->processoAp = 578;
     }
 };
-
-
 
 ?>
 
