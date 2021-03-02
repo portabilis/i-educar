@@ -4,16 +4,8 @@ use App\Menu;
 use App\Models\State;
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Instituição");
-        $this->processoAp = '559';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $cod_instituicao;
     public $ref_usuario_exc;
@@ -454,17 +446,17 @@ class indice extends clsCadastro
     public function Excluir()
     {
         $this->simpleRedirect('educar_instituicao_lst.php');
-    }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
+    }
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Instituição";
+        $this->processoAp = '559';
+    }
+};
+
+
 ?>
 <script type="text/javascript">
 

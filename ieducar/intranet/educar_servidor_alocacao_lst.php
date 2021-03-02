@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Servidor');
-        $this->processoAp = 635;
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     public $pessoa_logada;
     public $titulo;
@@ -171,17 +163,14 @@ class indice extends clsListagem
         $this->breadcrumb('Registro de alocações do servidor', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
+
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
+    public function Formular()
+    {
+        $this->title = "Servidores - Servidor";
+        $this->processoAp = 635;
+    }
+};
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
 
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();

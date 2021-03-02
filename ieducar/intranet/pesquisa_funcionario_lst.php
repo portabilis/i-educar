@@ -2,20 +2,10 @@
 
 use Illuminate\Support\Facades\Session;
 
-$desvio_diretorio = '';
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Pesquisa por Funcion&aacute;rio!");
-        $this->processoAp         = '0';
-        $this->renderMenu         = false;
-        $this->renderMenuSuspenso = false;
-    }
-}
 
-class indice extends clsListagem
+
+return new class extends clsListagem
 {
     public $chave_campo;
     public $importarCpf;
@@ -142,13 +132,19 @@ class indice extends clsListagem
 
         // Define Largura da Página
         $this->largura = '100%';
-    }
-}
 
-$pagina = new clsIndex();
-$miolo = new indice();
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    }
+
+    public function Formular()
+    {
+        $this->title = "Pesquisa por Funcion&aacute;rio!";
+        $this->processoAp         = '0';
+        $this->renderMenu         = false;
+        $this->renderMenuSuspenso = false;
+    }
+};
+
+
 ?>
 <script type="text/javascript"/">
 /*

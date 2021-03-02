@@ -4,16 +4,8 @@ use App\Models\District;
 use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Distrito');
-        $this->processoAp = 759;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     use InteractWithDatabase, SelectOptions;
 
@@ -139,14 +131,17 @@ class indice extends clsCadastro
         }
 
         return $this->delete($this->iddis);
+
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
+    public function Formular()
+    {
+        $this->title = "Distrito";
+        $this->processoAp = 759;
+    }
+};
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+
 
 ?>
 <script type='text/javascript'>

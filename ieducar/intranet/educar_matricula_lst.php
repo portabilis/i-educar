@@ -1,16 +1,8 @@
 <?php
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Matr&iacute;cula");
-        $this->processoAp = '578';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Titulo no topo da pagina
@@ -248,14 +240,17 @@ class indice extends clsListagem
         $this->array_botao[] = 'Voltar';
         $this->array_botao_url[] = "educar_aluno_det.php?cod_aluno={$this->ref_cod_aluno}";
         $this->largura = '100%';
+
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
+    public function Formular()
+    {
+        $this->title = "i-Educar - Matr&iacute;cula";
+        $this->processoAp = '578';
+    }
+};
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+
 
 ?>
 

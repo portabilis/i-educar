@@ -1,17 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Escola Localiza&ccedil;&atilde;o");
-        $this->processoAp = '562';
-        $this->renderMenu = false;
-        $this->renderMenuSuspenso = false;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -88,17 +78,19 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-    }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
+    }
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Escola Localiza&ccedil;&atilde;o";
+        $this->processoAp = '562';
+        $this->renderMenu = false;
+        $this->renderMenuSuspenso = false;
+    }
+};
+
+
 ?>
 
 <script>

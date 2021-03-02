@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - S&eacute;rie');
-        $this->processoAp = '586';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
     public $cod_turma;
@@ -73,17 +65,13 @@ class indice extends clsCadastro
     public function Excluir()
     {
         return false;
+
     }
-}
 
-// Instancia objeto de pÃ¡gina
-$pagina = new clsIndexBase();
+    public function Formular()
+    {
+        $this->title = "i-Educar - S&eacute;rie";
+        $this->processoAp = '586';
+    }
+};
 
-// Instancia objeto de conteÃºdo
-$miolo = new indice();
-
-// Atribui o conteÃºdo Ã Â  pÃ¡gina
-$pagina->addForm($miolo);
-
-// Gera o cÃ³digo HTML
-$pagina->MakeAll();

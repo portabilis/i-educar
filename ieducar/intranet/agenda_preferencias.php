@@ -1,17 +1,9 @@
 <?php
 
-$desvio_diretorio = '';
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Agenda - Preferencias");
-        $this->processoAp = '345';
-    }
-}
 
-class indice extends clsCadastro
+
+return new class extends clsCadastro
 {
     public $cod_agenda;
     public $ref_ref_cod_pessoa_exc;
@@ -97,12 +89,14 @@ class indice extends clsCadastro
 
         $db->Consulta("UPDATE portal.agenda SET ref_ref_cod_pessoa_exc = '{$this->pessoa_logada}', data_edicao = NOW() $set WHERE cod_agenda = '{$this->cod_agenda}'");
         $this->simpleRedirect('agenda.php');
+
     }
-}
 
-$pagina = new clsIndex();
+    public function Formular()
+    {
+        $this->title = "Agenda - Preferencias";
+        $this->processoAp = '345';
+    }
+};
 
-$miolo = new indice();
-$pagina->addForm($miolo);
 
-$pagina->MakeAll();

@@ -1,16 +1,8 @@
 <?php
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Distribui&ccedil;&atilde;o de uniforme");
-        $this->processoAp = 578;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -466,12 +458,17 @@ class indice extends clsCadastro
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
-    }
-}
 
-$pagina = new clsIndexBase();
-$pagina->addForm(new indice());
-$pagina->MakeAll();
+    }
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Distribui&ccedil;&atilde;o de uniforme";
+        $this->processoAp = 578;
+    }
+};
+
+
 
 ?>
 

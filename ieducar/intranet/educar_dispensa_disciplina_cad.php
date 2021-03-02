@@ -4,16 +4,8 @@ use App\Models\LegacyDisciplineExemption;
 use App\Models\LegacyRegistration;
 use App\Services\Exemption\ExemptionService;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Dispensa Componente Curricular');
-        $this->processoAp = 578;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -402,17 +394,14 @@ class indice extends clsCadastro
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
+    public function Formular()
+    {
+        $this->title = "i-Educar - Dispensa Componente Curricular";
+        $this->processoAp = 578;
+    }
+};
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
 
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();

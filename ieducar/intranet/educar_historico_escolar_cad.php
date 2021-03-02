@@ -4,16 +4,8 @@ use App\Models\Country;
 use App\Models\State;
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Hist&oacute;rico Escolar");
-        $this->processoAp = '578';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $ref_cod_aluno;
 
@@ -513,8 +505,15 @@ class indice extends clsCadastro
         $valorPermitirCargaHoraria = dbBool($detalhe_instituicao['permitir_carga_horaria']);
 
         return $valorPermitirCargaHoraria;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Hist&oacute;rico Escolar";
+        $this->processoAp = '578';
+    }
+};
 
 function getOpcoesGradeCurso()
 {
@@ -540,8 +539,4 @@ function validaControlePosicaoHistorico()
     return dbBool($lst[0]['controlar_posicao_historicos']);
 }
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();

@@ -1,17 +1,9 @@
 <?php
 
-$desvio_diretorio = '';
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Agenda");
-        $this->processoAp = '341';
-    }
-}
 
-class indice extends clsListagem
+
+return new class extends clsListagem
 {
     public $cd_agenda;
     public $nm_agenda;
@@ -65,12 +57,14 @@ class indice extends clsListagem
         $this->largura = '100%';
 
         $this->breadcrumb('Agendas');
+
     }
-}
 
-$pagina = new clsIndex();
+    public function Formular()
+    {
+        $this->title = "Agenda";
+        $this->processoAp = '341';
+    }
+};
 
-$miolo = new indice();
-$pagina->addForm($miolo);
 
-$pagina->MakeAll();

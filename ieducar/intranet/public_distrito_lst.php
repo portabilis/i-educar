@@ -4,16 +4,8 @@ use App\Models\District;
 use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Distrito');
-        $this->processoAp = 759;
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     use InteractWithDatabase, SelectOptions;
 
@@ -154,14 +146,17 @@ class indice extends clsListagem
         $this->breadcrumb('Listagem de distritos', [
             url('intranet/educar_enderecamento_index.php') => 'Endereçamento',
         ]);
+
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
+    public function Formular()
+    {
+        $this->title = "Distrito";
+        $this->processoAp = 759;
+    }
+};
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+
 
 ?>
 <script type="text/javascript">

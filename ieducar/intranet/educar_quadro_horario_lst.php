@@ -2,16 +2,8 @@
 
 use iEducar\Support\Navigation\Breadcrumb;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Quadro de Horário');
-        $this->processoAp = '641';
-    }
-}
 
-class indice
+return new class
 {
     public $pessoa_logada;
     public $titulo;
@@ -273,20 +265,17 @@ class indice
         }
 
         return $valores;
+
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
+    public function Formular()
+    {
+        $this->title = "i-Educar - Quadro de Horário";
+        $this->processoAp = '641';
+    }
+};
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
 
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
 ?>
 <script type="text/javascript">
 var campoInstituicao = document.getElementById('ref_cod_instituicao');

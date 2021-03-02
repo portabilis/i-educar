@@ -1,16 +1,8 @@
 <?php
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Etapa");
-        $this->processoAp = '584';
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     public $cod_modulo;
     public $ref_usuario_exc;
@@ -100,10 +92,14 @@ class indice extends clsDetalhe
         $this->breadcrumb('Detalhe da etapa', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-    }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+    }
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Etapa";
+        $this->processoAp = '584';
+    }
+};
+
+

@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Disciplina de dependência');
-        $this->processoAp = 578;
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     public $pessoa_logada;
     public $titulo;
@@ -176,17 +168,14 @@ class indice extends clsListagem
         $this->breadcrumb('Disciplinas de dependência', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
+
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
+    public function Formular()
+    {
+        $this->title = "i-Educar - Disciplina de dependência";
+        $this->processoAp = 578;
+    }
+};
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
 
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();

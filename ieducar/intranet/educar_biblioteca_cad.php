@@ -2,16 +2,8 @@
 
 use Illuminate\Support\Facades\Session;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Biblioteca");
-        $this->processoAp = '591';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $cod_biblioteca;
     public $ref_cod_instituicao;
@@ -246,14 +238,7 @@ class indice extends clsCadastro
     }
 }
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
+
 ?>
 
 <script>
@@ -300,8 +285,15 @@ function getUsuarios(selecao)
                 campoUsuario.options[campoUsuario.options.length] = new Option( user_biblioteca[j][1], user_biblioteca[j][0],false,false);
             }
         }
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Biblioteca";
+        $this->processoAp = '591';
+    }
+};
 */
 function getUsuario(xml_usuario)
 {

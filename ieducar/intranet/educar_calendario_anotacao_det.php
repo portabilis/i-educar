@@ -3,16 +3,8 @@
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Calendario Anotacao");
-        $this->processoAp = '620';
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     /**
      * Titulo no topo da pagina
@@ -72,14 +64,14 @@ class indice extends clsDetalhe
 
         $this->url_cancelar = "educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}";
         $this->largura = '100%';
-    }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
+    }
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Calendario Anotacao";
+        $this->processoAp = '620';
+    }
+};
+
+

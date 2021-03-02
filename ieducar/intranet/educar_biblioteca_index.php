@@ -1,17 +1,9 @@
 <?php
 
-$desvio_diretorio = '';
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar");
-        $this->processoAp = 57;
-    }
-}
 
-class indice
+
+return new class
 {
     public function RenderHTML()
     {
@@ -20,12 +12,14 @@ class indice
                     <tr align=center valign=\'top\'><td></td></tr>
                 </table>
                 ';
+
     }
-}
 
-$pagina = new clsIndex();
+    public function Formular()
+    {
+        $this->title = "i-Educar";
+        $this->processoAp = 57;
+    }
+};
 
-$miolo = new indice();
-$pagina->addForm($miolo);
 
-$pagina->MakeAll();

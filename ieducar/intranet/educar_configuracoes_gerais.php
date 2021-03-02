@@ -3,16 +3,8 @@
 use Illuminate\Support\Facades\Cache;
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Configura&ccedil;&otilde;es gerais');
-        $this->processoAp = 999873;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -312,16 +304,13 @@ class indice extends clsCadastro
         $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
 
         return false;
+
     }
-}
-// Instancia objeto de página
-$pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
+    public function Formular()
+    {
+        $this->title = "i-Educar - Configura&ccedil;&otilde;es gerais";
+        $this->processoAp = 999873;
+    }
+};
 
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();

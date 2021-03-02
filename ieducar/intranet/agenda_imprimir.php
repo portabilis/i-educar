@@ -1,15 +1,7 @@
 <?php
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Agenda");
-        $this->processoAp = '345';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $cod_agenda;
     public $link;
@@ -234,12 +226,14 @@ class indice extends clsCadastro
         }
 
         return  true;
+
     }
-}
 
-$pagina = new clsIndex();
+    public function Formular()
+    {
+        $this->title = "Agenda";
+        $this->processoAp = '345';
+    }
+};
 
-$miolo = new indice();
-$pagina->addForm($miolo);
 
-$pagina->MakeAll();

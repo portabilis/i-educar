@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Instituicao");
-        $this->processoAp = '559';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -112,13 +104,13 @@ class indice extends clsListagem
         $this->breadcrumb('Listagem de instituições', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
+
     }
-}
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Instituicao";
+        $this->processoAp = '559';
+    }
+};
+

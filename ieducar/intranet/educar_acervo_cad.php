@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Obras");
-        $this->processoAp = '598';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -331,14 +323,7 @@ class indice extends clsCadastro
     }
 }
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
+
 ?>
 
 <script>
@@ -517,8 +502,15 @@ function getIdioma( xml_acervo_idioma )
             campoIdioma.options[0].text = 'A biblioteca não possui idiomas';
             setVisibility(document.getElementById('img_idioma'), true);
         }
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Obras";
+        $this->processoAp = '598';
+    }
+};
 
 document.getElementById('ref_cod_biblioteca').onchange = function()
 {

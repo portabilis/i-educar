@@ -2,16 +2,8 @@
 
 use App\Process;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Reclassificar Matr&iacute;cula");
-        $this->processoAp = Process::RECLASSIFY_REGISTRATION;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -202,14 +194,7 @@ class indice extends clsCadastro
     }
 }
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
+
 ?>
 <script>
 /*
@@ -247,7 +232,14 @@ function getSerie_XML(xml)
         //{
         campoSerie[campoSerie.length] = new Option(seq_serie[ct].firstChild.nodeValue,seq_serie[ct].getAttribute("cod_serie"),false,false);
     //  }
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Reclassificar Matr&iacute;cula";
+        $this->processoAp = Process::RECLASSIFY_REGISTRATION;
+    }
+};
 getSerie();
 </script>

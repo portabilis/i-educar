@@ -2,16 +2,8 @@
 
 use App\Services\iDiarioService;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Ano Letivo Etapa');
-        $this->processoAp = 561;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -695,20 +687,17 @@ class indice extends clsCadastro
         }
 
         return true;
+
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
+    public function Formular()
+    {
+        $this->title = "Ano Letivo Etapa";
+        $this->processoAp = 561;
+    }
+};
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
 
-// Atribui o conteúdo à página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
 ?>
 <script type="text/javascript">
     var modulosDisponiveis = <?php echo $miolo->gerarJsonDosModulos(); ?>;

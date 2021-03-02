@@ -2,16 +2,8 @@
 
 use Illuminate\Support\Facades\Session;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Exemplar Empr&eacute;stimo");
-        $this->processoAp = '610';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -203,16 +195,16 @@ class indice extends clsListagem
         }
 
         $this->largura = '100%';
+
     }
-}
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Exemplar Empr&eacute;stimo";
+        $this->processoAp = '610';
+    }
+};
+
 ?>
 
 <script>

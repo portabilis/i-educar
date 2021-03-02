@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Servidores - Avalia&ccedil;&atilde;o Desempenho");
-        $this->processoAp = '635';
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     /**
      * Titulo no topo da pagina
@@ -81,14 +73,14 @@ class indice extends clsDetalhe
         $this->breadcrumb('Detalhe da avaliação de desempenho', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
-    }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
+    }
+
+    public function Formular()
+    {
+        $this->title = "Servidores - Avalia&ccedil;&atilde;o Desempenho";
+        $this->processoAp = '635';
+    }
+};
+
+

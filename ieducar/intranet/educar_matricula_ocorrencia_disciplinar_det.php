@@ -1,16 +1,8 @@
 <?php
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Ocorr&ecirc;ncia Disciplinar");
-        $this->processoAp = '578';
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     /**
      * Titulo no topo da pagina
@@ -115,14 +107,14 @@ class indice extends clsDetalhe
         $this->breadcrumb('Ocorrências disciplinares da matrícula', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-    }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
+    }
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Ocorr&ecirc;ncia Disciplinar";
+        $this->processoAp = '578';
+    }
+};
+
+

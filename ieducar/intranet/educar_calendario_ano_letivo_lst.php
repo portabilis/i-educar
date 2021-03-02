@@ -2,16 +2,8 @@
 
 use Illuminate\Support\Facades\Session;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Calendários');
-        $this->processoAp = 620;
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     public $pessoa_logada;
     public $titulo;
@@ -482,17 +474,14 @@ class indice extends clsListagem
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 
         return $retorno;
+
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
+    public function Formular()
+    {
+        $this->title = "i-Educar - Calendários";
+        $this->processoAp = 620;
+    }
+};
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
 
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();

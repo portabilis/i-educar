@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Série');
-        $this->processoAp = '583';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -406,20 +398,17 @@ class indice extends clsCadastro
         foreach ($regrasSerieAnoDeletar as $regra) {
             $serieAnoMapper->delete($regra);
         }
+
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
+    public function Formular()
+    {
+        $this->title = "i-Educar - Série";
+        $this->processoAp = '583';
+    }
+};
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
 
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
 ?>
 <script type="text/javascript">
     function getRegra()

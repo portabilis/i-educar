@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Servidor Formação');
-        $this->processoAp = 635;
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     public $titulo;
 
@@ -132,17 +124,14 @@ class indice extends clsDetalhe
         $this->breadcrumb('Detalhe do vínculo', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
+
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
+    public function Formular()
+    {
+        $this->title = "Servidores - Servidor Formação";
+        $this->processoAp = 635;
+    }
+};
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
 
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();

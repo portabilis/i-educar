@@ -1,15 +1,6 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular(): bool
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Coffebreak Tipo");
-        $this->processoAp = '564';
-    }
-}
-
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     /**
      * Titulo no topo da pagina
@@ -66,13 +57,10 @@ class indice extends clsDetalhe
         $this->url_cancelar = 'educar_coffebreak_tipo_lst.php';
         $this->largura = '100%';
     }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
+    public function Formular(): bool
+    {
+        $this->titulo = "i-Educar - Coffebreak Tipo";
+        $this->processoAp = '564';
+    }
+};

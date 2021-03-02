@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Empresas');
-        $this->processoAp = 21235;
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     public $titulo;
 
@@ -76,17 +68,14 @@ class indice extends clsDetalhe
         $this->breadcrumb('Detalhe da empresa de transporte', [
         url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
     ]);
+
     }
-}
 
-// Instancia o objeto da página
-$pagina = new clsIndexBase();
+    public function Formular()
+    {
+        $this->title = "i-Educar - Empresas";
+        $this->processoAp = 21235;
+    }
+};
 
-// Instancia o objeto de conteúdo
-$miolo = new indice();
 
-// Passa o conteúdo para a página
-$pagina->addForm($miolo);
-
-// Gera o HTML
-$pagina->MakeAll();

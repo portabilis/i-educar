@@ -4,16 +4,8 @@ use App\Models\LogUnification;
 use iEducar\Modules\Unification\StudentLogUnification;
 use Illuminate\Support\Facades\DB;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Unifica&ccedil;&atilde;o de alunos');
-        $this->processoAp = '999847';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
     public $tabela_alunos = [];
@@ -117,20 +109,17 @@ class indice extends clsCadastro
         $log->save();
 
         return $log->id;
+
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
+    public function Formular()
+    {
+        $this->title = "i-Educar - Unifica&ccedil;&atilde;o de alunos";
+        $this->processoAp = '999847';
+    }
+};
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
 
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
 ?>
 <script type="text/javascript">
 

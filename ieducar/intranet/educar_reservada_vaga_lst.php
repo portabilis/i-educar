@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Vagas Reservadas');
-        $this->processoAp = '639';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referência a usuário da sessão
@@ -234,20 +226,17 @@ class indice extends clsListagem
         $this->breadcrumb('Listagem de vagas reservadas', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
+
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
+    public function Formular()
+    {
+        $this->title = "i-Educar - Vagas Reservadas";
+        $this->processoAp = '639';
+    }
+};
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
 
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
 ?>
 
 <script type="text/javascript">

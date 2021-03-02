@@ -1,15 +1,7 @@
 <?php
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Vínculo Funcionários!");
-        $this->processoAp = '190';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     public function Gerar()
     {
@@ -62,12 +54,14 @@ class indice extends clsListagem
         $this->nome_acao = 'Novo';
 
         $this->breadcrumb('Listagem de v&iacute;nculos');
+
     }
-}
 
-$pagina = new clsIndex();
+    public function Formular()
+    {
+        $this->title = "Vínculo Funcionários!";
+        $this->processoAp = '190';
+    }
+};
 
-$miolo = new indice();
-$pagina->addForm($miolo);
 
-$pagina->MakeAll();

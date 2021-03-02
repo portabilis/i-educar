@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Falta Atraso');
-        $this->processoAp = 635;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -311,20 +303,17 @@ class indice extends clsCadastro
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
+    public function Formular()
+    {
+        $this->title = "Servidores - Falta Atraso";
+        $this->processoAp = 635;
+    }
+};
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
 
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
 ?>
 <script type="text/javascript">
 var obj_tipo = document.getElementById('tipo');

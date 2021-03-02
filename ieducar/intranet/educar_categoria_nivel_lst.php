@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . 'Categorias ou níveis do servidor');
-        $this->processoAp = '829';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -148,17 +140,14 @@ class indice extends clsListagem
         $this->breadcrumb('Categorias ou níveis do servidor', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
+
     }
-}
 
-// Instancia a classe da página
-$pagina = new clsIndexBase();
+    public function Formular()
+    {
+        $this->title = "Categorias ou níveis do servidor";
+        $this->processoAp = '829';
+    }
+};
 
-// Instancia o conteúdo
-$miolo = new indice();
 
-// Passa o conteúdo para a classe da página
-$pagina->addForm($miolo);
-
-// Imprime o HTML
-$pagina->MakeAll();

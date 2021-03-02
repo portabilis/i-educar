@@ -3,16 +3,8 @@
 use App\Models\PersonHasPlace;
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Escola");
-        $this->processoAp = '561';
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     public $cod_escola;
     public $ref_usuario_cad;
@@ -299,14 +291,17 @@ class indice extends clsDetalhe
         $tabela .= '</table>';
 
         return $existe == true ? $tabela : false;
+
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
+    public function Formular()
+    {
+        $this->title = "i-Educar - Escola";
+        $this->processoAp = '561';
+    }
+};
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+
 
 ?>
 <script>

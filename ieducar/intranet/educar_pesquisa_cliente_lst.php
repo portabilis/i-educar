@@ -2,18 +2,8 @@
 
 use Illuminate\Support\Facades\Session;
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Cliente");
-        $this->processoAp = '0';
-        $this->renderMenu = false;
-        $this->renderMenuSuspenso = false;
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -139,15 +129,7 @@ class indice extends clsListagem
         $this->largura = '100%';
     }
 }
-// cria uma extensao da classe base
-//$pagina = new clsIndexBase();
-$pagina = new clsIndex();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
+
 ?>
 <script>
 
@@ -167,8 +149,17 @@ function addVal1( campo, valor, opcao )
     {
         obj       =  window.parent.document.getElementById( campo );
         obj.value = valor;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Cliente";
+        $this->processoAp = '0';
+        $this->renderMenu = false;
+        $this->renderMenuSuspenso = false;
+    }
+};
 
 function fecha()
 {

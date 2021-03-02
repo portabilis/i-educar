@@ -2,16 +2,8 @@
 
 use Illuminate\Support\Facades\Session;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Reservas");
-        $this->processoAp = '609';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -364,17 +356,17 @@ class indice extends clsCadastro
         $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
 
         return false;
-    }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
+    }
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Reservas";
+        $this->processoAp = '609';
+    }
+};
+
+
 ?>
 
 <script>

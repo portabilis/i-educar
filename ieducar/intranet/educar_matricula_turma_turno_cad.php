@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Turno do aluno");
-        $this->processoAp = '578';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $cod_matricula;
     public $ref_cod_aluno;
@@ -139,14 +131,14 @@ class indice extends clsCadastro
         if (!$det_matricula) {
             $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
-    }
-}
 
-// cria uma extensao da classe base
-$pagina = new clsIndexBase();
-// cria o conteudo
-$miolo = new indice();
-// adiciona o conteudo na clsBase
-$pagina->addForm($miolo);
-// gera o html
-$pagina->MakeAll();
+    }
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Turno do aluno";
+        $this->processoAp = '578';
+    }
+};
+
+

@@ -4,16 +4,8 @@ use App\Models\LegacyIndividual;
 use App\Services\FileService;
 use App\Services\UrlPresigner;
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Pessoa');
-        $this->processoAp = 43;
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     public function Gerar()
     {
@@ -171,17 +163,14 @@ class indice extends clsDetalhe
         $this->largura = '100%';
 
         $this->breadcrumb('Pessoa física', ['educar_pessoas_index.php' => 'Pessoas']);
+
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndex();
+    public function Formular()
+    {
+        $this->title = "Pessoa";
+        $this->processoAp = 43;
+    }
+};
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
 
-// Atribui o conteúdo à página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();

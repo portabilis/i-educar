@@ -1,17 +1,6 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Falta Atraso');
-        $this->processoAp = 635;
-    }
-}
-
-
-class indice extends clsListagem
-{
+return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -186,16 +175,10 @@ class indice extends clsListagem
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
-
-// Instancia objeto de conteúdo
-$miolo = new indice();
-
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();;
+    public function Formular()
+    {
+        $this->titulo = 'Servidores - Falta Atraso';
+        $this->processoAp = 635;
+    }
+};

@@ -5,16 +5,8 @@ use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Município');
-        $this->processoAp = 755;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     use InteractWithDatabase, SelectOptions;
 
@@ -122,14 +114,17 @@ class indice extends clsCadastro
         }
 
         return $this->delete($this->idmun);
+
     }
-}
 
-$pagina = new clsIndexBase();
-$miolo = new indice();
+    public function Formular()
+    {
+        $this->title = "Município";
+        $this->processoAp = 755;
+    }
+};
 
-$pagina->addForm($miolo);
-$pagina->MakeAll();
+
 
 ?>
 

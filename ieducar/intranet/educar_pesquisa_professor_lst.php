@@ -2,18 +2,8 @@
 
 use Illuminate\Support\Facades\Session;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor');
-        $this->processoAp = '0';
-        $this->renderMenu = false;
-        $this->renderMenuSuspenso = false;
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     public $pessoa_logada;
     public $titulo;
@@ -119,16 +109,18 @@ class indice extends clsListagem
 
         Session::save();
         Session::start();
+
     }
-}
-// Instancia objeto de pÃ¡gina
-$pagina = new clsIndexBase();
-// Instancia objeto de conteÃºdo
-$miolo = new indice();
-// Atribui o conteÃºdo Ã   pÃ¡gina
-$pagina->addForm($miolo);
-// Gera o cÃ³digo HTML
-$pagina->MakeAll();
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Servidor";
+        $this->processoAp = '0';
+        $this->renderMenu = false;
+        $this->renderMenuSuspenso = false;
+    }
+};
+
 ?>
 <script type="text/javascript">
 function addVal1(campo,opcao, valor)

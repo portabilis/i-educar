@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Componentes da série');
-        $this->processoAp = '9998859';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     public $pessoa_logada;
     public $titulo;
@@ -107,17 +99,14 @@ class indice extends clsListagem
         $scripts = ['/modules/Cadastro/Assets/Javascripts/ComponentesSerieFiltros.js'];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+
     }
-}
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
+    public function Formular()
+    {
+        $this->title = "i-Educar - Componentes da série";
+        $this->processoAp = '9998859';
+    }
+};
 
-// Instancia objeto de conteúdo
-$miolo = new indice();
 
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();

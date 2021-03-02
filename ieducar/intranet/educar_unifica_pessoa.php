@@ -4,17 +4,7 @@ use App\Models\Individual;
 use App\Models\LogUnification;
 use iEducar\Modules\Unification\PersonLogUnification;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Unificação de pessoas');
-        $this->processoAp = '9998878';
-    }
-}
-
-class indice extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $tabela_pessoas = [];
@@ -22,6 +12,9 @@ class indice extends clsCadastro
 
     public function Formular()
     {
+        $this->titulo = 'i-Educar - Unificação de pessoas';
+        $this->processoAp = '9998878';
+
         $this->breadcrumb('Unificação de pessoas', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
@@ -136,19 +129,8 @@ class indice extends clsCadastro
 
         return $names;
     }
-}
+};
 
-// Instancia objeto de página
-$pagina = new clsIndexBase();
-
-// Instancia objeto de conteúdo
-$miolo = new indice();
-
-// Atribui o conteúdo à  página
-$pagina->addForm($miolo);
-
-// Gera o código HTML
-$pagina->MakeAll();
 ?>
 <script type="text/javascript">
 
