@@ -403,7 +403,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Série";
+        $this->title = "i-Educar - Série";
         $this->processoAp = '583';
     }
 };

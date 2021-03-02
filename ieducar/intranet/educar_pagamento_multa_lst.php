@@ -180,7 +180,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Pagamento Multa";
+        $this->title = "i-Educar - Pagamento Multa";
         $this->processoAp = '622';
     }
 };
