@@ -49,7 +49,6 @@
         "fakerphp/faker": "^1.9.1",
         "filp/whoops": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.13",
-        "laravel/dusk": "^6.0",
         "laravel/sail": "^0.0.5",
         "laravel/telescope": "^4.0",
         "mockery/mockery": "^1.4.2",
@@ -93,7 +92,6 @@
     "extra": {
         "laravel": {
             "dont-discover": [
-                "laravel/dusk",
                 "laravel/telescope"
             ]
         }
