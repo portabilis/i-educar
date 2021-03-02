@@ -1,16 +1,8 @@
 <?php
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Matrículas Turmas");
-        $this->processoAp = '659';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Titulo no topo da pagina
@@ -171,8 +163,15 @@ class indice extends clsListagem
         $this->breadcrumb('Listagem de turmas para enturmações', [
             'educar_index.php' => 'Escola',
         ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Matrículas Turmas";
+        $this->processoAp = '659';
+    }
+};
 
 
 ?>

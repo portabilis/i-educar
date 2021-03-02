@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Curso");
-        $this->processoAp = '0';
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     /**
      * Titulo no topo da pagina
@@ -136,7 +128,14 @@ class indice extends clsDetalhe
 
         $this->url_cancelar = 'educar_curso_lst.php';
         $this->largura = '100%';
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Curso";
+        $this->processoAp = '0';
+    }
+};
 
 

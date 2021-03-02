@@ -1,18 +1,8 @@
 <?php
 
-$desvio_diretorio = "";
 
-class clsIndex extends clsBase
-{
 
-    function Formular()
-    {
-        $this->SetTitulo( "{$this->_instituicao} i-OpeTopicE" );
-        $this->processoAp = "459";
-    }
-}
-
-class indice
+return new class
 {
     function RenderHTML()
     {
@@ -22,7 +12,13 @@ class indice
                 </table>
                 ";
     }
-}
+
+    function Formular()
+    {
+        $this->title = "i-OpeTopicE";
+        $this->processoAp = "459";
+    }
+};
 
 
 

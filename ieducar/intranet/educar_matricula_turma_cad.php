@@ -4,16 +4,8 @@ use App\Models\LegacyRegistration;
 use App\Services\SchoolClass\AvailableTimeService;
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Matricula Turma');
-        $this->processoAp = 578;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
     public $ref_cod_matricula;
@@ -334,7 +326,14 @@ class indice extends clsCadastro
         $turma = $turma->detalhe();
 
         return $turma['turma_turno_id'] == clsPmieducarTurma::TURNO_INTEGRAL;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Matricula Turma";
+        $this->processoAp = 578;
+    }
+};
 
 

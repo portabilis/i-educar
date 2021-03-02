@@ -1,16 +1,8 @@
 <?php
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Cliente");
-        $this->processoAp = '603';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -420,6 +412,13 @@ function requisitaSenha(xml)
                 document.getElementById('requisita_senha').value = '1';
             }
         }
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Cliente";
+        $this->processoAp = '603';
+    }
+};
 </script>

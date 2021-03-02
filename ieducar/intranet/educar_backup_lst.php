@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Backups");
-        $this->processoAp = '9998858';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -97,6 +89,13 @@ class indice extends clsListagem
         $this->breadcrumb('Backups', [
             url('intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "Backups";
+        $this->processoAp = '9998858';
+    }
+};
 

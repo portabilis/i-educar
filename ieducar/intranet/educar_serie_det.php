@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - S&eacute;rie');
-        $this->processoAp = '583';
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     public $titulo;
 
@@ -162,7 +154,14 @@ SQL;
         }
 
         return join('<br>', $html);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - S&eacute;rie";
+        $this->processoAp = '583';
+    }
+};
 
 

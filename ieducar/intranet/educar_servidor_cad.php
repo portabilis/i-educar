@@ -9,16 +9,8 @@ use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Servidor');
-        $this->processoAp = 635;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
     public $cod_servidor;
@@ -1040,8 +1032,15 @@ JS;
         $college = DB::table('modules.educacenso_ies')->where('id', $collegeId)->get(['nome', 'ies_id'])->first();
 
         return $college->ies_id . ' - ' . $college->nome;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "Servidores - Servidor";
+        $this->processoAp = 635;
+    }
+};
 
 
 ?>

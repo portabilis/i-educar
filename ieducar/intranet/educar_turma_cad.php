@@ -13,16 +13,8 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Turma');
-        $this->processoAp = 586;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -1631,8 +1623,15 @@ class indice extends clsCadastro
         }
 
         return null;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Turma";
+        $this->processoAp = 586;
+    }
+};
 
 
 ?>

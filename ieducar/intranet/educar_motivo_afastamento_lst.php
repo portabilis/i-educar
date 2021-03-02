@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Motivos de afastamento do servidor");
-        $this->processoAp = '633';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -134,6 +126,13 @@ class indice extends clsListagem
         $this->breadcrumb('Motivos de afastamento do servidor', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Motivos de afastamento do servidor";
+        $this->processoAp = '633';
+    }
+};
 

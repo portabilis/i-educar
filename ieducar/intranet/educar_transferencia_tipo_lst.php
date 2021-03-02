@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Motivo Transfer&ecirc;ncia");
-        $this->processoAp = '575';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -127,6 +119,13 @@ class indice extends clsListagem
         $this->breadcrumb('Listagem de tipos de transferência', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Motivo Transfer&ecirc;ncia";
+        $this->processoAp = '575';
+    }
+};
 

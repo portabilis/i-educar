@@ -3,16 +3,8 @@
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoAluno;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Tipo do AEE do aluno");
-        $this->processoAp = '578';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $cod_matricula;
     public $ref_cod_aluno;
@@ -166,7 +158,14 @@ class indice extends clsCadastro
         }
 
         return $arrayEnturmacoes;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Tipo do AEE do aluno";
+        $this->processoAp = '578';
+    }
+};
 
 

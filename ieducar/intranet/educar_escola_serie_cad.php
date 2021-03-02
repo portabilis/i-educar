@@ -9,16 +9,8 @@ use App\Services\SchoolLevelsService;
 use Illuminate\Support\Arr;
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Escola Série');
-        $this->processoAp = 585;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $ref_cod_escola_;
     public $ref_cod_serie;
@@ -870,7 +862,14 @@ class indice extends clsCadastro
         }
 
         return null;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Escola Série";
+        $this->processoAp = 585;
+    }
+};
 
 

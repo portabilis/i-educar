@@ -3,18 +3,9 @@
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Sequ&ecirc;ncia Enturma&ccedil;&atilde;o");
-        $this->processoAp = '587';
-    }
-}
-
 $nivel_usuario_fora = 0;
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -243,7 +234,13 @@ class indice extends clsCadastro
 
         return false;
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Sequ&ecirc;ncia Enturma&ccedil;&atilde;o";
+        $this->processoAp = '587';
+    }
+};
 
 
 ?>

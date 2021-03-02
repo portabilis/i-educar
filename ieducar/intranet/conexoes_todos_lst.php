@@ -1,17 +1,9 @@
 <?php
 
-$desvio_diretorio = '';
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Conexões!");
-        $this->processoAp = '158';
-    }
-}
 
-class indice extends clsListagem
+
+return new class extends clsListagem
 {
     public function Gerar()
     {
@@ -81,7 +73,14 @@ class indice extends clsListagem
         $this->addPaginador2('conexoes_todos_lst.php', $total, $_GET, $this->nome, $limite);
 
         $this->largura = '100%';
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "Conexões!";
+        $this->processoAp = '158';
+    }
+};
 
 

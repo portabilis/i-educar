@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Tipo Cliente");
-        $this->processoAp = '596';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -313,8 +305,15 @@ function getExemplarTipo_XML(xml)
     if(!tipos)
     {
         setVisibility ('tr_div_exemplares', false);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Tipo Cliente";
+        $this->processoAp = '596';
+    }
+};
 
 function Valida()
 {

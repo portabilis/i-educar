@@ -5,16 +5,8 @@ use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Município");
-        $this->processoAp = 755;
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     use InteractWithDatabase, SelectOptions;
 
@@ -100,8 +92,15 @@ class indice extends clsListagem
         $this->breadcrumb('Listagem de municípios', [
             url('intranet/educar_enderecamento_index.php') => 'Endereçamento',
         ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "Município";
+        $this->processoAp = 755;
+    }
+};
 
 
 

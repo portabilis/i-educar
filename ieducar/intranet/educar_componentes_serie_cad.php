@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - S&eacute;rie');
-        $this->processoAp = '9998859';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -127,7 +119,14 @@ class indice extends clsCadastro
         // Todas as ações estão sendo realizadas em ComponentesSerieAcao.js
         $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
         $this->simpleRedirect('educar_componentes_serie_lst.php');
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - S&eacute;rie";
+        $this->processoAp = '9998859';
+    }
+};
 
 

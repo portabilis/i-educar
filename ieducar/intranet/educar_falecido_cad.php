@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Transfer&ecirc;ncia Solicita&ccedil;&atilde;o");
-        $this->processoAp = '578';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -127,7 +119,14 @@ class indice extends clsCadastro
         $this->mensagem = 'A alteração não pode ser realizado.<br>';
 
         return false;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Transfer&ecirc;ncia Solicita&ccedil;&atilde;o";
+        $this->processoAp = '578';
+    }
+};
 
 

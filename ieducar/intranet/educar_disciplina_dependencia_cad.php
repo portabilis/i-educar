@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Dispensa Componente Curricular');
-        $this->processoAp = 578;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -399,7 +391,14 @@ SQL;
         $this->mensagem = 'Exclus&atilde;o nÃ£o realizada.<br />';
 
         return false;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Dispensa Componente Curricular";
+        $this->processoAp = 578;
+    }
+};
 
 

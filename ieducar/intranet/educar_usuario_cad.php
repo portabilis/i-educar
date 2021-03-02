@@ -4,16 +4,8 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo('Cadastro de usuários');
-        $this->processoAp = 555;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $ref_pessoa;
 
@@ -454,7 +446,14 @@ class indice extends clsCadastro
         }
 
         return false;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "Cadastro de usuários";
+        $this->processoAp = 555;
+    }
+};
 
 

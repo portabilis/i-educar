@@ -4,18 +4,8 @@ use App\Models\City;
 use App\Models\State;
 use Illuminate\Support\Facades\Session;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Municipio");
-        $this->processoAp = '0';
-        $this->renderMenu = false;
-        $this->renderMenuSuspenso = false;
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -109,8 +99,17 @@ class indice extends clsListagem
         $this->addPaginador2('educar_pesquisa_municipio_lst.php', $total, $_GET, $this->nome, $this->limite);
 
         $this->largura = '100%';
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Municipio";
+        $this->processoAp = '0';
+        $this->renderMenu = false;
+        $this->renderMenuSuspenso = false;
+    }
+};
 
 ?>
 <script>

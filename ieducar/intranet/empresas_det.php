@@ -1,17 +1,9 @@
 <?php
 
-$desvio_diretorio = '';
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Empresas");
-        $this->processoAp = 41;
-    }
-}
 
-class indice extends clsDetalhe
+
+return new class extends clsDetalhe
 {
     public function Gerar()
     {
@@ -60,7 +52,14 @@ class indice extends clsDetalhe
         $this->breadcrumb('Detalhe da pessoa jurídica', [
             url('intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "Empresas";
+        $this->processoAp = 41;
+    }
+};
 
 

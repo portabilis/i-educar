@@ -2,16 +2,8 @@
 
 use iEducar\Support\View\SelectOptions;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Escolaridade');
-        $this->processoAp = '632';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referência a usuário da sessão
@@ -146,7 +138,14 @@ class indice extends clsCadastro
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "Servidores - Escolaridade";
+        $this->processoAp = '632';
+    }
+};
 
 

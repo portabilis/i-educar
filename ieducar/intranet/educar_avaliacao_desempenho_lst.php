@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Servidores - Avaliação Desempenho");
-        $this->processoAp = '635';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -139,6 +131,13 @@ class indice extends clsListagem
         $this->breadcrumb('Registro da avaliação de desempenho do servidor', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "Servidores - Avaliação Desempenho";
+        $this->processoAp = '635';
+    }
+};
 

@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Movimentação Mensal de Alunos");
-        $this->processoAp = '944';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -117,8 +109,15 @@ class indice extends clsCadastro
 
         $this->acao_enviar = 'acao2()';
         $this->acao_executa_submit = false;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Movimentação Mensal de Alunos";
+        $this->processoAp = '944';
+    }
+};
 
 
 

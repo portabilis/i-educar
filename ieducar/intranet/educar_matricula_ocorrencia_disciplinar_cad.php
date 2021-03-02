@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Ocorr&ecirc;ncia Disciplinar");
-        $this->processoAp = '578';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -299,7 +291,14 @@ class indice extends clsCadastro
         $instituicao = $tmp_obj->detalhe();
 
         return strlen($instituicao['url_novo_educacao']) > 0;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Ocorr&ecirc;ncia Disciplinar";
+        $this->processoAp = '578';
+    }
+};
 
 

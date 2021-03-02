@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . 'i-Educar - Vagas Reservadas');
-        $this->processoAp = '639';
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     /**
      * Referência a usuário da sessão
@@ -213,7 +205,14 @@ class indice extends clsDetalhe
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
 
         return false;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Vagas Reservadas";
+        $this->processoAp = '639';
+    }
+};
 
 

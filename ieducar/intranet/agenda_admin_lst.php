@@ -1,18 +1,8 @@
 <?php
 
-$desvio_diretorio = "";
 
-class clsIndex extends clsBase
-{
 
-    function Formular()
-    {
-        $this->SetTitulo( "{$this->_instituicao} Agenda" );
-        $this->processoAp = "343";
-    }
-}
-
-class indice extends clsListagem
+return new class extends clsListagem
 {
     var $cd_agenda;
     var $nm_agenda;
@@ -62,7 +52,13 @@ class indice extends clsListagem
 
         $this->breadcrumb('Listagem de agendas');
     }
-}
+
+    function Formular()
+    {
+        $this->title = "Agenda";
+        $this->processoAp = "343";
+    }
+};
 
 
 

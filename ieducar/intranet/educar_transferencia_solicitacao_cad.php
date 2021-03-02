@@ -6,16 +6,8 @@ use App\Models\LegacyTransferRequest;
 use App\Services\PromotionService;
 use Illuminate\Support\Facades\DB;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Transferência Solicitação");
-        $this->processoAp = '578';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $cod_transferencia_solicitacao;
 
@@ -320,7 +312,14 @@ class indice extends clsCadastro
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Transferência Solicitação";
+        $this->processoAp = '578';
+    }
+};
 
 

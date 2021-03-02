@@ -10,16 +10,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Aluno');
-        $this->processoAp = 578;
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     public $titulo;
     public $cod_aluno;
@@ -953,7 +945,14 @@ class indice extends clsDetalhe
         }
 
         return $this->urlPresigner;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Aluno";
+        $this->processoAp = 578;
+    }
+};
 
 

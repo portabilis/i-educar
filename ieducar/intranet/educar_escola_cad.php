@@ -40,16 +40,8 @@ use iEducar\Support\View\SelectOptions;
 use iEducar\Modules\Educacenso\Validator\School\HasDifferentStepsOfChildEducationValidator;
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Escola");
-        $this->processoAp = "561";
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     use LegacyAddressingFields;
 
@@ -2900,7 +2892,14 @@ class indice extends clsCadastro
         }
 
         return true;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Escola";
+        $this->processoAp = "561";
+    }
+};
 
 

@@ -1,16 +1,8 @@
 <?php
 
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Servidor Alocação');
-        $this->processoAp = 635;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
     public $cod_servidor_alocacao;
@@ -362,7 +354,14 @@ class indice extends clsCadastro
         }
 
         return $total;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "Servidores - Servidor Alocação";
+        $this->processoAp = 635;
+    }
+};
 
 

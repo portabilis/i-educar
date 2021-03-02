@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Curso');
-        $this->processoAp = '566';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     public $pessoa_logada;
     public $titulo;
@@ -255,8 +247,15 @@ class indice extends clsListagem
         $this->breadcrumb('Listagem de cursos', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Curso";
+        $this->processoAp = '566';
+    }
+};
 
 
 ?>

@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Curso');
-        $this->processoAp = '566';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -665,8 +657,15 @@ class indice extends clsCadastro
         if ($standerdSchoolYear == 0) {
             $classStepsObject->copySchoolStepsIntoClassesForCourseAndYear($courseCode, $currentYear);
         }
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Curso";
+        $this->processoAp = '566';
+    }
+};
 
 
 ?>

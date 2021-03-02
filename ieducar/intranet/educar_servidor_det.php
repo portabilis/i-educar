@@ -4,16 +4,8 @@ use App\Models\Employee;
 use App\Models\EmployeeWithdrawal;
 use App\Support\View\Employee\EmployeeReturn;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Servidor');
-        $this->processoAp = 635;
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     public $titulo;
 
@@ -474,8 +466,15 @@ class indice extends clsDetalhe
         $this->breadcrumb('Funções do servidor', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "Servidores - Servidor";
+        $this->processoAp = 635;
+    }
+};
 
 
 ?>

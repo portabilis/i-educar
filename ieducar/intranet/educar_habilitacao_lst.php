@@ -1,15 +1,6 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular(): bool
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Habilita&ccedil;&atilde;o");
-        $this->processoAp = '573';
-    }
-}
-
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -141,5 +132,11 @@ class indice extends clsListagem
             url('intranet/educar_index.php') => 'Escola',
         ]);
     }
-}
+
+    public function Formular(): bool
+    {
+        $this->titulo = "i-Educar - Habilita&ccedil;&atilde;o";
+        $this->processoAp = '573';
+    }
+};
 

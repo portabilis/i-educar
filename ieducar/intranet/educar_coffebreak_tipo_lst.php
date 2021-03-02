@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Tipo Coffebreak");
-        $this->processoAp = '564';
-    }
-}
 
-class indice extends clsListagem
+return new class extends clsListagem
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -116,6 +108,13 @@ class indice extends clsListagem
         $this->addPaginador2('educar_coffebreak_tipo_lst.php', $total, $_GET, $this->nome, $this->limite);
 
         $this->largura = '100%';
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Tipo Coffebreak";
+        $this->processoAp = '564';
+    }
+};
 

@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Iniciar/Finalizar Ano Letivo");
-        $this->processoAp = '561';
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -144,7 +136,14 @@ class indice extends clsCadastro
                     window.location = 'educar_escola_det.php?cod_escola={$this->ref_cod_escola}#ano_letivo';
                   </script>";
         }
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Iniciar/Finalizar Ano Letivo";
+        $this->processoAp = '561';
+    }
+};
 
 

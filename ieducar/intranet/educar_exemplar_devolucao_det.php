@@ -2,16 +2,8 @@
 
 use Illuminate\Support\Facades\Session;
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Exemplar Devolu&ccedil;&atilde;o");
-        $this->processoAp = '628';
-    }
-}
 
-class indice extends clsDetalhe
+return new class extends clsDetalhe
 {
     /**
      * Titulo no topo da pagina
@@ -132,7 +124,14 @@ class indice extends clsDetalhe
         $this->breadcrumb('Detalhe do exemplar para devolução', [
             url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
         ]);
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Exemplar Devolu&ccedil;&atilde;o";
+        $this->processoAp = '628';
+    }
+};
 
 

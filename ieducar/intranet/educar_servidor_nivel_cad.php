@@ -1,17 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' Servidores - Servidor Nível');
-        $this->processoAp         = 0;
-        $this->renderMenu         = false;
-        $this->renderMenuSuspenso = false;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -167,8 +157,17 @@ class indice extends clsCadastro
     public function Excluir()
     {
         return false;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "Servidores - Servidor Nível";
+        $this->processoAp         = 0;
+        $this->renderMenu         = false;
+        $this->renderMenuSuspenso = false;
+    }
+};
 
 
 ?>

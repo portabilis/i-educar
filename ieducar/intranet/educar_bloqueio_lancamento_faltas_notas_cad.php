@@ -1,15 +1,7 @@
 <?php
 
-class clsIndexBase extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa');
-        $this->processoAp = 999848;
-    }
-}
 
-class indice extends clsCadastro
+return new class extends clsCadastro
 {
     public $pessoa_logada;
 
@@ -179,7 +171,14 @@ class indice extends clsCadastro
         $this->mensagem = 'Exclus&atilde;o nÃ£o realizada.<br />';
 
         return false;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa";
+        $this->processoAp = 999848;
+    }
+};
 
 

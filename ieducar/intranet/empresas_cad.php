@@ -2,18 +2,10 @@
 
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 
-$desvio_diretorio = '';
 
-class clsIndex extends clsBase
-{
-    public function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} Empresas!");
-        $this->processoAp = 41;
-    }
-}
 
-class indice extends clsCadastro
+
+return new class extends clsCadastro
 {
     use LegacyAddressingFields;
 
@@ -408,7 +400,14 @@ class indice extends clsCadastro
         }
 
         return true;
+
     }
-}
+
+    public function Formular()
+    {
+        $this->title = "Empresas!";
+        $this->processoAp = 41;
+    }
+};
 
 
