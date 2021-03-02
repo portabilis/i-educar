@@ -685,12 +685,20 @@ return new class extends clsCadastro {
         }
 
         return true;
+    }
 
+    public function makeExtra()
+    {
+        return str_replace(
+            '#modulos',
+            $this->gerarJsonDosModulos(),
+            file_get_contents(__DIR__ . '/scripts/extra/educar-ano-letivo-modulo-cad.js')
+        );
     }
 
     public function Formular()
     {
-        $this->titulo = "Ano Letivo Etapa";
+        $this->titulo = 'Ano Letivo Etapa';
         $this->processoAp = 561;
     }
 };
