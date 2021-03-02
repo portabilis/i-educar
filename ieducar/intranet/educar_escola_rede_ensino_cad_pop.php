@@ -1,12 +1,11 @@
 <?php
 
-
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Escola Rede Ensino" );
-        $this->processoAp = "647";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Escola Rede Ensino");
+        $this->processoAp = '647';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
     }
@@ -19,26 +18,25 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_escola_rede_ensino;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nm_rede;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $ref_cod_instituicao;
+    public $cod_escola_rede_ensino;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_rede;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_instituicao;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
 
-
-        $this->cod_escola_rede_ensino=$_GET["cod_escola_rede_ensino"];
+        $this->cod_escola_rede_ensino=$_GET['cod_escola_rede_ensino'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 647, $this->pessoa_logada, 3,  "educar_escola_rede_ensino_lst.php" );
+        $obj_permissoes->permissao_cadastra(647, $this->pessoa_logada, 3, 'educar_escola_rede_ensino_lst.php');
 
         /*if( is_numeric( $this->cod_escola_rede_ensino ) )
         {
@@ -58,36 +56,33 @@ class indice extends clsCadastro
             }
         }*/
 //      $this->url_cancelar = ($retorno == "Editar") ? "educar_escola_rede_ensino_det.php?cod_escola_rede_ensino={$registro["cod_escola_rede_ensino"]}" : "educar_escola_rede_ensino_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
-        $this->script_cancelar = "window.parent.fechaExpansivel(\"div_dinamico_\"+(parent.DOM_divs.length-1));";
+        $this->nome_url_cancelar = 'Cancelar';
+        $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_escola_rede_ensino", $this->cod_escola_rede_ensino );
+        $this->campoOculto('cod_escola_rede_ensino', $this->cod_escola_rede_ensino);
 
         // Filtros de Foreign Keys
 //      $obrigatorio = true;
 //      include("include/pmieducar/educar_campo_lista.php");
-        $this->campoOculto("ref_cod_instituicao", $this->ref_cod_instituicao);
+        $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
         // text
-        $this->campoTexto( "nm_rede", "Rede Ensino", $this->nm_rede, 30, 255, true );
+        $this->campoTexto('nm_rede', 'Rede Ensino', $this->nm_rede, 30, 255, true);
     }
 
-    function Novo()
+    public function Novo()
     {
-
-
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 647, $this->pessoa_logada, 3,  "educar_escola_rede_ensino_lst.php" );
+        $obj_permissoes->permissao_cadastra(647, $this->pessoa_logada, 3, 'educar_escola_rede_ensino_lst.php');
 
-
-        $obj = new clsPmieducarEscolaRedeEnsino( null,null,$this->pessoa_logada,$this->nm_rede,null,null,1,$this->ref_cod_instituicao );
+        $obj = new clsPmieducarEscolaRedeEnsino(null, null, $this->pessoa_logada, $this->nm_rede, null, null, 1, $this->ref_cod_instituicao);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
+        if ($cadastrou) {
             echo "<script>
                         parent.document.getElementById('ref_cod_escola_rede_ensino').options[parent.document.getElementById('ref_cod_escola_rede_ensino').options.length] = new Option('$this->nm_rede', '$cadastrou', false, false);
                         parent.document.getElementById('ref_cod_escola_rede_ensino').value = '$cadastrou';
@@ -96,22 +91,21 @@ class indice extends clsCadastro
                     </script>";
 
             die();
+
             return true;
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
 
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
-
     }
 
-    function Excluir()
+    public function Excluir()
     {
-
     }
 }
 
@@ -120,7 +114,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>

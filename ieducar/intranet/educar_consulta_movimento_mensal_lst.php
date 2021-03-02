@@ -2,7 +2,6 @@
 
 use iEducar\Modules\Reports\QueryFactory\MovimentoMensalQueryFactory;
 
-
 class clsIndex extends clsBase
 {
     public function Formular()
@@ -50,7 +49,7 @@ class indice extends clsListagem
         $startDate = [];
         $endDate = [];
 
-        foreach($this->getQueryString('calendars') as $datas) {
+        foreach ($this->getQueryString('calendars') as $datas) {
             $arrayDatas = explode(' ', $datas);
             $startDate[] = $arrayDatas[0];
             $endDate[] = $arrayDatas[1];
@@ -67,7 +66,7 @@ class indice extends clsListagem
 
         $this->titulo = 'Parâmetros';
         $this->acao = 'go("/intranet/educar_consulta_movimento_mensal.php")';
-        $this->nome_acao = "Nova consulta";
+        $this->nome_acao = 'Nova consulta';
 
         $escola = 'Todas';
         $curso = 'Todos';

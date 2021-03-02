@@ -1,6 +1,5 @@
 <?php
 
-
 class clsIndexBase extends clsBase
 {
     public function Formular()
@@ -16,7 +15,6 @@ class indice extends clsDetalhe
     public $ref_cod_escola;
     public $ref_cod_instituicao;
     public $ref_funcionario_cad;
-    public $ref_funcionario_exc;
     public $ref_cod_tipo_usuario;
     public $data_cadastro;
     public $data_exclusao;

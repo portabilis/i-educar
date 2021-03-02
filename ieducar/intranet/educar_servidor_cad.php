@@ -9,9 +9,6 @@ use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
-
-
-
 class clsIndexBase extends clsBase
 {
     public function Formular()

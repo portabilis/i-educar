@@ -1,6 +1,5 @@
 <?php
 
-
 class clsIndex extends clsBase
 {
     public function Formular()
@@ -67,8 +66,8 @@ class indice extends clsCadastro
 
             return false;
         }
-            $nm_vinculo = $db->escapeString($this->nm_vinculo);
-            $abreviatura = $db->escapeString($this->abreviatura);
+        $nm_vinculo = $db->escapeString($this->nm_vinculo);
+        $abreviatura = $db->escapeString($this->abreviatura);
 
         $this->db->Consulta("INSERT INTO portal.funcionario_vinculo ( nm_vinculo, abreviatura ) VALUES ( '$nm_vinculo', '$abreviatura' )");
         echo '<script>document.location=\'funcionario_vinculo_lst.php\';</script>';

@@ -4,7 +4,6 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-
 class clsIndexBase extends clsBase
 {
     public function Formular()
@@ -33,7 +32,7 @@ class indice extends clsCadastro
     {
         $retorno = 'Novo';
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, "educar_usuario_lst.php");
+        $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, 'educar_usuario_lst.php');
         $this->ref_pessoa = $_POST['ref_pessoa'];
 
         if ($_GET['ref_pessoa']) {
@@ -208,7 +207,7 @@ class indice extends clsCadastro
         $scripts = ['/modules/Cadastro/Assets/Javascripts/Usuario.js'];
 
         $this->acao_enviar = 'valida()';
-        if(!$this->canChange($user, $this->ref_pessoa)) {
+        if (!$this->canChange($user, $this->ref_pessoa)) {
             $this->acao_enviar = null;
             $this->fexcluir = null;
             $scripts[] = '/modules/Cadastro/Assets/Javascripts/disableAllFields.js';
@@ -267,7 +266,7 @@ class indice extends clsCadastro
     {
         /** @var User $user */
         $user = Auth::user();
-        if(!$this->canChange($user, $this->ref_pessoa)) {
+        if (!$this->canChange($user, $this->ref_pessoa)) {
             return false;
         }
 
@@ -355,7 +354,7 @@ class indice extends clsCadastro
     {
         /** @var User $user */
         $user = Auth::user();
-        if(!$this->canChange($user, $this->ref_pessoa)) {
+        if (!$this->canChange($user, $this->ref_pessoa)) {
             return false;
         }
 
@@ -428,8 +427,9 @@ class indice extends clsCadastro
      * Caso algum usuário com nível diferente de admin tentar alterar dados do usuário admin,
      * esse método retornará false
      *
-     * @param User $currentUser
+     * @param User    $currentUser
      * @param integer $changedUserId
+     *
      * @return bool
      */
     private function canChange(User $currentUser, $changedUserId)

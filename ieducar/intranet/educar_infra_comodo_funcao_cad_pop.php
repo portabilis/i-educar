@@ -1,12 +1,11 @@
 <?php
 
-
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo de ambiente " );
-        $this->processoAp = "572";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Tipo de ambiente ");
+        $this->processoAp = '572';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
     }
@@ -19,29 +18,27 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_infra_comodo_funcao;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nm_funcao;
-    var $desc_funcao;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $ref_cod_escola;
-    var $ref_cod_instituicao;
+    public $cod_infra_comodo_funcao;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $nm_funcao;
+    public $desc_funcao;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_escola;
+    public $ref_cod_instituicao;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
 
-
-
-        $this->cod_infra_comodo_funcao=$_GET["cod_infra_comodo_funcao"];
+        $this->cod_infra_comodo_funcao=$_GET['cod_infra_comodo_funcao'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 572, $this->pessoa_logada,7, "educar_infra_comodo_funcao_lst.php" );
+        $obj_permissoes->permissao_cadastra(572, $this->pessoa_logada, 7, 'educar_infra_comodo_funcao_lst.php');
 
         /*if( is_numeric( $this->cod_infra_comodo_funcao ) )
         {
@@ -68,42 +65,36 @@ class indice extends clsCadastro
             }
         }*/
 //      $this->url_cancelar = ($retorno == "Editar") ? "educar_infra_comodo_funcao_det.php?cod_infra_comodo_funcao={$registro["cod_infra_comodo_funcao"]}" : "educar_infra_comodo_funcao_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
-        $this->script_cancelar = "window.parent.fechaExpansivel(\"div_dinamico_\"+(parent.DOM_divs.length-1));";
+        $this->nome_url_cancelar = 'Cancelar';
+        $this->script_cancelar = 'window.parent.fechaExpansivel("div_dinamico_"+(parent.DOM_divs.length-1));';
+
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_infra_comodo_funcao", $this->cod_infra_comodo_funcao );
-        if ($_GET['precisa_lista'])
-        {
+        $this->campoOculto('cod_infra_comodo_funcao', $this->cod_infra_comodo_funcao);
+        if ($_GET['precisa_lista']) {
             $obrigatorio = true;
             $get_escola = true;
-            include("include/pmieducar/educar_campo_lista.php");
-        }
-        else
-        {
-            $this->campoOculto("ref_cod_instituicao", $this->ref_cod_instituicao);
-            $this->campoOculto("ref_cod_escola", $this->ref_cod_escola);
+            include('include/pmieducar/educar_campo_lista.php');
+        } else {
+            $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
+            $this->campoOculto('ref_cod_escola', $this->ref_cod_escola);
         }
         // text
-        $this->campoTexto( "nm_funcao", "Tipo", $this->nm_funcao, 30, 255, true );
-        $this->campoMemo( "desc_funcao", "Descrição do tipo", $this->desc_funcao, 60, 5, false );
+        $this->campoTexto('nm_funcao', 'Tipo', $this->nm_funcao, 30, 255, true);
+        $this->campoMemo('desc_funcao', 'Descrição do tipo', $this->desc_funcao, 60, 5, false);
 
         // data
-
     }
 
-    function Novo()
+    public function Novo()
     {
-
-
-        $obj = new clsPmieducarInfraComodoFuncao( null, null, $this->pessoa_logada, $this->nm_funcao, $this->desc_funcao, null, null, 1, $this->ref_cod_escola );
+        $obj = new clsPmieducarInfraComodoFuncao(null, null, $this->pessoa_logada, $this->nm_funcao, $this->desc_funcao, null, null, 1, $this->ref_cod_escola);
         $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
+        if ($cadastrou) {
             echo "<script>
                         if (parent.document.getElementById('ref_cod_infra_comodo_funcao').disabled)
                             parent.document.getElementById('ref_cod_infra_comodo_funcao').options[0] = new Option('Selecione uma função cômodo', '', false, false);
@@ -115,16 +106,16 @@ class indice extends clsCadastro
             die();
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
 
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
     }
 
-    function Excluir()
+    public function Excluir()
     {
     }
 }
@@ -134,7 +125,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>
@@ -142,9 +133,8 @@ $pagina->MakeAll();
 <script>
 
 <?php
-if (!$_GET['precisa_lista'])
-{
-?>
+if (!$_GET['precisa_lista']) {
+    ?>
     Event.observe(window, 'load', Init, false);
 
     function Init()

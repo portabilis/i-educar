@@ -2,16 +2,13 @@
 
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoAluno;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
-use iEducar\Support\View\SelectOptions;
-use Illuminate\Support\Str;
-
 
 class clsIndexBase extends clsBase
 {
     public function Formular()
     {
         $this->SetTitulo("{$this->_instituicao} i-Educar - Tipo do AEE do aluno");
-        $this->processoAp = "578";
+        $this->processoAp = '578';
     }
 }
 
@@ -23,12 +20,12 @@ class indice extends clsCadastro
 
     public function Formular()
     {
-        $this->nome_url_cancelar = "Voltar";
+        $this->nome_url_cancelar = 'Voltar';
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
         $this->breadcrumb('Tipo do AEE do aluno', [
-            $_SERVER['SERVER_NAME'] . "/intranet" => "Início",
-            "educar_index.php" => "Escola",
+            $_SERVER['SERVER_NAME'] . '/intranet' => 'Início',
+            'educar_index.php' => 'Escola',
         ]);
     }
 
@@ -39,28 +36,29 @@ class indice extends clsCadastro
 
         $this->validaPermissao();
         $this->validaParametros();
+
         return 'Editar';
     }
 
     public function Gerar()
     {
-        $this->campoOculto("cod_matricula", $this->cod_matricula);
-        $this->campoOculto("ref_cod_aluno", $this->ref_cod_aluno);
+        $this->campoOculto('cod_matricula', $this->cod_matricula);
+        $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
 
         $obj_aluno = new clsPmieducarAluno();
         $lst_aluno = $obj_aluno->lista($this->ref_cod_aluno, null, null, null, null, null, null, null, null, null, 1);
         if (is_array($lst_aluno)) {
             $det_aluno = array_shift($lst_aluno);
-            $this->nm_aluno = $det_aluno["nome_aluno"];
-            $this->campoRotulo("nm_aluno", "Aluno", $this->nm_aluno);
+            $this->nm_aluno = $det_aluno['nome_aluno'];
+            $this->campoRotulo('nm_aluno', 'Aluno', $this->nm_aluno);
         }
 
         $enturmacoes = $this->getEnturmacoesAee();
 
         foreach ($enturmacoes as $enturmacao) {
-            $tipoAtendimento = explode(',', str_replace(array('{', "}"), '', $enturmacao['tipo_atendimento']));
+            $tipoAtendimento = explode(',', str_replace(['{', '}'], '', $enturmacao['tipo_atendimento']));
 
-            $helperOptions = array('objectName' => "{$enturmacao['ref_cod_turma']}_{$enturmacao['sequencial']}_tipoatendimento");
+            $helperOptions = ['objectName' => "{$enturmacao['ref_cod_turma']}_{$enturmacao['sequencial']}_tipoatendimento"];
             $options = [
                 'label' => "Tipo de atendimento educacional especializado do aluno na turma {$enturmacao['nm_turma']}: ",
                 'options' => [
@@ -97,7 +95,7 @@ class indice extends clsCadastro
             $obj->edita();
         }
 
-        $this->mensagem = "Tipo do AEE do aluno atualizado com sucesso.<br>";
+        $this->mensagem = 'Tipo do AEE do aluno atualizado com sucesso.<br>';
         $this->simpleRedirect("educar_matricula_det.php?cod_matricula={$this->cod_matricula}");
     }
 
@@ -121,11 +119,40 @@ class indice extends clsCadastro
     {
         $enturmacoes = new clsPmieducarMatriculaTurma();
         $enturmacoes = $enturmacoes->lista(
-            $this->cod_matricula, null, null,
-            null, null, null, null, null, 1, null, null, null,
-            null, null, null, null, null, null, null, null, false,
-            null, null, null, false, false, false, null, null,
-            false, null, false, false, false
+            $this->cod_matricula,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            1,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            false,
+            null,
+            null,
+            null,
+            false,
+            false,
+            false,
+            null,
+            null,
+            false,
+            null,
+            false,
+            false,
+            false
         );
 
         $arrayEnturmacoes = [];

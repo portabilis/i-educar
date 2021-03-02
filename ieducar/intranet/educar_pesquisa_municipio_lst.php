@@ -1,17 +1,15 @@
 <?php
 
-
 use App\Models\City;
 use App\Models\State;
 use Illuminate\Support\Facades\Session;
 
-
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Municipio" );
-        $this->processoAp = "0";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Municipio");
+        $this->processoAp = '0';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
     }
@@ -24,74 +22,69 @@ class indice extends clsListagem
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
      */
-    var $limite;
+    public $limite;
 
     /**
      * Inicio dos registros a serem exibidos (limit)
      *
      * @var int
      */
-    var $offset;
+    public $offset;
 
-    var $idmun;
-    var $nome;
-    var $sigla_uf;
+    public $idmun;
+    public $nome;
+    public $sigla_uf;
 
-    function Gerar()
+    public function Gerar()
     {
         Session::put([
-            'campo1' => $_GET["campo1"] ? $_GET["campo1"] : Session::get('campo1')
+            'campo1' => $_GET['campo1'] ? $_GET['campo1'] : Session::get('campo1')
         ]);
         Session::save();
         Session::start();
 
-        $this->titulo = "Municipio - Listagem";
+        $this->titulo = 'Municipio - Listagem';
 
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
+        foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
+            $this->$var = ($val === '') ? null: $val;
+        }
 
         //
 
-        $this->addCabecalhos( array(
-            "Cidade",
-            "Estado"
-        ) );
+        $this->addCabecalhos([
+            'Cidade',
+            'Estado'
+        ]);
 
+        $array_uf = ['' => 'Todos'] + State::getListKeyAbbreviation()->toArray();
 
-        $array_uf = array('' => 'Todos') + State::getListKeyAbbreviation()->toArray();
-
-        if(!isset($this->sigla_uf))
-        {
+        if (!isset($this->sigla_uf)) {
             $this->sigla_uf = config('legacy.app.locale.province', '');
         }
 
-
-
-
         // outros Filtros
 
-        $this->campoLista("sigla_uf", "UF", $array_uf, $this->sigla_uf, "", false, "","", $disabled);
-        $this->campoTexto( "nome", "Cidade", $this->nome, 30, 255, false );
-    //  $this->campoTexto( "sigla_uf", "Sigla Uf", $this->sigla_uf, 30, 255, false );
-
+        $this->campoLista('sigla_uf', 'UF', $array_uf, $this->sigla_uf, '', false, '', '', $disabled);
+        $this->campoTexto('nome', 'Cidade', $this->nome, 30, 255, false);
+        //  $this->campoTexto( "sigla_uf", "Sigla Uf", $this->sigla_uf, 30, 255, false );
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $cities = City::query()
             ->with('state')
@@ -107,15 +100,15 @@ class indice extends clsListagem
         foreach ($cities as $city) {
             $campo1 = Session::get('campo1');
             $script = " onclick=\"addSel1('{$campo1}','{$city->id}','{$city->name}'); fecha();\"";
-            $this->addLinhas( array(
+            $this->addLinhas([
                 "<a href=\"javascript:void(0);\" {$script}>{$city->name}</a>",
                 "<a href=\"javascript:void(0);\" {$script}>{$city->state->name}</a>"
-            ) );
+            ]);
         }
 
-        $this->addPaginador2( "educar_pesquisa_municipio_lst.php", $total, $_GET, $this->nome, $this->limite );
+        $this->addPaginador2('educar_pesquisa_municipio_lst.php', $total, $_GET, $this->nome, $this->limite);
 
-        $this->largura = "100%";
+        $this->largura = '100%';
     }
 }
 // cria uma extensao da classe base
@@ -123,7 +116,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>

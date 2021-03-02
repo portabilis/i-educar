@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\LegacyInstitution;
+use Illuminate\Support\Facades\Session;
+
+
 class clsIndexBase extends clsBase
 {
     public function Formular()
@@ -9,8 +13,6 @@ class clsIndexBase extends clsBase
     }
 }
 
-use App\Models\LegacyInstitution;
-use Illuminate\Support\Facades\Session;
 
 class indice extends clsCadastro
 {

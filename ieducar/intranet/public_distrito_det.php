@@ -4,7 +4,6 @@ use App\Models\District;
 use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 
-
 class clsIndexBase extends clsBase
 {
     public function Formular()

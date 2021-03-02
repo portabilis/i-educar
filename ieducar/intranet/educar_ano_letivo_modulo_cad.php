@@ -1,12 +1,9 @@
 <?php
 
 use App\Services\iDiarioService;
-use RuntimeException;
-
 
 class clsIndexBase extends clsBase
 {
-
     public function Formular()
     {
         $this->SetTitulo($this->_instituicao . ' Ano Letivo Etapa');
@@ -16,7 +13,6 @@ class clsIndexBase extends clsBase
 
 class indice extends clsCadastro
 {
-
     public $pessoa_logada;
 
     public $ref_cod_instituicao;
@@ -42,8 +38,6 @@ class indice extends clsCadastro
     public function Inicializar()
     {
         $retorno = 'Novo';
-
-
 
         $this->ref_cod_modulo = $_GET['ref_cod_modulo'];
         $this->ref_ref_cod_escola = $_GET['ref_cod_escola'];
@@ -171,32 +165,32 @@ class indice extends clsCadastro
 
         $opcoesCampoModulo = [];
 
-            $objTemp = new clsPmieducarModulo();
-            $objTemp->setOrderby('nm_tipo ASC');
+        $objTemp = new clsPmieducarModulo();
+        $objTemp->setOrderby('nm_tipo ASC');
 
-            $lista = $objTemp->lista(
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                1,
-                $ref_cod_instituicao
-            );
+        $lista = $objTemp->lista(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            1,
+            $ref_cod_instituicao
+        );
 
-            if (is_array($lista) && count($lista)) {
-                $this->modulos = $lista;
+        if (is_array($lista) && count($lista)) {
+            $this->modulos = $lista;
 
-                foreach ($lista as $registro) {
-                    $opcoesCampoModulo[$registro['cod_modulo']] = sprintf('%s - %d etapa(s)', $registro['nm_tipo'], $registro['num_etapas']);
-                }
+            foreach ($lista as $registro) {
+                $opcoesCampoModulo[$registro['cod_modulo']] = sprintf('%s - %d etapa(s)', $registro['nm_tipo'], $registro['num_etapas']);
             }
+        }
 
         $this->campoLista(
             'ref_cod_modulo',
@@ -250,8 +244,6 @@ class indice extends clsCadastro
 
     public function Novo()
     {
-
-
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_cadastra(
@@ -389,8 +381,6 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-
-
         $obj_permissoes = new clsPermissoes();
 
         $obj_permissoes->permissao_excluir(
@@ -654,7 +644,7 @@ class indice extends clsCadastro
         $counts = [];
 
         $counts[] = DB::table('modules.falta_componente_curricular as fcc')
-            ->join('modules.falta_aluno as fa', 'fa.id',  '=', 'fcc.falta_aluno_id')
+            ->join('modules.falta_aluno as fa', 'fa.id', '=', 'fcc.falta_aluno_id')
             ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'fa.matricula_id')
             ->whereIn('fcc.etapa', $etapas)
             ->where('m.ref_ref_cod_escola', $escolaId)
@@ -663,7 +653,7 @@ class indice extends clsCadastro
             ->count();
 
         $counts[] = DB::table('modules.falta_geral as fg')
-            ->join('modules.falta_aluno as fa', 'fa.id',  '=', 'fg.falta_aluno_id')
+            ->join('modules.falta_aluno as fa', 'fa.id', '=', 'fg.falta_aluno_id')
             ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'fa.matricula_id')
             ->whereIn('fg.etapa', $etapas)
             ->where('m.ref_ref_cod_escola', $escolaId)
@@ -672,7 +662,7 @@ class indice extends clsCadastro
             ->count();
 
         $counts[] = DB::table('modules.nota_componente_curricular as ncc')
-            ->join('modules.nota_aluno as na', 'na.id',  '=', 'ncc.nota_aluno_id')
+            ->join('modules.nota_aluno as na', 'na.id', '=', 'ncc.nota_aluno_id')
             ->join('pmieducar.matricula as m', 'm.cod_matricula', '=', 'na.matricula_id')
             ->whereIn('ncc.etapa', $etapas)
             ->where('m.ref_ref_cod_escola', $escolaId)

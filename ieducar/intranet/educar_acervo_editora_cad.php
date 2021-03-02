@@ -1,15 +1,13 @@
 <?php
 
-
 use App\Models\State;
-
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Editora" );
-        $this->processoAp = "595";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Editora");
+        $this->processoAp = '595';
     }
 }
 
@@ -20,58 +18,54 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $cod_acervo_editora;
-    var $ref_usuario_cad;
-    var $ref_usuario_exc;
-    var $ref_idtlog;
-    var $ref_sigla_uf;
-    var $nm_editora;
-    var $cep;
-    var $cidade;
-    var $bairro;
-    var $logradouro;
-    var $numero;
-    var $telefone;
-    var $ddd_telefone;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $ref_cod_biblioteca;
+    public $cod_acervo_editora;
+    public $ref_usuario_cad;
+    public $ref_usuario_exc;
+    public $ref_idtlog;
+    public $ref_sigla_uf;
+    public $nm_editora;
+    public $cep;
+    public $cidade;
+    public $bairro;
+    public $logradouro;
+    public $numero;
+    public $telefone;
+    public $ddd_telefone;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
+    public $ref_cod_biblioteca;
 
-    function Inicializar()
+    public function Inicializar()
     {
-        $retorno = "Novo";
+        $retorno = 'Novo';
 
-
-        $this->cod_acervo_editora=$_GET["cod_acervo_editora"];
+        $this->cod_acervo_editora=$_GET['cod_acervo_editora'];
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 595, $this->pessoa_logada, 11,  "educar_acervo_editora_lst.php" );
+        $obj_permissoes->permissao_cadastra(595, $this->pessoa_logada, 11, 'educar_acervo_editora_lst.php');
 
-        if( is_numeric( $this->cod_acervo_editora ) )
-        {
-
-            $obj = new clsPmieducarAcervoEditora( $this->cod_acervo_editora );
+        if (is_numeric($this->cod_acervo_editora)) {
+            $obj = new clsPmieducarAcervoEditora($this->cod_acervo_editora);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+            if ($registro) {
+                foreach ($registro as $campo => $val) {  // passa todos os valores obtidos no registro para atributos do objeto
                     $this->$campo = $val;
+                }
 
-            if( $obj_permissoes->permissao_excluir( 595, $this->pessoa_logada, 11 ) )
-            {
-                $this->fexcluir = true;
-            }
+                if ($obj_permissoes->permissao_excluir(595, $this->pessoa_logada, 11)) {
+                    $this->fexcluir = true;
+                }
 
-                $retorno = "Editar";
+                $retorno = 'Editar';
             }
         }
-        $this->url_cancelar = ($retorno == "Editar") ? "educar_acervo_editora_det.php?cod_acervo_editora={$registro["cod_acervo_editora"]}" : "educar_acervo_editora_lst.php";
-        $this->nome_url_cancelar = "Cancelar";
+        $this->url_cancelar = ($retorno == 'Editar') ? "educar_acervo_editora_det.php?cod_acervo_editora={$registro['cod_acervo_editora']}" : 'educar_acervo_editora_lst.php';
+        $this->nome_url_cancelar = 'Cancelar';
 
-        $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+        $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
 
         $this->breadcrumb($nomeMenu . ' editora', [
             url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
@@ -80,103 +74,98 @@ class indice extends clsCadastro
         return $retorno;
     }
 
-    function Gerar()
+    public function Gerar()
     {
         // primary keys
-        $this->campoOculto( "cod_acervo_editora", $this->cod_acervo_editora );
+        $this->campoOculto('cod_acervo_editora', $this->cod_acervo_editora);
 
-    //foreign keys
-    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'biblioteca'));
+        //foreign keys
+        $this->inputsHelper()->dynamic(['instituicao', 'escola', 'biblioteca']);
 
         //text
-        $this->campoTexto( "nm_editora", "Editora", $this->nm_editora, 30, 255, true );
+        $this->campoTexto('nm_editora', 'Editora', $this->nm_editora, 30, 255, true);
 
         // foreign keys
-        if ($this->cod_acervo_editora)
-        {
+        if ($this->cod_acervo_editora) {
             $this->cep = int2CEP($this->cep);
         }
 
-        $this->campoCep( "cep", "CEP", $this->cep, false );
+        $this->campoCep('cep', 'CEP', $this->cep, false);
 
-        $opcoes = array( "" => "Selecione" ) + State::getListKeyAbbreviation()->toArray();
+        $opcoes = [ '' => 'Selecione' ] + State::getListKeyAbbreviation()->toArray();
 
-        $this->campoLista( "ref_sigla_uf", "Estado", $opcoes, $this->ref_sigla_uf, '', false, '', '', false, false );
+        $this->campoLista('ref_sigla_uf', 'Estado', $opcoes, $this->ref_sigla_uf, '', false, '', '', false, false);
 
-        $this->campoTexto( "cidade", "Cidade", $this->cidade, 30, 60, false );
-        $this->campoTexto( "bairro", "Bairro", $this->bairro, 30, 60, false );
+        $this->campoTexto('cidade', 'Cidade', $this->cidade, 30, 60, false);
+        $this->campoTexto('bairro', 'Bairro', $this->bairro, 30, 60, false);
 
-        $opcoes = array( "" => "Selecione" );
+        $opcoes = [ '' => 'Selecione' ];
 
-        $this->campoLista( "ref_idtlog", "Tipo Logradouro", $opcoes, $this->ref_idtlog, '', false, '', '', false, false );
+        $this->campoLista('ref_idtlog', 'Tipo Logradouro', $opcoes, $this->ref_idtlog, '', false, '', '', false, false);
 
-        $this->campoTexto( "logradouro", "Logradouro", $this->logradouro, 30, 255, false );
+        $this->campoTexto('logradouro', 'Logradouro', $this->logradouro, 30, 255, false);
 
-        $this->campoNumero( "numero", "N&uacute;mero", $this->numero, 6, 6 );
+        $this->campoNumero('numero', 'N&uacute;mero', $this->numero, 6, 6);
 
-        $this->campoNumero( "ddd_telefone", "DDD Telefone", $this->ddd_telefone, 2, 2, false );
-        $this->campoNumero( "telefone", "Telefone", $this->telefone, 10, 15, false );
+        $this->campoNumero('ddd_telefone', 'DDD Telefone', $this->ddd_telefone, 2, 2, false);
+        $this->campoNumero('telefone', 'Telefone', $this->telefone, 10, 15, false);
 
         // data
-
     }
 
-    function Novo()
+    public function Novo()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 595, $this->pessoa_logada, 11,  "educar_acervo_editora_lst.php" );
+        $obj_permissoes->permissao_cadastra(595, $this->pessoa_logada, 11, 'educar_acervo_editora_lst.php');
 
         $this->cep = idFederal2int($this->cep);
 
-        $obj = new clsPmieducarAcervoEditora( null, $this->pessoa_logada, null, $this->ref_idtlog, $this->ref_sigla_uf, $this->nm_editora, $this->cep, $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->telefone, $this->ddd_telefone, null, null, 1, $this->ref_cod_biblioteca );
+        $obj = new clsPmieducarAcervoEditora(null, $this->pessoa_logada, null, $this->ref_idtlog, $this->ref_sigla_uf, $this->nm_editora, $this->cep, $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->telefone, $this->ddd_telefone, null, null, 1, $this->ref_cod_biblioteca);
         $this->cod_acervo_editora = $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
-      $obj->cod_acervo_editora = $this->cod_acervo_editora;
-            $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
+        if ($cadastrou) {
+            $obj->cod_acervo_editora = $this->cod_acervo_editora;
+            $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
 
             $this->simpleRedirect('educar_acervo_editora_lst.php');
         }
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+        $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
 
         return false;
     }
 
-    function Editar()
+    public function Editar()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 595, $this->pessoa_logada, 11,  "educar_acervo_editora_lst.php" );
+        $obj_permissoes->permissao_cadastra(595, $this->pessoa_logada, 11, 'educar_acervo_editora_lst.php');
 
         $this->cep = idFederal2int($this->cep);
 
         $obj = new clsPmieducarAcervoEditora($this->cod_acervo_editora, null, $this->pessoa_logada, $this->ref_idtlog, $this->ref_sigla_uf, $this->nm_editora, $this->cep, $this->cidade, $this->bairro, $this->logradouro, $this->numero, $this->telefone, $this->ddd_telefone, null, null, 1, $this->ref_cod_biblioteca);
         $editou = $obj->edita();
-        if( $editou )
-        {
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
+        if ($editou) {
+            $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_acervo_editora_lst.php');
         }
 
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
 
         return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir( 595, $this->pessoa_logada, 11,  "educar_acervo_editora_lst.php" );
+        $obj_permissoes->permissao_excluir(595, $this->pessoa_logada, 11, 'educar_acervo_editora_lst.php');
 
-        $obj = new clsPmieducarAcervoEditora($this->cod_acervo_editora, null, $this->pessoa_logada, null,null,null,null,null,null,null,null,null,null,null,null, 0);
+        $obj = new clsPmieducarAcervoEditora($this->cod_acervo_editora, null, $this->pessoa_logada, null, null, null, null, null, null, null, null, null, null, null, null, 0);
         $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
+        if ($excluiu) {
+            $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
             $this->simpleRedirect('educar_acervo_editora_lst.php');
         }
 
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
 
         return false;
     }
@@ -187,7 +176,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

@@ -1,12 +1,11 @@
 <?php
 
-
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Matricula Turma" );
-        $this->processoAp = "578";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Matricula Turma");
+        $this->processoAp = '578';
     }
 }
 
@@ -17,79 +16,66 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
-    var $ref_cod_matricula;
+    public $ref_cod_matricula;
 
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+    public $ref_usuario_exc;
+    public $ref_usuario_cad;
+    public $data_cadastro;
+    public $data_exclusao;
+    public $ativo;
 
-    var $formando;
+    public $formando;
 
-    function Inicializar()
+    public function Inicializar()
     {
-    //  print_r($_POST);die;
-        $retorno = "Novo";
-
+        //  print_r($_POST);die;
+        $retorno = 'Novo';
 
         //$this->ref_cod_turma=$_GET["ref_cod_turma"];
-
 
         foreach ($_GET as $key =>$value) {
             $this->$key = $value;
         }
 
         $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7,  "educar_matricula_lst.php" );
+        $obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7, 'educar_matricula_lst.php');
 
-        if( is_numeric( $this->ref_cod_matricula ) && is_numeric($this->formando))
-        {
-
-            $obj = new clsPmieducarMatricula( $this->ref_cod_matricula,null,null,null,$this->pessoa_logada,null,null,null,null,null,null,null,null,null,$this->formando);
+        if (is_numeric($this->ref_cod_matricula) && is_numeric($this->formando)) {
+            $obj = new clsPmieducarMatricula($this->ref_cod_matricula, null, null, null, $this->pessoa_logada, null, null, null, null, null, null, null, null, null, $this->formando);
             $registro  = $obj->detalhe();
-            if( $registro )
-            {
-
-                if(!$obj->edita())
-                {
-                    echo "erro ao cadastrar";
+            if ($registro) {
+                if (!$obj->edita()) {
+                    echo 'erro ao cadastrar';
                     die;
                 }
-                $des = "";
-                if(!$this->formando)
-                    $des = "des";
+                $des = '';
+                if (!$this->formando) {
+                    $des = 'des';
+                }
                 echo "<script>alert('Matrícula {$des}marcada como formando com sucesso!'); window.location='educar_matricula_det.php?cod_matricula={$this->ref_cod_matricula}';</script>";
-
             }
-
         }
 
         $this->simpleRedirect('educar_matricula_lst.php');
     }
 
-    function Gerar()
+    public function Gerar()
     {
-
         die;
-
     }
 
-    function Novo()
+    public function Novo()
     {
-
     }
 
-    function Editar()
+    public function Editar()
     {
-
     }
 
-    function Excluir()
+    public function Excluir()
     {
-
     }
 }
 
@@ -98,7 +84,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

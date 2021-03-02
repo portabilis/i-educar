@@ -2,7 +2,6 @@
 
 use iEducar\Modules\Reports\QueryFactory\MovimentoGeralQueryFactory;
 
-
 class clsIndex extends clsBase
 {
     public function Formular()
@@ -48,7 +47,7 @@ class indice extends clsListagem
 
         $this->titulo = 'Parâmetros';
         $this->acao = 'go("/intranet/educar_consulta_movimento_geral.php")';
-        $this->nome_acao = "Nova consulta";
+        $this->nome_acao = 'Nova consulta';
         $cursos = [];
 
         if (empty($params['curso'])) {

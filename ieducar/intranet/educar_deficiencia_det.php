@@ -1,16 +1,11 @@
 <?php
 
-/**
- * @author Adriano Erik Weiguert Nagasava
- */
-
-
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Defici&ecirc;ncia" );
-        $this->processoAp = "631";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Defici&ecirc;ncia");
+        $this->processoAp = '631';
     }
 }
 
@@ -21,38 +16,34 @@ class indice extends clsDetalhe
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
-    var $cod_deficiencia;
-    var $nm_deficiencia;
+    public $cod_deficiencia;
+    public $nm_deficiencia;
 
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Defici&ecirc;ncia - Detalhe";
+        $this->titulo = 'Defici&ecirc;ncia - Detalhe';
 
+        $this->cod_deficiencia=$_GET['cod_deficiencia'];
 
-        $this->cod_deficiencia=$_GET["cod_deficiencia"];
-
-        $tmp_obj = new clsCadastroDeficiencia( $this->cod_deficiencia );
+        $tmp_obj = new clsCadastroDeficiencia($this->cod_deficiencia);
         $registro = $tmp_obj->detalhe();
 
-        if( ! $registro )
-        {
+        if (! $registro) {
             $this->simpleRedirect('educar_deficiencia_lst.php');
         }
 
-        if( $registro["nm_deficiencia"] )
-        {
-            $this->addDetalhe( array( "Deficiência", "{$registro["nm_deficiencia"]}") );
+        if ($registro['nm_deficiencia']) {
+            $this->addDetalhe([ 'Deficiência', "{$registro['nm_deficiencia']}"]);
         }
         $obj_permissoes = new clsPermissoes();
-        if( $obj_permissoes->permissao_cadastra( 631, $this->pessoa_logada, 7 ) )
-        {
-            $this->url_novo = "educar_deficiencia_cad.php";
-            $this->url_editar = "educar_deficiencia_cad.php?cod_deficiencia={$registro["cod_deficiencia"]}";
+        if ($obj_permissoes->permissao_cadastra(631, $this->pessoa_logada, 7)) {
+            $this->url_novo = 'educar_deficiencia_cad.php';
+            $this->url_editar = "educar_deficiencia_cad.php?cod_deficiencia={$registro['cod_deficiencia']}";
         }
-        $this->url_cancelar = "educar_deficiencia_lst.php";
-        $this->largura = "100%";
+        $this->url_cancelar = 'educar_deficiencia_lst.php';
+        $this->largura = '100%';
 
         $this->breadcrumb('Detalhe da deficiência', [
             url('intranet/educar_pessoas_index.php') => 'Pessoas',
@@ -65,7 +56,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>

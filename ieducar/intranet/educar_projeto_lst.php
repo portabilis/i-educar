@@ -1,12 +1,11 @@
 <?php
 
-
 class clsIndexBase extends clsBase
 {
-    function Formular()
+    public function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Projeto" );
-        $this->processoAp = "21250";
+        $this->SetTitulo("{$this->_instituicao} i-Educar - Projeto");
+        $this->processoAp = '21250';
     }
 }
 
@@ -17,57 +16,55 @@ class indice extends clsListagem
      *
      * @var int
      */
-    var $pessoa_logada;
+    public $pessoa_logada;
 
     /**
      * Titulo no topo da pagina
      *
      * @var int
      */
-    var $titulo;
+    public $titulo;
 
     /**
      * Quantidade de registros a ser apresentada em cada pagina
      *
      * @var int
      */
-    var $limite;
+    public $limite;
 
     /**
      * Inicio dos registros a serem exibidos (limit)
      *
      * @var int
      */
-    var $offset;
+    public $offset;
 
-    var $cod_projeto;
-    var $nome;
-    var $observacao;
+    public $cod_projeto;
+    public $nome;
+    public $observacao;
 
-    function Gerar()
+    public function Gerar()
     {
-        $this->titulo = "Projetos - Listagem";
+        $this->titulo = 'Projetos - Listagem';
 
-        foreach( $_GET AS $var => $val )
-            $this->$var = ( $val === "" ) ? null: $val;
+        foreach ($_GET as $var => $val) {
+            $this->$var = ($val === '') ? null: $val;
+        }
 
-
-
-        $this->addCabecalhos( array(
-            "Nome do projeto",
+        $this->addCabecalhos([
+            'Nome do projeto',
             'Observação'
-        ) );
+        ]);
 
-        $this->campoTexto( "nome", "Nome do projeto", $this->nome, 30, 255, false );
-
+        $this->campoTexto('nome', 'Nome do projeto', $this->nome, 30, 255, false);
 
         // Paginador
         $this->limite = 20;
-        $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
         $obj_projeto = new clsPmieducarProjeto();
-        $obj_projeto->setOrderby( "nome ASC" );
-        $obj_projeto->setLimite( $this->limite, $this->offset );
+        $obj_projeto->setOrderby('nome ASC');
+        $obj_projeto->setLimite($this->limite, $this->offset);
 
         $lista = $obj_projeto->lista(
             null,
@@ -77,31 +74,26 @@ class indice extends clsListagem
         $total = $obj_projeto->_total;
 
         // monta a lista
-        if( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista AS $registro )
-            {
-
-                $this->addLinhas( array(
-                    "<a href=\"educar_projeto_det.php?cod_projeto={$registro["cod_projeto"]}\">{$registro["nome"]}</a>",
-                    "<a href=\"educar_projeto_det.php?cod_projeto={$registro["cod_projeto"]}\">{$registro["observacao"]}</a>"
-                ) );
+        if (is_array($lista) && count($lista)) {
+            foreach ($lista as $registro) {
+                $this->addLinhas([
+                    "<a href=\"educar_projeto_det.php?cod_projeto={$registro['cod_projeto']}\">{$registro['nome']}</a>",
+                    "<a href=\"educar_projeto_det.php?cod_projeto={$registro['cod_projeto']}\">{$registro['observacao']}</a>"
+                ]);
             }
         }
-        $this->addPaginador2( "educar_projeto_lst.php", $total, $_GET, $this->nome, $this->limite );
-
+        $this->addPaginador2('educar_projeto_lst.php', $total, $_GET, $this->nome, $this->limite);
 
         //** Verificacao de permissao para cadastro
         $obj_permissao = new clsPermissoes();
 
-        if($obj_permissao->permissao_cadastra(21250, $this->pessoa_logada,3))
-        {
-            $this->acao = "go(\"educar_projeto_cad.php\")";
-            $this->nome_acao = "Novo";
+        if ($obj_permissao->permissao_cadastra(21250, $this->pessoa_logada, 3)) {
+            $this->acao = 'go("educar_projeto_cad.php")';
+            $this->nome_acao = 'Novo';
         }
         //**
 
-        $this->largura = "100%";
+        $this->largura = '100%';
 
         $this->breadcrumb('Listagem de projetos', [
             url('intranet/educar_index.php') => 'Escola',
@@ -113,7 +105,6 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
-?>
