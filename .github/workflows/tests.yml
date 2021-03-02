@@ -1,14 +1,6 @@
 name: tests
 
-on:
-  push:
-    branches:
-      - 2.*
-      - master
-  pull_request:
-    branches:
-      - 2.*
-      - master
+on: [push, pull_request]
 
 jobs:
   default:
