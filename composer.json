@@ -16,7 +16,6 @@
         "ext-pdo": "*",
         "ext-pgsql": "*",
         "aws/aws-sdk-php-laravel": "^3.4",
-        "cocur/slugify": "^3.1",
         "composer/semver": "^1.4",
         "cossou/jasperphp": "^2.7",
         "dex/composer-plug-and-play": "~0.1",
