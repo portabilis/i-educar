@@ -284,6 +284,8 @@ class LegacyCreateTestsCommand extends Command
             'EducarFonteDet',
             'EducarFuncaoDet',
             'EducarHabilitacaoDet',
+            'EducarHabilitacaoCad',
+            'EducarHabilitacaoLst',
             'EducarHistoricoEscolarDet',
             'EducarHistoricoEscolarLst',
             'EducarInfraComodoFuncaoDet',

@@ -21,7 +21,7 @@ class indice extends clsCadastro
      *
      * @var int
      */
-    public int $pessoa_logada;
+    public $pessoa_logada;
 
     public $ref_cod_biblioteca;
     public $login_;
