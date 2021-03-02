@@ -5,6 +5,8 @@ on: [push, pull_request]
 jobs:
   default:
 
+    name: Tests
+
     runs-on: ubuntu-latest
 
     env:
