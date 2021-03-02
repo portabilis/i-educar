@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_curso;
@@ -657,16 +655,14 @@ return new class extends clsCadastro
         if ($standerdSchoolYear == 0) {
             $classStepsObject->copySchoolStepsIntoClassesForCourseAndYear($courseCode, $currentYear);
         }
-
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Curso";
+        $this->titulo = 'i-Educar - Curso';
         $this->processoAp = '566';
     }
 };
-
 
 ?>
 <script type="text/javascript">
