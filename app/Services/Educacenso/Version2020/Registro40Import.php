@@ -19,21 +19,6 @@ use App\User;
 class Registro40Import extends Registro40Import2019
 {
     /**
-     * @var Registro40
-     */
-    private $model;
-
-    /**
-     * @var User
-     */
-    private $user;
-
-    /**
-     * @var LegacyInstitution
-     */
-    private $institution;
-
-    /**
      * Faz a importação dos dados a partir da linha do arquivo
      *
      * @param RegistroEducacenso $model
