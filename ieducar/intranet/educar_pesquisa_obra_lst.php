@@ -148,7 +148,7 @@ function fecha()
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Obra";
+        $this->title = "i-Educar - Obra";
         $this->processoAp = '0';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

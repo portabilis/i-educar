@@ -157,7 +157,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Dados Biblioteca";
+        $this->title = "i-Educar - Dados Biblioteca";
         $this->processoAp = '629';
     }
 };

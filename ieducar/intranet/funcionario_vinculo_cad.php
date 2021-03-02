@@ -120,7 +120,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->titulo = "Vínculo Funcionários!";
+        $this->title = "Vínculo Funcionários!";
         $this->processoAp = '190';
     }
 };

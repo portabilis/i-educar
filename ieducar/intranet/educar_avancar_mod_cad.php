@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Session;
 # ABC
     public function Formular()
     {
-        $this->titulo = "i-Educar";
+        $this->title = "i-Educar";
         $this->processoAp = '845';
     }
 # ABC

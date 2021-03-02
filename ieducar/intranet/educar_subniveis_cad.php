@@ -170,7 +170,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->titulo = "Nivel";
+        $this->title = "Nivel";
         $this->processoAp   = '829';
         $this->renderMenu   = false;
         $this->renderMenuSuspenso = false;

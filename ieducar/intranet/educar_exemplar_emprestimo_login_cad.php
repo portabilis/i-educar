@@ -255,7 +255,7 @@ function requisitaSenha(xml)
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Empr&eacute;stimo";
+        $this->title = "i-Educar - Empr&eacute;stimo";
         $this->processoAp = '610';
     }
 };

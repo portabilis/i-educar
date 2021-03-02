@@ -473,7 +473,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->titulo = "Agenda Particular";
+        $this->title = "Agenda Particular";
         $this->processoAp = '0';
     }
 };
