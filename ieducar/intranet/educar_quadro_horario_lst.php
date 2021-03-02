@@ -270,7 +270,7 @@ return new class
 
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Quadro de Horário');
+        $this->title = "i-Educar - Quadro de Horário";
         $this->processoAp = '641';
     }
 };

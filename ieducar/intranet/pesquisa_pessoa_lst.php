@@ -10,7 +10,7 @@
 
 use Illuminate\Support\Facades\Session;
 
-$desvio_diretorio = "";
+
 
 return new class extends clsListagem
 {
@@ -359,7 +359,7 @@ return new class extends clsListagem
 
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Pesquisa por Pessoa!" );
+        $this->title = "Pesquisa por Pessoa!";
         $this->processoAp         = "0";
         $this->renderMenu         = false;
         $this->renderMenuSuspenso = false;

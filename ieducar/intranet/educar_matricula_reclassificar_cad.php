@@ -237,7 +237,7 @@ function getSerie_XML(xml)
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Reclassificar Matr&iacute;cula");
+        $this->title = "i-Educar - Reclassificar Matr&iacute;cula";
         $this->processoAp = Process::RECLASSIFY_REGISTRATION;
     }
 };

@@ -154,7 +154,7 @@ function addVal1( campo, valor, opcao )
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Cliente");
+        $this->title = "i-Educar - Cliente";
         $this->processoAp = '0';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

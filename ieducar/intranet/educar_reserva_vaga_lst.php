@@ -148,7 +148,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Reserva Vaga');
+        $this->title = "i-Educar - Reserva Vaga";
         $this->processoAp = '639';
     }
 };

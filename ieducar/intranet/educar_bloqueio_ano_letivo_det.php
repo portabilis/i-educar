@@ -61,7 +61,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Bloqueio do ano letivo");
+        $this->title = "i-Educar - Bloqueio do ano letivo";
         $this->processoAp = '21251';
     }
 };

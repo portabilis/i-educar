@@ -290,7 +290,7 @@ function getUsuarios(selecao)
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Biblioteca");
+        $this->title = "i-Educar - Biblioteca";
         $this->processoAp = '591';
     }
 };

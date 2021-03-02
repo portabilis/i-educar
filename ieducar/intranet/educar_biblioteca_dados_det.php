@@ -153,7 +153,7 @@ return new class extends clsDetalhe
 
     public function Formular(): bool
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Dados Biblioteca");
+        $this->titulo = "i-Educar - Dados Biblioteca";
         $this->processoAp = '629';
     }
 };

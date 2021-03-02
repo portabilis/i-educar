@@ -399,7 +399,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Dispensa Componente Curricular');
+        $this->title = "i-Educar - Dispensa Componente Curricular";
         $this->processoAp = 578;
     }
 };

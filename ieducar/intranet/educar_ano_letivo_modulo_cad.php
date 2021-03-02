@@ -692,7 +692,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . ' Ano Letivo Etapa');
+        $this->title = "Ano Letivo Etapa";
         $this->processoAp = 561;
     }
 };

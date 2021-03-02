@@ -4,9 +4,7 @@ use App\Models\Individual;
 use App\Models\LogUnification;
 use iEducar\Modules\Unification\PersonLogUnification;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $tabela_pessoas = [];
@@ -14,6 +12,9 @@ return new class extends clsCadastro
 
     public function Formular()
     {
+        $this->titulo = 'i-Educar - Unificação de pessoas';
+        $this->processoAp = '9998878';
+
         $this->breadcrumb('Unificação de pessoas', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
@@ -127,16 +128,8 @@ return new class extends clsCadastro
         }
 
         return $names;
-
-    }
-
-    public function Formular()
-    {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Unificação de pessoas');
-        $this->processoAp = '9998878';
     }
 };
-
 
 ?>
 <script type="text/javascript">

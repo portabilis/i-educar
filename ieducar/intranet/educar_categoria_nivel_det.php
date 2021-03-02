@@ -83,7 +83,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . 'Servidores - Detalhe Categoria Nível');
+        $this->title = "Servidores - Detalhe Categoria Nível";
         $this->processoAp = '829';
     }
 };

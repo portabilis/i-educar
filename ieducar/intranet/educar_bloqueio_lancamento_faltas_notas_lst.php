@@ -113,7 +113,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa');
+        $this->title = "i-Educar - Bloqueio de lanÃ§amento de notas e faltas por etapa";
         $this->processoAp = 999848;
     }
 };

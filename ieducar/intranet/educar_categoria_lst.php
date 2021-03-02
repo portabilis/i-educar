@@ -88,7 +88,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Categoria de obras");
+        $this->title = "i-Educar - Categoria de obras";
         $this->processoAp = 599;
     }
 };

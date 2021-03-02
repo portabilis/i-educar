@@ -1,6 +1,6 @@
 <?php
 
-$desvio_diretorio = "";
+
 
 return new class
 {
@@ -15,7 +15,7 @@ return new class
 
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} i-OpeTopicE" );
+        $this->title = "i-OpeTopicE";
         $this->processoAp = "459";
     }
 };

@@ -1,5 +1,5 @@
 <?php
-$desvio_diretorio = '';
+
 
 
 return new class extends clsListagem
@@ -55,7 +55,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->SetTitulo('Pessoas Físicas');
+        $this->title = "Pessoas Físicas";
         $this->processoAp = '43';
     }
 };

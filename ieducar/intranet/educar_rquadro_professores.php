@@ -69,7 +69,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Quadro Curricular");
+        $this->title = "i-Educar - Quadro Curricular";
         $this->processoAp = '696';
     }
 };

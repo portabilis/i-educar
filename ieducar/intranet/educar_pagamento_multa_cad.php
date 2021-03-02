@@ -162,7 +162,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Pagamento Multa");
+        $this->title = "i-Educar - Pagamento Multa";
         $this->processoAp = '622';
     }
 };

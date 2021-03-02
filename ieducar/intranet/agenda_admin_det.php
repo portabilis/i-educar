@@ -1,6 +1,6 @@
 <?php
 
-$desvio_diretorio = '';
+
 
 
 return new class extends clsDetalhe
@@ -78,7 +78,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} Agenda");
+        $this->title = "Agenda";
         $this->processoAp = '343';
     }
 };

@@ -2,7 +2,7 @@
 
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 
-$desvio_diretorio = '';
+
 
 
 return new class extends clsCadastro
@@ -405,7 +405,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} Empresas!");
+        $this->title = "Empresas!";
         $this->processoAp = 41;
     }
 };

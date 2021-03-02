@@ -102,7 +102,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Tipo Regime");
+        $this->title = "i-Educar - Tipo Regime";
         $this->processoAp = '568';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;

@@ -284,7 +284,7 @@ function getSituacao(xml_situacao)
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Situa&ccedil;&atilde;o");
+        $this->title = "i-Educar - Situa&ccedil;&atilde;o";
         $this->processoAp = '602';
     }
 };

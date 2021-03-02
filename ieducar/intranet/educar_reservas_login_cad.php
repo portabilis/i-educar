@@ -193,7 +193,7 @@ function requisitaSenha(xml_tipo_regime)
 
     public function Formular()
     {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Reservas");
+        $this->title = "i-Educar - Reservas";
         $this->processoAp = '609';
     }
 };

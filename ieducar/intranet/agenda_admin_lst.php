@@ -1,6 +1,6 @@
 <?php
 
-$desvio_diretorio = "";
+
 
 return new class extends clsListagem
 {
@@ -55,7 +55,7 @@ return new class extends clsListagem
 
     function Formular()
     {
-        $this->SetTitulo( "{$this->_instituicao} Agenda" );
+        $this->title = "Agenda";
         $this->processoAp = "343";
     }
 };
