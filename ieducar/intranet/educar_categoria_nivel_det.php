@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
      *
@@ -78,16 +76,14 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhes da categoria/nível', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->titulo = "Servidores - Detalhe Categoria Nível";
+        $this->titulo = 'Servidores - Detalhe Categoria Nível';
         $this->processoAp = '829';
     }
 };
-
 
 ?>
 
