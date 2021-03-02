@@ -124,7 +124,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Transfer&ecirc;ncia Solicita&ccedil;&atilde;o";
+        $this->title = "i-Educar - Transfer&ecirc;ncia Solicita&ccedil;&atilde;o";
         $this->processoAp = '578';
     }
 };

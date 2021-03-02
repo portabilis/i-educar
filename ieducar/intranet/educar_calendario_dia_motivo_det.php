@@ -84,7 +84,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Calend&aacute;rio Dia Motivo";
+        $this->title = "i-Educar - Calend&aacute;rio Dia Motivo";
         $this->processoAp = '576';
     }
 };

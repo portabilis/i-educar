@@ -56,7 +56,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Motivo Baixa";
+        $this->title = "i-Educar - Motivo Baixa";
         $this->processoAp = '600';
     }
 };

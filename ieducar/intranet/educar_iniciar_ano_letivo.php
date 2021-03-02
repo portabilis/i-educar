@@ -141,7 +141,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Iniciar/Finalizar Ano Letivo";
+        $this->title = "i-Educar - Iniciar/Finalizar Ano Letivo";
         $this->processoAp = '561';
     }
 };
