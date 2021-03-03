@@ -151,9 +151,7 @@ class indice extends clsCadastro
 
                 if ($lst_servidor_disciplina) {
                     foreach ($lst_servidor_disciplina as $disciplina) {
-                        $obj_disciplina = new clsPmieducarDisciplina($disciplina['ref_cod_disciplina']);
-                        $det_disciplina = $obj_disciplina->detalhe();
-                        $this->cursos_disciplina[$det_disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $disciplina['ref_cod_disciplina'];
+                        $this->cursos_disciplina[$disciplina['ref_cod_curso']][$disciplina['ref_cod_disciplina']] = $disciplina['ref_cod_disciplina'];
                     }
                 }
 
@@ -327,7 +325,7 @@ class indice extends clsCadastro
             $horas = $this->total_horas_alocadas . ':00';
         }
 
-        if (strtoupper($this->tipoacao) == 'EDITAR') {
+        if (mb_strtoupper($this->tipoacao) == 'EDITAR') {
             $this->campoTextoInv(
                 'total_horas_alocadas_',
                 'Total de Horas Alocadadas',

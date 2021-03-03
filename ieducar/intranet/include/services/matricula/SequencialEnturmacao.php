@@ -284,12 +284,12 @@ class SequencialEnturmacao
 
         foreach ($students as $student) {
             $sequencial = $student->sequencial_fechamento;
-            $alunos[$sequencial] = strtoupper($student->nome);
+            $alunos[$sequencial] = mb_strtoupper($student->nome);
         }
 
         $nome = $this->registration->student->person->name;
 
-        $alunos['novo-aluno'] = limpa_acentos(strtoupper($nome));
+        $alunos['novo-aluno'] = limpa_acentos(mb_strtoupper($nome));
 
         asort($alunos);
 

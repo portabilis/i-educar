@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class CreateExtensions extends Migration
 {
@@ -16,9 +15,9 @@ class CreateExtensions extends Migration
         DB::unprepared(
             '
                 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-                
+
                 CREATE EXTENSION IF NOT EXISTS unaccent WITH SCHEMA public;
-                
+
                 CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA relatorio;
             '
         );
@@ -34,9 +33,9 @@ class CreateExtensions extends Migration
         DB::unprepared(
             '
                 DROP EXTENSION hstore;
-                
+
                 DROP EXTENSION plpgsql;
-                
+
                 DROP EXTENSION unaccent;
             '
         );

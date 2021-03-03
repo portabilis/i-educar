@@ -20,17 +20,17 @@ class Registro40Import implements RegistroImportInterface
     /**
      * @var Registro40
      */
-    private $model;
+    protected $model;
 
     /**
      * @var User
      */
-    private $user;
+    protected $user;
 
     /**
      * @var LegacyInstitution
      */
-    private $institution;
+    protected $institution;
 
     /**
      * Faz a importação dos dados a partir da linha do arquivo

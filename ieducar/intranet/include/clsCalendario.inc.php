@@ -232,7 +232,7 @@ class clsCalendario
         return;
 
     $this->array_legenda[] = $str_legenda;
-    $str_cor               = strtoupper($str_cor);
+    $str_cor               = mb_strtoupper($str_cor);
     $this->array_cor[]     = $this->COR[$str_cor];
   }
 
@@ -252,7 +252,7 @@ class clsCalendario
    */
   function setCorDiaSemana($arr_dia_semana, $str_cor)
   {
-    $str_cor = strtoupper($str_cor);
+    $str_cor = mb_strtoupper($str_cor);
 
     if (is_array($arr_dia_semana))
       foreach ($arr_dia_semana as $dia) {

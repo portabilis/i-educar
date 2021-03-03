@@ -43,7 +43,6 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . 'Nivel');
     $this->processoAp   = '829';
-    $this->renderBanner = FALSE;
     $this->renderMenu   = FALSE;
     $this->renderMenuSuspenso = FALSE;
   }
