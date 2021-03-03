@@ -1,4 +1,4 @@
-<script>
+
   function getInfraPredioFuncao(xml_infra_comodo_funcao)
   {
     var campoFuncao = document.getElementById('ref_cod_infra_comodo_funcao');
@@ -40,4 +40,4 @@
     campoFuncao.options[0].text = 'Selecione';
     campoFuncao.disabled = false;
   }
-</script>
+

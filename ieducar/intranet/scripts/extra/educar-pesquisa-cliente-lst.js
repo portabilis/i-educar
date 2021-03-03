@@ -1,4 +1,4 @@
-<script>
+
 
   function addVal1( campo, valor, opcao )
   {
@@ -23,4 +23,4 @@
   {
     window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length*1-1));
   }
-</script>
+

@@ -1,4 +1,4 @@
-<script>
+
 
   function getCurso(xml_curso)
   {
@@ -116,4 +116,4 @@
 
   };
 
-</script>
+

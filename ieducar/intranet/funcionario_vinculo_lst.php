@@ -59,7 +59,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->titulo = "Vínculo Funcionários!";
+        $this->title = "Vínculo Funcionários!";
         $this->processoAp = '190';
     }
 };

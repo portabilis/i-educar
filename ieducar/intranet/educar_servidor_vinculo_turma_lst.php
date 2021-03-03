@@ -141,7 +141,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->titulo = "Servidores - Servidor Vínculo Turma";
+        $this->title = "Servidores - Servidor Vínculo Turma";
         $this->processoAp = 635;
     }
 };

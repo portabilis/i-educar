@@ -162,7 +162,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->titulo = "Servidores - Servidor Nível";
+        $this->title = "Servidores - Servidor Nível";
         $this->processoAp         = 0;
         $this->renderMenu         = false;
         $this->renderMenuSuspenso = false;

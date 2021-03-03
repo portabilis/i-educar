@@ -1,4 +1,4 @@
-<script>
+
 
   changeCurso =
   function(){
@@ -57,4 +57,4 @@
 
   document.formcadastro.action = 'educar_alunos_defasados_nominal_proc.php';
 
-</script>
+

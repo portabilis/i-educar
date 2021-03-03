@@ -1,4 +1,4 @@
-<script>
+
 
 var scriptValida = "";
 var retorno = 1;
@@ -118,7 +118,7 @@ if(editar_)
     getExemplarTipo();
 }
 
-</script>
+
 <style>
 .dias
 {

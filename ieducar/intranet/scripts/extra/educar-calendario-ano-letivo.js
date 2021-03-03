@@ -1,4 +1,4 @@
-<script>
+
   var anoAtual= new Date().getFullYear();
 
   after_getEscola = function() {
@@ -46,4 +46,4 @@
   }
 
   geraAnos();
-</script>
+

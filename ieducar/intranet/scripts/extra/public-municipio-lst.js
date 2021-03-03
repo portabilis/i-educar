@@ -1,4 +1,4 @@
-<script>
+
   document.getElementById('idpais').onchange = function () {
   var campoPais = document.getElementById('idpais').value;
 
@@ -26,4 +26,4 @@
 } else
   campoUf.options[0].text = 'O pais não possui nenhum estado';
 }
-</script>
+

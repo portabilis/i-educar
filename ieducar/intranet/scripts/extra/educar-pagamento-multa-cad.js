@@ -1,4 +1,4 @@
-<script>
+
   function validaValor()
   {
     var valor_pago_bib;
@@ -25,4 +25,4 @@
     document.formcadastro.submit();
   }
   }
-</script>
+
