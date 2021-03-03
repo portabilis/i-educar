@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $ref_cod_instituicao;
@@ -884,16 +882,14 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->titulo = "Servidores - Cadastro de Horários";
+        $this->titulo = 'Servidores - Cadastro de Horários';
         $this->processoAp = '641';
     }
 };
-
 
 ?>
 <script type="text/javascript">
