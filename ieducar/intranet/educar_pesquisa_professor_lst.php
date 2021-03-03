@@ -109,6 +109,11 @@ return new class extends clsListagem {
         Session::start();
     }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-pesquisa-professor-lst.js');
+    }
+
     public function Formular()
     {
         $this->titulo = 'i-Educar - Servidor';
