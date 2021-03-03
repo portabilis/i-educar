@@ -265,6 +265,11 @@ return new class {
         return $valores;
     }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-quadro-horario-lst.js');
+    }
+
     public function Formular()
     {
         $this->titulo = 'i-Educar - Quadro de Horário';
