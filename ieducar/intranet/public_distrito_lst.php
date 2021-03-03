@@ -4,9 +4,7 @@ use App\Models\District;
 use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     use InteractWithDatabase, SelectOptions;
 
     public $__limite;
@@ -146,7 +144,6 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de distritos', [
             url('intranet/educar_enderecamento_index.php') => 'Endereçamento',
         ]);
-
     }
 
     public function makeExtra()
@@ -156,7 +153,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->titulo = "Distrito";
+        $this->titulo = 'Distrito';
         $this->processoAp = 759;
     }
 };
