@@ -152,35 +152,14 @@ return new class extends clsCadastro {
         return false;
     }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-nivel-cad.js');
+    }
+
     public function Formular()
     {
         $this->titulo = 'Servidores - Nível';
         $this->processoAp = '829';
     }
 };
-
-?>
-
-<script type="text/javascript">
-
-    function setOrdem(id)
-    {
-        document.getElementById('nr_nivel['+(id)+']').value = (id+1);
-    }
-
-    tab_add_1.afterAddRow = function() {
-        setOrdem(this.id-1);
-    }
-
-    tab_add_1.afterRemoveRow = function() {
-        reordena();
-    }
-
-    function reordena()
-    {
-        for(var ct=0;ct < tab_add_1.getId();ct++)
-        {
-            setOrdem(ct);
-        }
-    }
-</script>
