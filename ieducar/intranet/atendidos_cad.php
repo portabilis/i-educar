@@ -13,9 +13,7 @@ use iEducar\Modules\Educacenso\Validator\NameValidator;
 use iEducar\Modules\Educacenso\Validator\NisValidator;
 use iEducar\Support\View\SelectOptions;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     use LegacyAddressingFields;
 
     public $cod_pessoa_fj;
@@ -1412,14 +1410,11 @@ return new class extends clsCadastro
             $deletedFiles = explode(',', $this->file_url_deleted);
             $fileService->deleteFiles($deletedFiles);
         }
-
     }
 
     public function Formular()
     {
-        $this->title = "Pessoas Físicas - Cadastro";
+        $this->title = 'Pessoas Físicas - Cadastro';
         $this->processoAp = 43;
     }
 };
-
-

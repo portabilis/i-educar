@@ -1,10 +1,6 @@
 <?php
 
-
-
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public function Gerar()
     {
         $this->titulo = 'Agendas';
@@ -73,14 +69,11 @@ return new class extends clsDetalhe
         $this->largura = '100%';
 
         $this->breadcrumb('Detalhe da agenda');
-
     }
 
     public function Formular()
     {
-        $this->title = "Agenda";
+        $this->title = 'Agenda';
         $this->processoAp = '343';
     }
 };
-
-

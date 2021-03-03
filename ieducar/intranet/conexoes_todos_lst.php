@@ -1,10 +1,6 @@
 <?php
 
-
-
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public function Gerar()
     {
         $this->titulo = 'Conexões';
@@ -73,14 +69,11 @@ return new class extends clsListagem
         $this->addPaginador2('conexoes_todos_lst.php', $total, $_GET, $this->nome, $limite);
 
         $this->largura = '100%';
-
     }
 
     public function Formular()
     {
-        $this->title = "Conexões!";
+        $this->title = 'Conexões!';
         $this->processoAp = '158';
     }
 };
-
-

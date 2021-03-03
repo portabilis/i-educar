@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $cod_agenda;
     public $link;
 
@@ -226,14 +224,11 @@ return new class extends clsCadastro
         }
 
         return  true;
-
     }
 
     public function Formular()
     {
-        $this->title = "Agenda";
+        $this->title = 'Agenda';
         $this->processoAp = '345';
     }
 };
-
-

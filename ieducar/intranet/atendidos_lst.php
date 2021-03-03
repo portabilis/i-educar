@@ -1,9 +1,6 @@
 <?php
 
-
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public function Gerar()
     {
         $this->titulo = 'Pessoas Físicas';
@@ -50,14 +47,11 @@ return new class extends clsListagem
         $this->addPaginador2('atendidos_lst.php', $total, $_GET, $this->nome, $limite);
 
         $this->breadcrumb('Pessoa física', ['educar_pessoas_index.php' => 'Pessoas']);
-
     }
 
     public function Formular()
     {
-        $this->title = "Pessoas Físicas";
+        $this->title = 'Pessoas Físicas';
         $this->processoAp = '43';
     }
 };
-
-

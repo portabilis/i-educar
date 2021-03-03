@@ -1,10 +1,6 @@
 <?php
 
-
-
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public function Gerar()
     {
         $this->titulo = 'Conexões';
@@ -66,14 +62,11 @@ return new class extends clsListagem
         $this->largura = '100%';
 
         $this->breadcrumb('Listagem de conexões realizadas');
-
     }
 
     public function Formular()
     {
-        $this->title = "Conexões!";
+        $this->title = 'Conexões!';
         $this->processoAp = '157';
     }
 };
-
-
