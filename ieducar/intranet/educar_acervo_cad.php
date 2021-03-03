@@ -322,7 +322,7 @@ return new class extends clsCadastro {
 
     public function makeExtra()
     {
-        return file_get_contents(__DIR__ . '/scripts/extra/acervo-cad');
+        return file_get_contents(__DIR__ . '/scripts/extra/acervo-cad.js');
     }
 
     public function Formular()
