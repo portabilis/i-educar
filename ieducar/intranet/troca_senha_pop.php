@@ -1,10 +1,6 @@
 <?php
 
-
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $p_cod_pessoa_fj;
     public $f_senha;
     public $f_senha2;
@@ -76,7 +72,6 @@ return new class extends clsCadastro
 
     public function Editar()
     {
-
     }
 
     public function makeExtra()
@@ -86,7 +81,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->titulo = "Usu&aacute;rios";
+        $this->titulo = 'Usu&aacute;rios';
         $this->processoAp   = '0';
         $this->renderMenu   = false;
         $this->renderMenuSuspenso = false;
