@@ -9,6 +9,8 @@ return new class extends clsCadastro
 
     public function Formular()
     {
+        $this->titulo = "i-Educar - Turno do aluno";
+        $this->processoAp = '578';
         $this->nome_url_cancelar = 'Voltar';
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
 
@@ -133,12 +135,4 @@ return new class extends clsCadastro
         }
 
     }
-
-    public function Formular()
-    {
-        $this->titulo = "i-Educar - Turno do aluno";
-        $this->processoAp = '578';
-    }
 };
-
-
