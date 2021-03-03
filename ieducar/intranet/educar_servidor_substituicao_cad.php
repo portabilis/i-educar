@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_servidor_alocacao;
@@ -271,7 +269,6 @@ return new class extends clsCadastro
     public function Excluir()
     {
         return false;
-
     }
 
     public function makeExtra()
@@ -281,7 +278,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->titulo = "Servidores - Servidor Substituição";
+        $this->titulo = 'Servidores - Servidor Substituição';
         $this->processoAp = 635;
     }
 };
