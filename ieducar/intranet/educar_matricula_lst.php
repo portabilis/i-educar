@@ -1,9 +1,6 @@
 <?php
 
-
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Titulo no topo da pagina
      *
@@ -240,28 +237,16 @@ return new class extends clsListagem
         $this->array_botao[] = 'Voltar';
         $this->array_botao_url[] = "educar_aluno_det.php?cod_aluno={$this->ref_cod_aluno}";
         $this->largura = '100%';
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-matricula-abandono-cad.js');
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Matr&iacute;cula";
+        $this->title = 'i-Educar - Matr&iacute;cula';
         $this->processoAp = '578';
     }
 };
-
-
-
-?>
-
-<script>
-
-    document.getElementById('ref_cod_escola').onchange = function () {
-        getEscolaCurso();
-    };
-
-    document.getElementById('ref_cod_curso').onchange = function () {
-        getEscolaCursoSerie();
-    };
-
-</script>

@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -201,30 +199,16 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de exemplares para devolução', [
             url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
         ]);
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-exemplar-devolucao-lst.js');
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Exemplar Devolu&ccedil;&atilde;o";
+        $this->title = 'i-Educar - Exemplar Devolu&ccedil;&atilde;o';
         $this->processoAp = '628';
     }
 };
-
-?>
-
-<script>
-
-function pesquisa_cliente()
-{
-    var campoBiblioteca = document.getElementById('cod_biblioteca').value;
-    pesquisa_valores_popless('educar_pesquisa_cliente_lst.php?campo1=ref_cod_cliente&campo2=nm_cliente&ref_cod_biblioteca='+campoBiblioteca)
-}
-
-function pesquisa_obra()
-{
-    var campoBiblioteca = document.getElementById('cod_biblioteca').value;
-    pesquisa_valores_popless('educar_pesquisa_obra_lst.php?campo1=ref_cod_acervo&campo2=nm_obra&campo3='+campoBiblioteca)
-}
-
-</script>

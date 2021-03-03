@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Session;
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -125,33 +123,17 @@ return new class extends clsListagem
         $this->addPaginador2('educar_pesquisa_obra_lst.php', $total, $_GET, $this->nome, $this->limite);
         $this->largura = '100%';
     }
-}
 
-?>
-<script>
-
-function addVal1( campo, valor )
-{
-    obj = window.parent.document.getElementById( campo );
-    obj.value = valor;
-}
-
-function fecha()
-{
-    window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length*1-1));
-    if( window.parent.document.getElementById('passo') )
+    public function makeExtra()
     {
-        window.parent.document.getElementById('passo').value = 2;
-        window.parent.document.forms[0].submit();
-
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-pesquisa-obra-lst.js');
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Obra";
+        $this->title = 'i-Educar - Obra';
         $this->processoAp = '0';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
     }
 };
-</script>

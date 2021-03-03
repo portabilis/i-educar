@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -99,35 +97,22 @@ return new class extends clsCadastro
 
     public function Excluir()
     {
+    }
 
+    public function makeExtra()
+    {
+        if (! $_GET['ref_cod_instituicao']) {
+            return file_get_contents(__DIR__ . '/scripts/extra/educar-habilitacao-cad-pop.js');
+        }
+
+        return '';
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Habilita&ccedil;&atilde;o";
+        $this->title = 'i-Educar - Habilita&ccedil;&atilde;o';
         $this->processoAp = '573';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
     }
 };
-
-
-?>
-
-<script>
-
-<?php
-if (!$_GET['ref_cod_instituicao']) {
-    ?>
-    Event.observe(window, 'load', Init, false);
-
-    function Init()
-    {
-        $('ref_cod_instituicao').value = parent.document.getElementById('ref_cod_instituicao').value;
-    }
-
-<?php
-}
-?>
-
-</script>

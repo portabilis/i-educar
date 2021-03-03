@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -175,28 +173,16 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de dívidas', [
             url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
         ]);
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-pagamento-multa-lst.js');
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Pagamento Multa";
+        $this->title = 'i-Educar - Pagamento Multa';
         $this->processoAp = '622';
     }
 };
-
-?>
-<script>
-if ( document.getElementById( 'ref_cod_instituicao' ) ) {
-    var ref_cod_instituicao = document.getElementById( 'ref_cod_instituicao' );
-    ref_cod_instituicao.onchange = function() { getEscola(); getBiblioteca(1); getClienteTipo(); }
-}
-if ( document.getElementById( 'ref_cod_escola' ) ) {
-    var ref_cod_escola = document.getElementById( 'ref_cod_escola' );
-    ref_cod_escola.onchange = function() { getBiblioteca(2); getClienteTipo(); }
-}
-if ( document.getElementById( 'ref_cod_biblioteca' ) ) {
-    var ref_cod_biblioteca = document.getElementById( 'ref_cod_biblioteca' );
-    ref_cod_biblioteca.onchange = function() { getClienteTipo(); }
-}
-</script>

@@ -2,10 +2,7 @@
 
 use App\Models\PersonHasPlace;
 
-
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $cod_escola;
     public $ref_usuario_cad;
     public $ref_usuario_exc;
@@ -291,28 +288,16 @@ return new class extends clsDetalhe
         $tabela .= '</table>';
 
         return $existe == true ? $tabela : false;
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-escola-det.js');
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Escola";
+        $this->title = 'i-Educar - Escola';
         $this->processoAp = '561';
     }
 };
-
-
-
-?>
-<script>
-  function preencheForm (ano, escola, acao) {
-    if (!confirm('Deseja realmente \'' + acao.substr(0, 1).toUpperCase() + acao.substr(1) + '\' o ano letivo?')) {
-      return false;
-    }
-
-    document.acao_ano_letivo.ano.value = ano;
-    document.acao_ano_letivo.ref_cod_escola.value = escola;
-    document.acao_ano_letivo.tipo_acao.value = acao;
-    document.acao_ano_letivo.submit();
-  }
-</script>

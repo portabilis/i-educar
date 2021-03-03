@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -166,75 +164,16 @@ return new class extends clsListagem
         $this->breadcrumb('Infraestrutura da escola', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-infra-predio-comodo-lst.js');
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Ambientes ";
+        $this->title = 'i-Educar - Ambientes ';
         $this->processoAp = '574';
     }
 };
-
-?>
-<script>
-
-function getInfraPredioFuncao(xml_infra_comodo_funcao)
-{
-    /*
-    var campoEscola  = document.getElementById('ref_cod_escola').value;
-    var campoFuncao = document.getElementById('ref_cod_infra_comodo_funcao');
-
-    campoFuncao.length = 1;
-    campoFuncao.options[0] = new Option( 'Selecione', '', false, false );
-    for (var j = 0; j < funcao.length; j++)
-    {
-        if (funcao[j][2] == campoEscola)
-        {
-            campoFuncao.options[campoFuncao.options.length] = new Option( funcao[j][1], funcao[j][0],false,false);
-        }
-    }
-    */
-    var campoFuncao = document.getElementById('ref_cod_infra_comodo_funcao');
-    var DOM_array = xml_infra_comodo_funcao.getElementsByTagName( "infra_comodo_funcao" );
-
-    if(DOM_array.length)
-    {
-        campoFuncao.length = 1;
-        campoFuncao.options[0].text = 'Selecione uma função';
-        campoFuncao.disabled = false;
-
-        for( var i = 0; i < DOM_array.length; i++ )
-        {
-            campoFuncao.options[campoFuncao.options.length] = new Option( DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_infra_comodo_funcao"),false,false);
-        }
-    }
-    else
-        campoFuncao.options[0].text = 'A escola não possui nenhuma função';
-}
-
-document.getElementById('ref_cod_escola').onchange = function()
-{
-    /*
-    getFuncao();
-    */
-    var campoEscola  = document.getElementById('ref_cod_escola').value;
-
-    var campoFuncao = document.getElementById('ref_cod_infra_comodo_funcao');
-    campoFuncao.length = 1;
-    campoFuncao.disabled = true;
-    campoFuncao.options[0].text = 'Carregando função';
-
-    var xml_infra_comodo_funcao = new ajax( getInfraPredioFuncao );
-    xml_infra_comodo_funcao.envia( "educar_infra_comodo_funcao_xml.php?esc="+campoEscola );
-}
-
-before_getEscola = function()
-{
-    var campoFuncao = document.getElementById('ref_cod_infra_comodo_funcao');
-    campoFuncao.length = 1;
-    campoFuncao.options[0].text = 'Selecione';
-    campoFuncao.disabled = false;
-}
-
-</script>

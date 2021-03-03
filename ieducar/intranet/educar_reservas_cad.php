@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Session;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -356,25 +354,16 @@ return new class extends clsCadastro
         $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
 
         return false;
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-reservas-cad.js');
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Reservas";
+        $this->title = 'i-Educar - Reservas';
         $this->processoAp = '609';
     }
 };
-
-
-?>
-
-<script>
-
-function pesquisa_obra()
-{
-    var campoBiblioteca = document.getElementById('cod_biblioteca').value;
-    pesquisa_valores_popless('educar_pesquisa_obra_lst.php?campo1=ref_cod_acervo&campo2=titulo_obra&campo3='+campoBiblioteca)
-}
-
-</script>

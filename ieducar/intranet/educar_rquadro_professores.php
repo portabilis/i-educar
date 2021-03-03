@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
 
     /**
      * Referencia pega da session para o idpes do usuario atual
@@ -64,44 +62,16 @@ return new class extends clsCadastro
 
         $this->acao_enviar = 'acao2()';
         $this->acao_executa_submit = false;
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-rquadro-professores.js');
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Quadro Curricular";
+        $this->title = 'i-Educar - Quadro Curricular';
         $this->processoAp = '696';
     }
 };
-
-
-
-?>
-<script>
-
-function acao2()
-{
-
-    if(!acao())
-        return false;
-
-    showExpansivelImprimir(400, 200,'',[], "Quadro Curricular");
-
-    document.formcadastro.target = 'miolo_'+(DOM_divs.length-1);
-
-    document.formcadastro.submit();
-}
-
-document.formcadastro.action = 'educar_relatorio_quadro_curricular_proc.php';
-
-document.getElementById('ref_cod_escola').onchange = function()
-{
-    getEscolaCurso();
-}
-
-document.getElementById('ref_cod_curso').onchange = function()
-{
-    getEscolaCursoSerie();
-}
-
-</script>
