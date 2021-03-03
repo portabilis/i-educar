@@ -143,15 +143,3 @@ return new class extends clsListagem
         $this->renderMenuSuspenso = false;
     }
 };
-
-
-?>
-<script type="text/javascript"/">
-/*
-try{
-window.onload = setTimeout("document.forms[0].elements[1].focus()", 1000);//setFocus('campo_busca');
-}catch(e){
-
-}
-*/
-</script>
