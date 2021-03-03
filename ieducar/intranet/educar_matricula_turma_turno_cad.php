@@ -1,15 +1,13 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $cod_matricula;
     public $ref_cod_aluno;
     public $turno;
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Turno do aluno";
+        $this->titulo = 'i-Educar - Turno do aluno';
         $this->processoAp = '578';
         $this->nome_url_cancelar = 'Voltar';
         $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
@@ -133,6 +131,5 @@ return new class extends clsCadastro
         if (!$det_matricula) {
             $this->simpleRedirect("educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
         }
-
     }
 };
