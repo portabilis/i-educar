@@ -149,6 +149,11 @@ return new class extends clsListagem
 
     }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__  . '/scripts/extra/public-distrito-lst.js');
+    }
+
     public function Formular()
     {
         $this->titulo = "Distrito";
