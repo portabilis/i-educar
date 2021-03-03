@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
 
   $j(function() {
 
@@ -63,4 +63,4 @@
 
 }
 }
-</script>
+

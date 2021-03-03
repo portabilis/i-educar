@@ -1,4 +1,4 @@
-<script type='text/javascript'>
+
   document.getElementById('idpais').onchange = function () {
   var campoPais = document.getElementById('idpais').value;
 
@@ -58,4 +58,4 @@
   campoMunicipio.options[0].text = 'O estado não possui nenhum município';
 }
 }
-</script>
+

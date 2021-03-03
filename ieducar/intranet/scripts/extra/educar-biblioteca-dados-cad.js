@@ -1,4 +1,4 @@
-<script type='text/javascript'>
+
   document.getElementById('event_incluir_feriado').onclick = incluirFeriado;
 
   function incluirFeriado(){
@@ -14,4 +14,4 @@
   document.getElementById('tipoacao').value = '';
   acao();
 }
-</script>
+

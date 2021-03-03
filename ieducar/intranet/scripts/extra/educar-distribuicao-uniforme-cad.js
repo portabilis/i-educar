@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
   function bloqueiaCamposQuantidade(){
   $j('#agasalho_qtd').val('').attr('disabled', 'disabled');
   $j('#camiseta_curta_qtd').val('').attr('disabled', 'disabled');
@@ -37,4 +37,4 @@
   liberaCamposQuantidade();
 });
 })
-</script>
+

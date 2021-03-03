@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
   var campoInstituicao = document.getElementById('ref_cod_instituicao');
   var campoEscola = document.getElementById('ref_cod_escola');
   var campoCurso = document.getElementById('ref_cod_curso');
@@ -138,4 +138,4 @@
   objCSS.href = 'styles/calendario.css';
   objCSS.type = 'text/css';
 }
-</script>
+

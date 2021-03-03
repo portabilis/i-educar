@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
   function trocaCurso(id_campo)
   {
     var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
@@ -72,4 +72,4 @@
   if (document.getElementById('total_horas_alocadas')) {
   document.getElementById('total_horas_alocadas').style.textAlign = 'right';
 }
-</script>
+

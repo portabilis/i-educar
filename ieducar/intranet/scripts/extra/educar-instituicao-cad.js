@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
 
   let populaOrgaoRegional = data => {
   $j('#orgao_regional').append(
@@ -33,4 +33,4 @@
   $j('#data_base').mask("99/99");
   $j('#data_fechamento').mask("99/99");
 
-</script>
+

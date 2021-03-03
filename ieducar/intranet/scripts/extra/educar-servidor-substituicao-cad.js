@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
   function acao2()
   {
     if (document.getElementById('ref_cod_servidor_todos').value == ''){
@@ -8,4 +8,4 @@
 
     acao();
   }
-</script>
+

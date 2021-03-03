@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
 
   var handleSelect = function(event, ui){
   $j(event.target).val(ui.item.label);
@@ -40,4 +40,4 @@
   $j('#btn_enviar').val('Unificar');
 
 
-</script>
+

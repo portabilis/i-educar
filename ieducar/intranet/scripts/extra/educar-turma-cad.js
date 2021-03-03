@@ -1,5 +1,5 @@
 
-<script type='text/javascript'>
+
   var modulosDisponiveis = #modulos;
 
   function getComodo() {
@@ -507,4 +507,4 @@
   $j(this).trigger("change");
 })
 }
-</script>
+

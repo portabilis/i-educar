@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
   function getNivelEnsino(xml_nivel_ensino)
   {
     var campoNivelEnsino = document.getElementById('ref_cod_nivel_ensino');
@@ -182,4 +182,4 @@
   fixupEtapacursoSize();
 });
 
-</script>
+

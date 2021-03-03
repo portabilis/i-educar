@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
   // Reescrita da função para exibir mensagem interativa
   function excluir()
   {
@@ -9,4 +9,4 @@
     document.formcadastro.submit();
   }
   }
-</script>
+

@@ -1,4 +1,4 @@
-<script type='text/javascript'>
+
   function pesquisa_aluno() {
   pesquisa_valores_popless('educar_pesquisa_aluno.php')
 }
@@ -44,4 +44,4 @@
 }
   acao();
 }
-</script>
+

@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
 
   // autocomplete disciplina fields
 
@@ -94,4 +94,4 @@
   $submitButton.removeAttr('onclick');
   $submitButton.click(submitForm);
 
-</script>
+

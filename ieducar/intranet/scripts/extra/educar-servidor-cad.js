@@ -1,5 +1,5 @@
 
-<script type="text/javascript">
+
   /**
   * Carrega as opções de um campo select de funções via Ajax
   */
@@ -233,4 +233,4 @@
 
   $j('#cod_servidor').attr('onchange', 'atualizaInformacoesServidor();');
 });
-</script>
+

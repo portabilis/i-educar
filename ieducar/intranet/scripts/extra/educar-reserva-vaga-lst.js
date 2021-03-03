@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
   document.getElementById('ref_cod_escola').onchange = function() {
   getEscolaCurso();
 }
@@ -10,4 +10,4 @@
   function pesquisa_aluno() {
   pesquisa_valores_popless('educar_pesquisa_aluno.php')
 }
-</script>
+

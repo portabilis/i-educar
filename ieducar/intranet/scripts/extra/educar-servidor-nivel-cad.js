@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
   function trocaNiveis()
   {
     var campoCategoria = document.getElementById('ref_cod_categoria').value;
@@ -91,4 +91,4 @@
   document.getElementById('ref_cod_nivel').onchange = function(){
   trocaSubniveis();
 }
-</script>
+

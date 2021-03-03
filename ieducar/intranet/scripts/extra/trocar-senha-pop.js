@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
   function acao2()
   {
     if ($F('f_senha').length > 7) {
@@ -13,4 +13,4 @@
     alert('A sua nova senha deverá conter pelo menos oito caracteres');
   }
   }
-</script>
+

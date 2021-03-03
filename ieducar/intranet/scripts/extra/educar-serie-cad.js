@@ -1,5 +1,5 @@
 
-<script type="text/javascript">
+
   function getRegra()
   {
     var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
@@ -107,4 +107,4 @@
     // Essa ação é a padrão do item, via include
     getCurso();
   }
-</script>
+

@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
   if (document.getElementById('btn_enviar')) {
   document.getElementById('btn_enviar').onclick = function() { validaFormulario(); }
 }
@@ -24,4 +24,4 @@
 
   acao();
 }
-</script>
+

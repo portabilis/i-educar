@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
   function getNivelEnsino()
   {
     var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
@@ -34,4 +34,4 @@
     getNivelEnsino();
     getTipoEnsino();
   }
-</script>
+

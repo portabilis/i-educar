@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
 
   function setOrdem(id)
   {
@@ -20,4 +20,4 @@
     setOrdem(ct);
   }
   }
-</script>
+

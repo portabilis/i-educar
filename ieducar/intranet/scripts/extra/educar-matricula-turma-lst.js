@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
   function enturmar(ref_cod_escola, ref_cod_serie, ref_cod_matricula, ref_cod_turma, ano_letivo) {
   document.formcadastro.method = 'post';
   document.formcadastro.action = 'educar_matricula_turma_det.php';
@@ -11,4 +11,4 @@
 
   document.formcadastro.submit();
 }
-</script>
+

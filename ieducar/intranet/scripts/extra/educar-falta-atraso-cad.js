@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
   var obj_tipo = document.getElementById('tipo');
 
   obj_tipo.onchange = function()
@@ -12,4 +12,4 @@
     setVisibility('tr_qtd_min', false);
   }
   }
-</script>
+

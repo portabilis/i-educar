@@ -1,5 +1,5 @@
 
-<script type="text/javascript">
+
   document.getElementById('ref_cod_servidor_lupa').onclick = function() {
   validaCampoServidor();
 }
@@ -285,4 +285,4 @@
 }
 }
 }
-</script>
+

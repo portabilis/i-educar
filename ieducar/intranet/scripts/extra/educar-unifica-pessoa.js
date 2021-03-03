@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
 
   var handleSelect = function(event, ui){
   $j(event.target).val(ui.item.label);
@@ -82,4 +82,4 @@
 
   container.dialog(params);
 }
-</script>
+

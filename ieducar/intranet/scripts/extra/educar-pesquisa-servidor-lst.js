@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
   function addVal1(campo,opcao, valor)
   {
     if (window.parent.document.getElementById(campo)) {
@@ -49,4 +49,4 @@
   }
     return array_h;
   }
-</script>
+
