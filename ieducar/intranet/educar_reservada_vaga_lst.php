@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referência a usuário da sessão
      *
@@ -226,16 +224,14 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de vagas reservadas', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
-
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Vagas Reservadas";
+        $this->titulo = 'i-Educar - Vagas Reservadas';
         $this->processoAp = '639';
     }
 };
-
 
 ?>
 
