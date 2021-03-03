@@ -81,7 +81,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->titulo = "Usu&aacute;rios";
+        $this->title = "Usu&aacute;rios";
         $this->processoAp   = '0';
         $this->renderMenu   = false;
         $this->renderMenuSuspenso = false;

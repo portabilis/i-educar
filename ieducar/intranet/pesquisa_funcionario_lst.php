@@ -137,7 +137,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->titulo = "Pesquisa por Funcion&aacute;rio!";
+        $this->title = "Pesquisa por Funcion&aacute;rio!";
         $this->processoAp         = '0';
         $this->renderMenu         = false;
         $this->renderMenuSuspenso = false;

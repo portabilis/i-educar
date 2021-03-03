@@ -35,7 +35,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->titulo = "Vínculo Funcionários";
+        $this->title = "Vínculo Funcionários";
         $this->processoAp = '190';
     }
 };

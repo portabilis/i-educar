@@ -387,7 +387,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->titulo = "Servidores - Servidor vínculo turma";
+        $this->title = "Servidores - Servidor vínculo turma";
         $this->processoAp = 635;
     }
 };

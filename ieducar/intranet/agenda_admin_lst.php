@@ -55,7 +55,7 @@ return new class extends clsListagem
 
     function Formular()
     {
-        $this->titulo = "Agenda";
+        $this->title = "Agenda";
         $this->processoAp = "343";
     }
 };

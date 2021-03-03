@@ -71,7 +71,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->titulo = 'i-Educar - Quadro Curricular';
+        $this->title = 'i-Educar - Quadro Curricular';
         $this->processoAp = '696';
     }
 };

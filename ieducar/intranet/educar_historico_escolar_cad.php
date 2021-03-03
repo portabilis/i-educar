@@ -510,7 +510,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Hist&oacute;rico Escolar";
+        $this->title = "i-Educar - Hist&oacute;rico Escolar";
         $this->processoAp = '578';
     }
 };
