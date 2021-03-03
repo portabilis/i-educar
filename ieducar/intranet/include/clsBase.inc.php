@@ -59,7 +59,9 @@ class clsBase
             if (method_exists($form, 'makeExtra')) {
                 ob_start();
 
+                $corpo .= '<script>';
                 $corpo .= $form->makeExtra();
+                $corpo .= '</script>';
 
                 ob_end_clean();
             }
