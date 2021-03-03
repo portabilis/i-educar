@@ -884,6 +884,11 @@ return new class extends clsCadastro {
         return false;
     }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-quadro-horario-horarios-cad.js');
+    }
+
     public function Formular()
     {
         $this->titulo = 'Servidores - Cadastro de Horários';
