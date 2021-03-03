@@ -1,9 +1,6 @@
 <?php
 
-
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -312,16 +309,14 @@ return new class extends clsListagem
         $this->breadcrumb('Enturmações da matrícula', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Matricula Turma";
+        $this->titulo = 'i-Educar - Matricula Turma';
         $this->processoAp = 578;
     }
 };
-
 
 ?>
 <script type="text/javascript">
