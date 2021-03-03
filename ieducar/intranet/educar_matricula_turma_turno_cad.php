@@ -9,13 +9,6 @@ return new class extends clsCadastro {
     {
         $this->titulo = 'i-Educar - Turno do aluno';
         $this->processoAp = '578';
-        $this->nome_url_cancelar = 'Voltar';
-        $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
-
-        $this->breadcrumb('Turno do aluno', [
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'Início',
-            'educar_index.php' => 'Escola',
-        ]);
     }
 
     public function Inicializar()
@@ -33,6 +26,14 @@ return new class extends clsCadastro {
     {
         $this->campoOculto('cod_matricula', $this->cod_matricula);
         $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
+
+        $this->nome_url_cancelar = 'Voltar';
+        $this->url_cancelar = "educar_matricula_det.php?cod_matricula={$this->cod_matricula}";
+
+        $this->breadcrumb('Turno do aluno', [
+            $_SERVER['SERVER_NAME'] . '/intranet' => 'Início',
+            'educar_index.php' => 'Escola',
+        ]);
 
         $obj_aluno = new clsPmieducarAluno();
         $lst_aluno = $obj_aluno->lista($this->ref_cod_aluno, null, null, null, null, null, null, null, null, null, 1);
