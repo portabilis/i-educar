@@ -1,4 +1,4 @@
-<script>
+
 
   function getInfraPredio(xml_infra_predio)
   {var campoPredio = document.getElementById('ref_cod_infra_predio');
@@ -93,4 +93,4 @@
     campoFuncao.disabled = false;
   }
 
-</script>
+

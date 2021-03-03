@@ -120,7 +120,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->titulo = 'Município';
+        $this->title = 'Município';
         $this->processoAp = 755;
     }
 };

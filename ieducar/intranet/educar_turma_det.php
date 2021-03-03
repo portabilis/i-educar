@@ -493,7 +493,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Turma";
+        $this->title = "i-Educar - Turma";
         $this->processoAp = 586;
     }
 };

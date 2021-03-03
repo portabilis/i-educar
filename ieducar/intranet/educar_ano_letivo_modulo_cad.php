@@ -698,7 +698,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->titulo = 'Ano Letivo Etapa';
+        $this->title = 'Ano Letivo Etapa';
         $this->processoAp = 561;
     }
 };

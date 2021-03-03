@@ -53,7 +53,7 @@ return new class extends clsDetalhe
 
     public function Formular()
     {
-        $this->titulo = "Pais";
+        $this->title = "Pais";
         $this->processoAp = 753;
     }
 };

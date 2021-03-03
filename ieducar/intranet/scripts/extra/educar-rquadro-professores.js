@@ -1,4 +1,4 @@
-<script>
+
 
   function acao2()
   {
@@ -25,4 +25,4 @@
     getEscolaCursoSerie();
   }
 
-</script>
+

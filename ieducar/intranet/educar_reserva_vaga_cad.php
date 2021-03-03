@@ -162,7 +162,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->titulo = 'i-Educar - Reserva Vaga';
+        $this->title = 'i-Educar - Reserva Vaga';
         $this->processoAp = '639';
     }
 };

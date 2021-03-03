@@ -1,4 +1,4 @@
-<script>
+
   function addSel1( campo, valor, texto )
   {
     obj = window.parent.document.getElementById( campo );
@@ -22,4 +22,4 @@
     window.parent.fechaExpansivel('div_dinamico_'+(parent.DOM_divs.length*1-1));
     //window.parent.document.forms[0].submit();
   }
-</script>
+

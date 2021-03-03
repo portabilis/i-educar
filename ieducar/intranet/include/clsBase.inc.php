@@ -57,11 +57,9 @@ class clsBase
             * Insere o HTML/JS Extras que estão nas views
             */
             if (method_exists($form, 'makeExtra')) {
-                ob_start();
-
+                $corpo .= '<script>';
                 $corpo .= $form->makeExtra();
-
-                ob_end_clean();
+                $corpo .= '</script>';
             }
 
             if (method_exists($form, 'getAppendedOutput')) {

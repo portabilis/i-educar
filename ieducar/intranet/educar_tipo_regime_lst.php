@@ -140,7 +140,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Tipo Regime";
+        $this->title = "i-Educar - Tipo Regime";
         $this->processoAp = '568';
     }
 };

@@ -145,7 +145,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->titulo = "Categorias ou níveis do servidor";
+        $this->title = "Categorias ou níveis do servidor";
         $this->processoAp = '829';
     }
 };

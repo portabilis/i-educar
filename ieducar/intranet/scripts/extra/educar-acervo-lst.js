@@ -1,5 +1,5 @@
 
-<script>
+
 
 function getExemplarTipo(xml_exemplar_tipo)
 {
@@ -86,4 +86,4 @@ document.getElementById('ref_cod_biblioteca').onchange = function()
 
 };
 
-</script>
+

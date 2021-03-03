@@ -16,7 +16,6 @@
         "ext-pdo": "*",
         "ext-pgsql": "*",
         "aws/aws-sdk-php-laravel": "^3.4",
-        "cocur/slugify": "^3.1",
         "composer/semver": "^1.4",
         "cossou/jasperphp": "^2.7",
         "dex/composer-plug-and-play": "~0.1",
@@ -45,18 +44,17 @@
         "tooleks/laravel-asset-version": "^1.0"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.2",
         "beyondcode/laravel-dump-server": "^1.0",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "filp/whoops": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.13",
-        "laravel/dusk": "^6.0",
         "laravel/sail": "^0.0.5",
         "laravel/telescope": "^4.0",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
-        "phpunit/phpunit": "^9.3.3"
+        "phpunit/phpunit": "^9.3.3",
+        "brianium/paratest": "^6.2"
     },
     "autoload": {
         "classmap": [
@@ -95,9 +93,7 @@
     "extra": {
         "laravel": {
             "dont-discover": [
-                "laravel/dusk",
-                "laravel/telescope",
-                "barryvdh/laravel-debugbar"
+                "laravel/telescope"
             ]
         }
     },

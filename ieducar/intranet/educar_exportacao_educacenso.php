@@ -85,7 +85,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->titulo = 'i-Educar - Exportação Educacenso';
+        $this->title = 'i-Educar - Exportação Educacenso';
         $this->processoAp = ($_REQUEST['fase2'] == 1 ? 9998845 : 846);
     }
 };

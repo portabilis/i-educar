@@ -233,7 +233,7 @@ return new class extends clsListagem {
 
     public function Formular()
     {
-        $this->titulo = 'i-Educar - Vagas Reservadas';
+        $this->title = 'i-Educar - Vagas Reservadas';
         $this->processoAp = '639';
     }
 };

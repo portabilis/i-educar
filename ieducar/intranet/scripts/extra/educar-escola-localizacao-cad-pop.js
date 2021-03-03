@@ -1,4 +1,4 @@
-<script>
+
 
   Event.observe(window, 'load', Init, false);
 
@@ -7,4 +7,4 @@
     $('ref_cod_instituicao').value = parent.document.getElementById('ref_cod_instituicao').value;
   }
 
-</script>
+

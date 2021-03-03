@@ -504,7 +504,6 @@ return new class extends clsCadastro {
         return $valorPermitirCargaHoraria;
     }
 
-
     public function getOpcoesGradeCurso()
     {
         $db = new clsBanco();
@@ -531,7 +530,7 @@ return new class extends clsCadastro {
 
     public function Formular()
     {
-        $this->titulo = 'i-Educar - Hist&oacute;rico Escolar';
+        $this->title = 'i-Educar - Histórico Escolar';
         $this->processoAp = '578';
     }
 };

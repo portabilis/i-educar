@@ -1,4 +1,4 @@
-<script>
+
 var $autores = $j(document.getElementById('autores[]'));
 console.log($autores);
 if($j('#ref_cod_tipo_autor').val() == 2 || $j('#ref_cod_tipo_autor').val() == 3){
@@ -399,4 +399,4 @@ var getAutores = function() {
 getAutores();
 makeSelect2Autores();
 
-</script>
+

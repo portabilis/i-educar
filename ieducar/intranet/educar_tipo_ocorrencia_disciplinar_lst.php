@@ -130,7 +130,7 @@ return new class extends clsListagem
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Tipo Ocorr&ecirc;ncia Disciplinar";
+        $this->title = "i-Educar - Tipo Ocorr&ecirc;ncia Disciplinar";
         $this->processoAp = '580';
     }
 };

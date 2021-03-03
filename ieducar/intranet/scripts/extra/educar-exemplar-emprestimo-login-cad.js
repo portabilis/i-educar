@@ -1,4 +1,4 @@
-<script>
+
   function acao2()
   {
     if(!acao())
@@ -107,4 +107,4 @@
 
   }
 
-    </script>
+

@@ -1,4 +1,4 @@
-<script>
+
   if ( document.getElementById( 'ref_cod_instituicao' ) ) {
   var ref_cod_instituicao = document.getElementById( 'ref_cod_instituicao' );
   ref_cod_instituicao.onchange = function() { getEscola(); getBiblioteca(1); getClienteTipo(); }
@@ -11,4 +11,4 @@
   var ref_cod_biblioteca = document.getElementById( 'ref_cod_biblioteca' );
   ref_cod_biblioteca.onchange = function() { getClienteTipo(); }
 }
-</script>
+

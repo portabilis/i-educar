@@ -1,4 +1,4 @@
-<script>
+
 document.getElementById('ref_cod_biblioteca').onchange = function()
 {
     ajaxBiblioteca();
@@ -53,4 +53,4 @@ function requisitaSenha(xml)
 
     }
 
-</script>
+

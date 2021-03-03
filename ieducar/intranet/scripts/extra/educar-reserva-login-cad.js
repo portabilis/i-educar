@@ -1,4 +1,4 @@
-<script>
+
 
   document.getElementById('login_').setAttribute('autocomplete','off');
   document.getElementById('login_').onkeypress = function(e)
@@ -74,4 +74,4 @@
     xml_biblioteca.envia( "educar_biblioteca_xml.php?bib="+campoBiblioteca );
   }
 
-</script>
+

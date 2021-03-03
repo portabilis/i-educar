@@ -1,4 +1,4 @@
-<script>
+
 
   function getCurso(xml_curso)
   {
@@ -157,4 +157,4 @@
     xml_serie_.envia( "educar_serie_xml.php?cur="+campoCurso_ )
   };
 
-</script>
+
