@@ -1626,6 +1626,15 @@ return new class extends clsCadastro
 
     }
 
+    public function makeExtra()
+    {
+        return str_replace(
+            '#modulos',
+            $this->gerarJsonDosModulos(),
+            file_get_contents(__DIR__ . '/scripts/extra/educar-turma-cad.js')
+        );
+    }
+
     public function Formular()
     {
         $this->titulo = "i-Educar - Turma";

@@ -1,6 +1,6 @@
 
 <script type='text/javascript'>
-  var modulosDisponiveis = <?php echo $miolo->gerarJsonDosModulos(); ?>;
+  var modulosDisponiveis = #modulos;
 
   function getComodo() {
   var campoEscola = document.getElementById('ref_cod_escola').value;
