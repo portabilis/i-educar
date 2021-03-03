@@ -3,10 +3,7 @@
 use App\Menu;
 use App\Models\State;
 
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $cod_instituicao;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -446,16 +443,14 @@ return new class extends clsCadastro
     public function Excluir()
     {
         $this->simpleRedirect('educar_instituicao_lst.php');
-
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Instituição";
+        $this->titulo = 'i-Educar - Instituição';
         $this->processoAp = '559';
     }
 };
-
 
 ?>
 <script type="text/javascript">
