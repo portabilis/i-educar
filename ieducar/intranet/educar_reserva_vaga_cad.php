@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referência a usuário da sessão
      *
@@ -155,16 +153,14 @@ return new class extends clsCadastro
         $this->mensagem = 'Reserva de Vaga n&atilde;o realizada.<br>';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Reserva Vaga";
+        $this->titulo = 'i-Educar - Reserva Vaga';
         $this->processoAp = '639';
     }
 };
-
 
 ?>
 
