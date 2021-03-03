@@ -168,6 +168,11 @@ return new class extends clsCadastro
 
     }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/edecar-subniveis-cad.js');
+    }
+
     public function Formular()
     {
         $this->titulo = "Nivel";
