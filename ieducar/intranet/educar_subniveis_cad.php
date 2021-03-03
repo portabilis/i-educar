@@ -3,9 +3,7 @@
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -165,41 +163,18 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
 
         return false;
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-subniveis-cad.js');
     }
 
     public function Formular()
     {
-        $this->titulo = "Nivel";
+        $this->titulo = 'Nivel';
         $this->processoAp   = '829';
         $this->renderMenu   = false;
         $this->renderMenuSuspenso = false;
     }
 };
-
-
-?>
-
-<script type="text/javascript">
-
-    function setOrdem(id)
-    {
-        document.getElementById('nr_nivel['+(id)+']').value = (id+1);
-    }
-
-    tab_add_1.afterAddRow = function() {
-        setOrdem(this.id-1);
-    }
-
-    tab_add_1.afterRemoveRow = function() {
-        reordena();
-    }
-
-    function reordena()
-    {
-        for(var ct=0;ct < tab_add_1.getId();ct++)
-        {
-            setOrdem(ct);
-        }
-    }
-</script>
