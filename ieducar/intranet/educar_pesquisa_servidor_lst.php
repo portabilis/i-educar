@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Session;
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -263,12 +261,11 @@ return new class extends clsListagem
         );
         $obj_permissoes = new clsPermissoes();
         $this->largura = '100%';
-
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Servidor";
+        $this->titulo = 'i-Educar - Servidor';
         $this->processoAp = '0';
         $this->renderMenu = false;
         $this->renderMenuSuspenso = false;
