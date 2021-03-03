@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_serie;
@@ -398,16 +396,14 @@ return new class extends clsCadastro
         foreach ($regrasSerieAnoDeletar as $regra) {
             $serieAnoMapper->delete($regra);
         }
-
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Série";
+        $this->titulo = 'i-Educar - Série';
         $this->processoAp = '583';
     }
 };
-
 
 ?>
 <script type="text/javascript">
