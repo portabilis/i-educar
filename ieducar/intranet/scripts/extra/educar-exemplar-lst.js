@@ -1,4 +1,4 @@
-<script>
+
 
   function getExemplarTipo(xml_exemplar_tipo)
   {
@@ -126,4 +126,4 @@
     pesquisa_valores_popless('educar_pesquisa_acervo_lst.php?campo1=ref_cod_acervo&ref_cod_bilioteca=' + biblioteca , 'ref_cod_acervo')
   }
 
-</script>
+

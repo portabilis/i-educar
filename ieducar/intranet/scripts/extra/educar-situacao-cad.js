@@ -1,4 +1,4 @@
-<script>
+
 
   document.getElementById('ref_cod_biblioteca').onchange = function()
   {
@@ -44,4 +44,4 @@
     return;
     document.forms[0].submit();
   }
-    </script>
+

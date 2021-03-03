@@ -1,4 +1,4 @@
-<script>
+
   function getSerie()
   {
     var campoCurso = document.getElementById('ref_cod_curso').value;
@@ -27,4 +27,4 @@
 
   }
     getSerie();
-</script>
+

@@ -1,4 +1,4 @@
-<script>
+
 
   document.getElementById('ref_cod_escola').onchange = function () {
   getEscolaCurso();
@@ -12,4 +12,4 @@
   getTurma();
 };
 
-</script>
+

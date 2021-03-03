@@ -1,4 +1,4 @@
-<script>
+
 
   document.getElementById('ref_cod_escola').onchange = function()
   {
@@ -10,4 +10,4 @@
     getEscolaCursoSerie();
   }
 
-</script>
+

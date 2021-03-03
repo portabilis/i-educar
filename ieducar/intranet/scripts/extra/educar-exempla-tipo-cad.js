@@ -1,5 +1,5 @@
 
-<script>
+
 
   var scriptValida = "";
   var retorno = 1;
@@ -111,7 +111,7 @@
     getClienteTipo();
   }
 
-    </script>
+
     <style>
     .dias
   {

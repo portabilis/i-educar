@@ -1,4 +1,4 @@
-<script>
+
 
   function addVal1( campo, valor )
   {
@@ -16,4 +16,4 @@
 
   }
   }
-</script>
+

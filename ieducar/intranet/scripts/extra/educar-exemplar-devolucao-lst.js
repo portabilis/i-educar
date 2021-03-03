@@ -1,4 +1,4 @@
-<script>
+
 
   function pesquisa_cliente()
   {
@@ -12,4 +12,4 @@
     pesquisa_valores_popless('educar_pesquisa_obra_lst.php?campo1=ref_cod_acervo&campo2=nm_obra&campo3='+campoBiblioteca)
   }
 
-</script>
+

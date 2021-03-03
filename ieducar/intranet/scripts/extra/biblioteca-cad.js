@@ -1,4 +1,4 @@
-<script>
+
 function getUsuario(xml_usuario)
 {
     var campoUsuario = document.getElementById('ref_cod_usuario');
@@ -44,4 +44,4 @@ document.getElementById('ref_cod_escola').onchange = function()
     var xml_usuario = new ajax( getUsuario );
     xml_usuario.envia( "educar_usuario_xml.php?esc="+campoEscola );
 }
-</script>
+
