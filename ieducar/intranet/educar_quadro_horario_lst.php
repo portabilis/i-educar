@@ -2,9 +2,7 @@
 
 use iEducar\Support\Navigation\Breadcrumb;
 
-
-return new class
-{
+return new class {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -265,16 +263,14 @@ return new class
         }
 
         return $valores;
-
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Quadro de Horário";
+        $this->titulo = 'i-Educar - Quadro de Horário';
         $this->processoAp = '641';
     }
 };
-
 
 ?>
 <script type="text/javascript">
