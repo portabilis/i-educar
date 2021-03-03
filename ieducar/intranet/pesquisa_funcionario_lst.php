@@ -2,11 +2,7 @@
 
 use Illuminate\Support\Facades\Session;
 
-
-
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public $chave_campo;
     public $importarCpf;
 
@@ -132,12 +128,11 @@ return new class extends clsListagem
 
         // Define Largura da Página
         $this->largura = '100%';
-
     }
 
     public function Formular()
     {
-        $this->titulo = "Pesquisa por Funcion&aacute;rio!";
+        $this->titulo = 'Pesquisa por Funcion&aacute;rio!';
         $this->processoAp         = '0';
         $this->renderMenu         = false;
         $this->renderMenuSuspenso = false;
