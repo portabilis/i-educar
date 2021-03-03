@@ -1,14 +1,11 @@
 <?php
 
-use App\Services\FileService;
 use App\Models\EmployeeWithdrawal;
+use App\Services\FileService;
 use App\Services\UrlPresigner;
 use App\Support\View\Employee\EmployeeReturn;
 
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
 
     /**
      * Referência a usuário da sessão
@@ -679,12 +676,11 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->titulo = "Servidores - Servidor Afastamento";
+        $this->titulo = 'Servidores - Servidor Afastamento';
         $this->processoAp = '635';
     }
 };
