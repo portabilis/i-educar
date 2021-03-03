@@ -1,10 +1,6 @@
 <?php
 
-
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $p_cod_pessoa_fj;
     public $f_senha;
     public $f_senha2;
@@ -76,33 +72,18 @@ return new class extends clsCadastro
 
     public function Editar()
     {
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/trocar-senha-pop.js');
     }
 
     public function Formular()
     {
-        $this->title = "Usu&aacute;rios";
+        $this->title = 'Usuários';
         $this->processoAp   = '0';
         $this->renderMenu   = false;
         $this->renderMenuSuspenso = false;
     }
 };
-
-?>
-
-<script type="text/javascript">
-function acao2()
-{
-  if ($F('f_senha').length > 7) {
-    if ($F('f_senha') == $F('f_senha2')) {
-      acao();
-    }
-    else {
-      alert('As senhas devem ser iguais');
-    }
-  }
-  else {
-    alert('A sua nova senha deverá conter pelo menos oito caracteres');
-  }
-}
-</script>

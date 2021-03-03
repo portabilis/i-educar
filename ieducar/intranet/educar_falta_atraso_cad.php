@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_falta_atraso;
@@ -303,30 +301,16 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-falta-atraso-cad.js');
     }
 
     public function Formular()
     {
-        $this->title = "Servidores - Falta Atraso";
+        $this->title = 'Servidores - Falta Atraso';
         $this->processoAp = 635;
     }
 };
-
-
-?>
-<script type="text/javascript">
-var obj_tipo = document.getElementById('tipo');
-
-obj_tipo.onchange = function()
-{
-  if (document.getElementById('tipo').value == 1) {
-    setVisibility('tr_qtd_horas', true);
-    setVisibility('tr_qtd_min', true);
-  }
-  else if (document.getElementById( 'tipo' ).value == 2) {
-    setVisibility('tr_qtd_horas', false);
-    setVisibility('tr_qtd_min', false);
-  }
-}
-</script>

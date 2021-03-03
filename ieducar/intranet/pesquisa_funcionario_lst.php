@@ -2,11 +2,7 @@
 
 use Illuminate\Support\Facades\Session;
 
-
-
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public $chave_campo;
     public $importarCpf;
 
@@ -132,26 +128,13 @@ return new class extends clsListagem
 
         // Define Largura da Página
         $this->largura = '100%';
-
     }
 
     public function Formular()
     {
-        $this->title = "Pesquisa por Funcion&aacute;rio!";
+        $this->title = 'Pesquisa por Funcion&aacute;rio!';
         $this->processoAp         = '0';
         $this->renderMenu         = false;
         $this->renderMenuSuspenso = false;
     }
 };
-
-
-?>
-<script type="text/javascript"/">
-/*
-try{
-window.onload = setTimeout("document.forms[0].elements[1].focus()", 1000);//setFocus('campo_busca');
-}catch(e){
-
-}
-*/
-</script>

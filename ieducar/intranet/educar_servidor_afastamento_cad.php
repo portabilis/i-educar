@@ -1,14 +1,11 @@
 <?php
 
-use App\Services\FileService;
 use App\Models\EmployeeWithdrawal;
+use App\Services\FileService;
 use App\Services\UrlPresigner;
 use App\Support\View\Employee\EmployeeReturn;
 
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
 
     /**
      * Referência a usuário da sessão
@@ -679,43 +676,16 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
 
         return false;
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-servidor-afastamento-cad.js');
     }
 
     public function Formular()
     {
-        $this->title = "Servidores - Servidor Afastamento";
+        $this->title = 'Servidores - Servidor Afastamento';
         $this->processoAp = '635';
     }
 };
-
-
-?>
-
-<script type="text/javascript">
-    if (document.getElementById('btn_enviar')) {
-        document.getElementById('btn_enviar').onclick = function() { validaFormulario(); }
-    }
-
-    function validaFormulario() {
-        var c    = 0;
-        var loop = true;
-
-        do {
-            if (document.getElementById('ref_cod_servidor_substituto_' + c + '_')) {
-                if (document.getElementById('ref_cod_servidor_substituto_' + c + '_').value == '') {
-                    alert('Você deve informar um substituto para cada horário.');
-
-                    return;
-                }
-            }
-            else {
-                loop = false;
-            }
-
-            c++;
-        } while (loop);
-
-        acao();
-    }
-</script>

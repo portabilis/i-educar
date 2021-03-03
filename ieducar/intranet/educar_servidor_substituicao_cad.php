@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_servidor_alocacao;
@@ -271,26 +269,16 @@ return new class extends clsCadastro
     public function Excluir()
     {
         return false;
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-servidor-substituicao-cad.js');
     }
 
     public function Formular()
     {
-        $this->title = "Servidores - Servidor Substituição";
+        $this->title = 'Servidores - Servidor Substituição';
         $this->processoAp = 635;
     }
 };
-
-
-?>
-<script type="text/javascript">
-function acao2()
-{
-  if (document.getElementById('ref_cod_servidor_todos').value == ''){
-    alert("Selecione um servidor substituto!");
-    return false;
-  }
-
-  acao();
-}
-</script>

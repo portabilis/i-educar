@@ -2,9 +2,7 @@
 
 use App\Services\iDiarioService;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $ref_cod_instituicao;
@@ -687,18 +685,20 @@ return new class extends clsCadastro
         }
 
         return true;
+    }
 
+    public function makeExtra()
+    {
+        return str_replace(
+            '#modulos',
+            $this->gerarJsonDosModulos(),
+            file_get_contents(__DIR__ . '/scripts/extra/educar-ano-letivo-modulo-cad.js')
+        );
     }
 
     public function Formular()
     {
-        $this->title = "Ano Letivo Etapa";
+        $this->title = 'Ano Letivo Etapa';
         $this->processoAp = 561;
     }
 };
-
-
-?>
-<script type="text/javascript">
-    var modulosDisponiveis = <?php echo $miolo->gerarJsonDosModulos(); ?>;
-</script>

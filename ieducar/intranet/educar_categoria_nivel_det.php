@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
      *
@@ -78,24 +76,21 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhes da categoria/nível', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
+    }
 
+    public function makeExtra()
+    {
+        return str_replace(
+            '#cod_categoria_nivel',
+            $_GET['cod_categoria_nivel'],
+            file_get_contents(__DIR__ . '/scripts/extra/educar-categoria-nivel-det.js')
+        );
     }
 
     public function Formular()
     {
-        $this->title = "Servidores - Detalhe Categoria Nível";
+        $this->title = 'Servidores - Detalhe Categoria Nível';
         $this->processoAp = '829';
     }
 };
 
-
-?>
-
-<script type="text/javascript">
-    function popless(nivel)
-    {
-        var campoCategoria = <?=$_GET['cod_categoria_nivel'];?>;
-        pesquisa_valores_popless('educar_subniveis_cad.php?ref_cod_categoria='+campoCategoria+'&ref_cod_nivel='+nivel, '');
-    }
-
-</script>
