@@ -303,26 +303,14 @@ return new class extends clsCadastro {
         return false;
     }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-falta-atraso-cad.js');
+    }
+
     public function Formular()
     {
         $this->titulo = 'Servidores - Falta Atraso';
         $this->processoAp = 635;
     }
 };
-
-?>
-<script type="text/javascript">
-var obj_tipo = document.getElementById('tipo');
-
-obj_tipo.onchange = function()
-{
-  if (document.getElementById('tipo').value == 1) {
-    setVisibility('tr_qtd_horas', true);
-    setVisibility('tr_qtd_min', true);
-  }
-  else if (document.getElementById( 'tipo' ).value == 2) {
-    setVisibility('tr_qtd_horas', false);
-    setVisibility('tr_qtd_min', false);
-  }
-}
-</script>
