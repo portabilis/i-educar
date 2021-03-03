@@ -13,9 +13,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_turma;
@@ -1623,7 +1621,6 @@ return new class extends clsCadastro
         }
 
         return null;
-
     }
 
     public function makeExtra()
@@ -1637,7 +1634,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Turma";
+        $this->titulo = 'i-Educar - Turma';
         $this->processoAp = 586;
     }
 };
