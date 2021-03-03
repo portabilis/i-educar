@@ -1032,6 +1032,11 @@ JS;
         return $college->ies_id . ' - ' . $college->nome;
     }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-servidor-cad.js');
+    }
+
     public function Formular()
     {
         $this->titulo = 'Servidores - Servidor';
