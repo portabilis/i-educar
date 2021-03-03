@@ -246,6 +246,11 @@ return new class extends clsCadastro
 
     }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-servidor-disciplina-lst.js');
+    }
+
     public function Formular()
     {
         $this->titulo = "i-Educar - Servidor Disciplina";
