@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Session;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_servidor;
@@ -243,7 +241,6 @@ return new class extends clsCadastro
     public function Excluir()
     {
         return false;
-
     }
 
     public function makeExtra()
@@ -253,7 +250,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Servidor Disciplina";
+        $this->titulo = 'i-Educar - Servidor Disciplina';
         $this->processoAp         = 0;
         $this->renderMenu         = false;
         $this->renderMenuSuspenso = false;
