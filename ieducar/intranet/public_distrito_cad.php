@@ -4,9 +4,7 @@ use App\Models\District;
 use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     use InteractWithDatabase, SelectOptions;
 
     public $idmun;
@@ -131,7 +129,6 @@ return new class extends clsCadastro
         }
 
         return $this->delete($this->iddis);
-
     }
 
     public function makeExtra()
@@ -141,7 +138,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->titulo = "Distrito";
+        $this->titulo = 'Distrito';
         $this->processoAp = 759;
     }
 };
