@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -320,33 +318,16 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
 
         return false;
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-biblioteca-dados-cad.js');
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Dados Biblioteca";
+        $this->titulo = 'i-Educar - Dados Biblioteca';
         $this->processoAp = '629';
     }
 };
-
-
-?>
-
-<script type='text/javascript'>
-document.getElementById('event_incluir_feriado').onclick = incluirFeriado;
-
-function incluirFeriado(){
-  document.getElementById('incluir_feriado').value = 'S';
-  document.getElementById('tipoacao').value = '';
-  acao();
-}
-
-document.getElementById('event_incluir_dia_semana').onclick = incluirDiaSemana;
-
-function incluirDiaSemana(){
-  document.getElementById('incluir_dia_semana').value = 'S';
-  document.getElementById('tipoacao').value = '';
-  acao();
-}
-</script>
