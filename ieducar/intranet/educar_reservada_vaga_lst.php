@@ -226,25 +226,14 @@ return new class extends clsListagem {
     ]);
     }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-reserva-vaga-lst.js');
+    }
+
     public function Formular()
     {
         $this->titulo = 'i-Educar - Vagas Reservadas';
         $this->processoAp = '639';
     }
 };
-
-?>
-
-<script type="text/javascript">
-document.getElementById('ref_cod_escola').onchange = function() {
-  getEscolaCurso();
-}
-
-document.getElementById('ref_cod_curso').onchange = function() {
-  getEscolaCursoSerie();
-}
-
-function pesquisa_aluno() {
-  pesquisa_valores_popless('educar_pesquisa_aluno.php')
-}
-</script>
