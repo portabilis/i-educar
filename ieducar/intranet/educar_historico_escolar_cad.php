@@ -3,10 +3,7 @@
 use App\Models\Country;
 use App\Models\State;
 
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $ref_cod_aluno;
 
     public $sequencial;
@@ -505,12 +502,11 @@ return new class extends clsCadastro
         $valorPermitirCargaHoraria = dbBool($detalhe_instituicao['permitir_carga_horaria']);
 
         return $valorPermitirCargaHoraria;
-
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Hist&oacute;rico Escolar";
+        $this->titulo = 'i-Educar - Hist&oacute;rico Escolar';
         $this->processoAp = '578';
     }
 };
@@ -538,5 +534,3 @@ function validaControlePosicaoHistorico()
 
     return dbBool($lst[0]['controlar_posicao_historicos']);
 }
-
-
