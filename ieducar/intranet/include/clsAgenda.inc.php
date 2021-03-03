@@ -1,9 +1,5 @@
 <?php
 
-if( file_exists("include/juris/jurisGeral.inc.php") )
-{
-    }
-
 class clsAgenda
 {
     var $cod_pessoa_dono;

@@ -194,7 +194,7 @@ class indice extends clsCadastro
         foreach ($lstMatricula as $matricula) {
             $alunoInep = $objAluno->verificaInep($matricula['ref_cod_aluno']);
             if (!$alunoInep && $exigeInep) {
-                $alunosSemInep[] = strtoupper($matricula['nome']);
+                $alunosSemInep[] = mb_strtoupper($matricula['nome']);
             }
         }
 
@@ -209,7 +209,7 @@ class indice extends clsCadastro
         $alunos = [];
 
         foreach ($alunosComSaidaDaEscola as $a) {
-            $alunos[] = strtoupper($a['nome']);
+            $alunos[] = mb_strtoupper($a['nome']);
         }
 
         return $alunos;

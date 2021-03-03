@@ -21,18 +21,13 @@ services:
       - redis
     environment:
       PGPASSWORD: ieducar
-      XDEBUG_IDEKEY: xdebug
-      XDEBUG_REMOTE_HOST: 127.0.0.1
-      XDEBUG_REMOTE_PORT: 9000
-      XDEBUG_REMOTE_ENABLE: 0
-      XDEBUG_AUTOSTART: 0
     working_dir: /var/www/ieducar
     volumes:
       - ./:/var/www/ieducar
 
   postgres:
     container_name: ieducar-postgres
-    image: postgres:9.5-alpine
+    image: postgres:alpine
     environment:
       POSTGRES_DB: ieducar
       POSTGRES_USER: ieducar

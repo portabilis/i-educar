@@ -583,7 +583,7 @@ class AlunoController extends ApiCoreController
         $aluno = new clsPmieducarAluno();
         $aluno->cod_aluno = $id;
 
-        $alunoEstadoId = strtoupper($this->getRequest()->aluno_estado_id);
+        $alunoEstadoId = mb_strtoupper($this->getRequest()->aluno_estado_id);
         $alunoEstadoId = str_replace('.', '', $alunoEstadoId);
         $alunoEstadoId = str_replace('-', '', $alunoEstadoId);
 

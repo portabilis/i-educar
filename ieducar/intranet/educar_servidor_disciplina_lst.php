@@ -47,7 +47,6 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Disciplina');
     $this->processoAp         = 0;
-    $this->renderBanner       = FALSE;
     $this->renderMenu         = FALSE;
     $this->renderMenuSuspenso = FALSE;
   }
@@ -150,11 +149,8 @@ class indice extends clsCadastro
       }
     }
 
-    $obj_disciplina = new clsPmieducarDisciplina();
-    $obj_disciplina->setOrderby('nm_disciplina');
-    $lst_opcoes = array();
-    $arr_valores = array();
-
+        $lst_opcoes = [];
+        $arr_valores = [];
 
     if ($this->cursos_disciplina) {
       foreach ($this->cursos_disciplina as $curso => $disciplinas) {
