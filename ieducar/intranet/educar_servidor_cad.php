@@ -9,9 +9,7 @@ use iEducar\Support\View\SelectOptions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
     public $cod_servidor;
     public $ref_cod_instituicao;
@@ -1032,12 +1030,11 @@ JS;
         $college = DB::table('modules.educacenso_ies')->where('id', $collegeId)->get(['nome', 'ies_id'])->first();
 
         return $college->ies_id . ' - ' . $college->nome;
-
     }
 
     public function Formular()
     {
-        $this->titulo = "Servidores - Servidor";
+        $this->titulo = 'Servidores - Servidor';
         $this->processoAp = 635;
     }
 };
