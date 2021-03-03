@@ -4,9 +4,7 @@ use App\Models\LogUnification;
 use iEducar\Modules\Unification\StudentLogUnification;
 use Illuminate\Support\Facades\DB;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
     public $tabela_alunos = [];
     public $aluno_duplicado;
@@ -109,7 +107,6 @@ return new class extends clsCadastro
         $log->save();
 
         return $log->id;
-
     }
 
     public function makeExtra()
@@ -119,7 +116,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Unifica&ccedil;&atilde;o de alunos";
+        $this->titulo = 'i-Educar - Unifica&ccedil;&atilde;o de alunos';
         $this->processoAp = '999847';
     }
 };
