@@ -1,9 +1,6 @@
 <?php
 
-
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -312,29 +309,16 @@ return new class extends clsListagem
         $this->breadcrumb('Enturmações da matrícula', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
+    }
 
+    public function makeExtra()
+    {
+        return file_get_contents(__DIR__ . '/scripts/extra/educar-matricula-turma-lst.js');
     }
 
     public function Formular()
     {
-        $this->titulo = "i-Educar - Matricula Turma";
+        $this->titulo = 'i-Educar - Matricula Turma';
         $this->processoAp = 578;
     }
 };
-
-
-?>
-<script type="text/javascript">
-    function enturmar(ref_cod_escola, ref_cod_serie, ref_cod_matricula, ref_cod_turma, ano_letivo) {
-        document.formcadastro.method = 'post';
-        document.formcadastro.action = 'educar_matricula_turma_det.php';
-
-        document.formcadastro.ref_cod_escola.value = ref_cod_escola;
-        document.formcadastro.ref_cod_serie.value = ref_cod_serie;
-        document.formcadastro.ref_cod_matricula.value = ref_cod_matricula;
-        document.formcadastro.ref_cod_turma.value = ref_cod_turma;
-        document.formcadastro.ano_letivo.value = ano_letivo;
-
-        document.formcadastro.submit();
-    }
-</script>
