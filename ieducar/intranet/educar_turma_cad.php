@@ -927,8 +927,15 @@ class indice extends clsCadastro
                 ];
             }
 
-            $service = new MultiGradesService($schoolClassGrades);
-            $service->storeSchoolClassGrade();
+            $service = new MultiGradesService;
+
+            try {
+                $service->storeSchoolClassGrade($schoolClass, $schoolClassGrades);
+            } catch (ValidationException $exception) {
+                $this->mensagem = $exception->errors()['grades'][0];
+
+                return false;
+            }
         }
 
         if (!$cadastrou) {
@@ -1032,15 +1039,32 @@ class indice extends clsCadastro
             ];
         }
 
-        $service = new MultiGradesService($schoolClassGrades);
+        $service = new MultiGradesService();
         $schoolClass = LegacySchoolClass::find($this->cod_turma);
 
-        if ($turmaDetalhe['multiseriada'] == 1 && $this->multiseriada == 0) {
-            $service->deleteAllGradesOfSchoolClass($schoolClass);
+        $mudouParaMultisseriada = $turmaDetalhe['multiseriada'] == 0 && $this->multiseriada == 1;
+        $mudouParaTurmaSerieUnica = $turmaDetalhe['multiseriada'] == 1 && $this->multiseriada == 0;
+        $naoManteveSerieOriginal = !in_array($turmaDetalhe['ref_ref_cod_serie'], $this->mult_serie_id);
+
+        if ($mudouParaMultisseriada && $naoManteveSerieOriginal && $possuiAlunosVinculados) {
+            DB::rollBack();
+            $this->mensagem = 'Não foi possível alterar a turma para ser multisseriada, pois a série original possui matrículas vinculadas.';
+            return false;
         }
 
-        if ($this->multiseriada) {
-            $service->storeSchoolClassGrade();
+        try {
+             if ($this->multiseriada) {
+                $service->storeSchoolClassGrade($schoolClass, $schoolClassGrades);
+            }
+            
+            if ($mudouParaTurmaSerieUnica) {
+                $service->deleteAllGradesOfSchoolClass($schoolClass, [$this->ref_cod_serie]);
+            }
+        } catch (ValidationException $exception) {
+            DB::rollBack();
+            $this->mensagem = $exception->errors()['grades'][0];
+
+            return false;
         }
 
         if (!$editou) {

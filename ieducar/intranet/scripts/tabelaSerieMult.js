@@ -14,6 +14,10 @@ $j('#btn_add_tab_add_1').click(function(){
     let quantidadeDeCursos = $j('select[name^="mult_curso_id"]').length;
     let idUltimoSelectCurso = $j('select[name^="mult_curso_id"]')[quantidadeDeCursos - 1].id;
     let ultimoCurso = $j('select[id="'+idUltimoSelectCurso+'"]');
+    if (opcoesCurso > 0) {
+        ultimoCurso.empty();
+        ultimoCurso.append('<option value="">Selecione um curso</option>');
+    }
     $j.each(opcoesCurso, function(key, curso) {
         ultimoCurso.append('<option value="' + key + '">' + curso + '</option>');
     });
@@ -75,7 +79,7 @@ function configuraCamposExibidos() {
         $j('#tr_ref_cod_serie').show();
         $j('#tr_turma_serie').hide();
         $j("[name^=tr_turma_serie]").remove();
-        $j('#tr_disciplinas_ td:nth-child(1)').html('Componentes curriculares definidos em séries da escola');
+        $j('#tr_disciplinas_ td:first').html('Componentes curriculares definidos em séries da escola');
     }
 }
 
