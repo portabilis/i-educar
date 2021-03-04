@@ -936,6 +936,8 @@ class indice extends clsCadastro
                 $service->storeSchoolClassGrade($schoolClass, $schoolClassGrades);
             } catch (ValidationException $exception) {
                 $this->mensagem = $exception->errors()['grades'][0];
+
+                return false;
             }
         }
 
@@ -1047,19 +1049,24 @@ class indice extends clsCadastro
         $mudouParaTurmaSerieUnica = $turmaDetalhe['multiseriada'] == 1 && $this->multiseriada == 0;
         $naoManteveSerieOriginal = !in_array($turmaDetalhe['ref_ref_cod_serie'], $this->mult_serie_id);
 
+        if ($mudouParaMultisseriada && $naoManteveSerieOriginal && $possuiAlunosVinculados) {
+            DB::rollBack();
+            $this->mensagem = 'Não foi possível alterar a turma para ser multisseriada, pois a série original possui matrículas vinculadas.';
+            return false;
+        }
+
         try {
-            if ($mudouParaMultisseriada && $naoManteveSerieOriginal && $possuiAlunosVinculados) {
-                $this->mensagem = 'Não foi possível alterar a turma para ser multisseriada, pois a série original possui matrículas vinculadas.';
-                DB::rollBack();
-                return false;
-            } elseif ($this->multiseriada) {
+             if ($this->multiseriada) {
                 $service->storeSchoolClassGrade($schoolClass, $schoolClassGrades);
-            } elseif ($mudouParaTurmaSerieUnica) {
+            }
+            
+            if ($mudouParaTurmaSerieUnica) {
                 $service->deleteAllGradesOfSchoolClass($schoolClass, [$this->ref_cod_serie]);
             }
         } catch (ValidationException $exception) {
-            $this->mensagem = $exception->errors()['grades'][0];
             DB::rollBack();
+            $this->mensagem = $exception->errors()['grades'][0];
+
             return false;
         }
 
