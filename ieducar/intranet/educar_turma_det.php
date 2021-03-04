@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacySchoolClassGrade;
 
 class clsIndexBase extends clsBase
 {
@@ -159,22 +160,24 @@ class indice extends clsDetalhe
             );
         }
 
-        if ($registro['ref_cod_curso']) {
-            $this->addDetalhe(
-                [
-                    'Curso',
-                    $registro['ref_cod_curso']
-                ]
-            );
-        }
+        if ($registro['multiseriada'] == 1) {
+            $seriesDaTurma = LegacySchoolClassGrade::query()
+                ->where('turma_id', $this->cod_turma)
+                ->with('grade')
+                ->get()
+                ->map(function($turmaSerie){
+                    return $turmaSerie->grade->nm_serie;
+                })
+                ->implode('</br>');
 
-        if ($registro['ref_ref_cod_serie']) {
-            $this->addDetalhe(
-                [
-                    'Série',
-                    $registro['ref_ref_cod_serie']
-                ]
-            );
+            $this->addDetalhe(['Multisseriada', 'Sim']);
+            $this->addDetalhe(['Curso principal', $registro['ref_cod_curso']]);
+            $this->addDetalhe(['Série principal', $registro['ref_ref_cod_serie']]);
+            $this->addDetalhe(['Séries da turma', $seriesDaTurma]);
+        } else {
+            $this->addDetalhe(['Multisseriada', 'Não']);
+            $this->addDetalhe(['Curso', $registro['ref_cod_curso']]);
+            $this->addDetalhe(['Série', $registro['ref_ref_cod_serie']]);
         }
 
         if ($registro['ref_cod_regente']) {
@@ -240,21 +243,6 @@ class indice extends clsDetalhe
                 dbBool($registro['visivel']) ? 'Ativo' : 'Desativo'
             ]
         );
-
-        if ($registro['multiseriada'] == 1) {
-            if ($registro['multiseriada'] == 1) {
-                $registro['multiseriada'] = 'sim';
-            } else {
-                $registro['multiseriada'] = 'não';
-            }
-
-            $this->addDetalhe(array('Multi-Seriada', $registro['multiseriada']));
-
-            $obj_serie_mult = new clsPmieducarSerie($registro['ref_ref_cod_serie_mult']);
-            $det_serie_mult = $obj_serie_mult->detalhe();
-
-            $this->addDetalhe(array('Série Multi-Seriada', $det_serie_mult['nm_serie']));
-        }
 
         if ($padrao_ano_escolar == 1) {
             if ($registro['hora_inicial']) {

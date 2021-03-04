@@ -232,6 +232,11 @@ class LegacySchoolClass extends Model
         return $this->hasMany(LegacySchoolClassStage::class, 'ref_cod_turma', 'cod_turma');
     }
 
+    public function multigrades()
+    {
+        return $this->hasMany(LegacySchoolClassGrade::class, 'turma_id');
+    }
+
     /**
      * Retorna os dias da semana em um array
      *
