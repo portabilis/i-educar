@@ -37,7 +37,7 @@ class FilaUnicaController extends ApiCoreController
                   FROM pmieducar.aluno
                  INNER JOIN cadastro.pessoa ON (pessoa.idpes = aluno.ref_idpes)
                  INNER JOIN cadastro.fisica ON (fisica.idpes = aluno.ref_idpes)
-                 INNER JOIN cadastro.documento ON (documento.idpes = aluno.ref_idpes)
+                  LEFT JOIN cadastro.documento ON (documento.idpes = aluno.ref_idpes)
                   LEFT JOIN person_has_place php ON php.person_id = aluno.ref_idpes
                   LEFT JOIN addresses ad ON ad.id = php.place_id
                   WHERE
