@@ -10,7 +10,7 @@ class NameValidator implements EducacensoValidator
 
     public function __construct(string $name)
     {
-        $this->name = strtoupper($name);
+        $this->name = mb_strtoupper($name);
     }
 
     /**

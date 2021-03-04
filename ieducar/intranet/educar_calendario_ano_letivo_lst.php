@@ -231,7 +231,7 @@ class indice extends clsListagem
                           /**
                            * @todo CoreExt_Enum?
                            */
-                          $tipo = strtoupper($det_motivo['tipo']) == 'E' ? 'Dia Extra-Letivo' : 'Dia Não Letivo';
+                          $tipo = mb_strtoupper($det_motivo['tipo']) == 'E' ? 'Dia Extra-Letivo' : 'Dia Não Letivo';
 
                           // Busca pelas turmas que estão marcadas para esse dia
                           $args = [
@@ -271,10 +271,10 @@ class indice extends clsListagem
 
                           $array_descricao[$dia['dia']] = $descricao;
 
-                          if (strtoupper($det_motivo['tipo']) == 'E') {
+                          if (mb_strtoupper($det_motivo['tipo']) == 'E') {
                               $obj_calendario->adicionarLegenda('Extra Letivo', 'LARANJA_ESCURO');
                               $obj_calendario->adicionarArrayDias('Extra Letivo', [$dia['dia']]);
-                          } elseif (strtoupper($det_motivo['tipo']) == 'N') {
+                          } elseif (mb_strtoupper($det_motivo['tipo']) == 'N') {
                               $obj_calendario->adicionarLegenda('Não Letivo', '#VERDE_ESCURO');
                               $obj_calendario->adicionarArrayDias('Não Letivo', [$dia['dia']]);
                           }

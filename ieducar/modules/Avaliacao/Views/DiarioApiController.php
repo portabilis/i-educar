@@ -7,7 +7,6 @@ use App\Models\LegacyRemedialRule;
 use App\Models\LegacySchoolClass;
 use App\Process;
 use App\Services\ReleasePeriodService;
-use Cocur\Slugify\Slugify;
 use iEducar\Modules\Stages\Exceptions\MissingStagesException;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
@@ -1164,8 +1163,6 @@ class DiarioApiController extends ApiCoreController
         $turmaId = $this->getRequest()->turma_id;
         $situacoes = $this->getSituacaoComponentes();
 
-        $slugify = new Slugify();
-
         foreach ($_componentesCurriculares as $_componente) {
             $componente = [];
             $componenteId = $_componente->get('id');
@@ -1213,8 +1210,8 @@ class DiarioApiController extends ApiCoreController
             //criando chave para ordenamento temporário
             //área de conhecimento + componente curricular
 
-            $componente['ordem_nome_area_conhecimento'] = $slugify->slugify($nomeArea);
-            $componente['ordem_componente_curricular'] = $slugify->slugify($_componente->get('nome'));
+            $componente['ordem_nome_area_conhecimento'] = Str::slug($nomeArea);
+            $componente['ordem_componente_curricular'] = Str::slug($_componente->get('nome'));
             $componentesCurriculares[] = $componente;
         }
 
