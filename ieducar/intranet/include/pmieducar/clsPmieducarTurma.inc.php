@@ -1183,7 +1183,7 @@ class clsPmieducarTurma extends Model
     {
         $db = new clsBanco();
 
-        $sql = "SELECT {$this->_campos_lista},c.nm_curso,s.nm_serie,i.nm_instituicao FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c, {$this->_schema}instituicao i ";
+        $sql = "SELECT {$this->_campos_lista},c.nm_curso,s.nm_serie,i.nm_instituicao FROM {$this->_tabela} t LEFT JOIN pmieducar.turma_serie ts ON (ts.turma_id  = T.cod_turma) LEFT JOIN {$this->_schema}serie s ON (s.cod_serie = COALESCE(ts.serie_id, T.ref_ref_cod_serie)), {$this->_schema}curso c, {$this->_schema}instituicao i ";
         $filtros = '';
 
         $whereAnd = ' WHERE t.ref_cod_curso = c.cod_curso AND c.ref_cod_instituicao = i.cod_instituicao AND ';
@@ -1201,7 +1201,7 @@ class clsPmieducarTurma extends Model
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_ref_cod_serie)) {
-            $filtros .= "{$whereAnd} t.ref_ref_cod_serie = '{$int_ref_ref_cod_serie}'";
+            $filtros .= "{$whereAnd} COALESCE(ts.serie_id, T.ref_ref_cod_serie) = '{$int_ref_ref_cod_serie}'";
             $whereAnd = ' AND ';
         }
         if (is_numeric($int_ref_ref_cod_escola)) {
@@ -1357,7 +1357,7 @@ class clsPmieducarTurma extends Model
 
         $sql .= $filtros . $this->getOrderby() . $this->getLimite();
 
-        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} t left outer join {$this->_schema}serie s on (t.ref_ref_cod_serie = s.cod_serie), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}");
+        $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} t LEFT JOIN pmieducar.turma_serie ts ON (ts.turma_id  = T.cod_turma) LEFT JOIN {$this->_schema}serie s ON (s.cod_serie = COALESCE(ts.serie_id, T.ref_ref_cod_serie)), {$this->_schema}curso c , {$this->_schema}instituicao i {$filtros}");
 
         $db->Consulta($sql);
 
