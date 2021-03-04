@@ -8,10 +8,7 @@ class LegacyDisciplineSchoolClass extends Pivot
 {
     protected $table = 'modules.componente_curricular_turma';
 
-    protected $primaryKey = [
-        'componente_curricular_id',
-        'turma_id',
-    ];
+    protected $primaryKey = 'componente_curricular_id';
 
     protected $fillable = [
         'componente_curricular_id',
@@ -25,6 +22,6 @@ class LegacyDisciplineSchoolClass extends Pivot
     ];
 
     public $timestamps = false;
-    
+
     public $incrementing = false;
 }
