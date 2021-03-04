@@ -3,6 +3,8 @@
 # TODO remove-require
 require_once 'Reports/Tipos/TipoBoletim.php';
 
+use App\Models\LegacySchoolClassGrade;
+
 class TurmaController extends ApiCoreController
 {
 
@@ -376,6 +378,20 @@ class TurmaController extends ApiCoreController
         return ['alunos' => $alunos];
     }
 
+    protected function getSeriesDaTurma()
+    {
+        $schoolClass = $this->getRequest()->turma_id;
+        $seriesDaTurma = LegacySchoolClassGrade::query()
+            ->select('turma_serie.*', 'serie.ref_cod_curso', 'curso.padrao_ano_escolar')
+            ->join('pmieducar.serie', 'serie.cod_serie', '=', 'turma_serie.serie_id')
+            ->join('pmieducar.curso', 'curso.cod_curso', '=', 'serie.ref_cod_curso')
+            ->where('turma_id', $schoolClass)
+            ->get()
+            ->toArray();
+
+        return ['series_turma' => $seriesDaTurma];
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'turma')) {
@@ -392,6 +408,8 @@ class TurmaController extends ApiCoreController
             $this->appendResponse($this->getAlunosMatriculadosTurma());
         } elseif ($this->isRequestFor('get', 'alunos-exame-turma')) {
             $this->appendResponse($this->getAlunosExameTurma());
+        } elseif ($this->isRequestFor('get', 'series-da-turma')) {
+            $this->appendResponse($this->getSeriesDaTurma());
         } else {
             $this->notImplementedOperationError();
         }

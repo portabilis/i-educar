@@ -226,6 +226,80 @@ function preencheEtapasNaTurma(etapas) {
   });
 }
 
+function atualizaOpcoesDeDisciplinas() {
+  let escola_id = $j('#ref_cod_escola').val();
+  let serie_id = $j('#ref_cod_serie').val();
+  let ano = $j('#ano_letivo').val();
+  if (escola_id && serie_id && ano) {
+    let parametros = {
+      escola_id: escola_id,
+      serie_id: serie_id,
+      ano: ano
+    };
+    let url = getResourceUrlBuilder.buildUrl(
+      '/module/Api/ComponenteCurricular',
+      'componentes-curriculares-escola-serie-ano',
+      parametros
+    );
+    let options = {
+      dataType: 'json',
+      url: url,
+      success: preencheComponentesCurriculares
+    };
+    getResource(options);
+  } else {
+    $j('#disciplinas').html('');
+  }
+}
+
+var preencheComponentesCurriculares = function(data) {
+  let componentesCurriculares = data.componentes_curriculares;
+  var conteudo = '';
+  let multisseriada = $j('#multiseriada').is(':checked');
+
+  if (componentesCurriculares.length && !multisseriada) {
+    conteudo += `<tr>
+                   <td> <span>Nome</span></td>
+                   <td> <span>Abreviatura</span></td>
+                   <td> <span>Carga horária </span></td>
+                   <td> <span>Usar padrão do componente?</span></td>
+                   <td> <span>Possui docente vinculado?</span></td>
+                 </tr>`;
+
+    componentesCurriculares.forEach((componente) => {
+      conteudo += getLinhaComponente(componente);
+    });
+
+    $j('#tr_disciplinas_ td:nth-child(1)').html('Componentes curriculares definidos em séries da escola');
+    $j('#disciplinas').show();
+  }  else if (multisseriada) {
+    $j('#tr_disciplinas_ td:nth-child(1)').html('Os componentes curriculares de turmas multisseriadas devem ser definidos em suas respectivas series (Escola > Cadastros > Séries da escola)');
+    $j('#disciplinas').hide();
+  } else {
+    $j('#disciplinas').html('A série/ano escolar não possui componentes curriculares cadastrados.');
+  }
+
+  if (conteudo) {
+    $j('#disciplinas').html(
+      `<table id="componentes_turma_cad" cellspacing="0" cellpadding="0" border="0">
+          <tr align="left"><td>${conteudo}</td></tr>
+      </table>`
+    );
+  }
+}
+
+
+var getLinhaComponente = function(componente) {
+  return  `
+  <tr class="linha-disciplina">
+    <td width="250"><input type="checkbox" name="disciplinas[${componente.id}]" class="check-disciplina" id="disciplinas[]" value="${componente.id}">${componente.nome}</td>
+    <td><span>${componente.abreviatura}</span></td>
+    <td><input type="text" name="carga_horaria[${componente.id}]" value="" size="5" maxlength="7"></td>
+    <td><input type="checkbox" name="usar_componente[${componente.id}]" value="1">(${componente.carga_horaria} h)</td>
+    <td><input type="checkbox" name="docente_vinculado[${componente.id}]" value="1"></td>
+  </tr>`;
+}
+
 $j(document).ready(function() {
 
   // on click das abas
@@ -246,6 +320,8 @@ $j(document).ready(function() {
           row.show();
         }
       });
+      //multisseriada
+      configuraCamposExibidos();
     }
   );
 
@@ -293,68 +369,7 @@ $j(document).ready(function() {
   }
 
   $j('#ref_cod_serie, #ano_letivo').on('change', function(){
-    let escola_id = $j('#ref_cod_escola').val();
-    let serie_id = $j('#ref_cod_serie').val();
-    let ano = $j('#ano_letivo').val();
-    if (escola_id && serie_id && ano) {
-      let parametros = {
-        escola_id: escola_id,
-        serie_id: serie_id,
-        ano: ano
-      };
-      let url = getResourceUrlBuilder.buildUrl(
-        '/module/Api/ComponenteCurricular',
-        'componentes-curriculares-escola-serie-ano',
-        parametros
-      );
-      let options = {
-        dataType: 'json',
-        url: url,
-        success: preencheComponentesCurriculares
-      };
-      getResource(options);
-    } else {
-      $j('#disciplinas').html('');
-    }
+    atualizaOpcoesDeDisciplinas();
   });
 
-  var getLinhaComponente = function(componente) {
-    return  `
-    <tr class="linha-disciplina">
-      <td width="250"><input type="checkbox" name="disciplinas[${componente.id}]" class="check-disciplina" id="disciplinas[]" value="${componente.id}">${componente.nome}</td>
-      <td><span>${componente.abreviatura}</span></td>
-      <td><input type="text" name="carga_horaria[${componente.id}]" value="" size="5" maxlength="7"></td>
-      <td><input type="checkbox" name="usar_componente[${componente.id}]" value="1">(${componente.carga_horaria} h)</td>
-      <td><input type="checkbox" name="docente_vinculado[${componente.id}]" value="1"></td>
-    </tr>`;
-  }
-
-  var preencheComponentesCurriculares = function(data) {
-    let componentesCurriculares = data.componentes_curriculares;
-    var conteudo = '';
-
-    if (componentesCurriculares.length) {
-      conteudo += `<tr>
-                     <td> <span>Nome</span></td>
-                     <td> <span>Abreviatura</span></td>
-                     <td> <span>Carga horária </span></td>
-                     <td> <span>Usar padrão do componente?</span></td>
-                     <td> <span>Possui docente vinculado?</span></td>
-                   </tr>`;
-
-      componentesCurriculares.forEach((componente) => {
-        conteudo += getLinhaComponente(componente);
-      });
-    } else {
-      $j('#disciplinas').html('A série/ano escolar não possui componentes curriculares cadastrados.');
-    }
-
-    if (conteudo) {
-      $j('#disciplinas').html(
-        `<table id="componentes_turma_cad" cellspacing="0" cellpadding="0" border="0">
-            <tr align="left"><td>${conteudo}</td></tr>
-        </table>`
-      );
-    }
-  }
 });

@@ -206,13 +206,17 @@ $j(function () {
             }
         },
         removeTableCellsAndRows: function () {
-            var removeLinks = $j('[id^=link_remove'),
-                addLink = $j('[id^=btn_add]'),
+            let tabela = '';
+            if (this.env == 'turma') {
+                tabela = '#turma_modulo ';
+            }
+            var removeLinks = $j(tabela + '[id^=link_remove'),
+                addLink = $j(tabela + '[id^=btn_add]'),
                 sendBtn = $j('#btn_enviar');
 
-            $j('td#td_acao').hide();
-            $j('[id^=link_remove').parent().hide();
-            $j('#adicionar_linha').hide();
+            $j(tabela + 'td#td_acao').hide();
+            $j(tabela + '[id^=link_remove').parent().hide();
+            $j(tabela + '#adicionar_linha').hide();
 
             removeLinks.removeAttr('onclick');
             addLink.removeAttr('onclick');
@@ -355,7 +359,11 @@ $j(function () {
         },
         addRows: function (qtt) {
             for (var i = 0; i < qtt; i++) {
-                tab_add_1.addRow();
+                if (this.env == 'turma') {
+                    tab_add_2.addRow();
+                } else {
+                    tab_add_1.addRow();
+                }
                 this.removeTableCellsAndRows();
             }
         },

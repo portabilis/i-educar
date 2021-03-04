@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\LegacyCourse;
+use App\Models\LegacySchoolCourse;
 
 class CursoController extends ApiCoreController
 {
@@ -7,6 +9,16 @@ class CursoController extends ApiCoreController
     protected function canGetCursos()
     {
         return $this->validatesPresenceOf('instituicao_id');
+    }
+
+    protected function canGetCursosDaEscola()
+    {
+        return $this->validatesPresenceOf('escola_id');
+    }
+
+    protected function canGetDadosDoCurso()
+    {
+        return $this->validatesPresenceOf('curso_id');
     }
 
     protected function getCursos()
@@ -188,6 +200,36 @@ class CursoController extends ApiCoreController
         return $modalidade;
     }
 
+    protected function getCursosDaEscola()
+    {
+        if ($this->canGetCursosDaEscola()) {
+            $escolaId = $this->getRequest()->escola_id;
+
+            $cursos = LegacySchoolCourse::query()
+                ->with('course')
+                ->where('ref_cod_escola', $escolaId)
+                ->get()
+                ->pluck('course.nm_curso', 'ref_cod_curso')
+                ->toArray();
+
+            return ['cursos' => $cursos];
+        }
+    }
+
+    protected function getDadosDoCurso()
+    {
+        if ($this->canGetDadosDoCurso()) {
+            $cursoId = $this->getRequest()->curso_id;
+
+            $dadosCurso = LegacyCourse::query()
+                ->where('cod_curso', $cursoId)
+                ->first()
+                ->toArray();
+
+            return ['dados_curso' => $dadosCurso];
+        }
+    }
+
     public function Gerar()
     {
         if ($this->isRequestFor('get', 'cursos')) {
@@ -196,6 +238,10 @@ class CursoController extends ApiCoreController
             $this->appendResponse($this->getModalidadeCurso());
         } elseif ($this->isRequestFor('get', 'cursos-multiple-search')) {
             $this->appendResponse($this->getCursosMultipleSearch());
+        }  elseif ($this->isRequestFor('get', 'cursos-da-escola')) {
+            $this->appendResponse($this->getCursosDaEscola());
+        } elseif ($this->isRequestFor('get', 'dados-curso')) {
+            $this->appendResponse($this->getDadosDoCurso());
         } else {
             $this->notImplementedOperationError();
         }

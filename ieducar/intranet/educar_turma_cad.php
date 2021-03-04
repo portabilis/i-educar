@@ -14,6 +14,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 use Throwable;
+use App\Models\LegacySchoolCourse;
+use App\Models\LegacyDisciplineSchoolClass;
+use App\Services\SchoolClass\MultiGradesService;
 
 
 class clsIndexBase extends clsBase
@@ -54,7 +57,6 @@ class indice extends clsCadastro
     public $padrao_ano_escolar;
     public $ref_cod_regente;
     public $ref_cod_instituicao_regente;
-    public $ref_cod_serie_mult;
     public $turma_modulo = [];
     public $incluir_modulo;
     public $excluir_modulo;
@@ -217,6 +219,7 @@ class indice extends clsCadastro
 
         $this->campoOculto('obrigar_campos_censo', (int)$obrigarCamposCenso);
         $this->campoOculto('cod_turma', $this->cod_turma);
+        $this->campoOculto('ref_cod_escola_', $this->ref_cod_escola);
         $this->campoOculto('ano_letivo_', $this->ano);
         $this->campoOculto('dependencia_administrativa', $this->dependencia_administrativa);
         $this->campoOculto('modalidade_curso', $this->modalidade_curso);
@@ -266,6 +269,40 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->dynamic('instituicao', ['value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('escola', ['value' => $this->ref_cod_escola, 'disabled' => $desabilitado]);
+        $this->campoCheck(
+            'multiseriada',
+            'Multisseriada',
+            $this->multiseriada,
+            '',
+            false,
+            false
+        );
+
+        $opcoesCursos = [
+            null => 'Selecione um curso',
+        ];
+
+        if ($this->ref_ref_cod_escola) {
+            $cursosDaEscola = LegacySchoolCourse::query()
+                ->with('course')
+                ->where('ref_cod_escola', $this->ref_ref_cod_escola)
+                ->get()
+                ->pluck('course.nm_curso', 'ref_cod_curso')
+                ->toArray();
+            $opcoesCursos = array_replace($opcoesCursos, $cursosDaEscola);
+        }
+
+        $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
+        $tiposBoletim = Portabilis_Array_Utils::insertIn(null, 'Selecione um modelo', $tiposBoletim);
+
+        $this->campoTabelaInicio('turma_serie', 'Séries da turma', ['Curso', 'Série', 'Boletim', 'Boletim diferenciado'], $this->turma_serie);
+            $this->campoLista('mult_curso_id', 'Curso', $opcoesCursos, $this->mult_curso_id, 'atualizaInformacoesComBaseNoCurso(this)');
+            $this->campoLista('mult_serie_id', 'Série', ['Selecione uma série'], $this->mult_serie_id, 'atualizaInformacoesComBaseNaSerie()');
+            $this->campoLista('mult_boletim_id', 'Boletim', $tiposBoletim, $this->mult_boletim_id);
+            $this->campoLista('mult_boletim_diferenciado_id', 'Boletim diferenciado', $tiposBoletim, $this->mult_boletim_diferenciado_id, null, null, null, null, null, false);
+            $this->campoOculto('mult_padrao_ano_escolar', $this->mult_padrao_ano_escolar);
+        $this->campoTabelaFim();
+
         $this->inputsHelper()->dynamic('curso', ['value' => $this->ref_cod_curso, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('serie', ['value' => $this->ref_cod_serie, 'disabled' => $desabilitado]);
         $this->inputsHelper()->dynamic('anoLetivo', ['value' => $this->ano, 'disabled' => $desabilitado]);
@@ -416,30 +453,6 @@ class indice extends clsCadastro
         $ativo = isset($this->cod_turma) ? dbBool($this->visivel) : true;
         $this->campoCheck('visivel', 'Ativo', $ativo);
 
-        $this->campoCheck(
-            'multiseriada',
-            'Multi-Seriada',
-            $this->multiseriada,
-            '',
-            false,
-            false
-        );
-
-        $this->campoLista(
-            'ref_cod_serie_mult',
-            'S&eacute;rie',
-            ['' => 'Selecione'],
-            '',
-            '',
-            false,
-            '',
-            '',
-            '',
-            false
-        );
-
-        $this->campoOculto('ref_cod_serie_mult_', $this->ref_ref_cod_serie_mult);
-
         $resources = SelectOptions::tiposMediacaoDidaticoPedagogico();
         $options = ['label' => 'Tipo de mediação didático pedagógico', 'resources' => $resources, 'value' => $this->tipo_mediacao_didatico_pedagogico, 'required' => $obrigarCamposCenso, 'size' => 70,];
         $this->inputsHelper()->select('tipo_mediacao_didatico_pedagogico', $options);
@@ -493,9 +506,6 @@ class indice extends clsCadastro
         $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
         $this->inputsHelper()->turmaTurno();
-
-        $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
-        $tiposBoletim = Portabilis_Array_Utils::insertIn(null, 'Selecione um modelo', $tiposBoletim);
 
         $this->campoLista('tipo_boletim', 'Modelo relat&oacute;rio boletim', $tiposBoletim, $this->tipo_boletim);
         $this->campoLista('tipo_boletim_diferenciado', 'Modelo relat&oacute;rio boletim diferenciado', $tiposBoletim, $this->tipo_boletim_diferenciado, '', false, '', '', false, false);
@@ -652,7 +662,8 @@ class indice extends clsCadastro
 
         $scripts = [
             '/modules/Cadastro/Assets/Javascripts/Turma.js',
-            '/intranet/scripts/etapas.js'
+            '/intranet/scripts/etapas.js',
+            '/intranet/scripts/tabelaSerieMult.js',
         ];
 
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
@@ -667,11 +678,23 @@ class indice extends clsCadastro
         return $this->tipo_mediacao_didatico_pedagogico == App_Model_TipoMediacaoDidaticoPedagogico::PRESENCIAL;
     }
 
+    protected function existeComponentesNaTurma()
+    {
+        if ($this->cod_turma) {
+            return LegacyDisciplineSchoolClass::query()
+                ->where('turma_id', $this->cod_turma)
+                ->exists();
+        }
+
+        return false;
+    }
+
     public function montaListaComponentesSerieEscola()
     {
         $this->campoQuebra2();
+        $existeComponentesNaTurma = $this->existeComponentesNaTurma();
 
-        if ($this->ref_cod_serie) {
+        if ($this->ref_cod_serie && (!$this->multiseriada || $existeComponentesNaTurma)) {
             $conteudo = '';
 
             try {
@@ -772,7 +795,7 @@ class indice extends clsCadastro
                     }
 
                     $conteudo .= '<tr class="linha-disciplina" >';
-                    $conteudo .= "<td><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" class='check-disciplina' id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</td>";
+                    $conteudo .= "<td><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" class='check-disciplina' id=\"disciplinas[$registro->id]\" value=\"{$registro->id}\">{$registro}</td>";
                     $conteudo .= "<td>{$registro->abreviatura}</td>";
                     $conteudo .= "<td><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></td>";
                     $conteudo .= "<td><input type='checkbox' name='usar_componente[$registro->id]' value='1' " . ($usarComponente == true ? $checked : '') . ">($cargaComponente h)</td>";
@@ -797,6 +820,10 @@ class indice extends clsCadastro
         $help = [];
 
         $label = 'Componentes curriculares definidos em s&eacute;ries da escola';
+
+        if ($this->multiseriada && !$existeComponentesNaTurma) {
+            $label = 'Os componentes curriculares de turmas multisseriadas devem ser definidos em suas respectivas Séries (Escola > Cadastros > Séries da escola)';
+        }
 
         $label = sprintf($label, $help);
 
@@ -883,7 +910,26 @@ class indice extends clsCadastro
 
         $objTurma = $this->montaObjetoTurma(null, $this->pessoa_logada);
 
+        DB::beginTransaction();
         $this->cod_turma = $cadastrou = $objTurma->cadastra();
+
+        $schoolClass = LegacySchoolClass::find($this->cod_turma);
+
+        if ($this->multiseriada) {
+            $schoolClassGrades = [];
+            foreach ($this->mult_serie_id as $key => $serieId) {
+                $schoolClassGrades[] = [
+                    'escola_id' => $this->ref_cod_escola,
+                    'serie_id' => $serieId,
+                    'turma_id' => $this->cod_turma,
+                    'boletim_id' => $this->mult_boletim_id[$key],
+                    'boletim_diferenciado_id' => $this->mult_boletim_diferenciado_id[$key],
+                ];
+            }
+
+            $service = new MultiGradesService($schoolClassGrades);
+            $service->storeSchoolClassGrade();
+        }
 
         if (!$cadastrou) {
             $this->mensagem = 'Cadastro não realizado.';
@@ -895,21 +941,25 @@ class indice extends clsCadastro
         $turma = new clsPmieducarTurma($this->cod_turma);
         $turma = $turma->detalhe();
 
-        $this->atualizaComponentesCurriculares(
-            $this->ref_cod_serie,
-            $this->ref_cod_escola,
-            $this->cod_turma,
-            $this->disciplinas,
-            $this->carga_horaria,
-            $this->usar_componente,
-            $this->docente_vinculado
-        );
+        if (!$this->multiseriada) {
+            $this->atualizaComponentesCurriculares(
+                $this->ref_cod_serie,
+                $this->ref_cod_escola,
+                $this->cod_turma,
+                $this->disciplinas,
+                $this->carga_horaria,
+                $this->usar_componente,
+                $this->docente_vinculado
+            );
+        }
 
         $this->cadastraInepTurma($this->cod_turma, $this->codigo_inep_educacenso);
 
         if (!$this->atualizaModulos()) {
             return false;
         }
+
+        DB::commit();
 
         $this->mensagem = 'Cadastro efetuado com sucesso.';
         $this->simpleRedirect('educar_turma_lst.php');
@@ -971,6 +1021,28 @@ class indice extends clsCadastro
         DB::beginTransaction();
         $editou = $objTurma->edita();
 
+        $schoolClassGrades = [];
+        foreach ($this->mult_serie_id as $key => $serieId) {
+            $schoolClassGrades[] = [
+                'escola_id' => $this->ref_ref_cod_escola,
+                'serie_id' => $serieId,
+                'turma_id' => $this->cod_turma,
+                'boletim_id' => $this->mult_boletim_id[$key],
+                'boletim_diferenciado_id' => $this->mult_boletim_diferenciado_id[$key],
+            ];
+        }
+
+        $service = new MultiGradesService($schoolClassGrades);
+        $schoolClass = LegacySchoolClass::find($this->cod_turma);
+
+        if ($turmaDetalhe['multiseriada'] == 1 && $this->multiseriada == 0) {
+            $service->deleteAllGradesOfSchoolClass($schoolClass);
+        }
+
+        if ($this->multiseriada) {
+            $service->storeSchoolClassGrade();
+        }
+
         if (!$editou) {
             $this->mensagem = 'Edição não realizada.';
 
@@ -983,15 +1055,17 @@ class indice extends clsCadastro
         }
 
         try {
-            $this->atualizaComponentesCurriculares(
-                $turmaDetalhe['ref_ref_cod_serie'],
-                $turmaDetalhe['ref_ref_cod_escola'],
-                $this->cod_turma,
-                $this->disciplinas,
-                $this->carga_horaria,
-                $this->usar_componente,
-                $this->docente_vinculado
-            );
+            if (!$this->multiseriada) {
+                $this->atualizaComponentesCurriculares(
+                    $turmaDetalhe['ref_ref_cod_serie'],
+                    $turmaDetalhe['ref_ref_cod_escola'],
+                    $this->cod_turma,
+                    $this->disciplinas,
+                    $this->carga_horaria,
+                    $this->usar_componente,
+                    $this->docente_vinculado
+                );
+            }
         } catch (DisciplinesValidationException $e) {
             $this->mensagem = $e->getMessage();
 
@@ -1276,8 +1350,6 @@ class indice extends clsCadastro
         $objTurma->ref_cod_instituicao_regente = $this->ref_cod_instituicao_regente;
         $objTurma->ref_cod_instituicao = $this->ref_cod_instituicao;
         $objTurma->ref_cod_curso = $this->ref_cod_curso;
-        $objTurma->ref_ref_cod_serie_mult = $objTurma->multiseriada ? $this->ref_cod_serie_mult : null;
-        $objTurma->ref_ref_cod_escola_mult = $objTurma->multiseriada ? $this->ref_cod_escola : null;
         $objTurma->visivel = $this->visivel;
         $objTurma->turma_turno_id = $this->turma_turno_id;
         $objTurma->tipo_boletim = $this->tipo_boletim;
@@ -1752,21 +1824,6 @@ $pagina->MakeAll();
         setVisibility('tr_hora_inicio_intervalo', false);
         setVisibility('tr_hora_fim_intervalo', false);
 
-        if (!document.getElementById('ref_cod_serie').value) {
-            setVisibility('tr_multiseriada', false);
-            setVisibility('tr_ref_cod_serie_mult', document.getElementById('multiseriada').checked ? true : false);
-            setVisibility('ref_cod_serie_mult', document.getElementById('multiseriada').checked ? true : false);
-        } else {
-            if (document.getElementById('multiseriada').checked) {
-                changeMultiSerie();
-                document.getElementById('ref_cod_serie_mult').value =
-                    document.getElementById('ref_cod_serie_mult_').value;
-            } else {
-                setVisibility('tr_ref_cod_serie_mult', document.getElementById('multiseriada').checked ? true : false);
-                setVisibility('ref_cod_serie_mult', document.getElementById('multiseriada').checked ? true : false);
-            }
-        }
-
         // HIDE quebra de linha
         var hr_tag = document.getElementsByTagName('hr');
 
@@ -1801,11 +1858,6 @@ $pagina->MakeAll();
     }
 
     document.getElementById('ref_cod_curso').onchange = function () {
-        setVisibility('tr_multiseriada', document.getElementById('ref_cod_serie').value ? true : false);
-        setVisibility('tr_ref_cod_serie_mult', document.getElementById('multiseriada').checked ? true : false);
-        setVisibility('ref_cod_serie_mult', document.getElementById('multiseriada').checked ? true : false);
-
-        hideMultiSerie();
         getEscolaCursoSerie();
 
         PadraoAnoEscolar_xml();
@@ -1818,92 +1870,11 @@ $pagina->MakeAll();
         xml1.envia(strURL);
     }
 
-    function changeMultiSerie() {
-        var campoCurso = document.getElementById('ref_cod_curso').value;
-        var campoSerie = document.getElementById('ref_cod_serie').value;
-        var campoEscola = document.getElementById('ref_cod_escola').value;
-        var campoAno = document.getElementById('ano_letivo').value;
-        if (campoAno != '') {
-            var xml1 = new ajax(atualizaMultiSerie);
-            strURL = 'educar_sequencia_serie_xml.php?cur=' + campoCurso + '&ser_dif=' + campoSerie + '&escola=' + campoEscola + '&ano=' + campoAno;
-
-            xml1.envia(strURL);
-        }
-    }
-
-    function atualizaMultiSerie(xml) {
-        var campoMultiSeriada = document.getElementById('multiseriada');
-        var checked = campoMultiSeriada.checked;
-
-        var multiBool = (document.getElementById('multiseriada').checked == true &&
-            document.getElementById('ref_cod_serie').value != '') ? true : false;
-
-        setVisibility('tr_ref_cod_serie_mult', multiBool);
-        setVisibility('ref_cod_serie_mult', multiBool);
-
-        if (!checked) {
-            document.getElementById('ref_cod_serie_mult').value = '';
-            return;
-        }
-
-        var campoEscola = document.getElementById('ref_cod_escola').value;
-        var campoCurso = document.getElementById('ref_cod_curso').value;
-        var campoSerieMult = document.getElementById('ref_cod_serie_mult');
-        var campoSerie = document.getElementById('ref_cod_serie');
-
-        campoSerieMult.length = 1;
-        campoSerieMult.options[0] = new Option('Selecione uma s\u00e9rie', '', false, false);
-
-        var multi_serie = xml.getElementsByTagName('serie');
-
-        if (multi_serie.length) {
-            for (var i = 0; i < multi_serie.length; i++) {
-                campoSerieMult.options[campoSerieMult.options.length] = new Option(
-                    multi_serie[i].firstChild.data, multi_serie[i].getAttribute('cod_serie'), false, false
-                );
-            }
-        }
-
-        if (campoSerieMult.length == 1 && campoCurso != '') {
-            campoSerieMult.options[0] = new Option('O curso n\u00e3o possui nenhuma s\u00e9rie', '', false, false);
-        }
-
-        document.getElementById('ref_cod_serie_mult').value = document.getElementById('ref_cod_serie_mult_').value;
-    }
-
-    document.getElementById('multiseriada').onclick = function () {
-        changeMultiSerie();
-    }
-
     document.getElementById('ref_cod_serie').onchange = function () {
         if (this.value) {
             codEscola = document.getElementById('ref_cod_escola').value;
             getHoraEscolaSerie();
         }
-
-        if (document.getElementById('multiseriada').checked == true) {
-            changeMultiSerie();
-        }
-
-        hideMultiSerie();
-    }
-
-    document.getElementById('ano_letivo').onchange = function () {
-
-        changeMultiSerie();
-
-        hideMultiSerie();
-    }
-
-    function hideMultiSerie() {
-        setVisibility('tr_multiseriada', document.getElementById('ref_cod_serie').value != '' ? true : false);
-
-        var multiBool = (document.getElementById('multiseriada').checked == true &&
-            document.getElementById('ref_cod_serie').value != '' && document.getElementById('ano_letivo').value != '' ) ? true : false;
-
-        setVisibility('ref_cod_serie_mult', multiBool);
-        setVisibility('tr_ref_cod_serie_mult', multiBool);
-        setVisibility('tr_multiseriada', document.getElementById('ano_letivo').value != '' ? true : false);
     }
 
     function PadraoAnoEscolar(xml) {
@@ -2013,14 +1984,6 @@ $pagina->MakeAll();
             if (!document.getElementById('ref_cod_serie').value) {
                 alert("Preencha o campo 'Serie' corretamente!");
                 document.getElementById('ref_cod_serie').focus();
-                return false;
-            }
-        }
-
-        if (document.getElementById('multiseriada').checked) {
-            if (!document.getElementById('ref_cod_serie_mult')) {
-                alert("Preencha o campo 'Serie Multi-seriada' corretamente!");
-                document.getElementById('ref_cod_serie_mult').focus();
                 return false;
             }
         }

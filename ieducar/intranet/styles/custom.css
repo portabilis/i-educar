@@ -1461,3 +1461,11 @@ a.btn-detalhes {
 #componentes_turma_cad td{
   padding: 5px;
 }
+
+#turma_serie.tabela-adicao td.mult_curso_id,
+#turma_serie.tabela-adicao td.mult_serie_id,
+#turma_serie.tabela-adicao td.mult_boletim_id,
+#turma_serie.tabela-adicao td.mult_boletim_diferenciado_id,
+#turma_serie td.tr_turma_serie {
+  width: 23%;
+}
