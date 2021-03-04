@@ -292,9 +292,6 @@ class indice extends clsCadastro
             $opcoesCursos = array_replace($opcoesCursos, $cursosDaEscola);
         }
 
-        // modelos boletim
-        require_once 'Reports/Tipos/TipoBoletim.php';
-        require_once 'Portabilis/Array/Utils.php';
         $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
         $tiposBoletim = Portabilis_Array_Utils::insertIn(null, 'Selecione um modelo', $tiposBoletim);
 
