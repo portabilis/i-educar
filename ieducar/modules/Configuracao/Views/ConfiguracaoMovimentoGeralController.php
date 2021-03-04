@@ -1,8 +1,5 @@
 <?php
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'Configuracao/Model/ConfiguracaoMovimentoGeralDataMapper.php';
 
 class clsIndexBase extends clsBase
 {
@@ -85,14 +82,11 @@ class ConfiguracaoMovimentoGeralController extends clsCadastro
     {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra(9998867, $this->pessoa_logada, 1, 'educar_index.php');
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-            $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-            "educar_configuracoes_index.php"    => "Configurações",
-            ""                                  => "Configuração movimento geral"
-        ));
 
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Configuração movimento geral', [
+            url('intranet/educar_configuracoes_index.php') => 'Configurações',
+        ]);
+
         return 'Editar';
     }
 

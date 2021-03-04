@@ -2,8 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 class clsPmieducarEscolaSerieDisciplina extends Model
 {
@@ -219,11 +217,8 @@ class clsPmieducarEscolaSerieDisciplina extends Model
     ) {
         $whereAnd = ' WHERE ';
 
-        if ($boo_nome_disc) {
-            $join = ',pmieducar.disciplina';
-            $whereAnd = ' WHERE ref_cod_disciplina = cod_disciplina AND disciplina.ativo = 1 AND ';
-            $campos = ',disciplina.nm_disciplina';
-        }
+        $campos = '';
+        $join = '';
 
         $sql = "SELECT {$this->_campos_lista}{$campos} FROM {$this->_tabela}{$join}";
         $filtros = '';

@@ -1,12 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/EditController.php';
-require_once 'lib/Portabilis/Messenger.php';
-require_once 'lib/Portabilis/Validator.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'lib/Portabilis/DataMapper/Utils.php';
-require_once 'lib/Portabilis/View/Helper/Application.php';
 
 class Portabilis_Controller_Page_EditController extends Core_Controller_Page_EditController
 {
@@ -127,7 +120,6 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
         $styles = [
             '/modules/Portabilis/Assets/Stylesheets/Frontend.css',
             '/modules/Portabilis/Assets/Stylesheets/Frontend/Resource.css',
-            'styles/localizacaoSistema.css'
         ];
 
         Portabilis_View_Helper_Application::loadStylesheet($this, $styles);

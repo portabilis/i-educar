@@ -28,12 +28,6 @@
  * @version   $Id$
  */
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'CoreExt/View/Helper/UrlHelper.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 /**
  * clsIndexBase class.
@@ -127,9 +121,6 @@ class indice extends clsListagem
     }
 
     $this->campoOculto('ref_cod_turma', $this->ref_cod_turma);
-
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg',
-      'Intranet');
 
     $this->addCabecalhos(array(
       'Disciplina',

@@ -77,4 +77,24 @@ class LegacyStudent extends Model
             'idpes'
         );
     }
+
+    public function getInepNumberAttribute()
+    {
+        return $this->inep ? $this->inep->number : null;
+    }
+
+    public function getStateRegistrationIdAttribute()
+    {
+        return $this->aluno_estado_id;
+    }
+
+    public function setStateRegistrationIdAttribute($value)
+    {
+        $this->aluno_estado_id = $value;
+    }
+
+    public function inep()
+    {
+        return $this->hasOne(StudentInep::class, 'cod_aluno', 'cod_aluno');
+    }
 }

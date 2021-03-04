@@ -2,10 +2,6 @@
 
 use Illuminate\Support\Facades\Session;
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
 
 class clsIndex extends clsBase
 {
@@ -75,7 +71,7 @@ class indice extends clsListagem
         ) );
 
         $this->campoTexto( "nm_cliente", "Cliente", $this->nm_cliente, 30, 255, false );
-        $this->campoNumero( "codigo", "Código", $this->codigo, 9, 9 );
+        $this->campoNumero( "codigo", "Código", $this->codigo, 15, 13 );
         $this->campoOculto("ref_cod_biblioteca",$this->ref_cod_biblioteca);
 
         if (isset($_GET["ref_cod_biblioteca"]))
@@ -88,7 +84,7 @@ class indice extends clsListagem
         $obj_acervo = new clsPmieducarCliente();
         $obj_acervo->setOrderby( "nome ASC" );
         $obj_acervo->setLimite( $this->limite, $this->offset );
-        
+
         if ($this->ref_cod_biblioteca)
         {
             $lista = $obj_acervo->listaPesquisaCliente(

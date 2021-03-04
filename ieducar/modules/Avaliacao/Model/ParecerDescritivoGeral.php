@@ -29,7 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'Avaliacao/Model/ParecerDescritivoAbstract.php';
 
 /**
  * Avaliacao_Model_ParecerDescritivoGeral class.

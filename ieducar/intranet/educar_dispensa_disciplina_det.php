@@ -28,11 +28,6 @@
  * @version   $Id$
  */
 
-require_once "include/clsBase.inc.php";
-require_once "include/clsDetalhe.inc.php";
-require_once "include/clsBanco.inc.php";
-require_once "include/pmieducar/geral.inc.php";
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 
 /**
  * clsIndexBase class.
@@ -84,8 +79,6 @@ class indice extends clsDetalhe
   function Gerar()
   {
     $this->titulo = 'Dispensa Componente Curricular - Detalhe';
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg',
-      'Intranet');
 
     $this->ref_cod_disciplina = $_GET['ref_cod_disciplina'];
     $this->ref_cod_matricula  = $_GET['ref_cod_matricula'];

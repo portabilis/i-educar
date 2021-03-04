@@ -29,10 +29,6 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/_stub/Enum1.php';
-require_once __DIR__.'/_stub/Enum2.php';
-require_once __DIR__.'/_stub/EnumCoffee.php';
-require_once __DIR__.'/_stub/EnumString.php';
 
 /**
  * CoreExt_EnumTest class.
@@ -102,20 +98,16 @@ class CoreExt_EnumTest extends PHPUnit\Framework\TestCase
     $this->assertEquals('red', $enum->getKey('#FF0000'));
   }
 
-  /**
-   * @expectedException CoreExt_Exception
-   */
   public function testEnumEApenasLeitura()
   {
+      $this->expectException(\CoreExt_Exception::class);
     $enum = CoreExt_Enum1Stub::getInstance();
     $enum['foo'] = 'bar';
   }
 
-  /**
-   * @expectedException CoreExt_Exception
-   */
   public function testEnumNaoPermiteRemoverEntrada()
   {
+      $this->expectException(\CoreExt_Exception::class);
     $enum = CoreExt_Enum1Stub::getInstance();
     unset($enum['foo']);
   }

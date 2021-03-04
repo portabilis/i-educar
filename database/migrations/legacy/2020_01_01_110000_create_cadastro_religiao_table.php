@@ -15,8 +15,6 @@ class CreateCadastroReligiaoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE SEQUENCE cadastro.religiao_cod_religiao_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -33,7 +31,7 @@ class CreateCadastroReligiaoTable extends Migration
                     data_exclusao timestamp without time zone,
                     ativo boolean DEFAULT false
                 );
-                
+
                 ALTER TABLE ONLY cadastro.religiao
                     ADD CONSTRAINT religiao_pkey PRIMARY KEY (cod_religiao);
 

@@ -1,11 +1,7 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'lib/Portabilis/Array/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
+# TODO remove-require
 require_once 'Reports/Tipos/TipoBoletim.php';
-require_once 'App/Model/IedFinder.php';
-require_once 'include/funcoes.inc.php';
 
 class TurmaController extends ApiCoreController
 {
@@ -151,7 +147,7 @@ class TurmaController extends ApiCoreController
 
         foreach ($lstMatriculaTurma as $matricula) {
             $lstNomes[] = [
-                'nome' => limpa_acentos(strtoupper($matricula['nome'])),
+                'nome' => limpa_acentos(mb_strtoupper($matricula['nome'])),
                 'ref_cod_matricula' => $matricula['ref_cod_matricula'],
                 'sequencial' => $matricula['sequencial']
             ];

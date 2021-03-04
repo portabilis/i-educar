@@ -51,13 +51,14 @@
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/min-portabilis.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/mytdt.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/jquery.modal.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/localizacaoSistema.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/custom.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('/intranet/styles/flash-messages.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Asset::get("/intranet/scripts/select2/select2.min.css") }}">
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
     <link rel="stylesheet" type='text/css' href='{{ Asset::get('css/base.css') }}'>
     <link rel="stylesheet" type="text/css" href='{{ Asset::get('/intranet/scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css') }}'>
+    <link rel="stylesheet" type="text/css" href='{{ Asset::get('/intranet/scripts/jquery-maxlength/jquery.maxlength.css') }}'>
+    <link rel="stylesheet" type="text/css" href="{{ Asset::get("/intranet/scripts/summernote/summernote-lite.css") }}">
 
     @stack('styles')
 
@@ -83,6 +84,8 @@
     <script type='text/javascript' src='{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/SimpleSearch.js') }}'></script>
     <script type='text/javascript' src='{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Utils.js') }}'></script>
     <script type='text/javascript' src='{{ Asset::get('/intranet/scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js') }}'></script>
+    <script type='text/javascript' src='{{ Asset::get('/intranet/scripts/summernote/summernote-lite.js') }}'></script>
+    <script type='text/javascript' src='{{ Asset::get('/intranet/scripts/summernote/summernote-pt-BR.js') }}'></script>
 
     <script type="text/javascript">
         window.ambiente = 'development';
@@ -267,10 +270,6 @@
         }
     }
 
-    function go(url) {
-        document.location = url;
-    }
-
     function excluir() {
         document.formcadastro.reset();
 
@@ -287,6 +286,14 @@
             document.formcadastro.submit();
         }
     }
+
+    function goOrClose(url) {
+        if (window.opener) {
+            window.close();
+        } else {
+            go(url);
+        }
+    }
 </script>
 
 <script type='text/javascript' src='{{ Asset::get('/modules/Portabilis/Assets/Javascripts/Utils.js') }}'></script>
@@ -294,6 +301,7 @@
 <script type='text/javascript'>(function ($) {
     $(document).ready(function () {
             fixupFieldsWidth();
+            fixAutoComplete()
         });
     })(jQuery);
 </script>
@@ -304,6 +312,8 @@
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/flash-messages.js") }}"></script>
 <script type="text/javascript" src="{{ Asset::get("/js/app.js") }}"></script>
 <script type="text/javascript" src="{{ Asset::get("/intranet/scripts/notifications.js") }}"></script>
+<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery-maxlength/jquery.plugin.min.js") }}"></script>
+<script type="text/javascript" src="{{ Asset::get("/intranet/scripts/jquery-maxlength/jquery.maxlength.min.js") }}"></script>
 <script>
     getNotifications();
 

@@ -1,8 +1,5 @@
 <?php
 
-require_once 'lib/Portabilis/Controller/Page/EditController.php';
-require_once 'Usuario/Model/FuncionarioDataMapper.php';
-require_once 'include/modules/clsModulesTipoVeiculo.inc.php';
 
 class VeiculoController extends Portabilis_Controller_Page_EditController
 {
@@ -123,13 +120,9 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
             'delete_success' => '/intranet/transporte_veiculo_lst.php'
         ], $this->_options);
         $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
-            'educar_transporte_escolar_index.php' => 'Transporte escolar',
-            '' => "$nomeMenu ve&iacute;culo"
+        $this->breadcrumb("$nomeMenu ve&iacute;culo", [
+            url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
         ]);
-        $this->enviaLocalizacao($localizacao->montar());
     }
 
     protected function _initNovo()

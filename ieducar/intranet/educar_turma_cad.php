@@ -15,20 +15,6 @@ use Illuminate\Support\Facades\DB;
 use RuntimeException;
 use Throwable;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Utils/CustomLabel.php';
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
-require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
-require_once 'lib/App/Model/Educacenso/LocalFuncionamentoDiferenciado.php';
-require_once 'lib/App/Model/Educacenso/TipoMediacaoDidaticoPedagogico.php';
 
 class clsIndexBase extends clsBase
 {
@@ -508,10 +494,6 @@ class indice extends clsCadastro
 
         $this->inputsHelper()->turmaTurno();
 
-        // modelos boletim
-        require_once 'Reports/Tipos/TipoBoletim.php';
-        require_once 'Portabilis/Array/Utils.php';
-
         $tiposBoletim = Portabilis_Model_Report_TipoBoletim::getInstance()->getEnums();
         $tiposBoletim = Portabilis_Array_Utils::insertIn(null, 'Selecione um modelo', $tiposBoletim);
 
@@ -749,17 +731,17 @@ class indice extends clsCadastro
             $this->escola_serie_disciplina = [];
 
             if (is_array($lista) && count($lista)) {
-                $conteudo .= '<div style="margin-bottom: 10px;">';
-                $conteudo .= '  <span style="display: block; float: left; width: 250px;">Nome</span>';
-                $conteudo .= '  <span style="display: block; float: left; width: 100px;">Nome abreviado</span>';
-                $conteudo .= '  <span style="display: block; float: left; width: 100px;">Carga hor&aacute;ria</span>';
-                $conteudo .= '  <span style="display: block; float: left;width: 100px;">Usar padr&atilde;o do componente?</span>';
+                $conteudo .= '<tr>';
+                $conteudo .= '<td  width="250"><span style="display: block; float: left; width: 250px;">Nome</span></td>';
+                $conteudo .= '<td><span>Nome abreviado</span></td>';
+                $conteudo .= '<td><span>Carga horária</span></td>';
+                $conteudo .= '<td><span>Usar padrão do componente?</span></td>';
                 if ($this->definirComponentePorEtapa) {
-                    $conteudo .= '  <span style="display: block; float: left;width: 150px;">Usar etapas espec&iacute;ficas?</span>';
+                    $conteudo .= '<td><span>Usar etapas específicas?</span></td>';
+                    $conteudo .= '<td><span">Etapas utilizadas</span></td>';
                 }
-                $conteudo .= '  <span style="display: block; float: left">Possui docente v&iacute;nculado?</span>';
-                $conteudo .= '</div>';
-                $conteudo .= '<br style="clear: left" />';
+                $conteudo .= '<td><span>Possui docente vinculado?</span></td>';
+                $conteudo .= '</tr>';
 
                 foreach ($lista as $registro) {
                     $checked = '';
@@ -789,23 +771,22 @@ class indice extends clsCadastro
                         $docenteVinculado = true;
                     }
 
-                    $conteudo .= '<div style="margin-bottom: 10px; float: left" class="linha-disciplina" >';
-                    $conteudo .= "  <label style='display: block; float: left; width: 250px'><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" class='check-disciplina' id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</label>";
-                    $conteudo .= "  <span style='display: block; float: left; width: 100px'>{$registro->abreviatura}</span>";
-                    $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></label>";
-                    $conteudo .= "  <label style='display: block; float: left; width: 100px;'><input type='checkbox' name='usar_componente[$registro->id]' value='1' " . ($usarComponente == true ? $checked : '') . ">($cargaComponente h)</label>";
+                    $conteudo .= '<tr class="linha-disciplina" >';
+                    $conteudo .= "<td><input type=\"checkbox\" $checked name=\"disciplinas[$registro->id]\" class='check-disciplina' id=\"disciplinas[]\" value=\"{$registro->id}\">{$registro}</td>";
+                    $conteudo .= "<td>{$registro->abreviatura}</td>";
+                    $conteudo .= "<td><input type='text' name='carga_horaria[$registro->id]' value='{$cargaHoraria}' size='5' maxlength='7'></td>";
+                    $conteudo .= "<td><input type='checkbox' name='usar_componente[$registro->id]' value='1' " . ($usarComponente == true ? $checked : '') . ">($cargaComponente h)</td>";
                     if ($this->definirComponentePorEtapa) {
-                        $conteudo .= "  <input style='float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' " . $checkedEtapaEspecifica . '></label>';
-                        $conteudo .= "  <label style='display: block; float: left; width: 150px;'>Etapas utilizadas: <input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapaUtilizada}' size='5' maxlength='7'></label>";
+                        $conteudo .= "<td><input style='float:left;' type='checkbox' id='etapas_especificas[]' name='etapas_especificas[$registro->id]' value='1' " . $checkedEtapaEspecifica . '></td>';
+                        $conteudo .= "<td><input type='text' class='etapas_utilizadas' name='etapas_utilizadas[$registro->id]' value='{$etapaUtilizada}' size='5' maxlength='7'></td>";
                     }
-                    $conteudo .= "  <label style='display: block; float: left'><input type='checkbox' name='docente_vinculado[$registro->id]' value='1' " . ($docenteVinculado == true ? $checked : '') . '></label>';
-                    $conteudo .= '</div>';
-                    $conteudo .= '<br style="clear: left" />';
+                    $conteudo .= "<td><input type='checkbox' name='docente_vinculado[$registro->id]' value='1' " . ($docenteVinculado == true ? $checked : '') . '></td>';
+                    $conteudo .= '</tr>';
 
                     $cargaHoraria = '';
                 }
 
-                $disciplinas = '<table cellspacing="0" cellpadding="0" border="0">';
+                $disciplinas = '<table id="componentes_turma_cad" cellspacing="0" cellpadding="0" border="0">';
                 $disciplinas .= sprintf('<tr align="left"><td>%s</td></tr>', $conteudo);
                 $disciplinas .= '</table>';
             } else {
@@ -939,8 +920,8 @@ class indice extends clsCadastro
         $turmaDetalhe = new clsPmieducarTurma($this->cod_turma);
         $possuiAlunosVinculados = $turmaDetalhe->possuiAlunosVinculados();
         $turmaDetalhe = $turmaDetalhe->detalhe();
-        $this->ref_cod_curso = $turmaDetalhe['ref_cod_curso'];
-        $this->ref_ref_cod_escola = $turmaDetalhe['ref_ref_cod_escola'];
+        $this->ref_cod_curso = $this->ref_cod_curso ?? $turmaDetalhe['ref_cod_curso'];
+        $this->ref_ref_cod_escola = $this->ref_ref_cod_escola ?? $turmaDetalhe['ref_ref_cod_escola'];
 
         if (!$this->verificaModulos()) {
             return false;
@@ -1478,8 +1459,7 @@ class indice extends clsCadastro
 
     public function atualizaComponentesCurriculares($codSerie, $codEscola, $codTurma, $componentes, $cargaHoraria, $usarComponente, $docente)
     {
-        require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
-        $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
+                $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
 
         $componentesTurma = [];
 

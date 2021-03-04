@@ -3,10 +3,6 @@
 use App\Models\Country;
 use iEducar\Legacy\InteractWithDatabase;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -54,13 +50,10 @@ class indice extends clsCadastro
         $this->nome_url_cancelar = 'Cancelar';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-         $_SERVER['SERVER_NAME'].'/intranet' => 'Início',
-         'educar_enderecamento_index.php'    => 'Endereçamento',
-         ''        => "{$nomeMenu} país"
-    ]);
-        $this->enviaLocalizacao($localizacao->montar());
+
+        $this->breadcrumb("{$nomeMenu} país", [
+            url('intranet/educar_enderecamento_index.php') => 'Endereçamento',
+        ]);
 
         return $retorno;
     }

@@ -29,8 +29,6 @@
  * @version     $Id$
  */
 
-require_once 'FormulaMedia/Validate/Formula.php';
-require_once 'FormulaMedia/Validate/Exception.php';
 
 /**
  * ValidateFormulaTest class.
@@ -66,11 +64,9 @@ class ValidateFormulaTest extends UnitBaseTest
     $this->assertTrue($validator->isValid($formula));
   }
 
-  /**
-   * @expectedException Exception
-   */
   public function testFormulaInvalidaQuandoUtilizaTokenNaoPermitido()
   {
+      $this->expectException(\Exception::class);
     $formula = 'Rc * 0.4 + Se * 0.6';
     $validator = new FormulaMedia_Validate_Formula();
     $this->assertTrue($validator->isValid($formula));
@@ -83,11 +79,9 @@ class ValidateFormulaTest extends UnitBaseTest
     $this->assertTrue($validator->isValid($formula));
   }
 
-  /**
-   * @expectedException Error
-   */
   public function testFormulaInvalidaPorErroDeSintaxe()
   {
+      $this->expectException(\Error::class);
     $formula = '(Rc * 0.4) + (Se * 0.6) ()';
     $validator = new FormulaMedia_Validate_Formula(array('excludeToken' => NULL));
     $this->assertTrue($validator->isValid($formula));

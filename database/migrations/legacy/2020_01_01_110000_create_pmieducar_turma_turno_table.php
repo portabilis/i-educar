@@ -15,8 +15,6 @@ class CreatePmieducarTurmaTurnoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.turma_turno_id_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -29,7 +27,7 @@ class CreatePmieducarTurmaTurnoTable extends Migration
                     nome character varying(15) NOT NULL,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.turma_turno
                     ADD CONSTRAINT turma_turno_pkey PRIMARY KEY (id);
 

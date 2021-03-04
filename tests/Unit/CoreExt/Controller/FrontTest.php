@@ -31,7 +31,6 @@ use PHPUnit\Framework\TestCase;
  * @version     $Id$
  */
 
-require_once 'CoreExt/Controller/Front.php';
 
 /**
  * CoreExt_Controller_FrontTest class.
@@ -61,11 +60,9 @@ class CoreExt_Controller_FrontTest extends PHPUnit\Framework\TestCase
     $this->_frontController->resetOptions();
   }
 
-  /**
-   * @expectedException InvalidArgumentException
-   */
   public function testOpcaoDeConfiguracaoNaoExistenteLancaExcecao()
   {
+      $this->expectException(\InvalidArgumentException::class);
     $this->_frontController->setOptions(array('foo' => 'bar'));
   }
 
@@ -78,8 +75,7 @@ class CoreExt_Controller_FrontTest extends PHPUnit\Framework\TestCase
 
   public function testRequestCustomizadoERegistradoEmController()
   {
-    require_once 'CoreExt/Controller/Request.php';
-    $request = new CoreExt_Controller_Request();
+        $request = new CoreExt_Controller_Request();
     $this->_frontController->setRequest($request);
     $this->assertSame($request, $this->_frontController->getRequest());
   }

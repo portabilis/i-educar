@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/Configurable.php';
 
 abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAccess, Countable, Iterator
 {
@@ -45,8 +44,7 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
         $passedOptions = array_keys($options);
 
         if (0 < count(array_diff($passedOptions, $defaultOptions))) {
-            require_once 'CoreExt/Exception/InvalidArgumentException.php';
-            throw new CoreExt_Exception_InvalidArgumentException(
+                        throw new CoreExt_Exception_InvalidArgumentException(
                 sprintf('A classe %s não suporta as opções: %s.', get_class($this), implode(', ', $passedOptions))
             );
         }
@@ -111,8 +109,7 @@ abstract class CoreExt_Session_Abstract implements CoreExt_Configurable, ArrayAc
     public function getSessionStorage()
     {
         if (is_null($this->_sessionStorage)) {
-            require_once 'CoreExt/Session/Storage/Default.php';
-            $this->setSessionStorage(new CoreExt_Session_Storage_Default([
+                        $this->setSessionStorage(new CoreExt_Session_Storage_Default([
                 'session_auto_start' => $this->getOption('session_auto_start')
             ]));
         }

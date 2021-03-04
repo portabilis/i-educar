@@ -4,17 +4,7 @@ use App\Models\LegacyRegistration;
 use App\Models\LegacySchoolClassStage;
 use App\Models\LegacySchoolStage;
 
-require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
-require_once 'Avaliacao/Service/Boletim.php';
-require_once 'App/Model/MatriculaSituacao.php';
-require_once 'RegraAvaliacao/Model/TipoPresenca.php';
-require_once 'RegraAvaliacao/Model/TipoParecerDescritivo.php';
 
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'lib/Portabilis/Controller/ApiCoreController.php';
-require_once 'Avaliacao/Fixups/CleanComponentesCurriculares.php';
-require_once 'include/modules/clsModulesNotaExame.inc.php';
-require_once 'Portabilis/String/Utils.php';
 
 class PromocaoApiController extends ApiCoreController
 {
@@ -173,7 +163,7 @@ class PromocaoApiController extends ApiCoreController
         if (!isset($this->_boletimServices[$matriculaId]) || $reload) {
             // set service
             try {
-                $params = ['matricula' => $matriculaId, 'usuario' => $this->getSession()->id_pessoa];
+                $params = ['matricula' => $matriculaId, 'usuario' => \Illuminate\Support\Facades\Auth::id()];
                 $this->_boletimServices[$matriculaId] = new Avaliacao_Service_Boletim($params);
             } catch (Exception $e) {
                 $this->messenger->append("Erro ao instanciar serviço boletim para matricula {$matriculaId}: " . $e->getMessage(), 'error', true);
@@ -190,6 +180,12 @@ class PromocaoApiController extends ApiCoreController
 
     protected function getNota($etapa = null, $componenteCurricularId)
     {
+        $notaComponente = $this->boletimService()->getNotaComponente($componenteCurricularId, $etapa);
+
+        if (empty($notaComponente)) {
+            return '';
+        }
+
         // FIXME #parameters
         $nota = urldecode($this->boletimService()->getNotaComponente($componenteCurricularId, $etapa)->nota);
 
@@ -285,7 +281,7 @@ class PromocaoApiController extends ApiCoreController
 
                 if ($hasNotaOrParecerInEtapa) {
                     // FIXME #parameters
-                    $falta = $this->boletimService()->getFalta($etapa)->quantidade;
+                    $falta = $this->boletimService()->getFalta($etapa) ? $this->boletimService()->getFalta($etapa)->quantidade : null;
 
                     if (is_null($falta)) {
                         $notaFalta = new Avaliacao_Model_FaltaGeral([

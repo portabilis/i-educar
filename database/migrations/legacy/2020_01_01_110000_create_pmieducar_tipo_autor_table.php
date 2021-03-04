@@ -15,8 +15,6 @@ class CreatePmieducarTipoAutorTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE TABLE pmieducar.tipo_autor (
                     codigo integer,
                     tipo_autor character varying(255)

@@ -1,11 +1,5 @@
 <?php
 
-require_once ("include/clsBanco.inc.php");
-if( file_exists("include/juris/jurisGeral.inc.php") )
-{
-    require_once ("include/juris/jurisGeral.inc.php");
-}
-
 class clsAgenda
 {
     var $cod_pessoa_dono;
@@ -464,7 +458,7 @@ class clsAgenda
         if($cod_compromisso)
         {
             $db->Consulta( "SELECT 1 FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$cod_compromisso}' AND ref_cod_agenda = '{$this->agenda}'" );
-            if( $db->Num_Linhas() )
+            if( $db->numLinhas() )
             {
                 return true;
             }

@@ -15,8 +15,6 @@ class CreatePortalAgendaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE portal.agenda_cod_agenda_seq
                     START WITH 0
                     INCREMENT BY 1
@@ -35,7 +33,7 @@ class CreatePortalAgendaTable extends Migration
                     data_edicao timestamp without time zone,
                     ref_ref_cod_pessoa_own integer
                 );
-                
+
                 ALTER TABLE ONLY portal.agenda
                     ADD CONSTRAINT agenda_pkey PRIMARY KEY (cod_agenda);
 

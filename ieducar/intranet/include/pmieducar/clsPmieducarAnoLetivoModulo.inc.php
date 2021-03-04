@@ -3,7 +3,6 @@
 use iEducar\Legacy\Model;
 use Illuminate\Support\Facades\Session;
 
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarAnoLetivoModulo extends Model
 {
@@ -124,7 +123,7 @@ class clsPmieducarAnoLetivoModulo extends Model
                 $this->ref_ref_cod_escola,
                 $this->ref_ano,
                 null,
-                Session::get('id_pessoa'),
+                \Illuminate\Support\Facades\Auth::id(),
                 null,
                 null,
                 null,

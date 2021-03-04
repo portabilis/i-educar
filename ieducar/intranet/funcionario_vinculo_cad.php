@@ -1,8 +1,5 @@
 <?php
 
-require_once('include/clsBase.inc.php');
-require_once('include/clsCadastro.inc.php');
-require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
@@ -49,13 +46,8 @@ class indice extends clsCadastro
         $this->url_cancelar = 'funcionario_vinculo_lst.php';
 
         $nomeMenu = $retorno == 'Editar' ? $retorno : 'Cadastrar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            '' => "{$nomeMenu} v&iacute;nculo"
-        ]);
 
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb("{$nomeMenu} v&iacute;nculo");
 
         return $retorno;
     }

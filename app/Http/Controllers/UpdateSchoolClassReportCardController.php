@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-require_once 'Reports/Tipos/TipoBoletim.php';
 
 use App\Http\Requests\UpdateSchoolClassReportCardRequest;
 use App\Models\LegacySchoolClass;
 use App\Process;
+use CoreExt_Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -16,12 +17,15 @@ class UpdateSchoolClassReportCardController extends Controller
 {
     /**
      * @param Request $request
-     * @return View
+     *
+     * @throws CoreExt_Exception
+     *
+     * @return RedirectResponse|View
      */
     public function index(Request $request)
     {
         if (!$request->user()->isAdmin() && !$request->user()->isInstitutional()) {
-            return redirect('/');
+            return back()->withErrors(['Error' => ['Você não tem permissão para acessar este recurso']]);
         }
 
         $this->breadcrumb('Atualização de boletins em lote', [
@@ -37,9 +41,9 @@ class UpdateSchoolClassReportCardController extends Controller
     }
 
     /**
-     *
      * @param UpdateSchoolClassReportCardRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     *
+     * @return RedirectResponse
      */
     public function update(UpdateSchoolClassReportCardRequest $request)
     {

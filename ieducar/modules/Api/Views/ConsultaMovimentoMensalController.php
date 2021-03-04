@@ -10,7 +10,6 @@ use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatReclassificadoseQuery
 use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatTrocaeQueryFactory;
 use iEducar\Modules\Reports\QueryFactory\MovimentoMensalMatTrocasQueryFactory;
 
-require_once 'ConsultaBaseController.php';
 
 class ConsultaMovimentoMensalController extends ConsultaBaseController
 {

@@ -29,11 +29,6 @@
  * @version   $Id$
  */
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsListagem.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'CoreExt/View/Helper/UrlHelper.php';
 
 /**
  * clsIndexBase class.
@@ -90,9 +85,6 @@ class indice extends clsListagem
     foreach ($_GET as $var => $val) {
       $this->$var = ($val === '') ? NULL : $val;
     }
-
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg',
-      'Intranet');
 
     $this->addCabecalhos(array(
       'Ano', 'Escola', 'Curso', 'Série', 'Turno', 'Vagas'

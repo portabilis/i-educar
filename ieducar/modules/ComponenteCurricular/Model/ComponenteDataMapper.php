@@ -1,7 +1,5 @@
 <?php
 
-require_once 'CoreExt/DataMapper.php';
-require_once 'ComponenteCurricular/Model/Componente.php';
 
 class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
 {
@@ -24,7 +22,8 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
         'abreviatura' => 'abreviatura',
         'tipo_base' => 'tipo_base',
         'codigo_educacenso' => 'codigo_educacenso',
-        'ordenamento' => 'ordenamento'
+        'ordenamento' => 'ordenamento',
+        'desconsidera_para_progressao' => 'desconsidera_para_progressao'
     ];
 
     protected $_notPersistable = [
@@ -63,8 +62,7 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
     public function getAreaDataMapper()
     {
         if (is_null($this->_areaDataMapper)) {
-            require_once 'AreaConhecimento/Model/AreaDataMapper.php';
-            $this->setAreaDataMapper(new AreaConhecimento_Model_AreaDataMapper());
+                        $this->setAreaDataMapper(new AreaConhecimento_Model_AreaDataMapper());
         }
 
         return $this->_areaDataMapper;
@@ -92,8 +90,7 @@ class ComponenteCurricular_Model_ComponenteDataMapper extends CoreExt_DataMapper
     public function getAnoEscolarDataMapper()
     {
         if (is_null($this->_anoEscolarDataMapper)) {
-            require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
-            $this->setAnoEscolarDataMapper(new ComponenteCurricular_Model_AnoEscolarDataMapper());
+                        $this->setAnoEscolarDataMapper(new ComponenteCurricular_Model_AnoEscolarDataMapper());
         }
 
         return $this->_anoEscolarDataMapper;

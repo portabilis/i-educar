@@ -15,8 +15,6 @@ class CreatePmieducarBackupTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE SEQUENCE pmieducar.backup_id_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -31,9 +29,9 @@ class CreatePmieducarBackupTable extends Migration
                 );
 
                 ALTER SEQUENCE pmieducar.backup_id_seq OWNED BY pmieducar.backup.id;
-                
+
                 ALTER TABLE ONLY pmieducar.backup ALTER COLUMN id SET DEFAULT nextval(\'pmieducar.backup_id_seq\'::regclass);
-                
+
                 ALTER TABLE ONLY pmieducar.backup
                     ADD CONSTRAINT backup_pkey PRIMARY KEY (id);
 

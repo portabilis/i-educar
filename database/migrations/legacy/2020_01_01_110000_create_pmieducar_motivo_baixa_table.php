@@ -15,8 +15,6 @@ class CreatePmieducarMotivoBaixaTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.motivo_baixa_cod_motivo_baixa_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -35,7 +33,7 @@ class CreatePmieducarMotivoBaixaTable extends Migration
                     ativo smallint DEFAULT (1)::smallint NOT NULL,
                     ref_cod_biblioteca integer
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.motivo_baixa
                     ADD CONSTRAINT motivo_baixa_pkey PRIMARY KEY (cod_motivo_baixa);
 

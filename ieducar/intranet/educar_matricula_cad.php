@@ -10,15 +10,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use App\Events\RegistrationEvent;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/Date/Utils.php';
-require_once 'lib/Portabilis/String/Utils.php';
-require_once 'lib/Portabilis/Utils/Database.php';
-require_once 'lib/CoreExt/Controller/Request.php';
-require_once 'modules/Avaliacao/Views/PromocaoApiController.php';
 
 class clsIndexBase extends clsBase
 {
@@ -441,8 +432,7 @@ class indice extends clsCadastro
         }
 
         if (is_array($anoLetivoEmAndamentoEscola)) {
-            require_once 'include/pmieducar/clsPmieducarSerie.inc.php';
-            $db = new clsBanco();
+                        $db = new clsBanco();
 
             $db->Consulta("SELECT ref_ref_cod_serie, ref_cod_curso
                              FROM pmieducar.matricula
@@ -490,8 +480,6 @@ class indice extends clsCadastro
                     $cursoDeAtividadeComplementar = $cursoADeferir->cursoDeAtividadeComplementar();
 
                     if (($mesmoCursoAno || config('legacy.app.matricula.multiplas_matriculas') == 0) && !$cursoDeAtividadeComplementar) {
-                        require_once 'include/pmieducar/clsPmieducarEscola.inc.php';
-                        require_once 'include/pessoa/clsJuridica.inc.php';
 
                         $serie = new clsPmieducarSerie($m['ref_ref_cod_serie'], null, null, $m['ref_cod_curso']);
                         $serie = $serie->detalhe();
@@ -544,7 +532,7 @@ class indice extends clsCadastro
             $reload = Session::get('reload_faixa_etaria');
 
             if ($verificarDataCorte && !$reload) {
-                $instituicao = new clsPmiEducarInstituicao($this->ref_cod_instituicao);
+                $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
                 $instituicao = $instituicao->detalhe();
 
                 $dataCorte = $instituicao['data_base_matricula'];
@@ -761,7 +749,7 @@ class indice extends clsCadastro
                 );
             }
 
-            $objInstituicao = new clsPmiEducarInstituicao($this->ref_cod_instituicao);
+            $objInstituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
             $detInstituicao = $objInstituicao->detalhe();
             $controlaEspacoUtilizacaoAluno = $detInstituicao['controlar_espaco_utilizacao_aluno'];
 
@@ -1020,7 +1008,7 @@ class indice extends clsCadastro
 
     public function permiteDependenciaAnoConcluinte()
     {
-        $instituicao = new clsPmiEducarInstituicao($this->ref_cod_instituicao);
+        $instituicao = new clsPmieducarInstituicao($this->ref_cod_instituicao);
         $instituicao = $instituicao->detalhe();
         $serie = new clsPmieducarSerie($this->ref_cod_serie);
         $serie = $serie->detalhe();
@@ -1450,7 +1438,7 @@ class indice extends clsCadastro
             $int_ref_ref_cod_escola_mult = null,
             $int_ref_ref_cod_serie_mult = null,
             $int_qtd_min_alunos_matriculados = null,
-            $bool_verifica_serie_multiseriada = false,
+            $bool_verifica_serie_multiseriada = true,
             $bool_tem_alunos_aguardando_nota = null,
             $visivel = null,
             $turma_turno_id = $det_t['turma_turno_id'],

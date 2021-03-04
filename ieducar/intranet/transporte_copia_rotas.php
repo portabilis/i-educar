@@ -9,14 +9,7 @@
 error_reporting(E_ERROR);
 ini_set("display_errors", 1);
 
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsCadastro.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
 
-require_once 'include/modules/clsModulesItinerarioTransporteEscolar.inc.php';
-require_once("include/modules/clsModulesRotaTransporteEscolar.inc.php");
-require_once("include/modules/clsModulesEmpresaTransporteEscolar.inc.php");
 class clsIndexBase extends clsBase{
     function Formular(){
         $this->SetTitulo( "{$this->_instituicao} i-Educar - C&oacute;pia de Rotas" );
@@ -43,13 +36,9 @@ class indice extends clsCadastro {
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_cadastra( 950, $this->pessoa_logada, 7);
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_transporte_escolar_index.php"                  => "Transporte escolar",
-             ""                                  => "C&oacute;pia de rotas"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('C&oacute;pia de rotas', [
+        url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
+    ]);
 
         return $retorno;
     }

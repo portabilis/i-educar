@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Portabilis/Controller/Page/ListController.php';
-require_once 'Portabilis/Utils/CustomLabel.php';
 
 class ProcessamentoController extends Portabilis_Controller_Page_ListController
 {
@@ -19,16 +17,9 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
 
         parent::_preRender();
 
-        $localizacao = new LocalizacaoSistema();
-
-        $localizacao->entradaCaminhos(
-            [
-                $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
-                'educar_index.php' => 'Escola',
-                '' => 'Processamento de hist&oacute;rico escolar'
-            ]
-        );
-        $this->enviaLocalizacao($localizacao->montar(), true);
+        $this->breadcrumb('Processamento de histórico escolar', [
+            url('intranet/educar_index.php') => 'Escola',
+        ]);
     }
 
     // #TODO migrar funcionalidade para novo padrão
@@ -63,14 +54,21 @@ class ProcessamentoController extends Portabilis_Controller_Page_ListController
 
         $this->campoCheck(
             'alunos_dependencia',
-            'Processar somente hist&oacute;ricos de depend&ecirc;ncias',
+            'Processar somente históricos de dependências',
             null,
             null,
             false,
             false,
             false,
-            'Marque esta op&ccedil;&atilde;o para trazer somente alunos que possuem alguma depend&ecirc;ncia.'
+            'Marque esta opção para trazer somente alunos que possuem alguma dependência.'
         );
+
+        $usaCargaHorariaComponente = [
+            'rondondopara',
+        ];
+        $checked = in_array(config('legacy.report.mostrar_relatorios'), $usaCargaHorariaComponente);
+        $mensagemCh = 'Se esta opção for selecionada, passará a ser processada a CH informada no cadastro da <b>Turma</b> e/ou <b>Séries da escola</b>.';
+        $this->inputsHelper()->checkbox('emitir_carga_disciplinas', ['label' => 'Usar soma das cargas horárias dos componentes como carga horária total?', 'value' => $checked, $mensagemCh]);
 
         $campoPosicao = '';
 

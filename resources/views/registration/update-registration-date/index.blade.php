@@ -2,6 +2,7 @@
 
 @push('styles')
     <link rel="stylesheet" type="text/css" href="{{ Asset::get('css/ieducar.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ Asset::get('modules/Portabilis/Assets/Plugins/Chosen/chosen.css') }}"/>
 @endpush
 
 @section('content')
@@ -201,7 +202,8 @@
                     <td>{{ $registration->cod_matricula }}</td>
                     <td>{{ $registration->student->person->name }}</td>
                     <td>{{ $registration->data_matricula->format('d/m/Y') }}</td>
-                    <td>{{ $registration->lastEnrollment->data_enturmacao->format('d/m/Y') }}</td>
+                    <td>@if($registration->lastEnrollment) {{ $registration->lastEnrollment->data_enturmacao->format('d/m/Y') }} @else Sem enturmação @endif</td>
+                    <td></td>
                 </tr>
             @endforeach
             </tbody>
@@ -255,4 +257,5 @@
             src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Serie.js") }}"></script>
     <script type="text/javascript"
             src="{{ Asset::get("/modules/DynamicInput/Assets/Javascripts/Turma.js") }}"></script>
+    <script type="text/javascript" src="{{ Asset::get("/modules/Portabilis/Assets/Plugins/Chosen/chosen.jquery.min.js") }}"></script>
 @endprepend

@@ -1,9 +1,6 @@
 <?php
 
 $desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsDetalhe.inc.php");
-require_once ("include/clsBanco.inc.php");
 
 class clsIndex extends clsBase
 {
@@ -61,13 +58,9 @@ class indice extends clsDetalhe
 
         $this->largura = "100%";
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_pessoas_index.php"          => "Pessoas",
-         ""                                  => "Detalhe da pessoa jur&iacute;dica"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb("Detalhe da pessoa jurídica", [
+            url('intranet/educar_pessoas_index.php') => 'Pessoas',
+        ]);
     }
 }
 

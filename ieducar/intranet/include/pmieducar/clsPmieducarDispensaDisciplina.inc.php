@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarDispensaDisciplina extends Model
 {
@@ -81,8 +80,7 @@ class clsPmieducarDispensaDisciplina extends Model
         }
 
         if (is_numeric($ref_cod_disciplina) && is_numeric($ref_cod_escola) && is_numeric($ref_cod_serie)) {
-            require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
-            $anoEscolarMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+                        $anoEscolarMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
             $componenteAnos = $anoEscolarMapper->findAll([], [
                 'componenteCurricular' => $ref_cod_disciplina,
                 'anoEscolar' => $ref_cod_serie
@@ -207,6 +205,7 @@ class clsPmieducarDispensaDisciplina extends Model
             is_numeric($this->ref_usuario_exc)) {
             $db = new clsBanco();
             $set = '';
+            $gruda = '';
 
             if (is_numeric($this->ref_usuario_exc)) {
                 $set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";

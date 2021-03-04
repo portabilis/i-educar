@@ -15,8 +15,6 @@ class CreatePmieducarReservasTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-                
                 CREATE SEQUENCE pmieducar.reservas_cod_reserva_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -35,7 +33,7 @@ class CreatePmieducarReservasTable extends Migration
                     ref_cod_exemplar integer NOT NULL,
                     ativo smallint DEFAULT (1)::smallint NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.reservas
                     ADD CONSTRAINT reservas_pkey PRIMARY KEY (cod_reserva);
 

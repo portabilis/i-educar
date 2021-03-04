@@ -1,21 +1,36 @@
 $j(document).ready(function(){
-	var codigoEscola = document.getElementById('codigoEscola').value;
-	var nomeEscola = document.getElementById('escola').value;
-	var numeroSequencial = document.getElementById('numeroSequencial').value;
+	let codigoEscola = document.getElementById('codigoEscola').value;
+	let nomeEscola = document.getElementById('escola').value;
+	let numeroSequencial = document.getElementById('numeroSequencial').value;
+  const escola_em_outro_municipio = $j('#escola_em_outro_municipio');
+  const cidade_escola = $j('#escola_cidade');
+  const estado_escola = $j('#escola_uf');
+  const pais_escola = $j('#idpais');
 
 	//Quando for novo cadastro
 	if(codigoEscola === '' && nomeEscola === '' && numeroSequencial === ''){
 		$j('#ref_cod_escola').val("");
 		$j('#escola').closest('tr').hide();
+    cidade_escola.closest('tr').hide();
+    estado_escola.closest('tr').hide();
+    pais_escola.closest('tr').hide();
 	}
 	//Quando for edição e for outra
 	else if(codigoEscola === '' && numeroSequencial !== ''){
+    escola_em_outro_municipio.prop('checked', true);
+    $j('#ref_cod_instituicao').closest('tr').hide();
+    $j('#ref_cod_escola').closest('tr').hide();
 		$j('#ref_cod_escola').val('outra');
 		$j('#escola').closest('tr').show();
 		$j('#escola').val(nomeEscola);
 	}
 	//Quando for edição e não for outra
 	else{
+    cidade_escola.closest('tr').hide();
+    estado_escola.closest('tr').hide();
+    pais_escola.closest('tr').hide();
+    $j('#ref_cod_escola').makeRequired();
+    $j('#ref_cod_instituicao').makeRequired();
 		$j('#ref_cod_escola').val(codigoEscola);
 		$j('#escola').val('');
 		$j('#escola').closest('tr').hide();
@@ -35,20 +50,50 @@ $j(document).ready(function(){
 
 	habilitaPosicao();
 
-});
+    escola_em_outro_municipio.change(function () {
+      if (escola_em_outro_municipio.is(':checked')) {
+        $j('#ref_cod_escola').val('outra');
+        $j('#escola').closest('tr').show();
+        $j('#ref_cod_instituicao').closest('tr').hide();
+        $j('#ref_cod_escola').closest('tr').hide();
+        cidade_escola.closest('tr').show();
+        estado_escola.closest('tr').show();
+        pais_escola.closest('tr').show();
+        pais_escola.val('');
+        estado_escola.val('');
+        cidade_escola.val('');
+      } else {
+        $j('#escola').closest('tr').hide();
+        cidade_escola.closest('tr').hide();
+        estado_escola.closest('tr').hide();
+        pais_escola.closest('tr').hide();
+        pais_escola.val('');
+        estado_escola.val('');
+        cidade_escola.val('');
+        $j('#ref_cod_instituicao').closest('tr').show();
+        $j('#ref_cod_escola').closest('tr').show();
+        $j('#ref_cod_instituicao').makeRequired();
+        $j('#ref_cod_escola').makeRequired();
+        }
+      });
 
-	$j(function (){
-	$j('#ref_cod_escola').change(function (){
-		var ref_cod_escola_destino = $j('#ref_cod_escola').val();
-		if(ref_cod_escola_destino === 'outra'){
-			$j('#escola').closest('tr').show();
-		}
-		else{
-			$j('#escola').val('');
-			$j('#escola').closest('tr').hide();
-		}
-	});
-
+    $j('#ref_cod_escola').change(function () {
+      const cod_escola = $j('#ref_cod_escola').val();
+      let url = getResourceUrlBuilder.buildUrl('/module/Api/Escola',
+        'endereco-escola',
+        { escola_id : cod_escola }
+      );
+      let options = {
+        url      : url,
+        dataType : 'json',
+        success  : function (response) {
+          pais_escola.val(response.country_id);
+          estado_escola.val(response.state_abbreviation);
+          cidade_escola.val(response.city);
+        }
+      };
+      getResources(options);
+    });
 });
 
 document.getElementById('cb_faltas_globalizadas').onclick =function()
@@ -62,14 +107,14 @@ document.getElementById('cb_faltas_globalizadas').onclick();
 
 
 document.getElementById('idpais').onchange = function() {
-	var campoPais = document.getElementById( 'idpais' ).value;
-	var campoEstado = document.getElementById( 'escola_uf' );
+	let campoPais = document.getElementById( 'idpais' ).value;
+	let campoEstado = document.getElementById( 'escola_uf' );
 
 	campoEstado.length = 1;
 	campoEstado.disabled = true;
 	campoEstado.options[0] = new Option( 'Carregando estados', '', false, false );
 
-	var xml1 = new ajax(getEstado_XML);
+	let xml1 = new ajax(getEstado_XML);
 	strURL = "public_uf_xml.php?pais="+campoPais+"&abbreviation=true";
 	xml1.envia(strURL);
 }
@@ -78,14 +123,14 @@ function getEstado_XML(xml)
 {
 
 
-	var campoEstado = document.getElementById( 'escola_uf' );
+	let campoEstado = document.getElementById( 'escola_uf' );
 
 
-	var estados = xml.getElementsByTagName( "estado" );
+	let estados = xml.getElementsByTagName( "estado" );
 
 	campoEstado.length = 1;
 	campoEstado.options[0] = new Option( 'Selecione um estado', '', false, false );
-	for ( var j = 0; j < estados.length; j++ )
+	for ( let j = 0; j < estados.length; j++ )
 	{
 
 		campoEstado.options[campoEstado.options.length] = new Option( estados[j].firstChild.nodeValue, estados[j].getAttribute('id'), false, false );
@@ -101,14 +146,14 @@ function getEstado_XML(xml)
 
 // autocomplete disciplina fields
 
-var handleSelect = function(event, ui){
+let handleSelect = function(event, ui){
 	$j(event.target).val(ui.item.label);
 	return false;
 };
 
-var search = function(request, response) {
-	var searchPath = '/module/Api/ComponenteCurricular?oper=get&resource=componente_curricular-search';
-	var params     = { query : request.term };
+let search = function(request, response) {
+	let searchPath = '/module/Api/ComponenteCurricular?oper=get&resource=componente_curricular-search';
+	let params     = { query : request.term };
 
 	$j.get(searchPath, params, function(dataResponse) {
 		simpleSearch.handleSearch(dataResponse, response);
@@ -130,10 +175,10 @@ function setAutoComplete() {
 
 setAutoComplete();
 
-var submitForm = function(event) {
-	var $frequenciaField  	  = $j('#frequencia');
-	var frequencia        	  = $frequenciaField.val();
-	var frequenciaObrigatoria = $frequenciaField.hasClass('obrigatorio');
+let submitForm = function(event) {
+	let $frequenciaField  	  = $j('#frequencia');
+	let frequencia        	  = $frequenciaField.val();
+	let frequenciaObrigatoria = $frequenciaField.hasClass('obrigatorio');
 
 if (frequencia.indexOf(',') > -1){
 	frequencia = frequencia.replace('.', '').replace(',', '.');
@@ -149,7 +194,7 @@ if((frequencia.trim() == '')&&(!frequenciaObrigatoria)){
 
 // bind events
 
-var $addDisciplinaButton = $j('#btn_add_tab_add_1');
+let $addDisciplinaButton = $j('#btn_add_tab_add_1');
 
 $addDisciplinaButton.click(function(){
 	setAutoComplete();
@@ -158,8 +203,20 @@ $addDisciplinaButton.click(function(){
 
 // submit button
 
-var $submitButton = $j('#btn_enviar');
+let $submitButton = $j('#btn_enviar');
 
 $submitButton.removeAttr('onclick');
-$submitButton.click(submitForm);
+$submitButton.click(validaSubmit);
+
+  function validaSubmit() {
+    if (!$j('#escola_em_outro_municipio').is(':checked')) {
+      if ($j('#ref_cod_instituicao').closest("select").val() === '') {
+        return alert('É necessário informar a instituição');
+      }
+      if ($j('#ref_cod_escola').closest("select").val() === '') {
+        return alert('É necessário informar a escola');
+      }
+    }
+    acao();
+  };
 

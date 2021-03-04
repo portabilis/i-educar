@@ -4,24 +4,12 @@ use App\Models\City;
 use App\Models\Country;
 use App\Models\PersonHasPlace;
 use App\Services\UrlPresigner;
+use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesFichaMedicaAluno.inc.php';
-require_once 'include/modules/clsModulesMoradiaAluno.inc.php';
-require_once 'App/Model/ZonaLocalizacao.php';
-require_once 'Educacenso/Model/AlunoDataMapper.php';
-require_once 'Transporte/Model/AlunoDataMapper.php';
-require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
-require_once 'Portabilis/View/Helper/Application.php';
-require_once 'Portabilis/Utils/CustomLabel.php';
-require_once 'lib/Portabilis/Date/Utils.php';
 
 class clsIndexBase extends clsBase
 {
@@ -104,7 +92,7 @@ class indice extends clsDetalhe
                 $caminhoFoto = $detalheFoto['caminho'];
             }
 
-            $registro['nome_aluno'] = strtoupper($det_pessoa_fj['nome']);
+            $registro['nome_aluno'] = mb_strtoupper($det_pessoa_fj['nome']);
             $registro['cpf'] = int2IdFederal($det_fisica['cpf']);
             $registro['data_nasc'] = Portabilis_Date_Utils::pgSQLToBr($det_fisica['data_nasc']);
 
@@ -286,16 +274,6 @@ class indice extends clsDetalhe
         // código estado
         $this->addDetalhe([_cl('aluno.detalhe.codigo_estado'), $registro['aluno_estado_id']]);
 
-        if ($registro['caminho_foto']) {
-            $this->addDetalhe([
-                'Foto',
-                sprintf(
-                    '<img src="arquivos/educar/aluno/small/%s" border="0">',
-                    $this->urlPresigner()->getPresignedUrl($registro['caminho_foto'])
-                )
-            ]);
-        }
-
         if ($registro['nome_aluno']) {
             if ($caminhoFoto != null and $caminhoFoto != '') {
                 $url = $this->urlPresigner()->getPresignedUrl($caminhoFoto);
@@ -312,7 +290,7 @@ class indice extends clsDetalhe
         }
 
         if ($det_fisica['nome_social']) {
-            $this->addDetalhe(['Nome Social', strtoupper($det_fisica['nome_social'])]);
+            $this->addDetalhe(['Nome Social', mb_strtoupper($det_fisica['nome_social'])]);
         }
 
         if (idFederal2int($registro['cpf'])) {
@@ -364,7 +342,7 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Nacionalidade', $registro['nacionalidade']]);
         }
 
-        if ($registro['pais_origem']) {
+        if ($registro['pais_origem'] && $registro['nacionalidade'] != Nacionalidade::BRASILEIRA) {
             $this->addDetalhe(['País de Origem', $registro['pais_origem']]);
         }
 
@@ -482,7 +460,7 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Deficiências', $tabela]);
         }
 
-        if ($registro['url_documento'] && $registro['url_documento'] != '') {
+        if (!empty($registro['url_documento']) && $registro['url_documento'] != '[]') {
             $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Documentos</td></tr>';
             $cor = '#e9f0f8';
 
@@ -504,7 +482,7 @@ class indice extends clsDetalhe
             $this->addDetalhe(['Documentos do aluno', $tabela]);
         }
 
-        if ($registro['url_laudo_medico'] && $registro['url_laudo_medico'] != '') {
+        if (!empty($registro['url_laudo_medico']) && $registro['url_laudo_medico'] != '[]') {
             $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#ccdce6" align="center"><td>Laudo médico</td></tr>';
 
             $cor = '#D1DADF';
@@ -632,6 +610,26 @@ class indice extends clsDetalhe
                 sprintf('go("educar_historico_escolar_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno']),
                 sprintf('go("educar_distribuicao_uniforme_lst.php?ref_cod_aluno=%d");', $registro['cod_aluno'])
             ];
+
+            if ($titulo = config('legacy.app.alunos.sistema_externo.titulo')) {
+                $link = config('legacy.app.alunos.sistema_externo.link');
+                $token = config('legacy.app.alunos.sistema_externo.token');
+
+                $link = "go(\"{$link}\")";
+
+                $link = str_replace([
+                    '@aluno',
+                    '@usuario',
+                    '@token',
+                ], [
+                    $registro['cod_aluno'],
+                    $this->user()->getKey(),
+                    $token,
+                ], $link);
+
+                array_unshift($this->array_botao, $titulo);
+                array_unshift($this->array_botao_url_script, $link);
+            }
         }
 
         $objFichaMedica = new clsModulesFichaMedicaAluno($this->cod_aluno);
@@ -746,10 +744,8 @@ class indice extends clsDetalhe
                 $this->addDetalhe(['Qual', $reg['desc_plano_saude']]);
             }
 
-            $this->addDetalhe(['<span id="tr_tit_dados_hospital">Em caso de emergência, levar para hospital ou clínica</span>']);
-            $this->addDetalhe(['Nome', $reg['hospital_clinica']]);
-            $this->addDetalhe(['Endereço', $reg['hospital_clinica_endereco']]);
-            $this->addDetalhe(['Telefone', $reg['hospital_clinica_telefone']]);
+            $this->addDetalhe(['<span id="tr_tit_dados_hospital">Em caso de emergência, autorizo levar meu(minha) filho(a) para o Hospital ou Clínica mais próximos:</span>']);
+            $this->addDetalhe(['Responsável', $reg['desc_aceita_hospital_proximo']]);
             $this->addDetalhe(['<span id="tr_tit_dados_hospital">Em caso de emergência, se não for possível contatar os responsáveis, comunicar</span>']);
             $this->addDetalhe(['Nome', $reg['responsavel_nome']]);
             $this->addDetalhe(['Parentesco', $reg['responsavel_parentesco']]);

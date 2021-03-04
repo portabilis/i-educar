@@ -29,9 +29,6 @@
  * @version     $Id$
  */
 
-require_once __DIR__.'/TestCommon.php';
-require_once 'Avaliacao/Model/NotaComponente.php';
-
 /**
  * Avaliacao_Service_NotaTest class.
  *

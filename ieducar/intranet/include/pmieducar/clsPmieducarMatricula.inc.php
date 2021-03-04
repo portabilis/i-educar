@@ -1,9 +1,7 @@
 <?php
 
 use iEducar\Legacy\Model;
-use Illuminate\Support\Facades\Session;
 
-require_once 'include/pmieducar/geral.inc.php';
 
 class clsPmieducarMatricula extends Model
 {
@@ -31,7 +29,6 @@ class clsPmieducarMatricula extends Model
     public $data_cancel;
     public $turno_pre_matricula;
     public $dependencia;
-    public $pessoa_logada;
 
     /**
      * caso seja a primeira matricula do aluno
@@ -79,8 +76,6 @@ class clsPmieducarMatricula extends Model
         $this->db = $db;
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'matricula';
-
-        $this->pessoa_logada = Session::get('id_pessoa');
 
         $this->_campos_lista = $this->_todos_campos = 'm.cod_matricula, m.ref_cod_reserva_vaga, m.ref_ref_cod_escola, m.ref_ref_cod_serie, m.ref_usuario_exc, m.ref_usuario_cad, m.ref_cod_aluno, m.aprovado, m.data_cadastro, m.data_exclusao, m.ativo, m.ano, m.ultima_matricula, m.modulo,formando,descricao_reclassificacao,matricula_reclassificacao, m.ref_cod_curso,m.matricula_transferencia,m.semestre, m.data_matricula, m.data_cancel, m.ref_cod_abandono_tipo, m.turno_pre_matricula, m.dependencia, data_saida_escola';
 
@@ -1448,7 +1443,7 @@ class clsPmieducarMatricula extends Model
 
             $db = new clsBanco();
             $db->Consulta($select);
-            $total_registros = $db->Num_Linhas();
+            $total_registros = $db->numLinhas();
 
             if (!$total_registros) {
                 return false;
@@ -1570,7 +1565,7 @@ class clsPmieducarMatricula extends Model
 
             $db = new clsBanco();
             $db->Consulta($select);
-            $total_registros = $db->Num_Linhas();
+            $total_registros = $db->numLinhas();
 
             if (!$total_registros) {
                 return false;

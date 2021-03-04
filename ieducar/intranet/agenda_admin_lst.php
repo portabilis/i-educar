@@ -1,9 +1,6 @@
 <?php
 
 $desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
 
 class clsIndex extends clsBase
 {
@@ -63,12 +60,7 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Listagem de agendas"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+        $this->breadcrumb('Listagem de agendas');
     }
 }
 

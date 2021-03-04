@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LegacyInstitution;
 use App\Models\LegacySchoolClassType;
 use App\Models\LegacyUser;
 use Faker\Generator as Faker;
@@ -17,6 +18,7 @@ $factory->define(LegacySchoolClassType::class, function (Faker $faker) {
         'nm_tipo' => 'Tipo ' . $name,
         'sgl_tipo' => $abbreviation,
         'data_cadastro' => now(),
+        'ref_cod_instituicao' => factory(LegacyInstitution::class)->state('unique')->make(),
     ];
 });
 

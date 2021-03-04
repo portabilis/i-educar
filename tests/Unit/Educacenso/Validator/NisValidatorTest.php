@@ -19,7 +19,7 @@ class NisValidatorTest extends TestCase
         $validator = new NisValidator('00000000000');
 
         $this->assertFalse($validator->isValid());
-        $this->assertContains('Os números do campo: NIS (PIS/PASEP) não podem ser todos zeros.', $validator->getMessage());
+        $this->assertStringContainsString('Os números do campo: NIS (PIS/PASEP) não podem ser todos zeros.', $validator->getMessage());
     }
 
     public function testNisWithAllCharactersOne()

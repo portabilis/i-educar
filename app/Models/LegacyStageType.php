@@ -51,4 +51,26 @@ class LegacyStageType extends Model
     {
         return $query->where('ativo', 1);
     }
+
+    /**
+     * Indica se já existe um registro cadastrado com o mesmo nome e o mesmo
+     * número de etapa(s).
+     *
+     * @param string   $name
+     * @param int      $stagesNumber
+     * @param int|null $id
+     *
+     * @return bool
+     */
+    public static function alreadyExists($name, $stagesNumber, $id = null)
+    {
+        return self::query()
+            ->where('ativo', 1)
+            ->where('nm_tipo', $name)
+            ->where('num_etapas', $stagesNumber)
+            ->when($id, function ($query) use ($id) {
+                $query->where('cod_modulo', '<>', $id);
+            })
+            ->exists();
+    }
 }

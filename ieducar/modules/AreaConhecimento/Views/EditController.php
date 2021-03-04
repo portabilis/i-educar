@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/EditController.php';
-require_once 'AreaConhecimento/Model/AreaDataMapper.php';
-require_once '../intranet/include/clsBanco.inc.php';
 
 class EditController extends Core_Controller_Page_EditController
 {
@@ -51,15 +48,9 @@ class EditController extends Core_Controller_Page_EditController
 
         $nomeMenu = $this->getRequest()->id == null ? 'Cadastrar' : 'Editar';
 
-        $localizacao = new LocalizacaoSistema();
-
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => "$nomeMenu &aacute;rea de conhecimento"
+        $this->breadcrumb("$nomeMenu área de conhecimento", [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
     }
 
     /**

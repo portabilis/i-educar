@@ -1,6 +1,5 @@
 <?php
 
-require_once 'CoreExt/Entity.php';
 
 class Educacenso_Model_OrgaoRegional extends CoreExt_Entity
 {

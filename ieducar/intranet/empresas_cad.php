@@ -3,9 +3,6 @@
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 
 $desvio_diretorio = '';
-require_once('include/clsBase.inc.php');
-require_once('include/clsCadastro.inc.php');
-require_once('include/clsBanco.inc.php');
 
 class clsIndex extends clsBase
 {
@@ -93,13 +90,10 @@ class indice extends clsCadastro
         $this->nome_url_cancelar = 'Cancelar';
 
         $nomeMenu = $this->retorno == 'Editar' ? $this->retorno : 'Cadastrar';
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'] . '/intranet' => 'In&iacute;cio',
-            'educar_pessoas_index.php' => 'Pessoas',
-            '' => "$nomeMenu pessoa jur&iacute;dica"
+
+        $this->breadcrumb("{$nomeMenu} pessoa jurídica", [
+            url('intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
-        $this->enviaLocalizacao($localizacao->montar());
 
         return $this->retorno;
     }
@@ -119,7 +113,7 @@ class indice extends clsCadastro
             $this->campoTexto('razao_social', 'Raz&atilde;o Social', $this->razao_social, '50', '255', true);
             $this->campoTexto('capital_social', 'Capital Social', $this->capital_social, '50', '255');
 
-            $nivelUsuario = (new clsPermissoes)->nivel_acesso($this->getSession()->id_pessoa);
+            $nivelUsuario = (new clsPermissoes)->nivel_acesso(\Illuminate\Support\Facades\Auth::id());
             if (!$this->cod_pessoa_fj || $nivelUsuario > App_Model_NivelTipoUsuario::INSTITUCIONAL) {
                 $this->campoRotulo('cnpj_', 'CNPJ', $this->cnpj);
                 $this->campoOculto('cnpj', $this->cnpj);
@@ -235,7 +229,7 @@ class indice extends clsCadastro
             $this->simpleRedirect('empresas_lst.php');
         }
 
-        $this->mensagem = 'Ja existe uma empresa cadastrada com este CNPJ. ';
+        $this->mensagem = 'Já existe uma empresa cadastrada com este CNPJ.';
 
         return false;
     }
@@ -245,8 +239,10 @@ class indice extends clsCadastro
         $this->cnpj = idFederal2int(urldecode($this->cnpj));
         $objJuridica = new clsJuridica(false, $this->cnpj);
 
-        if ($objJuridica->detalhe()) {
-            $this->mensagem = 'Ja existe uma empresa cadastrada com este CNPJ. ';
+        $detalhe = $objJuridica->detalhe();
+
+        if ($detalhe && $this->cod_pessoa_fj != $detalhe['idpes']) {
+            $this->mensagem = 'Já existe uma empresa cadastrada com este CNPJ.';
 
             return false;
         }

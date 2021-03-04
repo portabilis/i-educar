@@ -28,12 +28,6 @@
  * @version   $Id$
  */
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'include/modules/clsModulesComponenteCurricularAnoEscolar.inc.php';
-require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 
 /**
  * clsIndexBase class.
@@ -138,7 +132,7 @@ class indice extends clsCadastro
     $this->campoOculto('serie_id', $this->serie_id);
     $this->campoOculto('serie_id', $this->serie_id);
     $this->campoOculto('retorno', $this->retorno);
-    $this->campoOculto('sugestao_anos_letivos', json_encode(array_values($this->sugestaoAnosLetivos())));
+    $this->campoOculto('sugestao_anos_letivos', json_encode(array_values($this->anosLetivosExistentes())));
 
     $this->inputsHelper()->dynamic('instituicao', array('value' => $this->instituicao_id));
 

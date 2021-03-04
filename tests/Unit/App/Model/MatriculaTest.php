@@ -29,8 +29,6 @@
  * @version     $Id: /ieducar/branches/1.1.0-avaliacao/ieducar/tests/unit/App/Model/IedFinderTest.php 1046 2009-12-21T17:30:49.663282Z eriksencosta  $
  */
 
-require_once 'App/Model/Matricula.php';
-require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 
 /**
  * App_Model_MatriculaTest class.

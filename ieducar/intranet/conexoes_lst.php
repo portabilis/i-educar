@@ -4,9 +4,6 @@ use Illuminate\Support\Facades\Session;
 
 
 $desvio_diretorio = "";
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
 
 class clsIndex extends clsBase
 {
@@ -31,7 +28,7 @@ class indice extends clsListagem
         $limite = 20;
         $iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
 
-        $id_pessoa = Session::get('id_pessoa');
+        $id_pessoa = \Illuminate\Support\Facades\Auth::id();
 
         $sql = "SELECT b.data_hora, b.ip_externo FROM acesso b WHERE cod_pessoa={$id_pessoa}";
         if (!empty($_GET['status']))
@@ -84,13 +81,7 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Listagem de conex&otilde;es realizadas"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-
+        $this->breadcrumb('Listagem de conexões realizadas');
     }
 }
 

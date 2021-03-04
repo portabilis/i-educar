@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/ViewController.php';
-require_once 'AreaConhecimento/Model/AreaDataMapper.php';
 
 class ViewController extends Core_Controller_Page_ViewController
 {
@@ -21,15 +19,9 @@ class ViewController extends Core_Controller_Page_ViewController
     {
         parent::_preRender();
 
-        $localizacao = new LocalizacaoSistema();
-
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => 'Detalhe da &aacute;rea de conhecimento'
+        $this->breadcrumb('Detalhe da &aacute;rea de conhecimento', [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
     }
 
     public function getEntry()

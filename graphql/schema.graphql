@@ -1,0 +1,5 @@
+type Query {
+    now: DateTime!
+}
+
+type Mutation

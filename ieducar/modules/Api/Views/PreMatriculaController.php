@@ -4,12 +4,6 @@ use App\Models\City;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
 use Illuminate\Support\Str;
 
-require_once 'Portabilis/Controller/ApiCoreController.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/String/Utils.php';
-require_once 'Portabilis/Array/Utils.php';
-require_once 'Portabilis/Date/Utils.php';
-require_once 'include/pmieducar/geral.inc.php';
 
 class PreMatriculaController extends ApiCoreController
 {
@@ -538,7 +532,7 @@ class PreMatriculaController extends ApiCoreController
         $fisica->data_nasc = $dataNascimento;
         $fisica->idpes_cad = 1;
         $fisica->idpes_rev = 1;
-        $fisica->sexo = strtoupper($sexo);
+        $fisica->sexo = mb_strtoupper($sexo);
 
         $sql = 'select 1 from cadastro.fisica WHERE idpes = $1 limit 1';
 

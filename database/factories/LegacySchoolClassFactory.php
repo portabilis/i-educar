@@ -14,7 +14,8 @@ use Illuminate\Database\Eloquent\Factory;
 $factory->define(LegacySchoolClass::class, function (Faker $faker) {
 
     $schoolGrade = factory(LegacySchoolGrade::class)->create();
-    $evaluationRule = factory(LegacyEvaluationRuleGradeYear::class)->create([
+
+    factory(LegacyEvaluationRuleGradeYear::class)->create([
         'serie_id' => $schoolGrade->grade,
         'ano_letivo' => now()->year,
     ]);
@@ -36,7 +37,7 @@ $factory->define(LegacySchoolClass::class, function (Faker $faker) {
     ];
 });
 
-$factory->defineAs(LegacySchoolClass::class, 'morning', function (Faker $faker) use ($factory) {
+$factory->state(LegacySchoolClass::class, 'morning', function (Faker $faker) use ($factory) {
     $schollClass = $factory->raw(LegacySchoolClass::class);
 
     return array_merge($schollClass, [
@@ -45,7 +46,7 @@ $factory->defineAs(LegacySchoolClass::class, 'morning', function (Faker $faker) 
     ]);
 });
 
-$factory->defineAs(LegacySchoolClass::class, 'afternoon', function (Faker $faker) use ($factory) {
+$factory->state(LegacySchoolClass::class, 'afternoon', function (Faker $faker) use ($factory) {
     $schollClass = $factory->raw(LegacySchoolClass::class);
 
     return array_merge($schollClass, [

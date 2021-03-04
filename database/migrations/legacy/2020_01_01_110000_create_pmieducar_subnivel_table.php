@@ -15,8 +15,6 @@ class CreatePmieducarSubnivelTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = false;
-
                 CREATE SEQUENCE pmieducar.subnivel_cod_subnivel_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -36,7 +34,7 @@ class CreatePmieducarSubnivelTable extends Migration
                     ativo boolean DEFAULT true NOT NULL,
                     salario double precision NOT NULL
                 );
-                
+
                 ALTER TABLE ONLY pmieducar.subnivel
                     ADD CONSTRAINT subnivel_pkey PRIMARY KEY (cod_subnivel);
 

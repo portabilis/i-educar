@@ -29,13 +29,7 @@
  * @version   $Id$
  */
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsDetalhe.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
 
-require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
-require_once 'Educacenso/Model/DocenteDataMapper.php';
 
 use App\Models\Employee;
 use App\Models\EmployeeWithdrawal;
@@ -93,7 +87,6 @@ class indice extends clsDetalhe
   function Gerar()
   {
     $this->titulo = 'Servidor - Detalhe';
-    $this->addBanner('imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
     $this->cod_servidor        = $_GET['cod_servidor'];
     $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
@@ -529,7 +522,7 @@ class indice extends clsDetalhe
     $this->breadcrumb('Funções do servidor', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
-    
+
   }
 }
 

@@ -1,4 +1,3 @@
-
 var url = window.location.href;
 var modoCadastro = url.indexOf("id=") == -1;
 
@@ -444,7 +443,7 @@ $j('.tablecadastro >tbody  > tr').each(function (index, row) {
 });
 
 // Adiciona classe para que os campos de descrição possam ser desativados (checkboxs)
-$j('#restricao_atividade_fisica, #acomp_medico_psicologico, #medicacao_especifica, #tratamento_medico, #doenca_congenita, #alergia_alimento, #alergia_medicamento, #fratura_trauma, #plano_saude').addClass('temDescricao');
+$j('#restricao_atividade_fisica, #acomp_medico_psicologico, #medicacao_especifica, #tratamento_medico, #doenca_congenita, #alergia_alimento, #alergia_medicamento, #fratura_trauma, #plano_saude, #aceita_hospital_proximo').addClass('temDescricao');
 
 // ajax
 
@@ -719,10 +718,17 @@ resourceOptions.handleGet = function (dataResponse) {
         $j('#fratura_trauma').attr('checked', true);
         $j('#fratura_trauma').val('on');
     }
+
     if (dataResponse.plano_saude == 'S') {
         $j('#plano_saude').attr('checked', true);
         $j('#plano_saude').val('on');
     }
+
+    if (dataResponse.aceita_hospital_proximo == 'S') {
+      $j('#aceita_hospital_proximo').attr('checked', true);
+      $j('#aceita_hospital_proximo').val('on');
+    }
+
     // campos texto
     $j('#altura').val(dataResponse.altura);
     $j('#peso').val(dataResponse.peso);
@@ -738,9 +744,7 @@ resourceOptions.handleGet = function (dataResponse) {
     $j('#desc_restricao_atividade_fisica').val(dataResponse.desc_restricao_atividade_fisica);
     $j('#desc_fratura_trauma').val(dataResponse.desc_fratura_trauma);
     $j('#desc_plano_saude').val(dataResponse.desc_plano_saude);
-    $j('#hospital_clinica').val(dataResponse.hospital_clinica);
-    $j('#hospital_clinica_endereco').val(dataResponse.hospital_clinica_endereco);
-    $j('#hospital_clinica_telefone').val(dataResponse.hospital_clinica_telefone);
+    $j('#desc_aceita_hospital_proximo').val(dataResponse.desc_aceita_hospital_proximo);
     $j('#responsavel').val(dataResponse.responsavel);
     $j('#responsavel_parentesco').val(dataResponse.responsavel_parentesco);
     $j('#responsavel_parentesco_telefone').val(dataResponse.responsavel_parentesco_telefone);
@@ -1775,7 +1779,7 @@ function canShowParentsFields() {
                   </td>
                 </tr>
               </table>
-              <p><a id="link_cadastro_detalhado" target="_blank">Cadastro detalhado</a></p>
+              <p><a id="link_cadastro_detalhado">Cadastro detalhado</a></p>
             </form>
           </div>
 
@@ -1991,7 +1995,7 @@ function canShowParentsFields() {
             }
         });
 
-        $j('body').append('<div id="dialog-form-pessoa-parent"><form><h2></h2><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="49" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option><option id="estado-civil-pessoa-parent_7" value="7">Não informado</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> <div id="falecido-modal"> <label>Falecido?</label><input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </div></fieldset><p><a id="link_cadastro_detalhado_parent" target="_blank">Cadastro detalhado</a></p></form></div>');
+        $j('body').append('<div id="dialog-form-pessoa-parent"><form><h2></h2><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="49" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option><option id="estado-civil-pessoa-parent_7" value="7">Não informado</option></select><label for="data-nasc-pessoa-parent"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-parent" id="data-nasc-pessoa-parent" value="" size="11" maxlength="10"> <div id="falecido-modal"> <label>Falecido?</label><input type="checkbox" name="falecido-parent" id="falecido-parent" style="display:inline;"> </div></fieldset><p><a id="link_cadastro_detalhado_parent">Cadastro detalhado</a></p></form></div>');
 
         $j('#dialog-form-pessoa-parent').find(':input').css('display', 'block');
 
@@ -2051,11 +2055,15 @@ function canShowParentsFields() {
             }
         });
 
-        $j('#link_cadastro_detalhado').click(function () {
+        $j('#link_cadastro_detalhado').click(function (e) {
+            e.preventDefault();
+            windowUtils.open(this.href);
             $j("#dialog-form-pessoa-aluno").dialog("close");
         });
 
-        $j('#link_cadastro_detalhado_parent').click(function () {
+        $j('#link_cadastro_detalhado_parent').click(function (e) {
+            e.preventDefault();
+            windowUtils.open(this.href);
             $j("#dialog-form-pessoa-parent").dialog("close");
         });
 

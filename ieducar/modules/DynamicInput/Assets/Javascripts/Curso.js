@@ -33,8 +33,15 @@
       $cursoField.change();
     };
 
-    // bind onchange event
     $escolaField.change(updateCursos);
-    $ano.change(updateCursos);
-  }); // ready
+    $ano.change(function () {
+
+      // Evita que o select "curso" tenha seus valores limpos ao alterar o campo ano
+      if ($cursoField.attr('data-refresh-ano') === 'false') {
+        return;
+      }
+
+      updateCursos();
+    });
+  });
 })(jQuery);

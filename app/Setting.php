@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Support\Database\DateSerializer;
 use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
+    use DateSerializer;
+
     const TYPE_STRING = 'string';
     const TYPE_FLOAT = 'float';
     const TYPE_INTEGER = 'integer';
@@ -15,7 +18,7 @@ class Setting extends Model
      * @var array
      */
     protected $fillable = [
-        'key', 'value', 'type', 'description',
+        'key', 'value', 'type', 'description', 'setting_category_id', 'hint'
     ];
 
     /**
@@ -44,5 +47,10 @@ class Setting extends Model
         }
 
         return $value;
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(SettingCategory::class, 'setting_category_id');
     }
 }

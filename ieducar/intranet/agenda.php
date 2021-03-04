@@ -29,12 +29,6 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 
-require_once('include/clsBase.inc.php');
-require_once('include/clsBanco.inc.php');
-require_once('include/clsAgenda.inc.php');
-//require_once ("include/juris/jurisGeral.inc.php");
-require_once('agenda_calendario.php');
-require_once 'include/localizacaoSistema.php';
 
 class clsIndex extends clsBase
 {
@@ -42,8 +36,6 @@ class clsIndex extends clsBase
     {
         $this->SetTitulo("{$this->_instituicao} Agenda Particular");
         $this->processoAp = '0';
-        $this->addEstilo('agenda');
-        $this->addScript('agenda');
     }
 }
 
@@ -68,7 +60,7 @@ class indice extends clsCadastro
         $db = new clsBanco();
         $db2 = new clsBanco();
         // inicializacao de variaveis
-        $this->editor = Session::get('id_pessoa');
+        $this->editor = \Illuminate\Support\Facades\Auth::id();
 
         Portabilis_View_Helper_Application::loadJavascript($this, '/intranet/scripts/agenda.js');
         Portabilis_View_Helper_Application::loadStylesheet($this, '/intranet/styles/agenda.css');
@@ -193,7 +185,7 @@ class indice extends clsCadastro
                                     </td>
                                     <td class=\"data-info\" title=\"Dia: {$this->arr_data_atual[0]} de {$mesesArr[$this->arr_data_atual[1]]} de {$this->arr_data_atual[2]}\" align=\"center\">
                                         <span class=\"data1\">{$this->arr_data_atual[0]}<br></span>
-                                        <span class=\"data2\">" . strtoupper(substr($mesesArr[$this->arr_data_atual[1]], 0, 3)) . "<br>
+                                        <span class=\"data2\">" . mb_strtoupper(substr($mesesArr[$this->arr_data_atual[1]], 0, 3)) . "<br>
                                         <span class=\"data3\">{$this->arr_data_atual[2]}</span></td>
                                     <td class=\"arrow-dia\" rowspan=\"2\" valign=\"middle\">
                                         <a href=\"{$this->scriptNome}?cod_agenda={$this->agenda}&time={$this->time_amanha}\">
@@ -387,7 +379,7 @@ class indice extends clsCadastro
 
             // verifica se o compromisso eh mesmo dessa agenda
             $db->Consulta("SELECT 1 FROM portal.agenda_compromisso WHERE ref_cod_agenda = '{$this->agenda}' AND cod_agenda_compromisso = '{$_GET['versoes']}'");
-            if ($db->Num_Linhas()) {
+            if ($db->numLinhas()) {
                 // seleciona as versoes desse compromisso
                 $db->Consulta("SELECT versao, ref_ref_cod_pessoa_cad, ativo, data_inicio, titulo, descricao, importante, publico, data_cadastro, data_fim FROM portal.agenda_compromisso WHERE cod_agenda_compromisso = '{$_GET['versoes']}' ORDER BY versao DESC");
                 while ($db->ProximoRegistro()) {

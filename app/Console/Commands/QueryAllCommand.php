@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Menu;
 use App\Support\Database\Connections;
 use Exception;
 use Illuminate\Console\Command;
@@ -11,12 +10,13 @@ use Illuminate\Support\Facades\DB;
 class QueryAllCommand extends Command
 {
     use Connections;
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'query:all {--no-database=*} {--file=}';
+    protected $signature = 'query:all {--no-database=*} {--database=*} {--file=}';
 
     /**
      * The console command description.
@@ -28,7 +28,7 @@ class QueryAllCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
     public function handle()
     {
@@ -37,8 +37,15 @@ class QueryAllCommand extends Command
         $file = file_get_contents($this->getFile());
 
         $excludedDatabases = $this->option('no-database');
+        $allowedDatabases = $this->option('database');
 
-        foreach ($this->getConnections() as $connection) {
+        $connections = $this->getConnections();
+
+        if (count($allowedDatabases)) {
+            $connections = array_intersect($connections, $allowedDatabases);
+        }
+
+        foreach ($connections as $connection) {
             if (in_array($connection, $excludedDatabases)) {
                 continue;
             }

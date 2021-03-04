@@ -4,12 +4,6 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/clsPmieducarUsuario.inc.php';
-require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
-require_once 'include/pmieducar/clsPmieducarFuncionarioVinculo.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -38,7 +32,8 @@ class indice extends clsCadastro
     public function Inicializar()
     {
         $retorno = 'Novo';
-
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra(561, $this->pessoa_logada, 7, "educar_usuario_lst.php");
         $this->ref_pessoa = $_POST['ref_pessoa'];
 
         if ($_GET['ref_pessoa']) {
@@ -74,8 +69,7 @@ class indice extends clsCadastro
                     $this->$campo = $val;
                 }
 
-                $obj_permissoes = new clsPermissoes();
-                $this->fexcluir = $obj_permissoes->permissao_excluir(555, $this->pessoa_logada, 7, 'educar_usuario_lst.php', true);
+                $this->fexcluir = $obj_permissoes->permissao_excluir(555, $this->pessoa_logada, 7);
                 $retorno = 'Editar';
             }
         }

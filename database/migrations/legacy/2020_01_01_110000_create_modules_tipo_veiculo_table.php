@@ -15,8 +15,6 @@ class CreateModulesTipoVeiculoTable extends Migration
     {
         DB::unprepared(
             '
-                SET default_with_oids = true;
-
                 CREATE SEQUENCE modules.tipo_veiculo_seq
                     START WITH 1
                     INCREMENT BY 1
@@ -28,7 +26,7 @@ class CreateModulesTipoVeiculoTable extends Migration
                     cod_tipo_veiculo integer DEFAULT nextval(\'modules.tipo_veiculo_seq\'::regclass) NOT NULL,
                     descricao character varying(60)
                 );
-                
+
                 ALTER TABLE ONLY modules.tipo_veiculo
                     ADD CONSTRAINT tipo_veiculo_pkey PRIMARY KEY (cod_tipo_veiculo);
 

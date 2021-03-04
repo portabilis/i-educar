@@ -13,8 +13,6 @@ use iEducar\Modules\EvaluationRules\Exceptions\EvaluationRuleNotDefinedInLevel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
-require_once 'CoreExt/Entity.php';
-require_once 'App/Model/Exception.php';
 
 class App_Model_IedFinder extends CoreExt_Entity
 {
@@ -89,7 +87,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $escolas = [];
 
         foreach ($_escolas->lista(null, null, null, $instituicaoId) as $escola) {
-            $escolas[$escola['cod_escola']] = $escola['nome'];
+            $escolas[$escola['cod_escola']] = mb_strtoupper($escola['nome']);
         }
 
         return $escolas;
@@ -570,8 +568,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $ano = null
     ) {
         if (is_null($mapper)) {
-            require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
-            $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
+                        $mapper = new ComponenteCurricular_Model_TurmaDataMapper();
         }
 
         $where = ['turma' => $turma];
@@ -708,6 +705,7 @@ class App_Model_IedFinder extends CoreExt_Entity
                         'cargaHoraria' => $getCargaHoraria($componentes, $discipline->id) ?? ($discipline->cargaHoraria ?? $disciplinesAcademicYear->get($discipline->id)),
                         'codigo_educacenso' => $discipline->codigo_educacenso,
                         'ordenamento' => $discipline->ordenamento,
+                        'desconsidera_para_progressao' => $discipline->desconsidera_para_progressao,
                     ]);
                 })->keyBy('id')->all();
 
@@ -725,8 +723,12 @@ class App_Model_IedFinder extends CoreExt_Entity
      * @throws EvaluationRuleNotDefinedInLevel
      * @throws StudentNotEnrolledInSchoolClass
      */
-    public static function getMatricula($codMatricula)
+    public static function getMatricula($codMatricula, $codTurma = null)
     {
+        if (empty($codTurma)) {
+            $codTurma = 0;
+        }
+
         $sql = '
             SELECT
                 m.cod_matricula,
@@ -794,6 +796,7 @@ class App_Model_IedFinder extends CoreExt_Entity
             ON rasa.ano_letivo = m.ano
             AND rasa.serie_id = s.cod_serie
             WHERE m.cod_matricula = $1
+            AND CASE WHEN $2 = 0 THEN true ELSE t.cod_turma = $2 END
             AND a.ativo = 1
             AND t.ativo = 1
             AND
@@ -815,10 +818,13 @@ class App_Model_IedFinder extends CoreExt_Entity
                     )
                 )
             )
+            ORDER BY
+                mt.ativo DESC,
+                mt.sequencial DESC
             LIMIT 1
     ';
 
-        $matricula = Portabilis_Utils_Database::selectRow($sql, ['params' => $codMatricula]);
+        $matricula = Portabilis_Utils_Database::selectRow($sql, ['params' => [$codMatricula, $codTurma]]);
 
         if (!$matricula) {
             throw new StudentNotEnrolledInSchoolClass($codMatricula);
@@ -853,8 +859,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $possuiDeficiencia = self::verificaSePossuiDeficiencia($matricula['ref_cod_aluno']);
 
         if (is_null($mapper)) {
-            require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
-            $mapper = new RegraAvaliacao_Model_RegraDataMapper();
+                        $mapper = new RegraAvaliacao_Model_RegraDataMapper();
         }
 
         if (dbBool($matricula['escola_utiliza_regra_diferenciada']) && is_numeric($matricula['serie_regra_avaliacao_diferenciada_id'])) {
@@ -896,8 +901,7 @@ class App_Model_IedFinder extends CoreExt_Entity
         $escola = self::getEscola($turma['ref_ref_cod_escola']);
 
         if (is_null($mapper)) {
-            require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
-            $mapper = new RegraAvaliacao_Model_RegraDataMapper();
+                        $mapper = new RegraAvaliacao_Model_RegraDataMapper();
         }
 
         if (dbBool($escola['utiliza_regra_diferenciada']) && is_numeric($serie['regra_avaliacao_diferenciada_id'])) {

@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/ListController.php';
-require_once 'AreaConhecimento/Model/AreaDataMapper.php';
 
 class IndexController extends Core_Controller_Page_ListController
 {
@@ -21,15 +19,9 @@ class IndexController extends Core_Controller_Page_ListController
     {
         parent::_preRender();
 
-        $localizacao = new LocalizacaoSistema();
-
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => 'Listagem de &aacute;reas de conhecimento'
+        $this->breadcrumb('Listagem de &aacute;reas de conhecimento', [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
     }
 
     public function getEntries()

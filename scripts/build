@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 VERSION=`cat composer.json | jq -r '.version' | tr -d '[:space:]'`
 BUILD_FOLDER=ieducar-${VERSION}

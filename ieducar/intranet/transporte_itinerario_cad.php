@@ -27,14 +27,7 @@
  * @version   $Id$
  */
 
-require_once 'include/clsBase.inc.php';
-require_once 'include/clsCadastro.inc.php';
-require_once 'include/clsBanco.inc.php';
-require_once 'include/pmieducar/geral.inc.php';
-require_once 'lib/Portabilis/View/Helper/Application.php';
 
-require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
-require_once 'include/modules/clsModulesItinerarioTransporteEscolar.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -102,13 +95,9 @@ class indice extends clsCadastro
         $this->url_cancelar = "transporte_rota_det.php?cod_rota={$this->cod_rota}";
         $this->nome_url_cancelar = "Cancelar";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_transporte_escolar_index.php" => "Transporte escolar",
-         "" => "Editar itinerário"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->breadcrumb('Editar itinerário', [
+        url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
+    ]);
 
         return $retorno;
     }

@@ -3,69 +3,76 @@
     "description": "Software livre de gestão escolar",
     "type": "project",
     "license": "GPL-2.0-or-later",
-    "version": "2.3.10",
+    "version": "2.5.3",
     "keywords": [
         "Portabilis",
         "i-Educar"
     ],
     "homepage": "https://github.com/portabilis/i-educar",
     "require": {
-        "php": "^7.3",
+        "php": "^7.4",
         "ext-gd": "*",
         "ext-json": "*",
         "ext-pdo": "*",
         "ext-pgsql": "*",
         "aws/aws-sdk-php-laravel": "^3.4",
-        "barryvdh/laravel-cors": "^0.11.4",
-        "cocur/slugify": "^3.1",
         "composer/semver": "^1.4",
         "cossou/jasperphp": "^2.7",
+        "dex/composer-plug-and-play": "~0.1",
         "doctrine/dbal": "^2.9",
-        "edersoares/laravel-plug-and-play": "^1.1",
-        "fideloper/proxy": "^4.0",
+        "fideloper/proxy": "^4.4",
+        "fruitcake/laravel-cors": "^2.0",
         "google/recaptcha": "^1.2",
-        "guzzlehttp/guzzle": "^6.3",
-        "honeybadger-io/honeybadger-laravel": "^1.4",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "honeybadger-io/honeybadger-laravel": "^3.0",
         "intervention/image": "^2.5",
-        "laravel/framework": "^6.0",
-        "laravel/horizon": "^3.4",
-        "laravel/tinker": "^1.0",
+        "laravel/framework": "^8.12",
+        "laravel/horizon": "^5.0",
+        "laravel/legacy-factories": "^1.1",
+        "laravel/tinker": "^2.5",
+        "laravel/ui": "^3.0",
+        "league/csv": "^9.6",
         "league/flysystem-aws-s3-v3": "~1.0",
         "league/flysystem-cached-adapter": "~1.0",
         "league/flysystem-sftp": "^1.0",
         "maatwebsite/excel": "^3.1",
+        "mll-lab/graphql-php-scalars": "^3.1",
+        "nuwave/lighthouse": "^4.18",
         "phpoffice/phpspreadsheet": "^1.6",
         "predis/predis": "^1.1",
-        "prettus/l5-repository": "^2.6",
         "swiftmailer/swiftmailer": "^6.1",
         "tooleks/laravel-asset-version": "^1.0"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.2",
         "beyondcode/laravel-dump-server": "^1.0",
+        "facade/ignition": "^2.5",
+        "fakerphp/faker": "^1.9.1",
         "filp/whoops": "^2.0",
         "friendsofphp/php-cs-fixer": "^2.13",
-        "fzaninotto/faker": "^1.4",
-        "laravel/dusk": "^5.1",
-        "laravel/telescope": "^2.0",
-        "mockery/mockery": "^1.0",
-        "nunomaduro/collision": "^3.0",
-        "phpunit/phpunit": "^7.5"
+        "laravel/sail": "^0.0.5",
+        "laravel/telescope": "^4.0",
+        "mockery/mockery": "^1.4.2",
+        "nunomaduro/collision": "^5.0",
+        "phpunit/phpunit": "^9.3.3"
     },
     "autoload": {
         "classmap": [
-            "database/seeds",
             "database/factories",
             "ieducar/intranet/include",
-            "ieducar/lib"
+            "ieducar/lib",
+            "ieducar/modules/*/Model",
+            "ieducar/modules/Avaliacao/Service",
+            "ieducar/modules/Avaliacao/Fixups",
+            "ieducar/modules/Avaliacao/Views",
+            "ieducar/modules/FormulaMedia/Validate"
         ],
         "files": [
             "ieducar/intranet/include/funcoes.inc.php"
         ],
         "psr-4": {
             "App\\": "app/",
-            "iEducar\\": "src",
-            "iEducar\\Packages\\Reports\\": "ieducar/modules/Reports/src"
+            "Database\\Seeders\\": "database/seeders/",
+            "iEducar\\": "src"
         }
     },
     "autoload-dev": {
@@ -85,14 +92,7 @@
     "extra": {
         "laravel": {
             "dont-discover": [
-                "laravel/dusk",
-                "laravel/telescope",
-                "barryvdh/laravel-debugbar"
-            ]
-        },
-        "merge-plugin": {
-            "include": [
-                "packages/*/*/composer.json"
+                "laravel/telescope"
             ]
         }
     },
@@ -125,7 +125,7 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
-        ]
+      ]
     },
     "config": {
         "preferred-install": "dist",

@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Core/Controller/Page/EditController.php';
-require_once 'ComponenteCurricular/Model/Componente.php';
-require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 
 class AnoController extends Core_Controller_Page_EditController
 {
@@ -173,15 +170,9 @@ class AnoController extends Core_Controller_Page_EditController
     {
         parent::_preRender();
 
-        $localizacao = new LocalizacaoSistema();
-
-        $localizacao->entradaCaminhos([
-            $_SERVER['SERVER_NAME'].'/intranet' => 'In&iacute;cio',
-            'educar_index.php' => 'Escola',
-            '' => 'Carga horária dos anos escolares'
+        $this->breadcrumb('Carga horária dos anos escolares', [
+            url('intranet/educar_index.php') => 'Escola',
         ]);
-
-        $this->enviaLocalizacao($localizacao->montar());
     }
 
     /**

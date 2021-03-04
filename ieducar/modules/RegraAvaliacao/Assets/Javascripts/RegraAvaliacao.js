@@ -1,7 +1,7 @@
 hideShowTabelaArredondamentoNota();
 $j('input:radio').change(function(){
   hideShowTabelaArredondamentoNota();
-}); 
+});
 
 function hideShowTabelaArredondamentoNota(){
   if($j("input[name='tipoNota']:checked").val() == 3){
@@ -64,7 +64,7 @@ $j('[name^="recuperacao[excluir]"]').on('change', function(){
     $j(this).val('');
 });
 
-$j('#notaGeralPorEtapa, #aprovaMediaDisciplina, #reprovacaoAutomatica, #definirComponentePorEtapa').on('change', function(){
+$j('#notaGeralPorEtapa, #aprovaMediaDisciplina, #reprovacaoAutomatica, #definirComponentePorEtapa, #desconsiderarLancamentoFrequencia').on('change', function(){
   if($j(this).is(':checked'))
     $j(this).val('1');
   else

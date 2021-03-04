@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Process;
 use App\Setting;
+use App\SettingCategory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -11,6 +12,7 @@ class SettingController extends Controller
 {
     /**
      * @param Request $request
+     *
      * @return View
      */
     public function index(Request $request)
@@ -21,19 +23,13 @@ class SettingController extends Controller
 
         $this->menu(Process::SETTINGS);
 
-        if(!$request->user()->isAdmin()) {
-            return redirect('/intranet/educar_configuracoes_index.php');
+        if (!$request->user()->isAdmin()) {
+            return back()->withErrors(['Error' => ['Você não tem permissão para acessar este recurso']]);
         }
 
-        $fields = $this->getSettingsFields();
-        return view('settings.index', ['fields' => $fields]);
-    }
+        $categories = SettingCategory::whereHas('settings')->orderBy('id', 'desc')->get();
 
-    private function getSettingsFields()
-    {
-        return Setting::query()
-        ->OrderBy('key')
-        ->get();
+        return view('settings.index', ['categories' => $categories]);
     }
 
     public function saveInputs(Request $request)
