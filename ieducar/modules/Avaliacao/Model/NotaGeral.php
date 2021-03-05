@@ -1,6 +1,5 @@
 <?php
 
-
 class Avaliacao_Model_NotaGeral extends Avaliacao_Model_Etapa
 {
     protected $_data = [

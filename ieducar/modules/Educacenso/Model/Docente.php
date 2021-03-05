@@ -1,6 +1,5 @@
 <?php
 
-
 class Educacenso_Model_Docente extends Educacenso_Model_CodigoReferencia
 {
     public function getDefaultValidatorCollection()

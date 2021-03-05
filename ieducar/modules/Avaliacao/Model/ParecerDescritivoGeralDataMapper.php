@@ -1,6 +1,5 @@
 <?php
 
-
 class Avaliacao_Model_ParecerDescritivoGeralDataMapper extends Avaliacao_Model_ParecerDescritivoAbstractDataMapper
 {
     protected $_entityClass = 'Avaliacao_Model_ParecerDescritivoGeral';

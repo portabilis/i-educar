@@ -1,7 +1,5 @@
 <?php
 
-
-
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 

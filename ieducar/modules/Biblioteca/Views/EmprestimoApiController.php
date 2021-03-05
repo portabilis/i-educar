@@ -3,8 +3,6 @@
 #error_reporting(E_ALL);
 #ini_set("display_errors", 1);
 
-
-
 class EmprestimoApiController extends ApiCoreController
 {
     protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_BIBLIOTECA;

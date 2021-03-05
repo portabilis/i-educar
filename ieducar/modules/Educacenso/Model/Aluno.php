@@ -1,6 +1,5 @@
 <?php
 
-
 class Educacenso_Model_Aluno extends Educacenso_Model_CodigoReferencia
 {
     protected $_data = [

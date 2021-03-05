@@ -3,8 +3,6 @@
 #error_reporting(E_ALL);
 #ini_set("display_errors", 1);
 
-
-
 class ReservaController extends Portabilis_Controller_Page_ListController
 {
     protected $_dataMapper = ''; #Avaliacao_Model_NotaAlunoDataMapper';

@@ -1,7 +1,5 @@
 <?php
 
-
-
 // Id do país na tabela public.pais
 $id = isset($_GET['rota']) ? $_GET['rota'] : null;
 

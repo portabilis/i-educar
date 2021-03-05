@@ -1,6 +1,5 @@
 <?php
 
-
 class Educacenso_Model_Ies extends CoreExt_Entity
 {
     protected $_data = [

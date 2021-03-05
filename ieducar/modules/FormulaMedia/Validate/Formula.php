@@ -1,6 +1,5 @@
 <?php
 
-
 class FormulaMedia_Validate_Formula extends CoreExt_Validate_Abstract
 {
     /**

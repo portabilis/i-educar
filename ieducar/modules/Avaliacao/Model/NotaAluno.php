@@ -1,6 +1,5 @@
 <?php
 
-
 class Avaliacao_Model_NotaAluno extends CoreExt_Entity
 {
     protected $_data = [

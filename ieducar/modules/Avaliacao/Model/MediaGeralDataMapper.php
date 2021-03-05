@@ -1,6 +1,5 @@
 <?php
 
-
 class Avaliacao_Model_MediaGeralDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'Avaliacao_Model_MediaGeral';

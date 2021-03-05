@@ -1,6 +1,5 @@
 <?php
 
-
 abstract class Educacenso_Model_CodigoReferencia extends CoreExt_Entity
 {
     protected $_data = [

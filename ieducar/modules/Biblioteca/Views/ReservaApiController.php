@@ -3,8 +3,6 @@
 #error_reporting(E_ALL);
 #ini_set("display_errors", 1);
 
-
-
 // TODO migrar novo padrao api controller
 
 class ReservaApiController extends ApiCoreController

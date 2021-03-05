@@ -1,6 +1,5 @@
 <?php
 
-
 class Avaliacao_Model_ParecerDescritivoComponente extends Avaliacao_Model_ParecerDescritivoAbstract
 {
     /**

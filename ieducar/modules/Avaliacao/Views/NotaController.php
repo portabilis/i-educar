@@ -1,6 +1,5 @@
 <?php
 
-
 class NotaController extends Core_Controller_Page_EditController
 {
     protected $_dataMapper        = 'Avaliacao_Model_NotaComponenteDataMapper';

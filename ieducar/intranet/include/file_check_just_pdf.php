@@ -1,7 +1,5 @@
 <?php
 
-
-
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,8 +14,7 @@ class FileControllerPdf
         $file,
         $maxSize = null,
         $suportedExtensions = null
-    )
-    {
+    ) {
         $this->file = $file;
 
         if ($maxSize!=null) {

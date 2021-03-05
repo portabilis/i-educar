@@ -3,7 +3,6 @@
 #error_reporting(E_ALL);
 #ini_set("display_errors", 1);
 
-
 class TipoExemplarController extends ApiCoreController
 {
     protected $_dataMapper  = 'Biblioteca_Model_TipoExemplarDataMapper';

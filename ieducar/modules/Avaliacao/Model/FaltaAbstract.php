@@ -1,6 +1,5 @@
 <?php
 
-
 abstract class Avaliacao_Model_FaltaAbstract extends Avaliacao_Model_Etapa
 {
     protected $_data = [

@@ -1,6 +1,5 @@
 <?php
 
-
 class Educacenso_Model_EscolaDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'Educacenso_Model_Escola';

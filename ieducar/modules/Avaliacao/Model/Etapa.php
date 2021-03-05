@@ -1,6 +1,5 @@
 <?php
 
-
 abstract class Avaliacao_Model_Etapa extends CoreExt_Entity
 {
     public function __construct($options = [])

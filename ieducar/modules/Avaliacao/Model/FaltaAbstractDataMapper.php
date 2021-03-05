@@ -1,6 +1,5 @@
 <?php
 
-
 abstract class Avaliacao_Model_FaltaAbstractDataMapper extends CoreExt_DataMapper
 {
     protected $_tableSchema = 'modules';

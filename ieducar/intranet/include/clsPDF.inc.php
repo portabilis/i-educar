@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 class clsPDF
 {
     public $nome;
@@ -36,8 +33,7 @@ class clsPDF
         $palavrasChaves,
         $depurar = false,
         $reder = true
-    )
-    {
+    ) {
         $this->nome = $nome;
         $this->titulo = $titulo;
         $this->palavrasChaves = $palavrasChaves;
@@ -423,8 +419,7 @@ class clsPDF
         $linha = 0.1,
         $color = '#000000',
         $color2 = '#FFFFFF'
-    )
-    {
+    ) {
         $altura  = $y_bottomright - $y_topleft;
         $largura = $x_bottomright - $x_topleft;
         $this->quadrado_relativo(
@@ -460,8 +455,7 @@ class clsPDF
         $linha = 0.1,
         $color = '#000000',
         $color2 = '#FFFFFF'
-    )
-    {
+    ) {
         $this->Shape(
             'ret',
             $x_topleft,
@@ -484,8 +478,7 @@ class clsPDF
         $color2 = '#000000',
         $teck = true,
         $teck2 = true
-    )
-    {
+    ) {
         if ($teck2) {
             $this->SetLine($linha);
             $this->SetBoth($color1);
@@ -525,8 +518,7 @@ class clsPDF
         $linha = 0.1,
         $color = '#000000',
         $color2 = '#FFFFFF'
-    )
-    {
+    ) {
         $this->Line(
             $x_topleft,
             $this->altura - $y_topleft,
@@ -560,8 +552,7 @@ class clsPDF
         $linha = 0.1,
         $color = '#000000',
         $color2 = '#FFFFFF'
-    )
-    {
+    ) {
         $this->Line(
             $x_topleft,
             $this->altura - $y_topleft,
@@ -585,8 +576,7 @@ class clsPDF
         $linha = 2.001,
         $color1 = '#000000',
         $color2 = '#000000'
-    )
-    {
+    ) {
         if ($teck2) {
             $this->SetLine($linha);
             $this->SetBoth($color1);
@@ -616,8 +606,7 @@ class clsPDF
         $color = '#888888',
         $align = 'center',
         $local = 'box'
-    )
-    {
+    ) {
         $this->SetFont($fonte, $tamanho);
         $this->SetBoth($color);
 
@@ -663,8 +652,7 @@ class clsPDF
         $tamanho = '10',
         $color = '#000000',
         $align = 'left'
-    )
-    {
+    ) {
         $this->Write(
             $texto,
             $x_topleft,
@@ -688,8 +676,7 @@ class clsPDF
         $tamanho = '10',
         $color = '#000000',
         $align = 'center'
-    )
-    {
+    ) {
         $this->escreve_relativo(
             $texto,
             $x_topleft,
@@ -729,8 +716,7 @@ class clsPDF
         $tamanho = '10',
         $color = '#000000',
         $align = 'left'
-    )
-    {
+    ) {
         $this->Write(
             $texto,
             $x_topleft,

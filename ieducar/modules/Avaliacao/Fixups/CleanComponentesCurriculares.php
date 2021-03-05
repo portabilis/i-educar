@@ -1,7 +1,5 @@
 <?php
 
-
-
 /* Ao desvincular componente curriculares, as notas, medias e faltas lançadas para estes continuam na base de dados
   impedindo que o aluno seja promovido, caso todas notas ou faltas destes componentes não tenham sido lançadas.
   para impedir isto, é removido as notas, medias e faltas lançadas para os componentes removidos.

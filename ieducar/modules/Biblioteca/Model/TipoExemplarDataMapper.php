@@ -1,6 +1,5 @@
 <?php
 
-
 class Biblioteca_Model_TipoExemplarDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'Biblioteca_Model_TipoExemplar';

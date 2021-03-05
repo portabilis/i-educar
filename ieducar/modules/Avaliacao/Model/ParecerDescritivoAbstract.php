@@ -1,6 +1,5 @@
 <?php
 
-
 abstract class Avaliacao_Model_ParecerDescritivoAbstract extends Avaliacao_Model_Etapa
 {
     protected $_data = [

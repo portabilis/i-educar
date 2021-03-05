@@ -1,6 +1,5 @@
 <?php
 
-
 class Avaliacao_Model_FaltaComponente extends Avaliacao_Model_FaltaAbstract
 {
     /**

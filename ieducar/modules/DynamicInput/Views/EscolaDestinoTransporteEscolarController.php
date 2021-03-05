@@ -1,6 +1,5 @@
 <?php
 
-
 class EscolaDestinoTransporteEscolarController extends ApiCoreController
 {
     protected function getEscolaDestinoTransporteEscolar()
