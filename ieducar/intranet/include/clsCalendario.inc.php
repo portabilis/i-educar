@@ -1,53 +1,5 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- *
- * @category  i-Educar
- *
- * @license   @@license@@
- *
- * @package   iEd_Include
- *
- * @since     Arquivo disponível desde a versão 1.0.0
- *
- * @version   $Id$
- */
-
-/**
- * clsCalendario class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- *
- * @category  i-Educar
- *
- * @license   @@license@@
- *
- * @package   iEd_Include
- *
- * @since     Classe disponível desde a versão 1.0.0
- *
- * @version   @@package_version@@
- */
 class clsCalendario
 {
     /**
@@ -74,36 +26,36 @@ class clsCalendario
      * @var array
      */
     public $COR = [
-    0                => '#FADEAF',
-    'LARANJA_CLARO'  => '#FADEAF',
-    1                => '#93BDC9',
-    'AZUL_ESCURO'    => '#93BDC9',
-    2                => '#BCD39D',
-    'VERDE_ESCURO'   => '#BCD39D',
-    3                => '#e9f0f8',
-    'AZUL_CLARO'     => '#e9f0f8',
-    4                => '#f8e9ee',
-    'ROSA'           => '#f8e9ee',
-    5                => '#E9D1AF',
-    'LARANJA_ESCURO' => '#E9D1AF',
-    6                => '#E9E6BB',
-    'AMARELO'        => '#E9E6BB',
-    7                => '#C9D9CF',
-    'VERDE_CLARO'    => '#C9D9CF',
-    8                => '#DDE3D9',
-    'CINZA'          => '#DDE3D9',
-  ];
+        0 => '#FADEAF',
+        'LARANJA_CLARO' => '#FADEAF',
+        1 => '#93BDC9',
+        'AZUL_ESCURO' => '#93BDC9',
+        2 => '#BCD39D',
+        'VERDE_ESCURO' => '#BCD39D',
+        3 => '#e9f0f8',
+        'AZUL_CLARO' => '#e9f0f8',
+        4 => '#f8e9ee',
+        'ROSA' => '#f8e9ee',
+        5 => '#E9D1AF',
+        'LARANJA_ESCURO' => '#E9D1AF',
+        6 => '#E9E6BB',
+        'AMARELO' => '#E9E6BB',
+        7 => '#C9D9CF',
+        'VERDE_CLARO' => '#C9D9CF',
+        8 => '#DDE3D9',
+        'CINZA' => '#DDE3D9',
+    ];
 
     /**
      * @var array
      */
     public $array_icone = [
-    'A' => [
-      'nome' => 'Anotações',
-      'link' => ''
-    ],
-    ''
-  ];
+        'A' => [
+            'nome' => 'Anotações',
+            'link' => ''
+        ],
+        ''
+    ];
 
     /**
      * @var array
@@ -167,14 +119,14 @@ class clsCalendario
     public function resetAll()
     {
         $this->array_div_flutuante_dias = [];
-        $this->array_onclick_dias       = [];
-        $this->array_dias               = [];
-        $this->array_cor_dia_padrao     = [];
-        $this->array_legenda            = ['Padrão'];
-        $this->array_cor                = ['#F7F7F7'];
-        $this->largura_externa          = 400;
-        $this->largura_interna          = 250;
-        $this->padding                  = 5;
+        $this->array_onclick_dias = [];
+        $this->array_dias = [];
+        $this->array_cor_dia_padrao = [];
+        $this->array_legenda = ['Padrão'];
+        $this->array_cor = ['#F7F7F7'];
+        $this->largura_externa = 400;
+        $this->largura_interna = 250;
+        $this->padding = 5;
     }
 
     /**
@@ -228,7 +180,7 @@ class clsCalendario
         if (is_array($arr_dias)) {
             foreach ($arr_dias as $key => $dia) {
                 if (key_exists($id_icone, $this->array_icone)) {
-                    $this->array_icone_dias[$dia]              = $id_icone;
+                    $this->array_icone_dias[$dia] = $id_icone;
                     $this->array_icone[$id_icone]['utilizado'] = true;
                 }
             }
@@ -250,8 +202,8 @@ class clsCalendario
         }
 
         $this->array_legenda[] = $str_legenda;
-        $str_cor               = mb_strtoupper($str_cor);
-        $this->array_cor[]     = $this->COR[$str_cor];
+        $str_cor = mb_strtoupper($str_cor);
+        $this->array_cor[] = $this->COR[$str_cor];
     }
 
     /**
@@ -261,7 +213,7 @@ class clsCalendario
     public function setLegendaPadrao($str_legenda, $str_cor = '#F7F7F7')
     {
         $this->array_legenda[0] = $str_legenda;
-        $this->array_cor[0]     = $this->COR[$str_cor];
+        $this->array_cor[0] = $this->COR[$str_cor];
     }
 
     /**
@@ -312,7 +264,7 @@ class clsCalendario
      * @param int    $mes
      * @param int    $ano
      * @param string $nome
-     * @param  mixed  mixVariaveisMantidas
+     * @param mixed  mixVariaveisMantidas
      *
      * @return string
      *
@@ -325,23 +277,22 @@ class clsCalendario
         $nome,
         $mixVariaveisMantidas,
         array $formValues = []
-    )
-    {
-        $array_color   = $this->array_cor;
+    ) {
+        $array_color = $this->array_cor;
         $array_legenda = $this->array_legenda;
 
         if (
-      isset($mixVariaveisMantidas["{$nome}_mes"]) &&
-      is_numeric($mixVariaveisMantidas["{$nome}_mes"])
-    ) {
+            isset($mixVariaveisMantidas["{$nome}_mes"]) &&
+            is_numeric($mixVariaveisMantidas["{$nome}_mes"])
+        ) {
             $mes = $mixVariaveisMantidas["{$nome}_mes"];
         }
 
         if (
-      isset($mixVariaveisMantidas["{$nome}_ano"]) &&
-      is_numeric($mixVariaveisMantidas["{$nome}_ano"]) &&
-      $this->permite_trocar_ano == true
-    ) {
+            isset($mixVariaveisMantidas["{$nome}_ano"]) &&
+            is_numeric($mixVariaveisMantidas["{$nome}_ano"]) &&
+            $this->permite_trocar_ano == true
+        ) {
             $ano = $mixVariaveisMantidas["{$nome}_ano"];
         }
 
@@ -349,19 +300,19 @@ class clsCalendario
         $diasDaSemana = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
 
         $mesesDoAno = [
-      '1'  => 'JANEIRO',
-      '2'  => 'FEVEREIRO',
-      '3'  => 'MARÇO',
-      '4'  => 'ABRIL',
-      '5'  => 'MAIO',
-      '6'  => 'JUNHO',
-      '7'  => 'JULHO',
-      '8'  => 'AGOSTO',
-      '9'  => 'SETEMBRO',
-      '10' => 'OUTUBRO',
-      '11' => 'NOVEMBRO',
-      '12' => 'DEZEMBRO'
-    ];
+            '1' => 'JANEIRO',
+            '2' => 'FEVEREIRO',
+            '3' => 'MARÇO',
+            '4' => 'ABRIL',
+            '5' => 'MAIO',
+            '6' => 'JUNHO',
+            '7' => 'JULHO',
+            '8' => 'AGOSTO',
+            '9' => 'SETEMBRO',
+            '10' => 'OUTUBRO',
+            '11' => 'NOVEMBRO',
+            '12' => 'DEZEMBRO'
+        ];
 
         // Qual o primeiro dia do mes
         $primeiroDiaDoMes = mktime(0, 0, 0, $mes, 1, $ano);
@@ -385,8 +336,8 @@ class clsCalendario
         $linkFixo = '?';
         if (is_array($mixVariaveisMantidas)) {
             foreach ($mixVariaveisMantidas as $key => $value) {
-                if ($key != "{$nome}_mes" &&  $key != "{$nome}_ano") {
-                    $linkFixo .= $key=$value . '&';
+                if ($key != "{$nome}_mes" && $key != "{$nome}_ano") {
+                    $linkFixo .= $key = $value . '&';
                 }
             }
         } else {
@@ -400,50 +351,50 @@ class clsCalendario
         if ($mes == 12) {
             if ($this->permite_trocar_ano) {
                 $mes_posterior_mes = 1;
-                $mes_anterior_mes  = 11;
+                $mes_anterior_mes = 11;
                 $ano_posterior_mes = $ano + 1;
-                $ano_anterior_mes  = $ano;
+                $ano_anterior_mes = $ano;
 
-                $mes_ano           = $mes;
+                $mes_ano = $mes;
                 $ano_posterior_ano = $ano + 1;
-                $ano_anterior_ano  = $ano - 1;
+                $ano_anterior_ano = $ano - 1;
             } else {
                 $mes_posterior_mes = 1;
-                $mes_anterior_mes  = 11;
+                $mes_anterior_mes = 11;
                 $ano_posterior_mes = $ano;
-                $ano_anterior_mes  = $ano;
+                $ano_anterior_mes = $ano;
             }
         } elseif ($mes == 1) {
             if ($this->permite_trocar_ano) {
                 $mes_posterior_mes = 2;
-                $mes_anterior_mes  = 12;
+                $mes_anterior_mes = 12;
                 $ano_posterior_mes = $ano;
-                $ano_anterior_mes  = $ano - 1;
+                $ano_anterior_mes = $ano - 1;
 
-                $mes_ano           = $mes;
+                $mes_ano = $mes;
                 $ano_posterior_ano = $ano + 1;
-                $ano_anterior_ano  = $ano - 1;
+                $ano_anterior_ano = $ano - 1;
             } else {
                 $mes_posterior_mes = 2;
-                $mes_anterior_mes  = 12;
+                $mes_anterior_mes = 12;
                 $ano_posterior_mes = $ano;
-                $ano_anterior_mes  = $ano;
+                $ano_anterior_mes = $ano;
             }
         } else {
             if ($this->permite_trocar_ano) {
                 $mes_posterior_mes = $mes + 1;
-                $mes_anterior_mes  = $mes - 1;
+                $mes_anterior_mes = $mes - 1;
                 $ano_posterior_mes = $ano;
-                $ano_anterior_mes  = $ano;
+                $ano_anterior_mes = $ano;
 
-                $mes_ano           = $mes;
+                $mes_ano = $mes;
                 $ano_posterior_ano = $ano + 1;
-                $ano_anterior_ano  = $ano - 1;
+                $ano_anterior_ano = $ano - 1;
             } else {
                 $mes_posterior_mes = $mes + 1;
-                $mes_anterior_mes  = $mes - 1;
+                $mes_anterior_mes = $mes - 1;
                 $ano_posterior_mes = $ano;
-                $ano_anterior_mes  = $ano;
+                $ano_anterior_mes = $ano;
             }
         }
 
@@ -469,7 +420,7 @@ class clsCalendario
 
             foreach ($mesesDoAno as $key => $mes_) {
                 $selected = ($dateComponents['mon'] == $key) ? 'selected="selected"' : '';
-                $select  .= sprintf(
+                $select .= sprintf(
                     '<option value="%s" %s>%s</option>',
                     $key,
                     $selected,
@@ -604,7 +555,7 @@ class clsCalendario
         // display consists of exactly 7 columns.
         if ($DiaSemana > 0) {
             $completar_dias = $DiaSemana;
-            $ts  = mktime(0, 0, 0, $dateComponents['mon'], -$completar_dias + 1, $dateComponents['year']);
+            $ts = mktime(0, 0, 0, $dateComponents['mon'], -$completar_dias + 1, $dateComponents['year']);
             $day = date('d', $ts);
 
             for ($a = 0; $a < $completar_dias; $a++) {
@@ -621,7 +572,7 @@ class clsCalendario
         while ($diaCorrente <= $NumeroDiasMes) {
             // Seventh column (Saturday) reached. Start a new row.
             if ($DiaSemana == 7) {
-                $DiaSemana   = 0;
+                $DiaSemana = 0;
                 $calendario .= '</tr><tr>';
             }
 
@@ -632,8 +583,8 @@ class clsCalendario
             }
 
             if (key_exists($diaCorrente, $this->array_dias)) {
-                $key       = $this->array_dias[$diaCorrente];
-                $cor       = $this->array_cor[$key];
+                $key = $this->array_dias[$diaCorrente];
+                $cor = $this->array_cor[$key];
                 $style_dia = sprintf('background-color: %s;', $cor);
             }
 
@@ -665,13 +616,13 @@ class clsCalendario
                 );
             }
 
-            $message      = '';
+            $message = '';
             $diaCorrente_ = strlen($diaCorrente) == 1 ? '0' . $diaCorrente : $diaCorrente;
-            $NomeMes      = strtolower($NomeMes);
+            $NomeMes = strtolower($NomeMes);
 
             if (key_exists($diaCorrente, $this->array_div_flutuante_dias)) {
-                $message    = "onmouseover=\"ShowContent('{$diaCorrente}','{$mes}','{$ano}','{$nome}'); return true;\"";
-                $mouseout   = "onmouseout=\"HideContent(event,'{$diaCorrente}','{$mes}','{$ano}','{$nome}')\" ";
+                $message = "onmouseover=\"ShowContent('{$diaCorrente}','{$mes}','{$ano}','{$nome}'); return true;\"";
+                $mouseout = "onmouseout=\"HideContent(event,'{$diaCorrente}','{$mes}','{$ano}','{$nome}')\" ";
                 $mensagens .= "
           <div $mouseout class='div_info' style='display:none; z-index: 10;' id=\"{$nome}_div_dia_{$diaCorrente}{$mes}{$ano}\">
             <div style='margin:0px 15px 0px 0px;font-size: 14px; z-index: 0; border-bottom: 1px solid #000000;'>{$diaCorrente_} de {$NomeMes} de $ano
@@ -708,7 +659,7 @@ class clsCalendario
         if ($DiaSemana != 7) {
             $remainingDays = 7 - $DiaSemana;
 
-            for ($a = 1 ; $a <= $remainingDays ; $a++) {
+            for ($a = 1; $a <= $remainingDays; $a++) {
                 //dayLastMonth
                 $calendario .= sprintf(
                     '

@@ -1,24 +1,5 @@
 <?php
 
-// error_reporting(E_ALL);
-// ini_set("display_errors", 1);
-
-/**
- * AreaConhecimento class.
- *
- * @author      Gabriel Matos de Souza <gabriel@portabilis.com.br>
- *
- * @category    i-Educar
- *
- * @license     @@license@@
- *
- * @package     Avaliacao
- * @subpackage  Modules
- *
- * @since       Classe disponível desde a versão ??
- *
- * @version     @@package_version@@
- */
 class AreaConhecimentoController extends ApiCoreController
 {
     protected function getAreasConhecimento()

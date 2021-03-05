@@ -1,39 +1,5 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestÃ£o escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
- *     <ctima@itajai.sc.gov.br>
- *
- * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
- * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
- * qualquer versÃ£o posterior.
- *
- * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
- * ADEQUAÃÃO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
- * do GNU para mais detalhes.
- *
- * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
- * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
- * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author      Lucas Schmoeller da Silva <lucas@portabilis.com.br>
- *
- * @category    i-Educar
- *
- * @license     @@license@@
- *
- * @package     Api
- * @subpackage  Modules
- *
- * @since       Arquivo disponÃ­vel desde a versÃ£o ?
- *
- * @version     $Id$
- */
-
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 

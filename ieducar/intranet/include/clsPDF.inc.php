@@ -1,50 +1,5 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- *
- * @package  Core
- *
- * @since    Arquivo disponível desde a versão 1.0.0
- *
- * @version  $Id$
- */
-
-/**
- * clsPDF class.
- *
- * @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- *
- * @package  Core
- *
- * @since    Classe disponível desde a versão 1.0.0
- *
- * @todo     Verificar o método PagAgenda() pois este insere a imagem 'imagens/brasao.gif',
- *           inutilizando a customização do arquivo ieducar.ini
- *
- * @version  $Id$
- */
 class clsPDF
 {
     public $nome;
@@ -78,8 +33,7 @@ class clsPDF
         $palavrasChaves,
         $depurar = false,
         $reder = true
-    )
-    {
+    ) {
         $this->nome = $nome;
         $this->titulo = $titulo;
         $this->palavrasChaves = $palavrasChaves;
@@ -465,8 +419,7 @@ class clsPDF
         $linha = 0.1,
         $color = '#000000',
         $color2 = '#FFFFFF'
-    )
-    {
+    ) {
         $altura  = $y_bottomright - $y_topleft;
         $largura = $x_bottomright - $x_topleft;
         $this->quadrado_relativo(
@@ -502,8 +455,7 @@ class clsPDF
         $linha = 0.1,
         $color = '#000000',
         $color2 = '#FFFFFF'
-    )
-    {
+    ) {
         $this->Shape(
             'ret',
             $x_topleft,
@@ -526,8 +478,7 @@ class clsPDF
         $color2 = '#000000',
         $teck = true,
         $teck2 = true
-    )
-    {
+    ) {
         if ($teck2) {
             $this->SetLine($linha);
             $this->SetBoth($color1);
@@ -567,8 +518,7 @@ class clsPDF
         $linha = 0.1,
         $color = '#000000',
         $color2 = '#FFFFFF'
-    )
-    {
+    ) {
         $this->Line(
             $x_topleft,
             $this->altura - $y_topleft,
@@ -602,8 +552,7 @@ class clsPDF
         $linha = 0.1,
         $color = '#000000',
         $color2 = '#FFFFFF'
-    )
-    {
+    ) {
         $this->Line(
             $x_topleft,
             $this->altura - $y_topleft,
@@ -627,8 +576,7 @@ class clsPDF
         $linha = 2.001,
         $color1 = '#000000',
         $color2 = '#000000'
-    )
-    {
+    ) {
         if ($teck2) {
             $this->SetLine($linha);
             $this->SetBoth($color1);
@@ -658,8 +606,7 @@ class clsPDF
         $color = '#888888',
         $align = 'center',
         $local = 'box'
-    )
-    {
+    ) {
         $this->SetFont($fonte, $tamanho);
         $this->SetBoth($color);
 
@@ -705,8 +652,7 @@ class clsPDF
         $tamanho = '10',
         $color = '#000000',
         $align = 'left'
-    )
-    {
+    ) {
         $this->Write(
             $texto,
             $x_topleft,
@@ -730,8 +676,7 @@ class clsPDF
         $tamanho = '10',
         $color = '#000000',
         $align = 'center'
-    )
-    {
+    ) {
         $this->escreve_relativo(
             $texto,
             $x_topleft,
@@ -771,8 +716,7 @@ class clsPDF
         $tamanho = '10',
         $color = '#000000',
         $align = 'left'
-    )
-    {
+    ) {
         $this->Write(
             $texto,
             $x_topleft,

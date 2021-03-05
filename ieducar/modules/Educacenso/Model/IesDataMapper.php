@@ -1,21 +1,5 @@
 <?php
 
-/**
- * Educacenso_Model_IesDataMapper class.
- *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- *
- * @category    i-Educar
- *
- * @license     @@license@@
- *
- * @package     Educacenso
- * @subpackage  Modules
- *
- * @since       Classe disponível desde a versão 1.2.0
- *
- * @version     @@package_version@@
- */
 class Educacenso_Model_IesDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'Educacenso_Model_Ies';
