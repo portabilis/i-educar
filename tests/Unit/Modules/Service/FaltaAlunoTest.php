@@ -24,11 +24,11 @@ class Avaliacao_Service_FaltaAlunoTest extends Avaliacao_Service_TestCommon
     {
         $faltaAluno = $this->_getConfigOption('faltaAluno', 'instance');
 
-        $faltaSave  = clone $faltaAluno;
+        $faltaSave = clone $faltaAluno;
         $faltaSave->id = null;
 
         // Configura mock para Avaliacao_Model_FaltaAlunoDataMapper
-        /** @var MockObject|Avaliacao_Model_FaltaAlunoDataMapper  $mock */
+        /** @var MockObject|Avaliacao_Model_FaltaAlunoDataMapper $mock */
         $mock = $this->getCleanMock('Avaliacao_Model_FaltaAlunoDataMapper');
 
         $mock

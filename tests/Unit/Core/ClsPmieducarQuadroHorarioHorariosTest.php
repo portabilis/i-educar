@@ -2,7 +2,6 @@
 
 use Tests\TestCase;
 
-
 class ClsPmieducarQuadroHorarioHorariosTest extends TestCase
 {
     /**

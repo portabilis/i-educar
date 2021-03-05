@@ -21,14 +21,18 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Core_Controller
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
-
 
 /**
  * Core_Controller_Page_AbstractStub class.
@@ -37,18 +41,23 @@
  * variáveis de instância para public, afim de fazer testes de inicialização
  * automática de valores.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @see         Core_Controller_Page_Abstract
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Core_Controller
  * @subpackage  UnitTests
- * @see         Core_Controller_Page_Abstract
+ *
+ * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class Core_Controller_Page_AbstractStub extends Core_Controller_Page_Abstract
 {
-  public $_dataMapper = NULL;
-  public $_processoAp = NULL;
-  public $_titulo = NULL;
+    public $_dataMapper = null;
+    public $_processoAp = null;
+    public $_titulo = null;
 }

@@ -161,7 +161,9 @@ class EnrollmentServiceTest extends TestCase
         ]);
 
         $result = $this->service->enroll(
-            $enrollment->registration, $enrollment->schoolClass, now()
+            $enrollment->registration,
+            $enrollment->schoolClass,
+            now()
         );
 
         $this->assertInstanceOf(LegacyEnrollment::class, $result);
@@ -188,7 +190,9 @@ class EnrollmentServiceTest extends TestCase
         $enrollment->schoolClass->max_aluno = 0;
 
         $this->service->enroll(
-            $enrollment->registration, $enrollment->schoolClass, now()
+            $enrollment->registration,
+            $enrollment->schoolClass,
+            now()
         );
     }
 
@@ -206,7 +210,9 @@ class EnrollmentServiceTest extends TestCase
         ]);
 
         $this->service->enroll(
-            $enrollment->registration, $enrollment->schoolClass, now()
+            $enrollment->registration,
+            $enrollment->schoolClass,
+            now()
         );
     }
 
@@ -235,7 +241,9 @@ class EnrollmentServiceTest extends TestCase
         $stage->save();
 
         $this->service->enroll(
-            $enrollment->registration, $enrollment->schoolClass, now()
+            $enrollment->registration,
+            $enrollment->schoolClass,
+            now()
         );
     }
 
@@ -262,7 +270,9 @@ class EnrollmentServiceTest extends TestCase
         $stage->save();
 
         $enrollment = $this->service->enroll(
-            $enrollment->registration, $enrollment->schoolClass, now()
+            $enrollment->registration,
+            $enrollment->schoolClass,
+            now()
         );
 
         $this->assertInstanceOf(LegacyEnrollment::class, $enrollment);
@@ -290,7 +300,9 @@ class EnrollmentServiceTest extends TestCase
         $stage->save();
 
         $this->service->enroll(
-            $enrollment->registration, $enrollment->schoolClass, now()
+            $enrollment->registration,
+            $enrollment->schoolClass,
+            now()
         );
     }
 
@@ -312,7 +324,9 @@ class EnrollmentServiceTest extends TestCase
         $this->service->cancelEnrollment($enrollment, now());
 
         $this->service->enroll(
-            $enrollment->registration, $enrollment->schoolClass, now()->subDay(1)
+            $enrollment->registration,
+            $enrollment->schoolClass,
+            now()->subDay(1)
         );
     }
 

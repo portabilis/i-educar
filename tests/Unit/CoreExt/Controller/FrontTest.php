@@ -1,7 +1,5 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -23,60 +21,69 @@ use PHPUnit\Framework\TestCase;
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Controller
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
-
 
 /**
  * CoreExt_Controller_FrontTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Controller
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class CoreExt_Controller_FrontTest extends PHPUnit\Framework\TestCase
 {
-  protected $_frontController = NULL;
-  protected $_path = NULL;
+    protected $_frontController = null;
+    protected $_path = null;
 
-  public function __construct($name = null, array $data = [], $dataName = '')
-  {
-      parent::__construct($name, $data, $dataName);
-    $this->_path = realpath(dirname(__FILE__) . '/_stub');
-  }
+    public function __construct($name = null, array $data = [], $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+        $this->_path = realpath(dirname(__FILE__) . '/_stub');
+    }
 
-  protected function setUp(): void
-  {
-    $this->_frontController = CoreExt_Controller_Front::getInstance();
-    $this->_frontController->resetOptions();
-  }
+    protected function setUp(): void
+    {
+        $this->_frontController = CoreExt_Controller_Front::getInstance();
+        $this->_frontController->resetOptions();
+    }
 
-  public function testOpcaoDeConfiguracaoNaoExistenteLancaExcecao()
-  {
-      $this->expectException(\InvalidArgumentException::class);
-    $this->_frontController->setOptions(array('foo' => 'bar'));
-  }
+    public function testOpcaoDeConfiguracaoNaoExistenteLancaExcecao()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->_frontController->setOptions(['foo' => 'bar']);
+    }
 
-  public function testControllerTemObjetosRequestDispatcherEViewPadroes()
-  {
-    $this->assertInstanceOf('CoreExt_Controller_Request', $this->_frontController->getRequest());
-    $this->assertInstanceOf('CoreExt_Controller_Dispatcher_Interface', $this->_frontController->getDispatcher());
-    $this->assertInstanceOf('CoreExt_View', $this->_frontController->getView());
-  }
+    public function testControllerTemObjetosRequestDispatcherEViewPadroes()
+    {
+        $this->assertInstanceOf('CoreExt_Controller_Request', $this->_frontController->getRequest());
+        $this->assertInstanceOf('CoreExt_Controller_Dispatcher_Interface', $this->_frontController->getDispatcher());
+        $this->assertInstanceOf('CoreExt_View', $this->_frontController->getView());
+    }
 
-  public function testRequestCustomizadoERegistradoEmController()
-  {
+    public function testRequestCustomizadoERegistradoEmController()
+    {
         $request = new CoreExt_Controller_Request();
-    $this->_frontController->setRequest($request);
-    $this->assertSame($request, $this->_frontController->getRequest());
-  }
+        $this->_frontController->setRequest($request);
+        $this->assertSame($request, $this->_frontController->getRequest());
+    }
 }

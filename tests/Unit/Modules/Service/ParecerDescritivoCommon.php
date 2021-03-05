@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Class Avaliacao_Service_ParecerDescritivoCommon
  */
@@ -38,72 +37,73 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
         $parecerDescritivo = $this->_getRegraOption('parecerDescritivo');
 
         switch ($parecerDescritivo) {
-          case RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL:
-          case RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL:
-            $mapper = 'Avaliacao_Model_ParecerDescritivoGeralDataMapper';
-            break;
-          case RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE:
-          case RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE:
-            $mapper = 'Avaliacao_Model_ParecerDescritivoComponenteDataMapper';
-            break;
+            case RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL:
+            case RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL:
+                $mapper = 'Avaliacao_Model_ParecerDescritivoGeralDataMapper';
+                break;
+            case RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE:
+            case RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE:
+                $mapper = 'Avaliacao_Model_ParecerDescritivoComponenteDataMapper';
+                break;
         }
 
         return $mapper;
     }
 
     /**
+     * @see Avaliacao_Service_ParecerDescritivoCommon#testInstanciaDeParecerERegistradaApenasUmaVezNoBoletim()
      * @return Avaliacao_Model_ParecerDescritivoAbstract
      *
-     * @see Avaliacao_Service_ParecerDescritivoCommon#testInstanciaDeParecerERegistradaApenasUmaVezNoBoletim()
      */
     abstract protected function _getTestInstanciaDeParecerERegistradaApenasUmaVezNoBoletim();
 
     /**
+     * @see Avaliacao_Service_ParecerDescritivoCommon#testAdicionaParecerNoBoletim()
      * @return Avaliacao_Model_ParecerDescritivoAbstract
      *
-     * @see Avaliacao_Service_ParecerDescritivoCommon#testAdicionaParecerNoBoletim()
      */
     abstract protected function _getTestAdicionaParecerNoBoletim();
 
     /**
+     * @see Avaliacao_Service_ParecerDescritivoCommon#testAdicionaParecerNoBoletim()
+     *
      * @param Avaliacao_Model_ParecerDescritivoAbstract $parecer
      *
-     * @see Avaliacao_Service_ParecerDescritivoCommon#testAdicionaParecerNoBoletim()
      */
     abstract protected function _testAdicionaParecerNoBoletimVerificaValidadores(Avaliacao_Model_ParecerDescritivoAbstract $parecer);
 
     /**
+     * @see Avaliacao_Service_ParecerDescritivoCommon#testSalvarPareceresNoBoletim()
      * @return array
      *
-     * @see Avaliacao_Service_ParecerDescritivoCommon#testSalvarPareceresNoBoletim()
      */
     abstract protected function _getTestSalvarPareceresNoBoletimInstanciasDePareceres();
 
     /**
+     * @see Avaliacao_Service_ParecerDescritivoCommon#testSalvarPareceresNoBoletimComEtapasJaLancadas()
      * @return array
      *
-     * @see Avaliacao_Service_ParecerDescritivoCommon#testSalvarPareceresNoBoletimComEtapasJaLancadas()
      */
     abstract protected function _getTestSalvarPareceresNoBoletimComEtapasJaLancadasInstancias();
 
     /**
+     * @see Avaliacao_Service_ParecerDescritivoCommon#testSalvarPareceresNoBoletimComEtapasJaLancadas()
      * @return array
      *
-     * @see Avaliacao_Service_ParecerDescritivoCommon#testSalvarPareceresNoBoletimComEtapasJaLancadas()
      */
     abstract protected function _getTestSalvarPareceresNoBoletimComEtapasJaLancadasInstanciasJaLancadas();
 
     /**
+     * @see Avaliacao_Service_ParecerDescritivoCommon#testSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadas()
      * @return array
      *
-     * @see Avaliacao_Service_ParecerDescritivoCommon#testSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadas()
      */
     abstract protected function _getTestSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadasInstancias();
 
     /**
+     * @see Avaliacao_Service_ParecerDescritivoCommon#testSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadas()
      * @return array
      *
-     * @see Avaliacao_Service_ParecerDescritivoCommon#testSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadas()
      */
     abstract protected function _getTestSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadasInstanciasLancadas();
 
@@ -160,9 +160,9 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
         $mock = $this->getCleanMock($this->_getParecerDescritivoDataMapper());
 
         $mock
-         ->method('findAll')
-         ->with([], ['parecerDescritivoAluno' => $parecerAluno->id], ['etapa' => 'ASC'])
-         ->willReturn([]);
+            ->method('findAll')
+            ->with([], ['parecerDescritivoAluno' => $parecerAluno->id], ['etapa' => 'ASC'])
+            ->willReturn([]);
 
         if (count($pareceres) === 4) {
             $mock

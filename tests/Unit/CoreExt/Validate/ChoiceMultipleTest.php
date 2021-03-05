@@ -21,68 +21,75 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Validate
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
-
 
 /**
  * CoreExt_Validate_ChoiceMultipleTest class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Validate
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class CoreExt_Validate_ChoiceMultipleTest extends PHPUnit\Framework\TestCase
 {
-  protected $_validator = NULL;
+    protected $_validator = null;
 
-  protected $_choices = array(
-    'bit' => array(0, 1),
-    'various' => array('sim', 'não', 'nda')
-  );
+    protected $_choices = [
+        'bit' => [0, 1],
+        'various' => ['sim', 'não', 'nda']
+    ];
 
-  protected function setUp(): void
-  {
-    $this->_validator = new CoreExt_Validate_ChoiceMultiple();
-  }
-
-  public function testEscolhaMultiplaValida()
-  {
-    $this->_validator->setOptions(array('choices' => $this->_choices['bit']));
-    $this->assertTrue($this->_validator->isValid(array(0, 1)));
-
-    // Testa com valor igual, mas tipo de dado diferente
-    $this->assertTrue($this->_validator->isValid(array('0', '1')));
-  }
-
-  public function testEscolhaMultiplaInvalidaLancaExcecao()
-  {
-    $this->_validator->setOptions(array('choices' => $this->_choices['bit']));
-    try {
-      $this->_validator->isValid(array(0, 2, 3));
-      $this->fail("CoreExt_Validate_ChoiceMultiple deveria ter lançado exceção.");
-    }
-    catch (Exception $e) {
-      $this->assertEquals('As opções "2, 3" não existem.', $e->getMessage());
+    protected function setUp(): void
+    {
+        $this->_validator = new CoreExt_Validate_ChoiceMultiple();
     }
 
-    // 'a' e '0a' normalmente seriam avaliados como '0' e '1' mas não queremos
-    // esse tipo de comportamento.
-    try {
-      $this->_validator->isValid(array(0, 'a', '1a'));
-      $this->fail("CoreExt_Validate_ChoiceMultiple deveria ter lançado exceção.");
+    public function testEscolhaMultiplaValida()
+    {
+        $this->_validator->setOptions(['choices' => $this->_choices['bit']]);
+        $this->assertTrue($this->_validator->isValid([0, 1]));
+
+        // Testa com valor igual, mas tipo de dado diferente
+        $this->assertTrue($this->_validator->isValid(['0', '1']));
     }
-    catch (Exception $e) {
-      $this->assertEquals('As opções "a, 1a" não existem.', $e->getMessage());
+
+    public function testEscolhaMultiplaInvalidaLancaExcecao()
+    {
+        $this->_validator->setOptions(['choices' => $this->_choices['bit']]);
+        try {
+            $this->_validator->isValid([0, 2, 3]);
+            $this->fail('CoreExt_Validate_ChoiceMultiple deveria ter lançado exceção.');
+        } catch (Exception $e) {
+            $this->assertEquals('As opções "2, 3" não existem.', $e->getMessage());
+        }
+
+        // 'a' e '0a' normalmente seriam avaliados como '0' e '1' mas não queremos
+        // esse tipo de comportamento.
+        try {
+            $this->_validator->isValid([0, 'a', '1a']);
+            $this->fail('CoreExt_Validate_ChoiceMultiple deveria ter lançado exceção.');
+        } catch (Exception $e) {
+            $this->assertEquals('As opções "a, 1a" não existem.', $e->getMessage());
+        }
     }
-  }
 }
