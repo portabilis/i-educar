@@ -53,8 +53,8 @@ class BatchExemptionJob implements ShouldQueue
      * Execute the job.
      *
      * @throws Throwable
-     * @return void
      *
+     * @return void
      */
     public function handle()
     {

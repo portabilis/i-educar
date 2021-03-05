@@ -52,15 +52,15 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
 
     /**
      * @see Avaliacao_Service_ParecerDescritivoCommon#testInstanciaDeParecerERegistradaApenasUmaVezNoBoletim()
-     * @return Avaliacao_Model_ParecerDescritivoAbstract
      *
+     * @return Avaliacao_Model_ParecerDescritivoAbstract
      */
     abstract protected function _getTestInstanciaDeParecerERegistradaApenasUmaVezNoBoletim();
 
     /**
      * @see Avaliacao_Service_ParecerDescritivoCommon#testAdicionaParecerNoBoletim()
-     * @return Avaliacao_Model_ParecerDescritivoAbstract
      *
+     * @return Avaliacao_Model_ParecerDescritivoAbstract
      */
     abstract protected function _getTestAdicionaParecerNoBoletim();
 
@@ -74,36 +74,36 @@ abstract class Avaliacao_Service_ParecerDescritivoCommon extends Avaliacao_Servi
 
     /**
      * @see Avaliacao_Service_ParecerDescritivoCommon#testSalvarPareceresNoBoletim()
-     * @return array
      *
+     * @return array
      */
     abstract protected function _getTestSalvarPareceresNoBoletimInstanciasDePareceres();
 
     /**
      * @see Avaliacao_Service_ParecerDescritivoCommon#testSalvarPareceresNoBoletimComEtapasJaLancadas()
-     * @return array
      *
+     * @return array
      */
     abstract protected function _getTestSalvarPareceresNoBoletimComEtapasJaLancadasInstancias();
 
     /**
      * @see Avaliacao_Service_ParecerDescritivoCommon#testSalvarPareceresNoBoletimComEtapasJaLancadas()
-     * @return array
      *
+     * @return array
      */
     abstract protected function _getTestSalvarPareceresNoBoletimComEtapasJaLancadasInstanciasJaLancadas();
 
     /**
      * @see Avaliacao_Service_ParecerDescritivoCommon#testSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadas()
-     * @return array
      *
+     * @return array
      */
     abstract protected function _getTestSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadasInstancias();
 
     /**
      * @see Avaliacao_Service_ParecerDescritivoCommon#testSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadas()
-     * @return array
      *
+     * @return array
      */
     abstract protected function _getTestSalvasPareceresAtualizandoEtapaDaUltimaInstanciaAdicionadaNoBoletimComEtapasLancadasInstanciasLancadas();
 

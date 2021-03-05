@@ -73,8 +73,8 @@ class EnrollmentService
      * @param int $enrollment ID da enturmação
      *
      * @throws ModelNotFoundException
-     * @return LegacyEnrollment $enrollment
      *
+     * @return LegacyEnrollment $enrollment
      */
     public function find($enrollment)
     {
@@ -138,8 +138,8 @@ class EnrollmentService
      * @throws PreviousCancellationDateException
      * @throws ModelNotFoundException
      * @throws Throwable
-     * @return bool
      *
+     * @return bool
      */
     public function cancelEnrollment(LegacyEnrollment $enrollment, DateTime $date)
     {
@@ -187,8 +187,8 @@ class EnrollmentService
      * @throws ExistsActiveEnrollmentException
      * @throws PreviousEnrollDateException
      * @throws Throwable
-     * @return LegacyEnrollment
      *
+     * @return LegacyEnrollment
      */
     public function enroll(
         LegacyRegistration $registration,

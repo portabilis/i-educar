@@ -1162,7 +1162,6 @@ class clsPmieducarNotaAluno extends Model
      * @param int $ultimo_modulo
      *
      * @return int
-     *
      */
     public function getUltimaNotaModulo($cod_matricula, $cod_disciplina, $cod_serie, $ultimo_modulo)
     {

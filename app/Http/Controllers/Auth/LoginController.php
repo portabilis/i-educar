@@ -59,8 +59,8 @@ class LoginController extends Controller
      * @param Request $request
      *
      * @throws \Illuminate\Validation\ValidationException
-     * @return void
      *
+     * @return void
      */
     public function validateLogin(Request $request)
     {

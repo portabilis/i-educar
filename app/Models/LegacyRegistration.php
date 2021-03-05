@@ -112,8 +112,8 @@ class LegacyRegistration extends Model
      *
      * @deprecated
      * @see grade()
-     * @return BelongsTo
      *
+     * @return BelongsTo
      */
     public function level()
     {

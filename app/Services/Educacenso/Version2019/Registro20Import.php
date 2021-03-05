@@ -998,8 +998,8 @@ class Registro20Import implements RegistroImportInterface
      * @param $horaFinal
      *
      * @throws Exception
-     * @return string|null
      *
+     * @return string|null
      */
     private function getTurno($horaInicial, $horaFinal)
     {
