@@ -15,10 +15,10 @@ class AddForeignKeysInPmieducarAlunoTable extends Migration
     {
         Schema::table('pmieducar.aluno', function (Blueprint $table) {
             $table->foreign('ref_idpes')
-               ->references('idpes')
-               ->on('cadastro.fisica')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('idpes')
+                ->on('cadastro.fisica')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

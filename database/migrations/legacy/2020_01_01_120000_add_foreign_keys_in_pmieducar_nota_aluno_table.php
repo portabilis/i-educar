@@ -15,22 +15,22 @@ class AddForeignKeysInPmieducarNotaAlunoTable extends Migration
     {
         Schema::table('pmieducar.nota_aluno', function (Blueprint $table) {
             $table->foreign(['ref_ref_cod_tipo_avaliacao', 'ref_sequencial'])
-               ->references(['ref_cod_tipo_avaliacao', 'sequencial'])
-               ->on('pmieducar.tipo_avaliacao_valores')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references(['ref_cod_tipo_avaliacao', 'sequencial'])
+                ->on('pmieducar.tipo_avaliacao_valores')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign(['ref_cod_serie', 'ref_cod_escola', 'ref_cod_disciplina'])
-               ->references(['ref_ref_cod_serie', 'ref_ref_cod_escola', 'ref_cod_disciplina'])
-               ->on('pmieducar.escola_serie_disciplina')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references(['ref_ref_cod_serie', 'ref_ref_cod_escola', 'ref_cod_disciplina'])
+                ->on('pmieducar.escola_serie_disciplina')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_matricula')
-               ->references('cod_matricula')
-               ->on('pmieducar.matricula')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_matricula')
+                ->on('pmieducar.matricula')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

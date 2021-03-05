@@ -15,34 +15,34 @@ class AddForeignKeysInPmieducarUsuarioTable extends Migration
     {
         Schema::table('pmieducar.usuario', function (Blueprint $table) {
             $table->foreign('ref_funcionario_exc')
-               ->references('ref_cod_pessoa_fj')
-               ->on('portal.funcionario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('ref_cod_pessoa_fj')
+                ->on('portal.funcionario')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_funcionario_cad')
-               ->references('ref_cod_pessoa_fj')
-               ->on('portal.funcionario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('ref_cod_pessoa_fj')
+                ->on('portal.funcionario')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_tipo_usuario')
-               ->references('cod_tipo_usuario')
-               ->on('pmieducar.tipo_usuario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_tipo_usuario')
+                ->on('pmieducar.tipo_usuario')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_instituicao')
-               ->references('cod_instituicao')
-               ->on('pmieducar.instituicao')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_instituicao')
+                ->on('pmieducar.instituicao')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('cod_usuario')
-               ->references('ref_cod_pessoa_fj')
-               ->on('portal.funcionario')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('ref_cod_pessoa_fj')
+                ->on('portal.funcionario')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

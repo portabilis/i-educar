@@ -15,30 +15,30 @@ class AddForeignKeysInPmieducarEscolaTable extends Migration
     {
         Schema::table('pmieducar.escola', function (Blueprint $table) {
             $table->foreign('ref_idpes_secretario_escolar')
-               ->references('idpes')
-               ->on('cadastro.pessoa');
+                ->references('idpes')
+                ->on('cadastro.pessoa');
 
             $table->foreign('ref_idpes_gestor')
-               ->references('idpes')
-               ->on('cadastro.pessoa');
+                ->references('idpes')
+                ->on('cadastro.pessoa');
 
             $table->foreign('ref_idpes')
-               ->references('idpes')
-               ->on('cadastro.juridica')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('idpes')
+                ->on('cadastro.juridica')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_instituicao')
-               ->references('cod_instituicao')
-               ->on('pmieducar.instituicao')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_instituicao')
+                ->on('pmieducar.instituicao')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_escola_rede_ensino')
-               ->references('cod_escola_rede_ensino')
-               ->on('pmieducar.escola_rede_ensino')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_escola_rede_ensino')
+                ->on('pmieducar.escola_rede_ensino')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('codigo_ies')
                 ->references('id')
