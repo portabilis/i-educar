@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factory;
 
 /** @var Factory $factory */
 
-
 $factory->define(LegacyEvaluationRule::class, function (Faker $faker) {
     return [
         'formula_media_id' => factory(LegacyAverageFormula::class)->create(),

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factory;
 
 $factory->define(LegacyExemptionStage::class, function (Faker $faker) {
     $exemption = factory(LegacyDisciplineExemption::class)->create();
+
     return [
         'ref_cod_dispensa' => $exemption->cod_dispensa,
         'etapa' => 1,

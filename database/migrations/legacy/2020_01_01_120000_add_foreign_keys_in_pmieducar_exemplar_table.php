@@ -15,28 +15,28 @@ class AddForeignKeysInPmieducarExemplarTable extends Migration
     {
         Schema::table('pmieducar.exemplar', function (Blueprint $table) {
             $table->foreign('ref_cod_situacao')
-               ->references('cod_situacao')
-               ->on('pmieducar.situacao')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_situacao')
+                ->on('pmieducar.situacao')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_motivo_baixa')
-               ->references('cod_motivo_baixa')
-               ->on('pmieducar.motivo_baixa')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_motivo_baixa')
+                ->on('pmieducar.motivo_baixa')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_fonte')
-               ->references('cod_fonte')
-               ->on('pmieducar.fonte')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_fonte')
+                ->on('pmieducar.fonte')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_acervo')
-               ->references('cod_acervo')
-               ->on('pmieducar.acervo')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_acervo')
+                ->on('pmieducar.acervo')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
         });
     }
 

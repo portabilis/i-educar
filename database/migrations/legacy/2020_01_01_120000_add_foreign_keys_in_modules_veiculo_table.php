@@ -15,14 +15,14 @@ class AddForeignKeysInModulesVeiculoTable extends Migration
     {
         Schema::table('modules.veiculo', function (Blueprint $table) {
             $table->foreign('ref_cod_tipo_veiculo')
-               ->references('cod_tipo_veiculo')
-               ->on('modules.tipo_veiculo')
-               ->onUpdate('restrict')
-               ->onDelete('restrict');
+                ->references('cod_tipo_veiculo')
+                ->on('modules.tipo_veiculo')
+                ->onUpdate('restrict')
+                ->onDelete('restrict');
 
             $table->foreign('ref_cod_empresa_transporte_escolar')
-               ->references('cod_empresa_transporte_escolar')
-               ->on('modules.empresa_transporte_escolar');
+                ->references('cod_empresa_transporte_escolar')
+                ->on('modules.empresa_transporte_escolar');
         });
     }
 

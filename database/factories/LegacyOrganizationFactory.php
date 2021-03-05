@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Factory;
 /** @var Factory $factory */
 
 $factory->define(LegacyOrganization::class, function (Faker $faker) {
-
     $person = factory(LegacyPerson::class)->create([
         'nome' => $faker->company,
     ]);

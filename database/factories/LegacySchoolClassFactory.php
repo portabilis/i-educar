@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Factory;
 /** @var Factory $factory */
 
 $factory->define(LegacySchoolClass::class, function (Faker $faker) {
-
     $schoolGrade = factory(LegacySchoolGrade::class)->create();
 
     factory(LegacyEvaluationRuleGradeYear::class)->create([

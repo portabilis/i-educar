@@ -2,7 +2,6 @@
 
 use App\Menu;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
 
 class AddEducacensoConsultMenu extends Migration
 {
