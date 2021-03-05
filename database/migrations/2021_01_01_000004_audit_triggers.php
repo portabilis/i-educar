@@ -49,6 +49,7 @@ class AuditTriggers extends Migration
      */
     public function up()
     {
+        $this->dropAuditTriggers();
         $this->createAuditTriggers();
     }
 
