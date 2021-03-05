@@ -37,7 +37,9 @@ class BreadCrumbTest extends TestCase
     public function testTitleAndMultipleParents()
     {
         $this->markTestSkipped();
-        $htmlBreadCrumb = $this->breadCrumbObject->makeBreadcrumb('Página teste', [
+        $htmlBreadCrumb = $this->breadCrumbObject->makeBreadcrumb(
+            'Página teste',
+            [
                 'arquivo1.php' => 'Arquivo 1',
                 'arquivo2.php' => 'Arquivo 2'
             ]

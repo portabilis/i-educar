@@ -21,14 +21,18 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Core_View
  * @subpackage  UnitTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
-
 
 /**
  * Core_ViewStub class.
@@ -37,21 +41,27 @@
  * o banco de dados e a geração de código HTML.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Core_View
  * @subpackage  UnitTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class Core_ViewStub extends Core_View
 {
-  /**
-   * @see clsBase#MakeAll()
-   */
-  public function MakeAll()
-  {
-    $this->Formular();
-    return TRUE;
-  }
+    /**
+     * @see clsBase#MakeAll()
+     */
+    public function MakeAll()
+    {
+        $this->Formular();
+
+        return true;
+    }
 }

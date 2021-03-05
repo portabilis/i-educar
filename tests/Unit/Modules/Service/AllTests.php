@@ -21,11 +21,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Tests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
 
@@ -35,21 +40,27 @@
  * Arquivo de definição de suíte para o módulo.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Tests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class Avaliacao_Service_AllTests extends TestCollector
 {
-  protected $_name = 'Suíte de testes do service Avaliacao_Service_Boletim do módulo Avaliacao';
-  protected $_file = __FILE__;
+    protected $_name = 'Suíte de testes do service Avaliacao_Service_Boletim do módulo Avaliacao';
+    protected $_file = __FILE__;
 
-  public static function suite()
-  {
-    $instance = new self;
-    return $instance->addDirectoryTests();
-  }
+    public static function suite()
+    {
+        $instance = new self;
+
+        return $instance->addDirectoryTests();
+    }
 }

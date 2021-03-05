@@ -25,6 +25,7 @@ trait DiarioApiFakeDataTestTrait
      * Cria dados base para testes das regras de avaliação
      *
      * @param LegacyEvaluationRule $evaluationRule
+     *
      * @return LegacyEnrollment
      */
     public function getCommonFakeData($evaluationRule)
@@ -141,7 +142,7 @@ trait DiarioApiFakeDataTestTrait
 
     /**
      * @param LegacySchoolClass $schoolClass
-     * @param integer $disciplines
+     * @param integer           $disciplines
      */
     public function createDisciplines($schoolClass, $disciplines)
     {

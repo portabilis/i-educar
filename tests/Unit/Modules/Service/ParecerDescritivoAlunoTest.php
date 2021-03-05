@@ -64,7 +64,7 @@ class Avaliacao_Service_ParecerDescritivoAlunoTest extends Avaliacao_Service_Tes
     {
         $parecerAluno = $this->_getConfigOption('parecerDescritivoAluno', 'instance');
 
-        $parecerSave  = clone $parecerAluno;
+        $parecerSave = clone $parecerAluno;
         $parecerSave->id = null;
 
         // Configura mock para Avaliacao_Model_ParecerDescritivoAlunoDataMapper
@@ -72,9 +72,9 @@ class Avaliacao_Service_ParecerDescritivoAlunoTest extends Avaliacao_Service_Tes
         $mock = $this->getCleanMock('Avaliacao_Model_ParecerDescritivoAlunoDataMapper');
 
         $mock
-         ->method('save')
-         ->with($parecerSave)
-         ->willReturn(true);
+            ->method('save')
+            ->with($parecerSave)
+            ->willReturn(true);
 
         $mock
             ->expects(self::exactly(2))
@@ -83,7 +83,7 @@ class Avaliacao_Service_ParecerDescritivoAlunoTest extends Avaliacao_Service_Tes
                 [[], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')]],
                 [[], ['matricula' => $this->_getConfigOption('matricula', 'cod_matricula')]]
             )
-         ->willReturnOnConsecutiveCalls([], [$parecerAluno]);
+            ->willReturnOnConsecutiveCalls([], [$parecerAluno]);
 
         $this->_setParecerDescritivoAlunoDataMapperMock($mock);
 

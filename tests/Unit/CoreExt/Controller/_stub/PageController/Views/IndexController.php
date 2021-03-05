@@ -21,41 +21,50 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Core_PageController
  * @subpackage  IntegrationTests
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
-
 
 /**
  * IndexController class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     CoreExt_Controller
  * @subpackage  IntegrationTests
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class IndexController extends Core_Controller_Page_Abstract
 {
-  public function setOptions(array $options = array())
-  {
-  }
+    public function setOptions(array $options = [])
+    {
+    }
 
-  public function getOptions()
-  {
-  }
+    public function getOptions()
+    {
+    }
 
-  public function dispatch()
-  {
-  }
+    public function dispatch()
+    {
+    }
 
-  public function generate(CoreExt_Controller_Page_Interface $instance)
-  {
-  }
+    public function generate(CoreExt_Controller_Page_Interface $instance)
+    {
+    }
 }

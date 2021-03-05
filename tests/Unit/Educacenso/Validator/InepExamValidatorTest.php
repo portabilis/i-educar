@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Educacenso\Validator;
 
-use iEducar\Modules\Educacenso\Validator\InepExamValidator;
 use iEducar\Modules\Educacenso\Model\Deficiencias;
 use iEducar\Modules\Educacenso\Model\RecursosRealizacaoProvas;
+use iEducar\Modules\Educacenso\Validator\InepExamValidator;
 use Tests\TestCase;
 
 class InepExamValidatorTest extends TestCase

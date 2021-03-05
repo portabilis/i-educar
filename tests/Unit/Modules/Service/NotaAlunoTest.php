@@ -36,7 +36,7 @@
 
 use PHPUnit\Framework\MockObject\MockObject;
 
-require_once __DIR__.'/TestCommon.php';
+require_once __DIR__ . '/TestCommon.php';
 require_once 'Avaliacao/Model/NotaComponente.php';
 
 /**
@@ -60,7 +60,7 @@ class Avaliacao_Service_NotaAlunoTest extends Avaliacao_Service_TestCommon
     public function testCriaNovaInstanciaDeNotaAluno()
     {
         $notaAluno = $this->_getConfigOption('notaAluno', 'instance');
-        $notaSave  = clone $notaAluno;
+        $notaSave = clone $notaAluno;
         $notaSave->id = null;
 
         // Configura mock para Avaliacao_Model_NotaAlunoDataMapper
