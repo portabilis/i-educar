@@ -5,7 +5,6 @@ use iEducar\Legacy\Model;
 error_reporting(E_ERROR);
 ini_set('display_errors', 1);
 
-
 class clsModulesComponenteCurricular extends Model
 {
     public $id;
@@ -104,7 +103,6 @@ class clsModulesComponenteCurricular extends Model
         $filtros = '';
 
         $whereAnd = ' WHERE ';
-
 
         if (is_numeric($instituicao_id)) {
             $filtros .= "{$whereAnd} cc.instituicao_id = '{$instituicao_id}'";

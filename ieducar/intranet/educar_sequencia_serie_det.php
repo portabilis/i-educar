@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
      *
@@ -86,14 +84,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe da sequência de enturmação', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Sequ&ecirc;ncia Enturma&ccedil;&atilde;o";
+        $this->title = 'i-Educar - Sequ&ecirc;ncia Enturma&ccedil;&atilde;o';
         $this->processoAp = '587';
     }
 };
-
-

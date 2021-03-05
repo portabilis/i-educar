@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
 
     public $cod_servidor_alocacao = null;
@@ -102,14 +100,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe da alocação', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "Servidores - Servidor alocação";
+        $this->title = 'Servidores - Servidor alocação';
         $this->processoAp = 635;
     }
 };
-
-

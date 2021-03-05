@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -130,13 +128,11 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de ve&iacute;culos', [
         url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
     ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Veículos";
+        $this->title = 'i-Educar - Veículos';
         $this->processoAp = '21237';
     }
 };
-

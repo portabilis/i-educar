@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -139,13 +137,11 @@ return new class extends clsListagem
         $this->breadcrumb('Tipos de evento do calendário', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Calend&aacute;rio Dia Motivo";
+        $this->title = 'i-Educar - Calend&aacute;rio Dia Motivo';
         $this->processoAp = '576';
     }
 };
-

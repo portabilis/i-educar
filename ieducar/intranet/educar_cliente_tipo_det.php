@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
      *
@@ -111,14 +109,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe do tipo de clientes', [
             url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Tipo Cliente ";
+        $this->title = 'i-Educar - Tipo Cliente ';
         $this->processoAp = '596';
     }
 };
-
-

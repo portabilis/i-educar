@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $cod_matricula;
     public $ref_cod_aluno;
     public $etapas_educacenso;
@@ -144,14 +142,11 @@ return new class extends clsCadastro
         $matchedKeys = array_filter(array_keys($array), $callback);
 
         return array_intersect_key($array, array_flip($matchedKeys));
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Etapa do aluno";
+        $this->title = 'i-Educar - Etapa do aluno';
         $this->processoAp = '578';
     }
 };
-
-

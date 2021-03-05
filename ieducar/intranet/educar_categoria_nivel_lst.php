@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -140,14 +138,11 @@ return new class extends clsListagem
         $this->breadcrumb('Categorias ou níveis do servidor', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "Categorias ou níveis do servidor";
+        $this->title = 'Categorias ou níveis do servidor';
         $this->processoAp = '829';
     }
 };
-
-

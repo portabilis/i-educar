@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarFaltaAtrasoCompensado extends Model
 {
     public $cod_compensado;
@@ -37,20 +36,20 @@ class clsPmieducarFaltaAtrasoCompensado extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_compensado, ref_cod_escola, ref_ref_cod_instituicao, ref_cod_servidor, ref_usuario_exc, ref_usuario_cad, data_inicio, data_fim, data_cadastro, data_exclusao, ativo';
 
         if (is_numeric($ref_cod_escola)) {
-                    $this->ref_cod_escola = $ref_cod_escola;
+            $this->ref_cod_escola = $ref_cod_escola;
         }
 
         if (is_numeric($ref_cod_servidor) && is_numeric($ref_ref_cod_instituicao)) {
-                    $this->ref_cod_servidor = $ref_cod_servidor;
-                    $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
+            $this->ref_cod_servidor = $ref_cod_servidor;
+            $this->ref_ref_cod_instituicao = $ref_ref_cod_instituicao;
         }
 
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
 
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($cod_compensado)) {

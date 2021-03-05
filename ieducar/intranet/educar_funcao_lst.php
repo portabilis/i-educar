@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -142,13 +140,11 @@ return new class extends clsListagem
         $this->breadcrumb('Funções do servidor', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "Servidores - Funções do servidor";
+        $this->title = 'Servidores - Funções do servidor';
         $this->processoAp = '634';
     }
 };
-

@@ -2,9 +2,7 @@
 
 use iEducar\Support\View\SelectOptions;
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -136,14 +134,11 @@ return new class extends clsListagem
         $this->breadcrumb('Registro de vínculos do professor', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "Servidores - Servidor Vínculo Turma";
+        $this->title = 'Servidores - Servidor Vínculo Turma';
         $this->processoAp = 635;
     }
 };
-
-

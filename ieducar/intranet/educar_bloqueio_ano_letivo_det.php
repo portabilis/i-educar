@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
      *
@@ -56,14 +54,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe do bloqueio do ano letivo', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Bloqueio do ano letivo";
+        $this->title = 'i-Educar - Bloqueio do ano letivo';
         $this->processoAp = '21251';
     }
 };
-
-

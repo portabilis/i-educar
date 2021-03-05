@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_Controller_Page_EditController extends Core_Controller_Page_EditController
 {
     protected $_dataMapper = null;

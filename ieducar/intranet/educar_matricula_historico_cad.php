@@ -2,10 +2,7 @@
 
 use App\Process;
 
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $ref_cod_matricula;
     public $ref_cod_turma;
     public $sequencial;
@@ -222,15 +219,12 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclusão não realizada.';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Bloqueio do ano letivo";
+        $this->title = 'i-Educar - Bloqueio do ano letivo';
 
         $this->processoAp = Process::ENROLLMENT_HISTORY;
     }
 };
-
-

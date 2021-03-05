@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarClienteSuspensao extends Model
 {
     public $sequencial;
@@ -23,16 +22,16 @@ class clsPmieducarClienteSuspensao extends Model
         $this->_campos_lista = $this->_todos_campos = 'sequencial, ref_cod_cliente, ref_cod_motivo_suspensao, ref_usuario_libera, ref_usuario_suspende, dias, data_suspensao, data_liberacao';
 
         if (is_numeric($ref_usuario_suspende)) {
-                    $this->ref_usuario_suspende = $ref_usuario_suspende;
+            $this->ref_usuario_suspende = $ref_usuario_suspende;
         }
         if (is_numeric($ref_usuario_libera)) {
-                    $this->ref_usuario_libera = $ref_usuario_libera;
+            $this->ref_usuario_libera = $ref_usuario_libera;
         }
         if (is_numeric($ref_cod_motivo_suspensao)) {
-                    $this->ref_cod_motivo_suspensao = $ref_cod_motivo_suspensao;
+            $this->ref_cod_motivo_suspensao = $ref_cod_motivo_suspensao;
         }
         if (is_numeric($ref_cod_cliente)) {
-                    $this->ref_cod_cliente = $ref_cod_cliente;
+            $this->ref_cod_cliente = $ref_cod_cliente;
         }
 
         if (is_numeric($sequencial)) {

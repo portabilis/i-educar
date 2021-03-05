@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_Input_MultipleSearchAjax extends Portabilis_View_Helper_Input_Core
 {
     public function multipleSearchAjax($objectName, $attrName, $options = [])

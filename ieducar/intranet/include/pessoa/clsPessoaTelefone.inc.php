@@ -1,8 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Session;
-
-
 class clsPessoaTelefone
 {
     public $idpes;

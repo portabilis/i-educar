@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $observacao;
@@ -391,14 +389,11 @@ SQL;
         $this->mensagem = 'Exclus&atilde;o nÃ£o realizada.<br />';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Dispensa Componente Curricular";
+        $this->title = 'i-Educar - Dispensa Componente Curricular';
         $this->processoAp = 578;
     }
 };
-
-

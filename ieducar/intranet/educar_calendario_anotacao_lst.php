@@ -4,9 +4,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -137,13 +135,11 @@ return new class extends clsListagem
         }
 
         $this->largura = '100%';
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Calendario Anotacao";
+        $this->title = 'i-Educar - Calendario Anotacao';
         $this->processoAp = '620';
     }
 };
-

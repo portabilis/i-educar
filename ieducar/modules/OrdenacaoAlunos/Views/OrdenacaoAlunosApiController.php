@@ -1,6 +1,5 @@
 <?php
 
-
 class OrdenacaoAlunosApiController extends ApiCoreController
 {
     protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_BIBLIOTECA;
@@ -161,9 +160,9 @@ class OrdenacaoAlunosApiController extends ApiCoreController
         }
 
         while (in_array(substr($data_entrega, 0, 3), $biblioteca_dias_folga) || in_array(
-                $data_entrega,
-                $biblioteca_dias_feriado
-            )) {
+            $data_entrega,
+            $biblioteca_dias_feriado
+        )) {
             $data_entrega = date('D Y-m-d ', strtotime("$data_entrega +1 day"));
             $data_entrega = dataFromPgToBr($data_entrega, 'D Y-m-d');
         }

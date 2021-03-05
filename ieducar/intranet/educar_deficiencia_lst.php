@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -89,13 +87,11 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de deficiência', [
             url('intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Defici&ecirc;ncia";
+        $this->title = 'i-Educar - Defici&ecirc;ncia';
         $this->processoAp = '631';
     }
 };
-

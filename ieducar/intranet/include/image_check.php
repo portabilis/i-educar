@@ -52,8 +52,7 @@ class PictureController
         $maxHeight = null,
         $maxSize = null,
         $suportedExtensions = null
-    )
-    {
+    ) {
         $this->imageFile = $imageFile;
 
         if ($maxWidth!=null) {
@@ -143,6 +142,7 @@ class PictureController
         }
 
         $this->errorMessage = 'Imagem inv&aacute;lida.';
+
         return false;
     }
     /**

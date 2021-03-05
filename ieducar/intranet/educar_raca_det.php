@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
      *
@@ -48,14 +46,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe da raça', [
             url('intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Ra&ccedil;a";
+        $this->title = 'i-Educar - Ra&ccedil;a';
         $this->processoAp = '678';
     }
 };
-
-

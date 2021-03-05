@@ -2,7 +2,6 @@
 
 use App\Menu;
 
-
 class MenuController extends ApiCoreController
 {
     protected function search()

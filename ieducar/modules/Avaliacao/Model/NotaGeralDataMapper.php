@@ -1,6 +1,5 @@
 <?php
 
-
 class Avaliacao_Model_NotaGeralDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'Avaliacao_Model_NotaGeral';

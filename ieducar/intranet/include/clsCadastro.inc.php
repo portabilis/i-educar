@@ -5,7 +5,6 @@ use iEducar\Support\Navigation\Breadcrumb;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
-
 class clsCadastro extends clsCampos
 {
     public $target = '_self';
@@ -129,38 +128,37 @@ class clsCadastro extends clsCampos
         }
     }
 
-
-    function Inicializar()
+    public function Inicializar()
     {
     }
 
-    function Formular()
+    public function Formular()
     {
     }
 
-    function Novo()
+    public function Novo()
     {
-        return FALSE;
+        return false;
     }
 
-    function Editar()
+    public function Editar()
     {
-        return FALSE;
+        return false;
     }
 
-    function Excluir()
+    public function Excluir()
     {
-        return FALSE;
+        return false;
     }
 
-    function ExcluirImg()
+    public function ExcluirImg()
     {
-        return FALSE;
+        return false;
     }
 
-    function Gerar()
+    public function Gerar()
     {
-        return FALSE;
+        return false;
     }
 
     protected function setFlashMessage()

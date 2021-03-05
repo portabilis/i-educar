@@ -1,6 +1,5 @@
 <?php
 
-
 class ViewController extends Core_Controller_Page_ViewController
 {
     /**
@@ -50,6 +49,6 @@ class ViewController extends Core_Controller_Page_ViewController
             url('intranet/educar_index.php') => 'Escola',
         ]);
 
-        $this->addBotao('Copiar regra',"/module/RegraAvaliacao/edit?id={$this->getRequest()->id}&copy=true" );
+        $this->addBotao('Copiar regra', "/module/RegraAvaliacao/edit?id={$this->getRequest()->id}&copy=true");
     }
 }

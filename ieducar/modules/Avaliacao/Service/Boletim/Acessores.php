@@ -1,6 +1,5 @@
 <?php
 
-
 trait Avaliacao_Service_Boletim_Acessores
 {
     use Avaliacao_Service_Boletim_Avaliacao,
@@ -126,7 +125,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function setOptions(array $options = [])
     {
         if (!isset($options['matricula'])) {
-                        throw new CoreExt_Service_Exception('É necessário informar o número de matrícula do aluno.');
+            throw new CoreExt_Service_Exception('É necessário informar o número de matrícula do aluno.');
         }
 
         if (isset($options['ComponenteDataMapper'])) {
@@ -242,7 +241,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getComponenteDataMapper()
     {
         if (is_null($this->_componenteDataMapper)) {
-                        $this->setComponenteDataMapper(new ComponenteCurricular_Model_ComponenteDataMapper());
+            $this->setComponenteDataMapper(new ComponenteCurricular_Model_ComponenteDataMapper());
         }
 
         return $this->_componenteDataMapper;
@@ -266,7 +265,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getComponenteTurmaDataMapper()
     {
         if (is_null($this->_componenteTurmaDataMapper)) {
-                        $this->setComponenteTurmaDataMapper(new ComponenteCurricular_Model_TurmaDataMapper());
+            $this->setComponenteTurmaDataMapper(new ComponenteCurricular_Model_TurmaDataMapper());
         }
 
         return $this->_componenteTurmaDataMapper;
@@ -290,7 +289,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getRegraDataMapper()
     {
         if (is_null($this->_regraDataMapper)) {
-                        $this->setRegraDataMapper(new RegraAvaliacao_Model_RegraDataMapper());
+            $this->setRegraDataMapper(new RegraAvaliacao_Model_RegraDataMapper());
         }
 
         return $this->_regraDataMapper;
@@ -314,7 +313,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getNotaAlunoDataMapper()
     {
         if (is_null($this->_notaAlunoDataMapper)) {
-                        $this->setNotaAlunoDataMapper(new Avaliacao_Model_NotaAlunoDataMapper());
+            $this->setNotaAlunoDataMapper(new Avaliacao_Model_NotaAlunoDataMapper());
         }
 
         return $this->_notaAlunoDataMapper;
@@ -338,7 +337,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getNotaComponenteDataMapper()
     {
         if (is_null($this->_notaComponenteDataMapper)) {
-                        $this->setNotaComponenteDataMapper(new Avaliacao_Model_NotaComponenteDataMapper());
+            $this->setNotaComponenteDataMapper(new Avaliacao_Model_NotaComponenteDataMapper());
         }
 
         return $this->_notaComponenteDataMapper;
@@ -362,7 +361,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getNotaComponenteMediaDataMapper()
     {
         if (is_null($this->_notaComponenteMediaDataMapper)) {
-                        $this->setNotaComponenteMediaDataMapper(new Avaliacao_Model_NotaComponenteMediaDataMapper());
+            $this->setNotaComponenteMediaDataMapper(new Avaliacao_Model_NotaComponenteMediaDataMapper());
         }
 
         return $this->_notaComponenteMediaDataMapper;
@@ -386,7 +385,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getFaltaAlunoDataMapper()
     {
         if (is_null($this->_faltaAlunoDataMapper)) {
-                        $this->setFaltaAlunoDataMapper(new Avaliacao_Model_FaltaAlunoDataMapper());
+            $this->setFaltaAlunoDataMapper(new Avaliacao_Model_FaltaAlunoDataMapper());
         }
 
         return $this->_faltaAlunoDataMapper;
@@ -442,7 +441,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getParecerDescritivoAlunoDataMapper()
     {
         if (is_null($this->_parecerDescritivoAlunoDataMapper)) {
-                        $this->setParecerDescritivoAlunoDataMapper(new Avaliacao_Model_ParecerDescritivoAlunoDataMapper());
+            $this->setParecerDescritivoAlunoDataMapper(new Avaliacao_Model_ParecerDescritivoAlunoDataMapper());
         }
 
         return $this->_parecerDescritivoAlunoDataMapper;
@@ -466,7 +465,6 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getParecerDescritivoAbstractDataMapper()
     {
         if (is_null($this->_parecerDescritivoAbstractDataMapper)) {
-
             switch ($this->getRegraAvaliacaoTipoParecerDescritivo()) {
                 case RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL:
                 case RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL:
@@ -526,7 +524,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getNotaGeralDataMapper()
     {
         if (is_null($this->_notaGeralDataMapper)) {
-                        $this->setNotaGeralDataMapper(new Avaliacao_Model_NotaGeralDataMapper());
+            $this->setNotaGeralDataMapper(new Avaliacao_Model_NotaGeralDataMapper());
         }
 
         return $this->_notaGeralDataMapper;
@@ -550,7 +548,7 @@ trait Avaliacao_Service_Boletim_Acessores
     public function getMediaGeralDataMapper()
     {
         if (is_null($this->_mediaGeralDataMapper)) {
-                        $this->setMediaGeralDataMapper(new Avaliacao_Model_MediaGeralDataMapper());
+            $this->setMediaGeralDataMapper(new Avaliacao_Model_MediaGeralDataMapper());
         }
 
         return $this->_mediaGeralDataMapper;

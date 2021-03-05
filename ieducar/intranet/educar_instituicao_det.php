@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
      *
@@ -66,14 +64,11 @@ return new class extends clsDetalhe
 
         $this->array_botao[] = 'Documentação padrão';
         $this->array_botao_url_script[] = "go(\"educar_documentacao_instituicao_cad.php?cod_instituicao={$registro['cod_instituicao']}\")";
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Institui&ccedil;&atilde;o";
+        $this->title = 'i-Educar - Institui&ccedil;&atilde;o';
         $this->processoAp = '559';
     }
 };
-
-

@@ -1,6 +1,5 @@
 <?php
 
-
 class EtapacursoController extends ApiCoreController
 {
 

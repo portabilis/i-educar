@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -108,13 +106,11 @@ return new class extends clsListagem
         $this->addPaginador2('educar_coffebreak_tipo_lst.php', $total, $_GET, $this->nome, $this->limite);
 
         $this->largura = '100%';
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Tipo Coffebreak";
+        $this->title = 'i-Educar - Tipo Coffebreak';
         $this->processoAp = '564';
     }
 };
-

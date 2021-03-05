@@ -1,9 +1,6 @@
 <?php
 
-
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public $limite;
     public $offset;
     public $ref_cod_serie;
@@ -130,15 +127,12 @@ return new class extends clsListagem
         $this->breadcrumb('Séries da escola', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Séries da escola";
+        $this->title = 'i-Educar - Séries da escola';
 
         $this->processoAp = 585;
     }
 };
-
-

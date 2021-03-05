@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsModulesProfessorTurma extends Model
 {
     public $id;

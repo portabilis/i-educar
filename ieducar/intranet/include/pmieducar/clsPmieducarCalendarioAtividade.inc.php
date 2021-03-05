@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarCalendarioAtividade extends Model
 {
     public $cod_calendario_atividade;
@@ -23,10 +22,10 @@ class clsPmieducarCalendarioAtividade extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_calendario_atividade, ref_usuario_exc, ref_usuario_cad, nm_atividade, descricao, data_cadastro, data_exclusao, ativo';
 
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($cod_calendario_atividade)) {

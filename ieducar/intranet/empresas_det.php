@@ -1,10 +1,6 @@
 <?php
 
-
-
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public function Gerar()
     {
         $this->titulo = 'Detalhe da empresa';
@@ -52,14 +48,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe da pessoa jurídica', [
             url('intranet/educar_pessoas_index.php') => 'Pessoas',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "Empresas";
+        $this->title = 'Empresas';
         $this->processoAp = 41;
     }
 };
-
-

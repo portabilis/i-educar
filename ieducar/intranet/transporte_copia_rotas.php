@@ -3,9 +3,7 @@
 error_reporting(E_ERROR);
 ini_set('display_errors', 1);
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -211,14 +209,11 @@ return new class extends clsCadastro
         } else {
             return empty($this->mensagem) ? '' : "<p class='form_erro error'>$this->mensagem</p>";
         }
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - C&oacute;pia de Rotas";
+        $this->title = 'i-Educar - C&oacute;pia de Rotas';
         $this->processoAp = '21240';
     }
 };
-
-

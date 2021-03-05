@@ -21,43 +21,52 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     FormulaMedia
  * @subpackage  Modules
+ *
  * @since       Arquivo disponível desde a versão 1.1.0
+ *
  * @version     $Id$
  */
-
 
 /**
  * ViewController class.
  *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     FormulaMedia
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class ViewController extends Core_Controller_Page_ViewController
 {
-  protected $_dataMapper = 'FormulaMedia_Model_FormulaDataMapper';
-  protected $_titulo     = 'Detalhes da fórmula de cálculo de média';
-  protected $_processoAp = 948;
-  protected $_tableMap   = array(
+    protected $_dataMapper = 'FormulaMedia_Model_FormulaDataMapper';
+    protected $_titulo     = 'Detalhes da fórmula de cálculo de média';
+    protected $_processoAp = 948;
+    protected $_tableMap   = [
     'Nome' => 'nome',
     'Fórmula de cálculo' => 'formulaMedia',
     'Tipo de fórmula' => 'tipoFormula',
-  );
+  ];
 
-  protected function _preRender(){
+    protected function _preRender()
+    {
+        parent::_preRender();
 
-    parent::_preRender();
-
-    $this->breadcrumb('Detalhe da f&oacute;rmula de m&eacute;dia', [
+        $this->breadcrumb('Detalhe da f&oacute;rmula de m&eacute;dia', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
-  }
+    }
 }

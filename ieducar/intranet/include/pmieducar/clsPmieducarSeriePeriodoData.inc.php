@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarSeriePeriodoData extends Model
 {
     public $ref_cod_serie;
@@ -20,10 +19,10 @@ class clsPmieducarSeriePeriodoData extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_serie, sequencial, ref_cod_serie_tipo_periodo_ano, data_inicial, data_final';
 
         if (is_numeric($ref_cod_serie_tipo_periodo_ano)) {
-                    $this->ref_cod_serie_tipo_periodo_ano = $ref_cod_serie_tipo_periodo_ano;
+            $this->ref_cod_serie_tipo_periodo_ano = $ref_cod_serie_tipo_periodo_ano;
         }
         if (is_numeric($ref_cod_serie)) {
-                    $this->ref_cod_serie = $ref_cod_serie;
+            $this->ref_cod_serie = $ref_cod_serie;
         }
 
         if (is_numeric($sequencial)) {

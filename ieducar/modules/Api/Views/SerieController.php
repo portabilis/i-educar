@@ -1,6 +1,5 @@
 <?php
 
-
 class SerieController extends ApiCoreController
 {
     protected function canGetSeries()
@@ -26,7 +25,7 @@ class SerieController extends ApiCoreController
 
             $params = [$instituicaoId];
 
-            $sql = "SELECT distinct
+            $sql = 'SELECT distinct
                     s.cod_serie,
                     s.nm_serie,
                     s.idade_ideal,
@@ -51,7 +50,7 @@ class SerieController extends ApiCoreController
                 WHERE TRUE
                 AND c.ref_cod_instituicao = $1
                 AND c.ativo = 1
-            ";
+            ';
 
             if ($escolaId) {
                 $sql .= " AND es.ref_cod_escola IN ({$escolaId}) ";
@@ -66,7 +65,7 @@ class SerieController extends ApiCoreController
                 $sql .= ' AND (s.updated_at >= $2 OR es.updated_at >= $2)';
             }
 
-            $sql .= " ORDER BY updated_at, s.nm_serie ASC";
+            $sql .= ' ORDER BY updated_at, s.nm_serie ASC';
 
             $series = $this->fetchPreparedQuery($sql, $params);
 
@@ -221,6 +220,7 @@ class SerieController extends ApiCoreController
             $seriePorCurso[$serie['cod_curso']]['nome'] = $serie['nm_curso'];
             $seriePorCurso[$serie['cod_curso']]['series'][$serie['id']] = $serie['nome'];
         }
+
         return ['options' => $seriePorCurso ];
     }
 

@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $cod_usuario;
     public $ref_cod_escola;
     public $ref_cod_instituicao;
@@ -92,14 +90,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe do usuário', [
             url('intranet/educar_configuracoes_index.php') => 'Configurações',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Usu&aacute;rio";
+        $this->title = 'i-Educar - Usu&aacute;rio';
         $this->processoAp = '555';
     }
 };
-
-

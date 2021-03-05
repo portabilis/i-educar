@@ -2,10 +2,7 @@
 
 use App\Services\SchoolGradeDisciplineService;
 
-
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $ref_cod_escola;
     public $ref_cod_serie;
     public $ref_usuario_exc;
@@ -151,14 +148,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe dos vínculos entre escola e série', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Escola S&eacute;rie";
+        $this->title = 'i-Educar - Escola S&eacute;rie';
         $this->processoAp = '585';
     }
 };
-
-

@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarMotivoSuspensao extends Model
 {
     public $cod_motivo_suspensao;
@@ -24,10 +23,10 @@ class clsPmieducarMotivoSuspensao extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_motivo_suspensao, ref_usuario_exc, ref_usuario_cad, nm_motivo, descricao, data_cadastro, data_exclusao, ativo, ref_cod_biblioteca';
 
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
 
         if (is_numeric($cod_motivo_suspensao)) {

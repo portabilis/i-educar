@@ -3,10 +3,7 @@
 use App\Models\LegacyRegistration;
 use App\Services\SchoolClass\AvailableTimeService;
 
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
     public $ref_cod_matricula;
     public $ref_usuario_exc;
@@ -326,14 +323,11 @@ return new class extends clsCadastro
         $turma = $turma->detalhe();
 
         return $turma['turma_turno_id'] == clsPmieducarTurma::TURNO_INTEGRAL;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Matricula Turma";
+        $this->title = 'i-Educar - Matricula Turma';
         $this->processoAp = 578;
     }
 };
-
-

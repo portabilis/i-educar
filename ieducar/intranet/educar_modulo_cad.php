@@ -2,9 +2,7 @@
 
 use App\Models\LegacyStageType;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $cod_modulo;
     public $ref_usuario_exc;
     public $ref_usuario_cad;
@@ -184,14 +182,11 @@ return new class extends clsCadastro
         }
 
         return true;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Etapa";
+        $this->title = 'i-Educar - Etapa';
         $this->processoAp = '584';
     }
 };
-
-

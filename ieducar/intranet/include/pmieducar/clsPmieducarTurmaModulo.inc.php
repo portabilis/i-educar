@@ -1,8 +1,6 @@
 <?php
 
 use iEducar\Legacy\Model;
-use Illuminate\Support\Facades\Session;
-
 
 class clsPmieducarTurmaModulo extends Model
 {
@@ -21,10 +19,10 @@ class clsPmieducarTurmaModulo extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_turma, ref_cod_modulo, sequencial, data_inicio, data_fim, dias_letivos';
 
         if (is_numeric($ref_cod_modulo)) {
-                    $this->ref_cod_modulo = $ref_cod_modulo;
+            $this->ref_cod_modulo = $ref_cod_modulo;
         }
         if (is_numeric($ref_cod_turma)) {
-                    $this->ref_cod_turma = $ref_cod_turma;
+            $this->ref_cod_turma = $ref_cod_turma;
         }
 
         if (is_numeric($sequencial)) {

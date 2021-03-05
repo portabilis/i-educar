@@ -1,6 +1,5 @@
 <?php
 
-
 class RegraAvaliacao_Model_Regra extends CoreExt_Entity
 {
     protected $_data = [
@@ -120,7 +119,7 @@ class RegraAvaliacao_Model_Regra extends CoreExt_Entity
     public function getDataMapper()
     {
         if (is_null($this->_dataMapper)) {
-                        $this->setDataMapper(new RegraAvaliacao_Model_RegraDataMapper());
+            $this->setDataMapper(new RegraAvaliacao_Model_RegraDataMapper());
         }
 
         return parent::getDataMapper();

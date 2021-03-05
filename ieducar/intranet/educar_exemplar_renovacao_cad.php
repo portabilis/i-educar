@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Session;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -224,14 +222,11 @@ return new class extends clsCadastro
         $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Renovação de empréstimo";
+        $this->title = 'i-Educar - Renovação de empréstimo';
         $this->processoAp = '628';
     }
 };
-
-

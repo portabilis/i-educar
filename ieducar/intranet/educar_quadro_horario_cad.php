@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $ref_cod_turma;
@@ -174,14 +172,11 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "Servidores - Quadro de Hor&aacute;rios";
+        $this->title = 'Servidores - Quadro de Hor&aacute;rios';
         $this->processoAp = '641';
     }
 };
-
-

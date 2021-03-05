@@ -1,6 +1,5 @@
 <?php
 
-
 class IndexController extends Core_Controller_Page_ListController
 {
     protected $_dataMapper = 'TabelaArredondamento_Model_TabelaDataMapper';

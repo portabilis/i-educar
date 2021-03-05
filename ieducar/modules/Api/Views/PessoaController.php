@@ -1,13 +1,12 @@
 <?php
 
+use App\Models\LegacyIndividual;
 use App\Models\PersonHasPlace;
 use iEducar\Modules\Addressing\LegacyAddressingFields;
-use iEducar\Modules\Educacenso\Validator\NameValidator;
+use iEducar\Modules\Educacenso\Model\Nacionalidade;
 use iEducar\Modules\Educacenso\Validator\BirthDateValidator;
 use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
-use App\Models\LegacyIndividual;
-use iEducar\Modules\Educacenso\Model\Nacionalidade;
-
+use iEducar\Modules\Educacenso\Validator\NameValidator;
 
 class PessoaController extends ApiCoreController
 {
@@ -476,6 +475,7 @@ class PessoaController extends ApiCoreController
 
         if (!$validator->isValid()) {
             $this->messenger->append($validator->getMessage());
+
             return false;
         }
 
@@ -492,6 +492,7 @@ class PessoaController extends ApiCoreController
 
         if (!$validator->isValid()) {
             $this->messenger->append($validator->getMessage());
+
             return false;
         }
 
@@ -504,6 +505,7 @@ class PessoaController extends ApiCoreController
 
         if (!$validator->isValid()) {
             $this->messenger->append($validator->getMessage());
+
             return false;
         }
 
@@ -568,7 +570,6 @@ class PessoaController extends ApiCoreController
         $individual->nome_social = $this->getRequest()->nome_social ?? $this->getRequest()->nome_social;
 
         $individual->saveOrFail();
-
 
         $raca = new clsCadastroFisicaRaca($pessoaId, $this->getRequest()->cor_raca);
         if ($raca->existe()) {

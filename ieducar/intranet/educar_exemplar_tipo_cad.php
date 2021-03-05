@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -217,8 +215,7 @@ return new class extends clsCadastro
 
     public function Formular()
     {
-        $this->title = "i-Educar - Tipo Exemplar";
+        $this->title = 'i-Educar - Tipo Exemplar';
         $this->processoAp = '597';
     }
-
 };

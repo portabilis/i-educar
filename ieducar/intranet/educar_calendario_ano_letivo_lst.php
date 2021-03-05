@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Session;
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -474,14 +472,11 @@ return new class extends clsListagem
         Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
 
         return $retorno;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Calendários";
+        $this->title = 'i-Educar - Calendários';
         $this->processoAp = 620;
     }
 };
-
-

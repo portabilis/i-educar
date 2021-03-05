@@ -1,6 +1,5 @@
 <?php
 
-
 class clsEscolaridade
 {
     public $idesco;

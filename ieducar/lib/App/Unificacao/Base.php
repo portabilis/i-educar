@@ -183,10 +183,10 @@ class App_Unificacao_Base
      */
     private function storeLogOldDataByKeys($oldKeys, $table, $columnKey)
     {
-        foreach($oldKeys as $key) {
+        foreach ($oldKeys as $key) {
             $data = $this->getOldData($table, $columnKey, $key);
 
-            if ($data->isEmpty()){
+            if ($data->isEmpty()) {
                 continue;
             }
 
@@ -205,6 +205,7 @@ class App_Unificacao_Base
      * @param $table
      * @param $key
      * @param $value
+     *
      * @return \Illuminate\Support\Collection
      */
     private function getOldData($table, $key, $value)

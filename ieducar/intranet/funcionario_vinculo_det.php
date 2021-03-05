@@ -1,9 +1,6 @@
 <?php
 
-
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $cod_usuario;
 
     public function Gerar()
@@ -30,14 +27,11 @@ return new class extends clsDetalhe
         $this->largura = '100%';
 
         $this->breadcrumb('Detalhe do v&iacute;nculo');
-
     }
 
     public function Formular()
     {
-        $this->title = "Vínculo Funcionários";
+        $this->title = 'Vínculo Funcionários';
         $this->processoAp = '190';
     }
 };
-
-

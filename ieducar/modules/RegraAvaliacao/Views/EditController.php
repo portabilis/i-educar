@@ -2,7 +2,6 @@
 
 use iEducar\Modules\EvaluationRules\Models\ParallelRemedialCalculationType;
 
-
 class EditController extends Core_Controller_Page_EditController
 {
     protected $_dataMapper = 'RegraAvaliacao_Model_RegraDataMapper';

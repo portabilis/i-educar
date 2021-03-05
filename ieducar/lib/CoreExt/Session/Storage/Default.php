@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Session;
 
-
 class CoreExt_Session_Storage_Default extends CoreExt_Session_Storage_Abstract
 {
     /**

@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Referência a usuário da sessão
      *
@@ -205,14 +203,11 @@ return new class extends clsDetalhe
         $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Vagas Reservadas";
+        $this->title = 'i-Educar - Vagas Reservadas';
         $this->processoAp = '639';
     }
 };
-
-

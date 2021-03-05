@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -111,13 +109,11 @@ return new class extends clsListagem
         $this->breadcrumb('Distribuições de uniforme escolar', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Distribui&ccedil;&atilde;o de uniforme";
+        $this->title = 'i-Educar - Distribui&ccedil;&atilde;o de uniforme';
         $this->processoAp = '578';
     }
 };
-

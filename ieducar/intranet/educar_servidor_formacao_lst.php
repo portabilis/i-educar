@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -147,14 +145,11 @@ return new class extends clsListagem
         );
 
         $this->largura = '100%';
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Servidor Formação";
+        $this->title = 'i-Educar - Servidor Formação';
         $this->processoAp = 635;
     }
 };
-
-

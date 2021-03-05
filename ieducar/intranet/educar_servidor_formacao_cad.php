@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $pessoa_logada;
 
     public $cod_formacao;
@@ -415,14 +413,11 @@ return new class extends clsCadastro
         $this->mensagem = 'Exclusão não realizada.<br>';
 
         return false;
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Servidor Formação";
+        $this->title = 'i-Educar - Servidor Formação';
         $this->processoAp = 635;
     }
 };
-
-

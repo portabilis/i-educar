@@ -1,6 +1,5 @@
 <?php
 
-
 class DiarioController extends Portabilis_Controller_Page_ListController
 {
     protected $_titulo = 'Lançamento por turma';

@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_Input_Checkbox extends Portabilis_View_Helper_Input_Core
 {
     public function checkbox($attrName, $options = [])

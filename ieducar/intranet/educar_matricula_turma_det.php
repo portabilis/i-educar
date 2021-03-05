@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
     public $ref_cod_matricula;
     public $ref_cod_turma;
@@ -367,14 +365,11 @@ return new class extends clsDetalhe
         $escolaSerie->ref_cod_serie = $serieId;
 
         return $escolaSerie->detalhe();
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Matricula Turma";
+        $this->title = 'i-Educar - Matricula Turma';
         $this->processoAp = 578;
     }
 };
-
-

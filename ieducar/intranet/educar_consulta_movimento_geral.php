@@ -1,9 +1,6 @@
 <?php
 
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     const PROCESSO_AP = 9998900;
 
     public $ano;
@@ -67,14 +64,11 @@ return new class extends clsCadastro
         $url = '/intranet/educar_consulta_movimento_geral_lst.php?' . $queryString;
 
         $this->simpleRedirect($url);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Consulta de movimento geral";
+        $this->title = 'i-Educar - Consulta de movimento geral';
         $this->processoAp = 9998900;
     }
 };
-
-

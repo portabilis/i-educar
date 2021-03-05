@@ -5,9 +5,7 @@ use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 use Illuminate\Support\Str;
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     use InteractWithDatabase, SelectOptions;
 
     public $__limite;
@@ -80,14 +78,11 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de UFs', [
             url('intranet/educar_enderecamento_index.php') => 'Endereçamento',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "Uf";
+        $this->title = 'Uf';
         $this->processoAp = 754;
     }
 };
-
-

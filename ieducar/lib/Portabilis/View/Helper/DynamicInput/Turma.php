@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_DynamicInput_CoreSelect
 {
     protected function inputName()

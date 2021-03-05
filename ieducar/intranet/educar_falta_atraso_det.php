@@ -2,9 +2,7 @@
 
 use App\Models\LegacySchool;
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
 
     public $cod_falta_atraso;
@@ -132,14 +130,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe da falta/atraso do servidor', [
         url('intranet/educar_servidores_index.php') => 'Servidores',
     ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "Servidores - Falta Atraso";
+        $this->title = 'Servidores - Falta Atraso';
         $this->processoAp = 635;
     }
 };
-
-

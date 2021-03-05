@@ -1,6 +1,5 @@
 <?php
 
-
 class Portabilis_Controller_Page_ListController extends Core_Controller_Page_ListController
 {
     protected $backwardCompatibility = false;

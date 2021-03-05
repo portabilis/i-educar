@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarBloqueioAnoLetivo extends Model
 {
     public $ref_cod_instituicao;

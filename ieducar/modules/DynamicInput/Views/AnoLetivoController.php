@@ -24,82 +24,97 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Avaliacao
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
-
 
 /**
  * AnoLetivoController class.
  *
  * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class AnoLetivoController extends ApiCoreController
 {
-
-  protected function canGetAnosLetivos() {
-    return $this->validatesId('escola');
-  }
-
-  protected function canGetAnosLetivosPorEscolaSerie()
-  {
-    return $this->validatesId('escola') && $this->validatesId('serie');
-  }
-
-  protected function filtroSituacao() {
-    $tiposSituacao  = array('nao_iniciado' => 0, 'em_andamento' => 1, 'finalizado' => 2);
-    $situacaoIn     = array();
-
-    foreach ($tiposSituacao as $nome => $flag) {
-      if ($this->getRequest()->{"situacao_$nome"} == true)
-        $situacaoIn[] = $flag;
+    protected function canGetAnosLetivos()
+    {
+        return $this->validatesId('escola');
     }
 
-    return (empty($situacaoIn) ? '' : 'and al.andamento in ('. implode(',', $situacaoIn) . ')');
-  }
+    protected function canGetAnosLetivosPorEscolaSerie()
+    {
+        return $this->validatesId('escola') && $this->validatesId('serie');
+    }
 
-  protected function getAnosLetivos() {
-    if ($this->canGetAnosLetivos()) {
-      $params       = array($this->getRequest()->escola_id);
-      $sql          = "select ano from pmieducar.escola_ano_letivo as al where ref_cod_escola = $1
+    protected function filtroSituacao()
+    {
+        $tiposSituacao  = ['nao_iniciado' => 0, 'em_andamento' => 1, 'finalizado' => 2];
+        $situacaoIn     = [];
+
+        foreach ($tiposSituacao as $nome => $flag) {
+            if ($this->getRequest()->{"situacao_$nome"} == true) {
+                $situacaoIn[] = $flag;
+            }
+        }
+
+        return (empty($situacaoIn) ? '' : 'and al.andamento in ('. implode(',', $situacaoIn) . ')');
+    }
+
+    protected function getAnosLetivos()
+    {
+        if ($this->canGetAnosLetivos()) {
+            $params       = [$this->getRequest()->escola_id];
+            $sql          = "select ano from pmieducar.escola_ano_letivo as al where ref_cod_escola = $1
                        and ativo = 1 {$this->filtroSituacao()} order by ano desc";
 
-      $records = $this->fetchPreparedQuery($sql, $params);
-      $options = array();
+            $records = $this->fetchPreparedQuery($sql, $params);
+            $options = [];
 
-      foreach ($records as $record)
-        $options[$record['ano']] = $record['ano'];
+            foreach ($records as $record) {
+                $options[$record['ano']] = $record['ano'];
+            }
 
-      return array('options' => $options);
+            return ['options' => $options];
+        }
     }
-  }
 
     protected function getAnosLetivosPorEscolaSerie()
     {
         if ($this->canGetAnosLetivos()) {
             $anosLetivos = App_Model_IedFinder::getAnosLetivosEscolaSerie($this->getRequest()->escola_id, $this->getRequest()->serie_id);
             asort($anosLetivos);
+
             return [ 'options' => $anosLetivos ];
         }
     }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'anos_letivos'))
-      $this->appendResponse($this->getAnosLetivos());
-    elseif ($this->isRequestFor('get', 'anos_letivos_escola_serie')) {
-      $this->appendResponse($this->getAnosLetivosPorEscolaSerie());
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'anos_letivos')) {
+            $this->appendResponse($this->getAnosLetivos());
+        } elseif ($this->isRequestFor('get', 'anos_letivos_escola_serie')) {
+            $this->appendResponse($this->getAnosLetivosPorEscolaSerie());
+        } else {
+            $this->notImplementedOperationError();
+        }
     }
-    else
-      $this->notImplementedOperationError();
-  }
 }

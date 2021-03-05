@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
      *
@@ -70,14 +68,11 @@ return new class extends clsDetalhe
 
         $this->url_cancelar = 'educar_exemplar_emprestimo_lst.php';
         $this->largura = '100%';
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Exemplar Empr&eacute;stimo";
+        $this->title = 'i-Educar - Exemplar Empr&eacute;stimo';
         $this->processoAp = '610';
     }
 };
-
-

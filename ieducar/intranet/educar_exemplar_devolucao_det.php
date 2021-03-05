@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Session;
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
      *
@@ -124,14 +122,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe do exemplar para devolução', [
             url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Exemplar Devolu&ccedil;&atilde;o";
+        $this->title = 'i-Educar - Exemplar Devolu&ccedil;&atilde;o';
         $this->processoAp = '628';
     }
 };
-
-

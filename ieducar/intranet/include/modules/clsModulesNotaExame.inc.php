@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsModulesNotaExame extends Model
 {
     public $ref_cod_matricula;

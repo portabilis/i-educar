@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -236,14 +234,11 @@ return new class extends clsListagem
         $this->breadcrumb('Dispensa de componentes curriculares', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Dispensa Componente Curricular";
+        $this->title = 'i-Educar - Dispensa Componente Curricular';
         $this->processoAp = 578;
     }
 };
-
-

@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
 
     public function Gerar()
@@ -68,14 +66,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe da empresa de transporte', [
         url('intranet/educar_transporte_escolar_index.php') => 'Transporte escolar',
     ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Empresas";
+        $this->title = 'i-Educar - Empresas';
         $this->processoAp = 21235;
     }
 };
-
-

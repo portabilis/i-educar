@@ -3,10 +3,7 @@
 use App\Models\City;
 use iEducar\Legacy\InteractWithDatabase;
 
-
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     use InteractWithDatabase;
 
     public $idmun;
@@ -61,14 +58,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe do município', [
             url('intranet/educar_enderecamento_index.php') => 'Endereçamento',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "Município";
+        $this->title = 'Município';
         $this->processoAp = 755;
     }
 };
-
-

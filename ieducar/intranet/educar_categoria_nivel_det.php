@@ -93,4 +93,3 @@ return new class extends clsDetalhe {
         $this->processoAp = '829';
     }
 };
-

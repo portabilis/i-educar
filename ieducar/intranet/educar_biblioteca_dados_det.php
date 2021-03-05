@@ -1,7 +1,6 @@
 <?php
 
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
      *
@@ -153,9 +152,7 @@ return new class extends clsDetalhe
 
     public function Formular(): bool
     {
-        $this->titulo = "i-Educar - Dados Biblioteca";
+        $this->titulo = 'i-Educar - Dados Biblioteca';
         $this->processoAp = '629';
     }
 };
-
-

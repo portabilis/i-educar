@@ -1,9 +1,6 @@
 <?php
 
-
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referência a usuário da sessão
      *
@@ -87,14 +84,11 @@ return new class extends clsListagem
     ]);
 
         $this->largura = '100%';
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Escolaridade do servidor";
+        $this->title = 'i-Educar - Escolaridade do servidor';
         $this->processoAp = '632';
     }
 };
-
-

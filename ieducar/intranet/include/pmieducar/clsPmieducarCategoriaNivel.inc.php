@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarCategoriaNivel extends Model
 {
     public $cod_categoria_nivel;
@@ -22,10 +21,10 @@ class clsPmieducarCategoriaNivel extends Model
         $this->_campos_lista = $this->_todos_campos = 'cod_categoria_nivel, ref_usuario_exc, ref_usuario_cad, nm_categoria_nivel, data_cadastro, data_exclusao, ativo';
 
         if (is_numeric($ref_usuario_cad)) {
-                    $this->ref_usuario_cad = $ref_usuario_cad;
+            $this->ref_usuario_cad = $ref_usuario_cad;
         }
         if (is_numeric($ref_usuario_exc)) {
-                    $this->ref_usuario_exc = $ref_usuario_exc;
+            $this->ref_usuario_exc = $ref_usuario_exc;
         }
 
         if (is_numeric($cod_categoria_nivel)) {

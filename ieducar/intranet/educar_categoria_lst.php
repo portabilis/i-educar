@@ -1,9 +1,6 @@
 <?php
 
-
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -83,13 +80,11 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de categorias', [
             url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Categoria de obras";
+        $this->title = 'i-Educar - Categoria de obras';
         $this->processoAp = 599;
     }
 };
-

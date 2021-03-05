@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     public $pessoa_logada;
     public $titulo;
     public $limite;
@@ -136,14 +134,11 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de vagas por série/ano', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Vagas por série";
+        $this->title = 'i-Educar - Vagas por série';
         $this->processoAp = 21253;
     }
 };
-
-

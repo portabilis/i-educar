@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     public $titulo;
 
     public $cod_curso;
@@ -165,14 +163,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe do curso', [
         url('intranet/educar_index.php') => 'Escola',
     ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Curso";
+        $this->title = 'i-Educar - Curso';
         $this->processoAp = '566';
     }
 };
-
-

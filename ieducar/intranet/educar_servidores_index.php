@@ -1,10 +1,6 @@
 <?php
 
-
-
-
-return new class
-{
+return new class {
     public function RenderHTML()
     {
         return '
@@ -12,14 +8,11 @@ return new class
                     <tr align=center valign=\'top\'><td></td></tr>
                 </table>
                 ';
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar";
+        $this->title = 'i-Educar';
         $this->processoAp = 71;
     }
 };
-
-

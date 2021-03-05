@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Session;
 
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     public $tipo_biblioteca;
 
     public function Inicializar()
@@ -35,14 +33,11 @@ return new class extends clsCadastro
         Session::put('biblioteca.tipo_biblioteca', $this->tipo_biblioteca);
 
         $this->simpleRedirect('educar_biblioteca_cad.php');
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Biblioteca";
+        $this->title = 'i-Educar - Biblioteca';
         $this->processoAp = '591';
     }
 };
-
-

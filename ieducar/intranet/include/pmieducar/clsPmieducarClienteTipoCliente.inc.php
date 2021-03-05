@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarClienteTipoCliente extends Model
 {
     public $ref_cod_cliente_tipo;
@@ -31,11 +30,11 @@ class clsPmieducarClienteTipoCliente extends Model
         $this->_campos_lista = $this->_todos_campos = 'ctc.ref_cod_cliente_tipo, ctc.ref_cod_cliente, ctc.data_cadastro, ctc.data_exclusao, ctc.ref_usuario_cad, ctc.ref_usuario_exc, ctc.ativo';
 
         if (is_numeric($ref_cod_cliente_tipo)) {
-                    $this->ref_cod_cliente_tipo = $ref_cod_cliente_tipo;
+            $this->ref_cod_cliente_tipo = $ref_cod_cliente_tipo;
         }
 
         if (is_numeric($ref_cod_cliente)) {
-                    $this->ref_cod_cliente = $ref_cod_cliente;
+            $this->ref_cod_cliente = $ref_cod_cliente;
         }
 
         if (is_string($data_cadastro)) {

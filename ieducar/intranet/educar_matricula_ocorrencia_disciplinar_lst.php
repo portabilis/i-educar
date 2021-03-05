@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -167,13 +165,11 @@ return new class extends clsListagem
         $this->breadcrumb('Ocorrências disciplinares da matrícula', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Ocorr&ecirc;ncia Disciplinar";
+        $this->title = 'i-Educar - Ocorr&ecirc;ncia Disciplinar';
         $this->processoAp = '578';
     }
 };
-

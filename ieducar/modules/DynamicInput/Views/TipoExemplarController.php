@@ -24,59 +24,75 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Avaliacao
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
-
 
 /**
  * TipoExemplarController class.
  *
  * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão 1.1.0
+ *
  * @version     @@package_version@@
  */
 class TipoExemplarController extends ApiCoreController
 {
-  protected $_dataMapper  = 'Biblioteca_Model_TipoExemplarDataMapper';
+    protected $_dataMapper  = 'Biblioteca_Model_TipoExemplarDataMapper';
 
-  protected function canGetTiposExemplar() {
-    return $this->validatesId('biblioteca');
-  }
-
-  protected function getTiposExemplar() {
-    if ($this->canGetTiposExemplar()) {
-      $columns = array('cod_exemplar_tipo', 'nm_tipo');
-
-      $where   = array('ref_cod_biblioteca' => $this->getRequest()->biblioteca_id,
-                       'ativo'              => '1');
-
-      $records = $this->getDataMapper()->findAll($columns,
-                                                 $where,
-                                                 $orderBy = array('nm_tipo' => 'ASC'),
-                                                 $addColumnIdIfNotSet = false);
-
-      $options = array();
-
-      foreach ($records as $record)
-        $options[$record->cod_exemplar_tipo] = Portabilis_String_Utils::toUtf8($record->nm_tipo);
-
-      return array('options' => $options);
+    protected function canGetTiposExemplar()
+    {
+        return $this->validatesId('biblioteca');
     }
-  }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'tipos_exemplar'))
-      $this->appendResponse($this->getTiposExemplar());
-    else
-      $this->notImplementedOperationError();
-  }
+    protected function getTiposExemplar()
+    {
+        if ($this->canGetTiposExemplar()) {
+            $columns = ['cod_exemplar_tipo', 'nm_tipo'];
+
+            $where   = ['ref_cod_biblioteca' => $this->getRequest()->biblioteca_id,
+                       'ativo'              => '1'];
+
+            $records = $this->getDataMapper()->findAll(
+                $columns,
+                $where,
+                $orderBy = ['nm_tipo' => 'ASC'],
+                $addColumnIdIfNotSet = false
+            );
+
+            $options = [];
+
+            foreach ($records as $record) {
+                $options[$record->cod_exemplar_tipo] = Portabilis_String_Utils::toUtf8($record->nm_tipo);
+            }
+
+            return ['options' => $options];
+        }
+    }
+
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'tipos_exemplar')) {
+            $this->appendResponse($this->getTiposExemplar());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

@@ -2,7 +2,6 @@
 
 use iEducar\Legacy\Model;
 
-
 class clsPmieducarDocumentos extends Model
 {
     public $ref_cod_pessoa_educ;
@@ -29,16 +28,16 @@ class clsPmieducarDocumentos extends Model
         $this->_campos_lista = $this->_todos_campos = 'ref_cod_pessoa_educ, ref_idorg_rg, sigla_uf_cert_civil, sigla_uf_exp_rg, rg, data_expedicao_rg, num_titulo_eleitor, zona_titulo_eleitor, secao_titulo_eleitor, tipo_certidao_civil, num_termo, num_folha, num_livro, data_emissao_certidao_civil';
 
         if (is_numeric($ref_idorg_rg)) {
-                    $this->ref_idorg_rg = $ref_idorg_rg;
+            $this->ref_idorg_rg = $ref_idorg_rg;
         }
         if (is_string($sigla_uf_cert_civil)) {
-                    $this->sigla_uf_cert_civil = $sigla_uf_cert_civil;
+            $this->sigla_uf_cert_civil = $sigla_uf_cert_civil;
         }
         if (is_string($sigla_uf_exp_rg)) {
-                    $this->sigla_uf_exp_rg = $sigla_uf_exp_rg;
+            $this->sigla_uf_exp_rg = $sigla_uf_exp_rg;
         }
         if (is_numeric($ref_cod_pessoa_educ)) {
-                    $this->ref_cod_pessoa_educ = $ref_cod_pessoa_educ;
+            $this->ref_cod_pessoa_educ = $ref_cod_pessoa_educ;
         }
 
         if (is_numeric($rg)) {

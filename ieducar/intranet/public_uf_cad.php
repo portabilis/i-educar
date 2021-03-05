@@ -5,10 +5,7 @@ use iEducar\Legacy\InteractWithDatabase;
 use iEducar\Legacy\SelectOptions;
 use Illuminate\Support\Str;
 
-
-
-return new class extends clsCadastro
-{
+return new class extends clsCadastro {
     use InteractWithDatabase, SelectOptions;
 
     public $id;
@@ -138,14 +135,11 @@ return new class extends clsCadastro
         }
 
         return $this->delete($this->id);
-
     }
 
     public function Formular()
     {
-        $this->title = "Uf";
+        $this->title = 'Uf';
         $this->processoAp = 754;
     }
 };
-
-

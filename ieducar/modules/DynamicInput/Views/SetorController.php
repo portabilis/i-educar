@@ -24,11 +24,16 @@
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Paula Bonot <bonot@portabilis.com.br>
+ *
  * @category  i-Educar
+ *
  * @license   @@license@@
+ *
  * @package   Avaliacao
  * @subpackage  Modules
+ *
  * @since   Arquivo disponível desde a versão ?
+ *
  * @version   $Id$
  */
 
@@ -36,23 +41,31 @@
  * CursoController class.
  *
  * @author    Matheus Nicoski <matheus@portabilis.com.br>
+ *
  * @category    i-Educar
+ *
  * @license     @@license@@
+ *
  * @package     Avaliacao
  * @subpackage  Modules
+ *
  * @since       Classe disponível desde a versão ?
+ *
  * @version     @@package_version@@
  */
 class SetorController extends ApiCoreController
 {
-  protected function getSetor() {
-      return array('options' => []);
+    protected function getSetor()
+    {
+        return ['options' => []];
     }
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'setor'))
-        $this->appendResponse($this->getSetor());
-    else
-      $this->notImplementedOperationError();
-  }
+    public function Gerar()
+    {
+        if ($this->isRequestFor('get', 'setor')) {
+            $this->appendResponse($this->getSetor());
+        } else {
+            $this->notImplementedOperationError();
+        }
+    }
 }

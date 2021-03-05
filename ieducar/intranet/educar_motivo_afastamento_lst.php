@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -126,13 +124,11 @@ return new class extends clsListagem
         $this->breadcrumb('Motivos de afastamento do servidor', [
             url('intranet/educar_servidores_index.php') => 'Servidores',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Motivos de afastamento do servidor";
+        $this->title = 'i-Educar - Motivos de afastamento do servidor';
         $this->processoAp = '633';
     }
 };
-

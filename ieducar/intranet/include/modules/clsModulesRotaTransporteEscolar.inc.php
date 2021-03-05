@@ -1,9 +1,6 @@
 <?php
 
 use iEducar\Legacy\Model;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-
 
 class clsModulesRotaTransporteEscolar extends Model
 {

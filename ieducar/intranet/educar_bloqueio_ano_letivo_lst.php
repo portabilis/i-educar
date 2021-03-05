@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -101,13 +99,11 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de bloqueios do ano letivo', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Bloqueio do ano letivo";
+        $this->title = 'i-Educar - Bloqueio do ano letivo';
         $this->processoAp = '21251';
     }
 };
-

@@ -1,8 +1,6 @@
 <?php
 
-
-return new class extends clsListagem
-{
+return new class extends clsListagem {
     /**
      * Referencia pega da session para o idpes do usuario atual
      *
@@ -142,13 +140,11 @@ return new class extends clsListagem
         $this->breadcrumb('Listagem de prédios', [
             url('intranet/educar_index.php') => 'Escola',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Infra Predio";
+        $this->title = 'i-Educar - Infra Predio';
         $this->processoAp = '567';
     }
 };
-

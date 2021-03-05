@@ -1,9 +1,6 @@
 <?php
 
-
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
      *
@@ -88,14 +85,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Distribuições de uniforme escolar', [
             'educar_index.php' => 'Escola'
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Distribuições de uniforme escolar";
+        $this->title = 'i-Educar - Distribuições de uniforme escolar';
         $this->processoAp = '578';
     }
 };
-
-

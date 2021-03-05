@@ -2,9 +2,7 @@
 
 use App\Models\State;
 
-
-return new class extends clsDetalhe
-{
+return new class extends clsDetalhe {
     /**
      * Titulo no topo da pagina
      *
@@ -88,14 +86,11 @@ return new class extends clsDetalhe
         $this->breadcrumb('Detalhe da editora', [
             url('intranet/educar_biblioteca_index.php') => 'Biblioteca',
         ]);
-
     }
 
     public function Formular()
     {
-        $this->title = "i-Educar - Editora";
+        $this->title = 'i-Educar - Editora';
         $this->processoAp = '595';
     }
 };
-
-
