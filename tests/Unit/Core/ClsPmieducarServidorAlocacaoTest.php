@@ -1,22 +1,7 @@
 <?php
 
 
-/**
- * ClsPmieducarServidorAlocacaoTest class.
- *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- *
- * @category    i-Educar
- *
- * @license     @@license@@
- *
- * @package     Core
- * @subpackage  UnitTests
- *
- * @since       Classe disponível desde a versão 1.0.2
- *
- * @version     @@package_version@@
- */
+
 class ClsPmieducarServidorAlocacaoTest extends PHPUnit\Framework\TestCase
 {
     /**

@@ -1,21 +1,6 @@
 <?php
 
-/**
- * EscolaDestinoTransporteEscolarController class.
- *
- * @author      Gabriel Matos de Souza <gabriel@portabilis.com.br>
- *
- * @category    i-Educar
- *
- * @license     @@license@@
- *
- * @package     Avaliacao
- * @subpackage  Modules
- *
- * @since       Classe disponível desde a versão ??
- *
- * @version     @@package_version@@
- */
+
 class EscolaDestinoTransporteEscolarController extends ApiCoreController
 {
     protected function getEscolaDestinoTransporteEscolar()

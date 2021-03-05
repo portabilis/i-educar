@@ -1,22 +1,7 @@
 <?php
 
 
-/**
- * Educacenso_Model_IesTest class.
- *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- *
- * @category    i-Educar
- *
- * @license     @@license@@
- *
- * @package     Educacenso
- * @subpackage  UnitTests
- *
- * @since       Classe disponível desde a versão 1.2.0
- *
- * @version     @@package_version@@
- */
+
 class Educacenso_Model_IesTest extends PHPUnit\Framework\TestCase
 {
     protected $_entity = null;

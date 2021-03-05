@@ -1,21 +1,6 @@
 <?php
 
-/**
- * Usuario_Model_TipoExemplarDataMapper class.
- *
- * @author      Lucas D'Avila <lucasdavila@portabilis.com.br>
- *
- * @category    i-Educar
- *
- * @license     @@license@@
- *
- * @package     Usuario
- * @subpackage  Modules
- *
- * @since       Classe disponível desde a versão 1.1.0
- *
- * @version     @@package_version@@
- */
+
 class Biblioteca_Model_TipoExemplarDataMapper extends CoreExt_DataMapper
 {
     protected $_entityClass = 'Biblioteca_Model_TipoExemplar';

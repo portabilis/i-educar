@@ -1,22 +1,7 @@
 <?php
 
 
-/**
- * App_Model_MatriculaTest class.
- *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- *
- * @category    i-Educar
- *
- * @license     @@license@@
- *
- * @package     App_Model
- * @subpackage  UnitTests
- *
- * @since       Classe disponível desde a versão 1.1.0
- *
- * @version     @@package_version@@
- */
+
 class App_Model_MatriculaTest extends UnitBaseTest
 {
     public function testAtualizaMatricula()

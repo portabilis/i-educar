@@ -1,22 +1,7 @@
 <?php
 
 
-/**
- * Avaliacao_Service_NotaSituacaoCommon abstract class.
- *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- *
- * @category    i-Educar
- *
- * @license     @@license@@
- *
- * @package     Avaliacao
- * @subpackage  UnitTests
- *
- * @since       Classe disponível desde a versão 1.1.0
- *
- * @version     @@package_version@@
- */
+
 abstract class Avaliacao_Service_NotaSituacaoCommon extends Avaliacao_Service_TestCommon
 {
     protected function _setUpNotaComponenteMediaDataMapperMock(

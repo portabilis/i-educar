@@ -1,22 +1,7 @@
 <?php
 
 
-/**
- * CoreExt_ChildEntityDataMapperStub class.
- *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- *
- * @category    i-Educar
- *
- * @license     @@license@@
- *
- * @package     CoreExt_DataMapper
- * @subpackage  UnitTests
- *
- * @since       Classe disponível desde a versão 1.1.0
- *
- * @version     @@package_version@@
- */
+
 class CoreExt_ChildEntityDataMapperStub extends CoreExt_DataMapper
 {
     protected $_entityClass = 'CoreExt_ChildEntityStub';

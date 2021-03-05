@@ -1,25 +1,7 @@
 <?php
 
 
-/**
- * CoreExt_EntityDataMapperStub class.
- *
- * Entidade para testes de integração do componente CoreExt_DataMapper com
- * o banco de dados.
- *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- *
- * @category    i-Educar
- *
- * @license     @@license@@
- *
- * @package     CoreExt_DataMapper
- * @subpackage  UnitTests
- *
- * @since       Classe disponível desde a versão 1.1.0
- *
- * @version     @@package_version@@
- */
+
 class CoreExt_EntityDataMapperStub extends CoreExt_DataMapper
 {
     protected $_entityClass = 'CoreExt_EntityStub';

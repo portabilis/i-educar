@@ -1,22 +1,7 @@
 <?php
 
 
-/**
- * CoreExt_ValidateTest class.
- *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
- *
- * @category    i-Educar
- *
- * @license     @@license@@
- *
- * @package     CoreExt_Validate
- * @subpackage  UnitTests
- *
- * @since       Classe disponível desde a versão 1.1.0
- *
- * @version     @@package_version@@
- */
+
 class CoreExt_ValidateTest extends PHPUnit\Framework\TestCase
 {
     protected $_validator = null;
