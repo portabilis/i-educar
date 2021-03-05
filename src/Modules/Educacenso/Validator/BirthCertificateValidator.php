@@ -21,11 +21,13 @@ class BirthCertificateValidator implements EducacensoValidator
     {
         if (!$this->validateCertificateLength() || !$this->validateCertificateDigits()) {
             $this->message = 'O campo: Tipo certidão civil (novo formato) possui valor inválido';
+
             return false;
         }
 
         if (!$this->validateCertificateYear()) {
             $this->message = 'O campo: Tipo certidão civil (novo formato) foi preenchido com o ano inválido. O número localizado nas posições de 11 a 14, não pode ser anterior ao ano de nascimento e nem posterior ao ano corrente';
+
             return false;
         }
 

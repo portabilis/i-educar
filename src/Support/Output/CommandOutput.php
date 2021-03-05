@@ -17,7 +17,6 @@ class CommandOutput implements Output
         $this->output = $outputStyle;
     }
 
-
     public function progressAdvance()
     {
         $this->output->progressAdvance();

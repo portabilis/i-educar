@@ -5,9 +5,6 @@ namespace iEducar\Modules\Educacenso\Analysis;
 use App\Models\Educacenso\Registro30;
 use App\Models\Educacenso\RegistroEducacenso;
 use iEducar\Modules\Educacenso\Model\Escolaridade;
-use iEducar\Modules\Educacenso\Validator\DifferentiatedLocationValidator;
-use Illuminate\Support\Facades\DB;
-use Portabilis_Utils_Database;
 
 class Register30TeacherAndManagerDataAnalysis implements AnalysisInterface
 {
@@ -94,7 +91,7 @@ class Register30TeacherAndManagerDataAnalysis implements AnalysisInterface
                 ];
             }
 
-            $cursosExtintos =  $data->cursosDeFormacaoSuperiorExtintos();
+            $cursosExtintos = $data->cursosDeFormacaoSuperiorExtintos();
 
             foreach ($data->formacaoCurso as $curso) {
                 if (array_key_exists($curso, $cursosExtintos)) {
