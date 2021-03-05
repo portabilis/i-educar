@@ -2,12 +2,10 @@
 
 namespace App\Models\Educacenso;
 
-use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\PaisResidencia;
 use iEducar\Modules\Educacenso\Model\TipoAtendimentoTurma;
 use iEducar\Modules\Educacenso\Model\TipoMediacaoDidaticoPedagogico;
 use Transporte_Model_Responsavel;
-
 
 class Registro60 implements RegistroEducacenso, ItemOfRegistro30
 {
@@ -169,7 +167,6 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
         return null;
     }
 
-
     /**
      * @param $column
      */
@@ -208,13 +205,3 @@ class Registro60 implements RegistroEducacenso, ItemOfRegistro30
         $this->veiculoTransporteAquaviarioCapacidadeAcima35 = (int)$arrayColumns[32];
     }
 }
-
-
-
-
-
-
-
-
-
-

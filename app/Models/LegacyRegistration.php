@@ -109,6 +109,7 @@ class LegacyRegistration extends Model
 
     /**
      * Relação com a série.
+     *
      * @return BelongsTo
      *
      * @deprecated

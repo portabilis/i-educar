@@ -6,13 +6,13 @@ use App\Models\Educacenso\Registro50;
 use App\Models\Educacenso\RegistroEducacenso;
 use App\Models\Employee;
 use App\Models\EmployeeInep;
-use App\Models\LegacySchoolClassTeacher;
-use App\Models\LegacySchoolClassTeacherDiscipline;
-use App\Models\LegacyInstitution;
-use App\Models\LegacySchoolClass;
 use App\Models\LegacyDiscipline;
 use App\Models\LegacyEmployeeRole;
+use App\Models\LegacyInstitution;
 use App\Models\LegacyRole;
+use App\Models\LegacySchoolClass;
+use App\Models\LegacySchoolClassTeacher;
+use App\Models\LegacySchoolClassTeacherDiscipline;
 use App\Models\SchoolClassInep;
 use App\Services\Educacenso\RegistroImportInterface;
 use App\User;
@@ -48,8 +48,9 @@ class Registro50Import implements RegistroImportInterface
      * Faz a importação dos dados a partir da linha do arquivo
      *
      * @param RegistroEducacenso $model
-     * @param int $year
+     * @param int                $year
      * @param $user
+     *
      * @return void
      */
     public function import(RegistroEducacenso $model, $year, $user)
@@ -75,12 +76,14 @@ class Registro50Import implements RegistroImportInterface
 
     /**
      * @param $arrayColumns
+     *
      * @return Registro50|RegistroEducacenso
      */
     public static function getModel($arrayColumns)
     {
         $registro = new Registro50();
         $registro->hydrateModel($arrayColumns);
+
         return $registro;
     }
 
@@ -133,7 +136,6 @@ class Registro50Import implements RegistroImportInterface
         ]);
     }
 
-
     /**
      * @param $employee Employee
      *
@@ -147,7 +149,6 @@ class Registro50Import implements RegistroImportInterface
                 $query->professor();
             })->exists();
     }
-
 
     /**
      * @return LegacyRole
@@ -177,6 +178,7 @@ class Registro50Import implements RegistroImportInterface
     /**
      * @param $schoolClass LegacySchoolClass
      * @param $employee Employee
+     *
      * @return void
      */
     private function createSchoolClassTeacher(LegacySchoolClass $schoolClass, Employee $employee) : void
@@ -197,6 +199,7 @@ class Registro50Import implements RegistroImportInterface
     /**
      * @param $schoolClassTeacher LegacySchoolClassTeacher
      * @param $employee Employee
+     *
      * @return void
      */
     private function linkDisciplines(LegacySchoolClassTeacher $schoolClassTeacher) : void

@@ -8,115 +8,115 @@ class Registro50 implements RegistroEducacenso, ItemOfRegistro30
 {
     /**
      * @var string
-     * Campo 1
+     *             Campo 1
      */
     public $registro;
 
     /**
      * @var string
-     * Campo 2
+     *             Campo 2
      */
     public $inepEscola;
 
     /**
      * @var string
-     * Campo 3
+     *             Campo 3
      */
     public $codigoPessoa;
 
     /**
      * @var string
-     * Campo 4
+     *             Campo 4
      */
     public $inepDocente;
 
     /**
      * @var string
-     * Campo 5
+     *             Campo 5
      */
     public $codigoTurma;
 
     /**
      * @var string
-     * Campo 6
+     *             Campo 6
      */
     public $inepTurma;
 
     /**
      * @var string
-     * Campo 7
+     *             Campo 7
      */
     public $funcaoDocente;
 
     /**
      * @var string
-     * Campo 8
+     *             Campo 8
      */
     public $tipoVinculo;
 
     /**
      * @var array
-     * Campos 9 a 23
+     *            Campos 9 a 23
      */
     public $componentes;
 
     /**
      * @var string
-     * Campo usado somente na análise
+     *             Campo usado somente na análise
      */
     public $nomeEscola;
 
     /**
      * @var string
-     * Campo usado somente na análise
+     *             Campo usado somente na análise
      */
     public $nomeDocente;
 
     /**
      * @var integer
-     * Campo usado somente na análise
+     *              Campo usado somente na análise
      */
     public $idServidor;
 
     /**
      * @var integer
-     * Campo usado somente na análise
+     *              Campo usado somente na análise
      */
     public $idInstituicao;
 
     /**
      * @var integer
-     * Campo usado somente na análise
+     *              Campo usado somente na análise
      */
     public $idAlocacao;
 
     /**
      * @var integer
-     * Campo usado somente na análise
+     *              Campo usado somente na análise
      */
     public $tipoMediacaoTurma;
 
     /**
      * @var integer
-     * Campo usado somente na análise
+     *              Campo usado somente na análise
      */
     public $tipoAtendimentoTurma;
 
     /**
      * @var string
-     * Campo usado somente na análise
+     *             Campo usado somente na análise
      */
     public $nomeTurma;
 
     /**
      * @var string
-     * Campo usado somente na análise
+     *             Campo usado somente na análise
      */
     public $dependenciaAdministrativaEscola;
 
     /**
      * @var string
-     * Campo usado somente na análise
+     *             Campo usado somente na análise
      */
     public $etapaEducacensoTurma;
 
@@ -170,6 +170,7 @@ class Registro50 implements RegistroEducacenso, ItemOfRegistro30
      * Retorna a propriedade da classe correspondente ao dado no arquivo do censo
      *
      * @param int $column
+     *
      * @return string
      */
     public function getProperty($column)

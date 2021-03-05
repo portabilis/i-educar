@@ -49,7 +49,7 @@ class DisciplineImport implements ToModel, WithHeadingRow, WithProgressBar
             'row' => $row,
             'discipline' => $discipline,
         ]);
-        
+
         $this->collection->push($collection);
 
         return $discipline;

@@ -20,7 +20,6 @@ use Illuminate\Support\Collection as LaravelCollection;
  * @property int    type
  * @property int    process
  * @property bool   active
- *
  * @property Menu              $parent
  * @property Collection|Menu[] $children
  */
@@ -71,7 +70,6 @@ class Menu extends Model
     public function hasLinkInSubmenu()
     {
         foreach ($this->children as $menu) {
-
             if ($menu->isLink()) {
                 return true;
             }

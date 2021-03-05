@@ -28,6 +28,7 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
 
     /**
      * @param Request $request
+     *
      * @return View
      */
     public function index(Request $request)
@@ -40,7 +41,9 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
 
         Session::flash('notice', self::INFO_MESSAGE);
 
-        return view('release-period.form', [
+        return view(
+            'release-period.form',
+            [
                 'stageTypes' => LegacyStageType::active()->get()->keyBy('cod_modulo')->toJson(),
                 'releasePeriod' => new ReleasePeriod(),
                 'data' => $this->applyFilters($request),
@@ -53,6 +56,7 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
 
     /**
      * @param ReleasePeriod $releasePeriod
+     *
      * @return View
      */
     public function form(ReleasePeriod $releasePeriod)
@@ -67,7 +71,9 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
 
         Session::flash('notice', self::INFO_MESSAGE);
 
-        return view('release-period.form', [
+        return view(
+            'release-period.form',
+            [
                 'stageTypes' => LegacyStageType::active()->get()->keyBy('cod_modulo')->toJson(),
                 'releasePeriod' => $releasePeriod,
                 'data' => $this->applyFilters(request()),
@@ -112,6 +118,7 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
 
     /**
      * @param ReleasePeriod $releasePeriod
+     *
      * @return View
      */
     public function show(ReleasePeriod $releasePeriod)
@@ -131,8 +138,9 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
     }
 
     /**
-     * @param ReleasePeriod $releasePeriod
+     * @param ReleasePeriod        $releasePeriod
      * @param ReleasePeriodRequest $request
+     *
      * @return RedirectResponse
      */
     public function update(ReleasePeriod $releasePeriod, ReleasePeriodRequest $request)
@@ -168,13 +176,14 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
 
     /**
      * @param ReleasePeriod $releasePeriod
+     *
      * @return RedirectResponse
      */
     public function delete(Request $request)
     {
         DB::beginTransaction();
 
-        foreach($request->get('periods') as $periodId) {
+        foreach ($request->get('periods') as $periodId) {
             $releasePeriod = ReleasePeriod::find($periodId);
             $releasePeriod->schools()->sync([]);
             $releasePeriod->periodDates()->delete();
@@ -195,7 +204,6 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
             ->route('release-period.index')
             ->with('success', 'Período(s) excluído(s) com sucesso.');
     }
-
 
     /**
      * Popula os campos
@@ -249,6 +257,7 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
 
     /**
      * @param $request
+     *
      * @return LengthAwarePaginator
      */
     private function applyFilters($request)

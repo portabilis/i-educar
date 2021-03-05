@@ -192,11 +192,13 @@ class LegacyCreateTestsCommand extends Command
      * Valida se esta na lista de exclusão
      *
      * @param string $className
+     *
      * @return bool
      */
     private function isClassWithKnownErrors(string $className)
     {
         $excludeClasseNameList = $this->excludeClasseNameList();
+
         return in_array($className, $excludeClasseNameList, true);
     }
 

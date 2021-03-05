@@ -24,7 +24,7 @@ class StudentLogUnificationController extends Controller
         if ($request->get('ref_cod_escola')) {
             $schoolId = $request->get('ref_cod_escola');
             $unificationsQuery->whereHas('studentMain', function ($studentQuery) use ($schoolId) {
-                $studentQuery->whereHas('registrations', function ($registrationsQuery) use ($schoolId){
+                $studentQuery->whereHas('registrations', function ($registrationsQuery) use ($schoolId) {
                     $registrationsQuery->where('school_id', $schoolId);
                 });
             });
@@ -51,8 +51,10 @@ class StudentLogUnificationController extends Controller
             $unificationService->undo($unification);
         } catch (Throwable $exception) {
             return redirect(
-                route('student-log-unification.show', ['unification' => $unification->id]))
-                ->withErrors([$exception->getMessage()]
+                route('student-log-unification.show', ['unification' => $unification->id])
+            )
+                ->withErrors(
+                    [$exception->getMessage()]
                 );
         }
 

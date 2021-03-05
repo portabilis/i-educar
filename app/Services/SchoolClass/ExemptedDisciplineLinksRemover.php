@@ -20,7 +20,7 @@ class ExemptedDisciplineLinksRemover
     private function updateAffectedSchoolClassTeacherTimestamps(LegacySchoolClass $schoolClass) : void
     {
         LegacySchoolClassTeacher::where('turma_id', $schoolClass->id)
-            ->whereHas('schoolClassTeacherDisciplines', function($query) use ($schoolClass) {
+            ->whereHas('schoolClassTeacherDisciplines', function ($query) use ($schoolClass) {
                 $query->where('componente_curricular_id', $schoolClass->exempted_discipline_id);
             })
             ->update([
@@ -31,7 +31,7 @@ class ExemptedDisciplineLinksRemover
     private function removeSchoolClassTeacherDisciplines(LegacySchoolClass $schoolClass) : void
     {
         LegacySchoolClassTeacherDiscipline::query()
-            ->whereHas('schoolClassTeacher', function($query) use ($schoolClass) {
+            ->whereHas('schoolClassTeacher', function ($query) use ($schoolClass) {
                 $query->where('turma_id', $schoolClass->id);
             })
             ->where('componente_curricular_id', $schoolClass->exempted_discipline_id)

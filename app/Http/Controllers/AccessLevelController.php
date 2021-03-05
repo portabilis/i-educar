@@ -154,7 +154,7 @@ class AccessLevelController extends Controller
 
     /**
      * @param LegacyUserType $userType
-     * @param Connection $connection
+     * @param Connection     $connection
      *
      * @return RedirectResponse
      *

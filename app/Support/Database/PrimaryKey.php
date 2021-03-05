@@ -12,6 +12,7 @@ trait PrimaryKey
      * Create a new column ID with primary key
      *
      * @param $tableName
+     *
      * @return void
      */
     public function createPrimaryKey($tableName)
@@ -23,7 +24,7 @@ trait PrimaryKey
 
             DB::statement("alter table {$tableName} drop constraint if exists " . $keyName);
 
-            Schema::table($tableName, function (Blueprint $table) use ($arrayColumns){
+            Schema::table($tableName, function (Blueprint $table) use ($arrayColumns) {
                 $table->unique($arrayColumns);
             });
         }
@@ -46,7 +47,7 @@ trait PrimaryKey
         Schema::table($tableName, function (Blueprint $table) use ($tableName, $keyColumns) {
             if ($keyColumns) {
                 $table->dropUnique($keyColumns);
-                
+
                 $table->primary($keyColumns);
             }
         });
@@ -54,6 +55,7 @@ trait PrimaryKey
 
     /**
      * @param $table
+     *
      * @return mixed
      */
     private function getPrimaryKeyInfo($table)
@@ -80,6 +82,7 @@ SQL;
 
     /**
      * @param $table
+     *
      * @return mixed
      */
     public function getTableName($table)

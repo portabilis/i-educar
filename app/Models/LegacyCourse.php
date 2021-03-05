@@ -82,6 +82,7 @@ class LegacyCourse extends Model
 
     /**
      * @param Builder $query
+     *
      * @return Builder
      */
     public function scopeIsEja($query)

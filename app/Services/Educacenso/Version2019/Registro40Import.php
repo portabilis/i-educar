@@ -8,7 +8,6 @@ use App\Models\Employee;
 use App\Models\EmployeeInep;
 use App\Models\LegacyInstitution;
 use App\Models\LegacySchool;
-use App\Models\LegacyStudent;
 use App\Models\SchoolInep;
 use App\Models\SchoolManager;
 use App\Services\Educacenso\RegistroImportInterface;
@@ -36,8 +35,9 @@ class Registro40Import implements RegistroImportInterface
      * Faz a importação dos dados a partir da linha do arquivo
      *
      * @param RegistroEducacenso $model
-     * @param int $year
+     * @param int                $year
      * @param $user
+     *
      * @return void
      */
     public function import(RegistroEducacenso $model, $year, $user)
@@ -56,12 +56,14 @@ class Registro40Import implements RegistroImportInterface
 
     /**
      * @param $arrayColumns
+     *
      * @return Registro40|RegistroEducacenso
      */
     public static function getModel($arrayColumns)
     {
         $registro = new Registro40Model();
         $registro->hydrateModel($arrayColumns);
+
         return $registro;
     }
 
@@ -82,6 +84,7 @@ class Registro40Import implements RegistroImportInterface
 
     /**
      * @param Employee $employee
+     *
      * @return void
      */
     private function createOrUpdateManager(Employee $employee) : void
@@ -122,7 +125,7 @@ class Registro40Import implements RegistroImportInterface
         if ($schoolInep) {
             return $schoolInep->school;
         }
-        
+
         return null;
     }
 }

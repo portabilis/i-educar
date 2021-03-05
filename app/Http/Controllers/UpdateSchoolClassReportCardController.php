@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Http\Requests\UpdateSchoolClassReportCardRequest;
 use App\Models\LegacySchoolClass;
 use App\Process;

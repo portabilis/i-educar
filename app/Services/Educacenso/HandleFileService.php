@@ -29,7 +29,7 @@ class HandleFileService
 
     /**
      * @param ImportService $yearImportService
-     * @param User $user
+     * @param User          $user
      */
     public function __construct(ImportService $yearImportService, User $user)
     {

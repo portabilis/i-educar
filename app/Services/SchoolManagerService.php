@@ -9,6 +9,7 @@ class SchoolManagerService
 {
     /**
      * @param $schoolId
+     *
      * @return SchoolManager[]
      */
     public function getSchoolManagers($schoolId)

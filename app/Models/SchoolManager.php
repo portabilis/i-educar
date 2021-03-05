@@ -72,8 +72,9 @@ class SchoolManager extends Model
     /**
      * Filtra pelo ID da escola
      *
-     * @param  Builder $query
-     * @param  integer $schoolId
+     * @param Builder $query
+     * @param integer $schoolId
+     *
      * @return Builder
      */
     public function scopeOfSchool($query, $schoolId)

@@ -104,5 +104,4 @@ class UpdateSchoolClassGrade extends Command
 
         throw new MissingSchoolCourseException($this->schoolClass->school, $this->grade->course);
     }
-
 }

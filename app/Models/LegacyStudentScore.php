@@ -25,7 +25,6 @@ class LegacyStudentScore extends Model
      */
     public $timestamps = false;
 
-
     /**
      * @return BelongsTo
      */

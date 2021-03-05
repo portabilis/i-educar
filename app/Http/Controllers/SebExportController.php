@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SebExportRequest;
-use App\Services\SebExport\ExportService;
 use App\Process;
-use Illuminate\View\View;
+use App\Services\SebExport\ExportService;
 use Illuminate\Http\Response as ResponseReturn;
+use Illuminate\View\View;
 use Response;
 
 class SebExportController extends Controller

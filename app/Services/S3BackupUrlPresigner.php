@@ -4,8 +4,6 @@ namespace App\Services;
 
 use Aws\Credentials\Credentials;
 use Aws\S3\S3Client;
-use Exception;
-use Storage;
 
 class S3BackupUrlPresigner
 {

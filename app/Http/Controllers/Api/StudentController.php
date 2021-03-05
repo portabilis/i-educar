@@ -16,6 +16,7 @@ class StudentController extends Controller
      * @param LegacyStudent                  $student
      *
      * @throws Throwable
+     *
      * @return array
      */
     public function updateStateRegistration(UpdateStateRegistrationRequest $request, LegacyStudent $student)

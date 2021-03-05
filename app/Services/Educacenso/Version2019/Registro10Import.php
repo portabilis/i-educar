@@ -52,8 +52,9 @@ class Registro10Import implements RegistroImportInterface
      * Faz a importação dos dados a partir da linha do arquivo
      *
      * @param RegistroEducacenso $model
-     * @param int $year
+     * @param int                $year
      * @param $user
+     *
      * @return void
      */
     public function import(RegistroEducacenso $model, $year, $user)
@@ -144,12 +145,14 @@ class Registro10Import implements RegistroImportInterface
 
     /**
      * @param $arrayColumns
+     *
      * @return Registro10|RegistroEducacenso
      */
     public static function getModel($arrayColumns)
     {
         $registro = new Registro10Model();
         $registro->hydrateModel($arrayColumns);
+
         return $registro;
     }
 
@@ -607,9 +610,9 @@ class Registro10Import implements RegistroImportInterface
             $arrayUsoInternet[] = UsoInternet::ALUNOS;
         }
 
-         if ($this->model->acessoInternetComunidade) {
-             $arrayUsoInternet[] = UsoInternet::COMUNIDADE;
-         }
+        if ($this->model->acessoInternetComunidade) {
+            $arrayUsoInternet[] = UsoInternet::COMUNIDADE;
+        }
 
         return $this->getPostgresIntegerArray($arrayUsoInternet);
     }

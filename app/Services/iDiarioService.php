@@ -31,7 +31,7 @@ class iDiarioService
 
     /**
      * @param LegacyInstitution $institution
-     * @param Client $http
+     * @param Client            $http
      *
      * @return void
      */
@@ -139,7 +139,7 @@ class iDiarioService
 
     /**
      * @param string $path
-     * @param array $query
+     * @param array  $query
      *
      * @return mixed
      */

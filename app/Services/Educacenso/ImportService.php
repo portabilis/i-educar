@@ -2,10 +2,7 @@
 
 namespace App\Services\Educacenso;
 
-use App\Models\Educacenso\RegistroEducacenso;
-use App\User;
 use DateTime;
-use Illuminate\Http\UploadedFile;
 
 abstract class ImportService
 {
@@ -21,6 +18,7 @@ abstract class ImportService
      *
      * @param array $importString
      * @param $user
+     *
      * @return void
      */
     public function import($importString, $user)
@@ -41,7 +39,7 @@ abstract class ImportService
         $lineId = $this->getLineId($line);
 
         $class = $this->getRegistroById($lineId);
-        $line = preg_replace( "/\r|\n/", '', $line);
+        $line = preg_replace("/\r|\n/", '', $line);
         $arrayColumns = explode(self::DELIMITER, $line);
 
         if (!$class) {
@@ -61,6 +59,7 @@ abstract class ImportService
      * Retorna o ID da linha (registro)
      *
      * @param $line
+     *
      * @return string
      */
     private function getLineId($line)
@@ -74,6 +73,7 @@ abstract class ImportService
      * Retorna a classe responsável por importar o registro da linha
      *
      * @param $lineId
+     *
      * @return RegistroImportInterface
      */
     abstract public function getRegistroById($lineId);
@@ -89,6 +89,7 @@ abstract class ImportService
      * Retorna o nome da escola a partir da string do arquivo de importação
      *
      * @param $school
+     *
      * @return string
      */
     abstract public function getSchoolNameByFile($school);

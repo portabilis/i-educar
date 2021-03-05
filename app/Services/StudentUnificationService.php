@@ -23,6 +23,7 @@ class StudentUnificationService
 
     /**
      * @param LogUnification $unification
+     *
      * @throws \Exception
      */
     public function undo(LogUnification $unification)
@@ -111,5 +112,4 @@ class StudentUnificationService
 
         throw new WithoutPermission();
     }
-
 }

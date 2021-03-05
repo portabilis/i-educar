@@ -28,6 +28,7 @@ class EmployeeGraduation extends Model
      *
      * @param Builder $query
      * @param $employeeId
+     *
      * @return Builder
      */
     public function scopeOfEmployee($query, $employeeId)

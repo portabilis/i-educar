@@ -18,6 +18,7 @@ class BatchExemptionService
 
     /**
      * BatchExemptionService constructor.
+     *
      * @param ExemptionService $exemptionService
      */
     public function __construct(ExemptionService $exemptionService)
@@ -30,7 +31,8 @@ class BatchExemptionService
         $disciplineArray,
         $exemptionTypeId,
         $description,
-        $stages)
+        $stages
+    )
     {
         $this->registrations[] = [
             'registration' => $registration,
@@ -43,7 +45,7 @@ class BatchExemptionService
 
     public function handle()
     {
-        foreach($this->registrations as $registration) {
+        foreach ($this->registrations as $registration) {
             $this->exemptionService->createExemptionByDisciplineArray(
                 $registration['registration'],
                 $registration['disciplineArray'],
@@ -53,5 +55,4 @@ class BatchExemptionService
             );
         }
     }
-
 }

@@ -6,10 +6,10 @@ use App\Models\EducacensoImport as EducacensoImportModel;
 use App\Services\Educacenso\ImportServiceFactory;
 use DateTime;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -43,7 +43,7 @@ class EducacensoImportJob implements ShouldQueue
      *
      * @param EducacensoImportModel $educacensoImport
      * @param $importArray
-     * @param string $databaseConnection
+     * @param string   $databaseConnection
      * @param DateTime $registrationDate
      */
     public function __construct(EducacensoImportModel $educacensoImport, $importArray, $databaseConnection, $registrationDate)
@@ -58,6 +58,7 @@ class EducacensoImportJob implements ShouldQueue
      * Execute the job.
      *
      * @return void
+     *
      * @throws Throwable
      */
     public function handle()

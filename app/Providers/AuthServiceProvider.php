@@ -6,9 +6,9 @@ use App\Extensions\LegacyUserProvider;
 use App\Policies\ProcessPolicy;
 use App\User;
 use Illuminate\Contracts\Hashing\Hasher;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {

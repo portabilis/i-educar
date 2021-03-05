@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class LegacyDisciplineExemption
+ *
  * @property LegacyRegistration $registration
  * @property integer cod_dispensa
  */
@@ -93,6 +94,7 @@ class LegacyDisciplineExemption extends Model
 
     /**
      * @param Builder $query
+     *
      * @return Builder
      */
     public function scopeActive($query)

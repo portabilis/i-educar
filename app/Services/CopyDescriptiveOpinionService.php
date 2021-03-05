@@ -97,7 +97,6 @@ class CopyDescriptiveOpinionService implements CopyRegistrationData
      *
      * @param LegacyStudentDescriptiveOpinion $studentDescriptiveOpinion
      * @param LegacyEvaluationRule            $newEvaluationRule
-     *
      * @param LegacyRegistration              $oldRegistration
      *
      * @throws MissingDescriptiveOpinionType
@@ -114,12 +113,14 @@ class CopyDescriptiveOpinionService implements CopyRegistrationData
         if ($newEvaluationRule->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_COMPONENTE
             || $newEvaluationRule->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_COMPONENTE) {
             $this->copyDisciplineDescriptiveOpinion($studentDescriptiveOpinion, $oldRegistration);
+
             return;
         }
 
         if ($newEvaluationRule->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL
             || $newEvaluationRule->parecer_descritivo == RegraAvaliacao_Model_TipoParecerDescritivo::ANUAL_GERAL) {
             $this->copyGeneralDescriptiveOpinion($studentDescriptiveOpinion, $oldRegistration);
+
             return;
         }
 
