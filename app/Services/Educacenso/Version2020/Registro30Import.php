@@ -16,7 +16,7 @@ class Registro30Import extends Registro30Import2019
      *
      * @param RegistroEducacenso $model
      * @param int                $year
-     * @param $user
+     * @param                    $user
      *
      * @return void
      */

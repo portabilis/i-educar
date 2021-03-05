@@ -18,7 +18,7 @@ class Registro40Import extends Registro40Import2019
      *
      * @param RegistroEducacenso $model
      * @param int                $year
-     * @param $user
+     * @param                    $user
      *
      * @return void
      */
@@ -52,7 +52,7 @@ class Registro40Import extends Registro40Import2019
     /**
      * @return Employee|null
      */
-    private function getEmployee() : ?Employee
+    private function getEmployee(): ?Employee
     {
         $inepNumber = $this->model->inepGestor;
         if (empty($inepNumber)) {
@@ -73,7 +73,7 @@ class Registro40Import extends Registro40Import2019
      *
      * @return void
      */
-    private function createOrUpdateManager(Employee $employee) : void
+    private function createOrUpdateManager(Employee $employee): void
     {
         $school = $this->getSchool();
 

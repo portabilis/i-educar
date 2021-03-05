@@ -9,7 +9,7 @@ use DB;
 
 class ExemptedDisciplineLinksRemover
 {
-    public function remove(LegacySchoolClass $schoolClass) : void
+    public function remove(LegacySchoolClass $schoolClass): void
     {
         DB::beginTransaction();
         $this->updateAffectedSchoolClassTeacherTimestamps($schoolClass);
@@ -17,7 +17,7 @@ class ExemptedDisciplineLinksRemover
         DB::commit();
     }
 
-    private function updateAffectedSchoolClassTeacherTimestamps(LegacySchoolClass $schoolClass) : void
+    private function updateAffectedSchoolClassTeacherTimestamps(LegacySchoolClass $schoolClass): void
     {
         LegacySchoolClassTeacher::where('turma_id', $schoolClass->id)
             ->whereHas('schoolClassTeacherDisciplines', function ($query) use ($schoolClass) {
@@ -28,7 +28,7 @@ class ExemptedDisciplineLinksRemover
             ]);
     }
 
-    private function removeSchoolClassTeacherDisciplines(LegacySchoolClass $schoolClass) : void
+    private function removeSchoolClassTeacherDisciplines(LegacySchoolClass $schoolClass): void
     {
         LegacySchoolClassTeacherDiscipline::query()
             ->whereHas('schoolClassTeacher', function ($query) use ($schoolClass) {

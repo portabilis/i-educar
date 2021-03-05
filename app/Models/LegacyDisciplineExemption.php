@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Class LegacyDisciplineExemption
  *
  * @property LegacyRegistration $registration
- * @property integer cod_dispensa
+ * @property integer            cod_dispensa
  */
 class LegacyDisciplineExemption extends Model
 {

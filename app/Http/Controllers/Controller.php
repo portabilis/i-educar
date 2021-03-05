@@ -20,7 +20,7 @@ class Controller extends BaseController
     /**
      * Set the breadcrumbs of the action
      *
-     * @param $currentPage
+     * @param       $currentPage
      * @param array $pages
      *
      * @return $this

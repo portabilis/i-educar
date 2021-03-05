@@ -57,7 +57,7 @@ class Registro30Import implements RegistroImportInterface
      *
      * @param RegistroEducacenso $model
      * @param int                $year
-     * @param $user
+     * @param                    $user
      *
      * @return void
      */
@@ -174,8 +174,8 @@ class Registro30Import implements RegistroImportInterface
             'idmun_nascimento' => $this->model->nacionalidade == Nacionalidade::BRASILEIRA ? $this->getCity($this->model->municipioNascimento) : null,
             'cpf' => $this->model->cpf ?: null,
             'nis_pis_pasep' => $this->model->nis ?: null,
-            'pais_residencia' => (int)$this->model->paisResidencia,
-            'zona_localizacao_censo' => (int)$this->model->localizacaoResidencia,
+            'pais_residencia' => (int) $this->model->paisResidencia,
+            'zona_localizacao_censo' => (int) $this->model->localizacaoResidencia,
         ]);
 
         return $person;
@@ -549,7 +549,7 @@ class Registro30Import implements RegistroImportInterface
         $this->createRecursosProvaInep($student);
         $this->createCertidaoNascimento($student);
 
-        $student->justificativa_falta_documentacao = (int)$this->model->justificativaFaltaDocumentacao;
+        $student->justificativa_falta_documentacao = (int) $this->model->justificativaFaltaDocumentacao;
         $student->save();
     }
 
@@ -564,7 +564,7 @@ class Registro30Import implements RegistroImportInterface
         $this->storeEmployeePostgraduate($employee);
         $this->storeEmployeeCourses($employee);
 
-        $employee->tipo_ensino_medio_cursado = (int)$this->model->tipoEnsinoMedioCursado;
+        $employee->tipo_ensino_medio_cursado = (int) $this->model->tipoEnsinoMedioCursado;
         $employee->save();
     }
 

@@ -55,8 +55,7 @@ class ExemptionService
         $exemptionTypeId,
         $description,
         $stages
-    )
-    {
+    ) {
         foreach ($disciplineArray as $discipline) {
             $this->createExemption($registration, $discipline, $exemptionTypeId, $description, $stages);
         }

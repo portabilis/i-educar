@@ -254,7 +254,7 @@ class Registro20 implements RegistroEducacenso
      */
     private function validaMinutos($minutos)
     {
-        return strlen($minutos) == 2 && $minutos <= '55' && ((int)$minutos % 5) == 0;
+        return strlen($minutos) == 2 && $minutos <= '55' && ((int) $minutos % 5) == 0;
     }
 
     public function getLocalFuncionamentoDescriptiveValue()

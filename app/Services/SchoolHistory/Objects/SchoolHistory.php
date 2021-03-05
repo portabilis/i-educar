@@ -106,7 +106,7 @@ class SchoolHistory
     {
         $lines = [];
         foreach ($student as $discipline) {
-            $lines[] = (array)$discipline;
+            $lines[] = (array) $discipline;
         }
 
         return $lines;

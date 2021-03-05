@@ -16,6 +16,7 @@ use Throwable;
 class EducacensoImportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     /**
      * @var EducacensoImportModel
      */
@@ -42,9 +43,9 @@ class EducacensoImportJob implements ShouldQueue
      * Create a new job instance.
      *
      * @param EducacensoImportModel $educacensoImport
-     * @param $importArray
-     * @param string   $databaseConnection
-     * @param DateTime $registrationDate
+     * @param                       $importArray
+     * @param string                $databaseConnection
+     * @param DateTime              $registrationDate
      */
     public function __construct(EducacensoImportModel $educacensoImport, $importArray, $databaseConnection, $registrationDate)
     {
@@ -57,9 +58,9 @@ class EducacensoImportJob implements ShouldQueue
     /**
      * Execute the job.
      *
+     * @throws Throwable
      * @return void
      *
-     * @throws Throwable
      */
     public function handle()
     {

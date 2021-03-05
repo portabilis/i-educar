@@ -11,7 +11,7 @@ use Response;
 
 class SebExportController extends Controller
 {
-    public function index() : View
+    public function index(): View
     {
         $this->breadcrumb('Exportação para o SEB', [
             url('intranet/educar_index.php') => 'Escola',
@@ -21,14 +21,14 @@ class SebExportController extends Controller
         return view('seb-export.index');
     }
 
-    public function export(SebExportRequest $request, ExportService $exportService) : ResponseReturn
+    public function export(SebExportRequest $request, ExportService $exportService): ResponseReturn
     {
         $exportContent = $exportService->export($request->all());
 
         $headers = [
-          'Content-type' => 'text/plain',
-          'Content-Disposition' => 'attachment; filename="exportacao_seb.txt"',
-          'Content-Length' => strlen($exportContent),
+            'Content-type' => 'text/plain',
+            'Content-Disposition' => 'attachment; filename="exportacao_seb.txt"',
+            'Content-Length' => strlen($exportContent),
         ];
 
         return Response::make($exportContent, 200, $headers);

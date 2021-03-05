@@ -229,7 +229,7 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
 
     /**
      * @param ReleasePeriod $releasePeriod
-     * @param $schools
+     * @param               $schools
      */
     private function createReleasePeriodSchools(ReleasePeriod $releasePeriod, $schools)
     {
@@ -240,8 +240,8 @@ Cadastre os períodos que deseja liberar o lançamento de notas e faltas por eta
 
     /**
      * @param ReleasePeriod $releasePeriod
-     * @param $startDateArray
-     * @param $endDateArray
+     * @param               $startDateArray
+     * @param               $endDateArray
      */
     private function createReleasePeriodDates(ReleasePeriod $releasePeriod, $startDateArray, $endDateArray)
     {

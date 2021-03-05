@@ -51,7 +51,7 @@ class Registro60Import implements RegistroImportInterface
      *
      * @param RegistroEducacenso $model
      * @param int                $year
-     * @param $user
+     * @param                    $user
      *
      * @return void
      */
@@ -241,7 +241,7 @@ class Registro60Import implements RegistroImportInterface
         LegacyStudentTransport::updateOrCreate(
             ['aluno_id' => $student->getKey()],
             [
-                'responsavel' => (int)$this->model->poderPublicoResponsavelTransporte,
+                'responsavel' => (int) $this->model->poderPublicoResponsavelTransporte,
                 'user_id' => $this->user->getKey(),
             ]
         );

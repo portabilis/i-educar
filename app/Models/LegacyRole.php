@@ -23,17 +23,17 @@ class LegacyRole extends Model
     ];
     public $timestamps = false;
 
-    public function scopeAtivo(Builder $query) : Builder
+    public function scopeAtivo(Builder $query): Builder
     {
         return $query->where('ativo', 1);
     }
 
-    public function scopeProfessor(Builder $query) : Builder
+    public function scopeProfessor(Builder $query): Builder
     {
         return $query->where('professor', 1);
     }
 
-    public function getIdAttribute() : int
+    public function getIdAttribute(): int
     {
         return $this->cod_funcao;
     }

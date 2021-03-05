@@ -12,7 +12,7 @@ class ImportServiceFactory
     /**
      * Intancia um service de importação
      *
-     * @param $year
+     * @param          $year
      * @param DateTime $registrationDate
      *
      * @return ImportService

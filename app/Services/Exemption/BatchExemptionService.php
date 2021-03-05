@@ -32,8 +32,7 @@ class BatchExemptionService
         $exemptionTypeId,
         $description,
         $stages
-    )
-    {
+    ) {
         $this->registrations[] = [
             'registration' => $registration,
             'disciplineArray' => $disciplineArray,

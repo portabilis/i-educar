@@ -81,9 +81,9 @@ class LogUnification extends Model
     }
 
     /**
+     * @throws Exception
      * @return string
      *
-     * @throws Exception
      */
     public function getMainName()
     {
@@ -91,9 +91,9 @@ class LogUnification extends Model
     }
 
     /**
+     * @throws Exception
      * @return array
      *
-     * @throws Exception
      */
     public function getDuplicatesName()
     {
@@ -101,9 +101,9 @@ class LogUnification extends Model
     }
 
     /**
+     * @throws Exception
      * @return LogUnificationTypeInterface
      *
-     * @throws Exception
      */
     public function getAdapter()
     {

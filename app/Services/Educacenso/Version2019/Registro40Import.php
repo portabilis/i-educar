@@ -36,7 +36,7 @@ class Registro40Import implements RegistroImportInterface
      *
      * @param RegistroEducacenso $model
      * @param int                $year
-     * @param $user
+     * @param                    $user
      *
      * @return void
      */
@@ -70,7 +70,7 @@ class Registro40Import implements RegistroImportInterface
     /**
      * @return Employee|null
      */
-    private function getEmployee() : ?Employee
+    private function getEmployee(): ?Employee
     {
         $inepNumber = $this->model->inepGestor;
         $employeeInep = EmployeeInep::where('cod_docente_inep', $inepNumber)->first();
@@ -87,7 +87,7 @@ class Registro40Import implements RegistroImportInterface
      *
      * @return void
      */
-    private function createOrUpdateManager(Employee $employee) : void
+    private function createOrUpdateManager(Employee $employee): void
     {
         $school = $this->getSchool();
 
@@ -103,7 +103,7 @@ class Registro40Import implements RegistroImportInterface
         $manager->role_id = $this->model->cargo;
         $manager->access_criteria_id = $this->model->criterioAcesso ?: null;
         $manager->access_criteria_description = $this->model->especificacaoCriterioAcesso;
-        $manager->link_type_id = (int)$this->model->tipoVinculo ?: null;
+        $manager->link_type_id = (int) $this->model->tipoVinculo ?: null;
         if (!$this->existsChiefSchoolManager($school)) {
             $manager->chief = true;
         }
@@ -111,7 +111,7 @@ class Registro40Import implements RegistroImportInterface
         $manager->saveOrFail();
     }
 
-    protected function existsChiefSchoolManager(LegacySchool $school) : bool
+    protected function existsChiefSchoolManager(LegacySchool $school): bool
     {
         return $school->schoolManagers()->where('chief', true)->exists();
     }
@@ -119,7 +119,7 @@ class Registro40Import implements RegistroImportInterface
     /**
      * @return LegacySchool
      */
-    protected function getSchool() : ?LegacySchool
+    protected function getSchool(): ?LegacySchool
     {
         $schoolInep = SchoolInep::where('cod_escola_inep', $this->model->inepEscola)->first();
         if ($schoolInep) {

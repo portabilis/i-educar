@@ -97,7 +97,7 @@ SQL;
     public function dropForeignKey($tableName, $foreignKey)
     {
         Schema::table($tableName, function (Blueprint $table) use ($tableName, $foreignKey) {
-            $table->dropForeign($foreignKey) ;
+            $table->dropForeign($foreignKey);
         });
     }
 
@@ -108,7 +108,7 @@ SQL;
     public function createUniqueIndex($tableName, $columnsForeignKey)
     {
         Schema::table($tableName, function (Blueprint $table) use ($columnsForeignKey) {
-            $table->unique($columnsForeignKey) ;
+            $table->unique($columnsForeignKey);
         });
     }
 }

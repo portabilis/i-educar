@@ -17,7 +17,7 @@ abstract class ImportService
      * Faz a importação dos dados a partir da string do arquivo do censo
      *
      * @param array $importString
-     * @param $user
+     * @param       $user
      *
      * @return void
      */
@@ -32,7 +32,7 @@ abstract class ImportService
      * Importa uma linha
      *
      * @param string $line
-     * @param $user
+     * @param        $user
      */
     private function importLine($line, $user)
     {

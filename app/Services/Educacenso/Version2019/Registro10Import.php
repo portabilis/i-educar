@@ -53,7 +53,7 @@ class Registro10Import implements RegistroImportInterface
      *
      * @param RegistroEducacenso $model
      * @param int                $year
-     * @param $user
+     * @param                    $user
      *
      * @return void
      */
@@ -548,13 +548,13 @@ class Registro10Import implements RegistroImportInterface
     {
         return !empty(array_filter(
             [
-                str_replace(['{','}'], '', $school->salas_gerais),
-                str_replace(['{','}'], '', $school->salas_funcionais),
-                str_replace(['{','}'], '', $school->banheiros),
-                str_replace(['{','}'], '', $school->laboratorios),
-                str_replace(['{','}'], '', $school->salas_atividades),
-                str_replace(['{','}'], '', $school->dormitorios),
-                str_replace(['{','}'], '', $school->areas_externas),
+                str_replace(['{', '}'], '', $school->salas_gerais),
+                str_replace(['{', '}'], '', $school->salas_funcionais),
+                str_replace(['{', '}'], '', $school->banheiros),
+                str_replace(['{', '}'], '', $school->laboratorios),
+                str_replace(['{', '}'], '', $school->salas_atividades),
+                str_replace(['{', '}'], '', $school->dormitorios),
+                str_replace(['{', '}'], '', $school->areas_externas),
             ]
         ));
     }

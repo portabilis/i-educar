@@ -54,7 +54,7 @@ class Registro20Import implements RegistroImportInterface
      *
      * @param RegistroEducacenso $model
      * @param int                $year
-     * @param $user
+     * @param                    $user
      *
      * @return void
      */
@@ -944,7 +944,7 @@ class Registro20Import implements RegistroImportInterface
     }
 
     /**
-     * @param $levelData
+     * @param              $levelData
      * @param LegacyCourse $course
      *
      * @return
@@ -997,9 +997,9 @@ class Registro20Import implements RegistroImportInterface
      * @param $horaInicial
      * @param $horaFinal
      *
+     * @throws Exception
      * @return string|null
      *
-     * @throws Exception
      */
     private function getTurno($horaInicial, $horaFinal)
     {

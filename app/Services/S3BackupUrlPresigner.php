@@ -7,7 +7,7 @@ use Aws\S3\S3Client;
 
 class S3BackupUrlPresigner
 {
-    public function getPresignedUrl(string $url) : string
+    public function getPresignedUrl(string $url): string
     {
         $s3Client = $this->getClient($url);
 
@@ -21,12 +21,12 @@ class S3BackupUrlPresigner
         return (string) $request->getURI();
     }
 
-    private function getClient(string $url) : S3Client
+    private function getClient(string $url): S3Client
     {
         $clientParameters = [
             'version' => 'latest',
-            'region'  => $this->getRegionFromUrl($url),
-            'http'    => [
+            'region' => $this->getRegionFromUrl($url),
+            'http' => [
                 'connect_timeout' => 5
             ],
         ];
@@ -38,17 +38,17 @@ class S3BackupUrlPresigner
         return new S3Client($clientParameters);
     }
 
-    private function getBucketFromUrl(string $url) : string
+    private function getBucketFromUrl(string $url): string
     {
         return explode('/', $url)[3];
     }
 
-    private function getKeyFromUrl(string $url) : string
+    private function getKeyFromUrl(string $url): string
     {
         return implode('/', array_slice(explode('/', $url), 4));
     }
 
-    private function getRegionFromUrl(string $url) : string
+    private function getRegionFromUrl(string $url): string
     {
         return substr(explode('.', explode('//', $url)[1])[0], 3);
     }

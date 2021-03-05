@@ -156,9 +156,9 @@ class AccessLevelController extends Controller
      * @param LegacyUserType $userType
      * @param Connection     $connection
      *
+     * @throws Exception
      * @return RedirectResponse
      *
-     * @throws Exception
      */
     public function delete(LegacyUserType $userType, Connection $connection)
     {

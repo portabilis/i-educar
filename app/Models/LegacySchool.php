@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * LegacySchool
  *
- * @property string $name
+ * @property string            $name
  * @property LegacyInstitution $institution
  */
 class LegacySchool extends Model

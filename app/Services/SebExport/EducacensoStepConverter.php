@@ -48,7 +48,7 @@ class EducacensoStepConverter
         68 => '37',
     ];
 
-    public function convert(int $etapaEducacenso) : string
+    public function convert(int $etapaEducacenso): string
     {
         return self::STEPS[$etapaEducacenso];
     }

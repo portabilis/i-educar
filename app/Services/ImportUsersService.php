@@ -77,7 +77,7 @@ class ImportUsersService implements ToCollection
      * Cria um usuário a partir do nome, matrícula e senha informados
      *
      * @param string $name
-     * @param string $user               Matrícula
+     * @param string $user Matrícula
      * @param string $password
      * @param string $email
      * @param bool   $forceResetPassword
@@ -168,7 +168,7 @@ class ImportUsersService implements ToCollection
      * @param string $email
      * @param string $username
      * @param string $password
-     * @param $name
+     * @param        $name
      */
     public function sendPasswordEmail($email, $username, $password, $name)
     {

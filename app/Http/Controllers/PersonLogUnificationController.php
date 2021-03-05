@@ -25,7 +25,7 @@ class PersonLogUnificationController extends Controller
             })->when($request->get('cpf'), function ($query, $cpf) {
                 $query->whereHas('personMain', function ($personQuery) use ($cpf) {
                     $personQuery->whereHas('individual', function ($individualQuery) use ($cpf) {
-                        $individualQuery->where('cpf', str_replace(['.','-'], '', $cpf));
+                        $individualQuery->where('cpf', str_replace(['.', '-'], '', $cpf));
                     });
                 });
             });

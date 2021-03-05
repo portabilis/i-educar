@@ -40,9 +40,9 @@ class SchoolManagerObserver
 
     /**
      * @param SchoolManager $schoolManager
-     * @param $individualId
-     * @param $roleId
-     * @param $managerEmail
+     * @param               $individualId
+     * @param               $roleId
+     * @param               $managerEmail
      */
     private function updateManagerDataSchool(SchoolManager $schoolManager, $individualId, $roleId, $managerEmail)
     {

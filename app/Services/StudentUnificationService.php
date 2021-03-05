@@ -98,7 +98,7 @@ class StudentUnificationService
      * nível ou nível escolar
      *
      * @param User $user
-     * @param $unificationOwner
+     * @param      $unificationOwner
      */
     private function checkPermissionInstitutionalLevel(User $user, $unificationOwner)
     {

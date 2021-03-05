@@ -66,7 +66,7 @@ class UpdateRegistrationStatusController extends Controller
         $query->where('aprovado', $request->get('situacao'));
 
         $query->join('pmieducar.matricula_turma', 'matricula.cod_matricula', '=', 'matricula_turma.ref_cod_matricula')
-              ->where('matricula_turma.ativo', 1);
+            ->where('matricula_turma.ativo', 1);
 
         $registrations = $query->get();
 

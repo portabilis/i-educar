@@ -10,16 +10,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection as LaravelCollection;
 
 /**
- * @property int    id
- * @property int    parent_id
- * @property string title
- * @property string description
- * @property string link
- * @property string icon
- * @property int    order
- * @property int    type
- * @property int    process
- * @property bool   active
+ * @property int               id
+ * @property int               parent_id
+ * @property string            title
+ * @property string            description
+ * @property string            link
+ * @property string            icon
+ * @property int               order
+ * @property int               type
+ * @property int               process
+ * @property bool              active
  * @property Menu              $parent
  * @property Collection|Menu[] $children
  */
@@ -269,10 +269,10 @@ class Menu extends Model
     public static function roots()
     {
         return static::query()
-                ->with('children.children.children.children.children')
-                ->whereNull('parent_id')
-                ->orderBy('order')
-                ->get();
+            ->with('children.children.children.children.children')
+            ->whereNull('parent_id')
+            ->orderBy('order')
+            ->get();
     }
 
     /**

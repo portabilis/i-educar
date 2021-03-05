@@ -38,9 +38,9 @@ class CheckInstitutionConfigurationsJob implements ShouldQueue
      *
      * @param NotificationService $notificationsService
      *
+     * @throws Throwable
      * @return void
      *
-     * @throws Throwable
      */
     public function handle(NotificationService $notificationsService)
     {

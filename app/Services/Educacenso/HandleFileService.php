@@ -36,6 +36,7 @@ class HandleFileService
         $this->yearImportService = $yearImportService;
         $this->user = $user;
     }
+
     /**
      * Processa o arquivo de importação do censo
      *

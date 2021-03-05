@@ -58,7 +58,7 @@ class EducacensoRepository
     }
 
     /**
-     * @param $sql
+     * @param       $sql
      * @param array $params
      *
      * @return array
