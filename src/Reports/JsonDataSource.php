@@ -42,7 +42,6 @@ trait JsonDataSource
      *
      * @throws Exception
      * @return string
-     *
      */
     public function getSqlHeaderReport()
     {
@@ -105,8 +104,8 @@ trait JsonDataSource
      * Retorna o SQL para buscar os dados do relatório principal.
      *
      * @throws Exception
-     * @return string
      *
+     * @return string
      */
     public function getSqlMainReport()
     {

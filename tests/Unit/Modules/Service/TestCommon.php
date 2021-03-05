@@ -195,8 +195,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
      * Getter. Retorna o array de opções para a inicialização do service.
      *
      * @throws Exception
-     * @return array
      *
+     * @return array
      */
     protected function _getServiceOptions()
     {
@@ -244,8 +244,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
      * @param string $namespace
      *
      * @throws Exception
-     * @return mixed
      *
+     * @return mixed
      */
     protected function _getConfigOptions($namespace)
     {
@@ -287,8 +287,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
      * @param string $key
      *
      * @throws Exception
-     * @return mixed
      *
+     * @return mixed
      */
     protected function _getConfigOption($namespace, $key)
     {
@@ -395,8 +395,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
      * TODO: Condicionar o retorno de 'Rc' caso exista recuperação na Regra
      *
      * @throws Exception
-     * @return array
      *
+     * @return array
      */
     protected function _getEtapasPossiveis()
     {
@@ -473,8 +473,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     /**
      * @throws Exception
-     * @return Avaliacao_Model_NotaAluno
      *
+     * @return Avaliacao_Model_NotaAluno
      */
     protected function _getNotaAluno()
     {
@@ -489,8 +489,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     /**
      * @throws Exception
-     * @return array
      *
+     * @return array
      */
     protected function _getFaltaAluno()
     {
@@ -506,8 +506,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     /**
      * @throws Exception
-     * @return array
      *
+     * @return array
      */
     protected function _getParecerDescritivoAluno()
     {
@@ -523,8 +523,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     /**
      * @throws Exception
-     * @return $this
      *
+     * @return $this
      */
     protected function _setUpMatriculaMock()
     {
@@ -603,8 +603,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     /**
      * @throws Exception
-     * @return $this
      *
+     * @return $this
      */
     protected function _setUpMatriculaTurmaMock()
     {
@@ -627,8 +627,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     /**
      * @throws Exception
-     * @return $this
      *
+     * @return $this
      */
     protected function _setUpSerieMock()
     {
@@ -650,8 +650,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     /**
      * @throws Exception
-     * @return $this
      *
+     * @return $this
      */
     protected function _setUpCursoMock()
     {
@@ -673,8 +673,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     /**
      * @throws Exception
-     * @return $this
      *
+     * @return $this
      */
     protected function _setUpEscolaAnoLetivo()
     {
@@ -697,8 +697,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     /**
      * @throws Exception
-     * @return $this
      *
+     * @return $this
      */
     protected function _setUpAnoLetivoModulo()
     {
@@ -721,8 +721,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     /**
      * @throws Exception
-     * @return $this
      *
+     * @return $this
      */
     protected function _setUpModulo()
     {
@@ -739,8 +739,8 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
 
     /**
      * @throws Exception
-     * @return $this
      *
+     * @return $this
      */
     protected function _setUpEscolaSerieDisciplinaMock()
     {
@@ -763,7 +763,6 @@ abstract class Avaliacao_Service_TestCommon extends UnitBaseTest
     /**
      * @throws Exception
      * @return $this
-     *
      */
     protected function _setUpDispensaDisciplinaMock()
     {

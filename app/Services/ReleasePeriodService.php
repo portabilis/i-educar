@@ -17,8 +17,8 @@ class ReleasePeriodService
      * @param integer $year
      *
      * @throws Exception
-     * @return bool
      *
+     * @return bool
      */
     public function canPostNow($schoolId, $classRoomId, $stage, $year)
     {

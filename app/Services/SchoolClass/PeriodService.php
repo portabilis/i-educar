@@ -14,8 +14,8 @@ class PeriodService
      * @param string $endTime
      *
      * @throws \Exception
-     * @return string
      *
+     * @return string
      */
     public function getPeriodByTime($startTime, $endTime)
     {

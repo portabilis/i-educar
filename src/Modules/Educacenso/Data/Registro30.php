@@ -106,8 +106,8 @@ class Registro30 extends AbstractRegistro
      * @param $escolaId
      *
      * @throws \Exception
-     * @return Registro30Model[]
      *
+     * @return Registro30Model[]
      */
     public function getExportFormatData($escolaId)
     {
