@@ -8,5 +8,4 @@ class ArrayToCenso
     {
         return implode($glue, $array);
     }
-
 }

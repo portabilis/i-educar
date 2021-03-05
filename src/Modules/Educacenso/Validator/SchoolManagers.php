@@ -22,8 +22,8 @@ class SchoolManagers implements EducacensoValidator
 
     /**
      * @param SchoolManagerValueObject[] $valueObject
-     * @param integer $administrativeDependency
-     * @param integer $operatingSituation
+     * @param integer                    $administrativeDependency
+     * @param integer                    $operatingSituation
      */
     public function __construct($valueObject, $administrativeDependency, $operatingSituation)
     {
@@ -67,6 +67,7 @@ class SchoolManagers implements EducacensoValidator
 
     /**
      * @param array $array
+     *
      * @return bool
      */
     private function containsEmptyOrIsNull($array)
@@ -138,6 +139,7 @@ class SchoolManagers implements EducacensoValidator
         foreach ($this->valueObject as $manager) {
             $individualArray[] = $manager->employeeId;
         }
+
         return $individualArray;
     }
 
@@ -147,6 +149,7 @@ class SchoolManagers implements EducacensoValidator
         foreach ($this->valueObject as $manager) {
             $roleArray[] = $manager->roleId;
         }
+
         return $roleArray;
     }
 }

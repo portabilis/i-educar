@@ -3,23 +3,23 @@
 namespace iEducar\Support\View;
 
 use App\Models\EmployeeGraduationDiscipline;
-use App_Model_TipoMediacaoDidaticoPedagogico;
-use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use App\Models\ManagerAccessCriteria;
 use App\Models\ManagerLinkType;
 use App\Models\ManagerRole;
-use iEducar\Modules\Servidores\Model\FuncaoExercida;
-use iEducar\Modules\Servidores\Model\TipoVinculo;
-use iEducar\Modules\Transport\Period;
+use App_Model_TipoMediacaoDidaticoPedagogico;
 use iEducar\Modules\Educacenso\Model\Deficiencias;
-use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\DependenciaAdministrativaEscola;
 use iEducar\Modules\Educacenso\Model\Escolaridade;
 use iEducar\Modules\Educacenso\Model\EsferaAdministrativa;
+use iEducar\Modules\Educacenso\Model\LocalFuncionamento;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaEscola;
 use iEducar\Modules\Educacenso\Model\LocalizacaoDiferenciadaPessoa;
+use iEducar\Modules\Educacenso\Model\SituacaoFuncionamento;
 use iEducar\Modules\Educacenso\Model\TipoEnsinoMedioCursado;
 use iEducar\Modules\Educacenso\Model\UnidadeVinculadaComOutraInstituicao;
+use iEducar\Modules\Servidores\Model\FuncaoExercida;
+use iEducar\Modules\Servidores\Model\TipoVinculo;
+use iEducar\Modules\Transport\Period;
 
 class SelectOptions
 {
